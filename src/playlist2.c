@@ -33,6 +33,13 @@ void pl2_delete_selected_songs ();
 guint filter_timeout = 0;
 void pl2_filter_refilter ();
 
+
+
+void pl2_clear_search()
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl2_xml, "pl_searchen")), "");
+}
+
 /* toggles the playlist on or off */
 gboolean toggle_playlist2(GtkToggleButton *tb)
 {
@@ -130,6 +137,8 @@ pl2_button_press_event (GtkWidget * widget, GdkEventButton * event)
 	gtk_widget_show_all(GTK_WIDGET(glade_xml_get_widget(xml, "context_menu")));
 	gtk_menu_popup(GTK_MENU(glade_xml_get_widget(xml, "context_menu")),NULL, NULL, NULL, NULL, event->button, event->time );
 
+
+	
       /* stop signal */
       return TRUE;
     }
@@ -759,6 +768,11 @@ void create_playlist2 ()
 			"drag_data_received", G_CALLBACK (pl2_drag_data_recieved),
 			NULL);
 
+
+	g_signal_connect(G_OBJECT(
+				gtk_tree_view_get_vadjustment(GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")))),
+			"value-changed", G_CALLBACK(mw_leave_cb), NULL);
+	
 	/* if where not connected call the disconnect function that will set some highlighting ok */
 	if (check_connection_state ())
 	{

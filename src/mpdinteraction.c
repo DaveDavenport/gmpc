@@ -229,6 +229,51 @@ void repeat_pl()
 	info.conlock = FALSE;
 }
 
+int seek_p10s()
+{
+	if(info.conlock) return FALSE;
+
+	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
+	{
+		info.conlock = TRUE;
+		mpd_sendSeekCommand(info.connection, info.status->song, 
+				info.status->elapsedTime+10);
+		mpd_finishCommand(info.connection);
+		if(check_for_errors()) return FALSE;
+		info.conlock = FALSE;
+	}
+	return FALSE;
+}
+
+int seek_n10s()
+{
+	if(info.conlock) return FALSE;
+
+	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
+	{
+		info.conlock = TRUE;
+		mpd_sendSeekCommand(info.connection, info.status->song,
+				info.status->elapsedTime-10);
+		mpd_finishCommand(info.connection);
+		if(check_for_errors()) return FALSE;
+		info.conlock = FALSE;
+
+	}                                                                                              		
+	return FALSE;
+}
+
+void volume_change(int diff)
+{
+	if(info.conlock) return;
+	info.conlock = TRUE;
+	mpd_sendVolumeCommand(info.connection,diff);
+	mpd_finishCommand(info.connection);
+	if(check_for_errors()) return;
+	info.conlock = FALSE;
+}
+
+
+
 /* this function updates the internall dbase of mpd */
 void update_mpd_dbase()
 {

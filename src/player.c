@@ -3,6 +3,7 @@
 #include <glade/glade.h>
 #include <stdlib.h>
 #include "libmpdclient.h"
+#include <gdk/gdkkeysyms.h>
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
@@ -14,7 +15,6 @@ scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
-
 
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
@@ -470,6 +470,54 @@ void style_changed(GtkWidget *window, GtkStyle *prev, PangoLayout *lay)
 	pango_layout_context_changed(lay);
 }
 
+int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
+{
+	/* go back 10 seconds */
+	if(event->keyval == GDK_Left)
+	{
+		seek_n10s();
+		return TRUE;	
+	}
+	/* go forward 10 seconds */
+	else if (event->keyval == GDK_Right)
+	{
+		seek_p10s();
+		return TRUE;	
+	}
+	/* volume up */
+	else if (event->keyval == GDK_Up)
+	{
+		volume_change(5);
+		return TRUE;
+	}
+	/* volume down */
+	else if (event->keyval == GDK_Down)
+	{
+		volume_change(-5);
+		return TRUE;
+	}
+	else if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
+	{
+		gtk_main_quit();
+		return TRUE;
+
+	}
+
+
+
+
+	return FALSE;
+}
+
+
+
+
+
+
+
+
+
+
 /* create the player and connect signals */
 void create_player()
 {
@@ -512,7 +560,11 @@ void create_player()
 
 */
 
-	
+	g_signal_connect(
+		G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),		
+		"key-press-event",
+		G_CALLBACK(player_key_press),
+		NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }

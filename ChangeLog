@@ -1,5 +1,17 @@
+23-09-2004 Qball <Qball@qballcow.nl>
+	* src/player.c:		Added key-press event handler.
+	* src/player.c:		Added winamp key bindings (up/down ->volumn,
+	left/right -> seek)
+
+20-09-2004 Qball <Qball@qballcow.nl>
+	* glade/playlist.glade:	Added a clear button, with c as keybinding
+	* glade/gmpc.glade:	corrected tooltip.
+	* src/playlist2.c:	Added signal handle that removes the tooltip
+	when scrolling the window.
+	* src/playlist2.c:	Added a clear string function.
+
 07-09-2004 Qball <Qball@qballcow.nl>
-	* glade/playlist.glade:	Removed find button, this is allready dont
+	* glade/playlist.glade:	Removed find button, this is allready done
 	automagically
 	* glade/gmpc.glade:	Changed random keybinding to 's'/'ctrl-s' like
 	in winamp.

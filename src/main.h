@@ -146,3 +146,8 @@ void destroy_tray_icon();
 
 /* main.h*/
 void main_trigger_update();
+
+
+int  seek_n10s();
+int  seek_p10s();
+void volume_change(int diff);
