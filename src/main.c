@@ -77,7 +77,7 @@ void set_default_values()
     info.popup. pixbuf_width = 0;
     info.popup.pixbuf_height = 0;
     info.popup.popup_stay = FALSE;
-    
+    info.hidden = FALSE; 
     }
 
 

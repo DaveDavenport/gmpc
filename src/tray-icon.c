@@ -22,6 +22,11 @@ void exposed_signal(GtkWidget *event)
 		return;
 	}
 
+	if(info.hidden == TRUE)
+	{
+		GdkPoint points[6] = {{20,13},{20,19}, {20,16},{16,16},{16,13},{16,19}};
+		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
+	}
 
 	if(info.state == MPD_STATUS_STATE_STOP)
 		{
@@ -99,7 +104,11 @@ void tray_icon_destroyed()
 	{
 		g_idle_add((GSourceFunc)create_tray_icon, NULL);
 	}
-
+	if(info.hidden)
+	{
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+		info.hidden = FALSE;
+	}
 }
 
 void destroy_tray_icon()
@@ -112,7 +121,18 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1)
 	{
+		if(info.hidden)
+		{
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+		info.hidden = FALSE;
+		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+		}
+		else
+		{
+		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		info.hidden = TRUE;
+		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+		}
 	}
 	else if(event->button == 3)
 	{

@@ -58,6 +58,8 @@ typedef struct
 	/* tray icon*/
 	gboolean do_tray;
 	popup_struct popup;
+	/* misc*/
+	gboolean hidden;
 } internal_data;
 
 enum{
