@@ -114,8 +114,14 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	height= PANGO_PIXELS(height);
 
 	if(info.rounded_corners) height = height+10;
-	
-	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8 +12)
+
+	if(info.status->totalTime != 0)
+	{
+		height = height+12;
+	}
+
+
+	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
 	{
 		int x_tv,y_tv;
 		int x,y;
@@ -126,7 +132,7 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 		gdk_screen_get_monitor_geometry(
 				gtk_widget_get_screen(tv), monitor, &msize);
-		
+
 		/* calculate position */
 
 		gdk_window_get_origin(tv->window, &x_tv, &y_tv);
@@ -143,14 +149,18 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 			x= 0;
 		}
 		/* check up down.. if can't place it below, place it above */
-		if( y+height+8+12 > msize.height+msize.y) 
+		if( y+height+8 > msize.height+msize.y) 
 		{
-			y = y_tv -5-(height+8+12);
+			y = y_tv -5-(height+8);
 		}
 		/* place the window */
 		gtk_window_move(GTK_WINDOW(tip), x, y);
 
-		gtk_widget_set_usize(tip, width+8, height+8+12);
+
+
+
+
+		gtk_widget_set_usize(tip, width+8, height+8);
 	}
 
 	if(info.rounded_corners) height -= 10;
@@ -163,14 +173,14 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+5, width ,8);                              		
+					FALSE,4,height+5-12, width ,8);                              		
 			width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
 			gdk_draw_rectangle(widget->window, 
 					widget->style->mid_gc[GTK_STATE_NORMAL],
-					TRUE,4,height+5, width ,8);
+					TRUE,4,height+5-12, width ,8);
 			gdk_draw_rectangle(widget->window, 
 					widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+5, width ,8);
+					FALSE,4,height+5-12, width ,8);
 		}
 	}
 	g_free(tooltiptext);
@@ -239,7 +249,12 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
-	height= PANGO_PIXELS(height)+8+12;
+	height= PANGO_PIXELS(height)+8;
+	if(info.status->totalTime != 0)
+	{
+		height = height+12;
+	}
+
 	if(info.rounded_corners)
 	{
 		height = height+10;
@@ -368,8 +383,8 @@ void update_tray_icon()
 {
 
 	if(	info.do_tray_popup && info.do_tray && 
-		info.status != NULL && info.song != info.status->song &&
-		info.status->state != MPD_STATUS_STATE_STOP)
+			info.status != NULL && info.song != info.status->song &&
+			info.status->state != MPD_STATUS_STATE_STOP)
 	{
 		if(popup_timeout == -1 && tip == NULL)
 		{

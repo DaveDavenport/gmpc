@@ -3,4 +3,4 @@
   
   
   
-<category title="Playlist3" place="1"><item><attribute id="1099684971" priority="1" done="0" start_date="731890" enddate="99999999" notify="0" endtime="-60" last_edited="1099684971"/><summary>Make a list of keybindings</summary><comment>For help</comment></item></category><category title="Popup" place="0"><item><attribute id="1099685245" priority="1" done="0" start_date="731890" enddate="99999999" notify="0" endtime="-60" last_edited="1099685245"/><summary>Remove empty space when no progressbar</summary><comment></comment></item></category></gtodo>
+<category title="Playlist3" place="1"><item><attribute id="1099684971" priority="1" done="0" start_date="731890" enddate="99999999" notify="0" endtime="-60" last_edited="1099684971"/><summary>Make a list of keybindings</summary><comment>For help</comment></item></category><category title="Popup" place="0"><item><attribute id="1099685245" priority="1" done="1" start_date="731890" completed_date="731890" notify="0" last_edited="1099685949"/><summary>Remove empty space when no progressbar</summary><comment></comment></item></category></gtodo>
