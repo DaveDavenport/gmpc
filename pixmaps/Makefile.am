@@ -11,7 +11,7 @@ appicon_DATA = 	tray.png\
 	media-stop.png
 
 SOURCES =tray.png\
-	 gmpc\
+	 gmpc.png\
 	media-play.png\
 	media-pause.png\
 	media-next.png\
