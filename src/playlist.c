@@ -390,7 +390,7 @@ void fill_playlist_tree()
 		}
 		if(entity->type== MPD_INFO_ENTITY_TYPE_PLAYLISTFILE) {
 			mpd_PlaylistFile * pl = entity->info.playlistFile;
-			GtkTreeIter iter;bd 
+			GtkTreeIter iter; 
 			gtk_list_store_append(info.playlist_list, &iter);
 			gtk_list_store_set(info.playlist_list, &iter, 0, pl->path, -1);
 		}
