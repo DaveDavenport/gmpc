@@ -1,4 +1,3 @@
 * Rewrite the id3 info window.
 * Clean up the preferences window.
 * implement permission checking.
-* Better error handling.. not more then 1 popup.

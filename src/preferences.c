@@ -44,6 +44,7 @@ void update_outputs_settings();
 void create_preferences_window()
 	{
 	GtkWidget *dialog;
+	char *string = NULL;
 	if(running)
 	{
 		if(xml_preferences_window == NULL)
@@ -64,8 +65,9 @@ void create_preferences_window()
 
 	/* set info from struct */
 	/* hostname */
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry")), 
-			cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
+	string = cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry")), string);
+	cfg_free_string(string);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")), 
 			cfg_get_single_value_as_int_with_default(config, "connection","portnumber",6600));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")), 
@@ -94,7 +96,6 @@ void create_preferences_window()
 	update_tray_settings();
 	update_auth_settings();
 
-	set_display_settings();
 
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
@@ -108,41 +109,40 @@ void create_preferences_window()
 
 	}
 
-void update_display_settings()
+
+
+void set_playlist_format()
 {
-	gchar *temp;
-	temp = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
-	cfg_set_single_value_as_string(config, "player","display_markup",temp);
-	g_free(temp);
-	temp = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
-	cfg_set_single_value_as_string(config, "playlist", "markup", temp);
-	g_free(temp);
+	char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "markup",DEFAULT_PLAYLIST_MARKUP);
+	char *format = edit_song_markup(string);
+	cfg_free_string(string);
+	if(format != NULL)
+	{
+		printf("new value: %s\n",format);
+		cfg_set_single_value_as_string(config, "playlist","markup",format);
+	}
+	g_free(format);
 }
 
-void set_display_settings()
+void set_player_format()
 {
-	char *escaped = g_strescape(cfg_get_single_value_as_string_with_default(config, "player", "display_markup",
-				"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),"");
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), escaped);
-	g_free(escaped);
-	escaped = g_strescape(cfg_get_single_value_as_string_with_default(config, "playlist", "markup", DEFAULT_PLAYLIST_MARKUP), "");
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), escaped);
-	g_free(escaped);
+	char *string = cfg_get_single_value_as_string_with_default(config, "player", "display_markup",	DEFAULT_PLAYER_MARKUP);
+	char *format = edit_song_markup(string);
+	cfg_free_string(string);
+
+	if(format != NULL)
+	{
+		printf("new value: %s\n",format);
+		cfg_set_single_value_as_string(config, "player","display_markup",format);
+	}
+	g_free(format);
 }
+
 
 void set_display_default_sd()
 {
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), DEFAULT_PLAYER_MARKUP);
 }
-void set_display_default_pl()
-{
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), DEFAULT_PLAYLIST_MARKUP);
-}
-void set_display_default_sb()
-{
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")),"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");		
-}
-
 
 /* destory the preferences window */
 void preferences_window_destroy()
@@ -185,7 +185,7 @@ void preferences_window_disconnect(GtkWidget *but)
 {
 	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
 	disconnect_to_mpd();
-/*	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");*/
+	/*	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");*/
 }
 
 /* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
@@ -340,13 +340,14 @@ void xfade_time_changed(GtkSpinButton *but)
 /* this sets all the settings in the authentification area preferences correct */
 void update_auth_settings()
 {
+	char *string = 	cfg_get_single_value_as_string_with_default(config, "connection","password", "");
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(xml_preferences_window, "ck_auth"), 
 			cfg_get_single_value_as_int_with_default(config, "connection", "useauth", 0));
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), 
 			cfg_get_single_value_as_int_with_default(config, "connection", "useauth", 0));
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),
-			cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),string);
+	cfg_free_string(string);
 }
 
 void osb_enable_tb(GtkToggleButton *but)

@@ -53,16 +53,20 @@ void disconnect_callback(MpdObj *mi)
 /* the functiont that connects to mpd */
 int connect_to_mpd()
 {
+	char *string = NULL;
 	scroll.exposed = 1;
 	info.playlist_playtime = 0;
-
-	mpd_ob_set_hostname(connection,cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
+	string =cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
+	mpd_ob_set_hostname(connection,string);
+	cfg_free_string(string);
 	mpd_ob_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
 	mpd_ob_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
 
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
-		mpd_ob_set_password(connection, cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
+		string = cfg_get_single_value_as_string_with_default(config, "connection","password", "");
+		mpd_ob_set_password(connection,string);
+		cfg_free_string(free);
 	}
 	else
 	{

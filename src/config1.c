@@ -108,6 +108,13 @@ xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
 	return NULL;                                     	
 }
 
+void cfg_free_string(char *string)
+{
+	if(string != NULL)
+	{
+		xmlFree(string);
+	}
+}
 
 char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 {
@@ -133,12 +140,15 @@ char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class,
 int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 {
 	char * temp = cfg_get_single_value_as_string(cfg,class,key);
+	int result = 0;
 	if(temp == NULL)
 	{
 		return CFG_INT_NOT_DEFINED;
 	}
 	/* make it return an error */
-	return atoi(temp);
+	result = atoi(temp);
+	xmlFree(temp);
+	return result;
 }
 
 void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
@@ -162,12 +172,15 @@ int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char 
 float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
 {
 	char * temp = cfg_get_single_value_as_string(cfg,class,key);
+	float result = 0;
 	if(temp == NULL)
 	{
 		return CFG_INT_NOT_DEFINED;
 	}
 	/* make it return an error */
-	return (float)g_ascii_strtod(temp,NULL);
+	result = g_ascii_strtod(temp,NULL);
+	xmlFree(temp);
+	return result;
 }
 
 void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, float value)

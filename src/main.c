@@ -229,6 +229,8 @@ int main (int argc, char **argv)
 	/*
 	 * run the main loop 
 	 */
+
+
 	gtk_main ();
 	stop = time(NULL);
 	printf("down: %llu\nup: %llu\ntotal: %llu\n",
@@ -304,6 +306,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	gchar buffer[1024];
 	g_print("playlist changed\n");
 	old_length = info.playlist_length;
+	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
 	while(data != NULL)
@@ -337,7 +340,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					info.playlist_playtime += data->value.song->time;
 				}
 				strfsong (buffer, 1024,
-						cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
+						string,
 						data->value.song);						
 		
 				gtk_list_store_set (pl2_store, &iter,
@@ -364,7 +367,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 			}
 			gtk_list_store_append (pl2_store, &iter);
 			strfsong (buffer, 1024,
-					cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
+					string,
 					data->value.song);
 
 			gtk_list_store_set (pl2_store, &iter,
@@ -398,7 +401,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		old_length--;
 	}
 	pl3_highlight_song_change ();
-
+	cfg_free_string(string);
 	info.playlist_id = new_playlist_id;
 	info.playlist_length = mpd_ob_playlist_get_playlist_length(connection);
 }

@@ -19,6 +19,7 @@ gmpc_SOURCES=\
 	vfs_download.c\
 	debug_printf.c\
 	osb_browser.c\
+	edit_markup.c\
 	config1.c
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG

@@ -50,25 +50,33 @@ void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 void time_exposed(GtkWidget *window)
 {
 	gint height, width;
+	GtkRequisition req;
 	pango_layout_get_size(time_layout, &width, &height);
 	width  = width/PANGO_SCALE;
 	height = height/PANGO_SCALE;
+	gtk_widget_size_request(window, &req);
+
+	
+	if(height+6 != req.height || width+6 > req.width)
+	{
+		gtk_widget_set_size_request(window,width+6,height+6);	
+	}                                                       	
 
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->base_gc[GTK_STATE_NORMAL],
 			TRUE,
 			0,0,
-			50,23);
+			req.width,req.height);
 	gdk_draw_layout(GDK_DRAWABLE(window->window),
 			window->style->text_gc[GTK_STATE_NORMAL],
-			MAX(0,(50-width)/2),MAX(0, (23-height)/2) ,
+			MAX(0,(req.width-width)/2),MAX(0, (req.height-height)/2) ,
 			time_layout);
 
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->dark_gc[GTK_STATE_NORMAL],
 			FALSE,
 			0,0,
-			49,22);
+			req.width-1,req.height-1);
 
 }
 
@@ -77,21 +85,28 @@ void time_exposed(GtkWidget *window)
 void display_exposed(GtkWidget *window)
 {
 	int width, height;
+	GtkRequisition req;
+	gtk_widget_size_request(window, &req);
 	g_signal_handler_block(G_OBJECT(window), expose_display_id);
 	pango_layout_get_size(layout, &width, &height);
 	width  = width/PANGO_SCALE;
 	height = height/PANGO_SCALE;
 
+	if(height+6 > req.height)
+	{
+		gtk_widget_set_size_request(window,-1,height+6);
+	}
+
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->base_gc[GTK_STATE_NORMAL],
 			TRUE,
 			0,0,
-			DISPLAY_WIDTH,23);                            
+			DISPLAY_WIDTH,req.height);                            
 	if(width <= DISPLAY_WIDTH-5)
 	{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
-			3, MAX(0, (23-height)/2),
+			3, MAX(0, (req.height-height)/2),
 			layout);
 	}
 	else{
@@ -99,20 +114,20 @@ void display_exposed(GtkWidget *window)
 		{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
-			-scroll.pos, MAX(0, (23-height)/2),
+			-scroll.pos, MAX(0, (req.height-height)/2),
 			layout);
 		}
 		else{
 			gdk_draw_layout(GDK_DRAWABLE(window->window), 
 					window->style->text_gc[GTK_STATE_NORMAL], 
-					-scroll.pos, MAX(0, (23-height)/2),
+					-scroll.pos, MAX(0, (req.height-height)/2),
 					layout);
 
 
 
 			gdk_draw_layout(GDK_DRAWABLE(window->window), 
 					window->style->text_gc[GTK_STATE_NORMAL], 
-					(-scroll.pos+width),MAX(0, (23-height)/2),
+					(-scroll.pos+width),MAX(0, (req.height-height)/2),
 					layout);
 		}
 
@@ -127,7 +142,7 @@ void display_exposed(GtkWidget *window)
 			window->style->dark_gc[GTK_STATE_NORMAL],
 			FALSE,
 			0,0,
-			DISPLAY_WIDTH-1,22);                              
+			DISPLAY_WIDTH-1,req.height-1);                              
 	g_signal_handler_unblock(G_OBJECT(window), expose_display_id);
 }	
 gboolean update_msg()
@@ -364,10 +379,9 @@ void player_state_changed(int old_state, int state)
 	else
 	{
 		gchar buffer[1024];
-		strfsong(buffer, 1024, 
-				cfg_get_single_value_as_string_with_default(config, "player","display_markup",
-					"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-				mpd_ob_playlist_get_current_song(connection));
+		char *string =cfg_get_single_value_as_string_with_default(config, "player","display_markup",DEFAULT_PLAYER_MARKUP);
+		strfsong(buffer, 1024,string,mpd_ob_playlist_get_current_song(connection));
+		cfg_free_string(string);
 		msg_set_base(buffer);
 	}
 
@@ -385,10 +399,9 @@ void player_song_changed(int oldsong, int newsong)
 	else
 	{
 		gchar buffer[1024];
-		strfsong(buffer, 1024, 
-				cfg_get_single_value_as_string_with_default(config, "player","display_markup",
-					"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-				mpd_ob_playlist_get_current_song(connection));
+		char *string = cfg_get_single_value_as_string_with_default(config, "player","display_markup",DEFAULT_PLAYER_MARKUP);
+		strfsong(buffer, 1024, string,mpd_ob_playlist_get_current_song(connection));
+		cfg_free_string(string);
 		msg_set_base(buffer);
 	}
 }

@@ -1,5 +1,14 @@
+26-02-2005 Qball <qball@qballcow.nl>
+	* glade/preferences.glade:	Cleaned up layout a bit.
+	* fixed not free'ed memory from config
+
 25-02-2005 Qball <Qball@qballcow.nl>
+	* started working on format editor
+	* src/preferences.[c|glade]: Now uses the format editor for the
+	playlist and player string.
 	* src/main.c:		error window forced to one instance.
+	* src/player.c:		time box now resizes with font size.. (width
+	and height) title box only height.
 	* src/preferences.c:	output isn't hidden when not availible but
 	made insensitive
 
