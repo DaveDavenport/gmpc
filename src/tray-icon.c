@@ -128,8 +128,8 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),player_wsize.width, player_wsize.height);
 			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
 
-
-
+			if(info.sb_hidden) song_browser_create();
+			if(info.pl2_hidden) create_playlist2();
 
 			info.hidden = FALSE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
@@ -143,6 +143,18 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+			
+			if(info.sb_hidden)
+			{
+				sb_close();
+				/* make sure its showed again */
+				info.sb_hidden = TRUE;
+			}
+ 			if(info.pl2_hidden)
+			{
+				hide_playlist2();      		
+				info.pl2_hidden = TRUE;
+			}
 		}
 	}
 	else if (event->button == 2)

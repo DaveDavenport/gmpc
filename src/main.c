@@ -121,6 +121,10 @@ set_default_values ()
 	info.hidden = FALSE;
 	info.mpdSong = NULL;
 
+	/* */
+	info.sb_hidden = FALSE;
+	info.pl2_hidden = FALSE;
+	
 	/*
 	 * updating 
 	 */

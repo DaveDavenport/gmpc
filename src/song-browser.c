@@ -325,6 +325,7 @@ sb_do_search ()
 void
 sb_close ()
 {
+  info.sb_hidden = FALSE;
   if (sb_xml != NULL)
   {
 	gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), &sb_wsize.x, &sb_wsize.y);
@@ -554,6 +555,7 @@ song_browser_create ()
   GtkCellRenderer *renderer;
   GtkWidget *tree;
   GtkTreeViewColumn *column;
+  info.sb_hidden = TRUE;
   if (sb_xml != NULL)
     {
 	    gtk_window_move(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), sb_wsize.x, sb_wsize.y);

@@ -1,4 +1,6 @@
 09-07-2004 Qball <Qball@qballcow.nl>
+	* hide/unhide now hides all windows (except preferences) and reshows them again.
+	* Saving position and size of all windows (exept pref)
 	* src/song-browser.c:	Fixed warning when disconnecting
 	* src/tray-icon.c:	make sure that the tooltip is updated.
 	* glade/gmpc.glade:	Added tooltips to all the buttons in the

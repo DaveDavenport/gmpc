@@ -67,6 +67,8 @@ typedef struct
 	popup_struct popup;
 	/* misc*/
 	gboolean hidden;
+	gboolean pl2_hidden;
+	gboolean sb_hidden;
 } internal_data;
 
 enum{
