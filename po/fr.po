@@ -1,256 +1,267 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# translation of gmpc.
+# Copyright (C) 2004 THE gmpc'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gmpc package.
+# <>, 2004.
+# , fuzzy
+# <>, 2004.
+# 
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-07-04 11:31+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2004-07-04 00:28+0200\n"
+"Last-Translator: Mathieu Doidy <mdoidy@roulaize.net>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "Une interface gnome pour le démon mpd"
 
 #. set up tray icon
 #: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:18 src/player.c:123
 #: src/player.c:266 src/player.c:267 src/player.c:287 src/tray-icon.c:74
 #: src/tray-icon.c:160 src/tray-icon.c:188
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "Gnome Music Player Client"
 
 #: glade/gmpc.glade.h:1 glade/add-browser.glade.h:1
 #: glade/open-location.glade.h:1 glade/playlist.glade.h:1
 msgid "*"
-msgstr ""
+msgstr "*"
 
 #: glade/gmpc.glade.h:2
 msgid "<b>Crossfade:</b>"
-msgstr ""
+msgstr "<b>Fondu enchaîné</b>"
 
 #: glade/gmpc.glade.h:3
 msgid "<b>Notification Area Icon</b>"
-msgstr ""
+msgstr "<b>Icône de la zone de notification</b>"
 
 #: glade/gmpc.glade.h:4
 msgid "<b>PopUp</b>"
-msgstr ""
+msgstr "<b>PopUp</b>"
 
 #: glade/gmpc.glade.h:5
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 " in order to change these settings</i></span>"
 msgstr ""
+"<span size=\"small\"><i>La connexion doit être établie\n"
+" pour pouvoir changer ces paramètres</i></span>"
 
 #: glade/gmpc.glade.h:7
 msgid ""
 "<span size=\"small\">Copyright ©  2003-2004 Qball Cow\n"
 "<i>Qball@qballcow.nl</i></span>"
 msgstr ""
+"<span size=\"small\">Copyright ©·  2003-2004 Qball Cow\n"
+"<i>Qball@qballcow.nl</i></span>"
 
 #: glade/gmpc.glade.h:9
 msgid ""
 "<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
 "0.11.1 <i>Intelligence is only skin deep</i>"
 msgstr ""
+"<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
+"0.11.1 <i>Intelligence is only skin deep</i>"
 
 #: glade/gmpc.glade.h:11
 msgid ""
 "A frontend for the music player daemon from:\n"
 "<span color=\"blue\"><u>www.musicpd.org</u></span>"
 msgstr ""
+"Une interface pour le démon music player de:\n"
+"<span color=\"blue\"><u>www.musicpd.org</u></span>"
 
 #: glade/gmpc.glade.h:13
 msgid "Album:"
-msgstr ""
+msgstr "Album:"
 
 #: glade/gmpc.glade.h:14
 msgid "Artist:"
-msgstr ""
+msgstr "Artiste:"
 
 #: glade/gmpc.glade.h:15
 msgid "Configure gmpc"
-msgstr ""
+msgstr "Configurer gmpc"
 
 #: glade/gmpc.glade.h:16
 msgid "Enable"
-msgstr ""
+msgstr "Activer"
 
 #: glade/gmpc.glade.h:17
 msgid "Filename:"
-msgstr ""
+msgstr "Nom de fichier:"
 
 #: glade/gmpc.glade.h:19
 msgid "Host:"
-msgstr ""
+msgstr "Hôte:"
 
 #: glade/gmpc.glade.h:20
 msgid "Length:"
-msgstr ""
+msgstr "Longueur:"
 
 #: glade/gmpc.glade.h:21
 msgid "Lower Left Corner"
-msgstr ""
+msgstr "Coin en bas à gauche"
 
 #: glade/gmpc.glade.h:22
 msgid "Lower Right Corner"
-msgstr ""
+msgstr "Coin en bas à droite"
 
 #: glade/gmpc.glade.h:23
 msgid "Open the playlist"
-msgstr ""
+msgstr "Ouvrir la liste de lecture"
 
 #: glade/gmpc.glade.h:24
 msgid "Password:"
-msgstr ""
+msgstr "Mot de passe:"
 
 #: glade/gmpc.glade.h:25
 msgid "Port:"
-msgstr ""
+msgstr "Port:"
 
 #: glade/gmpc.glade.h:26
 msgid "Position:"
-msgstr ""
+msgstr "Position:"
 
 #: glade/gmpc.glade.h:27
 msgid "Search for songs from this artist in the current playlist"
 msgstr ""
+"Chercher des chansons de cette artiste dans la liste de lecture courante"
 
 #: glade/gmpc.glade.h:28
 msgid "Search for songs with this title in the current playlist"
-msgstr ""
+msgstr "Chercher des chansons ayant ce titre dans la liste de lecture courante"
 
 #: glade/gmpc.glade.h:29
 msgid "Show State"
-msgstr ""
+msgstr "Afficher l'état"
 
 #: glade/gmpc.glade.h:30
 msgid "Timeout (s):"
-msgstr ""
+msgstr "Délai(s) d'expiration:"
 
 #: glade/gmpc.glade.h:31
 msgid "Timeout:"
-msgstr ""
+msgstr "Délai d'expiration:"
 
 #: glade/gmpc.glade.h:32
 msgid "Title:"
-msgstr ""
+msgstr "Titre:"
 
 #: glade/gmpc.glade.h:33
 msgid "Toggle Repeat <ctrl+e> or <e>"
-msgstr ""
+msgstr "Basculer le mode Répétition <ctrl+e> ou <e>"
 
 #: glade/gmpc.glade.h:34
 msgid "Toggle random <ctrl+a> or <a>"
-msgstr ""
+msgstr "Basculer le mode aléatoire <ctrl+a> ou <a>"
 
 #: glade/gmpc.glade.h:35
 msgid "Track:"
-msgstr ""
+msgstr "Piste:"
 
 #: glade/gmpc.glade.h:36
 msgid "Upper Left Corner"
-msgstr ""
+msgstr "Coin en haut à gauche"
 
 #: glade/gmpc.glade.h:37
 msgid "Upper Right Corner"
-msgstr ""
+msgstr "Coin en haut à droite"
 
 #: glade/gmpc.glade.h:38
 msgid "_About"
-msgstr ""
+msgstr "_À propos"
 
 #: glade/gmpc.glade.h:39
 msgid "_Autoconnect"
-msgstr ""
+msgstr "Connexion _automatique"
 
 #: glade/gmpc.glade.h:40
 msgid "_Connect"
-msgstr ""
+msgstr "_Connecter"
 
 #: glade/gmpc.glade.h:41
 msgid "_Connection"
-msgstr ""
+msgstr "_Connexion"
 
 #: glade/gmpc.glade.h:42
 msgid "_Disconnect"
-msgstr ""
+msgstr "_Déconnecter"
 
 #: glade/gmpc.glade.h:43
 msgid "_Misc"
-msgstr ""
+msgstr "_Divers"
 
 #: glade/gmpc.glade.h:44
 msgid "_Next"
-msgstr ""
+msgstr "_Suivant"
 
 #: glade/gmpc.glade.h:45
 msgid "_Play/Pause"
-msgstr ""
+msgstr "_Lecture/Pause"
 
 #: glade/gmpc.glade.h:46
 msgid "_Prev"
-msgstr ""
+msgstr "_Préc"
 
 #: glade/gmpc.glade.h:47
 msgid "_Server settings"
-msgstr ""
+msgstr "_Paramètres du serveur"
 
 #: glade/gmpc.glade.h:48
 msgid "_Stop"
-msgstr ""
+msgstr "_Stop"
 
 #: glade/gmpc.glade.h:49
 msgid "_Use Authentication"
-msgstr ""
+msgstr "_Utiliser l'authentification"
 
 #: glade/gmpc.glade.h:50
 msgid "enable crossfade"
-msgstr ""
+msgstr "activer le fondu enchainé"
 
 #: glade/gmpc.glade.h:51
 msgid "fade time (s):"
-msgstr ""
+msgstr "temps de fondu:"
 
 #: glade/gmpc.glade.h:52
 msgid "gmpc - Preferences"
-msgstr ""
+msgstr "gmpc - Préférences"
 
 #: glade/gmpc.glade.h:53
 msgid "gmpc - id3 info"
-msgstr ""
+msgstr "gmpc - info id3"
 
 #: glade/gmpc.glade.h:54
 msgid "localhost"
-msgstr ""
+msgstr "localhost"
 
 #: glade/gmpc.glade.h:55
 msgid "n/a"
-msgstr ""
+msgstr "n/a"
 
 #: glade/add-browser.glade.h:2
 msgid "Append selection to the playlist <Insert>"
-msgstr ""
+msgstr "Ajouter la sélection à la liste de lecture <Inser>"
 
 #: glade/add-browser.glade.h:3
 msgid "Browse by:"
-msgstr ""
+msgstr "Parcourir par:"
 
 #: glade/add-browser.glade.h:4
 msgid "Close the window <Escape or ctrl-w>"
-msgstr ""
+msgstr "Fermer la fenêtre <Echap ou ctrl-w>"
 
 #: glade/add-browser.glade.h:5
 msgid "Enter search query  <ctrl+l to grab focus>"
-msgstr ""
+msgstr "Entrer la requête de recherche  <ctrl+l pour activer le focus>"
 
 #: glade/add-browser.glade.h:6
 msgid ""
@@ -258,22 +269,25 @@ msgid ""
 "Artist\n"
 "Search Results"
 msgstr ""
+"Nom du fichier\n"
+"Artiste\n"
+"Résultats de la recherche"
 
 #: glade/add-browser.glade.h:9
 msgid "Replace playlist with selection <ctrl+Insert>"
-msgstr ""
+msgstr "Remplacer la liste de lecture par la sélection <ctrl+Inser>"
 
 #: glade/add-browser.glade.h:10
 msgid "Song Browser"
-msgstr ""
+msgstr "Navigateur de chansons"
 
 #: glade/add-browser.glade.h:11 glade/open-location.glade.h:5
 msgid "_Append"
-msgstr ""
+msgstr "_Ajouter"
 
 #: glade/add-browser.glade.h:12 glade/open-location.glade.h:6
 msgid "_Replace"
-msgstr ""
+msgstr "_Remplacer"
 
 #: glade/add-browser.glade.h:13
 msgid ""
@@ -282,75 +296,89 @@ msgid ""
 "for song title\n"
 "for filename"
 msgstr ""
+"pour les artistes\n"
+"pour les albums\n"
+"pour le titre de la chanson\n"
+"pour le nom du fichier"
 
 #: glade/open-location.glade.h:2
 msgid ""
 "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
 "span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: glade/open-location.glade.h:3
 msgid "Add Location"
-msgstr ""
+msgstr "Ajouter un emplacement"
 
 #: glade/open-location.glade.h:4
 msgid "Stream:"
-msgstr ""
+msgstr "Flux:"
 
 #: glade/playlist.glade.h:2
 msgid "<enter playlist name>"
-msgstr ""
+msgstr "<entrer le nom de la liste de lecture>"
 
 #: glade/playlist.glade.h:3
 msgid ""
 "<span size=\"x-small\"><i>This will overwrite any playlist with the same "
 "name.</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Toutes les listes de lecture avec le même "
+"nomseront écrasées.</i></span>"
 
 #: glade/playlist.glade.h:4
 msgid "Add _location"
-msgstr ""
+msgstr "Ajouter un _emplacement"
 
 #: glade/playlist.glade.h:5
 msgid ""
 "Add a stream. (you can drop a link directly from your browser on the button)"
 msgstr ""
+"Ajouter un flux. (vous pouvez glisser un lien directement depuis votre "
+"navigateur sur le bouton)"
 
 #: glade/playlist.glade.h:6
 msgid "Removes the selected songs. <Del>"
-msgstr ""
+msgstr "Supprimer les chansons sélectionnées <Suppr>"
 
 #: glade/playlist.glade.h:7
 msgid "Save Playlist"
-msgstr ""
+msgstr "Enregistrer la liste de lecture"
 
 #: glade/playlist.glade.h:8
 msgid "Saves the current playlist."
-msgstr ""
+msgstr "Enregistrer la liste de lecture courante"
 
 #: glade/playlist.glade.h:9
 msgid "Search the playlist (supports * and ?) <ctrl+l to select> "
 msgstr ""
+"Chercher dans la liste de lecture (* et ? peuvent être utilisés) <ctrl+l "
+"pour sélectionner>"
 
 #: glade/playlist.glade.h:10
 msgid "Search:"
-msgstr ""
+msgstr "Chercher:"
 
 #: glade/playlist.glade.h:11
 msgid "Show detailed information about the selected song <ctrl+i>"
 msgstr ""
+"Afficher des informations détaillées à propos de la chanson sélectionnée "
+"<ctrl+i>"
 
 #: glade/playlist.glade.h:12
 msgid "_Save"
-msgstr ""
+msgstr "_Enregistrer"
 
 #: glade/playlist.glade.h:13
 msgid "gmpc - Playlist"
-msgstr ""
+msgstr "gmpc - Liste de lecture"
 
 #: glade/playlist.glade.h:14
 msgid "name:"
-msgstr ""
+msgstr "nom:"
 
 #: src/callback.c:23
 msgid ""
@@ -399,8 +427,9 @@ msgid "Are you sure you want to clear the playlist?"
 msgstr ""
 
 #: src/popup.c:24
+#, fuzzy
 msgid "<b><i>Stopped</i></b>"
-msgstr ""
+msgstr "<b>PopUp</b>"
 
 #: src/popup.c:27
 msgid "<b><i>Paused</i></b>"
@@ -415,8 +444,9 @@ msgid "No Song found\n"
 msgstr ""
 
 #: src/mpdinteraction.c:52
+#, fuzzy
 msgid "gmpc - Disconnected"
-msgstr ""
+msgstr "_Déconnecter"
 
 #: src/mpdinteraction.c:91
 msgid "gmpc - Failed to connect, please check the connection settings."
@@ -427,28 +457,46 @@ msgid "You don't have enough permission to access mpd."
 msgstr ""
 
 #: src/open-location.c:83
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Failed to read the file.</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: src/open-location.c:108
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Failed to open file.</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: src/open-location.c:135
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Found playlist file</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Toutes les listes de lecture avec le même "
+"nomseront écrasées.</i></span>"
 
 #: src/open-location.c:156
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Unkown file found.</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: src/open-location.c:164
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: src/open-location.c:181
+#, fuzzy
 msgid "<span size=\"x-small\"><i>Invalid link format</i></span>"
 msgstr ""
+"<span size=\"x-small\"><i>Entrer un flux local ou distant ou une liste de "
+"lecture</i></span>"
 
 #: src/song-browser.c:85
 msgid "Are you sure you want to delete the selected playlist?"
