@@ -17,7 +17,7 @@ int debug = FALSE;
 int update_interface();
 /* the ID of the update timeout*/
 guint update_timeout = 0;
-
+void init_stock_icons();
 extern GtkListStore *pl2_store;
 
 
@@ -111,7 +111,10 @@ int main(int argc, char **argv)
 	load_config();    
 	/* initialize gtk */
 	gtk_init(&argc, &argv);    
+	/* stock icons */
+	init_stock_icons();
 
+	
 	/* create the main window, This is done before anything else (but after command line check)*/
 	create_player();
 	init_playlist2();
@@ -278,4 +281,35 @@ int update_interface()
 	if(info.status->state != MPD_STATUS_STATE_UNKNOWN) info.song = info.status->song;
 	if(info.status->state == MPD_STATUS_STATE_STOP)  info.song = -1;    
 	return TRUE;
+}
+
+
+
+void init_stock_icons()
+{
+	GtkIconFactory *factory;
+	GdkPixbuf *pb;
+	GtkIconSet *set;
+	factory = gtk_icon_factory_new();	
+
+	/* add media-audiofile */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-audiofile.png", NULL);
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-audiofile", set);
+	g_object_unref(G_OBJECT(pb));
+
+	/* add media-stream */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-stream.png", NULL);
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-stream", set);
+	g_object_unref(G_OBJECT(pb));
+
+	/* add media-artist */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-artist.png", NULL);
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-artist", set);
+	g_object_unref(G_OBJECT(pb));
+	
+
+	gtk_icon_factory_add_default(factory);
 }
