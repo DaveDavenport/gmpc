@@ -25,6 +25,8 @@ gmpc_SOURCES=\
 	open-location.c\
 	open-location.h\
 	list_tooltip.c\
+	mm-keys.c\
+	mm-keys.h\
 	main.h
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"

@@ -9,7 +9,7 @@
 #include "song-browser.h"
 #include "main.h"
 #include "strfsong.h"
-
+#include "mm-keys.h"
 /*
  * the xml fle pointer to the player window 
  */
@@ -143,6 +143,7 @@ set_default_values ()
 int
 main (int argc, char **argv)
 {
+	MmKeys *keys = NULL;
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -185,6 +186,16 @@ main (int argc, char **argv)
 		create_tray_icon ();
 	update_interface ();
 
+	/*
+	 * Keys
+	 */
+	keys = mmkeys_new();
+	g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
+
+
+	
 	/*
 	 * run the main loop 
 	 */

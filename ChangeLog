@@ -1,3 +1,12 @@
+25-08-2004 Qball <Qball@qballcow.nl>
+	* src/mm-keys.[c|h]:	Added primary support for mm-keys.
+
+23-08-2004 Qball <Qball@qballcow.nl>
+	* src/mpdinteraction.c:	Title is set when connecting. (To "GMPC - Connected")
+	* src/tray-icon.c:			Tooltip doesnt use monospace font anymore.
+	* src/tray-icon.c:			Tooltip resizes when needed (code somehow dissapeared)
+	* src/popup.c:			Made sure the tooltip has a nice line around it.
+
 20-08-2004 Qball <Qball@qballcow.nl>
 	* src/tray-icon.c:	Tooltip resizes when needed
 	* src/tray-icon.c:	Tooltip uses monospace font
