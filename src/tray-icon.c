@@ -11,9 +11,11 @@ EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
 GtkTooltips *tps = NULL;
+
+/* this draws the actual image to the window */
+/* gtk will call this function when the image is exposed and the data is gone */
 void exposed_signal(GtkWidget *event)
 	{
-//	GdkPixbuf *state = NULL;
 	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
 	
 	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);		
@@ -33,15 +35,11 @@ void exposed_signal(GtkWidget *event)
 		{
 		GdkPoint points[5] = {{4,1},{4,8}, {11,8},{11,1},{4,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
-
-			
-//		state =  gdk_pixbuf_new_from_file(PIXMAP_PATH"media-stop.png", NULL);
 		}
 	else if(info.state == MPD_STATUS_STATE_PLAY)
 	{
 		GdkPoint points[4] = {{5,1},{5,11}, {10,6},{5,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 4);
-//		state =  gdk_pixbuf_new_from_file(PIXMAP_PATH"media-play.png", NULL);
 	}
 	else if(info.state == MPD_STATUS_STATE_PAUSE)
 	{
@@ -49,8 +47,6 @@ void exposed_signal(GtkWidget *event)
 		GdkPoint points2[5] = {{8,1},{8,8}, {10,8},{10,1},{8,1}};	
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points2, 5);
-		
-//	state =  gdk_pixbuf_new_from_file(PIXMAP_PATH"media-pause.png", NULL);
 	}
 	else return;
 
@@ -74,16 +70,6 @@ void update_tray_icon()
 					gchar buffer[1024];
 					strfsong(buffer, 1024, preferences.markup_main_display, song);
 					str = g_strdup(buffer);
-/*
-					if(song->title != NULL && song->artist != NULL)
-					{
-						str = g_strdup_printf("%s - %s", song->artist, song->title);
-					}
-					else
-					{
-						str = remove_extention_and_basepath(song->file);
-					}
-					*/
 				}
 
 			}
@@ -95,10 +81,13 @@ void update_tray_icon()
 		{
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
-
-
 	}
 }
+
+/* if the item was destroyed and the user still wants an icon recreate it */
+/* if the main window was hidden and the icon was destroyed, popup the main window because otherwise you wouldnt be able to 
+ * get it back
+ */
 
 void tray_icon_destroyed()
 {
@@ -114,11 +103,17 @@ void tray_icon_destroyed()
 	}
 }
 
+/* destroy the tray icon */
 void destroy_tray_icon()
 {
 	gtk_widget_destroy(GTK_WIDGET(tray_icon));
 }
 
+/* wrong name: this handles clickes on the tray icon
+ * button1: present/hide window
+ * button2: play/pause
+ * button3: menu
+ */
 
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
@@ -136,6 +131,14 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
+	}
+	else if (event->button == 2)
+	{
+		play_song();
+
+
+
+
 	}
 	else if(event->button == 3)
 	{
