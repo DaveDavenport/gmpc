@@ -62,6 +62,7 @@ int disconnect_to_mpd()
 	
 	/* disconnect playlist */
 	pl2_disconnect();
+	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
