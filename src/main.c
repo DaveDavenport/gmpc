@@ -121,49 +121,49 @@ int update_interface()
     update_popup();
     /* check if there is an connection. (that is when connection == NULL) */    
     if(info.connection == NULL)
-	{
-	if(!preferences.autoconnect) return TRUE;
-	/* connect to mpd if that fails return this function */
-	if(connect_to_mpd())
+    {
+	    if(!preferences.autoconnect) return TRUE;
+	    /* connect to mpd if that fails return this function */
+	    if(connect_to_mpd())
 	    {
-	    /* make sure this is all set correct. just a little security */
+		    /* make sure this is all set correct. just a little security */
 
-	    info.connection = NULL;
-	    info.conlock = TRUE;
-	    return TRUE;
+		    info.connection = NULL;
+		    info.conlock = TRUE;
+		    return TRUE;
 	    }
-	else
-		{
-		 info.conlock = FALSE;
-	  	gtk_timeout_remove(update_timeout);
-		update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-		}
-	}
+	    else
+	    {
+		    info.conlock = FALSE;
+		    gtk_timeout_remove(update_timeout);
+		    update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
+	    }
+    }
     /* now start updating the rest */
     /* check if busy */
     if(info.conlock) return TRUE;
 
     /* ok save to update interface, no need to lock (yet)*/
-    
+
     /* check for new playlist and load it if needed */
     if(info.playlist_id != info.status->playlist)
-	{
-	if(load_playlist())
-		{
-		/* oeps error */
-		return TRUE;
-		}
-	}
+    {
+	    if(load_playlist())
+	    {
+		    /* oeps error */
+		    return TRUE;
+	    }
+    }
     /* update the playlist */
-	update_playlist();
+    update_playlist();
 
     /* update the player window */
     if(update_player())
-		{
-		/* error return */
-		return TRUE;
-		}
-    
+    {
+	    /* error return */
+	    return TRUE;
+    }
+
     /* return (must be true to keep timeout going) */
     /* set these to the good value. So there only updated when changed */
     info.playlist_id = info.status->playlist;

@@ -137,8 +137,6 @@ gboolean update_msg()
 			scroll.pos ++;
 
 		}
-//		else scroll.pos = 0;
-//		scroll.pos++;
 		gtk_widget_queue_draw(window);
 
 		scroll.exposed = FALSE;
@@ -354,10 +352,10 @@ void change_progress_update()
 			gchar *buf = NULL;
 			gdouble value = gtk_range_get_value(scale);
 			int newtime = (int)(info.status->totalTime*(double)(value/100));
-			mpd_sendSeekCommand(info.connection,info.status->song,value);
+/*			mpd_sendSeekCommand(info.connection,info.status->song,value);
 			mpd_finishCommand(info.connection);
 			if(check_for_errors()) return;
-
+*/
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
 				int min = (int)(newtime/60);
