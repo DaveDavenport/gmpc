@@ -9,10 +9,8 @@ GtkWidget *tray_image;
 GladeXML *tray_xml;
 
 GtkWidget *popup = NULL;
-/* we don't want to load the image for the popup everytime we display it.. so I keep the pixbuf open */
-GdkPixbuf *gmpc_image = NULL;
-gint pixbuf_width   = 0, pixbuf_height = 0;
 guint timeout       = 0;
+/* 0 = left up 1 is left down 2 = right up 3 = right down */
 
 gchar * get_string()
 {
@@ -66,38 +64,45 @@ gchar * get_string()
 /* this destroys the popup.. and set the timeout handler to 0 */
 int destroy_popup(GtkWidget *window)
 {
-	gtk_widget_destroy(window);
+        
+	gtk_widget_destroy(popup);
 	popup               = NULL;
 	timeout             = 0;
 	return FALSE;
 }
 /* if the image is clicked we (for now) want to remove it */
-int popup_clicked(GtkWidget *window)
+int popup_clicked(GtkWidget *window, GdkEventButton *event)
 {
-	g_source_remove(timeout);
-	destroy_popup(popup);
+	if(event->button == 1)
+	{
+		if(timeout)
+		{
+			g_source_remove(timeout);
+		}
+		destroy_popup(popup);
+	}
 	return FALSE;
 }
 /* this does the actual painting on the window */
-int paint_window(GtkWidget *popup)
+int paint_window(GtkWidget *drawing)
 {
 	PangoLayout *layout = NULL;
 	GtkStyle *style;
 	int w, h, text_height;
 	char *text          = get_string();
-	style               = popup->style;
-	layout  	    = gtk_widget_create_pango_layout(popup, NULL);
+	style               = drawing->style;
+	layout  	    = gtk_widget_create_pango_layout(drawing, NULL);
 
-	gtk_paint_box(style, popup->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
-			NULL, popup, "tooltip", 0,0,-1,-1);
+	gtk_paint_box(style, drawing->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+			NULL, drawing, "tooltip", 0,0,-1,-1);
 	/* draw the background + the border */
 	pango_layout_set_markup(layout,text, strlen(text));
 	/* draw the image */
-	gdk_draw_pixbuf(popup->window, NULL/*style->fg_gc[GTK_STATE_NORMAL]*/,
-			gmpc_image,
+	gdk_draw_pixbuf(drawing->window, NULL/*style->fg_gc[GTK_STATE_NORMAL]*/,
+			info.popup.gmpc_image,
 			0,0,
 			0,0,		
-			pixbuf_width, pixbuf_height,
+			info.popup.pixbuf_width, info.popup.pixbuf_height,
 			GDK_RGB_DITHER_NONE,0,0);
 
 	/* draw the text */
@@ -105,11 +110,11 @@ int paint_window(GtkWidget *popup)
 
 	h = PANGO_PIXELS(h);;
 
-	text_height = MAX(((pixbuf_height-h)/2) ,4);
-	gtk_paint_layout (style, popup->window, GTK_STATE_NORMAL, TRUE,
-			NULL, popup, "tooltip", 4+pixbuf_width, text_height,layout);
+	text_height = MAX(((info.popup.pixbuf_height-h)/2) ,4);
+	gtk_paint_layout (style, drawing->window, GTK_STATE_NORMAL, TRUE,
+			NULL, drawing, "tooltip", 4+info.popup.pixbuf_width, text_height,layout);
 	/* make sure we all see the result */
-	gtk_widget_show_all(popup);
+	gtk_widget_show_all(drawing);
 	g_free(text);
 	return TRUE;
 }
@@ -119,15 +124,17 @@ int paint_window(GtkWidget *popup)
 void popup_window()
 {
 	gint w, h;
+	GtkWidget *event;
+	GtkWidget *draw;
 	PangoLayout *layout = NULL;
 	char *text          = get_string();
 	if(popup != NULL)
 	{
-		g_source_remove(timeout);
+		if(timeout)g_source_remove(timeout);
 		destroy_popup(popup);
 	}
 	/* we need to do this once.. we keep it stored for later use */
-	if(gmpc_image == NULL)
+	if(info.popup.gmpc_image == NULL)
 	{
 		GdkPixbuf *temp;
 		temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc-tray.png", NULL);
@@ -135,51 +142,83 @@ void popup_window()
 		{
 			g_error("Failed to open gmpc_tray.png. Did you install it correctly?");
 		}
-		gmpc_image    = gdk_pixbuf_scale_simple(temp, 64,64,GDK_INTERP_HYPER);
+		info.popup.gmpc_image    = gdk_pixbuf_scale_simple(temp, 64,64,GDK_INTERP_HYPER);
+		if(info.popup.gmpc_image == NULL)
+		{
+			g_error("Failed to scale gmpc_tray.png. Did you install it correctly?");		
+		}
 		/* we don't need the original anymore */	
 		g_object_unref(temp);
 		/* we wont want this to be freeed anywhere */
-		g_object_ref(gmpc_image);
+		g_object_ref(info.popup.gmpc_image);
 		/* no need to get this all the time from the pixbuf */
 
-		pixbuf_width        = gdk_pixbuf_get_width(gmpc_image);
-		pixbuf_height       = gdk_pixbuf_get_height(gmpc_image);
+		info.popup.pixbuf_width        = gdk_pixbuf_get_width(info.popup.gmpc_image);
+		info.popup.pixbuf_height       = gdk_pixbuf_get_height(info.popup.gmpc_image);
 	}
 
 
 	popup  = gtk_window_new(GTK_WINDOW_POPUP);
-	
-	gtk_widget_set_app_paintable(popup, TRUE);
-	gtk_window_set_resizable(GTK_WINDOW(popup), FALSE);
-	gtk_widget_set_name(popup, "gtk-tooltips");
-
-	gtk_widget_ensure_style(popup);    
-
-	g_signal_connect(G_OBJECT(popup), "expose-event",
-			G_CALLBACK(paint_window), NULL);       
 
 	g_signal_connect(G_OBJECT(popup), "button-press-event",
 			G_CALLBACK(popup_clicked), NULL);       
+
+	event = gtk_event_box_new();
+	gtk_container_add(GTK_CONTAINER(popup), event);
+	draw  = gtk_drawing_area_new();
+
+	gtk_container_add(GTK_CONTAINER(event), draw);
+	gtk_window_set_resizable(GTK_WINDOW(popup), FALSE);
+	gtk_widget_set_name(draw, "gtk-tooltips");
+
+	gtk_widget_ensure_style(draw);    
+
+	g_signal_connect(G_OBJECT(draw), "expose-event",
+			G_CALLBACK(paint_window), NULL);       
 
 
 	layout = gtk_widget_create_pango_layout(popup, NULL);
 	pango_layout_set_markup(layout,text, strlen(text));
 
 	pango_layout_get_size (layout, &w, &h);
-	w = PANGO_PIXELS(w) + 12 + pixbuf_width;
-	h = MAX(PANGO_PIXELS(h) + 8, pixbuf_height);
+	w = PANGO_PIXELS(w) + 12 + info.popup.pixbuf_width;
+	h = MAX(PANGO_PIXELS(h) + 8, info.popup.pixbuf_height);
 
+	if(info.popup.position== 0) /* left upper corner */
+	{
+		gtk_window_move(GTK_WINDOW(popup), 0, 0);
+	}
+	else if(info.popup.position == 1) /* left down corner */
+	{
+		int height = gdk_screen_get_height(gdk_screen_get_default());     	
+		gtk_window_move(GTK_WINDOW(popup),0 ,height-h);
+	}
+	else if ( info.popup.position== 2) /* right upper corner */
+	{
+		int width = gdk_screen_get_width(gdk_screen_get_default());     	
+		gtk_window_move(GTK_WINDOW(popup),width-w,0);
+	}
+	else 
+	{
+		int width = gdk_screen_get_width(gdk_screen_get_default());     	
+		int height = gdk_screen_get_height(gdk_screen_get_default());     	
+		gtk_window_move(GTK_WINDOW(popup),width-w,height-h);
+
+	}
 	gtk_widget_set_usize(popup, w, h);
 	g_free(text);			
-	gtk_widget_show(popup);
+	gtk_widget_show_all(popup);
+	if(!info.popup.popup_stay)
+	{
 	timeout = gtk_timeout_add(5000, (GSourceFunc)destroy_popup, popup);
+	}
 }
 
 
 /* this function updates the trayicon on changes */
 void update_tray_icon()
 {
-	if(info.connection != NULL && info.status != NULL)
+	if(info.popup.do_popup && info.connection != NULL && info.status != NULL)
 	{
 		if(info.status->song != info.song)
 		{

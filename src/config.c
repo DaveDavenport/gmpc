@@ -71,7 +71,31 @@ void load_config()
 		info.do_tray = atoi(buf);
 		}
 	    }
-	    
+	else if(!strncmp(buffer, "do popup:", 9))
+	    {
+	    gchar *buf = g_strstrip(&buffer[9]);
+	    if(buf != NULL)
+		{
+		info.popup.do_popup = atoi(buf);
+		}
+	    }
+	else if(!strncmp(buffer, "popup pos:", 10))
+	    {
+	    gchar *buf = g_strstrip(&buffer[10]);
+	    if(buf != NULL)
+		{
+		info.popup.position = atoi(buf);
+		}                                	
+	    }                                    
+	else if(!strncmp(buffer, "popup stay:", 11))
+	    {
+	    gchar *buf = g_strstrip(&buffer[11]);
+	    if(buf != NULL)
+		{
+		info.popup.popup_stay = atoi(buf);
+		}                                	
+	    }                                    	
+	
 	bzero(buffer, 1024);
 	
     	}
@@ -98,6 +122,9 @@ void save_config()
     fprintf(fp, "filter field: %i\n", info.filter_field);    
     fprintf(fp, "filter entry: %s\n", info.filter_entry);    
     fprintf(fp, "do tray: %i\n", info.do_tray);    
+    fprintf(fp, "do popup: %i\n", info.popup.do_popup);   
+    fprintf(fp, "popup pos: %i\n", info.popup.position);
+    fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);
     fclose(fp);
     g_free(filename);    
     }

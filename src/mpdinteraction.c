@@ -5,7 +5,7 @@
 #include "main.h"
 
 /* the internall data structure */
-internal_data info = {NULL, NULL,NULL, TRUE,-1, -1, -1, -1, 1, NULL, NULL, FALSE, FALSE, "",0,NULL, NULL,NULL, NULL,NULL, NULL,NULL,"/", -1,0,0,FALSE};
+internal_data info = {NULL, NULL,NULL, TRUE,-1, -1, -1, -1, 1, NULL, NULL, FALSE, FALSE, "",0,NULL, NULL,NULL, NULL,NULL, NULL,NULL,"/", -1,0,0,FALSE, {1,0, NULL,0,0,FALSE}};
 
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 int update_mpd_status()
@@ -37,7 +37,6 @@ int disconnect_to_mpd()
     info.stats = NULL;
     
     info.connection = NULL;
-//    info.conlock = FALSE;
     msg_set_base("gmpc - Disconnected");
     gtk_timeout_remove(update_timeout);
     update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
@@ -58,9 +57,7 @@ int connect_to_mpd()
     {
     scroll.exposed = 1;
     info.song = -1;    
-	//msg_push_popup("Attempting to connect");
-//	while (gtk_events_pending ()) gtk_main_iteration();
-	if(debug)g_print("timeout = %.2f\n", preferences.timeout);
+    if(debug)g_print("timeout = %.2f\n", preferences.timeout);
     info.connection = mpd_newConnection(preferences.host, preferences.port, preferences.timeout);
     if(info.connection == NULL)
 	{

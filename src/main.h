@@ -2,6 +2,14 @@
 extern int debug;
 extern GladeXML *xml_main_window;
 typedef struct
+{
+	gboolean do_popup;
+	gint position;
+	GdkPixbuf *gmpc_image;
+	gint pixbuf_width, pixbuf_height;
+	gboolean popup_stay;
+}popup_struct;
+typedef struct
     {
     /* the mpd status struct used  in the whole program */
     mpd_Status *status;
@@ -46,6 +54,7 @@ typedef struct
 	guint64	total_playtime; 
     /* tray icon*/
     gboolean do_tray;
+    popup_struct popup;
     } internal_data;
 
 enum{
