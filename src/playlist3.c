@@ -1185,8 +1185,12 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				list = g_list_first(list);
 				gtk_tree_model_get_iter(model, &iter, list->data);
 				gtk_tree_model_get(model, &iter,1, &row_type, -1); 
-				
+				if(row_type == PL3_ENTRY_PLAYLIST)
+				{
+					printf("there is a playlist\n");
 
+
+				}
 				g_list_foreach (list, gtk_tree_path_free, NULL);
 				g_list_free (list);
 			}
