@@ -5,6 +5,7 @@
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include "libmpdclient.h"
+#include "config1.h"
 #include "playlist2.h"
 #include "playlist3.h"
 #include "song-browser.h"
@@ -28,6 +29,9 @@ int update_interface ();
 guint update_timeout = 0;
 void init_stock_icons ();
 extern GtkListStore *pl2_store;
+
+config_obj *config = NULL;
+
 
 
 	void
@@ -148,10 +152,10 @@ set_default_values ()
 
 
 
-	int
-main (int argc, char **argv)
+int main (int argc, char **argv)
 {
 	MmKeys *keys = NULL;
+	gchar *url = NULL;
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -162,6 +166,14 @@ main (int argc, char **argv)
 	 * load config 
 	 */
 	load_config ();
+	url = g_strdup_printf("%s/.gmpc.xml", g_getenv("HOME"));
+	config = cfg_open(url);
+	g_free(url);
+	if(config == NULL)
+	{
+		printf("Failed to save configuration\n");
+		return 1;
+	}
 	/*
 	 * initialize gtk 
 	 */

@@ -34,6 +34,7 @@ enum pl3_cat_store
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
+#define PL3_ENTRY_STREAM 2
 #define PL3_ENTRY_PLAYLIST 1
 #define PL3_ENTRY_SONG 0
 

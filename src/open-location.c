@@ -11,7 +11,6 @@
 #define MAX_PLAYLIST_SIZE 10000
 
 GladeXML *ol_xml = NULL;
-extern GladeXML *pl2_xml;
 GnomeVFSAsyncHandle *handle = NULL;
 GnomeVFSAsyncHandle *handle1 = NULL;
 /* this is so I won't return while busy */
@@ -229,7 +228,7 @@ void ol_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 
 
 
-void ol_create(GtkWidget *wid)
+void ol_create_url(GtkWidget *wid,char *url)
 {
 	/* check if allready open */
 	if(ol_xml != NULL)
@@ -240,10 +239,11 @@ void ol_create(GtkWidget *wid)
 					glade_xml_get_widget(ol_xml, "add_location")));
 		return;          	
 	}
+
+
 	/* create glade file, and set parent */
 	ol_xml = glade_xml_new(GLADE_PATH"open-location.glade", "add_location",NULL);
-	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), 
-			GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")));
+	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), wid);
 
 	/* Accept drops from outside */
 	gtk_drag_dest_set(glade_xml_get_widget(ol_xml, "add_location"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
@@ -251,7 +251,10 @@ void ol_create(GtkWidget *wid)
 
 	/* set image with custom stock */
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(ol_xml, "image")), "media-stream", GTK_ICON_SIZE_DIALOG);
-
+	if(url != NULL)
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream")),url);
+	}
 
 	/* set correct signals */
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(ol_xml, "add_location")), "drag_data_received",
@@ -262,4 +265,10 @@ void ol_create(GtkWidget *wid)
 		NULL);
 		*/
 	glade_xml_signal_autoconnect(ol_xml);	
+}
+
+void ol_create(GtkWidget *wid)
+{
+	ol_create_url(wid, NULL);
+
 }

@@ -137,7 +137,7 @@ void pl3_custom_stream_view_browser()
 				char *name=NULL;
 				gtk_list_store_append(pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
-						PL3_SONG_POS, PL3_ENTRY_SONG, 
+						PL3_SONG_POS, PL3_ENTRY_STREAM, 
 						PL3_SONG_STOCK_ID, "media-stream", 
 						-1);
 				while(cur1 != NULL)
@@ -304,7 +304,7 @@ void pl3_xiph_add()
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
-			PL3_CAT_TITLE, "Icecast",
+			PL3_CAT_TITLE, "Online Streams",
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "icecast",
 			PL3_CAT_PROC, FALSE,          	
@@ -329,7 +329,7 @@ void pl3_xiph_fill_view(char *buffer)
 			char *name=NULL, *bitrate=NULL, *genre=NULL;
 			gtk_list_store_append(pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
-					PL3_SONG_POS, PL3_ENTRY_SONG, 
+					PL3_SONG_POS, PL3_ENTRY_STREAM, 
 					PL3_SONG_STOCK_ID, "media-stream", 
 					-1);
 
@@ -337,7 +337,6 @@ void pl3_xiph_fill_view(char *buffer)
 			{
 				if(xmlStrEqual(cur1->name, "server_name"))
 				{
-					//		gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
 					name = xmlNodeGetContent(cur1);
 				}
 				else if(xmlStrEqual(cur1->name, "genre"))
@@ -517,22 +516,6 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* add's the toplevel entry for the current playlist view */
 void pl3_current_playlist_add()
 {
@@ -614,24 +597,15 @@ void pl3_current_playlist_delete_selected_songs ()
 		{
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
-				/* TODO: Replace by default clear function  */
 				pl3_clear_playlist();
-				/*				if (!check_connection_state ())
-								{
-								mpd_sendClearCommand (info.connection);
-								mpd_finishCommand (info.connection);
-								check_for_errors ();
-								}
-								*/		}
-				gtk_widget_destroy (GTK_WIDGET (dialog));
+		}
+		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
 	if (!check_connection_state ())
 		main_trigger_update ();	
 }
-
-
 
 
 void pl3_current_playlist_crop_selected_songs()
@@ -650,7 +624,6 @@ void pl3_current_playlist_crop_selected_songs()
 		mpd_sendCommandListBegin (info.connection);
 		/* remove every selected song one by one */
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter);
-
 		do
 		{
 			int value;
@@ -689,13 +662,7 @@ void pl3_current_playlist_crop_selected_songs()
 		switch (gtk_dialog_run (GTK_DIALOG (dialog)))
 		{
 			case GTK_RESPONSE_OK:
-				/* check if where still connected */
-				/* TODO: Replace by default clear function  */
-				//				if (!check_connection_state ())
-				//				{
 				pl3_clear_playlist();
-				/* clear the playlist */
-				//				}
 		}                                                         
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
@@ -871,9 +838,6 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 	{
 		return;
 	}
-
-
-
 	mpd_sendLsInfoCommand (info.connection, path);
 
 	ent = mpd_getNextInfoEntity (info.connection);
@@ -938,6 +902,10 @@ void pl3_browse_add_selected()
 				/* add them to the add list */
 				add_list = g_list_append (add_list, g_strdup (name));
 
+			}
+			else if(type == PL3_ENTRY_STREAM)
+			{
+				ol_create_url(glade_xml_get_widget(pl3_xml, "pl3_win"), name);
 			}
 			else if (type == PL3_ENTRY_PLAYLIST)
 			{
@@ -1361,9 +1329,6 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-
-
-
 	return TRUE;
 }
 
@@ -1529,7 +1494,6 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 
 	}
 	/* avuton's Idea */
-	/* TODO: Make this option */
 	if(preferences.pl3_scroll_to_open)
 	{
 		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
@@ -1541,8 +1505,7 @@ void pl3_cat_sel_changed()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-			glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "search_box"));
@@ -1661,8 +1624,6 @@ void pl3_update()
 			gchar *string = format_time(info.playlist_playtime);
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 			g_free(string);
-
-
 		}
 	}
 }
@@ -1741,13 +1702,12 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_artist_replace_folder), NULL);				
-
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_artist_replace_folder), NULL);
+		
 		/* show everything and popup */
 		gtk_widget_show_all(menu);                                                        		
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 	}
-
 	return TRUE;
 }
 
@@ -1758,8 +1718,6 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
-
-
 	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
 	{
 		int retval;
@@ -1819,13 +1777,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		gtk_tree_path_free(path);
 	}
 
-
-
-
-
-
-
-	/* default gmpc/xmms/gmpc key's*/
+	/* default gmpc/xmms/winamp key's*/
 	else if (event->keyval == GDK_z && event->state == 0)
 	{
 		prev_song();	
@@ -1865,7 +1817,7 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		pl3_browse_artist_replace_folder();
 	}
-	
+
 	else if (event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
 	{
 		pl3_browse_artist_add_folder();
@@ -1893,7 +1845,7 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_browse_replace_selected();	
 		return TRUE;
 	}
-	
+
 	else if (event->keyval == GDK_Insert && 
 			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{
@@ -1951,7 +1903,7 @@ int pl3_close()
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
-                                                                                                                               		
+
 		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
