@@ -47,6 +47,7 @@ void update_playlist2()
 				gtk_list_store_set(pl2_store, &iter, WEIGHT_INT, PANGO_WEIGHT_NORMAL, -1);
 			}
 			g_free(temp);
+			info.old_pos = -1;
 		}
 		
 		if(info.status->state != MPD_STATUS_STATE_STOP &&
