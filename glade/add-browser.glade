@@ -58,9 +58,9 @@
 	  <child>
 	    <widget class="GtkComboBox" id="cb_type">
 	      <property name="visible">True</property>
-	      <property name="items" translatable="yes">filename
-artist
-search</property>
+	      <property name="items" translatable="yes">Filename
+Artist
+Search Results</property>
 	      <signal name="changed" handler="sb_fill_browser" last_modification_time="Mon, 28 Jun 2004 15:10:41 GMT"/>
 	    </widget>
 	    <packing>

@@ -103,14 +103,24 @@ void sb_row_activated()
 	{
 		GList *node = g_list_first(rows);		
 		char *name = NULL;
+		gint type = 0;
 		GtkTreeIter iter;
 		/* step to all the selected songs/directories */
 		do{
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, path);
-			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &name, -1);
+			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &name,SB_TYPE, &type, -1);
+			if(type != 4)
+			{
 			/* add them to the add list */	
 			add_list = g_list_append(add_list, g_strdup(name));
+			}
+			else
+			{
+				mpd_sendLoadCommand(info.connection, name);
+				mpd_finishCommand(info.connection);
+
+			}
 
 		}while((node = g_list_next(node)) != NULL);
 
@@ -501,6 +511,23 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 						-1);
 
 			}
+
+			else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
+			{	
+				gchar *basename = g_path_get_basename(ent->info.playlistFile->path);
+				gtk_tree_store_append(sb_store, &iter, parent);
+				gtk_tree_store_set(sb_store, &iter,                			
+						SB_FPATH,ent->info.playlistFile->path,
+						SB_DPATH, basename,
+						SB_TYPE, 4,
+						SB_PIXBUF, "gtk-index",
+						-1);
+				g_free(basename);
+			}
+
+
+
+			
 			mpd_freeInfoEntity(ent);
 
 
@@ -533,7 +560,6 @@ void sb_fill_browser()
 	GtkWidget *cb = glade_xml_get_widget(sb_xml, "cb_type");
 	GtkWidget *tree =  glade_xml_get_widget(sb_xml, "treeview");
 	int i = gtk_combo_box_get_active(GTK_COMBO_BOX(cb));
-//	gtk_tree_store_clear(sb_store);
 	last_db = info.stats->dbUpdateTime;
 	if( i == 0)
 	{
