@@ -2845,7 +2845,7 @@
 		      <child>
 			<widget class="GtkLabel" id="mdb_info_playtime">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">N/A</property>
+			  <property name="label" translatable="yes">0d 0h 0m 0s</property>
 			  <property name="use_underline">False</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>

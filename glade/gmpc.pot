@@ -102,6 +102,7 @@ gchar *s = N_("0");
 gchar *s = N_("Update Database");
 gchar *s = N_("<i>Updating the database may cause gmpc to disconnect</i>");
 gchar *s = N_("<span weight=\"bold\">Music Database Information:</span>");
+gchar *s = N_("_Refresh Information");
 gchar *s = N_("_Information");
 gchar *s = N_("gmpc - Save playlist");
 gchar *s = N_("Save playlist as:");
