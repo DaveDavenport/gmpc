@@ -1,3 +1,11 @@
+19-02-2005 QBall <qball@qballcow.nl>
+	* src/playlist3.c:	moved a few things to libmpd.
+	* src/libmpd.c:		Added the begin of support for playlist
+	commands. als listing and adding.
+	* src/libmpd.c:		Added list artist/album
+	* src/libmpd.h:		Added a structure for linked list with return
+	values.
+
 18-02-2005 Qball <qball@qballcow.nl>
 	* src/playlist3.c:	Song highlighting is now done using the state
 	and song change signal from libmpd. highlighting should work like

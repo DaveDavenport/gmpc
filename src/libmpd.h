@@ -67,6 +67,31 @@ typedef struct _MpdObj
 
 }MpdObj;
 
+typedef struct _MpdData
+{
+	struct _MpdData *next;
+	struct _MpdData *last;
+	struct _MpdData *first;
+
+	int type;
+
+	union 
+	{
+		char *artist;
+		char *album;
+		mpd_Song *song;
+	}value;
+}MpdData;
+
+
+
+
+
+
+
+
+
+
 
 MpdObj * 	mpd_ob_new_default			();
 MpdObj * 	mpd_ob_new				(char *hostname, int port, char *password);
@@ -116,4 +141,13 @@ mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 int 		mpd_ob_playlist_clear			(MpdObj *mi);
 void 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
+MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
+MpdData *	mpd_ob_new_data_struct			();
+MpdData * 	mpd_ob_data_get_next			(MpdData *data);
+int 		mpd_ob_data_is_last			(MpdData *data);
+void 		mpd_ob_free_data_ob			(MpdData *data);
+
+
+
+
 #endif

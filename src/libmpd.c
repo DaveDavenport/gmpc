@@ -335,6 +335,7 @@ int mpd_ob_check_connected(MpdObj *mi)
 
 int mpd_ob_status_queue_update(MpdObj *mi)
 {
+
 	if(!mpd_ob_check_connected(mi))
 	{
 		debug_printf(DEBUG_INFO,"mpd_ob_status_queue_update: Where not connected\n");
@@ -347,6 +348,7 @@ int mpd_ob_status_queue_update(MpdObj *mi)
 	}
 	return FALSE;
 }
+
 
 int mpd_ob_status_update(MpdObj *mi)
 {
@@ -373,25 +375,14 @@ int mpd_ob_status_update(MpdObj *mi)
 		debug_printf(DEBUG_ERROR,"mpd_ob_status_update: Failed to grab status from mpd\n");
 //		return TRUE;
 	}
-
-	mpd_ob_unlock_conn(mi);
+	if(mpd_ob_unlock_conn(mi))
+	{
+		return TRUE;
+	}
 	/*
 	 * check for changes 
 	 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-	
 	if(mi->playlistid != mi->status->playlist)
 	{
 		/* print debug message */
@@ -491,7 +482,7 @@ int mpd_ob_status_get_volume(MpdObj *mi)
 
 int mpd_ob_status_get_total_song_time(MpdObj *mi)
 {
-	if(mi == NULL)
+	if(!mpd_ob_check_connected(mi))
 	{
 		printf("failed to check mi == NULL\n");
 		return -2;
@@ -505,7 +496,7 @@ int mpd_ob_status_get_total_song_time(MpdObj *mi)
 }
 int mpd_ob_status_get_elapsed_song_time(MpdObj *mi)
 {
-	if(mi == NULL)
+	if(!mpd_ob_check_connected(mi))
 	{
 		printf("failed to check mi == NULL\n");
 		return -2;
@@ -1111,3 +1102,160 @@ void mpd_ob_signal_set_error (MpdObj *mi, void *(* error_signal)(MpdObj *mi, int
 	mi->error_signal = error_signal;
 	mi->error_signal_pointer = pointer;
 }
+/* more playlist */
+
+MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
+{
+	char *string = NULL;
+	MpdData *data = NULL;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_get_artists: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_get_artists: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendListCommand(mi->connection,MPD_TABLE_ARTIST,NULL);
+	while (( string = mpd_getNextArtist(mi->connection)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->last = NULL;
+		
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->last = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		data->type = 1; /* TODO make enum */
+		data->value.artist = string;
+	}
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+
+MpdData *mpd_ob_new_data_struct()
+{
+	MpdData* data = malloc(sizeof(MpdData));
+
+	data->type = 0;
+
+	data->value.artist = NULL;
+	data->value.album = NULL;
+	data->value.song = NULL;
+
+	return data;	
+}
+
+MpdData * mpd_ob_data_get_next(MpdData *data)
+{
+	if(data == NULL || data->next != NULL)
+	{
+		return data->next;
+	}
+	return data;	
+}
+
+int mpd_ob_data_is_last(MpdData *data)
+{
+	if(data == NULL || data->next == NULL)
+	{
+		return TRUE;
+	}
+	return FALSE;	
+}
+
+void mpd_ob_free_data_ob(MpdData *data)
+{
+	if(data == NULL)
+	{
+		return;
+	}	
+	while(data->next != NULL)
+	{
+		data = data->next;
+		if(data->last->type == 1)
+		{
+			free(data->last->value.artist);
+		}
+		free(data->last);
+	}
+	if(data->type == 1)
+	{
+		free(data->value.artist);
+	}
+	else if (data->type == 2)
+	{
+		free(data->value.album);
+	}
+	free(data);
+}
+
+/* */
+
+MpdData * mpd_ob_playlist_get_albums(MpdObj *mi,char *artist)
+{
+	char *string = NULL;
+	MpdData *data = NULL;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_get_albums: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_get_albums: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendListCommand(mi->connection,MPD_TABLE_ALBUM,artist);
+	while (( string = mpd_getNextAlbum(mi->connection)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->last = NULL;
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->last = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		data->type = 2; /* TODO make enum */
+		data->value.album = string;
+	}
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+

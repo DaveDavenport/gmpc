@@ -14,6 +14,8 @@ internal_data info;
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 int update_mpd_status()
 {
+	if(!mpd_ob_check_connected(connection)) return TRUE;
+	mpd_ob_status_queue_update(connection);
 	/* check if locked, then just don't update */
 	if(info.conlock) return TRUE;
 	/* lock it. */
@@ -28,7 +30,7 @@ int update_mpd_status()
 		return TRUE;
 	}
 
-	mpd_ob_status_queue_update(connection);
+
 	/* unlock it */
 	info.conlock = FALSE;
 	return TRUE;
@@ -252,7 +254,7 @@ int seek_ns(int n)
 {
 	return seek_ps(-n);
 }
-
+/*
 int volume_change(int diff)
 {
 	if(mpd_lock())
@@ -271,7 +273,7 @@ int volume_change(int diff)
 	}
 	return FALSE;
 }
-
+*/
 
 
 /* this function updates the internall dbase of mpd */

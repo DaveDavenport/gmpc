@@ -1095,7 +1095,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
 
-	if (check_connection_state ())
+	if (!mpd_ob_check_connected(connection))
 	{
 		return;
 	}
@@ -1103,22 +1103,22 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	{
 		/* fill artist list */
 		char *string;
-		mpd_sendListCommand (info.connection, MPD_TABLE_ARTIST, NULL);
-		while ((string = mpd_getNextArtist (info.connection)) != NULL)
-		{
+		MpdData *data = mpd_ob_playlist_get_artists(connection);
+		
+		if(data != NULL)do{
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_ARTIST,
-					1, string, /* the field */
-					2, string, /* the artist name, if(1 and 2 together its an artist field) */
+					1, data->value.artist, /* the field */
+					2, data->value.artist, /* the artist name, if(1 and 2 together its an artist field) */
 					3, "media-artist",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
-
-		}
-		mpd_finishCommand(info.connection);
+			data = mpd_ob_data_get_next(data);
+		}while(!mpd_ob_data_is_last(data));
+		mpd_ob_free_data_ob(data);
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1128,21 +1128,21 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	else if(!g_utf8_collate(artist, alb_artist))
 	{
 		char *string;
-		mpd_sendListCommand (info.connection, MPD_TABLE_ALBUM, artist);
-		while ((string = mpd_getNextAlbum (info.connection)) != NULL)
-		{
+		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
+		if(data != NULL) do{
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_ARTIST,
-					1, string,
+					1, data->value.album,
 					2, artist,
 					3, "media-album", 
 					4, TRUE, 
 					PL3_CAT_ICON_SIZE,1,
 					-1);
-			g_free (string);
-		}
-		mpd_finishCommand (info.connection);
+			data = mpd_ob_data_get_next(data);
+		}while(!mpd_ob_data_is_last(data));
+		mpd_ob_free_data_ob(data);
+
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1346,10 +1346,10 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
 		/* send mpd the play command */
-//		mpd_sendPlayIdCommand (info.connection, song_id);
-//		mpd_finishCommand (info.connection);
+		//		mpd_sendPlayIdCommand (info.connection, song_id);
+		//		mpd_finishCommand (info.connection);
 		/* check for errors */                      		
-//		check_for_errors ();                        		
+		//		check_for_errors ();                        		
 		mpd_ob_player_play_id(connection, song_id);
 	}
 	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)

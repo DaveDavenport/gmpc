@@ -311,6 +311,7 @@ int update_interface ()
 	/*
 	 * check if busy 
 	 */
+	update_player();
 	if (info.conlock)
 		return TRUE;
 
@@ -357,15 +358,15 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 
 	if(old_length == -1)
 	{
-		mpd_sendPlaylistIdCommand(info.connection, -1);
+		mpd_sendPlaylistIdCommand(mi->connection, -1);
 		old_length = 0;
 	}
 	else{
 
-		mpd_sendPlChangesCommand (info.connection, old_playlist_id);
+		mpd_sendPlChangesCommand (mi->connection, old_playlist_id);
 	}
 
-	ent = mpd_getNextInfoEntity (info.connection);
+	ent = mpd_getNextInfoEntity (mi->connection);
 	while (ent != NULL)
 	{
 		/*
@@ -449,7 +450,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					-1);
 		}
 		mpd_freeInfoEntity (ent);
-		ent = mpd_getNextInfoEntity (info.connection);
+		ent = mpd_getNextInfoEntity (mi->connection);
 	}
 	while (connection->status->playlistLength < old_length)
 	{
@@ -617,17 +618,23 @@ void song_changed(MpdObj *mi, int oldsong, int newsong)
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
-	GtkDialog *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-			"An error occured");
-	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "error code %i: %s", error_id, error_msg);
-	gtk_dialog_run(dialog);
-	gtk_widget_destroy(GTK_WIDGET(dialog));
-	msg_set_base(_("Gnome Music Player Client"));
+	else
+	{
+		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
+		GladeXML * er_xml = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);
+		GtkDialog *dialog = glade_xml_get_widget(er_xml, "error_dialog");
+		gtk_label_set_markup(GTK_ENTRY(glade_xml_get_widget(er_xml,"em_label")), str); 
+		gtk_dialog_run(dialog);
+		gtk_widget_destroy(GTK_WIDGET(dialog));
+		msg_set_base(_("Gnome Music Player Client"));
+		g_object_unref(er_xml);
+		g_free(str);
+	}
 }
 
 void status_callback(MpdObj *mi)
 {
-	update_player();
+
 }
 
 
@@ -636,4 +643,5 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 	player_state_changed(old_state, new_state);
 	tray_icon_state_change();
 	pl3_highlight_state_change(old_state,new_state);
+	/* make */
 }

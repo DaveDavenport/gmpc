@@ -566,13 +566,13 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	/* volume up */
 	else if (event->keyval == GDK_Up)
 	{
-		volume_change(5);
+		mpd_ob_status_set_volume(connection,mpd_ob_status_get_volume(connection) +5);
 		return TRUE;
 	}
 	/* volume down */
 	else if (event->keyval == GDK_Down)
 	{
-		volume_change(-5);
+		mpd_ob_status_set_volume(connection,mpd_ob_status_get_volume(connection) -5);
 		return TRUE;
 	}
 	else if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
