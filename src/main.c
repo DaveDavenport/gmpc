@@ -24,6 +24,7 @@
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <time.h>
+#include "debug_printf.h"
 #include "libmpdclient.h"
 #include "config1.h"
 #include "playlist3.h"
@@ -34,7 +35,7 @@
 
 extern long long unsigned total_recieved;
 extern long long unsigned total_send;
-void playlist_changed(MpdInt *mi, int old_playlist_id, int new_playlist_id);
+void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
 /*
  * the xml fle pointer to the player window 
@@ -62,7 +63,7 @@ config_obj *config = NULL;
 /* 
  * The Connection object
  */
-MpdInt *connection = NULL;
+MpdObj *connection = NULL;
 
 
 void main_trigger_update ()
@@ -142,39 +143,49 @@ int main (int argc, char **argv)
 	time_t start, stop;
 	start = time(NULL);
 #ifdef ENABLE_NLS
+	debug_printf(DEBUG_INFO, "main.c: Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
+	
 	/* initialize the settings */
+	debug_printf(DEBUG_INFO, "main.c: loading default values");
 	set_default_values ();
 
 	/* Check for and create dir if availible */
 	url = g_strdup_printf("%s/.gmpc/", g_getenv("HOME"));
+	debug_printf(DEBUG_INFO, "main.c: Checking for %s existence",url);
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
+		debug_printf(DEBUG_INFO, "main.c: Trying to create %s",url);
 		if(mkdir(url,0777) < 0)
 		{
-			fprintf(stderr, "Failed to create: %s\n", url);
+			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
 			return 1;
 		}
 	}
 	else if (!g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
-		fprintf(stderr, "%s isn't a directory.\n", url);
+		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
 		return 1;
+	}
+	else
+	{
+		debug_printf(DEBUG_INFO, "main.c: %s exist and is directory",url);
 	}
 	g_free(url);
 
 	/* OPEN CONFIG FILE */
 	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_getenv("HOME"));
+	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
 	
 	/* test if config open  */
 	if(config == NULL)
 	{
-		fprintf(stderr,"Failed to save/load configuration:\n%s\n",url);
+		debug_printf(DEBUG_ERROR,"main.c: Failed to save/load configuration:\n%s\n",url);
 		return 1;
 	}
 
@@ -184,7 +195,7 @@ int main (int argc, char **argv)
 	connection = mpd_ob_new_default();
 	if(connection == NULL)
 	{
-		g_print("Failed to make connection\n");
+		debug_printf(DEBUG_ERROR,"main.c: Failed to create connection obj\n");
 		return 1;
 	}
 	/* connect signals */
@@ -355,7 +366,7 @@ int update_interface ()
 }
 
 
-void playlist_changed(MpdInt *mi, int old_playlist_id, int new_playlist_id)
+void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 {
 	mpd_InfoEntity *ent = NULL;
 

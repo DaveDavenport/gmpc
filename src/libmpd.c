@@ -6,9 +6,9 @@
 
 
 /*************************************************************************************/
-MpdInt * mpd_ob_create()
+MpdObj * mpd_ob_create()
 {
-	MpdInt * mi = malloc(sizeof(MpdInt));
+	MpdObj * mi = malloc(sizeof(MpdObj));
 	if( mi == NULL )
 	{
 		/* should never happen on linux */
@@ -36,9 +36,9 @@ MpdInt * mpd_ob_create()
 	return mi;
 }
 
-void mpd_ob_free(MpdInt *mi)
+void mpd_ob_free(MpdObj *mi)
 {
-	debug_printf(DEBUG_INFO, "mpd_ob_free: destroying MpdInt object\n");
+	debug_printf(DEBUG_INFO, "mpd_ob_free: destroying MpdObj object\n");
 	if(mi->connected)
 	{
 		/* disconnect */
@@ -77,7 +77,7 @@ void mpd_ob_free(MpdInt *mi)
 	free(mi);
 }
 
-int mpd_ob_lock_conn(MpdInt *mi)
+int mpd_ob_lock_conn(MpdObj *mi)
 {
 //	debug_printf(DEBUG_INFO, "mpd_ob_lock_conn: Locking connection\n");
 	if(mi->connection_lock)
@@ -89,7 +89,7 @@ int mpd_ob_lock_conn(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_unlock_conn(MpdInt *mi)
+int mpd_ob_unlock_conn(MpdObj *mi)
 {
 //	debug_printf(DEBUG_INFO, "mpd_ob_unlock_conn: unlocking connection\n");
 	if(!mi->connection_lock)
@@ -103,15 +103,15 @@ int mpd_ob_unlock_conn(MpdInt *mi)
 	return FALSE;
 }
 
-MpdInt * mpd_ob_new_default()
+MpdObj * mpd_ob_new_default()
 {
 	debug_printf(DEBUG_INFO, "mpd_ob_new_default: creating a new mpdInt object\n");
 	return mpd_ob_create();
 }
 
-MpdInt *mpd_ob_new(char *hostname,  int port, char *password)
+MpdObj *mpd_ob_new(char *hostname,  int port, char *password)
 {
-	MpdInt *mi = mpd_ob_create();
+	MpdObj *mi = mpd_ob_create();
 	if(mi == NULL)
 	{
 		return NULL;
@@ -132,7 +132,7 @@ MpdInt *mpd_ob_new(char *hostname,  int port, char *password)
 }
 
 
-void mpd_ob_set_hostname(MpdInt *mi, char *hostname)
+void mpd_ob_set_hostname(MpdObj *mi, char *hostname)
 {
 	if(mi == NULL)
 	{
@@ -148,7 +148,7 @@ void mpd_ob_set_hostname(MpdInt *mi, char *hostname)
 	mi->hostname = strdup(hostname);
 }
 
-void mpd_ob_set_password(MpdInt *mi, char *password)
+void mpd_ob_set_password(MpdObj *mi, char *password)
 {
 	if(mi == NULL)
 	{
@@ -164,7 +164,7 @@ void mpd_ob_set_password(MpdInt *mi, char *password)
 	mi->password = strdup(password);
 }
 
-void mpd_ob_set_port(MpdInt *mi, int port)
+void mpd_ob_set_port(MpdObj *mi, int port)
 {
 	if(mi == NULL)
 	{
@@ -173,7 +173,7 @@ void mpd_ob_set_port(MpdInt *mi, int port)
 	}
 	mi->port = port;
 }
-int mpd_ob_disconnect(MpdInt *mi)
+int mpd_ob_disconnect(MpdObj *mi)
 {
 	/* set disconnect flag */
 	mi->connected = 0;
@@ -208,7 +208,7 @@ int mpd_ob_disconnect(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_connect(MpdInt *mi)
+int mpd_ob_connect(MpdObj *mi)
 {
 	if(mi == NULL)
 	{
@@ -255,7 +255,7 @@ int mpd_ob_connect(MpdInt *mi)
 	return 0;
 }
 
-int mpd_ob_check_connected(MpdInt *mi)
+int mpd_ob_check_connected(MpdObj *mi)
 {
 	if(mi == NULL)
 	{
@@ -264,7 +264,7 @@ int mpd_ob_check_connected(MpdInt *mi)
 	return mi->connected;
 }
 
-int mpd_ob_status_queue_update(MpdInt *mi)
+int mpd_ob_status_queue_update(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -279,7 +279,7 @@ int mpd_ob_status_queue_update(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_status_update(MpdInt *mi)
+int mpd_ob_status_update(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -341,7 +341,7 @@ int mpd_ob_status_update(MpdInt *mi)
 }
 
 /* returns TRUE when status is availible, when not availible and connected it tries to grab it */
-int mpd_ob_status_check(MpdInt *mi)
+int mpd_ob_status_check(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -361,7 +361,7 @@ int mpd_ob_status_check(MpdInt *mi)
 }
 
 
-int mpd_ob_status_get_volume(MpdInt *mi)
+int mpd_ob_status_get_volume(MpdObj *mi)
 {
 	if(mi == NULL)
 	{
@@ -376,7 +376,7 @@ int mpd_ob_status_get_volume(MpdInt *mi)
 	return mi->status->volume;
 }
 
-int mpd_ob_status_set_volume(MpdInt *mi,int volume)
+int mpd_ob_status_set_volume(MpdObj *mi,int volume)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -408,7 +408,7 @@ int mpd_ob_status_set_volume(MpdInt *mi,int volume)
  * PLAYER
  */
 
-int mpd_ob_player_get_state(MpdInt *mi)
+int mpd_ob_player_get_state(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -435,7 +435,7 @@ int mpd_ob_player_get_state(MpdInt *mi)
 	return MPD_OB_PLAYER_UNKNOWN;
 }
 
-int mpd_ob_player_get_current_song_id(MpdInt *mi)
+int mpd_ob_player_get_current_song_id(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -461,7 +461,7 @@ int mpd_ob_player_get_current_song_id(MpdInt *mi)
 	return mi->status->songid;
 }
 
-int mpd_ob_player_get_current_song_pos(MpdInt *mi)
+int mpd_ob_player_get_current_song_pos(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -490,7 +490,7 @@ int mpd_ob_player_get_current_song_pos(MpdInt *mi)
 
 
 
-float mpd_ob_status_set_volume_as_float(MpdInt *mi, float fvol)
+float mpd_ob_status_set_volume_as_float(MpdObj *mi, float fvol)
 {
 	int volume = mpd_ob_status_set_volume(mi, (int)(fvol*100.0));
 	if(volume > -1)
@@ -501,8 +501,10 @@ float mpd_ob_status_set_volume_as_float(MpdInt *mi, float fvol)
 }
 
 
-int mpd_ob_player_play(MpdInt *mi)
+
+int mpd_ob_player_play_id(MpdObj *mi, int id)
 {
+	debug_printf(DEBUG_INFO, "mpd_ob_player_play_id: trying to play id: %i\n", id);
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_player_play: not connected\n");
@@ -514,7 +516,7 @@ int mpd_ob_player_play(MpdInt *mi)
 		return MPD_O_LOCK_FAILED;
 	}
 
-	mpd_sendPlayCommand(mi->connection,-1);
+	mpd_sendPlayIdCommand(mi->connection,id);
 	mpd_finishCommand(mi->connection);
 
 
@@ -526,7 +528,12 @@ int mpd_ob_player_play(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_player_stop(MpdInt *mi)
+int mpd_ob_player_play(MpdObj *mi)
+{
+	return mpd_ob_player_play_id(mi, -1);
+}
+
+int mpd_ob_player_stop(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -551,7 +558,7 @@ int mpd_ob_player_stop(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_player_next(MpdInt *mi)
+int mpd_ob_player_next(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -576,7 +583,7 @@ int mpd_ob_player_next(MpdInt *mi)
 	return FALSE;
 }
 
-int mpd_ob_player_prev(MpdInt *mi)
+int mpd_ob_player_prev(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -602,7 +609,7 @@ int mpd_ob_player_prev(MpdInt *mi)
 }
 
 
-int mpd_ob_player_pause(MpdInt *mi)
+int mpd_ob_player_pause(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -639,7 +646,7 @@ int mpd_ob_player_pause(MpdInt *mi)
 /*******************************************************************************
  * PLAYLIST 
  */
-mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
+mpd_Song * mpd_ob_playlist_get_song(MpdObj *mi, int songid)
 {
 	mpd_Song *song = NULL;
 	mpd_InfoEntity *ent = NULL;
@@ -683,7 +690,7 @@ mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
 }
 
 
-mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
+mpd_Song * mpd_ob_playlist_get_current_song(MpdObj *mi)
 {
 	int song_id = -1;
 	if(!mpd_ob_check_connected(mi))
@@ -722,11 +729,11 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
 	return mi->CurrentSong;
 }
 /* SIGNALS */
-void mpd_ob_signal_set_playlist_changed (MpdInt *mi, void *(* playlist_changed)(MpdInt *mi, int old_playlist_id, int new_playlist_id))
+void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id))
 {
 	if(mi == NULL)
 	{
-		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_playlist_changed: MpdInt *mi == NULL");
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_playlist_changed: MpdObj *mi == NULL");
 		return;
 	}
 	mi->playlist_changed = playlist_changed;

@@ -173,7 +173,7 @@ void pl3_custom_stream_add_url_changed(GtkEntry *entry, GtkWidget *button)
 
 }
 
-void pl3_custom_stream_add_stream()
+void pl3_custom_stream_add_stream(gchar *name, gchar *url)
 {
 	GladeXML *xml = glade_xml_new(GLADE_PATH"playlist3.glade", "add_stream",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(xml, "add_stream");
@@ -181,6 +181,14 @@ void pl3_custom_stream_add_stream()
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml, "entry_url")),"changed", G_CALLBACK(pl3_custom_stream_add_url_changed), 
 			glade_xml_get_widget(xml, "button_add"));
 	gtk_widget_show_all(dialog);
+	if(name != NULL)
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_name")),name);
+	}
+	if(url != NULL)
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_url")),url);
+	}                                                                                   	
 	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 	{
 		case GTK_RESPONSE_OK:
@@ -222,27 +230,27 @@ void pl3_custom_stream_add_stream()
 /**/
 void pl3_custom_stream_save_tree()
 {
-		gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
-		xmlDocPtr xmldoc;
-		xmlNodePtr newn,new2,root;                        
-		GtkTreeIter iter;		
+	gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
+	xmlDocPtr xmldoc;
+	xmlNodePtr newn,new2,root;                        
+	GtkTreeIter iter;		
 
-		xmldoc = xmlNewDoc("1.0");
-		root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
-		xmlDocSetRootElement(xmldoc, root);
-		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_store), &iter))
+	xmldoc = xmlNewDoc("1.0");
+	root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
+	xmlDocSetRootElement(xmldoc, root);
+	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_store), &iter))
+	{
+		do
 		{
-			do
-			{
-				gchar *name, *lurl;
-				gtk_tree_model_get(GTK_TREE_MODEL(pl3_store), &iter,SONG_ID, &lurl, SONG_TITLE, &name, -1);
-				newn = xmlNewChild(root, NULL, "entry",NULL);
-				new2 = xmlNewChild(newn, NULL, "name",name); 
-				new2 = xmlNewChild(newn, NULL, "listen_url", lurl);
-			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_store), &iter));
+			gchar *name, *lurl;
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_store), &iter,SONG_ID, &lurl, SONG_TITLE, &name, -1);
+			newn = xmlNewChild(root, NULL, "entry",NULL);
+			new2 = xmlNewChild(newn, NULL, "name",name); 
+			new2 = xmlNewChild(newn, NULL, "listen_url", lurl);
+		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_store), &iter));
 
-		}
-		xmlSaveFile(path, xmldoc);	
+	}
+	xmlSaveFile(path, xmldoc);	
 }
 
 
@@ -1280,10 +1288,11 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
 		/* send mpd the play command */
-		mpd_sendPlayIdCommand (info.connection, song_id);
-		mpd_finishCommand (info.connection);
+//		mpd_sendPlayIdCommand (info.connection, song_id);
+//		mpd_finishCommand (info.connection);
 		/* check for errors */                      		
-		check_for_errors ();                        		
+//		check_for_errors ();                        		
+		mpd_ob_player_play_id(connection, song_id);
 	}
 	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
 	{
@@ -1303,9 +1312,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		}
 		else if (type == PL3_BROWSE_CUSTOM_STREAM || type == PL3_BROWSE_XIPH)
 		{
-			pl3_push_statusbar_message("Added a stream");
-			mpd_sendAddCommand(info.connection, song_id);
-			mpd_finishCommand(info.connection);
+			pl3_browse_add_selected();
 			if(check_for_errors()) return;               			
 		}
 		else
@@ -1516,7 +1523,7 @@ void pl3_cat_sel_changed()
 			{
 
 
-				pl3_custom_stream_add_stream();
+				pl3_custom_stream_add_stream(NULL,NULL);
 				gtk_tree_model_iter_parent(model, &parent, &iter);
 				gtk_tree_selection_select_iter(selec, &parent);   					
 

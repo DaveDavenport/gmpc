@@ -19,7 +19,7 @@
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
-extern MpdInt *connection;
+extern MpdObj *connection;
 typedef struct
 {
 	/* the mpd status struct used  in the whole program */

@@ -21,7 +21,7 @@ enum {
 	MPD_OB_PLAYER_UNKNOWN	
 };
 
-typedef struct _MpdInt 
+typedef struct _MpdObj 
 {
 	/* defines if we are connected */
 	/* This should be made true if and only if the connection is up and running */
@@ -44,7 +44,7 @@ typedef struct _MpdInt
 	
 	
 	/* functions to call */
-	void *(* playlist_changed)(struct _MpdInt *mi, int old_playlist_id, int new_playlist_id);	
+	void *(* playlist_changed)(struct _MpdObj *mi, int old_playlist_id, int new_playlist_id);	
 	
 	
 	/* error message */
@@ -54,38 +54,39 @@ typedef struct _MpdInt
 	/* this "locks" the connections. so we can't have to commands competing with eachother */
 	short int connection_lock;
 	
-}MpdInt;
+}MpdObj;
 
 
-MpdInt * 	mpd_ob_new_default			();
-MpdInt * 	mpd_ob_new				(char *hostname, int port, char *password);
-void 		mpd_ob_set_hostname			(MpdInt *mi, char *hostname);
-void 		mpd_ob_set_password			(MpdInt *mi, char *hostname);
-void 		mpd_ob_set_port				(MpdInt *mi, int port);
-void 		mpd_ob_set_connection_timeout		(MpdInt *mi, float timeout);
-int 		mpd_ob_connect				(MpdInt *mi);
-int 		mpd_ob_disconnect			(MpdInt *mi);
-int 		mpd_ob_check_connected			(MpdInt *mi);
+MpdObj * 	mpd_ob_new_default			();
+MpdObj * 	mpd_ob_new				(char *hostname, int port, char *password);
+void 		mpd_ob_set_hostname			(MpdObj *mi, char *hostname);
+void 		mpd_ob_set_password			(MpdObj *mi, char *hostname);
+void 		mpd_ob_set_port				(MpdObj *mi, int port);
+void 		mpd_ob_set_connection_timeout		(MpdObj *mi, float timeout);
+int 		mpd_ob_connect				(MpdObj *mi);
+int 		mpd_ob_disconnect			(MpdObj *mi);
+int 		mpd_ob_check_connected			(MpdObj *mi);
 /* signals */
-void 		mpd_ob_signal_set_playlist_changed	(MpdInt *mi, void *(* playlist_changed)(MpdInt *mi, int old_playlist_id, int new_playlist_id));
+void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id));
 
 /* status commands */
-int 		mpd_ob_status_queue_update		(MpdInt *mi);
-float 		mpd_ob_status_set_volume_as_float	(MpdInt *mi, float fvol);
-int 		mpd_ob_status_set_volume		(MpdInt *mi,int volume);
-int 		mpd_ob_status_get_volume		(MpdInt *mi);
+int 		mpd_ob_status_queue_update		(MpdObj *mi);
+float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
+int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
+int 		mpd_ob_status_get_volume		(MpdObj *mi);
 
 /* player commands */
-int 		mpd_ob_player_play			(MpdInt *mi);
-int 		mpd_ob_player_stop			(MpdInt *mi);
-int 		mpd_ob_player_next			(MpdInt *mi);
-int 		mpd_ob_player_prev			(MpdInt *mi);
-int 		mpd_ob_player_pause			(MpdInt *mi);
-int 		mpd_ob_player_get_state			(MpdInt *mi);
-int 		mpd_ob_player_get_current_song_id	(MpdInt *mi);
-int 		mpd_ob_player_get_current_song_pos	(MpdInt *mi);
+int 		mpd_ob_player_play			(MpdObj *mi);
+int 		mpd_ob_player_play_id			(MpdObj *mi, int id);
+int 		mpd_ob_player_stop			(MpdObj *mi);
+int 		mpd_ob_player_next			(MpdObj *mi);
+int 		mpd_ob_player_prev			(MpdObj *mi);
+int 		mpd_ob_player_pause			(MpdObj *mi);
+int 		mpd_ob_player_get_state			(MpdObj *mi);
+int 		mpd_ob_player_get_current_song_id	(MpdObj *mi);
+int 		mpd_ob_player_get_current_song_pos	(MpdObj *mi);
 /* playlist command */
-mpd_Song * 	mpd_ob_playlist_get_song		(MpdInt *mi, int songid);
-mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdInt *mi);
+mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
+mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 
 #endif
