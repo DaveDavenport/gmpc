@@ -194,7 +194,7 @@ void msg_set_base(gchar *msg)
 	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		scroll.base_msg = g_strdup(_("No valid UTF-8. Please check youre locale"));
+		scroll.base_msg = g_strdup(_("No valid UTF-8. Please check your locale"));
 	}
 	else	scroll.base_msg = g_strdup(msg);
 
@@ -210,7 +210,7 @@ void msg_push_popup(gchar *msg)
 	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check youre locale")));
+		g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check your locale")));
 		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
 	}
 	else
@@ -384,7 +384,7 @@ int update_player()
 
 
 
-/* start seeking in the song..  only allow this when youre playing or paused */
+/* start seeking in the song..  only allow this when you're playing or paused */
 /* block it other wise. */
 /* everything is blocked until the seek is done. */
 /* show time to seek to in entry box */
