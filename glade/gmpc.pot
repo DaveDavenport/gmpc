@@ -5,6 +5,8 @@
  */
 
 gchar *s = N_("Gnome Music Player Client");
+gchar *s = N_("Toggle random <ctrl+a> or <a>");
+gchar *s = N_("Toggle Repeat <ctrl+e> or <e>");
 gchar *s = N_("Configure gmpc");
 gchar *s = N_("Open the playlist");
 gchar *s = N_("gmpc - Preferences");
