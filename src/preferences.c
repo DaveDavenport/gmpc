@@ -40,18 +40,21 @@ void create_preferences_window()
 	{
 	GtkWidget *dialog;
 	if(running)
-	    {
-	    if(xml_preferences_window == NULL){
-		running = 0;
-	    } else{
-		dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
-		gtk_window_present(GTK_WINDOW(dialog));
-		return;
-	    }
-	    }
-   	 xml_preferences_window = glade_xml_new(GLADE_PATH"gmpc.glade", "preferences_window", NULL);
-	 /* check for errors and axit when there is no gui file */
-	 if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
+	{
+		if(xml_preferences_window == NULL)
+		{
+			running = 0;
+		} 
+		else
+		{
+			dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
+			gtk_window_present(GTK_WINDOW(dialog));
+			return;
+		}
+	}
+	xml_preferences_window = glade_xml_new(GLADE_PATH"gmpc.glade", "preferences_window", NULL);
+	/* check for errors and axit when there is no gui file */
+	if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 
 
 	/* set info from struct */
@@ -65,66 +68,66 @@ void create_preferences_window()
 	running = 1;
 
 	update_server_settings();
-	
+
 	/* set the right sensitive stuff */
 	if(info.connection == NULL)
-	    {
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
-	    }
+	{
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
+	}
 	else
-	    {
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	    
-	    }
+	{
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	    
+	}
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
-	 
-	   if(info.stats != NULL)
-		{
+
+	if(info.stats != NULL)
+	{
 		gchar *buffer = ctime(&info.stats->dbUpdateTime);
 		/* nasty but I need to get rid of the trailing new line */
 		buffer[strlen(buffer)-1]='\0';
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
-		}
-	    
+	}
+
 	set_display_settings();
-	    
-	    
+
+
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 	}
-	
+
 void update_display_settings()
-	{
-		if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
-		if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
-		if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
-		preferences.markup_main_display = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
-		preferences.markup_playlist = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
-		preferences.markup_song_browser = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
-	}
-	
+{
+	if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
+	if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
+	if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
+	preferences.markup_main_display = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
+	preferences.markup_playlist = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+	preferences.markup_song_browser = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
+}
+
 void set_display_settings()
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), preferences.markup_main_display);
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), preferences.markup_playlist);
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), preferences.markup_song_browser);
-	}
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), preferences.markup_main_display);
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), preferences.markup_playlist);
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), preferences.markup_song_browser);
+}
 
 void set_display_default_sd()
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-	}
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+}
 void set_display_default_pl()
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-	}
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+}
 void set_display_default_sb()
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")),"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");		
-	}
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")),"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");		
+}
 
 
 /* destory the preferences window */

@@ -1,3 +1,9 @@
+09-07-2004 Qball <Qball@qballcow.nl>
+	* src/song-browser.c:		Enabled sorting on id3 browser, custom
+	sort function.
+	* glade/gmpc.glade:		Changed signals so gmpc doesnt crash
+	when opening/closing/opening the preferences window.
+
 08-07-2004 Qball <Qball@qballcow.nl>
 	* glade/gmpc.glade:		Playlist button is now a toggle button.
 	* src/playlist2.glade:		Made a toggle_playlist function.

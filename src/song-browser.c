@@ -29,8 +29,18 @@ gboolean sb_button_press_event (GtkWidget * widget, GdkEventButton * event)
 		 {
 			 
 		 }
+		 else if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_TAG)
+		 {
+			 
+		 }
+		 else if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_SEARCH)
+		 {
+			 
+			 
+		 }
 		 
-		 
+	 /* stop signal */
+	  return TRUE;		 
 	 }
 	 /* continue signal */
 	  return FALSE;
@@ -40,7 +50,7 @@ gboolean sb_button_press_event (GtkWidget * widget, GdkEventButton * event)
 /* function that gets called by the tree_Store to sort it. */
 /* TODO: FIXME, disabled for now, doesnt work */
 gint
-sb_sort_function (GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b)
+sb_sort_function_id3 (GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b)
 {
   gint type_a, type_b;
   gchar *aname = NULL, *bname = NULL;
@@ -48,11 +58,13 @@ sb_sort_function (GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b)
   gtk_tree_model_get (model, b, SB_TYPE, &type_b, SB_DPATH, &bname, -1);
   if (type_a != type_b)
     {
+    return 0;
       return type_b - type_a;
     }
   else
     {
-      return g_utf8_collate (bname, aname);
+	    return strcmp(aname,bname);
+//      return g_utf8_collate (aname, bname);
     }
 }
 
@@ -604,9 +616,10 @@ song_browser_create ()
      gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
      gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
      gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-     gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_search), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-     gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_search), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-   */
+*/   
+     gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function_id3, NULL, NULL);
+     gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+   
 
   gtk_combo_box_set_active (GTK_COMBO_BOX
 			    (glade_xml_get_widget (sb_xml, "cb_type")),
@@ -771,7 +784,7 @@ sb_fill_browser_id3 ()
 			  SB_DPATH, string,
 			  SB_TYPE, 1, SB_PIXBUF, "media-artist", -1);
       g_free (string);
-      if ((i % 35) == 0)
+      if ((i % 50) == 0)
 	{
 	  while (gtk_events_pending ())
 	    gtk_main_iteration ();

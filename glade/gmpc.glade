@@ -429,9 +429,7 @@
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">False</property>
-  <signal name="close" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:11 GMT"/>
-  <signal name="destroy_event" handler="preferences_window_destroy" last_modification_time="Wed, 14 Jan 2004 08:02:54 GMT"/>
-  <signal name="delete_event" handler="preferences_window_destroy" last_modification_time="Wed, 14 Jan 2004 08:03:03 GMT"/>
+  <signal name="response" handler="preferences_window_destroy" last_modification_time="Fri, 09 Jul 2004 12:27:45 GMT"/>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox1">
@@ -455,6 +453,7 @@
 	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-7</property>
 	      <signal name="clicked" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:22 GMT"/>
+	      <accelerator key="Escape" modifiers="0" signal="clicked"/>
 	    </widget>
 	  </child>
 	</widget>
