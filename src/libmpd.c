@@ -344,7 +344,7 @@ int mpd_ob_status_update(MpdObj *mi)
 	if(mi->songid != mi->status->songid)
 	{
 		/* print debug message */
-		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Song has changed!");
+		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Song has changed %i %i!", mi->songid, mi->status->songid);
 
 
 		
@@ -734,31 +734,6 @@ int mpd_ob_player_set_random(MpdObj *mi,int random)
 	mpd_ob_status_queue_update(mi);
 	return FALSE;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*******************************************************************************
  * PLAYLIST 

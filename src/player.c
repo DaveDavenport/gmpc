@@ -402,7 +402,7 @@ void change_progress_update()
 {
 	if(info.conlock)
 	{
-		if(info.connection != NULL)
+		if(mpd_ob_check_connected(connection))
 		{
 			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
 			gchar *buf = NULL;
@@ -438,7 +438,10 @@ void change_progress_update()
 int progress_seek_stop()
 {
 	msg_pop_popup();
-	if(info.connection == NULL)return TRUE;
+	if(!mpd_ob_check_connected(connection))
+	{
+		return TRUE;
+	}
 	else if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
@@ -468,7 +471,7 @@ int volume_change_start()
 /* if the volume changes say it in the entry box.. this looks nice :) */    
 void volume_change_update()
 {
-	if(info.connection != NULL && info.conlock)
+	if(mpd_ob_check_connected(connection) && info.conlock)
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
@@ -486,7 +489,7 @@ void volume_change_update()
 		/* it does look ugly .. need to find a better way */
 		scroll.pos = -1;
 	}
-	else if(info.connection != NULL)
+	else if(mpd_ob_check_connected(connection))
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
@@ -504,7 +507,7 @@ void volume_change_update()
 int volume_change_stop()
 {
 	msg_pop_popup();
-	if(info.connection == NULL) return TRUE;
+	if(!mpd_ob_check_connected(connection)) return TRUE;
 	else 
 	{
 		info.conlock = FALSE;    
@@ -528,7 +531,7 @@ void time_format_toggle()
 /* the id3 info screen */
 void id3_info()
 {
-	if(info.connection == NULL) return;
+	if(!mpd_ob_check_connected(connection)) return;
 	call_id3_window(info.status->song);
 }
 

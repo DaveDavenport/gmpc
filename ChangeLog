@@ -1,3 +1,7 @@
+28-01-2005 Qball:
+	* src/libmpdclient.c:	Fixed not-initialized pointer.
+	* src/player.c:		Moved more to libmpd
+
 01-19-2005 avuton <avuton@gmail.com>
 	* src/playlist3.c       Inadvertantly removed playlist saving ability
 	* glade/playlist3.glade when I removed playlist.glade on the 10th,
