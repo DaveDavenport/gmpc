@@ -222,8 +222,8 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 			if(readed<=0) {
 				snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
 					"problems getting a response from"
-					" \"%s\" on port %i",host,
-					port);
+					" \"%s\" on port %i : %s",host,
+					port, strerror(errno));
 				connection->error = MPD_ERROR_NORESPONSE;
 				return connection;
 			}
@@ -1383,4 +1383,64 @@ void mpd_sendCommandListEnd(mpd_Connection * connection) {
 	}
 	connection->commandList = 0;
 	mpd_executeCommand(connection,"command_list_end\n");
+}
+
+void mpd_sendDevicesCommand(mpd_Connection * connection) {
+	mpd_executeCommand(connection,"devices\n");
+}
+
+mpd_Device * mpd_getNextDevice(mpd_Connection * connection) {
+	mpd_Device * device = NULL;
+
+	if(connection->doneProcessing || (connection->listOks &&
+			connection->doneListOk))
+	{
+		return NULL;
+	}
+
+	if(connection->error) return NULL;
+
+	device = malloc(sizeof(mpd_Device));
+	device->id = -10;
+	device->name = NULL;
+	device->enabled = 0;
+
+	if(!connection->returnElement) mpd_getNextReturnElement(connection);
+
+	while(connection->returnElement) {
+		mpd_ReturnElement * re = connection->returnElement;
+		if(strcmp(re->name,"deviceid")==0) {
+			if(device!=NULL && device->id>=0) return device;
+			device->id = atoi(re->value);
+		}
+		else if(strcmp(re->name,"devicename")==0) {
+			device->name = strdup(re->value);
+		}
+		else if(strcmp(re->name,"deviceenabled")==0) {
+			device->enabled = atoi(re->value);
+		}
+
+		mpd_getNextReturnElement(connection);
+		if(connection->error) {
+			free(device);
+			return NULL;
+		}
+		
+	}
+
+	return device;
+}
+
+void mpd_sendEnableDeviceCommand(mpd_Connection * connection, int deviceId) {
+	char * string = malloc(strlen("enabledevice")+25);
+	sprintf(string,"enabledevice \"%i\"\n",deviceId);
+	mpd_executeCommand(connection,string);
+	free(string);
+}
+
+void mpd_sendDisableDeviceCommand(mpd_Connection * connection, int deviceId) {
+	char * string = malloc(strlen("disabledevice")+25);
+	sprintf(string,"disabledevice \"%i\"\n",deviceId);
+	mpd_executeCommand(connection,string);
+	free(string);
 }
