@@ -115,6 +115,8 @@ typedef struct
 	char password[256];
 	float timeout; /* seconds.ms */
 	gboolean autoconnect;
+	/* display formating */
+	gchar *markup_main_display;
 } pref_struct;
 extern pref_struct preferences;
 void create_preferences_window();

@@ -15,7 +15,9 @@ int update_mpd_status()
 	/* lock it. */
 	info.conlock = TRUE;
 	if(info.status != NULL)  mpd_freeStatus(info.status);
+	mpd_sendStatusCommand(info.connection);
 	info.status = mpd_getStatus(info.connection);
+	mpd_finishCommand(info.connection);
 	/* check for errors */
 	if(check_for_errors())
 	{
@@ -88,7 +90,9 @@ int connect_to_mpd()
 		mpd_finishCommand(info.connection);
 	}
 
+	mpd_sendStatsCommand(info.connection);
 	info.stats = mpd_getStats(info.connection);
+	mpd_finishCommand(info.connection);
 	if(info.stats == NULL)
 	{
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, 
@@ -157,11 +161,11 @@ void play_song()
 	switch(info.status->state)
 	{
 		case MPD_STATUS_STATE_PLAY:
-			mpd_sendPauseCommand(info.connection);
+			mpd_sendPauseCommand(info.connection, TRUE);
 			mpd_finishCommand(info.connection);
 			break;
 		case MPD_STATUS_STATE_PAUSE:
-			mpd_sendPauseCommand(info.connection);
+			mpd_sendPauseCommand(info.connection,FALSE);
 			mpd_finishCommand(info.connection);
 			break;
 		default:
@@ -204,7 +208,7 @@ void update_mpd_dbase()
 	if(info.conlock) return;
 	/* lock it. */
 	info.conlock = TRUE;
-	mpd_sendUpdateCommand(info.connection);
+	mpd_sendUpdateCommand(info.connection, "");
 	mpd_finishCommand(info.connection);
 	/* check for errors */
 	if(check_for_errors())

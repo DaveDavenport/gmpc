@@ -750,8 +750,10 @@ void delete_selected_songs()
 		g_list_free (list);
 	}
 	/* get latest playlist_id.. and make the current.. because playlist is up to date */
-	if(check_for_errors()) return;    
+	if(check_for_errors()) return;   
+        mpd_sendStatusCommand(info.connection);
 	info.status = mpd_getStatus(info.connection);
+	mpd_finishCommand(info.connection);	
 	if(check_for_errors()) return;    
 	info.playlist_id = info.status->playlist;
 
@@ -1237,6 +1239,7 @@ void refresh_information_tab()
 	{
 		mpd_freeStats(info.stats);
 	}
+	mpd_sendStatsCommand(info.connection);
 	info.stats = mpd_getStats(info.connection);
 	mpd_finishCommand(info.connection);
 

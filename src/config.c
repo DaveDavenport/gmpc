@@ -147,6 +147,19 @@ void load_config()
 		strncpy(preferences.password, buf, MIN(strlen(buf),256));
 		}
 	    }
+
+	else if(!strncmp(buffer, "markup main display:", 19))
+	    {
+	    gchar *buf = g_strstrip(&buffer[19]);
+	    if(buf != NULL)
+		{
+		if(preferences.markup_main_display != NULL)
+		{
+			g_free(preferences.markup_main_display);
+		}
+		preferences.markup_main_display = g_strdup(buf);
+		}
+	    }
 	
 	memset(buffer, '\0',1024);
 	
@@ -183,6 +196,7 @@ void save_config()
     fprintf(fp, "popup timeout: %i\n", info.popup.timeout);
     fprintf(fp, "use auth: %i\n", preferences.user_auth);
     fprintf(fp, "auth pass: %s\n", preferences.password);
+    fprintf(fp, "markup main display: %s\n", preferences.markup_main_display);
     fclose(fp);
     g_free(filename);    
     }

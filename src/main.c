@@ -27,7 +27,8 @@ void set_default_values()
 	strcpy(preferences.password, "");
 	preferences.timeout = 1.0;
 	preferences.autoconnect = FALSE;
-
+	/* main display markup */
+	preferences.markup_main_display = g_strdup("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
 	/* the mpd status struct used  in the whole program */
 	info.status = NULL;
 	/* the mpd connection */

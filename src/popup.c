@@ -2,6 +2,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include "libmpdclient.h"
+#include "strfsong.h"
 #include "main.h"
 #include "misc.h"
 GtkWidget *popup = NULL;
@@ -34,17 +35,21 @@ gchar * get_string()
 	}
 	else{
 		GList *node = g_list_nth(info.playlist, info.status->song);
+		gchar buffer[1024];
 		/* check if there actually a song to display */
 		if(node == NULL)
 		{
 			return g_strdup("No Song found\n");
 		}
-		/* create an empty string */
-		string = g_string_new("");
+
+
 		/* get the mpd_Song struct. that is where the info is stored */
 		song = node->data;
+		strfsong(buffer, 1024, "[%name%\n&[%artist%\n]%title%[\n%album%]]|%name%|[%artist%\n]%title%[\n%album%]|%shortfile%|", song);
+		/* create an empty string */
+		string = g_string_new(buffer);  		
 		/* if there is no artist name or title name we use the filename */
-		if(song->artist  == NULL || song->title == NULL)
+/*		if(song->artist  == NULL || song->title == NULL)
 		{
 			gchar *basename     = remove_extention_and_basepath(song->file);
 			g_string_printf(string,"%s",basename);
@@ -59,8 +64,9 @@ gchar * get_string()
 				g_string_append_printf(string,"\n%s", song->album);
 			}
 		}
+		*/
 		/* catch & signs and convert them so */
-
+		
 		for(i= 0;i < string->len;i++)
 		{
 			if(string->str[i] == '&')

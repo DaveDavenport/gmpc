@@ -5,6 +5,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
+#include "strfsong.h"
 #define TITLE_LENGTH 42
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
@@ -266,6 +267,11 @@ int update_player()
 			else
 			{
 				info.cursong = song;
+				gchar buffer[1024];
+				strfsong(buffer, 1024, preferences.markup_main_display, song);
+				msg_set_base(buffer);
+				
+/*				info.cursong = song;
 				if(song->artist != NULL && song->title != NULL)
 				{
 					gchar *buf = NULL;
@@ -282,6 +288,7 @@ int update_player()
 					msg_set_base(buf);
 					g_free(buf);
 				}
+				*/
 			}
 		}
 	}

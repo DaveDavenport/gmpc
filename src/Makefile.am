@@ -17,6 +17,10 @@ gmpc_SOURCES=\
 	popup.c\
 	misc.c\
 	misc.h\
+	strfsong.c\
+	strfsong.h\
+	support.h\
+	support.c\ 
 	main.h
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"

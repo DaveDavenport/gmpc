@@ -5,6 +5,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
+#include "strfsong.h"
 
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
@@ -70,6 +71,10 @@ void update_tray_icon()
 				if(node != NULL)
 				{
 					mpd_Song *song = node->data;
+					gchar buffer[1024];
+					strfsong(buffer, 1024, preferences.markup_main_display, song);
+					str = g_strdup(buffer);
+/*
 					if(song->title != NULL && song->artist != NULL)
 					{
 						str = g_strdup_printf("%s - %s", song->artist, song->title);
@@ -78,6 +83,7 @@ void update_tray_icon()
 					{
 						str = remove_extention_and_basepath(song->file);
 					}
+					*/
 				}
 
 			}
@@ -89,8 +95,8 @@ void update_tray_icon()
 		{
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
-		
-		
+
+
 	}
 }
 
@@ -120,15 +126,15 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	{
 		if(info.hidden)
 		{
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
-		info.hidden = FALSE;
-		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+			gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+			info.hidden = FALSE;
+			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
 		else
 		{
-		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
-		info.hidden = TRUE;
-		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+			info.hidden = TRUE;
+			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
 	}
 	else if(event->button == 3)
