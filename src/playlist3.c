@@ -1689,19 +1689,19 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 		GtkTreeIter iter;
 		char *id;
+
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_add_source), NULL);		
+
+
+
 		if(gtk_tree_selection_get_selected(selec,&model, &iter))
 		{
 			gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &id, -1);
 			if(strlen(id) > 0)
 			{
-
-
-
-				/* add the add widget */
-				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_add_source), NULL);		
-
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_del_source), NULL);		
@@ -1711,11 +1711,15 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
 
-				/* show everything and popup */
-				gtk_widget_show_all(menu);                                                        		
-				gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
+
+
 			}
 		}
+		/* show everything and popup */
+		gtk_widget_show_all(menu);                                                        		
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
 	}
 
 	return TRUE;
