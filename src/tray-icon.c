@@ -81,8 +81,30 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	pango_layout_set_width(tray_layout_tooltip, 500000);
 	style = widget->style;
 
-	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
-			NULL, widget, "tooltip", 0, 0, -1, -1);
+//	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+//			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
+	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height);
+
+	
+
+	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,1,19,19,0,64*360);
+	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,1,19,19,0,64*360);
+	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,widget->allocation.height-20,19,19,0,64*360);
+	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-20,19,19,0,64*360);
+	gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-2);
+	gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-22);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
@@ -98,6 +120,8 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 		if(info.status->totalTime != 0)
 		{
+
+
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					FALSE,4,height+7, width ,8);                              		
 			width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
@@ -110,6 +134,8 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 		}
 	}
 	g_free(tooltiptext);
+
+
 	return;
 }
 
@@ -184,11 +210,47 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 	gtk_widget_show_all(tip);	
 
-	if(tray_timeout != -1) g_source_remove(tray_timeout);
-	tray_timeout = g_timeout_add(800, (GSourceFunc)
-			gtk_widget_queue_draw, tip);
+
+	/* testing */
+	{
+		GdkBitmap *gbm = (GdkBitmap *)gdk_pixmap_new(GDK_DRAWABLE(tip->window), width+1,height+1,1);
+		GdkGCValues val;
+		GdkGC *gc = gdk_gc_new(gbm);
+		GdkGC *gc1 = gdk_gc_new(gbm);
+		gdk_gc_get_values(gc, &val);
+		gdk_gc_set_foreground(gc, &val.background);
+		gdk_draw_rectangle(gbm, gc1, TRUE, 0,0,width, height);
+
+		gdk_draw_rectangle(gbm, gc, TRUE, 10,0,width-20, height);
+		gdk_draw_rectangle(gbm, gc, TRUE, 0,10,width, height-20);
+		gdk_draw_arc(gbm, gc, TRUE, 0,0,20,20,0,64*360);
+		gdk_draw_arc(gbm, gc, TRUE, width-20,0,20,20,0,64*360);
+		gdk_draw_arc(gbm, gc, TRUE, 0,height-20,20,20,0,64*360);
+		gdk_draw_arc(gbm, gc, TRUE, width-20,height-20,20,20,0,64*360);
+
+		g_object_unref(gc);
+		g_object_unref(gc1);
 
 
+
+
+		gtk_widget_shape_combine_mask(tip, (GdkBitmap *) gbm, 0,0);
+
+	}
+
+
+
+
+
+
+
+
+
+
+	/*	if(tray_timeout != -1) g_source_remove(tray_timeout);
+		tray_timeout = g_timeout_add(800, (GSourceFunc)
+		gtk_widget_queue_draw, tip);
+		*/
 	return TRUE;
 }
 
