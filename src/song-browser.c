@@ -183,6 +183,10 @@ void song_browser_create()
 			NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), GTK_TREE_VIEW_COLUMN(column));
 
+//	gtk_tree_view_column_set_sort_column_id(column, SB_DPATH);
+//	gtk_tree_view_column_set_sort_order(column, GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_store), SB_DPATH, GTK_SORT_ASCENDING);
+
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type")),0);
 
 
