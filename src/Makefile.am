@@ -12,7 +12,6 @@ gmpc_SOURCES=\
 	tray-icon.c\
 	misc.c\
 	strfsong.c\
-	playlist2.c\
 	open-location.c\
 	mm-keys.c\
 	playlist3.c\
@@ -24,7 +23,6 @@ LIBS = @gmpc_LIBS@ @LIBS@
 
 
 EXTRA_DIST = 	playlist3.h\
-		playlist2.h\
 	    	main.h\
 	   	mm-keys.h\
 		open-location.h\ 
