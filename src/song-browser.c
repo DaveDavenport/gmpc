@@ -10,21 +10,58 @@
 
 GladeXML *sb_xml = NULL;
 GtkTreeStore *sb_store = NULL;
+GtkTreeStore *sb_file = NULL;
+GtkTreeStore *sb_id3 = NULL;
+GtkTreeStore *sb_search = NULL;
+
 void sb_fill_browser(); 
 void sb_row_activated();
 void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further);
 int last_db = 0;
 
+void sb_do_search()
+{
+	GtkTreeIter iter, child;
+	mpd_InfoEntity *ent;
+	gint results = 0;
+	gchar *search_string = (gchar *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(sb_xml, "search_entry")));
+	gint search_type = gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")));
+	if(strlen(search_string) == 0) return;
+	if(info.connection == NULL) return;
+
+	gtk_tree_store_append(sb_store, &iter, NULL);	
+
+	mpd_sendSearchCommand(info.connection,search_type, search_string);  
+	
+	while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
+	{
+		gchar buffer[1024];
+		strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+		gtk_tree_store_append(sb_store, &child, &iter);
+		gtk_tree_store_set(sb_store, &child,                			
+				SB_FPATH,ent->info.song->file,	
+				SB_DPATH, buffer,
+				SB_TYPE, 0,
+				SB_PIXBUF, "media-audiofile",
+				-1);
+		results ++;
+		mpd_freeInfoEntity(ent);
+	}	
+
+	search_string = g_strdup_printf("%s (%i)", search_string, results);
+	gtk_tree_store_set(sb_store, &iter,
+			SB_FPATH, search_string,
+			SB_DPATH, search_string,
+			SB_TYPE, 1,
+			SB_PIXBUF, "gtk-find",
+			-1);
+}
+
+
+
 
 void sb_close()
 {
-/*	gtk_widget_destroy(glade_xml_get_widget(sb_xml, "song_browser"));
-	gtk_tree_store_clear(sb_store);
-	g_object_unref(sb_store);
-	g_object_unref(sb_xml);
-	sb_store = NULL;
-	sb_xml = NULL;
-	*/
 	gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
 }
 
@@ -74,6 +111,26 @@ void sb_row_activated()
 			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &name, -1);
 			/* add them to the add list */	
 			add_list = g_list_append(add_list, g_strdup(name));
+
+		}while((node = g_list_next(node)) != NULL);
+
+	}
+	else if(i == 2)
+	{
+		GList *node = g_list_first(rows);		
+		char *name = NULL;
+		GtkTreeIter iter;
+		gint type;
+		/* step to all the selected songs/directories */
+		do{
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &name,SB_TYPE, &type, -1);
+			if(type ==0)
+			{
+				/* add them to the add list */	
+				add_list = g_list_append(add_list, g_strdup(name));
+			}
 
 		}while((node = g_list_next(node)) != NULL);
 
@@ -157,7 +214,7 @@ void song_browser_create()
 	GtkTreeViewColumn *column;          	
 	if(sb_xml != NULL)
 	{
-		gtk_widget_show_all(
+		gtk_widget_show(
 				glade_xml_get_widget(sb_xml, "song_browser"));
 		gtk_window_present(GTK_WINDOW(
 					glade_xml_get_widget(sb_xml, "song_browser")));
@@ -167,13 +224,28 @@ void song_browser_create()
 
 	if(sb_store == NULL)
 	{
-		sb_store = gtk_tree_store_new(SB_NROWS,
+		sb_file = gtk_tree_store_new(SB_NROWS,
 				GTK_TYPE_STRING, /* full path*/
 				GTK_TYPE_STRING, /* display string */
 				GTK_TYPE_INT,	/* 1 for folder 0 for song */
-				GTK_TYPE_STRING,  /* stock -id*/
-				G_TYPE_BOOLEAN /* expander */
+				GTK_TYPE_STRING  /* stock -id*/
 				);
+
+		sb_id3 = gtk_tree_store_new(SB_NROWS,
+				GTK_TYPE_STRING, /* full path*/
+				GTK_TYPE_STRING, /* display string */
+				GTK_TYPE_INT,	/* 1 for folder 0 for song */
+				GTK_TYPE_STRING  /* stock -id*/             		
+				);                                           
+
+		sb_search = gtk_tree_store_new(SB_NROWS,
+				GTK_TYPE_STRING, /* full path*/
+				GTK_TYPE_STRING, /* display string */
+				GTK_TYPE_INT,	/* 1 for folder 0 for song */
+				GTK_TYPE_STRING  /* stock -id*/
+				);
+		sb_store = sb_file;
+
 	}
 
 	tree = glade_xml_get_widget(sb_xml, "treeview");
@@ -195,7 +267,6 @@ void song_browser_create()
 	gtk_tree_view_column_set_attributes(
 			column,renderer,
 			"stock-id", SB_PIXBUF,
-			"is-expander", SB_EXPANDER,
 			NULL);
 	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_text_new();
@@ -206,16 +277,13 @@ void song_browser_create()
 			GTK_TREE_VIEW_COLUMN(column),
 			renderer,
 			"text", SB_DPATH,
-			"is-expander", SB_EXPANDER,
 			NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), GTK_TREE_VIEW_COLUMN(column));
 
-//	gtk_tree_view_column_set_sort_column_id(column, SB_DPATH);
-//	gtk_tree_view_column_set_sort_order(column, GTK_SORT_ASCENDING);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_store), SB_DPATH, GTK_SORT_ASCENDING);
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type")),0);
-
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")),0);
 
 	sb_fill_browser();
 	glade_xml_signal_autoconnect(sb_xml);
@@ -234,7 +302,7 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(sb_store), parent,SB_TYPE, &type, SB_FPATH, &artist, -1);
 		if(type == 1 || type ==3 )	
-		sb_fill_browser_file(artist,parent, TRUE);
+			sb_fill_browser_file(artist,parent, TRUE);
 	}
 	else
 	{
@@ -328,14 +396,14 @@ void sb_fill_browser_id3()
 		g_free(string);
 		if((i % 35) == 0)
 		{
-		while(gtk_events_pending()) gtk_main_iteration();
-		/* check if the users hasn't closed the interface */
-		if(sb_xml == NULL || gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type"))) != 1) return;
+			while(gtk_events_pending()) gtk_main_iteration();
+			/* check if the users hasn't closed the interface */
+			if(sb_xml == NULL || gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type"))) != 1) return;
 		}
 		i++;
 	}while((node = g_list_next(node)) != NULL);
 	g_list_free(list);
-	
+
 	/* get the first iter */
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &parent, NULL))
 	{
@@ -402,62 +470,60 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 	}
 	if(type == 1)
 	{	
-	mpd_sendLsInfoCommand(info.connection, path);
-
-	ent = mpd_getNextInfoEntity(info.connection);
-	while(ent != NULL)
-	{
-		if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
-		{
-			gchar *basename = g_path_get_basename(ent->info.directory->path);
-			gtk_tree_store_append(sb_store, &iter, parent);
-			gtk_tree_store_set(sb_store, &iter, 
-					SB_FPATH,ent->info.directory->path,
-					SB_DPATH, basename,
-					SB_TYPE, 1,
-					SB_PIXBUF, "gtk-open",
-					SB_EXPANDER,TRUE,
-					-1);
-
-			g_free(basename);
-		}
-		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
-		{	
-			gchar buffer[1024];
-			strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
-			gtk_tree_store_append(sb_store, &iter, parent);
-			gtk_tree_store_set(sb_store, &iter,                			
-					SB_FPATH,ent->info.song->file,
-					SB_DPATH, buffer,
-					SB_TYPE, 0,
-					SB_PIXBUF, "media-audiofile",
-					SB_EXPANDER, FALSE,
-					-1);
-
-		}
-		mpd_freeInfoEntity(ent);
-
+		mpd_sendLsInfoCommand(info.connection, path);
 
 		ent = mpd_getNextInfoEntity(info.connection);
+		while(ent != NULL)
+		{
+			if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+			{
+				gchar *basename = g_path_get_basename(ent->info.directory->path);
+				gtk_tree_store_append(sb_store, &iter, parent);
+				gtk_tree_store_set(sb_store, &iter, 
+						SB_FPATH,ent->info.directory->path,
+						SB_DPATH, basename,
+						SB_TYPE, 1,
+						SB_PIXBUF, "gtk-open",
+						-1);
+
+				g_free(basename);
+			}
+			else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+			{	
+				gchar buffer[1024];
+				strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+				gtk_tree_store_append(sb_store, &iter, parent);
+				gtk_tree_store_set(sb_store, &iter,                			
+						SB_FPATH,ent->info.song->file,
+						SB_DPATH, buffer,
+						SB_TYPE, 0,
+						SB_PIXBUF, "media-audiofile",
+						-1);
+
+			}
+			mpd_freeInfoEntity(ent);
+
+
+			ent = mpd_getNextInfoEntity(info.connection);
+		}
 	}
-	}
-//	while(gtk_events_pending()) gtk_main_iteration();
+	//	while(gtk_events_pending()) gtk_main_iteration();
 	/* check if the users hasn't closed the interface */
-//	if(sb_xml == NULL) return;
+	//	if(sb_xml == NULL) return;
 	if(go_further)
 	{
-	   if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter,parent))
-	   {
-		   do{
-			   gint type;
-			   gchar *name;
-			   gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type,SB_FPATH, &name, -1);
-			   if(type == 1 || type == 3)
-			   {
-				   sb_fill_browser_file(name, &iter,FALSE);
-			   }
-		   }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));
-	   }
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter,parent))
+		{
+			do{
+				gint type;
+				gchar *name;
+				gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type,SB_FPATH, &name, -1);
+				if(type == 1 || type == 3)
+				{
+					sb_fill_browser_file(name, &iter,FALSE);
+				}
+			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));
+		}
 	}
 }
 
@@ -465,19 +531,41 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 void sb_fill_browser()
 {
 	GtkWidget *cb = glade_xml_get_widget(sb_xml, "cb_type");
+	GtkWidget *tree =  glade_xml_get_widget(sb_xml, "treeview");
 	int i = gtk_combo_box_get_active(GTK_COMBO_BOX(cb));
-	gtk_tree_store_clear(sb_store);
+//	gtk_tree_store_clear(sb_store);
 	last_db = info.stats->dbUpdateTime;
 	if( i == 0)
 	{
+		gtk_widget_hide(glade_xml_get_widget(sb_xml, "hb_search"));
+		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),
+				GTK_TREE_MODEL(sb_file));
+		sb_store = sb_file;
+
+		
 		/* fill by filename */
-		sb_fill_browser_file("/", NULL,TRUE);
+		if(gtk_tree_model_iter_n_children(GTK_TREE_MODEL(sb_store), NULL) == 0)
+			sb_fill_browser_file("/", NULL,TRUE);
 
 	}
 	else if (i == 1)
 	{
-		/* fill by id3 */	
-		sb_fill_browser_id3();
+		gtk_widget_hide(glade_xml_get_widget(sb_xml, "hb_search"));
+		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),
+				GTK_TREE_MODEL(sb_id3));
+		sb_store = sb_id3;                         		
+		/* fill by id3 */
+		if(gtk_tree_model_iter_n_children(GTK_TREE_MODEL(sb_store), NULL) == 0)
+			sb_fill_browser_id3();
+	}
+	else if (i == 2)
+	{
+		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),
+				GTK_TREE_MODEL(sb_search));
+		sb_store = sb_search;                         				
+		/* brose by search */
+		gtk_widget_show(glade_xml_get_widget(sb_xml, "hb_search"));
+
 	}
 }
 
@@ -491,6 +579,9 @@ void update_song_browser()
 	if(info.stats->dbUpdateTime != last_db)
 	{
 		g_print("updating browser\n");
+		gtk_tree_store_clear(sb_id3);
+		gtk_tree_store_clear(sb_file);
+		gtk_tree_store_clear(sb_search);
 		sb_fill_browser();		
 	}
 }
