@@ -1,0 +1,12 @@
+18-01-2004 Qball <Qball@qballcow.nl>
+    *	Lot of changes in the whole program. (also old ones)
+    * 	Preferences menu non blocking, disconnect/connect. The whole dialog is instant apply
+    *	Ctrl-F works for every tree view now.
+    *	Added information tab.
+    * 	Lots more.
+    
+17-10-2003 Qball <Qball@qballcow.nl>
+    * Added saving of search query.
+    * search for artist, album, title in id3info window
+    * changed layout of id3_info window
+    
