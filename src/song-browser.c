@@ -640,6 +640,14 @@ void sb_fill_browser()
 	}
 }
 
+void sb_reload_file_browser()
+{
+	if(sb_file != NULL)
+	{
+		gtk_tree_store_clear(sb_file);
+		sb_fill_browser();
+	}
+}
 
 void update_song_browser()
 {

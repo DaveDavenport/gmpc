@@ -8,6 +8,7 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist2.h"
+#include "song-browser.h"
 
 GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
@@ -35,10 +36,22 @@ void init_playlist2()
 
 void pl2_save_playlist()
 {
-
-
-
-
+	gchar *str;
+	GladeXML *xml = glade_xml_new(GLADE_PATH"playlist.glade", "save_pl",NULL);
+	
+	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml, "save_pl"))))
+	{
+		case GTK_RESPONSE_OK:
+		str = (gchar *) gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "pl-entry")));
+		if(strlen(str) != 0)
+		{
+			mpd_sendSaveCommand(info.connection, str);
+			mpd_finishCommand(info.connection);
+			sb_reload_file_browser();
+		}	
+	}
+	gtk_widget_destroy(glade_xml_get_widget(xml, "save_pl"));
+	g_object_unref(xml);
 }
 
 
