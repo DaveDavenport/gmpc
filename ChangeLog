@@ -1,3 +1,9 @@
+27-03-2005 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:	Ctrl-click now pause/play's aswell.
+
+old:	Qball <Qball@qballcow.nl>
+	* fix for not drawn section of main window
+
 17-03-2005 Qball <Qball@qballcow.nl>
 	* src/libmpd.[c|h]:	possible fix for tracking db updates.
 	* src/main.c:		possible fix for tracking db. adding db change

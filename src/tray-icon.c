@@ -551,7 +551,7 @@ void destroy_tray_icon()
 
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
-	if(event->button == 1)
+	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
 		if(info.hidden )
 		{
@@ -583,7 +583,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 		}
 	}
-	else if (event->button == 2)
+	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
 	{
 		play_song();
 
