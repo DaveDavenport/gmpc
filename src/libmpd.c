@@ -1929,7 +1929,7 @@ void mpd_ob_playlist_queue_commit(MpdObj *mi)
 		}
 		else if (mi->queue->type == MPD_QUEUE_DELETE_ID)
 		{
-			if(mi->queue->id != 0)
+			if(mi->queue->id >= 0)
 			{                                                           						
 				mpd_sendDeleteIdCommand(mi->connection, mi->queue->id);			
 			}                                                                               		
