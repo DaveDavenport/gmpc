@@ -38,13 +38,14 @@ void destroy_playlist(GtkWidget *wid)
 	info.playlist_running = FALSE;
 	}
 
-gint track_sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b)
+gint track_sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
+	gint column = GPOINTER_TO_INT(data);
 	gchar *ca=NULL, *cb=NULL;
 	gint ia=-1, ib = -1;
 	if(a== NULL || b == NULL) return 0;
-	gtk_tree_model_get(model, a, 3, &ca, -1);
-	gtk_tree_model_get(model, b, 3, &cb, -1);
+	gtk_tree_model_get(model, a, column, &ca, -1);
+	gtk_tree_model_get(model, b, column, &cb, -1);
 	if(ca != NULL) ia = (int)g_ascii_strtod(ca, NULL);
 	if(cb != NULL) ib = (int)g_ascii_strtod(cb, NULL);
 	/* still don't know if its needed or not :-/ */
@@ -165,25 +166,39 @@ void create_playlist()
 	/* files tree */
 	if(info.file_list == NULL) 
 	{
-		info.file_list = gtk_list_store_new(4, GTK_TYPE_STRING,GTK_TYPE_STRING, GTK_TYPE_STRING, GTK_TYPE_STRING);	
+		info.file_list = gtk_list_store_new(5, GTK_TYPE_STRING,GTK_TYPE_STRING, GTK_TYPE_STRING, GTK_TYPE_STRING, GTK_TYPE_STRING);	
 		g_object_ref(info.file_list);
 	}
 	tree = glade_xml_get_widget(xml_playlist_window, "treeview_files");
 
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(info.file_list));
 	gtk_tree_selection_set_mode((GtkTreeSelection *)gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), GTK_SELECTION_MULTIPLE);
+
+	renderer = gtk_cell_renderer_text_new();
+	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track #", renderer, "text", 4, NULL);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
+	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 0), 4);
+	gtk_tree_sortable_set_sort_func((GtkTreeSortable *)info.file_list, 4, (GtkTreeIterCompareFunc)track_sort_func, GINT_TO_POINTER(4), NULL);
+	gtk_tree_sortable_set_sort_column_id((GtkTreeSortable *)info.file_list, 4, GTK_SORT_ASCENDING);
+
+
+	
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, "text", 1, NULL);
-	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), TRUE);
+	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 1), 1);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Artist", renderer, "text", 2, NULL);
-	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), TRUE);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 2), TRUE);
+	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 2), 2);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Album", renderer, "text", 3, NULL);
-	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 2), TRUE);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 3), TRUE);
+	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 3), 3);
 	/* set the search to search on the title column.. I think that is the most usefull one.. I dont want to wind up
 	 * making my own search routine..
 	 * Users should use advanced search if they realy need to find anything 
@@ -230,7 +245,7 @@ void create_playlist()
 	gtk_tree_view_column_set_max_width(gtk_tree_view_get_column((GtkTreeView*)tree, 1), 250);    
 	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 1), 1);
 
-	gtk_tree_sortable_set_sort_func((GtkTreeSortable *)info.id3_songs_list, 3, (GtkTreeIterCompareFunc)track_sort_func, NULL, NULL);
+	gtk_tree_sortable_set_sort_func((GtkTreeSortable *)info.id3_songs_list, 3, (GtkTreeIterCompareFunc)track_sort_func, GINT_TO_POINTER(3), NULL);
 	/* set the search on the title .. we allready know the album and the artist.. so title is the logical choise */
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
@@ -863,6 +878,10 @@ void load_directories(gchar *oldp)
 			{
 				gtk_list_store_set(info.file_list, &iter,3,entity->info.song->album,-1);
 			}
+			if(entity->info.song->track != NULL)	
+			{
+				gtk_list_store_set(info.file_list, &iter,4,entity->info.song->track,-1);
+			}                                                                               			
 		}
 		mpd_freeInfoEntity(entity);
 	}
