@@ -379,60 +379,8 @@ void time_format_toggle()
 /* the id3 info screen */
 void id3_info()
 {
-	GtkWidget *dialog = NULL;
-	GladeXML *xml_id3_window;
-	GList *node;
-	mpd_Song *song;
-	call_id3_window(info.status->song);
-	return;
 	if(info.connection == NULL) return;
-	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE);
-	else return;
-
-	xml_id3_window = glade_xml_new(GLADE_PATH"gmpc.glade", "id3_info_window", NULL);
-	/* check for errors and axit when there is no gui file */
-	if(xml_id3_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
-
-	/* set info from struct */
-	node = g_list_nth(info.playlist, info.status->song);
-	if(node == NULL)
-	{
-		gtk_widget_destroy(dialog);
-		g_object_unref(xml_id3_window);
-		xml_id3_window = NULL;
-		return;
-	}
-	song = node->data;
-	if(song->artist != NULL)
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "artist_entry")), song->artist);
-	}
-	if(song->title != NULL)
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "title_entry")), song->title);
-	}
-	if(song->album != NULL)
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "album_entry")),song->album);
-	}
-	if(song->track != NULL)
-	{
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "track_entry")), song->track);
-	}
-	if(song->file != NULL)
-	{
-		gchar *buf1 = g_path_get_basename(song->file);
-		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "filename_entry")), buf1);
-		g_free(buf1);
-	}
-
-	if(!gtk_window_set_icon_from_file(GTK_WINDOW(glade_xml_get_widget(xml_id3_window, "id3_info_window")), PIXMAP_PATH"gmpc-tray.png", NULL))
-	    {
-	    g_print("no icon created\n");
-	    }
-	gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "id3_info_window"));
-	glade_xml_signal_autoconnect(xml_id3_window);
-	
+	call_id3_window(info.status->song);
 }
 
 /* create the player and connect signals */
