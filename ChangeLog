@@ -1,3 +1,10 @@
+29-06-2004 Qball <Qball@qballcow.nl>
+	* Added temporary open location window
+	* after updating the gui (in filling song-browser) check if the user
+	closed the window
+	* Added icons to the window
+
+
 28-06-2004 Qball <Qball@qballcow.nl>
 	* Added a song-browser window
 	* Added images for song/stream to playlist
