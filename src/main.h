@@ -24,6 +24,7 @@ typedef struct
 	gboolean conlock;
 	/* playlist number this is to check if the playlist changed */
 	int playlist_id;
+	int playlist_length;
 	/* the state, if the state changes I know I have to update some stuff */
 	int state;
 	/* the current song */

@@ -45,6 +45,7 @@ void set_default_values()
 	info.conlock= TRUE;
 	/* playlist number this is to check if the playlist changed */
 	info.playlist_id = -1;
+	info.playlist_length = 0;
 	/* the state, if the state changes I know I have to update some stuff */
 	info.state = -1;
 	/* the volume if the volume change I also have to update some stuff */
@@ -184,11 +185,12 @@ int update_interface()
 	{
 		mpd_InfoEntity *ent = NULL;
 		/* so I don't have to check all the time */
-		gint old_length = g_list_length(info.playlist);
-		gint last_pos = old_length;
+		gint old_length = 0;
 		GtkTreeIter iter;
 		gchar buffer[1024];
 
+		old_length = info.playlist_length;
+		
 
 		mpd_sendPlChangesCommand(info.connection, info.playlist_id);
 
@@ -200,7 +202,7 @@ int update_interface()
 			{
 				/* needed for getting the row */
 				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
-				GList *node = g_list_nth(info.playlist,ent->info.song->pos);
+//				GList *node = g_list_nth(info.playlist,ent->info.song->pos);
 				gint weight = (info.status->songid == ent->info.song->id)?
 					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
@@ -215,13 +217,13 @@ int update_interface()
 
 							-1); 
 				}
-				g_free(path);
+/*				g_free(path);
 				if(node != NULL)
 				{
 					mpd_freeSong(node->data);
 					node->data = mpd_songDup(ent->info.song);
 				}
-			}
+*/			}
 			else
 			{
 				gint weight = (info.status->songid == ent->info.song->id)?
@@ -236,31 +238,30 @@ int update_interface()
 						WEIGHT_INT, weight,
 						-1); 
 				/* add */
-				info.playlist = g_list_append(info.playlist, mpd_songDup(ent->info.song));
+//				info.playlist = g_list_append(info.playlist, mpd_songDup(ent->info.song));
 			}
-			last_pos = ent->info.song->pos;
 			mpd_freeInfoEntity(ent);
 			ent = mpd_getNextInfoEntity(info.connection);
 		}
 		while(info.status->playlistLength < old_length)
 		{	
-			GList *node = g_list_nth(info.playlist, old_length-1);
+/*			GList *node = g_list_nth(info.playlist, old_length-1);
 			if(node != NULL)
 			{
 				mpd_Song *song = node->data;
-				gchar *path = g_strdup_printf("%i", old_length-1);
+*/				gchar *path = g_strdup_printf("%i", old_length-1);
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
 				{
 					gtk_list_store_remove(pl2_store, &iter);
 				}
 				g_free(path);
-
-				info.playlist = g_list_remove(info.playlist, song);
+				old_length--;
+/*				info.playlist = g_list_remove(info.playlist, song);
 				mpd_freeSong(song);
 
 			}
 			old_length = g_list_length(info.playlist);
-		}
+*/		}
 		info.status->song = -1;
 		/*
 		   if(load_playlist())
@@ -270,6 +271,7 @@ int update_interface()
 				}
 				*/
 	}
+	info.playlist_length = info.status->playlistLength;
 	/* update the playlist */
 	update_playlist();
 	update_playlist2();
