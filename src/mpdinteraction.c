@@ -66,7 +66,7 @@ int connect_to_mpd()
 	{
 		string = cfg_get_single_value_as_string_with_default(config, "connection","password", "");
 		mpd_ob_set_password(connection,string);
-		cfg_free_string(free);
+		cfg_free_string(string);
 	}
 	else
 	{

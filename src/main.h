@@ -109,3 +109,5 @@ int  seek_ps(int n);
 
 void pl3_highlight_song_change ();
 void pl3_highlight_state_change ();
+char * edit_song_markup(char *format);
+void pl3_reinitialize_tree();

@@ -267,3 +267,4 @@ void pl3_xiph_add_source()
 	gtk_widget_destroy(dialog);
 	g_object_unref(gxml);
 }
+

@@ -1,3 +1,7 @@
+07-03-2005 Qball <qball@qballcow.nl>
+	* src/preferences.c:	make osb source list working completely.
+	* glade/gmpc.glade:	Made preferences menu modal.
+
 3-03-2005 Qball <qball@qballcow.nl>
 	* src/playlist3.c:	Removing saved playlist implemented.
 	* src/libmpd.[c|h]:	Added delete playlist function.

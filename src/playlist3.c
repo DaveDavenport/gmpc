@@ -1304,6 +1304,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
  */
 void pl3_reinitialize_tree()
 {
+	if(pl3_xml == NULL) return;
 	GtkTreePath *path = gtk_tree_path_new_from_string("0");
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
 	gtk_tree_store_clear(pl3_tree);
