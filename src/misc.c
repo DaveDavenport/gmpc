@@ -15,8 +15,14 @@ char *remove_extention_and_basepath(const char *filename)
 		return NULL;
 	}
 	buf  = g_path_get_basename(filename);
+
 	if(buf != NULL)
 	{
+		/* replace _ with spaces */
+		for(i=0; i< strlen(buf);i++)
+		{
+			if(buf[i] == '_') buf[i] = ' ';
+		}
 		for(i=strlen(buf);buf[i] != '.';i--);
 		/* cut of the extention */
 		if(i > 0)
@@ -52,4 +58,3 @@ char * shorter_string(const char *long_string)
 	return ret_val;
 
 }
-

@@ -1,3 +1,11 @@
+05-07-2004 Qball <Qball@qballcow.nl>
+	* src/playlist2.c/glade/playlist.glade: Added context menu to the playlist.
+	* src/playlist2.c: added shuffle/clear and crop function.
+04-07-2004 Qball <Qball@qballcow.nl>
+	* src/misc.c:	Replace _ with a space
+	* po/fr.po:	Added french translation (thanks goes to Mathieu
+	Doidy)
+
 03-07-2004 Qball <Qball@qballcow>
 	* Added translation support
 	* src/playlist.c:	Added a function to open/popup the filter and show filtered list.
