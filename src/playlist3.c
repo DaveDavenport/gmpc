@@ -24,7 +24,8 @@ enum{
 	PL3_BROWSE_FILE,
 	PL3_BROWSE_ARTIST,
 	PL3_BROWSE_ALBUM,
-	PL3_FIND
+	PL3_FIND,
+	PL3_NTYPES
 	/* more space for options, like shoutcast */
 } tree_type;
 
@@ -117,7 +118,7 @@ int  pl3_cat_get_selected_browser()
 	{
 		gint type;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
-		if(type >= PL3_CAT_NROWS || type < 0)
+		if(type >= PL3_NTYPES || type < 0)
 		{
 			return -1;
 		}
@@ -159,8 +160,14 @@ void pl3_find_view_browser()
 		gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, PL3_CAT_INT_ID,&field,-1);
 		
 		num_field = atoi(field);
+
+
+		
 		if(strcmp(name, "Search"))
 		{
+			gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")), name);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector")), num_field);
+
 			/* do the actual search */
 			mpd_sendSearchCommand (info.connection, num_field, name);
 
@@ -194,20 +201,30 @@ void pl3_find_search()
 {
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter,child;
-	char *name, *field;
+	GtkTreeIter iter,child,tst;
+	const char *name;
+	gchar *field;
 	if(!gtk_tree_selection_get_selected(selection, &model, &iter)) return;
 	name = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")));
 	field = g_strdup_printf("%i", gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))));
-	gtk_tree_store_append(pl3_tree, &child,&iter);
-	gtk_tree_store_set(pl3_tree, &child,
-		PL3_CAT_TYPE, PL3_FIND,
-		PL3_CAT_TITLE, name,
-		PL3_CAT_INT_ID, field,
-		PL3_CAT_ICON_ID, "gtk-find",
-		PL3_CAT_PROC, TRUE,
-		-1);	
 
+	if(gtk_tree_model_iter_parent(model, &tst, &iter))
+	{
+		gtk_tree_store_append(pl3_tree, &child,&tst);
+	}
+	else
+	{
+		gtk_tree_store_append(pl3_tree, &child,&iter);
+	}
+
+	gtk_tree_store_set(pl3_tree, &child,
+			PL3_CAT_TYPE, PL3_FIND,
+			PL3_CAT_TITLE, name,
+			PL3_CAT_INT_ID, field,
+			PL3_CAT_ICON_ID, "gtk-find",
+			PL3_CAT_PROC, TRUE,
+			-1);
+	gtk_tree_selection_select_iter(selection, &child);
 
 
 	g_free(field);
@@ -1006,7 +1023,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND)
 	{
 
 		/* del, crop */
@@ -1053,7 +1070,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		/* check for errors */                      		
 		check_for_errors ();                        		
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND)
 	{
 		GtkTreeIter iter;
 		gchar *song_id;
