@@ -4,7 +4,9 @@
 #include <string.h>
 #include <glade/glade.h>
 #include "libmpdclient.h"
+#include "playlist2.h"
 #include "main.h"
+#include "strfsong.h"
 
 /* the xml fle pointer to the player window */
 GladeXML *xml_main_window = NULL;
@@ -15,6 +17,10 @@ int debug = FALSE;
 int update_interface();
 /* the ID of the update timeout*/
 guint update_timeout = 0;
+
+extern GtkListStore *pl2_store;
+
+
 
 /* sets default values in the main struct's */
 void set_default_values()
@@ -98,7 +104,8 @@ int main(int argc, char **argv)
 
 	/* create the main window, This is done before anything else (but after command line check)*/
 	create_player();
-
+	init_playlist2();
+	
 	/* create timeouts */
 	/* get the status every 1/2 second should be enough */
 	gtk_timeout_add(600, (GSourceFunc)update_mpd_status, NULL);
@@ -154,14 +161,92 @@ int update_interface()
 	/* check for new playlist and load it if needed */
 	if(info.playlist_id != info.status->playlist)
 	{
-		if(load_playlist())
+		mpd_InfoEntity *ent = NULL;
+		/* so I don't have to check all the time */
+		gint old_length = g_list_length(info.playlist);
+		gint last_pos = old_length;
+		GtkTreeIter iter;
+		gchar buffer[1024];
+
+
+		mpd_sendPlChangesCommand(info.connection, info.playlist_id);
+		
+		ent = mpd_getNextInfoEntity(info.connection);
+		while(ent != NULL)
 		{
-			/* oeps error */
-			return TRUE;
+			/* decide wether to update or to add */
+			if(ent->info.song->pos < old_length)
+			{
+				/* needed for getting the row */
+				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
+				GList *node = g_list_nth(info.playlist,ent->info.song->pos);
+				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
+				{
+					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+					gtk_list_store_set(pl2_store, &iter,                          				
+							SONG_ID,ent->info.song->id, 
+							SONG_POS, ent->info.song->pos,
+							SONG_TITLE,buffer,
+/*						COLOR_STRING, "green",
+						COLOR_ENABLE,FALSE,
+*/						-1); 
+				}
+				g_free(path);
+				if(node != NULL)
+				{
+					mpd_freeSong(node->data);
+					node->data = mpd_songDup(ent->info.song);
+				}
+			}
+			else
+			{
+				gtk_list_store_append(pl2_store, &iter);
+				strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+				gtk_list_store_set(pl2_store, &iter,                          				
+						SONG_ID,ent->info.song->id, 
+						SONG_POS, ent->info.song->pos,
+						SONG_TITLE,buffer,
+						COLOR_STRING, "green",
+						COLOR_ENABLE,FALSE,
+						-1); 
+				/* add */
+				info.playlist = g_list_append(info.playlist, mpd_songDup(ent->info.song));
+			}
+			last_pos = ent->info.song->pos;
+			mpd_freeInfoEntity(ent);
+			ent = mpd_getNextInfoEntity(info.connection);
 		}
+		while(info.status->playlistLength < old_length)
+		{	
+			GList *node = g_list_nth(info.playlist, old_length-1);
+			if(node != NULL)
+			{
+				mpd_Song *song = node->data;
+				gchar *path = g_strdup_printf("%i", old_length-1);
+				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
+				{
+					gtk_list_store_remove(pl2_store, &iter);
+				}
+				g_free(path);
+
+					info.playlist = g_list_remove(info.playlist, song);
+				mpd_freeSong(song);
+
+			}
+			old_length = g_list_length(info.playlist);
+		}
+
+		/*
+		   if(load_playlist())
+		   {
+		   */		/* oeps error */
+		/*		return TRUE;
+				}
+				*/
 	}
 	/* update the playlist */
 	update_playlist();
+	update_playlist2();
 
 	/* update the player window */
 	if(update_player())
