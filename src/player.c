@@ -6,229 +6,325 @@
 #define TITLE_LENGTH 42
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
+PangoLayout *layout = NULL, *time_layout = NULL;
+guint expose_display_id = 0;
 
-gboolean update_msg()
+
+void time_exposed(GtkWidget *window)
+{
+	gint height, width;
+	pango_layout_get_size(time_layout, &width, &height);
+	width  = width/PANGO_SCALE;
+	height = height/PANGO_SCALE;
+	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
+			window->style->base_gc[GTK_STATE_NORMAL],
+			TRUE,
+			0,0,
+			50,23);
+	gdk_draw_layout(GDK_DRAWABLE(window->window),
+			window->style->text_gc[GTK_STATE_NORMAL],
+			MAX(0,(50-width)/2),MAX(0, (23-height)/2) ,
+			time_layout);
+
+	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
+			window->style->dark_gc[GTK_STATE_NORMAL],
+			FALSE,
+			0,0,
+			49,22);
+}
+
+
+
+void display_exposed(GtkWidget *window)
+{
+	int width, height;
+	g_signal_handler_block(G_OBJECT(window), expose_display_id);
+	pango_layout_get_size(layout, &width, &height);
+	width  = width/PANGO_SCALE;
+	height = height/PANGO_SCALE;
+
+	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
+			window->style->base_gc[GTK_STATE_NORMAL],
+			TRUE,
+			0,0,
+			260,23);                            
+	if(width <= 255)
 	{
+		gdk_draw_layout(GDK_DRAWABLE(window->window), 
+			window->style->text_gc[GTK_STATE_NORMAL], 
+			3, MAX(0, (23-height)/2),
+			layout);
+	}
+	else{
+		if(width-scroll.pos > 260)
+		{
+		gdk_draw_layout(GDK_DRAWABLE(window->window), 
+			window->style->text_gc[GTK_STATE_NORMAL], 
+			-scroll.pos, MAX(0, (23-height)/2),
+			layout);
+		}
+		else{
+			gdk_draw_layout(GDK_DRAWABLE(window->window), 
+					window->style->text_gc[GTK_STATE_NORMAL], 
+					-scroll.pos, MAX(0, (23-height)/2),
+					layout);
+
+
+
+			gdk_draw_layout(GDK_DRAWABLE(window->window), 
+					window->style->text_gc[GTK_STATE_NORMAL], 
+					(-scroll.pos+width),MAX(0, (23-height)/2),
+					layout);
+		}
+
+		if((width-scroll.pos) == 0)
+		{
+			scroll.pos = 0;
+
+		}
+
+
+
+	}
+
+	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
+			window->style->dark_gc[GTK_STATE_NORMAL],
+			FALSE,
+			0,0,
+			259,22);                              
+	g_signal_handler_unblock(G_OBJECT(window), expose_display_id);
+}	
+gboolean update_msg()
+{
+	int width;
 	/* scroll will be -1 when there is getting stuff updated. hopefully this fixes the nasty segfault in pango*/
 	if(scroll.exposed)
-		{
+	{
 		if(scroll.msg != NULL) g_free(scroll.msg);
 		/* set the correct message in the msg box. and set posistion on 0 */
 		if(scroll.popup_msg != NULL)
-			{
+		{
 			scroll.msg = g_strdup(scroll.popup_msg);
-			}	
+		}	
 		else if(scroll.base_msg != NULL)
-			{
+		{
 			scroll.msg = g_strdup(scroll.base_msg);
-			}
+		}
 		else scroll.msg = g_strdup("Gnome Music Player Client");
 		scroll.pos = 0;
 		scroll.up = 0;
+		pango_layout_set_text(layout, scroll.msg, -1);
+		pango_layout_get_size(layout, &width, NULL);
+		width = width/PANGO_SCALE;
+		if(width > 255)
+		{
+			char *temp= scroll.msg;
+			scroll.msg = g_strdup_printf("%s  ***  ", scroll.msg);
+			g_free(temp);
+			pango_layout_set_text(layout, scroll.msg, -1);
 		}
-  	 /* scroll the song text */
+
+	}
+	/* scroll the song text */
 	{
-	GtkWidget *entry = glade_xml_get_widget(xml_main_window, "title_entry");
-	PangoLayout *layout = gtk_entry_get_layout(GTK_ENTRY(entry));
-	int width;
-	pango_layout_get_size(layout, &width, NULL);
-	if(scroll.exposed)gtk_entry_set_text(GTK_ENTRY(entry), scroll.msg);
-	if((width/PANGO_SCALE) > (entry->allocation.width - 8))
-	    {
-	    if(scroll.pos == 0 && scroll.up % 4 );
-	    {
-	    gtk_entry_set_text(GTK_ENTRY(entry), &scroll.msg[scroll.pos]);
-	    scroll.pos++;
-	    }
-	    scroll.up++;
-	    }
-	else if(scroll.up < 0 && scroll.up != -4) 
-	    {
-	    scroll.up--;
-	    }
-	else {
-		if(scroll.pos != 0)
-		    {
-		    if(scroll.up >= 0) scroll.up = -1;
-		    else{
-			scroll.up = 1;
-		        scroll.pos = 0;
-		        gtk_entry_set_text(GTK_ENTRY(entry), &scroll.msg[scroll.pos]);
-			}
-		    }
-		else  gtk_entry_set_text(GTK_ENTRY(entry), &scroll.msg[scroll.pos]);
-	     }
+		GtkWidget *window = glade_xml_get_widget(xml_main_window, "entry_image");
+		pango_layout_get_size(layout, &width, NULL);
+
+		width = width/PANGO_SCALE;
+
+		if(width > 255)
+		{
+			scroll.pos ++;
+
+		}
+//		else scroll.pos = 0;
+//		scroll.pos++;
+		gtk_widget_queue_draw(window);
+
 		scroll.exposed = FALSE;
 	}
 	/* return true .. so that the it keeps going */
 	return TRUE;
-	}
+}
 
 void msg_set_base(gchar *msg)
-	{
+{
 	if(msg == NULL) return;
 	/* don't update when its the same string :) */
 	if(scroll.msg != NULL)
-		{
+	{
 		if(!strcmp(scroll.msg, msg)) return;
-		}
+	}
 	if(scroll.base_msg != NULL)
-		{
-			g_free(scroll.base_msg);
-			scroll.base_msg = NULL;
-		}
+	{
+		g_free(scroll.base_msg);
+		scroll.base_msg = NULL;
+	}
 	if(!g_utf8_validate(msg, -1, NULL))
-		{
+	{
 		scroll.base_msg = g_strdup("No valid UTF-8. Please check youre locale");
-		}
+	}
 	else	scroll.base_msg = g_strdup(msg);
 	scroll.exposed = TRUE;
-	}
+}
 
 void msg_push_popup(gchar *msg)
-	{
+{
 	if(msg == NULL) return;
 	if(scroll.popup_msg != NULL)
-		{
-			g_free(scroll.popup_msg);
-			scroll.popup_msg = NULL;
-		}
+	{
+		g_free(scroll.popup_msg);
+		scroll.popup_msg = NULL;
+	}
 	if(!g_utf8_validate(msg, -1, NULL))
-		{
+	{
 		scroll.popup_msg = g_strdup("No valid UTF-8. Please check youre locale");
-		}
+	}
 	else	scroll.popup_msg = g_strdup(msg);
 	scroll.exposed = TRUE;
-	}
+}
 
 void msg_pop_popup()
-	{
+{
 	if(scroll.popup_msg != NULL)
-		{
-			g_free(scroll.popup_msg);
-			scroll.popup_msg = NULL;
-		}
-	scroll.exposed = TRUE;
+	{
+		g_free(scroll.popup_msg);
+		scroll.popup_msg = NULL;
 	}
+	scroll.exposed = TRUE;
+}
 
 /* this updates the player.. this is called from the update function */
 /* conlock isnt locked at this point.. so If I do decide to get anything lock it */
 
 int update_player()
-    {
-    /* update the volume slider */
-    if(info.conlock) return TRUE;
-    if(info.volume != info.status->volume)
+{
+	/* update the volume slider */
+	if(info.conlock) return TRUE;
+	if(info.volume != info.status->volume)
 	{
-	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-	gtk_range_set_value(scale, (double) info.status->volume);
-	info.volume = info.status->volume;
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+		gtk_range_set_value(scale, (double) info.status->volume);
+		info.volume = info.status->volume;
 	}    
-    
-    /* things that only need to be updated during playing */
-    if(info.status->state == MPD_STATUS_STATE_PLAY)
-	{
-	/* update the progress bar */
-	{
-	    GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
-    	    gdouble  prog = ((double)info.status->elapsedTime/(double)info.status->totalTime)*100;
-    	    gtk_range_set_value(scale, prog);
-	}
-	/* update the time box */
-	{
 
-	GtkWidget *entry = glade_xml_get_widget(xml_main_window, "time_entry");
-	    int e_min = (int)(info.status->elapsedTime/60);
-	    int e_sec = info.status->elapsedTime - 60*e_min;
-	    int r_min = (int)((info.status->totalTime- info.status->elapsedTime)/60);
-	    int r_sec = info.status->totalTime - info.status->elapsedTime - r_min*60;
-	    gchar *buf = NULL;
-	    if(info.time_format == TIME_FORMAT_ELAPSED)
+	/* things that only need to be updated during playing */
+	if(info.status->state == MPD_STATUS_STATE_PLAY)
+	{
+		/* update the progress bar */
 		{
-		buf = g_strdup_printf("%02i:%02i", e_min, e_sec);
+			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
+			gdouble  prog = ((double)info.status->elapsedTime/(double)info.status->totalTime)*100;
+			gtk_range_set_value(scale, prog);
 		}
-	    else if (info.time_format == TIME_FORMAT_REMAINING) buf = g_strdup_printf("-%02i:%02i", r_min, r_sec);
-	   else buf = g_strdup_printf("%3.1f%%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
-	    gtk_entry_set_text(GTK_ENTRY(entry), buf);
-	
-	    g_free(buf);
+		/* update the time box */
+		{
+
+			//			GtkWidget *entry = glade_xml_get_widget(xml_main_window, "time_entry");
+			int e_min = (int)(info.status->elapsedTime/60);
+			int e_sec = info.status->elapsedTime - 60*e_min;
+			int r_min = (int)((info.status->totalTime- info.status->elapsedTime)/60);
+			int r_sec = info.status->totalTime - info.status->elapsedTime - r_min*60;
+			gchar *buf = NULL;
+			if(info.time_format == TIME_FORMAT_ELAPSED)
+			{
+				buf = g_strdup_printf("%02i:%02i", e_min, e_sec);
+			}
+			else if (info.time_format == TIME_FORMAT_REMAINING) buf = g_strdup_printf("-%02i:%02i", r_min, r_sec);
+			else buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
+			//		gtk_entry_set_text(GTK_ENTRY(entry), buf);
+			pango_layout_set_text(time_layout, buf, -1);
+			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
+
+			g_free(buf);
+		}
 	}
+	/* update the song title */
+
+	if(info.song != info.status->song && info.status->state != MPD_STATUS_STATE_STOP)
+	{
+		GList *node = g_list_nth(info.playlist, info.status->song);
+		mpd_Song *song;
+		if(node != NULL){
+			song = node->data;
+			/* make a global song */
+			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
+			{
+				msg_set_base("Gnome Music Player Client");
+			}
+			else
+			{
+				info.cursong = song;
+				if(song->artist != NULL && song->title != NULL)
+				{
+					gchar *buf = NULL;
+					if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
+					else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
+					msg_set_base(buf);
+					g_free(buf);
+				}
+				else
+				{
+					gchar *buf  = g_path_get_basename(song->file);
+					msg_set_base(buf);
+					g_free(buf);
+				}
+			}
+		}
 	}
-    /* update the song title */
-    
-    if(info.song != info.status->song && info.status->state != MPD_STATUS_STATE_STOP)
-    {
-	    GList *node = g_list_nth(info.playlist, info.status->song);
-	    mpd_Song *song;
-	    if(node != NULL){
-		    song = node->data;
-		    /* make a global song */
-		    if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
-		    {
-			    msg_set_base("Gnome Music Player Client");
-		    }
-		    else
-		    {
-			    info.cursong = song;
-			    if(song->artist != NULL && song->title != NULL)
-			    {
-				    gchar *buf = NULL;
-				    if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
-				    else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
-				    msg_set_base(buf);
-				    g_free(buf);
-			    }
-			    else
-			    {
-				    gchar *buf  = g_path_get_basename(song->file);
-				    msg_set_base(buf);
-				    g_free(buf);
-			    }
-		    }
-	    }
-    }
 
 
-    /* update if state changes */
-    if(info.state != info.status->state)
-    {
-	    GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
-	    if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
-	    {
-		    GtkWidget *entry = glade_xml_get_widget(xml_main_window, "time_entry");
-		    msg_set_base("GMPC - Stopped");
-		    if(info.time_format == TIME_FORMAT_ELAPSED)
-		    {
-			    gtk_entry_set_text(GTK_ENTRY(entry), "00:00");
-		    }
-		    else if(info.time_format == TIME_FORMAT_REMAINING) gtk_entry_set_text(GTK_ENTRY(entry), "-00:00");
-		    else	 gtk_entry_set_text(GTK_ENTRY(entry), "0.0 %%");
-		    entry =  glade_xml_get_widget(xml_main_window, "progress_slider");
-		    gtk_range_set_value(GTK_RANGE(entry), 0);
-		    
-		    info.song = -1;
-	    }
-	    if(info.status->state == MPD_STATUS_STATE_PLAY) gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-pause.png");
-	    else gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-play.png");
+	/* update if state changes */
+	if(info.state != info.status->state)
+	{
+		GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
+		if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
+		{
+			GtkWidget *entry;
+			//			= glade_xml_get_widget(xml_main_window, "time_entry");
+			msg_set_base("GMPC - Stopped");
+			if(info.time_format == TIME_FORMAT_ELAPSED)
+			{
+				//gtk_entry_set_text(GTK_ENTRY(entry), "00:00");
+				pango_layout_set_text(time_layout, "00:00", -1);
+			}
+			else if(info.time_format == TIME_FORMAT_REMAINING)
+			{
+				//		gtk_entry_set_text(GTK_ENTRY(entry), "-00:00");
+				pango_layout_set_text(time_layout, "-00:00", -1);
 
-	    info.state = info.status->state;
-    }
-    /* update random and repeat button */
-    /* lock it to stop them from toggling and triggering another toggle*/
-    if(info.status->repeat != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
-    {
-	    info.conlock = TRUE;
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), info.status->repeat);
-	    info.conlock = FALSE;
-    }
-    if(info.status->random != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
-    {
-	    info.conlock = TRUE;
-	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), info.status->random);
-	    info.conlock = FALSE;
-    }
-    return FALSE;
-    }
+			}
+			else	{
+				//				gtk_entry_set_text(GTK_ENTRY(entry), "0.0 %%");
+				pango_layout_set_text(time_layout, "0.0 %", -1);
+			}
+			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
+			entry =  glade_xml_get_widget(xml_main_window, "progress_slider");
+			gtk_range_set_value(GTK_RANGE(entry), 0);
+
+			info.song = -1;
+		}
+		if(info.status->state == MPD_STATUS_STATE_PLAY) gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-pause.png");
+		else gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-play.png");
+
+		info.state = info.status->state;
+	}
+	/* update random and repeat button */
+	/* lock it to stop them from toggling and triggering another toggle*/
+	if(info.status->repeat != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
+	{
+		info.conlock = TRUE;
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), info.status->repeat);
+		info.conlock = FALSE;
+	}
+	if(info.status->random != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
+	{
+		info.conlock = TRUE;
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), info.status->random);
+		info.conlock = FALSE;
+	}
+	return FALSE;
+}
 
 
 
@@ -383,13 +479,33 @@ void id3_info()
 	call_id3_window(info.status->song);
 }
 
+void style_changed(GtkWidget *window, GtkStyle *prev, PangoLayout *lay)
+{
+	pango_layout_context_changed(lay);
+
+}
 /* create the player and connect signals */
 void create_player()
 {
 	xml_main_window = glade_xml_new(GLADE_PATH"gmpc.glade", "main_window", NULL);
+	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
+	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);
+	layout = gtk_widget_create_pango_layout(glade_xml_get_widget(xml_main_window, "entry_image"), "");
+	time_layout = gtk_widget_create_pango_layout(glade_xml_get_widget(xml_main_window, "time_image"), "");
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "entry_image")), 
+			"style-set", G_CALLBACK(style_changed), layout);
+	expose_display_id = g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "entry_image")), 
+			"expose-event", G_CALLBACK(display_exposed), layout);
+
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "time_image")), 
+			"style-set", G_CALLBACK(style_changed), time_layout);
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "time_image")), 
+			"expose-event", G_CALLBACK(time_exposed), time_layout);
+
+	pango_layout_set_text(time_layout, "00:00", -1);
 	/* check for errors and axit when there is no gui file */
 	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 	glade_xml_signal_autoconnect(xml_main_window);
-	gtk_timeout_add(400, (GSourceFunc)update_msg, NULL);
+	gtk_timeout_add(75, (GSourceFunc)update_msg, NULL);
 }
 

@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
-AM_INIT_AUTOMAKE(gmpc, 0.10.2)
+AM_INIT_AUTOMAKE(gmpc-smooth, 0.10.2)
 
 # Checks for programs.
 AC_PROG_CC
