@@ -156,7 +156,7 @@ void playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColum
 		/* check for errors */                      		
 		check_for_errors ();                        		
 	}
-	else if (type == PL3_BROWSE_FILE)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
 	{
 		GtkTreeIter iter;
 		gchar *song_id;
@@ -340,6 +340,7 @@ long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
 				gtk_list_store_set (pl3_store, &iter,
 						2, buffer,
 						0, ent->info.song->file,
+						1, PL3_ENTRY_SONG,
 						5,"media-audiofile",
 						-1);
 			}
@@ -379,6 +380,7 @@ long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
 				gtk_list_store_set (pl3_store, &iter,
 						2, buffer,
 						0, ent->info.song->file,
+						1, PL3_ENTRY_SONG,
 						5,"media-audiofile",
 						-1);
 
@@ -577,6 +579,9 @@ void cat_sel_changed()
 	{
 		gtk_tree_view_set_model(tree, NULL);	
 	}
+	/* gtk seems to want this when model changes  */
+	/* so we do it */
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 }
 
 void pl3_update()
@@ -689,6 +694,11 @@ void create_playlist3 ()
 	/* right column */
 	tree = glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
+
+	gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection
+			 (GTK_TREE_VIEW (tree))),
+			GTK_SELECTION_MULTIPLE);
+
 
 	pl3_store = gtk_list_store_new (6, 
 			GTK_TYPE_STRING,	/* song path */
