@@ -3,6 +3,8 @@
 	* src/eggtrayicon.c:	Fixed gettex compile time error.
 	* src/player.c:		Update all displays even when paused/stopped
 	(bug $319)
+	* src/player.c:		Display goes to hh:mm mode when more then 99
+	minutes have passed.
 
 06-10-2004 Qball, <Qball@qballcow.nl>
 	* src/tray_icon.c:	Fixed case that tooltip wouldn't go away when

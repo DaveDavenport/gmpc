@@ -232,11 +232,32 @@ int update_player()
 			int r_min = (int)((info.status->totalTime- info.status->elapsedTime)/60);
 			int r_sec = info.status->totalTime - info.status->elapsedTime - r_min*60;
 			gchar *buf = NULL;
+
+			
+			
+			
+			
+			
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
+			/* if more then 100 minutes player change to hh:mm */
+				if(abs(e_min) >= 100)
+				{
+					e_sec = (e_min % 60);
+					e_min = (int)(e_min/60);
+				}                                				
 				buf = g_strdup_printf("%02i:%02i", abs(e_min), abs(e_sec));
 			}
-			else if (info.time_format == TIME_FORMAT_REMAINING) buf = g_strdup_printf("-%02i:%02i", abs(r_min), abs(r_sec));
+			else if (info.time_format == TIME_FORMAT_REMAINING)
+			{
+			/* if more then 100 minutes player change to hh:mm */
+				if(abs(r_min) >= 100)
+				{                                                               				
+					r_sec = (r_min % 60);
+					r_min = (int)(r_min/60);
+				}                                								
+				buf = g_strdup_printf("-%02i:%02i", abs(r_min), abs(r_sec));
+			}
 			else{
 				if(info.status->totalTime <= 0)
 				{
@@ -244,7 +265,7 @@ int update_player()
 				}
 				else
 				{
-			       	buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
+					buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
 				}
 			}
 			pango_layout_set_text(time_layout, buf, -1);
@@ -534,8 +555,8 @@ void create_player()
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "media-play", GTK_ICON_SIZE_BUTTON);		
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);			
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);			
-	
-	
+
+
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);
 	layout = gtk_widget_create_pango_layout(glade_xml_get_widget(xml_main_window, "entry_image"), "");
@@ -552,19 +573,19 @@ void create_player()
 
 	pango_layout_set_text(time_layout, "00:00", -1);
 
-/* uncomment the following lines to enable tooltip on the title entry box */
-/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "enter-notify-event", 
-			G_CALLBACK(tray_motion_cb), NULL);
-	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "leave-notify-event",
-			G_CALLBACK(tray_leave_cb), NULL);
+	/* uncomment the following lines to enable tooltip on the title entry box */
+	/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "enter-notify-event", 
+		G_CALLBACK(tray_motion_cb), NULL);
+		g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "leave-notify-event",
+		G_CALLBACK(tray_leave_cb), NULL);
 
 */
 
 	g_signal_connect(
-		G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),		
-		"key-press-event",
-		G_CALLBACK(player_key_press),
-		NULL);
+			G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),		
+			"key-press-event",
+			G_CALLBACK(player_key_press),
+			NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }
