@@ -7,6 +7,8 @@ AM_INIT_AUTOMAKE(gmpc, 0.11.3)
 AC_PROG_CC
 AC_PROG_INTLTOOL
 
+
+AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
 # Checks for libraries.
 
 # Checks for header files.
@@ -29,6 +31,9 @@ PKG_CHECK_MODULES(gmpc,
 	gnome-vfs-2.0
 	libxml-2.0
 ])
+
+
+
 
 
 
@@ -57,8 +62,10 @@ PACKAGE_LOCALE_DIR="${PACKAGE_PREFIX}/${DATADIRNAME}/locale"
 AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",
 		   [The package's locale path for gettext])
 
-
-
-
 AC_SUBST(PACKAGE_LIBS)
+if test x${enable_debug} = xyes; then
+	AC_DEFINE(DEBUG, 1, [Enable extra debug output])
+fi
+
+
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in)

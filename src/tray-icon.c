@@ -2,7 +2,6 @@
 #include <string.h>
 #include <glade/glade.h>
 #include "eggtrayicon.h"
-#include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
@@ -29,12 +28,13 @@ guint popup_timeout = -1;
 gchar *tray_get_tooltip_text()
 {
 	GString *string = g_string_new("");
+	mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(info.connection != NULL && info.status != NULL && info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP)
+	if(mpd_ob_check_connected(connection) && song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
 	{
-		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, info.mpdSong);
+		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */
 		if(info.status->totalTime != 0)
@@ -407,7 +407,7 @@ void update_tray_icon()
 {
 
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) && 
-			info.status != NULL && info.song != info.status->song &&
+			info.status != NULL && info.song != mpd_ob_player_get_current_song_id(connection) &&
 			info.status->state != MPD_STATUS_STATE_STOP)
 	{
 		if(popup_timeout == -1 && tip == NULL)
@@ -433,23 +433,6 @@ void update_tray_icon()
 	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1)) return;
 	if(info.status != NULL) 
 	{
-		if(info.song != info.status->song)
-		{
-//			gchar *str = NULL;
-			if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
-			{
-				if(info.mpdSong != NULL)
-				{
-//					gchar buffer[1024];
-//					strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
-//					str = g_strdup(buffer);
-				}
-
-			}
-//			else str = g_strdup(_("Gnome Music Player Client"));
-			//			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
-//			g_free(str);
-		}
 		if(info.state != info.status->state)
 		{
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
@@ -494,13 +477,9 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	{
 		if(info.hidden )
 		{
-			//	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
 			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), player_wsize.x, player_wsize.y);
 			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),player_wsize.width, player_wsize.height);
 			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
-
-//			if(info.sb_hidden) song_browser_create();
-//			if(info.pl2_hidden) create_playlist2();
 
 			info.hidden = FALSE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
@@ -515,12 +494,6 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 
-//			if(info.sb_hidden)
-//			{
-//				sb_close();
-				/* make sure its showed again */
-//				info.sb_hidden = TRUE;
-//			}
 		}
 	}
 	else if (event->button == 2)
@@ -588,14 +561,12 @@ int create_tray_icon()
 	}
 	/* set up tray icon */
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
-	//	tray_image = gtk_image_new();
 	event = gtk_event_box_new();
 	gtk_widget_set_usize(event, 20,20);
 	gtk_widget_set_app_paintable(event, TRUE);
 	ali = gtk_alignment_new(0.5,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), event);
 	gtk_container_add(GTK_CONTAINER(tray_icon), ali);
-	//	gtk_container_add(GTK_CONTAINER(event), tray_image);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	/* set image */
 	temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc-tray.png",NULL);
@@ -615,12 +586,6 @@ int create_tray_icon()
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
 	/* we only need to load this one once */
-/*	if(tray_xml == NULL)
-	{
-		tray_xml =   glade_xml_new(GLADE_PATH"gmpc.glade", "tray_icon_menu", NULL);
-		glade_xml_signal_autoconnect(tray_xml);
-	}
-*/	//	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
 	info.song = -1;
 	return FALSE;
 }

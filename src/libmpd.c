@@ -25,6 +25,7 @@ MpdInt * mpd_ob_create()
 	mi->status = NULL;
 	mi->stats = NULL;
 	mi->error = NULL;
+	mi->CurrentSong = NULL;
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
 	
@@ -65,6 +66,10 @@ void mpd_ob_free(MpdInt *mi)
 	{
 		mpd_freeStats(mi->stats);
 	}	
+	if(mi->CurrentSong)
+	{
+		mpd_freeSong(mi->CurrentSong);
+	}
 	free(mi);
 }
 
@@ -170,6 +175,7 @@ int mpd_ob_disconnect(MpdInt *mi)
 	mi->connected = 0;
 	/* lock */
 	mpd_ob_lock_conn(mi);
+	debug_printf(DEBUG_INFO, "mpd_ob_disconnect: disconnecting\n");
 
 	if(mi->connection)
 	{
@@ -186,6 +192,12 @@ int mpd_ob_disconnect(MpdInt *mi)
 		mpd_freeStats(mi->stats);
 		mi->stats = NULL;
 	}
+	if(mi->CurrentSong)
+	{
+		mpd_freeSong(mi->CurrentSong);
+		mi->CurrentSong = NULL;
+	}
+	return FALSE;
 }
 
 int mpd_ob_connect(MpdInt *mi)
@@ -196,6 +208,8 @@ int mpd_ob_connect(MpdInt *mi)
 		return -1;
 	}
 
+	debug_printf(DEBUG_INFO, "mpd_ob_connect: connecting\n");
+	
 	if(mi->connected)
 	{
 		/* disconnect */
@@ -241,6 +255,7 @@ int mpd_ob_check_connected(MpdInt *mi)
 	}
 	return mi->connected;
 }
+
 int mpd_ob_status_queue_update(MpdInt *mi)
 {
 	if(!mpd_ob_check_connected(mi))
@@ -253,6 +268,7 @@ int mpd_ob_status_queue_update(MpdInt *mi)
 		mpd_freeStatus(mi->status);
 		mi->status = NULL;
 	}
+	return FALSE;
 }
 
 int mpd_ob_status_update(MpdInt *mi)
@@ -397,6 +413,35 @@ int mpd_ob_player_get_current_song_id(MpdInt *mi)
 	}
 	return mi->status->songid;
 }
+
+int mpd_ob_player_get_current_song_pos(MpdInt *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		debug_printf(DEBUG_WARNING,"mpd_ob_player_get_state: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_status_check(mi))
+	{                                        	          	
+		debug_printf(DEBUG_ERROR,"Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}                
+	/* check if in valid state */	
+	if(mpd_ob_player_get_state(mi) != MPD_OB_PLAYER_PLAY &&
+			mpd_ob_player_get_state(mi) != MPD_OB_PLAYER_PAUSE)
+	{
+		return -1;
+	}
+	/* just to be sure check */	
+	if(!mi->status->playlistLength)
+	{
+		return -1;
+	}
+	return mi->status->song;
+}
+
+
+
 
 float mpd_ob_status_set_volume_as_float(MpdInt *mi, float fvol)
 {
@@ -547,7 +592,6 @@ int mpd_ob_player_pause(MpdInt *mi)
 /*******************************************************************************
  * PLAYLIST 
  */
-
 mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
 {
 	mpd_Song *song = NULL;
@@ -562,7 +606,8 @@ mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
 	{
 		return NULL;
 	}
-	mpd_sendPlaylistInfoCommand(mi->connection, songid);
+	debug_printf(DEBUG_INFO, "mpd_ob_playlist_get_song: Trying to grab song with id: %i\n", songid);
+	mpd_sendPlaylistIdCommand(mi->connection, songid);
 	ent = mpd_getNextInfoEntity(mi->connection);
 	mpd_finishCommand(mi->connection);
 
@@ -581,14 +626,15 @@ mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
 	if(ent->type != MPD_INFO_ENTITY_TYPE_SONG)
 	{
 		mpd_freeInfoEntity(ent);
-		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_song: Failed to grab song from mpd\n");
+		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_song: Failed to grab corect song type from mpd\n");
 		return NULL;
 	}
 	song = mpd_songDup(ent->info.song);
 	mpd_freeInfoEntity(ent);
-
+	
 	return song;
 }
+
 
 mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
 {
@@ -599,12 +645,33 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
 		return NULL;
 	}
 
-	song_id = mpd_ob_player_get_current_song_id(mi);
-	if(song_id < 0)
+	if(!mpd_ob_status_check(mi))
 	{
-		return NULL;
+		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_current_song: Failed to check status\n");
+		return NULL; 
 	}
 
-	return mpd_ob_playlist_get_song(mi, song_id);
+	if(mi->CurrentSong != NULL && mi->CurrentSong->id != mi->status->songid)
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_get_current_song: Current song not up2date, updating\n");
+		mpd_freeSong(mi->CurrentSong);
+		mi->CurrentSong = NULL;
+	}
+	
+	if(mi->CurrentSong == NULL)
+	{
+		/* TODO: this to use the geT_current_song_id function */
+		mi->CurrentSong = mpd_ob_playlist_get_song(mi, mpd_ob_player_get_current_song_id(mi));
+		if(mi->CurrentSong == NULL)
+		{
+			debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_current_song: Failed to grab song\n");
+			return NULL;
+		}
+	}
+
+
+
+
+	return mi->CurrentSong;
 }
 

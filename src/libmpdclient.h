@@ -356,6 +356,9 @@ void mpd_sendCurrentSongCommand(mpd_Connection * connection);
 /* songNum of -1, means to display the whole list */
 void mpd_sendPlaylistInfoCommand(mpd_Connection * connection, int songNum);
 
+/* songId of -1, means to display the whole list */
+void mpd_sendPlaylistIdCommand(mpd_Connection * connection, int songId);
+
 /* use this to get the changes in the playlist since version _playlist_ */
 void mpd_sendPlChangesCommand(mpd_Connection * connection, long long playlist);
 
@@ -475,19 +478,21 @@ void mpd_sendCommandListEnd(mpd_Connection * connection);
  * returns -1 if it advanced to an OK or ACK */
 int mpd_nextListOkCommand(mpd_Connection * connection);
 
-typedef struct _mpd_Device {
+typedef struct _mpd_OutputEntity {
 	int id;
 	char * name;
 	int enabled;
-} mpd_Device;
+} mpd_OutputEntity;
 
-void mpd_sendDevicesCommand(mpd_Connection * connection);
+void mpd_sendOutputsCommand(mpd_Connection * connection);
 
-mpd_Device * mpd_getNextDevice(mpd_Connection * connection);
+mpd_OutputEntity * mpd_getNextOutput(mpd_Connection * connection);
 
-void mpd_sendEnableDeviceCommand(mpd_Connection * connection, int deviceId);
+void mpd_sendEnableOutputCommand(mpd_Connection * connection, int outputId);
 
-void mpd_sendDisableDeviceCommand(mpd_Connection * connection, int deviceId);
+void mpd_sendDisableOutputCommand(mpd_Connection * connection, int outputId);
+
+void mpd_freeOutputElement(mpd_OutputEntity * output);
 
 #ifdef __cplusplus
 }

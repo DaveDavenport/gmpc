@@ -256,6 +256,7 @@ int prev_song()
 int stop_song()
 {
 	mpd_ob_player_stop(connection);
+	return FALSE;
 	/* check lock, no need to lock it for this command */
 /*	if(mpd_lock())
 	{
@@ -287,7 +288,7 @@ int play_song()
 	{
 		mpd_ob_player_pause(connection);
 	}
-	
+	return FALSE;	
 /*	if(mpd_lock())
 	{
 		return TRUE;

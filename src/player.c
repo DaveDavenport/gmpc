@@ -316,9 +316,10 @@ int update_player()
 	}
 	/* update the song title */
 
-	if(info.song != info.status->song && info.status->state != MPD_STATUS_STATE_STOP)
+	if(info.song != mpd_ob_player_get_current_song_id(connection) && info.status->state != MPD_STATUS_STATE_STOP)
 	{
-		if(info.mpdSong != NULL){
+		mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
+		if(song){
 			/* make a global song */
 			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
 			{
@@ -331,7 +332,7 @@ int update_player()
 				strfsong(buffer, 1024, 
 						cfg_get_single_value_as_string_with_default(config, "player","display_markup",
 							"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-						info.mpdSong);
+						song);
 				msg_set_base(buffer);
 			}
 		}

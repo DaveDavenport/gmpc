@@ -36,6 +36,8 @@ typedef struct _MpdInt
 	mpd_Status *status;
 	mpd_Stats *stats;
 
+	mpd_Song *CurrentSong;
+
 	/* error message */
 	char *error;	
 	
@@ -53,7 +55,7 @@ void 		mpd_ob_set_password			(MpdInt *mi, char *hostname);
 void 		mpd_ob_set_port				(MpdInt *mi, int port);
 int 		mpd_ob_connect				(MpdInt *mi);
 int 		mpd_ob_disconnect			(MpdInt *mi);
-
+int 		mpd_ob_check_connected			(MpdInt *mi);
 /* status commands */
 int 		mpd_ob_status_queue_update		(MpdInt *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdInt *mi, float fvol);
@@ -66,7 +68,7 @@ int 		mpd_ob_player_prev			(MpdInt *mi);
 int 		mpd_ob_player_pause			(MpdInt *mi);
 int 		mpd_ob_player_get_state			(MpdInt *mi);
 int 		mpd_ob_player_get_current_song_id	(MpdInt *mi);
-
+int 		mpd_ob_player_get_current_song_pos	(MpdInt *mi);
 /* playlist command */
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdInt *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdInt *mi);

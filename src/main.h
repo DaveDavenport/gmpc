@@ -36,8 +36,6 @@ typedef struct
 	int playlist_playtime;
 	/* the state, if the state changes I know I have to update some stuff */
 	int state;
-	/* the current song */
-	mpd_Song *mpdSong;
 	/* the volume if the volume change I also have to update some stuff */
 	int volume;
 	/* the current song */

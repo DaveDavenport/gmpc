@@ -1583,7 +1583,7 @@ void pl3_update()
 	}
 
 	/* if the song changed, or the state highlight the right song */
-	if (info.status->song != info.song || info.state != info.status->state)
+	if (mpd_ob_player_get_current_song_id(connection) != info.song || info.state != info.status->state)
 	{
 		pl3_highlight_song ();
 	}
@@ -2082,13 +2082,11 @@ void pl3_highlight_song ()
 	{
 		/* create a string so I can get the right iter */
 		temp = g_strdup_printf ("%i", info.old_pos);
-		if (gtk_tree_model_get_iter_from_string
-				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
 			gint song_id = 0;
 			/* check if we have the song we want */
-			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,
-					&song_id, -1);
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,&song_id, -1);
 			/* if the old song is the new song (so tags updated) quit */
 			if (song_id == info.status->songid
 					&& info.status->state == info.state)
@@ -2109,7 +2107,7 @@ void pl3_highlight_song ()
 			info.status->state != MPD_STATUS_STATE_UNKNOWN &&
 			info.status->song != -1 && info.status->playlistLength > 0)
 	{
-		temp = g_strdup_printf ("%i", info.status->song);
+		temp = g_strdup_printf ("%i", mpd_ob_player_get_current_song_pos(connection));
 		if (gtk_tree_model_get_iter_from_string
 				(GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
@@ -2126,7 +2124,7 @@ void pl3_highlight_song ()
 		}
 		g_free (temp);
 		/* set highlighted position */
-		info.old_pos = info.status->song;
+		info.old_pos = mpd_ob_player_get_current_song_pos(connection);
 	}
 }
 

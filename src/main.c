@@ -117,7 +117,6 @@ set_default_values ()
 	 * tray icon 
 	 */
 	info.hidden = FALSE;
-	info.mpdSong = NULL;
 
 	/* */
 	info.sb_hidden = FALSE;
@@ -300,7 +299,6 @@ int update_interface ()
 
 	/*
 	 * ok save to update interface, no need to lock (yet) 
-	 */
 	if (info.song != info.status->song)
 	{
 		mpd_InfoEntity *ent = NULL;
@@ -318,7 +316,7 @@ int update_interface ()
 			mpd_freeInfoEntity (ent);
 		}
 	}
-
+*/
 	/*
 	 * tray update 
 	 */
@@ -479,7 +477,7 @@ int update_interface ()
 	 */
 	info.playlist_id = info.status->playlist;
 	if (info.status->state != MPD_STATUS_STATE_UNKNOWN)
-		info.song = info.status->song;
+		info.song = mpd_ob_player_get_current_song_id(connection);
 	if (info.status->state == MPD_STATUS_STATE_STOP)
 		info.song = -1;
 	return TRUE;
