@@ -46,7 +46,7 @@ void status_callback(MpdObj *mi);
  * the xml fle pointer to the player window 
  */
 GladeXML *xml_main_window = NULL;
-
+GladeXML *xml_error_window = NULL;
 
 int update_interface ();
 
@@ -339,6 +339,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 				strfsong (buffer, 1024,
 						cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
 						data->value.song);						
+		
 				gtk_list_store_set (pl2_store, &iter,
 						SONG_ID,data->value.song->id, 
 						SONG_POS,data->value.song->pos, 					
@@ -375,10 +376,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_TIME,data->value.song->time,
 					-1);
-
-
-
-
 
 		}
 		data= mpd_ob_data_get_next(data);		
@@ -544,20 +541,33 @@ void song_changed(MpdObj *mi, int oldsong, int newsong)
 	pl3_highlight_song_change();
 }
 
+void error_window_destroy(GtkWidget *window)
+{
+	gtk_widget_destroy(window);
+	g_object_unref(xml_error_window);
+	xml_error_window = NULL;
+}
+
+
+
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
+	else if (xml_error_window == NULL)
+	{
+		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
+		xml_error_window = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);
+		GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
+		gtk_widget_show_all(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), NULL);
+		msg_set_base(_("Gnome Music Player Client"));
+	}
 	else
 	{
 		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
-		GladeXML * er_xml = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);
-		GtkWidget *dialog = glade_xml_get_widget(er_xml, "error_dialog");
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(er_xml,"em_label")), str); 
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(GTK_WIDGET(dialog));
-		msg_set_base(_("Gnome Music Player Client"));
-		g_object_unref(er_xml);
-		g_free(str);
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
+
 	}
 }
 

@@ -1,5 +1,14 @@
+25-02-2005 Qball <Qball@qballcow.nl>
+	* src/main.c:		error window forced to one instance.
+	* src/preferences.c:	output isn't hidden when not availible but
+	made insensitive
+
 24-02-2005 Qball <Qball@qballcow.nl>
 	* cleaned up some compile warnings.. (and all // comment )
+	* src/playlist.c:	Fixed problem not loading song as if it where
+	a playlist.
+	* src/playlist.c:	Fixed problem with id3 info
+
 
 
 23-02-2005 Qball <Qball@qballcow.nl>

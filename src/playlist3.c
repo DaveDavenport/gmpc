@@ -563,37 +563,15 @@ void pl3_current_playlist_crop_selected_songs()
 		/* remove every selected song one by one */
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter);
 		do{
-			int value;
+			int value=0;
 			if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 			{
 				gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
+				printf("test %i\n", value);
 				mpd_ob_playlist_queue_delete_id(connection, value);				
 			}
 		} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
 		mpd_ob_playlist_queue_commit(connection);
-	}
-	else
-	{
-		/* create a warning message dialog */
-		GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
-					(glade_xml_get_widget
-					 (pl3_xml, "pl3_win")),
-					GTK_DIALOG_MODAL,
-					GTK_MESSAGE_WARNING,
-					GTK_BUTTONS_NONE,
-					_("Are you sure you want to clear the playlist?"));
-		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
-				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
-				GTK_RESPONSE_OK, NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
-				GTK_RESPONSE_CANCEL);
-
-		switch (gtk_dialog_run (GTK_DIALOG (dialog)))
-		{
-			case GTK_RESPONSE_OK:
-				pl3_clear_playlist();
-		}                                                         
-		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
@@ -622,7 +600,7 @@ void pl3_show_song_info ()
 			GtkTreeIter iter;
 			int value;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get (model, &iter, SONG_POS, &value, -1);
+			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
 			/* show the info for this song  */
 			call_id3_window (value);
 			/* go to previous song if still connected */
@@ -1256,7 +1234,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		else
 		{
 			pl3_push_statusbar_message("Added a song");
-			mpd_ob_playlist_queue_load(connection, song_id);
+			mpd_ob_playlist_queue_add(connection, song_id);
 		}
 		mpd_ob_playlist_queue_commit(connection);
 	}

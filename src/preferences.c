@@ -432,7 +432,6 @@ void update_outputs_settings()
 	if(mpd_ob_check_connected(connection) && (connection->connection->version[0] > 0 || connection->connection->version[1] >= 12))
 	{
 		MpdData *data = mpd_ob_server_get_output_devices(connection);
-		gtk_widget_show_all(GTK_WIDGET(frame));
 		while(data != NULL)
 		{
 			gtk_list_store_append(store, &iter);
@@ -442,9 +441,11 @@ void update_outputs_settings()
 					2, data->value.output_dev->id, -1);
 			data = mpd_ob_data_get_next(data);
 		}
+		gtk_widget_set_sensitive(GTK_WIDGET(frame), FALSE);
+		gtk_widget_show_all(GTK_WIDGET(frame));            		
 	}
 	else
 	{
-		gtk_widget_hide_all(GTK_WIDGET(frame));
+		gtk_widget_set_sensitive(GTK_WIDGET(frame), FALSE);
 	}
 }

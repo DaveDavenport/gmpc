@@ -1708,32 +1708,26 @@ MpdData * mpd_ob_playlist_get_changes(MpdObj *mi,int old_playlist_id)
 
 	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)
 	{	
-		if(data == NULL)
-		{
-			data = mpd_ob_new_data_struct();
-			data->first = data;
-			data->next = NULL;
-			data->prev = NULL;
-		}	
-		else
-		{
-			data->next = mpd_ob_new_data_struct();
-			data->next->first = data->first;
-			data->next->prev = data;
-			data = data->next;
-			data->next = NULL;
-		}
-		if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
-		{
+		if(ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{	
+			if(data == NULL)
+			{
+				data = mpd_ob_new_data_struct();
+				data->first = data;
+				data->next = NULL;
+				data->prev = NULL;
+			}	
+			else
+			{
+				data->next = mpd_ob_new_data_struct();
+				data->next->first = data->first;
+				data->next->prev = data;
+				data = data->next;
+				data->next = NULL;
+			}
 			data->type = MPD_DATA_TYPE_SONG;
 			data->value.song = mpd_songDup(ent->info.song);
 		}
-		else
-		{
-
-			/* should do something here */
-		}
-
 		mpd_freeInfoEntity(ent);
 	}
 	mpd_finishCommand(mi->connection);
