@@ -2189,7 +2189,7 @@ void pl2_save_playlist ()
 		return;
 
 	/* create the interface */
-	xml = glade_xml_new (GLADE_PATH "playlist.glade", "save_pl", NULL);
+	xml = glade_xml_new (GLADE_PATH "playlist3.glade", "save_pl", NULL);
 
 	/* run the interface */
 	switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
