@@ -909,10 +909,9 @@ void load_directories(gchar *oldp)
 		if(entity->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
 		{	
 
-			gchar *base;
+			gchar *base = NULL;
 			gtk_list_store_append(info.dir_list, &iter);
 			if(entity->info.directory->path == NULL)
-				if(debug)printf("Error on line 915, info.directory->path is a NULL pointer\n");
 			base = g_path_get_basename(entity->info.directory->path);
 			gtk_list_store_set(info.dir_list, &iter, 0,entity->info.directory->path , 1, base,-1);
 			g_free(base);
@@ -925,7 +924,6 @@ void load_directories(gchar *oldp)
 			{
 				gchar *utf8 = g_path_get_basename(entity->info.song->file);
 				if(entity->info.song->file == NULL)
-				if(debug)printf("Error on line 928, info.song->file is a NULL pointer\n");
 				
 				short_title = shorter_string(utf8);
 				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);

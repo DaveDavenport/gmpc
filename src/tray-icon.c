@@ -5,11 +5,9 @@
 #include "libmpdclient.h"
 #include "main.h"
 EggTrayIcon *tray_icon = NULL;
-GtkWidget *tray_image;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
-GdkPixbuf *logo_small = NULL;
-
+GtkTooltips *tps = NULL;
 void exposed_signal(GtkWidget *event)
 	{
 //	GdkPixbuf *state = NULL;
@@ -57,11 +55,40 @@ void exposed_signal(GtkWidget *event)
 void update_tray_icon()
 {
 	if(!info.do_tray) return;
-	if(info. status != NULL) 
+	if(info.status != NULL) 
 	{
-		if(info.state != info.status->state){
-			gtk_widget_queue_draw(tray_icon);
+		if(info.song != info.status->song)
+		{
+			gchar *str = NULL;
+			if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
+			{
+				GList *node = g_list_nth(info.playlist, info.status->song);
+				if(node != NULL)
+				{
+					mpd_Song *song = node->data;
+					if(song->title != NULL && song->artist != NULL)
+					{
+						str = g_strdup_printf("%s - %s", song->artist, song->title);
+					}
+					else
+					{
+						str = g_path_get_basename(song->file);
+						str[strlen(str)-4] = '\0';		
+
+					}
+				}
+
+			}
+			else str = g_strdup("Gnome Music Player Client");
+			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
+			g_free(str);
 		}
+		if(info.state != info.status->state)
+		{
+			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+		}
+		
+		
 	}
 }
 
@@ -98,7 +125,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 int create_tray_icon()
 {
-	GdkPixbuf *pb, *temp;
+	GdkPixbuf  *temp;
 	GtkWidget *event;
 	if(tray_icon != NULL)
 	{
@@ -112,19 +139,18 @@ int create_tray_icon()
 	gtk_widget_set_app_paintable(event, TRUE);
 	gtk_container_add(GTK_CONTAINER(tray_icon), event);
 	//	gtk_container_add(GTK_CONTAINER(event), tray_image);
-	gtk_widget_show_all(tray_icon);
+	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	/* set image */
 	temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc-tray.png",NULL);
 	logo = gdk_pixbuf_scale_simple(temp, 20,20, GDK_INTERP_BILINEAR);
-	logo_small =  gdk_pixbuf_scale_simple(temp, 10,10, GDK_INTERP_BILINEAR);g_object_unref(temp);
-	//	gtk_image_set_from_pixbuf(GTK_IMAGE(tray_image),   pb);  
-	//	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],pb, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);
-	//	g_object_unref(pb);
+	g_object_unref(temp);
+
 	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 	/* show all */
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
+	if(tps == NULL)	tps = gtk_tooltips_new();
 
 	/* we only need to load this one once */
 	if(tray_xml == NULL)
