@@ -212,7 +212,8 @@ init_playlist2 ()
 			GTK_TYPE_STRING,	/* song title */
 			GTK_TYPE_INT,	/* weight int */
 			G_TYPE_BOOLEAN,	/* weight color */
-			GTK_TYPE_STRING);	/* stock-id */
+			GTK_TYPE_STRING,	/* stock-id */
+			GTK_TYPE_INT);
 }
 
 

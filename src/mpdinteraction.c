@@ -57,6 +57,7 @@ int disconnect_to_mpd()
 	info.song = -1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
+	info.playlist_playtime = 0;
 	info.old_pos = -1;
 	
 	/* disconnect playlist */
@@ -75,6 +76,7 @@ int connect_to_mpd()
 	info.conlock = TRUE;
 	scroll.exposed = 1;
 	info.song = -1;    
+	info.playlist_playtime = 0;
 	if(debug)g_print("timeout = %.2f\n", preferences.timeout);
 	if(info.connection) mpd_clearError(info.connection);
 	info.connection = mpd_newConnection(preferences.host, preferences.port, preferences.timeout);

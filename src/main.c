@@ -6,6 +6,7 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include "libmpdclient.h"
 #include "playlist2.h"
+#include "playlist3.h"
 #include "song-browser.h"
 #include "main.h"
 #include "strfsong.h"
@@ -29,7 +30,7 @@ void init_stock_icons ();
 extern GtkListStore *pl2_store;
 
 
-void
+	void
 main_trigger_update ()
 {
 	if (info.connection != NULL)
@@ -43,7 +44,7 @@ main_trigger_update ()
 /*
  * sets default values in the main struct's 
  */
-void
+	void
 set_default_values ()
 {
 	memset (preferences.host, '\0', 256);
@@ -87,6 +88,7 @@ set_default_values ()
 	 */
 	info.playlist_id = -1;
 	info.playlist_length = 0;
+	info.playlist_playtime = 0;
 	/*
 	 * the state, if the state changes I know I have to update some stuff 
 	 */
@@ -124,14 +126,14 @@ set_default_values ()
 	/* */
 	info.sb_hidden = FALSE;
 	info.pl2_hidden = FALSE;
-	
+
 	/*
 	 * updating 
 	 */
 	info.updating = FALSE;
 
 	/* tooltip playlist
-	 */
+	*/
 	info.pl2_tooltip = 800;
 	info.pl2_do_tooltip = TRUE;
 
@@ -140,7 +142,7 @@ set_default_values ()
 
 
 
-int
+	int
 main (int argc, char **argv)
 {
 	MmKeys *keys = NULL;
@@ -195,7 +197,7 @@ main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 
-	
+
 	/*
 	 * run the main loop 
 	 */
@@ -343,11 +345,23 @@ update_interface ()
 				if (gtk_tree_model_get_iter_from_string
 						(GTK_TREE_MODEL (pl2_store), &iter, path))
 				{
+					/* overwriting existing entry */
 					gint weight = PANGO_WEIGHT_NORMAL;
+					gint time=0;
 					if (ent->info.song->id ==
 							info.status->songid)
 					{
 						weight = PANGO_WEIGHT_ULTRABOLD;
+					}
+					/* get old time */
+					gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
+					if(time != MPD_SONG_NO_TIME)
+					{
+						info.playlist_playtime -= time;
+					}
+					if(ent->info.song->time != MPD_SONG_NO_TIME)
+					{
+						info.playlist_playtime += ent->info.song->time;
 					}
 
 					strfsong (buffer, 1024,
@@ -370,11 +384,19 @@ update_interface ()
 							 NULL) ?
 							"media-audiofile"
 							: "media-stream",
+							SONG_TIME,
+							ent->info.song->time,
 							-1);
 				}
 			}
 			else
 			{
+				if(ent->info.song->time != MPD_SONG_NO_TIME)
+				{
+					info.playlist_playtime += ent->info.song->time;
+				}
+
+
 				gtk_list_store_append (pl2_store, &iter);
 				strfsong (buffer, 1024,
 						preferences.markup_playlist,
@@ -390,7 +412,9 @@ update_interface ()
 						SONG_STOCK_ID,
 						(ent->info.song->name ==
 						 NULL) ? "media-audiofile"
-						: "media-stream", -1);
+						: "media-stream", 
+						SONG_TIME, ent->info.song->time,
+						-1);
 			}
 			mpd_freeInfoEntity (ent);
 			ent = mpd_getNextInfoEntity (info.connection);
@@ -401,6 +425,12 @@ update_interface ()
 			if (gtk_tree_model_get_iter_from_string
 					(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
+				gint time = 0;
+				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
+				if(time != MPD_SONG_NO_TIME)
+				{
+					info.playlist_playtime -= time;
+				}                                                      				
 				gtk_list_store_remove (pl2_store, &iter);
 			}
 			g_free (path);
@@ -416,6 +446,7 @@ update_interface ()
 	 * update the playlist 
 	 */
 	update_playlist2 ();
+	pl3_update ();
 
 	/*
 	 * update the player window 

@@ -51,6 +51,36 @@ enum pl3_store_types
 	PL3_NROWS
 } pl3_store_type;
 
+
+gchar * format_time(unsigned long seconds)
+{
+	int days = seconds/86400;
+	int houres = (seconds % 86400)/3600;
+	int minutes = (seconds % 3600)/60;
+	char *ret;
+	GString *str = g_string_new("Total time: ");
+	if(days != 0)
+	{
+		g_string_append_printf(str, "%i days ", days);
+	}	
+	if(houres != 0)
+	{
+		g_string_append_printf(str, "%i hours ", houres);
+	}
+	if(minutes != 0)
+	{
+		g_string_append_printf(str, "%i minutes ", minutes);
+	}                                                         	
+	if(seconds == 0)
+	{
+		g_string_append(str, "0");
+	}
+	ret = str->str;
+	g_string_free(str, FALSE);
+	return ret;
+}
+
+
 /* Get the type of the selected row.. 
  * -1 means no row selected 
  */
@@ -198,17 +228,18 @@ void add_artist_browser()
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
 
-void view_file_browser_folder(GtkTreeIter *iter_cat)
+long unsigned view_file_browser_folder(GtkTreeIter *iter_cat)
 {
 	mpd_InfoEntity *ent = NULL;
 	char *path;
 	int sub_folder = 0;
 	GtkTreeIter iter;
+	long  unsigned time=0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
 	/* check the connection state and when its valid proceed */
 	if (check_connection_state ())
 	{
-		return;
+		return 0;
 	}
 
 	mpd_sendLsInfoCommand (info.connection, path);
@@ -223,6 +254,11 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 		{
 			gchar buffer[1024];
 			strfsong (buffer, 1024, preferences.markup_song_browser,ent->info.song);
+			if(ent->info.song->time != MPD_SONG_NO_TIME)
+			{
+				time += ent->info.song->time;			
+			}
+
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					0, ent->info.song->file,
@@ -257,26 +293,27 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 			gtk_tree_store_remove(pl3_tree, &iter);      		
 		}
 	}
-
+	return time;
 }
 
-void view_artist_browser_folder(GtkTreeIter *iter_cat)
+long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
 {
 	mpd_InfoEntity *ent = NULL;
 	char *artist, *string;
 	GtkTreeIter iter;
+	long unsigned time =0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (check_connection_state ())
-		return;
+		return 0;
 
 	if(artist == NULL || string == NULL)
 	{
-		return;
+		return 0;
 	}
 	if(strlen(artist) == 0)
 	{
 		/*lowest level, do nothing */
-		return;
+		return 0;
 	}
 	if(!strcmp(artist,string))
 	{
@@ -291,6 +328,10 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 				gchar buffer[1024];
 				strfsong (buffer, 1024, preferences.markup_song_browser,
 						ent->info.song);
+				if(ent->info.song->time != MPD_SONG_NO_TIME)
+				{
+					time += ent->info.song->time;
+				}
 				if(ent->info.song->file == NULL)
 				{
 					g_print("crap\n");
@@ -326,6 +367,10 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 				gchar buffer[1024];
 				strfsong (buffer, 1024, preferences.markup_song_browser,
 						ent->info.song);
+				if(ent->info.song->time != MPD_SONG_NO_TIME)
+				{
+					time += ent->info.song->time;
+				}
 				if(ent->info.song->file == NULL)
 				{
 					g_print("crap\n");
@@ -342,6 +387,7 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 		}
 
 	}
+	return time;
 }
 
 
@@ -478,32 +524,46 @@ void cat_sel_changed()
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
-	g_print("Changed\n");
+	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
-		g_print("type:%i\n", type);
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
 			g_print("adding list\n");
+			if(info.stats != NULL)
+			{	
+				gchar *string = format_time(info.playlist_playtime);
+				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+				g_free(string);
+			}
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
+			long unsigned time= 0;
+			gchar *string;
 			g_print("show songs\n");
 			gtk_list_store_clear(pl3_store);	
-			view_file_browser_folder(&iter);
+			time = view_file_browser_folder(&iter);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-
+			string = format_time(time);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+			g_free(string);
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
+			long unsigned time= 0;
+			gchar *string;        			
 			g_print("show songs for artist browser\n");
 			gtk_list_store_clear(pl3_store);	
-			view_artist_browser_folder(&iter);
+			time = view_artist_browser_folder(&iter);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+			string = format_time(time);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+			g_free(string);
 		}
 		/* when it's not a know type remove the model */
 		else
@@ -518,6 +578,37 @@ void cat_sel_changed()
 		gtk_tree_view_set_model(tree, NULL);	
 	}
 }
+
+void pl3_update()
+{
+	if(pl3_xml == NULL|| info.status == NULL)
+	{
+		return;
+	}
+	if(info.playlist_id != info.status->playlist)
+	{
+		gint type = cat_get_selected_browser();
+		if(type == PL3_CURRENT_PLAYLIST)
+		{
+			gchar *string = format_time(info.playlist_playtime);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+			g_free(string);
+
+
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 void pl3_close()
