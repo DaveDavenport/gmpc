@@ -115,58 +115,98 @@ void pl3_custom_stream_add()
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 }
 
-void pl3_custom_stream_fill_view(gchar *buffer)
-{
-	xmlDocPtr xmldoc = xmlParseMemory(buffer, strlen(buffer));
-	xmlNodePtr root = xmlDocGetRootElement(xmldoc);
-	xmlNodePtr cur = root->xmlChildrenNode;
-	while(cur != NULL)
-	{
-		if(xmlStrEqual(cur->name, "entry"))
-		{
-			xmlNodePtr cur1 = cur->xmlChildrenNode;
-			GtkTreeIter iter;
-			char *name=NULL, *bitrate=NULL, *genre=NULL;
-			gtk_list_store_append(pl3_store, &iter);
-			gtk_list_store_set (pl3_store, &iter,
-					PL3_SONG_POS, PL3_ENTRY_SONG, 
-					PL3_SONG_STOCK_ID, "media-stream", 
-					-1);
-			while(cur1 != NULL)
-			{
-				if(xmlStrEqual(cur1->name, "name"))
-				{
-					gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
-					name = xmlNodeGetContent(cur1);
-				}
-				else if(xmlStrEqual(cur1->name, "listen_url"))
-				{
-					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
-				}
-				cur1 = cur1->next;
-			}
-
-		}
-
-		cur = cur->next;
-	}
-	xmlFreeDoc(xmldoc);
-	xmlCleanupParser();
-}
-
-
 void pl3_custom_stream_view_browser()
 {
+
 	/* make this path configurable, we don't use gnome-vfs for nothing */
-	gchar *path = g_strdup_printf("file://%s/.gmpc.cst",g_getenv("HOME"));	
-	g_print("path: %s\n",path);
-	gtk_list_store_clear(pl3_store);
-	start_transfer(path,(void *)pl3_custom_stream_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+	gchar *path = g_strdup_printf("/%s/.gmpc.cst",g_getenv("HOME"));
+	if(g_file_test(path, G_FILE_TEST_EXISTS))
+	{
+		xmlDocPtr xmldoc = xmlParseFile(path);
+		xmlNodePtr root = xmlDocGetRootElement(xmldoc);
+		xmlNodePtr cur = root->xmlChildrenNode;
+		while(cur != NULL)
+		{
+			if(xmlStrEqual(cur->name, "entry"))
+			{
+				xmlNodePtr cur1 = cur->xmlChildrenNode;
+				GtkTreeIter iter;
+				char *name=NULL, *bitrate=NULL, *genre=NULL;
+				gtk_list_store_append(pl3_store, &iter);
+				gtk_list_store_set (pl3_store, &iter,
+						PL3_SONG_POS, PL3_ENTRY_SONG, 
+						PL3_SONG_STOCK_ID, "media-stream", 
+						-1);
+				while(cur1 != NULL)
+				{
+					if(xmlStrEqual(cur1->name, "name"))
+					{
+						gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+						name = xmlNodeGetContent(cur1);
+					}
+					else if(xmlStrEqual(cur1->name, "listen_url"))
+					{
+						gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
+					}
+					cur1 = cur1->next;
+				}
 
+			}
 
+			cur = cur->next;
+		}
+		xmlFreeDoc(xmldoc);
+		xmlCleanupParser();
+	}
 	g_free(path);
 }
 
+
+
+
+void pl3_custom_stream_add_stream()
+{
+	GladeXML *xml = glade_xml_new(GLADE_PATH"playlist3.glade", "add_stream",NULL);
+	GtkWidget *dialog = glade_xml_get_widget(xml, "add_stream");
+	gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+
+	gtk_widget_show_all(dialog);
+	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			{
+				gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
+				xmlDocPtr xmldoc;
+				xmlNodePtr newn,new2,root;
+				if(g_file_test(path, G_FILE_TEST_EXISTS))
+				{
+					xmldoc = xmlParseFile(path);
+					root = xmlDocGetRootElement(xmldoc);
+				}
+				else
+				{
+					xmldoc = xmlNewDoc("1.0");
+					root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
+					xmlDocSetRootElement(xmldoc, root);
+
+				}
+				newn = xmlNewChild(root, NULL, "entry",NULL);
+				new2 = xmlNewChild(newn, NULL, "name", 
+						gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_name"))));
+				new2 = xmlNewChild(newn, NULL, "listen_url", 
+						gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_url"))));
+
+				xmlSaveFile(path, xmldoc);	
+
+
+				g_free(path);
+			}
+		default:
+			break;	
+	}
+	gtk_widget_destroy(dialog);
+	g_object_unref(xml);
+}
 
 
 
@@ -1418,13 +1458,16 @@ void pl3_cat_sel_changed()
 			gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID , &id, -1);
 			if(strlen(id) != 0)
 			{
-				gtk_tree_model_iter_parent(model, &parent, &iter);
-				gtk_tree_selection_select_iter(selec, &parent);
 
+
+				pl3_custom_stream_add_stream();
+				gtk_tree_model_iter_parent(model, &parent, &iter);
+				gtk_tree_selection_select_iter(selec, &parent);   					
 
 			}
 			else
 			{	
+				gtk_list_store_clear(pl3_store);
 				pl3_custom_stream_view_browser();
 				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
 			}
@@ -1829,7 +1872,6 @@ void create_playlist3 ()
 
 	pl3_reinitialize_tree();
 
-
 	/* add the file browser */
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector")),0);
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
@@ -1843,8 +1885,3 @@ void create_playlist3 ()
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
 }
-
-
-
-
-
