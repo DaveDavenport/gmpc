@@ -237,7 +237,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_POS, &pos2,-1);
 	gtk_tree_path_free(path);
 
-	if(pos == GTK_TREE_VIEW_DROP_AFTER)
+	if(pos == GTK_TREE_VIEW_DROP_AFTER && pos2 < info.status->playlistLength-1)
 	{
 		pos2 = pos2+1;
 	}
@@ -252,6 +252,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 		int i=0;
 		mpd_sendCommandListBegin(info.connection);
 		do{
+			int dropl = pos2;
 			gtk_tree_model_get_iter(pl2_fil, &iter2,(GtkTreePath *)list->data);
 
 			/* get start pos */
@@ -261,12 +262,18 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 			if(pos1 < pos2)
 			{
 				pos1 -= i;
+				if(pos == GTK_TREE_VIEW_DROP_BEFORE)
+					dropl-=1;
+				
 			}
 			else if(pos1 > pos2)
 			{
-				pos1 += i; 
+				pos1 += i;
+				if(pos == GTK_TREE_VIEW_DROP_AFTER)
+					dropl+-=1;                   				
 			}
-			mpd_sendMoveCommand(info.connection, pos1,pos2);
+
+			mpd_sendMoveCommand(info.connection, pos1,dropl);
 			i++;
 		}while((list = g_list_previous(list)));
 		/* free list */
