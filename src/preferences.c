@@ -24,7 +24,8 @@ void auth_enable_toggled(GtkToggleButton *but);
 void entry_auth_changed(GtkEntry *entry);
 void xfade_time_changed(GtkSpinButton *but);
 void xfade_enable_toggled(GtkToggleButton *bug);
-
+void set_display_settings();
+void update_display_settings();
 /* update the db */
 void pref_update_mpd_db()
 {
@@ -88,12 +89,43 @@ void create_preferences_window()
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
 		}
 	    
-	    
+	set_display_settings();
 	    
 	    
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 	}
+	
+void update_display_settings()
+	{
+		if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
+		if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
+		if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
+		preferences.markup_main_display = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
+		preferences.markup_playlist = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+		preferences.markup_song_browser = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
+	}
+	
+void set_display_settings()
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), preferences.markup_main_display);
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), preferences.markup_playlist);
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), preferences.markup_song_browser);
+	}
+
+void set_display_default_sd()
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	}
+void set_display_default_pl()
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	}
+void set_display_default_sb()
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")),"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");		
+	}
+
 
 /* destory the preferences window */
 void preferences_window_destroy()

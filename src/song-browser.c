@@ -237,7 +237,7 @@ sb_do_search ()
   while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
     {
       gchar buffer[1024];
-      strfsong (buffer, 1024, preferences.markup_main_display,
+      strfsong (buffer, 1024, preferences.markup_song_browser,
 		ent->info.song);
       /* Add as child of the above created parent folder */
       gtk_tree_store_append (sb_search, &child, &iter);
@@ -655,7 +655,7 @@ sb_row_expanded (GtkTreeView * tree, GtkTreeIter * parent, GtkTreePath * path)
 			    {
 			      gchar buffer[1024];
 			      strfsong (buffer, 1024,
-					preferences.markup_main_display,
+					preferences.markup_song_browser,
 					ent->info.song);
 			      gtk_tree_store_append (sb_store, &child2,
 						     &iter);
@@ -686,7 +686,7 @@ sb_row_expanded (GtkTreeView * tree, GtkTreeIter * parent, GtkTreePath * path)
 		      || strlen (ent->info.song->album) == 0)
 		    {
 		      gchar buffer[1024];
-		      strfsong (buffer, 1024, preferences.markup_main_display,
+		      strfsong (buffer, 1024, preferences.markup_song_browser,
 				ent->info.song);
 		      gtk_tree_store_append (sb_store, &iter, parent);
 		      gtk_tree_store_set (sb_store, &iter,
@@ -816,7 +816,7 @@ sb_fill_browser_id3 ()
 		      || strlen (ent->info.song->album) == 0)
 		    {
 		      gchar buffer[1024];
-		      strfsong (buffer, 1024, preferences.markup_main_display,
+		      strfsong (buffer, 1024, preferences.markup_song_browser,
 				ent->info.song);
 		      gtk_tree_store_append (sb_id3, &iter, &parent);
 		      gtk_tree_store_set (sb_id3, &iter,
@@ -881,7 +881,7 @@ sb_fill_browser_file (char *path, GtkTreeIter * parent, gboolean go_further)
 	  else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
 	    {
 	      gchar buffer[1024];
-	      strfsong (buffer, 1024, preferences.markup_main_display,
+	      strfsong (buffer, 1024, preferences.markup_song_browser,
 			ent->info.song);
 	      gtk_tree_store_append (sb_file, &iter, parent);
 	      gtk_tree_store_set (sb_file, &iter,

@@ -60,6 +60,12 @@ set_default_values ()
 	preferences.markup_main_display =
 		g_strdup
 		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	preferences.markup_playlist =
+		g_strdup
+		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	preferences.markup_song_browser=
+		g_strdup
+		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
 	/*
 	 * the mpd status struct used  in the whole program 
 	 */
@@ -324,7 +330,7 @@ update_interface ()
 
 					strfsong (buffer, 1024,
 							preferences.
-							markup_main_display,
+							markup_playlist,
 							ent->info.song);
 					gtk_list_store_set (pl2_store, &iter,
 							SONG_ID,
@@ -349,7 +355,7 @@ update_interface ()
 			{
 				gtk_list_store_append (pl2_store, &iter);
 				strfsong (buffer, 1024,
-						preferences.markup_main_display,
+						preferences.markup_playlist,
 						ent->info.song);
 				gtk_list_store_set (pl2_store, &iter, SONG_ID,
 						ent->info.song->id,

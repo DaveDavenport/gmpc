@@ -128,6 +128,8 @@ typedef struct
 	gboolean autoconnect;
 	/* display formating */
 	gchar *markup_main_display;
+	gchar *markup_playlist;
+	gchar *markup_song_browser;
 } pref_struct;
 extern pref_struct preferences;
 void create_preferences_window();

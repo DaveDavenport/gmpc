@@ -134,6 +134,30 @@ load_config ()
 	      preferences.markup_main_display = g_strdup (buf);
 	    }
 	}
+     else if (!strncmp (buffer, "markup playlist:", 16))
+	{
+	  gchar *buf = g_strstrip (&buffer[16]);
+	  if (buf != NULL)
+	    {
+	      if (preferences.markup_playlist != NULL)
+		{
+		  g_free (preferences.markup_playlist);
+		}
+	      preferences.markup_playlist = g_strdup (buf);
+	    }
+	}
+     else if (!strncmp (buffer, "markup song browser:", 20))
+	{
+	  gchar *buf = g_strstrip (&buffer[20]);
+	  if (buf != NULL)
+	    {
+	      if (preferences.markup_song_browser != NULL)
+		{
+		  g_free (preferences.markup_song_browser);
+		}
+	      preferences.markup_song_browser = g_strdup (buf);
+	    }
+	}
 
       memset (buffer, '\0', 1024);
 
@@ -168,6 +192,8 @@ save_config ()
   fprintf (fp, "use auth: %i\n", preferences.user_auth);
   fprintf (fp, "auth pass: %s\n", preferences.password);
   fprintf (fp, "markup main display: %s\n", preferences.markup_main_display);
+  fprintf (fp, "markup playlist: %s\n", preferences.markup_playlist);
+    fprintf (fp, "markup song browser: %s\n", preferences.markup_song_browser);
   fclose (fp);
   g_free (filename);
 }
