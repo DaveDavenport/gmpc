@@ -21,6 +21,8 @@ gmpc_SOURCES=\
 	strfsong.h\
 	playlist2.c\
 	playlist2.h\
+	song-browser.c\
+	song-browser.h\
 	main.h
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"

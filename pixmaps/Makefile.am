@@ -3,6 +3,8 @@ gmpcicon_DATA = gmpc.png
 
 appicondir = $(datadir)/gmpc/
 appicon_DATA = 	tray.png\
+	media-audiofile.png\
+	media-stream\
 	media-play.png\
 	media-pause.png\
 	media-next.png\
@@ -12,6 +14,8 @@ appicon_DATA = 	tray.png\
 	media-stop.png
 
 DIST_SOURCES = 	tray.png\
+	media-audiofile.png\
+	media-stream.png\
 	media-play.png\
 	media-pause.png\
 	media-next.png\
