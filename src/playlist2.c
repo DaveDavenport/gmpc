@@ -289,8 +289,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 		g_print("Don't know where to move it to\n");
 		return TRUE;
 	}
-	gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_store), &iter,path);
-	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_POS, &pos2,-1);
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter,path);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, SONG_POS, &pos2,-1);
 	gtk_tree_path_free(path);
 
 	if(pos == GTK_TREE_VIEW_DROP_AFTER && pos2 < info.status->playlistLength-1)
