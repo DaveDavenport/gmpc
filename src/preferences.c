@@ -84,63 +84,64 @@ void preferences_window_destroy()
 		}
 		
 void update_preferences_information()
-	{
+{
+	g_print("port number updated %i\n",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	strncpy(preferences.host, gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))), 256);
 	preferences.port = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")));
 	preferences.timeout = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")));
 
-	}
+}
 
 void preferences_window_autoconnect(GtkToggleButton *tog)
-    {
-    preferences.autoconnect = gtk_toggle_button_get_active(tog);
-    
-    }
+{
+	preferences.autoconnect = gtk_toggle_button_get_active(tog);
+
+}
 
 void preferences_window_connect(GtkWidget *but)
-    {
-    if(debug)g_print("**DEBUG** connect\n");
-    if(info.connection == NULL)
-	if(!connect_to_mpd())
-	    {
-	    	info.conlock = FALSE;
-	  	gtk_timeout_remove(update_timeout);
-		update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-	        }
-    
-    }
+{
+	if(debug)g_print("**DEBUG** connect\n");
+	if(info.connection == NULL)
+		if(!connect_to_mpd())
+		{
+			info.conlock = FALSE;
+			gtk_timeout_remove(update_timeout);
+			update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
+		}
+
+}
 
 void preferences_window_disconnect(GtkWidget *but)
-    {
-    if(debug)g_print("**DEBUG** disconnect\n");    
-    disconnect_to_mpd();
-    
-    }
+{
+	if(debug)g_print("**DEBUG** disconnect\n");    
+	disconnect_to_mpd();
+
+}
 
 /* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
 void preferences_update()
-    {
-    if(!running)return;
-    if((info.connection == NULL? 0:1) != connected)
+{
+	if(!running)return;
+	if((info.connection == NULL? 0:1) != connected)
 	{
-	if(info.connection == NULL)
-	    {
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
-	    gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
-	    }
-	else
-	    {
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	   
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
-	    gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
-	    }
-	connected = (info.connection == NULL? 0:1);
+		if(info.connection == NULL)
+		{
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
+			gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+		}
+		else
+		{
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	   
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
+			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+		}
+		connected = (info.connection == NULL? 0:1);
 	}    
-    }
-   
+}
+
 void popup_enable_toggled(GtkToggleButton *but)
 {
 	info.popup.do_popup = gtk_toggle_button_get_active(but);
@@ -157,9 +158,9 @@ void show_state_changed(GtkToggleButton *but)
 }
 
 void popup_timeout_changed()
-    {
-    info.popup.timeout = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")));
-    }
+{
+	info.popup.timeout = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")));
+}
 
 void update_popup_settings()
 {
@@ -180,27 +181,27 @@ void update_server_settings()
 {
 	if(info.connection == NULL)
 	{
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
-	    gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
-	    return;
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
+		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+		return;
 	}
 	else 
 	{
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
-	    gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
+		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	}	
-		
+
 	if(info.status->crossfade == 0)
 	{
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), FALSE);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), FALSE);
 	}
 	else {
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), TRUE);
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), info.status->crossfade);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
 
 	}
 }

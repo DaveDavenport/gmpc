@@ -1,4 +1,6 @@
 15-05-2004 Qball <Qball@qballcow.nl>
+	* port number now also gets updated when typed in the entry. (wrong
+signal attached) 
 	* Fixed the Makefiles. now make dist works again .. (damn autotools,
 the higher the version number the more crap it gives you)
 	* Fixed a few compile warnings
