@@ -66,6 +66,7 @@ static gsize _strfsong(gchar *s,
 	gchar *p, *end;
 	gchar *temp;
 	gsize n, length = 0;
+	gint i;
 	gboolean found = FALSE;
 
 	memset(s, 0, max);
@@ -216,6 +217,11 @@ static gsize _strfsong(gchar *s,
 		/* advance past the specifier */
 		p += n;
 	}
+
+	for(i=0; i < max;i++)
+	{
+		if(s[i] == '_') s[i] = ' ';
+	}	
 
 	if(last) *last = p;
 

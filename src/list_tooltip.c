@@ -15,25 +15,39 @@ gulong timeout_tooltip = 0;
 static gboolean mw_tooltip_timeout(GtkWidget *tv);
 PangoLayout *layout_tooltip = NULL;
 
-gchar *get_tooltip_text()
+int get_song_id_hoover()
 {
 	GtkTreeIter iter;
 	GtkTreePath *path;
+	int id = -1;
+	if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")), rect.x, rect.y, &path, NULL, NULL, NULL))
+	{
+		gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path);	
+		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil),&iter,SONG_POS, &id, -1); 
+	}
+	return id;
+}
+
+gchar *get_tooltip_text()
+{
 	GString *string = g_string_new("");
 	int id = -1;
 	gchar result[1024];
 	gchar *retval;
-	if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")), rect.x, rect.y, &path, NULL, NULL, NULL))
+	id = get_song_id_hoover();
+	if(id != -1)
 	{
 		mpd_InfoEntity *ent;
-		gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path);	
-		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil),&iter,SONG_POS, &id, -1); 
 		mpd_sendPlaylistInfoCommand(info.connection, id);
 		if((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 		{
 			strfsong(result, 1024,
-	                		"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
-					"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]&[\n<b>Length:</b>\t%time%]|<b>Filename:</b>\t%shortfile%[\n<b>Length:</b>\t\t%time%]|", ent->info.song);
+	             		"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
+				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
+				"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]"
+				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]&"
+				"[\n<b>Length:</b>\t%time%]|<b>Filename:</b>\t%shortfile%"
+				"[\n<b>Length:</b>\t\t%time%]|", ent->info.song);
 			g_string_append(string, result);
 			mpd_freeInfoEntity(ent);	
 		}
@@ -49,7 +63,6 @@ gchar *get_tooltip_text()
 			g_string_insert(string, id+1, "amp;");
 			id++;
 		}
-
 	}
 	/* return a string (that needs to be free'd */
 	retval = string->str;
@@ -74,7 +87,7 @@ void mw_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 
 	gtk_paint_layout (style, tipwindow->window, GTK_STATE_NORMAL, TRUE,
-			NULL, tipwindow, "tooltip", 4, 4, layout_tooltip);
+			NULL, tipwindow, "tooltip", 4+40, 4, layout_tooltip);
 	/*
 	   g_object_unref(layout);
 	   */
@@ -105,7 +118,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 	scr_w = gdk_screen_width();
 	scr_h = gdk_screen_height();
 	pango_layout_get_size (layout_tooltip, &w, &h);
-	w = PANGO_PIXELS(w) + 8;
+	w = PANGO_PIXELS(w) + 8+40;
 	h = PANGO_PIXELS(h) + 8;
 
 	gdk_window_get_pointer(NULL, &x, &y, NULL);
