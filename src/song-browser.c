@@ -303,12 +303,21 @@ void sb_fill_browser_id3()
 	mpd_InfoEntity *ent = NULL;
 	GtkTreeIter iter, parent;
 	gchar *string;
+	GList *list = NULL, *node = NULL;
+	int i =0;
 	if(info.connection == NULL) return;
 
 	mpd_sendListCommand(info.connection, MPD_TABLE_ARTIST,NULL);
 
 	while((string = mpd_getNextArtist(info.connection)) != NULL)
 	{
+		list = g_list_append(list, string);
+	}
+	mpd_finishCommand(info.connection);
+	if(list == NULL) return;
+	node = g_list_first(list);	
+	do{
+		string = node->data;
 		gtk_tree_store_append(sb_store, &iter, NULL);    	
 		gtk_tree_store_set(sb_store, &iter, 
 				SB_FPATH,string,
@@ -317,7 +326,16 @@ void sb_fill_browser_id3()
 				SB_PIXBUF, "media-artist",
 				-1);
 		g_free(string);
-	}
+		if((i % 35) == 0)
+		{
+		while(gtk_events_pending()) gtk_main_iteration();
+		/* check if the users hasn't closed the interface */
+		if(sb_xml == NULL || gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type"))) != 1) return;
+		}
+		i++;
+	}while((node = g_list_next(node)) != NULL);
+	g_list_free(list);
+	
 	/* get the first iter */
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &parent, NULL))
 	{
