@@ -19,7 +19,8 @@ void load_config()
 	g_free(filename);
 	return;
 	}    
-    bzero(buffer, 1024);
+/*    bzero(buffer, 1024);*/
+    memset(buffer, '\0', 1024);
     while(fgets(buffer, 1024, fp))
 	{
 	
@@ -28,7 +29,8 @@ void load_config()
 	    gchar *buf = g_strstrip(&buffer[5]);
 	    if(buf != NULL)
 		{
-		bzero(preferences.host, 256);
+/*		bzero(preferences.host, 256);*/
+		memset(preferences.host, '\0', 256);
 	        strncpy(preferences.host, buf, MIN(strlen(buf),256));
 		}
 	    }
@@ -59,7 +61,8 @@ void load_config()
 	    gchar *buf = g_strstrip(&buffer[13]);
 	    if(buf != NULL)
 		{
-		bzero(info.filter_entry, 256);
+		/*bzero(info.filter_entry, 256);*/
+		memset(info.filter_entry, '\0', 256);
 		strncpy(info.filter_entry, buf, strlen(buf));
 		}
 	    }
@@ -116,12 +119,13 @@ void load_config()
 	    gchar *buf = g_strstrip(&buffer[10]);
 	    if(buf != NULL)
 		{
-		bzero(preferences.password, 256);
+		/*bzero(preferences.password, 256);*/
+		memset(preferences.password, '\0', 256);
 		strncpy(preferences.password, buf, MIN(strlen(buf),256));
 		}
 	    }
 	
-	bzero(buffer, 1024);
+	memset(buffer, '\0',1024);
 	
     	}
     fclose(fp);

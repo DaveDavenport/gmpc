@@ -967,7 +967,8 @@ void directory_row_selected(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewCol
 		g_free(buf);
 		buf = g_strdup("/");
 	}
-	bzero(info.path,1024);
+	memset(info.path, '\0', 1024);
+/*	bzero(info.path,1024);*/
 	strncpy(info.path, buf1, 1024);
 	load_directories(buf);
 	g_free(new_buf);
