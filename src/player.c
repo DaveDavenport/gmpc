@@ -56,7 +56,7 @@ void display_exposed(GtkWidget *window)
 			layout);
 	}
 	else{
-		if(width-scroll.pos > 260)
+		if(width-scroll.pos > 255)
 		{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
@@ -134,7 +134,7 @@ gboolean update_msg()
 
 		if(width > 255)
 		{
-			scroll.pos ++;
+			scroll.pos+=4;
 
 		}
 		gtk_widget_queue_draw(window);
@@ -504,6 +504,6 @@ void create_player()
 	/* check for errors and axit when there is no gui file */
 	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 	glade_xml_signal_autoconnect(xml_main_window);
-	gtk_timeout_add(75, (GSourceFunc)update_msg, NULL);
+	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }
 
