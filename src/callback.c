@@ -41,7 +41,7 @@ int check_for_errors()
 			update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 		}
 		else info.conlock = FALSE;
-
+		g_print("Found error: %s\n", info.connection->errorStr);
 		/* clear all error's so it doesnt annoy me later */
 		if(info.connection) mpd_clearError(info.connection);
 		return TRUE;

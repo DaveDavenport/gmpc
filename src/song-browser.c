@@ -566,7 +566,6 @@ void sb_fill_browser_id3()
 
 			if(nalbum == 0)
 			{
-				mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ARTIST,artist);
 				while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
 				{
@@ -585,8 +584,12 @@ void sb_fill_browser_id3()
 					}
 					mpd_freeInfoEntity(ent);
 				}
-			mpd_finishCommand(info.connection);
-			if(check_for_errors()) return;
+				mpd_finishCommand(info.connection);
+				if(check_for_errors())
+					{
+						g_print("Stopped on a error, on line 591 %s\n", info.connection->errorStr);
+					 return;
+					}
 			}
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_id3), &parent));
 
