@@ -1621,6 +1621,7 @@
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="tray_popup_toggled" last_modification_time="Fri, 01 Oct 2004 05:28:46 GMT"/>
 			</widget>
 			<packing>
 			  <property name="left_attach">0</property>
