@@ -5,6 +5,28 @@
 #include "libmpd.h"
 
 
+typedef struct _MpdQueue
+{
+	struct _MpdQueue *next;
+	struct _MpdQueue *prev;
+	struct _MpdQueue *first;
+
+	/* what item to queue, (add/load/remove)*/
+	int type;
+	/* for adding files/load playlist/adding streams */
+	char *path;
+	/* for removing */
+	int id;
+
+
+
+}_MpdQueue;
+
+
+
+
+
+
 /*************************************************************************************/
 MpdObj * mpd_ob_create()
 {
@@ -1127,18 +1149,18 @@ MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
 			data = mpd_ob_new_data_struct();
 			data->first = data;
 			data->next = NULL;
-			data->last = NULL;
+			data->prev = NULL;
 		
 		}	
 		else
 		{
 			data->next = mpd_ob_new_data_struct();
 			data->next->first = data->first;
-			data->next->last = data;
+			data->next->prev = data;
 			data = data->next;
 			data->next = NULL;
 		}
-		data->type = 1; /* TODO make enum */
+		data->type = MPD_DATA_TYPE_ARTIST; 
 		data->value.artist = string;
 	}
 	mpd_finishCommand(mi->connection);
@@ -1172,6 +1194,11 @@ MpdData * mpd_ob_data_get_next(MpdData *data)
 	{
 		return data->next;
 	}
+	else if(data->next == NULL)
+	{
+		mpd_ob_free_data_ob(data);
+		return NULL;
+	}
 	return data;	
 }
 
@@ -1184,30 +1211,42 @@ int mpd_ob_data_is_last(MpdData *data)
 	return FALSE;	
 }
 
+
+/* clean this up.. make one while look */
 void mpd_ob_free_data_ob(MpdData *data)
 {
+	MpdData *temp = NULL;
 	if(data == NULL)
 	{
 		return;
 	}	
-	while(data->next != NULL)
+	while(data != NULL)
 	{
-		data = data->next;
-		if(data->last->type == 1)
+		temp = data->next;
+		if(data->type == MPD_DATA_TYPE_ARTIST)
 		{
-			free(data->last->value.artist);
+			free(data->value.artist);
 		}
-		free(data->last);
+		else if (data->type == MPD_DATA_TYPE_ALBUM)
+		{
+			free(data->value.album);
+		}
+		else if (data->type == MPD_DATA_TYPE_DIRECTORY)
+		{
+			free(data->value.directory);
+		}
+		else if (data->type == MPD_DATA_TYPE_SONG)
+		{
+			mpd_freeSong(data->value.song);
+		}
+		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
+		{
+			free(data->value.playlist);
+		}
+
+		free(data);
+		data= temp;
 	}
-	if(data->type == 1)
-	{
-		free(data->value.artist);
-	}
-	else if (data->type == 2)
-	{
-		free(data->value.album);
-	}
-	free(data);
 }
 
 /* */
@@ -1235,18 +1274,156 @@ MpdData * mpd_ob_playlist_get_albums(MpdObj *mi,char *artist)
 			data = mpd_ob_new_data_struct();
 			data->first = data;
 			data->next = NULL;
-			data->last = NULL;
+			data->prev = NULL;
 		}	
 		else
 		{
 			data->next = mpd_ob_new_data_struct();
 			data->next->first = data->first;
-			data->next->last = data;
+			data->next->prev = data;
 			data = data->next;
 			data->next = NULL;
 		}
-		data->type = 2; /* TODO make enum */
+		data->type = MPD_DATA_TYPE_ALBUM;
 		data->value.album = string;
+	}
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+
+
+
+MpdData * mpd_ob_playlist_get_directory(MpdObj *mi,char *path)
+{
+	MpdData *data = NULL;
+	mpd_InfoEntity *ent = NULL;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_get_albums: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(path == NULL)
+	{
+		path = "/";
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_get_albums: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendLsInfoCommand(mi->connection,path);
+	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->prev = NULL;
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->prev = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		{
+			data->type = MPD_DATA_TYPE_DIRECTORY;
+			data->value.directory = strdup(ent->info.directory->path);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{
+			data->type = MPD_DATA_TYPE_SONG;
+			data->value.song = mpd_songDup(ent->info.song);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
+		{
+			data->type = MPD_DATA_TYPE_PLAYLIST;
+			data->value.playlist = strdup(ent->info.playlistFile->path);
+
+		}
+
+		mpd_freeInfoEntity(ent);
+	}
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+MpdData * mpd_ob_playlist_find(MpdObj *mi, int table, char *string, int exact)
+{
+	MpdData *data = NULL;
+	mpd_InfoEntity *ent = NULL;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_find: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_find: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+	if(exact)
+	{
+		mpd_sendFindCommand(mi->connection,table,string);
+	}
+	else
+	{
+		mpd_sendSearchCommand(mi->connection, table,string);
+	}
+	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->prev = NULL;
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->prev = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		{
+			data->type = MPD_DATA_TYPE_DIRECTORY;
+			data->value.directory = strdup(ent->info.directory->path);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{
+			data->type = MPD_DATA_TYPE_SONG;
+			data->value.song = mpd_songDup(ent->info.song);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
+		{
+			data->type = MPD_DATA_TYPE_PLAYLIST;
+			data->value.playlist = strdup(ent->info.playlistFile->path);
+		}
+
+		mpd_freeInfoEntity(ent);
 	}
 	mpd_finishCommand(mi->connection);
 

@@ -1,7 +1,30 @@
+21-02-2005 Qball <qball@qballcow.nl>
+	* src/libmpd.h:		Added typedef for queue and added a queue to
+	the MpdOb struct
+	* src/playlist3.c:	Moved mpd_sendFind and mpd_sendSearch to
+	libmpd function
+	* src/libmpd.c:		Added mpd_ob_playlist_find function. (for
+	exact and fuzzy matches)
+	* src/libmpd.c:		Added _MpdQueue struct defenition. (not yet
+	finished)
+
+
+20-02-2005 Qball <qball@qballcow.nl>
+	* src/libmpd.h:		Added comment.
+	* src/playlist3.c:	Make use of mpd_ob_playlist_get_directory
+	function;
+	* src/libmpd.c:		Added get_directory function.
+	* src/libmpd.c:		mpd_ob_data_get_next free's the data structure
+	when called on last item.. (allowing for the  while(data != NULL){data
+	= mpd_ob_data_next(data); } construction)
+	* src/libmpd.c:		improved mpd_ob_data_free function. (o.a.
+	addes free'ing of more types )
+	* src/libmpd.h:		Created enum with MpdDatatypes;
+
 19-02-2005 QBall <qball@qballcow.nl>
 	* src/playlist3.c:	moved a few things to libmpd.
 	* src/libmpd.c:		Added the begin of support for playlist
-	commands. als listing and adding.
+	commands. like listing.
 	* src/libmpd.c:		Added list artist/album
 	* src/libmpd.h:		Added a structure for linked list with return
 	values.

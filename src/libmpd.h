@@ -19,6 +19,8 @@
 #define	MPD_OB_PLAYER_STOP 	1
 #define	MPD_OB_PLAYER_UNKNOWN 	0
 
+
+typedef struct _MpdQueue MpdQueue;
 typedef struct _MpdObj 
 {
 	/* defines if we are connected */
@@ -65,20 +67,37 @@ typedef struct _MpdObj
 	/* this "locks" the connections. so we can't have to commands competing with eachother */
 	short int connection_lock;
 
+	/* queue */
+	MpdQueue *queue;
+
 }MpdObj;
+
+
+enum {
+	MPD_DATA_TYPE_NONE,
+	MPD_DATA_TYPE_ARTIST,
+	MPD_DATA_TYPE_ALBUM,
+	MPD_DATA_TYPE_DIRECTORY,
+	MPD_DATA_TYPE_SONG,
+	MPD_DATA_TYPE_PLAYLIST
+} MpdDataType;
+
 
 typedef struct _MpdData
 {
 	struct _MpdData *next;
-	struct _MpdData *last;
+	struct _MpdData *prev;
 	struct _MpdData *first;
 
+	/* MpdDataType */
 	int type;
 
 	union 
 	{
 		char *artist;
 		char *album;
+		char *directory;
+		char *playlist; /*is a path*/
 		mpd_Song *song;
 	}value;
 }MpdData;
@@ -113,6 +132,11 @@ void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(Mp
 void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer);
 
 /* status commands */
+/* To get the function to have the  most recent info you want to call mpd_ob_status_queue_update 
+ * In a gui app. you want to call this every 0.x seconds. 
+ * mpd_ob_status_queue_update only queue's an update
+ * Only when a function is called that needs status, it's fetched from mpd.
+ */
 int 		mpd_ob_status_queue_update		(MpdObj *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
 int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
@@ -143,6 +167,19 @@ int 		mpd_ob_playlist_clear			(MpdObj *mi);
 void 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
 MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
 MpdData *	mpd_ob_new_data_struct			();
+/* mpd ob data next will return NULL when there are no more items. it will also call free when called on the last item. */
+/* if you don't want this check with mpd_ob_data_is_last before calling get_next */
+/* this allows you to make this construction: */
+/*	MpdData * mpd_ob_playlist_get_artists(..);
+ * 	while(data != NULL)
+ * 	{
+ *
+ *
+ *		data = mpd_ob_data_next(data);
+ * 	}
+ */
+ /* withouth leaking memory  */
+
 MpdData * 	mpd_ob_data_get_next			(MpdData *data);
 int 		mpd_ob_data_is_last			(MpdData *data);
 void 		mpd_ob_free_data_ob			(MpdData *data);

@@ -88,16 +88,6 @@ gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const c
 }
 
 
-
-
-
-
-
-
-
-
-
-
 /********************************************************************
  * Misc functions 
  */
@@ -365,7 +355,6 @@ unsigned long pl3_find_view_browser()
 		gchar *name, *field;
 		gint num_field=0;
 		GtkTreeIter child;
-		mpd_InfoEntity *ent;
 
 		gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, PL3_CAT_INT_ID,&field,-1);
 
@@ -375,38 +364,36 @@ unsigned long pl3_find_view_browser()
 
 		if(strcmp(name, "Search"))
 		{
+			MpdData *data = NULL;
 			gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")), name);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector")), num_field);
 
 			/* do the actual search */
-			mpd_sendSearchCommand (info.connection, num_field, name);
+			data = mpd_ob_playlist_find(connection, num_field, name, FALSE);
 
-			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+			while (data != NULL)
 			{
 				gchar buffer[1024];
-				if(ent->info.song->time != MPD_SONG_NO_TIME)
+				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
-					time += ent->info.song->time;
+					time += data->value.song->time;
 				}
 
 				strfsong (buffer, 1024, 
 						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
 							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-						ent->info.song);
+						data->value.song);
 				/* add as child of the above created parent folder */
 				gtk_list_store_append (pl3_store, &child);
 				gtk_list_store_set (pl3_store, &child,
-						PL3_SONG_ID, ent->info.song->file,
+						PL3_SONG_ID, data->value.song->file,
 						PL3_SONG_TITLE, buffer,
 						PL3_SONG_POS, PL3_ENTRY_SONG, 
 						PL3_SONG_STOCK_ID, "media-audiofile", 
 						-1);
-				/* free information struct */
-				mpd_freeInfoEntity (ent);
+				
+				data =  mpd_ob_data_get_next(data);
 			}
-			/* check search */
-			mpd_finishCommand (info.connection);
-			check_for_errors ();
 		}
 	}
 	return time;
@@ -751,7 +738,7 @@ void pl3_file_browser_add()
 
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
-	mpd_InfoEntity *ent = NULL;
+	MpdData* data =NULL;
 	char *path;
 	int sub_folder = 0;
 	GtkTreeIter iter;
@@ -764,29 +751,28 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 
-	mpd_sendLsInfoCommand (info.connection, path);
-	ent = mpd_getNextInfoEntity (info.connection);
-	while (ent != NULL)
+	data = mpd_ob_playlist_get_directory(connection, path);
+	while (data != NULL)
 	{
-		if (ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		if (data->type == MPD_DATA_TYPE_DIRECTORY)
 		{
 			sub_folder++;
 		}
-		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		else if (data->type == MPD_DATA_TYPE_SONG)
 		{
 			gchar buffer[1024];
 			strfsong (buffer, 1024, 
 					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
 						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-					ent->info.song);
-			if(ent->info.song->time != MPD_SONG_NO_TIME)
+					data->value.song);
+			if(data->value.song->time != MPD_SONG_NO_TIME)
 			{
-				time += ent->info.song->time;			
+				time += data->value.song->time;			
 			}
 
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
-					0, ent->info.song->file,
+					0, data->value.song->file,
 					1, PL3_ENTRY_SONG,
 					2, buffer,               
 					5, "media-audiofile",
@@ -794,21 +780,19 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 
 		}
 
-		else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
+		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
 		{
-			gchar *basename = g_path_get_basename (ent->info.playlistFile->path);
+			gchar *basename = g_path_get_basename (data->value.playlist);
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
-					0, ent->info.playlistFile->path,
+					0, data->value.playlist,
 					1, PL3_ENTRY_PLAYLIST,
 					2, basename,
 					5, "media-playlist", 
 					-1);
 			g_free (basename);
 		}
-
-		mpd_freeInfoEntity (ent);
-		ent = mpd_getNextInfoEntity (info.connection);
+		data = mpd_ob_data_get_next(data);
 	}
 	/* remove the fantom child if there are no subfolders anyway. */
 	if(!sub_folder)
@@ -824,29 +808,24 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 
 void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 {
-	mpd_InfoEntity *ent = NULL;
 	char *path;
+	MpdData *data = NULL;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-	if (check_connection_state ())
-	{
-		return;
-	}
-	mpd_sendLsInfoCommand (info.connection, path);
 
-	ent = mpd_getNextInfoEntity (info.connection);
-	while (ent != NULL)
+	data = mpd_ob_playlist_get_directory(connection, path);
+	while (data != NULL)
 	{
-		if (ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		if (data->type == MPD_DATA_TYPE_DIRECTORY)
 		{
 			gchar *basename =
-				g_path_get_basename (ent->info.directory->path);
+				g_path_get_basename (data->value.directory);
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_FILE,
 					1, basename,
-					2, ent->info.directory->path,
+					2, data->value.directory,
 					3, "gtk-open",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
@@ -855,9 +834,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 
 			g_free (basename);
 		}
-
-		mpd_freeInfoEntity (ent);
-		ent = mpd_getNextInfoEntity (info.connection);
+		data = mpd_ob_data_get_next(data);
 	}
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 	{
@@ -1009,36 +986,36 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	if(!g_utf8_collate(artist,string))
 	{
 		int albums = 0;
+		MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 		/* artist is selected */
-		mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
-		while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+		while(data != NULL)
 		{
-			if (ent->info.song->album == NULL
-					|| strlen (ent->info.song->album) == 0)
+			if (data->value.song->album == NULL
+					|| strlen (data->value.song->album) == 0)
 			{
 				gchar buffer[1024];
 				strfsong (buffer, 1024,
 						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",          
 							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-						ent->info.song);
-				if(ent->info.song->time != MPD_SONG_NO_TIME)
+						data->value.song);
+				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
-					time += ent->info.song->time;
+					time += data->value.song->time;
 				}
-				if(ent->info.song->file == NULL)
+				if(data->value.song->file == NULL)
 				{
 					g_print("crap\n");
 				}
 				gtk_list_store_append (pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
 						2, buffer,
-						0, ent->info.song->file,
+						0, data->value.song->file,
 						1, PL3_ENTRY_SONG,
 						5,"media-audiofile",
 						-1);
 			}
 			else albums++;
-			mpd_freeInfoEntity (ent);
+			data = mpd_ob_data_get_next(data);
 		}
 
 		if(!albums)
@@ -1052,35 +1029,35 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	else 
 	{
 		/* artist and album is selected */
-		mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, string);
-		while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+		MpdData *data = mpd_ob_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
+		while (data != NULL)
 		{
-			if (ent->info.song->artist!= NULL
-					&& !g_utf8_collate (ent->info.song->artist, artist))
+			if (data->value.song->artist!= NULL
+					&& !g_utf8_collate (data->value.song->artist, artist))
 			{
 				gchar buffer[1024];
 				strfsong (buffer, 1024,
 						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
 							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-						ent->info.song);
-				if(ent->info.song->time != MPD_SONG_NO_TIME)
+						data->value.song);
+				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
-					time += ent->info.song->time;
+					time += data->value.song->time;
 				}
-				if(ent->info.song->file == NULL)
+				if(data->value.song->file == NULL)
 				{
 					g_print("crap\n");
 				}
 				gtk_list_store_append (pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
 						2, buffer,
-						0, ent->info.song->file,
+						0, data->value.song->file,
 						1, PL3_ENTRY_SONG,
 						5,"media-audiofile",
 						-1);
 
 			}
-			mpd_freeInfoEntity (ent);                                       	
+			data = mpd_ob_data_get_next(data);
 		}
 
 	}
@@ -1105,7 +1082,8 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		char *string;
 		MpdData *data = mpd_ob_playlist_get_artists(connection);
 		
-		if(data != NULL)do{
+		while(data != NULL)
+		{	
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_ARTIST,
@@ -1116,9 +1094,9 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					PL3_CAT_ICON_SIZE,1,
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
+
 			data = mpd_ob_data_get_next(data);
-		}while(!mpd_ob_data_is_last(data));
-		mpd_ob_free_data_ob(data);
+		}
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1129,7 +1107,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	{
 		char *string;
 		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
-		if(data != NULL) do{
+		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_ARTIST,
@@ -1140,9 +1118,8 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					PL3_CAT_ICON_SIZE,1,
 					-1);
 			data = mpd_ob_data_get_next(data);
-		}while(!mpd_ob_data_is_last(data));
-		mpd_ob_free_data_ob(data);
-
+		}
+			
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1181,13 +1158,12 @@ void pl3_browse_artist_add_folder()
 		{
 			/* artist selected */
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
-			mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
-			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+			MpdData * data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+			while (data != NULL)
 			{                                                                         			
-				add_list = g_list_append (add_list, g_strdup (ent->info.song->file));
-				mpd_freeInfoEntity (ent);
+				add_list = g_list_append (add_list, g_strdup (data->value.song->file));
+				data = mpd_ob_data_get_next(data);
 			}
-			mpd_finishCommand (info.connection);
 			pl3_push_statusbar_message(message);
 			g_free(message);
 
@@ -1197,16 +1173,15 @@ void pl3_browse_artist_add_folder()
 			/* album selected */
 			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
 			gchar *message = g_strdup_printf("Added songs from album '%s' ",title);
-			mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, title);
-			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+			MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
+			while (data != NULL)
 			{
 				if (!g_utf8_collate (ent->info.song->artist, artist))
 				{
 					add_list = g_list_append (add_list, g_strdup (ent->info.song->file));
 				}
-				mpd_freeInfoEntity (ent);
+				data = mpd_ob_data_get_next(data);
 			}
-			mpd_finishCommand (info.connection);
 			pl3_push_statusbar_message(message);
 			g_free(message);
 
@@ -1345,11 +1320,6 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		gint song_id;
 		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
-		/* send mpd the play command */
-		//		mpd_sendPlayIdCommand (info.connection, song_id);
-		//		mpd_finishCommand (info.connection);
-		/* check for errors */                      		
-		//		check_for_errors ();                        		
 		mpd_ob_player_play_id(connection, song_id);
 	}
 	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
