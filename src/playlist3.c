@@ -221,13 +221,99 @@ void pl3_custom_stream_add_stream()
 	g_object_unref(xml);
 }
 
+
+/**/
+void pl3_custom_stream_save_tree()
+{
+		gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
+		xmlDocPtr xmldoc;
+		xmlNodePtr newn,new2,root;                        
+		GtkTreeIter iter;		
+
+		xmldoc = xmlNewDoc("1.0");
+		root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
+		xmlDocSetRootElement(xmldoc, root);
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_store), &iter))
+		{
+			do
+			{
+				gchar *name, *lurl;
+				gtk_tree_model_get(GTK_TREE_MODEL(pl3_store), &iter,SONG_ID, &lurl, SONG_TITLE, &name, -1);
+				newn = xmlNewChild(root, NULL, "entry",NULL);
+				new2 = xmlNewChild(newn, NULL, "name",name); 
+				new2 = xmlNewChild(newn, NULL, "listen_url", lurl);
+			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_store), &iter));
+
+		}
+		xmlSaveFile(path, xmldoc);	
+}
+
+
+
+
+
+/* where going todo this the dirty way.
+ * Delete the requested streams then read the info from the tree
+ */
 void pl3_custom_stream_remove()
 {
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_store);
+	/* grab the selection from the tree */
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+	/* check if where connected */
+	if (check_connection_state ())
+		return;
+	/* see if there is a row selected */
+	if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	{
+		GList *list = NULL, *llist = NULL;
+		/* grab the selected songs */
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+		/* grab the last song that is selected */
+		llist = g_list_last (list);
+		/* remove every selected song one by one */
+		do
+		{
+			GtkTreeIter iter;
+			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+			gtk_list_store_remove (pl3_store, &iter);
 
+		}
+		while ((llist = g_list_previous (llist)));
 
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
 
-
+		check_for_errors ();
+	}
+	pl3_custom_stream_save_tree();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /************************************
@@ -1239,12 +1325,12 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_replace_selected), NULL);
-		
+
 		if(type == PL3_BROWSE_CUSTOM_STREAM)
 		{
 			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);                          		
-        		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_stream_remove), NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_stream_remove), NULL);
 		}
 
 		gtk_widget_show_all(menu);
@@ -1767,6 +1853,11 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_current_playlist_delete_selected_songs ();
 		return TRUE;
 	}
+	else if (event->keyval == GDK_Delete && type == PL3_BROWSE_CUSTOM_STREAM)
+	{
+		pl3_custom_stream_remove();	
+		return TRUE;
+	}
 	else if (event->keyval == GDK_Insert && 
 			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{
@@ -1775,18 +1866,19 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	}
 	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
 	{
-			if(info.status->song != -1 && info.status->playlistLength != 0)
-			{
-				gchar *str = g_strdup_printf("%i", info.status->song);
-				GtkTreePath *path = gtk_tree_path_new_from_string(str);
-				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
-						path,
-						NULL,
-						TRUE,0.5,0);
-				gtk_tree_path_free(path);
-				g_free(str);
-			}                                                      		
+		if(info.status->song != -1 && info.status->playlistLength != 0)
+		{
+			gchar *str = g_strdup_printf("%i", info.status->song);
+			GtkTreePath *path = gtk_tree_path_new_from_string(str);
+			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+						glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+					path,
+					NULL,
+					TRUE,0.5,0);
+			gtk_tree_path_free(path);
+			g_free(str);
+		}         
+		return TRUE;			
 
 	}
 	/* call default */
