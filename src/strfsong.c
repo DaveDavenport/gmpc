@@ -186,11 +186,7 @@ static gsize _strfsong(gchar *s,
 		else if (strncmp("%time%", p, n) == 0)
 		{
 			if (song->time != MPD_SONG_NO_TIME) {
-				gchar s[10];
-				snprintf(s, 9, "%02d:%02d", song->time / 60, 
-						song->time % 60 );
-				/* nasty hack to use static buffer */
-				temp = g_strdup(s);
+				temp = g_strdup_printf("%02d:%02d", song->time/60,song->time % 60);;
 			}
 		}
 
