@@ -1,4 +1,6 @@
 06-07-2004 Qball <Qball@qballcow.nl>
+	* src/preferences.c:		Last updated label now tracks database changes aswell. (uses last_db from song-browser.)
+	* glade/gmpc.glade:		Added update dbase stuff.
 	* added TODO file.
 	* glade/playlist.glade:	Added tooltip to find,close and add.
 	* src/playlist2.c:	del signals only cought when tree in focus, you can now use del to clear search window.

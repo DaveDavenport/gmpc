@@ -1,9 +1,10 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <string.h>
+#include <time.h>
 #include "libmpdclient.h"
 #include "main.h"
-
+extern int last_db;
 pref_struct preferences;
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
@@ -24,6 +25,15 @@ void entry_auth_changed(GtkEntry *entry);
 void xfade_time_changed(GtkSpinButton *but);
 void xfade_enable_toggled(GtkToggleButton *bug);
 
+/* update the db */
+void pref_update_mpd_db()
+{
+		if(!check_connection_state())
+		{
+			mpd_sendUpdateCommand(info.connection, "");
+			mpd_finishCommand(info.connection);
+		}
+}
 /* creat the preferences window */
 void create_preferences_window()
 	{
@@ -69,6 +79,18 @@ void create_preferences_window()
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
+	 
+	   if(info.stats != NULL)
+		{
+		gchar *buffer = ctime(&info.stats->dbUpdateTime);
+		/* nasty but I need to get rid of the trailing new line */
+		buffer[strlen(buffer)-1]='\0';
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
+		}
+	    
+	    
+	    
+	    
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 	}
@@ -94,7 +116,6 @@ void update_preferences_information()
 void preferences_window_autoconnect(GtkToggleButton *tog)
 {
 	preferences.autoconnect = gtk_toggle_button_get_active(tog);
-
 }
 
 void preferences_window_connect(GtkWidget *but)
@@ -106,6 +127,13 @@ void preferences_window_connect(GtkWidget *but)
 			info.conlock = FALSE;
 			gtk_timeout_remove(update_timeout);
 			update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
+			if(info.stats != NULL)
+			{
+				gchar *buffer = ctime(&info.stats->dbUpdateTime);
+				/* nasty but I need to get rid of the trailing new line */
+				buffer[strlen(buffer)-1]='\0';
+				gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
+			}
 		}
 
 }
@@ -114,7 +142,7 @@ void preferences_window_disconnect(GtkWidget *but)
 {
 	if(debug)g_print("**DEBUG** disconnect\n");    
 	disconnect_to_mpd();
-
+	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");
 }
 
 /* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
@@ -138,7 +166,17 @@ void preferences_update()
 			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
 		connected = (info.connection == NULL? 0:1);
-	}    
+	} 
+	if(info.stats != NULL)
+	{
+		if(last_db != info.stats->dbUpdateTime)
+		{
+			gchar *buffer = ctime(&info.stats->dbUpdateTime);
+			/* nasty but I need to get rid of the trailing new line */
+			buffer[strlen(buffer)-1]='\0';
+			gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
+		}
+	}
 }
 
 void popup_enable_toggled(GtkToggleButton *but)
@@ -276,6 +314,3 @@ void update_auth_settings()
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),preferences.password);
 }
-
-
-

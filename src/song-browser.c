@@ -1010,6 +1010,14 @@ update_song_browser ()
 {
   if (sb_xml == NULL)
     {
+	    /* I do this for the preferences window, isnt that nice */
+	    if(info.stats != NULL)
+	    {
+		    if (info.stats->dbUpdateTime != last_db)
+		    {
+			    last_db = info.stats->dbUpdateTime;
+		    }
+	    }
       return;
     }
   if (info.stats->dbUpdateTime != last_db)
