@@ -216,7 +216,7 @@ int update_player()
 	}    
 
 	/* things that only need to be updated during playing */
-	if(info.status->state == MPD_STATUS_STATE_PLAY)
+	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE || info.status->state == MPD_STATUS_STATE_STOP)
 	{
 		/* update the progress bar */
 		{

@@ -1,5 +1,8 @@
 16-10-2004 Qball <Qball@qballcow.nl>
 	* Fixed severall smaller autotools issues.
+	* src/eggtrayicon.c:	Fixed gettex compile time error.
+	* src/player.c:		Update all displays even when paused/stopped
+	(bug $319)
 
 06-10-2004 Qball, <Qball@qballcow.nl>
 	* src/tray_icon.c:	Fixed case that tooltip wouldn't go away when
