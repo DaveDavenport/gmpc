@@ -16,16 +16,6 @@
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
-typedef struct
-{
-	gboolean do_popup;
-	gboolean show_state;
-	gint position;
-	gint timeout;
-	GdkPixbuf *gmpc_image;
-	gint pixbuf_width, pixbuf_height;
-	gboolean popup_stay;
-}popup_struct;
 
 typedef struct
 {
@@ -54,10 +44,6 @@ typedef struct
 	gboolean updating;
 	/* Elapsed or remaining time */
 	int time_format;
-	/* tray icon*/
-	gboolean do_tray;
-	gboolean do_tray_popup;
-	popup_struct popup;
 	/* misc*/
 	gboolean hidden;
 	gboolean pl2_hidden;
@@ -65,7 +51,6 @@ typedef struct
 	/* tooltip playlist window */
 	gint pl2_tooltip;
 	gboolean pl2_do_tooltip;
-	gboolean rounded_corners;
 	/* playlist 3 */
 	gchar *xiph_url;
 	gchar **online_stream_list;
@@ -149,7 +134,7 @@ void update_tray_icon();
 int create_tray_icon();
 
 /* popup.c: update_popup() */
-void update_popup();
+//void update_popup();
 void destroy_tray_icon();
 
 /* main.h*/

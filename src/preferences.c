@@ -25,14 +25,12 @@ void preferences_window_disconnect(GtkWidget *but);
 void update_popup_settings();
 void update_tray_settings();
 void update_server_settings();
-void show_state_changed(GtkToggleButton *but);
 void auth_enable_toggled(GtkToggleButton *but);
 void entry_auth_changed(GtkEntry *entry);
 void xfade_time_changed(GtkSpinButton *but);
 void xfade_enable_toggled(GtkToggleButton *bug);
 void set_display_settings();
 void update_display_settings();
-void tray_popup_toggled(GtkToggleButton *but);
 
 
 /* update the db */
@@ -238,35 +236,31 @@ void preferences_update()
 
 void popup_enable_toggled(GtkToggleButton *but)
 {
-	info.popup.do_popup = gtk_toggle_button_get_active(but);
-	update_popup_settings();
+	cfg_set_single_value_as_int(config, "tray-icon", "do-popup", gtk_toggle_button_get_active(but));
 }
 
 void popup_position_changed(GtkOptionMenu *om)
 {
-	info.popup.position = gtk_option_menu_get_history(om);
-}
-void show_state_changed(GtkToggleButton *but)
-{
-	info.popup.show_state = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-location", gtk_option_menu_get_history(om));
 }
 
 void popup_timeout_changed()
 {
-	info.popup.timeout = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")));
+	//info.popup.timeout = gtk_spin_button_get_value_as_int(
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout", 
+			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout"))));
 }
 
 void update_popup_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(xml_preferences_window, "ck_popup_enable"), info.popup.do_popup);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "ck_show_state"), info.popup.do_popup);
-	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(xml_preferences_window, "ck_show_state"), info.popup.show_state);	
+			glade_xml_get_widget(xml_preferences_window, "ck_popup_enable"),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1));
 	gtk_option_menu_set_history((GtkOptionMenu *)
-			glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.position);
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")), info.popup.timeout);
+			glade_xml_get_widget(xml_preferences_window, "om_popup_position"),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0));
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 2));
 
 }
 
@@ -304,21 +298,15 @@ void update_server_settings()
 void update_tray_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(xml_preferences_window, "ck_tray_enable"), info.do_tray);
-	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(xml_preferences_window, "ck_tray_popup"), info.do_tray_popup);
-	
+			glade_xml_get_widget(xml_preferences_window, "ck_tray_enable"), 
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1));
 }
 
-void tray_popup_toggled(GtkToggleButton *but)
-{
-	info.do_tray_popup = gtk_toggle_button_get_active(but);
-}
-	
 void tray_enable_toggled(GtkToggleButton *but)
 {
-	info.do_tray = gtk_toggle_button_get_active(but);
-	if(info.do_tray)
+	g_print("chaning tray icon %i\n", gtk_toggle_button_get_active(but));
+	cfg_set_single_value_as_int(config, "tray-icon", "enable", (int)gtk_toggle_button_get_active(but));
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
 	{
 		create_tray_icon();
 	}

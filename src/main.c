@@ -106,16 +106,6 @@ set_default_values ()
 	/*
 	 * tray icon 
 	 */
-	info.do_tray = FALSE;
-	info.do_tray_popup = TRUE;
-	info.popup.do_popup = 0;
-	info.popup.show_state = FALSE;
-	info.popup.position = 0;
-	info.popup.timeout = 5;
-	info.popup.gmpc_image = NULL;
-	info.popup.pixbuf_width = 0;
-	info.popup.pixbuf_height = 0;
-	info.popup.popup_stay = FALSE;
 	info.hidden = FALSE;
 	info.mpdSong = NULL;
 
@@ -133,7 +123,6 @@ set_default_values ()
 	info.pl2_tooltip = 800;
 	info.pl2_do_tooltip = TRUE;
 
-	info.rounded_corners = FALSE;
 
 	/* playlist 3 */
 	info.xiph_url = g_strdup("http://dir.xiph.org/yp.xml");
@@ -194,7 +183,7 @@ int main (int argc, char **argv)
 	update_timeout =
 		gtk_timeout_add (5000, (GSourceFunc) update_interface, NULL);
 
-	if (info.do_tray)
+	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
 		create_tray_icon ();
 	update_interface ();
 
@@ -238,7 +227,7 @@ update_interface ()
 		/*
 		 * update the popup 
 		 */
-		update_popup ();
+		//update_popup ();
 		if (!cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0))
 		{
 			return TRUE;
@@ -313,7 +302,7 @@ update_interface ()
 	/*
 	 * update the popup 
 	 */
-	update_popup ();
+	//update_popup ();
 
 	/*
 	 * tray update 

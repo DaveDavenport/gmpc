@@ -116,7 +116,7 @@ int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 	char * temp = cfg_get_single_value_as_string(cfg,class,key);
 	if(temp == NULL)
 	{
-		return 0;
+		return CFG_INT_NOT_DEFINED;
 	}
 	/* make it return an error */
 	return atoi(temp);
@@ -131,7 +131,7 @@ void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int va
 int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def)
 {
 	int retv = cfg_get_single_value_as_int(cfg,class,key);
-	if(retv == 0)
+	if(retv == CFG_INT_NOT_DEFINED)
 	{
 		cfg_set_single_value_as_int(cfg,class,key,def);
 		retv = cfg_get_single_value_as_int(cfg,class,key);		
@@ -145,7 +145,7 @@ float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
 	char * temp = cfg_get_single_value_as_string(cfg,class,key);
 	if(temp == NULL)
 	{
-		return 0;
+		return CFG_INT_NOT_DEFINED;
 	}
 	/* make it return an error */
 	return (float)g_ascii_strtod(temp,NULL);
@@ -161,7 +161,7 @@ void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, floa
 float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def)
 {
 	float retv = cfg_get_single_value_as_float(cfg,class,key);
-	if(retv == 0)
+	if(retv == CFG_INT_NOT_DEFINED)
 	{
 		cfg_set_single_value_as_float(cfg,class,key,def);
 		retv = cfg_get_single_value_as_float(cfg,class,key);		
@@ -184,6 +184,7 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	gchar *string;
 	if(value == NULL)
 	{
+		g_print("ERROR: trying to set value NULL\n");
 		return;
 	}
 	if(cur != NULL)

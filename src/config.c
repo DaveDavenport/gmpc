@@ -24,23 +24,7 @@ void load_config ()
 	{
 
 
-		if (!strncmp (buffer, "do tray:", 8))
-		{
-			gchar *buf = g_strstrip (&buffer[8]);
-			if (buf != NULL)
-			{
-				info.do_tray = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "do tray popup:", 14))
-		{
-			gchar *buf = g_strstrip (&buffer[14]);
-			if (buf != NULL)
-			{
-				info.do_tray_popup = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "time format:", 12))
+		if (!strncmp (buffer, "time format:", 12))
 		{
 			gchar *buf = g_strstrip (&buffer[12]);
 			if (buf != NULL)
@@ -49,47 +33,6 @@ void load_config ()
 			}
 		}
 
-
-		else if (!strncmp (buffer, "do popup:", 9))
-		{
-			gchar *buf = g_strstrip (&buffer[9]);
-			if (buf != NULL)
-			{
-				info.popup.do_popup = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "popup pos:", 10))
-		{
-			gchar *buf = g_strstrip (&buffer[10]);
-			if (buf != NULL)
-			{
-				info.popup.position = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "popup stay:", 11))
-		{
-			gchar *buf = g_strstrip (&buffer[11]);
-			if (buf != NULL)
-			{
-				info.popup.popup_stay = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "popup state:", 12))
-		{
-			gchar *buf = g_strstrip (&buffer[12]);
-			if (buf != NULL)
-			{
-				info.popup.show_state = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "popup timeout:", 14))
-		{
-			gchar *buf = g_strstrip (&buffer[14]);
-			if (buf != NULL)
-			{
-				info.popup.timeout = atoi (buf);
-			}
-		}
 		else if (!strncmp (buffer, "markup main display:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
@@ -166,18 +109,6 @@ void load_config ()
 				info.pl2_do_tooltip = atoi (buf);
 			}
 		}
-		else if (!strncmp (buffer, "rounded corners:", 16))
-		{
-			gchar *buf = g_strstrip (&buffer[16]);
-			if (buf != NULL)
-			{
-				info.rounded_corners = atoi (buf);
-			}
-		}
-
-
-
-
 
 		memset (buffer, '\0', 1024);
 
@@ -199,14 +130,7 @@ void save_config ()
 		g_free (filename);
 		return;
 	}
-	fprintf (fp, "do tray: %i\n", info.do_tray);
-	fprintf (fp, "do tray popup: %i\n", info.do_tray_popup);
 	fprintf (fp, "time format: %i\n", info.time_format);
-	fprintf (fp, "do popup: %i\n", info.popup.do_popup);
-	fprintf (fp, "popup pos: %i\n", info.popup.position);
-	fprintf (fp, "popup stay: %i\n", info.popup.popup_stay);
-	fprintf (fp, "popup state: %i\n", info.popup.show_state);
-	fprintf (fp, "popup timeout: %i\n", info.popup.timeout);
 	escaped = g_strescape(preferences.markup_main_display, "");
 	fprintf (fp, "markup main display: %s\n", escaped);
 	g_free(escaped);
@@ -228,7 +152,6 @@ void save_config ()
 	}
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
-	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);
 	fclose (fp);
 	g_free (filename);
 }

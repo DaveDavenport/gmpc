@@ -11,7 +11,6 @@ gmpc_SOURCES=\
 	libmpdclient.c\
 	eggtrayicon.c\
 	tray-icon.c\
-	popup.c\
 	misc.c\
 	strfsong.c\
 	playlist2.c\

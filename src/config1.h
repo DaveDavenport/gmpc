@@ -2,6 +2,8 @@
 #define __CONFIG_1_H__
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#define CFG_INT_NOT_DEFINED -65536
+
 
 typedef struct config_obj
 {
