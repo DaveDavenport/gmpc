@@ -1,5 +1,5 @@
 /* libmpdclient
- * (c)2002 by Warren Dukes (shank@mercury.chem.pitt.edu)
+ * (c)2003-2004 by Warren Dukes (shank@mercury.chem.pitt.edu)
  * This project's homepage is: http://www.musicpd.org
  *
  * This library is free software; you can redistribute it and/or
@@ -73,6 +73,7 @@ typedef struct _mpd_Connection {
  * use this to open a new connection
  * you should use mpd_closeConnection, when your done with the connection,
  * even if an error has occurred
+ * _host_ format can include the password for the host: password@host
  * _timeout_ is the connection timeout period in seconds
  */
 mpd_Connection * mpd_newConnection(const char * host, int port, float timeout);
@@ -360,9 +361,18 @@ void mpd_sendRepeatCommand(mpd_Connection * connection, int repeatMode);
 
 void mpd_sendRandomCommand(mpd_Connection * connection, int randomMode);
 
+void mpd_sendSetvolCommand(mpd_Connection * connection, int volumeChange);
+
+/* WARNING: don't use volume command, its depreacted */
 void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange);
 
+void mpd_sendCrossfadeCommand(mpd_Connection * connection, int seconds);
+
+int mpd_getCrossfade(mpd_Connection * connection);
+
 void mpd_sendUpdateCommand(mpd_Connection * connection);
+
+void mpd_sendPasswordCommand(mpd_Connection * connection, const char * pass);
 
 /* after executing a command, when your done with it to get its status
  * (you want to check connection->error for an error)

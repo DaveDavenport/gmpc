@@ -1,5 +1,5 @@
 /* libmpdclient
- * (c)2002 by Warren Dukes (shank@mercury.chem.pitt.edu)
+ * (c)2003-2004 by Warren Dukes (shank@mercury.chem.pitt.edu)
  * This project's homepage is: http://www.musicpd.org
  *
  * This library is free software; you can redistribute it and/or
@@ -104,9 +104,23 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 	mpd_Connection * connection = malloc(sizeof(mpd_Connection));
 	struct timeval tv;
 	fd_set fds;
+	int passwordLen = 0;
+	int parsedLen = 0;
 #ifdef MPD_HAVE_IPV6
 	struct sockaddr_in6 sin6;
 #endif
+	/* parse password and host */
+	{
+		char * ret = strstr(host,"@");
+		int len = ret-host;
+
+		if(ret && len == 0) parsedLen++;
+		else if(ret) {
+			passwordLen = len;
+			parsedLen+=len+1;
+		}
+	}
+
 	strcpy(connection->buffer,"");
 	connection->buflen = 0;
 	connection->bufstart = 0;
@@ -116,9 +130,9 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 	connection->commandList = 0;
 	connection->returnElement = NULL;
 
-	if(!(he=gethostbyname(host))) {
+	if(!(he=gethostbyname(host+parsedLen))) {
 		snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
-				"host \"%s\" not found",host);
+				"host \"%s\" not found",host+parsedLen);
 		connection->error = MPD_ERROR_UNKHOST;
 		return connection;
 	}
@@ -204,7 +218,7 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 		if(connect(connection->sock,dest,destlen)<0) {
 			snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
 					"problems connecting to \"%s\" on port"
-				 	" %i",host,port);
+				 	" %i",host+parsedLen,port);
 			connection->error = MPD_ERROR_CONNPORT;
 			return connection;
 		}
@@ -236,7 +250,8 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 			if(readed<=0) {
 				snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
 					"problems getting a response from"
-					 " \"%s\" on port %i",host,port);
+					" \"%s\" on port %i",host+parsedLen,
+					port);
 				connection->error = MPD_ERROR_NORESPONSE;
 				return connection;
 			}
@@ -249,7 +264,7 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 		else {
 			snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
 				"timeout in attempting to get a response from"
-				 " \"%s\" on port %i",host,port);
+				 " \"%s\" on port %i",host+parsedLen,port);
 			connection->error = MPD_ERROR_NORESPONSE;
 			return connection;
 		}
@@ -264,7 +279,7 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 		free(output);
 		snprintf(connection->errorStr,MPD_BUFFER_MAX_LENGTH,
 				"mpd not running on port %i on host \"%s\"",
-				port,host);
+				port,host+parsedLen);
 		connection->error = MPD_ERROR_NOTMPD;
 		return connection;
 	}
@@ -308,6 +323,16 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 	free(output);
 
 	connection->doneProcessing = 1;
+
+	if(passwordLen) {
+		char * dup = strdup(host);
+		dup[passwordLen] = '\0';
+
+		mpd_sendPasswordCommand(connection,dup);
+		if(!connection->error) mpd_finishCommand(connection);
+
+		free(dup);
+	}
 
 	return connection;
 }
@@ -1097,11 +1122,59 @@ void mpd_sendRandomCommand(mpd_Connection * connection, int randomMode) {
 	free(string);
 }
 
+void mpd_sendSetvolCommand(mpd_Connection * connection, int volumeChange) {
+	char * string = malloc(strlen("setvol")+25);
+	sprintf(string,"setvol \"%i\"\n",volumeChange);
+	mpd_executeCommand(connection,string);
+	free(string);
+}
+
 void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange) {
 	char * string = malloc(strlen("volume")+25);
 	sprintf(string,"volume \"%i\"\n",volumeChange);
 	mpd_executeCommand(connection,string);
 	free(string);
+}
+
+void mpd_sendCrossfadeCommand(mpd_Connection * connection, int seconds) {
+	char * string = malloc(strlen("crossfade")+25);
+	sprintf(string,"crossfade \"%i\"\n",seconds);
+	mpd_executeCommand(connection,string);
+	free(string);
+}
+
+int mpd_getCrossfade(mpd_Connection * connection) {
+	int crossfade = -1;
+
+	mpd_executeCommand(connection,"crossfade\n");
+		
+	if(connection->error) return -1;
+
+	mpd_getNextReturnElement(connection);
+	if(connection->error) return -1;
+
+	while(connection->returnElement) {
+		mpd_ReturnElement * re = connection->returnElement;
+		if(strcmp(re->name,"crossfade")==0) {
+			crossfade = atoi(re->value);
+		}
+
+		mpd_getNextReturnElement(connection);
+		if(connection->error) return -1;
+	}
+
+	if(connection->error) return -1;
+
+	return crossfade;
+}
+
+void mpd_sendPasswordCommand(mpd_Connection * connection, const char * pass) {
+	char * sPass = mpd_sanitizeArg(pass);
+	char * string = malloc(strlen("password")+strlen(sPass)+5);
+	sprintf(string,"password \"%s\"\n",sPass);
+	mpd_executeCommand(connection,string);
+	free(string);
+	free(sPass);
 }
 
 void mpd_sendCommandListBegin(mpd_Connection * connection) {
