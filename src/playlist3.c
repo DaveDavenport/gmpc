@@ -372,7 +372,7 @@ void pl3_current_playlist_add()
 			PL3_CAT_TYPE, PL3_CURRENT_PLAYLIST,
 			PL3_CAT_TITLE, "Current Playlist",
 			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "media-stream",
+			PL3_CAT_ICON_ID, "media-playlist",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 			-1);
