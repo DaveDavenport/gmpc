@@ -79,7 +79,7 @@ void set_default_values()
 	/* tray icon*/
 	info.do_tray =FALSE;
 
-	info.popup.do_popup = 1;
+	info.popup.do_popup = 0;
 	info.popup.show_state = FALSE;
 	info.popup.position = 0;
 	info.popup.timeout = 5;
