@@ -51,10 +51,10 @@ int hide_playlist2(GtkWidget *but)
 void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 {
 	GtkTreeIter iter;
-	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_store), &iter, path))
+	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path))
 	{
 		gint id=0;
-		gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, 0,&id,-1);
+		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, 0,&id,-1);
 		mpd_sendPlayIdCommand(info.connection, id);
 		mpd_finishCommand(info.connection);
 
