@@ -103,7 +103,7 @@ void pl3_xiph_add()
 			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
 			PL3_CAT_TITLE, "Icecast",
 			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "gtk-find",
+			PL3_CAT_ICON_ID, "icecast",
 			PL3_CAT_PROC, FALSE,          	
 			PL3_CAT_ICON_SIZE,3,-1);
 }
@@ -1071,7 +1071,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH)
 	{
 
 		/* del, crop */
@@ -1578,7 +1578,7 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		return TRUE;
 	}
 	else if (event->keyval == GDK_Insert && 
-			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND))
+			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{
 		pl3_browse_add_selected();	
 		return TRUE;

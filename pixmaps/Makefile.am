@@ -14,7 +14,8 @@ appicon_DATA =	media-audiofile.png\
 	media-album.png\
 	media-stop.png\
 	player-repeat.png\
-	player-shuffle.png
+	player-shuffle.png\
+	icecast.png
 
 EXTRA_DIST = media-audiofile.png\
 	media-stream.png\
@@ -28,6 +29,7 @@ EXTRA_DIST = media-audiofile.png\
 	media-album.png\
 	media-stop.png\
 	player-repeat.png\
-	player-shuffle.png
+	player-shuffle.png\
+	icecast.png
 
 

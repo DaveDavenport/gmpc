@@ -574,5 +574,14 @@ init_stock_icons ()
 	g_object_unref (G_OBJECT (pb));
 
 
+	/*
+	 * add icecast
+	 */
+	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "icecast.png", NULL);
+	set = gtk_icon_set_new_from_pixbuf (pb); 
+	gtk_icon_factory_add (factory, "icecast", set);
+	g_object_unref (G_OBJECT (pb));
+
+
 	gtk_icon_factory_add_default (factory);
 }
