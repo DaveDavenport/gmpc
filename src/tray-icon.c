@@ -29,7 +29,7 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(info.connection != NULL && info.status != NULL && info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP) 
+	if(info.connection != NULL && info.status != NULL && info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP)
 	{
 /*		strfsong(result, 1024,
 				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
@@ -102,12 +102,12 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-30,19,19,0,64*360);
 		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-12);
 		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-32);
-		
+
 	}
 	else
 	{
-	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
-			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
+		gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+				NULL, widget, "tooltip", 0, 0, -1, -1);                     	
 
 	}
 
@@ -121,11 +121,13 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 	if(info.rounded_corners) height = height+10;
 
-	if(info.status->totalTime != 0)
+	if(info.status != NULL)
 	{
-		height = height+12;
+		if(info.status->totalTime != 0)
+		{
+			height = height+12;
+		}
 	}
-
 
 	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
 	{
@@ -256,11 +258,13 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8;
-	if(info.status->totalTime != 0)
+	if(info.status != NULL)
 	{
-		height = height+12;
+		if(info.status->totalTime != 0)
+		{
+			height = height+12;
+		}
 	}
-
 	if(info.rounded_corners)
 	{
 		height = height+10;
@@ -549,7 +553,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 				gtk_image_new_from_stock("media-prev", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);				                              		
-		
+
 
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
