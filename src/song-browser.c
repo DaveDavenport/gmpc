@@ -27,7 +27,6 @@ gint sb_sort_function(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b)
 	gtk_tree_model_get(model, b, SB_TYPE, &type_b, SB_DPATH, &bname, -1);
 	if(type_a != type_b)
 	{
-		if(type_a > type_b) return g_utf8_collate(bname, aname);
 		return type_b -type_a;
 	}
 	else 
@@ -328,13 +327,13 @@ void song_browser_create()
 			NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), GTK_TREE_VIEW_COLUMN(column));
 
-	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+/*	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
 	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
 	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_search), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_search), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	
+	*/
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type")),0);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")),0);
