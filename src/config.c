@@ -106,6 +106,14 @@ void load_config()
 		info.popup.show_state = atoi(buf);
 		}                                	
 	    }                                    	
+	else if(!strncmp(buffer, "popup timeout:", 14))
+	    {
+	    gchar *buf = g_strstrip(&buffer[14]);
+	    if(buf != NULL)
+		{
+		info.popup.timeout = atoi(buf);
+		}                                	
+	    }          
 	else if(!strncmp(buffer, "use auth:", 9))
 	    {
 	    gchar *buf = g_strstrip(&buffer[9]);
@@ -155,6 +163,7 @@ void save_config()
     fprintf(fp, "popup pos: %i\n", info.popup.position);
     fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);
     fprintf(fp, "popup state: %i\n", info.popup.show_state);
+    fprintf(fp, "popup timeout: %i\n", info.popup.timeout);
     fprintf(fp, "use auth: %i\n", preferences.user_auth);
     fprintf(fp, "auth pass: %s\n", preferences.password);
     fclose(fp);

@@ -8,7 +8,7 @@ pref_struct preferences;
 /* = {"127.0.0.1", 2100,FALSE, "",  1.0, FALSE};*/
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
-
+void popup_timeout_changed();
 void tray_enable_toggled(GtkToggleButton *but);
 void preferences_update();
 void popup_enable_toggled(GtkToggleButton *but);
@@ -146,6 +146,11 @@ void show_state_changed(GtkToggleButton *but)
 	info.popup.show_state = gtk_toggle_button_get_active(but);
 }
 
+void popup_timeout_changed()
+    {
+    info.popup.timeout = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")));
+    }
+
 void update_popup_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
@@ -156,6 +161,7 @@ void update_popup_settings()
 			glade_xml_get_widget(xml_preferences_window, "ck_show_state"), info.popup.show_state);	
 	gtk_option_menu_set_history((GtkOptionMenu *)
 			glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.position);
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")), info.popup.timeout);
 
 }
 
@@ -199,4 +205,6 @@ void update_auth_settings()
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),preferences.password);
 }
+
+
 

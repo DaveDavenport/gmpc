@@ -72,6 +72,7 @@ void set_default_values()
     info.popup.do_popup = 1;
     info.popup.show_state = FALSE;
     info.popup.position = 0;
+    info.popup.timeout = 5;
     info.popup.gmpc_image = NULL;
     info.popup. pixbuf_width = 0;
     info.popup.pixbuf_height = 0;

@@ -6,6 +6,7 @@ typedef struct
 	gboolean do_popup;
 	gboolean show_state;
 	gint position;
+	gint timeout;
 	GdkPixbuf *gmpc_image;
 	gint pixbuf_width, pixbuf_height;
 	gboolean popup_stay;

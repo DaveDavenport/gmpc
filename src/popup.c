@@ -222,7 +222,7 @@ void popup_window()
 	gtk_widget_show_all(popup);
 	if(!info.popup.popup_stay)
 	{
-		timeout = gtk_timeout_add(5000, (GSourceFunc)destroy_popup, popup);
+		timeout = gtk_timeout_add(info.popup.timeout*1000, (GSourceFunc)destroy_popup, popup);
 	}
 }
 
