@@ -1,4 +1,10 @@
 30-06-2004 Qball <Qball@qballcow.nl>
+	* Fixed double click on playlist. it now adds it to the list.
+	* info.old_pos is reset on disconnect
+	* Added comment to the playlist2.c 
+	* Added check_for_errors after every mpd_finishCommand
+	* Added check_connection_state at the beginnning of every function.
+	* added a Check connection_state function
 	* Added remote fetching and parsing of .m3u/.pls files
 	* Added dnd on open-location window and button
 	* Saving playlist
