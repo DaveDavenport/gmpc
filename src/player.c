@@ -56,7 +56,7 @@ void display_exposed(GtkWidget *window)
 			layout);
 	}
 	else{
-		if(width-scroll.pos > 255)
+		if(width-scroll.pos > 260)
 		{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
@@ -77,7 +77,7 @@ void display_exposed(GtkWidget *window)
 					layout);
 		}
 
-		if((width-scroll.pos) == 0)
+		if((width-scroll.pos) < 0)
 		{
 			scroll.pos = 0;
 
