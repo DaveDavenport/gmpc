@@ -105,6 +105,9 @@ void create_preferences_window()
 	set_display_settings();
 
 
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
+			cfg_get_single_value_as_int_with_default(config,"osb", "enable", 0));           	
+
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 	}
@@ -370,4 +373,11 @@ void update_auth_settings()
 			cfg_get_single_value_as_int_with_default(config, "connection", "useauth", 0));
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),
 			cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
+}
+
+void osb_enable_tb(GtkToggleButton *but)
+{
+
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "osb","enable", bool1);
 }

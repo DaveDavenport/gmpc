@@ -225,5 +225,133 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	cfg_save(cfg);
 }
 
+/* multiple values */
 
 
+xmlNodePtr cfg_get_multiple_value(config_obj *cfg, char *class, char *key, char* id)
+{
+	xmlNodePtr cur = cfg_get_class(cfg, class);
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	cur = cur->xmlChildrenNode;
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	do
+	{
+		if(xmlStrEqual(cur->name, key) && xmlStrEqual(xmlGetProp(cur, (const xmlChar *)"id"),id))
+		{
+			return cur;
+		}
+		cur = cur->next;
+	}while (cur != NULL);
+	return NULL;                                     	
+}
+
+void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id)
+{
+	xmlNodePtr cur = cfg_get_multiple_value(cfg, class,key,id);
+	if(cur != NULL)
+	{
+		xmlUnlinkNode(cur);
+		xmlFreeNode(cur);  				
+		cfg_save(cfg);
+	}
+}
+
+void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, char *id, char *value)
+{
+	xmlNodePtr test,cur;
+	char *string;
+	cur= cfg_get_multiple_value(cfg,class,key,id);
+	if(value == NULL)
+	{
+		return;
+	}
+	if(cur != NULL)
+	{
+		xmlUnlinkNode(cur);
+		xmlFreeNode(cur);  		
+	}
+
+	string = g_markup_escape_text(value, g_utf8_strlen(value, -1));
+	cur = cfg_get_class(cfg,class);
+	if(cur == NULL)
+	{
+		cur = xmlNewChild(cfg->root, NULL, class, NULL);
+	}
+	test = xmlNewChild(cur,NULL, key, string);
+	g_free(string);
+	string = g_markup_escape_text(id, g_utf8_strlen(id, -1));
+	g_print("id: %s\n",string);
+	xmlSetProp(test, "id",string); 
+	g_free(string);
+	cfg_save(cfg);
+}
+
+conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *key)
+{
+	xmlNodePtr cur;
+	conf_mult_obj *list = NULL, *first= NULL; 
+	cur = cfg_get_class(cfg, class);
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	cur = cur->xmlChildrenNode;
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	do
+	{
+		if(xmlStrEqual(cur->name, key))
+		{
+			if(list == NULL)
+			{
+				first = list = g_malloc(sizeof(conf_mult_obj));
+				list->next = NULL;
+				list->prev = NULL;
+			}
+			else
+			{
+				list->next = g_malloc(sizeof(conf_mult_obj));
+				list->next->next =  NULL;
+				list->next->prev = list;
+				list = list->next;
+			}
+			list->key = g_strdup(xmlGetProp(cur, "id"));
+			list->value = g_strdup(xmlNodeGetContent(cur));
+		}
+		cur = cur->next;
+	}while (cur != NULL);
+	return first;                                     	
+}
+
+void cfg_free_multiple(conf_mult_obj *data)
+{
+	conf_mult_obj *list = data;
+	while(list != NULL)
+	{
+		if(list->key != NULL) g_free(list->key);
+		if(list->value != NULL) g_free(list->value);
+		list = list->next;
+	}
+	list = data;
+	while(list != NULL)
+	{
+		if(list->next != NULL)
+		{
+			g_free(list->prev);
+			list = list->next;
+		}
+		else{
+			g_free(list);
+			list = NULL;
+		}
+	}
+
+}

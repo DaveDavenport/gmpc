@@ -34,6 +34,7 @@
 #include "playlist3.h"
 #include "open-location.h"
 #include "vfs_download.h"
+#include "osb_browser.h"
 #include "config1.h"
 
 extern config_obj *config;
@@ -314,159 +315,9 @@ void pl3_custom_stream_remove()
 }
 
 
-/************************************
- * XIPH BROWSER
- */
-
-void pl3_xiph_add()
-{
-	GtkTreeIter iter,child;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
-			PL3_CAT_TITLE, "Online Streams",
-			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "icecast",
-			PL3_CAT_PROC, FALSE,          	
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	gtk_tree_store_append(pl3_tree, &child, &iter);
-	gtk_tree_store_set(pl3_tree, &child, 
-			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
-			PL3_CAT_TITLE, "Xiph",
-			PL3_CAT_INT_ID, "http://dir.xiph.org/yp.xml",
-			PL3_CAT_ICON_ID, "icecast",
-			PL3_CAT_PROC, FALSE,          	
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	gtk_tree_store_append(pl3_tree, &child, &iter);
-	gtk_tree_store_set(pl3_tree, &child, 
-			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
-			PL3_CAT_TITLE, "Shoutcast",
-			PL3_CAT_INT_ID, "http://qballcow.nl/shoutcast.xml",
-			PL3_CAT_ICON_ID, "icecast",
-			PL3_CAT_PROC, FALSE,          	
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	
-
-	
-}
-
-
-void pl3_xiph_fill_view(char *buffer)
-{
-	xmlDocPtr xmldoc;
-	xmlNodePtr root;
-	xmlNodePtr cur;
-	gchar *name, *string;
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	if(!gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		return;
-	}
-		
-	gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, -1);
-	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
-	if(buffer != NULL)
-	{
-		FILE *fp = fopen(string, "w");
-		if(fp != NULL)
-		{
-			fputs(buffer,fp);
-			fclose(fp);
-
-		}
-		else
-		{
-			g_free(string);	
-			return;
-		}
-	}
-	xmldoc = xmlParseFile(string);
-	g_free(string);
-	root = xmlDocGetRootElement(xmldoc);
-	cur = root->xmlChildrenNode;
-	while(cur != NULL)
-	{
-		if(xmlStrEqual(cur->name, "entry"))
-		{
-			xmlNodePtr cur1 = cur->xmlChildrenNode;
-			GtkTreeIter iter;
-			char *name=NULL, *bitrate=NULL, *genre=NULL;
-			gtk_list_store_append(pl3_store, &iter);
-			gtk_list_store_set (pl3_store, &iter,
-					PL3_SONG_POS, PL3_ENTRY_STREAM, 
-					PL3_SONG_STOCK_ID, "media-stream", 
-					-1);
-
-			while(cur1 != NULL)
-			{
-				if(xmlStrEqual(cur1->name, "server_name"))
-				{
-					name = xmlNodeGetContent(cur1);
-				}
-				else if(xmlStrEqual(cur1->name, "genre"))
-				{
-					genre = xmlNodeGetContent(cur1);
-				}
-				else if (xmlStrEqual(cur1->name,"bitrate"))
-				{
-					bitrate = xmlNodeGetContent(cur1);
-				}
-				else if(xmlStrEqual(cur1->name, "listen_url"))
-				{
-					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
-
-				}
-
-				cur1 = cur1->next;
-			}
-			name = g_strdup_printf("Station: %s\nGenre: %s\nBitrate: %s", name,genre, bitrate);
-			gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, name, -1);
-			g_free(name);
-
-		}
-
-		cur = cur->next;
-	}
-	xmlFreeDoc(xmldoc);
-	xmlCleanupParser();
-}
-
-void pl3_xiph_view_browser(gchar *url,gchar *name)
-{
-	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
-	gtk_list_store_clear(pl3_store);
-	if(g_file_test(string, G_FILE_TEST_EXISTS))
-	{
-		pl3_xiph_fill_view(NULL);
-	}
-	else
-	{
-		start_transfer(url,(void *)pl3_xiph_fill_view,NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
-	}
-	g_free(string);
-}
 
 
 
-void pl3_xiph_refresh()
-{
-	gchar *name, *string, *url;
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	if(!gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		return;
-	}
-	gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name, -1);
-	if(url == NULL || name == NULL ) return;
-	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
-	unlink(string);
-	g_free(string);
-	pl3_xiph_view_browser(url, name);
-}
 
 /*****************************************************************
  * Find Browser
@@ -520,10 +371,10 @@ unsigned long pl3_find_view_browser()
 				{
 					time += ent->info.song->time;
 				}
-				
+
 				strfsong (buffer, 1024, 
 						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
-						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
 						ent->info.song);
 				/* add as child of the above created parent folder */
 				gtk_list_store_append (pl3_store, &child);
@@ -596,7 +447,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	gint type = pl3_cat_get_selected_browser();
 	if(type != PL3_CURRENT_PLAYLIST) return;
 	str = gtk_tree_path_to_string(path);
-	
+
 	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), iter,SONG_POS, &pos, -1);
 	new_pos = atoi(str);
 	if(new_pos > pos ) new_pos --;
@@ -1126,8 +977,8 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			{
 				gchar buffer[1024];
 				strfsong (buffer, 1024,
-					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",          
-						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",          
+							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
 						ent->info.song);
 				if(ent->info.song->time != MPD_SONG_NO_TIME)
 				{
@@ -1733,9 +1584,9 @@ void pl3_update()
 
 	/* if the song changed, or the state highlight the right song */
 	if (info.status->song != info.song || info.state != info.status->state)
-        {
-                pl3_highlight_song ();
-        }
+	{
+		pl3_highlight_song ();
+	}
 
 	if(info.playlist_id != info.status->playlist)
 	{
@@ -1824,7 +1675,7 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_artist_replace_folder), NULL);
-		
+
 		/* show everything and popup */
 		gtk_widget_show_all(menu);                                                        		
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
@@ -1834,20 +1685,37 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* here we have:  Add. Replace*/
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
-		/* add the add widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
-
-		/* show everything and popup */
-		gtk_widget_show_all(menu);                                                        		
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-
-
-
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+		GtkTreeIter iter;
+		char *id;
+		if(gtk_tree_selection_get_selected(selec,&model, &iter))
+		{
+			gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &id, -1);
+			if(strlen(id) > 0)
+			{
 
 
 
+				/* add the add widget */
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_add_source), NULL);		
+
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_del_source), NULL);		
+
+
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
+
+				/* show everything and popup */
+				gtk_widget_show_all(menu);                                                        		
+				gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+			}
+		}
 	}
 
 	return TRUE;
@@ -2279,7 +2147,7 @@ void pl2_save_playlist ()
 			/* if the users agrees do the following: */
 			/* get the song-name */
 			str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
-						(glade_xml_get_widget (xml, "pl-entry")));
+					(glade_xml_get_widget (xml, "pl-entry")));
 			/* check if the user entered a name, we can't do withouth */
 			/* TODO: disable ok button when nothing is entered */
 			/* also check if there is a connection */

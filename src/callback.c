@@ -23,7 +23,7 @@
 #include "main.h"
 
 /* returns TRUE when an error */
-
+/* NEEDS A REWRITE */
 int check_for_errors()
 {
 	if(info.connection == NULL) return TRUE;
