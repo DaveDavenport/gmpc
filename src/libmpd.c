@@ -24,7 +24,8 @@ MpdObj * mpd_ob_create()
 	mi->connection = NULL;
 	mi->status = NULL;
 	mi->stats = NULL;
-	mi->error = NULL;
+	mi->error = 0;
+	mi->error_msg = NULL;
 	mi->CurrentSong = NULL;
 	/* info */
 	mi->playlistid = -1;
@@ -32,6 +33,7 @@ MpdObj * mpd_ob_create()
 
 	/* signals */
 	mi->playlist_changed = NULL;
+	mi->error_signal = NULL;
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
 	
@@ -55,9 +57,9 @@ void mpd_ob_free(MpdObj *mi)
 	{
 		free(mi->password);
 	}
-	if(mi->error)
+	if(mi->error_msg)
 	{
-		free(mi->error);
+		free(mi->error_msg);
 	}
 	if(mi->connection)
 	{
@@ -78,6 +80,42 @@ void mpd_ob_free(MpdObj *mi)
 	}
 	free(mi);
 }
+
+int mpd_ob_check_error(MpdObj *mi)
+{
+	if(mi->error)
+	{
+		return TRUE;
+	}	
+
+	/* this shouldn't happen, ever */
+	if(mi->connection == NULL)
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_check_error: should this happen, mi->connection == NULL?");
+		return FALSE;
+	}
+	if(mi->connection->error)
+	{
+		/* TODO: map these errors in the future */
+		mi->error = mi->connection->error;
+		mi->error_msg = mi->connection->errorStr;	
+
+		debug_printf(DEBUG_ERROR, "mpd_ob_check_error: Following error occured: code: %i msg: %s", mi->error, mi->error_msg);
+		mpd_ob_disconnect(mi);
+		/* trigger signal for error */
+		if(mi->error_signal)
+		{
+			mi->error_signal(mi, mi->error, mi->error_msg,mi->error_signal_pointer);
+		}
+
+		
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
 
 int mpd_ob_lock_conn(MpdObj *mi)
 {
@@ -104,7 +142,7 @@ int mpd_ob_unlock_conn(MpdObj *mi)
 	
 	mi->connection_lock = FALSE;
 
-	return FALSE;
+	return mpd_ob_check_error(mi);
 }
 
 MpdObj * mpd_ob_new_default()
@@ -208,8 +246,10 @@ int mpd_ob_disconnect(MpdObj *mi)
 	mi->playlistid = -1;
 	mi->songid = -1;
 
+	/*don't reset errors */
+//	mi->error = 0;
+//	mi->error_msg = NULL;
 
-	
 	return FALSE;
 }
 
@@ -220,7 +260,10 @@ int mpd_ob_connect(MpdObj *mi)
 		/* should return some spiffy error here */
 		return -1;
 	}
-
+	/* reset errors */
+	mi->error = 0;
+	mi->error_msg = NULL;
+	
 	debug_printf(DEBUG_INFO, "mpd_ob_connect: connecting\n");
 	
 	if(mi->connected)
@@ -255,8 +298,11 @@ int mpd_ob_connect(MpdObj *mi)
 
 	/* set connected state */
 	mi->connected = TRUE;
-
-	mpd_ob_unlock_conn(mi);
+	debug_printf(DEBUG_ERROR,"error: %s", mi->connection->errorStr);
+	if(mpd_ob_unlock_conn(mi))
+	{
+		return -1;
+	}
 	return 0;
 }
 
@@ -273,7 +319,7 @@ int mpd_ob_status_queue_update(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
-		printf("Where not connected\n");
+		debug_printf(DEBUG_INFO,"mpd_ob_status_queue_update: Where not connected\n");
 		return TRUE;
 	}                                       	
 	if(mi->status != NULL)
@@ -288,12 +334,12 @@ int mpd_ob_status_update(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
-		printf("Where not connected\n");
+		debug_printf(DEBUG_INFO,"mpd_ob_status_update: Where not connected\n");
 		return TRUE;
 	}
 	if(mpd_ob_lock_conn(mi))
 	{
-		printf("mpd_ob_status_set_volume: lock failed\n");
+		debug_printf(DEBUG_WARNING,"mpd_ob_status_set_volume: lock failed\n");
 		return MPD_O_LOCK_FAILED;
 	}
 
@@ -306,8 +352,8 @@ int mpd_ob_status_update(MpdObj *mi)
 	mi->status = mpd_getStatus(mi->connection);
 	if(mi->status == NULL)
 	{
-		printf("mpd_ob_status_update: Failed to grab status from mpd\n");
-		return TRUE;
+		debug_printf(DEBUG_ERROR,"mpd_ob_status_update: Failed to grab status from mpd\n");
+//		return TRUE;
 	}
 
 	mpd_ob_unlock_conn(mi);
@@ -345,7 +391,6 @@ int mpd_ob_status_update(MpdObj *mi)
 	{
 		/* print debug message */
 		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Song has changed %i %i!", mi->songid, mi->status->songid);
-
 
 		
 
@@ -914,4 +959,16 @@ void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(
 		return;
 	}
 	mi->playlist_changed = playlist_changed;
+}
+
+
+void mpd_ob_signal_set_error (MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg,void *pointer),void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_error: MpdObj *mi == NULL");
+		return;
+	}
+	mi->error_signal = error_signal;
+	mi->error_signal_pointer = pointer;
 }

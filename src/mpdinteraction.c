@@ -106,20 +106,6 @@ int connect_to_mpd()
 		return TRUE;
 	}
 	info.connection = connection->connection;
-	/*check for connection errors */
-	if(info.connection->error)
-	{
-		g_print("Connection failed\n");
-		msg_set_base(_("gmpc - Failed to connect, please check the connection settings."));
-		mpd_ob_disconnect(connection);
-		info.connection = NULL;	
-		return TRUE;
-	}
-
-
-
-
-
 
 
 	mpd_sendStatsCommand(info.connection);

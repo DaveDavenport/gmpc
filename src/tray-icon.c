@@ -32,7 +32,7 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(mpd_ob_check_connected(connection) && song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
+	if(mpd_ob_check_connected(connection) && song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP && info.status != NULL)
 	{
 		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);

@@ -37,6 +37,7 @@ extern long long unsigned total_recieved;
 extern long long unsigned total_send;
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
+void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 /*
  * the xml fle pointer to the player window 
  */
@@ -200,6 +201,7 @@ int main (int argc, char **argv)
 	}
 	/* connect signals */
 	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed);
+	mpd_ob_signal_set_error(connection, (void *)error_callback, NULL);
 	/*
 	 * initialize gtk 
 	 */
@@ -629,3 +631,15 @@ void init_playlist ()
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT);
 }
+
+void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
+{
+	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
+	GtkDialog *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+			"An error occured");
+	gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), "error code %i: %s", error_id, error_msg);
+	gtk_dialog_run(dialog);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+	msg_set_base(_("Gnome Music Player Client"));
+}
+

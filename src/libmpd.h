@@ -46,10 +46,12 @@ typedef struct _MpdObj
 	
 	/* functions to call */
 	void *(* playlist_changed)(struct _MpdObj *mi, int old_playlist_id, int new_playlist_id);	
-	
+	void *(* error_signal)(struct _MpdObj *mi, int id, char *msg, void *pointer);	
+	void *error_signal_pointer;
 	
 	/* error message */
-	char *error;	
+	int error;
+	char *error_msg;	
 	
 	/* internal values */
 	/* this "locks" the connections. so we can't have to commands competing with eachother */
@@ -67,8 +69,12 @@ void 		mpd_ob_set_connection_timeout		(MpdObj *mi, float timeout);
 int 		mpd_ob_connect				(MpdObj *mi);
 int 		mpd_ob_disconnect			(MpdObj *mi);
 int 		mpd_ob_check_connected			(MpdObj *mi);
+int 		mpd_ob_check_error			(MpdObj *mi);
+
+
 /* signals */
 void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id));
+void 		mpd_ob_signal_set_error			(MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg, void *pointer),void *pointer);
 
 /* status commands */
 int 		mpd_ob_status_queue_update		(MpdObj *mi);

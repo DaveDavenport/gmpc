@@ -44,6 +44,7 @@ int check_for_errors()
 			mpd_closeConnection(info.connection);
 			info.conlock = TRUE;
 			info.connection = NULL;
+			connection->connection = NULL;
 			/*Set some stuff right.  */
 			scroll.exposed = 1;
 			info.song = -1;
