@@ -775,8 +775,11 @@ pl2_disconnect ()
 {
   /* remove all songs */
   gtk_list_store_clear (pl2_store);
-  /* set buttons insensitive */
-  gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"), FALSE);
+  if(pl2_xml != NULL)
+  {
+	  /* set buttons insensitive */
+	  gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"), FALSE);
+  }
   /* destroy a possible open location window */
   ol_destroy ();
   /* hide the add window */

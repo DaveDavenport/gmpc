@@ -44,28 +44,27 @@ int disconnect_to_mpd()
 	}
 	info.conlock = TRUE;
 	mpd_closeConnection(info.connection);
+	gtk_timeout_remove(update_timeout);
+
 	/* free the server stats */
 	if(info.stats != NULL) mpd_freeStats(info.stats);
 	info.stats = NULL;
 
 	info.connection = NULL;
 	msg_set_base(_("gmpc - Disconnected"));
-	gtk_timeout_remove(update_timeout);
-
 
 	scroll.exposed = 1;
 	info.song = -1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.old_pos = -1;
-	info.updating = FALSE;
-
+	
 	/* disconnect playlist */
 	pl2_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
-
+	info.updating = FALSE;
 
 	return FALSE;
 }

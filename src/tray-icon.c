@@ -186,5 +186,6 @@ int create_tray_icon()
 		glade_xml_signal_autoconnect(tray_xml);
 	}
 	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
+	info.song = -1;
 	return FALSE;
 }

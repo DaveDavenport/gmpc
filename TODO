@@ -6,6 +6,3 @@
 * 	Tooltips for "Find", "Artist, Album, Filename, Title" selector, for entry box for search browser
 * 	clicking on the tray to hide gmpc should hide and unhide all windows, but it should put the windows back in the places where they were.
 * 	remember all window sizes and positions
-* 	Fix warning when disconnecting:
-(gmpc:7003): libglade-CRITICAL **: file glade-xml.c: line 509 (glade_xml_get_widget): assertion `self != NULL' failed
-(gmpc:7003): Gtk-CRITICAL **: file gtkwidget.c: line 4205 (gtk_widget_set_sensitive): assertion `GTK_IS_WIDGET (widget)' failed
