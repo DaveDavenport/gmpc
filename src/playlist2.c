@@ -696,6 +696,7 @@ create_playlist2 ()
   pl2_fil = gtk_tree_model_filter_new (GTK_TREE_MODEL (pl2_store), NULL);
 
   gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl2_fil));
+  gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 
 
 

@@ -591,7 +591,7 @@ song_browser_create ()
 
   /* set filter */
   gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (sb_store));
-
+ gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), SB_DPATH);
   /* draw the column with the songs */
 
 
@@ -979,6 +979,7 @@ sb_fill_browser ()
       gtk_widget_hide (glade_xml_get_widget (sb_xml, "hb_search"));
       gtk_tree_view_set_model (GTK_TREE_VIEW (tree),
 			       GTK_TREE_MODEL (sb_file));
+
       sb_store = sb_file;
       /* fill by filename */
       if (gtk_tree_model_iter_n_children (GTK_TREE_MODEL (sb_store), NULL) ==

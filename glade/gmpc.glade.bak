@@ -453,6 +453,7 @@
 	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-7</property>
 	      <signal name="clicked" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:22 GMT"/>
+	      <accelerator key="Escape" modifiers="0" signal="clicked"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -2717,6 +2718,7 @@ Some  useful examples for format are: &quot;%file%&quot; and &quot;[[%artist% - 
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="remove_id3_window" last_modification_time="Thu, 16 Oct 2003 18:37:43 GMT"/>
+	      <accelerator key="Escape" modifiers="0" signal="clicked"/>
 	    </widget>
 	  </child>
 	</widget>

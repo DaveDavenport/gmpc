@@ -1,6 +1,12 @@
 09-07-2004 Qball <Qball@qballcow.nl>
 	* src/song-browser.c:		Enabled sorting on id3 browser, custom
 	sort function.
+	* src/playlist2.c:		Enabled search (ctrl-f) on right
+	column.
+	* src/song-browser.c:		Enabled search column on the right
+	column.
+	* glade/gmpc.glade:		Escape clickes the close button in the
+	id3-info window.
 	* glade/gmpc.glade:		Changed signals so gmpc doesnt crash
 	when opening/closing/opening the preferences window.
 
