@@ -310,9 +310,11 @@
 	  <child>
 	    <widget class="GtkButton" id="button8">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Saves the current playlist.</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="pl2_save_playlist" last_modification_time="Tue, 29 Jun 2004 16:45:46 GMT"/>
 
 	      <child>
 		<widget class="GtkAlignment" id="alignment2">
@@ -335,7 +337,7 @@
 		      <child>
 			<widget class="GtkImage" id="image3">
 			  <property name="visible">True</property>
-			  <property name="stock">gtk-index</property>
+			  <property name="stock">gtk-save</property>
 			  <property name="icon_size">4</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
@@ -352,7 +354,7 @@
 		      <child>
 			<widget class="GtkLabel" id="label3">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">_Playlists</property>
+			  <property name="label" translatable="yes">_Save</property>
 			  <property name="use_underline">True</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -383,7 +385,7 @@
 	  </child>
 	</widget>
 	<packing>
-	  <property name="padding">0</property>
+	  <property name="padding">6</property>
 	  <property name="expand">False</property>
 	  <property name="fill">True</property>
 	</packing>

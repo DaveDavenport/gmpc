@@ -46,7 +46,7 @@ void load_config()
 	    preferences.autoconnect = atoi(&buffer[13]);
 	    }
 	    
-	else if (!strncmp(buffer, "show filter:", 12))
+/*	else if (!strncmp(buffer, "show filter:", 12))
 	    {
 	    info.show_filter = atoi(&buffer[12]);
 	    }	
@@ -63,7 +63,7 @@ void load_config()
 		strncpy(info.filter_entry, buf, strlen(buf));
 		}
 	    }
-	else if(!strncmp(buffer, "do tray:", 8))
+*/	else if(!strncmp(buffer, "do tray:", 8))
 	    {
 	    gchar *buf = g_strstrip(&buffer[8]);
 	    if(buf != NULL)
@@ -71,7 +71,7 @@ void load_config()
 		info.do_tray = atoi(buf);
 		}
 	    }
-	else if(!strncmp(buffer, "playlist view hidden:", 21))
+/*	else if(!strncmp(buffer, "playlist view hidden:", 21))
 	    {
 	    gchar *buf = g_strstrip(&buffer[21]);
 	    if(buf != NULL)
@@ -79,7 +79,7 @@ void load_config()
 		info.playlist_view_hidden = atoi(buf);
 		}                                	
 	    }                        
-	    
+*/	    
 	else if(!strncmp(buffer, "time format:", 12))
 	    {
 	    gchar *buf = g_strstrip(&buffer[12]);
@@ -183,12 +183,12 @@ void save_config()
     fprintf(fp, "port: %i\n", preferences.port);    
     fprintf(fp, "timeout: %.2f\n", preferences.timeout);    
     fprintf(fp, "auto-connect: %i\n", preferences.autoconnect);    
-    fprintf(fp, "show filter: %i\n", info.show_filter);    
+/*    fprintf(fp, "show filter: %i\n", info.show_filter);    
     fprintf(fp, "filter field: %i\n", info.filter_field);    
     fprintf(fp, "filter entry: %s\n", info.filter_entry);    
-    fprintf(fp, "do tray: %i\n", info.do_tray);    
+*/    fprintf(fp, "do tray: %i\n", info.do_tray);    
     fprintf(fp, "time format: %i\n", info.time_format);        
-    fprintf(fp, "playlist view hidden: %i\n", info.playlist_view_hidden);
+//    fprintf(fp, "playlist view hidden: %i\n", info.playlist_view_hidden);
     fprintf(fp, "do popup: %i\n", info.popup.do_popup);   
     fprintf(fp, "popup pos: %i\n", info.popup.position);
     fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);

@@ -39,22 +39,22 @@ typedef struct
 	/* The Playlist, only in my memory */
 	GList *playlist;
 	/* playlist running. */
-	gboolean playlist_running;
+//	gboolean playlist_running;
 	/* filter enabled */
-	gboolean show_filter;
-	gchar filter_entry[256];
-	gint  filter_field;
+//	gboolean show_filter;
+//	gchar filter_entry[256];
+//	gint  filter_field;
 	/* Some internall data..  this to save trafic with mpd daemon */
-	GtkListStore *playlist_list;
-	GtkListStore *cur_list; /* this one should be empty..  no need to keep that in memory */
+/*	GtkListStore *playlist_list;
+	GtkListStore *cur_list;
 	GtkListStore *dir_list;
 	GtkListStore *file_list;
 	GtkListStore *id3_songs_list;
 	GtkListStore *search_list;
 	GtkTreeStore *id3_album_list;
 	gchar path[1024];
-	/* playlists view hidden */
-	gboolean playlist_view_hidden;
+*/	/* playlists view hidden */
+//	gboolean playlist_view_hidden;
 	guint64 total_number_of_songs;
 	guint64	total_playtime; 
 	/* tray icon*/
@@ -125,6 +125,7 @@ void create_preferences_window();
 void preferences_update();
 
 /* playlist.c*/
+/*
 void create_player();
 void create_playlist();
 void load_songs_with_filter();
@@ -133,6 +134,7 @@ void update_playlist();
 void filter_toggle();
 void destroy_playlist(GtkWidget *wid);
 void clear_playlist_buffer();
+*/
 /* id3info.c*/
 void call_id3_window(int song);
 /* config.c*/

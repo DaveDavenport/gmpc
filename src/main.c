@@ -68,14 +68,14 @@ void set_default_values()
 	/* The Playlist, only in my memory */
 	info.playlist = NULL;
 	/* playlist running. */
-	info.playlist_running = FALSE;
+//	info.playlist_running = FALSE;
 	/* filter enabled */
-	info.show_filter = FALSE;
-	memset(info.filter_entry, '\0', 256);
-	strcpy(info.filter_entry, "");
-	info.filter_field = 0;
+//	info.show_filter = FALSE;
+//	memset(info.filter_entry, '\0', 256);
+//	strcpy(info.filter_entry, "");
+//	info.filter_field = 0;
 	/* Some internall data..  this to save trafic with mpd daemon */
-	info.playlist_list = NULL;
+/*	info.playlist_list = NULL;
 	info.cur_list = NULL;
 	info.dir_list = NULL;
 	info.file_list = NULL;
@@ -84,8 +84,8 @@ void set_default_values()
 	info.id3_album_list = NULL;
 	memset(info.path, '\0', 1024);
 	strcpy(info.path, "/");
-	/* playlists view hidden */
-	info.playlist_view_hidden = FALSE;
+*/	/* playlists view hidden */
+//	info.playlist_view_hidden = FALSE;
 	info.total_number_of_songs = 0;
 	info.total_playtime = 0; 
 	/* tray icon*/
@@ -270,7 +270,7 @@ int update_interface()
 	}
 	info.playlist_length = info.status->playlistLength;
 	/* update the playlist */
-	update_playlist();
+//	update_playlist();
 	update_playlist2();
 
 	/* update the player window */

@@ -6,7 +6,6 @@ gmpc_SOURCES=\
 	callback.c\
 	player.c\
 	preferences.c\
-	playlist.c\
 	id3info.c\
 	config.c\
 	libmpdclient.c\

@@ -54,14 +54,14 @@ int disconnect_to_mpd()
 
 	scroll.exposed = 1;
 	info.song = -1;
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), FALSE);
+/*	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), FALSE);
 	if(info.playlist_running)
 	{
 		destroy_playlist(glade_xml_get_widget(xml_playlist_window, "playlist_window"));
 		if(debug)g_print("destroying playlist\n");
 	}
 	clear_playlist_buffer();
-
+*/
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
 	
@@ -116,7 +116,7 @@ int connect_to_mpd()
 	}
 	info.conlock = FALSE;
 	update_mpd_status();
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), TRUE);
+//	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), TRUE);
 
 	return FALSE;
 }

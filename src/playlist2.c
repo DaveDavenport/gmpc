@@ -33,6 +33,15 @@ void init_playlist2()
 
 }
 
+void pl2_save_playlist()
+{
+
+
+
+
+}
+
+
 
 void pl2_highlight_song()
 {
@@ -88,43 +97,6 @@ void update_playlist2()
 	{
 		pl2_highlight_song();
 	}
-
-
-	/* remove if above routine works */
-
-	/* FIXME: see if there is a more optimized way todo this */
-	/*	if(	(info.status->song != info.song && info.song != -1) || 
-		(info.state != info.status->state &&  
-		info.status->state != MPD_STATUS_STATE_PAUSE && 
-		info.state != MPD_STATUS_STATE_PAUSE))
-		{
-		GtkTreeIter iter;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
-		int i = 0;
-		if(gtk_tree_model_get_iter_first(model, &iter))
-		do
-		{
-		if(info.status->state != MPD_STATUS_STATE_STOP 
-		&& info.status->state != MPD_STATUS_STATE_UNKNOWN)
-		{
-		gtk_tree_model_get(model, &iter, SONG_ID, &i, -1);
-		if(i == info.status->songid)
-		{
-		gtk_list_store_set(pl2_store, &iter,
-		WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD, -1);
-		}
-		else  gtk_list_store_set(pl2_store, &iter,
-		WEIGHT_INT,PANGO_WEIGHT_NORMAL, -1);
-		}
-		else  gtk_list_store_set(pl2_store, &iter, 
-		WEIGHT_INT,PANGO_WEIGHT_NORMAL, -1);
-		}
-		while (gtk_tree_model_iter_next(model, &iter));
-		}
-		*/
-
-
-
 
 }
 

@@ -13,7 +13,7 @@ void id3_last_song();
 /* these functions opens the playlist manager and does a search on the selected field. */
 void find_title()
 {
-	if(info.playlist_running)
+/*	if(info.playlist_running)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_playlist_window, "search_entry")), gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "title_entry"))));
 		gtk_option_menu_set_history(GTK_OPTION_MENU(glade_xml_get_widget(xml_playlist_window, "search_optionmenu")), 0);
@@ -26,11 +26,12 @@ void find_title()
 		info.show_filter = TRUE;
 		create_playlist();
 	}
+	*/
 }
 
 void find_album()
 {
-	if(info.playlist_running)
+/*	if(info.playlist_running)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_playlist_window, "search_entry")), gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "album_entry"))));
 		gtk_option_menu_set_history(GTK_OPTION_MENU(glade_xml_get_widget(xml_playlist_window, "search_optionmenu")), 2);
@@ -44,11 +45,11 @@ void find_album()
 
 		create_playlist();
 	}
-
+*/
 }
 void find_artist()
 {
-
+/*
 	if(info.playlist_running)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_playlist_window, "search_entry")), gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "artist_entry"))));
@@ -62,6 +63,7 @@ void find_artist()
 		info.show_filter = TRUE;
 		create_playlist();
 	}
+	*/
 }
 /* function to remove the id3 info screen and unref the xml tree */
 
