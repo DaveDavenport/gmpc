@@ -82,12 +82,11 @@ int connect_to_mpd()
 	scroll.exposed = 1;
 	info.song = -1;    
 	info.playlist_playtime = 0;
-	if(debug)g_print("timeout = %.2f\n", preferences.timeout);
 	if(info.connection) mpd_clearError(info.connection);
 	info.connection = mpd_newConnection(
 			cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"),
 			cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600),
-			preferences.timeout);
+			cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
 	if(info.connection == NULL)
 	{
 		if(debug)g_print("Connection failed\n");
@@ -104,7 +103,8 @@ int connect_to_mpd()
 	}
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
-		mpd_sendPasswordCommand(info.connection, preferences.password);
+		mpd_sendPasswordCommand(info.connection, 
+				cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
 		mpd_finishCommand(info.connection);
 	}
 
@@ -133,8 +133,6 @@ int connect_to_mpd()
 
 	/* connect playlist2 */
 	pl2_connect();
-
-
 	
 	return FALSE;
 }

@@ -10,7 +10,9 @@
 #else 
 #define _(String) String
 #endif
+
 #define SEEK_STEP 3
+
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
@@ -126,14 +128,12 @@ void msg_set_base();
 /* preferences.c */
 typedef struct
 {
-	char password[256];
-	float timeout; /* seconds.ms */
 	/* display formating */
 	gchar *markup_main_display;
 	gchar *markup_playlist;
 	gchar *markup_song_browser;
-	int pl3_scroll_to_open;
 } pref_struct;
+
 extern pref_struct preferences;
 void create_preferences_window();
 void preferences_update();

@@ -24,11 +24,7 @@ void load_config ()
 	{
 
 
-		if (!strncmp (buffer, "timeout:", 8))
-		{
-			preferences.timeout = (float) g_strtod (&buffer[8], NULL);
-		}
-		else if (!strncmp (buffer, "do tray:", 8))
+		if (!strncmp (buffer, "do tray:", 8))
 		{
 			gchar *buf = g_strstrip (&buffer[8]);
 			if (buf != NULL)
@@ -94,16 +90,6 @@ void load_config ()
 				info.popup.timeout = atoi (buf);
 			}
 		}
-		else if (!strncmp (buffer, "auth pass:", 10))
-		{
-			gchar *buf = g_strstrip (&buffer[10]);
-			if (buf != NULL)
-			{
-				memset (preferences.password, '\0', 256);
-				strncpy (preferences.password, buf, MIN (strlen (buf), 256));
-			}
-		}
-
 		else if (!strncmp (buffer, "markup main display:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
@@ -170,14 +156,6 @@ void load_config ()
 				info.pl2_tooltip = atoi (buf);
 			}
 		}
-		else if (!strncmp (buffer, "pl3_scroll_to_open:", 19))
-		{
-			gchar *buf = g_strstrip (&buffer[19]);
-			if (buf != NULL)
-			{
-				preferences.pl3_scroll_to_open = atoi (buf);
-			}
-		}
 
 
 		else if (!strncmp (buffer, "pl2 do tooltip:", 15))
@@ -221,7 +199,6 @@ void save_config ()
 		g_free (filename);
 		return;
 	}
-	fprintf (fp, "timeout: %.2f\n", preferences.timeout);
 	fprintf (fp, "do tray: %i\n", info.do_tray);
 	fprintf (fp, "do tray popup: %i\n", info.do_tray_popup);
 	fprintf (fp, "time format: %i\n", info.time_format);
@@ -230,7 +207,6 @@ void save_config ()
 	fprintf (fp, "popup stay: %i\n", info.popup.popup_stay);
 	fprintf (fp, "popup state: %i\n", info.popup.show_state);
 	fprintf (fp, "popup timeout: %i\n", info.popup.timeout);
-	fprintf (fp, "auth pass: %s\n", preferences.password);
 	escaped = g_strescape(preferences.markup_main_display, "");
 	fprintf (fp, "markup main display: %s\n", escaped);
 	g_free(escaped);
@@ -253,7 +229,6 @@ void save_config ()
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
 	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);
-	fprintf (fp, "pl3_scroll_to_open: %i\n", preferences.pl3_scroll_to_open);
 	fclose (fp);
 	g_free (filename);
 }

@@ -15,7 +15,9 @@
 #include "song-browser.h"
 #include "open-location.h"
 #include "vfs_download.h"
+#include "config1.h"
 
+extern config_obj *config;
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
@@ -1494,7 +1496,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 
 	}
 	/* avuton's Idea */
-	if(preferences.pl3_scroll_to_open)
+	if(cfg_get_single_value_as_int_with_default(config, "playlist3", "open-to-position",0))
 	{
 		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
 	}

@@ -124,7 +124,7 @@ int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 
 void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
 {
-	char *value1 = g_strdup_printf("%i\n", value);
+	char *value1 = g_strdup_printf("%i", value);
 	cfg_set_single_value_as_string(cfg,class,key,value1);
 	g_free(value1);
 }
@@ -135,6 +135,36 @@ int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char 
 	{
 		cfg_set_single_value_as_int(cfg,class,key,def);
 		retv = cfg_get_single_value_as_int(cfg,class,key);		
+	}
+	/* make it return an error */
+	return retv;
+}
+/* float */
+float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
+{
+	char * temp = cfg_get_single_value_as_string(cfg,class,key);
+	if(temp == NULL)
+	{
+		return 0;
+	}
+	/* make it return an error */
+	return (float)g_ascii_strtod(temp,NULL);
+}
+
+void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, float value)
+{
+	char *value1 = g_strdup_printf("%f", value);
+	cfg_set_single_value_as_string(cfg,class,key,value1);
+	g_free(value1);
+}
+
+float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def)
+{
+	float retv = cfg_get_single_value_as_float(cfg,class,key);
+	if(retv == 0)
+	{
+		cfg_set_single_value_as_float(cfg,class,key,def);
+		retv = cfg_get_single_value_as_float(cfg,class,key);		
 	}
 	/* make it return an error */
 	return retv;
@@ -151,6 +181,7 @@ void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
 {
 	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	gchar *string;
 	if(value == NULL)
 	{
 		return;
@@ -165,6 +196,11 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	{
 		cur = xmlNewChild(cfg->root, NULL, class, NULL);
 	}
-	xmlNewChild(cur,NULL, key, value);
+	string = g_markup_escape_text(value, g_utf8_strlen(value, -1));
+	if(string != NULL)
+	{
+		xmlNewChild(cur,NULL, key, string);
+		g_free(string);
+	}
 	cfg_save(cfg);
 }

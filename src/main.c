@@ -51,9 +51,6 @@ main_trigger_update ()
 	void
 set_default_values ()
 {
-	memset (preferences.password, '\0', 256);
-	strcpy (preferences.password, "");
-	preferences.timeout = 1.0;
 	/*
 	 * main display markup 
 	 */
@@ -142,7 +139,6 @@ set_default_values ()
 	info.xiph_url = g_strdup("http://dir.xiph.org/yp.xml");
 	info.online_stream_list = NULL;
 	info.online_streams = 0;
-	preferences.pl3_scroll_to_open = FALSE;
 }
 
 
@@ -165,11 +161,9 @@ int main (int argc, char **argv)
 	config = cfg_open(url);
 	g_free(url);
 	/* test case: */
-	cfg_set_single_value_as_string(config, "main_config","testcase", "testing3");
-	g_print("test case: %s\n", cfg_get_single_value_as_string(config, "main_config", "testcase"));
 	if(config == NULL)
 	{
-		printf("Failed to save configuration\n");
+		printf("Failed to save/load configuration\n");
 		return 1;
 	}
 	/*

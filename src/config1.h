@@ -24,6 +24,11 @@ char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class,
 int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key);
 void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value);
 int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def);
+/* float */
+float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key);
+void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, float value);
+float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def);
+
 /* del */
 void cfg_del_single_value(config_obj *cfg, char *class, char *key);
 
