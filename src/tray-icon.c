@@ -215,11 +215,9 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gtk_widget_set_app_paintable(event, TRUE);
 
 	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);
-	gtk_widget_set_name(tip, "gtk-tooltips");
-	g_signal_connect(G_OBJECT(eventb), "expose_event",
+	gtk_widget_set_name(eventb, "gtk-tooltips");
+	g_signal_connect(G_OBJECT(eventb), "expose-event",
 			G_CALLBACK(tray_paint_tip), NULL);
-
-
 
 
 	gtk_widget_ensure_style (eventb);

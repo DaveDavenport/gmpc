@@ -4,7 +4,7 @@ appglade_DATA =	gmpc.glade \
 		open-location.glade\
 		playlist.glade
 
-DIST_SOURCES = gmpc.glade \
+EXTRA_DIST = gmpc.glade \
 		add-browser.glade\
 		open-location.glade\
 		playlist.glade

@@ -1,3 +1,6 @@
+16-10-2004 Qball <Qball@qballcow.nl>
+	* Fixed severall smaller autotools issues.
+
 06-10-2004 Qball, <Qball@qballcow.nl>
 	* src/tray_icon.c:	Fixed case that tooltip wouldn't go away when
 	pauzed.

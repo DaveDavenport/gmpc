@@ -16,7 +16,7 @@ appicon_DATA =	media-audiofile.png\
 	player-repeat.png\
 	player-shuffle.png
 
-DIST_SOURCES = media-audiofile.png\
+EXTRA_DIST = media-audiofile.png\
 	media-stream.png\
 	media-play.png\
 	media-pause.png\
