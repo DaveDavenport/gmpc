@@ -63,12 +63,12 @@ void pl3_clear_playlist()
 	mpd_finishCommand(info.connection);
 }
 
-
-
-
-
-
-
+void pl3_shuffle_playlist()
+{
+	if(check_connection_state()) return;
+	mpd_sendShuffleCommand(info.connection);
+	mpd_finishCommand(info.connection);
+}
 
 /********************************************************************
  * Misc functions 
@@ -309,6 +309,60 @@ void pl3_current_playlist_crop_selected_songs()
 	if (!check_connection_state ())
 		main_trigger_update ();	
 }
+
+
+	void
+pl3_show_song_info ()
+{
+	int i = 0;
+	GtkTreeModel *model = GTK_TREE_MODEL (pl2_store);
+	/* get the tree selection object */
+	GtkTreeSelection *selection =
+		gtk_tree_view_get_selection (GTK_TREE_VIEW
+				(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+	/* check if there are selected rows */
+	if ((i = gtk_tree_selection_count_selected_rows (selection)) > 0)
+	{
+		GList *list = NULL;
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+		/* iterate over every row */
+		list = g_list_last (list);
+		do
+		{
+			GtkTreeIter iter;
+			int value;
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
+			gtk_tree_model_get (model, &iter, SONG_POS, &value, -1);
+			/* show the info for this song  */
+			call_id3_window (value);
+			/* go to previous song if still connected */
+		}
+		while ((list = g_list_previous (list)) && !check_connection_state ());
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /********************************************************
  * FILE BROWSER 				  	*
@@ -764,9 +818,10 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
 		/* add the delete widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_delete_selected_songs), NULL);
+
 
 		/* add the delete widget */
 		item = gtk_image_menu_item_new_with_label("Crop");
@@ -775,8 +830,29 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_crop_selected_songs), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
+		/* add the clear widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);		
 
 
+		/* add the shuffle widget */
+		item = gtk_image_menu_item_new_with_label("Shuffle");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_shuffle_playlist), NULL);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
+
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_show_song_info), NULL);		
+
+
+
+		
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
