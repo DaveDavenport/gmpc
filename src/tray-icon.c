@@ -208,11 +208,12 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	eventb = gtk_event_box_new();
+//	eventb = tip;
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
 			G_CALLBACK(tray_leave_cb), NULL);
 
 	gtk_container_add(GTK_CONTAINER(tip), eventb);	
-	gtk_widget_set_app_paintable(event, TRUE);
+	gtk_widget_set_app_paintable(eventb, TRUE);
 
 	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);
 	gtk_widget_set_name(eventb, "gtk-tooltips");
