@@ -890,7 +890,27 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		int retval;
 		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
 		g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
+	}
+	else if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
+	{
+		pl3_close();
+	}
+	else if (event->keyval == GDK_Escape)
+	{
+		pl3_close();
+	}
+	/* on F1 move to current playlist */
+	else if (event->keyval == GDK_F1)
+	{
+		GtkTreeIter iter;
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
 
+		/* select the current playlist */
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
+		{
+			gtk_tree_selection_select_iter(sel, &iter);               		
+		}
 	}
 
 
@@ -906,7 +926,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 
 int pl3_pop_statusbar_message()
 {
-	
+
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), 0);
 	return FALSE;
 }
