@@ -89,7 +89,7 @@ void clear_playlist_buffer()
 
 void create_playlist()
 {
-	GtkWidget *tree,column;
+	GtkWidget *tree;
 	GtkCellRenderer *renderer;
 	if(info.playlist_running)
 	{

@@ -1,7 +1,7 @@
 desktopdir 	= $(datadir)/applications
 desktop_DATA = gmpc.desktop
 
-SOURCES = gmpc.desktop
+DIST_SOURCES = gmpc.desktop
 
 
 

@@ -11,3 +11,13 @@ appicon_DATA = 	tray.png\
 	gmpc.png\
 	media-stop.png
 
+DIST_SOURCES = 	tray.png\
+	media-play.png\
+	media-pause.png\
+	media-next.png\
+	media-prev.png\
+	gmpc-tray.png\
+	gmpc.png\
+	media-stop.png
+
+

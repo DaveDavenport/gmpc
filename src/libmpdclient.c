@@ -379,7 +379,7 @@ void mpd_getNextReturnElement(mpd_Connection * connection) {
 	char * output = NULL;
 	char * rt = NULL;
 	char * name;
-	char * value;
+	char * value = NULL;
 	fd_set fds;
 	struct timeval tv;
 	char * tok;
