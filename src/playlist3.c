@@ -52,6 +52,26 @@ enum pl3_store_types
 } pl3_store_type;
 
 
+/****************************************************************/
+/* We want to move this to mpdinteraction 			*/
+/****************************************************************/
+void pl3_clear_playlist()
+{
+	if(check_connection_state()) return;
+	mpd_sendClearCommand(info.connection);
+	mpd_finishCommand(info.connection);
+}
+
+
+
+
+
+
+
+
+
+/********************************************************************/
+
 gchar * format_time(unsigned long seconds)
 {
 	int days = seconds/86400;
@@ -103,6 +123,37 @@ int  cat_get_selected_browser()
 	return -1;
 }
 
+
+void browse_file_add_folder()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+
+	if(check_connection_state())
+	{
+		return;
+	}
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		char *path;
+		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
+		mpd_sendAddCommand(info.connection, path);
+		mpd_finishCommand(info.connection);
+		check_for_errors();
+	}
+
+
+
+
+
+
+
+}
+
+
+
+
 void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
 {
 	gint type = cat_get_selected_browser();
@@ -115,7 +166,7 @@ void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *co
 	{
 		return;
 	}
-	
+
 	else if(type == PL3_CURRENT_PLAYLIST)
 	{
 		/* scroll to the playing song */
@@ -123,15 +174,15 @@ void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *co
 		{
 			if(info.status->song != -1)
 			{
-			gchar *str = g_strdup_printf("%i", info.status->song);
-			GtkTreePath *path = gtk_tree_path_new_from_string(str);
-			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-				glade_xml_get_widget(pl3_xml, "playlist_tree")), 
-				path,
-				NULL,
-				TRUE,0.5,0);
-			gtk_tree_path_free(path);
-			g_free(str);
+				gchar *str = g_strdup_printf("%i", info.status->song);
+				GtkTreePath *path = gtk_tree_path_new_from_string(str);
+				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+						path,
+						NULL,
+						TRUE,0.5,0);
+				gtk_tree_path_free(path);
+				g_free(str);
 			}                                                      		
 		}
 	}
@@ -160,7 +211,7 @@ void playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColum
 	{
 		GtkTreeIter iter;
 		gchar *song_id;
-	        gint r_type;
+		gint r_type;
 		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
 		if(song_id == NULL) return;
@@ -605,8 +656,63 @@ void pl3_update()
 }
 
 
+/* handle right mouse clicks on the cat tree view */
+/* gonna be a big function*/
+int cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	gint type  = cat_get_selected_browser();
+	if(type == -1)
+	{
+		/* no selections, or no usefull one.. so propagate the signal */
+		return FALSE;
+	}
+
+	if(event->button != 3)
+	{
+		/* if its not the right mouse button propagate the signal */
+		return FALSE;
+	}
+	/* if it's the current playlist */
+	if(type == PL3_CURRENT_PLAYLIST)
+	{
+		/* here we have:  Save, Clear*/
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the save widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		/* TODO: Write own fun ction */
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
+		/* add the clear widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
+
+		/* show everything and popup */
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+	}
+	else if (type == PL3_BROWSE_FILE)
+	{
+		/* here we have:  Add. Replace, (update?)*/
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		/* TODO: Write own fun ction */
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(browse_file_add_folder), NULL);		
 
 
+
+		/* show everything and popup */
+		gtk_widget_show_all(menu);                                                        		
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
+	}
+
+	return TRUE;
+}
 
 
 
@@ -696,7 +802,7 @@ void create_playlist3 ()
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 
 	gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection
-			 (GTK_TREE_VIEW (tree))),
+				(GTK_TREE_VIEW (tree))),
 			GTK_SELECTION_MULTIPLE);
 
 
