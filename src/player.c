@@ -164,6 +164,7 @@ void msg_set_base(gchar *msg)
 		scroll.base_msg = g_strdup("No valid UTF-8. Please check youre locale");
 	}
 	else	scroll.base_msg = g_strdup(msg);
+
 	scroll.exposed = TRUE;
 }
 
@@ -250,23 +251,30 @@ int update_player()
 			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
 			{
 				msg_set_base("Gnome Music Player Client");
+				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), "Gnome Music Player Client");
 			}
 			else
 			{
 				info.cursong = song;
 				if(song->artist != NULL && song->title != NULL)
 				{
-					gchar *buf = NULL;
+					gchar *buf = NULL, *buf1 = NULL;
 					if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
 					else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
 					msg_set_base(buf);
+				 	buf1 = g_strdup_printf("gmpc - %s",buf);	
+					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf1);
+					g_free(buf1);
 					g_free(buf);
 				}
 				else
 				{
 					gchar *buf  = remove_extention_and_basepath(song->file);
+					gchar *buf1 = g_strdup_printf("gmpc - %s",buf);
+					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf1);
 					msg_set_base(buf);
 					g_free(buf);
+					g_free(buf1);
 				}
 			}
 		}
@@ -280,21 +288,18 @@ int update_player()
 		if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
 		{
 			GtkWidget *entry;
-			//			= glade_xml_get_widget(xml_main_window, "time_entry");
 			msg_set_base("GMPC - Stopped");
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), "Gnome Music Player Client");
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
-				//gtk_entry_set_text(GTK_ENTRY(entry), "00:00");
 				pango_layout_set_text(time_layout, "00:00", -1);
 			}
 			else if(info.time_format == TIME_FORMAT_REMAINING)
 			{
-				//		gtk_entry_set_text(GTK_ENTRY(entry), "-00:00");
 				pango_layout_set_text(time_layout, "-00:00", -1);
 
 			}
 			else	{
-				//				gtk_entry_set_text(GTK_ENTRY(entry), "0.0 %%");
 				pango_layout_set_text(time_layout, "0.0 %", -1);
 			}
 			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
@@ -353,10 +358,6 @@ void change_progress_update()
 			gchar *buf = NULL;
 			gdouble value = gtk_range_get_value(scale);
 			int newtime = (int)(info.status->totalTime*(double)(value/100));
-/*			mpd_sendSeekCommand(info.connection,info.status->song,value);
-			mpd_finishCommand(info.connection);
-			if(check_for_errors()) return;
-*/
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
 				int min = (int)(newtime/60);
@@ -462,15 +463,7 @@ void time_format_toggle()
 	if(info.time_format > 2) info.time_format = 0;
 }
 
-/* function to remove the id3 info screen and unref the xml tree */
-/*void remove_id3_window(GtkWidget *button)
-  {
-  GtkWidget *window = gtk_widget_get_toplevel(button);	
-  GladeXML *xml_id3_window = glade_get_widget_tree(window);
-  gtk_widget_destroy(window);
-  if(xml_id3_window != NULL)g_object_unref(xml_id3_window);
-  }
-  */
+
 /* the id3 info screen */
 void id3_info()
 {
