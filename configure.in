@@ -12,22 +12,6 @@ AC_PROG_INTLTOOL
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
 
-# i18n support
-dnl please keep them in alphabetical order
-ALL_LINGUAS=""
-
-GETTEXT_PACKAGE=gmpc
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
-	[The package name for gettext])
-AC_SUBST(GETTEXT_PACKAGE)
-AM_GLIB_GNU_GETTEXT
-
-# setting correct paths
-PACKAGE_LOCALE_DIR="${PACKAGE_PREFIX}/${DATADIRNAME}/locale"
-AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",
-	[The package's locale path for gettext])
-
-
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
@@ -43,6 +27,36 @@ PKG_CHECK_MODULES(gmpc,
 	libglade-2.0
 	gnome-vfs-2.0
 ])
+
+
+
+# installation paths
+AC_MSG_CHECKING(prefix)
+
+if test "x${prefix}" = "xNONE"; then
+	PACKAGE_PREFIX="${ac_default_prefix}"
+else
+	PACKAGE_PREFIX="${prefix}"
+fi
+AC_MSG_RESULT($PACKAGE_PREFIX)
+
+# i18n support
+dnl please keep them in alphabetical order
+ALL_LINGUAS=""
+
+GETTEXT_PACKAGE=gmpc
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
+		   [The package name for gettext])
+AC_SUBST(GETTEXT_PACKAGE)
+AM_GLIB_GNU_GETTEXT
+
+# setting correct paths
+PACKAGE_LOCALE_DIR="${PACKAGE_PREFIX}/${DATADIRNAME}/locale"
+AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",
+		   [The package's locale path for gettext])
+
+
+
 
 AC_SUBST(PACKAGE_LIBS)
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in)

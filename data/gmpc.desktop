@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Gnome Music Player Client
+Name[nl_NL]=Gnome Music Player Client
 Comment=A gnome frontend for the mpd daemon
+Comment[nl_NL]=Een gnome frontend voor de mpd daemon
 Exec=gmpc
 Terminal=false
 Type=Application

@@ -10,6 +10,5 @@
   <output_support_files>FALSE</output_support_files>
   <output_build_files>FALSE</output_build_files>
   <backup_source_files>FALSE</backup_source_files>
-  <output_translatable_strings>TRUE</output_translatable_strings>
   <translatable_strings_file>gmpc.pot</translatable_strings_file>
 </glade-project>

@@ -126,6 +126,11 @@ set_default_values ()
 int
 main (int argc, char **argv)
 {
+#ifdef ENABLE_NLS
+	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+#endif
 	set_default_values ();
 	/*
 	 * load config 
@@ -176,7 +181,7 @@ main (int argc, char **argv)
 }
 
 
-int
+	int
 update_interface ()
 {
 
@@ -215,8 +220,8 @@ update_interface ()
 			gtk_timeout_remove (update_timeout);
 			update_timeout =
 				gtk_timeout_add (400,
-						 (GSourceFunc)
-						 update_interface, NULL);
+						(GSourceFunc)
+						update_interface, NULL);
 		}
 	}
 	/*
@@ -227,7 +232,7 @@ update_interface ()
 	 */
 	if (info.conlock)
 		return TRUE;
-	
+
 	/* check if the database is being updated */
 	if(info.status->updatingDb != info.updating)
 	{
@@ -306,58 +311,58 @@ update_interface ()
 				 */
 				gchar *path =
 					g_strdup_printf ("%i",
-							 ent->info.song->pos);
+							ent->info.song->pos);
 				if (gtk_tree_model_get_iter_from_string
-				    (GTK_TREE_MODEL (pl2_store), &iter, path))
+						(GTK_TREE_MODEL (pl2_store), &iter, path))
 				{
 					gint weight = PANGO_WEIGHT_NORMAL;
 					if (ent->info.song->id ==
-					    info.status->songid)
+							info.status->songid)
 					{
 						weight = PANGO_WEIGHT_ULTRABOLD;
 					}
 
 					strfsong (buffer, 1024,
-						  preferences.
-						  markup_main_display,
-						  ent->info.song);
+							preferences.
+							markup_main_display,
+							ent->info.song);
 					gtk_list_store_set (pl2_store, &iter,
-							    SONG_ID,
-							    ent->info.song->
-							    id, SONG_POS,
-							    ent->info.song->
-							    pos, SONG_TITLE,
-							    buffer,
-							    WEIGHT_ENABLE,
-							    TRUE, WEIGHT_INT,
-							    weight,
-							    SONG_STOCK_ID,
-							    (ent->info.song->
-							     name ==
-							     NULL) ?
-							    "media-audiofile"
-							    : "media-stream",
-							    -1);
+							SONG_ID,
+							ent->info.song->
+							id, SONG_POS,
+							ent->info.song->
+							pos, SONG_TITLE,
+							buffer,
+							WEIGHT_ENABLE,
+							TRUE, WEIGHT_INT,
+							weight,
+							SONG_STOCK_ID,
+							(ent->info.song->
+							 name ==
+							 NULL) ?
+							"media-audiofile"
+							: "media-stream",
+							-1);
 				}
 			}
 			else
 			{
 				gtk_list_store_append (pl2_store, &iter);
 				strfsong (buffer, 1024,
-					  preferences.markup_main_display,
-					  ent->info.song);
+						preferences.markup_main_display,
+						ent->info.song);
 				gtk_list_store_set (pl2_store, &iter, SONG_ID,
-						    ent->info.song->id,
-						    SONG_POS,
-						    ent->info.song->pos,
-						    SONG_TITLE, buffer,
-						    WEIGHT_ENABLE, TRUE,
-						    WEIGHT_INT,
-						    PANGO_WEIGHT_NORMAL,
-						    SONG_STOCK_ID,
-						    (ent->info.song->name ==
-						     NULL) ? "media-audiofile"
-						    : "media-stream", -1);
+						ent->info.song->id,
+						SONG_POS,
+						ent->info.song->pos,
+						SONG_TITLE, buffer,
+						WEIGHT_ENABLE, TRUE,
+						WEIGHT_INT,
+						PANGO_WEIGHT_NORMAL,
+						SONG_STOCK_ID,
+						(ent->info.song->name ==
+						 NULL) ? "media-audiofile"
+						: "media-stream", -1);
 			}
 			mpd_freeInfoEntity (ent);
 			ent = mpd_getNextInfoEntity (info.connection);
@@ -366,7 +371,7 @@ update_interface ()
 		{
 			gchar *path = g_strdup_printf ("%i", old_length - 1);
 			if (gtk_tree_model_get_iter_from_string
-			    (GTK_TREE_MODEL (pl2_store), &iter, path))
+					(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
 				gtk_list_store_remove (pl2_store, &iter);
 			}
@@ -411,7 +416,7 @@ update_interface ()
 
 
 
-void
+	void
 init_stock_icons ()
 {
 	GtkIconFactory *factory;
@@ -423,7 +428,7 @@ init_stock_icons ()
 	 * add media-audiofile 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-audiofile.png",
-				       NULL);
+			NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-audiofile", set);
 	g_object_unref (G_OBJECT (pb));
@@ -496,7 +501,7 @@ init_stock_icons ()
 	 * add player-shuffle 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "player-shuffle.png",
-				       NULL);
+			NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "player-shuffle", set);
 	g_object_unref (G_OBJECT (pb));
