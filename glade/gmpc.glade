@@ -12,11 +12,6 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc-tray.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Mon, 06 Oct 2003 00:45:04 GMT"/>
 
   <child>
@@ -119,7 +114,6 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="prev_song" last_modification_time="Mon, 06 Oct 2003 11:52:21 GMT"/>
 		  <accelerator key="z" modifiers="0" signal="clicked"/>
 
@@ -146,7 +140,6 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="play_song" last_modification_time="Mon, 06 Oct 2003 11:53:53 GMT"/>
 		  <accelerator key="x" modifiers="0" signal="clicked"/>
 		  <accelerator key="c" modifiers="0" signal="clicked"/>
@@ -174,7 +167,6 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="stop_song" last_modification_time="Mon, 06 Oct 2003 11:52:10 GMT"/>
 		  <accelerator key="v" modifiers="0" signal="clicked"/>
 
@@ -201,7 +193,6 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="next_song" last_modification_time="Mon, 06 Oct 2003 11:52:38 GMT"/>
 		  <accelerator key="b" modifiers="0" signal="clicked"/>
 
@@ -241,7 +232,6 @@
 		  <property name="label" translatable="yes">R_and</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="random_pl" last_modification_time="Mon, 06 Oct 2003 14:18:22 GMT"/>
@@ -261,7 +251,6 @@
 		  <property name="label" translatable="yes">R_ep</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="repeat_pl" last_modification_time="Mon, 06 Oct 2003 14:18:35 GMT"/>
@@ -293,7 +282,6 @@
 		  <property name="label" translatable="yes">_PM</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="create_playlist" last_modification_time="Sat, 11 Oct 2003 20:12:28 GMT"/>
 		  <accelerator key="p" modifiers="0" signal="clicked"/>
 		</widget>
@@ -311,7 +299,6 @@
 		  <property name="label" translatable="yes">Pref</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="create_preferences_window" last_modification_time="Mon, 06 Oct 2003 17:44:49 GMT"/>
 		</widget>
 		<packing>
@@ -368,11 +355,6 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc-tray.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">False</property>
   <signal name="close" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:11 GMT"/>
   <signal name="destroy_event" handler="preferences_window_destroy" last_modification_time="Wed, 14 Jan 2004 08:02:54 GMT"/>
@@ -397,7 +379,6 @@
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-7</property>
 	      <signal name="clicked" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:22 GMT"/>
 	    </widget>
@@ -608,10 +589,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">1</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkButton" id="bt_dis">
@@ -619,7 +596,6 @@
 			  <property name="sensitive">False</property>
 			  <property name="can_focus">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <signal name="clicked" handler="preferences_window_disconnect" last_modification_time="Wed, 14 Jan 2004 08:19:14 GMT"/>
 
 			  <child>
@@ -629,10 +605,6 @@
 			      <property name="yalign">0.5</property>
 			      <property name="xscale">0</property>
 			      <property name="yscale">0</property>
-			      <property name="top_padding">0</property>
-			      <property name="bottom_padding">0</property>
-			      <property name="left_padding">0</property>
-			      <property name="right_padding">0</property>
 
 			      <child>
 				<widget class="GtkHBox" id="hbox17">
@@ -698,17 +670,12 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">1</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkButton" id="bt_con">
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <signal name="clicked" handler="preferences_window_connect" last_modification_time="Wed, 14 Jan 2004 08:19:28 GMT"/>
 
 			  <child>
@@ -718,10 +685,6 @@
 			      <property name="yalign">0.5</property>
 			      <property name="xscale">0</property>
 			      <property name="yscale">0</property>
-			      <property name="top_padding">0</property>
-			      <property name="bottom_padding">0</property>
-			      <property name="left_padding">0</property>
-			      <property name="right_padding">0</property>
 
 			      <child>
 				<widget class="GtkHBox" id="hbox18">
@@ -819,7 +782,6 @@
 		  <property name="label" translatable="yes">_Autoconnect</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <property name="draw_indicator">True</property>
@@ -842,7 +804,6 @@
 		  <property name="label" translatable="yes">_Use Authentication</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <property name="draw_indicator">True</property>
@@ -914,7 +875,6 @@
 			  <property name="label" translatable="yes">Enable</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
@@ -937,7 +897,6 @@
 			  <property name="label" translatable="yes">Show State</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
@@ -1062,10 +1021,6 @@
 			  <property name="yalign">0.5</property>
 			  <property name="xscale">0</property>
 			  <property name="yscale">1</property>
-			  <property name="top_padding">0</property>
-			  <property name="bottom_padding">0</property>
-			  <property name="left_padding">0</property>
-			  <property name="right_padding">0</property>
 
 			  <child>
 			    <widget class="GtkSpinButton" id="popup_timeout">
@@ -1144,7 +1099,6 @@
 			  <property name="label" translatable="yes">Enable</property>
 			  <property name="use_underline">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <property name="active">False</property>
 			  <property name="inconsistent">False</property>
 			  <property name="draw_indicator">True</property>
@@ -1348,11 +1302,6 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc-tray.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="destroy" handler="remove_id3_window" last_modification_time="Fri, 17 Oct 2003 21:26:09 GMT"/>
   <signal name="destroy_event" handler="remove_id3_window" last_modification_time="Fri, 17 Oct 2003 21:28:51 GMT"/>
 
@@ -1648,7 +1597,6 @@
 	      <property name="tooltip" translatable="yes">Search for songs with this title in the current playlist</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="find_title" last_modification_time="Fri, 17 Oct 2003 10:31:55 GMT"/>
 
 	      <child>
@@ -1679,7 +1627,6 @@
 	      <property name="tooltip" translatable="yes">Search for songs from this artist in the current playlist</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="find_artist" last_modification_time="Fri, 17 Oct 2003 11:08:08 GMT"/>
 
 	      <child>
@@ -1710,7 +1657,6 @@
 	      <property name="tooltip" translatable="yes">Search for songs from this album in the current playlist</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="find_album" last_modification_time="Fri, 17 Oct 2003 11:08:20 GMT"/>
 
 	      <child>
@@ -1756,7 +1702,6 @@
 	      <property name="label">gtk-go-back</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="id3_last_song" last_modification_time="Thu, 16 Oct 2003 18:39:04 GMT"/>
 	    </widget>
 	  </child>
@@ -1769,7 +1714,6 @@
 	      <property name="label">gtk-go-forward</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="id3_next_song" last_modification_time="Thu, 16 Oct 2003 18:38:51 GMT"/>
 	    </widget>
 	  </child>
@@ -1782,7 +1726,6 @@
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="remove_id3_window" last_modification_time="Thu, 16 Oct 2003 18:37:43 GMT"/>
 	    </widget>
 	  </child>
@@ -1807,11 +1750,6 @@
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc-tray.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="destroy" handler="destroy_playlist" last_modification_time="Sat, 11 Oct 2003 22:08:45 GMT"/>
   <signal name="delete_event" handler="destroy_playlist" last_modification_time="Sat, 11 Oct 2003 22:08:53 GMT"/>
 
@@ -1851,7 +1789,6 @@
 		      <property name="tooltip" translatable="yes">Refresh the playlists browser</property>
 		      <property name="can_focus">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="fill_playlist_tree" last_modification_time="Sat, 11 Oct 2003 22:58:44 GMT"/>
 
 		      <child>
@@ -1881,7 +1818,6 @@
 		      <property name="label">gtk-save</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="save_playlist" last_modification_time="Sat, 11 Oct 2003 23:42:46 GMT"/>
 		    </widget>
 		    <packing>
@@ -1899,7 +1835,6 @@
 		      <property name="label">gtk-delete</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="delete_playlist" last_modification_time="Sat, 11 Oct 2003 23:42:55 GMT"/>
 		    </widget>
 		    <packing>
@@ -1962,8 +1897,6 @@
 		<widget class="GtkEventBox" id="eventbox2">
 		  <property name="visible">True</property>
 		  <property name="tooltip" translatable="yes">Hide/Show the playlists browser</property>
-		  <property name="visible_window">True</property>
-		  <property name="above_child">False</property>
 		  <signal name="button_press_event" handler="hide_playlist_view" last_modification_time="Sat, 28 Feb 2004 16:08:18 GMT"/>
 
 		  <child>
@@ -2050,8 +1983,6 @@
 		  <child>
 		    <widget class="GtkEventBox" id="eventbox1">
 		      <property name="visible">True</property>
-		      <property name="visible_window">True</property>
-		      <property name="above_child">False</property>
 		      <signal name="button_press_event" handler="filter_toggle" last_modification_time="Sat, 11 Oct 2003 21:47:51 GMT"/>
 
 		      <child>
@@ -2225,7 +2156,6 @@
 		      <property name="tooltip" translatable="yes">Apply the filter to the current playlist</property>
 		      <property name="can_focus">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="load_songs_with_filter" last_modification_time="Sat, 11 Oct 2003 21:49:34 GMT"/>
 
 		      <child>
@@ -2377,7 +2307,6 @@
 		  <property name="tooltip" translatable="yes">Add the selected Directories and songs</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="button_press_event" handler="file_browser_add_button" last_modification_time="Sat, 28 Feb 2004 15:54:19 GMT"/>
 
 		  <child>
@@ -2387,10 +2316,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">0</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkHBox" id="hbox23">
@@ -2591,7 +2516,6 @@
 		  <property name="tooltip" translatable="yes">Expand the artist tree</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="expand_artist_tree" last_modification_time="Sat, 28 Feb 2004 13:59:11 GMT"/>
 
 		  <child>
@@ -2601,10 +2525,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">0</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkHBox" id="hbox28">
@@ -2667,7 +2587,6 @@
 		  <property name="tooltip" translatable="yes">Collapse the artist tree</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="collapse_artist_tree" last_modification_time="Sat, 28 Feb 2004 14:00:56 GMT"/>
 
 		  <child>
@@ -2677,10 +2596,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">0</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkHBox" id="hbox27">
@@ -2743,7 +2658,6 @@
 		  <property name="tooltip" translatable="yes">Add the selected songs or aritst/albums</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="button_press_event" handler="add_selected_id3_browser" last_modification_time="Sat, 28 Feb 2004 14:14:37 GMT"/>
 
 		  <child>
@@ -2753,10 +2667,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">0</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkHBox" id="hbox25">
@@ -2960,7 +2870,6 @@
 		  <property name="label">gtk-find</property>
 		  <property name="use_stock">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="do_server_side_search" last_modification_time="Fri, 23 Jan 2004 14:40:16 GMT"/>
 		</widget>
 		<packing>
@@ -2975,7 +2884,6 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="add_selected_search" last_modification_time="Sat, 28 Feb 2004 14:19:52 GMT"/>
 
 		  <child>
@@ -2985,10 +2893,6 @@
 		      <property name="yalign">0.5</property>
 		      <property name="xscale">0</property>
 		      <property name="yscale">0</property>
-		      <property name="top_padding">0</property>
-		      <property name="bottom_padding">0</property>
-		      <property name="left_padding">0</property>
-		      <property name="right_padding">0</property>
 
 		      <child>
 			<widget class="GtkHBox" id="hbox29">
@@ -3763,7 +3667,6 @@
 			  <property name="visible">True</property>
 			  <property name="can_focus">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
-			  <property name="focus_on_click">True</property>
 			  <signal name="clicked" handler="update_mpd_dbase" last_modification_time="Fri, 16 Jan 2004 17:45:13 GMT"/>
 
 			  <child>
@@ -3773,10 +3676,6 @@
 			      <property name="yalign">0.5</property>
 			      <property name="xscale">0</property>
 			      <property name="yscale">0</property>
-			      <property name="top_padding">0</property>
-			      <property name="bottom_padding">0</property>
-			      <property name="left_padding">0</property>
-			      <property name="right_padding">0</property>
 
 			      <child>
 				<widget class="GtkHBox" id="hbox20">
@@ -3897,17 +3796,12 @@
 		  <property name="yalign">0.5</property>
 		  <property name="xscale">0</property>
 		  <property name="yscale">1</property>
-		  <property name="top_padding">0</property>
-		  <property name="bottom_padding">0</property>
-		  <property name="left_padding">0</property>
-		  <property name="right_padding">0</property>
 
 		  <child>
 		    <widget class="GtkButton" id="button27">
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="refresh_information_tab" last_modification_time="Fri, 27 Feb 2004 15:38:48 GMT"/>
 
 		      <child>
@@ -3917,10 +3811,6 @@
 			  <property name="yalign">0.5</property>
 			  <property name="xscale">0</property>
 			  <property name="yscale">0</property>
-			  <property name="top_padding">0</property>
-			  <property name="bottom_padding">0</property>
-			  <property name="left_padding">0</property>
-			  <property name="right_padding">0</property>
 
 			  <child>
 			    <widget class="GtkHBox" id="hbox22">
@@ -4027,11 +3917,6 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc-tray.png</property>
-  <property name="decorated">True</property>
-  <property name="skip_taskbar_hint">False</property>
-  <property name="skip_pager_hint">False</property>
-  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">False</property>
 
   <child internal-child="vbox">
@@ -4053,7 +3938,6 @@
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -4067,7 +3951,6 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
