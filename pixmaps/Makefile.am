@@ -31,7 +31,7 @@ EXTRA_DIST = media-audiofile.png\
 	media-stop.png\
 	player-repeat.png\
 	player-shuffle.png\
-	media-playlist.svg
+	media-playlist.svg\
 	icecast.png
 
 

@@ -28,7 +28,7 @@ msgid "Gnome Music Player Client"
 msgstr ""
 
 #: glade/gmpc.glade.h:1 glade/add-browser.glade.h:1
-#: glade/open-location.glade.h:1 glade/playlist.glade.h:1
+#: glade/open-location.glade.h:1 glade/playlist3.glade.h:1
 msgid "*"
 msgstr ""
 
@@ -412,86 +412,86 @@ msgstr ""
 msgid "You can drop a link or file directly from a browser on this window."
 msgstr ""
 
-#: glade/playlist.glade.h:2
+#: glade/playlist3.glade.h:2
 msgid "<enter playlist name>"
 msgstr ""
 
-#: glade/playlist.glade.h:3
+#: glade/playlist3.glade.h:3
 msgid ""
 "<span size=\"x-small\"><i>This will overwrite any playlist with the same "
 "name.</i></span>"
 msgstr ""
 
-#: glade/playlist.glade.h:4
+#: glade/playlist3.glade.h:4
 msgid "Add _location"
 msgstr ""
 
-#: glade/playlist.glade.h:5
+#: glade/playlist3.glade.h:5
 msgid ""
 "Add a stream. (you can drop a link directly from your browser on the button)"
 msgstr ""
 
-#: glade/playlist.glade.h:6
+#: glade/playlist3.glade.h:6
 msgid "Clear"
 msgstr ""
 
-#: glade/playlist.glade.h:7
+#: glade/playlist3.glade.h:7
 msgid "Close this window <Escape>"
 msgstr ""
 
-#: glade/playlist.glade.h:8
+#: glade/playlist3.glade.h:8
 msgid "Crop"
 msgstr ""
 
-#: glade/playlist.glade.h:9
+#: glade/playlist3.glade.h:9
 msgid "Opens a browser window that allows you to add  songs and playlists"
 msgstr ""
 
-#: glade/playlist.glade.h:10
+#: glade/playlist3.glade.h:10
 msgid "Removes the selected songs. <Del>"
 msgstr ""
 
-#: glade/playlist.glade.h:11
+#: glade/playlist3.glade.h:11
 msgid "Save Playlist"
 msgstr ""
 
-#: glade/playlist.glade.h:12
+#: glade/playlist3.glade.h:12
 msgid "Saves the current playlist."
 msgstr ""
 
-#: glade/playlist.glade.h:13
+#: glade/playlist3.glade.h:13
 msgid "Search the playlist (supports * and ?) <ctrl+l to select> "
 msgstr ""
 
-#: glade/playlist.glade.h:14
+#: glade/playlist3.glade.h:14
 msgid "Search:"
 msgstr ""
 
-#: glade/playlist.glade.h:15
+#: glade/playlist3.glade.h:15
 msgid "Show detailed information about the selected song <ctrl+i>"
 msgstr ""
 
-#: glade/playlist.glade.h:16
+#: glade/playlist3.glade.h:16
 msgid "Show information"
 msgstr ""
 
-#: glade/playlist.glade.h:17
+#: glade/playlist3.glade.h:17
 msgid "Shuffle"
 msgstr ""
 
-#: glade/playlist.glade.h:18
+#: glade/playlist3.glade.h:18
 msgid "Wipe search string <alt - w>"
 msgstr ""
 
-#: glade/playlist.glade.h:19
+#: glade/playlist3.glade.h:19
 msgid "_Save"
 msgstr ""
 
-#: glade/playlist.glade.h:20
+#: glade/playlist3.glade.h:20
 msgid "gmpc - Playlist"
 msgstr ""
 
-#: glade/playlist.glade.h:21
+#: glade/playlist3.glade.h:21
 msgid "name:"
 msgstr ""
 
@@ -537,24 +537,8 @@ msgstr ""
 msgid "MPD is updating the database, please wait"
 msgstr ""
 
-#: src/playlist2.c:538
+#: src/playlist3.c:538
 msgid "Are you sure you want to clear the playlist?"
-msgstr ""
-
-#: src/popup.c:23
-msgid "<b><i>Stopped</i></b>"
-msgstr ""
-
-#: src/popup.c:26
-msgid "<b><i>Paused</i></b>"
-msgstr ""
-
-#: src/popup.c:29
-msgid "<b><i>Unknown State</i></b>"
-msgstr ""
-
-#: src/popup.c:39
-msgid "No Song found\n"
 msgstr ""
 
 #: src/mpdinteraction.c:54
@@ -598,18 +582,3 @@ msgstr ""
 msgid "<span size=\"x-small\"><i>Invalid link format</i></span>"
 msgstr ""
 
-#: src/song-browser.c:225
-msgid "Are you sure you want to delete the selected playlist?"
-msgstr ""
-
-#: src/song-browser.c:227
-msgid "Are you sure you want to delete the selected playlists?"
-msgstr ""
-
-#: src/song-browser.c:272
-msgid "Are you sure you want to delete the selected search query?"
-msgstr ""
-
-#: src/song-browser.c:274
-msgid "Are you sure you want to delete the selected search queries?"
-msgstr ""

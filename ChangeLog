@@ -1,3 +1,11 @@
+17-03-2005 Qball <Qball@qballcow.nl>
+	* src/libmpd.[c|h]:	possible fix for tracking db updates.
+	* src/main.c:		possible fix for tracking db. adding db change
+	handle.
+	* Fix for autotools. thanks to Eric Wong.
+	* Fix for bug that doesnt remove songid = 0;
+	* src/libmpd.c:		Fixed songid = 0;
+
 08-03-2005 Qball <Qball@qballcow.nl>
 	* src/open-location.c:	Fixed crash. (check for memory leaks. (memprof
 	crashes).

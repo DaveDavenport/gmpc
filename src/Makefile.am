@@ -29,7 +29,7 @@ LIBS = @gmpc_LIBS@ @LIBS@
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 	   	mm-keys.h\
-		open-location.h\ 
+		open-location.h\
 		strfsong.h\
 		misc.h\
 		eggtrayicon.h\
