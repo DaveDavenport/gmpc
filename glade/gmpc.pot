@@ -38,6 +38,12 @@ gchar *s = N_("<b>PopUp</b>");
 gchar *s = N_("Enable");
 gchar *s = N_("<b>Notification Area Icon</b>");
 gchar *s = N_("_Misc");
+gchar *s = N_("<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>");
+gchar *s = N_("A frontend for the music player daemon from:\n"
+              "<span color=\"blue\"><u>www.musicpd.org</u></span>");
+gchar *s = N_("<span size=\"small\">Copyright \302\251  2003-2004 Qball Cow\n"
+              "<i>Qball@qballcow.nl</i></span>");
+gchar *s = N_("_About");
 gchar *s = N_("gmpc - id3 info");
 gchar *s = N_("Title:");
 gchar *s = N_("n/a");
