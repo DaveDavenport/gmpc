@@ -389,7 +389,7 @@ void pl3_xiph_fill_view(char *buffer)
 void pl3_xiph_view_browser()
 {
 	gtk_list_store_clear(pl3_store);
-	start_transfer("http://dir.xiph.org/yp.xml",(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+	start_transfer(info.xiph_url,(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
 }
 
 /*****************************************************************
@@ -1548,7 +1548,10 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	}
 	/* avuton's Idea */
 	/* TODO: Make this option */
-	//	gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
+	if(preferences.pl3_scroll_to_open)
+	{
+		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
+	}
 }
 
 

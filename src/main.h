@@ -64,6 +64,9 @@ typedef struct
 	gint pl2_tooltip;
 	gboolean pl2_do_tooltip;
 	gboolean rounded_corners;
+	/* playlist 3 */
+	gchar *xiph_url;
+	gboolean pl3_scroll_to_song;
 } internal_data;
 
 enum{
@@ -127,6 +130,7 @@ typedef struct
 	gchar *markup_main_display;
 	gchar *markup_playlist;
 	gchar *markup_song_browser;
+	int pl3_scroll_to_open;
 } pref_struct;
 extern pref_struct preferences;
 void create_preferences_window();

@@ -165,6 +165,20 @@ void load_config ()
 				preferences.markup_song_browser = g_strcompress (buf);
 			}
 		}
+		else if (!strncmp (buffer, "xiph_url:", 9))
+		{
+			gchar *buf = g_strstrip (&buffer[9]);
+			if (buf != NULL)
+			{
+				if (info.xiph_url != NULL)
+				{
+					g_free (info.xiph_url);
+				}
+				info.xiph_url = g_strcompress (buf);
+			}
+		}
+
+		
 		else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
@@ -173,6 +187,16 @@ void load_config ()
 				info.pl2_tooltip = atoi (buf);
 			}
 		}
+		else if (!strncmp (buffer, "pl3_scroll_to_open:", 19))
+		{
+			gchar *buf = g_strstrip (&buffer[19]);
+			if (buf != NULL)
+			{
+				preferences.pl3_scroll_to_open = atoi (buf);
+			}
+		}
+
+
 		else if (!strncmp (buffer, "pl2 do tooltip:", 15))
 		{
 			gchar *buf = g_strstrip (&buffer[15]);
@@ -236,9 +260,13 @@ void save_config ()
 	escaped = g_strescape(preferences.markup_song_browser, "");
 	fprintf (fp, "markup song browser: %s\n", escaped);
 	g_free(escaped);
+	escaped = g_strescape(info.xiph_url, "");
+	fprintf(fp, "xiph_url: %s\n", escaped);
+	g_free(escaped);
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
 	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);
+	fprintf (fp, "pl3_scroll_to_open: %i\n", preferences.pl3_scroll_to_open);
 	fclose (fp);
 	g_free (filename);
 }

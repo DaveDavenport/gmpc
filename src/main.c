@@ -138,6 +138,10 @@ set_default_values ()
 	info.pl2_do_tooltip = TRUE;
 
 	info.rounded_corners = FALSE;
+
+	/* playlist 3 */
+	info.xiph_url = g_strdup("http://dir.xiph.org/yp.xml");
+	preferences.pl3_scroll_to_open = FALSE;
 }
 
 
