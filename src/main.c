@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
+#include <libgnomevfs/gnome-vfs.h>
 #include "libmpdclient.h"
 #include "playlist2.h"
 #include "song-browser.h"

@@ -15,18 +15,19 @@ GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
 GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key= NULL;
-/*
+
 static GtkTargetEntry drag_types[] = 
 {
 	{"text/plain", 0, 100}
 };
-*/
+
 void load_playlist2();
 
 /* timeout for the search */
 guint filter_timeout = 0;
 void pl2_filter_refilter();
-/*
+
+
 void pl2_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 		gint x, gint y, GtkSelectionData *selection_data,
 		guint info1, guint time)
@@ -37,7 +38,7 @@ void pl2_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 	ol_create(window);
 	ol_drag_data_recieved(window, context,x, y, selection_data,info1, time);
 }
-*/
+
 
 void init_playlist2()
 {
@@ -453,13 +454,13 @@ void create_playlist2()
 	gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), GDK_BUTTON1_MASK,
 			&target, 1, GDK_ACTION_MOVE);
 	gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), &target, 1, GDK_ACTION_MOVE);
-/*
-	gtk_drag_dest_set(glade_xml_get_widget(pl2_xml, "playlist_window"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
 
-	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl2_xml, "playlist_window")), "drag_data_received",
+	gtk_drag_dest_set(glade_xml_get_widget(pl2_xml, "button7"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
+
+	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl2_xml, "button7")), "drag_data_received",
 			G_CALLBACK (pl2_drag_data_recieved),
 			NULL);                                                                          	
-*/
+
 	glade_xml_signal_autoconnect(pl2_xml);
 }
 

@@ -37,50 +37,53 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 	{
 		gchar **list = g_strsplit(buffer, "\n",0);
 
-		if(!strncmp(list[0], "#EXTM3U",7))
-		{
-			int i =1;
-			while(list[i] != NULL)
-			{
-				if(!strncmp(list[i], "http://", 7))
-				{
-					mpd_sendAddCommand(info.connection,list[i]);
-					mpd_finishCommand(info.connection);
-				}
 
-				i++;
+
+		if(list != NULL)
+		{
+			if(!strncmp(list[0], "[playlist]", 10))
+			{
+				int i =1;
+				while(list[i] != NULL)
+				{
+					if(!strncmp(list[i], "File", 4))
+					{
+						mpd_sendAddCommand(info.connection,&list[i][6]);
+						mpd_finishCommand(info.connection);
+					}
+
+					i++;
+				}              
+				working = FALSE;		
+				ol_destroy();	
+
 			}
-			working = FALSE;		
-			ol_destroy();	           			
-		}
-		else if(!strncmp(list[0], "[playlist]", 10))
-		{
-			int i =1;
-			while(list[i] != NULL)
-			{
-				if(!strncmp(list[i], "File", 4))
+			else {
+				int i =0;
+				while(list[i] != NULL)
 				{
-					mpd_sendAddCommand(info.connection,&list[i][6]);
-					mpd_finishCommand(info.connection);
+					if(!strncasecmp(list[i], "http://", 7))
+					{
+						mpd_sendAddCommand(info.connection,list[i]);
+						mpd_finishCommand(info.connection);
+					}
+
+					i++;
 				}
-
-				i++;
-			}              
-			working = FALSE;		
-			ol_destroy();	
+				working = FALSE;		
+				ol_destroy();	           			
+			}
 		}
-		else
-		{
-			working = FALSE;
-			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-					"<span size=\"x-small\"><i>File has no valid layout.</i></span>");       			
-			gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
-		}
-
-
-		
+		/*else
+		  {
+		  working = FALSE;
+		  gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
+		  "<span size=\"x-small\"><i>File has no valid layout.</i></span>");       			
+		  gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
+		  }
+		  */
 		g_strfreev(list);
-		
+
 		gnome_vfs_async_close(handle, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         				
 	}
 	else
@@ -101,7 +104,7 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer data)
 {
 	gint size = GPOINTER_TO_INT(data);
-	g_print("%s\n", gnome_vfs_result_to_string(result));
+
 	if(result == GNOME_VFS_OK)
 	{
 		gchar *buffer = g_malloc0(size+sizeof(char));
@@ -109,6 +112,7 @@ void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer
 	}
 	else
 	{
+		g_print("Error found:%s\n", gnome_vfs_result_to_string(result));
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
 				"<span size=\"x-small\"><i>Failed to open file.</i></span>");       			
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
@@ -124,11 +128,14 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 
 	if(r->result == GNOME_VFS_OK)
 	{
-	g_print("Got mime-type: %s\n", r->file_info->mime_type);
+		g_print("Got mime-type: %s\n", r->file_info->mime_type);
 		/* m3u file */
-		if(!g_utf8_collate(r->file_info->mime_type, "audio/x-mpegurl") || /* .m3u file */
-		   !g_utf8_collate(r->file_info->mime_type, "audio/x-scpls") || /* .pls file */
-		   !g_utf8_collate(r->file_info->mime_type, "text/plain")) /* plain text isnt a stream, so we are gonna try to parse it */
+		if(
+				!g_utf8_collate(r->file_info->mime_type, "audio/x-scpls") ||
+				!g_utf8_collate(r->file_info->mime_type, "audio/x-mpegurl") ||			
+				!g_utf8_collate(r->file_info->mime_type, "audio/m3u") ||			
+				!g_utf8_collate(r->file_info->mime_type, "audio/pls") ||			
+				!g_utf8_collate(r->file_info->mime_type, "text/plain")) /* plain text isnt a stream, so we are gonna try to parse it */
 		{
 			gint size = r->file_info->size;
 			g_print("found m3u file  size: %i \n",(gint)size);
@@ -137,11 +144,11 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 					"<span size=\"x-small\"><i>Found playlist file</i></span>");
 			gnome_vfs_async_open_uri(&handle1, r->uri,GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
 					(GnomeVFSAsyncOpenCallback) ol_file_opened, GINT_TO_POINTER(size));
-			
+
 
 		}
 		/* audio file */
-		else if(!g_utf8_collate(r->file_info->mime_type, "audio/mpeg") && r->file_info->flags == 0)
+		else if(r->file_info->flags == 0)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 			g_print("stream found\n");
@@ -218,7 +225,7 @@ void ol_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 	{
 		g_print("%s\n",gnome_vfs_uri_to_string ((const GnomeVFSURI*)(p->data),GNOME_VFS_URI_HIDE_NONE)); 
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream")),
-			gnome_vfs_uri_to_string ((const GnomeVFSURI*)(p->data),GNOME_VFS_URI_HIDE_NONE)                     	
+				gnome_vfs_uri_to_string ((const GnomeVFSURI*)(p->data),GNOME_VFS_URI_HIDE_NONE)                     	
 				);
 		p = p->next;
 	}
@@ -249,7 +256,7 @@ void ol_create(GtkWidget *wid)
 	/* Accept drops from outside */
 	gtk_drag_dest_set(glade_xml_get_widget(ol_xml, "add_location"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
 	gtk_drag_dest_set(glade_xml_get_widget(ol_xml, "entry_stream"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
-	
+
 	/* set image with custom stock */
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(ol_xml, "image")), "media-stream", GTK_ICON_SIZE_DIALOG);
 
@@ -258,9 +265,9 @@ void ol_create(GtkWidget *wid)
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(ol_xml, "add_location")), "drag_data_received",
 			G_CALLBACK (ol_drag_data_recieved),
 			NULL);
-/*	g_signal_connect (G_OBJECT (glade_xml_get_widget(ol_xml, "entry_stream")), "drag_data_received",
-			G_CALLBACK (ol_drag_data_recieved),
-			NULL);
-*/
+	/*	g_signal_connect (G_OBJECT (glade_xml_get_widget(ol_xml, "entry_stream")), "drag_data_received",
+		G_CALLBACK (ol_drag_data_recieved),
+		NULL);
+		*/
 	glade_xml_signal_autoconnect(ol_xml);	
 }
