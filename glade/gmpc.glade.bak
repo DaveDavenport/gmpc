@@ -259,7 +259,7 @@
 	      <child>
 		<widget class="GtkToggleButton" id="rand_button">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Toggle random &lt;ctrl+a&gt; or &lt;a&gt;</property>
+		  <property name="tooltip" translatable="yes">Toggle random &lt;ctrl+s&gt; or &lt;s&gt;</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>

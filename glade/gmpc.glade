@@ -259,15 +259,15 @@
 	      <child>
 		<widget class="GtkToggleButton" id="rand_button">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Toggle random &lt;ctrl+a&gt; or &lt;a&gt;</property>
+		  <property name="tooltip" translatable="yes">Toggle random &lt;ctrl+s&gt; or &lt;s&gt;</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="random_pl" last_modification_time="Mon, 06 Oct 2003 14:18:22 GMT"/>
-		  <accelerator key="a" modifiers="0" signal="clicked"/>
-		  <accelerator key="a" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
+		  <accelerator key="s" modifiers="0" signal="clicked"/>
+		  <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="rand_im">
