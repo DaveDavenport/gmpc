@@ -55,6 +55,27 @@ gboolean toggle_playlist3(GtkToggleButton *tb);
 
 void pl3_highlight_song();
 
+enum store_types
+{
+	SONG_ID,
+	SONG_POS,
+	SONG_TITLE,
+	WEIGHT_INT,
+	WEIGHT_ENABLE,
+	SONG_STOCK_ID,
+	SONG_TIME,
+	NROWS
+};
+
+
+
+
+
+
+
+
+
+
 
 
 

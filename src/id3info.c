@@ -22,7 +22,6 @@
 #include <string.h>
 #include <glade/glade.h>
 #include "libmpdclient.h"
-#include "playlist2.h"
 #include "main.h"
 
 GladeXML *xml_id3_window = NULL;

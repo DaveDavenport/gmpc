@@ -25,7 +25,6 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include "libmpdclient.h"
 #include "config1.h"
-#include "playlist2.h"
 #include "playlist3.h"
 #include "main.h"
 #include "strfsong.h"

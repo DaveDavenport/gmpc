@@ -28,7 +28,6 @@
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
-#include "playlist2.h"
 #include "playlist3.h"
 #include "config1.h"
 extern config_obj *config;

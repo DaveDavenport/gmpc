@@ -31,7 +31,6 @@
 #include "strfsong.h"
 #include "main.h"
 #include "misc.h"
-#include "playlist2.h"
 #include "playlist3.h"
 #include "open-location.h"
 #include "vfs_download.h"
@@ -44,7 +43,7 @@ GtkListStore *pl3_store = NULL;
 GtkListStore *pl2_store = NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
-
+void pl2_save_playlist ();
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
 /****************************************************************/
