@@ -119,21 +119,27 @@ void pl3_xiph_fill_view(char *buffer)
 		{
 			xmlNodePtr cur1 = cur->xmlChildrenNode;
 			GtkTreeIter iter;
+			char *name=NULL, *bitrate=NULL, *genre=NULL;
 			gtk_list_store_append(pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
-//					PL3_SONG_ID, ent->info.song->file,
-//					PL3_SONG_TITLE, buffer,
 					PL3_SONG_POS, PL3_ENTRY_SONG, 
 					PL3_SONG_STOCK_ID, "media-stream", 
 					-1);
-
-
 
 			while(cur1 != NULL)
 			{
 				if(xmlStrEqual(cur1->name, "server_name"))
 				{
-					gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+			//		gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+					name = xmlNodeGetContent(cur1);
+				}
+				else if(xmlStrEqual(cur1->name, "genre"))
+				{
+					genre = xmlNodeGetContent(cur1);
+				}
+				else if (xmlStrEqual(cur1->name,"bitrate"))
+				{
+					bitrate = xmlNodeGetContent(cur1);
 				}
 				else if(xmlStrEqual(cur1->name, "listen_url"))
 				{
@@ -143,6 +149,9 @@ void pl3_xiph_fill_view(char *buffer)
 
 				cur1 = cur1->next;
 			}
+			name = g_strdup_printf("Station: %s\nGenre: %s\nBitrate: %s", name,genre, bitrate);
+			gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, name, -1);
+			g_free(name);
 
 		}
 
@@ -151,6 +160,7 @@ void pl3_xiph_fill_view(char *buffer)
 	xmlFreeDoc(xmldoc);
 	xmlCleanupParser();
 }
+
 void pl3_xiph_view_browser()
 {
 	gtk_list_store_clear(pl3_store);
