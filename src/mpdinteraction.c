@@ -27,12 +27,12 @@ int update_mpd_status()
 	{
 		return TRUE;
 	}
-	if(info.stats != NULL) mpd_freeStats(info.stats);
+/*	if(info.stats != NULL) mpd_freeStats(info.stats);
 	mpd_sendStatsCommand(info.connection);
 	info.stats = mpd_getStats(info.connection);
 	mpd_finishCommand(info.connection);
 	if(info.stats == NULL)g_print("crap %s\n", info.connection->errorStr);
-
+*/
 
 	mpd_ob_status_queue_update(connection);
 	/* unlock it */
@@ -83,17 +83,13 @@ int connect_to_mpd()
 	scroll.exposed = 1;
 	info.song = -1;    
 	info.playlist_playtime = 0;
-//	if(info.connection) mpd_clearError(info.connection);
-//	info.connection = mpd_newConnection(
+
 	mpd_ob_set_hostname(connection,cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
 	mpd_ob_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
 //			cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
 
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
-	//	mpd_sendPasswordCommand(info.connection, 
-	//			cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
-	//	mpd_finishCommand(info.connection);
 		mpd_ob_set_password(connection, cfg_get_single_value_as_string_with_default(config, "connection","password", ""));
 	}
 	else
@@ -115,7 +111,6 @@ int connect_to_mpd()
 	{
 		g_print("Connection failed\n");
 		msg_set_base(_("gmpc - Failed to connect, please check the connection settings."));
-//		mpd_closeConnection(info.connection);
 		mpd_ob_disconnect(connection);
 		info.connection = NULL;	
 		return TRUE;
@@ -208,48 +203,12 @@ gboolean mpd_unlock()
 int next_song()
 {
 	mpd_ob_player_next(connection);
-	/* check lock, no need to lock it for this command */
-/*	if(mpd_lock())
-	{
-		return TRUE;
-	}
-*/	/* send actual mpd commands */
-/*	mpd_sendNextCommand(info.connection);
-	mpd_finishCommand(info.connection);
-
-*/	/* check for an error */
-/*	if(check_for_errors())
-	{
-		return TRUE;
-	}
-	if(mpd_unlock())
-	{
-*/		/* unreachable code now, but this might change */
-/*		return TRUE;
-	}
-*/	return FALSE;
+	return FALSE;
 }
 
 int prev_song()
 {
 	mpd_ob_player_prev(connection);
-	/* check lock, no need to lock it for this command */
-/*	if(mpd_lock())
-	{
-		return TRUE;
-	}
-*/	/* send mpd command */
-/*	mpd_sendPrevCommand(info.connection);
-	mpd_finishCommand(info.connection);
-*/	/* check for an error */
-/*	if(check_for_errors())
-	{
-		return TRUE;
-	}
-	if(mpd_unlock())
-	{
-		return TRUE;
-	}*/
 	return FALSE;
 }
 
@@ -257,24 +216,6 @@ int stop_song()
 {
 	mpd_ob_player_stop(connection);
 	return FALSE;
-	/* check lock, no need to lock it for this command */
-/*	if(mpd_lock())
-	{
-		return TRUE;
-	}
-	mpd_sendStopCommand(info.connection);
-	mpd_finishCommand(info.connection);
-*/	/* check for an error */
-/*	if(check_for_errors())
-	{
-		return TRUE;
-	}
-	if(mpd_unlock())
-	{
-		return TRUE;
-	}
-	return FALSE;
-*/
 }
 
 int play_song()
@@ -289,42 +230,6 @@ int play_song()
 		mpd_ob_player_pause(connection);
 	}
 	return FALSE;	
-/*	if(mpd_lock())
-	{
-		return TRUE;
-	}
-*/	/* TODO: ABSTRACT THIS: */
-/*	if(info.status == NULL)
-	{
-		return TRUE;
-	}
-
-	switch(info.status->state)
-	{
-		case MPD_STATUS_STATE_PLAY:
-			mpd_sendPauseCommand(info.connection, TRUE);
-			mpd_finishCommand(info.connection);
-			break;
-		case MPD_STATUS_STATE_PAUSE:
-			mpd_sendPauseCommand(info.connection,FALSE);
-			mpd_finishCommand(info.connection);
-			break;
-		default:
-			mpd_sendPlayCommand(info.connection, -1);
-			mpd_finishCommand(info.connection);
-
-	}
-*/	/* check for an error */
-/*	if(check_for_errors())
-	{
-		return TRUE;
-	}
-	if(mpd_unlock())
-	{
-		return TRUE;
-	}
-	return FALSE;
-	*/
 }
 
 void random_pl()

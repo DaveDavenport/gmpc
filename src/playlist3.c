@@ -67,33 +67,6 @@ void pl3_shuffle_playlist()
  */
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Get the type of the selected row.. 
  * -1 means no row selected 
  */
@@ -1476,12 +1449,9 @@ void pl3_cat_sel_changed()
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
-			if(info.stats != NULL)
-			{	
-				gchar *string = format_time(info.playlist_playtime);
-				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-				g_free(string);
-			}
+			gchar *string = format_time(info.playlist_playtime);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+			g_free(string);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
 			gtk_tree_view_set_reorderable(tree, TRUE);
 		}
