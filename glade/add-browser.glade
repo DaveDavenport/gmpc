@@ -155,6 +155,7 @@ for filename</property>
 	  <child>
 	    <widget class="GtkButton" id="button6">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Do a server side search</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-find</property>
 	      <property name="use_stock">True</property>

@@ -1,4 +1,6 @@
 10-07-2004 Qball <Qball@qballcow.nl>
+	* glade/open-location.glade: 	Added tooltips to window saying you can drop files directly from a browser on the window.
+	* glade/add-browser.glade:	Added tooltip to search button.
 	* glade/song-browser.glade:	context menu.
 	* src/song-browser.glade: 	Added function to update directory.
 
