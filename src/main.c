@@ -332,6 +332,18 @@ void init_stock_icons()
 	gtk_icon_factory_add(factory, "media-pause", set);
 	g_object_unref(G_OBJECT(pb));	
 
-	
+	/* add player-shuffle */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"player-shuffle.png", NULL);		
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "player-shuffle", set);
+	g_object_unref(G_OBJECT(pb));	                                           	
+
+	/* add playerrepeat */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"player-repeat.png", NULL);		
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "player-repeat", set);
+	g_object_unref(G_OBJECT(pb));	                                           	
+
+
 	gtk_icon_factory_add_default(factory);
 }
