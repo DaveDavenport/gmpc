@@ -1853,10 +1853,19 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	/* call default */
 	gint type = pl3_cat_get_selected_browser();
-	if(event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
+	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
+	{
+		pl3_browse_file_replace_folder();		
+	}
+	else if(event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
 	{
 		pl3_browse_file_add_folder();		
 	}
+	else if (event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
+	{
+		pl3_browse_artist_replace_folder();
+	}
+	
 	else if (event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
 	{
 		pl3_browse_artist_add_folder();
@@ -1878,6 +1887,13 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_custom_stream_remove();	
 		return TRUE;
 	}
+	else if (event->keyval == GDK_Insert &&  event->state == GDK_CONTROL_MASK &&
+			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
+	{
+		pl3_browse_replace_selected();	
+		return TRUE;
+	}
+	
 	else if (event->keyval == GDK_Insert && 
 			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{

@@ -3,6 +3,7 @@
 	* src/playlist3.c:	position is (in session) saved and restored.
 	* src/playlist3.c: 	Push/pop messages are now popped off in the
 	right order.
+	* src/playlist3.c:	Added ctrl-insert = replace
 
 13-11-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Allow the playlist to be reordered
