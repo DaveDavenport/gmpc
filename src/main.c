@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 
 int update_interface()
     {
+
     /* update the preferences menu, I call this as soon as possible so the preferences menu can detect update */
     preferences_update();
     /* tray update */
@@ -69,6 +70,7 @@ int update_interface()
     /* now start updating the rest */
     /* check if busy */
     if(info.conlock) return TRUE;
+
     /* ok save to update interface, no need to lock (yet)*/
     
     /* check for new playlist and load it if needed */
@@ -94,6 +96,6 @@ int update_interface()
     /* set these to the good value. So there only updated when changed */
     info.playlist_id = info.status->playlist;
     if(info.status->state != MPD_STATUS_STATE_UNKNOWN) info.song = info.status->song;
-    if(info.status->state == MPD_STATUS_STATE_STOP)  info.song = -1;
+    if(info.status->state == MPD_STATUS_STATE_STOP)  info.song = -1;    
     return TRUE;
     }

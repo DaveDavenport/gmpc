@@ -581,7 +581,8 @@ void update_playlist()
 		update_information_tab();
 	}
 	/* update hightlighted song */
-	if(info.status->song != info.song && info.song != -1)
+	if((info.status->song != info.song && info.song != -1) || 
+	    (info.state != info.status->state &&  info.status->state != MPD_STATUS_STATE_PAUSE && info.state != MPD_STATUS_STATE_PAUSE))
 	{
 		GtkTreeIter iter;
 		GtkTreeModel *model = GTK_TREE_MODEL(info.cur_list);
