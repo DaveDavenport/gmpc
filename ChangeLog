@@ -1,4 +1,7 @@
 27-06-2004 Qball <Qball@qballcow.nl>
+	* Implemented clearing. (pressing remove when nothing is selected)
+	* Added keybindings (del)
+	* Added some tooltips
 	* Implemented delete in pl2. (single and multiple select
 
 26-06-2004 Qball <Qball@qballcow.nl>

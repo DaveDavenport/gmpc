@@ -219,6 +219,27 @@ void pl2_delete_selected_songs()
 		mpd_sendCommandListEnd(info.connection);
 		mpd_finishCommand(info.connection);
 	}
+	else
+	{
+		GtkWidget *dialog = gtk_message_dialog_new(
+			GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")),
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_WARNING,
+			GTK_BUTTONS_NONE,
+			"Are you sure you want to clear the playlist?");
+		gtk_dialog_add_buttons(GTK_DIALOG(dialog), 
+				GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+				GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+		gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
+		
+		switch(gtk_dialog_run(GTK_DIALOG(dialog)))
+		{
+			case GTK_RESPONSE_OK:
+				mpd_sendClearCommand(info.connection);
+				mpd_finishCommand(info.connection);
+		}
+		gtk_widget_destroy(GTK_WIDGET(dialog));
+	}
 }
 
 
