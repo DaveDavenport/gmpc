@@ -1110,7 +1110,10 @@ void pl3_reinitialize_tree()
 
 void pl3_disconnect()
 {
-	pl3_reinitialize_tree();
+	if(pl3_xml != NULL)
+	{
+		pl3_reinitialize_tree();
+	}
 }
 
 void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
