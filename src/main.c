@@ -203,8 +203,6 @@ int update_interface()
 			{
 				/* needed for getting the row */
 				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
-				gint weight = (info.status->songid == ent->info.song->id)?
-					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
 				{
 					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
@@ -213,19 +211,12 @@ int update_interface()
 							SONG_POS, ent->info.song->pos,
 							SONG_TITLE,buffer,
 							WEIGHT_ENABLE,TRUE,
-							WEIGHT_INT, weight,
-
+							WEIGHT_INT, PANGO_WEIGHT_NORMAL,
 							-1); 
-					if(weight == PANGO_WEIGHT_ULTRABOLD)
-					{
-						info.old_pos = ent->info.song->pos;
-					}
 				}
 			}
 			else
 			{
-				gint weight = (info.status->songid == ent->info.song->id)?
-					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				gtk_list_store_append(pl2_store, &iter);
 				strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
 				gtk_list_store_set(pl2_store, &iter,	
@@ -233,12 +224,8 @@ int update_interface()
 						SONG_POS, ent->info.song->pos,
 						SONG_TITLE,buffer,
 						WEIGHT_ENABLE,TRUE,
-						WEIGHT_INT, weight,
+						WEIGHT_INT, PANGO_WEIGHT_NORMAL,
 						-1); 
-				if(weight == PANGO_WEIGHT_ULTRABOLD)
-				{
-					info.old_pos = ent->info.song->pos;
-				}                                          				
 			}
 			mpd_freeInfoEntity(ent);
 			ent = mpd_getNextInfoEntity(info.connection);
@@ -253,6 +240,9 @@ int update_interface()
 			g_free(path);
 			old_length--;
 		}
+		pl2_highlight_song();
+
+		
 		info.status->song = -1;
 	}
 	info.playlist_length = info.status->playlistLength;
