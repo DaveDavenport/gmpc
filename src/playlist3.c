@@ -102,6 +102,28 @@ void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *co
 			}                                                      		
 		}
 	}
+}
+
+void playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
+{
+	gint type = cat_get_selected_browser();
+	if(type == -1 || check_connection_state())
+	{
+		return;
+	}
+	else if (type == PL3_CURRENT_PLAYLIST)
+	{
+		GtkTreeIter iter;
+		gint song_id;
+		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+		/* send mpd the play command */
+		mpd_sendPlayIdCommand (info.connection, song_id);
+		mpd_finishCommand (info.connection);
+		/* check for errors */                      		
+		check_for_errors ();                        		
+
+	}
 
 
 }
@@ -162,15 +184,15 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 	/* check the connection state and when its valid proceed */
 	if (check_connection_state ())
 	{
- 		return;
+		return;
 	}
- 
- 	mpd_sendLsInfoCommand (info.connection, path);
- 	ent = mpd_getNextInfoEntity (info.connection);
- 	while (ent != NULL)
- 	{
- 		if (ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
- 		{
+
+	mpd_sendLsInfoCommand (info.connection, path);
+	ent = mpd_getNextInfoEntity (info.connection);
+	while (ent != NULL)
+	{
+		if (ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		{
 			sub_folder++;
 		}
 		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
@@ -219,8 +241,8 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 	GtkTreeIter iter;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (check_connection_state ())
- 		return;
- 
+		return;
+
 	if(artist == NULL || string == NULL)
 	{
 		return;
@@ -303,7 +325,7 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-	
+
 	if (check_connection_state ())
 	{
 		return;
