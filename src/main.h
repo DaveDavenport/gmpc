@@ -86,10 +86,10 @@ int check_for_errors();
 /* mpdinteraction.c*/
 int update_mpd_status();
 int connect_to_mpd();
-void play_song();
-void stop_song();
-void next_song();
-void prev_song();
+int play_song();
+int stop_song();
+int next_song();
+int prev_song();
 void random_pl();
 void repeat_pl();
 void update_mpd_dbase();
@@ -156,4 +156,4 @@ void main_trigger_update();
 
 int  seek_ns(int n);
 int  seek_ps(int n);
-void volume_change(int diff);
+int volume_change(int diff);

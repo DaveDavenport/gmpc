@@ -132,6 +132,7 @@ int connect_to_mpd()
 	return FALSE;
 }
 
+/* DEFAULT FUNCTIONS */
 /* returns FALSE when connected */
 
 gboolean check_connection_state()
@@ -143,52 +144,124 @@ gboolean check_connection_state()
 	else return FALSE;
 }
 
+gboolean mpd_is_locked()
+{
+	return info.conlock;
+}
+
+gboolean mpd_lock()
+{
+	if(mpd_is_locked())
+	{
+		/* database is allready locked */
+		return TRUE;
+	}
+	/* lock */
+	info.conlock = TRUE;
+	return FALSE;
+}
+
+gboolean mpd_unlock()
+{
+	if(!mpd_is_locked())
+	{
+		/* database is allready unlocked */
+		/* we don't make an error from this..  maybe we should ? */
+		return FALSE;
+	}
+
+	/* unlock */
+	info.conlock = FALSE;
+	return FALSE;
+}
+
+
+/******************************************************
+ * PLAYER FUNCTIONS 
+ */
 
 
 /* the normal play functions, stop, play, next, prev */
-
-void next_song()
+/* returns FALSE when everything went ok */
+int next_song()
 {
 	/* check lock, no need to lock it for this command */
-	if(info.conlock) return;
-	info.conlock = TRUE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
+	/* send actual mpd commands */
 	mpd_sendNextCommand(info.connection);
 	mpd_finishCommand(info.connection);
+	
 	/* check for an error */
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
+	if(check_for_errors())
+	{
+		return TRUE;
+	}
+	if(mpd_unlock())
+	{
+		/* unreachable code now, but this might change */
+		return TRUE;
+	}
+	return FALSE;
 }
 
-void prev_song()
+int prev_song()
 {
 	/* check lock, no need to lock it for this command */
-	if(info.conlock) return;
-	info.conlock = TRUE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
+	/* send mpd command */
 	mpd_sendPrevCommand(info.connection);
 	mpd_finishCommand(info.connection);
 	/* check for an error */
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
+	if(check_for_errors())
+	{
+		return TRUE;
+	}
+	if(mpd_unlock())
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
 
-void stop_song()
+int stop_song()
 {
 	/* check lock, no need to lock it for this command */
-	if(info.conlock) return;
-	info.conlock = TRUE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
 	mpd_sendStopCommand(info.connection);
 	mpd_finishCommand(info.connection);
 	/* check for an error */
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
-
+	if(check_for_errors())
+	{
+		return TRUE;
+	}
+	if(mpd_unlock())
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
 
-void play_song()
+int play_song()
 {
-	/* check lock, no need to lock it for this command */
-	if(info.conlock) return;
-	info.conlock = TRUE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
+	/* TODO: ABSTRACT THIS: */
+	if(info.status == NULL)
+	{
+		return TRUE;
+	}
+	
 	switch(info.status->state)
 	{
 		case MPD_STATUS_STATE_PLAY:
@@ -205,9 +278,15 @@ void play_song()
 
 	}
 	/* check for an error */
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
-
+	if(check_for_errors())
+	{
+		return TRUE;
+	}
+	if(mpd_unlock())
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
 
 void random_pl()
@@ -232,47 +311,52 @@ void repeat_pl()
 	info.conlock = FALSE;
 }
 
+/* TODO: Changed return Values, check for possible errors */
 int seek_ps(int n)
 {
-	if(info.conlock) return FALSE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
 
 	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
 	{
-		info.conlock = TRUE;
-		mpd_sendSeekCommand(info.connection, info.status->song, 
-				info.status->elapsedTime+n);
+		mpd_sendSeekCommand(info.connection, info.status->song, info.status->elapsedTime+n);
 		mpd_finishCommand(info.connection);
-		if(check_for_errors()) return FALSE;
-		info.conlock = FALSE;
+		if(check_for_errors())
+		{
+			return TRUE;
+		}
+	}
+	if(mpd_unlock())
+	{
+		return TRUE;
 	}
 	return FALSE;
 }
 
 int seek_ns(int n)
 {
-	if(info.conlock) return FALSE;
-
-	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
-	{
-		info.conlock = TRUE;
-		mpd_sendSeekCommand(info.connection, info.status->song,
-				info.status->elapsedTime-n);
-		mpd_finishCommand(info.connection);
-		if(check_for_errors()) return FALSE;
-		info.conlock = FALSE;
-
-	}                                                                                              		
-	return FALSE;
+	return seek_ps(-n);
 }
 
-void volume_change(int diff)
+int volume_change(int diff)
 {
-	if(info.conlock) return;
-	info.conlock = TRUE;
+	if(mpd_lock())
+	{
+		return TRUE;
+	}
 	mpd_sendVolumeCommand(info.connection,diff);
 	mpd_finishCommand(info.connection);
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
+	if(check_for_errors())
+	{
+	       	return TRUE;
+	}
+	if(mpd_unlock())
+	{
+		return TRUE;
+	}
+	return FALSE;
 }
 
 
