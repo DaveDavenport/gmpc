@@ -36,7 +36,7 @@ gchar * get_string()
 	if(song->artist  == NULL || song->title == NULL)
 	{
 		gchar *basename     = g_path_get_basename(song->file);
-		g_string_printf(string,/*"<b>Title:</b>\t*/"%s",basename);
+		g_string_printf(string,"%s",basename);
 		g_free(basename);
 	}
 	else
@@ -121,7 +121,6 @@ void popup_window()
 	gint w, h;
 	PangoLayout *layout = NULL;
 	char *text          = get_string();
-	g_print("test1\n");
 	if(popup != NULL)
 	{
 		g_source_remove(timeout);
@@ -184,15 +183,11 @@ void update_tray_icon()
 	{
 		if(info.status->song != info.song)
 		{
-			g_print("popup window\n");
 			popup_window();
 
 		}
 	}
 	if(!info.do_tray) return;
-
-
-
 }
 
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
@@ -200,7 +195,6 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	GtkMenu *menu = (GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
 	gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
 	gtk_widget_show_all(GTK_WIDGET(menu));
-	g_print("test\n");
 	return FALSE;    
 }
 
