@@ -1,3 +1,3 @@
-AUTOMAKE_OPTIONS = foreign 1.8
+AUTOMAKE_OPTIONS = foreign 1.6
 
 SUBDIRS = src pixmaps glade data po
