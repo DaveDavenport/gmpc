@@ -15,6 +15,7 @@ GnomeVFSAsyncHandle *handle = NULL;
 GnomeVFSAsyncHandle *handle1 = NULL;
 /* this is so I won't return while busy */
 gint working = FALSE;
+gint add_anyway = FALSE;
 
 static GtkTargetEntry drag_types[] =
 {
@@ -38,7 +39,7 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 	if(result == GNOME_VFS_OK)
 	{
 		gchar **list = g_strsplit(buffer, "\n",0);
-		if(list != NULL)
+		if(list != NULL && list[0] != NULL)
 		{
 			if(!strncmp(list[0], "[playlist]", 10))
 			{
@@ -159,9 +160,11 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 	else
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
+		gtk_widget_hide(glade_xml_get_widget(ol_xml, "hbox4"));
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),                          	
-				_("<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>"));       			
+				_("<i>Failed to grab fileinfo.</i>\n<span size=\"larger\">Add anyway?</span>"));       			
 		working = FALSE;
+		add_anyway = TRUE;
 	}
 
 }
@@ -173,6 +176,15 @@ void ol_add_location()
 	GList *list = NULL;
 	GnomeVFSURI *uri;
 	if(strlen(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream")))) == 0 ) return;
+	if(add_anyway)
+	{
+
+
+		mpd_sendAddCommand(info.connection,gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
+		mpd_finishCommand(info.connection);
+		ol_destroy();
+		return;
+	}
 	uri = gnome_vfs_uri_new(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
 	if(uri == NULL)
 	{
@@ -240,7 +252,7 @@ void ol_create_url(GtkWidget *wid,char *url)
 		return;          	
 	}
 
-
+	add_anyway = FALSE;
 	/* create glade file, and set parent */
 	ol_xml = glade_xml_new(GLADE_PATH"open-location.glade", "add_location",NULL);
 	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), GTK_WINDOW(wid));

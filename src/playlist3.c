@@ -301,7 +301,7 @@ void pl3_custom_stream_remove()
 
 void pl3_xiph_add()
 {
-	GtkTreeIter iter;
+	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
@@ -310,15 +310,62 @@ void pl3_xiph_add()
 			PL3_CAT_ICON_ID, "icecast",
 			PL3_CAT_PROC, FALSE,          	
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	gtk_tree_store_append(pl3_tree, &child, &iter);
+	gtk_tree_store_set(pl3_tree, &child, 
+			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
+			PL3_CAT_TITLE, "Xiph",
+			PL3_CAT_INT_ID, "http://dir.xiph.org/yp.xml",
+			PL3_CAT_ICON_ID, "icecast",
+			PL3_CAT_PROC, FALSE,          	
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	gtk_tree_store_append(pl3_tree, &child, &iter);
+	gtk_tree_store_set(pl3_tree, &child, 
+			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
+			PL3_CAT_TITLE, "Shoutcast",
+			PL3_CAT_INT_ID, "http://qballcow.nl/shoutcast.xml",
+			PL3_CAT_ICON_ID, "icecast",
+			PL3_CAT_PROC, FALSE,          	
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	
+
+	
 }
+
 
 void pl3_xiph_fill_view(char *buffer)
 {
 	xmlDocPtr xmldoc;
 	xmlNodePtr root;
 	xmlNodePtr cur;
-	
-	xmldoc = xmlParseMemory(buffer, strlen(buffer));
+	gchar *name, *string;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	if(!gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		return;
+	}
+		
+	gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, -1);
+	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	if(buffer != NULL)
+	{
+		FILE *fp = fopen(string, "w");
+		if(fp != NULL)
+		{
+			fputs(buffer,fp);
+			fclose(fp);
+
+		}
+		else
+		{
+			g_free(string);	
+			return;
+		}
+	}
+//	xmldoc = xmlParseMemory(buffer, strlen(buffer));
+	xmldoc = xmlParseFile(string);
+	g_free(string);
 	root = xmlDocGetRootElement(xmldoc);
 	cur = root->xmlChildrenNode;
 	while(cur != NULL)
@@ -368,10 +415,39 @@ void pl3_xiph_fill_view(char *buffer)
 	xmlCleanupParser();
 }
 
-void pl3_xiph_view_browser()
+void pl3_xiph_view_browser(gchar *url,gchar *name)
 {
+	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
 	gtk_list_store_clear(pl3_store);
-//	start_transfer(info.xiph_url,(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+	if(g_file_test(string, G_FILE_TEST_EXISTS))
+	{
+		pl3_xiph_fill_view(NULL);
+	}
+	else
+	{
+		start_transfer(url,(void *)pl3_xiph_fill_view,NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+	}
+	g_free(string);
+}
+
+
+
+void pl3_xiph_refresh()
+{
+	gchar *name, *string, *url;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	if(!gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		return;
+	}
+	gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name, -1);
+	if(url == NULL || name == NULL ) return;
+	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	unlink(string);
+	g_free(string);
+	pl3_xiph_view_browser(url, name);
 }
 
 /*****************************************************************
@@ -1573,10 +1649,18 @@ void pl3_cat_sel_changed()
 		}
 		else if(type == PL3_BROWSE_XIPH)
 		{
+			gchar *url =NULL,*name = NULL;
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+			gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name,-1);
 
-
-			pl3_xiph_view_browser();
+			if(url != NULL && strlen(url) > 0) 
+			{
+				pl3_xiph_view_browser(url,name);
+			}
+			else
+			{
+				gtk_list_store_clear(pl3_store);
+			}
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
 		}
 		else if(type == PL3_BROWSE_CUSTOM_STREAM)
@@ -1719,6 +1803,27 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_widget_show_all(menu);                                                        		
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 	}
+	else if (type == PL3_BROWSE_XIPH)
+	{
+		/* here we have:  Add. Replace*/
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
+
+		/* show everything and popup */
+		gtk_widget_show_all(menu);                                                        		
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
+
+
+
+
+
+	}
+
 	return TRUE;
 }
 
@@ -1731,10 +1836,11 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
 	{
-		int retval;
-		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
-		g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
-	}
+		/* disabled because of problems with gtk 2.6 */
+		/*		int retval;
+				gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
+				g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
+				*/	}
 	else if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
 	{
 		pl3_close();

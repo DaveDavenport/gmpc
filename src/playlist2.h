@@ -1,19 +1,5 @@
-void pl2_set_query(const gchar *query);
-void create_playlist2();
-void update_playlist2();
 void init_playlist2();
-void pl2_highlight_song();
-
-void pl2_disconnect();
-void pl2_connect();
-int hide_playlist2 ();
-gboolean toggle_playlist2(GtkToggleButton *tb);
-
-void mw_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
-gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null);
-void pl2_save_playlist();
-
-
+void pl2_save_playlist ();
 enum store_types
 {
 	SONG_ID,
@@ -25,8 +11,3 @@ enum store_types
 	SONG_TIME,
 	NROWS
 };
-
-
-
-gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n);
-void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);

@@ -53,16 +53,6 @@ main_trigger_update ()
 set_default_values ()
 {
 	/*
-	 * main display markup 
-	 */
-//	preferences.markup_main_display =
-//		g_strdup
-//		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-/*	preferences.markup_playlist =
-		g_strdup
-		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-*/
-	/*
 	 * the mpd status struct used  in the whole program 
 	 */
 	info.status = NULL;
@@ -187,8 +177,7 @@ int main (int argc, char **argv)
 }
 
 
-	int
-update_interface ()
+int update_interface ()
 {
 
 	/*
@@ -277,16 +266,9 @@ update_interface ()
 	}
 
 	/*
-	 * update the popup 
-	 */
-	//update_popup ();
-
-	/*
 	 * tray update 
 	 */
 	update_tray_icon ();
-
-	//update_song_browser ();
 
 	/*
 	 * check for new playlist and load it if needed 
@@ -422,7 +404,6 @@ update_interface ()
 	/*
 	 * update the playlist 
 	 */
-//update_playlist2 ();
 	pl3_update ();
 
 	/*

@@ -12,7 +12,7 @@
 #define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
 
 extern config_obj *config;
-
+void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
