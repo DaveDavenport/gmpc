@@ -2,9 +2,15 @@
 	* Removed code in tray_icon.c that set an non-existing widget
 	sensitive
 	* Catch key presses on tree store
-	* If del is pressen when playlist selected or search query remove
+	* If del is pressed when playlist selected or search query remove
 	them.
 	* ctrl-l gives focus to search-entry
+	* Made the button layout smaller.
+	* Added confirmation dialog to deleting playlist/search query from
+	del key.
+	* create anjuta project file.
+	* src/song-browser.h: Added enumeration for browse types.
+	* src/song-browser.c: Added support for adding a search query completely.
 
 
 
@@ -166,4 +172,3 @@ the more section
     * Added saving of search query.
     * search for artist, album, title in id3info window
     * changed layout of id3_info window
-    

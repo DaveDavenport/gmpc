@@ -6,6 +6,13 @@ enum{
 	SB_NROWS
 } sb_tree_store;
 
+enum {
+	BROWSE_FILE,
+	BROWSE_TAG,
+	BROWSE_SEARCH,
+	BROWSE_N	
+} browse_types;
+
 
 void song_browser_create();
 void update_song_browser();
