@@ -8,14 +8,15 @@
 #include "config1.h"
 
 #define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
-
+int playlist_hidden = FALSE;
 extern config_obj *config;
+extern GladeXML *pl3_xml;
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
 GtkTooltips *tps = NULL;
-
+extern int pl3_hidden;
 /* size main window (I know odd place)*/
 GtkAllocation player_wsize = {0,0,0,0};
 GtkWidget *tip = NULL;
@@ -24,7 +25,7 @@ PangoLayout *tray_layout_tooltip = NULL;
 guint tray_timeout = -1;
 
 guint popup_timeout = -1;
-
+guint compf_timeout = -1;
 
 GdkPixbuf *bg = NULL;
 GdkPixbuf *dest = NULL;
@@ -223,14 +224,20 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 int compf_change(GtkWidget *widget)
 {
-	if(tip == NULL) return FALSE;
+	if(tip == NULL || widget == NULL) return FALSE;
 	if(compf > 30)
 	{
 		compf-=30;
 	}
 	else compf = 0;	
 	gtk_widget_queue_draw(widget);
-	return (compf == 0)? FALSE:TRUE;
+	if(compf == 0)
+	{
+
+		compf_timeout = -1;
+		return FALSE;
+	}
+	return TRUE;
 
 }
 /* fix it the ugly way */
@@ -393,7 +400,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			tooltip_queue_draw, eventb);
 	if(bg != NULL)
 	{
-		g_timeout_add(100, (GSourceFunc) compf_change, eventb);
+		compf_timeout = g_timeout_add(100, (GSourceFunc) compf_change, eventb);
 	}
 	g_free(tooltiptext);
 	return TRUE;
@@ -403,8 +410,10 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
+	if(compf_timeout != -1) g_source_remove(compf_timeout);
 	popup_timeout = -1;
 	tray_timeout = -1;
+	compf_timeout = -1;
 	if(bg != NULL)
 	{
 		g_object_unref(bg);
@@ -494,7 +503,7 @@ void tray_icon_song_change()
 
 void tray_icon_state_change()
 {
-	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
+	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE))
 	{
 		return;
 	}
@@ -518,6 +527,10 @@ void tray_icon_destroyed()
 	{
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
 		info.hidden = FALSE;
+		if(playlist_hidden)
+		{
+			create_playlist3();
+		}
 	}
 }
 
@@ -533,6 +546,8 @@ void destroy_tray_icon()
  * button3: menu
  */
 
+
+
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1)
@@ -540,11 +555,15 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		if(info.hidden )
 		{
 			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), player_wsize.x, player_wsize.y);
-			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),player_wsize.width, player_wsize.height);
 			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
 
 			info.hidden = FALSE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+			if(playlist_hidden)
+			{
+				create_playlist3();
+				playlist_hidden = FALSE;
+			}
 		}
 		else
 		{
@@ -555,6 +574,11 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+			if(pl3_xml != NULL && !pl3_hidden)
+			{
+				pl3_close();
+				playlist_hidden = TRUE;
+			}
 
 		}
 	}

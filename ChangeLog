@@ -1,4 +1,18 @@
+29-02-2005 Qball <qball@qballcow.nl>
+	* src/preferences.c/glade:	Added support for changing browser
+	markup.
+	* src/tray-icon.c:		playlist is now also hidden with click
+	on tray icon.
+
 28-02-2005 Qball <qball@qballcow.nl>
+	* src/main.c/preferences.c:		Support for enable/disable hide on startup.
+	* src/main.c:		On exit clean some stuff up. (mpdObj and
+	config obj )
+	* src/config1.c:	Make close function that cleans up.
+	* src/playlist3.c:	Fixed gtk_list_store_new..  wrongly defined.
+	(how the hell did it work)
+	* src/main.c:		Added stock yalign to list_store.
+	* src/playlist3.c:	Icon next to song is now alligned to the top.
 	* src/main.c:		Fixed memory leak in changed playlist.
 	(freeing of path string);
 	* src/libmpd.c:		Fixed memory leak in _free_data and free_queu

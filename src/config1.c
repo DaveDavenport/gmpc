@@ -55,6 +55,26 @@ config_obj *cfg_open(gchar *url)
 	return cfgo;
 }
 
+
+void config_close(config_obj *cfgo)
+{
+	if(cfgo == NULL)
+	{
+		return;
+	}
+	cfg_save(cfgo);
+	if(cfgo->url != NULL)
+	{
+		g_free(cfgo->url);
+	}
+	if(cfgo->xmldoc != NULL)
+	{
+		xmlFreeDoc(cfgo->xmldoc);
+
+	}
+	g_free(cfgo);
+}
+
 void cfg_save(config_obj *cfgo)
 {
 	if(cfgo == NULL)

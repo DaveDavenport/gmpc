@@ -44,6 +44,7 @@ GtkListStore *pl3_store = NULL;
 GtkListStore *pl2_store = NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
+int pl3_hidden = TRUE;
 void pl2_save_playlist ();
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
@@ -382,8 +383,7 @@ unsigned long pl3_find_view_browser()
 				}
 
 				strfsong (buffer, 1024, 
-						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
-							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER),
 						data->value.song);
 				/* add as child of the above created parent folder */
 				gtk_list_store_append (pl3_store, &child);
@@ -715,8 +715,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			gchar buffer[1024];
 			strfsong (buffer, 1024, 
-					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
-						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER),
 					data->value.song);
 			if(data->value.song->time != MPD_SONG_NO_TIME)
 			{
@@ -917,8 +916,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			{
 				gchar buffer[1024];
 				strfsong (buffer, 1024,
-						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",          
-							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER),
 						data->value.song);
 				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
@@ -959,8 +957,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			{
 				gchar buffer[1024];
 				strfsong (buffer, 1024,
-						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
-							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER),
 						data->value.song);
 				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
@@ -1817,6 +1814,7 @@ int pl3_close()
 			return TRUE;
 		}
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));	
+		pl3_hidden = TRUE;
 		return TRUE;
 	}
 	return TRUE;
@@ -1833,6 +1831,7 @@ void create_playlist3 ()
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
 	GtkTreeIter iter;
+	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
 	{
 		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
@@ -1872,7 +1871,7 @@ void create_playlist3 ()
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 			renderer,
-			"stock-id",3,"stock-size",5, NULL);
+			"stock-id",3,"stock-size",5,NULL);
 
 
 	renderer = gtk_cell_renderer_text_new ();
@@ -1898,20 +1897,22 @@ void create_playlist3 ()
 			GTK_SELECTION_MULTIPLE);
 
 
-	pl3_store = gtk_list_store_new (6, 
-			GTK_TYPE_STRING,	/* song path */
+	pl3_store = gtk_list_store_new (NROWS, 
+			GTK_TYPE_INT,
 			GTK_TYPE_INT,	/* pos id */
 			GTK_TYPE_STRING,	/* song title */
 			GTK_TYPE_INT,	/* color string */
 			G_TYPE_BOOLEAN,
-			GTK_TYPE_STRING);	/* stock id */
+			GTK_TYPE_STRING,
+			GTK_TYPE_INT,
+			GTK_TYPE_FLOAT);	/* stock id */
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 			renderer,
-			"stock-id", SONG_STOCK_ID, NULL);
+			"stock-id", SONG_STOCK_ID,"yalign", STOCK_ALIGN, NULL);
 
 	renderer = gtk_cell_renderer_text_new ();
 

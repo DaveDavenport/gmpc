@@ -195,6 +195,12 @@ int main (int argc, char **argv)
 	 * create the main window, This is done before anything else (but after command line check) 
 	 */
 	create_player ();
+	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) &&  
+			cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
+	{
+		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		info.hidden = TRUE;
+	}
 
 	/* create the store for the playlist */
 	init_playlist ();
@@ -239,6 +245,15 @@ int main (int argc, char **argv)
 			total_recieved+total_send);
 	printf("Network transfer: average of %.02f kb/sec\nTotal run time: %s %i seconds\n", ((total_recieved+total_send)/1024.0)/(float)(stop-start),
 			format_time(stop-start), (int)(stop-start)%60);
+
+	/* cleaning up. */
+	if(mpd_ob_check_connected(connection))
+	{
+		mpd_ob_disconnect(connection);
+	}
+
+	mpd_ob_free(connection);	
+	config_close(config);
 	return 0;
 }
 
@@ -351,6 +366,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 						WEIGHT_INT, weight,
 						SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 						SONG_TIME,data->value.song->time,
+						STOCK_ALIGN, 0.0,
 						-1);
 			}
 			g_free(path);
@@ -379,6 +395,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					WEIGHT_INT, weight,
 					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_TIME,data->value.song->time,
+					STOCK_ALIGN,0.0,
 					-1);
 
 		}
@@ -524,7 +541,8 @@ void init_playlist ()
 			GTK_TYPE_INT,	/* weight int */
 			G_TYPE_BOOLEAN,	/* weight color */
 			GTK_TYPE_STRING,	/* stock-id */
-			GTK_TYPE_INT);
+			GTK_TYPE_INT,
+			GTK_TYPE_FLOAT);
 }
 
 void song_changed(MpdObj *mi, int oldsong, int newsong)

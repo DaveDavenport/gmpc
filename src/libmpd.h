@@ -125,6 +125,7 @@ int 		mpd_ob_connect				(MpdObj *mi);
 int 		mpd_ob_disconnect			(MpdObj *mi);
 int 		mpd_ob_check_connected			(MpdObj *mi);
 int 		mpd_ob_check_error			(MpdObj *mi);
+void 		mpd_ob_free				(MpdObj *mi);
 
 
 /* signals */

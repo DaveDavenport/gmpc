@@ -64,6 +64,7 @@ enum store_types
 	WEIGHT_ENABLE,
 	SONG_STOCK_ID,
 	SONG_TIME,
+	STOCK_ALIGN,
 	NROWS
 };
 

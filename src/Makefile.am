@@ -39,5 +39,6 @@ EXTRA_DIST = 	playlist3.h\
 		mpdinteraction.h\
 		debug_printf.h\
 		osb_browser.h\
+		config-defaults.h\
 		config1.h
 		

@@ -12,9 +12,9 @@
 #endif
 
 #define SEEK_STEP 3
-#define DEFAULT_PLAYLIST_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
-#define DEFAULT_PLAYER_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
 
+
+#include "config-defaults.h"
 #include "libmpd.h"
 /** main.c **/
 extern GladeXML *xml_main_window;

@@ -42,7 +42,7 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 void update_outputs_settings();
 
 void create_preferences_window()
-	{
+{
 	GtkWidget *dialog;
 	char *string = NULL;
 	if(running)
@@ -107,9 +107,20 @@ void create_preferences_window()
 
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
+}
+
+void set_browser_format()
+{
+	char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+	char *format = edit_song_markup(string);
+	cfg_free_string(string);
+	if(format != NULL)
+	{
+		printf("new value: %s\n",format);
+		cfg_set_single_value_as_string(config, "playlist","browser_markup",format);
 	}
-
-
+	g_free(format);
+}
 
 void set_playlist_format()
 {
@@ -286,7 +297,11 @@ void update_tray_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(xml_preferences_window, "ck_tray_enable"), 
-			cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1));
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE));
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_hide_player"), 
+			cfg_get_single_value_as_int_with_default(config, "player", "hide-startup", DEFAULT_HIDE_ON_STARTUP));
+
 }
 
 void tray_enable_toggled(GtkToggleButton *but)
@@ -302,6 +317,15 @@ void tray_enable_toggled(GtkToggleButton *but)
 		destroy_tray_icon();
 	}
 }
+
+void hide_player_toggled(GtkToggleButton *but)
+{
+	cfg_set_single_value_as_int(config, "player", "hide-startup", (int)gtk_toggle_button_get_active(but));
+}
+
+
+
+
 
 void entry_auth_changed(GtkEntry *entry)
 {

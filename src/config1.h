@@ -23,7 +23,7 @@ typedef struct conf_mult_obj
 
 config_obj *cfg_open(gchar *url);
 void cfg_save(config_obj *cfgo);
-
+void config_close(config_obj *cfgo);
 /* string */
 
 char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key);
