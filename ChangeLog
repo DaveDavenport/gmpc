@@ -1,3 +1,9 @@
+30-06-2004 Qball <Qball@qballcow.nl>
+	* Saving playlist
+	* Removed lots of code for old playlist.
+	* Remove src/playlist.c
+	* removed playlist code from glade/gmpc.glade
+
 29-06-2004 Qball <Qball@qballcow.nl>
 	* added timeout.. half a second after you stop typing in filter entry,
 	the tree is filtered.
