@@ -240,6 +240,8 @@ void pl2_delete_selected_songs()
 		}
 		gtk_widget_destroy(GTK_WIDGET(dialog));
 	}
+	/* update everything */
+	main_trigger_update();
 }
 
 
@@ -338,8 +340,11 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 		mpd_finishCommand(info.connection);
 	}
 	g_signal_stop_emission_by_name(G_OBJECT(tree), "drag-drop");
+	/* trigger updates */
+	main_trigger_update();
+
+	/* */
 	return TRUE;	
-	//	return TRUE;
 }
 
 

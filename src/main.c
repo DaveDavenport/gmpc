@@ -21,6 +21,15 @@ guint update_timeout = 0;
 extern GtkListStore *pl2_store;
 
 
+void main_trigger_update()
+{
+	if(info.connection != NULL)
+	{
+		update_mpd_status();
+		update_interface();
+	}
+}
+
 
 /* sets default values in the main struct's */
 void set_default_values()
@@ -106,10 +115,10 @@ int main(int argc, char **argv)
 	/* create the main window, This is done before anything else (but after command line check)*/
 	create_player();
 	init_playlist2();
-	
+
 	/* create timeouts */
 	/* get the status every 1/2 second should be enough */
-	gtk_timeout_add(600, (GSourceFunc)update_mpd_status, NULL);
+	gtk_timeout_add(500, (GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 
 	if(info.do_tray)  create_tray_icon();
@@ -191,7 +200,7 @@ int update_interface()
 		gchar buffer[1024];
 
 		old_length = info.playlist_length;
-		
+
 
 		mpd_sendPlChangesCommand(info.connection, info.playlist_id);
 
@@ -210,7 +219,7 @@ int update_interface()
 					{
 						weight = PANGO_WEIGHT_ULTRABOLD;
 					}
-						
+
 					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
 					gtk_list_store_set(pl2_store, &iter,		
 							SONG_ID,ent->info.song->id, 
@@ -248,7 +257,7 @@ int update_interface()
 		}
 		pl2_highlight_song();
 
-		
+
 		info.status->song = -1;
 	}
 	info.playlist_length = info.status->playlistLength;

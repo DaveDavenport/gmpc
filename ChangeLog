@@ -1,4 +1,6 @@
 27-06-2004 Qball <Qball@qballcow.nl>
+	* Force update after changes to playlist (delete and move)
+	* added function main_trigger_update
 	* Implemented clearing. (pressing remove when nothing is selected)
 	* Added keybindings (del)
 	* Added some tooltips

@@ -147,3 +147,5 @@ int create_tray_icon();
 void update_popup();
 void destroy_tray_icon();
 
+/* main.h*/
+void main_trigger_update();
