@@ -20,7 +20,6 @@
 #ifndef LIBMPDCLIENT_H
 #define LIBMPDCLIENT_H
 
-#include <sys/param.h>
 #include <sys/time.h>
 
 #define MPD_BUFFER_MAX_LENGTH	50000
@@ -73,7 +72,6 @@ typedef struct _mpd_Connection {
  * use this to open a new connection
  * you should use mpd_closeConnection, when your done with the connection,
  * even if an error has occurred
- * _host_ format can include the password for the host: password@host
  * _timeout_ is the connection timeout period in seconds
  */
 mpd_Connection * mpd_newConnection(const char * host, int port, float timeout);
@@ -377,8 +375,6 @@ void mpd_sendSetvolCommand(mpd_Connection * connection, int volumeChange);
 void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange);
 
 void mpd_sendCrossfadeCommand(mpd_Connection * connection, int seconds);
-
-int mpd_getCrossfade(mpd_Connection * connection);
 
 void mpd_sendUpdateCommand(mpd_Connection * connection);
 
