@@ -14,7 +14,6 @@ gmpc_SOURCES=\
 	strfsong.c\
 	playlist2.c\
 	open-location.c\
-	list_tooltip.c\
 	mm-keys.c\
 	playlist3.c\
 	vfs_download.c\
