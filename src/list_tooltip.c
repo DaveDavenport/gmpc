@@ -33,7 +33,7 @@ gchar *get_tooltip_text()
 		{
 			strfsong(result, 1024,
 	                		"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
-					"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]|<b>Filename:</b>\t%shortfile%|", ent->info.song);
+					"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]&[\n<b>Length:</b>\t%time%]|<b>Filename:</b>\t%shortfile%[\n<b>Length:</b>\t\t%time%]|", ent->info.song);
 			g_string_append(string, result);
 			mpd_freeInfoEntity(ent);	
 		}

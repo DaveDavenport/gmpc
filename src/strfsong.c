@@ -33,8 +33,7 @@
 #include "libmpdclient.h"
 #include "strfsong.h"
 
-	static gchar * 
-skip(gchar * p) 
+static gchar * skip(gchar * p) 
 {
 	gint stack = 0;
 
@@ -58,8 +57,7 @@ skip(gchar * p)
 	return p;
 }
 
-	static gsize
-_strfsong(gchar *s, 
+static gsize _strfsong(gchar *s, 
 		gsize max, 
 		const gchar *format, 
 		mpd_Song *song, 
