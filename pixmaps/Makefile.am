@@ -2,8 +2,7 @@ gmpcicondir = $(datadir)/pixmaps/
 gmpcicon_DATA = gmpc.png
 
 appicondir = $(datadir)/gmpc/
-appicon_DATA = 	tray.png\
-	media-audiofile.png\
+appicon_DATA =	media-audiofile.png\
 	media-stream.png\
 	media-artist.png\
 	media-play.png\
@@ -13,10 +12,11 @@ appicon_DATA = 	tray.png\
 	gmpc-tray.png\
 	gmpc.png\
 	media-album.png\
-	media-stop.png
+	media-stop.png\
+	player-repeat.png\
+	player-shuffle.png
 
-DIST_SOURCES = 	tray.png\
-	media-audiofile.png\
+DIST_SOURCES = media-audiofile.png\
 	media-stream.png\
 	media-play.png\
 	media-pause.png\
@@ -26,6 +26,8 @@ DIST_SOURCES = 	tray.png\
 	gmpc.png\
 	media-artist.png\
 	media-album.png\
-	media-stop.png
+	media-stop.png\
+	player-repeat.png\
+	player-shuffle.png
 
 

@@ -331,7 +331,6 @@ void init_stock_icons()
 	set = gtk_icon_set_new_from_pixbuf(pb);
 	gtk_icon_factory_add(factory, "media-pause", set);
 	g_object_unref(G_OBJECT(pb));	
-	
 
 	
 	gtk_icon_factory_add_default(factory);

@@ -5,8 +5,6 @@
  */
 
 gchar *s = N_("Gnome Music Player Client");
-gchar *s = N_("R_and");
-gchar *s = N_("R_ep");
 gchar *s = N_("Configure gmpc");
 gchar *s = N_("Open the playlist");
 gchar *s = N_("gmpc - Preferences");
