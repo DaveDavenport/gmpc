@@ -70,22 +70,21 @@ void create_preferences_window()
 	update_tray_settings();
 	update_auth_settings();
 	glade_xml_signal_autoconnect(xml_preferences_window);	
-	
+
 	}
 
 /* destory the preferences window */
 void preferences_window_destroy()
-	{
+{
 	GtkWidget *dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
-		gtk_widget_destroy(dialog);
+	gtk_widget_destroy(dialog);
 	g_object_unref(xml_preferences_window);
 	xml_preferences_window = NULL;
 	running = 0;
-		}
-		
+}
+
 void update_preferences_information()
 {
-	g_print("port number updated %i\n",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	strncpy(preferences.host, gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))), 256);
 	preferences.port = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")));
 	preferences.timeout = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")));
@@ -239,6 +238,7 @@ void auth_enable_toggled(GtkToggleButton *but)
 
 void xfade_enable_toggled(GtkToggleButton *but)
 {
+
 	int bool1  = gtk_toggle_button_get_active(but);
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), bool1);
 	if(bool1)
@@ -257,6 +257,10 @@ void xfade_enable_toggled(GtkToggleButton *but)
 void xfade_time_changed(GtkSpinButton *but)
 {
 	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
+	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "cb_fading"))))
+	{
+		return;
+	}
 	if(info.connection == NULL) return;
 	mpd_sendCrossfadeCommand(info.connection, fade_time);	
 	mpd_finishCommand(info.connection);          
