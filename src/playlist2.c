@@ -270,7 +270,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 			{
 				pos1 += i;
 				if(pos == GTK_TREE_VIEW_DROP_AFTER)
-					dropl+-=1;                   				
+					dropl-=1;                   				
 			}
 
 			mpd_sendMoveCommand(info.connection, pos1,dropl);
