@@ -8,6 +8,8 @@
 #include "misc.h"
 #include "open-location.h"
 
+#define MAX_PLAYLIST_SIZE 10000
+
 GladeXML *ol_xml = NULL;
 extern GladeXML *pl2_xml;
 GnomeVFSAsyncHandle *handle = NULL;
@@ -128,11 +130,13 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 		   !g_utf8_collate(r->file_info->mime_type, "audio/x-scpls") || /* .pls file */
 		   !g_utf8_collate(r->file_info->mime_type, "text/plain")) /* plain text isnt a stream, so we are gonna try to parse it */
 		{
-			g_print("found m3u file  size: %i \n",(gint)r->file_info->size);
+			gint size = r->file_info->size;
+			g_print("found m3u file  size: %i \n",(gint)size);
+			if(size == 0) size = MAX_PLAYLIST_SIZE;
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
 					"<span size=\"x-small\"><i>Found playlist file</i></span>");
 			gnome_vfs_async_open_uri(&handle1, r->uri,GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
-					(GnomeVFSAsyncOpenCallback) ol_file_opened, GINT_TO_POINTER((gint)r->file_info->size));
+					(GnomeVFSAsyncOpenCallback) ol_file_opened, GINT_TO_POINTER(size));
 			
 
 		}

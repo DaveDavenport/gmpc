@@ -9,21 +9,38 @@
 #include "misc.h"
 #include "playlist2.h"
 #include "song-browser.h"
+#include "open-location.h"
 
 GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
 GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key= NULL;
-
+/*
+static GtkTargetEntry drag_types[] = 
+{
+	{"text/plain", 0, 100}
+};
+*/
 void load_playlist2();
 
 /* timeout for the search */
 guint filter_timeout = 0;
 void pl2_filter_refilter();
+/*
+void pl2_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
+		gint x, gint y, GtkSelectionData *selection_data,
+		guint info1, guint time)
+
+{
+	if(info1 != 100)
+		return;
+	ol_create(window);
+	ol_drag_data_recieved(window, context,x, y, selection_data,info1, time);
+}
+*/
 
 void init_playlist2()
 {
-	g_print("creating listore\n");
 	pl2_store = gtk_list_store_new(NROWS, 
 			GTK_TYPE_INT, /* song id */
 			GTK_TYPE_INT, /* pos id */	 	
@@ -173,7 +190,6 @@ void pl2_filter_refilter()
 		g_source_remove(filter_timeout);
 		filter_timeout = 0;
 	}                                       	
-	g_print("starting filtering\n");
 	gtk_tree_model_filter_refilter(GTK_TREE_MODEL_FILTER(pl2_fil));
 }
 
@@ -181,7 +197,6 @@ void pl2_filter_refilter()
 int hide_playlist2(GtkWidget *but)
 {
 	GtkWidget *win = glade_xml_get_widget(pl2_xml, "playlist_window");
-	g_print("hiding playlist2\n");
 	gtk_widget_hide(win);
 	return TRUE;
 }
@@ -194,7 +209,6 @@ void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 	{
 		gint id=0;
 		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, SONG_ID,&id,-1);
-		g_print("pos_id %i - %s %s, pos\n", id,gtk_tree_model_get_string_from_iter(pl2_fil, &iter), gtk_tree_path_to_string(path));
 		mpd_sendPlayIdCommand(info.connection, id);
 		mpd_finishCommand(info.connection);
 	}
@@ -284,7 +298,7 @@ void pl2_show_song_info()
 }
 
 
-gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, guint time)
+gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y,guint time)
 {
 	GtkTreePath *path = NULL;
 	GtkTreeViewDropPosition pos;
@@ -293,6 +307,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
 	/* get drop location */
 	gtk_tree_view_get_dest_row_at_pos(tree, x,y, &path, &pos);
+
 	if(path == NULL)
 	{
 		g_print("Don't know where to move it to\n");
@@ -431,17 +446,20 @@ void create_playlist2()
 
 
 	/* Dragging*/ 
-	target.target = "";
+	target.target = "other";
 	target.flags = GTK_TARGET_SAME_WIDGET;
-	target.info = 1;
+	target.info = 2;
 
 	gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), GDK_BUTTON1_MASK,
 			&target, 1, GDK_ACTION_MOVE);
 	gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), &target, 1, GDK_ACTION_MOVE);
+/*
+	gtk_drag_dest_set(glade_xml_get_widget(pl2_xml, "playlist_window"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
 
-
-
-
+	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl2_xml, "playlist_window")), "drag_data_received",
+			G_CALLBACK (pl2_drag_data_recieved),
+			NULL);                                                                          	
+*/
 	glade_xml_signal_autoconnect(pl2_xml);
 }
 
