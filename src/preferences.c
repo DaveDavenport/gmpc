@@ -4,7 +4,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 
-pref_struct preferences = {"127.0.0.1", 2100, 1.0, FALSE};
+pref_struct preferences = {"127.0.0.1", 2100,FALSE, "",  1.0, FALSE};
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 
@@ -12,12 +12,14 @@ void tray_enable_toggled(GtkToggleButton *but);
 void preferences_update();
 void popup_enable_toggled(GtkToggleButton *but);
 void popup_position_changed(GtkOptionMenu *om);
-	
+void update_auth_settings();
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void update_popup_settings();
 void update_tray_settings();
 void show_state_changed(GtkToggleButton *but);
+void auth_enable_toggled(GtkToggleButton *but);
+void entry_auth_changed(GtkEntry *entry);
 
 /* creat the preferences window */
 void create_preferences_window()
@@ -61,6 +63,7 @@ void create_preferences_window()
 	    }
 	update_popup_settings();
 	update_tray_settings();
+	update_auth_settings();
 	}
 
 /* destory the preferences window */
@@ -174,5 +177,26 @@ void tray_enable_toggled(GtkToggleButton *but)
 	{
 		destroy_tray_icon();
 	}
+}
+
+void entry_auth_changed(GtkEntry *entry)
+    {
+    strncpy(preferences.password,gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth"))),256);
+    }
+
+void auth_enable_toggled(GtkToggleButton *but)
+{
+	preferences.user_auth = gtk_toggle_button_get_active(but);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);	
+}
+
+
+/* this sets all the settings in the authentification area preferences correct */
+void update_auth_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_auth"), preferences.user_auth);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),preferences.password);
 }
 

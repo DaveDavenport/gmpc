@@ -103,7 +103,23 @@ void load_config()
 		info.popup.show_state = atoi(buf);
 		}                                	
 	    }                                    	
-
+	else if(!strncmp(buffer, "use auth:", 9))
+	    {
+	    gchar *buf = g_strstrip(&buffer[9]);
+	    if(buf != NULL)
+		{
+		preferences.user_auth = atoi(buf);
+		}                                	
+	    }                                    	
+	else if(!strncmp(buffer, "auth pass:", 10))
+	    {
+	    gchar *buf = g_strstrip(&buffer[10]);
+	    if(buf != NULL)
+		{
+		bzero(preferences.password, 256);
+		strncpy(preferences.password, buf, MIN(strlen(buf),256));
+		}
+	    }
 	
 	bzero(buffer, 1024);
 	
@@ -135,6 +151,8 @@ void save_config()
     fprintf(fp, "popup pos: %i\n", info.popup.position);
     fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);
     fprintf(fp, "popup state: %i\n", info.popup.show_state);
+    fprintf(fp, "use auth: %i\n", preferences.user_auth);
+    fprintf(fp, "auth pass: %s\n", preferences.password);
     fclose(fp);
     g_free(filename);    
     }

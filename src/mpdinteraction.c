@@ -70,12 +70,30 @@ int connect_to_mpd()
 	msg_set_base("gmpc - Failed to connect, please check the connection settings.");
 	mpd_closeConnection(info.connection);
 	info.connection = NULL;	
-//	msg_pop_popup();
 	return TRUE;
 	}
+    if(preferences.user_auth == TRUE)
+	{
+	mpd_sendPasswordCommand(info.connection, preferences.password);
+	mpd_finishCommand(info.connection);
+	}
+	
     info.stats = mpd_getStats(info.connection);
+    if(info.stats == NULL)
+	{
+	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, 
+						GTK_MESSAGE_ERROR,
+						GTK_BUTTONS_OK,
+						"You don't have enough permission to access mpd.");
+	mpd_closeConnection(info.connection);
+	info.connection = NULL;
+	preferences.autoconnect = FALSE;
+	gtk_widget_show_all(dialog);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+	return TRUE;	
+	}
     info.conlock = FALSE;
-//	msg_pop_popup();
     update_mpd_status();
     gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), TRUE);
 

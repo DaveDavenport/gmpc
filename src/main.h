@@ -10,6 +10,7 @@ typedef struct
 	gint pixbuf_width, pixbuf_height;
 	gboolean popup_stay;
 }popup_struct;
+
 typedef struct
 {
 	/* the mpd status struct used  in the whole program */
@@ -109,6 +110,8 @@ typedef struct
 {
 	char host[256];
 	int port;
+	gboolean user_auth;
+	char password[256];
 	float timeout; /* seconds.ms */
 	gboolean autoconnect;
 } pref_struct;
