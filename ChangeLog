@@ -1,4 +1,5 @@
 03-07-2004 Qball <Qball@qballcow>
+	* Added translation support
 	* src/playlist.c:	Added a function to open/popup the filter and show filtered list.
 	* src/id3info.c: Uses new playlist for filter function.
 	* glade/gmpc.glade: Removed search album button in id3info window.
