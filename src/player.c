@@ -475,13 +475,13 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	/* go back 10 seconds */
 	if(event->keyval == GDK_Left)
 	{
-		seek_n10s();
+		seek_ns(SEEK_STEP);
 		return TRUE;	
 	}
 	/* go forward 10 seconds */
 	else if (event->keyval == GDK_Right)
 	{
-		seek_p10s();
+		seek_ps(SEEK_STEP);
 		return TRUE;	
 	}
 	/* volume up */

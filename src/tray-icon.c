@@ -150,12 +150,7 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 		/* place the window */
 		gtk_window_move(GTK_WINDOW(tip), x, y);
 
-
-
-
-
-
-		gtk_widget_set_usize(widget, width+8, height+8+12);
+		gtk_widget_set_usize(tip, width+8, height+8+12);
 	}
 
 	if(info.rounded_corners) height -= 10;
@@ -200,6 +195,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	int x_tv,y_tv;
 	int monitor = gdk_screen_get_monitor_at_window(
 			gtk_widget_get_screen(tv), tv->window);
+	GtkWidget *eventb;
 	if(tip != NULL) return FALSE;
 
 
@@ -211,18 +207,24 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
-	gtk_widget_set_app_paintable(tip, TRUE);
+	eventb = gtk_event_box_new();
+	g_signal_connect(G_OBJECT(tip), "button-press-event",
+			G_CALLBACK(tray_leave_cb), NULL);
 
-
-
+	gtk_container_add(GTK_CONTAINER(tip), eventb);	
+	gtk_widget_set_app_paintable(event, TRUE);
 
 	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);
 	gtk_widget_set_name(tip, "gtk-tooltips");
-	g_signal_connect(G_OBJECT(tip), "expose_event",
+	g_signal_connect(G_OBJECT(eventb), "expose_event",
 			G_CALLBACK(tray_paint_tip), NULL);
-	gtk_widget_ensure_style (tip);
 
-	tray_layout_tooltip = gtk_widget_create_pango_layout (tip, NULL);
+
+
+
+	gtk_widget_ensure_style (eventb);
+
+	tray_layout_tooltip = gtk_widget_create_pango_layout (eventb, NULL);
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
 	pango_layout_set_width(tray_layout_tooltip, 500000);
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
@@ -297,14 +299,13 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(800, (GSourceFunc)
-			gtk_widget_queue_draw, tip);
+			gtk_widget_queue_draw, eventb);
 
 	return TRUE;
 }
 
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
-
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
 	popup_timeout = -1;
@@ -363,8 +364,9 @@ void exposed_signal(GtkWidget *event)
 void update_tray_icon()
 {
 
-	if(info.do_tray_popup && info.do_tray && 
-			info.status != NULL && info.song != info.status->song)
+	if(	info.do_tray_popup && info.do_tray && 
+		info.status != NULL && info.song != info.status->song &&
+		info.status->state != MPD_STATUS_STATE_STOP)
 	{
 		if(popup_timeout == -1 && tip == NULL)
 		{

@@ -1,3 +1,9 @@
+06-10-2004 Qball, <Qball@qballcow.nl>
+	* src/tray_icon.c:	Fixed case that tooltip wouldn't go away when
+	pauzed.
+				Click on tooltip window will now hide it.
+	* src/main.h:		Made seekstep a define (default 3 seconds)
+
 01-10-2004 Qball ,Qball@qballcow.nl>
 	* src/preferences.c:	Added configuration option to show the
 	tray_icon tooltip.

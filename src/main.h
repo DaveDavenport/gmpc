@@ -10,7 +10,7 @@
 #else 
 #define _(String) String
 #endif
-
+#define SEEK_STEP 3
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
@@ -149,6 +149,6 @@ void destroy_tray_icon();
 void main_trigger_update();
 
 
-int  seek_n10s();
-int  seek_p10s();
+int  seek_ns(int n);
+int  seek_ps(int n);
 void volume_change(int diff);

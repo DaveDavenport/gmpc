@@ -229,7 +229,7 @@ void repeat_pl()
 	info.conlock = FALSE;
 }
 
-int seek_p10s()
+int seek_ps(int n)
 {
 	if(info.conlock) return FALSE;
 
@@ -237,7 +237,7 @@ int seek_p10s()
 	{
 		info.conlock = TRUE;
 		mpd_sendSeekCommand(info.connection, info.status->song, 
-				info.status->elapsedTime+10);
+				info.status->elapsedTime+n);
 		mpd_finishCommand(info.connection);
 		if(check_for_errors()) return FALSE;
 		info.conlock = FALSE;
@@ -245,7 +245,7 @@ int seek_p10s()
 	return FALSE;
 }
 
-int seek_n10s()
+int seek_ns(int n)
 {
 	if(info.conlock) return FALSE;
 
@@ -253,7 +253,7 @@ int seek_n10s()
 	{
 		info.conlock = TRUE;
 		mpd_sendSeekCommand(info.connection, info.status->song,
-				info.status->elapsedTime-10);
+				info.status->elapsedTime-n);
 		mpd_finishCommand(info.connection);
 		if(check_for_errors()) return FALSE;
 		info.conlock = FALSE;
