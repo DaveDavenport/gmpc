@@ -15,6 +15,7 @@ GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
 GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key = NULL;
+int hide_playlist2 (GtkWidget * but);
 
 static GtkTargetEntry drag_types[] = {
   {"text/plain", 0, 100}
@@ -26,6 +27,20 @@ void pl2_delete_selected_songs ();
 guint filter_timeout = 0;
 void pl2_filter_refilter ();
 
+/* toggles the playlist on or off */
+gboolean toggle_playlist2(GtkToggleButton *tb)
+{
+	if(gtk_toggle_button_get_active(tb))
+	{
+		create_playlist2();
+	}
+	else
+	{
+		if(pl2_xml == NULL) return FALSE;
+		hide_playlist2(NULL);
+	}
+	return TRUE;
+}
 
 /* catch keybord pressing */
 gboolean pl2_key_pressed (GtkWidget * widget, GdkEventKey * event)
@@ -382,14 +397,19 @@ pl2_filter_refilter ()
  * this is called when the closed button is pressed (or keybinding)
  * or if the window recieves a delete event 
  */
-int
-hide_playlist2 (GtkWidget * but)
+int hide_playlist2 (GtkWidget * but)
 {
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+	{
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
+		return TRUE;
+	}
   /* get the window */
   GtkWidget *win = glade_xml_get_widget (pl2_xml, "playlist_window");
   /* hide the window */
   gtk_widget_hide (win);
   /* stop the signal (delete event from window) */
+  
   return TRUE;
 }
 

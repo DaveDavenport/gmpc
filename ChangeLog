@@ -1,3 +1,7 @@
+08-07-2004 Qball <Qball@qballcow.nl>
+	* glade/gmpc.glade:		Playlist button is now a toggle button.
+	* src/playlist2.glade:		Made a toggle_playlist function.
+	
 06-07-2004 Qball <Qball@qballcow.nl>
 	* glade/gmpc.glade:		Added a display formatting tab to the preferences menu.
 	* glade/gmpc.glade:		preferences window is now resizable.

@@ -6,6 +6,7 @@ void pl2_highlight_song();
 
 void pl2_disconnect();
 void pl2_connect();
+gboolean toggle_playlist2(GtkToggleButton *tb);
 
 
 enum store_types

@@ -20,6 +20,22 @@ void sb_fill_browser_file (char *path, GtkTreeIter * parent,
 			   gboolean go_further);
 int last_db = 0;
 
+gboolean sb_button_press_event (GtkWidget * widget, GdkEventButton * event)
+{
+	 if (event->button == 3)	/* right mouse button */
+	 {
+		 GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+		 if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_FILE)
+		 {
+			 
+		 }
+		 
+		 
+	 }
+	 /* continue signal */
+	  return FALSE;
+}
+
 
 /* function that gets called by the tree_Store to sort it. */
 /* TODO: FIXME, disabled for now, doesnt work */
