@@ -3,6 +3,7 @@
 #include <glade/glade.h>
 #include "libmpdclient.h"
 #include "main.h"
+#include "misc.h"
 GtkWidget *popup = NULL;
 guint timeout       = 0;
 
@@ -45,7 +46,7 @@ gchar * get_string()
 		/* if there is no artist name or title name we use the filename */
 		if(song->artist  == NULL || song->title == NULL)
 		{
-			gchar *basename     = g_path_get_basename(song->file);
+			gchar *basename     = remove_extention_and_basepath(song->file);
 			g_string_printf(string,"%s",basename);
 			g_free(basename);
 		}

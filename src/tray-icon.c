@@ -4,6 +4,8 @@
 #include "eggtrayicon.h"
 #include "libmpdclient.h"
 #include "main.h"
+#include "misc.h"
+
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
@@ -72,9 +74,7 @@ void update_tray_icon()
 					}
 					else
 					{
-						str = g_path_get_basename(song->file);
-						str[strlen(str)-4] = '\0';		
-
+						str = remove_extention_and_basepath(song->file);
 					}
 				}
 

@@ -5,11 +5,7 @@
 #include <time.h>
 #include "libmpdclient.h"
 #include "main.h"
-
-/* this should be something configurable by the user */
-/* or .f.e window size dependent */
-gint max_string_length = 32;
-
+#include "misc.h"
 
 GladeXML *xml_playlist_window = NULL;
 void update_information_tab();
@@ -39,27 +35,6 @@ void collapse_artist_tree();
 void add_selected_id3_browser();
 void add_selected_search();
 int hide_playlist_view();
-
-char * shorter_string(const char *long_string)
-{
-	char *ret_val = NULL;
-	int strl = 0;
-	if(long_string == NULL)
-	{
-		return NULL;
-	}
-	strl = g_utf8_strlen(long_string, -1);
-	/* this should be configurable? */
-	if(strl > max_string_length)
-	{
-		ret_val = g_strndup(long_string, max_string_length +1);
-		ret_val[max_string_length-3] = ret_val[max_string_length-2] = ret_val[max_string_length-1] = '.';
-		ret_val[max_string_length] = '\0';
-	}
-	else ret_val = g_strdup(long_string);
-	return ret_val;
-
-}
 
 
 void destroy_playlist(GtkWidget *wid)
@@ -479,7 +454,7 @@ void load_songs_with_filter()
 
 			}
 			else {
-				gchar *buf1 = g_path_get_basename(song->file);
+				gchar *buf1 = remove_extention_and_basepath(song->file);
 				gchar *short_string = shorter_string(buf1);
 				g_free(buf1);
 				gtk_list_store_set(info.cur_list, &iter, 0,i,5,"green",1,short_string,4,(info.status->song == i && info.status->state != MPD_STATUS_STATE_STOP && info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE, -1);
@@ -931,8 +906,7 @@ void load_directories(gchar *oldp)
 			gtk_list_store_append(info.file_list, &iter);
 			if(entity->info.song->title == NULL)
 			{
-				gchar *utf8 = g_path_get_basename(entity->info.song->file);
-				if(entity->info.song->file == NULL)
+				gchar *utf8 = remove_extention_and_basepath(entity->info.song->file);
 
 					short_title = shorter_string(utf8);
 				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);
@@ -983,7 +957,6 @@ void directory_row_selected(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewCol
 		buf = g_strdup("/");
 	}
 	memset(info.path, '\0', 1024);
-	/*	bzero(info.path,1024);*/
 	strncpy(info.path, buf1, 1024);
 	load_directories(buf);
 	g_free(new_buf);
@@ -1447,7 +1420,7 @@ void do_server_side_search()
 		gtk_list_store_append(info.search_list, &iter);
 		if(entity->info.song->title == NULL)
 		{
-			gchar *basename = g_path_get_basename(entity->info.song->file);
+			gchar *basename = remove_extention_and_basepath(entity->info.song->file);
 			gtk_list_store_set(info.search_list, &iter, 0, entity->info.song->file, 1, basename, -1);
 			g_free(basename);
 		}

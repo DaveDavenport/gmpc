@@ -3,6 +3,7 @@
 #include <glade/glade.h>
 #include "libmpdclient.h"
 #include "main.h"
+#include "misc.h"
 #define TITLE_LENGTH 42
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
@@ -263,16 +264,7 @@ int update_player()
 				}
 				else
 				{
-					int i =0;
-					gchar *buf  = g_path_get_basename(song->file);
-					for(i=strlen(buf);buf[i] != '.';i--);
-					/* cut of the extention */
-					if(i > 0)
-					{
-						gchar *buf2 = g_strndup(buf, i);
-						g_free(buf);
-						buf = buf2;
-					}
+					gchar *buf  = remove_extention_and_basepath(song->file);
 					msg_set_base(buf);
 					g_free(buf);
 				}
