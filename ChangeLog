@@ -1,7 +1,8 @@
 18-08-2004 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:	Fixed some xinerama issues.
 	* src/strfsong.c:	Remove '_' from strings.
 	* src/tray-icon.c:	Added advanced tooltip support.
-	* src/player.c:		Added tooltip to song window.
+	* src/player.c:		Added tooltip to song window. (removed again)
 
 07-08-2004 Qball <Qball@qballcow.nl>
 	* Fixed some shadows in preferences window

@@ -98,23 +98,21 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	if(info.status->elapsedTime != 0 && info.status->totalTime != 0)
 	{
 		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-				FALSE,4,height+4, width ,8);                              		
+				FALSE,4,height+7, width ,8);                              		
 		width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
-		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL],
-				TRUE,4,height+4, width ,8);
-		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-				FALSE,4,height+4, width ,8);
-
-
-
-
-
+		gdk_draw_rectangle(widget->window, 
+			widget->style->mid_gc[GTK_STATE_NORMAL],
+			TRUE,4,height+7, width ,8);
+		gdk_draw_rectangle(widget->window, 
+			widget->style->fg_gc[GTK_STATE_NORMAL],
+			FALSE,4,height+7, width ,8);
 	}
+	/*
 	else
 	{
 		width = 0;
 	}
-	/*
+	
 	gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL],
 			TRUE,4,height+4, width ,8);
 	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
