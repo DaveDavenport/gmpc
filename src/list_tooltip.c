@@ -1,5 +1,6 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
+#include <string.h>
 #include "libmpdclient.h"
 #include "strfsong.h"   
 #include "main.h"
@@ -18,33 +19,42 @@ gchar *get_tooltip_text()
 {
 	GtkTreeIter iter;
 	GtkTreePath *path;
+	GString *string = g_string_new("");
 	int id = -1;
 	gchar result[1024];
+	gchar *retval;
 	if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")), rect.x, rect.y, &path, NULL, NULL, NULL))
 	{
 		mpd_InfoEntity *ent;
 		gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path);	
 		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil),&iter,SONG_POS, &id, -1); 
-		g_print("song id: %i\n", id);
 		mpd_sendPlaylistInfoCommand(info.connection, id);
 		if((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 		{
 			strfsong(result, 1024,
-	                		"[%name%\n&[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n%album%]]"
-					"|%name%|[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]|%shortfile%|", ent->info.song);
+	                		"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
+					"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]|<b>Filename:</b>\t%shortfile%|", ent->info.song);
+			g_string_append(string, result);
 			mpd_freeInfoEntity(ent);	
 		}
-		else
-		{
-			strcpy(result, "not found");
-		}
 		mpd_finishCommand(info.connection);
-		return g_strdup(result);
 	}
 
-
 	
-	return g_strdup("Couldn't find any");
+	/* escape all & signs... needed for pango */
+	for(id=0;id < string->len; id++)
+	{
+		if(string->str[id] == '&')
+		{
+			g_string_insert(string, id+1, "amp;");
+			id++;
+		}
+
+	}
+	/* return a string (that needs to be free'd */
+	retval = string->str;
+	g_string_free(string, FALSE);
+	return retval;
 }
 
 
@@ -56,7 +66,7 @@ void mw_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	if(tooltiptext == NULL) tooltiptext = g_strdup("oeps");
 	pango_layout_set_markup(layout_tooltip, tooltiptext, strlen(tooltiptext));
 	pango_layout_set_wrap(layout_tooltip, PANGO_WRAP_WORD);
-	pango_layout_set_width(layout_tooltip, 300000);
+	pango_layout_set_width(layout_tooltip, 900000);
 	style = tipwindow->style;
 
 	gtk_paint_flat_box (style, tipwindow->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
@@ -90,7 +100,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 
 	layout_tooltip = gtk_widget_create_pango_layout (tipwindow, NULL);
 	pango_layout_set_wrap(layout_tooltip, PANGO_WRAP_WORD);
-	pango_layout_set_width(layout_tooltip, 300000);
+	pango_layout_set_width(layout_tooltip, 900000);
 	pango_layout_set_markup(layout_tooltip, tooltiptext, strlen(tooltiptext));
 	scr_w = gdk_screen_width();
 	scr_h = gdk_screen_height();
@@ -99,8 +109,6 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 	h = PANGO_PIXELS(h) + 8;
 
 	gdk_window_get_pointer(NULL, &x, &y, NULL);
-//	if (GTK_WIDGET_NO_WINDOW(mw.window))
-//		y+=mw.window->allocation.y;
 
 	x -= ((w >> 1) + 4);
 
