@@ -700,6 +700,30 @@ void pl3_browse_file_add_folder()
 	}
 }
 
+void pl3_browse_file_update_folder()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+
+	if(check_connection_state())
+	{
+		return;
+	}
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		char *path;
+		char *message = NULL;
+		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
+		message = g_strdup_printf("Updating folder '%s' recursively", path);
+		pl3_push_statusbar_message(message);
+		g_free(message);
+		mpd_sendUpdateCommand(info.connection, path);
+		mpd_finishCommand(info.connection);
+
+		check_for_errors();
+	}
+}
 
 void pl3_browse_file_replace_folder()
 {
@@ -1669,6 +1693,13 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_replace_folder), NULL);				
+
+		/* add the update widget */
+		item = gtk_image_menu_item_new_with_label("Update");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_update_folder), NULL);				
 
 		/* show everything and popup */
 		gtk_widget_show_all(menu);                                                        		

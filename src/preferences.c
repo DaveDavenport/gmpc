@@ -31,17 +31,6 @@ void xfade_enable_toggled(GtkToggleButton *bug);
 void set_display_settings();
 void update_display_settings();
 
-
-/* update the db */
-void pref_update_mpd_db()
-{
-		if(!check_connection_state())
-		{
-			mpd_sendUpdateCommand(info.connection, "");
-			mpd_finishCommand(info.connection);
-		}
-}
-/* creat the preferences window */
 void create_preferences_window()
 	{
 	GtkWidget *dialog;
@@ -306,7 +295,7 @@ void update_tray_settings()
 
 void tray_enable_toggled(GtkToggleButton *but)
 {
-	g_print("chaning tray icon %i\n", gtk_toggle_button_get_active(but));
+	g_print("changing tray icon %i\n", gtk_toggle_button_get_active(but));
 	cfg_set_single_value_as_int(config, "tray-icon", "enable", (int)gtk_toggle_button_get_active(but));
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
 	{
