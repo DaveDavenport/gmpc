@@ -1396,10 +1396,11 @@ void do_server_side_search()
 {
 	int search_type = 0;
 	int i = 0;
+	GtkTreeIter iter;
 	const gchar *search_string;
 	mpd_InfoEntity *entity = NULL;
 	gtk_list_store_clear(info.search_list);
-	GtkTreeIter iter;
+
 	/* get the searchtype */
 	i = gtk_option_menu_get_history(GTK_OPTION_MENU(glade_xml_get_widget(xml_playlist_window, "search_option_menu")));
 	switch (i)    
