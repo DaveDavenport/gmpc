@@ -231,9 +231,16 @@ void update_tray_icon()
 
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
-	GtkMenu *menu = (GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
-	gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
-	gtk_widget_show_all(GTK_WIDGET(menu));
+	if(event->button == 1)
+	{
+	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+	}
+	else if(event->button == 3)
+	{
+		GtkMenu *menu = (GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
+		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
+		gtk_widget_show_all(GTK_WIDGET(menu));
+	}
 	return FALSE;    
 }
 

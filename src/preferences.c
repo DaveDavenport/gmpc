@@ -9,10 +9,12 @@ GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 
 void preferences_update();
-
+void popup_enable_toggled(GtkToggleButton *but);
+void popup_position_changed(GtkOptionMenu *om);
+	
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
-
+void update_progress_window();
 
 /* creat the preferences window */
 void create_preferences_window()
@@ -54,6 +56,7 @@ void create_preferences_window()
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	    
 	    }
+	update_progress_window();
 	}
 
 /* destory the preferences window */
@@ -119,4 +122,24 @@ void preferences_update()
 	connected = (info.connection == NULL? 0:1);
 	}    
     }
-    
+   
+void popup_enable_toggled(GtkToggleButton *but)
+{
+	info.popup.do_popup = gtk_toggle_button_get_active(but);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
+}
+
+void popup_position_changed(GtkOptionMenu *om)
+{
+	info.popup.position = gtk_option_menu_get_history(om);
+}
+
+void update_progress_window()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_popup_enable"), info.popup.do_popup);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
+	gtk_option_menu_set_history((GtkOptionMenu *)
+			glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.position);
+
+}

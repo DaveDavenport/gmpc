@@ -1,3 +1,12 @@
+25-02-2004 qball <Qball@qballcow.nl>
+    *	Lots of changes I forgot to changelog
+    *	Added popup support. made this configurable via entry in the
+    preferences menu. 
+    *	src/tray-icon.c:	right click on tray icon shows menu. left
+    click brings player window to front.
+    *	src/config.c:		Added saving and loading for popup settings
+    * 	src/main.h:		Added popup struct and idented the file.
+
 18-01-2004 Qball <Qball@qballcow.nl>
     *	Lot of changes in the whole program. (also old ones)
     * 	Preferences menu non blocking, disconnect/connect. The whole dialog is instant apply
