@@ -409,7 +409,7 @@ void pl3_file_browser_add()
 			PL3_CAT_TYPE, PL3_BROWSE_FILE,
 			PL3_CAT_TITLE, "Browse Filesystem",
 			PL3_CAT_INT_ID, "/",
-			PL3_CAT_ICON_ID, "gtk-directory",
+			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
@@ -528,6 +528,81 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 		gtk_tree_store_remove(pl3_tree, &child); 
 	}
 }
+/*******************************************************
+ * Combined functions 
+ */
+
+
+
+ void pl3_browse_add_selected()
+ {
+	GtkTreeIter iter;
+	GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree"));
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
+	GtkTreeModel *model = GTK_TREE_MODEL (pl3_store);
+	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
+	GList *add_list = NULL;
+
+	if(rows != NULL)
+	{
+		gchar *name;
+		gint type;
+		GList *node = g_list_first(rows);
+		do
+		{
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (pl3_store), &iter, path);
+				gtk_tree_model_get (GTK_TREE_MODEL (pl3_store), &iter, PL3_SONG_ID, &name, 1, &type, -1);	  
+			if(type == PL3_ENTRY_SONG)
+			{
+				/* add them to the add list */
+				add_list = g_list_append (add_list, g_strdup (name));
+
+			}
+			else if (type == PL3_ENTRY_PLAYLIST)
+			{
+				/* append a playlist directly, we cant add it to the todo list */
+				mpd_sendLoadCommand (info.connection, name);
+				mpd_finishCommand (info.connection);
+				/* check for errors, and if there is an error step out this while loop */
+				if (check_for_errors ())
+				{
+					node = NULL;
+				}
+			}
+		}while((node = g_list_next(node)) != NULL);
+	}
+	/* if there are items in the add list add them to the playlist */
+	if (check_connection_state ())
+		return;
+	if (add_list != NULL)
+	{
+		GList *song;
+		mpd_sendCommandListBegin (info.connection);
+		song = g_list_first (add_list);
+		do
+		{
+			mpd_sendAddCommand (info.connection, song->data);
+		}
+		while ((song = g_list_next (song)) != NULL);
+		mpd_sendCommandListEnd (info.connection);
+		mpd_finishCommand (info.connection);
+		check_for_errors ();
+		g_list_foreach (add_list, (GFunc) g_free, NULL);
+		g_list_free (add_list);
+	}
+
+	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+	g_list_free (rows);
+ }
+
+void pl3_browse_replace_selected()
+{
+	pl3_clear_playlist();
+	pl3_browse_add_selected();
+}
+
+
 
 
 /***********************************************************************
@@ -852,11 +927,11 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 
 
-		
+
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-	else if (type == PL3_BROWSER_FILE)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
 	{
 
 		/* del, crop */
@@ -865,17 +940,15 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* add the delete widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_add_selected_songs), NULL);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_add_selected), NULL);
 
 		/* add the replace widget */
 		item = gtk_image_menu_item_new_with_label("Replace");
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_replace_selected), NULL);
 
-
-
-		
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
