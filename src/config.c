@@ -138,7 +138,7 @@ void load_config ()
 				{
 					g_free (preferences.markup_main_display);
 				}
-				preferences.markup_main_display = g_strdup (buf);
+				preferences.markup_main_display = g_strcompress(buf);
 			}
 		}
 		else if (!strncmp (buffer, "markup playlist:", 16))
@@ -150,7 +150,7 @@ void load_config ()
 				{
 					g_free (preferences.markup_playlist);
 				}
-				preferences.markup_playlist = g_strdup (buf);
+				preferences.markup_playlist = g_strcompress(buf);
 			}
 		}
 		else if (!strncmp (buffer, "markup song browser:", 20))
@@ -162,7 +162,7 @@ void load_config ()
 				{
 					g_free (preferences.markup_song_browser);
 				}
-				preferences.markup_song_browser = g_strdup (buf);
+				preferences.markup_song_browser = g_strcompress (buf);
 			}
 		}
 		else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
@@ -205,6 +205,7 @@ void save_config ()
 {
 	gchar *filename = g_strdup_printf ("%s/%s", g_getenv ("HOME"), CONFIG);
 	FILE *fp;
+	char *escaped;
 
 	fp = fopen (filename, "w");
 	if (fp == NULL)
@@ -226,9 +227,15 @@ void save_config ()
 	fprintf (fp, "popup timeout: %i\n", info.popup.timeout);
 	fprintf (fp, "use auth: %i\n", preferences.user_auth);
 	fprintf (fp, "auth pass: %s\n", preferences.password);
-	fprintf (fp, "markup main display: %s\n", preferences.markup_main_display);
-	fprintf (fp, "markup playlist: %s\n", preferences.markup_playlist);
-	fprintf (fp, "markup song browser: %s\n", preferences.markup_song_browser);
+	escaped = g_strescape(preferences.markup_main_display, "");
+	fprintf (fp, "markup main display: %s\n", escaped);
+	g_free(escaped);
+	escaped = g_strescape(preferences.markup_playlist, "");
+	fprintf (fp, "markup playlist: %s\n", escaped);
+	g_free(escaped);
+	escaped = g_strescape(preferences.markup_song_browser, "");
+	fprintf (fp, "markup song browser: %s\n", escaped);
+	g_free(escaped);
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
 	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);

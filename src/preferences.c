@@ -107,16 +107,22 @@ void update_display_settings()
 	if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
 	if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
 	if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
-	preferences.markup_main_display = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
-	preferences.markup_playlist = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
-	preferences.markup_song_browser = g_strdup(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
+	preferences.markup_main_display = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
+	preferences.markup_playlist = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+	preferences.markup_song_browser = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
 }
 
 void set_display_settings()
 {
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), preferences.markup_main_display);
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), preferences.markup_playlist);
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), preferences.markup_song_browser);
+	char *escaped = g_strescape(preferences.markup_main_display, "");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), escaped);
+	g_free(escaped);
+	escaped = g_strescape(preferences.markup_playlist, "");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), escaped);
+	g_free(escaped);
+	escaped = g_strescape(preferences.markup_song_browser, "");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), escaped);
+	g_free(escaped);
 }
 
 void set_display_default_sd()
