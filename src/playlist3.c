@@ -14,6 +14,7 @@
 #include "playlist3.h"
 #include "song-browser.h"
 #include "open-location.h"
+#include "vfs_download.h"
 
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
@@ -90,6 +91,84 @@ int  pl3_cat_get_selected_browser()
 	}
 	return -1;
 }
+/***********************************
+ * Custom Streams
+ */
+void pl3_custom_stream_add()
+{
+	GtkTreeIter iter,child;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_STREAM,
+			PL3_CAT_TITLE, "Custom Streams",
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-stream",
+			PL3_CAT_PROC, FALSE,          	
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	gtk_tree_store_append(pl3_tree, &child, &iter);
+	gtk_tree_store_set(pl3_tree, &child, 
+			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_STREAM,
+			PL3_CAT_TITLE, "Add a Stream",
+			PL3_CAT_INT_ID, "add",
+			PL3_CAT_ICON_ID, "icecast",
+			PL3_CAT_PROC, FALSE,          	
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+}
+
+void pl3_custom_stream_fill_view(gchar *buffer)
+{
+	xmlDocPtr xmldoc = xmlParseMemory(buffer, strlen(buffer));
+	xmlNodePtr root = xmlDocGetRootElement(xmldoc);
+	xmlNodePtr cur = root->xmlChildrenNode;
+	while(cur != NULL)
+	{
+		if(xmlStrEqual(cur->name, "entry"))
+		{
+			xmlNodePtr cur1 = cur->xmlChildrenNode;
+			GtkTreeIter iter;
+			char *name=NULL, *bitrate=NULL, *genre=NULL;
+			gtk_list_store_append(pl3_store, &iter);
+			gtk_list_store_set (pl3_store, &iter,
+					PL3_SONG_POS, PL3_ENTRY_SONG, 
+					PL3_SONG_STOCK_ID, "media-stream", 
+					-1);
+			while(cur1 != NULL)
+			{
+				if(xmlStrEqual(cur1->name, "name"))
+				{
+					gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+					name = xmlNodeGetContent(cur1);
+				}
+				else if(xmlStrEqual(cur1->name, "listen_url"))
+				{
+					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
+				}
+				cur1 = cur1->next;
+			}
+
+		}
+
+		cur = cur->next;
+	}
+	xmlFreeDoc(xmldoc);
+	xmlCleanupParser();
+}
+
+
+void pl3_custom_stream_view_browser()
+{
+	/* make this path configurable, we don't use gnome-vfs for nothing */
+	gchar *path = g_strdup_printf("file://%s/.gmpc.cst",g_getenv("HOME"));	
+	g_print("path: %s\n",path);
+	gtk_list_store_clear(pl3_store);
+	start_transfer(path,(void *)pl3_custom_stream_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+
+
+	g_free(path);
+}
+
+
+
 
 /************************************
  * XIPH BROWSER
@@ -105,7 +184,7 @@ void pl3_xiph_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "icecast",
 			PL3_CAT_PROC, FALSE,          	
-			PL3_CAT_ICON_SIZE,3,-1);
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 }
 
 void pl3_xiph_fill_view(char *buffer)
@@ -130,7 +209,7 @@ void pl3_xiph_fill_view(char *buffer)
 			{
 				if(xmlStrEqual(cur1->name, "server_name"))
 				{
-			//		gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+					//		gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
 					name = xmlNodeGetContent(cur1);
 				}
 				else if(xmlStrEqual(cur1->name, "genre"))
@@ -181,7 +260,7 @@ void pl3_find_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "gtk-find",
 			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,3,-1);
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 }
 
 unsigned long pl3_find_view_browser()
@@ -295,7 +374,7 @@ void pl3_current_playlist_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-stream",
 			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,3,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 			-1);
 }
 
@@ -365,15 +444,15 @@ void pl3_current_playlist_delete_selected_songs ()
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
 				/* TODO: Replace by default clear function  */
-				if (!check_connection_state ())
-				{
-					/* clear the playlist */
-					mpd_sendClearCommand (info.connection);
-					mpd_finishCommand (info.connection);
-					check_for_errors ();
-				}
-		}
-		gtk_widget_destroy (GTK_WIDGET (dialog));
+				pl3_clear_playlist();
+				/*				if (!check_connection_state ())
+								{
+								mpd_sendClearCommand (info.connection);
+								mpd_finishCommand (info.connection);
+								check_for_errors ();
+								}
+								*/		}
+				gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
@@ -441,14 +520,11 @@ void pl3_current_playlist_crop_selected_songs()
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
 				/* TODO: Replace by default clear function  */
-				if (!check_connection_state ())
-				{
-					pl3_clear_playlist();
-					/* clear the playlist */
-					/*					mpd_sendClearCommand (info.connection);
-										mpd_finishCommand (info.connection);
-										check_for_errors ();                              	
-										*/				}
+				//				if (!check_connection_state ())
+				//				{
+				pl3_clear_playlist();
+				/* clear the playlist */
+				//				}
 		}                                                         
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
@@ -539,7 +615,7 @@ void pl3_file_browser_add()
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,3,-1);
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -767,7 +843,7 @@ void pl3_artist_browser_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
 			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,3,-1);
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -1174,7 +1250,7 @@ void pl3_reinitialize_tree()
 	pl3_artist_browser_add();
 	pl3_find_add();
 	pl3_xiph_add();
-
+	pl3_custom_stream_add();
 
 	gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
 
@@ -1334,6 +1410,28 @@ void pl3_cat_sel_changed()
 			pl3_xiph_view_browser();
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
 		}
+		else if(type == PL3_BROWSE_CUSTOM_STREAM)
+		{
+			char *id;
+			GtkTreeIter parent;
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+			gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID , &id, -1);
+			if(strlen(id) != 0)
+			{
+				gtk_tree_model_iter_parent(model, &parent, &iter);
+				gtk_tree_selection_select_iter(selec, &parent);
+
+
+			}
+			else
+			{	
+				pl3_custom_stream_view_browser();
+				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
+			}
+		}
+
+
+
 		/* when it's not a know type remove the model */
 		else
 		{

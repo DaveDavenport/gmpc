@@ -1,10 +1,12 @@
 #include <gtk/gtk.h>
+#include <string.h>
 #include "vfs_download.h"
 
 #define BUF_SIZE 512
 
-void file_close(){
-	g_print("file closed\n");
+void file_close()
+{
+/*	g_print("file closed\n");*/
 }
 
 
@@ -83,6 +85,8 @@ void file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, dl_info *di
 	else
 	{
 		/* FIXME: Do some error handling */
+		gtk_widget_destroy(di->dialog);
+		g_free(di);
 	}
 }
 

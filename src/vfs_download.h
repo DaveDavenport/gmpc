@@ -15,3 +15,4 @@ typedef struct _dl_info
 void get_file(dl_info *di);
 void load_genres(gchar *buffer);
 void load_streams(gchar *buffer);
+void start_transfer(gchar *link, void *(*function)(gchar *buffer, gpointer data),gpointer data,GtkWidget *parent_window);

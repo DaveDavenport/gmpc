@@ -16,6 +16,7 @@ enum{
 	PL3_BROWSE_ARTIST,
 	PL3_BROWSE_ALBUM,
 	PL3_BROWSE_XIPH,
+	PL3_BROWSE_CUSTOM_STREAM,
 	PL3_FIND,
 	PL3_NTYPES
 	/* more space for options, like shoutcast */
