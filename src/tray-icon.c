@@ -123,14 +123,14 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+7, width ,8);                              		
+					FALSE,4,height+5, width ,8);                              		
 			width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
 			gdk_draw_rectangle(widget->window, 
 					widget->style->mid_gc[GTK_STATE_NORMAL],
-					TRUE,4,height+7, width ,8);
+					TRUE,4,height+5, width ,8);
 			gdk_draw_rectangle(widget->window, 
 					widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+7, width ,8);
+					FALSE,4,height+5, width ,8);
 		}
 	}
 	g_free(tooltiptext);
@@ -247,10 +247,10 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 
 
-	/*	if(tray_timeout != -1) g_source_remove(tray_timeout);
+		if(tray_timeout != -1) g_source_remove(tray_timeout);
 		tray_timeout = g_timeout_add(800, (GSourceFunc)
 		gtk_widget_queue_draw, tip);
-		*/
+		
 	return TRUE;
 }
 
