@@ -193,7 +193,7 @@ main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
-
+	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 
 	
 	/*
