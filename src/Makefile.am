@@ -36,5 +36,6 @@ EXTRA_DIST = 	playlist3.h\
 		misc.h\
 		eggtrayicon.h\
 		libmpdclient.h\
-		vfs_download.h
+		vfs_download.h\
+		mpdinteraction.h
 		
