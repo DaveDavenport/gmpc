@@ -61,6 +61,7 @@ typedef struct
 	/* tooltip playlist window */
 	gint pl2_tooltip;
 	gboolean pl2_do_tooltip;
+	gboolean rounded_corners;
 } internal_data;
 
 enum{

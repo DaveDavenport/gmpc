@@ -81,30 +81,25 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	pango_layout_set_width(tray_layout_tooltip, 500000);
 	style = widget->style;
 
-//	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
-//			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
-	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height);
 
-	
-
-	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,1,19,19,0,64*360);
-	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,1,19,19,0,64*360);
-	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,widget->allocation.height-20,19,19,0,64*360);
-	gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-20,19,19,0,64*360);
-	gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-2);
-	gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-22);
+	if(info.rounded_corners)
+	{	
+		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height);
 
 
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,1,19,19,0,64*360);
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,1,19,19,0,64*360);
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,widget->allocation.height-20,19,19,0,64*360);
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-20,19,19,0,64*360);
+		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-2);
+		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-22);
+	}
+	else
+	{
+	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
 
-
-
-
-
-
-
-
-
-
+	}
 
 
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
@@ -212,7 +207,7 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 
 	/* testing */
-	{
+	if(info.rounded_corners){
 		GdkBitmap *gbm = (GdkBitmap *)gdk_pixmap_new(GDK_DRAWABLE(tip->window), width+1,height+1,1);
 		GdkGCValues val;
 		GdkGC *gc = gdk_gc_new(gbm);
@@ -247,10 +242,10 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 
 
-		if(tray_timeout != -1) g_source_remove(tray_timeout);
-		tray_timeout = g_timeout_add(800, (GSourceFunc)
-		gtk_widget_queue_draw, tip);
-		
+	if(tray_timeout != -1) g_source_remove(tray_timeout);
+	tray_timeout = g_timeout_add(800, (GSourceFunc)
+			gtk_widget_queue_draw, tip);
+
 	return TRUE;
 }
 

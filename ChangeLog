@@ -1,4 +1,6 @@
 19-08-2004 Qball <Qball@qballcow.nl>
+	* src/main.h:		Added option field for rounded corner
+	* src/tray-icon.c:	Made rounded corners a config option.
 	* src/tray-icon.c:	Rounded tooltip corners.
 	* src/tray-icon.c:	Fix crash when not connected
 	* src/tray-icon.c:	Show right tooltip when not connected

@@ -174,6 +174,16 @@ load_config ()
 		      info.pl2_do_tooltip = atoi (buf);
 	      }
       }
+      else if (!strncmp (buffer, "rounded corners:", 16))
+      {
+	      gchar *buf = g_strstrip (&buffer[16]);
+	      if (buf != NULL)
+	      {
+		      info.rounded_corners = atoi (buf);
+	      }
+      }
+
+
       
 
 
@@ -214,6 +224,7 @@ save_config ()
 	fprintf (fp, "markup song browser: %s\n", preferences.markup_song_browser);
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
+	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);
 	fclose (fp);
 	g_free (filename);
 }

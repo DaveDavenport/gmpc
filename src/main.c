@@ -134,6 +134,8 @@ set_default_values ()
 	 */
 	info.pl2_tooltip = 800;
 	info.pl2_do_tooltip = TRUE;
+
+	info.rounded_corners = FALSE;
 }
 
 
