@@ -53,6 +53,14 @@ void load_config ()
 				info.do_tray = atoi (buf);
 			}
 		}
+		else if (!strncmp (buffer, "do tray popup:", 14))
+		{
+			gchar *buf = g_strstrip (&buffer[14]);
+			if (buf != NULL)
+			{
+				info.do_tray_popup = atoi (buf);
+			}
+		}
 		else if (!strncmp (buffer, "time format:", 12))
 		{
 			gchar *buf = g_strstrip (&buffer[12]);
@@ -209,6 +217,7 @@ void save_config ()
 	fprintf (fp, "timeout: %.2f\n", preferences.timeout);
 	fprintf (fp, "auto-connect: %i\n", preferences.autoconnect);
 	fprintf (fp, "do tray: %i\n", info.do_tray);
+	fprintf (fp, "do tray popup: %i\n", info.do_tray_popup);
 	fprintf (fp, "time format: %i\n", info.time_format);
 	fprintf (fp, "do popup: %i\n", info.popup.do_popup);
 	fprintf (fp, "popup pos: %i\n", info.popup.position);

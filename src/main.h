@@ -53,6 +53,7 @@ typedef struct
 	int time_format;
 	/* tray icon*/
 	gboolean do_tray;
+	gboolean do_tray_popup;
 	popup_struct popup;
 	/* misc*/
 	gboolean hidden;

@@ -37,7 +37,30 @@ void pl2_filter_refilter ();
 
 void pl2_clear_search()
 {
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl2_xml, "pl_searchen")), "");
+	if(strlen(gtk_entry_get_text(
+		GTK_ENTRY(glade_xml_get_widget(pl2_xml, "pl_searchen")))) == 0)
+	{
+		/* set current song in front */	
+		if(info.status != NULL)
+		{
+			if(info.status->song != -1)
+			{
+			gchar *str = g_strdup_printf("%i", info.status->song);
+			GtkTreePath *path = gtk_tree_path_new_from_string(str);
+			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+				glade_xml_get_widget(pl2_xml, "pl_tree")), 
+				path,
+				NULL,
+				TRUE,0.5,0);
+			gtk_tree_path_free(path);
+			g_free(str);
+			}
+		}
+	}
+	else
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl2_xml, "pl_searchen")), "");
+	}
 }
 
 /* toggles the playlist on or off */
@@ -58,35 +81,35 @@ gboolean toggle_playlist2(GtkToggleButton *tb)
 /* catch keybord pressing */
 gboolean pl2_key_pressed (GtkWidget * widget, GdkEventKey * event)
 {
-	  if (event->keyval == GDK_Delete)
-	  {
+	if (event->keyval == GDK_Delete)
+	{
 		pl2_delete_selected_songs ();  
-	  }	
-  /* propagate the event further */
-  return FALSE;	
+	}	
+	/* propagate the event further */
+	return FALSE;	
 }
 
 
 void pl2_shuffle_playlist()
 {
-		if(check_connection_state()) return;
-		mpd_sendShuffleCommand(info.connection);
-		mpd_finishCommand(info.connection);
+	if(check_connection_state()) return;
+	mpd_sendShuffleCommand(info.connection);
+	mpd_finishCommand(info.connection);
 }
 
 void pl2_clear_playlist()
 {
-		if(check_connection_state()) return;
-		mpd_sendClearCommand(info.connection);
-		mpd_finishCommand(info.connection);
+	if(check_connection_state()) return;
+	mpd_sendClearCommand(info.connection);
+	mpd_finishCommand(info.connection);
 }
 
 void pl2_crop_selected_songs()
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW
-				     (glade_xml_get_widget
-				      (pl2_xml, "pl_tree")));
+			(glade_xml_get_widget
+			 (pl2_xml, "pl_tree")));
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter))
 	{
 		mpd_sendCommandListBegin (info.connection);
@@ -94,12 +117,12 @@ void pl2_crop_selected_songs()
 			GtkTreeIter child;
 			gtk_tree_model_filter_convert_child_iter_to_iter(GTK_TREE_MODEL_FILTER(pl2_fil), &child, &iter);
 			if(!gtk_tree_selection_iter_is_selected(selection, &child))
-				{
-					gint id;
-					gtk_tree_model_get(GTK_TREE_MODEL(pl2_store),
+			{
+				gint id;
+				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store),
 						&iter, SONG_ID, &id, -1);
-					mpd_sendDeleteIdCommand(info.connection , id);
-				}
+				mpd_sendDeleteIdCommand(info.connection , id);
+			}
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store), &iter));
 		mpd_sendCommandListEnd(info.connection);
 		mpd_finishCommand(info.connection);
@@ -108,54 +131,54 @@ void pl2_crop_selected_songs()
 }
 
 
-gboolean
+	gboolean
 pl2_button_press_event (GtkWidget * widget, GdkEventButton * event)
 {
-  if (event->button == 3)	/* right mouse button */
-    {
-      GladeXML *xml = glade_xml_new (GLADE_PATH "playlist.glade", "context_menu", NULL);
-      GtkTreeSelection *selection =
-	gtk_tree_view_get_selection (GTK_TREE_VIEW
-				     (glade_xml_get_widget
-				      (pl2_xml, "pl_tree")));
-      if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	if (event->button == 3)	/* right mouse button */
 	{
+		GladeXML *xml = glade_xml_new (GLADE_PATH "playlist.glade", "context_menu", NULL);
+		GtkTreeSelection *selection =
+			gtk_tree_view_get_selection (GTK_TREE_VIEW
+					(glade_xml_get_widget
+					 (pl2_xml, "pl_tree")));
+		if (gtk_tree_selection_count_selected_rows (selection) > 0)
+		{
 
-	  /* menu with selected items */
+			/* menu with selected items */
 
 
+		}
+		else
+		{
+			/* menu withouth selected items */
+
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml, "remove"), FALSE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml, "crop"), FALSE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml, "show_information"), FALSE);
+		}
+		glade_xml_signal_autoconnect(xml);
+		gtk_widget_show_all(GTK_WIDGET(glade_xml_get_widget(xml, "context_menu")));
+		gtk_menu_popup(GTK_MENU(glade_xml_get_widget(xml, "context_menu")),NULL, NULL, NULL, NULL, event->button, event->time );
+
+
+
+		/* stop signal */
+		return TRUE;
 	}
-      else
-	{
-	  /* menu withouth selected items */
 
-		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "remove"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "crop"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "show_information"), FALSE);
-	}
-	glade_xml_signal_autoconnect(xml);
-	gtk_widget_show_all(GTK_WIDGET(glade_xml_get_widget(xml, "context_menu")));
-	gtk_menu_popup(GTK_MENU(glade_xml_get_widget(xml, "context_menu")),NULL, NULL, NULL, NULL, event->button, event->time );
-
-
-	
-      /* stop signal */
-      return TRUE;
-    }
-
-  /* continue signal */
-  return FALSE;
+	/* continue signal */
+	return FALSE;
 }
 
 /* function that gets called when the user clicks on a button in the song-info window */
-void
+	void
 pl2_set_query (const gchar * query)
 {
 	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
 	}
-  gtk_entry_set_text (GTK_ENTRY(glade_xml_get_widget (pl2_xml, "pl_searchen")), query);
+	gtk_entry_set_text (GTK_ENTRY(glade_xml_get_widget (pl2_xml, "pl_searchen")), query);
 }
 
 /* track data recieved on the open_location button and propegate it to the open-location window */
@@ -772,7 +795,7 @@ void create_playlist2 ()
 	g_signal_connect(G_OBJECT(
 				gtk_tree_view_get_vadjustment(GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")))),
 			"value-changed", G_CALLBACK(mw_leave_cb), NULL);
-	
+
 	/* if where not connected call the disconnect function that will set some highlighting ok */
 	if (check_connection_state ())
 	{

@@ -109,7 +109,7 @@ set_default_values ()
 	 * tray icon 
 	 */
 	info.do_tray = FALSE;
-
+	info.do_tray_popup = TRUE;
 	info.popup.do_popup = 0;
 	info.popup.show_state = FALSE;
 	info.popup.position = 0;

@@ -80,12 +80,12 @@
 	  <child>
 	    <widget class="GtkButton" id="button15">
 	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Clear search string &lt;alt - c&gt;</property>
+	      <property name="tooltip" translatable="yes">Wipe search string &lt;alt - w&gt;</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
 	      <signal name="clicked" handler="pl2_clear_search" last_modification_time="Mon, 20 Sep 2004 16:41:08 GMT"/>
-	      <accelerator key="c" modifiers="GDK_MOD1_MASK" signal="clicked"/>
+	      <accelerator key="w" modifiers="GDK_MOD1_MASK" signal="clicked"/>
 
 	      <child>
 		<widget class="GtkImage" id="image21">

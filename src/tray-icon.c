@@ -20,6 +20,8 @@ GtkWidget *tip = NULL;
 PangoLayout *tray_layout_tooltip = NULL;
 
 guint tray_timeout = -1;
+
+guint popup_timeout = -1;
 /**/
 gchar *tray_get_tooltip_text()
 {
@@ -85,15 +87,16 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	/* rounded corners are experimental, and breaks consistency. therefor they are an hidden option. */
 	if(info.rounded_corners)
 	{	
-		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height);
+		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height-10);
 
 
 		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,1,19,19,0,64*360);
 		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,1,19,19,0,64*360);
-		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,widget->allocation.height-20,19,19,0,64*360);
-		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-20,19,19,0,64*360);
-		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-2);
-		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-22);
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,widget->allocation.height-30,19,19,0,64*360);
+		gdk_draw_arc(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, widget->allocation.width-20,widget->allocation.height-30,19,19,0,64*360);
+		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 11,1,widget->allocation.width-22, widget->allocation.height-12);
+		gdk_draw_rectangle(widget->window, widget->style->bg_gc[GTK_STATE_NORMAL], TRUE, 1,11,widget->allocation.width-2, widget->allocation.height-32);
+		
 	}
 	else
 	{
@@ -110,20 +113,56 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	width= PANGO_PIXELS(width);
 	height= PANGO_PIXELS(height);
 
+	if(info.rounded_corners) height = height+10;
+	
 	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8 +12)
 	{
+		int x_tv,y_tv;
+		int x,y;
+		GdkRectangle msize;
+		GtkWidget *tv = (GtkWidget *)tray_icon;
+		int monitor = gdk_screen_get_monitor_at_window(
+				gtk_widget_get_screen(tv), tv->window);
+
+		gdk_screen_get_monitor_geometry(
+				gtk_widget_get_screen(tv), monitor, &msize);
+		
+		/* calculate position */
+
+		gdk_window_get_origin(tv->window, &x_tv, &y_tv);
+		x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - width/2;
+		y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
+
+		/* check borders left, right*/	
+		if((x+width+8) > msize.width+msize.x)
+		{	
+			x = msize.x+msize.width-(width+8);
+		}
+		else if(x < 0)
+		{
+			x= 0;
+		}
+		/* check up down.. if can't place it below, place it above */
+		if( y+height+8+12 > msize.height+msize.y) 
+		{
+			y = y_tv -5-(height+8+12);
+		}
+		/* place the window */
+		gtk_window_move(GTK_WINDOW(tip), x, y);
+
+
+
+
+
+
 		gtk_widget_set_usize(widget, width+8, height+8+12);
 	}
 
-
+	if(info.rounded_corners) height -= 10;
 
 
 	if(info.connection != NULL && info.status != NULL)
 	{
-
-		
-
-
 		if(info.status->totalTime != 0)
 		{
 
@@ -152,11 +191,13 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
  */
 
 
-gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
+gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
 	int width,height;
+	GtkWidget *tv = (GtkWidget *)tray_icon;
 	GdkRectangle msize;
 	int x,y;
+	int x_tv,y_tv;
 	int monitor = gdk_screen_get_monitor_at_window(
 			gtk_widget_get_screen(tv), tv->window);
 	if(tip != NULL) return FALSE;
@@ -187,15 +228,25 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
 
 
+
+
+
+
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8+12;
+	if(info.rounded_corners)
+	{
+		height = height+10;
+	}
 	gtk_widget_set_usize(tip, width,height);
 
 
 	/* calculate position */
-	x = (int)event->x_root - event->x+tv->allocation.width/2 - width/2;
-	y = (int)event->y_root+(tv->allocation.height - event->y) +5;	
+
+	gdk_window_get_origin(tv->window, &x_tv, &y_tv);
+	x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - width/2;
+	y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
 	/* check borders left, right*/	
 	if((x+width) > msize.width+msize.x)
@@ -209,7 +260,7 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 	/* check up down.. if can't place it below, place it above */
 	if( y+height > msize.height+msize.y) 
 	{
-		y = event->y_root - event->y -5-(height);
+		y = y_tv -5-(height);
 	}
 	/* place the window */
 	gtk_window_move(GTK_WINDOW(tip), x, y);
@@ -219,14 +270,16 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 	/* testing of rounded corners, because this breaks consistency its a hidden option.*/
 	if(info.rounded_corners){
+
 		GdkBitmap *gbm = (GdkBitmap *)gdk_pixmap_new(GDK_DRAWABLE(tip->window), width+1,height+1,1);
 		GdkGCValues val;
 		GdkGC *gc = gdk_gc_new(gbm);
 		GdkGC *gc1 = gdk_gc_new(gbm);
+
 		gdk_gc_get_values(gc, &val);
 		gdk_gc_set_foreground(gc, &val.background);
 		gdk_draw_rectangle(gbm, gc1, TRUE, 0,0,width, height);
-
+		height = height -10;
 		gdk_draw_rectangle(gbm, gc, TRUE, 10,0,width-20, height);
 		gdk_draw_rectangle(gbm, gc, TRUE, 0,10,width, height-20);
 		gdk_draw_arc(gbm, gc, TRUE, 0,0,20,20,0,64*360);
@@ -253,6 +306,8 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
 
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
+	if(popup_timeout != -1) g_source_remove(popup_timeout);
+	popup_timeout = -1;
 	tray_timeout = -1;
 	if(tip != NULL)
 	{
@@ -307,6 +362,30 @@ void exposed_signal(GtkWidget *event)
 /* this function updates the trayicon on changes */
 void update_tray_icon()
 {
+
+	if(info.do_tray_popup && info.do_tray && 
+			info.status != NULL && info.song != info.status->song)
+	{
+		if(popup_timeout == -1 && tip == NULL)
+		{
+			popup_timeout = g_timeout_add(5000, 
+					(GSourceFunc)(tray_leave_cb),
+					NULL);
+		}
+		if(tip == NULL)
+		{
+			tray_motion_cb((GtkWidget*)tray_icon,NULL,NULL);
+		}
+		else if(popup_timeout != -1)
+		{
+			g_source_remove(popup_timeout);
+			popup_timeout = g_timeout_add(5000, 
+					(GSourceFunc)(tray_leave_cb),			
+					NULL);
+		}
+
+
+	}
 	if(!info.do_tray) return;
 	if(info.status != NULL) 
 	{

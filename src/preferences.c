@@ -26,6 +26,9 @@ void xfade_time_changed(GtkSpinButton *but);
 void xfade_enable_toggled(GtkToggleButton *bug);
 void set_display_settings();
 void update_display_settings();
+void tray_popup_toggled(GtkToggleButton *but);
+
+
 /* update the db */
 void pref_update_mpd_db()
 {
@@ -283,8 +286,16 @@ void update_tray_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(xml_preferences_window, "ck_tray_enable"), info.do_tray);
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_tray_popup"), info.do_tray_popup);
+	
 }
 
+void tray_popup_toggled(GtkToggleButton *but)
+{
+	info.do_tray_popup = gtk_toggle_button_get_active(but);
+}
+	
 void tray_enable_toggled(GtkToggleButton *but)
 {
 	info.do_tray = gtk_toggle_button_get_active(but);

@@ -1,3 +1,16 @@
+01-10-2004 Qball ,Qball@qballcow.nl>
+	* src/preferences.c:	Added configuration option to show the
+	tray_icon tooltip.
+	* glade/playlist.glade:	Fixed keybinding collition.
+	* src/tray_icon.c:	Fixed placing tray icon.
+	* src/tray_icon.c:	If text in tooltip is changed, a  new position
+	is caculated aswell.
+	* src/playlist2.c:	Pressing wipe while search entry empty scrolls
+	to the playing song.
+
+30-09-2004 Qball <Qball@qballcow.nl>
+	* src/tray_icon.c:	Shows a tooltip on song change above/below the
+	tray icon.
 23-09-2004 Qball <Qball@qballcow.nl>
 	* src/player.c:		Added key-press event handler.
 	* src/player.c:		Added winamp key bindings (up/down ->volumn,
