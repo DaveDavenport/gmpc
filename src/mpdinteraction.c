@@ -57,11 +57,14 @@ int disconnect_to_mpd()
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 
+	/* disconnect playlist */
+	pl2_disconnect();
+
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
 
-	/* disconnect playlist */
-	pl2_disconnect();
+
+
 
 	return FALSE;
 }

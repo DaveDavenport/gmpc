@@ -478,6 +478,7 @@ void create_playlist2()
 
 void pl2_connect()
 {
+	if(pl2_xml != NULL)
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl2_xml, "hb_sens"), TRUE);	
 }
 

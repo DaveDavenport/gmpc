@@ -299,7 +299,7 @@ int update_player()
 		}
 		if(info.status->state == MPD_STATUS_STATE_PLAY) 
 			gtk_image_set_from_stock(GTK_IMAGE(image),"media-pause", GTK_ICON_SIZE_BUTTON);
-		else gtk_image_set_from_stock(GTK_IMAGE(image), "/media-play", GTK_ICON_SIZE_BUTTON);
+		else gtk_image_set_from_stock(GTK_IMAGE(image), "media-play", GTK_ICON_SIZE_BUTTON);
 
 		info.state = info.status->state;
 	}
