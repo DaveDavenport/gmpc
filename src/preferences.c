@@ -41,6 +41,7 @@ void create_outputs_tree();
 void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view);
 void update_outputs_settings();
 void create_osb_tree();
+void osb_add_edit_source();
 int update_osb_tree();
 
 
@@ -457,7 +458,7 @@ void osb_del_source()
 					char *id;
 					gtk_tree_model_get(model, &iter, 0, &id, -1);
 					cfg_del_multiple_value(config, "osb", "streams",id);
-					gtk_list_store_remove(model, &iter);
+					gtk_list_store_remove((gpointer)model, &iter);
 					pl3_reinitialize_tree();
 				}
 			default:
@@ -483,7 +484,7 @@ void osb_add_edit_source(int edit)
 		GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
 		GtkTreeModel *model = gtk_tree_view_get_model(tree);                                         	
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)tree);
-		GtkTreeIter iter;                                                                               		
+		GtkTreeIter iter;
 		gchar *id, *path;
 		if(gtk_tree_selection_get_selected(selec, &model, &iter))
 		{
@@ -509,7 +510,6 @@ void osb_add_edit_source(int edit)
 	{
 		case GTK_RESPONSE_YES:
 			{
-				GtkTreeIter iter,child;
 				const gchar *key = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_name")));
 				const gchar *value = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_url")));
 				cfg_set_multiple_value_as_string(config,"osb", "streams", (gchar *)key, (gchar *)value);
@@ -536,7 +536,7 @@ int update_osb_tree()
 	tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
 	model = gtk_tree_view_get_model(tree);
 
-	gtk_list_store_clear(model);
+	gtk_list_store_clear((gpointer)model);
 	list = cfg_get_multiple_as_string(config, "osb", "streams");
 	if(list != NULL)
 	{
@@ -544,8 +544,8 @@ int update_osb_tree()
 		do{
 			if(data->key != NULL && data->value != NULL)
 			{
-				gtk_list_store_append(model, &iter);
-				gtk_list_store_set(model, &iter, 
+				gtk_list_store_append((gpointer)model, &iter);
+				gtk_list_store_set((gpointer)model, &iter, 
 						0, data->key,
 						1, data->value,-1);
 			}
@@ -553,7 +553,7 @@ int update_osb_tree()
 		}while(data  != NULL);
 		cfg_free_multiple(list);
 	}
-
+	return 0;
 }
 
 

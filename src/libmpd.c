@@ -174,7 +174,7 @@ int mpd_ob_lock_conn(MpdObj *mi)
 */
 	if(mi->connection_lock)
 	{
-		debug_printf(DEBUG_WARNING, "mpd_ob_lock_conn: Failed to lock connection, allready locked\n");
+		debug_printf(DEBUG_WARNING, "mpd_ob_lock_conn: Failed to lock connection, already locked\n");
 		return TRUE;
 	}
 	mi->connection_lock = TRUE;
@@ -187,7 +187,7 @@ int mpd_ob_unlock_conn(MpdObj *mi)
  */
 	if(!mi->connection_lock)
 	{
-		debug_printf(DEBUG_WARNING, "mpd_ob_unlock_conn: Failed to unlock connection, allready unlocked\n");
+		debug_printf(DEBUG_WARNING, "mpd_ob_unlock_conn: Failed to unlock connection, already unlocked\n");
 		return FALSE;
 	}
 	

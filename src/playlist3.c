@@ -1222,7 +1222,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_delete_playlist), path);
 				}
-				g_list_foreach (list, gtk_tree_path_free, NULL);
+				g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 				g_list_free (list);
 			}
 		}

@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
+#include "playlist3.h"
 #include "eggtrayicon.h"
 #include "main.h"
 #include "misc.h"
