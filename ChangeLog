@@ -1,3 +1,9 @@
+27-06-2004 Qball <Qball@qballcow.nl>
+	* Implemented delete in pl2. (single and multiple select
+
+26-06-2004 Qball <Qball@qballcow.nl>
+	* Implemented primary dnd support in pl2.
+
 24-06-2004 Qball <Qball@qballcow.nl>
 	* Removed filling of info.playlist
 	* Made search case insensitive

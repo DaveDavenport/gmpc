@@ -195,6 +195,38 @@ void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
  * trigged on button click 
  */
 
+void pl2_delete_selected_songs()
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(
+			GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")));
+
+	if(gtk_tree_selection_count_selected_rows(selection) > 0)
+	{
+		GList *list = NULL, *llist = NULL;
+		mpd_sendCommandListBegin(info.connection);
+		list = gtk_tree_selection_get_selected_rows (selection, &pl2_fil);
+		llist = g_list_last(list);
+		do{
+			GtkTreeIter iter;
+			int value;
+			gtk_tree_model_get_iter(pl2_fil, &iter,(GtkTreePath *)llist->data);
+			gtk_tree_model_get(pl2_fil, &iter, SONG_ID, &value, -1);
+			mpd_sendDeleteIdCommand(info.connection, value);
+		}while((llist = g_list_previous(llist)));
+		/* free list */
+		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+		mpd_sendCommandListEnd(info.connection);
+		mpd_finishCommand(info.connection);
+	}
+}
+
+
+
+/* show the id3info popup of the selected song
+ * trigged on button click 
+ */
+
 void pl2_show_song_info()
 {
 	int i = 0;
@@ -265,13 +297,13 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 				pos1 -= i;
 				if(pos == GTK_TREE_VIEW_DROP_BEFORE)
 					dropl-=1;
-				
+
 			}
 			else if(pos1 > pos2)
 			{
 				pos1 += i;
-//				if(pos == GTK_TREE_VIEW_DROP_AFTER)
-//					dropl+=1;                   				
+				//				if(pos == GTK_TREE_VIEW_DROP_AFTER)
+				//					dropl+=1;                   				
 			}
 
 			mpd_sendMoveCommand(info.connection, pos1,dropl);
@@ -286,7 +318,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 	}
 	g_signal_stop_emission_by_name(G_OBJECT(tree), "drag-drop");
 	return TRUE;	
-//	return TRUE;
+	//	return TRUE;
 }
 
 
