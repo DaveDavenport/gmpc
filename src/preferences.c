@@ -55,7 +55,7 @@ void create_preferences_window()
 	running = 1;
 
 	update_server_settings();
-	glade_xml_signal_autoconnect(xml_preferences_window);	
+	
 	/* set the right sensitive stuff */
 	if(info.connection == NULL)
 	    {
@@ -70,7 +70,8 @@ void create_preferences_window()
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
-
+	glade_xml_signal_autoconnect(xml_preferences_window);	
+	
 	}
 
 /* destory the preferences window */
@@ -256,6 +257,7 @@ void xfade_enable_toggled(GtkToggleButton *but)
 void xfade_time_changed(GtkSpinButton *but)
 {
 	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
+	if(info.connection == NULL) return;
 	mpd_sendCrossfadeCommand(info.connection, fade_time);	
 	mpd_finishCommand(info.connection);          
 }

@@ -52,9 +52,6 @@ void exposed_signal(GtkWidget *event)
 //	state =  gdk_pixbuf_new_from_file(PIXMAP_PATH"media-pause.png", NULL);
 	}
 	else return;
-//	gdk_pixbuf_add_alpha(state, TRUE, 228,228,228);		
-//	gdk_draw_pixbuf(event->window, event->style->bg_gc[GTK_STATE_NORMAL],state, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);	
-//	g_object_unref(state);
 
 	}
 
@@ -178,5 +175,6 @@ int create_tray_icon()
 		tray_xml =   glade_xml_new(GLADE_PATH"gmpc.glade", "tray_icon_menu", NULL);
 		glade_xml_signal_autoconnect(tray_xml);
 	}
+	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), "Gnome Music Player Client", "");
 	return FALSE;
 }

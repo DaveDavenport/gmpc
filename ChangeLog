@@ -1,3 +1,8 @@
+05-05-2004 Qball <Qball@qballcow.nl>
+	* Fix for crash when not connected and opening preferences and moving
+	to the server settings tab
+	* Added starting tooltip to the tray icon
+
 21-04-2004 Qball <Qball@qballcow.nl>
 	* Added server settings to the preferences menu
 	* added crossfading to the server settings in the preferences menu
