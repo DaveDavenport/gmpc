@@ -8,7 +8,6 @@
 GtkWidget *popup = NULL;
 guint timeout       = 0;
 
-
 gchar * get_string()
 {
 	GString *string;
@@ -94,8 +93,9 @@ int paint_window(GtkWidget *drawing)
 	style               = popup->style;
 	layout  	    = gtk_widget_create_pango_layout(drawing, NULL);
 
-	gtk_paint_box(style, drawing->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+	gtk_paint_flat_box(style, drawing->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
 			NULL, drawing, "tooltip", 0,0,-1,-1);
+
 	/* draw the background + the border */
 	pango_layout_set_markup(layout,text, strlen(text));
 	/* draw the image */

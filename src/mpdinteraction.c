@@ -118,6 +118,8 @@ int connect_to_mpd()
 	info.conlock = FALSE;
 	update_mpd_status();
 
+	/* Set the title */
+	msg_set_base(_("GMPC - Connected"));
 
 	/* connect playlist2 */
 	pl2_connect();

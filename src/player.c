@@ -16,8 +16,6 @@ PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
 
-
-
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
 	if(allocation->width != 0) DISPLAY_WIDTH = allocation->width;
@@ -95,9 +93,6 @@ void display_exposed(GtkWidget *window)
 			scroll.pos = 0;
 
 		}
-
-
-
 	}
 
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),

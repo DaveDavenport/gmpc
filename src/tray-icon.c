@@ -106,12 +106,22 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
 			NULL, widget, "tooltip", 4, 4, tray_layout_tooltip);
 
+	pango_layout_get_size(tray_layout_tooltip, &width, &height);
+	width= PANGO_PIXELS(width);
+	height= PANGO_PIXELS(height);
+
+	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8 +12)
+	{
+		gtk_widget_set_usize(widget, width+8, height+8+12);
+	}
+
+
+
+
 	if(info.connection != NULL && info.status != NULL)
 	{
 
-		pango_layout_get_size(tray_layout_tooltip, &width, &height);
-		width= PANGO_PIXELS(width);
-		height= PANGO_PIXELS(height);
+		
 
 
 		if(info.status->totalTime != 0)
@@ -230,14 +240,6 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 		gtk_widget_shape_combine_mask(tip, (GdkBitmap *) gbm, 0,0);
 
 	}
-
-
-
-
-
-
-
-
 
 
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
