@@ -3,6 +3,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 
+/* next 2 functions could be removed */
 /* return 0 = good */
 /* return 1 = bad */
 int start_mpd_action()

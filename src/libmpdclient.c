@@ -508,6 +508,7 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 	status->channels = 0;
 	status->crossfade = -1;
 	status->error = NULL;
+	status->updatingDb = 0;
 
 	mpd_getNextReturnElement(connection);
 	if(connection->error) {
@@ -554,9 +555,14 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 		else if(strcmp(re->name,"time")==0) {
 			char * tok;
 			char * copy;
+			char * temp;
 			copy = strdup(re->value);
-			status->elapsedTime = atoi(strtok_r(copy,":",&tok));
-			status->totalTime = atoi(strtok_r(NULL,"",&tok));
+			temp = strtok_r(copy,":",&tok);
+			if(temp) {
+				status->elapsedTime = atoi(temp);
+				temp = strtok_r(NULL,"",&tok);
+				if(temp) status->totalTime = atoi(temp);
+			}
 			free(copy);
 		}
 		else if(strcmp(re->name,"error")==0) {
@@ -565,13 +571,24 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 		else if(strcmp(re->name,"xfade")==0) {
 			status->crossfade = atoi(re->value);
 		}
+		else if(strcmp(re->name,"updating_db")==0) {
+			status->updatingDb = atoi(re->value);
+		}
 		else if(strcmp(re->name,"audio")==0) {
 			char * tok;
 			char * copy;
+			char * temp;
 			copy = strdup(re->value);
-			status->sampleRate = atoi(strtok_r(copy,":",&tok));
-			status->bits = atoi(strtok_r(NULL,":",&tok));
-			status->channels = atoi(strtok_r(NULL,"",&tok));
+			temp = strtok_r(copy,":",&tok);
+			if(temp) {
+				status->sampleRate = atoi(temp);
+				temp = strtok_r(NULL,":",&tok);
+				if(temp) {
+					status->bits = atoi(temp);
+					temp = strtok_r(NULL,"",&tok);
+					if(temp) status->channels = atoi(temp);
+				}
+			}
 			free(copy);
 		}
 
@@ -1102,6 +1119,19 @@ void mpd_sendSeekCommand(mpd_Connection * connection, int song, int time) {
 
 void mpd_sendUpdateCommand(mpd_Connection * connection) {
         mpd_executeCommand(connection,"update\n");
+}
+
+int mpd_getUpdateId(mpd_Connection * connection) {
+	char * jobid;
+	int ret = 0;
+
+	jobid = mpd_getNextReturnElementNamed(connection,"updating_db");
+	if(jobid) {
+		ret = atoi(jobid);
+		free(jobid);
+	}
+
+	return ret;
 }
 
 void mpd_sendPrevCommand(mpd_Connection * connection) {

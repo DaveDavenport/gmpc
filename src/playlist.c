@@ -320,6 +320,7 @@ void create_playlist()
 	 */    
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
+	while(gtk_events_pending())gtk_main_iteration();
 
 	/* load the data into the playlist */
 	if(info.connection != NULL) 	load_songs_with_filter();
