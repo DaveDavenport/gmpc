@@ -59,7 +59,7 @@ gchar * get_string()
 /* this destroys the popup.. and set the timeout handler to 0 */
 int destroy_popup(GtkWidget *window)
 {
-        
+
 	gtk_widget_destroy(popup);
 	popup               = NULL;
 	timeout             = 0;
@@ -167,9 +167,9 @@ void popup_window()
 	gtk_widget_set_name(popup, "gtk-tooltips");
 	gtk_widget_ensure_style(popup);    
 
-//	gtk_widget_set_name(draw, "gtk-tooltips");
+	//	gtk_widget_set_name(draw, "gtk-tooltips");
 
-//	gtk_widget_ensure_style(draw);            
+	//	gtk_widget_ensure_style(draw);            
 
 	g_signal_connect(G_OBJECT(draw), "expose-event",
 			G_CALLBACK(paint_window), NULL);       
@@ -208,10 +208,11 @@ void popup_window()
 	gtk_widget_show_all(popup);
 	if(!info.popup.popup_stay)
 	{
-	timeout = gtk_timeout_add(5000, (GSourceFunc)destroy_popup, popup);
+		timeout = gtk_timeout_add(5000, (GSourceFunc)destroy_popup, popup);
 	}
 }
 
+/* the function that gets called fromt he update function that updates */
 void update_popup()
 {
 	if(info.popup.do_popup && info.connection != NULL && info.status != NULL)
