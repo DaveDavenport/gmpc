@@ -1,3 +1,14 @@
+21-04-2004 Qball <Qball@qballcow.nl>
+	* Added server settings to the preferences menu
+	* added crossfading to the server settings in the preferences menu
+	* Fixed anoying bug that caused the PM button to be inactive when the
+disconnect button is clicked (with auto-connect enabled).
+	* Changed the filter section to a more section 
+	* Added a show information and a clear button to the playlist view in
+the more section
+	* ctrl-l in playlist window now grabs focus.
+	* alt-r on main windows shows preferences (key mnemonic)
+
 20-04-2004 Qball <Qball@qballcow.nl>
 	* Added misc.[c|h]
 	* Added hiding to tray icon and indication of hidden state in tray
@@ -5,11 +16,13 @@
 	* Code cleanups
 	* Removing of extention when filename used as song title.
 	* lots more I forgot to changelog
+
 12-04-2004 Qball <Qball@qballcow.nl>
-    * 	Small updates.
+    	*  Small updates.
+
 13-03-2004 QBall <Qball@qballcow.nl>
-    *	Fixed bug #202 (timeout for popup configurable
-    *	If you press del in the playlist window it wil remove the current selected songs.
+    	* Fixed bug #202 (timeout for popup configurable
+    	* If you press del in the playlist window it wil remove the current selected songs.
     *	Playlists view hide state is remembered over session.
     *	Time format is remembered over session.
     *	Fix bug #203. (crash when not connected and click on title bar)

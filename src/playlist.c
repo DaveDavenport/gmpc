@@ -71,9 +71,9 @@ void clear_playlist_buffer()
 {
 	/* Check all "buffer" and if there full empty and unref them. */
 	if(info.playlist_list != NULL) 	g_object_unref(info.playlist_list);
-	if(info.cur_list != NULL) 		g_object_unref(info.cur_list);
-	if(info.dir_list != NULL)		g_object_unref(info.dir_list);
-	if(info.file_list != NULL) 		g_object_unref(info.file_list);
+	if(info.cur_list != NULL) 	g_object_unref(info.cur_list);
+	if(info.dir_list != NULL)	g_object_unref(info.dir_list);
+	if(info.file_list != NULL) 	g_object_unref(info.file_list);
 	if(info.id3_songs_list != NULL)	g_object_unref(info.id3_songs_list);
 	if(info.id3_album_list != NULL)	g_object_unref(info.id3_album_list);
 	if(info.search_list != NULL)	g_object_unref(info.search_list);

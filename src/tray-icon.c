@@ -24,7 +24,7 @@ void exposed_signal(GtkWidget *event)
 
 	if(info.hidden == TRUE)
 	{
-		GdkPoint points[6] = {{20,13},{20,19}, {20,16},{16,16},{16,13},{16,19}};
+		GdkPoint points[6] = {{19,13},{19,19}, {19,16},{16,16},{16,13},{16,19}};
 		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
 	}
 

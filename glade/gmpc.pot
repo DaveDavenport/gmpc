@@ -8,7 +8,7 @@ gchar *s = N_("Gnome Music Player Client");
 gchar *s = N_("R_and");
 gchar *s = N_("R_ep");
 gchar *s = N_("_PM");
-gchar *s = N_("Pref");
+gchar *s = N_("P_ref");
 gchar *s = N_("gmpc - Preferences");
 gchar *s = N_("Host:");
 gchar *s = N_("Port:");
@@ -22,6 +22,12 @@ gchar *s = N_("*");
 gchar *s = N_("_Autoconnect");
 gchar *s = N_("_Use Authentication");
 gchar *s = N_("_Connection");
+gchar *s = N_("enable crossfade");
+gchar *s = N_("fade time (s):");
+gchar *s = N_("<b>Crossfade:</b>");
+gchar *s = N_("<span size=\"small\"><i>You need to be connected\n"
+              " in order to change these settings</i></span>");
+gchar *s = N_("_Server settings");
 gchar *s = N_("Enable");
 gchar *s = N_("Show State");
 gchar *s = N_("Upper Left Corner");
@@ -35,10 +41,10 @@ gchar *s = N_("Enable");
 gchar *s = N_("<b>Notification Area Icon</b>");
 gchar *s = N_("_Misc");
 gchar *s = N_("<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
-              "0.10.2 <i>smooth scrolling</i>");
+              "0.10.3 <i>requests wanted</i>");
 gchar *s = N_("A frontend for the music player daemon from:\n"
               "<span color=\"blue\"><u>www.musicpd.org</u></span>");
-gchar *s = N_("<span size=\"small\">Copyright ©  2003-2004 Qball Cow\n"
+gchar *s = N_("<span size=\"small\">Copyright \302\251  2003-2004 Qball Cow\n"
               "<i>Qball@qballcow.nl</i></span>");
 gchar *s = N_("_About");
 gchar *s = N_("gmpc - id3 info");
@@ -68,7 +74,8 @@ gchar *s = N_("Refresh the playlists browser");
 gchar *s = N_("Save the current playlist");
 gchar *s = N_("Delete the selected playlist");
 gchar *s = N_("Hide/Show the playlists browser");
-gchar *s = N_("filter:");
+gchar *s = N_("more:");
+gchar *s = N_("_Song Info");
 gchar *s = N_("Filter:");
 gchar *s = N_("*");
 gchar *s = N_("Select the field where filter will be applied on");

@@ -18,9 +18,12 @@ void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void update_popup_settings();
 void update_tray_settings();
+void update_server_settings();
 void show_state_changed(GtkToggleButton *but);
 void auth_enable_toggled(GtkToggleButton *but);
 void entry_auth_changed(GtkEntry *entry);
+void xfade_time_changed(GtkSpinButton *but);
+void xfade_enable_toggled(GtkToggleButton *bug);
 
 /* creat the preferences window */
 void create_preferences_window()
@@ -50,6 +53,8 @@ void create_preferences_window()
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
+
+	update_server_settings();
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 	/* set the right sensitive stuff */
 	if(info.connection == NULL)
@@ -65,6 +70,7 @@ void create_preferences_window()
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
+
 	}
 
 /* destory the preferences window */
@@ -121,11 +127,15 @@ void preferences_update()
 	    {
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
+	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
+	    gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	    }
 	else
 	    {
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
-	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	    
+	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	   
+	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
+	    gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	    }
 	connected = (info.connection == NULL? 0:1);
 	}    
@@ -165,6 +175,36 @@ void update_popup_settings()
 
 }
 
+
+void update_server_settings()
+{
+	if(info.connection == NULL)
+	{
+	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
+	    gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+	    return;
+	}
+	else 
+	{
+	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
+	    gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
+	}	
+		
+	if(info.status->crossfade == 0)
+	{
+		gtk_toggle_button_set_active((GtkToggleButton *)
+				glade_xml_get_widget(xml_preferences_window, "cb_fading"), FALSE);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), FALSE);
+	}
+	else {
+		gtk_toggle_button_set_active((GtkToggleButton *)
+				glade_xml_get_widget(xml_preferences_window, "cb_fading"), TRUE);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), info.status->crossfade);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
+
+	}
+}
+
 /* this sets all the settings in the notification area preferences correct */
 void update_tray_settings()
 {
@@ -186,15 +226,40 @@ void tray_enable_toggled(GtkToggleButton *but)
 }
 
 void entry_auth_changed(GtkEntry *entry)
-    {
-    strncpy(preferences.password,gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth"))),256);
-    }
+{
+	strncpy(preferences.password,gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth"))),256);
+}
 
 void auth_enable_toggled(GtkToggleButton *but)
 {
 	preferences.user_auth = gtk_toggle_button_get_active(but);
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);	
 }
+
+void xfade_enable_toggled(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), bool1);
+	if(bool1)
+	{
+		int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
+		mpd_sendCrossfadeCommand(info.connection, fade_time);	
+		mpd_finishCommand(info.connection);          
+	}
+	else {
+		mpd_sendCrossfadeCommand(info.connection, 0);
+		mpd_finishCommand(info.connection);
+
+	}	
+}
+
+void xfade_time_changed(GtkSpinButton *but)
+{
+	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
+	mpd_sendCrossfadeCommand(info.connection, fade_time);	
+	mpd_finishCommand(info.connection);          
+}
+
 
 
 /* this sets all the settings in the authentification area preferences correct */

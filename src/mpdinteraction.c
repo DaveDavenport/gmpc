@@ -6,7 +6,6 @@
 
 /* the internall data structure */
 internal_data info;
-/* = {NULL, NULL,NULL, TRUE,-1, -1, -1, -1, 1, NULL, NULL, FALSE, FALSE, "",0,NULL, NULL,NULL, NULL,NULL, NULL,NULL,"/", 0,0,0,FALSE, {1,FALSE,0, NULL,0,0,FALSE}};*/
 
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 int update_mpd_status()
@@ -42,8 +41,8 @@ int disconnect_to_mpd()
 	info.connection = NULL;
 	msg_set_base("gmpc - Disconnected");
 	gtk_timeout_remove(update_timeout);
-	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	update_interface();
+
+
 	scroll.exposed = 1;
 	info.song = -1;
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), FALSE);
@@ -53,12 +52,17 @@ int disconnect_to_mpd()
 		if(debug)g_print("destroying playlist\n");
 	}
 	clear_playlist_buffer();
+
+	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
+	update_interface();
+	
 	return FALSE;
 }
 
 /* the functiont that connects to mpd */
 int connect_to_mpd()
 {
+	info.conlock = TRUE;
 	scroll.exposed = 1;
 	info.song = -1;    
 	if(debug)g_print("timeout = %.2f\n", preferences.timeout);
