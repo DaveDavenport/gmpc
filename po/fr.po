@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:23+0200\n"
+"POT-Creation-Date: 2004-10-17 00:26+0200\n"
 "PO-Revision-Date: 2004-07-04 00:28+0200\n"
 "Last-Translator: Mathieu Doidy <mdoidy@roulaize.net>\n"
 "Language-Team: French\n"
@@ -20,8 +20,8 @@ msgstr "Une interface gnome pour le démon mpd"
 
 #. set up tray icon
 #: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:121
-#: src/player.c:285 src/player.c:286 src/player.c:306 src/tray-icon.c:406
-#: src/tray-icon.c:515
+#: src/player.c:285 src/player.c:286 src/player.c:306 src/tray-icon.c:405
+#: src/tray-icon.c:514
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 

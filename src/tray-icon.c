@@ -179,7 +179,12 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	return;
 }
 
-
+/* fix it the ugly way */
+int tooltip_queue_draw(GtkWidget *widget)
+{
+	gtk_widget_queue_draw(widget);
+	return TRUE;
+}
 
 /*
  *
@@ -297,7 +302,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(800, (GSourceFunc)
-			gtk_widget_queue_draw, eventb);
+			tooltip_queue_draw, eventb);
 
 	return TRUE;
 }
