@@ -1065,6 +1065,11 @@ void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 					gtk_tree_model_get(model, &iter2, 0, &album, -1);
 					gtk_tree_model_iter_parent(model, &iter1, &iter2);
 					gtk_tree_model_get(model, &iter1, 0,&artist, -1);
+					/* just to make sure.. it should never be called */
+					if(album == NULL)
+					{
+						album = g_strdup("")
+					}
 				}
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ARTIST, artist);
 				if(!check_for_errors())
