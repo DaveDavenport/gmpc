@@ -3,6 +3,7 @@
 	* src/playlist3.c:	Added replacing in the right mouse menu for
 	real
 	* src/playlist3.c:	Added right mouse menu for artist browser.
+	* src/playlist3.c:	Added user feedback. (in statusbar)
 
 24-10-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Moved code around, improved function naming.

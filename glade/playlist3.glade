@@ -19,6 +19,7 @@
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="delete_event" handler="pl3_close" last_modification_time="Fri, 22 Oct 2004 19:06:02 GMT"/>
+  <signal name="key_press_event" handler="pl3_window_key_press_event" last_modification_time="Mon, 25 Oct 2004 17:51:56 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
@@ -76,6 +77,7 @@
 		<widget class="GtkTreeView" id="playlist_tree">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
+		  <property name="has_focus">True</property>
 		  <property name="headers_visible">False</property>
 		  <property name="rules_hint">True</property>
 		  <property name="reorderable">False</property>

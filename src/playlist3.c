@@ -8,6 +8,7 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist2.h"
+#include "playlist3.h"
 #include "song-browser.h"
 #include "open-location.h"
 
@@ -167,9 +168,14 @@ void pl3_browse_file_add_folder()
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		char *path;
+		char *message = NULL;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
+		message = g_strdup_printf("Added folder '%s' recursively", path);
+		pl3_push_statusbar_message(message);
+		g_free(message);
 		mpd_sendAddCommand(info.connection, path);
 		mpd_finishCommand(info.connection);
+			
 		check_for_errors();
 	}
 }
@@ -519,6 +525,7 @@ void pl3_browse_artist_add_folder()
 		else if(!g_utf8_collate(artist,title))
 		{
 			/* artist selected */
+			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
 			mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
 			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
 			{                                                                         			
@@ -526,12 +533,15 @@ void pl3_browse_artist_add_folder()
 				mpd_freeInfoEntity (ent);
 			}
 			mpd_finishCommand (info.connection);
+			pl3_push_statusbar_message(message);
+			g_free(message);
 
 		}
 		else
 		{
 			/* album selected */
 			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
+			gchar *message = g_strdup_printf("Added songs from album '%s' ",title);
 			mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, title);
 			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
 			{
@@ -542,7 +552,9 @@ void pl3_browse_artist_add_folder()
 				mpd_freeInfoEntity (ent);
 			}
 			mpd_finishCommand (info.connection);
-
+			pl3_push_statusbar_message(message);
+			g_free(message);
+			
 		}
 
 		/* if there are items in the add list add them to the playlist */
@@ -611,19 +623,19 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		if(song_id == NULL) return;
 		if(r_type == PL3_ENTRY_PLAYLIST)
 		{	
+			pl3_push_statusbar_message("Loaded playlist");
 			mpd_sendLoadCommand(info.connection, song_id);
 			mpd_finishCommand(info.connection);
+			
 			if(check_for_errors()) return;
 		}
 		else
 		{
+			pl3_push_statusbar_message("Added a song");
 			mpd_sendAddCommand(info.connection, song_id);
 			mpd_finishCommand(info.connection);
 			if(check_for_errors()) return;
 		}
-
-
-
 	}
 }
 
@@ -860,6 +872,52 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 
 
+
+
+
+
+
+
+
+/**********************************************************
+ * MISC
+ */
+
+int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
+{
+	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
+	{
+		int retval;
+		g_print("test\n");
+		g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
+
+	}
+
+
+
+
+
+
+
+
+	/* propagate */
+	return FALSE;
+}
+
+int pl3_pop_statusbar_message()
+{
+	
+	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), 0);
+	return FALSE;
+}
+
+
+void pl3_push_statusbar_message(char *mesg)
+{
+	/* message auto_remove after 5 sec */
+	g_timeout_add(5000,(GSourceFunc)pl3_pop_statusbar_message, NULL);
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), 0,mesg);
+}
 
 
 
