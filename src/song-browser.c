@@ -131,6 +131,8 @@ void sb_delete()
 
 gboolean sb_button_press_event (GtkWidget * widget, GdkEventButton * event)
 {
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+	if(gtk_tree_selection_count_selected_rows(selection) == 0) return FALSE;
 	if (event->button == 3)	/* right mouse button */
 	{
 		GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
