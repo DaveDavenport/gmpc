@@ -943,7 +943,7 @@ void create_playlist3 ()
 	GtkWidget *tree;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
-
+	GtkTreeIter iter;
 	if(pl3_xml != NULL)
 	{
 
@@ -1045,6 +1045,12 @@ void create_playlist3 ()
 
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
+
+	/* select the current playlist */
+	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
+	{
+		gtk_tree_selection_select_iter(sel, &iter);
+	}
 }
 
 
