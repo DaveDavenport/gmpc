@@ -912,9 +912,23 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 			gtk_tree_selection_select_iter(sel, &iter);               		
 		}
 	}
-
-
-
+	/* default gmpc/xmms/gmpc key's*/
+	else if (event->keyval == GDK_z && event->state == 0)
+	{
+		prev_song();	
+	}
+	else if ((event->keyval == GDK_x || event->keyval == GDK_c )&& event->state == 0)
+	{
+		play_song();	
+	}
+	else if (event->keyval == GDK_v && event->state == 0)
+	{
+		stop_song();
+	}
+	else if (event->keyval == GDK_b && event->state == 0)
+	{
+		next_song();
+	}
 
 
 

@@ -379,8 +379,8 @@ update_interface ()
 							TRUE, WEIGHT_INT,
 							weight,
 							SONG_STOCK_ID,
-							(ent->info.song->
-							 name ==
+							(strstr(ent->info.song->
+							 file,"://") !=
 							 NULL) ?
 							"media-audiofile"
 							: "media-stream",
@@ -410,7 +410,7 @@ update_interface ()
 						WEIGHT_INT,
 						PANGO_WEIGHT_NORMAL,
 						SONG_STOCK_ID,
-						(ent->info.song->name ==
+						(strstr(ent->info.song->file, "://") ==
 						 NULL) ? "media-audiofile"
 						: "media-stream", 
 						SONG_TIME, ent->info.song->time,
