@@ -1067,7 +1067,17 @@ void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 				if(!check_for_errors())
 					while((entity = mpd_getNextInfoEntity(info.connection)))
 					{
-						if(!g_utf8_collate(album, (entity->info.song->album == NULL)? "" : entity->info.song->album) || !g_utf8_collate(album, "All"))
+					if(entity->info.song->album == NULL)
+					{
+					if(!g_utf8_collate(album, "All"))
+					{
+					if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
+					mpd_freeInfoEntity(entity);
+					}
+					
+					}
+					else
+					if(!g_utf8_collate(album, entity->info.song->album) || !g_utf8_collate(album, "All"))
 						{
 							if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
 							mpd_freeInfoEntity(entity);
@@ -1342,13 +1352,29 @@ void fill_id3_songs_tree(GtkWidget *tree)
 			if(!check_for_errors())	while((entity = mpd_getNextInfoEntity(info.connection)))
 			{
 				GtkTreeIter iter;
-				if(!g_utf8_collate(album, "All") || !g_utf8_collate(album, (entity->info.song->album == NULL)? "":entity->info.song->album))
+				if(entity->info.song->album != NULL)
+				{
+				if(!g_utf8_collate(album, "All") || !g_utf8_collate(album, entity->info.song->album))
 				{
 					gtk_list_store_append(info.id3_songs_list, &iter);
 					if(entity->info.song->title != NULL )
 					{
 						gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
 					}	
+				}
+				}
+				else
+				{
+				if(!g_utf8_collate(album, "All"))
+				{
+					gtk_list_store_append(info.id3_songs_list, &iter);
+					if(entity->info.song->title != NULL )
+					{
+						gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
+					}	
+				}
+				
+				
 				}
 				mpd_freeInfoEntity(entity);
 			}
