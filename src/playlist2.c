@@ -60,6 +60,13 @@ void pl2_highlight_song()
 		temp = g_strdup_printf("%i", info.status->song);
 		if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, temp))
 		{
+			gint pos;
+			gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_POS, &pos, -1);
+			if(pos != info.status->song)
+			{
+				g_print("Errror %i %i\n", pos, info.status->song);
+
+			}
 			gtk_list_store_set(pl2_store, &iter, WEIGHT_INT, PANGO_WEIGHT_ULTRABOLD, -1);
 		}
 		g_free(temp);                                                                     	
@@ -212,6 +219,67 @@ void pl2_show_song_info()
 }
 
 
+gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, guint time)
+{
+	GtkTreePath *path = NULL;
+	GtkTreeViewDropPosition pos;
+	GtkTreeIter iter, iter2;
+	gint pos1, pos2;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
+	/* get drop location */
+	gtk_tree_view_get_dest_row_at_pos(tree, x,y, &path, &pos);
+	if(path == NULL)
+	{
+		g_print("Don't know where to move it to\n");
+		return TRUE;
+	}
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_store), &iter,path);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_POS, &pos2,-1);
+	gtk_tree_path_free(path);
+
+	if(pos == GTK_TREE_VIEW_DROP_AFTER)
+	{
+		pos2 = pos2+1;
+	}
+
+
+
+	if(gtk_tree_selection_count_selected_rows(selection) > 0)
+	{
+		GList *list = NULL;
+		list = gtk_tree_selection_get_selected_rows (selection, &pl2_fil);
+		list = g_list_last(list);
+		int i=0;
+		mpd_sendCommandListBegin(info.connection);
+		do{
+			gtk_tree_model_get_iter(pl2_fil, &iter2,(GtkTreePath *)list->data);
+
+			/* get start pos */
+			gtk_tree_model_get(pl2_fil, &iter2, SONG_POS, &pos1,-1);
+			/* compensate for previous moves */
+			/* if we move after the current */
+			if(pos1 < pos2)
+			{
+				pos1 -= i;
+			}
+			else if(pos1 > pos2)
+			{
+				pos1 += i; 
+			}
+			mpd_sendMoveCommand(info.connection, pos1,pos2);
+			i++;
+		}while((list = g_list_previous(list)));
+		/* free list */
+		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+
+		mpd_sendCommandListEnd(info.connection);
+		mpd_finishCommand(info.connection);
+	}
+	return TRUE;
+}
+
+
 /* create the playlist view 
  * This is done only once, for the rest its hidden, but still there
  */
@@ -220,6 +288,7 @@ void create_playlist2()
 {
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
+	GtkTargetEntry target;
 	if(pl2_xml != NULL)
 	{
 		gtk_widget_show_all(
@@ -267,6 +336,19 @@ void create_playlist2()
 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_fil), 
 			(GtkTreeModelFilterVisibleFunc) pl2_filter_function,
 			NULL, NULL);
+
+
+	/* Dragging*/ 
+	target.target = "";
+	target.flags = GTK_TARGET_SAME_WIDGET;
+	target.info = 1;
+
+	gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), GDK_BUTTON1_MASK,
+			&target, 1, GDK_ACTION_MOVE);
+	gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), &target, 1, GDK_ACTION_MOVE);
+
+
+
 
 	glade_xml_signal_autoconnect(pl2_xml);
 }

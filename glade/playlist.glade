@@ -145,6 +145,7 @@
 	      <property name="reorderable">False</property>
 	      <property name="enable_search">True</property>
 	      <signal name="row_activated" handler="pl2_row_activated" last_modification_time="Mon, 21 Jun 2004 12:58:30 GMT"/>
+	      <signal name="drag_drop" handler="pl2_row_moved" last_modification_time="Sat, 26 Jun 2004 14:38:05 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
