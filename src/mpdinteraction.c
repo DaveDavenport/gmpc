@@ -65,7 +65,6 @@ int disconnect_to_mpd()
 	info.old_pos = -1;
 	
 	/* disconnect playlist */
-	pl2_disconnect();
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
@@ -131,8 +130,6 @@ int connect_to_mpd()
 	/* Set the title */
 	msg_set_base(_("GMPC - Connected"));
 
-	/* connect playlist2 */
-	pl2_connect();
 	
 	return FALSE;
 }

@@ -105,19 +105,11 @@ set_default_values ()
 
 	/* */
 	info.sb_hidden = FALSE;
-	info.pl2_hidden = FALSE;
 
 	/*
 	 * updating 
 	 */
 	info.updating = FALSE;
-
-	/* tooltip playlist
-	*/
-	info.pl2_tooltip = 800;
-	info.pl2_do_tooltip = TRUE;
-
-
 }
 
 
@@ -421,7 +413,7 @@ update_interface ()
 			g_free (path);
 			old_length--;
 		}
-		pl2_highlight_song ();
+		//pl2_highlight_song ();
 
 
 		info.status->song = -1;
@@ -430,7 +422,7 @@ update_interface ()
 	/*
 	 * update the playlist 
 	 */
-	update_playlist2 ();
+//update_playlist2 ();
 	pl3_update ();
 
 	/*

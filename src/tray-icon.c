@@ -436,7 +436,7 @@ void update_tray_icon()
 	{
 		if(info.song != info.status->song)
 		{
-			gchar *str = NULL;
+//			gchar *str = NULL;
 			if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
 			{
 				if(info.mpdSong != NULL)
@@ -501,7 +501,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
 
 //			if(info.sb_hidden) song_browser_create();
-			if(info.pl2_hidden) create_playlist2();
+//			if(info.pl2_hidden) create_playlist2();
 
 			info.hidden = FALSE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
@@ -522,11 +522,6 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 				/* make sure its showed again */
 //				info.sb_hidden = TRUE;
 //			}
-			if(info.pl2_hidden)
-			{
-				hide_playlist2();      		
-				info.pl2_hidden = TRUE;
-			}
 		}
 	}
 	else if (event->button == 2)

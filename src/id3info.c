@@ -15,17 +15,11 @@ void id3_last_song ();
 	void
 find_title ()
 {
-	pl2_set_query (gtk_entry_get_text
-			(GTK_ENTRY
-			 (glade_xml_get_widget (xml_id3_window, "title_entry"))));
 }
 
 	void
 find_artist ()
 {
-	pl2_set_query (gtk_entry_get_text
-			(GTK_ENTRY
-			 (glade_xml_get_widget (xml_id3_window, "artist_entry"))));
 }
 
 /* function to remove the id3 info screen and unref the xml tree */
