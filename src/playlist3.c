@@ -296,7 +296,7 @@ void cat_sel_changed(GtkTreeSelection *sel)
 			//			g_print("show songs\n");
 			//			gtk_list_store_clear(pl3_store);	
 			//			view_file_browser_folder(&iter);
-			//			gtk_tree_view_set_model(tree, pl3_store);
+			gtk_tree_view_set_model(tree, pl3_store);
 
 		}
 
