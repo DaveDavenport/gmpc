@@ -19,8 +19,6 @@ gmpc_SOURCES=\
 	misc.h\
 	strfsong.c\
 	strfsong.h\
-	support.h\
-	support.c\ 
 	playlist2.c\
 	playlist2.h\
 	main.h

@@ -28,7 +28,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <glib.h>
-#include "support.h"
+//#include "support.h"
+#include "misc.h"
 #include "libmpdclient.h"
 #include "strfsong.h"
 
@@ -163,23 +164,23 @@ _strfsong(gchar *s,
       if(*end != '%')
 	n--;
       else if (strncmp("%file%", p, n) == 0)
-	temp = utf8_to_locale(song->file);
+	temp = g_strdup(song->file);
       else if (strncmp("%artist%", p, n) == 0)
-	temp = song->artist ? utf8_to_locale(song->artist) : NULL;
+	temp = song->artist ? g_strdup(song->artist) : NULL;
       else if (strncmp("%title%", p, n) == 0)
-	temp = song->title ? utf8_to_locale(song->title) : NULL;
+	temp = song->title ? g_strdup(song->title) : NULL;
       else if (strncmp("%album%", p, n) == 0)
-	temp = song->album ? utf8_to_locale(song->album) : NULL;
+	temp = song->album ? g_strdup(song->album) : NULL;
       else if (strncmp("%track%", p, n) == 0)
-	temp = song->track ? utf8_to_locale(song->track) : NULL;
+	temp = song->track ? g_strdup(song->track) : NULL;
       else if (strncmp("%name%", p, n) == 0)
-	temp = song->name ? utf8_to_locale(song->name) : NULL;
+	temp = song->name ? g_strdup(song->name) : NULL;
       else if (strncmp("%shortfile%", p, n) == 0)
 	{
 	  if( strstr(song->file, "://") )
-	    temp = utf8_to_locale(song->file);
+	    temp = g_strdup(song->file);
 	  else
-	    temp = utf8_to_locale(basename(song->file));
+		  temp = remove_extention_and_basepath(song->file);
 	}
       else if (strncmp("%time%", p, n) == 0)
 	{
