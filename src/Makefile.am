@@ -7,7 +7,6 @@ gmpc_SOURCES=\
 	player.c\
 	preferences.c\
 	id3info.c\
-	config.c\
 	libmpdclient.c\
 	eggtrayicon.c\
 	tray-icon.c\
