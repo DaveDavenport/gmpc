@@ -1,6 +1,5 @@
 * 	als window niet "present" is, hide dan niet op tray-icon click maar present de window
 * 	Add a note on the "Add Location" window that url's can be dropped there from a browser
-* 	Add a configuration item for configuring the song display
 * 	Sort id3 browser
 * 	In browser window in any mode, if someone has the parent and some (or all) children highlighted of a branch, add all items of just once.  
 	for example, if one highlights artist "Oasis" and all their songs, it should only add all the songs of oasis once, not twice).
