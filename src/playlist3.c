@@ -124,9 +124,95 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 		}
 	}
 
+}
+
+void view_artist_browser_folder(GtkTreeIter *iter_cat)
+{
+	mpd_InfoEntity *ent = NULL;
+	char *artist, *string;
+	int sub_folder = 0;
+	GtkTreeIter iter;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
+	if (check_connection_state ())
+ 		return;
+ 
+	if(artist == NULL || string == NULL)
+	{
+		return;
+	}
+	if(strlen(artist) == 0)
+	{
+		/*lowest level, do nothing */
+		return;
+	}
+	if(!strcmp(artist,string))
+	{
+		int albums = 0;
+		/* artist is selected */
+		mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
+		while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+		{
+			if (ent->info.song->album == NULL
+					|| strlen (ent->info.song->album) == 0)
+			{
+				gchar buffer[1024];
+				strfsong (buffer, 1024, preferences.markup_song_browser,
+						ent->info.song);
+				if(ent->info.song->file == NULL)
+				{
+					g_print("crap\n");
+				}
+				gtk_list_store_append (pl3_store, &iter);
+				gtk_list_store_set (pl3_store, &iter,
+						2, buffer,
+						0, ent->info.song->file,
+						5,"media-audiofile",
+						-1);
+
+			}
+			else albums++;
+			mpd_freeInfoEntity (ent);
+		}
+
+		if(!albums)
+		{
+			if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
+			{
+				gtk_tree_store_remove(pl3_tree, &iter);      		
+			}
+		}                                                                                  		
 
 
 
+	}
+	else 
+	{
+		/* artist and album is selected */
+		mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, string);
+		while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+		{
+			if (ent->info.song->artist!= NULL
+					&& !g_utf8_collate (ent->info.song->artist, artist))
+			{
+				gchar buffer[1024];
+				strfsong (buffer, 1024, preferences.markup_song_browser,
+						ent->info.song);
+				if(ent->info.song->file == NULL)
+				{
+					g_print("crap\n");
+				}
+				gtk_list_store_append (pl3_store, &iter);
+				gtk_list_store_set (pl3_store, &iter,
+						2, buffer,
+						0, ent->info.song->file,
+						5,"media-audiofile",
+						-1);
+
+			}
+			mpd_freeInfoEntity (ent);                                       	
+		}
+
+	}
 }
 
 
@@ -186,18 +272,7 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
 		}
-
-
-
-
-
 	}
-
-
-
-
-
-
 }
 void file_browser_fill_tree(GtkTreeIter *iter)
 {
@@ -293,8 +368,10 @@ void cat_sel_changed(GtkTreeSelection *sel)
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
-			//			g_print("show songs\n");
-			//			gtk_list_store_clear(pl3_store);	
+			g_print("show songs for artist browser\n");
+			gtk_list_store_clear(pl3_store);	
+			view_artist_browser_folder(&iter);
+
 			//			view_file_browser_folder(&iter);
 			gtk_tree_view_set_model(tree, pl3_store);
 
