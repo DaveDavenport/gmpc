@@ -1,3 +1,27 @@
+
+
+
+
+
+
+
+
+
+
+
+#ifdef ENABLE_NLS
+#include <libintl.h>
+#include <locale.h>
+#define _(String) gettext (String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#  endif
+#else 
+#define _(String) String
+#endif
+
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
