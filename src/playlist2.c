@@ -400,9 +400,10 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y,gu
 	GtkTreeIter iter, iter2;
 	gint pos1, pos2;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
-
 	/* if where disconnected just quit */
 	if(check_connection_state()) return TRUE;
+
+	
 
 	/* get drop location */
 	gtk_tree_view_get_dest_row_at_pos(tree, x,y, &path, &pos);
@@ -444,7 +445,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y,gu
 			if(pos1 < pos2)
 			{
 				pos1 -= i;
-				if(pos == GTK_TREE_VIEW_DROP_BEFORE)
+				if(pos == GTK_TREE_VIEW_DROP_BEFORE || 
+				  pos == GTK_TREE_VIEW_DROP_INTO_OR_BEFORE)
 					dropl-=1;
 			}
 			else if(pos1 > pos2)
