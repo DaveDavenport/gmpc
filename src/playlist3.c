@@ -221,6 +221,13 @@ void pl3_custom_stream_add_stream()
 	g_object_unref(xml);
 }
 
+void pl3_custom_stream_remove()
+{
+
+
+
+
+}
 
 
 /************************************
@@ -862,7 +869,12 @@ void pl3_browse_add_selected()
 	}
 	if(songs != 0)
 	{
-		message = g_strdup_printf("Added %i songs", songs);
+		gint type =  pl3_cat_get_selected_browser();
+		if(type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
+		{
+			message = g_strdup_printf("Added %i streams", songs);
+		}
+		else message = g_strdup_printf("Added %i songs", songs);
 		pl3_push_statusbar_message(message);
 		g_free(message);                                       	
 	}
@@ -1210,7 +1222,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
 	{
 
 		/* del, crop */
@@ -1227,6 +1239,13 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_replace_selected), NULL);
+		
+		if(type == PL3_BROWSE_CUSTOM_STREAM)
+		{
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);                          		
+        		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_stream_remove), NULL);
+		}
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
@@ -1272,6 +1291,13 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 			mpd_finishCommand(info.connection);
 
 			if(check_for_errors()) return;
+		}
+		else if (type == PL3_BROWSE_CUSTOM_STREAM || type == PL3_BROWSE_XIPH)
+		{
+			pl3_push_statusbar_message("Added a stream");
+			mpd_sendAddCommand(info.connection, song_id);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;               			
 		}
 		else
 		{
@@ -1746,6 +1772,22 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		pl3_browse_add_selected();	
 		return TRUE;
+	}
+	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
+	{
+			if(info.status->song != -1 && info.status->playlistLength != 0)
+			{
+				gchar *str = g_strdup_printf("%i", info.status->song);
+				GtkTreePath *path = gtk_tree_path_new_from_string(str);
+				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+						path,
+						NULL,
+						TRUE,0.5,0);
+				gtk_tree_path_free(path);
+				g_free(str);
+			}                                                      		
+
 	}
 	/* call default */
 	return pl3_window_key_press_event(mw,event);
