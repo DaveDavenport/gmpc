@@ -8,13 +8,17 @@
 #include "strfsong.h"
 #include "playlist2.h"
 #define TITLE_LENGTH 42
-#define DISPLAY_WIDTH 240
+gint DISPLAY_WIDTH = 240;
 
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
+void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
+{
+	if(allocation->width != 0) DISPLAY_WIDTH = allocation->width;
+}
 
 void time_exposed(GtkWidget *window)
 {
@@ -472,6 +476,14 @@ void style_changed(GtkWidget *window, GtkStyle *prev, PangoLayout *lay)
 void create_player()
 {
 	xml_main_window = glade_xml_new(GLADE_PATH"gmpc.glade", "main_window", NULL);
+	/* check for errors and axit when there is no gui file */
+	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
+	glade_xml_signal_autoconnect(xml_main_window);
+
+	DISPLAY_WIDTH = glade_xml_get_widget(xml_main_window, "entry_image")->allocation.width;
+
+
+	
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);
 	layout = gtk_widget_create_pango_layout(glade_xml_get_widget(xml_main_window, "entry_image"), "");
@@ -488,8 +500,8 @@ void create_player()
 
 	pango_layout_set_text(time_layout, "00:00", -1);
 	/* check for errors and axit when there is no gui file */
-	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
+/*	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 	glade_xml_signal_autoconnect(xml_main_window);
-	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
+*/	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }
 

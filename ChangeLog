@@ -1,4 +1,5 @@
 31-06-2004 Qball <Qball@qballcow.nl>
+	* Track window size changes and grow/shrink title box accordingly
 	* browse by search now opens an old search if the same search is done
 	again.
 	* removed default focus from close button in song-browser
