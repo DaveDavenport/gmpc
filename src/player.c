@@ -263,7 +263,16 @@ int update_player()
 				}
 				else
 				{
+					int i =0;
 					gchar *buf  = g_path_get_basename(song->file);
+					for(i=strlen(buf);buf[i] != '.';i--);
+					/* cut of the extention */
+					if(i > 0)
+					{
+						gchar *buf2 = g_strndup(buf, i);
+						g_free(buf);
+						buf = buf2;
+					}
 					msg_set_base(buf);
 					g_free(buf);
 				}
