@@ -959,34 +959,31 @@ sb_fill_browser_id3 ()
 			if (check_connection_state ())
 				return;
 
-			if (nalbum == 0)
+			mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
+			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
 			{
-				mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
-				while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+				if (ent->info.song->album == NULL
+						|| strlen (ent->info.song->album) == 0)
 				{
-					if (ent->info.song->album == NULL
-							|| strlen (ent->info.song->album) == 0)
-					{
-						gchar buffer[1024];
-						strfsong (buffer, 1024, preferences.markup_song_browser,
-								ent->info.song);
-						gtk_tree_store_append (sb_id3, &iter, &parent);
-						gtk_tree_store_set (sb_id3, &iter,
-								SB_FPATH, ent->info.song->file,
-								SB_DPATH, buffer,
-								SB_TYPE, ROW_SONG,
-								SB_PIXBUF, "media-audiofile", -1);
+					gchar buffer[1024];
+					strfsong (buffer, 1024, preferences.markup_song_browser,
+							ent->info.song);
+					gtk_tree_store_append (sb_id3, &iter, &parent);
+					gtk_tree_store_set (sb_id3, &iter,
+							SB_FPATH, ent->info.song->file,
+							SB_DPATH, buffer,
+							SB_TYPE, ROW_SONG,
+							SB_PIXBUF, "media-audiofile", -1);
 
-					}
-					mpd_freeInfoEntity (ent);
 				}
-				mpd_finishCommand (info.connection);
-				if (check_for_errors ())
-				{
-					g_print ("Stopped on a error, on line 591 %s\n",
-							info.connection->errorStr);
-					return;
-				}
+				mpd_freeInfoEntity (ent);
+			}
+			mpd_finishCommand (info.connection);
+			if (check_for_errors ())
+			{
+				g_print ("Stopped on a error, on line 591 %s\n",
+						info.connection->errorStr);
+				return;
 			}
 		}
 		while (gtk_tree_model_iter_next (GTK_TREE_MODEL (sb_id3), &parent));

@@ -1,6 +1,7 @@
 /*
- *Copyright (C) 2004 Lee Willis <lee@leewillis.co.uk>
- *    Borrowed heavily from code by Jan Arne Petersen <jpetersen@uni-bonn.de>
+ *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ * Borrowed from Lee Willis <lee@leewillis.co.uk> that
+ * Borrowed heavily from code by Jan Arne Petersen <jpetersen@uni-bonn.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -21,15 +22,15 @@
 #include <stdio.h>
 #include "mm-keys.h"
 
- static void mmkeys_class_init (MmKeysClass *klass);
- static void mmkeys_init       (MmKeys      *object);
- static void mmkeys_finalize   (GObject     *object);
+static void mmkeys_class_init (MmKeysClass *klass);
+static void mmkeys_init       (MmKeys      *object);
+static void mmkeys_finalize   (GObject     *object);
 
- static void grab_mmkey (int key_code, GdkWindow *root);
+static void grab_mmkey (int key_code, GdkWindow *root);
 
- static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent,
-		 GdkEvent *event,
-		 gpointer data);
+static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent,
+		GdkEvent *event,
+		gpointer data);
 
 enum {
 	MM_PLAYPAUSE,
@@ -44,8 +45,7 @@ static guint signals[LAST_SIGNAL];
 
 static GType type = 0;
 
-	GType
-mmkeys_get_type (void)
+GType mmkeys_get_type (void)
 {
 	if (!type) {
 		static const GTypeInfo info = {
@@ -67,8 +67,7 @@ mmkeys_get_type (void)
 	return type;
 }
 
-	static void
-mmkeys_class_init (MmKeysClass *klass)
+static void mmkeys_class_init (MmKeysClass *klass)
 {
 	GObjectClass *object_class;
 
@@ -111,16 +110,14 @@ mmkeys_class_init (MmKeysClass *klass)
 				G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
-	static void
-mmkeys_finalize (GObject *object)
+static void mmkeys_finalize (GObject *object)
 {
 	parent_class->finalize (G_OBJECT(object));
 }
 
 #define N_KEYCODES 5
 
-	static void
-mmkeys_init (MmKeys *object)
+static void mmkeys_init (MmKeys *object)
 {
 	int keycodes[N_KEYCODES];
 	GdkDisplay *display;
@@ -152,14 +149,12 @@ mmkeys_init (MmKeys *object)
 	}
 }
 
-	MmKeys *
-mmkeys_new (void)
+MmKeys * mmkeys_new (void)
 {
 	return MMKEYS (g_object_new (TYPE_MMKEYS, NULL));
 }
 
-	static void
-grab_mmkey (int key_code, GdkWindow *root)
+static void grab_mmkey (int key_code, GdkWindow *root)
 {
 	gdk_error_trap_push ();
 
@@ -202,8 +197,7 @@ grab_mmkey (int key_code, GdkWindow *root)
 	}
 }
 
-	static GdkFilterReturn
-filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpointer data)
+static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpointer data)
 {
 	XEvent *xev;
 	XKeyEvent *key;

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-22 13:26+0200\n"
+"POT-Creation-Date: 2004-08-25 13:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,9 +21,9 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
 #. set up tray icon
-#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:126
-#: src/player.c:269 src/player.c:270 src/player.c:290 src/tray-icon.c:325
-#: src/tray-icon.c:434
+#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:121
+#: src/player.c:264 src/player.c:265 src/player.c:285 src/tray-icon.c:326
+#: src/tray-icon.c:435
 msgid "Gnome Music Player Client"
 msgstr ""
 
@@ -492,40 +492,40 @@ msgid ""
 "GMPC - Connection Error. Please check youre settings in the preferences menu"
 msgstr ""
 
-#: src/player.c:176 src/player.c:193
+#: src/player.c:171 src/player.c:188
 msgid "No valid UTF-8. Please check youre locale"
 msgstr ""
 
-#: src/player.c:289
+#: src/player.c:284
 msgid "GMPC - Stopped"
 msgstr ""
 
-#: src/player.c:366
+#: src/player.c:361
 #, c-format
 msgid "Seek to %02i:%02i/%02i:%02i"
 msgstr ""
 
-#: src/player.c:374
+#: src/player.c:369
 #, c-format
 msgid "Seek to -%02i:%02i/%02i:%02i"
 msgstr ""
 
-#: src/player.c:376
+#: src/player.c:371
 #, c-format
 msgid "Seek to %3.1f%%"
 msgstr ""
 
-#: src/player.c:422
+#: src/player.c:417
 #, c-format
 msgid "Volume %i%%"
 msgstr ""
 
 #. check for errors and axit when there is no gui file
-#: src/player.c:483
+#: src/player.c:478
 msgid "Couldnt initialize GUI. Please check installation\n"
 msgstr ""
 
-#: src/main.c:258
+#: src/main.c:269
 msgid "MPD is updating the database, please wait"
 msgstr ""
 
@@ -533,19 +533,19 @@ msgstr ""
 msgid "Are you sure you want to clear the playlist?"
 msgstr ""
 
-#: src/popup.c:24
+#: src/popup.c:23
 msgid "<b><i>Stopped</i></b>"
 msgstr ""
 
-#: src/popup.c:27
+#: src/popup.c:26
 msgid "<b><i>Paused</i></b>"
 msgstr ""
 
-#: src/popup.c:30
+#: src/popup.c:29
 msgid "<b><i>Unknown State</i></b>"
 msgstr ""
 
-#: src/popup.c:40
+#: src/popup.c:39
 msgid "No Song found\n"
 msgstr ""
 
@@ -559,6 +559,11 @@ msgstr ""
 
 #: src/mpdinteraction.c:109
 msgid "You don't have enough permission to access mpd."
+msgstr ""
+
+#. Set the title
+#: src/mpdinteraction.c:122
+msgid "GMPC - Connected"
 msgstr ""
 
 #: src/open-location.c:83

@@ -1,3 +1,7 @@
+26-08-2004 Qball <Qball@qballcow.nl>
+	* src/song-browser.c:	Fixed bug that caused songs withouth an album
+	not always showing up in id3 browser.
+
 25-08-2004 Qball <Qball@qballcow.nl>
 	* src/mm-keys.[c|h]:	Added primary support for mm-keys.
 
