@@ -185,6 +185,7 @@ void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 	{
 		gint id=0;
 		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, SONG_ID,&id,-1);
+		g_print("pos_id %i - %s %s, pos\n", id,gtk_tree_model_get_string_from_iter(pl2_fil, &iter), gtk_tree_path_to_string(path));
 		mpd_sendPlayIdCommand(info.connection, id);
 		mpd_finishCommand(info.connection);
 	}
@@ -284,8 +285,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 		mpd_finishCommand(info.connection);
 	}
 	g_signal_stop_emission_by_name(G_OBJECT(tree), "drag-drop");
-	
-	return TRUE;
+	return TRUE;	
+//	return TRUE;
 }
 
 
