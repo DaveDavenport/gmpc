@@ -3,6 +3,7 @@
     *	If you press del in the playlist window it wil remove the current selected songs.
     *	Playlists view hide state is remembered over session.
     *	Time format is remembered over session.
+    *	Fix bug #203. (crash when not connected and click on title bar)
     
 06-03-2004 Qball <Qball@qballcow.nl>
     *	Added support for password authentification with mpd.
