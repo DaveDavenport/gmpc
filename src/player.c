@@ -9,6 +9,8 @@
 #include "strfsong.h"
 #include "playlist2.h"
 #include "playlist3.h"
+#include "config1.h"
+extern config_obj *config;
 
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
@@ -256,7 +258,7 @@ int update_player()
 			
 			
 			
-			if(info.time_format == TIME_FORMAT_ELAPSED)
+			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format", TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
 			{
 			/* if more then 100 minutes player change to hh:mm */
 				if(abs(e_min) >= 100)
@@ -266,7 +268,7 @@ int update_player()
 				}                                				
 				buf = g_strdup_printf("%02i:%02i", abs(e_min), abs(e_sec));
 			}
-			else if (info.time_format == TIME_FORMAT_REMAINING)
+			else if (cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
 			/* if more then 100 minutes player change to hh:mm */
 				if(abs(r_min) >= 100)
@@ -322,11 +324,11 @@ int update_player()
 			GtkWidget *entry;
 			msg_set_base(_("GMPC - Stopped"));
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
-			if(info.time_format == TIME_FORMAT_ELAPSED)
+			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
 			{
 				pango_layout_set_text(time_layout, "00:00", -1);
 			}
-			else if(info.time_format == TIME_FORMAT_REMAINING)
+			else if(cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
 				pango_layout_set_text(time_layout, "-00:00", -1);
 
@@ -392,7 +394,7 @@ void change_progress_update()
 			gchar *buf = NULL;
 			gdouble value = gtk_range_get_value(scale);
 			int newtime = (int)(info.status->totalTime*(double)(value/100));
-			if(info.time_format == TIME_FORMAT_ELAPSED)
+			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED)  == TIME_FORMAT_ELAPSED)
 			{
 				int min = (int)(newtime/60);
 				int sec = newtime - 60*min;
@@ -400,7 +402,7 @@ void change_progress_update()
 				int t_sec = info.status->totalTime - 60*t_min;
 				buf = g_strdup_printf(_("Seek to %02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}
-			else if (info.time_format == TIME_FORMAT_REMAINING)
+			else if (cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
 				int t_min = (int)(info.status->totalTime/60);
 				int t_sec = info.status->totalTime - 60*t_min;
@@ -496,8 +498,13 @@ int volume_change_stop()
 /* change the time format between elapsing and remaining and percentage */
 void time_format_toggle()
 {
-	info.time_format++;
-	if(info.time_format > 2) info.time_format = 0;
+	int time = cfg_get_single_value_as_int(config, "player", "time-format");
+	time++;
+	if(time > 2)
+	{
+		time = 0;
+	}
+	cfg_set_single_value_as_int(config, "player", "time-format",time);
 }
 
 

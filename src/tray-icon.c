@@ -4,7 +4,6 @@
 #include "eggtrayicon.h"
 #include "libmpdclient.h"
 #include "playlist2.h"
-#include "song-browser.h"
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
@@ -71,10 +70,11 @@ gchar *tray_get_tooltip_text()
 	return retval;
 }
 
-void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
+void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 {
 	int width, height;
 	GtkStyle *style;
+	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = tray_get_tooltip_text();
 	if(tooltiptext == NULL) tooltiptext = g_strdup("oeps");
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
@@ -129,11 +129,11 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 				screen, monitor, &msize);
 
 		/* calculate position */
-		switch(cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
+		switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 		{
 			case 0:
 				gdk_window_get_origin(tv->window, &x_tv, &y_tv);
-				x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - width/2;
+				x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
 				y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
 				/* check borders left, right*/	
@@ -157,19 +157,16 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 				gtk_window_move(GTK_WINDOW(tip), 0,0);
 				break;
 			case 2:
-				gtk_window_move(GTK_WINDOW(tip), msize.width-width, 0);	
+				gtk_window_move(GTK_WINDOW(tip), msize.width-width-8, 0);	
 				break;
 			case 3:
-				gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height);	
+				gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height-8);	
 				break;
 			case 4:
-				gtk_window_move(GTK_WINDOW(tip), msize.width-width, msize.height-height);	
+				gtk_window_move(GTK_WINDOW(tip), msize.width-width-8, msize.height-height-8);	
 				break;                                                  				
 
 		}
-
-
-
 
 		gtk_widget_set_usize(tip, width+8, height+8);
 	}
@@ -218,6 +215,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	int x,y;
 	int x_tv,y_tv;
 	int monitor =0;
+	int from_tray = GPOINTER_TO_INT(n);
 
 	GtkWidget *eventb;
 	GdkScreen *screen;
@@ -235,13 +233,18 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 
 
-
-
-
-
-
-
-	if(tip != NULL) return FALSE;
+	if(tip != NULL)
+	{
+		if(from_tray)
+		{
+			tray_leave_cb(NULL, NULL, 0);
+		}
+		else 
+		{
+			return FALSE;
+		}
+	}
+	
 
 
 	char *tooltiptext = NULL;
@@ -262,7 +265,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);
 	gtk_widget_set_name(eventb, "gtk-tooltips");
 	g_signal_connect(G_OBJECT(eventb), "expose-event",
-			G_CALLBACK(tray_paint_tip), NULL);
+			G_CALLBACK(tray_paint_tip), n);
 
 
 	gtk_widget_ensure_style (eventb);
@@ -294,7 +297,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	gdk_window_get_origin(tv->window, &x_tv, &y_tv);
 	/* calculate position */
-	switch(cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
+	switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 	{
 		case 0:
 			gdk_window_get_origin(tv->window, &x_tv, &y_tv);
@@ -332,26 +335,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			gtk_window_move(GTK_WINDOW(tip), msize.width-width, msize.height-height);	
 			break;                                                  				
 	}
-
-	//	x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - width/2;
-	//	y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
-
-	/* check borders left, right*/	
-	//	if((x+width) > msize.width+msize.x)
-	//	{	
-	//		x = msize.x+msize.width-(width);
-	//	}
-	//	else if(x < 0)
-	//	{
-	//		x= 0;
-	//	}
-	/* check up down.. if can't place it below, place it above */
-	//	if( y+height > msize.height+msize.y) 
-	//	{
-	//		y = y_tv -5-(height);
-	//	}
-	/* place the window */
-	//	gtk_window_move(GTK_WINDOW(tip), x, y);
 
 	gtk_widget_show_all(tip);	
 
@@ -436,7 +419,7 @@ void update_tray_icon()
 		}
 		if(tip == NULL)
 		{
-			tray_motion_cb((GtkWidget*)tray_icon,NULL,NULL);
+			tray_motion_cb((GtkWidget*)tray_icon,NULL,GINT_TO_POINTER(0));
 		}
 		else if(popup_timeout != -1)
 		{
@@ -517,7 +500,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),player_wsize.width, player_wsize.height);
 			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
 
-			if(info.sb_hidden) song_browser_create();
+//			if(info.sb_hidden) song_browser_create();
 			if(info.pl2_hidden) create_playlist2();
 
 			info.hidden = FALSE;
@@ -533,12 +516,12 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 
-			if(info.sb_hidden)
-			{
-				sb_close();
+//			if(info.sb_hidden)
+//			{
+//				sb_close();
 				/* make sure its showed again */
-				info.sb_hidden = TRUE;
-			}
+//				info.sb_hidden = TRUE;
+//			}
 			if(info.pl2_hidden)
 			{
 				hide_playlist2();      		
@@ -630,7 +613,7 @@ int create_tray_icon()
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
 	g_signal_connect(G_OBJECT(event), "enter-notify-event", 
-			G_CALLBACK(tray_motion_cb), NULL);
+			G_CALLBACK(tray_motion_cb), GINT_TO_POINTER(1));
 	g_signal_connect(G_OBJECT(event), "leave-notify-event",
 			G_CALLBACK(tray_leave_cb), NULL);
 	/* show all */

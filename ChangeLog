@@ -1,3 +1,8 @@
+05-11-2004 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:	Fixed location of popup.
+				Mouse over tray will always make the popup
+				appear above/below the tray.
+
 24-11-2004 Qball <Qball@qballcow.nl>
 	* src/player.c:		pop/push popup msg is now stack based.
 	* src/playlist3.c:	position is (in session) saved and restored.
@@ -21,7 +26,7 @@
 	
 
 2-11-2004 Qball <Qball@qballcow.nl>
-	* src/playlist3.c:	Can't open row in plaaylist when disconnected.
+	* src/playlist3.c:	Can't open row in playlist when disconnected.
 	* src/playlist3.c:	activating a row now expands it.
 
 1-11-2004 Qball <Qball@qballcow.nl>

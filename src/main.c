@@ -8,10 +8,11 @@
 #include "config1.h"
 #include "playlist2.h"
 #include "playlist3.h"
-#include "song-browser.h"
 #include "main.h"
 #include "strfsong.h"
 #include "mm-keys.h"
+
+
 /*
  * the xml fle pointer to the player window 
  */
@@ -57,10 +58,10 @@ set_default_values ()
 	preferences.markup_main_display =
 		g_strdup
 		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-	preferences.markup_playlist =
+/*	preferences.markup_playlist =
 		g_strdup
 		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-	preferences.markup_song_browser=
+*/	preferences.markup_song_browser=
 		g_strdup
 		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
 	/*
@@ -98,11 +99,6 @@ set_default_values ()
 	 */
 	info.song = -1;
 	info.old_pos = -1;
-	/*
-	 * Elapsed or remaining time 
-	 */
-	info.time_format = 1;
-
 	/*
 	 * tray icon 
 	 */
@@ -309,7 +305,7 @@ update_interface ()
 	 */
 	update_tray_icon ();
 
-	update_song_browser ();
+	//update_song_browser ();
 
 	/*
 	 * check for new playlist and load it if needed 
@@ -365,8 +361,7 @@ update_interface ()
 						info.playlist_playtime += ent->info.song->time;
 					}
 					strfsong (buffer, 1024,
-							preferences.
-							markup_playlist,
+							cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
 							ent->info.song);
 					gtk_list_store_set (pl2_store, &iter,
 							SONG_ID,
@@ -399,7 +394,8 @@ update_interface ()
 
 				gtk_list_store_append (pl2_store, &iter);
 				strfsong (buffer, 1024,
-						preferences.markup_playlist,
+//						preferences.markup_playlist,
+						cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
 						ent->info.song);
 				gtk_list_store_set (pl2_store, &iter, SONG_ID,
 						ent->info.song->id,

@@ -23,17 +23,7 @@ void load_config ()
 	while (fgets (buffer, 1024, fp))
 	{
 
-
-		if (!strncmp (buffer, "time format:", 12))
-		{
-			gchar *buf = g_strstrip (&buffer[12]);
-			if (buf != NULL)
-			{
-				info.time_format = atoi (buf);
-			}
-		}
-
-		else if (!strncmp (buffer, "markup main display:", 20))
+		if (!strncmp (buffer, "markup main display:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
 			if (buf != NULL)
@@ -45,7 +35,7 @@ void load_config ()
 				preferences.markup_main_display = g_strcompress(buf);
 			}
 		}
-		else if (!strncmp (buffer, "markup playlist:", 16))
+/*		else if (!strncmp (buffer, "markup playlist:", 16))
 		{
 			gchar *buf = g_strstrip (&buffer[16]);
 			if (buf != NULL)
@@ -57,7 +47,7 @@ void load_config ()
 				preferences.markup_playlist = g_strcompress(buf);
 			}
 		}
-		else if (!strncmp (buffer, "markup song browser:", 20))
+*/		else if (!strncmp (buffer, "markup song browser:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
 			if (buf != NULL)
@@ -91,25 +81,6 @@ void load_config ()
 				info.online_stream_list[info.online_streams-1] = g_strcompress (buf);
 			}
 		}                                                   		
-		else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
-		{
-			gchar *buf = g_strstrip (&buffer[20]);
-			if (buf != NULL)
-			{
-				info.pl2_tooltip = atoi (buf);
-			}
-		}
-
-
-		else if (!strncmp (buffer, "pl2 do tooltip:", 15))
-		{
-			gchar *buf = g_strstrip (&buffer[15]);
-			if (buf != NULL)
-			{
-				info.pl2_do_tooltip = atoi (buf);
-			}
-		}
-
 		memset (buffer, '\0', 1024);
 
 	}
@@ -130,14 +101,13 @@ void save_config ()
 		g_free (filename);
 		return;
 	}
-	fprintf (fp, "time format: %i\n", info.time_format);
 	escaped = g_strescape(preferences.markup_main_display, "");
 	fprintf (fp, "markup main display: %s\n", escaped);
 	g_free(escaped);
-	escaped = g_strescape(preferences.markup_playlist, "");
+/*	escaped = g_strescape(preferences.markup_playlist, "");
 	fprintf (fp, "markup playlist: %s\n", escaped);
 	g_free(escaped);
-	escaped = g_strescape(preferences.markup_song_browser, "");
+*/	escaped = g_strescape(preferences.markup_song_browser, "");
 	fprintf (fp, "markup song browser: %s\n", escaped);
 	g_free(escaped);
 	escaped = g_strescape(info.xiph_url, "");
@@ -150,8 +120,6 @@ void save_config ()
 		g_free(escaped);
 
 	}
-	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
-	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
 	fclose (fp);
 	g_free (filename);
 }

@@ -8,7 +8,6 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist2.h"
-#include "song-browser.h"
 #include "open-location.h"
 
 GladeXML *pl2_xml = NULL;
@@ -250,8 +249,8 @@ pl2_save_playlist ()
 				mpd_finishCommand (info.connection);
 
 				/* if nothing went wrong we can reload the browser */
-				if (!check_for_errors ())
-					sb_reload_file_browser ();
+//				if (!check_for_errors ())
+//					sb_reload_file_browser ();
 			}
 	}
 	/* destroy the window */
@@ -833,6 +832,6 @@ pl2_disconnect ()
 	/* destroy a possible open location window */
 	ol_destroy ();
 	/* hide the add window */
-	sb_close ();
-	sb_disconnect ();
+//	sb_close ();
+//	sb_disconnect ();
 }

@@ -112,12 +112,15 @@ void create_preferences_window()
 
 void update_display_settings()
 {
+	gchar *temp;
 	if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
-	if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
-	if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
+//	if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
+//	if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
 	preferences.markup_main_display = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
-	preferences.markup_playlist = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
-	preferences.markup_song_browser = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb"))));
+//	preferences.markup_playlist = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+	temp = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+	cfg_set_single_value_as_string(config, "playlist", "markup", temp);
+	g_free(temp);
 }
 
 void set_display_settings()
@@ -125,21 +128,18 @@ void set_display_settings()
 	char *escaped = g_strescape(preferences.markup_main_display, "");
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), escaped);
 	g_free(escaped);
-	escaped = g_strescape(preferences.markup_playlist, "");
+	escaped = g_strescape(cfg_get_single_value_as_string_with_default(config, "playlist", "markup", DEFAULT_PLAYLIST_MARKUP), "");
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), escaped);
-	g_free(escaped);
-	escaped = g_strescape(preferences.markup_song_browser, "");
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sb")), escaped);
 	g_free(escaped);
 }
 
 void set_display_default_sd()
 {
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), DEFAULT_PLAYER_MARKUP);
 }
 void set_display_default_pl()
 {
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl")), DEFAULT_PLAYLIST_MARKUP);
 }
 void set_display_default_sb()
 {
@@ -224,13 +224,14 @@ void preferences_update()
 	} 
 	if(info.stats != NULL)
 	{
-		if(last_db != info.stats->dbUpdateTime)
-		{
-			gchar *buffer = ctime(&info.stats->dbUpdateTime);
+		/* TODO: fix this to be nice */
+//		if(last_db != info.stats->dbUpdateTime)
+//		{
+//			gchar *buffer = ctime(&info.stats->dbUpdateTime);
 			/* nasty but I need to get rid of the trailing new line */
-			buffer[strlen(buffer)-1]='\0';
-			gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
-		}
+//			buffer[strlen(buffer)-1]='\0';
+//			gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
+//		}
 	}
 }
 

@@ -12,6 +12,9 @@
 #endif
 
 #define SEEK_STEP 3
+#define DEFAULT_PLAYLIST_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
+#define DEFAULT_PLAYER_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
+
 
 /** main.c **/
 extern int debug;
@@ -42,8 +45,6 @@ typedef struct
 	int old_pos;
 	/* updating */
 	gboolean updating;
-	/* Elapsed or remaining time */
-	int time_format;
 	/* misc*/
 	gboolean hidden;
 	gboolean pl2_hidden;
@@ -115,7 +116,7 @@ typedef struct
 {
 	/* display formating */
 	gchar *markup_main_display;
-	gchar *markup_playlist;
+//	gchar *markup_playlist;
 	gchar *markup_song_browser;
 } pref_struct;
 

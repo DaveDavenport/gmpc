@@ -14,7 +14,6 @@ gmpc_SOURCES=\
 	misc.c\
 	strfsong.c\
 	playlist2.c\
-	song-browser.c\
 	open-location.c\
 	list_tooltip.c\
 	mm-keys.c\
@@ -30,7 +29,6 @@ EXTRA_DIST = 	playlist3.h\
 		playlist2.h\
 	    	main.h\
 	   	mm-keys.h\
-		song-browser.h\
 		open-location.h\ 
 		strfsong.h\
 		misc.h\
