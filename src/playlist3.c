@@ -888,7 +888,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
 	{
 		int retval;
-		g_print("test\n");
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
 		g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
 
 	}
