@@ -1364,7 +1364,7 @@ void pl3_cat_sel_changed()
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "search_box"));
-	gtk_tree_view_set_reorderable(tree, FALSE);
+/*	gtk_tree_view_set_reorderable(tree, FALSE);*/
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
@@ -1375,7 +1375,7 @@ void pl3_cat_sel_changed()
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 			g_free(string);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
-			gtk_tree_view_set_reorderable(tree, TRUE);
+/*			gtk_tree_view_set_reorderable(tree, TRUE);*/
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
@@ -1618,16 +1618,14 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 /**********************************************************
  * MISC
  */
-
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
 	{
 		/* disabled because of problems with gtk 2.6 */
-		/*		int retval;
-				gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
-				g_signal_emit_by_name(G_OBJECT(glade_xml_get_widget (pl3_xml, "playlist_tree")), "start-interactive-search",&retval);
-				*/	}
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
+		return FALSE;
+	}
 	else if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
 	{
 		pl3_close();
@@ -1698,9 +1696,13 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		next_song();
 	}
+	else
+	{
+		return FALSE;
+	}
 
-	/* propagate */
-	return FALSE;
+	/* don't propagate */
+	return TRUE;
 }
 
 

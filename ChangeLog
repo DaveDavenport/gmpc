@@ -1,4 +1,7 @@
 29-02-2005 Qball <qball@qballcow.nl>
+	* src/palylist.c:	Disabled moving of row's for now.
+	* src/playlist.c:	key don't propate used event.
+	* src/player.c:		Fix for bug 373
 	* src/preferences.c/glade:	Added support for changing browser
 	markup.
 	* src/tray-icon.c:		playlist is now also hidden with click

@@ -485,7 +485,7 @@ int progress_seek_stop()
 /* also if volume isnt "slidable" block the user from changing it */
 int volume_change_start()
 {
-	if(volume) return TRUE;
+	if(!mpd_ob_check_connected(connection) || volume) return TRUE;
 	if(mpd_ob_status_get_volume(connection) == -1) return TRUE;
 	volume = TRUE;
 	msg_push_popup("Volume: ");
