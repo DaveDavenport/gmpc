@@ -1,5 +1,5 @@
 15-05-2004 Qball <Qball@qballcow.nl>
-	* window title is now gmpc - <song info > 
+	* window title is now <song info > 
 	* more old code removed
 	* port number now also gets updated when typed in the entry. (wrong
 signal attached) 

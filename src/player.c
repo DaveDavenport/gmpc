@@ -262,19 +262,15 @@ int update_player()
 					if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
 					else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
 					msg_set_base(buf);
-				 	buf1 = g_strdup_printf("gmpc - %s",buf);	
-					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf1);
-					g_free(buf1);
+					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf);
 					g_free(buf);
 				}
 				else
 				{
 					gchar *buf  = remove_extention_and_basepath(song->file);
-					gchar *buf1 = g_strdup_printf("gmpc - %s",buf);
-					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf1);
+					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf);
 					msg_set_base(buf);
 					g_free(buf);
-					g_free(buf1);
 				}
 			}
 		}
