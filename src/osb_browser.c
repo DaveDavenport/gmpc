@@ -104,6 +104,7 @@ void pl3_xiph_fill_view(char *buffer)
 
 	gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, -1);
 	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	g_free(name);
 	if(buffer != NULL)
 	{
 		FILE *fp = fopen(string, "w");
@@ -111,7 +112,6 @@ void pl3_xiph_fill_view(char *buffer)
 		{
 			fputs(buffer,fp);
 			fclose(fp);
-
 		}
 		else
 		{

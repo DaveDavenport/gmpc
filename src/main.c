@@ -32,7 +32,7 @@
 #include "strfsong.h"
 #include "misc.h"
 #include "mm-keys.h"
-
+extern int debug_level;
 extern long long unsigned total_recieved;
 extern long long unsigned total_send;
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
@@ -41,7 +41,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 void song_changed(MpdObj *mi, int oldsong, int newsong);
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
 void status_callback(MpdObj *mi);
-
+void connect_callback();
 /*
  * the xml fle pointer to the player window 
  */
@@ -116,6 +116,23 @@ int main (int argc, char **argv)
 	/* debug stuff */
 	time_t start, stop;
 	start = time(NULL);
+
+	if(argc > 1)
+	{
+		int i;
+		for(i = 1; i< argc; i++)
+		{
+			if(!strncasecmp(argv[i], "--enable-debug=", 15))
+			{
+				debug_level = atoi(&argv[i][15]);
+				debug_level = (debug_level < 0)? 0:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
+			}
+		}
+
+	}
+
+
+	
 #ifdef ENABLE_NLS
 	debug_printf(DEBUG_INFO, "main.c: Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -179,6 +196,7 @@ int main (int argc, char **argv)
 	mpd_ob_signal_set_state_changed(connection, (void *)state_callback, NULL);
 	mpd_ob_signal_set_status_changed(connection, (void *)status_callback, NULL);
 	mpd_ob_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
+	mpd_ob_signal_set_connect(connection, (void *)connect_callback, NULL);
 	/*
 	 * initialize gtk 
 	 */
@@ -239,11 +257,11 @@ int main (int argc, char **argv)
 
 	gtk_main ();
 	stop = time(NULL);
-	printf("down: %llu\nup: %llu\ntotal: %llu\n",
+	debug_printf(DEBUG_INFO,"down: %llu\nup: %llu\ntotal: %llu\n",
 			total_recieved,
 			total_send,
 			total_recieved+total_send);
-	printf("Network transfer: average of %.02f kb/sec\nTotal run time: %s %i seconds\n", ((total_recieved+total_send)/1024.0)/(float)(stop-start),
+	debug_printf(DEBUG_INFO,"Network transfer: average of %.02f kb/sec\nTotal run time: %s %i seconds\n", ((total_recieved+total_send)/1024.0)/(float)(stop-start),
 			format_time(stop-start), (int)(stop-start)%60);
 
 	/* cleaning up. */
@@ -319,7 +337,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	gint old_length = 0;
 	GtkTreeIter iter;
 	gchar buffer[1024];
-	g_print("playlist changed\n");
+	debug_printf(DEBUG_INFO, "playlist_changed_callback: playlist changed\n");
 	old_length = info.playlist_length;
 	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
@@ -582,7 +600,13 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 
 	}
 }
-
+void connect_callback()
+{
+	if(xml_error_window != NULL)
+	{
+		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"));
+	}
+}
 void status_callback(MpdObj *mi)
 {
 

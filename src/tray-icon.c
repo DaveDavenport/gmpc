@@ -8,7 +8,7 @@
 #include "strfsong.h"
 #include "config1.h"
 
-#define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
+
 int playlist_hidden = FALSE;
 extern config_obj *config;
 extern GladeXML *pl3_xml;

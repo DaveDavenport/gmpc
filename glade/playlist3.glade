@@ -126,6 +126,7 @@
 		      <property name="invisible_char">*</property>
 		      <property name="activates_default">False</property>
 		      <signal name="activate" handler="pl3_find_search" last_modification_time="Sun, 31 Oct 2004 14:32:51 GMT"/>
+		      <signal name="changed" handler="pl3_find_entry_change" last_modification_time="Tue, 08 Mar 2005 17:10:38 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
@@ -152,8 +153,9 @@ for filename</property>
 		  </child>
 
 		  <child>
-		    <widget class="GtkButton" id="button1">
+		    <widget class="GtkButton" id="find_button">
 		      <property name="visible">True</property>
+		      <property name="sensitive">False</property>
 		      <property name="can_focus">True</property>
 		      <property name="label">gtk-find</property>
 		      <property name="use_stock">True</property>

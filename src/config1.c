@@ -343,6 +343,7 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 	{
 		if(xmlStrEqual(cur->name, key))
 		{
+			char *temp;
 			if(list == NULL)
 			{
 				first = list = g_malloc(sizeof(conf_mult_obj));
@@ -356,8 +357,12 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 				list->next->prev = list;
 				list = list->next;
 			}
-			list->key = g_strdup(xmlGetProp(cur, "id"));
-			list->value = g_strdup(xmlNodeGetContent(cur));
+			temp = xmlGetProp(cur, "id");
+			list->key = g_strdup(temp);
+			xmlFree(temp);
+			temp = xmlNodeGetContent(cur);
+			list->value = g_strdup(temp);
+			xmlFree(temp);
 		}
 		cur = cur->next;
 	}while (cur != NULL);
@@ -367,6 +372,10 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 void cfg_free_multiple(conf_mult_obj *data)
 {
 	conf_mult_obj *list = data;
+	while(list->prev != NULL)
+	{
+		list = list->prev;
+	}
 	while(list != NULL)
 	{
 		if(list->key != NULL) g_free(list->key);
@@ -382,6 +391,7 @@ void cfg_free_multiple(conf_mult_obj *data)
 			list = list->next;
 		}
 		else{
+			g_free(list->prev);
 			g_free(list);
 			list = NULL;
 		}

@@ -36,6 +36,7 @@
 #include "vfs_download.h"
 #include "osb_browser.h"
 #include "config1.h"
+#include "debug_printf.h"
 
 extern config_obj *config;
 GladeXML *pl3_xml = NULL;
@@ -401,6 +402,13 @@ unsigned long pl3_find_view_browser()
 	return time;
 }
 
+
+void pl3_find_entry_change(GtkEntry *entry)
+{
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "find_button"), (strlen(gtk_entry_get_text(entry)) > 0)?1:0);
+
+}
+
 void pl3_find_search()
 {
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
@@ -411,7 +419,10 @@ void pl3_find_search()
 	gchar *field;
 	if(!gtk_tree_selection_get_selected(selection, &model, &iter)) return;
 	name = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")));
+	if(strlen(name) == 0) return;
+	
 	field = g_strdup_printf("%i", gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))));
+
 
 	if(gtk_tree_model_iter_parent(model, &tst, &iter))
 	{
@@ -924,7 +935,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				}
 				if(data->value.song->file == NULL)
 				{
-					g_print("crap\n");
+					debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
 				}
 				gtk_list_store_append (pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
@@ -965,7 +976,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				}
 				if(data->value.song->file == NULL)
 				{
-					g_print("crap\n");
+					debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
 				}
 				gtk_list_store_append (pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
@@ -1899,7 +1910,7 @@ void create_playlist3 ()
 	pl3_xml = glade_xml_new (GLADE_PATH "playlist3.glade", "pl3_win", NULL);
 	if(pl3_xml == NULL)
 	{
-		g_print("Failed to open playlist3.glade.\n");
+		debug_printf(DEBUG_ERROR, "create_playlist3: Failed to open playlist3.glade.\n");
 		return;
 	}
 	if (pl3_tree == NULL)
@@ -2072,7 +2083,6 @@ void pl3_highlight_song_change ()
 			/* if the old song is the new song (so tags updated) quit */
 			if (song_id == mpd_ob_player_get_current_song_id(connection))
 			{
-				g_print("song change to same song\n");
 				g_free (temp);
 				return;
 			}
@@ -2096,7 +2106,7 @@ void pl3_highlight_song_change ()
 			/* check if we have the right song, if not, print an error */
 			if (pos != mpd_ob_player_get_current_song_pos(connection))
 			{
-				g_print ("Errror %i %i\n", pos,mpd_ob_player_get_current_song_pos(connection));
+				debug_printf(DEBUG_ERROR,"pl3_highlight_song_change: Error %i %i should be the same\n", pos,mpd_ob_player_get_current_song_pos(connection));
 			}
 			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
 					PANGO_WEIGHT_ULTRABOLD, -1);

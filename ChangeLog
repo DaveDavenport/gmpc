@@ -1,3 +1,16 @@
+08-03-2005 Qball <Qball@qballcow.nl>
+	* src/open-location.c:	Fixed crash. (check for memory leaks. (memprof
+	crashes).
+	* src/config.c:		Fix severall memory leaks.
+	* src/osb-browser.c:	Fix memory leak.	
+	* src/main.c:		Fixed bug #379. on connect error dialog is
+	destroyed.
+	* src/playlist3.c:	Fix for bug #378. It checks for strlen first.
+	* src/playlist3.c:	find is inactive if entry is empty.
+	* src/debug_printf.c:	Default debug level to DEBUG_ERROR
+	* src/main.c:		commandline accepts --enable-debug=0,1,2
+	0=error, 1=error,warning, 2=all. default = 0;
+
 07-03-2005 Qball <qball@qballcow.nl>
 	* src/preferences.c:	make osb source list working completely.
 	* glade/gmpc.glade:	Made preferences menu modal.

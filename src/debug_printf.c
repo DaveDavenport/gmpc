@@ -10,7 +10,7 @@
 #define GREEN "\x1b[32;06m"
 #define YELLOW "\x1b[33;06m"
 
-int debug_level = DEBUG_INFO;
+int debug_level = DEBUG_ERROR;
 
 
 
