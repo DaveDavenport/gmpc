@@ -298,12 +298,24 @@
 	      <child>
 		<widget class="GtkButton" id="button1">
 		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Configure gmpc</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">P_ref</property>
-		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="create_preferences_window" last_modification_time="Mon, 06 Oct 2003 17:44:49 GMT"/>
+		  <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
+
+		  <child>
+		    <widget class="GtkImage" id="image60">
+		      <property name="visible">True</property>
+		      <property name="stock">gtk-preferences</property>
+		      <property name="icon_size">4</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		  </child>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -315,12 +327,24 @@
 	      <child>
 		<widget class="GtkButton" id="button36">
 		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Open the playlist</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">PL2</property>
-		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="create_playlist2" last_modification_time="Mon, 21 Jun 2004 12:04:12 GMT"/>
+		  <accelerator key="p" modifiers="0" signal="clicked"/>
+
+		  <child>
+		    <widget class="GtkImage" id="image61">
+		      <property name="visible">True</property>
+		      <property name="stock">gtk-justify-fill</property>
+		      <property name="icon_size">4</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		  </child>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -1451,7 +1475,7 @@
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="label" translatable="yes">&lt;span size=&quot;xx-large&quot;&gt;&lt;b&gt;Gnome Music Player Client&lt;/b&gt;&lt;/span&gt;
-0.10.3 &lt;i&gt;requests wanted&lt;/i&gt;</property>
+0.11.1 &lt;i&gt;Intelligence is only skin deep&lt;/i&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_CENTER</property>

@@ -1,3 +1,15 @@
+31-06-2004 Qball <Qball@qballcow.nl>
+	* changed configure in to depend on gtk+-2.4 and up
+	* Commented most parts of song-browser.c
+	* added error_Checks to song-browser.c
+	* removed dead code
+	* Bump version in glade
+	* Temporary icon for playlist and pref. in main gui 
+	* Added keybinding to playlist (p) and preferences (ctrl-p)
+	* When song-browser opened check if the current field is filled and
+	fill it, if not.
+
+
 30-06-2004 Qball <Qball@qballcow.nl>
 	* Fixed double click on playlist. it now adds it to the list.
 	* info.old_pos is reset on disconnect

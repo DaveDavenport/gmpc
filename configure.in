@@ -1,6 +1,6 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
-AM_INIT_AUTOMAKE(gmpc, 0.10.3)
+AM_INIT_AUTOMAKE(gmpc, 0.11.0)
 
 # Checks for programs.
 AC_PROG_CC
@@ -22,9 +22,9 @@ AC_SUBST(GTK_REQUIRED)
 
 PKG_CHECK_MODULES(gmpc,
 [
-	glib-2.0 
-	gobject-2.0
-	gtk+-2.0 
+	glib-2.0 >= 2.4
+	gobject-2.0 >= 2.4
+	gtk+-2.0 >= 2.4
 	libglade-2.0
 	gnome-vfs-2.0
 ])

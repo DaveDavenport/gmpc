@@ -7,8 +7,8 @@
 gchar *s = N_("Gnome Music Player Client");
 gchar *s = N_("R_and");
 gchar *s = N_("R_ep");
-gchar *s = N_("P_ref");
-gchar *s = N_("PL2");
+gchar *s = N_("Configure gmpc");
+gchar *s = N_("Open the playlist");
 gchar *s = N_("gmpc - Preferences");
 gchar *s = N_("Host:");
 gchar *s = N_("Port:");
@@ -41,7 +41,7 @@ gchar *s = N_("Enable");
 gchar *s = N_("<b>Notification Area Icon</b>");
 gchar *s = N_("_Misc");
 gchar *s = N_("<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
-              "0.10.3 <i>requests wanted</i>");
+              "0.11.1 <i>Intelligence is only skin deep</i>");
 gchar *s = N_("A frontend for the music player daemon from:\n"
               "<span color=\"blue\"><u>www.musicpd.org</u></span>");
 gchar *s = N_("<span size=\"small\">Copyright \302\251  2003-2004 Qball Cow\n"

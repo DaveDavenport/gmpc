@@ -19,6 +19,9 @@ void sb_row_activated();
 void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further);
 int last_db = 0;
 
+
+/* function that gets called by the tree_Store to sort it. */
+/* TODO: FIXME, disabled for now, doesnt work */
 gint sb_sort_function(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b)
 {
 	gint type_a, type_b;
@@ -46,18 +49,24 @@ void sb_do_search()
 	gchar *search_ts = NULL;
 	gchar *search_string = (gchar *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(sb_xml, "search_entry")));
 	gint search_type = gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")));
+
+	/* check if there is an actual search query */
 	if(strlen(search_string) == 0) return;
-	if(info.connection == NULL) return;
+
+	/* check if where still connected */
 	if(check_connection_state()) return;
 
+	/* start the search map in the tree */
 	gtk_tree_store_append(sb_search, &iter, NULL);	
 
+	/* do the actual search */
 	mpd_sendSearchCommand(info.connection,search_type, search_string);  
 	
 	while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 	{
 		gchar buffer[1024];
 		strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+		/* Add as child of the above created parent folder */
 		gtk_tree_store_append(sb_search, &child, &iter);
 		gtk_tree_store_set(sb_search, &child,                			
 				SB_FPATH,ent->info.song->file,	
@@ -65,10 +74,18 @@ void sb_do_search()
 				SB_TYPE, 0,
 				SB_PIXBUF, "media-audiofile",
 				-1);
+		/* count results */
 		results ++;
+		/* free information struct */
 		mpd_freeInfoEntity(ent);
 	}	
+	/* check search */
+	mpd_finishCommand(info.connection);
+	check_for_errors();
+	/* close the search */
 
+
+	/* append the correct search type */
 	if(search_type == 0)
 	{
 		search_ts = g_strdup("Artist");
@@ -85,11 +102,14 @@ void sb_do_search()
 	{
 		search_ts = g_strdup("Filename");
 	}                                    
-
-	search_string = g_strdup_printf("%s: %s (%i)",search_ts, search_string, results);
+	/* form url 
+	* TODO: Add information about the search so I can match searches 
+	*   This only requires saving of serach field
+	*/
+	search_ts = g_strdup_printf("%s: %s (%i)",search_ts, search_string, results);
 	gtk_tree_store_set(sb_search, &iter,
 			SB_FPATH, search_string,
-			SB_DPATH, search_string,
+			SB_DPATH, search_ts,
 			SB_TYPE, 1,
 			SB_PIXBUF, "gtk-find",
 			-1);
@@ -97,19 +117,21 @@ void sb_do_search()
 
 
 
-
+/*  close aka hide the song browser */
 void sb_close()
 {
 	if(sb_xml != NULL)
 	gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
 }
 
+/* when row is activated, see what type of row it is and call the right functions */
 void sb_row_activate_click(GtkTreeView *tree, GtkTreePath *path)
 {
 	GtkTreeIter iter;
 	gint type;
 	gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, path);
 	gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type, -1);
+	/* if itsn't a song or playlist open/close the row */
 	if(type != 0 && type != 4)
 	{
 		if(!gtk_tree_view_row_expanded(tree, path))
@@ -120,12 +142,14 @@ void sb_row_activate_click(GtkTreeView *tree, GtkTreePath *path)
 	}
 	else
 	{
+		/* call the function that will try to add the selected item's */
 		sb_row_activated();
 	}
 }
 
 
-
+/* tries to add the selected items, supports artist,albums,songs, folders */
+/* TODO: support adding complete search results (a search map)*/
 void sb_row_activated()
 {
 	GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget(sb_xml, "treeview"));
@@ -135,8 +159,10 @@ void sb_row_activated()
 	GList *rows = gtk_tree_selection_get_selected_rows(selection, &model);
 	GList *add_list = NULL;
 	int i = gtk_combo_box_get_active(GTK_COMBO_BOX(cb));
-	/* if now rows selected (how we activated it then? but just to be safe) return */
+
+	/* if no rows selected) return */
 	if(rows == NULL) return;
+	/* check if there is a connection */
 	if(check_connection_state()) return;
 
 	if(i == 0)
@@ -157,8 +183,14 @@ void sb_row_activated()
 			}
 			else
 			{
+				/* append a playlist directly, we cant add it to the todo list */
 				mpd_sendLoadCommand(info.connection, name);
 				mpd_finishCommand(info.connection);
+				/* check for errors, and if there is an error step out this while loop */
+				if(check_for_errors())
+				{
+					node = NULL;
+				}
 
 			}
 
@@ -211,6 +243,7 @@ void sb_row_activated()
 					mpd_freeInfoEntity(ent);
 				}	
 				mpd_finishCommand(info.connection);	
+				if(check_for_errors()) node = NULL;
 			}
 			else if (type ==2) /* album */
 			{
@@ -225,6 +258,7 @@ void sb_row_activated()
 					mpd_freeInfoEntity(ent);
 				}	
 				mpd_finishCommand(info.connection);	
+				if(check_for_errors()) node = NULL;
 			}
 		}
 		while((node = g_list_next(node)) != NULL);
@@ -241,6 +275,7 @@ void sb_row_activated()
 		}while((song = g_list_next(song)) != NULL);
 		mpd_sendCommandListEnd(info.connection);
 		mpd_finishCommand(info.connection);     	
+		check_for_errors();
 		g_list_foreach (add_list,(GFunc) g_free, NULL);
 		g_list_free(add_list);
 	}
@@ -249,15 +284,19 @@ void sb_row_activated()
 	g_list_free (rows);
 }
 
+/* does the same as append but clears the list first */
 void sb_replace_songs()
 {
 	mpd_sendClearCommand(info.connection);
 	mpd_finishCommand(info.connection);
-	sb_row_activated();
+	if(!check_for_errors())
+	{
+		sb_row_activated();
+	}
 }
 
 
-
+/* create the song browser */
 void song_browser_create()
 {
 	GtkCellRenderer *renderer;
@@ -269,6 +308,8 @@ void song_browser_create()
 				glade_xml_get_widget(sb_xml, "song_browser"));
 		gtk_window_present(GTK_WINDOW(
 					glade_xml_get_widget(sb_xml, "song_browser")));
+		sb_fill_browser();
+
 		return;          	
 	}
 	sb_xml = glade_xml_new(GLADE_PATH"add-browser.glade", "song_browser",NULL);
@@ -347,6 +388,8 @@ void song_browser_create()
 
 }
 
+/* continues the to fill the tree an extra level deep, when the user opens a folder, also called a lazy tree */
+
 void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 {
 	GtkWidget *cb = glade_xml_get_widget(sb_xml, "cb_type");
@@ -395,7 +438,10 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 						}
 						mpd_freeInfoEntity(ent);
 					} 	
-				}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));                                      	
+					mpd_finishCommand(info.connection);
+					check_for_errors();
+
+				}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter) && !check_connection_state());                                      	
 			}
 			else
 			{
@@ -417,6 +463,8 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 					}
 					mpd_freeInfoEntity(ent);
 				}
+				mpd_finishCommand(info.connection);
+				check_for_errors();
 			}
 			/* we only need to fill it once */
 			/* so I now make it type 3 */
@@ -425,6 +473,11 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 	}
 }
 
+
+/* fill the id3_store with songs */
+/* this is done lazy, it will only load all albums and songs withouth album, it starts loading the songs in the album when the user
+opens the artist 
+*/
 void sb_fill_browser_id3()
 {
 	mpd_InfoEntity *ent = NULL;
@@ -432,6 +485,7 @@ void sb_fill_browser_id3()
 	gchar *string;
 	GList *list = NULL, *node = NULL;
 	int i =0;
+
 	if(check_connection_state()) return;
 
 	mpd_sendListCommand(info.connection, MPD_TABLE_ARTIST,NULL);
@@ -441,6 +495,17 @@ void sb_fill_browser_id3()
 		list = g_list_append(list, string);
 	}
 	mpd_finishCommand(info.connection);
+	if(check_for_errors() || check_connection_state())
+	{
+		if(list != NULL)
+			{
+			g_list_foreach(list,(GFunc) g_free, NULL);
+			g_list_free(list);
+
+			}
+		 return;
+	}
+
 	if(list == NULL) return;
 	node = g_list_first(list);	
 	do{
@@ -456,15 +521,20 @@ void sb_fill_browser_id3()
 		if((i % 35) == 0)
 		{
 			while(gtk_events_pending()) gtk_main_iteration();
-			/* check if the users hasn't closed the interface */
-			if(sb_xml == NULL )return;
+			/* if the connection was lost we need to stop */
+			if(check_connection_state())
+			{
+				g_list_foreach(list,(GFunc) g_free, NULL);
+				g_list_free(list);
+				return;
+			}
 		}
 		i++;
 	}while((node = g_list_next(node)) != NULL);
 	g_list_free(list);
 
 
-	if(info.connection == NULL) return;
+	if(check_connection_state()) return;
 	/* get the first iter */
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_id3), &parent, NULL))
 	{
@@ -486,13 +556,13 @@ void sb_fill_browser_id3()
 				g_free(string);
 				nalbum++;
 			}
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
 
 			
 			while(gtk_events_pending()) gtk_main_iteration();
 
 			if(check_connection_state()) return;
-			/* check if the users hasn't closed the interface */
-			if(sb_xml == NULL) return;
 
 			if(nalbum == 0)
 			{
@@ -515,6 +585,8 @@ void sb_fill_browser_id3()
 					}
 					mpd_freeInfoEntity(ent);
 				}
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
 			}
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_id3), &parent));
 
@@ -591,9 +663,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 			ent = mpd_getNextInfoEntity(info.connection);
 		}
 	}
-	//	while(gtk_events_pending()) gtk_main_iteration();
-	/* check if the users hasn't closed the interface */
-	//	if(sb_xml == NULL) return;
+
 	if(check_connection_state()) return;
 	if(go_further)
 	{
@@ -652,7 +722,7 @@ void sb_fill_browser()
 
 	}
 }
-
+/* if the users ads a playlist, I need to reload the file-browser */
 void sb_reload_file_browser()
 {
 	if(sb_file != NULL)
@@ -661,6 +731,8 @@ void sb_reload_file_browser()
 		sb_fill_browser();
 	}
 }
+
+/* if disconnect clear all buffered data */
 
 void sb_disconnect()
 {
@@ -672,7 +744,7 @@ void sb_disconnect()
 	}
 }
 
-
+/* function that gets called from the main-loop that checks if the database has update */
 void update_song_browser()
 {
 	if(sb_xml == NULL)
