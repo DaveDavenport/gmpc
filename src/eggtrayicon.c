@@ -24,17 +24,11 @@
 #include "eggtrayicon.h"
 
 #include <gdk/gdkx.h>
+#include <gtk/gtk.h>
+#include <glade/glade.h>
+#include "libmpdclient.h"
 #include <X11/Xatom.h>
-
-#ifndef EGG_COMPILATION
-#ifndef _
-#define _(x) dgettext (GETTEXT_PACKAGE, x)
-#define N_(x) x
-#endif
-#else
-#define _(x) x
-#define N_(x) x
-#endif
+#include "main.h"
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 #define SYSTEM_TRAY_BEGIN_MESSAGE   1
