@@ -24,6 +24,12 @@ PangoLayout *tray_layout_tooltip = NULL;
 guint tray_timeout = -1;
 
 guint popup_timeout = -1;
+
+
+GdkPixbuf *bg = NULL;
+GdkPixbuf *dest = NULL;
+int compf= 50;
+
 /**/
 gchar *tray_get_tooltip_text()
 {
@@ -70,13 +76,13 @@ gchar *tray_get_tooltip_text()
 	return retval;
 }
 
-void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
+int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 {
 	int width, height;
 	GtkStyle *style;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = tray_get_tooltip_text();
-	if(tooltiptext == NULL) tooltiptext = g_strdup("oeps");
+	if(tooltiptext == NULL) tooltiptext = g_strdup("Gnome Music Player Deamon");
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
 	pango_layout_set_width(tray_layout_tooltip, 500000);
@@ -149,6 +155,9 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				}
 				/* place the window */
 				gtk_window_move(GTK_WINDOW(tip), x, y);
+
+
+
 				break;
 			case 1:
 				gtk_window_move(GTK_WINDOW(tip), 0,0);
@@ -165,6 +174,9 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 		}
 
+
+
+		
 		gtk_widget_set_usize(tip, width+8, height+8);
 	}
 
@@ -174,24 +186,53 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		if(mpd_ob_status_get_total_song_time(connection) > 0)
 		{
 
-
+			int width2 = 0;
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					FALSE,4,height+5-12, width ,8);                              		
-			width = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
+			width2 = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
 			gdk_draw_rectangle(widget->window, 
 					widget->style->mid_gc[GTK_STATE_NORMAL],
-					TRUE,4,height+5-12, width ,8);
+					TRUE,4,height+5-12, width2 ,8);
 			gdk_draw_rectangle(widget->window, 
 					widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+5-12, width ,8);
+					FALSE,4,height+5-12, width2 ,8);
 		}
 	}
 	g_free(tooltiptext);
 
-
-	return;
+	if(bg != NULL && compf)
+	{
+		gdk_window_set_back_pixmap(widget->window,NULL,FALSE);
+		if(dest == NULL)
+		{
+			dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width+8, height+8);
+		}
+		else
+		{
+			gdk_pixbuf_fill(dest,0x00000000);
+		}
+		
+		gdk_pixbuf_composite(bg,dest,0,0,width+8,height+8,0,0,1,1,GDK_INTERP_BILINEAR,compf);
+		gdk_draw_pixbuf(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],dest,0,0,0,0,-1,-1,GDK_RGB_DITHER_NONE,0,0);
+	}
+	
+	return TRUE;
 }
 
+
+
+int compf_change(GtkWidget *widget)
+{
+	if(tip == NULL) return FALSE;
+	if(compf > 30)
+	{
+		compf-=30;
+	}
+	else compf = 0;	
+	gtk_widget_queue_draw(widget);
+	return (compf == 0)? FALSE:TRUE;
+
+}
 /* fix it the ugly way */
 int tooltip_queue_draw(GtkWidget *widget)
 {
@@ -209,13 +250,14 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	int width,height;
 	GtkWidget *tv = (GtkWidget *)tray_icon;
 	GdkRectangle msize;
-	int x,y;
+	int x=0,y=0;
 	int x_tv,y_tv;
 	int monitor =0;
 	int from_tray = GPOINTER_TO_INT(n);
-
+	char *tooltiptext = NULL;
 	GtkWidget *eventb;
 	GdkScreen *screen;
+	compf = 255;
 	if(tv != NULL)
 	{
 		screen = gtk_widget_get_screen(tv);
@@ -244,7 +286,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 
 
-	char *tooltiptext = NULL;
+
 
 	tooltiptext = tray_get_tooltip_text();
 	gdk_screen_get_monitor_geometry(
@@ -313,23 +355,35 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 				y = y_tv -5-(height+8);
 			}
 			/* place the window */
-			gtk_window_move(GTK_WINDOW(tip), x, y);
+//			gtk_window_move(GTK_WINDOW(tip), x, y);
+	
+			
 			break;
 		case 1:
-			gtk_window_move(GTK_WINDOW(tip), 0,0);
+			x =y=0;
+//			gtk_window_move(GTK_WINDOW(tip), 0,0);
 			break;
 		case 2:
-			g_print("%i 0\n", msize.width-width);
-			gtk_window_move(GTK_WINDOW(tip), msize.width-width, 0);	
+			x= msize.width-width;
+			y=0;
+//			gtk_window_move(GTK_WINDOW(tip), msize.width-width, 0);	
 			break;
 		case 3:
-			gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height);	
+			x = 0;
+			y = msize.height-height;
+//			gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height);	
 			break;
 		case 4:
-			gtk_window_move(GTK_WINDOW(tip), msize.width-width, msize.height-height);	
+			x= msize.width-width;
+			y = msize.height-height;
+//			gtk_window_move(GTK_WINDOW(tip), msize.width-width, msize.height-height);	
 			break;                                                  				
 	}
-
+	gtk_window_move(GTK_WINDOW(tip),x,y);
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-fadein",1) && bg == NULL)
+	{
+		bg = gdk_pixbuf_get_from_drawable(NULL,gdk_screen_get_root_window(screen),NULL,x,y,0,0,width+8,height+8);
+	}
 	gtk_widget_show_all(tip);	
 
 
@@ -337,7 +391,11 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(400, (GSourceFunc)
 			tooltip_queue_draw, eventb);
-
+	if(bg != NULL)
+	{
+		g_timeout_add(100, (GSourceFunc) compf_change, eventb);
+	}
+	g_free(tooltiptext);
 	return TRUE;
 }
 
@@ -347,10 +405,20 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
 	popup_timeout = -1;
 	tray_timeout = -1;
+	if(bg != NULL)
+	{
+		g_object_unref(bg);
+		bg = NULL;
+	}
 	if(tip != NULL)
 	{
 		gtk_widget_destroy(tip);
 		g_object_unref(tray_layout_tooltip);
+	}
+	if(dest != NULL)
+	{
+		g_object_unref(dest);
+		dest= NULL;
 	}
 
 	tip = NULL;
@@ -406,7 +474,7 @@ void tray_icon_song_change()
 	{
 		if(popup_timeout == -1 && tip == NULL)
 		{
-			popup_timeout = g_timeout_add(5000, 
+			popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000,
 					(GSourceFunc)(tray_leave_cb),
 					NULL);
 		}
@@ -417,7 +485,7 @@ void tray_icon_song_change()
 		else if(popup_timeout != -1)
 		{
 			g_source_remove(popup_timeout);
-			popup_timeout = g_timeout_add(5000, 
+			popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000, 
 					(GSourceFunc)(tray_leave_cb),			
 					NULL);
 		}

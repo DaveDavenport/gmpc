@@ -218,6 +218,11 @@ void popup_enable_toggled(GtkToggleButton *but)
 	cfg_set_single_value_as_int(config, "tray-icon", "do-popup", gtk_toggle_button_get_active(but));
 }
 
+void popup_fade_toggled(GtkToggleButton *but)
+{
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-fadein", gtk_toggle_button_get_active(but));
+}
+
 void popup_position_changed(GtkOptionMenu *om)
 {
 	cfg_set_single_value_as_int(config, "tray-icon", "popup-location", gtk_option_menu_get_history(om));
@@ -239,8 +244,10 @@ void update_popup_settings()
 			glade_xml_get_widget(xml_preferences_window, "om_popup_position"),
 			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout")),
-			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 2));
-
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 5));
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_popup_fade"),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-fadein", 1));
 }
 
 

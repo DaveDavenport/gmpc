@@ -1,3 +1,15 @@
+28-02-2005 Qball <qball@qballcow.nl>
+	* src/main.c:		Fixed memory leak in changed playlist.
+	(freeing of path string);
+	* src/libmpd.c:		Fixed memory leak in _free_data and free_queu
+	function. (didn't start at the beginnning);
+	* src/tray-icon.c:	Fixed memory leak in popup. (nasty fix,  why
+	does gtk doc provide a wrong example)
+	* src/tray-icon.c:	The popup timeout now follows setting.
+	* src/tray-icon.c:	Added the option to fade the popup in. (fake
+	transparant.)
+	* src/preferences.c:	Added fade-in for popup option.
+
 26-02-2005 Qball <qball@qballcow.nl>
 	* glade/preferences.glade:	Cleaned up layout a bit.
 	* fixed not free'ed memory from config

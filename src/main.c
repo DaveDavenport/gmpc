@@ -353,6 +353,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 						SONG_TIME,data->value.song->time,
 						-1);
 			}
+			g_free(path);
 		}
 		else
 		{
@@ -421,7 +422,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-audiofile", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-stream 
 	 */
@@ -429,7 +429,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-stream", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-artist 
 	 */
@@ -437,7 +436,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-artist", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-album 
 	 */
@@ -453,7 +451,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-play", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-stop 
 	 */
@@ -461,7 +458,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-stop", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-next 
 	 */
@@ -469,7 +465,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-next", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-prev 
 	 */
@@ -477,7 +472,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-prev", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add media-pause 
 	 */
@@ -485,7 +479,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-pause", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add player-shuffle 
 	 */
@@ -494,7 +487,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-random", set);
 	g_object_unref (G_OBJECT (pb));
-
 	/*
 	 * add playerrepeat 
 	 */
@@ -502,7 +494,6 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-repeat", set);
 	g_object_unref (G_OBJECT (pb));
-
 
 	/*
 	 * add icecast
@@ -512,7 +503,6 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "icecast", set);
 	g_object_unref (G_OBJECT (pb));
 
-
 	/*
 	 * add media playlist
 	 */
@@ -520,6 +510,7 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);                        	
 	gtk_icon_factory_add (factory, "media-playlist", set);
 	g_object_unref (G_OBJECT (pb));                
+
 	gtk_icon_factory_add_default (factory);
 }
 

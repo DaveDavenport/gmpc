@@ -1460,7 +1460,8 @@ void mpd_ob_free_data_ob(MpdData *data)
 	if(data == NULL)
 	{
 		return;
-	}	
+	}
+	data = data->first;	
 	while(data != NULL)
 	{
 		temp = data->next;
@@ -1752,6 +1753,7 @@ void mpd_ob_free_queue_ob(MpdObj *mi)
 	{
 		return;
 	}	
+	mi->queue = mi->queue->first;
 	while(mi->queue != NULL)
 	{
 		temp = mi->queue->next;

@@ -458,7 +458,11 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	new_pos = atoi(str);
 	if(new_pos > pos ) new_pos --;
 	/* if there wasn't a move action we don't do anything, because this signal is trigged on every row change */
-	if(new_pos == pos) return;
+	if(new_pos == pos)
+	{
+		g_free(str);
+		return;
+	}
 
 
 	mpd_ob_playlist_move_pos(connection, pos, new_pos);
