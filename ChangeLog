@@ -1,3 +1,6 @@
+13-07-2004 Qball <Qball@qballcow.nl>
+	* glade/gmpc.glade:	Fix typo.
+
 12-07-2004 Qball <Qball@qballcow.nl>
 	* src/playlist2.c:	Fixed bug that moved playlist window when
 	search from id3window.

@@ -2092,7 +2092,7 @@
 %track%&quot;
 &quot;%time%&quot;
 &quot;%file%&quot;.  
-%shorfile% (filename withouth path and extension)
+%shortfile% (filename withouth path and extension)
 The [] operator  is  used  to  group  output  such  that if no metadata delimeters are found or matched between '[' and ']',  then  none of the  characters between '[' and ']' are output.  
 '&amp;' and '|' are logical operators for and and or.  '#'  is  used  to  escape characters.   
 Some  useful examples for format are: &quot;%file%&quot; and &quot;[[%artist% - ]%title%]|[%file]&quot;</property>
