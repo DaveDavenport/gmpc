@@ -148,9 +148,9 @@ void load_config()
 		}
 	    }
 
-	else if(!strncmp(buffer, "markup main display:", 19))
+	else if(!strncmp(buffer, "markup main display:", 20))
 	    {
-	    gchar *buf = g_strstrip(&buffer[19]);
+	    gchar *buf = g_strstrip(&buffer[20]);
 	    if(buf != NULL)
 		{
 		if(preferences.markup_main_display != NULL)
