@@ -35,9 +35,7 @@ int load_playlist()
     info.total_number_of_songs = 0;
     info.total_playtime = 0;
 	int i =1;
-	// rate = MAX(((info.status->playlistLength+1)/15),50);
     if(info.conlock) return TRUE;
-//    start_mpd_action();
     if(debug)g_print("start updating playlist\n");
     if(info.playlist != NULL)
 	{
@@ -85,7 +83,6 @@ int load_playlist()
 	i++;
 	mpd_freeInfoEntity(entity);
 	}
-//    stop_mpd_action();
     /* force update */
     info.status->song = -1;
     if(debug)g_print("done updating playlist %lu\n", (long unsigned) info.total_playtime);

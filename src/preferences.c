@@ -133,7 +133,6 @@ void preferences_update()
 void popup_enable_toggled(GtkToggleButton *but)
 {
 	info.popup.do_popup = gtk_toggle_button_get_active(but);
-//	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
 	update_popup_settings();
 }
 

@@ -194,7 +194,6 @@ void create_playlist()
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Directory", renderer, "text", 1, NULL);
-	//gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
 	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 0), GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_set_max_width(gtk_tree_view_get_column((GtkTreeView*)tree, 0),200);
 	/* set the search function to search in the directories the way the users sees it */
@@ -328,17 +327,14 @@ void create_playlist()
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, "text", 1, NULL);
-	//	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
 	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 0), GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Artist", renderer, "text", 2, NULL);
-	//	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), TRUE);
 	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 1), GTK_TREE_VIEW_COLUMN_AUTOSIZE);	
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Album", renderer, "text", 3, NULL);
-	//	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 2), TRUE);
 	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 2), GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	/* set the search to search on the title column.. I think that is the most usefull one.. I dont want to wind up
 	 * making my own search routine..

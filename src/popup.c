@@ -185,10 +185,6 @@ void popup_window()
 	gtk_widget_set_name(popup, "gtk-tooltips");
 	gtk_widget_ensure_style(popup);    
 
-	//	gtk_widget_set_name(draw, "gtk-tooltips");
-
-	//	gtk_widget_ensure_style(draw);            
-
 	g_signal_connect(G_OBJECT(draw), "expose-event",
 			G_CALLBACK(paint_window), NULL);       
 

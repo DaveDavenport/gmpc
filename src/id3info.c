@@ -83,9 +83,7 @@ void remove_id3_window()
 
 void create_window(int song)
 {
-	//    GtkWidget *dialog = NULL;
 	GList *node;
-	//    mpd_Song *msong;
 	if(info.connection == NULL) return;
 	if(info.status->state == MPD_STATUS_STATE_UNKNOWN) return;
 	if(info.status->playlistLength == 0 ) return;
