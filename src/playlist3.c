@@ -866,6 +866,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreeIter iter;
 	long  unsigned time=0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
+
 	/* check the connection state and when its valid proceed */
 	if (check_connection_state ())
 	{

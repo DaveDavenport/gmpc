@@ -43,6 +43,7 @@ GladeXML *xml_main_window = NULL;
 int debug = FALSE;
 
 int update_interface ();
+
 /*
  * the ID of the update timeout
  */
@@ -50,14 +51,16 @@ guint update_timeout = 0;
 void init_stock_icons ();
 extern GtkListStore *pl2_store;
 
+/*
+ * The Config object
+ */
 config_obj *config = NULL;
 
 
 
-	void
-main_trigger_update ()
+void main_trigger_update ()
 {
-	if (info.connection != NULL)
+	if (check_connection_state(info))
 	{
 		update_mpd_status ();
 		update_interface ();
@@ -133,18 +136,37 @@ int main (int argc, char **argv)
 	textdomain (GETTEXT_PACKAGE);
 #endif
 	set_default_values ();
-	/*
-	 * load config 
-	 */
-	url = g_strdup_printf("%s/.gmpc.xml", g_getenv("HOME"));
-	config = cfg_open(url);
-	g_free(url);
-	/* test case: */
-	if(config == NULL)
+
+	/* Check for and create dir if availible */
+	url = g_strdup_printf("%s/.gmpc/", g_getenv("HOME"));
+	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
-		printf("Failed to save/load configuration\n");
+		if(mkdir(url,0777) < 0)
+		{
+			fprintf(stderr, "Failed to create: %s\n", url);
+			return 1;
+		}
+	}
+	else if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		fprintf(stderr, "%s isn't a directory.\n", url);
 		return 1;
 	}
+	g_free(url);
+
+	/* OPEN CONFIG FILE */
+	url = g_strdup_printf("%s/.gmpc/.gmpc.xml", g_getenv("HOME"));
+	config = cfg_open(url);
+
+	
+	/* test if config open  */
+	if(config == NULL)
+	{
+		fprintf(stderr,"Failed to save/load configuration:\n%s\n",url);
+		return 1;
+	}
+
+	g_free(url);
 	/*
 	 * initialize gtk 
 	 */
