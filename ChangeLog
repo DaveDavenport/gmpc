@@ -1,3 +1,8 @@
+24-06-2004 Qball <Qball@qballcow.nl>
+	* Removed filling of info.playlist
+	* Made search case insensitive
+	* don't match when no match string
+
 23-06-2004 Qball <Qball@qballcow.nl>
 	* removed the need of info.playlist in id3info and the popup/tray icon
 	* middle mouse click on tray-icon pauses/plays

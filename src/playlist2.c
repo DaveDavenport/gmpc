@@ -66,19 +66,39 @@ void update_playlist2()
 
 void set_compare_key(GtkEntry *entry)
 {
-	gchar *string = g_strdup_printf("*%s*", gtk_entry_get_text(entry));
 	if(compare_key != NULL) g_free(compare_key);
-	compare_key = g_pattern_spec_new(string);
-	g_free(string);
+	if(strlen(gtk_entry_get_text(entry)) ==0)
+	{
+		compare_key = NULL;
+		return;
+	}
+	else
+	{
+		gchar *string = g_strdup_printf("*%s*", gtk_entry_get_text(entry));
+		gchar *lower = g_utf8_strdown(string, -1);
+		g_free(string);
+		compare_key = g_pattern_spec_new(lower);
+		g_free(lower);
+	}
 }
 
 int pl2_filter_function(GtkTreeModel *model, GtkTreeIter *iter)
 {
-	gchar *string;
+	gchar *string, *lower;
 	if(compare_key == NULL) return TRUE;
 	gtk_tree_model_get(model, iter, SONG_TITLE, &string, -1);
 	if(string == NULL) return FALSE;
-	return g_pattern_match_string(compare_key, string);
+	lower = g_utf8_strdown(string,-1); 
+	if(g_pattern_match_string(compare_key, lower))
+	{
+		g_free(lower);
+		return TRUE;
+	}
+	else
+	{
+		g_free(lower);
+		return FALSE;
+	}
 }
 
 void pl2_filter_refilter()
@@ -179,7 +199,7 @@ void create_playlist2()
 
 	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_text_new();
-	
+
 	/* insert the column in the tree */
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), 
 			-1,"Playlist", renderer, 
