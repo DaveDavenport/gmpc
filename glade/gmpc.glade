@@ -11,7 +11,7 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">gmpc-tray.png</property>
+  <property name="icon">gmpc.png</property>
   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Mon, 06 Oct 2003 00:45:04 GMT"/>
 
   <child>
@@ -1183,7 +1183,7 @@
 	      <child>
 		<widget class="GtkImage" id="image30">
 		  <property name="visible">True</property>
-		  <property name="pixbuf">gmpc-tray.png</property>
+		  <property name="pixbuf">gmpc.png</property>
 		  <property name="xalign">0.5</property>
 		  <property name="yalign">0.5</property>
 		  <property name="xpad">0</property>

@@ -150,15 +150,15 @@ void popup_window()
 	if(info.popup.gmpc_image == NULL)
 	{
 		GdkPixbuf *temp;
-		temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc-tray.png", NULL);
+		temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc.png", NULL);
 		if(temp == NULL)
 		{
-			g_error("Failed to open gmpc_tray.png. Did you install it correctly?");
+			g_error("Failed to open gmpc.png. Did you install it correctly?");
 		}
 		info.popup.gmpc_image    = gdk_pixbuf_scale_simple(temp, 64,64,GDK_INTERP_HYPER);
 		if(info.popup.gmpc_image == NULL)
 		{
-			g_error("Failed to scale gmpc_tray.png. Did you install it correctly?");		
+			g_error("Failed to scale gmpc.png. Did you install it correctly?");		
 		}
 		/* we don't need the original anymore */	
 		g_object_unref(temp);
