@@ -23,7 +23,7 @@ guint tray_timeout = -1;
 /**/
 gchar *tray_get_tooltip_text()
 {
-	GString *string = g_string_new("");
+	GString *string = g_string_new("<tt>");
 	gchar result[1024];
 	gchar *retval;
 	int id;
@@ -64,6 +64,7 @@ gchar *tray_get_tooltip_text()
 			id++;
 		}
 	}
+	g_string_append(string, "</tt>");
 	/* return a string (that needs to be free'd */
 	retval = string->str;
 	g_string_free(string, FALSE);
@@ -82,6 +83,7 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	style = widget->style;
 
 
+	/* rounded corners are experimental, and breaks consistency. therefor they are an hidden option. */
 	if(info.rounded_corners)
 	{	
 		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL], TRUE,0,0,widget->allocation.width, widget->allocation.height);
@@ -206,7 +208,7 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 	gtk_widget_show_all(tip);	
 
 
-	/* testing */
+	/* testing of rounded corners, because this breaks consistency its a hidden option.*/
 	if(info.rounded_corners){
 		GdkBitmap *gbm = (GdkBitmap *)gdk_pixmap_new(GDK_DRAWABLE(tip->window), width+1,height+1,1);
 		GdkGCValues val;
@@ -225,9 +227,6 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 		g_object_unref(gc);
 		g_object_unref(gc1);
-
-
-
 
 		gtk_widget_shape_combine_mask(tip, (GdkBitmap *) gbm, 0,0);
 

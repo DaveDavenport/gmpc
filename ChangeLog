@@ -1,3 +1,7 @@
+20-08-2004 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:	Tooltip resizes when needed
+	* src/tray-icon.c:	Tooltip uses monospace font
+
 19-08-2004 Qball <Qball@qballcow.nl>
 	* src/main.h:		Added option field for rounded corner
 	* src/tray-icon.c:	Made rounded corners a config option.
