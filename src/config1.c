@@ -46,20 +46,58 @@ void cfg_save(config_obj *cfgo)
 	return;
 }
 
-
-char * cfg_get_value_as_string(config_obj *cfg, char *class, char *key)
+xmlNodePtr cfg_get_class(config_obj *cfg, char *class)
 {
 	xmlNodePtr cur = cfg->root->xmlChildrenNode;
 	do
 	{
 		if(xmlStrEqual(cur->name, class))
 		{
-			xmlNodePtr node = cur->xmlChildrenNode;
-
-
-
+			return cur;
 		}
 	}while (cur != NULL);
+	return NULL;
+}
+
+xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
+{
+	xmlNodePtr cur = cfg_get_class(cfg, class);
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	do
+	{
+		if(xmlStrEqual(cur->name, key))
+		{
+			return cur;
+		}
+	}while (cur != NULL);
+	return NULL;                                     	
+}
 
 
+char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
+{
+	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	if(cur != NULL)
+	{
+		return xmlNodeGetContent(cur);
+	}
+	return NULL;
+}
+
+int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
+{
+	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	if(cur != NULL)
+	{
+		char * value = xmlNodeGetContent(cur);
+		if(value != NULL)
+		{
+			return atoi(value);
+		}
+	}
+	/* make it return an error */
+	return 0;
 }
