@@ -1,3 +1,6 @@
+03-08-2004 Qball <Qball@qballcow.nl>
+	* Cleanup the list_tooltip
+
 02-08-2004 Qball <Qball@qballcow.nl>
 	* Applied patches from Pav Lucistnik for compiling on gcc < 3
 	* Added src/list_tooltip.c

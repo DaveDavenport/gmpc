@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 #ifdef ENABLE_NLS
 #include <libintl.h>
 #include <locale.h>
@@ -69,6 +58,9 @@ typedef struct
 	gboolean hidden;
 	gboolean pl2_hidden;
 	gboolean sb_hidden;
+	/* tooltip playlist window */
+	gint pl2_tooltip;
+	gboolean pl2_do_tooltip;
 } internal_data;
 
 enum{

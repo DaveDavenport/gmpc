@@ -66,7 +66,7 @@ void mw_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	if(tooltiptext == NULL) tooltiptext = g_strdup("oeps");
 	pango_layout_set_markup(layout_tooltip, tooltiptext, strlen(tooltiptext));
 	pango_layout_set_wrap(layout_tooltip, PANGO_WRAP_WORD);
-	pango_layout_set_width(layout_tooltip, 900000);
+	pango_layout_set_width(layout_tooltip, 500000);
 	style = tipwindow->style;
 
 	gtk_paint_flat_box (style, tipwindow->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
@@ -100,7 +100,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 
 	layout_tooltip = gtk_widget_create_pango_layout (tipwindow, NULL);
 	pango_layout_set_wrap(layout_tooltip, PANGO_WRAP_WORD);
-	pango_layout_set_width(layout_tooltip, 900000);
+	pango_layout_set_width(layout_tooltip, 500000);
 	pango_layout_set_markup(layout_tooltip, tooltiptext, strlen(tooltiptext));
 	scr_w = gdk_screen_width();
 	scr_h = gdk_screen_height();
@@ -135,7 +135,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null)
 {
 	GtkTreePath *path;
-//	if(!settings.list_tooltip) return FALSE;
+	if(!info.pl2_do_tooltip) return FALSE;
 
 	if(rect.y == 0 && rect.height == 0 && timeout_tooltip)
 	{
@@ -171,7 +171,7 @@ gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null)
 	{
 		gtk_tree_view_get_cell_area(GTK_TREE_VIEW(tv), path, NULL, &rect);
 		gtk_tree_path_free(path);
-		if(rect.y != 0 && rect.height != 0) timeout_tooltip = g_timeout_add(500, (GSourceFunc)mw_tooltip_timeout, tv);
+		if(rect.y != 0 && rect.height != 0) timeout_tooltip = g_timeout_add(info.pl2_tooltip, (GSourceFunc)mw_tooltip_timeout, tv);
 	}
 	return FALSE;
 }
