@@ -208,7 +208,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	eventb = gtk_event_box_new();
-//	eventb = tip;
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
 			G_CALLBACK(tray_leave_cb), NULL);
 
