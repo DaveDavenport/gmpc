@@ -131,7 +131,8 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	cur = cfg_get_class(cfg,class);
 	if(cur == NULL)
 	{
-		g_print("found no class: %s\n", cur->name);
+		//g_print("found no class: %s\n", cur->name);
+		g_print("found no class\n");
 		cur = xmlNewChild(cfg->root, NULL, class, NULL);
 	}
 	xmlNewChild(cur,NULL, key, value);
