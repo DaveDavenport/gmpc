@@ -1475,11 +1475,21 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 
 
 
-
-
 int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	/* call default */
+	gint type = pl3_cat_get_selected_browser();
+	if(event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
+	{
+		pl3_browse_file_add_folder();		
+
+
+	}
+	else if (event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
+	{
+		pl3_browse_artist_add_folder();
+	}
+	
 	return pl3_window_key_press_event(mw,event);
 }
 
@@ -1500,12 +1510,6 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	/* call default */
 	return pl3_window_key_press_event(mw,event);
 }
-
-
-
-
-
-
 
 
 int pl3_pop_statusbar_message()
