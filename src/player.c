@@ -291,7 +291,7 @@ void change_progress_update()
 int progress_seek_stop()
 {
 	msg_pop_popup();
-	if(info.connection == NULL) return TRUE;
+	if(info.connection == NULL || info.status->state != MPD_STATUS_STATE_PLAY) return TRUE;
 	else 
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
