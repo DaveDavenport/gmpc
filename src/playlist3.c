@@ -1909,6 +1909,12 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_browse_add_selected();	
 		return TRUE;
 	}
+	else if (event->keyval == GDK_i && type == PL3_CURRENT_PLAYLIST)
+	{
+
+		pl3_show_song_info ();
+		return  TRUE;
+	}
 	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
 	{
 		if(info.status->song != -1 && info.status->playlistLength != 0)

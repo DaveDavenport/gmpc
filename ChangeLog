@@ -1,5 +1,7 @@
 13-11-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Allow the playlist to be reordered
+	* src/playlist3.c:	Binded I to information about song.
+
 10-11-2004 Qball <Qball@qballcow.nl>
 	* src/tray-icon.c:	Changed tooltip text markup
 05-11-2004 Qball <Qball@qballcow.nl>
