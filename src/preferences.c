@@ -4,6 +4,12 @@
 #include <time.h>
 #include "libmpdclient.h"
 #include "main.h"
+#include "config1.h"
+extern config_obj *config;
+
+
+
+
 extern int last_db;
 pref_struct preferences;
 GladeXML *xml_preferences_window;
@@ -62,8 +68,10 @@ void create_preferences_window()
 
 	/* set info from struct */
 	/* hostname */
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry")), preferences.host);
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")), preferences.port);
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry")), 
+			cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")), 
+			cfg_get_single_value_as_int_with_default(config, "connection","portnumber",6600));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")), preferences.timeout);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_autocon")), preferences.autoconnect);
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
@@ -151,8 +159,8 @@ void preferences_window_destroy()
 
 void update_preferences_information()
 {
-	strncpy(preferences.host, gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))), 256);
-	preferences.port = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")));
+	cfg_set_single_value_as_string(config,"connection","hostname", gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))));
+	cfg_set_single_value_as_int(config, "connection", "portnumber",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	preferences.timeout = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")));
 
 }

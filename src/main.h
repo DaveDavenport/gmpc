@@ -125,8 +125,6 @@ void msg_set_base();
 /* preferences.c */
 typedef struct
 {
-	char host[256];
-	int port;
 	gboolean user_auth;
 	char password[256];
 	float timeout; /* seconds.ms */

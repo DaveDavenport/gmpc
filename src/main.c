@@ -51,9 +51,6 @@ main_trigger_update ()
 	void
 set_default_values ()
 {
-	memset (preferences.host, '\0', 256);
-	strcpy (preferences.host, "localhost");
-	preferences.port = 6600;
 	preferences.user_auth = FALSE;;
 	memset (preferences.password, '\0', 256);
 	strcpy (preferences.password, "");

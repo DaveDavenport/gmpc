@@ -55,11 +55,9 @@ xmlNodePtr cfg_get_class(config_obj *cfg, char *class)
 	}
 	do
 	{
-		g_print("get_class: %s-%s\n", cur->name,class);
 		if(xmlStrEqual(cur->name, class))
 		{
-			g_print("returning from get_class: %s\n",cur->name);
-			return cur->xmlChildrenNode;
+			return cur;
 		}
 		cur = cur->next;
 	}while (cur != NULL);
@@ -70,6 +68,12 @@ xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
 {
 	/* take children */
 	xmlNodePtr cur = cfg_get_class(cfg, class);
+	
+	if(cur == NULL)
+	{
+		return NULL;
+	}
+	cur = cur->xmlChildrenNode;
 	if(cur == NULL)
 	{
 		return NULL;
@@ -93,8 +97,18 @@ char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 	{
 		return xmlNodeGetContent(cur);
 	}
-	g_print("no value found\n");
 	return NULL;
+}
+
+char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class, char *key , char *def)
+{
+	char *retv = cfg_get_single_value_as_string(cfg,class,key);
+	if(retv == NULL)
+	{
+		cfg_set_single_value_as_string(cfg,class,key,def);
+		retv = cfg_get_single_value_as_string(cfg,class,key);
+	}
+	return retv;
 }
 
 int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
@@ -106,6 +120,24 @@ int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 	}
 	/* make it return an error */
 	return atoi(temp);
+}
+
+void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
+{
+	char *value1 = g_strdup_printf("%i\n", value);
+	cfg_set_single_value_as_string(cfg,class,key,value1);
+	g_free(value1);
+}
+int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def)
+{
+	int retv = cfg_get_single_value_as_int(cfg,class,key);
+	if(retv == 0)
+	{
+		cfg_set_single_value_as_int(cfg,class,key,def);
+		retv = cfg_get_single_value_as_int(cfg,class,key);		
+	}
+	/* make it return an error */
+	return retv;
 }
 
 void cfg_del_single_value(config_obj *cfg, char *class, char *key)
@@ -125,14 +157,12 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	}
 	if(cur != NULL)
 	{
-		g_print("found one\n");
 		cfg_del_single_value(cfg,class,key);
+		cur = NULL;
 	}
 	cur = cfg_get_class(cfg,class);
 	if(cur == NULL)
 	{
-		//g_print("found no class: %s\n", cur->name);
-		g_print("found no class\n");
 		cur = xmlNewChild(cfg->root, NULL, class, NULL);
 	}
 	xmlNewChild(cur,NULL, key, value);

@@ -5,6 +5,8 @@
 #include "mpdinteraction.h"
 #include "playlist2.h"
 #include "main.h"
+#include "config1.h"
+extern config_obj *config;
 
 /* the internall data structure */
 internal_data info;
@@ -81,7 +83,10 @@ int connect_to_mpd()
 	info.playlist_playtime = 0;
 	if(debug)g_print("timeout = %.2f\n", preferences.timeout);
 	if(info.connection) mpd_clearError(info.connection);
-	info.connection = mpd_newConnection(preferences.host, preferences.port, preferences.timeout);
+	info.connection = mpd_newConnection(
+			cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"),
+			cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600),
+			preferences.timeout);
 	if(info.connection == NULL)
 	{
 		if(debug)g_print("Connection failed\n");

@@ -23,21 +23,8 @@ void load_config ()
 	while (fgets (buffer, 1024, fp))
 	{
 
-		if (!strncmp (buffer, "host:", 5))
-		{
-			gchar *buf = g_strstrip (&buffer[5]);
-			if (buf != NULL)
-			{
-				memset (preferences.host, '\0', 256);
-				strncpy (preferences.host, buf, MIN (strlen (buf), 256));
-			}
-		}
 
-		else if (!strncmp (buffer, "port:", 5))
-		{
-			preferences.port = atoi (&buffer[5]);
-		}
-		else if (!strncmp (buffer, "timeout:", 8))
+		if (!strncmp (buffer, "timeout:", 8))
 		{
 			preferences.timeout = (float) g_strtod (&buffer[8], NULL);
 		}
@@ -246,8 +233,6 @@ void save_config ()
 		g_free (filename);
 		return;
 	}
-	fprintf (fp, "host: %s\n", preferences.host);
-	fprintf (fp, "port: %i\n", preferences.port);
 	fprintf (fp, "timeout: %.2f\n", preferences.timeout);
 	fprintf (fp, "auto-connect: %i\n", preferences.autoconnect);
 	fprintf (fp, "do tray: %i\n", info.do_tray);
