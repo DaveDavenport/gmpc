@@ -11,18 +11,39 @@
 GladeXML *sb_xml = NULL;
 GtkTreeStore *sb_store = NULL;
 void sb_fill_browser(); 
+void sb_row_activated();
 int last_db = 0;
 
 
 void sb_close()
 {
-	gtk_widget_destroy(glade_xml_get_widget(sb_xml, "song_browser"));
+/*	gtk_widget_destroy(glade_xml_get_widget(sb_xml, "song_browser"));
 	gtk_tree_store_clear(sb_store);
 	g_object_unref(sb_store);
 	g_object_unref(sb_xml);
 	sb_store = NULL;
 	sb_xml = NULL;
+	*/
+	gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
 }
+
+void sb_row_activate_click(GtkTreeView *tree, GtkTreePath *path)
+{
+	GtkTreeIter iter;
+	gint type;
+	gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, path);
+	gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type, -1);
+	if(type != 0 && !gtk_tree_view_row_expanded(tree, path))
+	{
+		gtk_tree_view_expand_row (tree, path, FALSE);
+
+	}
+	else
+	{
+		sb_row_activated();
+	}
+}
+
 
 
 void sb_row_activated()
@@ -146,7 +167,8 @@ void song_browser_create()
 				GTK_TYPE_STRING, /* full path*/
 				GTK_TYPE_STRING, /* display string */
 				GTK_TYPE_INT,	/* 1 for folder 0 for song */
-				GTK_TYPE_STRING  /* stock -id*/
+				GTK_TYPE_STRING,  /* stock -id*/
+				G_TYPE_BOOLEAN /* expander */
 				);
 	}
 
@@ -169,6 +191,7 @@ void song_browser_create()
 	gtk_tree_view_column_set_attributes(
 			column,renderer,
 			"stock-id", SB_PIXBUF,
+			"is-expander", SB_EXPANDER,
 			NULL);
 	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_text_new();
@@ -179,7 +202,7 @@ void song_browser_create()
 			GTK_TREE_VIEW_COLUMN(column),
 			renderer,
 			"text", SB_DPATH,
-
+			"is-expander", SB_EXPANDER,
 			NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), GTK_TREE_VIEW_COLUMN(column));
 
@@ -338,9 +361,74 @@ void sb_fill_browser_id3()
 
 void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 {
+/*	mpd_InfoEntity *ent = NULL;
+	GtkTreeIter iter,parent1, *old_iter = NULL;
+	gint old_depth=0;
+	GtkTreePath *path1 = gtk_tree_path_new_first();
+	if(info.connection == NULL) return;
+
+	mpd_sendListallInfoCommand(info.connection, "/");
+
+	while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
+	{
+		if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		{
+			g_print("directory\n");
+			int i=0, depth=0;
+			for(i=0; i < strlen(ent->info.directory->path);i++)
+			{
+				if(ent->info.directory->path[i] == '/') depth++;
+			}	
+			g_print("depth: %i %i %s\n",old_depth, depth, ent->info.directory->path);
+			if(depth == old_depth)
+			{
+				if(depth != 0)
+				{
+					gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &parent1, path1);
+				}
+
+			}
+			else if(depth < old_depth)
+			{
+				gtk_tree_path_down(path1);
+				gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &parent1, path1);
+			}
+			else 
+			{
+				if(depth != 0)
+				{
+				gtk_tree_path_free(path1);
+				path1 = gtk_tree_model_get_path(GTK_TREE_MODEL(sb_store), &iter);
+				gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &parent1, path1);
+				}
+
+			}
+			old_depth = depth;
+			gchar *basename = g_path_get_basename(ent->info.directory->path);
+			if(depth != 0)	gtk_tree_store_append(sb_store, &iter, &parent1);
+			else gtk_tree_store_append(sb_store, &iter, &parent1);
+			gtk_tree_store_set(sb_store, &iter, 
+					SB_FPATH,ent->info.directory->path,
+					SB_DPATH, basename,                              			
+					SB_TYPE, 1,                                      			
+					SB_PIXBUF, "gtk-open",
+					-1);
+			g_free(basename);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{
+
+
+		}
+
+		mpd_freeInfoEntity(ent);
+	}
+
+	return;
+	*/
 	mpd_InfoEntity *ent = NULL;
 	GtkTreeIter iter;
-	if(info.connection == NULL) return;
+	if(info.connection == NULL) return;	
 	mpd_sendLsInfoCommand(info.connection, path);
 
 	ent = mpd_getNextInfoEntity(info.connection);
@@ -355,6 +443,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 					SB_DPATH, basename,
 					SB_TYPE, 1,
 					SB_PIXBUF, "gtk-open",
+					SB_EXPANDER,TRUE,
 					-1);
 
 			g_free(basename);
@@ -369,6 +458,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 					SB_DPATH, buffer,
 					SB_TYPE, 0,
 					SB_PIXBUF, "media-audiofile",
+					SB_EXPANDER, FALSE,
 					-1);
 
 		}
@@ -381,7 +471,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 	while(gtk_events_pending()) gtk_main_iteration();
 	/* check if the users hasn't closed the interface */
 	if(sb_xml == NULL) return;
-
+/*
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter,parent))
 	{
 		do{
@@ -394,6 +484,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 			}
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));
 	}
+	*/
 }
 
 

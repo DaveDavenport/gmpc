@@ -3,6 +3,7 @@ enum{
 	SB_DPATH,
 	SB_TYPE, /* 0 song, 1 folder */
 	SB_PIXBUF,
+	SB_EXPANDER,
 	SB_NROWS
 } sb_tree_store;
 
