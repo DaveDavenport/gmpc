@@ -72,6 +72,8 @@ void 		mpd_ob_signal_set_playlist_changed	(MpdInt *mi, void *(* playlist_changed
 /* status commands */
 int 		mpd_ob_status_queue_update		(MpdInt *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdInt *mi, float fvol);
+int 		mpd_ob_status_set_volume		(MpdInt *mi,int volume);
+int 		mpd_ob_status_get_volume		(MpdInt *mi);
 
 /* player commands */
 int 		mpd_ob_player_play			(MpdInt *mi);

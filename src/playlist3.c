@@ -65,33 +65,33 @@ void pl3_shuffle_playlist()
 /********************************************************************
  * Misc functions 
  */
-gchar * format_time(unsigned long seconds)
-{
-	int days = seconds/86400;
-	int houres = (seconds % 86400)/3600;
-	int minutes = (seconds % 3600)/60;
-	char *ret;
-	GString *str = g_string_new("Total time: ");
-	if(days != 0)
-	{
-		g_string_append_printf(str, "%i days ", days);
-	}	
-	if(houres != 0)
-	{
-		g_string_append_printf(str, "%i hours ", houres);
-	}
-	if(minutes != 0)
-	{
-		g_string_append_printf(str, "%i minutes ", minutes);
-	}                                                         	
-	if(seconds == 0)
-	{
-		g_string_append(str, "0");
-	}
-	ret = str->str;
-	g_string_free(str, FALSE);
-	return ret;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Get the type of the selected row.. 
@@ -688,6 +688,7 @@ void pl3_browse_file_replace_folder()
 {
 	pl3_clear_playlist();
 	pl3_browse_file_add_folder();	
+	mpd_ob_player_play(connection);
 }
 
 
@@ -919,6 +920,7 @@ void pl3_browse_replace_selected()
 {
 	pl3_clear_playlist();
 	pl3_browse_add_selected();
+	mpd_ob_player_play(connection);
 }
 
 
@@ -1198,6 +1200,7 @@ void pl3_browse_artist_replace_folder()
 {
 	pl3_clear_playlist();
 	pl3_browse_artist_add_folder();
+	mpd_ob_player_play(connection);
 }
 
 
@@ -2115,9 +2118,9 @@ void pl3_highlight_song ()
 			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
 					&pos, -1);
 			/* check if we have the right song, if not, print an error */
-			if (pos != info.status->song)
+			if (pos != mpd_ob_player_get_current_song_pos(connection))
 			{
-				g_print ("Errror %i %i\n", pos, info.status->song);
+				g_print ("Errror %i %i\n", pos,mpd_ob_player_get_current_song_pos(connection));
 			}
 			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
 					PANGO_WEIGHT_ULTRABOLD, -1);

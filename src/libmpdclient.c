@@ -55,6 +55,9 @@
 #define COMMAND_LIST	1
 #define COMMAND_LIST_OK	2
 
+long long unsigned total_send = 0;
+long long unsigned total_recieved = 0;
+
 #ifdef MPD_HAVE_IPV6        
 int mpd_ipv6Supported() {
         int s;          
@@ -231,6 +234,7 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 			connection->buffer[connection->buflen] = '\0';
 			tv.tv_sec = connection->timeout.tv_sec;
 			tv.tv_usec = connection->timeout.tv_usec;
+			total_recieved+= readed;
 		}
 		else if(err<0) {
 			switch(errno) {
@@ -357,6 +361,7 @@ void mpd_executeCommand(mpd_Connection * connection, char * command) {
 		else {
 			commandPtr+=ret;
 			commandLen-=ret;
+			total_send += ret;
 		}
 
 		if(commandLen<=0) break;
@@ -440,6 +445,7 @@ void mpd_getNextReturnElement(mpd_Connection * connection) {
 				connection->doneListOk = 0;
 				return;
 			}
+			total_recieved+= readed;
 			connection->buflen+=readed;
 			connection->buffer[connection->buflen] = '\0';
 		}

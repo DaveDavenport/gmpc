@@ -79,3 +79,32 @@ char * shorter_string(const char *long_string)
 	return ret_val;
 
 }
+
+
+gchar * format_time(unsigned long seconds)
+{
+	int days = seconds/86400;
+	int houres = (seconds % 86400)/3600;
+	int minutes = (seconds % 3600)/60;
+	char *ret;
+	GString *str = g_string_new("Total time: ");
+	if(days != 0)
+	{
+		g_string_append_printf(str, "%i days ", days);
+	}	
+	if(houres != 0)
+	{
+		g_string_append_printf(str, "%i hours ", houres);
+	}
+	if(minutes != 0)
+	{
+		g_string_append_printf(str, "%i minutes ", minutes);
+	}                                                         	
+	if(seconds == 0)
+	{
+		g_string_append(str, "0");
+	}
+	ret = str->str;
+	g_string_free(str, FALSE);
+	return ret;
+}

@@ -79,7 +79,7 @@ void mpd_ob_free(MpdInt *mi)
 
 int mpd_ob_lock_conn(MpdInt *mi)
 {
-	debug_printf(DEBUG_INFO, "mpd_ob_lock_conn: Locking connection\n");
+//	debug_printf(DEBUG_INFO, "mpd_ob_lock_conn: Locking connection\n");
 	if(mi->connection_lock)
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_lock_conn: Failed to lock connection, allready locked\n");
@@ -91,7 +91,7 @@ int mpd_ob_lock_conn(MpdInt *mi)
 
 int mpd_ob_unlock_conn(MpdInt *mi)
 {
-	debug_printf(DEBUG_INFO, "mpd_ob_unlock_conn: unlocking connection\n");
+//	debug_printf(DEBUG_INFO, "mpd_ob_unlock_conn: unlocking connection\n");
 	if(!mi->connection_lock)
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_unlock_conn: Failed to unlock connection, allready unlocked\n");
@@ -286,6 +286,13 @@ int mpd_ob_status_update(MpdInt *mi)
 		printf("Where not connected\n");
 		return TRUE;
 	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_status_set_volume: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	
 	if(mi->status != NULL)
 	{
 		mpd_freeStatus(mi->status);
@@ -298,6 +305,7 @@ int mpd_ob_status_update(MpdInt *mi)
 		return TRUE;
 	}
 
+	mpd_ob_unlock_conn(mi);
 	/*
 	 * check for changes 
 	 */
@@ -326,7 +334,6 @@ int mpd_ob_status_update(MpdInt *mi)
 		/* save new id */
 		mi->playlistid = mi->status->playlist;
 	}
-
 
 
 

@@ -23,12 +23,17 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs.h>
+#include <time.h>
 #include "libmpdclient.h"
 #include "config1.h"
 #include "playlist3.h"
 #include "main.h"
 #include "strfsong.h"
+#include "misc.h"
 #include "mm-keys.h"
+
+extern long long unsigned total_recieved;
+extern long long unsigned total_send;
 void playlist_changed(MpdInt *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
 /*
@@ -133,6 +138,9 @@ int main (int argc, char **argv)
 {
 	MmKeys *keys = NULL;
 	gchar *url = NULL;
+	/* debug stuff */
+	time_t start, stop;
+	start = time(NULL);
 #ifdef ENABLE_NLS
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -177,10 +185,10 @@ int main (int argc, char **argv)
 	if(connection == NULL)
 	{
 		g_print("Failed to make connection\n");
-		return NULL;
+		return 1;
 	}
 	/* connect signals */
-	mpd_ob_signal_set_playlist_changed(connection, playlist_changed);
+	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed);
 	/*
 	 * initialize gtk 
 	 */
@@ -232,7 +240,13 @@ int main (int argc, char **argv)
 	 * run the main loop 
 	 */
 	gtk_main ();
-
+	stop = time(NULL);
+	printf("down: %llu\nup: %llu\ntotal: %llu\n",
+			total_recieved,
+			total_send,
+			total_recieved+total_send);
+	printf("Network transfer: average of %.02f kb/sec\nTotal run time: %s %i seconds\n", ((total_recieved+total_send)/1024.0)/(float)(stop-start),
+			format_time(stop-start), (int)(stop-start)%60);
 	return 0;
 }
 

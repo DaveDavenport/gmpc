@@ -207,13 +207,13 @@ void pl3_xiph_refresh()
 
 void pl3_xiph_del_source()
 {
-	GtkDialog *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(pl3_xml,"pl3_win")),
+	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(pl3_xml,"pl3_win")),
 			GTK_DIALOG_MODAL,
 			GTK_MESSAGE_WARNING,
 			GTK_BUTTONS_YES_NO,
 			"Are you sure you want to delete this source?");
 
-	switch(gtk_dialog_run(dialog))
+	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 	{
 		case GTK_RESPONSE_YES:
 			{

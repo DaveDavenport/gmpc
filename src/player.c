@@ -208,12 +208,7 @@ void msg_push_popup(gchar *msg)
 	{
 		scroll.queue = g_queue_new();
 	}
-/*	if(scroll.popup_msg != NULL)
-	{
-		g_free(scroll.popup_msg);
-		scroll.popup_msg = NULL;
-	}
-*/	if(!g_utf8_validate(msg, -1, NULL))
+	if(!g_utf8_validate(msg, -1, NULL))
 	{
 		g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check youre locale")));
 		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
@@ -231,9 +226,7 @@ void msg_pop_popup()
 	if(scroll.popup_msg != NULL)
 	{
 		char *msg = g_queue_peek_tail(scroll.queue);
-/*		g_free(scroll.popup_msg);
-		scroll.popup_msg = NULL;
-*/		
+	
 		g_queue_pop_tail(scroll.queue);
 		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
 		g_free(msg);
@@ -248,11 +241,11 @@ int update_player()
 {
 	/* update the volume slider */
 	if(info.conlock) return TRUE;
-	if(info.volume != info.status->volume)
+	if(info.volume != mpd_ob_status_get_volume(connection))
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-		gtk_range_set_value(scale, (double) info.status->volume);
-		info.volume = info.status->volume;
+		gtk_range_set_value(scale, (double)mpd_ob_status_get_volume(connection));
+		info.volume = mpd_ob_status_get_volume(connection);
 	}    
 
 	/* things that only need to be updated during playing */
@@ -487,9 +480,10 @@ void volume_change_update()
 		msg_push_popup(buf);
 		g_free(buf);
 
-		mpd_sendSetvolCommand(info.connection, (int)value);
-		mpd_finishCommand(info.connection);
-		if(check_for_errors()) return;
+		if(mpd_ob_status_set_volume(connection,(int)value) < 0)
+		{
+			return;
+		}
 
 		/* do this so the title gets updated again, even if it doesnt need scrolling */
 		/* it does look ugly .. need to find a better way */
@@ -501,9 +495,11 @@ void volume_change_update()
 		gdouble value = gtk_range_get_value(scale);
 		if(value != info.volume)
 		{
-			mpd_sendSetvolCommand(info.connection, (int)value);
-			mpd_finishCommand(info.connection);        
-			if(check_for_errors()) return;
+			if(mpd_ob_status_set_volume(connection, (int)value) < 0)
+			{
+				return;
+			}                                                 			
+
 		}
 	}
 }
@@ -576,17 +572,8 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 		return TRUE;
 
 	}
-
-
-
-
 	return FALSE;
 }
-
-
-
-
-
 
 
 
