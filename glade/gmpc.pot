@@ -9,6 +9,7 @@ gchar *s = N_("R_and");
 gchar *s = N_("R_ep");
 gchar *s = N_("_PM");
 gchar *s = N_("P_ref");
+gchar *s = N_("PL2");
 gchar *s = N_("gmpc - Preferences");
 gchar *s = N_("Host:");
 gchar *s = N_("Port:");

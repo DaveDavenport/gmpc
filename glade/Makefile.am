@@ -1,4 +1,6 @@
 appgladedir = $(datadir)/gmpc/
-appglade_DATA = 	gmpc.glade
+appglade_DATA =	gmpc.glade \
+		playlist.glade
 
-DIST_SOURCES = gmpc.glade
+DIST_SOURCES = gmpc.glade \
+		playlist.glade

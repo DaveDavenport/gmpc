@@ -6,6 +6,7 @@
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
+#include "playlist2.h"
 #define TITLE_LENGTH 42
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
