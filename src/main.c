@@ -47,10 +47,6 @@ void status_callback(MpdObj *mi);
  */
 GladeXML *xml_main_window = NULL;
 
-/*
- * set this true to get a little bit more of debug information 
- */
-int debug = FALSE;
 
 int update_interface ();
 
@@ -182,7 +178,7 @@ int main (int argc, char **argv)
 	mpd_ob_signal_set_song_changed(connection, (void *)song_changed, NULL);
 	mpd_ob_signal_set_state_changed(connection, (void *)state_callback, NULL);
 	mpd_ob_signal_set_status_changed(connection, (void *)status_callback, NULL);
-	
+	mpd_ob_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
 	/*
 	 * initialize gtk 
 	 */
@@ -298,7 +294,6 @@ int update_interface ()
 
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 {
-//	mpd_InfoEntity *ent = NULL;
 	MpdData *data = NULL;
 
 	/*
@@ -310,40 +305,23 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	g_print("playlist changed\n");
 	old_length = info.playlist_length;
 
-/*
-	if(old_length == -1)
-	{
-		mpd_sendPlaylistIdCommand(mi->connection, -1);
-		old_length = 0;
-	}
-	else{
-
-		mpd_sendPlChangesCommand (mi->connection, info.playlist_id);
-	}
-*/
-	
-//	ent = mpd_getNextInfoEntity (mi->connection);
-//	while (ent != NULL)
 	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
 	while(data != NULL)
 	{
 		/*
 		 * decide wether to update or to add 
 		 */
-//		if (ent->info.song->pos < old_length)
 		if(data->value.song->pos < old_length)
 		{
 			/*
 			 * needed for getting the row 
 			 */
-	//		gchar *path = g_strdup_printf ("%i", ent->info.song->pos);
 			gchar *path = g_strdup_printf ("%i", data->value.song->pos);	
 			if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
 				/* overwriting existing entry */
 				gint weight = PANGO_WEIGHT_NORMAL;
 				gint time=0;
-//				if (ent->info.song->id == mpd_ob_player_get_current_song_id(connection))
 				if (data->value.song->id == mpd_ob_player_get_current_song_id(connection))
 				{
 					weight = PANGO_WEIGHT_ULTRABOLD;
@@ -354,27 +332,20 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 				{
 					info.playlist_playtime -= time;
 				}
-//				if(ent->info.song->time != MPD_SONG_NO_TIME)
 				if(data->value.song->time != MPD_SONG_NO_TIME)
 				{
-//					info.playlist_playtime += ent->info.song->time;
 					info.playlist_playtime += data->value.song->time;
 				}
 				strfsong (buffer, 1024,
 						cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
-//						ent->info.song);
 						data->value.song);						
 				gtk_list_store_set (pl2_store, &iter,
-//						SONG_ID,ent->info.song->id, 
 						SONG_ID,data->value.song->id, 
-//						SONG_POS,ent->info.song->pos, 
 						SONG_POS,data->value.song->pos, 					
 						SONG_TITLE, buffer,
 						WEIGHT_ENABLE, TRUE, 
 						WEIGHT_INT, weight,
-//						SONG_STOCK_ID,(strstr(ent->info.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 						SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-//						SONG_TIME,ent->info.song->time,
 						SONG_TIME,data->value.song->time,
 						-1);
 			}
@@ -382,10 +353,8 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		else
 		{
 			int weight = PANGO_WEIGHT_NORMAL;
-//			if(ent->info.song->time != MPD_SONG_NO_TIME)
 			if(data->value.song->time != MPD_SONG_NO_TIME)
 			{
-//				info.playlist_playtime += ent->info.song->time;
 				info.playlist_playtime += data->value.song->time;
 			}
 			if (data->value.song->id == mpd_ob_player_get_current_song_id(connection))
@@ -395,33 +364,15 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 			gtk_list_store_append (pl2_store, &iter);
 			strfsong (buffer, 1024,
 					cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP),
-//					ent->info.song);
 					data->value.song);
-/*			gtk_list_store_set (pl2_store, &iter, SONG_ID,
-					ent->info.song->id,
-					SONG_POS,
-					ent->info.song->pos,
-					SONG_TITLE, buffer,
-					WEIGHT_ENABLE, TRUE,
-					WEIGHT_INT,
-					PANGO_WEIGHT_NORMAL,
-					SONG_STOCK_ID,
-					(strstr(ent->info.song->file, "://") ==
-					 NULL) ? "media-audiofile"
-					: "media-stream", 
-					SONG_TIME, ent->info.song->time,
-					-1);
-*/			gtk_list_store_set (pl2_store, &iter,
-					//						SONG_ID,ent->info.song->id, 
+
+			gtk_list_store_set (pl2_store, &iter,
 					SONG_ID,data->value.song->id, 
-					//						SONG_POS,ent->info.song->pos, 
 					SONG_POS,data->value.song->pos, 					
 					SONG_TITLE, buffer,
 					WEIGHT_ENABLE, TRUE, 
 					WEIGHT_INT, weight,
-					//						SONG_STOCK_ID,(strstr(ent->info.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-					//						SONG_TIME,ent->info.song->time,
 					SONG_TIME,data->value.song->time,
 					-1);
 
@@ -430,8 +381,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 
 
 		}
-//		mpd_freeInfoEntity (ent);
-//		ent = mpd_getNextInfoEntity (mi->connection);
 		data= mpd_ob_data_get_next(data);		
 	}
 	while (connection->status->playlistLength < old_length)
@@ -451,7 +400,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		g_free (path);
 		old_length--;
 	}
-	//	pl3_highlight_song ();
 	pl3_highlight_song_change ();
 
 	info.playlist_id = new_playlist_id;

@@ -39,12 +39,13 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <sys/param.h>
-#include <string.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <string.h>
+
 
 #ifndef MPD_NO_IPV6
 #ifdef AF_INET6
@@ -263,7 +264,7 @@ mpd_Connection * mpd_newConnection(const char * host, int port, float timeout) {
 	}
 
 	*rt = '\0';
-	output = strdup(connection->buffer);
+	output = strdup((const char *)connection->buffer);
 	strcpy(connection->buffer,rt+1);
 	connection->buflen = strlen(connection->buffer);
 
@@ -650,7 +651,7 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 			char * tok;
 			char * copy;
 			char * temp;
-			copy = strdup(re->value);
+			copy = strdup((const char *)re->value);
 			temp = strtok_r(copy,":",&tok);
 			if(temp) {
 				status->elapsedTime = atoi(temp);
@@ -660,7 +661,7 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 			free(copy);
 		}
 		else if(strcmp(re->name,"error")==0) {
-			status->error = strdup(re->value);
+			status->error = strdup((const char *)re->value);
 		}
 		else if(strcmp(re->name,"xfade")==0) {
 			status->crossfade = atoi(re->value);
@@ -672,7 +673,7 @@ mpd_Status * mpd_getStatus(mpd_Connection * connection) {
 			char * tok;
 			char * copy;
 			char * temp;
-			copy = strdup(re->value);
+			copy = strdup((const char *)re->value);
 			temp = strtok_r(copy,":",&tok);
 			if(temp) {
 				status->sampleRate = atoi(temp);
@@ -826,13 +827,13 @@ void mpd_freeSong(mpd_Song * song) {
 mpd_Song * mpd_songDup(mpd_Song * song) {
 	mpd_Song * ret = mpd_newSong();
 
-	if(song->file) ret->file = strdup(song->file);
-	if(song->artist) ret->artist = strdup(song->artist);
-	if(song->album) ret->album = strdup(song->album);
-	if(song->title) ret->title = strdup(song->title);
-	if(song->track) ret->track = strdup(song->track);
-	if(song->name) ret->name = strdup(song->name);
-	if(song->date) ret->date = strdup(song->date);
+	if(song->file) ret->file = strdup((const char *)song->file);
+	if(song->artist) ret->artist = strdup((const char *)song->artist);
+	if(song->album) ret->album = strdup((const char *)song->album);
+	if(song->title) ret->title = strdup((const char *)song->title);
+	if(song->track) ret->track = strdup((const char *)song->track);
+	if(song->name) ret->name = strdup((const char *)song->name);
+	if(song->date) ret->date = strdup((const char *)song->date);
 	ret->time = song->time;
 	ret->pos = song->pos;
 	ret->id = song->id;
@@ -865,7 +866,7 @@ void mpd_freeDirectory(mpd_Directory * directory) {
 mpd_Directory * mpd_directoryDup(mpd_Directory * directory) {
 	mpd_Directory * ret = mpd_newDirectory();
 
-	if(directory->path) ret->path = strdup(directory->path);
+	if(directory->path) ret->path = strdup((const char *)directory->path);
 
 	return ret;
 }
@@ -894,7 +895,7 @@ void mpd_freePlaylistFile(mpd_PlaylistFile * playlist) {
 mpd_PlaylistFile * mpd_playlistFileDup(mpd_PlaylistFile * playlist) {
 	mpd_PlaylistFile * ret = mpd_newPlaylistFile();
 
-	if(playlist->path) ret->path = strdup(playlist->path);
+	if(playlist->path) ret->path = strdup((const char *)playlist->path);
 
 	return ret;
 }
@@ -951,7 +952,7 @@ mpd_InfoEntity * mpd_getNextInfoEntity(mpd_Connection * connection) {
 			entity->type = MPD_INFO_ENTITY_TYPE_SONG;
 			entity->info.song = mpd_newSong();
 			entity->info.song->file = 
-				strdup(connection->returnElement->value);
+				strdup((const char *)connection->returnElement->value);
 		}
 		else if(strcmp(connection->returnElement->name,
 					"directory")==0) {
@@ -959,14 +960,14 @@ mpd_InfoEntity * mpd_getNextInfoEntity(mpd_Connection * connection) {
 			entity->type = MPD_INFO_ENTITY_TYPE_DIRECTORY;
 			entity->info.directory = mpd_newDirectory();
 			entity->info.directory->path = 
-				strdup(connection->returnElement->value);
+				strdup((const char *)connection->returnElement->value);
 		}
 		else if(strcmp(connection->returnElement->name,"playlist")==0) {
 			entity = mpd_newInfoEntity();
 			entity->type = MPD_INFO_ENTITY_TYPE_PLAYLISTFILE;
 			entity->info.playlistFile = mpd_newPlaylistFile();
 			entity->info.playlistFile->path = 
-				strdup(connection->returnElement->value);
+				strdup((const char *)connection->returnElement->value);
 		}
 		else {
 			connection->error = 1;
@@ -988,23 +989,23 @@ mpd_InfoEntity * mpd_getNextInfoEntity(mpd_Connection * connection) {
 				strlen(re->value)) {
 			if(!entity->info.song->artist &&
 					strcmp(re->name,"Artist")==0) {
-				entity->info.song->artist = strdup(re->value);
+				entity->info.song->artist = strdup((const char *)re->value);
 			}
 			else if(!entity->info.song->album &&
 					strcmp(re->name,"Album")==0) {
-				entity->info.song->album = strdup(re->value);
+				entity->info.song->album = strdup((const char *)re->value);
 			}
 			else if(!entity->info.song->title &&
 					strcmp(re->name,"Title")==0) {
-				entity->info.song->title = strdup(re->value);
+				entity->info.song->title = strdup((const char *)re->value);
 			}
 			else if(!entity->info.song->track &&
 					strcmp(re->name,"Track")==0) {
-				entity->info.song->track = strdup(re->value);
+				entity->info.song->track = strdup((const char *)re->value);
 			}
 			else if(!entity->info.song->name &&
 					strcmp(re->name,"Name")==0) {
-				entity->info.song->name = strdup(re->value);
+				entity->info.song->name = strdup((const char *)re->value);
 			}
 			else if(entity->info.song->time==MPD_SONG_NO_TIME &&
 					strcmp(re->name,"Time")==0) {
@@ -1020,7 +1021,7 @@ mpd_InfoEntity * mpd_getNextInfoEntity(mpd_Connection * connection) {
 			}
 			else if(!entity->info.song->date &&
 					strcmp(re->name, "Date") == 0) {
-				entity->info.song->date = strdup(re->value);
+				entity->info.song->date = strdup((const char *)re->value);
 			}
 		}
 		else if(entity->type == MPD_INFO_ENTITY_TYPE_DIRECTORY) {
@@ -1047,7 +1048,7 @@ char * mpd_getNextReturnElementNamed(mpd_Connection * connection,
 	while(connection->returnElement) {
 		mpd_ReturnElement * re = connection->returnElement;
 
-		if(strcmp(re->name,name)==0) return strdup(re->value);
+		if(strcmp(re->name,name)==0) return strdup((const char *)re->value);
 		mpd_getNextReturnElement(connection);
 	}
 
@@ -1442,7 +1443,7 @@ mpd_OutputEntity * mpd_getNextOutput(mpd_Connection * connection) {
 			output->id = atoi(re->value);
 		}
 		else if(strcmp(re->name,"outputname")==0) {
-			output->name = strdup(re->value);
+			output->name = strdup((const char *)re->value);
 		}
 		else if(strcmp(re->name,"outputenabled")==0) {
 			output->enabled = atoi(re->value);

@@ -27,22 +27,23 @@ typedef struct _MpdObj
 {
 	/* defines if we are connected */
 	/* This should be made true if and only if the connection is up and running */
-	short int connected;
+	short int 	connected;
 	/* information needed to connect to mpd */
-	char *hostname;
-	int port;
-	char *password;
+	char 		*hostname;
+	int 		port;
+	char 		*password;
+	float 		connection_timeout;
 
 	/* mpd's structures */
-	mpd_Connection *connection;
-	mpd_Status *status;
-	mpd_Stats *stats;
-	mpd_Song *CurrentSong;
+	mpd_Connection 	*connection;
+	mpd_Status 	*status;
+	mpd_Stats 	*stats;
+	mpd_Song 	*CurrentSong;
 
 	/* information needed to detect changes on mpd's side */
-	long long playlistid;
-	int songid;
-	int state;
+	long long 	playlistid;
+	int 		songid;
+	int 		state;
 	
 	
 	
@@ -60,6 +61,14 @@ typedef struct _MpdObj
 	/* song status changed */
 	void *(* state_changed)(struct _MpdObj *mi,int old_state,int new_state, void *pointer);	
 	void *state_changed_signal_pointer;                                                     	
+
+	/* disconnect signal */
+	void *(* disconnect) (struct _MpdObj *mi, void *pointer);
+	void *disconnect_pointer;
+
+	/* connect signal */
+	void *(* connect) (struct _MpdObj *mi, void *pointer);
+	void *connect_pointer;
 	
 	/* error message */
 	int error;
@@ -124,7 +133,8 @@ void 		mpd_ob_signal_set_error			(MpdObj *mi, void *(* error_signal)(MpdObj *mi,
 void 		mpd_ob_signal_set_song_changed		(MpdObj *mi, void *(* song_changed)(MpdObj *mi, int old_song_id, int new_song_id,void *pointer), void *pointer);
 void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(MpdObj *mi,void *pointer), void *pointer);
 void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer);
-
+void 		mpd_ob_signal_set_disconnect		(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect_pointer);
+void 		mpd_ob_signal_set_connect		(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect_pointer);
 /* status commands */
 /* To get the function to have the  most recent info you want to call mpd_ob_status_queue_update 
  * In a gui app. you want to call this every 0.x seconds. 

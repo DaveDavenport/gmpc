@@ -501,7 +501,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	else if(event->button == 3)
 	{
 		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();//(GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
+		GtkWidget *menu = gtk_menu_new();
 
 
 		item = gtk_image_menu_item_new_with_label(_("Play/Pause"));

@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(gmpc, 0.11.3)
+AM_INIT_AUTOMAKE(gmpc, 0.12.0)
 
 # Checks for programs.
 AC_PROG_CC

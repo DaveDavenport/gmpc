@@ -118,6 +118,10 @@ int  pl3_cat_get_selected_browser()
 void pl3_custom_stream_add()
 {
 	GtkTreeIter iter,child;
+	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "custom_stream_enable", TRUE))
+	{
+		return;
+	}
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_STREAM,
@@ -1077,7 +1081,6 @@ void pl3_browse_artist_add_folder()
 	{
 		char *artist, *title;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &artist, PL3_CAT_TITLE,&title, -1);
-		//		GList *add_list = NULL;
 		if(!artist || !title)
 		{
 			return;
@@ -1354,18 +1357,20 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 
 	}
 
-	if(read) return;
-	if(type == PL3_BROWSE_FILE)
+	if(!read)
 	{
-		pl3_file_browser_fill_tree(iter);
-	}
-	else if (type == PL3_BROWSE_ARTIST)
-	{
-		pl3_artist_browser_fill_tree(iter);
+		if(type == PL3_BROWSE_FILE)
+		{
+			pl3_file_browser_fill_tree(iter);
+		}
+		else if (type == PL3_BROWSE_ARTIST)
+		{
+			pl3_artist_browser_fill_tree(iter);
 
+		}
 	}
 	/* avuton's Idea */
-	if(cfg_get_single_value_as_int_with_default(config, "playlist3", "open-to-position",0))
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "open-to-position",0))
 	{
 		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
 	}

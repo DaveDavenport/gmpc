@@ -46,6 +46,7 @@ MpdObj * mpd_ob_create()
 	mi->port = 6600;
 	mi->hostname = strdup("localhost");
 	mi->password = NULL;
+	mi->connection_timeout = 1.0;
 	mi->connection = NULL;
 	mi->status = NULL;
 	mi->stats = NULL;
@@ -68,6 +69,13 @@ MpdObj * mpd_ob_create()
 	/* state */
 	mi->state_changed = NULL;
 	mi->state_changed_signal_pointer = NULL;
+	/* disconnect signal */
+	mi->disconnect = NULL;
+	mi->disconnect_pointer = NULL;
+	/* connect signal */
+	mi->connect = NULL;
+	mi->connect_pointer = NULL;	
+
 
 	mi->error_signal = NULL;
 	/* connection is locked because where not connected */
@@ -258,6 +266,32 @@ void mpd_ob_set_port(MpdObj *mi, int port)
 	}
 	mi->port = port;
 }
+
+void mpd_ob_set_connection_timeout(MpdObj *mi, float timeout)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_set_connection_timeout: mi == NULL\n");
+		return;
+	}
+	mi->connection_timeout = timeout;
+	if(mpd_ob_check_connected(mi))
+	{
+		/*TODO: set timeout */	
+		if(mpd_ob_lock_conn(mi))
+		{
+			debug_printf(DEBUG_WARNING,"mpd_ob_set_connection_timeout: lock failed\n");
+			return;
+		}
+		mpd_setConnectionTimeout(mi->connection, timeout);
+		mpd_finishCommand(mi->connection);
+
+		mpd_ob_unlock_conn(mi);
+
+	}
+}
+
+
 int mpd_ob_disconnect(MpdObj *mi)
 {
 	/* set disconnect flag */
@@ -292,6 +326,11 @@ int mpd_ob_disconnect(MpdObj *mi)
 
 	/*don't reset errors */
 
+	if(mi->disconnect != NULL)
+	{                                                                      		
+		mi->disconnect(mi, mi->disconnect_pointer);
+	}                                                                                           		
+
 	return FALSE;
 }
 
@@ -309,9 +348,9 @@ int mpd_ob_connect(MpdObj *mi)
 		free(mi->error_msg);
 	}
 	mi->error_msg = NULL;
-	
+
 	debug_printf(DEBUG_INFO, "mpd_ob_connect: connecting\n");
-	
+
 	if(mi->connected)
 	{
 		/* disconnect */
@@ -328,7 +367,7 @@ int mpd_ob_connect(MpdObj *mi)
 		mpd_ob_lock_conn(mi);
 	}
 	/* make timeout configurable */
-	mi->connection = mpd_newConnection(mi->hostname,mi->port,1);
+	mi->connection = mpd_newConnection(mi->hostname,mi->port,mi->connection_timeout);
 	if(mi->connection == NULL)
 	{
 		/* again spiffy error here */
@@ -348,6 +387,12 @@ int mpd_ob_connect(MpdObj *mi)
 	{
 		return -1;
 	}
+	if(mi->connect != NULL)
+	{                                                                      		
+		mi->connect(mi, mi->connect_pointer);
+	}                                                                                           		
+
+
 	return 0;
 }
 
@@ -390,7 +435,7 @@ int mpd_ob_status_update(MpdObj *mi)
 		return MPD_O_LOCK_FAILED;
 	}
 
-	
+
 	if(mi->status != NULL)
 	{
 		mpd_freeStatus(mi->status);
@@ -400,7 +445,6 @@ int mpd_ob_status_update(MpdObj *mi)
 	if(mi->status == NULL)
 	{
 		debug_printf(DEBUG_ERROR,"mpd_ob_status_update: Failed to grab status from mpd\n");
-//		return TRUE;
 	}
 	if(mpd_ob_unlock_conn(mi))
 	{
@@ -446,7 +490,7 @@ int mpd_ob_status_update(MpdObj *mi)
 
 		mi->state = mi->status->state;
 	}
-	
+
 	if(mi->songid != mi->status->songid)
 	{
 		/* print debug message */
@@ -462,7 +506,7 @@ int mpd_ob_status_update(MpdObj *mi)
 
 	}
 
-	
+
 	if(mi->status_changed != NULL)
 	{                                                                      		
 		mi->status_changed(mi, mi->status_changed_signal_pointer);		
@@ -1224,13 +1268,29 @@ void mpd_ob_playlist_move_pos(MpdObj *mi, int old_pos, int new_pos)
 }
 
 
+void mpd_ob_signal_set_connect (MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer), void *connect_pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_connect: MpdObj *mi == NULL");
+		return;
+	}
+	mi->connect = connect;
+	mi->connect_pointer = connect_pointer;
+}                                                                                                                                     /* SIGNALS */
 
 
+void mpd_ob_signal_set_disconnect (MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer), void *disconnect_pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_disconnect: MpdObj *mi == NULL");
+		return;
+	}
+	mi->disconnect = disconnect;
+	mi->disconnect_pointer = disconnect_pointer;
+}                                                                                                                                     /* SIGNALS */
 
-
-
-
-/* SIGNALS */
 void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id))
 {
 	if(mi == NULL)
@@ -1331,7 +1391,7 @@ MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
 			data->first = data;
 			data->next = NULL;
 			data->prev = NULL;
-		
+
 		}	
 		else
 		{
@@ -1884,7 +1944,7 @@ int mpd_ob_stats_update(MpdObj *mi)
 		debug_printf(DEBUG_WARNING,"mpd_ob_stats_set_volume: lock failed\n");
 		return MPD_O_LOCK_FAILED;
 	}
-	
+
 	if(mi->stats != NULL)
 	{
 		mpd_freeStats(mi->stats);
@@ -2013,7 +2073,7 @@ MpdData * mpd_ob_server_get_output_devices(MpdObj *mi)
 			data->first = data;
 			data->next = NULL;
 			data->prev = NULL;
-		
+
 		}	
 		else
 		{

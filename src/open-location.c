@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
+#include <strings.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include "libmpdclient.h"

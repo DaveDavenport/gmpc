@@ -1,4 +1,12 @@
+24-02-2005 Qball <Qball@qballcow.nl>
+	* cleaned up some compile warnings.. (and all // comment )
+
+
 23-02-2005 Qball <Qball@qballcow.nl>
+	* glade/gmpc.glade:	Added Playlist tab + obtions
+	* src/mpdinteraction.c:	Disconnect is always reload.
+	* src/playlist3.c:	make open to location work propperly.
+	* src/libmpd.c:		Update timeout on the fly, if connected.
 	* src/main.c:		Uses libmpd to track song changes.
 	* src/libmpd.[c|h]:	Added function that returns the changed songs.
 	* src/mpdinteractions.c:After disconnect not directly a reconnect

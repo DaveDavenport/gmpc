@@ -1,3 +1,4 @@
 * Rewrite the id3 info window.
 * Clean up the preferences window.
-* libmpd: Make connect/disconnect signals
+* implement permission checking.
+* Better error handling.. not more then 1 popup.

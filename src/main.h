@@ -17,7 +17,6 @@
 
 #include "libmpd.h"
 /** main.c **/
-extern int debug;
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
 typedef struct
@@ -60,6 +59,7 @@ void random_pl();
 void repeat_pl();
 void update_mpd_dbase();
 int disconnect_to_mpd();
+void disconnect_callback(MpdObj *mi);
 
 /* returns FALSE when connected */
 gboolean check_connection_state();
@@ -98,7 +98,6 @@ int create_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
 /* popup.c: update_popup() */
-//void update_popup();
 void destroy_tray_icon();
 
 /* main.h*/

@@ -5,6 +5,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 #include "config1.h"
+#include "debug_printf.h"
 extern config_obj *config;
 
 enum
@@ -97,7 +98,11 @@ void create_preferences_window()
 
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
-			cfg_get_single_value_as_int_with_default(config,"osb", "enable", 0));           	
+			cfg_get_single_value_as_int_with_default(config,"osb", "enable", 0));        
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "csl_ck_enable")), 
+			cfg_get_single_value_as_int_with_default(config,"playlist", "custom_stream_enable", 1));                          	
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_of")), 
+			cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));                          	
 
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
@@ -167,7 +172,7 @@ void preferences_window_autoconnect(GtkToggleButton *tog)
 
 void preferences_window_connect(GtkWidget *but)
 {
-	if(debug)g_print("**DEBUG** connect\n");
+	debug_printf(DEBUG_INFO,"*DEBUG** connect\n");
 	if(!mpd_ob_check_connected(connection))
 		if(!connect_to_mpd())
 		{
@@ -178,7 +183,7 @@ void preferences_window_connect(GtkWidget *but)
 
 void preferences_window_disconnect(GtkWidget *but)
 {
-	if(debug)g_print("**DEBUG** disconnect\n");    
+	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
 	disconnect_to_mpd();
 /*	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");*/
 }
@@ -220,9 +225,9 @@ void popup_position_changed(GtkOptionMenu *om)
 
 void popup_timeout_changed()
 {
-	//info.popup.timeout = gtk_spin_button_get_value_as_int(
 	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout", 
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout"))));
+	mpd_ob_set_connection_timeout(connection, gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout"))));
 }
 
 void update_popup_settings()
@@ -351,6 +356,18 @@ void osb_enable_tb(GtkToggleButton *but)
 	cfg_set_single_value_as_int(config, "osb","enable", bool1);
 }
 
+
+void csl_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "playlist","custom_stream_enable", bool1);
+}
+
+void open_to_position_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "playlist","open-to-position", bool1);
+}
 void create_outputs_tree()
 {
 	GtkListStore *model;

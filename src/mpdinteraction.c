@@ -6,6 +6,7 @@
 #include "playlist3.h"
 #include "main.h"
 #include "config1.h"
+#include "debug_printf.h"
 extern config_obj *config;
 extern GtkListStore *pl2_store;
 /* the internall data structure */
@@ -25,8 +26,13 @@ int update_mpd_status()
 int disconnect_to_mpd()
 {
 	/* disconnect */
-	gtk_timeout_remove(update_timeout);
 	mpd_ob_disconnect(connection);
+	return FALSE;
+}
+
+void disconnect_callback(MpdObj *mi)
+{
+	gtk_timeout_remove(update_timeout);
 	msg_set_base(_("gmpc - Disconnected"));
 
 	scroll.exposed = 1;
@@ -42,7 +48,6 @@ int disconnect_to_mpd()
 	preferences_update();
 	info.updating = FALSE;
 	gtk_list_store_clear(pl2_store);
-	return FALSE;
 }
 
 /* the functiont that connects to mpd */
@@ -53,7 +58,7 @@ int connect_to_mpd()
 
 	mpd_ob_set_hostname(connection,cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
 	mpd_ob_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
-//			cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
+	mpd_ob_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
 
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
@@ -66,7 +71,7 @@ int connect_to_mpd()
 
 	if(mpd_ob_connect(connection) < 0)
 	{
-		if(debug)g_print("Connection failed\n");
+		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
 	}
 
