@@ -36,32 +36,17 @@ gchar * get_string()
 	if(song->artist  == NULL || song->title == NULL)
 	{
 		gchar *basename     = g_path_get_basename(song->file);
-		g_string_printf(string,"<b>Title:</b>\t%s",basename);
+		g_string_printf(string,/*"<b>Title:</b>\t*/"%s",basename);
 		g_free(basename);
 	}
 	else
 	{
-		g_string_printf(string, "<b>Title:</b>\t\t%s\n<b>Artist:</b>\t\t%s", song->title, song->artist);
+		g_string_printf(string, "%s\n%s", song->title, song->artist);
 
 		if(song->album != NULL)
 		{
-			g_string_append_printf(string,"\n<b>Album:</b>\t\t%s", song->album);
+			g_string_append_printf(string,"\n%s", song->album);
 		}
-		/*
-		   if(song->track !    = NULL)
-		   {
-		   g_string_append_printf(string, "\n<b>Track:</b>\t\t%s", song->track);
-		   }
-		   */
-		/*
-		   if(song->time !     = MPD_SONG_NO_TIME)
-		   {
-		   */ /* the the minutes by deviding it by 60 and flooring (done automatic because it is int)*/
-		/*	int min          = (int)(song->time/60);
-			int seconds         = song->time - 60*min;
-			g_string_append_printf(string, "\n<b>Playtime:</b>\t%02i:%02i", min, seconds);
-			}
-			*/
 	}
 	/* catch & signs and convert them so */
 
@@ -86,11 +71,19 @@ int destroy_popup(GtkWidget *window)
 	timeout             = 0;
 	return FALSE;
 }
+/* if the image is clicked we (for now) want to remove it */
+int popup_clicked(GtkWidget *window)
+{
+	g_source_remove(timeout);
+	destroy_popup(popup);
+	return FALSE;
+}
 /* this does the actual painting on the window */
 int paint_window(GtkWidget *popup)
 {
 	PangoLayout *layout = NULL;
 	GtkStyle *style;
+	int w, h, text_height;
 	char *text          = get_string();
 	style               = popup->style;
 	layout  	    = gtk_widget_create_pango_layout(popup, NULL);
@@ -106,10 +99,15 @@ int paint_window(GtkWidget *popup)
 			0,0,		
 			pixbuf_width, pixbuf_height,
 			GDK_RGB_DITHER_NONE,0,0);
-			
+
 	/* draw the text */
+	pango_layout_get_size (layout, &w, &h);
+
+	h = PANGO_PIXELS(h);;
+
+	text_height = MAX(((pixbuf_height-h)/2) ,4);
 	gtk_paint_layout (style, popup->window, GTK_STATE_NORMAL, TRUE,
-			NULL, popup, "tooltip", 4+pixbuf_width, 4,layout);
+			NULL, popup, "tooltip", 4+pixbuf_width, text_height,layout);
 	/* make sure we all see the result */
 	gtk_widget_show_all(popup);
 	g_free(text);
@@ -151,6 +149,7 @@ void popup_window()
 
 
 	popup  = gtk_window_new(GTK_WINDOW_POPUP);
+	
 	gtk_widget_set_app_paintable(popup, TRUE);
 	gtk_window_set_resizable(GTK_WINDOW(popup), FALSE);
 	gtk_widget_set_name(popup, "gtk-tooltips");
@@ -160,11 +159,15 @@ void popup_window()
 	g_signal_connect(G_OBJECT(popup), "expose-event",
 			G_CALLBACK(paint_window), NULL);       
 
+	g_signal_connect(G_OBJECT(popup), "button-press-event",
+			G_CALLBACK(popup_clicked), NULL);       
+
+
 	layout = gtk_widget_create_pango_layout(popup, NULL);
 	pango_layout_set_markup(layout,text, strlen(text));
 
 	pango_layout_get_size (layout, &w, &h);
-	w = PANGO_PIXELS(w) + 8 + pixbuf_width;
+	w = PANGO_PIXELS(w) + 12 + pixbuf_width;
 	h = MAX(PANGO_PIXELS(h) + 8, pixbuf_height);
 
 	gtk_widget_set_usize(popup, w, h);
