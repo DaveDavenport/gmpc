@@ -104,7 +104,7 @@ gchar * format_time(unsigned long seconds)
 /* Get the type of the selected row.. 
  * -1 means no row selected 
  */
-int  cat_get_selected_browser()
+int  pl3_cat_get_selected_browser()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -122,6 +122,34 @@ int  cat_get_selected_browser()
 	}
 	return -1;
 }
+
+
+/*****************************************************************
+ * CURRENT BROWSER
+ */
+
+
+/* add's the toplevel entry for the current playlist view */
+void pl3_current_playlist_add()
+{
+	GtkTreeIter iter;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_CURRENT_PLAYLIST,
+			PL3_CAT_TITLE, "Current Playlist",
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-stream",
+			PL3_CAT_PROC, TRUE,-1);
+}
+
+
+
+
+
+
+
+
+
 
 /********************************************************
  * FILE BROWSER 				  	*
@@ -155,7 +183,7 @@ void pl3_browse_file_replace_folder()
 
 
 /* add's the toplevel entry for the file browser, it also add's a fantom child */
-void pl3_add_file_browser()
+void pl3_file_browser_add()
 {
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -284,138 +312,13 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 }
 
 
+/***********************************************************************
+ *  ARTIST BROWSER
+ */
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
-{
-	gint type = cat_get_selected_browser();
-	if(check_connection_state())
-	{
-		return;
-	}
-	/* nothing valid, so return */
-	if(type == -1)
-	{
-		return;
-	}
-
-	else if(type == PL3_CURRENT_PLAYLIST)
-	{
-		/* scroll to the playing song */
-		if(info.status != NULL)
-		{
-			if(info.status->song != -1)
-			{
-				gchar *str = g_strdup_printf("%i", info.status->song);
-				GtkTreePath *path = gtk_tree_path_new_from_string(str);
-				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
-						path,
-						NULL,
-						TRUE,0.5,0);
-				gtk_tree_path_free(path);
-				g_free(str);
-			}                                                      		
-		}
-	}
-}
-
-void playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
-{
-	gint type = cat_get_selected_browser();
-	if(type == -1 || check_connection_state())
-	{
-		return;
-	}
-	else if (type == PL3_CURRENT_PLAYLIST)
-	{
-		GtkTreeIter iter;
-		gint song_id;
-		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
-		/* send mpd the play command */
-		mpd_sendPlayIdCommand (info.connection, song_id);
-		mpd_finishCommand (info.connection);
-		/* check for errors */                      		
-		check_for_errors ();                        		
-	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
-	{
-		GtkTreeIter iter;
-		gchar *song_id;
-		gint r_type;
-		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
-		if(song_id == NULL) return;
-		if(r_type == PL3_ENTRY_PLAYLIST)
-		{	
-			mpd_sendLoadCommand(info.connection, song_id);
-			mpd_finishCommand(info.connection);
-			if(check_for_errors()) return;
-		}
-		else
-		{
-			mpd_sendAddCommand(info.connection, song_id);
-			mpd_finishCommand(info.connection);
-			if(check_for_errors()) return;
-		}
-
-
-
-	}
-}
-
-
-/* add's the toplevel entry for the current playlist view */
-void add_current_playlist()
-{
-	GtkTreeIter iter;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_CURRENT_PLAYLIST,
-			PL3_CAT_TITLE, "Current Playlist",
-			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "media-stream",
-			PL3_CAT_PROC, TRUE,-1);
-}
-
-
-
-void add_artist_browser()
+void pl3_artist_browser_add()
 {
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -430,7 +333,7 @@ void add_artist_browser()
 }
 
 
-long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
+long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	mpd_InfoEntity *ent = NULL;
 	char *artist, *string;
@@ -449,7 +352,7 @@ long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
 		/*lowest level, do nothing */
 		return 0;
 	}
-	if(!strcmp(artist,string))
+	if(!g_utf8_collate(artist,string))
 	{
 		int albums = 0;
 		/* artist is selected */
@@ -527,7 +430,7 @@ long unsigned view_artist_browser_folder(GtkTreeIter *iter_cat)
 }
 
 
-void artist_browser_fill_tree(GtkTreeIter *iter)
+void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 {
 	char *artist, *alb_artist;
 	GtkTreeIter child,child2;
@@ -542,7 +445,6 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 	{
 		/* fill artist list */
 		char *string;
-		g_print("filling with artists\n");
 		mpd_sendListCommand (info.connection, MPD_TABLE_ARTIST, NULL);
 		while ((string = mpd_getNextArtist (info.connection)) != NULL)
 		{
@@ -564,7 +466,7 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 		}
 	}
 	/* if where inside a artist */
-	else if(!strcmp(artist, alb_artist))
+	else if(!g_utf8_collate(artist, alb_artist))
 	{
 		char *string;
 		mpd_sendListCommand (info.connection, MPD_TABLE_ALBUM, artist);
@@ -589,6 +491,141 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 
 
 
+void pl3_browse_artist_add_folder()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+
+	if(check_connection_state())
+	{
+		return;
+	}
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		char *artist, *title;
+		mpd_InfoEntity *ent = NULL;
+		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &artist, PL3_CAT_TITLE,&title, -1);
+		GList *add_list = NULL;
+		if(!artist || !title)
+		{
+			return;
+		}
+		if(strlen(artist) == 0)
+		{
+			/*toplevel node */
+			/* do nothing here, what is there todo? */
+		}
+		else if(!g_utf8_collate(artist,title))
+		{
+			/* artist selected */
+			mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, artist);
+			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+			{                                                                         			
+				add_list = g_list_append (add_list, g_strdup (ent->info.song->file));
+				mpd_freeInfoEntity (ent);
+			}
+			mpd_finishCommand (info.connection);
+
+		}
+		else
+		{
+			/* album selected */
+			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
+			mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, title);
+			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+			{
+				if (!g_utf8_collate (ent->info.song->artist, artist))
+				{
+					add_list = g_list_append (add_list, g_strdup (ent->info.song->file));
+				}
+				mpd_freeInfoEntity (ent);
+			}
+			mpd_finishCommand (info.connection);
+
+		}
+
+		/* if there are items in the add list add them to the playlist */
+		if (check_connection_state ())
+			return;
+		if (add_list != NULL)
+		{
+			GList *song;
+			mpd_sendCommandListBegin (info.connection);
+			song = g_list_first (add_list);
+			do
+			{
+				mpd_sendAddCommand (info.connection, song->data);
+			}
+			while ((song = g_list_next (song)) != NULL);
+			mpd_sendCommandListEnd (info.connection);
+			mpd_finishCommand (info.connection);
+			check_for_errors ();
+			g_list_foreach (add_list, (GFunc) g_free, NULL);
+			g_list_free (add_list);
+		}
+	}
+
+}
+
+void pl3_browse_artist_replace_folder()
+{
+	pl3_clear_playlist();
+	pl3_browse_artist_add_folder();
+}
+
+
+
+/**************************************************
+ * PLaylist Tree
+ */
+
+
+
+void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
+{
+	gint type = pl3_cat_get_selected_browser();
+	if(type == -1 || check_connection_state())
+	{
+		return;
+	}
+	else if (type == PL3_CURRENT_PLAYLIST)
+	{
+		GtkTreeIter iter;
+		gint song_id;
+		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+		/* send mpd the play command */
+		mpd_sendPlayIdCommand (info.connection, song_id);
+		mpd_finishCommand (info.connection);
+		/* check for errors */                      		
+		check_for_errors ();                        		
+	}
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST)
+	{
+		GtkTreeIter iter;
+		gchar *song_id;
+		gint r_type;
+		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
+		if(song_id == NULL) return;
+		if(r_type == PL3_ENTRY_PLAYLIST)
+		{	
+			mpd_sendLoadCommand(info.connection, song_id);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
+		}
+		else
+		{
+			mpd_sendAddCommand(info.connection, song_id);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
+		}
+
+
+
+	}
+}
 
 
 
@@ -596,49 +633,50 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 
 
 
+/**************************************************
+ * Category Tree 
+ */
 
 
+void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
+{
+	gint type = pl3_cat_get_selected_browser();
+	if(check_connection_state())
+	{
+		return;
+	}
+	/* nothing valid, so return */
+	if(type == -1)
+	{
+		return;
+	}
+
+	else if(type == PL3_CURRENT_PLAYLIST)
+	{
+		/* scroll to the playing song */
+		if(info.status != NULL)
+		{
+			if(info.status->song != -1)
+			{
+				gchar *str = g_strdup_printf("%i", info.status->song);
+				GtkTreePath *path = gtk_tree_path_new_from_string(str);
+				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+						path,
+						NULL,
+						TRUE,0.5,0);
+				gtk_tree_path_free(path);
+				g_free(str);
+			}                                                      		
+		}
+	}
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
+void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
 {
 	gint type,read;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, 0, &type,4,&read, -1);
-	g_print("%i %i\n", type, read);
 	if(read) return;
 	if(type == PL3_BROWSE_FILE)
 	{
@@ -646,14 +684,14 @@ void cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
 	}
 	else if (type == PL3_BROWSE_ARTIST)
 	{
-		artist_browser_fill_tree(iter);
+		pl3_artist_browser_fill_tree(iter);
 
 	}
 
 }
 
 
-void cat_sel_changed()
+void pl3_cat_sel_changed()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
@@ -668,7 +706,6 @@ void cat_sel_changed()
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
-			g_print("adding list\n");
 			if(info.stats != NULL)
 			{	
 				gchar *string = format_time(info.playlist_playtime);
@@ -681,7 +718,6 @@ void cat_sel_changed()
 		{
 			long unsigned time= 0;
 			gchar *string;
-			g_print("show songs\n");
 			gtk_list_store_clear(pl3_store);	
 			time = pl3_file_browser_view_folder(&iter);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
@@ -693,9 +729,8 @@ void cat_sel_changed()
 		{
 			long unsigned time= 0;
 			gchar *string;        			
-			g_print("show songs for artist browser\n");
 			gtk_list_store_clear(pl3_store);	
-			time = view_artist_browser_folder(&iter);
+			time = pl3_artist_browser_view_folder(&iter);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
 			string = format_time(time);
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
@@ -726,7 +761,7 @@ void pl3_update()
 	}
 	if(info.playlist_id != info.status->playlist)
 	{
-		gint type = cat_get_selected_browser();
+		gint type = pl3_cat_get_selected_browser();
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
 			gchar *string = format_time(info.playlist_playtime);
@@ -741,9 +776,9 @@ void pl3_update()
 
 /* handle right mouse clicks on the cat tree view */
 /* gonna be a big function*/
-int cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
-	gint type  = cat_get_selected_browser();
+	gint type  = pl3_cat_get_selected_browser();
 	if(type == -1)
 	{
 		/* no selections, or no usefull one.. so propagate the signal */
@@ -783,21 +818,40 @@ int cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* add the add widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		/* TODO: Write own fun ction */
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_add_folder), NULL);		
 
 		/* add the replace widget */
 		item = gtk_image_menu_item_new_with_label("Replace");
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-			gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		/* TODO: Write own fun ction */
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_add_folder), NULL);				
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_replace_folder), NULL);				
 
 		/* show everything and popup */
 		gtk_widget_show_all(menu);                                                        		
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 
+	}
+	else if (type == PL3_BROWSE_ARTIST)
+	{
+		/* here we have:  Add. Replace*/
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_artist_add_folder), NULL);		
+
+		/* add the replace widget */
+		item = gtk_image_menu_item_new_with_label("Replace");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_artist_replace_folder), NULL);				
+
+		/* show everything and popup */
+		gtk_widget_show_all(menu);                                                        		
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 	}
 
 	return TRUE;
@@ -883,7 +937,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(cat_sel_changed), NULL);
+	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
 
 	/* right column */
@@ -923,9 +977,9 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 	/* add the current playlist */
-	add_current_playlist();
-	pl3_add_file_browser();
-	add_artist_browser();
+	pl3_current_playlist_add();
+	pl3_file_browser_add();
+	pl3_artist_browser_add();
 
 	/* add the file browser */
 
