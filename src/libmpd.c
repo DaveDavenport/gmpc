@@ -1193,30 +1193,37 @@ int mpd_ob_playlist_shuffle(MpdObj *mi)
 
 }
 
-void mpd_ob_playlist_save(MpdObj *mi, char *name)
+int mpd_ob_playlist_save(MpdObj *mi, char *name)
 {
 	if(name == NULL || !strlen(name))
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_save: name != NULL  and strlen(name) > 0 failed");
-		return;
+		return MPD_O_ERROR;
 	}
 	if(!mpd_ob_check_connected(mi))
 	{
 		debug_printf(DEBUG_WARNING,"mpd_ob_playlist_save: not connected\n");
-		return;
+		return MPD_O_NOT_CONNECTED;
 	}
 	if(mpd_ob_lock_conn(mi))
 	{
 		debug_printf(DEBUG_ERROR,"mpd_ob_playlist_save: lock failed\n");
-		return;
+		return MPD_O_LOCK_FAILED;
 	}
 
 	mpd_sendSaveCommand(mi->connection,name);
 	mpd_finishCommand(mi->connection);
+	if(mi->connection->error == MPD_ERROR_ACK && mi->connection->errorCode == MPD_ACK_ERROR_EXIST)
+	{
+		mpd_clearError(mi->connection);
+		mpd_ob_unlock_conn(mi);	
+		return MPD_O_PLAYLIST_EXIST; 
+
+	}
 
 	/* unlock */                                               	
 	mpd_ob_unlock_conn(mi);
-	return;
+	return FALSE;
 }
 
 void mpd_ob_playlist_update_dir(MpdObj *mi, char *path)
@@ -2119,3 +2126,19 @@ int mpd_ob_server_set_output_device(MpdObj *mi,int device_id,int state)
 	mpd_ob_status_queue_update(mi);
 	return FALSE;
 }
+
+int mpd_ob_server_check_version(MpdObj *mi, int major, int minor, int micro)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_server_check_version: not connected\n");	
+		return FALSE;                                     	
+	}
+	if(major > mi->connection->version[0]) return FALSE;
+	if(mi->connection->version[0] > major) return TRUE;
+	if(minor > mi->connection->version[1]) return FALSE;
+	if(mi->connection->version[1] > minor) return TRUE;
+	if(micro > mi->connection->version[2]) return FALSE;
+	if(mi->connection->version[2] > micro) return TRUE; 	
+	return TRUE;
+}	

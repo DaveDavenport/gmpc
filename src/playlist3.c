@@ -1120,7 +1120,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	int type = pl3_cat_get_selected_browser();
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || !gtk_tree_selection_count_selected_rows(sel) || check_connection_state())	
+	if(event->button != 3 || !gtk_tree_selection_count_selected_rows(sel) || !mpd_ob_check_connected(connection))	
 	{
 		return FALSE;
 	}
@@ -1174,6 +1174,23 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* del, crop */
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
+		if(gtk_tree_selection_count_selected(sel) == 1)
+		{	
+			GtkTreeModel *model = GTK_TREE_MODEL(pl3_store);	
+			GList *list = gtk_tree_selection_get_seleted_rows(sel, &model);
+			if(list != NULL)
+			{
+				GtkTreeIter iter;
+				int row_type;
+				list = g_list_first(list);
+				gtk_tree_model_get_iter(model, &iter, list->data);
+				gtk_tree_model_get(model, &iter,1, &row_type, -1); 
+				
+
+				g_list_foreach (list, gtk_tree_path_free, NULL);
+				g_list_free (list);
+			}
+		}
 		/* add the delete widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -2060,7 +2077,7 @@ void pl2_save_playlist ()
 {
 	gchar *str;
 	GladeXML *xml = NULL;
-
+	int run = TRUE;
 	/* check if the connection is up */
 	if (check_connection_state ())
 		return;
@@ -2069,21 +2086,35 @@ void pl2_save_playlist ()
 	xml = glade_xml_new (GLADE_PATH "playlist3.glade", "save_pl", NULL);
 
 	/* run the interface */
-	switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+	do
 	{
-		case GTK_RESPONSE_OK:
-			/* if the users agrees do the following: */
-			/* get the song-name */
-			str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
-					(glade_xml_get_widget (xml, "pl-entry")));
-			/* check if the user entered a name, we can't do withouth */
-			/* TODO: disable ok button when nothing is entered */
-			/* also check if there is a connection */
-			if (strlen (str) != 0 && !check_connection_state ())
-			{
-				mpd_ob_playlist_save(connection, str);
-			}
-	}
+		switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+		{
+			case GTK_RESPONSE_OK:
+				run = FALSE;
+				/* if the users agrees do the following: */
+				/* get the song-name */
+				str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
+						(glade_xml_get_widget (xml, "pl-entry")));
+				/* check if the user entered a name, we can't do withouth */
+				/* TODO: disable ok button when nothing is entered */
+				/* also check if there is a connection */
+				if (strlen (str) != 0 && !check_connection_state ())
+				{
+					if(mpd_ob_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST)
+					{
+						gchar *errormsg = g_strdup_printf("<i>Playlist <b>\"%s\"</b> allready exists</i>", str);
+						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
+						gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
+						run = TRUE;
+						g_free(errormsg);
+					}
+				}
+				break;
+			default:
+				run = FALSE;
+		}
+	}while(run);
 	/* destroy the window */
 	gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
 

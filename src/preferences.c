@@ -444,7 +444,7 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 	{
 		gtk_tree_model_get(model, &iter, ENABLED_COL, &state, -1);
 		gtk_tree_model_get(model, &iter, ID_COL, &id, -1);
-		state = state;
+		state = !state;
 		mpd_ob_server_set_output_device(connection, id, state);
 
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, state, -1);
@@ -461,10 +461,10 @@ void update_outputs_settings()
 	frame = GTK_FRAME(glade_xml_get_widget(xml_preferences_window, "frm_outputs"));
 	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"))));
 	gtk_list_store_clear(store);
-	if(mpd_ob_check_connected(connection) && (connection->connection->version[0] > 0 || connection->connection->version[1] >= 12))
+	if(mpd_ob_check_connected(connection) && mpd_ob_server_check_version(connection, 0,12,0))
 	{
 		MpdData *data = mpd_ob_server_get_output_devices(connection);
-		while(data != NULL)
+		while(data != NULL && data->value.output_dev->id != -10)
 		{
 			gtk_list_store_append(store, &iter);
 			gtk_list_store_set(store, &iter, 
@@ -473,7 +473,7 @@ void update_outputs_settings()
 					2, data->value.output_dev->id, -1);
 			data = mpd_ob_data_get_next(data);
 		}
-		gtk_widget_set_sensitive(GTK_WIDGET(frame), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(frame), TRUE);
 		gtk_widget_show_all(GTK_WIDGET(frame));            		
 	}
 	else

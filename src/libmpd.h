@@ -14,6 +14,8 @@
 #define MPD_O_FAILED_STATUS -3
 #define MPD_O_LOCK_FAILED -4
 #define MPD_O_FAILED_STATS -5
+#define MPD_O_ERROR -6
+#define MPD_O_PLAYLIST_EXIST -10
 
 #define	MPD_OB_PLAYER_PAUSE 	3
 #define	MPD_OB_PLAYER_PLAY 	2
@@ -172,7 +174,7 @@ mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 int 		mpd_ob_playlist_clear			(MpdObj *mi);
 int 		mpd_ob_playlist_shuffle			(MpdObj *mi);
-void 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
+int 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
 void 		mpd_ob_playlist_update_dir		(MpdObj *mi, char *path);
 void 		mpd_ob_playlist_move_pos		(MpdObj *mi, int old_pos, int new_pos);
 MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
@@ -213,6 +215,6 @@ void 		mpd_ob_playlist_queue_commit		(MpdObj *mi);
 MpdData * 	mpd_ob_server_get_output_devices	(MpdObj *mi);
 int 		mpd_ob_server_set_output_device		(MpdObj *mi,int device_id,int state);
 long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
-
+int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro);
 
 #endif
