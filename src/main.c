@@ -54,7 +54,10 @@ extern GtkListStore *pl2_store;
  * The Config object
  */
 config_obj *config = NULL;
-
+/* 
+ * The Connection object
+ */
+MpdInt *connection = NULL;
 
 
 void main_trigger_update ()
@@ -73,6 +76,8 @@ void main_trigger_update ()
 	void
 set_default_values ()
 {
+	
+	
 	/*
 	 * the mpd status struct used  in the whole program 
 	 */
@@ -134,6 +139,7 @@ int main (int argc, char **argv)
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
+	/* initialize the settings */
 	set_default_values ();
 
 	/* Check for and create dir if availible */
@@ -166,6 +172,9 @@ int main (int argc, char **argv)
 	}
 
 	g_free(url);
+
+	/* Create connection object */
+	connection = mpd_ob_new_default();
 	/*
 	 * initialize gtk 
 	 */

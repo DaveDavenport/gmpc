@@ -15,11 +15,11 @@
 #define DEFAULT_PLAYLIST_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
 #define DEFAULT_PLAYER_MARKUP "[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
 
-
+#include "libmpd.h"
 /** main.c **/
 extern int debug;
 extern GladeXML *xml_main_window;
-
+extern MpdInt *connection;
 typedef struct
 {
 	/* the mpd status struct used  in the whole program */
