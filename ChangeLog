@@ -1,3 +1,8 @@
+12-07-2004 Qball <Qball@qballcow.nl>
+	* src/playlist2.c:	Fixed bug that moved playlist window when
+	search from id3window.
+	* po/fr.po:		Updated translation
+
 11-07-2004 Qball < Qball@qballcow.nl>
 	* src/player.c:	All buttons in the main window can now be themed. 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-10 23:10+0200\n"
+"POT-Creation-Date: 2004-07-12 17:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -529,7 +529,7 @@ msgstr ""
 msgid "MPD is updating the database, please wait"
 msgstr ""
 
-#: src/playlist2.c:503
+#: src/playlist2.c:505
 msgid "Are you sure you want to clear the playlist?"
 msgstr ""
 

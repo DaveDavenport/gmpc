@@ -142,261 +142,263 @@ pl2_button_press_event (GtkWidget * widget, GdkEventButton * event)
 void
 pl2_set_query (const gchar * query)
 {
-  create_playlist2 ();
-  gtk_entry_set_text (GTK_ENTRY
-		      (glade_xml_get_widget (pl2_xml, "pl_searchen")), query);
+	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+	{
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
+	}
+  gtk_entry_set_text (GTK_ENTRY(glade_xml_get_widget (pl2_xml, "pl_searchen")), query);
 }
 
 /* track data recieved on the open_location button and propegate it to the open-location window */
-void
+	void
 pl2_drag_data_recieved (GtkWidget * window, GdkDragContext * context,
-			gint x, gint y, GtkSelectionData * selection_data,
-			guint info1, guint time)
+		gint x, gint y, GtkSelectionData * selection_data,
+		guint info1, guint time)
 {
-  /* check if there is a connection */
-  if (check_connection_state ())
-    return;
+	/* check if there is a connection */
+	if (check_connection_state ())
+		return;
 
-  /* check if its the right type */
-  if (info1 != 100)
-    return;
+	/* check if its the right type */
+	if (info1 != 100)
+		return;
 
-  /* create (or if it exists do nothing  the open location window */
-  ol_create (window);
+	/* create (or if it exists do nothing  the open location window */
+	ol_create (window);
 
-  /* propagate event */
-  ol_drag_data_recieved (window, context, x, y, selection_data, info1, time);
+	/* propagate event */
+	ol_drag_data_recieved (window, context, x, y, selection_data, info1, time);
 }
 
 /* initialize playlist2, this is now a dependency and should always be called on startup */
-void
+	void
 init_playlist2 ()
 {
-  /* create initial tree store */
-  pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
-				  GTK_TYPE_INT,	/* pos id */
-				  GTK_TYPE_STRING,	/* song title */
-				  GTK_TYPE_INT,	/* weight int */
-				  G_TYPE_BOOLEAN,	/* weight color */
-				  GTK_TYPE_STRING);	/* stock-id */
+	/* create initial tree store */
+	pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
+			GTK_TYPE_INT,	/* pos id */
+			GTK_TYPE_STRING,	/* song title */
+			GTK_TYPE_INT,	/* weight int */
+			G_TYPE_BOOLEAN,	/* weight color */
+			GTK_TYPE_STRING);	/* stock-id */
 }
 
 
 /* create a dialog that allows the user to save the current playlist */
-void
+	void
 pl2_save_playlist ()
 {
-  gchar *str;
-  GladeXML *xml = NULL;
+	gchar *str;
+	GladeXML *xml = NULL;
 
-  /* check if the connection is up */
-  if (check_connection_state ())
-    return;
+	/* check if the connection is up */
+	if (check_connection_state ())
+		return;
 
-  /* create the interface */
-  xml = glade_xml_new (GLADE_PATH "playlist.glade", "save_pl", NULL);
+	/* create the interface */
+	xml = glade_xml_new (GLADE_PATH "playlist.glade", "save_pl", NULL);
 
-  /* run the interface */
-  switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
-    {
-    case GTK_RESPONSE_OK:
-      /* if the users agrees do the following: */
-      /* get the song-name */
-      str =
-	(gchar *)
-	gtk_entry_get_text (GTK_ENTRY
-			    (glade_xml_get_widget (xml, "pl-entry")));
-      /* check if the user entered a name, we can't do withouth */
-      /* TODO: disable ok button when nothing is entered */
-      /* also check if there is a connection */
-      if (strlen (str) != 0 && !check_connection_state ())
+	/* run the interface */
+	switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
 	{
-	  mpd_sendSaveCommand (info.connection, str);
-	  mpd_finishCommand (info.connection);
+		case GTK_RESPONSE_OK:
+			/* if the users agrees do the following: */
+			/* get the song-name */
+			str =
+				(gchar *)
+				gtk_entry_get_text (GTK_ENTRY
+						(glade_xml_get_widget (xml, "pl-entry")));
+			/* check if the user entered a name, we can't do withouth */
+			/* TODO: disable ok button when nothing is entered */
+			/* also check if there is a connection */
+			if (strlen (str) != 0 && !check_connection_state ())
+			{
+				mpd_sendSaveCommand (info.connection, str);
+				mpd_finishCommand (info.connection);
 
-	  /* if nothing went wrong we can reload the browser */
-	  if (!check_for_errors ())
-	    sb_reload_file_browser ();
+				/* if nothing went wrong we can reload the browser */
+				if (!check_for_errors ())
+					sb_reload_file_browser ();
+			}
 	}
-    }
-  /* destroy the window */
-  gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
+	/* destroy the window */
+	gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
 
-  /* unref the gui description */
-  g_object_unref (xml);
+	/* unref the gui description */
+	g_object_unref (xml);
 }
 
 /* this function takes care the right row is highlighted */
-void
+	void
 pl2_highlight_song ()
 {
-  GtkTreeIter iter;
-  gchar *temp;
-  /* check if there is a connection */
-  if (check_connection_state ())
-    return;
+	GtkTreeIter iter;
+	gchar *temp;
+	/* check if there is a connection */
+	if (check_connection_state ())
+		return;
 
-  /* unmark the old pos if it exists */
-  if (info.old_pos != -1)
-    {
-      /* create a string so I can get the right iter */
-      temp = g_strdup_printf ("%i", info.old_pos);
-      if (gtk_tree_model_get_iter_from_string
-	  (GTK_TREE_MODEL (pl2_store), &iter, temp))
+	/* unmark the old pos if it exists */
+	if (info.old_pos != -1)
 	{
-	  gint song_id = 0;
-	  /* check if we have the song we want */
-	  gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,
-			      &song_id, -1);
-	  /* if the old song is the new song (so tags updated) quit */
-	  if (song_id == info.status->songid
-	      && info.status->state == info.state)
-	    {
-	      g_free (temp);
-	      return;
-	    }
-	  /* unhighlight the song */
-	  gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
-			      PANGO_WEIGHT_NORMAL, -1);
+		/* create a string so I can get the right iter */
+		temp = g_strdup_printf ("%i", info.old_pos);
+		if (gtk_tree_model_get_iter_from_string
+				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			gint song_id = 0;
+			/* check if we have the song we want */
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,
+					&song_id, -1);
+			/* if the old song is the new song (so tags updated) quit */
+			if (song_id == info.status->songid
+					&& info.status->state == info.state)
+			{
+				g_free (temp);
+				return;
+			}
+			/* unhighlight the song */
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
+					PANGO_WEIGHT_NORMAL, -1);
+		}
+		g_free (temp);
+		/* reset old pos */
+		info.old_pos = -1;
 	}
-      g_free (temp);
-      /* reset old pos */
-      info.old_pos = -1;
-    }
-  /* check if we need to highlight a song */
-  if (info.status->state != MPD_STATUS_STATE_STOP &&
-      info.status->state != MPD_STATUS_STATE_UNKNOWN &&
-      info.status->song != -1 && info.status->playlistLength > 0)
-    {
-      temp = g_strdup_printf ("%i", info.status->song);
-      if (gtk_tree_model_get_iter_from_string
-	  (GTK_TREE_MODEL (pl2_store), &iter, temp))
+	/* check if we need to highlight a song */
+	if (info.status->state != MPD_STATUS_STATE_STOP &&
+			info.status->state != MPD_STATUS_STATE_UNKNOWN &&
+			info.status->song != -1 && info.status->playlistLength > 0)
 	{
-	  gint pos;
-	  gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
-			      &pos, -1);
-	  /* check if we have the right song, if not, print an error */
-	  if (pos != info.status->song)
-	    {
-	      g_print ("Errror %i %i\n", pos, info.status->song);
-	    }
-	  gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
-			      PANGO_WEIGHT_ULTRABOLD, -1);
+		temp = g_strdup_printf ("%i", info.status->song);
+		if (gtk_tree_model_get_iter_from_string
+				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			gint pos;
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
+					&pos, -1);
+			/* check if we have the right song, if not, print an error */
+			if (pos != info.status->song)
+			{
+				g_print ("Errror %i %i\n", pos, info.status->song);
+			}
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
+					PANGO_WEIGHT_ULTRABOLD, -1);
+		}
+		g_free (temp);
+		/* set highlighted position */
+		info.old_pos = info.status->song;
 	}
-      g_free (temp);
-      /* set highlighted position */
-      info.old_pos = info.status->song;
-    }
 }
 
 
 /* function called on regular bases that allows the playlist to track changes */
-void
+	void
 update_playlist2 ()
 {
-  /* do nothing if we don't exist */
-  if (pl2_store == NULL)
-    return;
+	/* do nothing if we don't exist */
+	if (pl2_store == NULL)
+		return;
 
-  /* if the song changed, or the state highlight the right song */
-  if (info.status->song != info.song || info.state != info.status->state)
-    {
-      pl2_highlight_song ();
-    }
+	/* if the song changed, or the state highlight the right song */
+	if (info.status->song != info.song || info.state != info.status->state)
+	{
+		pl2_highlight_song ();
+	}
 
 }
 
 /* this function triggers an refilter of the playlist by the timout function */
-gboolean
+	gboolean
 pl2_auto_search ()
 {
-  /* so reset timeout id, because it will be removed if this function returns FALSE */
-  filter_timeout = 0;
-  /* refilter the tree */
-  pl2_filter_refilter ();
-  /* stop the timeout */
-  return FALSE;
+	/* so reset timeout id, because it will be removed if this function returns FALSE */
+	filter_timeout = 0;
+	/* refilter the tree */
+	pl2_filter_refilter ();
+	/* stop the timeout */
+	return FALSE;
 }
 
 /* sets the search key from the entry, when changed */
-void
+	void
 set_compare_key (GtkEntry * entry)
 {
-  /* if there was another timeout counting off, reset that */
-  if (filter_timeout != 0)
-    {
-      g_source_remove (filter_timeout);
-      filter_timeout = 0;
-    }
+	/* if there was another timeout counting off, reset that */
+	if (filter_timeout != 0)
+	{
+		g_source_remove (filter_timeout);
+		filter_timeout = 0;
+	}
 
-  /* 0.5 second after the user is _done_ typeing update the view */
-  filter_timeout = g_timeout_add (500, (GSourceFunc) pl2_auto_search, NULL);
+	/* 0.5 second after the user is _done_ typeing update the view */
+	filter_timeout = g_timeout_add (500, (GSourceFunc) pl2_auto_search, NULL);
 
-  /* if there allready is a compare key free its memory */
-  if (compare_key != NULL)
-    g_free (compare_key);
+	/* if there allready is a compare key free its memory */
+	if (compare_key != NULL)
+		g_free (compare_key);
 
-  /* check if the users entered a filter query, if not set compare key to NULL */
-  if (strlen (gtk_entry_get_text (entry)) == 0)
-    {
-      compare_key = NULL;
-      return;
-    }
-  else
-    {
-      /* convert the search query so that it doesnt find an exact match but *<user query>* */
-      gchar *string = g_strdup_printf ("*%s*", gtk_entry_get_text (entry));
-      /* make it case insensitive */
-      gchar *lower = g_utf8_strdown (string, -1);
-      /* free memory */
-      g_free (string);
-      /* create search key */
-      compare_key = g_pattern_spec_new (lower);
-      /* free lower case string */
-      g_free (lower);
-    }
+	/* check if the users entered a filter query, if not set compare key to NULL */
+	if (strlen (gtk_entry_get_text (entry)) == 0)
+	{
+		compare_key = NULL;
+		return;
+	}
+	else
+	{
+		/* convert the search query so that it doesnt find an exact match but *<user query>* */
+		gchar *string = g_strdup_printf ("*%s*", gtk_entry_get_text (entry));
+		/* make it case insensitive */
+		gchar *lower = g_utf8_strdown (string, -1);
+		/* free memory */
+		g_free (string);
+		/* create search key */
+		compare_key = g_pattern_spec_new (lower);
+		/* free lower case string */
+		g_free (lower);
+	}
 }
 
 /* function called by the tree_model that returns FALSE if a row shouldn't apear int he list */
-int
+	int
 pl2_filter_function (GtkTreeModel * model, GtkTreeIter * iter)
 {
-  gchar *string, *lower;
-  /* if there is no key, every row is ok */
-  if (compare_key == NULL)
-    return TRUE;
-  /* grab the row's name */
-  gtk_tree_model_get (model, iter, SONG_TITLE, &string, -1);
-  /* error check */
-  if (string == NULL)
-    return FALSE;
-  /* lower the rows name */
-  lower = g_utf8_strdown (string, -1);
-  /* compare, and if matches the row is showed */
-  if (g_pattern_match_string (compare_key, lower))
-    {
-      g_free (lower);
-      return TRUE;
-    }
-  else
-    {
-      g_free (lower);
-      return FALSE;
-    }
+	gchar *string, *lower;
+	/* if there is no key, every row is ok */
+	if (compare_key == NULL)
+		return TRUE;
+	/* grab the row's name */
+	gtk_tree_model_get (model, iter, SONG_TITLE, &string, -1);
+	/* error check */
+	if (string == NULL)
+		return FALSE;
+	/* lower the rows name */
+	lower = g_utf8_strdown (string, -1);
+	/* compare, and if matches the row is showed */
+	if (g_pattern_match_string (compare_key, lower))
+	{
+		g_free (lower);
+		return TRUE;
+	}
+	else
+	{
+		g_free (lower);
+		return FALSE;
+	}
 }
 
 /* trigger a refilter */
-void
+	void
 pl2_filter_refilter ()
 {
-  /* remove a auto-refilter timeout if running */
-  if (filter_timeout != 0)
-    {
-      g_source_remove (filter_timeout);
-      filter_timeout = 0;
-    }
-  /* tell the model to refilter */
-  gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (pl2_fil));
+	/* remove a auto-refilter timeout if running */
+	if (filter_timeout != 0)
+	{
+		g_source_remove (filter_timeout);
+		filter_timeout = 0;
+	}
+	/* tell the model to refilter */
+	gtk_tree_model_filter_refilter (GTK_TREE_MODEL_FILTER (pl2_fil));
 }
 
 /* hide the playlist 
@@ -663,8 +665,7 @@ pl2_row_moved (GtkTreeView * tree, GdkDragContext * con, gint x, gint y,
  * This is done only once, for the rest its hidden, but still there
  */
 
-	void
-create_playlist2 ()
+void create_playlist2 ()
 {
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
@@ -677,6 +678,7 @@ create_playlist2 ()
 		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")), pl2_wsize.x, pl2_wsize.y);
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")),pl2_wsize.width, pl2_wsize.height);
 		gtk_widget_show_all (glade_xml_get_widget (pl2_xml, "playlist_window"));
+
 		return;
 	}
 	/* load gui desciption */
