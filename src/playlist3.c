@@ -145,11 +145,12 @@ void pl3_find_add()
 			PL3_CAT_PROC, TRUE,-1);
 }
 
-void pl3_find_view_browser()
+unsigned long pl3_find_view_browser()
 {
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
+	int time=0;
 
 	if(gtk_tree_selection_get_selected(selection,&model, &iter))
 	{
@@ -157,6 +158,7 @@ void pl3_find_view_browser()
 		gint num_field=0;
 		GtkTreeIter child;
 		mpd_InfoEntity *ent;
+
 		gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, PL3_CAT_INT_ID,&field,-1);
 		
 		num_field = atoi(field);
@@ -174,6 +176,10 @@ void pl3_find_view_browser()
 			while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
 			{
 				gchar buffer[1024];
+				if(ent->info.song->time != MPD_SONG_NO_TIME)
+				{
+					time += ent->info.song->time;
+				}
 				strfsong (buffer, 1024, preferences.markup_song_browser,
 						ent->info.song);
 				/* add as child of the above created parent folder */
@@ -191,10 +197,8 @@ void pl3_find_view_browser()
 			mpd_finishCommand (info.connection);
 			check_for_errors ();
 		}
-
-
-
 	}
+	return time;
 }
 
 void pl3_find_search()
@@ -1207,11 +1211,15 @@ void pl3_cat_sel_changed()
 		}
 		else if (type == PL3_FIND)
 		{
+			long unsigned time = 0;
+			gchar *string;	
 			gtk_list_store_clear(pl3_store);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
 			gtk_widget_show_all(glade_xml_get_widget(pl3_xml, "search_box"));
-			pl3_find_view_browser();
-
+			time = pl3_find_view_browser();
+			string = format_time(time);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+			g_free(string);
 
 		}
 		/* when it's not a know type remove the model */
