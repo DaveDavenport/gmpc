@@ -1,4 +1,5 @@
 27-06-2004 Qball <Qball@qballcow.nl>
+	* Changed move function so it works with filtered playlist
 	* Force update after changes to playlist (delete and move)
 	* added function main_trigger_update
 	* Implemented clearing. (pressing remove when nothing is selected)
