@@ -50,9 +50,7 @@ void pl2_save_playlist ();
 /****************************************************************/
 void pl3_clear_playlist()
 {
-	if(check_connection_state()) return;
-	mpd_sendClearCommand(info.connection);
-	mpd_finishCommand(info.connection);
+	mpd_ob_playlist_clear(connection);
 }
 
 void pl3_shuffle_playlist()
@@ -62,13 +60,16 @@ void pl3_shuffle_playlist()
 	mpd_finishCommand(info.connection);
 }
 
-
+/* custom search and match function, this is a workaround for the problems with in gtk+-2.6 */
 gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const char *key, GtkTreeIter *iter)
 {
 	char *value= NULL;
 	char *lkey, *lvalue;
 	int ret = TRUE;
-	if(iter == NULL) return;
+	if(iter == NULL)
+	{
+		return TRUE;
+	}
 	gtk_tree_model_get(model, iter, column, &value, -1);
 	if(value == NULL || key == NULL)
 	{

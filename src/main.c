@@ -380,7 +380,15 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	old_length = info.playlist_length;
 
 
-	mpd_sendPlChangesCommand (info.connection, old_playlist_id);
+	if(old_length == -1)
+	{
+		mpd_sendPlaylistIdCommand(info.connection, -1);
+		old_length = 0;
+	}
+	else{
+
+		mpd_sendPlChangesCommand (info.connection, old_playlist_id);
+	}
 
 	ent = mpd_getNextInfoEntity (info.connection);
 	while (ent != NULL)

@@ -7,7 +7,7 @@
 #include "main.h"
 #include "config1.h"
 extern config_obj *config;
-
+extern GtkListStore *pl2_store;
 /* the internall data structure */
 internal_data info;
 
@@ -72,7 +72,7 @@ int disconnect_to_mpd()
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
 	info.updating = FALSE;
-
+	gtk_list_store_clear(pl2_store);
 	return FALSE;
 }
 
@@ -232,26 +232,16 @@ int play_song()
 	return FALSE;	
 }
 
-void random_pl()
+void random_pl(GtkToggleButton *tb)
 {
-	if(info.conlock) return;
-	info.conlock = TRUE;
-	mpd_sendRandomCommand(info.connection, !info.status->random);
-	mpd_finishCommand(info.connection);
-	info.status->random =  !info.status->random;
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
+	if(gtk_toggle_button_get_active(tb) != mpd_ob_player_get_random(connection))
+	mpd_ob_player_set_random(connection, !mpd_ob_player_get_random(connection));
 }
 
-void repeat_pl()
+void repeat_pl(GtkToggleButton *tb)
 {
-	if(info.conlock) return;
-	info.conlock = TRUE;
-	mpd_sendRepeatCommand(info.connection, !info.status->repeat);
-	mpd_finishCommand(info.connection);
-	info.status->repeat =  !info.status->repeat;
-	if(check_for_errors()) return;
-	info.conlock = FALSE;
+	if(gtk_toggle_button_get_active(tb) != mpd_ob_player_get_repeat(connection))
+		mpd_ob_player_set_repeat(connection, !mpd_ob_player_get_repeat(connection));
 }
 
 /* TODO: Changed return Values, check for possible errors */

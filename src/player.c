@@ -367,17 +367,13 @@ int update_player()
 	}
 	/* update random and repeat button */
 	/* lock it to stop them from toggling and triggering another toggle*/
-	if(info.status->repeat != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
+	if(mpd_ob_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
 	{
-		info.conlock = TRUE;
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), info.status->repeat);
-		info.conlock = FALSE;
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), mpd_ob_player_get_repeat(connection));
 	}
-	if(info.status->random != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
+	if(mpd_ob_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
 	{
-		info.conlock = TRUE;
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), info.status->random);
-		info.conlock = FALSE;
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), mpd_ob_player_get_random(connection));
 	}
 	return FALSE;
 }
@@ -392,7 +388,8 @@ int progress_seek_start()
 {
 	if(info.conlock) return TRUE;
 	info.conlock = TRUE;
-	if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
+	if(mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PLAY && 
+			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PAUSE)
 	{
 		info.conlock = FALSE;
 		return TRUE;

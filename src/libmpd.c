@@ -81,7 +81,8 @@ void mpd_ob_free(MpdObj *mi)
 
 int mpd_ob_lock_conn(MpdObj *mi)
 {
-//	debug_printf(DEBUG_INFO, "mpd_ob_lock_conn: Locking connection\n");
+/*	debug_printf(DEBUG_INFO, "mpd_ob_lock_conn: Locking connection\n");
+*/
 	if(mi->connection_lock)
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_lock_conn: Failed to lock connection, allready locked\n");
@@ -93,7 +94,8 @@ int mpd_ob_lock_conn(MpdObj *mi)
 
 int mpd_ob_unlock_conn(MpdObj *mi)
 {
-//	debug_printf(DEBUG_INFO, "mpd_ob_unlock_conn: unlocking connection\n");
+/*	debug_printf(DEBUG_INFO, "mpd_ob_unlock_conn: unlocking connection\n");
+ */
 	if(!mi->connection_lock)
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_unlock_conn: Failed to unlock connection, allready unlocked\n");
@@ -659,6 +661,105 @@ int mpd_ob_player_pause(MpdObj *mi)
 }
 
 
+
+int mpd_ob_player_get_repeat(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_get_repeat: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("mpd_ob_player_get_repeat: Failed grabbing status\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	return mi->status->repeat;
+}
+
+int mpd_ob_player_set_repeat(MpdObj *mi,int repeat)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_set_repeat: not connected\n");	
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_player_set_repeat: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+	mpd_sendRepeatCommand(mi->connection, repeat);
+	mpd_finishCommand(mi->connection);
+	
+	mpd_ob_unlock_conn(mi);
+	mpd_ob_status_queue_update(mi);
+	return FALSE;
+}
+
+
+
+int mpd_ob_player_get_random(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_get_random: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("mpd_ob_player_get_random: Failed grabbing status\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	return mi->status->random;
+}
+
+
+int mpd_ob_player_set_random(MpdObj *mi,int random)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_set_random: not connected\n");	
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_player_set_random: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+	mpd_sendRandomCommand(mi->connection, random);
+	mpd_finishCommand(mi->connection);
+	
+	mpd_ob_unlock_conn(mi);
+	mpd_ob_status_queue_update(mi);
+	return FALSE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*******************************************************************************
  * PLAYLIST 
  */
@@ -708,7 +809,6 @@ mpd_Song * mpd_ob_playlist_get_song(MpdObj *mi, int songid)
 
 mpd_Song * mpd_ob_playlist_get_current_song(MpdObj *mi)
 {
-	int song_id = -1;
 	if(!mpd_ob_check_connected(mi))
 	{
 		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_current_song: Not Connected\n");
@@ -738,12 +838,55 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdObj *mi)
 			return NULL;
 		}
 	}
-
-
-
-
 	return mi->CurrentSong;
 }
+
+
+int mpd_ob_playlist_clear(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_clear: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_clear: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendClearCommand(mi->connection);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	return FALSE;
+}
+
+int mpd_ob_playlist_shuffle(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_shuffle: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_shuffle: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendShuffleCommand(mi->connection);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	return FALSE;
+
+}
+
+
+
 /* SIGNALS */
 void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id))
 {

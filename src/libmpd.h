@@ -86,8 +86,14 @@ int 		mpd_ob_player_pause			(MpdObj *mi);
 int 		mpd_ob_player_get_state			(MpdObj *mi);
 int 		mpd_ob_player_get_current_song_id	(MpdObj *mi);
 int 		mpd_ob_player_get_current_song_pos	(MpdObj *mi);
+int		mpd_ob_player_get_repeat		(MpdObj *mi);
+int		mpd_ob_player_set_repeat		(MpdObj *mi, int repeat);
+int		mpd_ob_player_get_random		(MpdObj *mi);
+int		mpd_ob_player_set_random		(MpdObj *mi, int random);
+
+
 /* playlist command */
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
-
+int 		mpd_ob_playlist_clear			(MpdObj *mi);
 #endif
