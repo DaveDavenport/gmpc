@@ -1,3 +1,13 @@
+09-05-2004 Qball <Qball@qballcow.nl>
+	* Double click/enter is now add song/artist/album in every tree view
+	besides the directory browser.
+	* changed IDS browser to Song tag browser.
+	* If disconnected teh playlist manager is disabled in tray-icon mouse
+	menu
+	* id3 fields are cleared when going to the next or previous, so no
+	wrong info is in fields
+
+
 05-05-2004 Qball <Qball@qballcow.nl>
 	* Fix for crash when not connected and opening preferences and moving
 	to the server settings tab

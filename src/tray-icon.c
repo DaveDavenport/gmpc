@@ -135,6 +135,14 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	{
 		GtkMenu *menu = (GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
 		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
+		if(info.connection == NULL)
+		{
+			gtk_widget_set_sensitive(glade_xml_get_widget(tray_xml,"playlist_manager"), FALSE);
+		}
+		else{
+			gtk_widget_set_sensitive(glade_xml_get_widget(tray_xml,"playlist_manager"), TRUE);
+
+		}
 		gtk_widget_show_all(GTK_WIDGET(menu));
 	}
 	return FALSE;    

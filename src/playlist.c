@@ -35,7 +35,7 @@ void collapse_artist_tree();
 void add_selected_id3_browser();
 void add_selected_search();
 int hide_playlist_view();
-
+void add_song_id3_browser(GtkWidget *Tree);
 
 void destroy_playlist(GtkWidget *wid)
 {
@@ -962,7 +962,8 @@ void directory_row_selected(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewCol
 	load_directories(buf);
 	g_free(new_buf);
 	g_free(buf);
-}  
+} 
+
 
 void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 {
@@ -1109,6 +1110,11 @@ void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 	info.conlock = FALSE;    
 
 
+}
+
+void add_song_id3_browser(GtkWidget *Tree)
+{
+	add_song_file_browser(NULL, Tree);
 }
 
 int file_browser_activate(GtkWidget *tree)

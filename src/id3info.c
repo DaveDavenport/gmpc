@@ -113,23 +113,43 @@ void set_text(GList *node)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "artist_entry")), song->artist);
 	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "artist_entry")), "");
+	}
 	if(song->title != NULL)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "title_entry")), song->title);
+	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "title_entry")), "");
 	}
 	if(song->album != NULL)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "album_entry")),song->album);
 	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "album_entry")),"");
+	}
 	if(song->track != NULL)
 	{
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "track_entry")), song->track);
+	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "track_entry")), "");
 	}
 	if(song->file != NULL)
 	{
 		gchar *buf1 = g_path_get_basename(song->file);
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "filename_entry")), buf1);
 		g_free(buf1);
+	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "filename_entry")), "");
 	}
 	if(song->time != MPD_SONG_NO_TIME)
 	{
@@ -138,6 +158,10 @@ void set_text(GList *node)
 		gchar *buf1 = g_strdup_printf("%02i:%02i", min, sec);
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "length_entry")), buf1);
 		g_free(buf1);
+	}
+	else
+	{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_id3_window, "length_entry")), "");
 	}
 	if(g_list_previous(songs) == NULL)
 	{
