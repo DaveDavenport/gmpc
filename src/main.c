@@ -31,7 +31,7 @@
 #include "strfsong.h"
 #include "mm-keys.h"
 
-
+void init_playlist ();
 /*
  * the xml fle pointer to the player window 
  */
@@ -183,7 +183,9 @@ int main (int argc, char **argv)
 	 * create the main window, This is done before anything else (but after command line check) 
 	 */
 	create_player ();
-	init_playlist2 ();
+
+	/* create the store for the playlist */
+	init_playlist ();
 
 	/*
 	 * create timeouts 
@@ -191,15 +193,18 @@ int main (int argc, char **argv)
 	/*
 	 * get the status every 1/2 second should be enough 
 	 */
-	gtk_timeout_add (500, (GSourceFunc) update_mpd_status, NULL);
-	update_timeout =
-		gtk_timeout_add (5000, (GSourceFunc) update_interface, NULL);
+	gtk_timeout_add (500,(GSourceFunc)update_mpd_status, NULL);
+	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
 
+
+	/* create a tray icon */
 	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
-
-
-	create_tray_icon ();
-	update_interface ();	
+	{
+		create_tray_icon();
+	}
+	/* update the interface */
+	update_interface();
+	
 	/*
 	 * Keys
 	 */
@@ -437,7 +442,7 @@ int update_interface ()
 			g_free (path);
 			old_length--;
 		}
-		pl2_highlight_song ();
+		pl3_highlight_song ();
 
 
 		info.status->song = -1;
@@ -590,4 +595,17 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-playlist", set);
 	g_object_unref (G_OBJECT (pb));                
 	gtk_icon_factory_add_default (factory);
+}
+
+
+void init_playlist ()
+{
+	/* create initial tree store */
+	pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
+			GTK_TYPE_INT,	/* pos id */
+			GTK_TYPE_STRING,	/* song title */
+			GTK_TYPE_INT,	/* weight int */
+			G_TYPE_BOOLEAN,	/* weight color */
+			GTK_TYPE_STRING,	/* stock-id */
+			GTK_TYPE_INT);
 }
