@@ -390,7 +390,7 @@ void fill_playlist_tree()
 		}
 		if(entity->type== MPD_INFO_ENTITY_TYPE_PLAYLISTFILE) {
 			mpd_PlaylistFile * pl = entity->info.playlistFile;
-			GtkTreeIter iter;
+			GtkTreeIter iter;bd 
 			gtk_list_store_append(info.playlist_list, &iter);
 			gtk_list_store_set(info.playlist_list, &iter, 0, pl->path, -1);
 		}
@@ -911,6 +911,8 @@ void load_directories(gchar *oldp)
 
 			gchar *base;
 			gtk_list_store_append(info.dir_list, &iter);
+			if(entity->info.directory->path == NULL)
+				if(debug)printf("Error on line 915, info.directory->path is a NULL pointer\n");
 			base = g_path_get_basename(entity->info.directory->path);
 			gtk_list_store_set(info.dir_list, &iter, 0,entity->info.directory->path , 1, base,-1);
 			g_free(base);
@@ -922,6 +924,9 @@ void load_directories(gchar *oldp)
 			if(entity->info.song->title == NULL)
 			{
 				gchar *utf8 = g_path_get_basename(entity->info.song->file);
+				if(entity->info.song->file == NULL)
+				if(debug)printf("Error on line 928, info.song->file is a NULL pointer\n");
+				
 				short_title = shorter_string(utf8);
 				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);
 				g_free(short_title);
@@ -1068,7 +1073,7 @@ void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 					/* just to make sure.. it should never be called */
 					if(album == NULL)
 					{
-						album = g_strdup("")
+						album = g_strdup("");
 					}
 				}
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ARTIST, artist);
