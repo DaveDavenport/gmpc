@@ -153,6 +153,7 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 	}
 	else
 	{
+		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),                          	
 				"<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>");       			
 		working = FALSE;
