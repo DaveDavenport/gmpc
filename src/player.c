@@ -1,3 +1,24 @@
+/*
+ *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this program; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+
+
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
@@ -604,14 +625,6 @@ void create_player()
 			"expose-event", G_CALLBACK(time_exposed), time_layout);
 
 	pango_layout_set_text(time_layout, "00:00", -1);
-
-	/* uncomment the following lines to enable tooltip on the title entry box */
-	/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "enter-notify-event", 
-		G_CALLBACK(tray_motion_cb), NULL);
-		g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "leave-notify-event",
-		G_CALLBACK(tray_leave_cb), NULL);
-
-*/
 
 	g_signal_connect(
 			G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),		
