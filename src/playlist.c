@@ -382,6 +382,7 @@ void fill_playlist_tree()
 
 void load_songs_with_filter()
 {
+	return;
 	gchar *entryb,*buf = NULL;
 	GPatternSpec *spec;
 	GtkTreeIter iter;

@@ -180,16 +180,19 @@ int update_interface()
 				/* needed for getting the row */
 				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
 				GList *node = g_list_nth(info.playlist,ent->info.song->pos);
+				gint weight = (info.status->songid == ent->info.song->id)?
+					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
 				{
 					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
-					gtk_list_store_set(pl2_store, &iter,                          				
+					gtk_list_store_set(pl2_store, &iter,		
 							SONG_ID,ent->info.song->id, 
 							SONG_POS, ent->info.song->pos,
 							SONG_TITLE,buffer,
-/*						COLOR_STRING, "green",
-						COLOR_ENABLE,FALSE,
-*/						-1); 
+							WEIGHT_ENABLE,TRUE,
+							WEIGHT_INT, weight,
+
+						-1); 
 				}
 				g_free(path);
 				if(node != NULL)
@@ -200,14 +203,16 @@ int update_interface()
 			}
 			else
 			{
+				gint weight = (info.status->songid == ent->info.song->id)?
+					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				gtk_list_store_append(pl2_store, &iter);
 				strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
-				gtk_list_store_set(pl2_store, &iter,                          				
+				gtk_list_store_set(pl2_store, &iter,	
 						SONG_ID,ent->info.song->id, 
 						SONG_POS, ent->info.song->pos,
 						SONG_TITLE,buffer,
-						COLOR_STRING, "green",
-						COLOR_ENABLE,FALSE,
+						WEIGHT_ENABLE,TRUE,
+						WEIGHT_INT, weight,
 						-1); 
 				/* add */
 				info.playlist = g_list_append(info.playlist, mpd_songDup(ent->info.song));
