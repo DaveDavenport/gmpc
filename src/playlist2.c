@@ -50,7 +50,9 @@ void update_playlist2()
 		}
 		
 		if(info.status->state != MPD_STATUS_STATE_STOP &&
-		   info.status->state != MPD_STATUS_STATE_UNKNOWN)
+		   info.status->state != MPD_STATUS_STATE_UNKNOWN &&
+		   info.status->song != -1 &&
+		   info.status->playlistLength > 0)
 		{
 			temp = g_strdup_printf("%i", info.status->song);
 			if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, temp))
