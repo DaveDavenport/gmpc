@@ -159,6 +159,7 @@ int create_tray_icon()
 {
 	GdkPixbuf  *temp;
 	GtkWidget *event;
+	GtkWidget *ali;
 	if(tray_icon != NULL)
 	{
 		return FALSE;
@@ -169,7 +170,9 @@ int create_tray_icon()
 	event = gtk_event_box_new();
 	gtk_widget_set_usize(event, 20,20);
 	gtk_widget_set_app_paintable(event, TRUE);
-	gtk_container_add(GTK_CONTAINER(tray_icon), event);
+	ali = gtk_alignment_new(0.5,0.5,0,0);
+	gtk_container_add(GTK_CONTAINER(ali), event);
+	gtk_container_add(GTK_CONTAINER(tray_icon), ali);
 	//	gtk_container_add(GTK_CONTAINER(event), tray_image);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	/* set image */
