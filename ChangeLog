@@ -1,4 +1,6 @@
 29-06-2004 Qball <Qball@qballcow.nl>
+	* added timeout.. half a second after you stop typing in filter entry,
+	the tree is filtered.
 	* Added temporary open location window
 	* after updating the gui (in filling song-browser) check if the user
 	closed the window

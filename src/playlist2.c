@@ -16,6 +16,9 @@ GPatternSpec *compare_key= NULL;
 
 void load_playlist2();
 
+/* timeout for the search */
+guint filter_timeout = 0;
+void pl2_filter_refilter();
 
 void init_playlist2()
 {
@@ -125,9 +128,19 @@ void update_playlist2()
 
 }
 
+gboolean pl2_auto_search()
+{
+	pl2_filter_refilter();
+	return FALSE;
+}
 
 void set_compare_key(GtkEntry *entry)
 {
+	if(filter_timeout != 0)
+	{
+		g_source_remove(filter_timeout);
+		filter_timeout = 0;
+	}
 	if(compare_key != NULL) g_free(compare_key);
 	if(strlen(gtk_entry_get_text(entry)) ==0)
 	{
@@ -140,6 +153,7 @@ void set_compare_key(GtkEntry *entry)
 		gchar *lower = g_utf8_strdown(string, -1);
 		g_free(string);
 		compare_key = g_pattern_spec_new(lower);
+		filter_timeout = g_timeout_add(500, (GSourceFunc)pl2_auto_search, NULL);
 		g_free(lower);
 	}
 }

@@ -11,7 +11,6 @@
 GladeXML *sb_xml = NULL;
 GtkTreeStore *sb_store = NULL;
 void sb_fill_browser(); 
-
 int last_db = 0;
 
 
@@ -73,7 +72,6 @@ void sb_row_activated()
 			else if(type == 1 || type ==3) /* artist */
 			{
 				/* fetch all songs by this artist from mpd and add them to the add-list */
-//				mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST, name);
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ARTIST, name);
 				while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 				{
@@ -85,7 +83,6 @@ void sb_row_activated()
 			else if (type ==2) /* album */
 			{
 				/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
-//				mpd_sendSearchCommand(info.connection, MPD_TABLE_ALBUM, album);
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ALBUM, album);
 				while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 				{
@@ -213,7 +210,6 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 			gchar *album;
 			do{                                                                                                   
 				gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_DPATH, &album,-1);
-//				mpd_sendSearchCommand(info.connection, MPD_TABLE_ALBUM, album);
 				mpd_sendFindCommand(info.connection, MPD_TABLE_ALBUM, album);
 				while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
 				{
@@ -239,7 +235,6 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 		}
 		else
 		{
-//		mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
 		mpd_sendFindCommand(info.connection, MPD_TABLE_ARTIST,artist);	
 		while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
 		{
