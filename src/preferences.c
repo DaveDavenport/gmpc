@@ -7,6 +7,13 @@
 #include "config1.h"
 extern config_obj *config;
 
+enum
+{
+        ENABLED_COL,
+	NAME_COL,
+        ID_COL,
+        N_COLUMNS
+};
 
 
 
@@ -30,6 +37,9 @@ void xfade_time_changed(GtkSpinButton *but);
 void xfade_enable_toggled(GtkToggleButton *bug);
 void set_display_settings();
 void update_display_settings();
+void create_outputs_tree();
+void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view);
+void update_outputs_settings();
 
 void create_preferences_window()
 	{
@@ -62,6 +72,7 @@ void create_preferences_window()
 			cfg_get_single_value_as_float_with_default(config,"connection", "timeout",1.0));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_autocon")), 
 			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
+	create_outputs_tree();
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
@@ -210,6 +221,7 @@ void preferences_update()
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
 			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
+		update_outputs_settings();
 		connected = (info.connection == NULL? 0:1);
 	} 
 	if(info.stats != NULL)
@@ -283,6 +295,7 @@ void update_server_settings()
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
 
 	}
+	update_outputs_settings();
 }
 
 /* this sets all the settings in the notification area preferences correct */
@@ -369,4 +382,85 @@ void osb_enable_tb(GtkToggleButton *but)
 
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "osb","enable", bool1);
+}
+
+void create_outputs_tree()
+{
+        GtkListStore *model;
+	GtkCellRenderer *cell;
+	GtkTreeViewColumn *col;
+	GtkTreeView *tree;
+
+	tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"));
+	model = gtk_list_store_new(3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(model));
+	g_object_unref(G_OBJECT(model));
+
+	cell = gtk_cell_renderer_toggle_new();
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_pack_start(col, cell, TRUE);
+	gtk_tree_view_column_add_attribute(col, cell, "active", 0);
+	gtk_tree_view_column_set_title(col, "Enabled");
+	gtk_tree_view_append_column(tree, col);
+	gtk_signal_connect(GTK_OBJECT(cell), "toggled",	GTK_SIGNAL_FUNC(outputs_toggled), tree);
+
+	cell = gtk_cell_renderer_text_new();
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_pack_start(col, cell, TRUE);
+	gtk_tree_view_column_add_attribute(col, cell, "text", 1);
+	gtk_tree_view_column_set_title(col, "Name");
+	gtk_tree_view_append_column(tree, col);
+
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_visible(col, FALSE);
+	gtk_tree_view_append_column(tree, col);
+	gtk_widget_show_all(GTK_WIDGET(tree));
+}
+
+void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
+{
+        gboolean enabled;
+	gint id;
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_tree_view_get_model(view);
+	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
+
+	if(gtk_tree_model_get_iter(model, &iter, path))
+        {
+	        gtk_tree_model_get(model, &iter, ENABLED_COL, &enabled, -1);
+		gtk_tree_model_get(model, &iter, ID_COL, &id, -1);
+		if(enabled)
+                {
+		        enabled = FALSE;
+			mpd_sendDisableOutputCommand(info.connection, id);
+		}
+		else
+		{
+		        enabled = TRUE;
+			mpd_sendEnableOutputCommand(info.connection, id);
+		}
+		mpd_finishCommand(info.connection);          
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, enabled, -1);
+	}
+	gtk_tree_path_free(path);
+}
+
+void update_outputs_settings()
+{
+        mpd_OutputEntity *output;
+	GtkTreeIter iter;
+	GtkListStore *store;
+
+	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"))));
+	gtk_list_store_clear(store);
+        if(info.connection)
+	{
+	        mpd_sendOutputsCommand(info.connection);
+		while((output = mpd_getNextOutput(info.connection)) != NULL)
+		{
+		        gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0, output->enabled?TRUE:FALSE, 1, output->name, 2, output->id, -1);
+			mpd_freeOutputElement(output);
+		}
+	}
 }

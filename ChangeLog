@@ -1,3 +1,8 @@
+ 01-28-2005 encoded <encoded@xmtp.net>
+ 	* src/preferences.c     Added support for (dis|en)abling outputs.
+ 	* glade/gmpc.glade
+
+
 28-01-2005 Qball:
 	* src/libmpdclient.c:	Fixed not-initialized pointer.
 	* src/player.c:		Moved more to libmpd
