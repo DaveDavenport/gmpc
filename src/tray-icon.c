@@ -616,12 +616,12 @@ int create_tray_icon()
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
 	/* we only need to load this one once */
-	if(tray_xml == NULL)
+/*	if(tray_xml == NULL)
 	{
 		tray_xml =   glade_xml_new(GLADE_PATH"gmpc.glade", "tray_icon_menu", NULL);
 		glade_xml_signal_autoconnect(tray_xml);
 	}
-	//	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
+*/	//	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
 	info.song = -1;
 	return FALSE;
 }

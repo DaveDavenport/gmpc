@@ -174,9 +174,9 @@ int main (int argc, char **argv)
 		gtk_timeout_add (5000, (GSourceFunc) update_interface, NULL);
 
 	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
-		create_tray_icon ();
-	update_interface ();
 
+	update_interface ();
+	create_tray_icon ();
 	/*
 	 * Keys
 	 */
