@@ -8,6 +8,8 @@
 #include "strfsong.h"
 #include "playlist2.h"
 #define TITLE_LENGTH 42
+#define DISPLAY_WIDTH 240
+
 scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
@@ -51,8 +53,8 @@ void display_exposed(GtkWidget *window)
 			window->style->base_gc[GTK_STATE_NORMAL],
 			TRUE,
 			0,0,
-			260,23);                            
-	if(width <= 255)
+			DISPLAY_WIDTH,23);                            
+	if(width <= DISPLAY_WIDTH-5)
 	{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
@@ -60,7 +62,7 @@ void display_exposed(GtkWidget *window)
 			layout);
 	}
 	else{
-		if(width-scroll.pos > 260)
+		if(width-scroll.pos > DISPLAY_WIDTH)
 		{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
 			window->style->text_gc[GTK_STATE_NORMAL], 
@@ -95,7 +97,7 @@ void display_exposed(GtkWidget *window)
 			window->style->dark_gc[GTK_STATE_NORMAL],
 			FALSE,
 			0,0,
-			259,22);                              
+			DISPLAY_WIDTH-1,22);                              
 	g_signal_handler_unblock(G_OBJECT(window), expose_display_id);
 }	
 gboolean update_msg()
@@ -120,7 +122,7 @@ gboolean update_msg()
 		pango_layout_set_text(layout, scroll.msg, -1);
 		pango_layout_get_size(layout, &width, NULL);
 		width = width/PANGO_SCALE;
-		if(width > 255)
+		if(width > DISPLAY_WIDTH-5)
 		{
 			char *temp= scroll.msg;
 			scroll.msg = g_strdup_printf("%s  ***  ", scroll.msg);
@@ -136,7 +138,7 @@ gboolean update_msg()
 
 		width = width/PANGO_SCALE;
 
-		if(width > 255)
+		if(width > DISPLAY_WIDTH-5)
 		{
 			scroll.pos+=4;
 

@@ -1,4 +1,5 @@
 31-06-2004 Qball <Qball@qballcow.nl>
+	* Made mainwindow 20 pixels smaller
 	* changed configure in to depend on gtk+-2.4 and up
 	* Commented most parts of song-browser.c
 	* added error_Checks to song-browser.c
