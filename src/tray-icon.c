@@ -40,7 +40,7 @@ gchar *tray_get_tooltip_text()
 				"|", info.mpdSong);
 				*/
 		strfsong(result, 1024,
-				"[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%\n][<span size=\"small\">%album% [(track %track%)]</span>]|"
+				"[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|"
 //				"%name%|"
 //				"<size=\"large\">%title%</size>\n[%artist%]\n[<size=\"small\">%album%</size>]|"
 				"%shortfile%|", info.mpdSong);

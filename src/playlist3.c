@@ -131,7 +131,7 @@ void pl3_custom_stream_view_browser()
 			{
 				xmlNodePtr cur1 = cur->xmlChildrenNode;
 				GtkTreeIter iter;
-				char *name=NULL, *bitrate=NULL, *genre=NULL;
+				char *name=NULL;
 				gtk_list_store_append(pl3_store, &iter);
 				gtk_list_store_set (pl3_store, &iter,
 						PL3_SONG_POS, PL3_ENTRY_SONG, 
@@ -162,14 +162,27 @@ void pl3_custom_stream_view_browser()
 }
 
 
+void pl3_custom_stream_add_url_changed(GtkEntry *entry, GtkWidget *button)
+{
+	if(strstr(gtk_entry_get_text(entry), "://"))
+	{
+		gtk_widget_set_sensitive(button, TRUE);
+	}	
+	else
+	{
+		gtk_widget_set_sensitive(button, FALSE);
+	}
 
+
+}
 
 void pl3_custom_stream_add_stream()
 {
 	GladeXML *xml = glade_xml_new(GLADE_PATH"playlist3.glade", "add_stream",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(xml, "add_stream");
 	gtk_window_set_transient_for(GTK_WINDOW(dialog),GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml, "entry_url")),"changed", G_CALLBACK(pl3_custom_stream_add_url_changed), 
+			glade_xml_get_widget(xml, "button_add"));
 	gtk_widget_show_all(dialog);
 	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 	{
@@ -1244,7 +1257,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		/* check for errors */                      		
 		check_for_errors ();                        		
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
 	{
 		GtkTreeIter iter;
 		gchar *song_id;
