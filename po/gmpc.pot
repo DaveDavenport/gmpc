@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-01 20:03+0100\n"
+"POT-Creation-Date: 2004-11-05 20:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -561,16 +561,16 @@ msgstr ""
 msgid "gmpc - Disconnected"
 msgstr ""
 
-#: src/mpdinteraction.c:92
+#: src/mpdinteraction.c:93
 msgid "gmpc - Failed to connect, please check the connection settings."
 msgstr ""
 
-#: src/mpdinteraction.c:111
+#: src/mpdinteraction.c:112
 msgid "You don't have enough permission to access mpd."
 msgstr ""
 
 #. Set the title
-#: src/mpdinteraction.c:124
+#: src/mpdinteraction.c:125
 msgid "GMPC - Connected"
 msgstr ""
 

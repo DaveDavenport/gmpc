@@ -1482,8 +1482,6 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	if(event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
 	{
 		pl3_browse_file_add_folder();		
-
-
 	}
 	else if (event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
 	{

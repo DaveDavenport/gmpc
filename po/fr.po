@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-11-01 20:03+0100\n"
+"POT-Creation-Date: 2004-11-05 20:12+0100\n"
 "PO-Revision-Date: 2004-07-04 00:28+0200\n"
 "Last-Translator: Mathieu Doidy <mdoidy@roulaize.net>\n"
 "Language-Team: French\n"
@@ -616,17 +616,17 @@ msgstr "Aucune chanson trouvée\n"
 msgid "gmpc - Disconnected"
 msgstr "gmpc - Déconnecté"
 
-#: src/mpdinteraction.c:92
+#: src/mpdinteraction.c:93
 msgid "gmpc - Failed to connect, please check the connection settings."
 msgstr ""
 "gmpc - La connexion a echoué, Veuillez vérifier les paramètres de connexion."
 
-#: src/mpdinteraction.c:111
+#: src/mpdinteraction.c:112
 msgid "You don't have enough permission to access mpd."
 msgstr "Vous n'avez pas les permissions suffisantes pour accéder à mpd"
 
 #. Set the title
-#: src/mpdinteraction.c:124
+#: src/mpdinteraction.c:125
 #, fuzzy
 msgid "GMPC - Connected"
 msgstr "GMPC - Arrêté"
