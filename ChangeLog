@@ -1,3 +1,6 @@
+12-05-2004 Qball <Qball@qballcow.nl>
+	* Removed some dead code..  
+
 09-05-2004 Qball <Qball@qballcow.nl>
 	* Double click/enter is now add song/artist/album in every tree view
 	besides the directory browser.

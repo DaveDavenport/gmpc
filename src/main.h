@@ -73,8 +73,6 @@ extern guint update_timeout;
 int update_interface();
 
 /* callback.c */
-int start_mpd_action();
-int stop_mpd_action();
 int load_playlist();
 int check_for_errors();
 

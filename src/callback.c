@@ -3,33 +3,6 @@
 #include "libmpdclient.h"
 #include "main.h"
 
-/* next 2 functions could be removed */
-/* return 0 = good */
-/* return 1 = bad */
-int start_mpd_action()
-    {
-    /* check lock, just to be sure */
-    if(info.conlock) return 1;
-    /* ok its not locked.. let lock it now */
-    info.conlock = TRUE;    
-    /* do some stuff so the user can't do (or expect to) do wild stuff */
-   gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "main_window"), FALSE);
-    /* everything is ok.. */
-    return 0;
-    }
-
-int stop_mpd_action()
-    {
-    /* check lock, just to be sure */
-    if(!info.conlock) return 1;
-    /* ok its not locked.. let lock it now */
-    info.conlock = FALSE;    
-    /* undo the stuff */
-      gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "main_window"), TRUE);
-    /* everything is ok.. */
-    return 0;
-    }
-
 int load_playlist()
     {
     mpd_InfoEntity *entity;
@@ -71,7 +44,6 @@ int load_playlist()
 		    g_list_free(info.playlist);
 		    info.playlist = NULL;
 
-		    stop_mpd_action();
 		    /* this needs to be true, we did stop on error. */
 		    info.conlock = TRUE;
 		    return TRUE;
