@@ -30,9 +30,20 @@ MpdObj * mpd_ob_create()
 	/* info */
 	mi->playlistid = -1;
 	mi->songid = -1;
+	mi->state = -1;
 
 	/* signals */
 	mi->playlist_changed = NULL;
+	/* song */
+	mi->song_changed = NULL;
+	mi->song_changed_signal_pointer = NULL;
+	/* status */
+	mi->status_changed = NULL;
+	mi->status_changed_signal_pointer = NULL;
+	/* state */
+	mi->state_changed = NULL;
+	mi->state_changed_signal_pointer = NULL;
+
 	mi->error_signal = NULL;
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
@@ -103,7 +114,7 @@ int mpd_ob_check_error(MpdObj *mi)
 	{
 		/* TODO: map these errors in the future */
 		mi->error = mi->connection->error;
-		mi->error_msg = mi->connection->errorStr;	
+		mi->error_msg = strdup(mi->connection->errorStr);	
 
 		debug_printf(DEBUG_ERROR, "mpd_ob_check_error: Following error occured: code: %i msg: %s", mi->error, mi->error_msg);
 		mpd_ob_disconnect(mi);
@@ -249,6 +260,7 @@ int mpd_ob_disconnect(MpdObj *mi)
 		mi->CurrentSong = NULL;
 	}
 	mi->playlistid = -1;
+	mi->state = -1;
 	mi->songid = -1;
 
 	/*don't reset errors */
@@ -267,6 +279,10 @@ int mpd_ob_connect(MpdObj *mi)
 	}
 	/* reset errors */
 	mi->error = 0;
+	if(mi->error_msg != NULL)
+	{
+		free(mi->error_msg);
+	}
 	mi->error_msg = NULL;
 	
 	debug_printf(DEBUG_INFO, "mpd_ob_connect: connecting\n");
@@ -365,7 +381,19 @@ int mpd_ob_status_update(MpdObj *mi)
 	 * check for changes 
 	 */
 
-	/* playlist change */
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	if(mi->playlistid != mi->status->playlist)
 	{
 		/* print debug message */
@@ -391,18 +419,49 @@ int mpd_ob_status_update(MpdObj *mi)
 	}
 
 
+	/* playlist change */
+	if(mi->state != mi->status->state)
+	{
+		/* TODO: Call defined functions */
+		if(mi->state_changed != NULL)
+		{                                                                      		
+			mi->state_changed(mi, mi->state,mi->status->state,mi->state_changed_signal_pointer);
+		}                                                                                           		
+
+		mi->state = mi->status->state;
+	}
+	
 	if(mi->songid != mi->status->songid)
 	{
 		/* print debug message */
 		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Song has changed %i %i!", mi->songid, mi->status->songid);
 
-		
-
+		/* TODO: Call defined functions */
+		if(mi->song_changed != NULL)
+		{                                                                      		
+			mi->song_changed(mi, mi->songid,mi->status->songid,mi->song_changed_signal_pointer);
+		}
 		/* save new songid */
 		mi->songid = mi->status->songid;
 
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+	
+	if(mi->status_changed != NULL)
+	{                                                                      		
+		mi->status_changed(mi, mi->status_changed_signal_pointer);		
+	}
 
 	return FALSE;
 }
@@ -441,6 +500,35 @@ int mpd_ob_status_get_volume(MpdObj *mi)
 		return MPD_O_FAILED_STATUS;
 	}
 	return mi->status->volume;
+}
+
+int mpd_ob_status_get_total_song_time(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->status->totalTime;
+}
+int mpd_ob_status_get_elapsed_song_time(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->status->elapsedTime;
 }
 
 int mpd_ob_status_set_volume(MpdObj *mi,int volume)
@@ -783,7 +871,7 @@ int mpd_ob_player_set_repeat(MpdObj *mi,int repeat)
 	}
 	mpd_sendRepeatCommand(mi->connection, repeat);
 	mpd_finishCommand(mi->connection);
-	
+
 	mpd_ob_unlock_conn(mi);
 	mpd_ob_status_queue_update(mi);
 	return FALSE;
@@ -821,7 +909,7 @@ int mpd_ob_player_set_random(MpdObj *mi,int random)
 	}
 	mpd_sendRandomCommand(mi->connection, random);
 	mpd_finishCommand(mi->connection);
-	
+
 	mpd_ob_unlock_conn(mi);
 	mpd_ob_status_queue_update(mi);
 	return FALSE;
@@ -964,6 +1052,50 @@ void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(
 	}
 	mi->playlist_changed = playlist_changed;
 }
+
+
+void mpd_ob_signal_set_song_changed (MpdObj *mi, void *(* song_changed)(MpdObj *mi, int old_song_id, int new_song_id, void *pointer),void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_song_changed: MpdObj *mi == NULL");
+		return;
+	}
+	mi->song_changed = song_changed;
+	mi->song_changed_signal_pointer = pointer;
+}
+
+
+void mpd_ob_signal_set_state_changed (MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_state_changed: MpdObj *mi == NULL");
+		return;
+	}
+	mi->state_changed = state_changed;
+	mi->state_changed_signal_pointer = pointer;
+}
+
+void mpd_ob_signal_set_status_changed (MpdObj *mi, void *(* status_changed)(MpdObj *mi, void *pointer),void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_state_changed: MpdObj *mi == NULL");
+		return;
+	}
+	mi->status_changed = status_changed;
+	mi->status_changed_signal_pointer = pointer;
+}
+
+
+
+
+
+
+
+
+
 
 
 void mpd_ob_signal_set_error (MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg,void *pointer),void *pointer)

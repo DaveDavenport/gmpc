@@ -10,29 +10,36 @@
 #define GREEN "\x1b[32;06m"
 #define YELLOW "\x1b[33;06m"
 
+int debug_level = DEBUG_INFO;
+
+
+
 void debug_printf(int dp,char *format, ...)
 {
 #ifdef DEBUG
-	va_list arglist;
-	va_start(arglist,format);
-	if(dp == DEBUG_INFO)
+	if(debug_level >= dp)
 	{
-		printf(GREEN"INFO:\t"RESET);
+		va_list arglist;
+		va_start(arglist,format);
+		if(dp == DEBUG_INFO)
+		{
+			printf(GREEN"INFO:\t"RESET);
+		}
+		else if(dp == DEBUG_WARNING)
+		{
+			printf(YELLOW"WARNING:\t"RESET);
+		}
+		else
+		{
+			printf(DARKRED"ERROR:\t"RESET);
+		}
+		vprintf(format, arglist);
+		if(format[strlen(format)-1] != '\n')
+		{
+			printf("\n");
+		}
+		va_end(arglist);
 	}
-	else if(dp == DEBUG_WARNING)
-	{
-		printf(YELLOW"WARNING:\t"RESET);
-	}
-	else
-	{
-		printf(DARKRED"ERROR:\t"RESET);
-	}
-	vprintf(format, arglist);
-	if(format[strlen(format)-1] != '\n')
-	{
-		printf("\n");
-	}
-	va_end(arglist);
 #endif
 }
 

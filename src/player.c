@@ -23,7 +23,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <stdlib.h>
-#include "libmpdclient.h"
+//#include "libmpdclient.h"
 #include <gdk/gdkkeysyms.h>
 #include "main.h"
 #include "misc.h"
@@ -41,7 +41,7 @@ PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
 guint seek = FALSE;
-
+guint volume = FALSE;
 
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
@@ -243,36 +243,30 @@ void msg_pop_popup()
 int update_player()
 {
 	/* update the volume slider */
-	if(info.conlock) return TRUE;
-	if(info.volume != mpd_ob_status_get_volume(connection))
+	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+	if((int)gtk_range_get_value(scale) != mpd_ob_status_get_volume(connection))
 	{
-		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gtk_range_set_value(scale, (double)mpd_ob_status_get_volume(connection));
-		info.volume = mpd_ob_status_get_volume(connection);
 	}    
 
 	/* things that only need to be updated during playing */
-	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE || info.status->state == MPD_STATUS_STATE_STOP)
 	{
+		int totalTime = mpd_ob_status_get_total_song_time(connection);
+		int elapsedTime = mpd_ob_status_get_elapsed_song_time(connection);		
 		/* update the progress bar */
 		if(!seek){
 			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
-			gdouble  prog = ((double)info.status->elapsedTime/(double)info.status->totalTime)*100;
+			gdouble  prog = ((double)elapsedTime/(double)totalTime)*100;
 			gtk_range_set_value(scale, prog);
 		}
 		/* update the time box */
 		{
-
-			int e_min = (int)(info.status->elapsedTime/60);
-			int e_sec = info.status->elapsedTime - 60*e_min;
-			int r_min = (int)((info.status->totalTime- info.status->elapsedTime)/60);
-			int r_sec = info.status->totalTime - info.status->elapsedTime - r_min*60;
+			int e_min = (int)(elapsedTime/60);
+			int e_sec = elapsedTime - 60*e_min;
+			int r_min = (int)((totalTime- elapsedTime)/60);
+			int r_sec = totalTime - elapsedTime - r_min*60;
 			gchar *buf = NULL;
 
-			
-			
-			
-			
 			
 			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format", TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
 			{
@@ -295,13 +289,13 @@ int update_player()
 				buf = g_strdup_printf("-%02i:%02i", abs(r_min), abs(r_sec));
 			}
 			else{
-				if(info.status->totalTime <= 0)
+				if(totalTime <= 0)
 				{
 					buf = g_strdup("n/a");
 				}
 				else
 				{
-					buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
+					buf = g_strdup_printf("%3.1f %%", (double)((double)elapsedTime/(double)totalTime)*100);
 				}
 			}
 			pango_layout_set_text(time_layout, buf, -1);
@@ -310,64 +304,7 @@ int update_player()
 			g_free(buf);
 		}
 	}
-	/* update the song title */
 
-	if(info.song != mpd_ob_player_get_current_song_id(connection) && info.status->state != MPD_STATUS_STATE_STOP)
-	{
-		mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
-		if(song){
-			/* make a global song */
-			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
-			{
-				msg_set_base(_("Gnome Music Player Client"));
-//				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
-			}
-			else
-			{
-				gchar buffer[1024];
-				strfsong(buffer, 1024, 
-						cfg_get_single_value_as_string_with_default(config, "player","display_markup",
-							"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
-						song);
-				msg_set_base(buffer);
-			}
-		}
-	}
-
-
-	/* update if state changes */
-	if(info.state != info.status->state)
-	{
-		GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
-		if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
-		{
-			GtkWidget *entry;
-			msg_set_base(_("GMPC - Stopped"));
-			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
-			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
-			{
-				pango_layout_set_text(time_layout, "00:00", -1);
-			}
-			else if(cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
-			{
-				pango_layout_set_text(time_layout, "-00:00", -1);
-
-			}
-			else	{
-				pango_layout_set_text(time_layout, "0.0 %", -1);
-			}
-			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
-			entry =  glade_xml_get_widget(xml_main_window, "progress_slider");
-			gtk_range_set_value(GTK_RANGE(entry), 0);
-
-			info.song = -1;
-		}
-		if(info.status->state == MPD_STATUS_STATE_PLAY) 
-			gtk_image_set_from_stock(GTK_IMAGE(image),"media-pause", GTK_ICON_SIZE_BUTTON);
-		else gtk_image_set_from_stock(GTK_IMAGE(image), "media-play", GTK_ICON_SIZE_BUTTON);
-
-		info.state = info.status->state;
-	}
 	/* update random and repeat button */
 	/* lock it to stop them from toggling and triggering another toggle*/
 	if(mpd_ob_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
@@ -382,6 +319,81 @@ int update_player()
 }
 
 
+void player_state_changed(int old_state, int state)
+{
+	GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
+	if(state == MPD_OB_PLAYER_STOP || state == MPD_OB_PLAYER_UNKNOWN)
+	{
+		GtkWidget *entry;
+		msg_set_base(_("GMPC - Stopped"));
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
+		if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
+		{
+			pango_layout_set_text(time_layout, "00:00", -1);
+		}
+		else if(cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
+		{
+			pango_layout_set_text(time_layout, "-00:00", -1);
+
+		}
+		else	
+		{
+			pango_layout_set_text(time_layout, "0.0 %", -1);
+		}
+		gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
+		entry =  glade_xml_get_widget(xml_main_window, "progress_slider");
+		gtk_range_set_value(GTK_RANGE(entry), 0);
+
+	}
+	if(state == MPD_OB_PLAYER_PLAY)
+	{	
+		gtk_image_set_from_stock(GTK_IMAGE(image),"media-pause", GTK_ICON_SIZE_BUTTON);
+	}
+	else
+	{
+		gtk_image_set_from_stock(GTK_IMAGE(image), "media-play", GTK_ICON_SIZE_BUTTON);
+	}
+
+
+
+	/* make a global song */
+
+	if(state != MPD_OB_PLAYER_PLAY && state != MPD_OB_PLAYER_PAUSE)
+	{
+		msg_set_base(_("Gnome Music Player Client"));
+	}
+	else
+	{
+		gchar buffer[1024];
+		strfsong(buffer, 1024, 
+				cfg_get_single_value_as_string_with_default(config, "player","display_markup",
+					"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+				mpd_ob_playlist_get_current_song(connection));
+		msg_set_base(buffer);
+	}
+
+}
+
+
+void player_song_changed(int oldsong, int newsong)
+{
+	int state = mpd_ob_player_get_state(connection);
+
+	if(state != MPD_OB_PLAYER_PLAY && state != MPD_OB_PLAYER_PAUSE)
+	{
+		msg_set_base(_("Gnome Music Player Client"));
+	}
+	else
+	{
+		gchar buffer[1024];
+		strfsong(buffer, 1024, 
+				cfg_get_single_value_as_string_with_default(config, "player","display_markup",
+					"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+				mpd_ob_playlist_get_current_song(connection));
+		msg_set_base(buffer);
+	}
+}
+
 
 /* start seeking in the song..  only allow this when you're playing or paused */
 /* block it other wise. */
@@ -389,12 +401,9 @@ int update_player()
 /* show time to seek to in entry box */
 int progress_seek_start()
 {
-//	if(info.conlock) return TRUE;
-//	info.conlock = TRUE;
 	if(mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PLAY && 
 			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PAUSE)
 	{
-		info.conlock = FALSE;
 		return TRUE;
 	}
 	seek = TRUE;
@@ -411,21 +420,22 @@ void change_progress_update()
 			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
 			gchar *buf = NULL;
 			gdouble value = gtk_range_get_value(scale);
-			int newtime = (int)(info.status->totalTime*(double)(value/100));
+			int totaltime = mpd_ob_status_get_total_song_time(connection);
+			int newtime = (int)(totaltime*(double)(value/100));
 			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED)  == TIME_FORMAT_ELAPSED)
 			{
 				int min = (int)(newtime/60);
 				int sec = newtime - 60*min;
-				int t_min = (int)(info.status->totalTime/60);
-				int t_sec = info.status->totalTime - 60*t_min;
+				int t_min = (int)(totaltime/60);
+				int t_sec = totaltime - 60*t_min;
 				buf = g_strdup_printf(_("Seek to %02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}
 			else if (cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
-				int t_min = (int)(info.status->totalTime/60);
-				int t_sec = info.status->totalTime - 60*t_min;
-				int min = (int)((info.status->totalTime -newtime)/60);
-				int sec = (info.status->totalTime -newtime) - 60*min;
+				int t_min = (int)(totaltime/60);
+				int t_sec = totaltime - 60*t_min;
+				int min = (int)((totaltime -newtime)/60);
+				int sec = (totaltime -newtime) - 60*min;
 				buf = g_strdup_printf(_("Seek to -%02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}	
 			else buf = g_strdup_printf(_("Seek to %3.1f%%"), value);
@@ -447,11 +457,11 @@ int progress_seek_stop()
 	{
 		return TRUE;
 	}
-	else if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
+	else if(mpd_ob_player_get_state(connection) == MPD_OB_PLAYER_PLAY || mpd_ob_player_get_state(connection) == MPD_OB_PLAYER_PAUSE)
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
 		gdouble value = gtk_range_get_value(scale);
-		int change = (int)(info.status->totalTime*(double)(value/100));
+		int change = (int)(mpd_ob_status_get_total_song_time(connection)*(double)(value/100));
 
 		mpd_ob_player_seek(connection, change);
 	}
@@ -463,9 +473,9 @@ int progress_seek_stop()
 /* also if volume isnt "slidable" block the user from changing it */
 int volume_change_start()
 {
-	if(info.conlock) return TRUE;
-	if(info.volume == -1) return TRUE;
-	info.conlock = TRUE;
+	if(volume) return TRUE;
+	if(mpd_ob_status_get_volume(connection) == -1) return TRUE;
+	volume = TRUE;
 	msg_push_popup("Volume: ");
 	return FALSE;
 }
@@ -473,7 +483,7 @@ int volume_change_start()
 /* if the volume changes say it in the entry box.. this looks nice :) */    
 void volume_change_update()
 {
-	if(mpd_ob_check_connected(connection) && info.conlock)
+	if(mpd_ob_check_connected(connection) && volume)
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
@@ -495,13 +505,12 @@ void volume_change_update()
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
-		if(value != info.volume)
+		if(value != mpd_ob_status_get_volume(connection))
 		{
 			if(mpd_ob_status_set_volume(connection, (int)value) < 0)
 			{
 				return;
 			}                                                 			
-
 		}
 	}
 }
@@ -509,11 +518,8 @@ void volume_change_update()
 int volume_change_stop()
 {
 	msg_pop_popup();
+	volume = FALSE;
 	if(!mpd_ob_check_connected(connection)) return TRUE;
-	else 
-	{
-		info.conlock = FALSE;    
-	}
 	return FALSE;
 }
 
@@ -534,7 +540,8 @@ void time_format_toggle()
 void id3_info()
 {
 	if(!mpd_ob_check_connected(connection)) return;
-	call_id3_window(info.status->song);
+	if(mpd_ob_player_get_current_song_id(connection) > 0);
+	call_id3_window(mpd_ob_player_get_current_song_id(connection));
 }
 
 void style_changed(GtkWidget *window, GtkStyle *prev, PangoLayout *lay)
@@ -576,9 +583,6 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	}
 	return FALSE;
 }
-
-
-
 
 
 /* create the player and connect signals */

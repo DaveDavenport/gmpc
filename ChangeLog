@@ -1,3 +1,18 @@
+17-02-2005 Qball <qball@qballcow.nl>
+	* src/tray-icon.c:	Make it use libmpd completely
+	* glade/gmpc.glade:	Removed find artist/album from file. 
+	* src/id3info.c:	Make it use libmpd.
+
+16-02-2005 Qball <qball@qballcow.nl>
+	* src/libmpd.c/h:	Added
+	mpd_ob_status_get_total/elapsed_song_time (and more)
+	* src/player.c:		Use mpd_ob_status_get_total/elapsed_song_time
+	* src/player.c:		remove use of libmpdclient?
+	* src/player.c:		volume flag instead of "conlock"
+	* src/debug_printf:	Added a debug level control.
+	* src/player.c:		cleaned out all info. stuff.
+
+
 15-02-2005 Qball <Qball@qballcow.nl>
 	* src/libmpd.c/h:	Added basic error checking.
 	* src/callback.c:	use libmpd error_check.

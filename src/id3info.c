@@ -33,8 +33,7 @@ void id3_last_song ();
 
 /* function to remove the id3 info screen and unref the xml tree */
 
-	void
-remove_id3_window ()
+void remove_id3_window ()
 {
 	GtkWidget *window =
 		glade_xml_get_widget (xml_id3_window, "id3_info_window");
@@ -56,13 +55,12 @@ remove_id3_window ()
 	void
 create_window (int song)
 {
-	mpd_InfoEntity *ent = NULL;
-	if (info.connection == NULL)
+	mpd_Song *songstr = mpd_ob_playlist_get_song(connection, song);
+	if(songstr == NULL)
+	{
 		return;
-	if (info.status->state == MPD_STATUS_STATE_UNKNOWN)
-		return;
-	if (info.status->playlistLength == 0)
-		return;
+	}
+	
 	xml_id3_window =
 		glade_xml_new (GLADE_PATH "gmpc.glade", "id3_info_window", NULL);
 
@@ -71,14 +69,7 @@ create_window (int song)
 		g_error ("Couldnt initialize GUI. Please check installation\n");
 	glade_xml_signal_autoconnect (xml_id3_window);
 
-	/* set info from struct */
-	mpd_sendPlaylistInfoCommand (info.connection, song);
-	ent = mpd_getNextInfoEntity (info.connection);
-	if (ent != NULL)
-	{
-		songs = g_list_append (songs, mpd_songDup (ent->info.song));
-		mpd_freeInfoEntity (ent);
-	}
+	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
 
@@ -231,18 +222,12 @@ call_id3_window (int song)
 	}
 	else
 	{
-		mpd_InfoEntity *ent = NULL;
-		mpd_sendPlaylistInfoCommand (info.connection, song);
-		ent = mpd_getNextInfoEntity (info.connection);
-		if (ent != NULL)
+		mpd_Song  *songstr = mpd_ob_playlist_get_song(connection, song);
+		if(songstr != NULL)
 		{
-			songs = g_list_append (songs, mpd_songDup (ent->info.song));
+			songs = g_list_append (songs,songstr);
 			songs = g_list_last (songs);
-			if (songs == NULL)
-				if (debug)
-					g_print ("Oeps.. error\n");
 			set_text (songs);
-			mpd_freeInfoEntity (ent);
 		}
 	}
 }

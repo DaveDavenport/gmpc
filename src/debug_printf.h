@@ -2,9 +2,9 @@
 #define __DEBUG_PRINTF_H__
 
 enum {
-	DEBUG_INFO,
+	DEBUG_ERROR,
 	DEBUG_WARNING,
-	DEBUG_ERROR
+	DEBUG_INFO
 };
 
 void debug_printf(int dp, char *format, ...);

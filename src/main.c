@@ -38,6 +38,10 @@ extern long long unsigned total_send;
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
+void song_changed(MpdObj *mi, int oldsong, int newsong);
+void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
+void status_callback(MpdObj *mi);
+
 /*
  * the xml fle pointer to the player window 
  */
@@ -114,7 +118,7 @@ set_default_values ()
 	/*
 	 * the volume if the volume change I also have to update some stuff 
 	 */
-	info.volume = -1;
+//	info.volume = -1;
 	/*
 	 * the current song 
 	 */
@@ -202,6 +206,10 @@ int main (int argc, char **argv)
 	/* connect signals */
 	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed);
 	mpd_ob_signal_set_error(connection, (void *)error_callback, NULL);
+	mpd_ob_signal_set_song_changed(connection, (void *)song_changed, NULL);
+	mpd_ob_signal_set_state_changed(connection, (void *)state_callback, NULL);
+	mpd_ob_signal_set_status_changed(connection, (void *)status_callback, NULL);
+	
 	/*
 	 * initialize gtk 
 	 */
@@ -335,7 +343,7 @@ int update_interface ()
 	/*
 	 * tray update 
 	 */
-	update_tray_icon ();
+//	update_tray_icon ();
 
 	/*
 	 * update the playlist 
@@ -345,13 +353,13 @@ int update_interface ()
 	/*
 	 * update the player window 
 	 */
-	if (update_player ())
-	{
+//	if (update_player ())
+//	{
 		/*
 		 * error return 
 		 */
-		return TRUE;
-	}
+//		return TRUE;
+//	}
 
 	/*
 	 * return (must be true to keep timeout going) 
@@ -632,6 +640,13 @@ void init_playlist ()
 			GTK_TYPE_INT);
 }
 
+void song_changed(MpdObj *mi, int oldsong, int newsong)
+{
+	/* player changed */
+	player_song_changed(oldsong, newsong);
+	tray_icon_song_change();
+}
+
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
@@ -643,3 +658,15 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 	msg_set_base(_("Gnome Music Player Client"));
 }
 
+void status_callback(MpdObj *mi)
+{
+	update_player();
+}
+
+
+void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
+{
+	player_state_changed(old_state, new_state);
+	tray_icon_state_change();
+
+}

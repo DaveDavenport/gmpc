@@ -37,7 +37,7 @@ typedef struct
 	/* the state, if the state changes I know I have to update some stuff */
 	int state;
 	/* the volume if the volume change I also have to update some stuff */
-	int volume;
+//	int volume;
 	/* the current song */
 	int song;
 	int old_pos;

@@ -32,7 +32,7 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(mpd_ob_check_connected(connection) && song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP && info.status != NULL)
+	if(song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
 	{
 		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
@@ -171,15 +171,15 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	}
 
 
-	if(info.connection != NULL && info.status != NULL)
+	if(mpd_ob_check_connected(connection))
 	{
-		if(info.status->totalTime != 0)
+		if(mpd_ob_status_get_total_song_time(connection) > 0)
 		{
 
 
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					FALSE,4,height+5-12, width ,8);                              		
-			width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
+			width = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
 			gdk_draw_rectangle(widget->window, 
 					widget->style->mid_gc[GTK_STATE_NORMAL],
 					TRUE,4,height+5-12, width ,8);
@@ -366,11 +366,12 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 /* gtk will call this function when the image is exposed and the data is gone */
 void exposed_signal(GtkWidget *event)
 {
+	int state = mpd_ob_player_get_state(connection);
 	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
 
 	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);		
 
-	if(info.status == NULL)
+	if(state < 0)
 	{
 		return;
 	}
@@ -381,17 +382,17 @@ void exposed_signal(GtkWidget *event)
 		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
 	}
 
-	if(info.state == MPD_STATUS_STATE_STOP)
+	if(state == MPD_OB_PLAYER_STOP)
 	{
 		GdkPoint points[5] = {{4,1},{4,8}, {11,8},{11,1},{4,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
 	}
-	else if(info.state == MPD_STATUS_STATE_PLAY)
+	else if(state == MPD_OB_PLAYER_PLAY)
 	{
 		GdkPoint points[4] = {{5,1},{5,11}, {10,6},{5,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 4);
 	}
-	else if(info.state == MPD_STATUS_STATE_PAUSE)
+	else if(state == MPD_OB_PLAYER_PAUSE)
 	{
 		GdkPoint points[5] = {{4,1},{4,8}, {6,8},{6,1},{4,1}};
 		GdkPoint points2[5] = {{8,1},{8,8}, {10,8},{10,1},{8,1}};	
@@ -403,12 +404,10 @@ void exposed_signal(GtkWidget *event)
 }
 
 /* this function updates the trayicon on changes */
-void update_tray_icon()
+void tray_icon_song_change()
 {
-
-	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) && 
-			info.status != NULL && info.song != mpd_ob_player_get_current_song_id(connection) &&
-			info.status->state != MPD_STATUS_STATE_STOP)
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
+			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
 	{
 		if(popup_timeout == -1 && tip == NULL)
 		{
@@ -427,17 +426,17 @@ void update_tray_icon()
 					(GSourceFunc)(tray_leave_cb),			
 					NULL);
 		}
-
-
 	}
-	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1)) return;
-	if(info.status != NULL) 
+}
+
+void tray_icon_state_change()
+{
+	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
 	{
-		if(info.state != info.status->state)
-		{
-			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-		}
+		return;
 	}
+	gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+	
 }
 
 /* if the item was destroyed and the user still wants an icon recreate it */
@@ -585,8 +584,6 @@ int create_tray_icon()
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
-	/* we only need to load this one once */
-	info.song = -1;
 	return FALSE;
 }
 
