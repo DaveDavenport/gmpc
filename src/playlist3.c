@@ -144,7 +144,7 @@ void pl3_find_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "gtk-find",
 			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,1,-1);
+			PL3_CAT_ICON_SIZE,3,-1);
 }
 
 unsigned long pl3_find_view_browser()
@@ -258,7 +258,7 @@ void pl3_current_playlist_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-stream",
 			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,2,
+			PL3_CAT_ICON_SIZE,3,
 			-1);
 }
 
@@ -502,7 +502,7 @@ void pl3_file_browser_add()
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,2,-1);
+			PL3_CAT_ICON_SIZE,3,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -730,7 +730,7 @@ void pl3_artist_browser_add()
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
 			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,2,-1);
+			PL3_CAT_ICON_SIZE,3,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
