@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Gnome Music Player Client
+Comment=A gnome frontend for the mpd daemon
+Exec=gmpc
+Terminal=false
+Type=Application
+Icon=gmpc.png
+Categories=GNOME;Application;AudioVideo;
+StartupNotify=true
+Encoding=UTF-8

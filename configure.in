@@ -1,9 +1,10 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
-AM_INIT_AUTOMAKE(gmpc, 0.10.1)
+AM_INIT_AUTOMAKE(gmpc, 0.10.2)
 
 # Checks for programs.
 AC_PROG_CC
+
 
 # Checks for libraries.
 
@@ -28,4 +29,4 @@ PKG_CHECK_MODULES(gmpc,
 ])
 
 AC_SUBST(PACKAGE_LIBS)
-AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile)
+AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile)

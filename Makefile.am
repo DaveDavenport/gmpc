@@ -1,1 +1,1 @@
-SUBDIRS = src pixmaps glade
+SUBDIRS = src pixmaps glade data
