@@ -49,8 +49,21 @@ void add_file_browser()
 			4, FALSE,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
+}
 
-	
+
+void add_artist_browser()
+{
+	GtkTreeIter iter,child;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			0, PL3_BROWSE_ARTIST,
+			1, "Browse Artists",        	
+			2, "",
+			3, "media-artist",
+			4, FALSE,-1);
+	/* add fantom child for lazy tree */
+	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
 
 void view_file_browser_folder(GtkTreeIter *iter_cat)
@@ -116,6 +129,76 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 
 }
 
+
+void artist_browser_fill_tree(GtkTreeIter *iter)
+{
+	char *artist, *alb_artist;
+	GtkTreeIter child,child2;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
+	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
+	/* if there is no child, this should _never happend_ (well it cna't) but to be sure */
+	if (check_connection_state ())
+		return;
+	g_print("fill artist list %i\n", strlen(alb_artist));
+	if(!strlen(alb_artist))
+	{
+		/* fill artist list */
+		char *string;
+		g_print("filling with artists\n");
+		mpd_sendListCommand (info.connection, MPD_TABLE_ARTIST, NULL);
+		while ((string = mpd_getNextArtist (info.connection)) != NULL)
+		{
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_ARTIST,
+					1, string, /* the field */
+					2, string, /* the artist name, if(1 and 2 together its an artist field) */
+					3, "media-artist",
+					4, FALSE,
+					-1);
+			gtk_tree_store_append(pl3_tree, &child2, &child);
+
+		}
+		mpd_finishCommand(info.connection);
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
+		{
+			gtk_tree_store_remove(pl3_tree, &child); 
+		}
+	}
+	/* if where inside a artist */
+	else if(!strcmp(artist, alb_artist))
+	{
+		char *string;
+		mpd_sendListCommand (info.connection, MPD_TABLE_ALBUM, artist);
+		while ((string = mpd_getNextAlbum (info.connection)) != NULL)
+		{
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_ARTIST,
+					1, string,
+					2, artist,
+					3, "media-album", 
+					4, TRUE, -1);
+			g_free (string);
+		}
+		mpd_finishCommand (info.connection);
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
+		{
+			gtk_tree_store_remove(pl3_tree, &child); 
+		}
+
+
+
+
+
+	}
+
+
+
+
+
+
+}
 void file_browser_fill_tree(GtkTreeIter *iter)
 {
 	mpd_InfoEntity *ent = NULL;
@@ -159,22 +242,6 @@ void file_browser_fill_tree(GtkTreeIter *iter)
 	{
 		gtk_tree_store_remove(pl3_tree, &child); 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -187,7 +254,10 @@ void cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
 	if(type == PL3_BROWSE_FILE)
 	{
 		file_browser_fill_tree(iter);
-
+	}
+	else if (type == PL3_BROWSE_ARTIST)
+	{
+		artist_browser_fill_tree(iter);
 
 	}
 
@@ -221,6 +291,15 @@ void cat_sel_changed(GtkTreeSelection *sel)
 			gtk_tree_view_set_model(tree, pl3_store);
 
 		}
+		else if (type == PL3_BROWSE_ARTIST)
+		{
+			//			g_print("show songs\n");
+			//			gtk_list_store_clear(pl3_store);	
+			//			view_file_browser_folder(&iter);
+			//			gtk_tree_view_set_model(tree, pl3_store);
+
+		}
+
 		else
 		{
 			gtk_tree_view_set_model(tree, NULL);	
@@ -252,7 +331,7 @@ void create_playlist3 ()
 {
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
-	GtkTargetEntry target;
+	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
 
 	if(pl3_xml != NULL)
@@ -269,7 +348,6 @@ void create_playlist3 ()
 		g_print("Failed to open playlist3.glade.\n");
 		return;
 	}
-	/* obsolete, but cant hurt either */
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
@@ -284,7 +362,7 @@ void create_playlist3 ()
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
+
 
 
 	/* draw the column with the songs */
@@ -305,14 +383,14 @@ void create_playlist3 ()
 			"text", 1,
 			NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(cat_sel_changed), NULL);
 
 
 	/* right column */
 	tree = glade_xml_get_widget (pl3_xml, "playlist_tree");
-
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 
 	pl3_store = gtk_list_store_new (6, 
 			GTK_TYPE_STRING,	/* song path */
@@ -344,6 +422,7 @@ void create_playlist3 ()
 	/* add the current playlist */
 	add_current_playlist();
 	add_file_browser();
+	add_artist_browser();
 
 	/* add the file browser */
 
@@ -352,31 +431,6 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
