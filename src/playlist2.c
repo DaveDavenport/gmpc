@@ -108,14 +108,17 @@ void create_playlist2()
 	/* insert the column in the tree */
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), 
 			-1, "Playlist", renderer, "text", SONG_TITLE, NULL);
-	
+
+	/* some code to speed up the treeview. */
+	/* it seems to make a good difference */
+/*	
 	gtk_tree_view_column_set_sizing(
 			gtk_tree_view_get_column(GTK_TREE_VIEW(tree), 0),
 		        GTK_TREE_VIEW_COLUMN_FIXED);
 
 	g_object_set(G_OBJECT(tree),"fixed-height-mode", TRUE, NULL);
 	
-
+*/
 	/* set filter function */
 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_fil), 
 			(GtkTreeModelFilterVisibleFunc) pl2_filter_function,
