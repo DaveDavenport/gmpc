@@ -15,45 +15,63 @@ gchar * get_string()
 	/* because we don't want to pass the GString we need to get a pointer to the gstrings string. */
 	/* because we do the free on the string before the return */
 	char *retval = NULL;
-	GList *node = g_list_nth(info.playlist, info.status->song);
-	/* check if there actually a song to display */
-	if(node == NULL)
+	if(info.status->state != MPD_STATUS_STATE_PLAY)
 	{
-		return g_strdup("No Song found\n");
-	}
-	/* create an empty string */
-	string = g_string_new("");
-	/* get the mpd_Song struct. that is where the info is stored */
-	song = node->data;
-	/* if there is no artist name or title name we use the filename */
-	if(song->artist  == NULL || song->title == NULL)
-	{
-		gchar *basename     = g_path_get_basename(song->file);
-		g_string_printf(string,"%s",basename);
-		g_free(basename);
-	}
-	else
-	{
-		g_string_printf(string, "%s\n%s", song->title, song->artist);
-
-		if(song->album != NULL)
+		switch(info.status->state)
 		{
-			g_string_append_printf(string,"\n%s", song->album);
+		case MPD_STATUS_STATE_STOP:
+			retval  = g_strdup("<b><i>Stopped</i></b>");
+			break;
+		case MPD_STATUS_STATE_PAUSE:
+			retval = g_strdup("<b><i>Paused</i></b>");
+			break;
+		default:
+			retval = g_strdup("<b><i>Unknown State</i></b>");
+			break;
 		}
-	}
-	/* catch & signs and convert them so */
 
-	for(i= 0;i < string->len;i++)
-	{
-		if(string->str[i] == '&')
+	}
+	else{
+		GList *node = g_list_nth(info.playlist, info.status->song);
+		/* check if there actually a song to display */
+		if(node == NULL)
 		{
-			g_string_insert(string, i+1, "amp;");
+			return g_strdup("No Song found\n");
 		}
+		/* create an empty string */
+		string = g_string_new("");
+		/* get the mpd_Song struct. that is where the info is stored */
+		song = node->data;
+		/* if there is no artist name or title name we use the filename */
+		if(song->artist  == NULL || song->title == NULL)
+		{
+			gchar *basename     = g_path_get_basename(song->file);
+			g_string_printf(string,"%s",basename);
+			g_free(basename);
+		}
+		else
+		{
+			g_string_printf(string, "%s\n%s", song->title, song->artist);
+
+			if(song->album != NULL)
+			{
+				g_string_append_printf(string,"\n%s", song->album);
+			}
+		}
+		/* catch & signs and convert them so */
+
+		for(i= 0;i < string->len;i++)
+		{
+			if(string->str[i] == '&')
+			{
+				g_string_insert(string, i+1, "amp;");
+			}
+		}
+
+
+		retval  = string->str;
+		g_string_free(string, FALSE);
 	}
-
-
-	retval  = string->str;
-	g_string_free(string, FALSE);
 	return retval;
 }
 /* this destroys the popup.. and set the timeout handler to 0 */
@@ -217,10 +235,14 @@ void update_popup()
 {
 	if(info.popup.do_popup && info.connection != NULL && info.status != NULL)
 	{
-		if(info.status->song != info.song && info.status->state != MPD_STATUS_STATE_STOP)
+		if(info.status->song != info.song && info.status->state == MPD_STATUS_STATE_PLAY)
 		{
 			popup_window();                                     
 
+		}
+		else if(info.popup.show_state && info.status->state != info.state)
+		{
+			popup_window();
 		}
 	}
 }

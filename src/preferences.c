@@ -17,6 +17,7 @@ void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void update_popup_settings();
 void update_tray_settings();
+void show_state_changed(GtkToggleButton *but);
 
 /* creat the preferences window */
 void create_preferences_window()
@@ -129,12 +130,17 @@ void preferences_update()
 void popup_enable_toggled(GtkToggleButton *but)
 {
 	info.popup.do_popup = gtk_toggle_button_get_active(but);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
+//	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
+	update_popup_settings();
 }
 
 void popup_position_changed(GtkOptionMenu *om)
 {
 	info.popup.position = gtk_option_menu_get_history(om);
+}
+void show_state_changed(GtkToggleButton *but)
+{
+	info.popup.show_state = gtk_toggle_button_get_active(but);
 }
 
 void update_popup_settings()
@@ -142,6 +148,9 @@ void update_popup_settings()
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(xml_preferences_window, "ck_popup_enable"), info.popup.do_popup);
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.do_popup);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "ck_show_state"), info.popup.do_popup);
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_show_state"), info.popup.show_state);	
 	gtk_option_menu_set_history((GtkOptionMenu *)
 			glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.position);
 

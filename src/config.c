@@ -95,6 +95,15 @@ void load_config()
 		info.popup.popup_stay = atoi(buf);
 		}                                	
 	    }                                    	
+	else if(!strncmp(buffer, "popup state:", 12))
+	    {
+	    gchar *buf = g_strstrip(&buffer[12]);
+	    if(buf != NULL)
+		{
+		info.popup.show_state = atoi(buf);
+		}                                	
+	    }                                    	
+
 	
 	bzero(buffer, 1024);
 	
@@ -125,6 +134,7 @@ void save_config()
     fprintf(fp, "do popup: %i\n", info.popup.do_popup);   
     fprintf(fp, "popup pos: %i\n", info.popup.position);
     fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);
+    fprintf(fp, "popup state: %i\n", info.popup.show_state);
     fclose(fp);
     g_free(filename);    
     }

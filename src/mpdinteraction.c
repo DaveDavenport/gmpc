@@ -5,7 +5,7 @@
 #include "main.h"
 
 /* the internall data structure */
-internal_data info = {NULL, NULL,NULL, TRUE,-1, -1, -1, -1, 1, NULL, NULL, FALSE, FALSE, "",0,NULL, NULL,NULL, NULL,NULL, NULL,NULL,"/", -1,0,0,FALSE, {1,0, NULL,0,0,FALSE}};
+internal_data info = {NULL, NULL,NULL, TRUE,-1, -1, -1, -1, 1, NULL, NULL, FALSE, FALSE, "",0,NULL, NULL,NULL, NULL,NULL, NULL,NULL,"/", 0,0,0,FALSE, {1,FALSE,0, NULL,0,0,FALSE}};
 
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 int update_mpd_status()

@@ -35,6 +35,7 @@ void expand_artist_tree();
 void collapse_artist_tree();
 void add_selected_id3_browser();
 void add_selected_search();
+int hide_playlist_view();
 
 char * shorter_string(const char *long_string)
 {
@@ -360,7 +361,10 @@ void create_playlist()
 			g_free(buf);
 			g_free(buf2);
 		}
-	}	
+	}
+	info.playlist_view_hidden = !info.playlist_view_hidden;
+	hide_playlist_view();
+	
 	/* ok.. now show the main window */
 	gtk_widget_show(glade_xml_get_widget(xml_playlist_window, "playlist_window"));
 	/* update the information tab */
@@ -857,18 +861,21 @@ int current_playlist_mouse_event(GtkWidget *tree, GdkEventButton *event)
 	return FALSE;
 }
 
-int hide_playlist_view(GtkWidget *tree, GdkEventButton *event)
+int hide_playlist_view()
 {
-	GtkWidget *vbox = glade_xml_get_widget(xml_playlist_window, "hpaned1");
-	if(tree == vbox && event->button != 3) return FALSE;
-	if(info.playlist_view_hidden == -1 || gtk_paned_get_position(GTK_PANED(vbox)) > 0)
+	GtkWidget *vbox = glade_xml_get_widget(xml_playlist_window, "playlist_vbox");
+	if(info.playlist_view_hidden == FALSE)
 	{
-		info.playlist_view_hidden = gtk_paned_get_position(GTK_PANED(vbox));
-		gtk_paned_set_position(GTK_PANED(vbox), 0);
+		gtk_widget_hide(vbox);
+		gtk_arrow_set(GTK_ARROW(glade_xml_get_widget(xml_playlist_window, "arrow1")), 
+				GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+		info.playlist_view_hidden = TRUE;
 	}
 	else {
-		gtk_paned_set_position(GTK_PANED(vbox), info.playlist_view_hidden);
-		info.playlist_view_hidden = -1;
+		gtk_widget_show(vbox);
+		gtk_arrow_set(GTK_ARROW(glade_xml_get_widget(xml_playlist_window, "arrow1")), 
+				GTK_ARROW_LEFT, GTK_SHADOW_NONE);                             	
+		info.playlist_view_hidden = FALSE;
 	}
 	return TRUE;
 }
@@ -1111,9 +1118,15 @@ int file_browser_activate(GtkWidget *tree)
 void file_browser_add_button()
 {
 	GtkWidget *tree = glade_xml_get_widget(xml_playlist_window, "treeview_dirs");
-	add_song_file_browser(NULL, tree);
-	tree = glade_xml_get_widget(xml_playlist_window, "treeview_files");
-	add_song_file_browser(NULL, tree);                                        	
+	if(gtk_widget_is_focus(tree))
+	{
+		add_song_file_browser(NULL, tree);
+	}
+	else
+	{
+		tree = glade_xml_get_widget(xml_playlist_window, "treeview_files");
+		add_song_file_browser(NULL, tree);    
+	}	
 }
 
 int file_browser_mouse_event(GtkWidget *tree, GdkEventButton *event)
@@ -1161,7 +1174,7 @@ void expand_artist_tree()
 
 void add_selected_id3_browser()
 {
-	
+
 	GtkWidget * tree = glade_xml_get_widget(xml_playlist_window, "id3_artist_tree");
 	if(gtk_widget_is_focus(tree))
 	{

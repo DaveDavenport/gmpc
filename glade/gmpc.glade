@@ -770,7 +770,7 @@
 		    <widget class="GtkTable" id="table8">
 		      <property name="border_width">12</property>
 		      <property name="visible">True</property>
-		      <property name="n_rows">2</property>
+		      <property name="n_rows">3</property>
 		      <property name="n_columns">2</property>
 		      <property name="homogeneous">False</property>
 		      <property name="row_spacing">6</property>
@@ -815,8 +815,8 @@
 			<packing>
 			  <property name="left_attach">0</property>
 			  <property name="right_attach">1</property>
-			  <property name="top_attach">1</property>
-			  <property name="bottom_attach">2</property>
+			  <property name="top_attach">2</property>
+			  <property name="bottom_attach">3</property>
 			  <property name="x_options">fill</property>
 			  <property name="y_options"></property>
 			</packing>
@@ -868,6 +868,28 @@
 			</widget>
 			<packing>
 			  <property name="left_attach">1</property>
+			  <property name="right_attach">2</property>
+			  <property name="top_attach">2</property>
+			  <property name="bottom_attach">3</property>
+			  <property name="x_options">fill</property>
+			  <property name="y_options"></property>
+			</packing>
+		      </child>
+
+		      <child>
+			<widget class="GtkCheckButton" id="ck_show_state">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Show State</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="show_state_changed" last_modification_time="Sat, 28 Feb 2004 16:43:34 GMT"/>
+			</widget>
+			<packing>
+			  <property name="left_attach">0</property>
 			  <property name="right_attach">2</property>
 			  <property name="top_attach">1</property>
 			  <property name="bottom_attach">2</property>
@@ -1475,12 +1497,11 @@
       <property name="enable_popup">False</property>
 
       <child>
-	<widget class="GtkHPaned" id="hpaned1">
+	<widget class="GtkHBox" id="hbox30">
 	  <property name="border_width">6</property>
 	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="position">0</property>
-	  <signal name="button_press_event" handler="hide_playlist_view" last_modification_time="Mon, 13 Oct 2003 15:52:39 GMT"/>
+	  <property name="homogeneous">False</property>
+	  <property name="spacing">0</property>
 
 	  <child>
 	    <widget class="GtkVBox" id="playlist_vbox">
@@ -1555,33 +1576,6 @@
 		      <property name="fill">False</property>
 		    </packing>
 		  </child>
-
-		  <child>
-		    <widget class="GtkButton" id="button29">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Hide The playlists browser</property>
-		      <property name="can_focus">True</property>
-		      <property name="relief">GTK_RELIEF_NORMAL</property>
-		      <signal name="clicked" handler="hide_playlist_view" last_modification_time="Sat, 28 Feb 2004 13:36:40 GMT"/>
-
-		      <child>
-			<widget class="GtkArrow" id="arrow1">
-			  <property name="visible">True</property>
-			  <property name="arrow_type">GTK_ARROW_LEFT</property>
-			  <property name="shadow_type">GTK_SHADOW_OUT</property>
-			  <property name="xalign">0.5</property>
-			  <property name="yalign">0.5</property>
-			  <property name="xpad">0</property>
-			  <property name="ypad">0</property>
-			</widget>
-		      </child>
-		    </widget>
-		    <packing>
-		      <property name="padding">0</property>
-		      <property name="expand">False</property>
-		      <property name="fill">False</property>
-		    </packing>
-		  </child>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -1619,8 +1613,48 @@
 	      </child>
 	    </widget>
 	    <packing>
-	      <property name="shrink">True</property>
-	      <property name="resize">False</property>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkVBox" id="vbox11">
+	      <property name="height_request">32</property>
+	      <property name="visible">True</property>
+	      <property name="homogeneous">False</property>
+	      <property name="spacing">6</property>
+
+	      <child>
+		<widget class="GtkEventBox" id="eventbox2">
+		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Hide/Show the playlists browser</property>
+		  <signal name="button_press_event" handler="hide_playlist_view" last_modification_time="Sat, 28 Feb 2004 16:08:18 GMT"/>
+
+		  <child>
+		    <widget class="GtkArrow" id="arrow1">
+		      <property name="visible">True</property>
+		      <property name="arrow_type">GTK_ARROW_LEFT</property>
+		      <property name="shadow_type">GTK_SHADOW_NONE</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">1</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
 	    </packing>
 	  </child>
 
@@ -1882,15 +1916,15 @@
 	      </child>
 	    </widget>
 	    <packing>
-	      <property name="shrink">True</property>
-	      <property name="resize">True</property>
+	      <property name="padding">0</property>
+	      <property name="expand">True</property>
+	      <property name="fill">True</property>
 	    </packing>
 	  </child>
 	</widget>
 	<packing>
 	  <property name="tab_expand">False</property>
 	  <property name="tab_fill">True</property>
-	  <property name="menu_label" translatable="yes"></property>
 	</packing>
       </child>
 
@@ -2004,7 +2038,7 @@
 		  <property name="tooltip" translatable="yes">Add the selected Directories and songs</property>
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <signal name="clicked" handler="file_browser_add_button" last_modification_time="Sat, 28 Feb 2004 13:20:56 GMT"/>
+		  <signal name="button_press_event" handler="file_browser_add_button" last_modification_time="Sat, 28 Feb 2004 15:54:19 GMT"/>
 
 		  <child>
 		    <widget class="GtkAlignment" id="alignment9">

@@ -4,6 +4,7 @@ extern GladeXML *xml_main_window;
 typedef struct
 {
 	gboolean do_popup;
+	gboolean show_state;
 	gint position;
 	GdkPixbuf *gmpc_image;
 	gint pixbuf_width, pixbuf_height;
@@ -49,7 +50,7 @@ typedef struct
 	GtkTreeStore *id3_album_list;
 	gchar path[1024];
 	/* playlists view hidden */
-	gint playlist_view_hidden;
+	gboolean playlist_view_hidden;
 	guint64 total_number_of_songs;
 	guint64	total_playtime; 
 	/* tray icon*/
