@@ -8,6 +8,7 @@
 #include "open-location.h"
 
 GladeXML *ol_xml = NULL;
+extern GladeXML *pl2_xml;
 
 void ol_destroy()
 {
@@ -55,12 +56,12 @@ void ol_create(GtkWidget *wid)
 	}
 	ol_xml = glade_xml_new(GLADE_PATH"open-location.glade", "add_location",NULL);
 	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), 
-			GTK_WINDOW(gtk_widget_get_toplevel(wid)));
+			GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")));
 
-	gtk_window_set_position(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), GTK_WIN_POS_CENTER_ON_PARENT);
+//	gtk_window_set_position(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), GTK_WIN_POS_CENTER_ON_PARENT);
 		
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(ol_xml, "image")), "media-stream", GTK_ICON_SIZE_DIALOG);
 
-	gtk_widget_show_all(glade_xml_get_widget(ol_xml, "add_location"));
+//	gtk_widget_show_all(glade_xml_get_widget(ol_xml, "add_location"));
 	glade_xml_signal_autoconnect(ol_xml);	
 }

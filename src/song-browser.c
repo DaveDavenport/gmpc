@@ -307,6 +307,9 @@ void sb_fill_browser_id3()
 				nalbum++;
 			}
 			while(gtk_events_pending()) gtk_main_iteration();
+			/* check if the users hasn't closed the interface */
+			if(sb_xml == NULL) return;
+			
 			if(nalbum == 0)
 			{
 				mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
@@ -377,7 +380,8 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent)
 	}
 
 	while(gtk_events_pending()) gtk_main_iteration();
-
+	/* check if the users hasn't closed the interface */
+	if(sb_xml == NULL) return;
 
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter,parent))
 	{
