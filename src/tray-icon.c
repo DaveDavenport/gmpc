@@ -23,7 +23,7 @@ guint tray_timeout = -1;
 /**/
 gchar *tray_get_tooltip_text()
 {
-	GString *string = g_string_new("<tt>");
+	GString *string = g_string_new("");
 	gchar result[1024];
 	gchar *retval;
 	int id;
@@ -64,7 +64,6 @@ gchar *tray_get_tooltip_text()
 			id++;
 		}
 	}
-	g_string_append(string, "</tt>");
 	/* return a string (that needs to be free'd */
 	retval = string->str;
 	g_string_free(string, FALSE);

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-13 17:38+0200\n"
+"POT-Creation-Date: 2004-08-22 13:26+0200\n"
 "PO-Revision-Date: 2004-07-04 00:28+0200\n"
 "Last-Translator: Mathieu Doidy <mdoidy@roulaize.net>\n"
 "Language-Team: French\n"
@@ -20,8 +20,8 @@ msgstr "Une interface gnome pour le démon mpd"
 
 #. set up tray icon
 #: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:126
-#: src/player.c:269 src/player.c:270 src/player.c:290 src/tray-icon.c:80
-#: src/tray-icon.c:189 src/tray-icon.c:217
+#: src/player.c:269 src/player.c:270 src/player.c:290 src/tray-icon.c:325
+#: src/tray-icon.c:434
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -578,7 +578,7 @@ msgstr "Volume %i%%"
 msgid "Couldnt initialize GUI. Please check installation\n"
 msgstr "Impossible d'initialiser l'IUG. Veuillez vérifier votre installation\n"
 
-#: src/main.c:251
+#: src/main.c:258
 msgid "MPD is updating the database, please wait"
 msgstr ""
 "MPD est en train de mettre à jour sa base de données, veuillez patienter"
@@ -638,7 +638,7 @@ msgstr ""
 "<span size\"x-small\"><i>La lecture des informations sur le fichier a echoué."
 "</i></span>"
 
-#: src/open-location.c:181
+#: src/open-location.c:182
 msgid "<span size=\"x-small\"><i>Invalid link format</i></span>"
 msgstr "<span size=\"x-small\"><i>Format du lien non valide</i></span>"
 

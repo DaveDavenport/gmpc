@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-13 17:38+0200\n"
+"POT-Creation-Date: 2004-08-22 13:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 
 #. set up tray icon
 #: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:126
-#: src/player.c:269 src/player.c:270 src/player.c:290 src/tray-icon.c:80
-#: src/tray-icon.c:189 src/tray-icon.c:217
+#: src/player.c:269 src/player.c:270 src/player.c:290 src/tray-icon.c:325
+#: src/tray-icon.c:434
 msgid "Gnome Music Player Client"
 msgstr ""
 
@@ -525,7 +525,7 @@ msgstr ""
 msgid "Couldnt initialize GUI. Please check installation\n"
 msgstr ""
 
-#: src/main.c:251
+#: src/main.c:258
 msgid "MPD is updating the database, please wait"
 msgstr ""
 
@@ -581,7 +581,7 @@ msgstr ""
 msgid "<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>"
 msgstr ""
 
-#: src/open-location.c:181
+#: src/open-location.c:182
 msgid "<span size=\"x-small\"><i>Invalid link format</i></span>"
 msgstr ""
 

@@ -1,3 +1,0 @@
-* 	In browser window in any mode, if someone has the parent and some (or all) children highlighted of a branch, add all items of just once.  
-	for example, if one highlights artist "Oasis" and all their songs, it should only add all the songs of oasis once, not twice).
-* 	"Artist, Album, Filename, Title" selector (doesn't seems to be possible)

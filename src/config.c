@@ -8,194 +8,192 @@
 #include "main.h"
 #define CONFIG ".gmpc.cfg"
 
-void
-load_config ()
+void load_config ()
 {
-  gchar *filename = g_strdup_printf ("%s/%s", g_getenv ("HOME"), CONFIG);
-  FILE *fp;
-  gchar buffer[1024];
-  fp = fopen (filename, "r");
-  if (fp == NULL)
-    {
-      g_free (filename);
-      return;
-    }
-  memset (buffer, '\0', 1024);
-  while (fgets (buffer, 1024, fp))
-    {
+	gchar *filename = g_strdup_printf ("%s/%s", g_getenv ("HOME"), CONFIG);
+	FILE *fp;
+	gchar buffer[1024];
+	fp = fopen (filename, "r");
+	if (fp == NULL)
+	{
+		g_free (filename);
+		return;
+	}
+	memset (buffer, '\0', 1024);
+	while (fgets (buffer, 1024, fp))
+	{
 
-      if (!strncmp (buffer, "host:", 5))
-	{
-	  gchar *buf = g_strstrip (&buffer[5]);
-	  if (buf != NULL)
-	    {
-	      memset (preferences.host, '\0', 256);
-	      strncpy (preferences.host, buf, MIN (strlen (buf), 256));
-	    }
-	}
-
-      else if (!strncmp (buffer, "port:", 5))
-	{
-	  preferences.port = atoi (&buffer[5]);
-	}
-      else if (!strncmp (buffer, "timeout:", 8))
-	{
-	  preferences.timeout = (float) g_strtod (&buffer[8], NULL);
-	}
-      else if (!strncmp (buffer, "auto-connect:", 13))
-	{
-	  preferences.autoconnect = atoi (&buffer[13]);
-	}
-      else if (!strncmp (buffer, "do tray:", 8))
-	{
-	  gchar *buf = g_strstrip (&buffer[8]);
-	  if (buf != NULL)
-	    {
-	      info.do_tray = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "time format:", 12))
-	{
-	  gchar *buf = g_strstrip (&buffer[12]);
-	  if (buf != NULL)
-	    {
-	      info.time_format = atoi (buf);
-	    }
-	}
-
-
-      else if (!strncmp (buffer, "do popup:", 9))
-	{
-	  gchar *buf = g_strstrip (&buffer[9]);
-	  if (buf != NULL)
-	    {
-	      info.popup.do_popup = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "popup pos:", 10))
-	{
-	  gchar *buf = g_strstrip (&buffer[10]);
-	  if (buf != NULL)
-	    {
-	      info.popup.position = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "popup stay:", 11))
-	{
-	  gchar *buf = g_strstrip (&buffer[11]);
-	  if (buf != NULL)
-	    {
-	      info.popup.popup_stay = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "popup state:", 12))
-	{
-	  gchar *buf = g_strstrip (&buffer[12]);
-	  if (buf != NULL)
-	    {
-	      info.popup.show_state = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "popup timeout:", 14))
-	{
-	  gchar *buf = g_strstrip (&buffer[14]);
-	  if (buf != NULL)
-	    {
-	      info.popup.timeout = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "use auth:", 9))
-	{
-	  gchar *buf = g_strstrip (&buffer[9]);
-	  if (buf != NULL)
-	    {
-	      preferences.user_auth = atoi (buf);
-	    }
-	}
-      else if (!strncmp (buffer, "auth pass:", 10))
-	{
-	  gchar *buf = g_strstrip (&buffer[10]);
-	  if (buf != NULL)
-	    {
-	      memset (preferences.password, '\0', 256);
-	      strncpy (preferences.password, buf, MIN (strlen (buf), 256));
-	    }
-	}
-
-      else if (!strncmp (buffer, "markup main display:", 20))
-	{
-	  gchar *buf = g_strstrip (&buffer[20]);
-	  if (buf != NULL)
-	    {
-	      if (preferences.markup_main_display != NULL)
+		if (!strncmp (buffer, "host:", 5))
 		{
-		  g_free (preferences.markup_main_display);
+			gchar *buf = g_strstrip (&buffer[5]);
+			if (buf != NULL)
+			{
+				memset (preferences.host, '\0', 256);
+				strncpy (preferences.host, buf, MIN (strlen (buf), 256));
+			}
 		}
-	      preferences.markup_main_display = g_strdup (buf);
-	    }
-	}
-     else if (!strncmp (buffer, "markup playlist:", 16))
-	{
-	  gchar *buf = g_strstrip (&buffer[16]);
-	  if (buf != NULL)
-	    {
-	      if (preferences.markup_playlist != NULL)
+
+		else if (!strncmp (buffer, "port:", 5))
 		{
-		  g_free (preferences.markup_playlist);
+			preferences.port = atoi (&buffer[5]);
 		}
-	      preferences.markup_playlist = g_strdup (buf);
-	    }
-	}
-     else if (!strncmp (buffer, "markup song browser:", 20))
-	{
-	  gchar *buf = g_strstrip (&buffer[20]);
-	  if (buf != NULL)
-	    {
-	      if (preferences.markup_song_browser != NULL)
+		else if (!strncmp (buffer, "timeout:", 8))
 		{
-		  g_free (preferences.markup_song_browser);
+			preferences.timeout = (float) g_strtod (&buffer[8], NULL);
 		}
-	      preferences.markup_song_browser = g_strdup (buf);
-	    }
+		else if (!strncmp (buffer, "auto-connect:", 13))
+		{
+			preferences.autoconnect = atoi (&buffer[13]);
+		}
+		else if (!strncmp (buffer, "do tray:", 8))
+		{
+			gchar *buf = g_strstrip (&buffer[8]);
+			if (buf != NULL)
+			{
+				info.do_tray = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "time format:", 12))
+		{
+			gchar *buf = g_strstrip (&buffer[12]);
+			if (buf != NULL)
+			{
+				info.time_format = atoi (buf);
+			}
+		}
+
+
+		else if (!strncmp (buffer, "do popup:", 9))
+		{
+			gchar *buf = g_strstrip (&buffer[9]);
+			if (buf != NULL)
+			{
+				info.popup.do_popup = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "popup pos:", 10))
+		{
+			gchar *buf = g_strstrip (&buffer[10]);
+			if (buf != NULL)
+			{
+				info.popup.position = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "popup stay:", 11))
+		{
+			gchar *buf = g_strstrip (&buffer[11]);
+			if (buf != NULL)
+			{
+				info.popup.popup_stay = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "popup state:", 12))
+		{
+			gchar *buf = g_strstrip (&buffer[12]);
+			if (buf != NULL)
+			{
+				info.popup.show_state = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "popup timeout:", 14))
+		{
+			gchar *buf = g_strstrip (&buffer[14]);
+			if (buf != NULL)
+			{
+				info.popup.timeout = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "use auth:", 9))
+		{
+			gchar *buf = g_strstrip (&buffer[9]);
+			if (buf != NULL)
+			{
+				preferences.user_auth = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "auth pass:", 10))
+		{
+			gchar *buf = g_strstrip (&buffer[10]);
+			if (buf != NULL)
+			{
+				memset (preferences.password, '\0', 256);
+				strncpy (preferences.password, buf, MIN (strlen (buf), 256));
+			}
+		}
+
+		else if (!strncmp (buffer, "markup main display:", 20))
+		{
+			gchar *buf = g_strstrip (&buffer[20]);
+			if (buf != NULL)
+			{
+				if (preferences.markup_main_display != NULL)
+				{
+					g_free (preferences.markup_main_display);
+				}
+				preferences.markup_main_display = g_strdup (buf);
+			}
+		}
+		else if (!strncmp (buffer, "markup playlist:", 16))
+		{
+			gchar *buf = g_strstrip (&buffer[16]);
+			if (buf != NULL)
+			{
+				if (preferences.markup_playlist != NULL)
+				{
+					g_free (preferences.markup_playlist);
+				}
+				preferences.markup_playlist = g_strdup (buf);
+			}
+		}
+		else if (!strncmp (buffer, "markup song browser:", 20))
+		{
+			gchar *buf = g_strstrip (&buffer[20]);
+			if (buf != NULL)
+			{
+				if (preferences.markup_song_browser != NULL)
+				{
+					g_free (preferences.markup_song_browser);
+				}
+				preferences.markup_song_browser = g_strdup (buf);
+			}
+		}
+		else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
+		{
+			gchar *buf = g_strstrip (&buffer[20]);
+			if (buf != NULL)
+			{
+				info.pl2_tooltip = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "pl2 do tooltip:", 15))
+		{
+			gchar *buf = g_strstrip (&buffer[15]);
+			if (buf != NULL)
+			{
+				info.pl2_do_tooltip = atoi (buf);
+			}
+		}
+		else if (!strncmp (buffer, "rounded corners:", 16))
+		{
+			gchar *buf = g_strstrip (&buffer[16]);
+			if (buf != NULL)
+			{
+				info.rounded_corners = atoi (buf);
+			}
+		}
+
+
+
+
+
+		memset (buffer, '\0', 1024);
+
 	}
-      else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
-      {
-	      gchar *buf = g_strstrip (&buffer[20]);
-	      if (buf != NULL)
-	      {
-		      info.pl2_tooltip = atoi (buf);
-	      }
-      }
-      else if (!strncmp (buffer, "pl2 do tooltip:", 15))
-      {
-	      gchar *buf = g_strstrip (&buffer[15]);
-	      if (buf != NULL)
-	      {
-		      info.pl2_do_tooltip = atoi (buf);
-	      }
-      }
-      else if (!strncmp (buffer, "rounded corners:", 16))
-      {
-	      gchar *buf = g_strstrip (&buffer[16]);
-	      if (buf != NULL)
-	      {
-		      info.rounded_corners = atoi (buf);
-	      }
-      }
-
-
-      
-
-
-      memset (buffer, '\0', 1024);
-
-    }
-  fclose (fp);
-  g_free (filename);
+	fclose (fp);
+	g_free (filename);
 }
 
-	void
-save_config ()
+void save_config ()
 {
 	gchar *filename = g_strdup_printf ("%s/%s", g_getenv ("HOME"), CONFIG);
 	FILE *fp;
