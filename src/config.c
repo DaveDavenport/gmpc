@@ -177,8 +177,16 @@ void load_config ()
 				info.xiph_url = g_strcompress (buf);
 			}
 		}
-
-		
+		else if (!strncmp (buffer, "online stream url:", 18))
+		{
+			gchar *buf = g_strstrip (&buffer[18]);
+			if (buf != NULL)
+			{
+				info.online_streams++;
+				info.online_stream_list = g_realloc(info.online_stream_list, info.online_streams*sizeof(gchar *));
+				info.online_stream_list[info.online_streams-1] = g_strcompress (buf);
+			}
+		}                                                   		
 		else if (!strncmp (buffer, "pl2 tooltip timeout:", 20))
 		{
 			gchar *buf = g_strstrip (&buffer[20]);
@@ -230,6 +238,7 @@ void save_config ()
 	gchar *filename = g_strdup_printf ("%s/%s", g_getenv ("HOME"), CONFIG);
 	FILE *fp;
 	char *escaped;
+	int i = 0;
 
 	fp = fopen (filename, "w");
 	if (fp == NULL)
@@ -263,6 +272,13 @@ void save_config ()
 	escaped = g_strescape(info.xiph_url, "");
 	fprintf(fp, "xiph_url: %s\n", escaped);
 	g_free(escaped);
+	for(i=0; i < info.online_streams;i++)
+	{
+		escaped = g_strescape(info.online_stream_list[i], "");
+		fprintf(fp, "online stream url: %s\n", escaped);
+		g_free(escaped);
+
+	}
 	fprintf (fp, "pl2 do tooltip: %i\n", info.pl2_do_tooltip);
 	fprintf (fp, "pl2 tooltip timeout: %i\n", info.pl2_tooltip);	
 	fprintf (fp, "rounded corners: %i\n", info.rounded_corners);

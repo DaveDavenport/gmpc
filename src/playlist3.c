@@ -21,6 +21,9 @@ GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
 extern GtkListStore *pl2_store;
 
+/* size */
+GtkAllocation pl3_wsize = { 0,0,0,0};
+
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
 /****************************************************************/
@@ -291,31 +294,6 @@ void pl3_custom_stream_remove()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /************************************
  * XIPH BROWSER
  */
@@ -335,9 +313,13 @@ void pl3_xiph_add()
 
 void pl3_xiph_fill_view(char *buffer)
 {
-	xmlDocPtr xmldoc = xmlParseMemory(buffer, strlen(buffer));
-	xmlNodePtr root = xmlDocGetRootElement(xmldoc);
-	xmlNodePtr cur = root->xmlChildrenNode;
+	xmlDocPtr xmldoc;
+	xmlNodePtr root;
+	xmlNodePtr cur;
+	
+	xmldoc = xmlParseMemory(buffer, strlen(buffer));
+	root = xmlDocGetRootElement(xmldoc);
+	cur = root->xmlChildrenNode;
 	while(cur != NULL)
 	{
 		if(xmlStrEqual(cur->name, "entry"))
@@ -1774,16 +1756,6 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
  * MISC
  */
 
-
-
-
-
-
-
-
-
-
-
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 
@@ -1940,33 +1912,39 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 }
 
 
-int pl3_pop_statusbar_message()
+int pl3_pop_statusbar_message(gpointer data)
 {
-
-	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), 0);
+	gint id = GPOINTER_TO_INT(data);
+	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
 	return FALSE;
 }
 
 
 void pl3_push_statusbar_message(char *mesg)
 {
+	gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
 	/* message auto_remove after 5 sec */
-	g_timeout_add(5000,(GSourceFunc)pl3_pop_statusbar_message, NULL);
-	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), 0,mesg);
+	g_timeout_add(5000,(GSourceFunc)pl3_pop_statusbar_message, GINT_TO_POINTER(id));
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
 }
 
 
-
-
-
-void pl3_close()
+int pl3_close()
 {
 	if(pl3_xml != NULL)
 	{
-
+		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
+		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+                                                                                                                               		
+		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
+			return TRUE;
+		}
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));	
-		return;
+		return TRUE;
 	}
+	return TRUE;
 }
 
 /* create the playlist view 
@@ -1982,7 +1960,8 @@ void create_playlist3 ()
 	GtkTreeIter iter;
 	if(pl3_xml != NULL)
 	{
-
+		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
+		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}
@@ -2087,4 +2066,20 @@ void create_playlist3 ()
 	{
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
+}
+
+/* toggles the playlist on or off */
+/* this should be placed on the player's toggle button */
+gboolean toggle_playlist3(GtkToggleButton *tb)
+{
+	if(gtk_toggle_button_get_active(tb))
+	{
+		create_playlist3();
+	}
+	else
+	{
+		if(pl3_xml == NULL) return FALSE;
+		pl3_close();
+	}
+	return TRUE;
 }

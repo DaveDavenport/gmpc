@@ -6,7 +6,7 @@ void create_playlist3 ();
 void pl3_update();
 void pl3_push_statusbar_message(char *mesg);
 void pl3_disconnect();
-void pl3_close();
+int pl3_close();
 
 
 enum{
@@ -48,6 +48,8 @@ enum pl3_store_types
 	PL3_SONG_STOCK_ID,
 	PL3_NROWS
 } pl3_store_type;
+
+gboolean toggle_playlist3(GtkToggleButton *tb);
 
 
 

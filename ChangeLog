@@ -1,3 +1,9 @@
+24-11-2004 Qball <Qball@qballcow.nl>
+	* src/player.c:		pop/push popup msg is now stack based.
+	* src/playlist3.c:	position is (in session) saved and restored.
+	* src/playlist3.c: 	Push/pop messages are now popped off in the
+	right order.
+
 13-11-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Allow the playlist to be reordered
 	* src/playlist3.c:	Binded I to information about song.

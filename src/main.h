@@ -66,6 +66,10 @@ typedef struct
 	gboolean rounded_corners;
 	/* playlist 3 */
 	gchar *xiph_url;
+	gchar **online_stream_list;
+	gint online_streams;
+
+	
 	gboolean pl3_scroll_to_song;
 } internal_data;
 
@@ -105,6 +109,7 @@ typedef struct 	{
 	char *msg;
 	char *base_msg;
 	char *popup_msg;
+	GQueue *queue;
 	int pos;
 	int up;
 	gboolean exposed;

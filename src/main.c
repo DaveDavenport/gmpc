@@ -141,6 +141,8 @@ set_default_values ()
 
 	/* playlist 3 */
 	info.xiph_url = g_strdup("http://dir.xiph.org/yp.xml");
+	info.online_stream_list = NULL;
+	info.online_streams = 0;
 	preferences.pl3_scroll_to_open = FALSE;
 }
 

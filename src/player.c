@@ -13,7 +13,7 @@
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
 
-scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
+scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE};
 /* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
@@ -29,6 +29,7 @@ void time_exposed(GtkWidget *window)
 	pango_layout_get_size(time_layout, &width, &height);
 	width  = width/PANGO_SCALE;
 	height = height/PANGO_SCALE;
+
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->base_gc[GTK_STATE_NORMAL],
 			TRUE,
@@ -44,6 +45,7 @@ void time_exposed(GtkWidget *window)
 			FALSE,
 			0,0,
 			49,22);
+
 }
 
 
@@ -180,16 +182,25 @@ void msg_set_base(gchar *msg)
 void msg_push_popup(gchar *msg)
 {
 	if(msg == NULL) return;
-	if(scroll.popup_msg != NULL)
+	if(scroll.queue == NULL)
+	{
+		scroll.queue = g_queue_new();
+	}
+/*	if(scroll.popup_msg != NULL)
 	{
 		g_free(scroll.popup_msg);
 		scroll.popup_msg = NULL;
 	}
-	if(!g_utf8_validate(msg, -1, NULL))
+*/	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check youre locale"));
+		g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check youre locale")));
+		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
 	}
-	else	scroll.popup_msg = g_strdup(msg);
+	else
+	{
+		g_queue_push_tail(scroll.queue,g_strdup(msg));
+		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
+	}
 	scroll.exposed = TRUE;
 }
 
@@ -197,8 +208,13 @@ void msg_pop_popup()
 {
 	if(scroll.popup_msg != NULL)
 	{
-		g_free(scroll.popup_msg);
+		char *msg = g_queue_peek_tail(scroll.queue);
+/*		g_free(scroll.popup_msg);
 		scroll.popup_msg = NULL;
+*/		
+		g_queue_pop_tail(scroll.queue);
+		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
+		g_free(msg);
 	}
 	scroll.exposed = TRUE;
 }
@@ -362,6 +378,7 @@ int progress_seek_start()
 		info.conlock = FALSE;
 		return TRUE;
 	}
+	msg_push_popup("Seek To:");
 	return FALSE;
 }
 
@@ -392,6 +409,7 @@ void change_progress_update()
 				buf = g_strdup_printf(_("Seek to -%02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}	
 			else buf = g_strdup_printf(_("Seek to %3.1f%%"), value);
+			msg_pop_popup(buf);
 			msg_push_popup(buf);
 			g_free(buf);
 		}
@@ -427,6 +445,7 @@ int volume_change_start()
 	if(info.conlock) return TRUE;
 	if(info.volume == -1) return TRUE;
 	info.conlock = TRUE;
+	msg_push_popup("Volume: ");
 	return FALSE;
 }
 
@@ -438,6 +457,7 @@ void volume_change_update()
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
 		gchar *buf = g_strdup_printf(_("Volume %i%%"), (int)value);
+		msg_pop_popup();
 		msg_push_popup(buf);
 		g_free(buf);
 

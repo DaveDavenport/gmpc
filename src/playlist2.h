@@ -12,6 +12,8 @@ gboolean toggle_playlist2(GtkToggleButton *tb);
 void mw_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null);
 void pl2_save_playlist();
+
+
 enum store_types
 {
 	SONG_ID,
