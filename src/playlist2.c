@@ -352,6 +352,7 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 	/* trigger updates */
 	main_trigger_update();
 
+	gtk_drag_finish(con, TRUE, FALSE, time);
 	/* */
 	return TRUE;	
 }

@@ -26,6 +26,7 @@ PKG_CHECK_MODULES(gmpc,
 	gobject-2.0
 	gtk+-2.0 
 	libglade-2.0
+	gnome-vfs-2.0
 ])
 
 AC_SUBST(PACKAGE_LIBS)

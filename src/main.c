@@ -112,6 +112,8 @@ int main(int argc, char **argv)
 	load_config();    
 	/* initialize gtk */
 	gtk_init(&argc, &argv);    
+	gnome_vfs_init();
+
 	/* stock icons */
 	init_stock_icons();
 
