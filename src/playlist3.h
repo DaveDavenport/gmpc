@@ -47,6 +47,8 @@ enum pl3_store_types
 	PL3_WEIGHT_INT,
 	PL3_WEIGHT_ENABLE,
 	PL3_SONG_STOCK_ID,
+	PL3_UNKOWN,
+	PL3_YALIGN,
 	PL3_NROWS
 } pl3_store_type;
 

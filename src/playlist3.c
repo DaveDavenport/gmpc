@@ -819,7 +819,7 @@ void pl3_browse_add_selected()
 		{
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter (GTK_TREE_MODEL (pl3_store), &iter, path);
-			gtk_tree_model_get (GTK_TREE_MODEL (pl3_store), &iter, PL3_SONG_ID, &name, 1, &type, -1);	  
+			gtk_tree_model_get (GTK_TREE_MODEL (pl3_store), &iter, 0,&name, 1, &type, -1);	  
 			if(type == PL3_ENTRY_SONG)
 			{
 				/* add them to the add list */
@@ -1897,8 +1897,8 @@ void create_playlist3 ()
 			GTK_SELECTION_MULTIPLE);
 
 
-	pl3_store = gtk_list_store_new (NROWS, 
-			GTK_TYPE_INT,
+	pl3_store = gtk_list_store_new (PL3_NROWS, 
+			GTK_TYPE_STRING,
 			GTK_TYPE_INT,	/* pos id */
 			GTK_TYPE_STRING,	/* song title */
 			GTK_TYPE_INT,	/* color string */
