@@ -27,7 +27,7 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(info.mpdSong != NULL && info.status->state == MPD_STATUS_STATE_PLAY)
+	if(info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP)
 	{
 		strfsong(result, 1024,
 				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
@@ -143,7 +143,6 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
-	g_print("%i %i\n", width, height);
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8+12;
 	gtk_widget_set_usize(tip, width,height);
@@ -161,15 +160,19 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 
 	gtk_widget_show_all(tip);	
 
+	if(tray_timeout != -1) g_source_remove(tray_timeout);
+	tray_timeout = g_timeout_add(800, (GSourceFunc)
+			gtk_widget_queue_draw, tip);
 
-	g_print("%i %i %i %i\n",x, y,msize.width,msize.height);
-	g_print("enter\n");
+
 	return TRUE;
 }
 
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
-	
+
+	if(tray_timeout != -1) g_source_remove(tray_timeout);
+	tray_timeout = -1;
 	if(tip != NULL)
 	{
 		gtk_widget_destroy(tip);
@@ -177,7 +180,6 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 	}
 
 	tip = NULL;
-	g_print("leave\n");
 }
 
 
