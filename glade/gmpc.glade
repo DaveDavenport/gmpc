@@ -11,6 +11,7 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gmpc-tray.png</property>
   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Mon, 06 Oct 2003 00:45:04 GMT"/>
 
   <child>
@@ -353,6 +354,7 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gmpc-tray.png</property>
   <property name="has_separator">False</property>
   <signal name="close" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:11 GMT"/>
   <signal name="destroy_event" handler="preferences_window_destroy" last_modification_time="Wed, 14 Jan 2004 08:02:54 GMT"/>
@@ -1125,6 +1127,7 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gmpc-tray.png</property>
   <signal name="destroy" handler="remove_id3_window" last_modification_time="Fri, 17 Oct 2003 21:26:09 GMT"/>
   <signal name="destroy_event" handler="remove_id3_window" last_modification_time="Fri, 17 Oct 2003 21:28:51 GMT"/>
 
@@ -1572,6 +1575,7 @@
   <property name="default_height">350</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gmpc-tray.png</property>
   <signal name="destroy" handler="destroy_playlist" last_modification_time="Sat, 11 Oct 2003 22:08:45 GMT"/>
   <signal name="delete_event" handler="destroy_playlist" last_modification_time="Sat, 11 Oct 2003 22:08:53 GMT"/>
 
@@ -3736,6 +3740,7 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">gmpc-tray.png</property>
   <property name="has_separator">False</property>
 
   <child internal-child="vbox">

@@ -1,3 +1,9 @@
+06-03-2004 Qball <Qball@qballcow.nl>
+    *	Added support for password authentification with mpd.
+    *	Fixed highlighting bug in playlist.
+    *	Password is saved (plain text) in mpd.
+    *	Added popup-box when there are insufficient permissions to let gmpc be userfull. (less then read).
+
 25-02-2004 qball <Qball@qballcow.nl>
     *	Lots of changes I forgot to changelog
     *	Added popup support. made this configurable via entry in the

@@ -426,7 +426,13 @@ void id3_info()
 		g_free(buf1);
 	}
 
+	if(!gtk_window_set_icon_from_file(GTK_WINDOW(glade_xml_get_widget(xml_id3_window, "id3_info_window")), PIXMAP_PATH"gmpc-tray.png", NULL))
+	    {
+	    g_print("no icon created\n");
+	    }
+	gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "id3_info_window"));
 	glade_xml_signal_autoconnect(xml_id3_window);
+	
 }
 
 /* create the player and connect signals */

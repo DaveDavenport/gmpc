@@ -4,7 +4,8 @@
 #include "libmpdclient.h"
 #include "main.h"
 
-pref_struct preferences = {"127.0.0.1", 2100,FALSE, "",  1.0, FALSE};
+pref_struct preferences;
+/* = {"127.0.0.1", 2100,FALSE, "",  1.0, FALSE};*/
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 
