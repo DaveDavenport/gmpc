@@ -1,4 +1,5 @@
 17-02-2005 Qball <qball@qballcow.nl>
+	* src/tray-icon.c:	Actually make it use libmpd.
 	* src/tray-icon.c:	Make it use libmpd completely
 	* glade/gmpc.glade:	Removed find artist/album from file. 
 	* src/id3info.c:	Make it use libmpd.

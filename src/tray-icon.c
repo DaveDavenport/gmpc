@@ -37,16 +37,16 @@ gchar *tray_get_tooltip_text()
 		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */
-		if(info.status->totalTime != 0)
+		if(mpd_ob_status_get_total_song_time(connection) > 0)
 		{
 			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i/%02i:%02i</span>",
-					info.status->elapsedTime/60, info.status->elapsedTime %60,
-					info.status->totalTime/60, info.status->totalTime %60);
+					mpd_ob_status_get_elapsed_song_time(connection)/60, mpd_ob_status_get_elapsed_song_time(connection) %60,
+					mpd_ob_status_get_total_song_time(connection)/60, mpd_ob_status_get_total_song_time(connection) %60);
 		}
 		else
 		{
 			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i</span>",
-					info.status->elapsedTime/60, info.status->elapsedTime %60);
+					mpd_ob_status_get_elapsed_song_time(connection)/60, mpd_ob_status_get_elapsed_song_time(connection) %60);
 		}
 	}
 	else
@@ -94,12 +94,9 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	height= PANGO_PIXELS(height);
 
 
-	if(info.status != NULL)
+	if(mpd_ob_status_get_total_song_time(connection)> 0)
 	{
-		if(info.status->totalTime != 0)
-		{
-			height = height+12;
-		}
+		height = height+12;
 	}
 
 	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
@@ -243,7 +240,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			return FALSE;
 		}
 	}
-	
+
 
 
 	char *tooltiptext = NULL;
@@ -282,12 +279,9 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8;
-	if(info.status != NULL)
+	if(mpd_ob_status_get_total_song_time(connection) > 0)
 	{
-		if(info.status->totalTime != 0)
-		{
-			height = height+12;
-		}
+		height = height+12;
 	}
 	gtk_widget_set_usize(tip, width,height);
 
@@ -436,7 +430,7 @@ void tray_icon_state_change()
 		return;
 	}
 	gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-	
+
 }
 
 /* if the item was destroyed and the user still wants an icon recreate it */
