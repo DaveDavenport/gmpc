@@ -205,13 +205,19 @@ int update_interface()
 				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
 				{
+					gint weight = PANGO_WEIGHT_NORMAL;
+					if(ent->info.song->id == info.status->songid)
+					{
+						weight = PANGO_WEIGHT_ULTRABOLD;
+					}
+						
 					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
 					gtk_list_store_set(pl2_store, &iter,		
 							SONG_ID,ent->info.song->id, 
 							SONG_POS, ent->info.song->pos,
 							SONG_TITLE,buffer,
 							WEIGHT_ENABLE,TRUE,
-							WEIGHT_INT, PANGO_WEIGHT_NORMAL,
+							WEIGHT_INT, weight,
 							-1); 
 				}
 			}
