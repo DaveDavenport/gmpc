@@ -14,6 +14,7 @@ gmpc_SOURCES=\
 	eggtrayicon.h\
 	eggtrayicon.c\
 	tray-icon.c\
+	popup.c\
 	main.h
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"

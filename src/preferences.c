@@ -8,13 +8,15 @@ pref_struct preferences = {"127.0.0.1", 2100, 1.0, FALSE};
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 
+void tray_enable_toggled(GtkToggleButton *but);
 void preferences_update();
 void popup_enable_toggled(GtkToggleButton *but);
 void popup_position_changed(GtkOptionMenu *om);
 	
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
-void update_progress_window();
+void update_popup_settings();
+void update_tray_settings();
 
 /* creat the preferences window */
 void create_preferences_window()
@@ -56,7 +58,8 @@ void create_preferences_window()
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
 	    gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	    
 	    }
-	update_progress_window();
+	update_popup_settings();
+	update_tray_settings();
 	}
 
 /* destory the preferences window */
@@ -134,7 +137,7 @@ void popup_position_changed(GtkOptionMenu *om)
 	info.popup.position = gtk_option_menu_get_history(om);
 }
 
-void update_progress_window()
+void update_popup_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(xml_preferences_window, "ck_popup_enable"), info.popup.do_popup);
@@ -143,3 +146,24 @@ void update_progress_window()
 			glade_xml_get_widget(xml_preferences_window, "om_popup_position"), info.popup.position);
 
 }
+
+/* this sets all the settings in the notification area preferences correct */
+void update_tray_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(xml_preferences_window, "ck_tray_enable"), info.do_tray);
+}
+
+void tray_enable_toggled(GtkToggleButton *but)
+{
+	info.do_tray = gtk_toggle_button_get_active(but);
+	if(info.do_tray)
+	{
+		create_tray_icon();
+	}
+	else
+	{
+		destroy_tray_icon();
+	}
+}
+

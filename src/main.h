@@ -132,4 +132,9 @@ void save_config();
 
 /* do tray */
 void update_tray_icon();
-void create_tray_icon();
+int create_tray_icon();
+
+/* popup.c: update_popup() */
+void update_popup();
+void destroy_tray_icon();
+

@@ -44,6 +44,8 @@ int update_interface()
     preferences_update();
     /* tray update */
     update_tray_icon();
+    /* update the popup */
+    update_popup();
     /* check if there is an connection. (that is when connection == NULL) */    
     if(info.connection == NULL)
 	{

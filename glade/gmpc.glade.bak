@@ -753,111 +753,220 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkTable" id="table8">
+	    <widget class="GtkVBox" id="vbox9">
 	      <property name="border_width">12</property>
 	      <property name="visible">True</property>
-	      <property name="n_rows">3</property>
-	      <property name="n_columns">2</property>
 	      <property name="homogeneous">False</property>
-	      <property name="row_spacing">6</property>
-	      <property name="column_spacing">6</property>
+	      <property name="spacing">6</property>
 
 	      <child>
-		<widget class="GtkCheckButton" id="ck_popup_enable">
+		<widget class="GtkFrame" id="frame4">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Enable Pop-ups</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		  <property name="active">False</property>
-		  <property name="inconsistent">False</property>
-		  <property name="draw_indicator">True</property>
-		  <signal name="toggled" handler="popup_enable_toggled" last_modification_time="Wed, 25 Feb 2004 22:21:16 GMT"/>
-		</widget>
-		<packing>
-		  <property name="left_attach">0</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">0</property>
-		  <property name="bottom_attach">1</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkLabel" id="label62">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">Position:</property>
-		  <property name="use_underline">False</property>
-		  <property name="use_markup">False</property>
-		  <property name="justify">GTK_JUSTIFY_LEFT</property>
-		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
-		  <property name="xalign">1</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">0</property>
-		  <property name="right_attach">1</property>
-		  <property name="top_attach">1</property>
-		  <property name="bottom_attach">2</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkOptionMenu" id="om_popup_position">
-		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="history">0</property>
+		  <property name="label_xalign">0</property>
+		  <property name="label_yalign">0.5</property>
+		  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
 
 		  <child>
-		    <widget class="GtkMenu" id="menu3">
+		    <widget class="GtkTable" id="table8">
+		      <property name="border_width">12</property>
+		      <property name="visible">True</property>
+		      <property name="n_rows">2</property>
+		      <property name="n_columns">2</property>
+		      <property name="homogeneous">False</property>
+		      <property name="row_spacing">6</property>
+		      <property name="column_spacing">6</property>
 
 		      <child>
-			<widget class="GtkMenuItem" id="upper_left_corner1">
+			<widget class="GtkCheckButton" id="ck_popup_enable">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Upper Left Corner</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Enable</property>
 			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			  <signal name="toggled" handler="popup_enable_toggled" last_modification_time="Wed, 25 Feb 2004 22:21:16 GMT"/>
 			</widget>
+			<packing>
+			  <property name="left_attach">0</property>
+			  <property name="right_attach">2</property>
+			  <property name="top_attach">0</property>
+			  <property name="bottom_attach">1</property>
+			  <property name="x_options">fill</property>
+			  <property name="y_options"></property>
+			</packing>
 		      </child>
 
 		      <child>
-			<widget class="GtkMenuItem" id="lower_left_corner1">
+			<widget class="GtkLabel" id="label62">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Lower Left Corner</property>
-			  <property name="use_underline">True</property>
+			  <property name="label" translatable="yes">Position:</property>
+			  <property name="use_underline">False</property>
+			  <property name="use_markup">False</property>
+			  <property name="justify">GTK_JUSTIFY_LEFT</property>
+			  <property name="wrap">False</property>
+			  <property name="selectable">False</property>
+			  <property name="xalign">1</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
 			</widget>
+			<packing>
+			  <property name="left_attach">0</property>
+			  <property name="right_attach">1</property>
+			  <property name="top_attach">1</property>
+			  <property name="bottom_attach">2</property>
+			  <property name="x_options">fill</property>
+			  <property name="y_options"></property>
+			</packing>
 		      </child>
 
 		      <child>
-			<widget class="GtkMenuItem" id="upper_right_corner1">
+			<widget class="GtkOptionMenu" id="om_popup_position">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Upper Right Corner</property>
-			  <property name="use_underline">True</property>
-			</widget>
-		      </child>
+			  <property name="can_focus">True</property>
+			  <property name="history">0</property>
+			  <signal name="changed" handler="popup_position_changed" last_modification_time="Wed, 25 Feb 2004 22:21:31 GMT"/>
 
-		      <child>
-			<widget class="GtkMenuItem" id="lower_right_corner1">
-			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Lower Right Corner</property>
-			  <property name="use_underline">True</property>
+			  <child>
+			    <widget class="GtkMenu" id="menu3">
+
+			      <child>
+				<widget class="GtkMenuItem" id="upper_left_corner1">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">Upper Left Corner</property>
+				  <property name="use_underline">True</property>
+				</widget>
+			      </child>
+
+			      <child>
+				<widget class="GtkMenuItem" id="lower_left_corner1">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">Lower Left Corner</property>
+				  <property name="use_underline">True</property>
+				</widget>
+			      </child>
+
+			      <child>
+				<widget class="GtkMenuItem" id="upper_right_corner1">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">Upper Right Corner</property>
+				  <property name="use_underline">True</property>
+				</widget>
+			      </child>
+
+			      <child>
+				<widget class="GtkMenuItem" id="lower_right_corner1">
+				  <property name="visible">True</property>
+				  <property name="label" translatable="yes">Lower Right Corner</property>
+				  <property name="use_underline">True</property>
+				</widget>
+			      </child>
+			    </widget>
+			  </child>
 			</widget>
+			<packing>
+			  <property name="left_attach">1</property>
+			  <property name="right_attach">2</property>
+			  <property name="top_attach">1</property>
+			  <property name="bottom_attach">2</property>
+			  <property name="x_options">fill</property>
+			  <property name="y_options"></property>
+			</packing>
 		      </child>
 		    </widget>
 		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label62">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">&lt;b&gt;Pop-up&lt;/b&gt;</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">True</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="type">label_item</property>
+		    </packing>
+		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">1</property>
-		  <property name="bottom_attach">2</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkFrame" id="frame5">
+		  <property name="visible">True</property>
+		  <property name="label_xalign">0</property>
+		  <property name="label_yalign">0.5</property>
+		  <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+
+		  <child>
+		    <widget class="GtkTable" id="table9">
+		      <property name="border_width">12</property>
+		      <property name="visible">True</property>
+		      <property name="n_rows">1</property>
+		      <property name="n_columns">2</property>
+		      <property name="homogeneous">False</property>
+		      <property name="row_spacing">6</property>
+		      <property name="column_spacing">6</property>
+
+		      <child>
+			<widget class="GtkCheckButton" id="ck_tray_enable">
+			  <property name="visible">True</property>
+			  <property name="can_focus">True</property>
+			  <property name="label" translatable="yes">Enable</property>
+			  <property name="use_underline">True</property>
+			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="active">False</property>
+			  <property name="inconsistent">False</property>
+			  <property name="draw_indicator">True</property>
+			</widget>
+			<packing>
+			  <property name="left_attach">0</property>
+			  <property name="right_attach">2</property>
+			  <property name="top_attach">0</property>
+			  <property name="bottom_attach">1</property>
+			  <property name="x_options">fill</property>
+			  <property name="y_options"></property>
+			</packing>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkLabel" id="label63">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">&lt;b&gt;Notification Area Icon&lt;/b&gt;</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">True</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="type">label_item</property>
+		    </packing>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">True</property>
+		  <property name="fill">True</property>
 		</packing>
 	      </child>
 	    </widget>
@@ -870,7 +979,7 @@
 	  <child>
 	    <widget class="GtkLabel" id="label61">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">_Pop up</property>
+	      <property name="label" translatable="yes">_Misc</property>
 	      <property name="use_underline">True</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
