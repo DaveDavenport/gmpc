@@ -197,8 +197,9 @@ int main (int argc, char **argv)
 
 	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
 
-	update_interface ();
+
 	create_tray_icon ();
+	update_interface ();	
 	/*
 	 * Keys
 	 */
@@ -436,7 +437,7 @@ int update_interface ()
 			g_free (path);
 			old_length--;
 		}
-		//pl2_highlight_song ();
+		pl2_highlight_song ();
 
 
 		info.status->song = -1;

@@ -1732,6 +1732,13 @@ void pl3_update()
 	{
 		return;
 	}
+
+	/* if the song changed, or the state highlight the right song */
+	if (info.status->song != info.song || info.state != info.status->state)
+        {
+                pl2_highlight_song ();
+        }
+
 	if(info.playlist_id != info.status->playlist)
 	{
 		gint type = pl3_cat_get_selected_browser();

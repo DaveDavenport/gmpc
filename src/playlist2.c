@@ -111,4 +111,67 @@ pl2_save_playlist ()
 	g_object_unref (xml);
 }
 
+/* this function takes care the right row is highlighted */
+void pl2_highlight_song ()
+{
+	GtkTreeIter iter;
+	gchar *temp;
+	/* check if there is a connection */
+	if (check_connection_state ())
+		return;
+
+	/* unmark the old pos if it exists */
+	if (info.old_pos != -1)
+	{
+		/* create a string so I can get the right iter */
+		temp = g_strdup_printf ("%i", info.old_pos);
+		if (gtk_tree_model_get_iter_from_string
+				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			gint song_id = 0;
+			/* check if we have the song we want */
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,
+					&song_id, -1);
+			/* if the old song is the new song (so tags updated) quit */
+			if (song_id == info.status->songid
+					&& info.status->state == info.state)
+			{
+				g_free (temp);
+				return;
+			}
+			/* unhighlight the song */
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
+					PANGO_WEIGHT_NORMAL, -1);
+		}
+		g_free (temp);
+		/* reset old pos */
+		info.old_pos = -1;
+	}
+	/* check if we need to highlight a song */
+	if (info.status->state != MPD_STATUS_STATE_STOP &&
+			info.status->state != MPD_STATUS_STATE_UNKNOWN &&
+			info.status->song != -1 && info.status->playlistLength > 0)
+	{
+		temp = g_strdup_printf ("%i", info.status->song);
+		if (gtk_tree_model_get_iter_from_string
+				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			gint pos;
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
+					&pos, -1);
+			/* check if we have the right song, if not, print an error */
+			if (pos != info.status->song)
+			{
+				g_print ("Errror %i %i\n", pos, info.status->song);
+			}
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
+					PANGO_WEIGHT_ULTRABOLD, -1);
+		}
+		g_free (temp);
+		/* set highlighted position */
+		info.old_pos = info.status->song;
+	}
+}
+
+
 
