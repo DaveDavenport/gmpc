@@ -513,7 +513,7 @@ init_stock_icons ()
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "player-shuffle.png",
 			NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "player-shuffle", set);
+	gtk_icon_factory_add (factory, "media-random", set);
 	g_object_unref (G_OBJECT (pb));
 
 	/*
@@ -521,7 +521,7 @@ init_stock_icons ()
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "player-repeat.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "player-repeat", set);
+	gtk_icon_factory_add (factory, "media-repeat", set);
 	g_object_unref (G_OBJECT (pb));
 
 

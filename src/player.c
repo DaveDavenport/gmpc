@@ -484,8 +484,14 @@ void create_player()
 	glade_xml_signal_autoconnect(xml_main_window);
 
 	DISPLAY_WIDTH = glade_xml_get_widget(xml_main_window, "entry_image")->allocation.width;
-
-
+	/* set icons from the custom stock set*/
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")), "media-prev", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")), "media-next", GTK_ICON_SIZE_BUTTON);	
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")), "media-stop", GTK_ICON_SIZE_BUTTON);	
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "media-play", GTK_ICON_SIZE_BUTTON);		
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);			
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);			
+	
 	
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);

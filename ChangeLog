@@ -1,3 +1,6 @@
+11-07-2004 Qball < Qball@qballcow.nl>
+	* src/player.c:	All buttons in the main window can now be themed. 
+
 10-07-2004 Qball <Qball@qballcow.nl>
 	* glade/open-location.glade: 	Added tooltips to window saying you can drop files directly from a browser on the window.
 	* glade/add-browser.glade:	Added tooltip to search button.

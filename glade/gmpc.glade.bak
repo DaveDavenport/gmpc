@@ -135,7 +135,7 @@
 		  <accelerator key="z" modifiers="0" signal="clicked"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image1">
+		    <widget class="GtkImage" id="prev_im">
 		      <property name="visible">True</property>
 		      <property name="pixbuf">media-prev.png</property>
 		      <property name="xalign">0.5</property>
@@ -192,7 +192,7 @@
 		  <accelerator key="v" modifiers="0" signal="clicked"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image2">
+		    <widget class="GtkImage" id="stop_im">
 		      <property name="visible">True</property>
 		      <property name="pixbuf">media-stop.png</property>
 		      <property name="xalign">0.5</property>
@@ -220,7 +220,7 @@
 		  <accelerator key="b" modifiers="0" signal="clicked"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image4">
+		    <widget class="GtkImage" id="next_im">
 		      <property name="visible">True</property>
 		      <property name="pixbuf">media-next.png</property>
 		      <property name="xalign">0.5</property>
@@ -262,7 +262,7 @@
 		  <accelerator key="a" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image62">
+		    <widget class="GtkImage" id="rand_im">
 		      <property name="visible">True</property>
 		      <property name="pixbuf">player-shuffle.png</property>
 		      <property name="xalign">0.5</property>
@@ -293,7 +293,7 @@
 		  <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image63">
+		    <widget class="GtkImage" id="rep_im">
 		      <property name="visible">True</property>
 		      <property name="pixbuf">player-repeat.png</property>
 		      <property name="xalign">0.5</property>
