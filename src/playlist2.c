@@ -17,6 +17,12 @@ GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key = NULL;
 int hide_playlist2 (GtkWidget * but);
 
+/* size */
+GtkAllocation pl2_wsize = { 0,0,0,0};
+
+
+
+
 static GtkTargetEntry drag_types[] = {
   {"text/plain", 0, 100}
 };
@@ -399,6 +405,9 @@ pl2_filter_refilter ()
  */
 int hide_playlist2 (GtkWidget * but)
 {
+	gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")), &pl2_wsize.x, &pl2_wsize.y);
+	gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")), &pl2_wsize.width, &pl2_wsize.height);
+	
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
@@ -663,34 +672,33 @@ create_playlist2 ()
   /* if we exists pop the window up */
   if (pl2_xml != NULL)
     {
-      gtk_widget_show_all (glade_xml_get_widget (pl2_xml, "playlist_window"));
-      gtk_window_present (GTK_WINDOW
-			  (glade_xml_get_widget
-			   (pl2_xml, "playlist_window")));
-      return;
+	    gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")), pl2_wsize.x, pl2_wsize.y);
+	    gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl2_xml, "playlist_window")),pl2_wsize.width, pl2_wsize.height);
+	    gtk_widget_show_all (glade_xml_get_widget (pl2_xml, "playlist_window"));
+	    return;
     }
   /* load gui desciption */
   pl2_xml =
-    glade_xml_new (GLADE_PATH "playlist.glade", "playlist_window", NULL);
+	  glade_xml_new (GLADE_PATH "playlist.glade", "playlist_window", NULL);
 
   /* obsolete, but cant hurt either */
   if (pl2_store == NULL)
-    {
-      /* song id, song title */
-      pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
-				      GTK_TYPE_INT,	/* pos id */
-				      GTK_TYPE_STRING,	/* song title */
-				      GTK_TYPE_INT,	/* color string */
-				      G_TYPE_BOOLEAN);	/* enble color */
-    }
+  {
+	  /* song id, song title */
+	  pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
+			  GTK_TYPE_INT,	/* pos id */
+			  GTK_TYPE_STRING,	/* song title */
+			  GTK_TYPE_INT,	/* color string */
+			  G_TYPE_BOOLEAN);	/* enble color */
+  }
 
   tree = glade_xml_get_widget (pl2_xml, "pl_tree");
 
   /* set selection mode, so the user can select more then one row  */
   gtk_tree_selection_set_mode (GTK_TREE_SELECTION
-			       (gtk_tree_view_get_selection
-				(GTK_TREE_VIEW (tree))),
-			       GTK_SELECTION_MULTIPLE);
+		  (gtk_tree_view_get_selection
+		   (GTK_TREE_VIEW (tree))),
+		  GTK_SELECTION_MULTIPLE);
 
   /* set filter */
   pl2_fil = gtk_tree_model_filter_new (GTK_TREE_MODEL (pl2_store), NULL);
@@ -706,8 +714,8 @@ create_playlist2 ()
   column = gtk_tree_view_column_new ();
   gtk_tree_view_column_pack_start (column, renderer, FALSE);
   gtk_tree_view_column_set_attributes (column,
-				       renderer,
-				       "stock-id", SONG_STOCK_ID, NULL);
+		  renderer,
+		  "stock-id", SONG_STOCK_ID, NULL);
 
 
   renderer = gtk_cell_renderer_text_new ();
@@ -715,17 +723,17 @@ create_playlist2 ()
   /* insert the column in the tree */
   gtk_tree_view_column_pack_start (column, renderer, TRUE);
   gtk_tree_view_column_set_attributes (column,
-				       renderer,
-				       "text", SONG_TITLE,
-				       "weight", WEIGHT_INT,
-				       "weight-set", WEIGHT_ENABLE, NULL);
+		  renderer,
+		  "text", SONG_TITLE,
+		  "weight", WEIGHT_INT,
+		  "weight-set", WEIGHT_ENABLE, NULL);
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
   /* set filter function */
   gtk_tree_model_filter_set_visible_func (GTK_TREE_MODEL_FILTER (pl2_fil),
-					  (GtkTreeModelFilterVisibleFunc)
-					  pl2_filter_function, NULL, NULL);
+		  (GtkTreeModelFilterVisibleFunc)
+		  pl2_filter_function, NULL, NULL);
 
 
   /* Dragging */
@@ -734,24 +742,24 @@ create_playlist2 ()
   target.info = 2;
 
   gtk_tree_view_enable_model_drag_source (GTK_TREE_VIEW (tree),
-					  GDK_BUTTON1_MASK, &target, 1,
-					  GDK_ACTION_MOVE);
+		  GDK_BUTTON1_MASK, &target, 1,
+		  GDK_ACTION_MOVE);
   gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW (tree), &target, 1,
-					GDK_ACTION_MOVE);
+		  GDK_ACTION_MOVE);
 
   /* allow playlist (links) to be dragged onto the open-location buttn */
   gtk_drag_dest_set (glade_xml_get_widget (pl2_xml, "button7"),
-		     GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
+		  GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
 
   g_signal_connect (G_OBJECT (glade_xml_get_widget (pl2_xml, "button7")),
-		    "drag_data_received", G_CALLBACK (pl2_drag_data_recieved),
-		    NULL);
+		  "drag_data_received", G_CALLBACK (pl2_drag_data_recieved),
+		  NULL);
 
   /* if where not connected call the disconnect function that will set some highlighting ok */
   if (check_connection_state ())
-    {
-      pl2_disconnect ();
-    }
+  {
+	  pl2_disconnect ();
+  }
 
   /* connect signals that are defined in the gui description */
   glade_xml_signal_autoconnect (pl2_xml);
@@ -759,30 +767,30 @@ create_playlist2 ()
 
 
 /* set some stuff if where connecting */
-void
+	void
 pl2_connect ()
 {
-  if (pl2_xml != NULL)
-    {
-      gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"),
+	if (pl2_xml != NULL)
+	{
+		gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"),
 				TRUE);
-    }
+	}
 }
 
 /* set some stuff if where disconnecting */
-void
+	void
 pl2_disconnect ()
 {
-  /* remove all songs */
-  gtk_list_store_clear (pl2_store);
-  if(pl2_xml != NULL)
-  {
-	  /* set buttons insensitive */
-	  gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"), FALSE);
-  }
-  /* destroy a possible open location window */
-  ol_destroy ();
-  /* hide the add window */
-  sb_close ();
-  sb_disconnect ();
+	/* remove all songs */
+	gtk_list_store_clear (pl2_store);
+	if(pl2_xml != NULL)
+	{
+		/* set buttons insensitive */
+		gtk_widget_set_sensitive (glade_xml_get_widget (pl2_xml, "hb_sens"), FALSE);
+	}
+	/* destroy a possible open location window */
+	ol_destroy ();
+	/* hide the add window */
+	sb_close ();
+	sb_disconnect ();
 }

@@ -15,6 +15,9 @@ scrollname scroll = {NULL, NULL, NULL, 0,0, TRUE};
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
+
+
+
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
 	if(allocation->width != 0) DISPLAY_WIDTH = allocation->width;

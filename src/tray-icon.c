@@ -12,6 +12,10 @@ GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
 GtkTooltips *tps = NULL;
 
+/* size main window (I know odd place)*/
+GtkAllocation player_wsize = {0,0,0,0};
+
+
 /* this draws the actual image to the window */
 /* gtk will call this function when the image is exposed and the data is gone */
 void exposed_signal(GtkWidget *event)
@@ -119,12 +123,23 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	{
 		if(info.hidden )
 		{
-			gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+			//	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), player_wsize.x, player_wsize.y);
+			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),player_wsize.width, player_wsize.height);
+			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
+
+
+
+
 			info.hidden = FALSE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		}
 		else
 		{
+			gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), &player_wsize.x, &player_wsize.y);
+			gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), &player_wsize.width, &player_wsize.height);
+
+
 			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
