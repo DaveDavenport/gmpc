@@ -626,8 +626,9 @@ sb_row_activated ()
 		return;
 	if (add_list != NULL)
 	{
+		GList *song;
 		mpd_sendCommandListBegin (info.connection);
-		GList *song = g_list_first (add_list);
+		song = g_list_first (add_list);
 		do
 		{
 			mpd_sendAddCommand (info.connection, song->data);

@@ -6,29 +6,7 @@ fr<b>Song Formating:</b><b>Affichage des chansons:</b>frGMPC - Connection Er
 Aucune chanson trouvée
 frSong display:Affichage des chansons:fr_Connection_ConnexionfrLower Right CornerCoin en bas à droitefr_Next_Suivantfr_Save_Enregistrerfrgmpc - Preferencesgmpc - PréférencesfrTitle:Titre:frSaves the current playlist.Enregistrer la liste de lecture courantefrLast updated:Dernière mise à jour:frn/an/afrlocalhostlocalhostfrfade time (s):temps de fondu:frToggle random <ctrl+a> or <a>Basculer le mode aléatoire <ctrl+a> ou <a>frCouldnt initialize GUI. Please check installation
 Impossible d'initialiser l'IUG. Veuillez vérifier votre installation
-fr_Update database_Mettre à jour la base de donnéesfrStop <v>Stop <v>fr_Play/Pause_Lecture/Pausefrgmpc - Failed to connect, please check the connection settings.gmpc - La connexion a echoué, Veuillez vérifier les paramètres de connexion.fr_Prev_PrécfrSearch the playlist (supports * and ?) <ctrl+l to select> Chercher dans la liste de lecture (* et ? peuvent être utilisés) <ctrl+l pour sélectionner>frNext <b>Suivant <b>frSearch for songs with this title in the current playlistChercher des chansons ayant ce titre dans la liste de lecture courantefrgmpc - Disconnectedgmpc - DéconnectéfrSearch for songs from this artist in the current playlistChercher des chansons de cette artiste dans la liste de lecture courantefrenable crossfadeactiver le fondu enchainéfrThe  metadata  delimeters  are:
-%name% (for streams)
-%artist% 
-%album%
-%title%
-%track%"
-"%time%"
-"%file%".  
-%shorfile% (filename withouth path and extension)
-The [] operator  is  used  to  group  output  such  that if no metadata delimeters are found or matched between '[' and ']',  then  none of the  characters between '[' and ']' are output.  
-'&' and '|' are logical operators for and and or.  '#'  is  used  to  escape characters.   
-Some  useful examples for format are: "%file%" and "[[%artist% - ]%title%]|[%file]"Les délimiteurs de méta-données sont:
-%nom% (pour les flux)
-%artiste% 
-%album%
-%titre%
-%piste%
-"%temps%"
-"%fichier%".  
-%fichier court% (nom du fichier sans le chemin ni l'extension)
-L'opérateur [] est utilisé pour grouper la sortie de telle sorte que si aucun délimiteur de méta-données n'est trouvé ou trouvé entre '[' et ']', alors aucun des caractères entre '[' et ']' n'est affiché.  
-'&' et '|' sont les opérateurs logiques pour et et ou. '#' est utilisé pour échapper des caractères.   
-Des examples utiles pour le format d'affichage sont: "%fichier%" et "[[%artiste% - ]%titre%]|[%fichier]"frStream:Flux:frCropRognerfrSeek to %02i:%02i/%02i:%02iAller à la position %02i:%02i/%02i:%02ifr<span size="x-small"><i>Failed to read the file.</i></span><span size="x-small"><i>La lecture du fichier a echoué</i></span>frThis format is used in the main display, tray-icon tooltipCe format sera utilisé pour l'affichage principal, l'infobulle de l'icône miniaturiséefr_Update_Mettre à jourfrAre you sure you want to delete the selected playlist?Êtes vous sûr de vouloir supprimer la liste de lecture sélectionnée ?frPosition:Position:frPlay <x or c>Lecture <x ou c>frAre you sure you want to delete the selected search query?Êtes vous sûr de vouloir supprimer la requête de recherche sélectionnée ?frPort:Port:frGnome Music Player ClientGnome Music Player ClientfrAdd _locationAjouter un _emplacementfrfor artists
+fr_Update database_Mettre à jour la base de donnéesfrStop <v>Stop <v>fr_Play/Pause_Lecture/Pausefrgmpc - Failed to connect, please check the connection settings.gmpc - La connexion a echoué, Veuillez vérifier les paramètres de connexion.fr_Prev_PrécfrSearch the playlist (supports * and ?) <ctrl+l to select> Chercher dans la liste de lecture (* et ? peuvent être utilisés) <ctrl+l pour sélectionner>frNext <b>Suivant <b>frSearch for songs with this title in the current playlistChercher des chansons ayant ce titre dans la liste de lecture courantefrgmpc - Disconnectedgmpc - DéconnectéfrSearch for songs from this artist in the current playlistChercher des chansons de cette artiste dans la liste de lecture courantefrenable crossfadeactiver le fondu enchainéfrStream:Flux:frCropRognerfrSeek to %02i:%02i/%02i:%02iAller à la position %02i:%02i/%02i:%02ifr<span size="x-small"><i>Failed to read the file.</i></span><span size="x-small"><i>La lecture du fichier a echoué</i></span>frThis format is used in the main display, tray-icon tooltipCe format sera utilisé pour l'affichage principal, l'infobulle de l'icône miniaturiséefr_Update_Mettre à jourfrPosition:Position:frAre you sure you want to delete the selected playlist?Êtes vous sûr de vouloir supprimer la liste de lecture sélectionnée ?frPlay <x or c>Lecture <x ou c>frAre you sure you want to delete the selected search query?Êtes vous sûr de vouloir supprimer la requête de recherche sélectionnée ?frPort:Port:frGnome Music Player ClientGnome Music Player ClientfrAdd _locationAjouter un _emplacementfrfor artists
 for albums
 for song title
 for filenamepour les artistes

@@ -24,6 +24,7 @@ gmpc_SOURCES=\
 	song-browser.h\
 	open-location.c\
 	open-location.h\
+	list_tooltip.c\
 	main.h
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"

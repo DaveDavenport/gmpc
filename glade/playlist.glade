@@ -152,6 +152,8 @@
 	      <signal name="drag_drop" handler="pl2_row_moved" last_modification_time="Wed, 30 Jun 2004 13:27:35 GMT"/>
 	      <signal name="button_press_event" handler="pl2_button_press_event" last_modification_time="Sun, 04 Jul 2004 20:31:37 GMT"/>
 	      <signal name="key_press_event" handler="pl2_key_pressed" last_modification_time="Tue, 06 Jul 2004 14:48:47 GMT"/>
+	      <signal name="motion_notify_event" handler="mw_motion_cb" last_modification_time="Mon, 02 Aug 2004 21:16:42 GMT"/>
+	      <signal name="leave_notify_event" handler="mw_leave_cb" last_modification_time="Mon, 02 Aug 2004 21:17:04 GMT"/>
 	    </widget>
 	  </child>
 	</widget>

@@ -9,6 +9,8 @@ void pl2_connect();
 int hide_playlist2 ();
 gboolean toggle_playlist2(GtkToggleButton *tb);
 
+void mw_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
+gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null);
 
 enum store_types
 {

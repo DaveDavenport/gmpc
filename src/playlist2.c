@@ -609,10 +609,10 @@ pl2_row_moved (GtkTreeView * tree, GdkDragContext * con, gint x, gint y,
 	/* move every dragged row */
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
+		int i = 0;
 		GList *list = NULL;
 		list = gtk_tree_selection_get_selected_rows (selection, &pl2_fil);
 		list = g_list_last (list);
-		int i = 0;
 		/* start a command list */
 		mpd_sendCommandListBegin (info.connection);
 		do

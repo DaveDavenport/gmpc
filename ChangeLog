@@ -1,3 +1,8 @@
+02-08-2004 Qball <Qball@qballcow.nl>
+	* Applied patches from Pav Lucistnik for compiling on gcc < 3
+	* Added src/list_tooltip.c
+	* Very very basic support for tooltips in playlist window.
+
 13-07-2004 Qball <Qball@qballcow.nl>
 	* glade/gmpc.glade:	Fix typo.
 
