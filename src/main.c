@@ -363,7 +363,6 @@ update_interface ()
 					{
 						info.playlist_playtime += ent->info.song->time;
 					}
-
 					strfsong (buffer, 1024,
 							preferences.
 							markup_playlist,

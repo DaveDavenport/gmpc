@@ -19,7 +19,7 @@
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
-extern GtkTreeModel *pl2_store;
+extern GtkListStore *pl2_store;
 
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
@@ -509,6 +509,48 @@ void pl3_find_search()
  */
 
 
+
+void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter)
+{
+	gint pos, new_pos;
+	gchar *str = NULL;         	
+	gint type = pl3_cat_get_selected_browser();
+	if(type != PL3_CURRENT_PLAYLIST) return;
+	str = gtk_tree_path_to_string(path);
+	
+	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), iter,SONG_POS, &pos, -1);
+	new_pos = atoi(str);
+	if(new_pos > pos ) new_pos --;
+	/* if there wasn't a move action we don't do anything, because this signal is trigged on every row change */
+	if(new_pos == pos) return;
+
+
+	if(!check_connection_state())
+	{
+		mpd_sendMoveCommand(info.connection, pos, new_pos);
+		mpd_finishCommand(info.connection);
+	}
+	gtk_list_store_set(pl2_store,iter, SONG_POS, new_pos, -1);
+	g_free(str);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* add's the toplevel entry for the current playlist view */
 void pl3_current_playlist_add()
 {
@@ -540,10 +582,11 @@ void pl3_current_playlist_delete_selected_songs ()
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
+		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
 		/* start a command list */
 		mpd_sendCommandListBegin (info.connection);
 		/* grab the selected songs */
-		list = gtk_tree_selection_get_selected_rows (selection, &pl2_store);
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
 		/* grab the last song that is selected */
 		llist = g_list_last (list);
 		/* remove every selected song one by one */
@@ -551,9 +594,9 @@ void pl3_current_playlist_delete_selected_songs ()
 		{
 			GtkTreeIter iter;
 			int value;
-			gtk_tree_model_get_iter (pl2_store, &iter,
+			gtk_tree_model_get_iter (model, &iter,
 					(GtkTreePath *) llist->data);
-			gtk_tree_model_get (pl2_store, &iter, SONG_ID, &value, -1);
+			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
 			mpd_sendDeleteIdCommand (info.connection, value);
 		}
 		while ((llist = g_list_previous (llist)));
@@ -1518,6 +1561,7 @@ void pl3_cat_sel_changed()
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "search_box"));
+	gtk_tree_view_set_reorderable(tree, FALSE);
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
@@ -1531,6 +1575,7 @@ void pl3_cat_sel_changed()
 				g_free(string);
 			}
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
+			gtk_tree_view_set_reorderable(tree, TRUE);
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
@@ -2025,6 +2070,8 @@ void create_playlist3 ()
 
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
+
+	g_signal_connect(G_OBJECT(pl2_store), "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
 	/* select the current playlist */
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
