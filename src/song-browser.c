@@ -56,6 +56,31 @@ void sb_do_search()
 	/* check if where still connected */
 	if(check_connection_state()) return;
 
+	/* check if we searched for it before */
+
+	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(sb_search), &iter))
+	{
+		gchar *query;
+		gint st;
+		do{
+			gtk_tree_model_get(GTK_TREE_MODEL(sb_search), &iter, SB_FPATH, &query, SB_NROWS, &st, -1);
+			if(search_type == st && !g_utf8_collate(search_string, query))
+			{
+				/* get the path so we can expand it */
+				GtkTreePath *path;
+				GtkTreeSelection *selection = gtk_tree_view_get_selection(
+						GTK_TREE_VIEW(glade_xml_get_widget(sb_xml, "treeview")));
+				path = gtk_tree_model_get_path(GTK_TREE_MODEL(sb_search), &iter);
+				gtk_tree_view_expand_row(GTK_TREE_VIEW(glade_xml_get_widget(sb_xml, "treeview")),
+						path, FALSE);
+				gtk_tree_selection_select_iter(selection, &iter);	
+				gtk_tree_path_free(path);
+
+				return;
+			}
+		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_search), &iter));
+	}
+
 	/* start the search map in the tree */
 	gtk_tree_store_append(sb_search, &iter, NULL);	
 
@@ -112,6 +137,7 @@ void sb_do_search()
 			SB_DPATH, search_ts,
 			SB_TYPE, 1,
 			SB_PIXBUF, "gtk-find",
+			SB_NROWS, search_type, /* search type */
 			-1);
 }
 
@@ -330,11 +356,12 @@ void song_browser_create()
 				GTK_TYPE_STRING  /* stock -id*/             		
 				);                                           
 
-		sb_search = gtk_tree_store_new(SB_NROWS,
+		sb_search = gtk_tree_store_new(SB_NROWS+1,
 				GTK_TYPE_STRING, /* full path*/
 				GTK_TYPE_STRING, /* display string */
 				GTK_TYPE_INT,	/* 1 for folder 0 for song */
-				GTK_TYPE_STRING  /* stock -id*/
+				GTK_TYPE_STRING,  /* stock -id*/
+				GTK_TYPE_INT	/* search type */
 				);
 		sb_store = sb_file;
 

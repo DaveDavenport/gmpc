@@ -1,4 +1,9 @@
 31-06-2004 Qball <Qball@qballcow.nl>
+	* browse by search now opens an old search if the same search is done
+	again.
+	* removed default focus from close button in song-browser
+	* Added buttons for repeat/shuff
+	* mainwindow 20px smaller
 	* Made mainwindow 20 pixels smaller
 	* changed configure in to depend on gtk+-2.4 and up
 	* Commented most parts of song-browser.c
