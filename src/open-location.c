@@ -33,9 +33,12 @@ void ol_destroy()
 	}
 	ol_xml = NULL;
 }
-void ol_file_close(){}
+void ol_file_close()
+{
+	printf("test\n");
+}
 
-void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buffer)
+void ol_file_read(GnomeVFSAsyncHandle *hand, GnomeVFSResult result, gchar *buffer)
 {
 	if(result == GNOME_VFS_OK)
 	{
@@ -74,15 +77,17 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 			}
 		}
 		g_strfreev(list);
-		gnome_vfs_async_close(handle, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         				
+		printf("gkkkn\n");
+//		gnome_vfs_async_close(hand, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         				
 	}
 	else
 	{
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
 				_("<span size=\"x-small\"><i>Failed to read the file.</i></span>"));       			
 		working = FALSE;
+		printf("fdaljdlk\n");
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
-		gnome_vfs_async_close(handle, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         		
+//		gnome_vfs_async_close(hand, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         		
 	}       
 
 
@@ -91,14 +96,14 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 
 }	
 
-void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer data)
+void ol_file_opened(GnomeVFSAsyncHandle *hand, GnomeVFSResult result, gpointer data)
 {
 	gint size = GPOINTER_TO_INT(data);
 
 	if(result == GNOME_VFS_OK)
 	{
 		gchar *buffer = g_malloc0(size+sizeof(char));
-		gnome_vfs_async_read(handle, buffer, size,(GnomeVFSAsyncReadCallback)ol_file_read, NULL); 
+		gnome_vfs_async_read(hand, buffer, size,(GnomeVFSAsyncReadCallback)ol_file_read, NULL); 
 	}
 	else
 	{
@@ -112,7 +117,7 @@ void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer
 
 
 /* grab the type of file the user entered */
-void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
+void ol_get_fileinfo(GnomeVFSAsyncHandle *hand,GList *results)
 {
 	GnomeVFSGetFileInfoResult *r = results->data;
 
@@ -127,12 +132,13 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 				!g_utf8_collate(r->file_info->mime_type, "audio/pls") ||			
 				!g_utf8_collate(r->file_info->mime_type, "text/plain")) /* plain text isnt a stream, so we are gonna try to parse it */
 		{
+			GnomeVFSURI *uri = gnome_vfs_uri_dup(r->uri);
 			gint size = r->file_info->size;
 			g_print("found m3u file  size: %i \n",(gint)size);
 			if(size == 0) size = MAX_PLAYLIST_SIZE;
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
 					_("<span size=\"x-small\"><i>Found playlist file</i></span>"));
-			gnome_vfs_async_open_uri(&handle1, r->uri,GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
+			gnome_vfs_async_open_uri(&handle, uri,GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
 					(GnomeVFSAsyncOpenCallback) ol_file_opened, GINT_TO_POINTER(size));
 
 
@@ -163,7 +169,6 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 		working = FALSE;
 		add_anyway = TRUE;
 	}
-
 }
 
 
@@ -226,7 +231,7 @@ void ol_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 		p = p->next;
 	}
 
-	gnome_vfs_uri_list_free (list);
+//	gnome_vfs_uri_list_free (list);
 
 	gtk_drag_finish(context, TRUE, FALSE, time);
 }

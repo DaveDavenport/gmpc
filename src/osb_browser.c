@@ -129,7 +129,7 @@ void pl3_xiph_fill_view(char *buffer)
 		{
 			xmlNodePtr cur1 = cur->xmlChildrenNode;
 			GtkTreeIter iter;
-			char *name=NULL, *bitrate=NULL, *genre=NULL;
+			char *string=NULL, *name=NULL, *bitrate=NULL, *genre=NULL;
 			gtk_list_store_append(pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					PL3_SONG_POS, PL3_ENTRY_STREAM, 
@@ -152,15 +152,19 @@ void pl3_xiph_fill_view(char *buffer)
 				}
 				else if(xmlStrEqual(cur1->name, "listen_url"))
 				{
-					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
-
+					string = xmlNodeGetContent(cur1);
+					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, string, -1);
+					xmlFree(string);
 				}
 
 				cur1 = cur1->next;
 			}
-			name = g_strdup_printf("Station: %s\nGenre: %s\nBitrate: %s", name,genre, bitrate);
-			gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, name, -1);
-			g_free(name);
+			string = g_strdup_printf("Station: %s\nGenre: %s\nBitrate: %s", name,genre, bitrate);
+			gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, string, -1);
+			g_free(string);
+			xmlFree(name);
+			xmlFree(genre);
+			xmlFree(bitrate);
 
 		}
 
