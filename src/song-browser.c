@@ -301,7 +301,7 @@ void sb_fill_browser_id3()
 						SB_FPATH,artist,
 						SB_DPATH,string,                        			
 						SB_TYPE, 2,                             			
-						SB_PIXBUF, "",                          		
+						SB_PIXBUF, "media-album",                          		
 						-1);                                    			
 				g_free(string);
 				nalbum++;

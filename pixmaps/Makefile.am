@@ -12,6 +12,7 @@ appicon_DATA = 	tray.png\
 	media-prev.png\
 	gmpc-tray.png\
 	gmpc.png\
+	media-album.png\
 	media-stop.png
 
 DIST_SOURCES = 	tray.png\
@@ -24,6 +25,7 @@ DIST_SOURCES = 	tray.png\
 	gmpc-tray.png\
 	gmpc.png\
 	media-artist.png\
+	media-album.png\
 	media-stop.png
 
 
