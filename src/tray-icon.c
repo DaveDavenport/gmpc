@@ -16,14 +16,190 @@ GtkTooltips *tps = NULL;
 
 /* size main window (I know odd place)*/
 GtkAllocation player_wsize = {0,0,0,0};
+GtkWidget *tip = NULL;
+PangoLayout *tray_layout_tooltip = NULL;
+
+guint tray_timeout = -1;
+/**/
+gchar *tray_get_tooltip_text()
+{
+	GString *string = g_string_new("");
+	gchar result[1024];
+	gchar *retval;
+	int id;
+	if(info.mpdSong != NULL && info.status->state == MPD_STATUS_STATE_PLAY)
+	{
+		strfsong(result, 1024,
+				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
+				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
+				"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]"
+				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]&"
+				"[\n<b>Time:</b>\t%time%]|<b>Filename:</b>\t%shortfile%"
+				"[\n<b>Time:</b>\t\t%time%]|", info.mpdSong);
+		g_string_append(string, result);
+	}
+	else
+	{
+		g_string_append(string,"Gnome Music Player Client");
+	}
+
+	/* escape all & signs... needed for pango */
+	for(id=0;id < string->len; id++)
+	{
+		if(string->str[id] == '&')
+		{
+			g_string_insert(string, id+1, "amp;");
+			id++;
+		}
+	}
+	/* return a string (that needs to be free'd */
+	retval = string->str;
+	g_string_free(string, FALSE);
+	return retval;
+}
+
+void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
+{
+	int width, height;
+	GtkStyle *style;
+	char *tooltiptext = tray_get_tooltip_text();
+	if(tooltiptext == NULL) tooltiptext = g_strdup("oeps");
+	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
+	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
+	pango_layout_set_width(tray_layout_tooltip, 500000);
+	style = widget->style;
+
+	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
+			NULL, widget, "tooltip", 0, 0, -1, -1);
+
+
+	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
+			NULL, widget, "tooltip", 4, 4, tray_layout_tooltip);
+
+
+
+	pango_layout_get_size(tray_layout_tooltip, &width, &height);
+	width= PANGO_PIXELS(width);
+	height= PANGO_PIXELS(height);
+
+
+	if(info.status->elapsedTime != 0)
+	{
+		width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
+	}
+	else
+	{
+		width = 0;
+	}
+	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+			TRUE,4,height+4, width ,8);
+	
+	
+	/*
+	   g_object_unref(layout);
+	   */
+	g_free(tooltiptext);
+	return;
+}
+
+
+
+/*
+ *
+ */
+
+
+gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
+{
+	int width,height;
+	GdkRectangle msize;
+	int x,y;
+	int monitor = gdk_screen_get_monitor_at_window(gtk_widget_get_screen(tv), tv->window);
+	if(tip != NULL) return FALSE;
+
+
+	char *tooltiptext = NULL;
+                                         	
+	tooltiptext = tray_get_tooltip_text();
+	gdk_screen_get_monitor_geometry(gtk_widget_get_screen(tv), monitor, &msize);
+
+
+	tip = gtk_window_new(GTK_WINDOW_POPUP);
+	gtk_widget_set_app_paintable(tip, TRUE);
+
+
+
+
+	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);
+	gtk_widget_set_name(tip, "gtk-tooltips");
+	g_signal_connect(G_OBJECT(tip), "expose_event",
+			G_CALLBACK(tray_paint_tip), NULL);
+	gtk_widget_ensure_style (tip);
+
+	tray_layout_tooltip = gtk_widget_create_pango_layout (tip, NULL);
+	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
+	pango_layout_set_width(tray_layout_tooltip, 500000);
+	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
+
+
+	pango_layout_get_size(tray_layout_tooltip, &width, &height);
+	g_print("%i %i\n", width, height);
+	width= PANGO_PIXELS(width)+8;
+	height= PANGO_PIXELS(height)+8+12;
+	gtk_widget_set_usize(tip, width,height);
+	
+
+	/* calculate position */
+	x = (int)event->x_root - event->x+tv->allocation.width;
+	y = (int)event->y_root+(tv->allocation.height - event->y);	
+	x = x - (width)/2;
+	if((x+width) > msize.width) x = msize.width-(width);
+	if(x < 0) x= 0;
+	y = y+5;
+	if( y+height > msize.height) y = event->y_root - event->y -5-(height);
+	gtk_window_move(GTK_WINDOW(tip), x, y);
+
+	gtk_widget_show_all(tip);	
+
+
+	g_print("%i %i %i %i\n",x, y,msize.width,msize.height);
+	g_print("enter\n");
+	return TRUE;
+}
+
+void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
+{
+	
+	if(tip != NULL)
+	{
+		gtk_widget_destroy(tip);
+		g_object_unref(tray_layout_tooltip);
+	}
+
+	tip = NULL;
+	g_print("leave\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* this draws the actual image to the window */
 /* gtk will call this function when the image is exposed and the data is gone */
 void exposed_signal(GtkWidget *event)
-	{
+{
 	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
-	
+
 	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);		
 
 	if(info.status == NULL)
@@ -38,10 +214,10 @@ void exposed_signal(GtkWidget *event)
 	}
 
 	if(info.state == MPD_STATUS_STATE_STOP)
-		{
+	{
 		GdkPoint points[5] = {{4,1},{4,8}, {11,8},{11,1},{4,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
-		}
+	}
 	else if(info.state == MPD_STATUS_STATE_PLAY)
 	{
 		GdkPoint points[4] = {{5,1},{5,11}, {10,6},{5,1}};
@@ -56,7 +232,7 @@ void exposed_signal(GtkWidget *event)
 	}
 	else return;
 
-	}
+}
 
 /* this function updates the trayicon on changes */
 void update_tray_icon()
@@ -78,7 +254,7 @@ void update_tray_icon()
 
 			}
 			else str = g_strdup(_("Gnome Music Player Client"));
-			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
+			//			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
 			g_free(str);
 		}
 		if(info.state != info.status->state)
@@ -145,14 +321,14 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
 			info.hidden = TRUE;
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-			
+
 			if(info.sb_hidden)
 			{
 				sb_close();
 				/* make sure its showed again */
 				info.sb_hidden = TRUE;
 			}
- 			if(info.pl2_hidden)
+			if(info.pl2_hidden)
 			{
 				hide_playlist2();      		
 				info.pl2_hidden = TRUE;
@@ -204,6 +380,11 @@ int create_tray_icon()
 	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
+
+	g_signal_connect(G_OBJECT(event), "enter-notify-event", 
+			G_CALLBACK(tray_motion_cb), NULL);
+	g_signal_connect(G_OBJECT(event), "leave-notify-event",
+			G_CALLBACK(tray_leave_cb), NULL);
 	/* show all */
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	if(tps == NULL)	tps = gtk_tooltips_new();
@@ -214,7 +395,10 @@ int create_tray_icon()
 		tray_xml =   glade_xml_new(GLADE_PATH"gmpc.glade", "tray_icon_menu", NULL);
 		glade_xml_signal_autoconnect(tray_xml);
 	}
-	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
+	//	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
 	info.song = -1;
 	return FALSE;
 }
+
+
+

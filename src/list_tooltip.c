@@ -87,7 +87,7 @@ void mw_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 
 
 	gtk_paint_layout (style, tipwindow->window, GTK_STATE_NORMAL, TRUE,
-			NULL, tipwindow, "tooltip", 4+40, 4, layout_tooltip);
+			NULL, tipwindow, "tooltip", 4, 4, layout_tooltip);
 	/*
 	   g_object_unref(layout);
 	   */
@@ -118,7 +118,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 	scr_w = gdk_screen_width();
 	scr_h = gdk_screen_height();
 	pango_layout_get_size (layout_tooltip, &w, &h);
-	w = PANGO_PIXELS(w) + 8+40;
+	w = PANGO_PIXELS(w) + 8;
 	h = PANGO_PIXELS(h) + 8;
 
 	gdk_window_get_pointer(NULL, &x, &y, NULL);
@@ -135,8 +135,8 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 	else
 		y = y + 6;
 	/*
-	   g_object_unref(layout);
-	   */
+	 * g_object_unref(layout);
+	 */
 	g_free(tooltiptext);
 	gtk_widget_set_size_request(tipwindow, w, h);
 	gtk_window_move(GTK_WINDOW(tipwindow), x, y);
@@ -145,7 +145,7 @@ gboolean mw_tooltip_timeout(GtkWidget *tv)
 	return FALSE;
 }
 
-gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer null)
+gboolean mw_motion_cb (GtkWidget *tv, GdkEventMotion *event, gpointer n)
 {
 	GtkTreePath *path;
 	if(!info.pl2_do_tooltip) return FALSE;
