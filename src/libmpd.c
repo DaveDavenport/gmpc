@@ -28,6 +28,8 @@ MpdObj * mpd_ob_create()
 	mi->CurrentSong = NULL;
 	/* info */
 	mi->playlistid = -1;
+	mi->songid = -1;
+
 	/* signals */
 	mi->playlist_changed = NULL;
 	/* connection is locked because where not connected */
@@ -202,6 +204,7 @@ int mpd_ob_disconnect(MpdObj *mi)
 		mi->CurrentSong = NULL;
 	}
 	mi->playlistid = -1;
+	mi->songid = -1;
 
 
 	
@@ -335,6 +338,19 @@ int mpd_ob_status_update(MpdObj *mi)
 		mi->playlistid = mi->status->playlist;
 	}
 
+
+	if(mi->songid != mi->status->songid)
+	{
+		/* print debug message */
+		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Song has changed!");
+
+
+		
+
+		/* save new songid */
+		mi->songid = mi->status->songid;
+
+	}
 
 
 	return FALSE;

@@ -62,6 +62,41 @@ void pl3_shuffle_playlist()
 	mpd_finishCommand(info.connection);
 }
 
+
+gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const char *key, GtkTreeIter *iter)
+{
+	char *value= NULL;
+	char *lkey, *lvalue;
+	int ret = TRUE;
+	if(iter == NULL) return;
+	gtk_tree_model_get(model, iter, column, &value, -1);
+	if(value == NULL || key == NULL)
+	{
+		return TRUE;
+	}
+	lkey = g_utf8_casefold(key,-1);
+	lvalue = g_utf8_casefold(value,-1);
+	
+	if(strstr(lvalue,lkey) != NULL)
+	{
+		ret = FALSE;
+	}
+	g_free(lkey);
+	g_free(lvalue);
+	return ret;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /********************************************************************
  * Misc functions 
  */
@@ -2013,6 +2048,8 @@ void create_playlist3 ()
 
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
+	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),
+				pl3_playlist_tree_search_func, NULL,NULL);
 	pl3_reinitialize_tree();
 
 	/* add the file browser */

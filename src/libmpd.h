@@ -39,6 +39,7 @@ typedef struct _MpdObj
 
 	/* information needed to detect changes on mpd's side */
 	long long playlistid;
+	int songid;
 
 	
 	
