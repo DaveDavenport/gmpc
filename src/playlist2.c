@@ -30,8 +30,7 @@ void init_playlist2()
 
 void update_playlist2()
 {
-	if(pl2_xml == NULL) return;
-	/* check if I need to reload the playlist */
+	if(pl2_store == NULL) return;
 	
 	/* FIXME: see if there is a more optimized way todo this */
 	if(	(info.status->song != info.song && info.song != -1) || 
@@ -97,6 +96,7 @@ int hide_playlist2(GtkWidget *but)
 	return TRUE;
 }
 
+/* if the user activate a row, grab the songid of that row and play it */
 void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 {
 	GtkTreeIter iter;
@@ -106,9 +106,41 @@ void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, SONG_ID,&id,-1);
 		mpd_sendPlayIdCommand(info.connection, id);
 		mpd_finishCommand(info.connection);
-
 	}
 }
+
+/* show the id3info popup of the selected song
+ * trigged on button click 
+ */
+
+void pl2_show_song_info()
+{
+	int i = 0;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl2_fil);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(
+			GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")));
+	if((i = gtk_tree_selection_count_selected_rows(selection)) > 0)
+	{
+		GList *list = NULL;
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+		list = g_list_last(list);
+		do{
+			GtkTreeIter iter;
+			int value;
+			gtk_tree_model_get_iter(model, &iter,(GtkTreePath *)list->data);
+			gtk_tree_model_get(model, &iter, SONG_POS, &value, -1);
+			call_id3_window(value);
+		}while((list = g_list_previous(list)));
+		/* free list */
+		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+	}
+}
+
+
+/* create the playlist view 
+ * This is done only once, for the rest its hidden, but still there
+ */
 
 void create_playlist2()
 {
@@ -135,7 +167,9 @@ void create_playlist2()
 				G_TYPE_BOOLEAN); /* enble color */
 	}
 	tree = glade_xml_get_widget(pl2_xml, "pl_tree");
-
+	/* set selection mode */
+	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree))), 
+			GTK_SELECTION_MULTIPLE);
 
 	/* set filter */
 	pl2_fil = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store), NULL);
@@ -145,10 +179,7 @@ void create_playlist2()
 
 	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_text_new();
-	/* make it load faster by setting default height */
-/*	gtk_cell_renderer_text_set_fixed_height_from_font (
-			GTK_CELL_RENDERER_TEXT(renderer), 1);
-			*/
+	
 	/* insert the column in the tree */
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), 
 			-1,"Playlist", renderer, 
