@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "libmpdclient.h"
+#include "mpdinteraction.h"
 #include "playlist2.h"
 #include "main.h"
 
@@ -131,6 +131,203 @@ int connect_to_mpd()
 	
 	return FALSE;
 }
+/*************************************************************************************/
+MpdInt * mpd_ob_create()
+{
+	MpdInt * mi = g_malloc(sizeof(MpdInt));
+	if( mi == NULL )
+	{
+		/* should never happen on linux */
+		return NULL;
+	}
+
+	
+	/* set default values */
+	mi->connected = FALSE;
+	mi->port = 6600;
+	mi->hostname = g_strdup("localhost");
+	mi->password = NULL;
+	mi->connection = NULL;
+	mi->status = NULL;
+	mi->stats = NULL;
+	mi->error = NULL;
+	/* connection is locked because where not connected */
+	mi->connection_lock = TRUE;
+	
+	return mi;
+}
+
+void mpd_ob_free(MpdInt *mi)
+{
+	if(mi->connected)
+	{
+		/* disconnect */
+		
+	}
+	if(mi->hostname)
+	{
+		g_free(mi->hostname);
+	}
+	if(mi->password)
+	{
+		g_free(mi->password);
+	}
+	if(mi->error)
+	{
+		g_free(mi->error);
+	}
+	if(mi->connection)
+	{
+		/* obsolete */
+		mpd_closeConnection(mi->connection);
+	}
+	if(mi->status)
+	{
+		mpd_freeStatus(mi->status);
+	}
+	if(mi->stats)
+	{
+		mpd_freeStats(mi->stats);
+	}	
+	g_free(mi);
+}
+
+int mpd_ob_lock_conn(MpdInt *mi)
+{
+	if(mi->connection_lock)
+	{
+		return TRUE;
+	}
+	mi->connection_lock = TRUE;
+	return FALSE;
+}
+
+int mpd_ob_unlock_conn(MpdInt *mi)
+{
+	if(!mi->connection_lock)
+	{
+		return FALSE;
+	}
+	
+	mi->connection_lock = FALSE;
+
+	return FALSE;
+}
+
+MpdInt * mpd_ob_new_default()
+{
+	return mpd_ob_create();
+}
+
+MpdInt *mpd_ob_new(char *hostname,  int port, char *password)
+{
+	MpdInt *mi = mpd_ob_create();
+	if(mi == NULL)
+	{
+		return NULL;
+	}
+	if(hostname != NULL)
+	{
+		mpd_ob_set_hostname(mi, hostname);
+	}
+	if(port != 0)
+	{
+		mpd_ob_set_port(mi, port);
+	}
+	if(password != NULL)
+	{
+		mpd_ob_set_password(mi, password);
+	}
+	return mi;
+}
+
+
+void mpd_ob_set_hostname(MpdInt *mi, char *hostname)
+{
+	if(mi == NULL)
+	{
+		return;
+	}
+
+	if(mi->hostname != NULL)
+	{
+		g_free(mi->hostname);
+	}
+	/* possible location todo some post processing of hostname */
+	mi->hostname = g_strdup(hostname);
+}
+
+void mpd_ob_set_password(MpdInt *mi, char *password)
+{
+	if(mi == NULL)
+	{
+		return;
+	}
+
+	if(mi->password != NULL)
+	{
+		g_free(mi->password);
+	}
+	/* possible location todo some post processing of password */
+	mi->password = g_strdup(password);
+}
+
+void mpd_ob_set_port(MpdInt *mi, int port)
+{
+	if(mi == NULL)
+	{
+		return;
+	}
+	mi->port = port;
+}
+
+
+int mpd_ob_connect(MpdInt *mi)
+{
+	if(mi == NULL)
+	{
+		/* should return some spiffy error here */
+		return -1;
+	}
+
+	if(mi->connected)
+	{
+		/* disconnect */
+	}
+
+	if(mi->hostname == NULL)
+	{
+		mpd_ob_set_hostname(mi, "localhost");
+	}
+	/* make sure this is true */
+	mpd_ob_lock_conn(mi);
+	/* make timeout configurable */
+	mi->connection = mpd_newConnection(mi->hostname,mi->port,1);
+	if(mi->connection == NULL)
+	{
+		/* again spiffy error here */
+		return -1;
+	}
+	if(mi->hostname != NULL)
+	{
+		mpd_sendPasswordCommand(mi->connection, mi->password);	
+		mpd_finishCommand(mi->connection);
+		/* TODO: check if succesfull */
+	}	
+
+	mpd_ob_unlock_conn(mi);
+	/* */
+	return 0;
+}
+
+
+
+
+
+
+
+
+
 
 /* DEFAULT FUNCTIONS */
 /* returns FALSE when connected */
