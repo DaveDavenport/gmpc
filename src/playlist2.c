@@ -269,8 +269,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 			else if(pos1 > pos2)
 			{
 				pos1 += i;
-				if(pos == GTK_TREE_VIEW_DROP_AFTER)
-					dropl-=1;                   				
+//				if(pos == GTK_TREE_VIEW_DROP_AFTER)
+//					dropl+=1;                   				
 			}
 
 			mpd_sendMoveCommand(info.connection, pos1,dropl);
@@ -283,6 +283,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y, g
 		mpd_sendCommandListEnd(info.connection);
 		mpd_finishCommand(info.connection);
 	}
+	g_signal_stop_emission_by_name(G_OBJECT(tree), "drag-drop");
+	
 	return TRUE;
 }
 
