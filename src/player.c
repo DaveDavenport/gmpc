@@ -638,4 +638,6 @@ void create_player()
 			NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
+	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
+	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
 }
