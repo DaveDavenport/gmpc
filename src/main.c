@@ -169,6 +169,9 @@ int main (int argc, char **argv)
 	url = g_strdup_printf("%s/.gmpc.xml", g_getenv("HOME"));
 	config = cfg_open(url);
 	g_free(url);
+	/* test case: */
+	cfg_set_single_value_as_string(config, "main_config","testcase", "testing3");
+	g_print("test case: %s\n", cfg_get_single_value_as_string(config, "main_config", "testcase"));
 	if(config == NULL)
 	{
 		printf("Failed to save configuration\n");

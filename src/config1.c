@@ -49,18 +49,26 @@ void cfg_save(config_obj *cfgo)
 xmlNodePtr cfg_get_class(config_obj *cfg, char *class)
 {
 	xmlNodePtr cur = cfg->root->xmlChildrenNode;
+	if(cur == NULL)
+	{
+		return NULL;
+	}
 	do
 	{
+		g_print("get_class: %s-%s\n", cur->name,class);
 		if(xmlStrEqual(cur->name, class))
 		{
-			return cur;
+			g_print("returning from get_class: %s\n",cur->name);
+			return cur->xmlChildrenNode;
 		}
+		cur = cur->next;
 	}while (cur != NULL);
 	return NULL;
 }
 
 xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
 {
+	/* take children */
 	xmlNodePtr cur = cfg_get_class(cfg, class);
 	if(cur == NULL)
 	{
@@ -72,6 +80,7 @@ xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
 		{
 			return cur;
 		}
+		cur = cur->next;
 	}while (cur != NULL);
 	return NULL;                                     	
 }
@@ -84,20 +93,47 @@ char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 	{
 		return xmlNodeGetContent(cur);
 	}
+	g_print("no value found\n");
 	return NULL;
 }
 
 int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 {
-	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
-	if(cur != NULL)
+	char * temp = cfg_get_single_value_as_string(cfg,class,key);
+	if(temp == NULL)
 	{
-		char * value = xmlNodeGetContent(cur);
-		if(value != NULL)
-		{
-			return atoi(value);
-		}
+		return 0;
 	}
 	/* make it return an error */
-	return 0;
+	return atoi(temp);
+}
+
+void cfg_del_single_value(config_obj *cfg, char *class, char *key)
+{
+	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	xmlUnlinkNode(cur);
+	xmlFreeNode(cur);
+	cfg_save(cfg);
+}
+
+void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
+{
+	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	if(value == NULL)
+	{
+		return;
+	}
+	if(cur != NULL)
+	{
+		g_print("found one\n");
+		cfg_del_single_value(cfg,class,key);
+	}
+	cur = cfg_get_class(cfg,class);
+	if(cur == NULL)
+	{
+		g_print("found no class: %s\n", cur->name);
+		cur = xmlNewChild(cfg->root, NULL, class, NULL);
+	}
+	xmlNewChild(cur,NULL, key, value);
+	cfg_save(cfg);
 }
