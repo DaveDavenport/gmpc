@@ -1,3 +1,7 @@
+19-08-2004 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:	Fix crash when not connected
+	* src/tray-icon.c:	Show right tooltip when not connected
+
 18-08-2004 Qball <Qball@qballcow.nl>
 	* src/tray-icon.c:	Fixed some xinerama issues.
 	* src/strfsong.c:	Remove '_' from strings.

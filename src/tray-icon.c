@@ -27,7 +27,7 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP)
+	if(info.connection != NULL && info.status != NULL && info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP) 
 	{
 		strfsong(result, 1024,
 				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
@@ -40,14 +40,14 @@ gchar *tray_get_tooltip_text()
 		/* add time */
 		if(info.status->totalTime != 0)
 		{
-		g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i/%02i:%02i",
-				info.status->elapsedTime/60, info.status->elapsedTime %60,
-				info.status->totalTime/60, info.status->totalTime %60);
+			g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i/%02i:%02i",
+					info.status->elapsedTime/60, info.status->elapsedTime %60,
+					info.status->totalTime/60, info.status->totalTime %60);
 		}
 		else
 		{
-		g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i",
-				info.status->elapsedTime/60, info.status->elapsedTime %60);
+			g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i",
+					info.status->elapsedTime/60, info.status->elapsedTime %60);
 		}
 	}
 	else
@@ -88,42 +88,27 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
 			NULL, widget, "tooltip", 4, 4, tray_layout_tooltip);
 
-
-
-	pango_layout_get_size(tray_layout_tooltip, &width, &height);
-	width= PANGO_PIXELS(width);
-	height= PANGO_PIXELS(height);
-
-
-	if(info.status->elapsedTime != 0 && info.status->totalTime != 0)
+	if(info.connection != NULL && info.status != NULL)
 	{
-		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-				FALSE,4,height+7, width ,8);                              		
-		width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
-		gdk_draw_rectangle(widget->window, 
-			widget->style->mid_gc[GTK_STATE_NORMAL],
-			TRUE,4,height+7, width ,8);
-		gdk_draw_rectangle(widget->window, 
-			widget->style->fg_gc[GTK_STATE_NORMAL],
-			FALSE,4,height+7, width ,8);
-	}
-	/*
-	else
-	{
-		width = 0;
-	}
-	
-	gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL],
-			TRUE,4,height+4, width ,8);
-	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-			FALSE,4,height+4, width ,8);
-	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-			FALSE,4,height+4, width ,8);
-			*/
 
-	/*
-	   g_object_unref(layout);
-	   */
+		pango_layout_get_size(tray_layout_tooltip, &width, &height);
+		width= PANGO_PIXELS(width);
+		height= PANGO_PIXELS(height);
+
+
+		if(info.status->totalTime != 0)
+		{
+			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+					FALSE,4,height+7, width ,8);                              		
+			width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
+			gdk_draw_rectangle(widget->window, 
+					widget->style->mid_gc[GTK_STATE_NORMAL],
+					TRUE,4,height+7, width ,8);
+			gdk_draw_rectangle(widget->window, 
+					widget->style->fg_gc[GTK_STATE_NORMAL],
+					FALSE,4,height+7, width ,8);
+		}
+	}
 	g_free(tooltiptext);
 	return;
 }
