@@ -31,24 +31,30 @@ gchar *tray_get_tooltip_text()
 	int id;
 	if(info.connection != NULL && info.status != NULL && info.mpdSong != NULL && info.status->state != MPD_STATUS_STATE_STOP) 
 	{
-		strfsong(result, 1024,
+/*		strfsong(result, 1024,
 				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
 				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
 				"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]"
 				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]"
 				"|<b>Filename:</b>\t%shortfile%"
 				"|", info.mpdSong);
+				*/
+		strfsong(result, 1024,
+				"[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>]\n[%artist%]\n[<span size=\"small\">%album%</span>]|"
+//				"%name%|"
+//				"<size=\"large\">%title%</size>\n[%artist%]\n[<size=\"small\">%album%</size>]|"
+				"%shortfile%|", info.mpdSong);
 		g_string_append(string, result);
 		/* add time */
 		if(info.status->totalTime != 0)
 		{
-			g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i/%02i:%02i",
+			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i/%02i:%02i</span>",
 					info.status->elapsedTime/60, info.status->elapsedTime %60,
 					info.status->totalTime/60, info.status->totalTime %60);
 		}
 		else
 		{
-			g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i",
+			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i</span>",
 					info.status->elapsedTime/60, info.status->elapsedTime %60);
 		}
 	}
