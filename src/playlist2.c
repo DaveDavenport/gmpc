@@ -130,17 +130,21 @@ void update_playlist2()
 
 gboolean pl2_auto_search()
 {
+	/* I am gonna remove it in a sec */
+	filter_timeout = 0;
 	pl2_filter_refilter();
 	return FALSE;
 }
 
 void set_compare_key(GtkEntry *entry)
 {
+	/* 0.5 second after the user is _done_ typeing update the view */
 	if(filter_timeout != 0)
 	{
 		g_source_remove(filter_timeout);
 		filter_timeout = 0;
 	}
+	filter_timeout = g_timeout_add(500, (GSourceFunc)pl2_auto_search, NULL);
 	if(compare_key != NULL) g_free(compare_key);
 	if(strlen(gtk_entry_get_text(entry)) ==0)
 	{
@@ -153,7 +157,7 @@ void set_compare_key(GtkEntry *entry)
 		gchar *lower = g_utf8_strdown(string, -1);
 		g_free(string);
 		compare_key = g_pattern_spec_new(lower);
-		filter_timeout = g_timeout_add(500, (GSourceFunc)pl2_auto_search, NULL);
+
 		g_free(lower);
 	}
 }
@@ -179,6 +183,11 @@ int pl2_filter_function(GtkTreeModel *model, GtkTreeIter *iter)
 
 void pl2_filter_refilter()
 {
+	if(filter_timeout != 0)
+	{
+		g_source_remove(filter_timeout);
+		filter_timeout = 0;
+	}                                       	
 	g_print("starting filtering\n");
 	gtk_tree_model_filter_refilter(GTK_TREE_MODEL_FILTER(pl2_fil));
 }
