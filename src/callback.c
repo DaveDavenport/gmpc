@@ -3,6 +3,8 @@
 #include "libmpdclient.h"
 #include "main.h"
 
+/* returns TRUE when an error */
+
 int check_for_errors()
 {
 	/* check for an error */

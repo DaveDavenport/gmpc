@@ -110,7 +110,7 @@ void sb_row_activate_click(GtkTreeView *tree, GtkTreePath *path)
 	gint type;
 	gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, path);
 	gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type, -1);
-	if(type != 0)
+	if(type != 0 && type != 4)
 	{
 		if(!gtk_tree_view_row_expanded(tree, path))
 		{

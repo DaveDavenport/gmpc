@@ -56,6 +56,7 @@ int disconnect_to_mpd()
 	info.song = -1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
+	info.old_pos = -1;
 
 	/* disconnect playlist */
 	pl2_disconnect();
