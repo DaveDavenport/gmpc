@@ -245,9 +245,9 @@ void pl3_xiph_add_source()
 		case GTK_RESPONSE_YES:
 			{
 				GtkTreeIter iter,child;
-				char *key = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_name")));
-				char *value = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_url")));
-				cfg_set_multiple_value_as_string(config,"osb", "streams", key, value);
+				const gchar *key = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_name")));
+				const gchar *value = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_url")));
+				cfg_set_multiple_value_as_string(config,"osb", "streams", (gchar *)key, (gchar *)value);
 				gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
 				gtk_tree_store_append(pl3_tree, &child, &iter);
 				gtk_tree_store_set(pl3_tree, &child, 

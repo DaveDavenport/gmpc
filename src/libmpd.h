@@ -21,6 +21,7 @@
 
 
 typedef struct _MpdQueue MpdQueue;
+
 typedef struct _MpdObj 
 {
 	/* defines if we are connected */
@@ -144,6 +145,7 @@ int 		mpd_ob_status_get_volume		(MpdObj *mi);
 int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
 
+
 /* player commands */
 int 		mpd_ob_player_play			(MpdObj *mi);
 int 		mpd_ob_player_play_id			(MpdObj *mi, int id);
@@ -164,9 +166,21 @@ int 		mpd_ob_player_seek			(MpdObj *mi, int sec);
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 int 		mpd_ob_playlist_clear			(MpdObj *mi);
+int 		mpd_ob_playlist_shuffle			(MpdObj *mi);
 void 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
+void 		mpd_ob_playlist_update_dir		(MpdObj *mi, char *path);
+void 		mpd_ob_playlist_move_pos		(MpdObj *mi, int old_pos, int new_pos);
 MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
-MpdData *	mpd_ob_new_data_struct			();
+MpdData *	mpd_ob_playlist_get_albums		(MpdObj *mi, char *artist);
+MpdData * 	mpd_ob_playlist_get_directory		(MpdObj *mi,char *path);
+MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exact);
+int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
+void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
+
+/* MpdData struct functions */
+int 		mpd_ob_data_is_last			(MpdData *data);
+void 		mpd_ob_free_data_ob			(MpdData *data);
+MpdData * 	mpd_ob_data_get_next			(MpdData *data);
 /* mpd ob data next will return NULL when there are no more items. it will also call free when called on the last item. */
 /* if you don't want this check with mpd_ob_data_is_last before calling get_next */
 /* this allows you to make this construction: */
@@ -180,11 +194,14 @@ MpdData *	mpd_ob_new_data_struct			();
  */
  /* withouth leaking memory  */
 
-MpdData * 	mpd_ob_data_get_next			(MpdData *data);
-int 		mpd_ob_data_is_last			(MpdData *data);
-void 		mpd_ob_free_data_ob			(MpdData *data);
 
 
 
 
+/* queing stuff */
+void 		mpd_ob_playlist_queue_add		(MpdObj *mi,char *path);
+void 		mpd_ob_playlist_queue_load		(MpdObj *mi,char *path);
+void 		mpd_ob_playlist_queue_delete_id		(MpdObj *mi,int id);
+/* use these to commit the changes */
+void 		mpd_ob_playlist_queue_commit		(MpdObj *mi);
 #endif

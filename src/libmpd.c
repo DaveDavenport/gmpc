@@ -5,6 +5,12 @@
 #include "libmpd.h"
 
 
+enum {
+	MPD_QUEUE_ADD,
+	MPD_QUEUE_LOAD,
+	MPD_QUEUE_DELETE_ID
+} MpdQueueType;
+
 typedef struct _MpdQueue
 {
 	struct _MpdQueue *next;
@@ -17,9 +23,6 @@ typedef struct _MpdQueue
 	char *path;
 	/* for removing */
 	int id;
-
-
-
 }_MpdQueue;
 
 
@@ -69,6 +72,8 @@ MpdObj * mpd_ob_create()
 	mi->error_signal = NULL;
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
+
+	mi->queue = NULL;
 	
 	return mi;
 }
@@ -516,6 +521,8 @@ int mpd_ob_status_get_total_song_time(MpdObj *mi)
 	}
 	return mi->status->totalTime;
 }
+
+
 int mpd_ob_status_get_elapsed_song_time(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
@@ -554,10 +561,61 @@ int mpd_ob_status_set_volume(MpdObj *mi,int volume)
 
 	mpd_ob_unlock_conn(mi);
 	/* update status, because we changed it */
-	mpd_ob_status_update(mi);
+	mpd_ob_status_queue_update(mi);
 	/* return current volume */
 	return mpd_ob_status_get_volume(mi);
 }
+
+int mpd_ob_status_get_crossfade(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_status_get_crossfade: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("mpd_ob_status_get_crossfade: Failed grabbing status\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	return mi->status->crossfade;
+}
+
+int mpd_ob_status_set_crossfade(MpdObj *mi,int crossfade_time)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_set_crossfade: not connected\n");	
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_player_set_crossfade: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+	mpd_sendCrossfadeCommand(mi->connection, crossfade_time);
+	mpd_finishCommand(mi->connection);
+
+	mpd_ob_unlock_conn(mi);
+	mpd_ob_status_queue_update(mi);
+	return FALSE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*******************************************************************************************
  * PLAYER
@@ -830,18 +888,6 @@ int mpd_ob_player_seek(MpdObj *mi, int sec)
 	return FALSE;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 int mpd_ob_player_get_repeat(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
@@ -856,6 +902,55 @@ int mpd_ob_player_get_repeat(MpdObj *mi)
 	}
 	return mi->status->repeat;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int mpd_ob_player_set_repeat(MpdObj *mi,int repeat)
 {
@@ -914,6 +1009,36 @@ int mpd_ob_player_set_random(MpdObj *mi,int random)
 	mpd_ob_status_queue_update(mi);
 	return FALSE;
 }
+
+int mpd_ob_playlist_get_playlist_length(MpdObj *mi)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_get_playlist_length: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_status_check(mi))
+	{
+		printf("mpd_ob_player_get_playlist_length: Failed grabbing status\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	return mi->status->playlistLength;
+}
+
+void mpd_ob_playlist_add(MpdObj *mi, char *path)
+{
+	mpd_ob_playlist_queue_add(mi, path);
+	mpd_ob_playlist_queue_commit(mi);
+}
+
+
+
+
+
+
+
+
+
 
 /*******************************************************************************
  * PLAYLIST 
@@ -1042,7 +1167,7 @@ int mpd_ob_playlist_shuffle(MpdObj *mi)
 
 void mpd_ob_playlist_save(MpdObj *mi, char *name)
 {
-	if(name == NULL && strlen(name))
+	if(name == NULL || !strlen(name))
 	{
 		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_save: name != NULL  and strlen(name) > 0 failed");
 		return;
@@ -1065,6 +1190,60 @@ void mpd_ob_playlist_save(MpdObj *mi, char *name)
 	mpd_ob_unlock_conn(mi);
 	return;
 }
+
+void mpd_ob_playlist_update_dir(MpdObj *mi, char *path)
+{
+	if(path == NULL || !strlen(path))
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_update_dir: path != NULL  and strlen(path) > 0 failed");
+		return;
+	}
+	if(!mpd_ob_check_connected(mi))
+	{
+		debug_printf(DEBUG_WARNING,"mpd_ob_playlist_update_dir: not connected\n");
+		return;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		debug_printf(DEBUG_ERROR,"mpd_ob_playlist_update_dir: lock failed\n");
+		return;
+	}
+
+	mpd_sendUpdateCommand(mi->connection,path);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */                                               	
+	mpd_ob_unlock_conn(mi);
+	return;
+}
+
+
+void mpd_ob_playlist_move_pos(MpdObj *mi, int old_pos, int new_pos)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		debug_printf(DEBUG_WARNING,"mpd_ob_playlist_move_pos: not connected\n");
+		return;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		debug_printf(DEBUG_ERROR,"mpd_ob_playlist_move_pos: lock failed\n");
+		return;
+	}
+
+	mpd_sendMoveCommand(mi->connection,old_pos, new_pos);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */                                               	
+	mpd_ob_unlock_conn(mi);
+	return;
+}
+
+
+
+
+
+
 
 
 /* SIGNALS */
@@ -1124,7 +1303,25 @@ void mpd_ob_signal_set_error (MpdObj *mi, void *(* error_signal)(MpdObj *mi, int
 	mi->error_signal = error_signal;
 	mi->error_signal_pointer = pointer;
 }
+
+
+
 /* more playlist */
+/* MpdData Part */
+MpdData *mpd_ob_new_data_struct()
+{
+	MpdData* data = malloc(sizeof(MpdData));
+
+	data->type = 0;
+
+	data->value.artist = NULL;
+	data->value.album = NULL;
+	data->value.song = NULL;
+
+	return data;	
+}
+
+
 
 MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
 {
@@ -1133,12 +1330,12 @@ MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_get_artists: not connected\n");
-		return MPD_O_NOT_CONNECTED;
+		return NULL;
 	}
 	if(mpd_ob_lock_conn(mi))
 	{
 		printf("mpd_ob_playlist_get_artists: lock failed\n");
-		return MPD_O_LOCK_FAILED;
+		return NULL;
 	}
 
 	mpd_sendListCommand(mi->connection,MPD_TABLE_ARTIST,NULL);
@@ -1175,18 +1372,18 @@ MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
 }
 
 
-MpdData *mpd_ob_new_data_struct()
-{
-	MpdData* data = malloc(sizeof(MpdData));
 
-	data->type = 0;
 
-	data->value.artist = NULL;
-	data->value.album = NULL;
-	data->value.song = NULL;
 
-	return data;	
-}
+
+
+
+
+
+
+
+
+
 
 MpdData * mpd_ob_data_get_next(MpdData *data)
 {
@@ -1258,12 +1455,12 @@ MpdData * mpd_ob_playlist_get_albums(MpdObj *mi,char *artist)
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_get_albums: not connected\n");
-		return MPD_O_NOT_CONNECTED;
+		return NULL;
 	}
 	if(mpd_ob_lock_conn(mi))
 	{
 		printf("mpd_ob_playlist_get_albums: lock failed\n");
-		return MPD_O_LOCK_FAILED;
+		return NULL;
 	}
 
 	mpd_sendListCommand(mi->connection,MPD_TABLE_ALBUM,artist);
@@ -1308,7 +1505,7 @@ MpdData * mpd_ob_playlist_get_directory(MpdObj *mi,char *path)
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_get_albums: not connected\n");
-		return MPD_O_NOT_CONNECTED;
+		return NULL;
 	}
 	if(path == NULL)
 	{
@@ -1317,7 +1514,7 @@ MpdData * mpd_ob_playlist_get_directory(MpdObj *mi,char *path)
 	if(mpd_ob_lock_conn(mi))
 	{
 		printf("mpd_ob_playlist_get_albums: lock failed\n");
-		return MPD_O_LOCK_FAILED;
+		return NULL;
 	}
 
 	mpd_sendLsInfoCommand(mi->connection,path);
@@ -1375,12 +1572,12 @@ MpdData * mpd_ob_playlist_find(MpdObj *mi, int table, char *string, int exact)
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_find: not connected\n");
-		return MPD_O_NOT_CONNECTED;
+		return NULL;
 	}
 	if(mpd_ob_lock_conn(mi))
 	{
 		printf("mpd_ob_playlist_find: lock failed\n");
-		return MPD_O_LOCK_FAILED;
+		return NULL;
 	}
 	if(exact)
 	{
@@ -1436,3 +1633,197 @@ MpdData * mpd_ob_playlist_find(MpdObj *mi, int table, char *string, int exact)
 	return data->first;
 }
 
+
+
+
+
+
+/* clean this up.. make one while look */
+void mpd_ob_free_queue_ob(MpdObj *mi)
+{
+	MpdQueue *temp = NULL;
+	if(mi->queue == NULL)
+	{
+		return;
+	}	
+	while(mi->queue != NULL)
+	{
+		temp = mi->queue->next;
+
+		if(mi->queue->path != NULL)
+		{
+			free(mi->queue->path);
+		}
+
+		free(mi->queue);
+		mi->queue = temp;
+	}
+	mi->queue = NULL;
+
+}
+
+MpdQueue *mpd_ob_new_queue_struct()
+{
+	MpdQueue* queue = malloc(sizeof(MpdQueue));
+
+	queue->type = 0;
+	queue->path = NULL;
+	queue->id = 0;
+
+	return queue;	
+}
+
+
+void mpd_ob_queue_get_next(MpdObj *mi)
+{
+	if(mi->queue != NULL && mi->queue->next != NULL)
+	{
+		mi->queue = mi->queue->next;
+	}
+	else if(mi->queue->next == NULL)
+	{
+		mpd_ob_free_queue_ob(mi);
+		mi->queue = NULL;
+	}
+}
+
+void mpd_ob_playlist_queue_add(MpdObj *mi,char *path)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_add: not connected\n");
+		return;
+	}
+	if(path == NULL)
+	{
+		return;
+	}
+
+	if(mi->queue == NULL)
+	{
+		mi->queue = mpd_ob_new_queue_struct();
+		mi->queue->first = mi->queue;
+		mi->queue->next = NULL;
+		mi->queue->prev = NULL;
+	}	
+	else
+	{
+		mi->queue->next = mpd_ob_new_queue_struct();
+		mi->queue->next->first = mi->queue->first;
+		mi->queue->next->prev = mi->queue;
+		mi->queue = mi->queue->next;
+		mi->queue->next = NULL;
+	}
+	mi->queue->type = MPD_QUEUE_ADD; 
+	mi->queue->path = strdup(path);
+}
+
+void mpd_ob_playlist_queue_load(MpdObj *mi,char *path)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_add: not connected\n");
+		return;
+	}
+	if(path == NULL)
+	{
+		return;
+	}
+
+	if(mi->queue == NULL)
+	{
+		mi->queue = mpd_ob_new_queue_struct();
+		mi->queue->first = mi->queue;
+		mi->queue->next = NULL;
+		mi->queue->prev = NULL;
+	}	
+	else
+	{
+		mi->queue->next = mpd_ob_new_queue_struct();
+		mi->queue->next->first = mi->queue->first;
+		mi->queue->next->prev = mi->queue;
+		mi->queue = mi->queue->next;
+		mi->queue->next = NULL;
+	}
+	mi->queue->type = MPD_QUEUE_LOAD; 
+	mi->queue->path = strdup(path);
+}
+
+
+void mpd_ob_playlist_queue_commit(MpdObj *mi)
+{
+	if(mi->queue == NULL)
+	{
+		return;
+	}
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_add: not connected\n");
+		return;
+	}                                                      	
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_find: lock failed\n");
+		return ;
+	}                                
+	mpd_sendCommandListBegin(mi->connection);		
+	/* get first item */
+	mi->queue = mi->queue->first;
+	while(mi->queue != NULL)
+	{
+		if(mi->queue->type == MPD_QUEUE_ADD)
+		{
+			if(mi->queue->path != NULL)
+			{
+				mpd_sendAddCommand(mi->connection, mi->queue->path);
+			}
+		}	
+		else if(mi->queue->type == MPD_QUEUE_LOAD)
+		{
+			if(mi->queue->path != NULL)
+			{                                                           			
+				mpd_sendLoadCommand(mi->connection, mi->queue->path);			
+			}
+		}
+		else if (mi->queue->type == MPD_QUEUE_DELETE_ID)
+		{
+			if(mi->queue->id != 0)
+			{                                                           						
+				mpd_sendDeleteIdCommand(mi->connection, mi->queue->id);			
+			}                                                                               		
+		}
+		mpd_ob_queue_get_next(mi);
+	}
+	mpd_sendCommandListEnd(mi->connection);
+	mpd_finishCommand(mi->connection);
+	mpd_ob_unlock_conn(mi);
+}
+
+
+void mpd_ob_playlist_queue_delete_id(MpdObj *mi,int id)
+{
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_add: not connected\n");
+		return;
+	}
+
+	if(mi->queue == NULL)
+	{
+		mi->queue = mpd_ob_new_queue_struct();
+		mi->queue->first = mi->queue;
+		mi->queue->next = NULL;
+		mi->queue->prev = NULL;
+	}	
+	else
+	{
+		mi->queue->next = mpd_ob_new_queue_struct();
+		mi->queue->next->first = mi->queue->first;
+		mi->queue->next->prev = mi->queue;
+		mi->queue = mi->queue->next;
+		mi->queue->next = NULL;
+	}
+	mi->queue->type = MPD_QUEUE_DELETE_ID;
+	mi->queue->id = id;
+	mi->queue->path = NULL;
+}

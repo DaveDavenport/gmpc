@@ -53,7 +53,7 @@ enum pl3_store_types
 gboolean toggle_playlist3(GtkToggleButton *tb);
 
 
-void pl3_highlight_song();
+void pl3_highlight_song_change();
 
 enum store_types
 {

@@ -333,7 +333,7 @@ int update_interface ()
 	/*
 	 * set these to the good value. So there only updated when changed 
 	 */
-	info.playlist_id = info.status->playlist;
+//	info.playlist_id = info.status->playlist;
 //	if (info.status->state != MPD_STATUS_STATE_UNKNOWN)
 //		info.song = mpd_ob_player_get_current_song_id(connection);
 //	if (info.status->state == MPD_STATUS_STATE_STOP)
@@ -363,7 +363,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	}
 	else{
 
-		mpd_sendPlChangesCommand (mi->connection, old_playlist_id);
+		mpd_sendPlChangesCommand (mi->connection, info.playlist_id);
 	}
 
 	ent = mpd_getNextInfoEntity (mi->connection);
@@ -472,7 +472,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 //	pl3_highlight_song ();
 	pl3_highlight_song_change ();
 
-
+	info.playlist_id = new_playlist_id;
 	info.status->song = -1;
 	info.playlist_length = info.status->playlistLength;
 }
@@ -622,9 +622,9 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 	{
 		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
 		GladeXML * er_xml = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);
-		GtkDialog *dialog = glade_xml_get_widget(er_xml, "error_dialog");
-		gtk_label_set_markup(GTK_ENTRY(glade_xml_get_widget(er_xml,"em_label")), str); 
-		gtk_dialog_run(dialog);
+		GtkWidget *dialog = glade_xml_get_widget(er_xml, "error_dialog");
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(er_xml,"em_label")), str); 
+		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(GTK_WIDGET(dialog));
 		msg_set_base(_("Gnome Music Player Client"));
 		g_object_unref(er_xml);

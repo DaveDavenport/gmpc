@@ -55,9 +55,7 @@ void pl3_clear_playlist()
 
 void pl3_shuffle_playlist()
 {
-	if(check_connection_state()) return;
-	mpd_sendShuffleCommand(info.connection);
-	mpd_finishCommand(info.connection);
+	mpd_ob_playlist_shuffle(connection);
 }
 
 /* custom search and match function, this is a workaround for the problems with in gtk+-2.6 */
@@ -459,11 +457,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	if(new_pos == pos) return;
 
 
-	if(!check_connection_state())
-	{
-		mpd_sendMoveCommand(info.connection, pos, new_pos);
-		mpd_finishCommand(info.connection);
-	}
+	mpd_ob_playlist_move_pos(connection, pos, new_pos);
 	gtk_list_store_set(pl2_store,iter, SONG_POS, new_pos, -1);
 	g_free(str);
 }
@@ -494,39 +488,30 @@ void pl3_current_playlist_delete_selected_songs ()
 		gtk_tree_view_get_selection (GTK_TREE_VIEW
 				(glade_xml_get_widget (pl3_xml, "playlist_tree")));
 	/* check if where connected */
-	if (check_connection_state ())
-		return;
 	/* see if there is a row selected */
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
 		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
 		/* start a command list */
-		mpd_sendCommandListBegin (info.connection);
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 		/* grab the last song that is selected */
-		llist = g_list_last (list);
+		llist = g_list_first (list);
 		/* remove every selected song one by one */
-		do
-		{
+		do{
 			GtkTreeIter iter;
 			int value;
-			gtk_tree_model_get_iter (model, &iter,
-					(GtkTreePath *) llist->data);
+			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
 			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
-			mpd_sendDeleteIdCommand (info.connection, value);
-		}
-		while ((llist = g_list_previous (llist)));
+			mpd_ob_playlist_queue_delete_id(connection, value);			
+		} while ((llist = g_list_next (llist)));
 
 		/* close the list, so it will be executed */
-		mpd_sendCommandListEnd (info.connection);
-		mpd_finishCommand (info.connection);
+		mpd_ob_playlist_queue_commit(connection);
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
-
-		check_for_errors ();
 	}
 	else
 	{
@@ -550,14 +535,14 @@ void pl3_current_playlist_delete_selected_songs ()
 		{
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
-				pl3_clear_playlist();
+				mpd_ob_playlist_clear(connection);
 		}
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
-	if (!check_connection_state ())
-		main_trigger_update ();	
+
+	mpd_ob_status_queue_update(connection);
 }
 
 
@@ -566,46 +551,33 @@ void pl3_current_playlist_crop_selected_songs()
 	/* grab the selection from the tree */
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")));
 
-	/* check if where connected */
-	if (check_connection_state ())
-		return;
 	/* see if there is a row selected */
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GtkTreeIter iter;
 		/* start a command list */
-		mpd_sendCommandListBegin (info.connection);
 		/* remove every selected song one by one */
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter);
-		do
-		{
+		do{
 			int value;
 			if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 			{
 				gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
-				mpd_sendDeleteIdCommand (info.connection, value);
+				mpd_ob_playlist_queue_delete_id(connection, value);				
 			}
-		}
-		while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
-
-		/* close the list, so it will be executed */
-		mpd_sendCommandListEnd (info.connection);
-		mpd_finishCommand (info.connection);
-
-		check_for_errors ();
+		} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
+		mpd_ob_playlist_queue_commit(connection);
 	}
 	else
 	{
 		/* create a warning message dialog */
-		GtkWidget *dialog =
-			gtk_message_dialog_new (GTK_WINDOW
+		GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
 					(glade_xml_get_widget
 					 (pl3_xml, "pl3_win")),
 					GTK_DIALOG_MODAL,
 					GTK_MESSAGE_WARNING,
 					GTK_BUTTONS_NONE,
-					_
-					("Are you sure you want to clear the playlist?"));
+					_("Are you sure you want to clear the playlist?"));
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
 				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
 				GTK_RESPONSE_OK, NULL);
@@ -621,8 +593,8 @@ void pl3_current_playlist_crop_selected_songs()
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
-	if (!check_connection_state ())
-		main_trigger_update ();	
+	
+	mpd_ob_status_queue_update(connection);
 }
 
 
@@ -680,10 +652,8 @@ void pl3_browse_file_add_folder()
 		message = g_strdup_printf("Added folder '%s' recursively", path);
 		pl3_push_statusbar_message(message);
 		g_free(message);
-		mpd_sendAddCommand(info.connection, path);
-		mpd_finishCommand(info.connection);
-
-		check_for_errors();
+		mpd_ob_playlist_queue_add(connection, path);
+		mpd_ob_playlist_queue_commit(connection);
 	}
 }
 
@@ -705,10 +675,7 @@ void pl3_browse_file_update_folder()
 		message = g_strdup_printf("Updating folder '%s' recursively", path);
 		pl3_push_statusbar_message(message);
 		g_free(message);
-		mpd_sendUpdateCommand(info.connection, path);
-		mpd_finishCommand(info.connection);
-
-		check_for_errors();
+		mpd_ob_playlist_update_dir(connection, path);
 	}
 }
 
@@ -854,7 +821,6 @@ void pl3_browse_add_selected()
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
 	GtkTreeModel *model = GTK_TREE_MODEL (pl3_store);
 	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
-	GList *add_list = NULL;
 	int songs=0;
 	gchar *message;
 
@@ -872,8 +838,7 @@ void pl3_browse_add_selected()
 			if(type == PL3_ENTRY_SONG)
 			{
 				/* add them to the add list */
-				add_list = g_list_append (add_list, g_strdup (name));
-
+				mpd_ob_playlist_queue_add(connection, name);
 			}
 			else if(type == PL3_ENTRY_STREAM)
 			{
@@ -881,41 +846,13 @@ void pl3_browse_add_selected()
 			}
 			else if (type == PL3_ENTRY_PLAYLIST)
 			{
-				message = g_strdup_printf("Added playlist '%s'", name);
-				pl3_push_statusbar_message(message);
-				g_free(message);
-
-				/* append a playlist directly, we cant add it to the todo list */
-				mpd_sendLoadCommand (info.connection, name);
-				mpd_finishCommand (info.connection);
-				/* check for errors, and if there is an error step out this while loop */
-				if (check_for_errors ())
-				{
-					node = NULL;
-				}
+				mpd_ob_playlist_queue_load(connection, name);
 			}
+			songs++;
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
-	if (check_connection_state ())
-		return;
-	if (add_list != NULL)
-	{
-		GList *song;
-		mpd_sendCommandListBegin (info.connection);
-		song = g_list_first (add_list);
-		do
-		{
-			mpd_sendAddCommand (info.connection, song->data);
-			songs++;
-		}
-		while ((song = g_list_next (song)) != NULL);
-		mpd_sendCommandListEnd (info.connection);
-		mpd_finishCommand (info.connection);
-		check_for_errors ();
-		g_list_foreach (add_list, (GFunc) g_free, NULL);
-		g_list_free (add_list);
-	}
+	mpd_ob_playlist_queue_commit(connection);
 	if(songs != 0)
 	{
 		gint type =  pl3_cat_get_selected_browser();
@@ -966,7 +903,6 @@ void pl3_artist_browser_add()
 
 long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
-	mpd_InfoEntity *ent = NULL;
 	char *artist, *string;
 	GtkTreeIter iter;
 	long unsigned time =0;
@@ -1079,9 +1015,8 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	if(!strlen(alb_artist))
 	{
 		/* fill artist list */
-		char *string;
 		MpdData *data = mpd_ob_playlist_get_artists(connection);
-		
+
 		while(data != NULL)
 		{	
 			gtk_tree_store_append (pl3_tree, &child, iter);
@@ -1105,7 +1040,6 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(!g_utf8_collate(artist, alb_artist))
 	{
-		char *string;
 		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
@@ -1119,7 +1053,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					-1);
 			data = mpd_ob_data_get_next(data);
 		}
-			
+
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1135,33 +1069,27 @@ void pl3_browse_artist_add_folder()
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
-	if(check_connection_state())
+	if(!mpd_ob_check_connected(connection))
 	{
 		return;
 	}
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		char *artist, *title;
-		mpd_InfoEntity *ent = NULL;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &artist, PL3_CAT_TITLE,&title, -1);
-		GList *add_list = NULL;
+		//		GList *add_list = NULL;
 		if(!artist || !title)
 		{
 			return;
 		}
-		if(strlen(artist) == 0)
-		{
-			/*toplevel node */
-			/* do nothing here, what is there todo? */
-		}
-		else if(!g_utf8_collate(artist,title))
+		if(strlen(artist) && !g_utf8_collate(artist,title))
 		{
 			/* artist selected */
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
 			MpdData * data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 			while (data != NULL)
 			{                                                                         			
-				add_list = g_list_append (add_list, g_strdup (data->value.song->file));
+				mpd_ob_playlist_queue_add(connection, data->value.song->file);
 				data = mpd_ob_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
@@ -1176,9 +1104,9 @@ void pl3_browse_artist_add_folder()
 			MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
 			while (data != NULL)
 			{
-				if (!g_utf8_collate (ent->info.song->artist, artist))
+				if (!g_utf8_collate (data->value.song->artist, artist))
 				{
-					add_list = g_list_append (add_list, g_strdup (ent->info.song->file));
+					mpd_ob_playlist_queue_add(connection,data->value.song->file);
 				}
 				data = mpd_ob_data_get_next(data);
 			}
@@ -1188,24 +1116,7 @@ void pl3_browse_artist_add_folder()
 		}
 
 		/* if there are items in the add list add them to the playlist */
-		if (check_connection_state ())
-			return;
-		if (add_list != NULL)
-		{
-			GList *song;
-			mpd_sendCommandListBegin (info.connection);
-			song = g_list_first (add_list);
-			do
-			{
-				mpd_sendAddCommand (info.connection, song->data);
-			}
-			while ((song = g_list_next (song)) != NULL);
-			mpd_sendCommandListEnd (info.connection);
-			mpd_finishCommand (info.connection);
-			check_for_errors ();
-			g_list_foreach (add_list, (GFunc) g_free, NULL);
-			g_list_free (add_list);
-		}
+		mpd_ob_playlist_queue_commit(connection);
 	}
 
 }
@@ -1333,23 +1244,18 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		if(r_type == PL3_ENTRY_PLAYLIST)
 		{	
 			pl3_push_statusbar_message("Loaded playlist");
-			mpd_sendLoadCommand(info.connection, song_id);
-			mpd_finishCommand(info.connection);
-
-			if(check_for_errors()) return;
+			mpd_ob_playlist_queue_load(connection, song_id);
 		}
 		else if (type == PL3_BROWSE_CUSTOM_STREAM || type == PL3_BROWSE_XIPH)
 		{
 			pl3_browse_add_selected();
-			if(check_for_errors()) return;               			
 		}
 		else
 		{
 			pl3_push_statusbar_message("Added a song");
-			mpd_sendAddCommand(info.connection, song_id);
-			mpd_finishCommand(info.connection);
-			if(check_for_errors()) return;
+			mpd_ob_playlist_queue_load(connection, song_id);
 		}
+		mpd_ob_playlist_queue_commit(connection);
 	}
 }
 
@@ -1408,21 +1314,18 @@ void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn
 	else if(type == PL3_CURRENT_PLAYLIST)
 	{
 		/* scroll to the playing song */
-		if(info.status != NULL)
+		if(mpd_ob_player_get_current_song_pos(connection) > 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
 		{
-			if(info.status->song != -1 && info.status->playlistLength != 0)
-			{
-				gchar *str = g_strdup_printf("%i", info.status->song);
-				GtkTreePath *path = gtk_tree_path_new_from_string(str);
-				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
-							glade_xml_get_widget(pl3_xml, "playlist_tree")), 
-						path,
-						NULL,
-						TRUE,0.5,0);
-				gtk_tree_path_free(path);
-				g_free(str);
-			}                                                      		
-		}
+			gchar *str = g_strdup_printf("%i", mpd_ob_player_get_current_song_pos(connection));
+			GtkTreePath *path = gtk_tree_path_new_from_string(str);
+			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+						glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+					path,
+					NULL,
+					TRUE,0.5,0);
+			gtk_tree_path_free(path);
+			g_free(str);
+		}                                                      		
 	}
 	else
 	{
@@ -1877,9 +1780,9 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	}
 	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
 	{
-		if(info.status->song != -1 && info.status->playlistLength != 0)
+		if(mpd_ob_player_get_current_song_pos(connection) > 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
 		{
-			gchar *str = g_strdup_printf("%i", info.status->song);
+			gchar *str = g_strdup_printf("%i", mpd_ob_player_get_current_song_pos(connection));
 			GtkTreePath *path = gtk_tree_path_new_from_string(str);
 			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
 						glade_xml_get_widget(pl3_xml, "playlist_tree")), 
@@ -1888,7 +1791,7 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 					TRUE,0.5,0);
 			gtk_tree_path_free(path);
 			g_free(str);
-		}         
+		}                                                      		
 		return TRUE;			
 
 	}
@@ -2036,7 +1939,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),
-			pl3_playlist_tree_search_func, NULL,NULL);
+			(GtkTreeViewSearchEqualFunc)pl3_playlist_tree_search_func, NULL,NULL);
 	pl3_reinitialize_tree();
 
 	/* add the file browser */
@@ -2084,7 +1987,6 @@ void pl3_highlight_state_change(int old_state, int new_state)
 		temp = g_strdup_printf ("%i", info.old_pos);
 		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
-			gint song_id = 0;
 			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, -1);
 		}
 		g_free (temp);

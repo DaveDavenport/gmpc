@@ -282,7 +282,7 @@ void update_server_settings()
 		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	}	
 
-	if(info.status->crossfade == 0)
+	if(mpd_ob_status_get_crossfade(connection) == 0)
 	{
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), FALSE);
@@ -291,7 +291,7 @@ void update_server_settings()
 	else {
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), TRUE);
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), info.status->crossfade);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), mpd_ob_status_get_crossfade(connection));
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
 
 	}
@@ -341,13 +341,11 @@ void xfade_enable_toggled(GtkToggleButton *but)
 	if(bool1)
 	{
 		int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
-		mpd_sendCrossfadeCommand(info.connection, fade_time);	
-		mpd_finishCommand(info.connection);          
+		mpd_ob_status_set_crossfade(connection, fade_time);
 	}
-	else {
-		mpd_sendCrossfadeCommand(info.connection, 0);
-		mpd_finishCommand(info.connection);
-
+	else 
+	{
+		mpd_ob_status_set_crossfade(connection, 0);
 	}	
 }
 
@@ -358,9 +356,7 @@ void xfade_time_changed(GtkSpinButton *but)
 	{
 		return;
 	}
-	if(info.connection == NULL) return;
-	mpd_sendCrossfadeCommand(info.connection, fade_time);	
-	mpd_finishCommand(info.connection);          
+	mpd_ob_status_set_crossfade(connection, fade_time);
 }
 
 
@@ -431,14 +427,14 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 		if(enabled)
                 {
 		        enabled = FALSE;
-			mpd_sendDisableOutputCommand(info.connection, id);
+			mpd_sendDisableOutputCommand(connection->connection, id);
 		}
 		else
 		{
 		        enabled = TRUE;
-			mpd_sendEnableOutputCommand(info.connection, id);
+			mpd_sendEnableOutputCommand(connection->connection, id);
 		}
-		mpd_finishCommand(info.connection);          
+		mpd_finishCommand(connection->connection);          
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, enabled, -1);
 	}
 	gtk_tree_path_free(path);
@@ -466,6 +462,9 @@ void update_outputs_settings()
 			gtk_list_store_set(store, &iter, 0, output->enabled?TRUE:FALSE, 1, output->name, 2, output->id, -1);
 			mpd_freeOutputElement(output);
 		}
-	}else
+	}
+	else
+	{
 	        gtk_widget_hide_all(GTK_WIDGET(frame));
+	}
 }

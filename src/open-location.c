@@ -48,8 +48,7 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 				{
 					if(!strncmp(list[i], "File", 4))
 					{
-						mpd_sendAddCommand(info.connection,&list[i][6]);
-						mpd_finishCommand(info.connection);
+						mpd_ob_playlist_add(connection, &list[i][6]);
 					}
 
 					i++;
@@ -64,8 +63,7 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 				{
 					if(!strncasecmp(list[i], "http://", 7))
 					{
-						mpd_sendAddCommand(info.connection,list[i]);
-						mpd_finishCommand(info.connection);
+						mpd_ob_playlist_add(connection, list[i]);
 					}
 
 					i++;
@@ -143,9 +141,7 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 			g_print("stream found\n");
-			mpd_sendAddCommand(info.connection, gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
-			mpd_finishCommand(info.connection);
-
+			mpd_ob_playlist_add(connection, (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
 			working = FALSE;
 			ol_destroy();
 		}
@@ -178,10 +174,7 @@ void ol_add_location()
 	if(strlen(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream")))) == 0 ) return;
 	if(add_anyway)
 	{
-
-
-		mpd_sendAddCommand(info.connection,gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
-		mpd_finishCommand(info.connection);
+		mpd_ob_playlist_add(connection, (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(ol_xml, "entry_stream"))));
 		ol_destroy();
 		return;
 	}
@@ -208,8 +201,7 @@ void ol_add_location()
 
 void ol_replace_location()
 {
-	mpd_sendClearCommand(info.connection);
-	mpd_finishCommand(info.connection);
+	mpd_ob_playlist_clear(connection);
 	ol_add_location();
 }
 

@@ -15,6 +15,7 @@ internal_data info;
 int update_mpd_status()
 {
 	if(!mpd_ob_check_connected(connection)) return TRUE;
+	if(connection->connection_lock) return TRUE;
 	mpd_ob_status_queue_update(connection);
 	/* check if locked, then just don't update */
 	if(info.conlock) return TRUE;
@@ -136,11 +137,7 @@ int connect_to_mpd()
 
 gboolean check_connection_state()
 {
-	if(info.connection == NULL)
-	{
-		return TRUE;
-	}
-	else return FALSE;
+	return !mpd_ob_check_connected(connection);
 }
 
 gboolean mpd_is_locked()
@@ -229,24 +226,7 @@ void repeat_pl(GtkToggleButton *tb)
 /* TODO: Changed return Values, check for possible errors */
 int seek_ps(int n)
 {
-	if(mpd_lock())
-	{
-		return TRUE;
-	}
-
-	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
-	{
-		mpd_sendSeekCommand(info.connection, info.status->song, info.status->elapsedTime+n);
-		mpd_finishCommand(info.connection);
-		if(check_for_errors())
-		{
-			return TRUE;
-		}
-	}
-	if(mpd_unlock())
-	{
-		return TRUE;
-	}
+	mpd_ob_player_seek(connection, mpd_ob_status_get_elapsed_song_time(connection)+n);
 	return FALSE;
 }
 
@@ -254,43 +234,4 @@ int seek_ns(int n)
 {
 	return seek_ps(-n);
 }
-/*
-int volume_change(int diff)
-{
-	if(mpd_lock())
-	{
-		return TRUE;
-	}
-	mpd_sendVolumeCommand(info.connection,diff);
-	mpd_finishCommand(info.connection);
-	if(check_for_errors())
-	{
-		return TRUE;
-	}
-	if(mpd_unlock())
-	{
-		return TRUE;
-	}
-	return FALSE;
-}
-*/
 
-
-/* this function updates the internall dbase of mpd */
-void update_mpd_dbase()
-{
-	/* check if locked, then just don't update */
-	if(info.conlock) return;
-	/* lock it. */
-	info.conlock = TRUE;
-	mpd_sendUpdateCommand(info.connection, "");
-	mpd_finishCommand(info.connection);
-	/* check for errors */
-	if(check_for_errors())
-	{
-		return;
-	}
-	/* unlock it */
-	info.conlock = FALSE;
-	return;
-}

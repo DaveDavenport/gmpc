@@ -36,9 +36,7 @@ typedef struct
 	int playlist_playtime;
 	/* the state, if the state changes I know I have to update some stuff */
 	/* the volume if the volume change I also have to update some stuff */
-//	int volume;
 	/* the current song */
-//	int song;
 	int old_pos;
 	/* updating */
 	gboolean updating;
@@ -100,8 +98,8 @@ gboolean update_msg();
 void msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
-
-
+void player_song_changed(int oldsong, int newsong);
+void player_state_changed(int old_state, int state);
 void create_preferences_window();
 void preferences_update();
 
@@ -111,7 +109,8 @@ void call_id3_window(int song);
 /* do tray */
 void update_tray_icon();
 int create_tray_icon();
-
+void tray_icon_song_change();
+void tray_icon_state_change();
 /* popup.c: update_popup() */
 //void update_popup();
 void destroy_tray_icon();
