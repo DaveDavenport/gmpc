@@ -1179,7 +1179,8 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 
 	}
 	/* avuton's Idea */
-	gtk_tree_view_scroll_to_cell(tree, path,NULL,TRUE,0.5,0);
+	/* TODO: Make this option */
+	//	gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
 }
 
 
@@ -1396,6 +1397,42 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 			gtk_tree_selection_select_iter(sel, &iter);               		
 		}
 	}
+	else if (event->keyval == GDK_F2)
+	{
+		GtkTreePath *path = gtk_tree_path_new_from_string("1");
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
+
+		gtk_tree_selection_select_path(sel, path);               		
+		gtk_tree_view_set_cursor(glade_xml_get_widget(pl3_xml, "cat_tree"), path, NULL, FALSE);	
+		gtk_tree_path_free(path);
+	}
+	else if (event->keyval == GDK_F3)
+	{
+		GtkTreePath *path = gtk_tree_path_new_from_string("2");
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
+
+		gtk_tree_selection_select_path(sel, path);               		
+		gtk_tree_view_set_cursor(glade_xml_get_widget(pl3_xml, "cat_tree"), path, NULL, FALSE);	
+		gtk_tree_path_free(path);
+	}
+	else if (event->keyval == GDK_F4)
+	{
+		GtkTreePath *path = gtk_tree_path_new_from_string("3");
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
+		gtk_tree_selection_select_path(sel, path);               	
+		gtk_tree_view_set_cursor(glade_xml_get_widget(pl3_xml, "cat_tree"), path, NULL, FALSE);	
+		gtk_tree_path_free(path);
+	}
+	
+
+
+
+
+	
+
 	/* default gmpc/xmms/gmpc key's*/
 	else if (event->keyval == GDK_z && event->state == 0)
 	{

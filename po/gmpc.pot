@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 16:25+0200\n"
+"POT-Creation-Date: 2004-11-01 20:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,8 +21,8 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
 #. set up tray icon
-#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:121
-#: src/player.c:285 src/player.c:286 src/player.c:306 src/tray-icon.c:410
+#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:123
+#: src/player.c:287 src/player.c:288 src/player.c:308 src/tray-icon.c:410
 #: src/tray-icon.c:519
 msgid "Gnome Music Player Client"
 msgstr ""
@@ -332,6 +332,10 @@ msgid "n/a"
 msgstr ""
 
 #: glade/gmpc.glade.h:87
+msgid "pl3"
+msgstr ""
+
+#: glade/gmpc.glade.h:88
 msgid "set the default value"
 msgstr ""
 
@@ -496,44 +500,44 @@ msgid ""
 "GMPC - Connection Error. Please check youre settings in the preferences menu"
 msgstr ""
 
-#: src/player.c:171 src/player.c:188
+#: src/player.c:173 src/player.c:190
 msgid "No valid UTF-8. Please check youre locale"
 msgstr ""
 
-#: src/player.c:305
+#: src/player.c:307
 msgid "GMPC - Stopped"
 msgstr ""
 
-#: src/player.c:382
+#: src/player.c:384
 #, c-format
 msgid "Seek to %02i:%02i/%02i:%02i"
 msgstr ""
 
-#: src/player.c:390
+#: src/player.c:392
 #, c-format
 msgid "Seek to -%02i:%02i/%02i:%02i"
 msgstr ""
 
-#: src/player.c:392
+#: src/player.c:394
 #, c-format
 msgid "Seek to %3.1f%%"
 msgstr ""
 
-#: src/player.c:438
+#: src/player.c:440
 #, c-format
 msgid "Volume %i%%"
 msgstr ""
 
 #. check for errors and axit when there is no gui file
-#: src/player.c:547
+#: src/player.c:549
 msgid "Couldnt initialize GUI. Please check installation\n"
 msgstr ""
 
-#: src/main.c:269
+#: src/main.c:271
 msgid "MPD is updating the database, please wait"
 msgstr ""
 
-#: src/playlist2.c:537
+#: src/playlist2.c:538
 msgid "Are you sure you want to clear the playlist?"
 msgstr ""
 
@@ -557,16 +561,16 @@ msgstr ""
 msgid "gmpc - Disconnected"
 msgstr ""
 
-#: src/mpdinteraction.c:90
+#: src/mpdinteraction.c:92
 msgid "gmpc - Failed to connect, please check the connection settings."
 msgstr ""
 
-#: src/mpdinteraction.c:109
+#: src/mpdinteraction.c:111
 msgid "You don't have enough permission to access mpd."
 msgstr ""
 
 #. Set the title
-#: src/mpdinteraction.c:122
+#: src/mpdinteraction.c:124
 msgid "GMPC - Connected"
 msgstr ""
 
