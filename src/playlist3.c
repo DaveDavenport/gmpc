@@ -152,6 +152,164 @@ void pl3_current_playlist_add()
 
 
 
+/* delete all selected songs,
+ * if no songs select ask the user if he want's to clear the list 
+ */
+void pl3_current_playlist_delete_selected_songs ()
+{
+	/* grab the selection from the tree */
+	GtkTreeSelection *selection =
+		gtk_tree_view_get_selection (GTK_TREE_VIEW
+				(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+	/* check if where connected */
+	if (check_connection_state ())
+		return;
+	/* see if there is a row selected */
+	if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	{
+		GList *list = NULL, *llist = NULL;
+		/* start a command list */
+		mpd_sendCommandListBegin (info.connection);
+		/* grab the selected songs */
+		list = gtk_tree_selection_get_selected_rows (selection, &pl2_store);
+		/* grab the last song that is selected */
+		llist = g_list_last (list);
+		/* remove every selected song one by one */
+		do
+		{
+			GtkTreeIter iter;
+			int value;
+			gtk_tree_model_get_iter (pl2_store, &iter,
+					(GtkTreePath *) llist->data);
+			gtk_tree_model_get (pl2_store, &iter, SONG_ID, &value, -1);
+			mpd_sendDeleteIdCommand (info.connection, value);
+		}
+		while ((llist = g_list_previous (llist)));
+
+		/* close the list, so it will be executed */
+		mpd_sendCommandListEnd (info.connection);
+		mpd_finishCommand (info.connection);
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+		
+		check_for_errors ();
+	}
+	else
+	{
+		/* create a warning message dialog */
+		GtkWidget *dialog =
+			gtk_message_dialog_new (GTK_WINDOW
+					(glade_xml_get_widget
+					 (pl3_xml, "pl3_win")),
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_WARNING,
+					GTK_BUTTONS_NONE,
+					_
+					("Are you sure you want to clear the playlist?"));
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
+				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
+				GTK_RESPONSE_OK, NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+				GTK_RESPONSE_CANCEL);
+
+		switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+		{
+			case GTK_RESPONSE_OK:
+				/* check if where still connected */
+				/* TODO: Replace by default clear function  */
+				if (!check_connection_state ())
+				{
+					/* clear the playlist */
+					mpd_sendClearCommand (info.connection);
+					mpd_finishCommand (info.connection);
+					check_for_errors ();
+				}
+		}
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+	}
+	/* update everything if where still connected */
+	gtk_tree_selection_unselect_all(selection);
+	if (!check_connection_state ())
+		main_trigger_update ();	
+}
+
+
+
+
+void pl3_current_playlist_crop_selected_songs()
+{
+	/* grab the selection from the tree */
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+
+	/* check if where connected */
+	if (check_connection_state ())
+		return;
+	/* see if there is a row selected */
+	if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	{
+		GtkTreeIter iter;
+		/* start a command list */
+		mpd_sendCommandListBegin (info.connection);
+		/* remove every selected song one by one */
+		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter);
+		
+		do
+		{
+			int value;
+			if(!gtk_tree_selection_iter_is_selected(selection, &iter))
+			{
+				gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
+				mpd_sendDeleteIdCommand (info.connection, value);
+			}
+		}
+		while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
+
+		/* close the list, so it will be executed */
+		mpd_sendCommandListEnd (info.connection);
+		mpd_finishCommand (info.connection);
+
+		check_for_errors ();
+	}
+	else
+	{
+		/* create a warning message dialog */
+		GtkWidget *dialog =
+			gtk_message_dialog_new (GTK_WINDOW
+					(glade_xml_get_widget
+					 (pl3_xml, "pl3_win")),
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_WARNING,
+					GTK_BUTTONS_NONE,
+					_
+					("Are you sure you want to clear the playlist?"));
+		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
+				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
+				GTK_RESPONSE_OK, NULL);
+		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+				GTK_RESPONSE_CANCEL);
+
+		switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+		{
+			case GTK_RESPONSE_OK:
+				/* check if where still connected */
+				/* TODO: Replace by default clear function  */
+				if (!check_connection_state ())
+				{
+					/* clear the playlist */
+					mpd_sendClearCommand (info.connection);
+					mpd_finishCommand (info.connection);
+					check_for_errors ();                              	
+				}
+		}                                                         
+		gtk_widget_destroy (GTK_WIDGET (dialog));
+	}
+	/* update everything if where still connected */
+	gtk_tree_selection_unselect_all(selection);
+	if (!check_connection_state ())
+		main_trigger_update ();	
+}
+
 /********************************************************
  * FILE BROWSER 				  	*
  */
@@ -175,7 +333,7 @@ void pl3_browse_file_add_folder()
 		g_free(message);
 		mpd_sendAddCommand(info.connection, path);
 		mpd_finishCommand(info.connection);
-			
+
 		check_for_errors();
 	}
 }
@@ -554,7 +712,7 @@ void pl3_browse_artist_add_folder()
 			mpd_finishCommand (info.connection);
 			pl3_push_statusbar_message(message);
 			g_free(message);
-			
+
 		}
 
 		/* if there are items in the add list add them to the playlist */
@@ -595,16 +753,34 @@ void pl3_browse_artist_replace_folder()
 int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	int type = pl3_cat_get_selected_browser();
-	if(event->button != 3)	
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	if(event->button != 3 || !gtk_tree_selection_count_selected_rows(sel))	
 	{
 		return FALSE;
 	}
 	if(type == PL3_CURRENT_PLAYLIST)
 	{
+		/* del, crop */
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the delete widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_delete_selected_songs), NULL);
+
+		/* add the delete widget */
+		item = gtk_image_menu_item_new_with_label("Crop");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_crop_selected_songs), NULL);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 
+
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	}
-	
+
 
 
 	return TRUE;
@@ -643,7 +819,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 			pl3_push_statusbar_message("Loaded playlist");
 			mpd_sendLoadCommand(info.connection, song_id);
 			mpd_finishCommand(info.connection);
-			
+
 			if(check_for_errors()) return;
 		}
 		else
