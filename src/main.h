@@ -53,10 +53,6 @@ typedef struct
 	gint pl2_tooltip;
 	gboolean pl2_do_tooltip;
 	/* playlist 3 */
-	gchar *xiph_url;
-	gchar **online_stream_list;
-	gint online_streams;
-
 	
 	gboolean pl3_scroll_to_song;
 } internal_data;
@@ -111,24 +107,12 @@ void msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
 
-/* preferences.c */
-typedef struct
-{
-	/* display formating */
-	gchar *markup_main_display;
-//	gchar *markup_playlist;
-	gchar *markup_song_browser;
-} pref_struct;
 
-extern pref_struct preferences;
 void create_preferences_window();
 void preferences_update();
 
 /* id3info.c*/
 void call_id3_window(int song);
-/* config.c*/
-void load_config();
-void save_config();
 
 /* do tray */
 void update_tray_icon();

@@ -205,3 +205,6 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	}
 	cfg_save(cfg);
 }
+
+
+

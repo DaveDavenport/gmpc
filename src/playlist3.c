@@ -371,7 +371,7 @@ void pl3_xiph_fill_view(char *buffer)
 void pl3_xiph_view_browser()
 {
 	gtk_list_store_clear(pl3_store);
-	start_transfer(info.xiph_url,(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+//	start_transfer(info.xiph_url,(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
 }
 
 /*****************************************************************
@@ -426,7 +426,10 @@ unsigned long pl3_find_view_browser()
 				{
 					time += ent->info.song->time;
 				}
-				strfsong (buffer, 1024, preferences.markup_song_browser,
+				
+				strfsong (buffer, 1024, 
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
+						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
 						ent->info.song);
 				/* add as child of the above created parent folder */
 				gtk_list_store_append (pl3_store, &child);
@@ -784,7 +787,10 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
 		{
 			gchar buffer[1024];
-			strfsong (buffer, 1024, preferences.markup_song_browser,ent->info.song);
+			strfsong (buffer, 1024, 
+					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
+						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+					ent->info.song);
 			if(ent->info.song->time != MPD_SONG_NO_TIME)
 			{
 				time += ent->info.song->time;			
@@ -1024,7 +1030,9 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					|| strlen (ent->info.song->album) == 0)
 			{
 				gchar buffer[1024];
-				strfsong (buffer, 1024, preferences.markup_song_browser,
+				strfsong (buffer, 1024,
+					cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",          
+						"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
 						ent->info.song);
 				if(ent->info.song->time != MPD_SONG_NO_TIME)
 				{
@@ -1064,7 +1072,9 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					&& !g_utf8_collate (ent->info.song->artist, artist))
 			{
 				gchar buffer[1024];
-				strfsong (buffer, 1024, preferences.markup_song_browser,
+				strfsong (buffer, 1024,
+						cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
+							"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
 						ent->info.song);
 				if(ent->info.song->time != MPD_SONG_NO_TIME)
 				{

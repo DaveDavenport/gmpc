@@ -55,15 +55,13 @@ set_default_values ()
 	/*
 	 * main display markup 
 	 */
-	preferences.markup_main_display =
-		g_strdup
-		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+//	preferences.markup_main_display =
+//		g_strdup
+//		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
 /*	preferences.markup_playlist =
 		g_strdup
 		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
-*/	preferences.markup_song_browser=
-		g_strdup
-		("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+*/
 	/*
 	 * the mpd status struct used  in the whole program 
 	 */
@@ -120,10 +118,6 @@ set_default_values ()
 	info.pl2_do_tooltip = TRUE;
 
 
-	/* playlist 3 */
-	info.xiph_url = g_strdup("http://dir.xiph.org/yp.xml");
-	info.online_stream_list = NULL;
-	info.online_streams = 0;
 }
 
 
@@ -141,7 +135,6 @@ int main (int argc, char **argv)
 	/*
 	 * load config 
 	 */
-	load_config ();
 	url = g_strdup_printf("%s/.gmpc.xml", g_getenv("HOME"));
 	config = cfg_open(url);
 	g_free(url);
@@ -198,10 +191,6 @@ int main (int argc, char **argv)
 	 */
 	gtk_main ();
 
-	/*
-	 * save config and quit 
-	 */
-	save_config ();
 	return 0;
 }
 

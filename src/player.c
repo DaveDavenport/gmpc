@@ -308,7 +308,10 @@ int update_player()
 			else
 			{
 				gchar buffer[1024];
-				strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
+				strfsong(buffer, 1024, 
+						cfg_get_single_value_as_string_with_default(config, "player","display_markup",
+							"markup main display: [%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),
+						info.mpdSong);
 				msg_set_base(buffer);
 			}
 		}

@@ -11,7 +11,6 @@ extern config_obj *config;
 
 
 extern int last_db;
-pref_struct preferences;
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 void popup_timeout_changed();
@@ -113,11 +112,9 @@ void create_preferences_window()
 void update_display_settings()
 {
 	gchar *temp;
-	if(preferences.markup_main_display != NULL) g_free(preferences.markup_main_display);
-//	if(preferences.markup_playlist != NULL) g_free(preferences.markup_playlist);
-//	if(preferences.markup_song_browser != NULL) g_free(preferences.markup_song_browser);
-	preferences.markup_main_display = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
-//	preferences.markup_playlist = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
+	temp = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd"))));
+	cfg_set_single_value_as_string(config, "player","display_markup",temp);
+	g_free(temp);
 	temp = g_strcompress(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_pl"))));
 	cfg_set_single_value_as_string(config, "playlist", "markup", temp);
 	g_free(temp);
@@ -125,7 +122,8 @@ void update_display_settings()
 
 void set_display_settings()
 {
-	char *escaped = g_strescape(preferences.markup_main_display, "");
+	char *escaped = g_strescape(cfg_get_single_value_as_string_with_default(config, "player", "display_markup",
+				"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"),"");
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), escaped);
 	g_free(escaped);
 	escaped = g_strescape(cfg_get_single_value_as_string_with_default(config, "playlist", "markup", DEFAULT_PLAYLIST_MARKUP), "");

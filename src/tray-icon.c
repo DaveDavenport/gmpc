@@ -441,15 +441,15 @@ void update_tray_icon()
 			{
 				if(info.mpdSong != NULL)
 				{
-					gchar buffer[1024];
-					strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
-					str = g_strdup(buffer);
+//					gchar buffer[1024];
+//					strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
+//					str = g_strdup(buffer);
 				}
 
 			}
-			else str = g_strdup(_("Gnome Music Player Client"));
+//			else str = g_strdup(_("Gnome Music Player Client"));
 			//			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
-			g_free(str);
+//			g_free(str);
 		}
 		if(info.state != info.status->state)
 		{
