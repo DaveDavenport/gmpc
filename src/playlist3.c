@@ -908,8 +908,6 @@ void pl3_browse_add_selected()
 				pl3_push_statusbar_message(message);
 				g_free(message);
 
-
-
 				/* append a playlist directly, we cant add it to the todo list */
 				mpd_sendLoadCommand (info.connection, name);
 				mpd_finishCommand (info.connection);
@@ -1615,28 +1613,15 @@ void pl3_cat_sel_changed()
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 }
 
-void pl3_update()
+
+void pl3_playlist_change()
 {
-	if(pl3_xml == NULL|| info.status == NULL)
+	gint type = pl3_cat_get_selected_browser();
+	if(type == PL3_CURRENT_PLAYLIST)
 	{
-		return;
-	}
-
-	/* if the song changed, or the state highlight the right song */
-	if (mpd_ob_player_get_current_song_id(connection) != info.song || info.state != info.status->state)
-	{
-		pl3_highlight_song ();
-	}
-
-	if(info.playlist_id != info.status->playlist)
-	{
-		gint type = pl3_cat_get_selected_browser();
-		if(type == PL3_CURRENT_PLAYLIST)
-		{
-			gchar *string = format_time(info.playlist_playtime);
-			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-			g_free(string);
-		}
+		gchar *string = format_time(info.playlist_playtime);
+		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+		g_free(string);
 	}
 }
 
@@ -2081,7 +2066,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),
-				pl3_playlist_tree_search_func, NULL,NULL);
+			pl3_playlist_tree_search_func, NULL,NULL);
 	pl3_reinitialize_tree();
 
 	/* add the file browser */
@@ -2118,13 +2103,46 @@ gboolean toggle_playlist3(GtkToggleButton *tb)
 
 
 /* this function takes care the right row is highlighted */
-void pl3_highlight_song ()
+void pl3_highlight_state_change(int old_state, int new_state)
+{
+	GtkTreeIter iter;
+	gchar *temp;
+	/* unmark the old pos if it exists */
+	if (info.old_pos != -1 && mpd_ob_player_get_state(connection) <= MPD_OB_PLAYER_STOP)
+	{
+		/* create a string so I can get the right iter */
+		temp = g_strdup_printf ("%i", info.old_pos);
+		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			gint song_id = 0;
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, -1);
+		}
+		g_free (temp);
+		/* reset old pos */
+		info.old_pos = -1;
+	}                                                           
+	/* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
+	if(old_state <= MPD_OB_PLAYER_STOP && old_state < new_state)
+	{
+		pl3_highlight_song_change();
+	}
+}
+
+
+
+
+
+
+
+void pl3_highlight_song_change ()
 {
 	GtkTreeIter iter;
 	gchar *temp;
 	/* check if there is a connection */
-	if (check_connection_state ())
+	if (!mpd_ob_check_connected (connection))
+	{
 		return;
+	}
 
 	/* unmark the old pos if it exists */
 	if (info.old_pos != -1)
@@ -2137,9 +2155,9 @@ void pl3_highlight_song ()
 			/* check if we have the song we want */
 			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,&song_id, -1);
 			/* if the old song is the new song (so tags updated) quit */
-			if (song_id == info.status->songid
-					&& info.status->state == info.state)
+			if (song_id == mpd_ob_player_get_current_song_id(connection))
 			{
+				g_print("song change to same song\n");
 				g_free (temp);
 				return;
 			}
@@ -2152,13 +2170,10 @@ void pl3_highlight_song ()
 		info.old_pos = -1;
 	}
 	/* check if we need to highlight a song */
-	if (info.status->state != MPD_STATUS_STATE_STOP &&
-			info.status->state != MPD_STATUS_STATE_UNKNOWN &&
-			info.status->song != -1 && info.status->playlistLength > 0)
+	if (mpd_ob_player_get_state(connection) > MPD_OB_PLAYER_STOP && mpd_ob_player_get_current_song_pos(connection) >= 0) 
 	{
 		temp = g_strdup_printf ("%i", mpd_ob_player_get_current_song_pos(connection));
-		if (gtk_tree_model_get_iter_from_string
-				(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
 			gint pos;
 			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
@@ -2204,8 +2219,7 @@ void pl2_save_playlist ()
 			/* also check if there is a connection */
 			if (strlen (str) != 0 && !check_connection_state ())
 			{
-				mpd_sendSaveCommand (info.connection, str);
-				mpd_finishCommand (info.connection);
+				mpd_ob_playlist_save(connection, str);
 			}
 	}
 	/* destroy the window */

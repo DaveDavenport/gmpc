@@ -84,7 +84,8 @@ int 		mpd_ob_check_error			(MpdObj *mi);
 void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id));
 void 		mpd_ob_signal_set_error			(MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg, void *pointer),void *pointer);
 void 		mpd_ob_signal_set_song_changed		(MpdObj *mi, void *(* song_changed)(MpdObj *mi, int old_song_id, int new_song_id,void *pointer), void *pointer);
-void 		mpd_ob_signal_set_status_changed		(MpdObj *mi, void *(* status_changed)(MpdObj *mi,void *pointer), void *pointer);
+void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(MpdObj *mi,void *pointer), void *pointer);
+void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer);
 
 /* status commands */
 int 		mpd_ob_status_queue_update		(MpdObj *mi);
@@ -114,4 +115,5 @@ int 		mpd_ob_player_seek			(MpdObj *mi, int sec);
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 int 		mpd_ob_playlist_clear			(MpdObj *mi);
+void 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
 #endif

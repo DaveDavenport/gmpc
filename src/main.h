@@ -35,11 +35,10 @@ typedef struct
 	int playlist_length;
 	int playlist_playtime;
 	/* the state, if the state changes I know I have to update some stuff */
-	int state;
 	/* the volume if the volume change I also have to update some stuff */
 //	int volume;
 	/* the current song */
-	int song;
+//	int song;
 	int old_pos;
 	/* updating */
 	gboolean updating;
@@ -124,3 +123,8 @@ void main_trigger_update();
 int  seek_ns(int n);
 int  seek_ps(int n);
 int volume_change(int diff);
+
+
+
+void pl3_highlight_song_change ();
+void pl3_highlight_state_change ();

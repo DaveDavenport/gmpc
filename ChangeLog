@@ -1,3 +1,8 @@
+18-02-2005 Qball <qball@qballcow.nl>
+	* src/playlist3.c:	Song highlighting is now done using the state
+	and song change signal from libmpd. highlighting should work like
+	expected again.
+
 17-02-2005 Qball <qball@qballcow.nl>
 	* src/tray-icon.c:	Actually make it use libmpd.
 	* src/tray-icon.c:	Make it use libmpd completely

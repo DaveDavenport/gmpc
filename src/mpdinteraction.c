@@ -27,12 +27,6 @@ int update_mpd_status()
 	{
 		return TRUE;
 	}
-/*	if(info.stats != NULL) mpd_freeStats(info.stats);
-	mpd_sendStatsCommand(info.connection);
-	info.stats = mpd_getStats(info.connection);
-	mpd_finishCommand(info.connection);
-	if(info.stats == NULL)g_print("crap %s\n", info.connection->errorStr);
-*/
 
 	mpd_ob_status_queue_update(connection);
 	/* unlock it */
@@ -60,7 +54,7 @@ int disconnect_to_mpd()
 	msg_set_base(_("gmpc - Disconnected"));
 
 	scroll.exposed = 1;
-	info.song = -1;
+//	info.song = -1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
@@ -81,7 +75,7 @@ int connect_to_mpd()
 {
 	info.conlock = TRUE;
 	scroll.exposed = 1;
-	info.song = -1;    
+//	info.song = -1;    
 	info.playlist_playtime = 0;
 
 	mpd_ob_set_hostname(connection,cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));

@@ -264,8 +264,6 @@ int mpd_ob_disconnect(MpdObj *mi)
 	mi->songid = -1;
 
 	/*don't reset errors */
-//	mi->error = 0;
-//	mi->error_msg = NULL;
 
 	return FALSE;
 }
@@ -445,17 +443,6 @@ int mpd_ob_status_update(MpdObj *mi)
 		mi->songid = mi->status->songid;
 
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 	
 	if(mi->status_changed != NULL)
@@ -1040,6 +1027,31 @@ int mpd_ob_playlist_shuffle(MpdObj *mi)
 
 }
 
+void mpd_ob_playlist_save(MpdObj *mi, char *name)
+{
+	if(name == NULL && strlen(name))
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_save: name != NULL  and strlen(name) > 0 failed");
+		return;
+	}
+	if(!mpd_ob_check_connected(mi))
+	{
+		debug_printf(DEBUG_WARNING,"mpd_ob_playlist_save: not connected\n");
+		return;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		debug_printf(DEBUG_ERROR,"mpd_ob_playlist_save: lock failed\n");
+		return;
+	}
+
+	mpd_sendSaveCommand(mi->connection,name);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */                                               	
+	mpd_ob_unlock_conn(mi);
+	return;
+}
 
 
 /* SIGNALS */
@@ -1087,15 +1099,6 @@ void mpd_ob_signal_set_status_changed (MpdObj *mi, void *(* status_changed)(MpdO
 	mi->status_changed = status_changed;
 	mi->status_changed_signal_pointer = pointer;
 }
-
-
-
-
-
-
-
-
-
 
 
 void mpd_ob_signal_set_error (MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg,void *pointer),void *pointer)

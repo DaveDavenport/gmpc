@@ -23,7 +23,6 @@
 #include "main.h"
 
 /* returns TRUE when an error */
-/* NEEDS A REWRITE */
 int check_for_errors()
 {
 	return mpd_ob_check_error(connection);

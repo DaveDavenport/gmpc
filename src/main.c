@@ -87,8 +87,6 @@ void main_trigger_update ()
 	void
 set_default_values ()
 {
-	
-	
 	/*
 	 * the mpd status struct used  in the whole program 
 	 */
@@ -112,17 +110,8 @@ set_default_values ()
 	info.playlist_length = 0;
 	info.playlist_playtime = 0;
 	/*
-	 * the state, if the state changes I know I have to update some stuff 
-	 */
-	info.state = -1;
-	/*
-	 * the volume if the volume change I also have to update some stuff 
-	 */
-//	info.volume = -1;
-	/*
 	 * the current song 
 	 */
-	info.song = -1;
 	info.old_pos = -1;
 	/*
 	 * tray icon 
@@ -341,37 +330,13 @@ int update_interface ()
 
 
 	/*
-	 * tray update 
-	 */
-//	update_tray_icon ();
-
-	/*
-	 * update the playlist 
-	 */
-	pl3_update ();
-
-	/*
-	 * update the player window 
-	 */
-//	if (update_player ())
-//	{
-		/*
-		 * error return 
-		 */
-//		return TRUE;
-//	}
-
-	/*
-	 * return (must be true to keep timeout going) 
-	 */
-	/*
 	 * set these to the good value. So there only updated when changed 
 	 */
 	info.playlist_id = info.status->playlist;
-	if (info.status->state != MPD_STATUS_STATE_UNKNOWN)
-		info.song = mpd_ob_player_get_current_song_id(connection);
-	if (info.status->state == MPD_STATUS_STATE_STOP)
-		info.song = -1;
+//	if (info.status->state != MPD_STATUS_STATE_UNKNOWN)
+//		info.song = mpd_ob_player_get_current_song_id(connection);
+//	if (info.status->state == MPD_STATUS_STATE_STOP)
+//		info.song = -1;
 	return TRUE;
 }
 
@@ -503,7 +468,8 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		g_free (path);
 		old_length--;
 	}
-	pl3_highlight_song ();
+//	pl3_highlight_song ();
+	pl3_highlight_song_change ();
 
 
 	info.status->song = -1;
@@ -645,6 +611,7 @@ void song_changed(MpdObj *mi, int oldsong, int newsong)
 	/* player changed */
 	player_song_changed(oldsong, newsong);
 	tray_icon_song_change();
+	pl3_highlight_song_change();
 }
 
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
@@ -668,5 +635,5 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 {
 	player_state_changed(old_state, new_state);
 	tray_icon_state_change();
-
+	pl3_highlight_state_change(old_state,new_state);
 }

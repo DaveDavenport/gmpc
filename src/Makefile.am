@@ -17,8 +17,8 @@ gmpc_SOURCES=\
 	mm-keys.c\
 	playlist3.c\
 	vfs_download.c\
-	osb_browser.c\
 	debug_printf.c\
+	osb_browser.c\
 	config1.c
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG
@@ -36,7 +36,7 @@ EXTRA_DIST = 	playlist3.h\
 		libmpd.h\
 		vfs_download.h\
 		mpdinteraction.h\
-		osb_browser.h\
 		debug_printf.h\
+		osb_browser.h\
 		config1.h
 		
