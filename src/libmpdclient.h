@@ -117,6 +117,8 @@ typedef struct mpd_Status {
 	long long playlist;
 	/* use with MPD_STATUS_STATE_* to determine state of player */
 	int state;
+	/* crossfade setting in seconds */
+	int crossfade;
 	/* if in PLAY or PAUSE state, this is the number of the currently
 	 * playing song in the playlist, beginning with 0
 	 */
@@ -129,6 +131,12 @@ typedef struct mpd_Status {
 	int totalTime;
 	/* current bit rate in kbs */
 	int bitRate;
+	/* audio sample rate */
+	unsigned int sampleRate;
+	/* audio bits */
+	int bits;
+	/* audio channels */
+	int channels;
 	/* error */
 	char * error;
 } mpd_Status;
@@ -149,6 +157,8 @@ typedef struct _mpd_Stats {
 	int numberOfSongs;
 	unsigned long uptime;
 	unsigned long dbUpdateTime;
+	unsigned long playTime;
+	unsigned long dbPlayTime;
 } mpd_Stats;
 
 mpd_Stats * mpd_getStats(mpd_Connection * connection);

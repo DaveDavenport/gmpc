@@ -9,6 +9,7 @@ GladeXML *xml_playlist_window = NULL;
 void update_information_tab();
 
 /* playlist only functions */
+void refresh_information_tab();
 void do_server_side_search();
 void load_songs_with_filter();
 void fill_playlist_tree();
@@ -176,7 +177,7 @@ void create_playlist()
 
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track #", renderer, "text", 4, NULL);
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track", renderer, "text", 4, NULL);
 	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
 	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 0), 4);
 	gtk_tree_sortable_set_sort_func((GtkTreeSortable *)info.file_list, 4, (GtkTreeIterCompareFunc)track_sort_func, GINT_TO_POINTER(4), NULL);
@@ -233,7 +234,7 @@ void create_playlist()
 
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track #", renderer, "text", 3, NULL);
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track", renderer, "text", 3, NULL);
 	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
 	gtk_tree_view_column_set_max_width(gtk_tree_view_get_column((GtkTreeView*)tree, 0), 250);    
 	gtk_tree_view_column_set_sort_column_id(gtk_tree_view_get_column((GtkTreeView*)tree, 0), 3);
@@ -1113,6 +1114,19 @@ void fill_artist_tree()
 
 }
 
+void refresh_information_tab()
+{
+	if(info.connection == NULL) return;
+	if(info.stats != NULL)
+	{
+		mpd_freeStats(info.stats);
+	}
+	info.stats = mpd_getStats(info.connection);
+	mpd_finishCommand(info.connection);
+
+	update_information_tab();
+}
+
 void update_information_tab()
 {
 	int day = 0, hour = 0, min = 0, sec = 0;
@@ -1151,6 +1165,24 @@ void update_information_tab()
 	temp = g_strdup_printf("%id %ih %im",day, hour,min);
 	gtk_label_set_label(GTK_LABEL(glade_xml_get_widget(xml_playlist_window, "mpd_info_uptime")), temp);
 	g_free(temp);
+
+	/* set time played */
+	day =  info.stats->playTime/86400;
+	hour = (int)info.stats->playTime/3600 - day*24;
+	min = (int)info.stats->playTime/60 - day*1440 - hour*60;
+	temp = g_strdup_printf("%id %ih %im",day, hour,min);
+	gtk_label_set_label(GTK_LABEL(glade_xml_get_widget(xml_playlist_window, "mpd_info_music_played")), temp);
+	g_free(temp);                 
+
+
+	/* set time played */
+	day =  info.stats->dbPlayTime/86400;
+	hour = (int)info.stats->dbPlayTime/3600 - day*24;
+	min = (int)info.stats->dbPlayTime/60 - day*1440 - hour*60;
+	sec = info.stats->dbPlayTime - min*60 - hour*3600 - day*86400;
+	temp = g_strdup_printf("%id %ih %im %is",day, hour,min, sec);
+	gtk_label_set_label(GTK_LABEL(glade_xml_get_widget(xml_playlist_window, "mdb_info_playtime")), temp);
+	g_free(temp);                 
 
 	/* last update db */
 	temp = g_strdup_printf("%s",ctime((time_t *)&info.stats->dbUpdateTime));
