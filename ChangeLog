@@ -1,3 +1,10 @@
+28-06-2004 Qball <Qball@qballcow.nl>
+	* Added a song-browser window
+	* Added images for song/stream to playlist
+	* song-browser reloads if playlist changes.
+	* Added custom stock icons.
+	* Adding from song browser now completely works.
+
 27-06-2004 Qball <Qball@qballcow.nl>
 	* Changed move function so it works with filtered playlist
 	* Force update after changes to playlist (delete and move)

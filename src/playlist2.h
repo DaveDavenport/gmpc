@@ -11,5 +11,6 @@ enum store_types
 	SONG_TITLE,
 	WEIGHT_INT,
 	WEIGHT_ENABLE,
+	SONG_STOCK_ID,
 	NROWS
 };

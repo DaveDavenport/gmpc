@@ -8,3 +8,4 @@ enum{
 
 
 void song_browser_create();
+void update_song_browser();

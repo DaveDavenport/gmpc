@@ -23,6 +23,13 @@ int update_mpd_status()
 	{
 		return TRUE;
 	}
+	if(info.stats != NULL) mpd_freeStats(info.stats);
+	mpd_sendStatsCommand(info.connection);
+	info.stats = mpd_getStats(info.connection);
+	mpd_finishCommand(info.connection);
+	if(info.stats == NULL)g_print("crap %s\n", info.connection->errorStr);
+
+	
 	/* unlock it */
 	info.conlock = FALSE;
 	return TRUE;

@@ -5,6 +5,7 @@
 #include <glade/glade.h>
 #include "libmpdclient.h"
 #include "playlist2.h"
+#include "song-browser.h"
 #include "main.h"
 #include "strfsong.h"
 
@@ -193,6 +194,8 @@ int update_interface()
 	/* tray update */
 	update_tray_icon();	
 
+	update_song_browser();
+
 	/* check for new playlist and load it if needed */
 	if(info.playlist_id != info.status->playlist)
 	{
@@ -230,6 +233,7 @@ int update_interface()
 							SONG_TITLE,buffer,
 							WEIGHT_ENABLE,TRUE,
 							WEIGHT_INT, weight,
+							SONG_STOCK_ID,(ent->info.song->name == NULL)? "media-audiofile":"media-stream",
 							-1); 
 				}
 			}
@@ -243,6 +247,7 @@ int update_interface()
 						SONG_TITLE,buffer,
 						WEIGHT_ENABLE,TRUE,
 						WEIGHT_INT, PANGO_WEIGHT_NORMAL,
+						SONG_STOCK_ID,(ent->info.song->name == NULL)? "media-audiofile":"media-stream",
 						-1); 
 			}
 			mpd_freeInfoEntity(ent);

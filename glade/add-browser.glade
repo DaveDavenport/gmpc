@@ -18,6 +18,7 @@
   <property name="skip_pager_hint">False</property>
   <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <signal name="delete_event" handler="sb_close" last_modification_time="Mon, 28 Jun 2004 18:26:36 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
@@ -87,11 +88,12 @@ id3-tag</property>
 	    <widget class="GtkTreeView" id="treeview">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
-	      <property name="headers_visible">True</property>
+	      <property name="headers_visible">False</property>
 	      <property name="rules_hint">True</property>
 	      <property name="reorderable">False</property>
 	      <property name="enable_search">True</property>
 	      <signal name="row_expanded" handler="sb_row_expanded" last_modification_time="Mon, 28 Jun 2004 17:16:11 GMT"/>
+	      <signal name="row_activated" handler="sb_row_activated" last_modification_time="Mon, 28 Jun 2004 17:53:20 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -111,10 +113,13 @@ id3-tag</property>
 	  <child>
 	    <widget class="GtkButton" id="button3">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Replace playlist with selection &lt;ctrl+Insert&gt;</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="sb_replace_songs" last_modification_time="Mon, 28 Jun 2004 18:25:19 GMT"/>
+	      <accelerator key="Insert" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 	      <child>
 		<widget class="GtkAlignment" id="alignment2">
@@ -181,10 +186,13 @@ id3-tag</property>
 	  <child>
 	    <widget class="GtkButton" id="button4">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Append selection to the playlist &lt;Insert&gt;</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="sb_row_activated" last_modification_time="Mon, 28 Jun 2004 18:25:03 GMT"/>
+	      <accelerator key="Insert" modifiers="0" signal="clicked"/>
 
 	      <child>
 		<widget class="GtkAlignment" id="alignment1">
@@ -251,12 +259,16 @@ id3-tag</property>
 	  <child>
 	    <widget class="GtkButton" id="button5">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Close the window &lt;Escape or ctrl-w&gt;</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="focus_on_click">True</property>
+	      <signal name="clicked" handler="sb_close" last_modification_time="Mon, 28 Jun 2004 18:26:19 GMT"/>
+	      <accelerator key="Escape" modifiers="0" signal="clicked"/>
+	      <accelerator key="w" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 	    </widget>
 	  </child>
 	</widget>

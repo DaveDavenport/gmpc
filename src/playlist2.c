@@ -25,7 +25,8 @@ void init_playlist2()
 			GTK_TYPE_INT, /* pos id */	 	
 			GTK_TYPE_STRING, /* song title */
 			GTK_TYPE_INT, /* weight int */
-			G_TYPE_BOOLEAN); /* weight color */
+			G_TYPE_BOOLEAN, /* weight color */
+			GTK_TYPE_STRING);/* stock-id */
 
 }
 
@@ -357,6 +358,7 @@ void create_playlist2()
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	GtkTargetEntry target;
+	GtkTreeViewColumn *column = NULL;
 	if(pl2_xml != NULL)
 	{
 		gtk_widget_show_all(
@@ -388,18 +390,31 @@ void create_playlist2()
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),
 			GTK_TREE_MODEL(pl2_fil));
 
+
+
+	
 	/* draw the column with the songs */
+	renderer = gtk_cell_renderer_pixbuf_new();
+	column = gtk_tree_view_column_new();
+	gtk_tree_view_column_pack_start(column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes(column, 
+			renderer, 
+			"stock-id", SONG_STOCK_ID,
+			NULL);                      	
+
+	
 	renderer = gtk_cell_renderer_text_new();
 
 	/* insert the column in the tree */
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), 
-			-1,"Playlist", renderer, 
+	gtk_tree_view_column_pack_start(column, renderer, TRUE);
+	gtk_tree_view_column_set_attributes(column, 
+			renderer, 
 			"text", SONG_TITLE,
 			"weight", WEIGHT_INT,
 			"weight-set", WEIGHT_ENABLE,
 			NULL);
 
-
+	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
 	/* set filter function */
 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_fil), 
 			(GtkTreeModelFilterVisibleFunc) pl2_filter_function,
