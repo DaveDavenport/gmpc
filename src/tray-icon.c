@@ -117,7 +117,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1)
 	{
-		if(info.hidden)
+		if(info.hidden )
 		{
 			gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
 			info.hidden = FALSE;

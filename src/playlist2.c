@@ -21,10 +21,23 @@ static GtkTargetEntry drag_types[] = {
 };
 
 void load_playlist2 ();
-
+void pl2_delete_selected_songs ();
 /* timeout for the search */
 guint filter_timeout = 0;
 void pl2_filter_refilter ();
+
+
+/* catch keybord pressing */
+gboolean pl2_key_pressed (GtkWidget * widget, GdkEventKey * event)
+{
+	  if (event->keyval == GDK_Delete)
+	  {
+		pl2_delete_selected_songs ();  
+	  }	
+  /* propagate the event further */
+  return FALSE;	
+}
+
 
 void pl2_shuffle_playlist()
 {
@@ -63,6 +76,7 @@ void pl2_crop_selected_songs()
 		mpd_sendCommandListEnd(info.connection);
 		mpd_finishCommand(info.connection);
 	}
+	gtk_tree_selection_unselect_all(selection);
 }
 
 
@@ -98,9 +112,6 @@ pl2_button_press_event (GtkWidget * widget, GdkEventButton * event)
       /* stop signal */
       return TRUE;
     }
-
-
-
 
   /* continue signal */
   return FALSE;
@@ -480,8 +491,10 @@ pl2_delete_selected_songs ()
       gtk_widget_destroy (GTK_WIDGET (dialog));
     }
   /* update everything if where still connected */
+    gtk_tree_selection_unselect_all(selection);
   if (!check_connection_state ())
     main_trigger_update ();
+  
 }
 
 

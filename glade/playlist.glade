@@ -80,6 +80,7 @@
 	  <child>
 	    <widget class="GtkButton" id="button1">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Filters the playlist to match the string entered in the search box.</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-find</property>
 	      <property name="use_stock">True</property>
@@ -150,6 +151,7 @@
 	      <signal name="row_activated" handler="pl2_row_activated" last_modification_time="Mon, 21 Jun 2004 12:58:30 GMT"/>
 	      <signal name="drag_drop" handler="pl2_row_moved" last_modification_time="Wed, 30 Jun 2004 13:27:35 GMT"/>
 	      <signal name="button_press_event" handler="pl2_button_press_event" last_modification_time="Sun, 04 Jul 2004 20:31:37 GMT"/>
+	      <signal name="key_press_event" handler="pl2_key_pressed" last_modification_time="Tue, 06 Jul 2004 14:48:47 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -175,6 +177,7 @@
 	      <child>
 		<widget class="GtkButton" id="button6">
 		  <property name="visible">True</property>
+		  <property name="tooltip" translatable="yes">Opens a browser window that allows you to add  songs and playlists</property>
 		  <property name="can_focus">True</property>
 		  <property name="label">gtk-add</property>
 		  <property name="use_stock">True</property>
@@ -275,7 +278,6 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="pl2_delete_selected_songs" last_modification_time="Sun, 27 Jun 2004 13:38:43 GMT"/>
-		  <accelerator key="Delete" modifiers="0" signal="clicked"/>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -371,6 +373,7 @@
 	  <child>
 	    <widget class="GtkButton" id="button9">
 	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Close this window &lt;Escape&gt;</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>

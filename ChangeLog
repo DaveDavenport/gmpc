@@ -1,3 +1,10 @@
+06-07-2004 Qball <Qball@qballcow.nl>
+	* added TODO file.
+	* glade/playlist.glade:	Added tooltip to find,close and add.
+	* src/playlist2.c:	del signals only cought when tree in focus, you can now use del to clear search window.
+	* src/playlist2.c:	unselect after delete
+	* src/playlist2.c:	Unselect after crop.
+	
 05-07-2004 Qball <Qball@qballcow.nl>
 	* src/playlist2.c/glade/playlist.glade: Added context menu to the playlist.
 	* src/playlist2.c: added shuffle/clear and crop function.

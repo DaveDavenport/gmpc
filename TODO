@@ -1,0 +1,11 @@
+* 	als window niet "present" is, hide dan niet op tray-icon click maar present de window
+* 	Add a note on the "Add Location" window that url's can be dropped there from a browser
+* 	Add a configuration item for configuring the song display
+* 	Sort id3 browser
+* 	In browser window in any mode, if someone has the parent and some (or all) children highlighted of a branch, add all items of just once.  
+	for example, if one highlights artist "Oasis" and all their songs, it should only add all the songs of oasis once, not twice).
+* 	Context menus for the song browser.
+* 	Tooltips for "Find", "Artist, Album, Filename, Title" selector, for entry box for search browser
+* 	clicking on the tray to hide gmpc should hide and unhide all windows, but it should put the windows back in the places where they were.
+* 	remember all window sizes and positions
+* 	make playlist button toggleable, so that playlist can be opened and closed w/o moving the mouse button

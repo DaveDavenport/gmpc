@@ -357,7 +357,7 @@ sb_row_activated ()
 	  GtkTreePath *path = node->data;
 	  gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
 	  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_FPATH,
-			      &name, SB_TYPE, &type, -1);
+			      &name, SB_TYPE, &type, -1);	  
 	  if (type != 4)
 	    {
 	      /* add them to the add list */
