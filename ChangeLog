@@ -1,6 +1,11 @@
 05-11-2004 Qball <Qball@qballcow.nl>
 	* src/tray-icon.c:	Remove empty space of progressbar when its not
 	availible
+	* src/playlist3.c:	Check if playlist is active when
+	disconnecting. if not, don't do anything.
+	* src/tray-icon.c:	Context menu on tray-icon now uses stock
+	icons, not default stuff. (no more a glade menu). 
+	
 
 2-11-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Can't open row in plaaylist when disconnected.

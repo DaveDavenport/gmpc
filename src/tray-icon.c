@@ -514,9 +514,46 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	}
 	else if(event->button == 3)
 	{
-		GtkMenu *menu = (GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
-		gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 3, event->time);
-		gtk_widget_show_all(GTK_WIDGET(menu));
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();//(GtkMenu *)glade_xml_get_widget(tray_xml, "tray_icon_menu");
+
+
+		item = gtk_image_menu_item_new_with_label(_("Play/Pause"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock("media-play", GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);				
+
+
+		item = gtk_image_menu_item_new_with_label(_("Stop"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock("media-stop", GTK_ICON_SIZE_MENU));                            		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);				
+
+		item = gtk_image_menu_item_new_with_label(_("Next"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
+				gtk_image_new_from_stock("media-next", GTK_ICON_SIZE_MENU));                            		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);				
+
+
+		item = gtk_image_menu_item_new_with_label(_("Previous"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
+				gtk_image_new_from_stock("media-prev", GTK_ICON_SIZE_MENU));                            		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);				                              		
+		
+
+		item = gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(gtk_main_quit), NULL);				                              		
+
+		gtk_widget_show_all(menu);	
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, event->time);
 	}
 	return FALSE;    
 }
