@@ -37,6 +37,7 @@ enum pl3_cat_store
 	PL3_CAT_INT_ID,
 	PL3_CAT_ICON_ID,
 	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
+	PL3_CAT_ICON_SIZE,
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
@@ -142,7 +143,8 @@ void pl3_find_add()
 			PL3_CAT_TITLE, "Search",
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "gtk-find",
-			PL3_CAT_PROC, TRUE,-1);
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,1,-1);
 }
 
 unsigned long pl3_find_view_browser()
@@ -228,6 +230,7 @@ void pl3_find_search()
 			PL3_CAT_INT_ID, field,
 			PL3_CAT_ICON_ID, "gtk-find",
 			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,1,
 			-1);
 	path = gtk_tree_model_get_path(model,&iter);
 	gtk_tree_view_expand_to_path(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path);
@@ -254,7 +257,9 @@ void pl3_current_playlist_add()
 			PL3_CAT_TITLE, "Current Playlist",
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-stream",
-			PL3_CAT_PROC, TRUE,-1);
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,2,
+			-1);
 }
 
 /* delete all selected songs,
@@ -496,7 +501,8 @@ void pl3_file_browser_add()
 			PL3_CAT_TITLE, "Browse Filesystem",
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
-			PL3_CAT_PROC, FALSE,-1);
+			PL3_CAT_PROC, FALSE,
+			PL3_CAT_ICON_SIZE,2,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -600,6 +606,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 					2, ent->info.directory->path,
 					3, "gtk-open",
 					4, FALSE,
+					PL3_CAT_ICON_SIZE,1,
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
 
@@ -722,7 +729,8 @@ void pl3_artist_browser_add()
 			PL3_CAT_TITLE, "Browse Artists",        	
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
-			PL3_CAT_PROC, FALSE,-1);
+			PL3_CAT_PROC, FALSE,
+			PL3_CAT_ICON_SIZE,2,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -850,6 +858,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					2, string, /* the artist name, if(1 and 2 together its an artist field) */
 					3, "media-artist",
 					4, FALSE,
+					PL3_CAT_ICON_SIZE,1,
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
 
@@ -873,7 +882,9 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					1, string,
 					2, artist,
 					3, "media-album", 
-					4, TRUE, -1);
+					4, TRUE, 
+					PL3_CAT_ICON_SIZE,1,
+					-1);
 			g_free (string);
 		}
 		mpd_finishCommand (info.connection);
@@ -1156,6 +1167,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 {
 	gint type,read;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, 0, &type,4,&read, -1);
+	
 	if(read) return;
 	if(type == PL3_BROWSE_FILE)
 	{
@@ -1166,7 +1178,8 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		pl3_artist_browser_fill_tree(iter);
 
 	}
-
+	/* avuton's Idea */
+	gtk_tree_view_scroll_to_cell(tree, path,NULL,TRUE,0.5,0);
 }
 
 
@@ -1462,12 +1475,13 @@ void create_playlist3 ()
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
-		pl3_tree = gtk_tree_store_new (5, 
+		pl3_tree = gtk_tree_store_new (6, 
 				GTK_TYPE_INT,	/* row type, see free_type struct */
 				GTK_TYPE_STRING, /* display name */
 				GTK_TYPE_STRING,/* full path and stuff for backend */
 				GTK_TYPE_STRING,
-				GTK_TYPE_BOOL);	/* stock_id*/
+				GTK_TYPE_BOOL,
+				GTK_TYPE_UINT);	/* stock_id*/
 	}
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
@@ -1482,7 +1496,7 @@ void create_playlist3 ()
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 			renderer,
-			"stock-id",3, NULL);
+			"stock-id",3,"stock-size",5, NULL);
 
 
 	renderer = gtk_cell_renderer_text_new ();

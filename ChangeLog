@@ -1,3 +1,6 @@
+1-11-2004 Qball <Qball@qballcow.nl>
+	* src/playlist3.c:	Implemented avuton's request, I don't like
+	it.. lets see how it works out.
 31-10-2004 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Add right mouse menu in right pane
 28-10-2004 Qball <Qball@qballcow.nl>
