@@ -3,6 +3,8 @@
 #include <glade/glade.h>
 #include "eggtrayicon.h"
 #include "libmpdclient.h"
+#include "playlist2.h"
+#include "song-browser.h"
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"

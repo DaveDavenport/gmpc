@@ -99,6 +99,7 @@ Search Results</property>
 	      <signal name="row_expanded" handler="sb_row_expanded" last_modification_time="Mon, 28 Jun 2004 17:16:11 GMT"/>
 	      <signal name="row_activated" handler="sb_row_activate_click" last_modification_time="Tue, 29 Jun 2004 14:07:14 GMT"/>
 	      <signal name="key_press_event" handler="sb_key_pressed" last_modification_time="Fri, 02 Jul 2004 11:30:36 GMT"/>
+	      <signal name="button_press_event" handler="sb_button_press_event" last_modification_time="Sat, 10 Jul 2004 14:31:18 GMT"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -348,6 +349,75 @@ for filename</property>
 	  <property name="expand">False</property>
 	  <property name="fill">True</property>
 	</packing>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+<widget class="GtkMenu" id="sb_menu">
+
+  <child>
+    <widget class="GtkImageMenuItem" id="add1">
+      <property name="visible">True</property>
+      <property name="label">gtk-add</property>
+      <property name="use_stock">True</property>
+      <signal name="activate" handler="sb_row_activated" last_modification_time="Sat, 10 Jul 2004 14:28:55 GMT"/>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="replace1">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Replace</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="sb_replace_songs" last_modification_time="Sat, 10 Jul 2004 14:29:11 GMT"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image23">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-apply</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="sb_delete">
+      <property name="visible">True</property>
+      <property name="label">gtk-delete</property>
+      <property name="use_stock">True</property>
+      <signal name="activate" handler="sb_delete" last_modification_time="Sat, 10 Jul 2004 14:42:28 GMT"/>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkSeparatorMenuItem" id="separator">
+      <property name="visible">True</property>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="update_dir">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Update</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="sb_update_dir" last_modification_time="Sat, 10 Jul 2004 14:29:18 GMT"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image24">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-refresh</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
       </child>
     </widget>
   </child>

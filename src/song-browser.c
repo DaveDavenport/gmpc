@@ -23,625 +23,732 @@ int last_db = 0;
 /* size */
 GtkAllocation sb_wsize = { 0,0,0,0};
 
+void sb_update_dir()
+{
+	GtkTreeSelection *selection =
+		gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget(sb_xml, "treeview")));
+	GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
+	gint amount = gtk_tree_selection_count_selected_rows (selection);
+	GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) != BROWSE_FILE) return;
+	if (amount != 0)
+	{
+		GList *rows = NULL;
+		if ((rows = gtk_tree_selection_get_selected_rows (selection, &model)) != NULL)
+		{
+			GList *node = g_list_last (rows);
+			do
+			{
+				GtkTreeIter iter;
+				if (gtk_tree_model_get_iter(GTK_TREE_MODEL (sb_store), &iter, node->data))
+				{
+					gint type = 0;
+					gchar *name;
+					gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter,
+							SB_TYPE, &type, SB_FPATH, &name, -1);
+					if (type == ROW_CLOSE || type == ROW_OPEN)
+					/* playlist */
+					{
+						if (!check_connection_state ())
+						{
+							mpd_sendUpdateCommand (info.connection, name);
+							mpd_finishCommand (info.connection);
+							if (!check_for_errors ())
+								sb_reload_file_browser ();
+						}
+
+					}
+				}
+			}
+			while ((node = g_list_previous (node)) != NULL);
+
+			g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+			g_list_free (rows);
+		}
+		return;
+	}
+}
+
+void sb_delete()
+{
+	GtkTreeSelection *selection =
+		gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget(sb_xml, "treeview")));
+	GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+	GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
+	gint amount = gtk_tree_selection_count_selected_rows (selection);
+	if (amount != 0)
+	{
+		GList *rows = NULL;
+		if ((rows = gtk_tree_selection_get_selected_rows (selection, &model)) != NULL)
+		{
+			GList *node = g_list_last (rows);
+			do
+			{
+				GtkTreeIter iter;
+				if (gtk_tree_model_get_iter
+						(GTK_TREE_MODEL (sb_store), &iter, node->data))
+				{
+					gint type = 0;
+					gchar *name;
+					gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter,
+							SB_TYPE, &type, SB_FPATH, &name, -1);
+					if (type == ROW_PLAYLIST && 
+					gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_FILE)	
+					/* playlist */
+					{
+						if (!check_connection_state ())
+						{
+							mpd_sendRmCommand (info.connection, name);
+							mpd_finishCommand (info.connection);
+							if (!check_for_errors ())
+								sb_reload_file_browser ();
+						}
+
+					}
+					else if (type == ROW_CLOSE && 
+					gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_SEARCH)	
+					/* search folder */
+					{
+						GtkTreeIter child;
+						if (gtk_tree_model_iter_children (model, &child, &iter))
+						{
+							while (gtk_tree_store_remove (sb_store, &child));
+						}
+						gtk_tree_store_remove (sb_store, &iter);
+					}
+				}
+			}
+			while ((node = g_list_previous (node)) != NULL);
+
+			g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+			g_list_free (rows);
+		}
+		return;
+	}
+}
+
+
+
 gboolean sb_button_press_event (GtkWidget * widget, GdkEventButton * event)
 {
-	 if (event->button == 3)	/* right mouse button */
-	 {
-		 GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
-		 if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_FILE)
-		 {
-			 
-		 }
-		 else if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_TAG)
-		 {
-			 
-		 }
-		 else if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_SEARCH)
-		 {
-			 
-			 
-		 }
-		 
-	 /* stop signal */
-	  return TRUE;		 
-	 }
-	 /* continue signal */
-	  return FALSE;
+	if (event->button == 3)	/* right mouse button */
+	{
+		GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+		GladeXML *xml = glade_xml_new (GLADE_PATH "add-browser.glade", 
+				"sb_menu", NULL);
+		if(!gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_FILE)
+		{
+			gtk_widget_hide(glade_xml_get_widget(xml, "update_dir"));
+			gtk_widget_hide(glade_xml_get_widget(xml, "separator"));
+		}
+		if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == BROWSE_TAG)
+		{
+			gtk_widget_hide(glade_xml_get_widget(xml, "sb_delete"));
+		}
+		glade_xml_signal_autoconnect(xml);
+		gtk_menu_popup(GTK_MENU(glade_xml_get_widget(xml, "sb_menu")),
+				NULL, NULL, NULL, NULL, event->button, event->time );
+
+		/* stop signal */
+		return TRUE;		 
+	}
+	/* continue signal */
+	return FALSE;
 }
 
 
 /* function that gets called by the tree_Store to sort it. */
 /* TODO: FIXME, disabled for now, doesnt work */
-gint
+	gint
 sb_sort_function_id3 (GtkTreeModel * model, GtkTreeIter * a, GtkTreeIter * b)
 {
-  gint type_a, type_b;
-  gchar *aname = NULL, *bname = NULL;
-  gtk_tree_model_get (model, a, SB_TYPE, &type_a, SB_DPATH, &aname, -1);
-  gtk_tree_model_get (model, b, SB_TYPE, &type_b, SB_DPATH, &bname, -1);
-  if (type_a != type_b)
-    {
-    return 0;
-      return type_b - type_a;
-    }
-  else
-    {
-	    return strcmp(aname,bname);
-//      return g_utf8_collate (aname, bname);
-    }
+	gint type_a, type_b;
+	gchar *aname = NULL, *bname = NULL;
+	gtk_tree_model_get (model, a, SB_TYPE, &type_a, SB_DPATH, &aname, -1);
+	gtk_tree_model_get (model, b, SB_TYPE, &type_b, SB_DPATH, &bname, -1);
+	if (type_a != type_b)
+	{
+		return 0;
+		return type_b - type_a;
+	}
+	else
+	{
+		return strcmp(aname,bname);
+		//      return g_utf8_collate (aname, bname);
+	}
 }
 
 /* function that handles key-presses in the tree */
-gboolean
+	gboolean
 sb_key_pressed (GtkWidget * widget, GdkEventKey * event)
 {
-  GtkTreeSelection *selection =
-    gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
-  GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
-  GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
-  gint asked = FALSE;
-  gint amount = gtk_tree_selection_count_selected_rows (selection);
-  if (event->keyval == GDK_Delete)
-    {
-      GList *rows = NULL;
-      if ((rows =
-	   gtk_tree_selection_get_selected_rows (selection, &model)) != NULL)
+	GtkTreeSelection *selection =
+		gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+	GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
+	gint asked = FALSE;
+	gint amount = gtk_tree_selection_count_selected_rows (selection);
+	if (event->keyval == GDK_Delete)
 	{
-	  GList *node = g_list_last (rows);
-	  do
-	    {
-	      GtkTreeIter iter;
-	      if (gtk_tree_model_get_iter
-		  (GTK_TREE_MODEL (sb_store), &iter, node->data))
+		GList *rows = NULL;
+		if ((rows =
+					gtk_tree_selection_get_selected_rows (selection, &model)) != NULL)
 		{
-		  gint type = 0;
-		  gchar *name;
-		  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter,
-				      SB_TYPE, &type, SB_FPATH, &name, -1);
-		  if (type == ROW_PLAYLIST && gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_FILE)	/* playlist */
-		    {
-		      if (!asked)
+			GList *node = g_list_last (rows);
+			do
 			{
-			  GtkWidget *dialog;
-			  /* as the user if he is sure */
-			  dialog =
-			    gtk_message_dialog_new (GTK_WINDOW
-						    (gtk_widget_get_toplevel
-						     (widget)),
-						    GTK_DIALOG_DESTROY_WITH_PARENT,
-						    GTK_MESSAGE_WARNING,
-						    GTK_BUTTONS_OK_CANCEL,
-						    (amount ==
-						     1) ?
-						    _("Are you sure you want to delete the selected playlist?")
-						    :
-						    _("Are you sure you want to delete the selected playlists?"));
-			  gtk_widget_show_all (dialog);
-			  switch (gtk_dialog_run (GTK_DIALOG (dialog)))
-			    {
-			    case GTK_RESPONSE_OK:
-			      break;
-			    default:
-			      {
-				gtk_widget_destroy (dialog);
-				g_list_foreach (rows,
-						(GFunc) gtk_tree_path_free,
-						NULL);
-				g_list_free (rows);
-				return TRUE;
-			      }
-			    }
-			  gtk_widget_destroy (dialog);
-			  asked = TRUE;
-			}
+				GtkTreeIter iter;
+				if (gtk_tree_model_get_iter
+						(GTK_TREE_MODEL (sb_store), &iter, node->data))
+				{
+					gint type = 0;
+					gchar *name;
+					gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter,
+							SB_TYPE, &type, SB_FPATH, &name, -1);
+					if (type == ROW_PLAYLIST && gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_FILE)	/* playlist */
+					{
+						if (!asked)
+						{
+							GtkWidget *dialog;
+							/* as the user if he is sure */
+							dialog =
+								gtk_message_dialog_new (GTK_WINDOW
+										(gtk_widget_get_toplevel
+										 (widget)),
+										GTK_DIALOG_DESTROY_WITH_PARENT,
+										GTK_MESSAGE_WARNING,
+										GTK_BUTTONS_OK_CANCEL,
+										(amount ==
+										 1) ?
+										_("Are you sure you want to delete the selected playlist?")
+										:
+										_("Are you sure you want to delete the selected playlists?"));
+							gtk_widget_show_all (dialog);
+							switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+							{
+								case GTK_RESPONSE_OK:
+									break;
+								default:
+									{
+										gtk_widget_destroy (dialog);
+										g_list_foreach (rows,
+												(GFunc) gtk_tree_path_free,
+												NULL);
+										g_list_free (rows);
+										return TRUE;
+									}
+							}
+							gtk_widget_destroy (dialog);
+							asked = TRUE;
+						}
 
-		      if (!check_connection_state ())
-			{
-			  mpd_sendRmCommand (info.connection, name);
-			  mpd_finishCommand (info.connection);
-			  if (!check_for_errors ())
-			    sb_reload_file_browser ();
-			}
+						if (!check_connection_state ())
+						{
+							mpd_sendRmCommand (info.connection, name);
+							mpd_finishCommand (info.connection);
+							if (!check_for_errors ())
+								sb_reload_file_browser ();
+						}
 
-		    }
-		  else if (type == ROW_CLOSE && gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_SEARCH)	/* search folder */
-		    {
-		      GtkTreeIter child;
-		      if (!asked)
-			{
-			  GtkWidget *dialog;
-			  /* as the user if he is sure */
-			  dialog =
-			    gtk_message_dialog_new (GTK_WINDOW
-						    (gtk_widget_get_toplevel
-						     (widget)),
-						    GTK_DIALOG_DESTROY_WITH_PARENT,
-						    GTK_MESSAGE_WARNING,
-						    GTK_BUTTONS_OK_CANCEL,
-						    (amount ==
-						     1) ?
-						    _("Are you sure you want to delete the selected search query?")
-						    :
-						    _("Are you sure you want to delete the selected search queries?"));
-			  gtk_widget_show_all (dialog);
-			  switch (gtk_dialog_run (GTK_DIALOG (dialog)))
-			    {
-			    case GTK_RESPONSE_OK:
-			      break;
-			    default:
-			      {
-				gtk_widget_destroy (dialog);
-				g_list_foreach (rows,
-						(GFunc) gtk_tree_path_free,
-						NULL);
-				g_list_free (rows);
-				return TRUE;
-			      }
-			    }
-			  gtk_widget_destroy (dialog);
-			  asked = TRUE;
+					}
+					else if (type == ROW_CLOSE && gtk_combo_box_get_active (GTK_COMBO_BOX (cb)) == BROWSE_SEARCH)	/* search folder */
+					{
+						GtkTreeIter child;
+						if (!asked)
+						{
+							GtkWidget *dialog;
+							/* as the user if he is sure */
+							dialog =
+								gtk_message_dialog_new (GTK_WINDOW
+										(gtk_widget_get_toplevel
+										 (widget)),
+										GTK_DIALOG_DESTROY_WITH_PARENT,
+										GTK_MESSAGE_WARNING,
+										GTK_BUTTONS_OK_CANCEL,
+										(amount ==
+										 1) ?
+										_("Are you sure you want to delete the selected search query?")
+										:
+										_("Are you sure you want to delete the selected search queries?"));
+							gtk_widget_show_all (dialog);
+							switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+							{
+								case GTK_RESPONSE_OK:
+									break;
+								default:
+									{
+										gtk_widget_destroy (dialog);
+										g_list_foreach (rows,
+												(GFunc) gtk_tree_path_free,
+												NULL);
+										g_list_free (rows);
+										return TRUE;
+									}
+							}
+							gtk_widget_destroy (dialog);
+							asked = TRUE;
+						}
+						if (gtk_tree_model_iter_children (model, &child, &iter))
+						{
+							while (gtk_tree_store_remove (sb_store, &child));
+						}
+						gtk_tree_store_remove (sb_store, &iter);
+					}
+				}
 			}
-		      if (gtk_tree_model_iter_children (model, &child, &iter))
-			{
-			  while (gtk_tree_store_remove (sb_store, &child));
-			}
-		      gtk_tree_store_remove (sb_store, &iter);
-		    }
+			while ((node = g_list_previous (node)) != NULL);
+
+			g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+			g_list_free (rows);
 		}
-	    }
-	  while ((node = g_list_previous (node)) != NULL);
-
-	  g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
-	  g_list_free (rows);
+		return TRUE;
 	}
-      return TRUE;
-    }
 
-  /* propagate the event further */
-  return FALSE;
+	/* propagate the event further */
+	return FALSE;
 }
 
 
 
 /* function that gets called when the user does a search */
-void
+	void
 sb_do_search ()
 {
-  GtkTreeIter iter, child;
-  mpd_InfoEntity *ent;
-  gint results = 0;
-  gchar *search_ts = NULL;
-  gchar *search_string =
-    (gchar *)
-    gtk_entry_get_text (GTK_ENTRY
-			(glade_xml_get_widget (sb_xml, "search_entry")));
-  gint search_type =
-    gtk_combo_box_get_active (GTK_COMBO_BOX
-			      (glade_xml_get_widget (sb_xml, "cb_search")));
+	GtkTreeIter iter, child;
+	mpd_InfoEntity *ent;
+	gint results = 0;
+	gchar *search_ts = NULL;
+	gchar *search_string =
+		(gchar *)
+		gtk_entry_get_text (GTK_ENTRY
+				(glade_xml_get_widget (sb_xml, "search_entry")));
+	gint search_type =
+		gtk_combo_box_get_active (GTK_COMBO_BOX
+				(glade_xml_get_widget (sb_xml, "cb_search")));
 
-  /* check if there is an actual search query */
-  if (strlen (search_string) == 0)
-    return;
+	/* check if there is an actual search query */
+	if (strlen (search_string) == 0)
+		return;
 
-  /* check if where still connected */
-  if (check_connection_state ())
-    return;
+	/* check if where still connected */
+	if (check_connection_state ())
+		return;
 
-  /* check if we searched for it before */
+	/* check if we searched for it before */
 
-  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (sb_search), &iter))
-    {
-      gchar *query;
-      gint st;
-      do
+	if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (sb_search), &iter))
 	{
-	  gtk_tree_model_get (GTK_TREE_MODEL (sb_search), &iter, SB_FPATH,
-			      &query, SB_NROWS, &st, -1);
-	  if (search_type == st && !g_utf8_collate (search_string, query))
-	    {
-	      /* get the path so we can expand it */
-	      GtkTreePath *path;
-	      GtkTreeSelection *selection =
-		gtk_tree_view_get_selection (GTK_TREE_VIEW
-					     (glade_xml_get_widget
-					      (sb_xml, "treeview")));
-	      path =
-		gtk_tree_model_get_path (GTK_TREE_MODEL (sb_search), &iter);
-	      gtk_tree_view_expand_row (GTK_TREE_VIEW
-					(glade_xml_get_widget
-					 (sb_xml, "treeview")), path, FALSE);
-	      gtk_tree_selection_select_iter (selection, &iter);
-	      gtk_tree_path_free (path);
+		gchar *query;
+		gint st;
+		do
+		{
+			gtk_tree_model_get (GTK_TREE_MODEL (sb_search), &iter, SB_FPATH,
+					&query, SB_NROWS, &st, -1);
+			if (search_type == st && !g_utf8_collate (search_string, query))
+			{
+				/* get the path so we can expand it */
+				GtkTreePath *path;
+				GtkTreeSelection *selection =
+					gtk_tree_view_get_selection (GTK_TREE_VIEW
+							(glade_xml_get_widget
+							 (sb_xml, "treeview")));
+				path =
+					gtk_tree_model_get_path (GTK_TREE_MODEL (sb_search), &iter);
+				gtk_tree_view_expand_row (GTK_TREE_VIEW
+						(glade_xml_get_widget
+						 (sb_xml, "treeview")), path, FALSE);
+				gtk_tree_selection_select_iter (selection, &iter);
+				gtk_tree_path_free (path);
 
-	      return;
-	    }
+				return;
+			}
+		}
+		while (gtk_tree_model_iter_next (GTK_TREE_MODEL (sb_search), &iter));
 	}
-      while (gtk_tree_model_iter_next (GTK_TREE_MODEL (sb_search), &iter));
-    }
 
-  /* start the search map in the tree */
-  gtk_tree_store_append (sb_search, &iter, NULL);
+	/* start the search map in the tree */
+	gtk_tree_store_append (sb_search, &iter, NULL);
 
-  /* do the actual search */
-  mpd_sendSearchCommand (info.connection, search_type, search_string);
+	/* do the actual search */
+	mpd_sendSearchCommand (info.connection, search_type, search_string);
 
-  while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
-    {
-      gchar buffer[1024];
-      strfsong (buffer, 1024, preferences.markup_song_browser,
-		ent->info.song);
-      /* Add as child of the above created parent folder */
-      gtk_tree_store_append (sb_search, &child, &iter);
-      gtk_tree_store_set (sb_search, &child,
-			  SB_FPATH, ent->info.song->file,
-			  SB_DPATH, buffer,
-			  SB_TYPE, 0, SB_PIXBUF, "media-audiofile", -1);
-      /* count results */
-      results++;
-      /* free information struct */
-      mpd_freeInfoEntity (ent);
-    }
-  /* check search */
-  mpd_finishCommand (info.connection);
-  check_for_errors ();
-  /* close the search */
+	while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+	{
+		gchar buffer[1024];
+		strfsong (buffer, 1024, preferences.markup_song_browser,
+				ent->info.song);
+		/* Add as child of the above created parent folder */
+		gtk_tree_store_append (sb_search, &child, &iter);
+		gtk_tree_store_set (sb_search, &child,
+				SB_FPATH, ent->info.song->file,
+				SB_DPATH, buffer,
+				SB_TYPE, 0, SB_PIXBUF, "media-audiofile", -1);
+		/* count results */
+		results++;
+		/* free information struct */
+		mpd_freeInfoEntity (ent);
+	}
+	/* check search */
+	mpd_finishCommand (info.connection);
+	check_for_errors ();
+	/* close the search */
 
 
-  /* append the correct search type */
-  if (search_type == 0)
-    {
-      search_ts = g_strdup ("Artist");
-    }
-  else if (search_type == 1)
-    {
-      search_ts = g_strdup ("Album");
-    }
-  else if (search_type == 2)
-    {
-      search_ts = g_strdup ("Title");
-    }
-  else
-    {
-      search_ts = g_strdup ("Filename");
-    }
-  /* form url 
-   * TODO: Add information about the search so I can match searches 
-   *   This only requires saving of serach field
-   */
-  search_ts =
-    g_strdup_printf ("%s: %s (%i)", search_ts, search_string, results);
-  gtk_tree_store_set (sb_search, &iter, 
+	/* append the correct search type */
+	if (search_type == 0)
+	{
+		search_ts = g_strdup ("Artist");
+	}
+	else if (search_type == 1)
+	{
+		search_ts = g_strdup ("Album");
+	}
+	else if (search_type == 2)
+	{
+		search_ts = g_strdup ("Title");
+	}
+	else
+	{
+		search_ts = g_strdup ("Filename");
+	}
+	/* form url 
+	 * TODO: Add information about the search so I can match searches 
+	 *   This only requires saving of serach field
+	 */
+	search_ts =
+		g_strdup_printf ("%s: %s (%i)", search_ts, search_string, results);
+	gtk_tree_store_set (sb_search, &iter, 
 			SB_FPATH, search_string, 
 			SB_DPATH, search_ts, 
 			SB_TYPE, 1, 
 			SB_PIXBUF, "gtk-find", 
 			SB_NROWS, search_type,	/* search type */
-		      -1);
+			-1);
 }
 
 
 
 /*  close aka hide the song browser */
-void
+	void
 sb_close ()
 {
-  info.sb_hidden = FALSE;
-  if (sb_xml != NULL)
-  {
-	gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), &sb_wsize.x, &sb_wsize.y);
-	gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), &sb_wsize.width, &sb_wsize.height);
-	gtk_widget_hide (glade_xml_get_widget (sb_xml, "song_browser"));
+	info.sb_hidden = FALSE;
+	if (sb_xml != NULL)
+	{
+		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), &sb_wsize.x, &sb_wsize.y);
+		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), &sb_wsize.width, &sb_wsize.height);
+		gtk_widget_hide (glade_xml_get_widget (sb_xml, "song_browser"));
 
-  }
+	}
 }
 
 /* when row is activated, see what type of row it is and call the right functions */
-void
+	void
 sb_row_activate_click (GtkTreeView * tree, GtkTreePath * path)
 {
-  GtkTreeIter iter;
-  gint type;
-  gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
-  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_TYPE, &type, -1);
-  /* if itsn't a song or playlist open/close the row */
-  if (type != 0 && type != 4)
-    {
-      if (!gtk_tree_view_row_expanded (tree, path))
+	GtkTreeIter iter;
+	gint type;
+	gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_TYPE, &type, -1);
+	/* if itsn't a song or playlist open/close the row */
+	if (type != 0 && type != 4)
 	{
-	  gtk_tree_view_expand_row (tree, path, FALSE);
+		if (!gtk_tree_view_row_expanded (tree, path))
+		{
+			gtk_tree_view_expand_row (tree, path, FALSE);
+		}
+		else
+			gtk_tree_view_collapse_row (tree, path);
 	}
-      else
-	gtk_tree_view_collapse_row (tree, path);
-    }
-  else
-    {
-      /* call the function that will try to add the selected item's */
-      sb_row_activated ();
-    }
+	else
+	{
+		/* call the function that will try to add the selected item's */
+		sb_row_activated ();
+	}
 }
 
 
 /* tries to add the selected items, supports artist,albums,songs, folders */
 /* TODO: support adding complete search results (a search map)*/
-void
+	void
 sb_row_activated ()
 {
-  GtkTreeView *tree =
-    GTK_TREE_VIEW (glade_xml_get_widget (sb_xml, "treeview"));
-  GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
-  GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
-  GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
-  GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
-  GList *add_list = NULL;
-  int i = gtk_combo_box_get_active (GTK_COMBO_BOX (cb));
+	GtkTreeView *tree =
+		GTK_TREE_VIEW (glade_xml_get_widget (sb_xml, "treeview"));
+	GtkWidget *cb = glade_xml_get_widget (sb_xml, "cb_type");
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
+	GtkTreeModel *model = GTK_TREE_MODEL (sb_store);
+	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
+	GList *add_list = NULL;
+	int i = gtk_combo_box_get_active (GTK_COMBO_BOX (cb));
 
-  /* if no rows selected) return */
-  if (rows == NULL)
-    return;
-  /* check if there is a connection */
-  if (check_connection_state ())
-    return;
+	/* if no rows selected) return */
+	if (rows == NULL)
+		return;
+	/* check if there is a connection */
+	if (check_connection_state ())
+		return;
 
-  if (i == BROWSE_FILE)
-    {
-      GList *node = g_list_first (rows);
-      char *name = NULL;
-      gint type = 0;
-      GtkTreeIter iter;
-      /* step to all the selected songs/directories */
-      do
+	if (i == BROWSE_FILE)
 	{
-	  GtkTreePath *path = node->data;
-	  gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
-	  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_FPATH,
-			      &name, SB_TYPE, &type, -1);	  
-	  if (type != 4)
-	    {
-	      /* add them to the add list */
-	      add_list = g_list_append (add_list, g_strdup (name));
-	    }
-	  else
-	    {
-	      /* append a playlist directly, we cant add it to the todo list */
-	      mpd_sendLoadCommand (info.connection, name);
-	      mpd_finishCommand (info.connection);
-	      /* check for errors, and if there is an error step out this while loop */
-	      if (check_for_errors ())
+		GList *node = g_list_first (rows);
+		char *name = NULL;
+		gint type = 0;
+		GtkTreeIter iter;
+		/* step to all the selected songs/directories */
+		do
 		{
-		  node = NULL;
-		}
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
+			gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_FPATH,
+					&name, SB_TYPE, &type, -1);	  
+			if (type != 4)
+			{
+				/* add them to the add list */
+				add_list = g_list_append (add_list, g_strdup (name));
+			}
+			else
+			{
+				/* append a playlist directly, we cant add it to the todo list */
+				mpd_sendLoadCommand (info.connection, name);
+				mpd_finishCommand (info.connection);
+				/* check for errors, and if there is an error step out this while loop */
+				if (check_for_errors ())
+				{
+					node = NULL;
+				}
 
-	    }
-
-	}
-      while ((node = g_list_next (node)) != NULL);
-
-    }
-  else if (i == BROWSE_SEARCH)
-    {
-      GList *node = g_list_first (rows);
-      char *name = NULL;
-      GtkTreeIter iter;
-      gint type;
-      /* step to all the selected songs/directories */
-      do
-	{
-	  GtkTreePath *path = node->data;
-	  gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
-	  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_FPATH,
-			      &name, SB_TYPE, &type, -1);
-	  if (type == ROW_SONG)
-	    {
-	      /* add them to the add list */
-	      add_list = g_list_append (add_list, g_strdup (name));
-	    }
-	  else if (type == ROW_OPEN || type == ROW_CLOSE)
-	    {
-	      GtkTreeIter child;
-	      if (gtk_tree_model_iter_children
-		  (GTK_TREE_MODEL (sb_store), &child, &iter))
-		{
-		  do
-		    {
-		      gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &child,
-					  SB_FPATH, &name, -1);
-		      add_list = g_list_append (add_list, g_strdup (name));
-
-		    }
-		  while (gtk_tree_model_iter_next
-			 (GTK_TREE_MODEL (sb_store), &child));
+			}
 
 		}
-
-	    }
+		while ((node = g_list_next (node)) != NULL);
 
 	}
-      while ((node = g_list_next (node)) != NULL);
-
-    }
-  else if (i == BROWSE_TAG)
-    {
-      gint type = 0;
-      gchar *name, *album;
-      GtkTreeIter iter;
-      GList *node = g_list_first (rows);
-      do
+	else if (i == BROWSE_SEARCH)
 	{
-	  mpd_InfoEntity *ent = NULL;
-	  GtkTreePath *path = node->data;
-	  gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
-	  gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_TYPE,
-			      &type, SB_FPATH, &name, SB_DPATH, &album, -1);
-	  if (type == ROW_SONG)	/* adding a song */
-	    {
-	      add_list = g_list_append (add_list, g_strdup (name));
-	    }
-	  else if (type == ROW_CLOSE || type == ROW_OPEN)	/* artist */
-	    {
-	      /* fetch all songs by this artist from mpd and add them to the add-list */
-	      mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, name);
-	      while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+		GList *node = g_list_first (rows);
+		char *name = NULL;
+		GtkTreeIter iter;
+		gint type;
+		/* step to all the selected songs/directories */
+		do
 		{
-		  add_list =
-		    g_list_append (add_list, g_strdup (ent->info.song->file));
-		  mpd_freeInfoEntity (ent);
-		}
-	      mpd_finishCommand (info.connection);
-	      if (check_for_errors ())
-		node = NULL;
-	    }
-	  else if (type == ROW_ALBUM)	/* album */
-	    {
-	      /* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
-	      mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, album);
-	      while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
-		{
-		  if (!g_utf8_collate (ent->info.song->artist, name))
-		    {
-		      add_list =
-			g_list_append (add_list,
-				       g_strdup (ent->info.song->file));
-		    }
-		  mpd_freeInfoEntity (ent);
-		}
-	      mpd_finishCommand (info.connection);
-	      if (check_for_errors ())
-		node = NULL;
-	    }
-	}
-      while ((node = g_list_next (node)) != NULL);
-    }
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
+			gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_FPATH,
+					&name, SB_TYPE, &type, -1);
+			if (type == ROW_SONG)
+			{
+				/* add them to the add list */
+				add_list = g_list_append (add_list, g_strdup (name));
+			}
+			else if (type == ROW_OPEN || type == ROW_CLOSE)
+			{
+				GtkTreeIter child;
+				if (gtk_tree_model_iter_children
+						(GTK_TREE_MODEL (sb_store), &child, &iter))
+				{
+					do
+					{
+						gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &child,
+								SB_FPATH, &name, -1);
+						add_list = g_list_append (add_list, g_strdup (name));
 
-  /* if there are items in the add list add them to the playlist */
-  if (check_connection_state ())
-    return;
-  if (add_list != NULL)
-    {
-      mpd_sendCommandListBegin (info.connection);
-      GList *song = g_list_first (add_list);
-      do
+					}
+					while (gtk_tree_model_iter_next
+							(GTK_TREE_MODEL (sb_store), &child));
+
+				}
+
+			}
+
+		}
+		while ((node = g_list_next (node)) != NULL);
+
+	}
+	else if (i == BROWSE_TAG)
 	{
-	  mpd_sendAddCommand (info.connection, song->data);
+		gint type = 0;
+		gchar *name, *album;
+		GtkTreeIter iter;
+		GList *node = g_list_first (rows);
+		do
+		{
+			mpd_InfoEntity *ent = NULL;
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (GTK_TREE_MODEL (sb_store), &iter, path);
+			gtk_tree_model_get (GTK_TREE_MODEL (sb_store), &iter, SB_TYPE,
+					&type, SB_FPATH, &name, SB_DPATH, &album, -1);
+			if (type == ROW_SONG)	/* adding a song */
+			{
+				add_list = g_list_append (add_list, g_strdup (name));
+			}
+			else if (type == ROW_CLOSE || type == ROW_OPEN)	/* artist */
+			{
+				/* fetch all songs by this artist from mpd and add them to the add-list */
+				mpd_sendFindCommand (info.connection, MPD_TABLE_ARTIST, name);
+				while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+				{
+					add_list =
+						g_list_append (add_list, g_strdup (ent->info.song->file));
+					mpd_freeInfoEntity (ent);
+				}
+				mpd_finishCommand (info.connection);
+				if (check_for_errors ())
+					node = NULL;
+			}
+			else if (type == ROW_ALBUM)	/* album */
+			{
+				/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
+				mpd_sendFindCommand (info.connection, MPD_TABLE_ALBUM, album);
+				while ((ent = mpd_getNextInfoEntity (info.connection)) != NULL)
+				{
+					if (!g_utf8_collate (ent->info.song->artist, name))
+					{
+						add_list =
+							g_list_append (add_list,
+									g_strdup (ent->info.song->file));
+					}
+					mpd_freeInfoEntity (ent);
+				}
+				mpd_finishCommand (info.connection);
+				if (check_for_errors ())
+					node = NULL;
+			}
+		}
+		while ((node = g_list_next (node)) != NULL);
 	}
-      while ((song = g_list_next (song)) != NULL);
-      mpd_sendCommandListEnd (info.connection);
-      mpd_finishCommand (info.connection);
-      check_for_errors ();
-      g_list_foreach (add_list, (GFunc) g_free, NULL);
-      g_list_free (add_list);
-    }
 
-  g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
-  g_list_free (rows);
+	/* if there are items in the add list add them to the playlist */
+	if (check_connection_state ())
+		return;
+	if (add_list != NULL)
+	{
+		mpd_sendCommandListBegin (info.connection);
+		GList *song = g_list_first (add_list);
+		do
+		{
+			mpd_sendAddCommand (info.connection, song->data);
+		}
+		while ((song = g_list_next (song)) != NULL);
+		mpd_sendCommandListEnd (info.connection);
+		mpd_finishCommand (info.connection);
+		check_for_errors ();
+		g_list_foreach (add_list, (GFunc) g_free, NULL);
+		g_list_free (add_list);
+	}
+
+	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+	g_list_free (rows);
 }
 
 /* does the same as append but clears the list first */
-void
+	void
 sb_replace_songs ()
 {
-  mpd_sendClearCommand (info.connection);
-  mpd_finishCommand (info.connection);
-  if (!check_for_errors ())
-    {
-      sb_row_activated ();
-    }
+	mpd_sendClearCommand (info.connection);
+	mpd_finishCommand (info.connection);
+	if (!check_for_errors ())
+	{
+		sb_row_activated ();
+	}
 }
 
 
 /* create the song browser */
-void
+	void
 song_browser_create ()
 {
-  GtkCellRenderer *renderer;
-  GtkWidget *tree;
-  GtkTreeViewColumn *column;
-  info.sb_hidden = TRUE;
-  if (sb_xml != NULL)
-    {
-	    gtk_window_move(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), sb_wsize.x, sb_wsize.y);
-	    gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")),sb_wsize.width, sb_wsize.height);
+	GtkCellRenderer *renderer;
+	GtkWidget *tree;
+	GtkTreeViewColumn *column;
+	info.sb_hidden = TRUE;
+	if (sb_xml != NULL)
+	{
+		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")), sb_wsize.x, sb_wsize.y);
+		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(sb_xml, "song_browser")),sb_wsize.width, sb_wsize.height);
 
-	    gtk_widget_show (glade_xml_get_widget (sb_xml, "song_browser"));
-/*	    gtk_window_present (GTK_WINDOW
+		gtk_widget_show (glade_xml_get_widget (sb_xml, "song_browser"));
+		/*	    gtk_window_present (GTK_WINDOW
 			    (glade_xml_get_widget (sb_xml, "song_browser")));
-*/	    sb_fill_browser ();
+			    */	    sb_fill_browser ();
 
-	    return;
-    }
-  sb_xml =
-	  glade_xml_new (GLADE_PATH "add-browser.glade", "song_browser", NULL);
+		return;
+	}
+	sb_xml =
+		glade_xml_new (GLADE_PATH "add-browser.glade", "song_browser", NULL);
 
-  if (sb_store == NULL)
-  {
-	  sb_file = gtk_tree_store_new (SB_NROWS, GTK_TYPE_STRING,	/* full path */
-			  GTK_TYPE_STRING,	/* display string */
-			  GTK_TYPE_INT,	/* 1 for folder 0 for song */
-			  GTK_TYPE_STRING	/* stock -id */
-			  );
+	if (sb_store == NULL)
+	{
+		sb_file = gtk_tree_store_new (SB_NROWS, GTK_TYPE_STRING,	/* full path */
+				GTK_TYPE_STRING,	/* display string */
+				GTK_TYPE_INT,	/* 1 for folder 0 for song */
+				GTK_TYPE_STRING	/* stock -id */
+				);
 
-	  sb_id3 = gtk_tree_store_new (SB_NROWS, GTK_TYPE_STRING,	/* full path */
-			  GTK_TYPE_STRING,	/* display string */
-			  GTK_TYPE_INT,	/* 1 for folder 0 for song */
-			  GTK_TYPE_STRING	/* stock -id */
-			  );
+		sb_id3 = gtk_tree_store_new (SB_NROWS, GTK_TYPE_STRING,	/* full path */
+				GTK_TYPE_STRING,	/* display string */
+				GTK_TYPE_INT,	/* 1 for folder 0 for song */
+				GTK_TYPE_STRING	/* stock -id */
+				);
 
-	  sb_search = gtk_tree_store_new (SB_NROWS + 1, GTK_TYPE_STRING,	/* full path */
-			  GTK_TYPE_STRING,	/* display string */
-			  GTK_TYPE_INT,	/* 1 for folder 0 for song */
-			  GTK_TYPE_STRING,	/* stock -id */
-			  GTK_TYPE_INT	/* search type */
-			  );
-	  sb_store = sb_file;
+		sb_search = gtk_tree_store_new (SB_NROWS + 1, GTK_TYPE_STRING,	/* full path */
+				GTK_TYPE_STRING,	/* display string */
+				GTK_TYPE_INT,	/* 1 for folder 0 for song */
+				GTK_TYPE_STRING,	/* stock -id */
+				GTK_TYPE_INT	/* search type */
+				);
+		sb_store = sb_file;
 
-  }
+	}
 
-  tree = glade_xml_get_widget (sb_xml, "treeview");
-  /* set selection mode */
-  gtk_tree_selection_set_mode (GTK_TREE_SELECTION
-		  (gtk_tree_view_get_selection
-		   (GTK_TREE_VIEW (tree))),
-		  GTK_SELECTION_MULTIPLE);
+	tree = glade_xml_get_widget (sb_xml, "treeview");
+	/* set selection mode */
+	gtk_tree_selection_set_mode (GTK_TREE_SELECTION
+			(gtk_tree_view_get_selection
+			 (GTK_TREE_VIEW (tree))),
+			GTK_SELECTION_MULTIPLE);
 
-  /* set filter */
-  gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (sb_store));
-  gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), SB_DPATH);
-  /* draw the column with the songs */
-
-
-  /* insert the column in the tree */
-  renderer = gtk_cell_renderer_pixbuf_new ();
-  column = gtk_tree_view_column_new ();
-  gtk_tree_view_column_pack_start (column, renderer, FALSE);
-  gtk_tree_view_column_set_attributes (column, renderer,
-		  "stock-id", SB_PIXBUF, NULL);
-  /* draw the column with the songs */
-  renderer = gtk_cell_renderer_text_new ();
-
-  /* insert the column in the tree */
-  gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer,
-		  TRUE);
-  gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column),
-		  renderer, "text", SB_DPATH, NULL);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (tree),
-		  GTK_TREE_VIEW_COLUMN (column));
-
-  /*      gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-	  gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	  gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-	  gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	  */   
-  gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function_id3, NULL, NULL);
-  gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+	/* set filter */
+	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (sb_store));
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), SB_DPATH);
+	/* draw the column with the songs */
 
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX
-		  (glade_xml_get_widget (sb_xml, "cb_type")),
-		  BROWSE_FILE);
-  gtk_combo_box_set_active (GTK_COMBO_BOX
-		  (glade_xml_get_widget (sb_xml, "cb_search")), 0);
+	/* insert the column in the tree */
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column, renderer,
+			"stock-id", SB_PIXBUF, NULL);
+	/* draw the column with the songs */
+	renderer = gtk_cell_renderer_text_new ();
 
-  sb_fill_browser ();
-  glade_xml_signal_autoconnect (sb_xml);
+	/* insert the column in the tree */
+	gtk_tree_view_column_pack_end (GTK_TREE_VIEW_COLUMN (column), renderer,
+			TRUE);
+	gtk_tree_view_column_set_attributes (GTK_TREE_VIEW_COLUMN (column),
+			renderer, "text", SB_DPATH, NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tree),
+			GTK_TREE_VIEW_COLUMN (column));
+
+	/*      gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
+		gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
+		*/   
+	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function_id3, NULL, NULL);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+
+
+	gtk_combo_box_set_active (GTK_COMBO_BOX
+			(glade_xml_get_widget (sb_xml, "cb_type")),
+			BROWSE_FILE);
+	gtk_combo_box_set_active (GTK_COMBO_BOX
+			(glade_xml_get_widget (sb_xml, "cb_search")), 0);
+
+	sb_fill_browser ();
+	glade_xml_signal_autoconnect (sb_xml);
 
 }
 

@@ -1,3 +1,7 @@
+10-07-2004 Qball <Qball@qballcow.nl>
+	* glade/song-browser.glade:	context menu.
+	* src/song-browser.glade: 	Added function to update directory.
+
 09-07-2004 Qball <Qball@qballcow.nl>
 	* hide/unhide now hides all windows (except preferences) and reshows them again.
 	* Saving position and size of all windows (exept pref)

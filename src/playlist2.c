@@ -15,7 +15,7 @@ GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
 GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key = NULL;
-int hide_playlist2 (GtkWidget * but);
+
 
 /* size */
 GtkAllocation pl2_wsize = { 0,0,0,0};
@@ -43,7 +43,7 @@ gboolean toggle_playlist2(GtkToggleButton *tb)
 	else
 	{
 		if(pl2_xml == NULL) return FALSE;
-		hide_playlist2(NULL);
+		hide_playlist2();
 	}
 	return TRUE;
 }
@@ -403,7 +403,7 @@ pl2_filter_refilter ()
  * this is called when the closed button is pressed (or keybinding)
  * or if the window recieves a delete event 
  */
-int hide_playlist2 (GtkWidget * but)
+int hide_playlist2 ()
 {
 	/* get the window */
 	GtkWidget *win = glade_xml_get_widget (pl2_xml, "playlist_window");	

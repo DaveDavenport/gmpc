@@ -6,6 +6,7 @@ void pl2_highlight_song();
 
 void pl2_disconnect();
 void pl2_connect();
+int hide_playlist2 ();
 gboolean toggle_playlist2(GtkToggleButton *tb);
 
 
