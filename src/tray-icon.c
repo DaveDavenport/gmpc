@@ -301,7 +301,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
-	tray_timeout = g_timeout_add(800, (GSourceFunc)
+	tray_timeout = g_timeout_add(400, (GSourceFunc)
 			tooltip_queue_draw, eventb);
 
 	return TRUE;

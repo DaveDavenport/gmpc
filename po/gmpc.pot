@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-17 00:26+0200\n"
+"POT-Creation-Date: 2004-10-17 00:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,8 +22,8 @@ msgstr ""
 
 #. set up tray icon
 #: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:22 src/player.c:121
-#: src/player.c:285 src/player.c:286 src/player.c:306 src/tray-icon.c:405
-#: src/tray-icon.c:514
+#: src/player.c:285 src/player.c:286 src/player.c:306 src/tray-icon.c:410
+#: src/tray-icon.c:519
 msgid "Gnome Music Player Client"
 msgstr ""
 
