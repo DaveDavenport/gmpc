@@ -26,6 +26,10 @@ MpdInt * mpd_ob_create()
 	mi->stats = NULL;
 	mi->error = NULL;
 	mi->CurrentSong = NULL;
+	/* info */
+	mi->playlistid = -1;
+	/* signals */
+	mi->playlist_changed = NULL;
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
 	
@@ -197,6 +201,10 @@ int mpd_ob_disconnect(MpdInt *mi)
 		mpd_freeSong(mi->CurrentSong);
 		mi->CurrentSong = NULL;
 	}
+	mi->playlistid = -1;
+
+
+	
 	return FALSE;
 }
 
@@ -290,6 +298,38 @@ int mpd_ob_status_update(MpdInt *mi)
 		return TRUE;
 	}
 
+	/*
+	 * check for changes 
+	 */
+
+	/* playlist change */
+	if(mi->playlistid != mi->status->playlist)
+	{
+		/* print debug message */
+		debug_printf(DEBUG_INFO, "mpd_ob_status_update: Playlist has changed!");
+
+		/* TODO: Call defined functions */
+		if(mi->playlist_changed != NULL)
+		{
+			mi->playlist_changed(mi, mi->playlistid, mi->status->playlist);
+		}
+
+
+		/* We can't trust the current song anymore. so we remove it */
+		/* tags might have been updated */
+		if(mi->CurrentSong != NULL)
+		{
+			mpd_freeSong(mi->CurrentSong);
+			mi->CurrentSong = NULL;
+		}
+
+		/* save new id */
+		mi->playlistid = mi->status->playlist;
+	}
+
+
+
+
 	return FALSE;
 }
 
@@ -344,7 +384,7 @@ int mpd_ob_status_set_volume(MpdInt *mi,int volume)
 		printf("mpd_ob_status_set_volume: lock failed\n");
 		return MPD_O_LOCK_FAILED;
 	}
-	
+
 	/* send the command */
 	mpd_sendSetvolCommand(mi->connection , volume);
 	mpd_finishCommand(mi->connection);
@@ -631,7 +671,7 @@ mpd_Song * mpd_ob_playlist_get_song(MpdInt *mi, int songid)
 	}
 	song = mpd_songDup(ent->info.song);
 	mpd_freeInfoEntity(ent);
-	
+
 	return song;
 }
 
@@ -657,7 +697,7 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
 		mpd_freeSong(mi->CurrentSong);
 		mi->CurrentSong = NULL;
 	}
-	
+
 	if(mi->CurrentSong == NULL)
 	{
 		/* TODO: this to use the geT_current_song_id function */
@@ -674,4 +714,13 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdInt *mi)
 
 	return mi->CurrentSong;
 }
-
+/* SIGNALS */
+void mpd_ob_signal_set_playlist_changed (MpdInt *mi, void *(* playlist_changed)(MpdInt *mi, int old_playlist_id, int new_playlist_id))
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_playlist_changed: MpdInt *mi == NULL");
+		return;
+	}
+	mi->playlist_changed = playlist_changed;
+}

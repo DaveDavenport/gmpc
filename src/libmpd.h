@@ -35,9 +35,18 @@ typedef struct _MpdInt
 	mpd_Connection *connection;
 	mpd_Status *status;
 	mpd_Stats *stats;
-
 	mpd_Song *CurrentSong;
 
+	/* information needed to detect changes on mpd's side */
+	long long playlistid;
+
+	
+	
+	
+	/* functions to call */
+	void *(* playlist_changed)(struct _MpdInt *mi, int old_playlist_id, int new_playlist_id);	
+	
+	
 	/* error message */
 	char *error;	
 	
@@ -53,9 +62,13 @@ MpdInt * 	mpd_ob_new				(char *hostname, int port, char *password);
 void 		mpd_ob_set_hostname			(MpdInt *mi, char *hostname);
 void 		mpd_ob_set_password			(MpdInt *mi, char *hostname);
 void 		mpd_ob_set_port				(MpdInt *mi, int port);
+void 		mpd_ob_set_connection_timeout		(MpdInt *mi, float timeout);
 int 		mpd_ob_connect				(MpdInt *mi);
 int 		mpd_ob_disconnect			(MpdInt *mi);
 int 		mpd_ob_check_connected			(MpdInt *mi);
+/* signals */
+void 		mpd_ob_signal_set_playlist_changed	(MpdInt *mi, void *(* playlist_changed)(MpdInt *mi, int old_playlist_id, int new_playlist_id));
+
 /* status commands */
 int 		mpd_ob_status_queue_update		(MpdInt *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdInt *mi, float fvol);
