@@ -1,4 +1,15 @@
-31-06-2004 Qball <Qball@qballcow.nl>
+2-07-2004 Qball <Qball@qballcow.nl>
+	* Removed code in tray_icon.c that set an non-existing widget
+	sensitive
+	* Catch key presses on tree store
+	* If del is pressen when playlist selected or search query remove
+	them.
+	* ctrl-l gives focus to search-entry
+
+
+
+
+1-07-2004 Qball <Qball@qballcow.nl>
 	* Track window size changes and grow/shrink title box accordingly
 	* browse by search now opens an old search if the same search is done
 	again.

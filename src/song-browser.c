@@ -38,9 +38,62 @@ gint sb_sort_function(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b)
 	}
 }
 
+/* function that handles key-presses in the tree */
+gboolean sb_key_pressed(GtkWidget *widget, GdkEventKey *event)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+	GtkWidget *cb = glade_xml_get_widget(sb_xml, "cb_type");
+	GtkTreeModel *model = GTK_TREE_MODEL(sb_store);
+	if(event->keyval == GDK_Delete)
+	{
+		GList *rows = NULL;
+		if((rows = gtk_tree_selection_get_selected_rows(selection, &model)) != NULL)
+		{
+			GList *node = g_list_first(rows);
+			do{
+				GtkTreeIter iter;
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(sb_store), &iter, node->data))
+				{
+					gint type = 0;
+					gchar *name;
+					gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_TYPE, &type,SB_FPATH, &name, -1);
+					if(type == 4 && gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 0) /* playlist */
+					{
+						if(!check_connection_state())
+						{
+							g_print("DEBUG: removing playlist %s\n", name);
+							mpd_sendRmCommand(info.connection,name);
+							mpd_finishCommand(info.connection);
+							if(!check_for_errors())	sb_reload_file_browser();
+						}
+
+					}
+					else if(type == 1 && gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 2) /* search folder */
+					{
+						GtkTreeIter child;
+						g_print("DEBUG: removing search %s\n", name);
+						if(gtk_tree_model_iter_children(model, &child, &iter))
+						{
+							while(gtk_tree_store_remove(sb_store, &child));
+						}
+						gtk_tree_store_remove(sb_store, &iter);
+					}	
+				}
+			}while((node = g_list_next(node)) != NULL);
+
+			g_list_foreach (rows,(GFunc) gtk_tree_path_free, NULL);
+			g_list_free (rows);
+		}
+		return TRUE;
+	}	
+
+	/* propagate the event further */
+	return FALSE;
+}
 
 
 
+/* function that gets called when the user does a search */
 void sb_do_search()
 {
 	GtkTreeIter iter, child;
@@ -86,7 +139,7 @@ void sb_do_search()
 
 	/* do the actual search */
 	mpd_sendSearchCommand(info.connection,search_type, search_string);  
-	
+
 	while((ent = mpd_getNextInfoEntity(info.connection)) != NULL)
 	{
 		gchar buffer[1024];
@@ -128,9 +181,9 @@ void sb_do_search()
 		search_ts = g_strdup("Filename");
 	}                                    
 	/* form url 
-	* TODO: Add information about the search so I can match searches 
-	*   This only requires saving of serach field
-	*/
+	 * TODO: Add information about the search so I can match searches 
+	 *   This only requires saving of serach field
+	 */
 	search_ts = g_strdup_printf("%s: %s (%i)",search_ts, search_string, results);
 	gtk_tree_store_set(sb_search, &iter,
 			SB_FPATH, search_string,
@@ -147,7 +200,7 @@ void sb_do_search()
 void sb_close()
 {
 	if(sb_xml != NULL)
-	gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
+		gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
 }
 
 /* when row is activated, see what type of row it is and call the right functions */
@@ -204,8 +257,8 @@ void sb_row_activated()
 			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &name,SB_TYPE, &type, -1);
 			if(type != 4)
 			{
-			/* add them to the add list */	
-			add_list = g_list_append(add_list, g_strdup(name));
+				/* add them to the add list */	
+				add_list = g_list_append(add_list, g_strdup(name));
 			}
 			else
 			{
@@ -399,13 +452,13 @@ void song_browser_create()
 			NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), GTK_TREE_VIEW_COLUMN(column));
 
-/*	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_search), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
-	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_search), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
-	*/
+	/*	gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_file), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_file), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
+		gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_id3), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_id3), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
+		gtk_tree_sortable_set_default_sort_func(GTK_TREE_SORTABLE(sb_search), (GtkTreeIterCompareFunc)sb_sort_function, NULL, NULL);
+		gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(sb_search), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_DESCENDING);
+		*/
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_type")),0);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")),0);
@@ -427,7 +480,11 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 
 	if(check_connection_state()) return;
 	/* only for id3 */
-	if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 0)
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 2)
+	{
+		return;
+	}
+	else if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 0)
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(sb_store), parent,SB_TYPE, &type, SB_FPATH, &artist, -1);
 		if(type == 1 || type ==3 )	
@@ -503,8 +560,8 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 
 /* fill the id3_store with songs */
 /* this is done lazy, it will only load all albums and songs withouth album, it starts loading the songs in the album when the user
-opens the artist 
-*/
+   opens the artist 
+   */
 void sb_fill_browser_id3()
 {
 	mpd_InfoEntity *ent = NULL;
@@ -525,12 +582,12 @@ void sb_fill_browser_id3()
 	if(check_for_errors() || check_connection_state())
 	{
 		if(list != NULL)
-			{
+		{
 			g_list_foreach(list,(GFunc) g_free, NULL);
 			g_list_free(list);
 
-			}
-		 return;
+		}
+		return;
 	}
 
 	if(list == NULL) return;
@@ -586,7 +643,7 @@ void sb_fill_browser_id3()
 			mpd_finishCommand(info.connection);
 			if(check_for_errors()) return;
 
-			
+
 			while(gtk_events_pending()) gtk_main_iteration();
 
 			if(check_connection_state()) return;
@@ -613,10 +670,10 @@ void sb_fill_browser_id3()
 				}
 				mpd_finishCommand(info.connection);
 				if(check_for_errors())
-					{
-						g_print("Stopped on a error, on line 591 %s\n", info.connection->errorStr);
-					 return;
-					}
+				{
+					g_print("Stopped on a error, on line 591 %s\n", info.connection->errorStr);
+					return;
+				}
 			}
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_id3), &parent));
 
@@ -686,7 +743,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 
 
 
-			
+
 			mpd_freeInfoEntity(ent);
 
 
