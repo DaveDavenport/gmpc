@@ -19,7 +19,8 @@ gmpc_SOURCES=\
 	open-location.c\
 	list_tooltip.c\
 	mm-keys.c\
-	playlist3.c
+	playlist3.c\
+	vfs_download.c
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"
 LIBS = @gmpc_LIBS@ @LIBS@ 
@@ -34,5 +35,6 @@ EXTRA_DIST = 	playlist3.h\
 		strfsong.h\
 		misc.h\
 		eggtrayicon.h\
-		libmpdclient.h
+		libmpdclient.h\
+		vfs_download.h
 		

@@ -27,6 +27,7 @@ PKG_CHECK_MODULES(gmpc,
 	gtk+-2.0 >= 2.4
 	libglade-2.0
 	gnome-vfs-2.0
+	libxml-2.0
 ])
 
 

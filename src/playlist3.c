@@ -4,6 +4,8 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <time.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 #include "libmpdclient.h"
 #include "strfsong.h"
 #include "main.h"
@@ -89,7 +91,71 @@ int  pl3_cat_get_selected_browser()
 	return -1;
 }
 
+/************************************
+ * XIPH BROWSER
+ */
 
+void pl3_xiph_add()
+{
+	GtkTreeIter iter;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_BROWSE_XIPH,
+			PL3_CAT_TITLE, "Icecast",
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "gtk-find",
+			PL3_CAT_PROC, FALSE,          	
+			PL3_CAT_ICON_SIZE,3,-1);
+}
+
+void pl3_xiph_fill_view(char *buffer)
+{
+	xmlDocPtr xmldoc = xmlParseMemory(buffer, strlen(buffer));
+	xmlNodePtr root = xmlDocGetRootElement(xmldoc);
+	xmlNodePtr cur = root->xmlChildrenNode;
+	while(cur != NULL)
+	{
+		if(xmlStrEqual(cur->name, "entry"))
+		{
+			xmlNodePtr cur1 = cur->xmlChildrenNode;
+			GtkTreeIter iter;
+			gtk_list_store_append(pl3_store, &iter);
+			gtk_list_store_set (pl3_store, &iter,
+//					PL3_SONG_ID, ent->info.song->file,
+//					PL3_SONG_TITLE, buffer,
+					PL3_SONG_POS, PL3_ENTRY_SONG, 
+					PL3_SONG_STOCK_ID, "media-stream", 
+					-1);
+
+
+
+			while(cur1 != NULL)
+			{
+				if(xmlStrEqual(cur1->name, "server_name"))
+				{
+					gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
+				}
+				else if(xmlStrEqual(cur1->name, "listen_url"))
+				{
+					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
+
+				}
+
+				cur1 = cur1->next;
+			}
+
+		}
+
+		cur = cur->next;
+	}
+	xmlFreeDoc(xmldoc);
+	xmlCleanupParser();
+}
+void pl3_xiph_view_browser()
+{
+	gtk_list_store_clear(pl3_store);
+	start_transfer("http://dir.xiph.org/yp.xml",(void *)pl3_xiph_fill_view, NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+}
 
 /*****************************************************************
  * Find Browser
@@ -123,11 +189,11 @@ unsigned long pl3_find_view_browser()
 		mpd_InfoEntity *ent;
 
 		gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, PL3_CAT_INT_ID,&field,-1);
-		
+
 		num_field = atoi(field);
 
 
-		
+
 		if(strcmp(name, "Search"))
 		{
 			gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")), name);
@@ -196,7 +262,7 @@ void pl3_find_search()
 	path = gtk_tree_model_get_path(model,&iter);
 	gtk_tree_view_expand_to_path(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path);
 	gtk_tree_path_free(path);
-	
+
 	gtk_tree_selection_select_iter(selection, &child);
 
 
@@ -1052,7 +1118,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 		/* check for errors */                      		
 		check_for_errors ();                        		
 	}
-	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND)
+	else if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH)
 	{
 		GtkTreeIter iter;
 		gchar *song_id;
@@ -1097,6 +1163,7 @@ void pl3_reinitialize_tree()
 	pl3_file_browser_add();       	
 	pl3_artist_browser_add();
 	pl3_find_add();
+	pl3_xiph_add();
 
 
 	gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
@@ -1248,6 +1315,14 @@ void pl3_cat_sel_changed()
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 			g_free(string);
 
+		}
+		else if(type == PL3_BROWSE_XIPH)
+		{
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+
+
+			pl3_xiph_view_browser();
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
 		}
 		/* when it's not a know type remove the model */
 		else
@@ -1490,7 +1565,7 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		pl3_browse_artist_add_folder();
 	}
-	
+
 	return pl3_window_key_press_event(mw,event);
 }
 
