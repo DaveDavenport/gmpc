@@ -235,7 +235,7 @@ int update_interface()
 			}
 			old_length = g_list_length(info.playlist);
 		}
-
+		info.status->song = -1;
 		/*
 		   if(load_playlist())
 		   {

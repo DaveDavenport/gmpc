@@ -267,6 +267,7 @@ int update_player()
 			}
 			else
 			{
+				g_print("update display\n");
 				info.cursong = song;
 				gchar buffer[1024];
 				strfsong(buffer, 1024, preferences.markup_main_display, song);
