@@ -593,7 +593,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 					0, ent->info.playlistFile->path,
 					1, PL3_ENTRY_PLAYLIST,
 					2, basename,
-					5, "gtk-index", 
+					5, "media-playlist", 
 					-1);
 			g_free (basename);
 		}
