@@ -1,3 +1,3 @@
 aclocal
-automake -a
+automake -a -c
 autoconf
