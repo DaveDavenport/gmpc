@@ -28,12 +28,13 @@ guint popup_timeout = -1;
 gchar *tray_get_tooltip_text()
 {
 	GString *string = g_string_new("");
-	mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
+
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(song != NULL && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
+	if(mpd_ob_check_connected(connection) && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
 	{
+		mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
 		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */

@@ -13,6 +13,7 @@
 #define MPD_O_NOT_CONNECTED -2
 #define MPD_O_FAILED_STATUS -3
 #define MPD_O_LOCK_FAILED -4
+#define MPD_O_FAILED_STATS -5
 
 #define	MPD_OB_PLAYER_PAUSE 	3
 #define	MPD_OB_PLAYER_PLAY 	2
@@ -80,7 +81,8 @@ enum {
 	MPD_DATA_TYPE_ALBUM,
 	MPD_DATA_TYPE_DIRECTORY,
 	MPD_DATA_TYPE_SONG,
-	MPD_DATA_TYPE_PLAYLIST
+	MPD_DATA_TYPE_PLAYLIST,
+	MPD_DATA_TYPE_OUTPUT_DEV
 } MpdDataType;
 
 
@@ -100,18 +102,9 @@ typedef struct _MpdData
 		char *directory;
 		char *playlist; /*is a path*/
 		mpd_Song *song;
+		mpd_OutputEntity *output_dev; /* from devices */
 	}value;
 }MpdData;
-
-
-
-
-
-
-
-
-
-
 
 MpdObj * 	mpd_ob_new_default			();
 MpdObj * 	mpd_ob_new				(char *hostname, int port, char *password);
@@ -144,7 +137,8 @@ int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
 int 		mpd_ob_status_get_volume		(MpdObj *mi);
 int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
-
+int		mpd_ob_status_get_crossfade		(MpdObj *mi);
+int		mpd_ob_status_set_crossfade		(MpdObj *mi, int crossfade_time);
 
 /* player commands */
 int 		mpd_ob_player_play			(MpdObj *mi);
@@ -174,6 +168,7 @@ MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
 MpdData *	mpd_ob_playlist_get_albums		(MpdObj *mi, char *artist);
 MpdData * 	mpd_ob_playlist_get_directory		(MpdObj *mi,char *path);
 MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exact);
+MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
 int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
 void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
 
@@ -195,13 +190,18 @@ MpdData * 	mpd_ob_data_get_next			(MpdData *data);
  /* withouth leaking memory  */
 
 
-
-
-
 /* queing stuff */
 void 		mpd_ob_playlist_queue_add		(MpdObj *mi,char *path);
 void 		mpd_ob_playlist_queue_load		(MpdObj *mi,char *path);
 void 		mpd_ob_playlist_queue_delete_id		(MpdObj *mi,int id);
 /* use these to commit the changes */
 void 		mpd_ob_playlist_queue_commit		(MpdObj *mi);
+
+
+/* Server Stuff */
+MpdData * 	mpd_ob_server_get_output_devices	(MpdObj *mi);
+int 		mpd_ob_server_set_output_device		(MpdObj *mi,int device_id,int state);
+long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
+
+
 #endif

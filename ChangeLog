@@ -1,4 +1,17 @@
+23-02-2005 Qball <Qball@qballcow.nl>
+	* src/main.c:		Uses libmpd to track song changes.
+	* src/libmpd.[c|h]:	Added function that returns the changed songs.
+	* src/mpdinteractions.c:After disconnect not directly a reconnect
+	(with autoconnect enabled)
+
+
 22-02-2005 Qball <qball@qballcow.nl>
+	* Move to libmpd complete beside the plchange function.
+	* src/preferences.c:	Moved to libmpd.
+	* src/main.h:		Removed info.connection, info.status,
+	info.stats.
+	* src/libmpd.c:		Added support for getting and setting output
+	device
 	* src/libmpd.c:		Added mpd_ob_playlist_add,
 	mpd_ob_plalist_update_dir (and more)functions.
 	* src/playlist3.c:	Uses only libmpd now.

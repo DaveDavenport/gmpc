@@ -1,2 +1,3 @@
 * Rewrite the id3 info window.
-* Clean up the preferences.
+* Clean up the preferences window.
+* libmpd: Make connect/disconnect signals

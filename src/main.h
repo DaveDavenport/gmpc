@@ -22,20 +22,10 @@ extern GladeXML *xml_main_window;
 extern MpdObj *connection;
 typedef struct
 {
-	/* the mpd status struct used  in the whole program */
-	mpd_Status *status;
-	/* the mpd connection */
-	mpd_Connection * connection;
-	/* status about the connection */
-	mpd_Stats *stats;
-	/* connection lock, to prevent to functions to use the connection concurrent */
-	gboolean conlock;
 	/* playlist number this is to check if the playlist changed */
 	int playlist_id;
 	int playlist_length;
 	int playlist_playtime;
-	/* the state, if the state changes I know I have to update some stuff */
-	/* the volume if the volume change I also have to update some stuff */
 	/* the current song */
 	int old_pos;
 	/* updating */
@@ -43,10 +33,6 @@ typedef struct
 	/* misc*/
 	gboolean hidden;
 	gboolean sb_hidden;
-	/* tooltip playlist window */
-	/* playlist 3 */
-	
-	gboolean pl3_scroll_to_song;
 } internal_data;
 
 enum{
@@ -121,9 +107,6 @@ void main_trigger_update();
 
 int  seek_ns(int n);
 int  seek_ps(int n);
-int volume_change(int diff);
-
-
 
 void pl3_highlight_song_change ();
 void pl3_highlight_state_change ();

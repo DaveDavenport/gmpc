@@ -17,7 +17,6 @@ enum
 
 
 
-extern int last_db;
 GladeXML *xml_preferences_window;
 gboolean running = 0, connected = 0;
 void popup_timeout_changed();
@@ -80,7 +79,7 @@ void create_preferences_window()
 	update_server_settings();
 
 	/* set the right sensitive stuff */
-	if(info.connection == NULL)
+	if(!mpd_ob_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
@@ -93,14 +92,6 @@ void create_preferences_window()
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
-
-	if(info.stats != NULL)
-	{
-		gchar *buffer = ctime(&info.stats->dbUpdateTime);
-		/* nasty but I need to get rid of the trailing new line */
-		buffer[strlen(buffer)-1]='\0';
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
-	}
 
 	set_display_settings();
 
@@ -165,7 +156,7 @@ void update_preferences_information()
 	cfg_set_single_value_as_int(config, "connection", "portnumber",
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	cfg_set_single_value_as_float(config,"connection","timeout",
-		       	gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
+			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
 
 }
 
@@ -177,37 +168,28 @@ void preferences_window_autoconnect(GtkToggleButton *tog)
 void preferences_window_connect(GtkWidget *but)
 {
 	if(debug)g_print("**DEBUG** connect\n");
-	if(info.connection == NULL)
+	if(!mpd_ob_check_connected(connection))
 		if(!connect_to_mpd())
 		{
-			info.conlock = FALSE;
 			gtk_timeout_remove(update_timeout);
 			update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-			if(info.stats != NULL)
-			{
-				gchar *buffer = ctime(&info.stats->dbUpdateTime);
-				/* nasty but I need to get rid of the trailing new line */
-				buffer[strlen(buffer)-1]='\0';
-				gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
-			}
 		}
-
 }
 
 void preferences_window_disconnect(GtkWidget *but)
 {
 	if(debug)g_print("**DEBUG** disconnect\n");    
 	disconnect_to_mpd();
-	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");
+/*	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),"n/a");*/
 }
 
 /* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
 void preferences_update()
 {
 	if(!running)return;
-	if((info.connection == NULL? 0:1) != connected)
+	if(mpd_ob_check_connected(connection) != connected)
 	{
-		if(info.connection == NULL)
+		if(!mpd_ob_check_connected(connection))
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
@@ -222,19 +204,8 @@ void preferences_update()
 			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
 		update_outputs_settings();
-		connected = (info.connection == NULL? 0:1);
+		connected = mpd_ob_check_connected(connection);
 	} 
-	if(info.stats != NULL)
-	{
-		/* TODO: fix this to be nice */
-//		if(last_db != info.stats->dbUpdateTime)
-//		{
-//			gchar *buffer = ctime(&info.stats->dbUpdateTime);
-			/* nasty but I need to get rid of the trailing new line */
-//			buffer[strlen(buffer)-1]='\0';
-//			gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "db_lu")),buffer);
-//		}
-	}
 }
 
 void popup_enable_toggled(GtkToggleButton *but)
@@ -270,7 +241,7 @@ void update_popup_settings()
 
 void update_server_settings()
 {
-	if(info.connection == NULL)
+	if(!mpd_ob_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
 		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
@@ -323,7 +294,7 @@ void tray_enable_toggled(GtkToggleButton *but)
 void entry_auth_changed(GtkEntry *entry)
 {
 	cfg_set_single_value_as_string(config, "connection","password",
-		(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth"))));
+			(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth"))));
 }
 
 void auth_enable_toggled(GtkToggleButton *but)
@@ -382,7 +353,7 @@ void osb_enable_tb(GtkToggleButton *but)
 
 void create_outputs_tree()
 {
-        GtkListStore *model;
+	GtkListStore *model;
 	GtkCellRenderer *cell;
 	GtkTreeViewColumn *col;
 	GtkTreeView *tree;
@@ -414,35 +385,26 @@ void create_outputs_tree()
 
 void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
 {
-        gboolean enabled;
+	gboolean state;
 	gint id;
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_tree_view_get_model(view);
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_str);
 
 	if(gtk_tree_model_get_iter(model, &iter, path))
-        {
-	        gtk_tree_model_get(model, &iter, ENABLED_COL, &enabled, -1);
+	{
+		gtk_tree_model_get(model, &iter, ENABLED_COL, &state, -1);
 		gtk_tree_model_get(model, &iter, ID_COL, &id, -1);
-		if(enabled)
-                {
-		        enabled = FALSE;
-			mpd_sendDisableOutputCommand(connection->connection, id);
-		}
-		else
-		{
-		        enabled = TRUE;
-			mpd_sendEnableOutputCommand(connection->connection, id);
-		}
-		mpd_finishCommand(connection->connection);          
-		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, enabled, -1);
+		state = state;
+		mpd_ob_server_set_output_device(connection, id, state);
+
+		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, state, -1);
 	}
 	gtk_tree_path_free(path);
 }
 
 void update_outputs_settings()
 {
-        mpd_OutputEntity *output;
 	GtkTreeIter iter;
 	GtkListStore *store;
 	GtkFrame *frame;
@@ -450,21 +412,22 @@ void update_outputs_settings()
 	frame = GTK_FRAME(glade_xml_get_widget(xml_preferences_window, "frm_outputs"));
 	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"))));
 	gtk_list_store_clear(store);
-	if(info.connection && 
-	   (info.connection->version[0] > 0 ||
-	    info.connection->version[1] >= 12))
+	if(mpd_ob_check_connected(connection) && (connection->connection->version[0] > 0 || connection->connection->version[1] >= 12))
 	{
-   	        gtk_widget_show_all(GTK_WIDGET(frame));
-	        mpd_sendOutputsCommand(info.connection);
-		while((output = mpd_getNextOutput(info.connection)) != NULL)
+		MpdData *data = mpd_ob_server_get_output_devices(connection);
+		gtk_widget_show_all(GTK_WIDGET(frame));
+		while(data != NULL)
 		{
-		        gtk_list_store_append(store, &iter);
-			gtk_list_store_set(store, &iter, 0, output->enabled?TRUE:FALSE, 1, output->name, 2, output->id, -1);
-			mpd_freeOutputElement(output);
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 
+					0, data->value.output_dev->enabled?TRUE:FALSE, 
+					1, data->value.output_dev->name, 
+					2, data->value.output_dev->id, -1);
+			data = mpd_ob_data_get_next(data);
 		}
 	}
 	else
 	{
-	        gtk_widget_hide_all(GTK_WIDGET(frame));
+		gtk_widget_hide_all(GTK_WIDGET(frame));
 	}
 }

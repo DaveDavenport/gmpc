@@ -17,47 +17,19 @@ int update_mpd_status()
 	if(!mpd_ob_check_connected(connection)) return TRUE;
 	if(connection->connection_lock) return TRUE;
 	mpd_ob_status_queue_update(connection);
-	/* check if locked, then just don't update */
-	if(info.conlock) return TRUE;
-	/* lock it. */
-	info.conlock = TRUE;
-	if(info.status != NULL)  mpd_freeStatus(info.status);
-	mpd_sendStatusCommand(info.connection);
-	info.status = mpd_getStatus(info.connection);
-	mpd_finishCommand(info.connection);
-	/* check for errors */
-	if(check_for_errors())
-	{
-		return TRUE;
-	}
-
 
 	/* unlock it */
-	info.conlock = FALSE;
 	return TRUE;
 }
 
 int disconnect_to_mpd()
 {
-	if(info.conlock == TRUE)
-	{
-		return TRUE;
-	}
-	info.conlock = TRUE;
 	/* disconnect */
-	mpd_ob_disconnect(connection);
-	
 	gtk_timeout_remove(update_timeout);
-
-	/* free the server stats */
-	if(info.stats != NULL) mpd_freeStats(info.stats);
-	info.stats = NULL;
-
-	info.connection = NULL;
+	mpd_ob_disconnect(connection);
 	msg_set_base(_("gmpc - Disconnected"));
 
 	scroll.exposed = 1;
-//	info.song = -1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
@@ -67,7 +39,7 @@ int disconnect_to_mpd()
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	update_interface();
+	preferences_update();
 	info.updating = FALSE;
 	gtk_list_store_clear(pl2_store);
 	return FALSE;
@@ -76,9 +48,7 @@ int disconnect_to_mpd()
 /* the functiont that connects to mpd */
 int connect_to_mpd()
 {
-	info.conlock = TRUE;
 	scroll.exposed = 1;
-//	info.song = -1;    
 	info.playlist_playtime = 0;
 
 	mpd_ob_set_hostname(connection,cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost"));
@@ -94,35 +64,13 @@ int connect_to_mpd()
 		mpd_ob_set_password(connection,"");
 	}
 
-
-
-
 	if(mpd_ob_connect(connection) < 0)
 	{
 		if(debug)g_print("Connection failed\n");
 		return TRUE;
 	}
-	info.connection = connection->connection;
 
 
-	mpd_sendStatsCommand(info.connection);
-	info.stats = mpd_getStats(info.connection);
-	mpd_finishCommand(info.connection);
-	if(info.stats == NULL)
-	{
-		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, 
-				GTK_MESSAGE_ERROR,
-				GTK_BUTTONS_OK,
-				_("You don't have enough permission to access mpd."));
-		mpd_closeConnection(info.connection);
-		info.connection = NULL;
-		cfg_set_single_value_as_int(config, "connection","autoconnect", 0);
-		gtk_widget_show_all(dialog);
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-		return TRUE;	
-	}
-	info.conlock = FALSE;
 	update_mpd_status();
 
 	/* Set the title */
@@ -133,43 +81,12 @@ int connect_to_mpd()
 }
 
 /* DEFAULT FUNCTIONS */
-/* returns FALSE when connected */
 
 gboolean check_connection_state()
 {
 	return !mpd_ob_check_connected(connection);
 }
 
-gboolean mpd_is_locked()
-{
-	return info.conlock;
-}
-
-gboolean mpd_lock()
-{
-	if(mpd_is_locked())
-	{
-		/* database is allready locked */
-		return TRUE;
-	}
-	/* lock */
-	info.conlock = TRUE;
-	return FALSE;
-}
-
-gboolean mpd_unlock()
-{
-	if(!mpd_is_locked())
-	{
-		/* database is allready unlocked */
-		/* we don't make an error from this..  maybe we should ? */
-		return FALSE;
-	}
-
-	/* unlock */
-	info.conlock = FALSE;
-	return FALSE;
-}
 
 
 /******************************************************
