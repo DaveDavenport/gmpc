@@ -660,6 +660,49 @@ int mpd_ob_player_pause(MpdObj *mi)
 	return FALSE;
 }
 
+int mpd_ob_player_seek(MpdObj *mi, int sec)
+{
+	int cur_song  = mpd_ob_player_get_current_song_pos(mi);
+	if( cur_song < 0 )
+	{
+		printf("mpd_ob_player_seek: failed to get current song pos\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_player_play: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_player_play: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	debug_printf(DEBUG_INFO, "mpd_ob_player_seek: seeking in song %i to %i sec\n", cur_song,sec);
+
+	mpd_sendSeekCommand(mi->connection, cur_song,sec);
+	mpd_finishCommand(mi->connection);
+
+
+	mpd_ob_unlock_conn(mi);
+	if(mpd_ob_status_update(mi))
+	{
+		return MPD_O_FAILED_STATUS;
+	}
+	return FALSE;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 int mpd_ob_player_get_repeat(MpdObj *mi)

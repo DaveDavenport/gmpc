@@ -1,3 +1,8 @@
+12-02-2005 Qball <Qball@qballcow.nl>
+	* src/player.c:		Changed the seeking to a libmpd function.
+	Added seek flag.
+	* src/libmpd.c/h:	Added mpd_ob_player_seek().
+
 29-01-2005 encoded <encoded@xmtp.net>
 	* src/preferences.c     Check version before adding support for
 	* glade/gmpc.glade	(dis|en)abling outputs.

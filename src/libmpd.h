@@ -90,7 +90,7 @@ int		mpd_ob_player_get_repeat		(MpdObj *mi);
 int		mpd_ob_player_set_repeat		(MpdObj *mi, int repeat);
 int		mpd_ob_player_get_random		(MpdObj *mi);
 int		mpd_ob_player_set_random		(MpdObj *mi, int random);
-
+int 		mpd_ob_player_seek			(MpdObj *mi, int sec);
 
 /* playlist command */
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);

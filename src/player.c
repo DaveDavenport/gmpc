@@ -40,6 +40,9 @@ scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE};
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
+guint seek = FALSE;
+
+
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
 	if(allocation->width != 0) DISPLAY_WIDTH = allocation->width;
@@ -252,7 +255,7 @@ int update_player()
 	if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE || info.status->state == MPD_STATUS_STATE_STOP)
 	{
 		/* update the progress bar */
-		{
+		if(!seek){
 			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
 			gdouble  prog = ((double)info.status->elapsedTime/(double)info.status->totalTime)*100;
 			gtk_range_set_value(scale, prog);
@@ -386,21 +389,22 @@ int update_player()
 /* show time to seek to in entry box */
 int progress_seek_start()
 {
-	if(info.conlock) return TRUE;
-	info.conlock = TRUE;
+//	if(info.conlock) return TRUE;
+//	info.conlock = TRUE;
 	if(mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PLAY && 
 			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_PAUSE)
 	{
 		info.conlock = FALSE;
 		return TRUE;
 	}
+	seek = TRUE;
 	msg_push_popup("Seek To:");
 	return FALSE;
 }
 
 void change_progress_update()
 {
-	if(info.conlock)
+	if(seek)
 	{
 		if(mpd_ob_check_connected(connection))
 		{
@@ -438,6 +442,7 @@ void change_progress_update()
 int progress_seek_stop()
 {
 	msg_pop_popup();
+	seek = FALSE;
 	if(!mpd_ob_check_connected(connection))
 	{
 		return TRUE;
@@ -447,11 +452,8 @@ int progress_seek_stop()
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
 		gdouble value = gtk_range_get_value(scale);
 		int change = (int)(info.status->totalTime*(double)(value/100));
-		mpd_sendSeekCommand(info.connection,info.status->song, change);
-		mpd_finishCommand(info.connection);
-		if(check_for_errors()) return FALSE;
-		info.status->elapsedTime = change;	
-		info.conlock = FALSE;
+
+		mpd_ob_player_seek(connection, change);
 	}
 	return FALSE;
 }
