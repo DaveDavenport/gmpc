@@ -1174,10 +1174,11 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* del, crop */
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
-		if(gtk_tree_selection_count_selected(sel) == 1)
+		printf("test\n");
+		if(gtk_tree_selection_count_selected_rows(sel) == 1)
 		{	
 			GtkTreeModel *model = GTK_TREE_MODEL(pl3_store);	
-			GList *list = gtk_tree_selection_get_seleted_rows(sel, &model);
+			GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
 			if(list != NULL)
 			{
 				GtkTreeIter iter;
