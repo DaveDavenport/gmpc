@@ -8,27 +8,36 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist2.h"
-void load_playlist2();
 
 GladeXML *pl2_xml = NULL;
 GtkListStore *pl2_store = NULL;
 GtkTreeModel *pl2_fil = NULL;
 GPatternSpec *compare_key= NULL;
 
+enum store_types
+{
+	SONG_ID,
+	SONG_POS,
+	SONG_TITLE,
+	COLOR_STRING,
+	COLOR_ENABLE,
+	NROWS
+};
+
+void load_playlist2();
 void set_compare_key(GtkEntry *entry)
 {
 	gchar *string = g_strdup_printf("*%s*", gtk_entry_get_text(entry));
 	if(compare_key != NULL) g_free(compare_key);
 	compare_key = g_pattern_spec_new(string);
 	g_free(string);
-	gtk_tree_model_filter_refilter(GTK_TREE_MODEL_FILTER(pl2_fil));
 }
 
 int pl2_filter_function(GtkTreeModel *model, GtkTreeIter *iter)
 {
 	gchar *string;
 	if(compare_key == NULL) return TRUE;
-	gtk_tree_model_get(model, iter, 1, &string, -1);
+	gtk_tree_model_get(model, iter, SONG_TITLE, &string, -1);
 	return g_pattern_match_string(compare_key, string);
 }
 
@@ -36,7 +45,6 @@ void pl2_filter_refilter()
 {
 	g_print("starting filtering\n");
 	gtk_tree_model_filter_refilter(GTK_TREE_MODEL_FILTER(pl2_fil));
-
 }
 
 
@@ -54,7 +62,7 @@ void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path))
 	{
 		gint id=0;
-		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, 0,&id,-1);
+		gtk_tree_model_get(GTK_TREE_MODEL(pl2_fil), &iter, SONG_ID,&id,-1);
 		mpd_sendPlayIdCommand(info.connection, id);
 		mpd_finishCommand(info.connection);
 
@@ -76,9 +84,15 @@ void create_playlist2()
 	if(pl2_store == NULL)
 	{
 		/* song id, song title */
-		pl2_store = gtk_list_store_new(2, GTK_TYPE_INT, GTK_TYPE_STRING);
+		pl2_store = gtk_list_store_new(NROWS, 
+				GTK_TYPE_INT, /* song id */
+			        GTK_TYPE_INT, /* pos id */	
+				GTK_TYPE_STRING, /* song title */
+				GTK_TYPE_STRING, /* color string */
+				G_TYPE_BOOLEAN); /* enble color */
 	}
 	tree = glade_xml_get_widget(pl2_xml, "pl_tree");
+
 
 	/* set filter */
 	pl2_fil = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store), NULL);
@@ -93,8 +107,14 @@ void create_playlist2()
 			GTK_CELL_RENDERER_TEXT(renderer), 1);
 	/* insert the column in the tree */
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), 
-			-1, "Playlist", renderer, "text", 1, NULL);
+			-1, "Playlist", renderer, "text", SONG_TITLE, NULL);
+	
+	gtk_tree_view_column_set_sizing(
+			gtk_tree_view_get_column(GTK_TREE_VIEW(tree), 0),
+		        GTK_TREE_VIEW_COLUMN_FIXED);
 
+	g_object_set(G_OBJECT(tree),"fixed-height-mode", TRUE, NULL);
+	
 
 	/* set filter function */
 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_fil), 
@@ -120,7 +140,13 @@ void load_playlist2()
 		mpd_Song *song = node->data;
 		gtk_list_store_append(pl2_store, &iter);
 		strfsong(buffer, 1024, preferences.markup_main_display, song);
-		gtk_list_store_set(pl2_store, &iter, 0,song->id, 1,buffer, -1);
+		gtk_list_store_set(pl2_store, &iter, 
+				SONG_ID,song->id, 
+				SONG_POS, song->pos,
+				SONG_TITLE,buffer,
+			        COLOR_STRING, "green",
+				COLOR_ENABLE, FALSE,
+				-1);
 	}while((node = g_list_next(node)) != NULL);
 
 }
