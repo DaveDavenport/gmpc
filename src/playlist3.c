@@ -1647,9 +1647,6 @@ void create_playlist3 ()
 	pl3_reinitialize_tree();
 
 
-
-
-
 	/* add the file browser */
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector")),0);
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
