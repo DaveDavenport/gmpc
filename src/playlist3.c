@@ -36,6 +36,9 @@ enum pl3_cat_store
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
+#define PL3_ENTRY_PLAYLIST 1
+#define PL3_ENTRY_SONG 0
+
 /* for the tree in the right pane. */
 enum pl3_store_types
 {
@@ -122,10 +125,31 @@ void playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColum
 		mpd_finishCommand (info.connection);
 		/* check for errors */                      		
 		check_for_errors ();                        		
+	}
+	else if (type == PL3_BROWSE_FILE)
+	{
+		GtkTreeIter iter;
+		gchar *song_id;
+	        gint r_type;
+		gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
+		if(song_id == NULL) return;
+		if(r_type == PL3_ENTRY_PLAYLIST)
+		{	
+			mpd_sendLoadCommand(info.connection, song_id);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
+		}
+		else
+		{
+			mpd_sendAddCommand(info.connection, song_id);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
+		}
+
+
 
 	}
-
-
 }
 
 
@@ -202,6 +226,7 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					0, ent->info.song->file,
+					1, PL3_ENTRY_SONG,
 					2, buffer,               
 					5, "media-audiofile",
 					-1);
@@ -214,6 +239,7 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					0, ent->info.playlistFile->path,
+					1, PL3_ENTRY_PLAYLIST,
 					2, basename,
 					5, "gtk-index", 
 					-1);
