@@ -233,6 +233,17 @@ void cat_sel_changed(GtkTreeSelection *sel)
 	}
 }
 
+
+void pl3_close()
+{
+	if(pl3_xml != NULL)
+	{
+
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));	
+		return;
+	}
+}
+
 /* create the playlist view 
  * This is done only once, for the rest its hidden, but still there
  */
@@ -243,6 +254,13 @@ void create_playlist3 ()
 	GtkWidget *tree;
 	GtkTargetEntry target;
 	GtkTreeViewColumn *column = NULL;
+
+	if(pl3_xml != NULL)
+	{
+
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		return;
+	}
 
 	/* load gui desciption */
 	pl3_xml = glade_xml_new (GLADE_PATH "playlist3.glade", "pl3_win", NULL);
@@ -304,22 +322,12 @@ void create_playlist3 ()
 			G_TYPE_BOOLEAN,
 			GTK_TYPE_STRING);	/* stock id */
 
-
-
-
-
-
-
-
-
-
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 			renderer,
 			"stock-id", SONG_STOCK_ID, NULL);
-
 
 	renderer = gtk_cell_renderer_text_new ();
 
@@ -331,16 +339,7 @@ void create_playlist3 ()
 			"weight", WEIGHT_INT,
 			"weight-set", WEIGHT_ENABLE, NULL);
 
-
-
-
-
-
-
-
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-
 
 	/* add the current playlist */
 	add_current_playlist();
