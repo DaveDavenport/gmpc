@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
+#include <stdlib.h>
 #include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
@@ -228,10 +229,19 @@ int update_player()
 			gchar *buf = NULL;
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
-				buf = g_strdup_printf("%02i:%02i", e_min, e_sec);
+				buf = g_strdup_printf("%02i:%02i", abs(e_min), abs(e_sec));
 			}
-			else if (info.time_format == TIME_FORMAT_REMAINING) buf = g_strdup_printf("-%02i:%02i", r_min, r_sec);
-			else buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
+			else if (info.time_format == TIME_FORMAT_REMAINING) buf = g_strdup_printf("-%02i:%02i", abs(r_min), abs(r_sec));
+			else{
+				if(info.status->totalTime <= 0)
+				{
+					buf = g_strdup("n/a");
+				}
+				else
+				{
+			       	buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
+				}
+			}
 			//		gtk_entry_set_text(GTK_ENTRY(entry), buf);
 			pango_layout_set_text(time_layout, buf, -1);
 			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
@@ -258,7 +268,7 @@ int update_player()
 				info.cursong = song;
 				if(song->artist != NULL && song->title != NULL)
 				{
-					gchar *buf = NULL, *buf1 = NULL;
+					gchar *buf = NULL;
 					if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
 					else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
 					msg_set_base(buf);
