@@ -5,6 +5,11 @@
 #include "libmpdclient.h"
 #include "main.h"
 
+/* this should be something configurable by the user */
+/* or .f.e window size dependent */
+gint max_string_length = 32;
+
+
 GladeXML *xml_playlist_window = NULL;
 void update_information_tab();
 
@@ -25,9 +30,36 @@ void directory_row_selected(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewCol
 int file_browser_mouse_event(GtkWidget *tree, GdkEventButton *event);
 int file_browser_activate(GtkWidget *tree);
 void fill_artist_tree();
+void file_browser_add_button();
+void expand_artist_tree();
+void collapse_artist_tree();
+void add_selected_id3_browser();
+void add_selected_search();
+
+char * shorter_string(const char *long_string)
+{
+	char *ret_val = NULL;
+	int strl = 0;
+	if(long_string == NULL)
+	{
+		return NULL;
+	}
+	strl = g_utf8_strlen(long_string, -1);
+	/* this should be configurable? */
+	if(strl > max_string_length)
+	{
+	ret_val = g_strndup(long_string, max_string_length +1);
+	ret_val[max_string_length-3] = ret_val[max_string_length-2] = ret_val[max_string_length-1] = '.';
+	ret_val[max_string_length] = '\0';
+	}
+	else ret_val = g_strdup(long_string);
+	return ret_val;
+
+}
+
 
 void destroy_playlist(GtkWidget *wid)
-	{
+{
 	if(!info.playlist_running) return;
 	/* clear the current playlist.. allready got this buffered.. no need to buffer it twice */
 	gtk_list_store_clear(info.cur_list);
@@ -37,7 +69,7 @@ void destroy_playlist(GtkWidget *wid)
 	/* destroy the playlist */
 	gtk_widget_destroy(gtk_widget_get_toplevel(wid));
 	info.playlist_running = FALSE;
-	}
+}
 
 gint track_sort_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
 {
@@ -119,28 +151,30 @@ void create_playlist()
 	{
 		if(debug)g_print("**DEBUG** Creating current_playlist list store \n");
 		/* make sure it doesnt get unreffed by gtk.. ref it again.. */
-		info.cur_list = gtk_list_store_new(6, GTK_TYPE_INT,GTK_TYPE_STRING, GTK_TYPE_STRING, GTK_TYPE_STRING, G_TYPE_BOOLEAN, GTK_TYPE_STRING);
+		info.cur_list = gtk_list_store_new(7, GTK_TYPE_INT,GTK_TYPE_STRING, GTK_TYPE_STRING, GTK_TYPE_STRING, G_TYPE_BOOLEAN, GTK_TYPE_STRING, GTK_TYPE_STRING);
 		g_object_ref(info.cur_list);
 	}
 
 	tree = glade_xml_get_widget(xml_playlist_window, "current_playlist");
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(info.cur_list));
 	gtk_tree_selection_set_mode((GtkTreeSelection *)gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), GTK_SELECTION_MULTIPLE);
-	renderer = gtk_cell_renderer_text_new();
-	//	gtk_cell_renderer_set_fixed_size(renderer, -1, 25);	
-	//gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, "text", 1,"background-set", 4, "background", 5, NULL);
-	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 0), GTK_TREE_VIEW_COLUMN_FIXED);
-	//gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), FALSE);
-	gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column((GtkTreeView*)tree, 0), 250);    
 
 	renderer = gtk_cell_renderer_text_new();
-	//gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
-	//	gtk_cell_renderer_set_fixed_size(renderer, -1, 25);
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Artist", renderer, "text", 2,"background-set", 4, "background", 5, NULL);
-	gtk_tree_view_column_set_sizing(gtk_tree_view_get_column((GtkTreeView*)tree, 0), GTK_TREE_VIEW_COLUMN_FIXED);
-	//gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), FALSE);
-	gtk_tree_view_column_set_fixed_width(gtk_tree_view_get_column((GtkTreeView*)tree, 1), 250);    
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track", renderer, 
+					"text", 6,"background-set", 4, "background", 5, NULL);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
+	
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, 
+					"text", 1,"background-set", 4, "background", 5, NULL);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), TRUE);
+
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Artist", renderer, 
+					"text", 2,"background-set", 4, "background", 5, NULL);
+	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 2), TRUE);
+
+
 	/* Set search on title
 	 * I dont think artist is realy needed.. this is just to lookup quickly a song f.e. after a filter
 	 */
@@ -184,7 +218,7 @@ void create_playlist()
 	gtk_tree_sortable_set_sort_column_id((GtkTreeSortable *)info.file_list, 4, GTK_SORT_ASCENDING);
 
 
-	
+
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_renderer_text_set_fixed_height_from_font ((GtkCellRendererText *)renderer, 1);
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, "text", 1, NULL);
@@ -420,16 +454,33 @@ void load_songs_with_filter()
 		if(!info.show_filter || g_pattern_match_string(spec, buf))
 		{
 			gtk_list_store_append(info.cur_list, &iter);
-			//			gtk_list_store_set(info.cur_list, &iter, 0, i,4, FALSE,5,"green", -1);
-			//			if(info.status->song == i && info.status->state != MPD_STATUS_STATE_STOP && info.status->state != MPD_STATUS_STATE_UNKNOWN)  gtk_list_store_set(info.cur_list, &iter,4, TRUE, -1);
 			if(song->title != NULL)
 			{
-				gtk_list_store_set(info.cur_list, &iter,0,i,5,"green", 1, song->title,2, (song->artist == NULL)? "":song->artist,4,(info.status->song == i && info.status->state != MPD_STATUS_STATE_STOP && info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE,  -1);
+				gchar *short_string = shorter_string(song->title);
+				if(short_string == NULL) g_print("ARG\n");
+				gtk_list_store_set(info.cur_list, &iter,0,i,5,"green", 1, short_string,-1);
+				g_free(short_string);
+				if(song->artist != NULL)
+				{
+				short_string = shorter_string(song->artist);
+				gtk_list_store_set(info.cur_list, &iter, 2, short_string, -1);
+				g_free(short_string);
+				}
+				if(song->track != NULL)
+				{
+				gtk_list_store_set(info.cur_list, &iter, 6, song->track, -1);
+				}
+				gtk_list_store_set(info.cur_list, &iter,4,(info.status->song == i && 
+						 info.status->state != MPD_STATUS_STATE_STOP && 
+						 info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE,  -1);
+				
 			}
 			else {
 				gchar *buf1 = g_path_get_basename(song->file);
-				gtk_list_store_set(info.cur_list, &iter, 0,i,5,"green",1,buf1,4,(info.status->song == i && info.status->state != MPD_STATUS_STATE_STOP && info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE, -1);
+				gchar *short_string = shorter_string(buf1);
 				g_free(buf1);
+				gtk_list_store_set(info.cur_list, &iter, 0,i,5,"green",1,short_string,4,(info.status->song == i && info.status->state != MPD_STATUS_STATE_STOP && info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE, -1);
+				g_free(short_string);
 			}			
 		}
 
@@ -526,7 +577,7 @@ void update_playlist()
 		update_information_tab();
 	}
 	/* update hightlighted song */
-	if(info.status->song != info.song)
+	if(info.status->song != info.song && info.song != -1)
 	{
 		GtkTreeIter iter;
 		GtkTreeModel *model = GTK_TREE_MODEL(info.cur_list);
@@ -808,9 +859,9 @@ int current_playlist_mouse_event(GtkWidget *tree, GdkEventButton *event)
 
 int hide_playlist_view(GtkWidget *tree, GdkEventButton *event)
 {
-	if(event->button != 3) return FALSE;
 	GtkWidget *vbox = glade_xml_get_widget(xml_playlist_window, "hpaned1");
-	if(info.playlist_view_hidden == -1)
+	if(tree == vbox && event->button != 3) return FALSE;
+	if(info.playlist_view_hidden == -1 || gtk_paned_get_position(GTK_PANED(vbox)) > 0)
 	{
 		info.playlist_view_hidden = gtk_paned_get_position(GTK_PANED(vbox));
 		gtk_paned_set_position(GTK_PANED(vbox), 0);
@@ -859,25 +910,33 @@ void load_directories(gchar *oldp)
 		}
 		else if(entity->type == MPD_INFO_ENTITY_TYPE_SONG)
 		{
+			gchar *short_title = NULL; 
 			gtk_list_store_append(info.file_list, &iter);
 			if(entity->info.song->title == NULL)
 			{
-				gchar *utf8 = NULL;
-				utf8 = g_path_get_basename(entity->info.song->file);
-				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,utf8,-1);
+				gchar *utf8 = g_path_get_basename(entity->info.song->file);
+				short_title = shorter_string(utf8);
+				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);
+				g_free(short_title);
 				g_free(utf8);
 			}
 			else
 			{
-				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,entity->info.song->title,-1);
+				short_title =  shorter_string(entity->info.song->title);
+				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);
+				g_free(short_title);
 			}
 			if(entity->info.song->artist != NULL)				
 			{
-				gtk_list_store_set(info.file_list, &iter,2,entity->info.song->artist,-1);
+				short_title =  shorter_string(entity->info.song->artist);
+				gtk_list_store_set(info.file_list, &iter,2,short_title,-1);
+				g_free(short_title);
 			}
 			if(entity->info.song->album != NULL)	
 			{
-				gtk_list_store_set(info.file_list, &iter,3,entity->info.song->album,-1);
+				short_title =  shorter_string(entity->info.song->album);
+				gtk_list_store_set(info.file_list, &iter,3,short_title,-1);
+				g_free(short_title);
 			}
 			if(entity->info.song->track != NULL)	
 			{
@@ -1049,6 +1108,14 @@ int file_browser_activate(GtkWidget *tree)
 	return TRUE;
 }
 
+void file_browser_add_button()
+{
+	GtkWidget *tree = glade_xml_get_widget(xml_playlist_window, "treeview_dirs");
+	add_song_file_browser(NULL, tree);
+	tree = glade_xml_get_widget(xml_playlist_window, "treeview_files");
+	add_song_file_browser(NULL, tree);                                        	
+}
+
 int file_browser_mouse_event(GtkWidget *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *selection;
@@ -1082,6 +1149,31 @@ int file_browser_mouse_event(GtkWidget *tree, GdkEventButton *event)
 	}
 	return FALSE;
 }
+
+void collapse_artist_tree()
+{
+	gtk_tree_view_collapse_all(GTK_TREE_VIEW(glade_xml_get_widget(xml_playlist_window, "id3_artist_tree")));
+}
+void expand_artist_tree()
+{
+	gtk_tree_view_expand_all(GTK_TREE_VIEW(glade_xml_get_widget(xml_playlist_window, "id3_artist_tree")));
+}
+
+void add_selected_id3_browser()
+{
+	
+	GtkWidget * tree = glade_xml_get_widget(xml_playlist_window, "id3_artist_tree");
+	if(gtk_widget_is_focus(tree))
+	{
+		add_song_file_browser(NULL, tree);
+	}
+	else
+	{
+		tree = glade_xml_get_widget(xml_playlist_window, "id3_songs_tree");
+		add_song_file_browser(NULL, tree);
+	}
+}
+
 
 void fill_artist_tree()
 {
@@ -1255,6 +1347,12 @@ void fill_id3_songs_tree(GtkWidget *tree)
 		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
+}
+
+void add_selected_search()
+{
+	GtkWidget *tree = glade_xml_get_widget(xml_playlist_window, "search_tree");	
+	add_song_file_browser(NULL, tree);
 }
 
 void do_server_side_search()
