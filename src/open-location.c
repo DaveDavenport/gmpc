@@ -25,8 +25,11 @@ static GtkTargetEntry drag_types[] =
 void ol_destroy()
 {
 	if(working) return;
-	gtk_widget_destroy(glade_xml_get_widget(ol_xml, "add_location"));
-	g_object_unref(ol_xml);
+	if(ol_xml != NULL)
+	{
+		gtk_widget_destroy(glade_xml_get_widget(ol_xml, "add_location"));
+		g_object_unref(ol_xml);
+	}
 	ol_xml = NULL;
 }
 void ol_file_close(){}

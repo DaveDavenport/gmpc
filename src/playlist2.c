@@ -55,13 +55,15 @@ void init_playlist2()
 void pl2_save_playlist()
 {
 	gchar *str;
-	GladeXML *xml = glade_xml_new(GLADE_PATH"playlist.glade", "save_pl",NULL);
+	GladeXML *xml = NULL;
+	if(check_connection_state()) return;
+	xml = glade_xml_new(GLADE_PATH"playlist.glade", "save_pl",NULL);
 	
 	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml, "save_pl"))))
 	{
 		case GTK_RESPONSE_OK:
 		str = (gchar *) gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "pl-entry")));
-		if(strlen(str) != 0)
+		if(strlen(str) != 0 && !check_connection_state())
 		{
 			mpd_sendSaveCommand(info.connection, str);
 			mpd_finishCommand(info.connection);
@@ -206,6 +208,7 @@ int hide_playlist2(GtkWidget *but)
 void pl2_row_activated(GtkTreeView *tree, GtkTreePath *path)
 {
 	GtkTreeIter iter;
+	if(check_connection_state()) return;
 	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_fil), &iter, path))
 	{
 		gint id=0;
@@ -223,7 +226,8 @@ void pl2_delete_selected_songs()
 {
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(
 			GTK_TREE_VIEW(glade_xml_get_widget(pl2_xml, "pl_tree")));
-
+	if(check_connection_state()) return;
+	
 	if(gtk_tree_selection_count_selected_rows(selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
@@ -306,6 +310,8 @@ gboolean pl2_row_moved(GtkTreeView *tree ,GdkDragContext *con, gint x, gint y,gu
 	GtkTreeIter iter, iter2;
 	gint pos1, pos2;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
+
+	if(check_connection_state()) return;
 	/* get drop location */
 	gtk_tree_view_get_dest_row_at_pos(tree, x,y, &path, &pos);
 
@@ -460,7 +466,31 @@ void create_playlist2()
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl2_xml, "button7")), "drag_data_received",
 			G_CALLBACK (pl2_drag_data_recieved),
 			NULL);                                                                          	
+	if(check_connection_state())
+	{
+		pl2_disconnect();
+	}
 
 	glade_xml_signal_autoconnect(pl2_xml);
+}
+
+
+
+void pl2_connect()
+{
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl2_xml, "hb_sens"), TRUE);	
+}
+
+void pl2_disconnect()
+{
+	/* remove all songs */
+	gtk_list_store_clear(pl2_store);
+	/* set buttons insensitive */
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl2_xml, "hb_sens"), FALSE);	
+	/* destroy a possible open location window */
+	ol_destroy();
+	/* hide the add window */
+	sb_close();
+	sb_disconnect();
 }
 

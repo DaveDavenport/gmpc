@@ -36,27 +36,6 @@ typedef struct
 	int old_pos;
 	/* Elapsed or remaining time */
 	int time_format;
-	/* The Playlist, only in my memory */
-	GList *playlist;
-	/* playlist running. */
-//	gboolean playlist_running;
-	/* filter enabled */
-//	gboolean show_filter;
-//	gchar filter_entry[256];
-//	gint  filter_field;
-	/* Some internall data..  this to save trafic with mpd daemon */
-/*	GtkListStore *playlist_list;
-	GtkListStore *cur_list;
-	GtkListStore *dir_list;
-	GtkListStore *file_list;
-	GtkListStore *id3_songs_list;
-	GtkListStore *search_list;
-	GtkTreeStore *id3_album_list;
-	gchar path[1024];
-*/	/* playlists view hidden */
-//	gboolean playlist_view_hidden;
-	guint64 total_number_of_songs;
-	guint64	total_playtime; 
 	/* tray icon*/
 	gboolean do_tray;
 	popup_struct popup;
@@ -89,6 +68,10 @@ void random_pl();
 void repeat_pl();
 void update_mpd_dbase();
 int disconnect_to_mpd();
+
+/* returns FALSE when connected */
+gboolean check_connection_state();
+
 
 /* player.c*/
 /* scrolling title in main window */
@@ -124,17 +107,6 @@ extern pref_struct preferences;
 void create_preferences_window();
 void preferences_update();
 
-/* playlist.c*/
-/*
-void create_player();
-void create_playlist();
-void load_songs_with_filter();
-extern GladeXML *xml_playlist_window;
-void update_playlist();
-void filter_toggle();
-void destroy_playlist(GtkWidget *wid);
-void clear_playlist_buffer();
-*/
 /* id3info.c*/
 void call_id3_window(int song);
 /* config.c*/

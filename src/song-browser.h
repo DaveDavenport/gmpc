@@ -10,3 +10,5 @@ enum{
 void song_browser_create();
 void update_song_browser();
 void sb_reload_file_browser();
+void sb_disconnect();
+void sb_close();

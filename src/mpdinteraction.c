@@ -29,7 +29,7 @@ int update_mpd_status()
 	mpd_finishCommand(info.connection);
 	if(info.stats == NULL)g_print("crap %s\n", info.connection->errorStr);
 
-	
+
 	/* unlock it */
 	info.conlock = FALSE;
 	return TRUE;
@@ -54,17 +54,15 @@ int disconnect_to_mpd()
 
 	scroll.exposed = 1;
 	info.song = -1;
-/*	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), FALSE);
-	if(info.playlist_running)
-	{
-		destroy_playlist(glade_xml_get_widget(xml_playlist_window, "playlist_window"));
-		if(debug)g_print("destroying playlist\n");
-	}
-	clear_playlist_buffer();
-*/
+	info.playlist_id = -1;
+	info.playlist_length = -1;
+
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
-	
+
+	/* disconnect playlist */
+	pl2_disconnect();
+
 	return FALSE;
 }
 
@@ -116,10 +114,29 @@ int connect_to_mpd()
 	}
 	info.conlock = FALSE;
 	update_mpd_status();
-//	gtk_widget_set_sensitive(glade_xml_get_widget(xml_main_window, "pm_button"), TRUE);
 
+
+	/* connect playlist2 */
+	pl2_connect();
+
+
+	
 	return FALSE;
 }
+
+/* returns FALSE when connected */
+
+gboolean check_connection_state()
+{
+	if(info.connection == NULL)
+	{
+		return TRUE;
+	}
+	else return FALSE;
+
+}
+
+
 
 /* the normal play functions, stop, play, next, prev */
 

@@ -4,6 +4,10 @@ void update_playlist2();
 void init_playlist2();
 void pl2_highlight_song();
 
+void pl2_disconnect();
+void pl2_connect();
+
+
 enum store_types
 {
 	SONG_ID,

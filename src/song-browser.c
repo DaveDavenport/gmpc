@@ -48,6 +48,7 @@ void sb_do_search()
 	gint search_type = gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(sb_xml, "cb_search")));
 	if(strlen(search_string) == 0) return;
 	if(info.connection == NULL) return;
+	if(check_connection_state()) return;
 
 	gtk_tree_store_append(sb_search, &iter, NULL);	
 
@@ -99,6 +100,7 @@ void sb_do_search()
 
 void sb_close()
 {
+	if(sb_xml != NULL)
 	gtk_widget_hide(glade_xml_get_widget(sb_xml, "song_browser"));
 }
 
@@ -135,6 +137,7 @@ void sb_row_activated()
 	int i = gtk_combo_box_get_active(GTK_COMBO_BOX(cb));
 	/* if now rows selected (how we activated it then? but just to be safe) return */
 	if(rows == NULL) return;
+	if(check_connection_state()) return;
 
 	if(i == 0)
 	{
@@ -228,6 +231,7 @@ void sb_row_activated()
 	}
 
 	/* if there are items in the add list add them to the playlist */
+	if(check_connection_state()) return;
 	if(add_list != NULL)
 	{
 		mpd_sendCommandListBegin(info.connection);
@@ -350,6 +354,8 @@ void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
 	mpd_InfoEntity *ent = NULL;
 	gchar *artist;
 	GtkTreeIter iter,child2;
+
+	if(check_connection_state()) return;
 	/* only for id3 */
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 0)
 	{
@@ -426,7 +432,7 @@ void sb_fill_browser_id3()
 	gchar *string;
 	GList *list = NULL, *node = NULL;
 	int i =0;
-	if(info.connection == NULL) return;
+	if(check_connection_state()) return;
 
 	mpd_sendListCommand(info.connection, MPD_TABLE_ARTIST,NULL);
 
@@ -457,6 +463,8 @@ void sb_fill_browser_id3()
 	}while((node = g_list_next(node)) != NULL);
 	g_list_free(list);
 
+
+	if(info.connection == NULL) return;
 	/* get the first iter */
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_id3), &parent, NULL))
 	{
@@ -478,7 +486,11 @@ void sb_fill_browser_id3()
 				g_free(string);
 				nalbum++;
 			}
+
+			
 			while(gtk_events_pending()) gtk_main_iteration();
+
+			if(check_connection_state()) return;
 			/* check if the users hasn't closed the interface */
 			if(sb_xml == NULL) return;
 
@@ -516,7 +528,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 	mpd_InfoEntity *ent = NULL;
 	GtkTreeIter iter;
 	gint type = 1;
-	if(info.connection == NULL) return;	
+	if(check_connection_state()) return;
 	if(parent != NULL)
 	{
 		gchar *name;
@@ -582,6 +594,7 @@ void sb_fill_browser_file(char *path, GtkTreeIter *parent, gboolean go_further)
 	//	while(gtk_events_pending()) gtk_main_iteration();
 	/* check if the users hasn't closed the interface */
 	//	if(sb_xml == NULL) return;
+	if(check_connection_state()) return;
 	if(go_further)
 	{
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_file), &iter,parent))
@@ -648,6 +661,17 @@ void sb_reload_file_browser()
 		sb_fill_browser();
 	}
 }
+
+void sb_disconnect()
+{
+	if(sb_id3 != NULL)
+	{
+		gtk_tree_store_clear(sb_id3);
+		gtk_tree_store_clear(sb_file);
+		gtk_tree_store_clear(sb_search);
+	}
+}
+
 
 void update_song_browser()
 {

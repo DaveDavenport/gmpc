@@ -45,7 +45,8 @@ void set_default_values()
 	preferences.timeout = 1.0;
 	preferences.autoconnect = FALSE;
 	/* main display markup */
-	preferences.markup_main_display = g_strdup("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
+	preferences.markup_main_display = 
+		g_strdup("[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|");
 	/* the mpd status struct used  in the whole program */
 	info.status = NULL;
 	/* the mpd connection */
@@ -66,29 +67,7 @@ void set_default_values()
 	info.old_pos = -1;
 	/* Elapsed or remaining time */
 	info.time_format = 1;
-	/* The Playlist, only in my memory */
-	info.playlist = NULL;
-	/* playlist running. */
-//	info.playlist_running = FALSE;
-	/* filter enabled */
-//	info.show_filter = FALSE;
-//	memset(info.filter_entry, '\0', 256);
-//	strcpy(info.filter_entry, "");
-//	info.filter_field = 0;
-	/* Some internall data..  this to save trafic with mpd daemon */
-/*	info.playlist_list = NULL;
-	info.cur_list = NULL;
-	info.dir_list = NULL;
-	info.file_list = NULL;
-	info.id3_songs_list = NULL;
-	info.search_list = NULL;
-	info.id3_album_list = NULL;
-	memset(info.path, '\0', 1024);
-	strcpy(info.path, "/");
-*/	/* playlists view hidden */
-//	info.playlist_view_hidden = FALSE;
-	info.total_number_of_songs = 0;
-	info.total_playtime = 0; 
+	
 	/* tray icon*/
 	info.do_tray =FALSE;
 
@@ -273,7 +252,6 @@ int update_interface()
 	}
 	info.playlist_length = info.status->playlistLength;
 	/* update the playlist */
-//	update_playlist();
 	update_playlist2();
 
 	/* update the player window */
@@ -323,7 +301,38 @@ void init_stock_icons()
 	set = gtk_icon_set_new_from_pixbuf(pb);
 	gtk_icon_factory_add(factory, "media-album", set);
 	g_object_unref(G_OBJECT(pb));
+
+	/* add media-play */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-play.png", NULL);	
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-play", set);
+	g_object_unref(G_OBJECT(pb));                                           	
+
+	/* add media-stop */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-stop.png", NULL);	
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-stop", set);
+	g_object_unref(G_OBJECT(pb));                                           	
+
+	/* add media-next */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-next.png", NULL);	
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-next", set);
+	g_object_unref(G_OBJECT(pb));	
+
+	/* add media-prev */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-prev.png", NULL);		
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-prev", set);
+	g_object_unref(G_OBJECT(pb));	
+
+	/* add media-pause */
+	pb = gdk_pixbuf_new_from_file(PIXMAP_PATH"media-pause.png", NULL);		
+	set = gtk_icon_set_new_from_pixbuf(pb);
+	gtk_icon_factory_add(factory, "media-pause", set);
+	g_object_unref(G_OBJECT(pb));	
 	
 
+	
 	gtk_icon_factory_add_default(factory);
 }

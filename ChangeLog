@@ -1,4 +1,6 @@
 30-06-2004 Qball <Qball@qballcow.nl>
+	* Added remote fetching and parsing of .m3u/.pls files
+	* Added dnd on open-location window and button
 	* Saving playlist
 	* Removed lots of code for old playlist.
 	* Remove src/playlist.c
