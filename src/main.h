@@ -26,6 +26,8 @@ typedef struct
 	int playlist_id;
 	/* the state, if the state changes I know I have to update some stuff */
 	int state;
+	/* the current song */
+	mpd_Song *mpdSong;
 	/* the volume if the volume change I also have to update some stuff */
 	int volume;
 	/* the current song */
@@ -34,8 +36,6 @@ typedef struct
 	int time_format;
 	/* The Playlist, only in my memory */
 	GList *playlist;
-	/* the current song */
-	mpd_Song *cursong;
 	/* playlist running. */
 	gboolean playlist_running;
 	/* filter enabled */

@@ -83,7 +83,7 @@ void remove_id3_window()
 
 void create_window(int song)
 {
-	GList *node;
+	mpd_InfoEntity *ent = NULL;
 	if(info.connection == NULL) return;
 	if(info.status->state == MPD_STATUS_STATE_UNKNOWN) return;
 	if(info.status->playlistLength == 0 ) return;
@@ -94,9 +94,13 @@ void create_window(int song)
 	glade_xml_signal_autoconnect(xml_id3_window);
 
 	/* set info from struct */
-	node = g_list_nth(info.playlist, song);
-	songs = g_list_append(songs, mpd_songDup(node->data));
-
+	mpd_sendPlaylistInfoCommand(info.connection, song);
+	ent = mpd_getNextInfoEntity(info.connection);
+	if(ent != NULL)
+	{	
+		songs = g_list_append(songs, mpd_songDup(ent->info.song));
+		mpd_freeInfoEntity(ent);
+	}
 	set_text(songs);
 }
 
@@ -195,11 +199,17 @@ void call_id3_window(int song)
 	}
 	else
 	{
-		GList *node = g_list_nth(info.playlist, song);
-		songs = g_list_append(songs, mpd_songDup(node->data));
-		songs = g_list_last(songs);
-		if(songs == NULL) if(debug)g_print("Oeps.. error\n");
-		set_text(songs);
+		mpd_InfoEntity *ent = NULL;
+		mpd_sendPlaylistInfoCommand(info.connection, song);
+		ent = mpd_getNextInfoEntity(info.connection);
+		if(ent != NULL)
+		{	
+			songs = g_list_append(songs, mpd_songDup(ent->info.song));
+			songs = g_list_last(songs);
+			if(songs == NULL) if(debug)g_print("Oeps.. error\n");
+			set_text(songs);                                     			
+			mpd_freeInfoEntity(ent);
+		}
 	}
 }
 

@@ -63,12 +63,10 @@ void update_tray_icon()
 			gchar *str = NULL;
 			if(info.status->state == MPD_STATUS_STATE_PLAY || info.status->state == MPD_STATUS_STATE_PAUSE)
 			{
-				GList *node = g_list_nth(info.playlist, info.status->song);
-				if(node != NULL)
+				if(info.mpdSong != NULL)
 				{
-					mpd_Song *song = node->data;
 					gchar buffer[1024];
-					strfsong(buffer, 1024, preferences.markup_main_display, song);
+					strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
 					str = g_strdup(buffer);
 				}
 

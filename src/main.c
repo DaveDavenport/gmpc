@@ -55,8 +55,6 @@ void set_default_values()
 	info.time_format = 1;
 	/* The Playlist, only in my memory */
 	info.playlist = NULL;
-	/* the current song */
-	info.cursong = NULL;
 	/* playlist running. */
 	info.playlist_running = FALSE;
 	/* filter enabled */
@@ -90,6 +88,7 @@ void set_default_values()
 	info.popup.pixbuf_height = 0;
 	info.popup.popup_stay = FALSE;
 	info.hidden = FALSE; 
+	info.mpdSong = NULL;
 }
 
 
@@ -110,10 +109,10 @@ int main(int argc, char **argv)
 	/* get the status every 1/2 second should be enough */
 	gtk_timeout_add(600, (GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	update_interface();
-
 
 	if(info.do_tray)  create_tray_icon();
+	update_interface();
+
 	/* run the main loop */
 	gtk_main();
 
@@ -128,13 +127,12 @@ int update_interface()
 
 	/* update the preferences menu, I call this as soon as possible so the preferences menu can detect update */
 	preferences_update();
-	/* tray update */
-	update_tray_icon();
-	/* update the popup */
-	update_popup();
+
 	/* check if there is an connection. (that is when connection == NULL) */    
 	if(info.connection == NULL)
 	{
+		/* update the popup */
+		update_popup();       		
 		if(!preferences.autoconnect) return TRUE;
 		/* connect to mpd if that fails return this function */
 		if(connect_to_mpd())
@@ -157,6 +155,29 @@ int update_interface()
 	if(info.conlock) return TRUE;
 
 	/* ok save to update interface, no need to lock (yet)*/
+	if(info.song != info.status->song)
+	{
+		mpd_InfoEntity *ent = NULL;
+		if(info.mpdSong != NULL)
+		{
+			mpd_freeSong(info.mpdSong);
+			info.mpdSong = NULL;
+		}
+		mpd_sendCurrentSongCommand(info.connection);	
+		ent = mpd_getNextInfoEntity(info.connection);
+		if(ent != NULL)
+		{
+			info.mpdSong = mpd_songDup(ent->info.song);
+			mpd_finishCommand(info.connection);
+			mpd_freeInfoEntity(ent);
+		}
+	}
+
+	/* update the popup */
+	update_popup();
+
+	/* tray update */
+	update_tray_icon();	
 
 	/* check for new playlist and load it if needed */
 	if(info.playlist_id != info.status->playlist)
@@ -170,7 +191,7 @@ int update_interface()
 
 
 		mpd_sendPlChangesCommand(info.connection, info.playlist_id);
-		
+
 		ent = mpd_getNextInfoEntity(info.connection);
 		while(ent != NULL)
 		{
@@ -192,7 +213,7 @@ int update_interface()
 							WEIGHT_ENABLE,TRUE,
 							WEIGHT_INT, weight,
 
-						-1); 
+							-1); 
 				}
 				g_free(path);
 				if(node != NULL)
@@ -234,7 +255,7 @@ int update_interface()
 				}
 				g_free(path);
 
-					info.playlist = g_list_remove(info.playlist, song);
+				info.playlist = g_list_remove(info.playlist, song);
 				mpd_freeSong(song);
 
 			}

@@ -12,7 +12,6 @@ guint timeout       = 0;
 gchar * get_string()
 {
 	GString *string;
-	mpd_Song *song;
 	int i;
 	/* because we don't want to pass the GString we need to get a pointer to the gstrings string. */
 	/* because we do the free on the string before the return */
@@ -34,39 +33,21 @@ gchar * get_string()
 
 	}
 	else{
-		GList *node = g_list_nth(info.playlist, info.status->song);
 		gchar buffer[1024];
 		/* check if there actually a song to display */
-		if(node == NULL)
+		if(info.mpdSong == NULL)
 		{
 			return g_strdup("No Song found\n");
 		}
 
 
 		/* get the mpd_Song struct. that is where the info is stored */
-		song = node->data;
-		strfsong(buffer, 1024, "[%name%\n&[%artist%\n]%title%[\n%album%]]|%name%|[%artist%\n]%title%[\n%album%]|%shortfile%|", song);
+		strfsong(buffer, 1024,
+				"[%name%\n&[%artist%\n]%title%[\n%album%]]|%name%|[%artist%\n]%title%[\n%album%]|%shortfile%|", info.mpdSong);
 		/* create an empty string */
 		string = g_string_new(buffer);  		
-		/* if there is no artist name or title name we use the filename */
-/*		if(song->artist  == NULL || song->title == NULL)
-		{
-			gchar *basename     = remove_extention_and_basepath(song->file);
-			g_string_printf(string,"%s",basename);
-			g_free(basename);
-		}
-		else
-		{
-			g_string_printf(string, "%s\n%s", song->title, song->artist);
-
-			if(song->album != NULL)
-			{
-				g_string_append_printf(string,"\n%s", song->album);
-			}
-		}
-		*/
 		/* catch & signs and convert them so */
-		
+		/* markup can't handle it otherwise */
 		for(i= 0;i < string->len;i++)
 		{
 			if(string->str[i] == '&')

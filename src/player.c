@@ -223,7 +223,6 @@ int update_player()
 		/* update the time box */
 		{
 
-			//			GtkWidget *entry = glade_xml_get_widget(xml_main_window, "time_entry");
 			int e_min = (int)(info.status->elapsedTime/60);
 			int e_sec = info.status->elapsedTime - 60*e_min;
 			int r_min = (int)((info.status->totalTime- info.status->elapsedTime)/60);
@@ -244,7 +243,6 @@ int update_player()
 			       	buf = g_strdup_printf("%3.1f %%", (double)((double)info.status->elapsedTime/(double)info.status->totalTime)*100);
 				}
 			}
-			//		gtk_entry_set_text(GTK_ENTRY(entry), buf);
 			pango_layout_set_text(time_layout, buf, -1);
 			gtk_widget_queue_draw(glade_xml_get_widget(xml_main_window, "time_image"));
 
@@ -255,10 +253,7 @@ int update_player()
 
 	if(info.song != info.status->song && info.status->state != MPD_STATUS_STATE_STOP)
 	{
-		GList *node = g_list_nth(info.playlist, info.status->song);
-		mpd_Song *song;
-		if(node != NULL){
-			song = node->data;
+		if(info.mpdSong != NULL){
 			/* make a global song */
 			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
 			{
@@ -267,30 +262,9 @@ int update_player()
 			}
 			else
 			{
-				g_print("update display\n");
-				info.cursong = song;
 				gchar buffer[1024];
-				strfsong(buffer, 1024, preferences.markup_main_display, song);
+				strfsong(buffer, 1024, preferences.markup_main_display, info.mpdSong);
 				msg_set_base(buffer);
-				
-/*				info.cursong = song;
-				if(song->artist != NULL && song->title != NULL)
-				{
-					gchar *buf = NULL;
-					if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
-					else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
-					msg_set_base(buf);
-					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf);
-					g_free(buf);
-				}
-				else
-				{
-					gchar *buf  = remove_extention_and_basepath(song->file);
-					gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buf);
-					msg_set_base(buf);
-					g_free(buf);
-				}
-				*/
 			}
 		}
 	}
@@ -489,8 +463,8 @@ void id3_info()
 void style_changed(GtkWidget *window, GtkStyle *prev, PangoLayout *lay)
 {
 	pango_layout_context_changed(lay);
-
 }
+
 /* create the player and connect signals */
 void create_player()
 {
