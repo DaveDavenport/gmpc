@@ -206,6 +206,7 @@ void pl3_find_search()
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter,child,tst;
+	GtkTreePath *path;
 	const char *name;
 	gchar *field;
 	if(!gtk_tree_selection_get_selected(selection, &model, &iter)) return;
@@ -228,6 +229,10 @@ void pl3_find_search()
 			PL3_CAT_ICON_ID, "gtk-find",
 			PL3_CAT_PROC, TRUE,
 			-1);
+	path = gtk_tree_model_get_path(model,&iter);
+	gtk_tree_view_expand_to_path(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path);
+	gtk_tree_path_free(path);
+	
 	gtk_tree_selection_select_iter(selection, &child);
 
 
@@ -625,6 +630,7 @@ void pl3_browse_add_selected()
 	GList *add_list = NULL;
 	int songs=0;
 	gchar *message;
+	
 
 	if(rows != NULL)
 	{
@@ -1344,15 +1350,6 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 }
 
 
-
-
-
-
-
-
-
-
-
 /**********************************************************
  * MISC
  */
@@ -1403,10 +1400,6 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		next_song();
 	}
-
-
-
-
 
 	/* propagate */
 	return FALSE;
