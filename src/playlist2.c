@@ -339,7 +339,7 @@ void pl2_delete_selected_songs()
 				GTK_DIALOG_MODAL,
 				GTK_MESSAGE_WARNING,
 				GTK_BUTTONS_NONE,
-				"Are you sure you want to clear the playlist?");
+				_("Are you sure you want to clear the playlist?"));
 		gtk_dialog_add_buttons(GTK_DIALOG(dialog), 
 				GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 				GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);

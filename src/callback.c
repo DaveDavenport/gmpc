@@ -20,7 +20,7 @@ int check_for_errors()
 				info.connection->error == MPD_ERROR_NORESPONSE	||
 				info.connection->error == MPD_ERROR_SENDING)
 		{
-			msg_set_base("GMPC - Connection Error. Please check youre settings in the preferences menu");
+			msg_set_base(_("GMPC - Connection Error. Please check youre settings in the preferences menu"));
 			mpd_closeConnection(info.connection);
 			info.conlock = TRUE;
 			info.connection = NULL;
@@ -48,6 +48,3 @@ int check_for_errors()
 	}
 	else return FALSE;
 }
-
-
-

@@ -71,7 +71,7 @@ void update_tray_icon()
 				}
 
 			}
-			else str = g_strdup("Gnome Music Player Client");
+			else str = g_strdup(_("Gnome Music Player Client"));
 			gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), str, "");
 			g_free(str);
 		}
@@ -157,7 +157,7 @@ int create_tray_icon()
 		return FALSE;
 	}
 	/* set up tray icon */
-	tray_icon = egg_tray_icon_new("Gnome Music Player Client");
+	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	//	tray_image = gtk_image_new();
 	event = gtk_event_box_new();
 	gtk_widget_set_usize(event, 20,20);
@@ -185,6 +185,6 @@ int create_tray_icon()
 		tray_xml =   glade_xml_new(GLADE_PATH"gmpc.glade", "tray_icon_menu", NULL);
 		glade_xml_signal_autoconnect(tray_xml);
 	}
-	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), "Gnome Music Player Client", "");
+	gtk_tooltips_set_tip(tps, GTK_WIDGET(tray_icon), _("Gnome Music Player Client"), "");
 	return FALSE;
 }

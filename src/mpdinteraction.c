@@ -49,7 +49,7 @@ int disconnect_to_mpd()
 	info.stats = NULL;
 
 	info.connection = NULL;
-	msg_set_base("gmpc - Disconnected");
+	msg_set_base(_("gmpc - Disconnected"));
 	gtk_timeout_remove(update_timeout);
 
 
@@ -88,7 +88,7 @@ int connect_to_mpd()
 	if(info.connection->error)
 	{
 		g_print("Connection failed\n");
-		msg_set_base("gmpc - Failed to connect, please check the connection settings.");
+		msg_set_base(_("gmpc - Failed to connect, please check the connection settings."));
 		mpd_closeConnection(info.connection);
 		info.connection = NULL;	
 		return TRUE;
@@ -107,7 +107,7 @@ int connect_to_mpd()
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, 
 				GTK_MESSAGE_ERROR,
 				GTK_BUTTONS_OK,
-				"You don't have enough permission to access mpd.");
+				_("You don't have enough permission to access mpd."));
 		mpd_closeConnection(info.connection);
 		info.connection = NULL;
 		preferences.autoconnect = FALSE;

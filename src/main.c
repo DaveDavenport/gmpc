@@ -238,7 +238,7 @@ update_interface ()
 	{
 		if(info.status->updatingDb)
 		{
-			msg_push_popup("MPD is updating the database, please wait");
+			msg_push_popup(_("MPD is updating the database, please wait"));
 		}
 		else
 		{

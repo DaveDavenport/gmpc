@@ -120,7 +120,7 @@ gboolean update_msg()
 		{
 			scroll.msg = g_strdup(scroll.base_msg);
 		}
-		else scroll.msg = g_strdup("Gnome Music Player Client");
+		else scroll.msg = g_strdup(_("Gnome Music Player Client"));
 		scroll.pos = 0;
 		scroll.up = 0;
 		pango_layout_set_text(layout, scroll.msg, -1);
@@ -170,7 +170,7 @@ void msg_set_base(gchar *msg)
 	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		scroll.base_msg = g_strdup("No valid UTF-8. Please check youre locale");
+		scroll.base_msg = g_strdup(_("No valid UTF-8. Please check youre locale"));
 	}
 	else	scroll.base_msg = g_strdup(msg);
 
@@ -187,7 +187,7 @@ void msg_push_popup(gchar *msg)
 	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		scroll.popup_msg = g_strdup("No valid UTF-8. Please check youre locale");
+		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check youre locale"));
 	}
 	else	scroll.popup_msg = g_strdup(msg);
 	scroll.exposed = TRUE;
@@ -263,8 +263,8 @@ int update_player()
 			/* make a global song */
 			if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
 			{
-				msg_set_base("Gnome Music Player Client");
-				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), "Gnome Music Player Client");
+				msg_set_base(_("Gnome Music Player Client"));
+				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
 			}
 			else
 			{
@@ -283,8 +283,8 @@ int update_player()
 		if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
 		{
 			GtkWidget *entry;
-			msg_set_base("GMPC - Stopped");
-			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), "Gnome Music Player Client");
+			msg_set_base(_("GMPC - Stopped"));
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
 			if(info.time_format == TIME_FORMAT_ELAPSED)
 			{
 				pango_layout_set_text(time_layout, "00:00", -1);
@@ -360,7 +360,7 @@ void change_progress_update()
 				int sec = newtime - 60*min;
 				int t_min = (int)(info.status->totalTime/60);
 				int t_sec = info.status->totalTime - 60*t_min;
-				buf = g_strdup_printf("Seek to %02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
+				buf = g_strdup_printf(_("Seek to %02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}
 			else if (info.time_format == TIME_FORMAT_REMAINING)
 			{
@@ -368,9 +368,9 @@ void change_progress_update()
 				int t_sec = info.status->totalTime - 60*t_min;
 				int min = (int)((info.status->totalTime -newtime)/60);
 				int sec = (info.status->totalTime -newtime) - 60*min;
-				buf = g_strdup_printf("Seek to -%02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
+				buf = g_strdup_printf(_("Seek to -%02i:%02i/%02i:%02i"), min, sec, t_min, t_sec);
 			}	
-			else buf = g_strdup_printf("Seek to %3.1f%%", value);
+			else buf = g_strdup_printf(_("Seek to %3.1f%%"), value);
 			msg_push_popup(buf);
 			g_free(buf);
 		}
@@ -416,7 +416,7 @@ void volume_change_update()
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
-		gchar *buf = g_strdup_printf("Volume %i%%", (int)value);
+		gchar *buf = g_strdup_printf(_("Volume %i%%"), (int)value);
 		msg_push_popup(buf);
 		g_free(buf);
 
@@ -477,7 +477,7 @@ void create_player()
 {
 	xml_main_window = glade_xml_new(GLADE_PATH"gmpc.glade", "main_window", NULL);
 	/* check for errors and axit when there is no gui file */
-	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
+	if(xml_main_window == NULL)  g_error(_("Couldnt initialize GUI. Please check installation\n"));
 	glade_xml_signal_autoconnect(xml_main_window);
 
 	DISPLAY_WIDTH = glade_xml_get_widget(xml_main_window, "entry_image")->allocation.width;
@@ -500,8 +500,5 @@ void create_player()
 
 	pango_layout_set_text(time_layout, "00:00", -1);
 	/* check for errors and axit when there is no gui file */
-/*	if(xml_main_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
-	glade_xml_signal_autoconnect(xml_main_window);
-*/	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
+	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }
-

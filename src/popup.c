@@ -21,13 +21,13 @@ gchar * get_string()
 		switch(info.status->state)
 		{
 		case MPD_STATUS_STATE_STOP:
-			retval  = g_strdup("<b><i>Stopped</i></b>");
+			retval  = g_strdup(_("<b><i>Stopped</i></b>"));
 			break;
 		case MPD_STATUS_STATE_PAUSE:
-			retval = g_strdup("<b><i>Paused</i></b>");
+			retval = g_strdup(_("<b><i>Paused</i></b>"));
 			break;
 		default:
-			retval = g_strdup("<b><i>Unknown State</i></b>");
+			retval = g_strdup(_("<b><i>Unknown State</i></b>"));
 			break;
 		}
 
@@ -37,7 +37,7 @@ gchar * get_string()
 		/* check if there actually a song to display */
 		if(info.mpdSong == NULL)
 		{
-			return g_strdup("No Song found\n");
+			return g_strdup(_("No Song found\n"));
 		}
 
 

@@ -39,9 +39,6 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 	if(result == GNOME_VFS_OK)
 	{
 		gchar **list = g_strsplit(buffer, "\n",0);
-
-
-
 		if(list != NULL)
 		{
 			if(!strncmp(list[0], "[playlist]", 10))
@@ -77,22 +74,13 @@ void ol_file_read(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gchar *buf
 				ol_destroy();	           			
 			}
 		}
-		/*else
-		  {
-		  working = FALSE;
-		  gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-		  "<span size=\"x-small\"><i>File has no valid layout.</i></span>");       			
-		  gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
-		  }
-		  */
 		g_strfreev(list);
-
 		gnome_vfs_async_close(handle, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         				
 	}
 	else
 	{
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-				"<span size=\"x-small\"><i>Failed to read the file.</i></span>");       			
+				_("<span size=\"x-small\"><i>Failed to read the file.</i></span>"));       			
 		working = FALSE;
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 		gnome_vfs_async_close(handle, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         		
@@ -117,7 +105,7 @@ void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer
 	{
 		g_print("Error found:%s\n", gnome_vfs_result_to_string(result));
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-				"<span size=\"x-small\"><i>Failed to open file.</i></span>");       			
+				_("<span size=\"x-small\"><i>Failed to open file.</i></span>"));       			
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 		working = FALSE;
 	}
@@ -144,7 +132,7 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 			g_print("found m3u file  size: %i \n",(gint)size);
 			if(size == 0) size = MAX_PLAYLIST_SIZE;
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-					"<span size=\"x-small\"><i>Found playlist file</i></span>");
+					_("<span size=\"x-small\"><i>Found playlist file</i></span>"));
 			gnome_vfs_async_open_uri(&handle1, r->uri,GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
 					(GnomeVFSAsyncOpenCallback) ol_file_opened, GINT_TO_POINTER(size));
 
@@ -165,7 +153,7 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-					"<span size=\"x-small\"><i>Unkown file found.</i></span>");       			
+					_("<span size=\"x-small\"><i>Unkown file found.</i></span>"));       			
 			working = FALSE;
 		}
 	}
@@ -173,7 +161,7 @@ void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),                          	
-				"<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>");       			
+				_("<span size=\"x-small\"><i>Failed to grab fileinfo.</i></span>"));       			
 		working = FALSE;
 	}
 
@@ -190,7 +178,7 @@ void ol_add_location()
 	{
 		g_print("Invalid link\n");
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
-				"<span size=\"x-small\"><i>Invalid link format</i></span>");
+				_("<span size=\"x-small\"><i>Invalid link format</i></span>"));
 		return;
 	}
 	list = g_list_append(NULL,uri);

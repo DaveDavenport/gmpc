@@ -82,9 +82,9 @@ sb_key_pressed (GtkWidget * widget, GdkEventKey * event)
 						    GTK_BUTTONS_OK_CANCEL,
 						    (amount ==
 						     1) ?
-						    "Are you sure you want to delete the selected playlist?"
+						    _("Are you sure you want to delete the selected playlist?")
 						    :
-						    "Are you sure you want to delete the selected playlists?");
+						    _("Are you sure you want to delete the selected playlists?"));
 			  gtk_widget_show_all (dialog);
 			  switch (gtk_dialog_run (GTK_DIALOG (dialog)))
 			    {
@@ -129,9 +129,9 @@ sb_key_pressed (GtkWidget * widget, GdkEventKey * event)
 						    GTK_BUTTONS_OK_CANCEL,
 						    (amount ==
 						     1) ?
-						    "Are you sure you want to delete the selected search query?"
+						    _("Are you sure you want to delete the selected search query?")
 						    :
-						    "Are you sure you want to delete the selected search queries?");
+						    _("Are you sure you want to delete the selected search queries?"));
 			  gtk_widget_show_all (dialog);
 			  switch (gtk_dialog_run (GTK_DIALOG (dialog)))
 			    {
