@@ -83,11 +83,15 @@ char * shorter_string(const char *long_string)
 
 gchar * format_time(unsigned long seconds)
 {
+	if(seconds == 0)
+	{
+		return 0;
+	}
 	int days = seconds/86400;
 	int houres = (seconds % 86400)/3600;
 	int minutes = (seconds % 3600)/60;
 	char *ret;
-	GString *str = g_string_new("Total time: ");
+	GString *str = g_string_new(" Total time: ");
 	if(days != 0)
 	{
 		g_string_append_printf(str, "%i days ", days);
@@ -99,10 +103,6 @@ gchar * format_time(unsigned long seconds)
 	if(minutes != 0)
 	{
 		g_string_append_printf(str, "%i minutes ", minutes);
-	}                                                         	
-	if(seconds == 0)
-	{
-		g_string_append(str, "0");
 	}
 	ret = str->str;
 	g_string_free(str, FALSE);
