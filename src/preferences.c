@@ -414,7 +414,6 @@ void create_outputs_tree()
 	col = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_visible(col, FALSE);
 	gtk_tree_view_append_column(tree, col);
-	gtk_widget_show_all(GTK_WIDGET(tree));
 }
 
 void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
@@ -450,11 +449,16 @@ void update_outputs_settings()
         mpd_OutputEntity *output;
 	GtkTreeIter iter;
 	GtkListStore *store;
+	GtkFrame *frame;
 
+	frame = GTK_FRAME(glade_xml_get_widget(xml_preferences_window, "frm_outputs"));
 	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"))));
 	gtk_list_store_clear(store);
-        if(info.connection)
+	if(info.connection && 
+	   (info.connection->version[0] > 0 ||
+	    info.connection->version[1] >= 12))
 	{
+   	        gtk_widget_show_all(GTK_WIDGET(frame));
 	        mpd_sendOutputsCommand(info.connection);
 		while((output = mpd_getNextOutput(info.connection)) != NULL)
 		{
@@ -462,5 +466,6 @@ void update_outputs_settings()
 			gtk_list_store_set(store, &iter, 0, output->enabled?TRUE:FALSE, 1, output->name, 2, output->id, -1);
 			mpd_freeOutputElement(output);
 		}
-	}
+	}else
+	        gtk_widget_hide_all(GTK_WIDGET(frame));
 }
