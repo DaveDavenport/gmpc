@@ -8,6 +8,8 @@
 #include "misc.h"
 #include "strfsong.h"
 #include "playlist2.h"
+#include "playlist3.h"
+
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
 

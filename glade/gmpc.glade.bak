@@ -387,6 +387,22 @@
 		  <property name="fill">False</property>
 		</packing>
 	      </child>
+
+	      <child>
+		<widget class="GtkButton" id="button41">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="label" translatable="yes">pl3</property>
+		  <property name="use_underline">True</property>
+		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="focus_on_click">True</property>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">False</property>
+		</packing>
+	      </child>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
@@ -2240,7 +2256,7 @@ Some  useful examples for format are: &quot;%file%&quot; and &quot;[[%artist% - 
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="label" translatable="yes">&lt;span size=&quot;xx-large&quot;&gt;&lt;b&gt;Gnome Music Player Client&lt;/b&gt;&lt;/span&gt;
-0.11.1 &lt;i&gt;Intelligence is only skin deep&lt;/i&gt;</property>
+0.11.2 &lt;i&gt;If only a day would have 36 houres&lt;/i&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_CENTER</property>

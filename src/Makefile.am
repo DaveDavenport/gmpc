@@ -27,7 +27,8 @@ gmpc_SOURCES=\
 	list_tooltip.c\
 	mm-keys.c\
 	mm-keys.h\
-	main.h
+	main.h\
+	playlist3.c
 
 INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\"
 LIBS = @gmpc_LIBS@ @LIBS@ 
