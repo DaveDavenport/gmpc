@@ -16,6 +16,7 @@ GPatternSpec *compare_key= NULL;
 
 void load_playlist2();
 
+
 void init_playlist2()
 {
 	g_print("creating listore\n");
@@ -31,9 +32,43 @@ void init_playlist2()
 void update_playlist2()
 {
 	if(pl2_store == NULL) return;
+
+
+
+	if(info.status->song != info.song || info.state != info.status->state)
+	{
+		GtkTreeIter iter;
+		gchar *temp;
+		if(info.old_pos != -1)
+		{
+			temp = g_strdup_printf("%i",info.old_pos);
+			if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, temp))
+			{
+				gtk_list_store_set(pl2_store, &iter, WEIGHT_INT, PANGO_WEIGHT_NORMAL, -1);
+			}
+			g_free(temp);
+		}
+		
+		if(info.status->state != MPD_STATUS_STATE_STOP &&
+		   info.status->state != MPD_STATUS_STATE_UNKNOWN)
+		{
+			temp = g_strdup_printf("%i", info.status->song);
+			if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, temp))
+                	{
+                		gtk_list_store_set(pl2_store, &iter, WEIGHT_INT, PANGO_WEIGHT_ULTRABOLD, -1);
+                	}
+			g_free(temp);                                                                     	
+			info.old_pos = info.status->song;
+		}
+
+
+	}
+
+
+	/* remove if above routine works */
 	
 	/* FIXME: see if there is a more optimized way todo this */
-	if(	(info.status->song != info.song && info.song != -1) || 
+/*	if(	(info.status->song != info.song && info.song != -1) || 
 			(info.state != info.status->state &&  
 			 info.status->state != MPD_STATUS_STATE_PAUSE && 
 			 info.state != MPD_STATUS_STATE_PAUSE))
@@ -61,6 +96,11 @@ void update_playlist2()
 			}
 			while (gtk_tree_model_iter_next(model, &iter));
 	}
+	*/
+
+	
+
+	
 }
 
 

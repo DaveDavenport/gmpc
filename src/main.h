@@ -33,6 +33,7 @@ typedef struct
 	int volume;
 	/* the current song */
 	int song;
+	int old_pos;
 	/* Elapsed or remaining time */
 	int time_format;
 	/* The Playlist, only in my memory */

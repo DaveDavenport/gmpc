@@ -52,6 +52,7 @@ void set_default_values()
 	info.volume = -1;
 	/* the current song */
 	info.song = -1;
+	info.old_pos = -1;
 	/* Elapsed or remaining time */
 	info.time_format = 1;
 	/* The Playlist, only in my memory */
@@ -215,6 +216,10 @@ int update_interface()
 							WEIGHT_INT, weight,
 
 							-1); 
+					if(weight == PANGO_WEIGHT_ULTRABOLD)
+					{
+						info.old_pos = ent->info.song->pos;
+					}
 				}
 			}
 			else
@@ -230,19 +235,23 @@ int update_interface()
 						WEIGHT_ENABLE,TRUE,
 						WEIGHT_INT, weight,
 						-1); 
+				if(weight == PANGO_WEIGHT_ULTRABOLD)
+				{
+					info.old_pos = ent->info.song->pos;
+				}                                          				
 			}
 			mpd_freeInfoEntity(ent);
 			ent = mpd_getNextInfoEntity(info.connection);
 		}
 		while(info.status->playlistLength < old_length)
 		{	
-				gchar *path = g_strdup_printf("%i", old_length-1);
-				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
-				{
-					gtk_list_store_remove(pl2_store, &iter);
-				}
-				g_free(path);
-				old_length--;
+			gchar *path = g_strdup_printf("%i", old_length-1);
+			if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
+			{
+				gtk_list_store_remove(pl2_store, &iter);
+			}
+			g_free(path);
+			old_length--;
 		}
 		info.status->song = -1;
 	}
