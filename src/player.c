@@ -508,6 +508,16 @@ void create_player()
 			"expose-event", G_CALLBACK(time_exposed), time_layout);
 
 	pango_layout_set_text(time_layout, "00:00", -1);
+
+
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "enter-notify-event", 
+			G_CALLBACK(tray_motion_cb), NULL);
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_main_window, "eventbox_entry")), "leave-notify-event",
+			G_CALLBACK(tray_leave_cb), NULL);
+
+
+
+	
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
 }

@@ -33,10 +33,22 @@ gchar *tray_get_tooltip_text()
 				"[<b>Stream:</b>\t%name%\n&[<b>Artist:</b>\t%artist%\n]"
 				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]]"
 				"|<b>Stream:</b>\t%name%|[<b>Artist:</b>\t%artist%\n]"
-				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]&"
-				"[\n<b>Time:</b>\t%time%]|<b>Filename:</b>\t%shortfile%"
-				"[\n<b>Time:</b>\t\t%time%]|", info.mpdSong);
+				"<b>Title:</b>\t%title%[\n<b>Album:</b>\t%album%]"
+				"|<b>Filename:</b>\t%shortfile%"
+				"|", info.mpdSong);
 		g_string_append(string, result);
+		/* add time */
+		if(info.status->totalTime != 0)
+		{
+		g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i/%02i:%02i",
+				info.status->elapsedTime/60, info.status->elapsedTime %60,
+				info.status->totalTime/60, info.status->totalTime %60);
+		}
+		else
+		{
+		g_string_append_printf(string, "\n<b>Time:</b>\t%02i:%02i",
+				info.status->elapsedTime/60, info.status->elapsedTime %60);
+		}
 	}
 	else
 	{
@@ -83,18 +95,34 @@ void tray_paint_tip(GtkWidget *widget, GdkEventExpose *event)
 	height= PANGO_PIXELS(height);
 
 
-	if(info.status->elapsedTime != 0)
+	if(info.status->elapsedTime != 0 && info.status->totalTime != 0)
 	{
+		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+				FALSE,4,height+4, width ,8);                              		
 		width = (info.status->elapsedTime/(float)info.status->totalTime)*width;
+		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL],
+				TRUE,4,height+4, width ,8);
+		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+				FALSE,4,height+4, width ,8);
+
+
+
+
+
 	}
 	else
 	{
 		width = 0;
 	}
-	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+	/*
+	gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL],
 			TRUE,4,height+4, width ,8);
-	
-	
+	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+			FALSE,4,height+4, width ,8);
+	gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+			FALSE,4,height+4, width ,8);
+			*/
+
 	/*
 	   g_object_unref(layout);
 	   */
@@ -114,14 +142,16 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 	int width,height;
 	GdkRectangle msize;
 	int x,y;
-	int monitor = gdk_screen_get_monitor_at_window(gtk_widget_get_screen(tv), tv->window);
+	int monitor = gdk_screen_get_monitor_at_window(
+			gtk_widget_get_screen(tv), tv->window);
 	if(tip != NULL) return FALSE;
 
 
 	char *tooltiptext = NULL;
-                                         	
+
 	tooltiptext = tray_get_tooltip_text();
-	gdk_screen_get_monitor_geometry(gtk_widget_get_screen(tv), monitor, &msize);
+	gdk_screen_get_monitor_geometry(
+			gtk_widget_get_screen(tv), monitor, &msize);
 
 
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
@@ -146,16 +176,27 @@ gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n)
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8+12;
 	gtk_widget_set_usize(tip, width,height);
-	
+
 
 	/* calculate position */
-	x = (int)event->x_root - event->x+tv->allocation.width;
-	y = (int)event->y_root+(tv->allocation.height - event->y);	
-	x = x - (width)/2;
-	if((x+width) > msize.width) x = msize.width-(width);
-	if(x < 0) x= 0;
-	y = y+5;
-	if( y+height > msize.height) y = event->y_root - event->y -5-(height);
+	x = (int)event->x_root - event->x+tv->allocation.width/2 - width/2;
+	y = (int)event->y_root+(tv->allocation.height - event->y) +5;	
+
+	/* check borders left, right*/	
+	if((x+width) > msize.width+msize.x)
+	{	
+		x = msize.x+msize.width-(width);
+	}
+	else if(x < 0)
+	{
+		x= 0;
+	}
+	/* check up down.. if can't place it below, place it above */
+	if( y+height > msize.height+msize.y) 
+	{
+		y = event->y_root - event->y -5-(height);
+	}
+	/* place the window */
 	gtk_window_move(GTK_WINDOW(tip), x, y);
 
 	gtk_widget_show_all(tip);	
@@ -181,19 +222,6 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 
 	tip = NULL;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /* this draws the actual image to the window */

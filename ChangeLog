@@ -1,3 +1,8 @@
+18-08-2004 Qball <Qball@qballcow.nl>
+	* src/strfsong.c:	Remove '_' from strings.
+	* src/tray-icon.c:	Added advanced tooltip support.
+	* src/player.c:		Added tooltip to song window.
+
 07-08-2004 Qball <Qball@qballcow.nl>
 	* Fixed some shadows in preferences window
 

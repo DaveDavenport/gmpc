@@ -22,3 +22,8 @@ enum store_types
 	SONG_STOCK_ID,
 	NROWS
 };
+
+
+
+gboolean tray_motion_cb (GtkWidget *tv, GdkEventCrossing *event, gpointer n);
+void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
