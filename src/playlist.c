@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <string.h>
 #include <glade/glade.h>
 #include <time.h>
@@ -12,6 +13,8 @@ gint max_string_length = 32;
 
 GladeXML *xml_playlist_window = NULL;
 void update_information_tab();
+
+int playlist_key_press_event(GtkWidget *tree, GdkEventKey *event);
 
 /* playlist only functions */
 void refresh_information_tab();
@@ -49,9 +52,9 @@ char * shorter_string(const char *long_string)
 	/* this should be configurable? */
 	if(strl > max_string_length)
 	{
-	ret_val = g_strndup(long_string, max_string_length +1);
-	ret_val[max_string_length-3] = ret_val[max_string_length-2] = ret_val[max_string_length-1] = '.';
-	ret_val[max_string_length] = '\0';
+		ret_val = g_strndup(long_string, max_string_length +1);
+		ret_val[max_string_length-3] = ret_val[max_string_length-2] = ret_val[max_string_length-1] = '.';
+		ret_val[max_string_length] = '\0';
 	}
 	else ret_val = g_strdup(long_string);
 	return ret_val;
@@ -162,17 +165,17 @@ void create_playlist()
 
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Track", renderer, 
-					"text", 6,"background-set", 4, "background", 5, NULL);
+			"text", 6,"background-set", 4, "background", 5, NULL);
 	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 0), TRUE);
-	
+
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Title", renderer, 
-					"text", 1,"background-set", 4, "background", 5, NULL);
+			"text", 1,"background-set", 4, "background", 5, NULL);
 	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 1), TRUE);
 
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "Artist", renderer, 
-					"text", 2,"background-set", 4, "background", 5, NULL);
+			"text", 2,"background-set", 4, "background", 5, NULL);
 	gtk_tree_view_column_set_resizable(gtk_tree_view_get_column((GtkTreeView*)tree, 2), TRUE);
 
 
@@ -360,7 +363,7 @@ void create_playlist()
 	}
 	info.playlist_view_hidden = !info.playlist_view_hidden;
 	hide_playlist_view();
-	
+
 	/* ok.. now show the main window */
 	gtk_widget_show(glade_xml_get_widget(xml_playlist_window, "playlist_window"));
 	/* update the information tab */
@@ -462,18 +465,18 @@ void load_songs_with_filter()
 				g_free(short_string);
 				if(song->artist != NULL)
 				{
-				short_string = shorter_string(song->artist);
-				gtk_list_store_set(info.cur_list, &iter, 2, short_string, -1);
-				g_free(short_string);
+					short_string = shorter_string(song->artist);
+					gtk_list_store_set(info.cur_list, &iter, 2, short_string, -1);
+					g_free(short_string);
 				}
 				if(song->track != NULL)
 				{
-				gtk_list_store_set(info.cur_list, &iter, 6, song->track, -1);
+					gtk_list_store_set(info.cur_list, &iter, 6, song->track, -1);
 				}
 				gtk_list_store_set(info.cur_list, &iter,4,(info.status->song == i && 
-						 info.status->state != MPD_STATUS_STATE_STOP && 
-						 info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE,  -1);
-				
+							info.status->state != MPD_STATUS_STATE_STOP && 
+							info.status->state != MPD_STATUS_STATE_UNKNOWN)? TRUE:FALSE,  -1);
+
 			}
 			else {
 				gchar *buf1 = g_path_get_basename(song->file);
@@ -578,7 +581,7 @@ void update_playlist()
 	}
 	/* update hightlighted song */
 	if((info.status->song != info.song && info.song != -1) || 
-	    (info.state != info.status->state &&  info.status->state != MPD_STATUS_STATE_PAUSE && info.state != MPD_STATUS_STATE_PAUSE))
+			(info.state != info.status->state &&  info.status->state != MPD_STATUS_STATE_PAUSE && info.state != MPD_STATUS_STATE_PAUSE))
 	{
 		GtkTreeIter iter;
 		GtkTreeModel *model = GTK_TREE_MODEL(info.cur_list);
@@ -968,7 +971,7 @@ void directory_row_selected(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewCol
 		buf = g_strdup("/");
 	}
 	memset(info.path, '\0', 1024);
-/*	bzero(info.path,1024);*/
+	/*	bzero(info.path,1024);*/
 	strncpy(info.path, buf1, 1024);
 	load_directories(buf);
 	g_free(new_buf);
@@ -1067,21 +1070,21 @@ void add_song_file_browser(GtkWidget *menu, GtkWidget *tree)
 				if(!check_for_errors())
 					while((entity = mpd_getNextInfoEntity(info.connection)))
 					{
-					if(entity->info.song->album == NULL)
-					{
-					if(!g_utf8_collate(album, "All"))
-					{
-					if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
-					mpd_freeInfoEntity(entity);
-					}
-					
-					}
-					else
-					if(!g_utf8_collate(album, entity->info.song->album) || !g_utf8_collate(album, "All"))
+						if(entity->info.song->album == NULL)
 						{
-							if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
-							mpd_freeInfoEntity(entity);
+							if(!g_utf8_collate(album, "All"))
+							{
+								if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
+								mpd_freeInfoEntity(entity);
+							}
+
 						}
+						else
+							if(!g_utf8_collate(album, entity->info.song->album) || !g_utf8_collate(album, "All"))
+							{
+								if(entity->type == MPD_INFO_ENTITY_TYPE_SONG && entity->info.song->file != NULL) glist = g_list_append(glist, g_strdup(entity->info.song->file));
+								mpd_freeInfoEntity(entity);
+							}
 					}
 				/* add the songs */
 				mpd_sendCommandListBegin(info.connection);
@@ -1354,27 +1357,27 @@ void fill_id3_songs_tree(GtkWidget *tree)
 				GtkTreeIter iter;
 				if(entity->info.song->album != NULL)
 				{
-				if(!g_utf8_collate(album, "All") || !g_utf8_collate(album, entity->info.song->album))
-				{
-					gtk_list_store_append(info.id3_songs_list, &iter);
-					if(entity->info.song->title != NULL )
+					if(!g_utf8_collate(album, "All") || !g_utf8_collate(album, entity->info.song->album))
 					{
-						gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
-					}	
-				}
+						gtk_list_store_append(info.id3_songs_list, &iter);
+						if(entity->info.song->title != NULL )
+						{
+							gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
+						}	
+					}
 				}
 				else
 				{
-				if(!g_utf8_collate(album, "All"))
-				{
-					gtk_list_store_append(info.id3_songs_list, &iter);
-					if(entity->info.song->title != NULL )
+					if(!g_utf8_collate(album, "All"))
 					{
-						gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
-					}	
-				}
-				
-				
+						gtk_list_store_append(info.id3_songs_list, &iter);
+						if(entity->info.song->title != NULL )
+						{
+							gtk_list_store_set(info.id3_songs_list, &iter,0,entity->info.song->file,1,entity->info.song->title,3,entity->info.song->track,-1);
+						}	
+					}
+
+
 				}
 				mpd_freeInfoEntity(entity);
 			}
@@ -1435,5 +1438,15 @@ void do_server_side_search()
 		mpd_freeInfoEntity(entity);	
 	}
 	mpd_finishCommand(info.connection);
+}
+
+int playlist_key_press_event(GtkWidget *tree, GdkEventKey *event)
+{
+	if(event->keyval == GDK_Delete)
+	{
+		delete_selected_songs();	    
+		return TRUE;
+	}
+	return FALSE;
 }
 

@@ -74,6 +74,25 @@ void load_config()
 		info.do_tray = atoi(buf);
 		}
 	    }
+	else if(!strncmp(buffer, "playlist view hidden:", 21))
+	    {
+	    gchar *buf = g_strstrip(&buffer[21]);
+	    if(buf != NULL)
+		{
+		info.playlist_view_hidden = atoi(buf);
+		}                                	
+	    }                        
+	    
+	else if(!strncmp(buffer, "time format:", 12))
+	    {
+	    gchar *buf = g_strstrip(&buffer[12]);
+	    if(buf != NULL)
+		{
+		info.time_format = atoi(buf);
+		}                                	
+	    }                        
+	    
+
 	else if(!strncmp(buffer, "do popup:", 9))
 	    {
 	    gchar *buf = g_strstrip(&buffer[9]);
@@ -159,6 +178,8 @@ void save_config()
     fprintf(fp, "filter field: %i\n", info.filter_field);    
     fprintf(fp, "filter entry: %s\n", info.filter_entry);    
     fprintf(fp, "do tray: %i\n", info.do_tray);    
+    fprintf(fp, "time format: %i\n", info.time_format);        
+    fprintf(fp, "playlist view hidden: %i\n", info.playlist_view_hidden);
     fprintf(fp, "do popup: %i\n", info.popup.do_popup);   
     fprintf(fp, "popup pos: %i\n", info.popup.position);
     fprintf(fp, "popup stay: %i\n", info.popup.popup_stay);
