@@ -380,7 +380,7 @@ update_interface ()
 							weight,
 							SONG_STOCK_ID,
 							(strstr(ent->info.song->
-							 file,"://") !=
+							 file,"://") ==
 							 NULL) ?
 							"media-audiofile"
 							: "media-stream",
