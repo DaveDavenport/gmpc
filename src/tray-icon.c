@@ -90,7 +90,7 @@ int paint_window(GtkWidget *drawing)
 	GtkStyle *style;
 	int w, h, text_height;
 	char *text          = get_string();
-	style               = drawing->style;
+	style               = popup->style;
 	layout  	    = gtk_widget_create_pango_layout(drawing, NULL);
 
 	gtk_paint_box(style, drawing->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
@@ -169,9 +169,12 @@ void popup_window()
 
 	gtk_container_add(GTK_CONTAINER(event), draw);
 	gtk_window_set_resizable(GTK_WINDOW(popup), FALSE);
-	gtk_widget_set_name(draw, "gtk-tooltips");
+	gtk_widget_set_name(popup, "gtk-tooltips");
+	gtk_widget_ensure_style(popup);    
 
-	gtk_widget_ensure_style(draw);    
+//	gtk_widget_set_name(draw, "gtk-tooltips");
+
+//	gtk_widget_ensure_style(draw);            
 
 	g_signal_connect(G_OBJECT(draw), "expose-event",
 			G_CALLBACK(paint_window), NULL);       
