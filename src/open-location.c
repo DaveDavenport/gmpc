@@ -119,10 +119,14 @@ void ol_file_opened(GnomeVFSAsyncHandle *handle, GnomeVFSResult result, gpointer
 void ol_get_fileinfo(GnomeVFSAsyncHandle *handle,GList *results)
 {
 	GnomeVFSGetFileInfoResult *r = results->data;
+
 	if(r->result == GNOME_VFS_OK)
 	{
+	g_print("Got mime-type: %s\n", r->file_info->mime_type);
 		/* m3u file */
-		if(!g_utf8_collate(r->file_info->mime_type, "audio/x-mpegurl") || !g_utf8_collate(r->file_info->mime_type, "audio/x-scpls"))
+		if(!g_utf8_collate(r->file_info->mime_type, "audio/x-mpegurl") || /* .m3u file */
+		   !g_utf8_collate(r->file_info->mime_type, "audio/x-scpls") || /* .pls file */
+		   !g_utf8_collate(r->file_info->mime_type, "text/plain")) /* plain text isnt a stream, so we are gonna try to parse it */
 		{
 			g_print("found m3u file  size: %i \n",(gint)r->file_info->size);
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
