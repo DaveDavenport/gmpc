@@ -1149,6 +1149,33 @@ mpd_Song * mpd_ob_playlist_get_current_song(MpdObj *mi)
 	return mi->CurrentSong;
 }
 
+int mpd_ob_playlist_delete(MpdObj *mi,char *path)
+{
+	if(path == NULL)
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_delete: path == NULL");
+		return MPD_O_ERROR;
+	}
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_delete: not connected\n");
+		return MPD_O_NOT_CONNECTED;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_delete: lock failed\n");
+		return MPD_O_LOCK_FAILED;
+	}
+
+	mpd_sendRmCommand(mi->connection,path);
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	return FALSE;
+}
+
+
 
 int mpd_ob_playlist_clear(MpdObj *mi)
 {

@@ -1,3 +1,7 @@
+3-03-2005 Qball <qball@qballcow.nl>
+	* src/playlist3.c:	Removing saved playlist implemented.
+	* src/libmpd.[c|h]:	Added delete playlist function.
+
 2-03-2005 Qball <qball@qballcow.nl>
 	* src/preferences.c:	Saving a playlist that allready exists now
 	gives an error and the possibility to change the name.

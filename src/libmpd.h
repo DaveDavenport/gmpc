@@ -184,6 +184,7 @@ MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exac
 MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
 int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
 void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
+int 		mpd_ob_playlist_delete			(MpdObj *mi,char *path);
 
 /* MpdData struct functions */
 int 		mpd_ob_data_is_last			(MpdData *data);

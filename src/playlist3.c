@@ -1115,7 +1115,37 @@ void pl3_browse_artist_replace_folder()
 /**************************************************
  * PLaylist Tree
  */
+void pl3_browse_delete_playlist(GtkToggleButton *bt, char *string)
+{
+	/* create a warning message dialog */
+	GtkWidget *dialog =
+		gtk_message_dialog_new (GTK_WINDOW
+				(glade_xml_get_widget
+				 (pl3_xml, "pl3_win")),
+				GTK_DIALOG_MODAL,
+				GTK_MESSAGE_WARNING,
+				GTK_BUTTONS_NONE,
+				_("Are you sure you want to clear the selected playlist?"));
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_NO,
+			GTK_RESPONSE_CANCEL, GTK_STOCK_YES,
+			GTK_RESPONSE_OK, NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+			GTK_RESPONSE_CANCEL);
 
+	switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			mpd_ob_playlist_delete(connection, string);
+			pl3_cat_sel_changed();
+			
+	}
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+
+
+	
+	
+
+}
 int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	int type = pl3_cat_get_selected_browser();
@@ -1174,7 +1204,6 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* del, crop */
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
-		printf("test\n");
 		if(gtk_tree_selection_count_selected_rows(sel) == 1)
 		{	
 			GtkTreeModel *model = GTK_TREE_MODEL(pl3_store);	
@@ -1183,14 +1212,15 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 			{
 				GtkTreeIter iter;
 				int row_type;
+				char *path;
 				list = g_list_first(list);
 				gtk_tree_model_get_iter(model, &iter, list->data);
-				gtk_tree_model_get(model, &iter,1, &row_type, -1); 
+				gtk_tree_model_get(model, &iter,0,&path,1, &row_type, -1); 
 				if(row_type == PL3_ENTRY_PLAYLIST)
 				{
-					printf("there is a playlist\n");
-
-
+					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_delete_playlist), path);
 				}
 				g_list_foreach (list, gtk_tree_path_free, NULL);
 				g_list_free (list);
@@ -1386,7 +1416,7 @@ void pl3_cat_sel_changed()
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "search_box"));
-/*	gtk_tree_view_set_reorderable(tree, FALSE);*/
+	/*	gtk_tree_view_set_reorderable(tree, FALSE);*/
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
@@ -1397,7 +1427,7 @@ void pl3_cat_sel_changed()
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 			g_free(string);
 			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
-/*			gtk_tree_view_set_reorderable(tree, TRUE);*/
+			/*			gtk_tree_view_set_reorderable(tree, TRUE);*/
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
