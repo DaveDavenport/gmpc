@@ -26,13 +26,14 @@
 /* NEEDS A REWRITE */
 int check_for_errors()
 {
-	if(info.connection == NULL) return TRUE;
-	/* check for an error */
-	if(info.connection->error)
+	return mpd_ob_check_error(connection);
+/*	if(info.connection == NULL) return TRUE;
+*/	/* check for an error */
+/*	if(info.connection->error)
 	{
 		if(debug)g_print("**DEBUG**  error: %s\n", info.connection->errorStr);
-		/* check for connection errors */
-		if(	info.connection->error == MPD_ERROR_TIMEOUT 		||
+*/		/* check for connection errors */
+/*		if(	info.connection->error == MPD_ERROR_TIMEOUT 		||
 				info.connection->error == MPD_ERROR_CONNCLOSED 	||
 				info.connection->error == MPD_ERROR_UNKHOST 		||
 				info.connection->error == MPD_ERROR_CONNPORT 		||
@@ -45,8 +46,8 @@ int check_for_errors()
 			info.conlock = TRUE;
 			info.connection = NULL;
 			connection->connection = NULL;
-			/*Set some stuff right.  */
-			scroll.exposed = 1;
+*/			/*Set some stuff right.  */
+/*			scroll.exposed = 1;
 			info.song = -1;
 			info.state = -1;
 
@@ -54,9 +55,9 @@ int check_for_errors()
 			update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 		}
 		else info.conlock = FALSE;
-		/* clear all error's so it doesnt annoy me later */
-		if(info.connection) mpd_clearError(info.connection);
+*/		/* clear all error's so it doesnt annoy me later */
+/*		if(info.connection) mpd_clearError(info.connection);
 		return TRUE;
-	}
+*/	}
 	else return FALSE;
 }

@@ -1,3 +1,7 @@
+15-02-2005 Qball <Qball@qballcow.nl>
+	* src/libmpd.c/h:	Added basic error checking.
+	* src/callback.c:	use libmpd error_check.
+
 12-02-2005 Qball <Qball@qballcow.nl>
 	* src/player.c:		Changed the seeking to a libmpd function.
 	Added seek flag.
@@ -6,31 +10,38 @@
 29-01-2005 encoded <encoded@xmtp.net>
 	* src/preferences.c     Check version before adding support for
 	* glade/gmpc.glade	(dis|en)abling outputs.
+	
 28-01-2005 encoded <encoded@xmtp.net>
-	* src/preferences.c     Added support for (dis|en)abling outputs.
-	* glade/gmpc.glade
-28-01-2005 Qball:
+	* src/preferences.c:     Added support for (dis|en)abling outputs.
+	* glade/gmpc.glade:
+	
+28-01-2005 Qball <qball@qballcow.nl>:
 	* src/libmpdclient.c:	Fixed not-initialized pointer.
 	* src/player.c:		Moved more to libmpd
+	
 01-19-2005 avuton <avuton@gmail.com>
-	* src/playlist3.c       Inadvertantly removed playlist saving ability
-	* glade/playlist3.glade when I removed playlist.glade on the 10th,
-	* glade/playlist3.glade move it to playlist3.glade
+	* src/playlist3.c:       Inadvertantly removed playlist saving ability
+	* glade/playlist3.glade: when I removed playlist.glade on the 10th,
+	* glade/playlist3.glade: move it to playlist3.glade
+
 01-19-2005 avuton <avuton@gmail.com>
 	* src/libmpdclient.c:   Update libmpdclient.c so it will be able to
 	* src/libmpdclient.c:   compile in cygwin
+
 01-10-2005 avuton <avuton@gmail.com>
 	* glade/gmpc.glade:     Remove 'update' from 'Server settings' menu
 	* src/playlist3.c:      Add 'update' to 'Browse Filesystem' menu in
 	* src/playlist3.c:      pl3, made it work incrementally
 	* src/preferences.c:    Spelling Fixes
-	* glade/gmpc.glade.bak  Removed (not needed)
-	* glade/gmpc.gladep.bak Removed (not needed)
-	* glade/playlist.glade  Removed (not needed)
+	* glade/gmpc.glade.bak:  Removed (not needed)
+	* glade/gmpc.gladep.bak: Removed (not needed)
+	* glade/playlist.glade:  Removed (not needed)
+
 01-04-2005 avuton <avuton@gmail.com>
 	* glade/playlist3:      Fix pl3 icon
 	* src/callback.c:       Fix spelling mistakes
-	  src/player.c:         Fix spelling mistakes
+	* src/player.c:         Fix spelling mistakes
+
 05-11-2004 Qball <Qball@qballcow.nl>
 	* src/tray-icon.c:	Fixed location of popup.
 				Mouse over tray will always make the popup

@@ -83,6 +83,11 @@ void mpd_ob_free(MpdObj *mi)
 
 int mpd_ob_check_error(MpdObj *mi)
 {
+	if(mi == NULL)
+	{
+		return FALSE;
+	}
+
 	if(mi->error)
 	{
 		return TRUE;
@@ -298,7 +303,6 @@ int mpd_ob_connect(MpdObj *mi)
 
 	/* set connected state */
 	mi->connected = TRUE;
-	debug_printf(DEBUG_ERROR,"error: %s", mi->connection->errorStr);
 	if(mpd_ob_unlock_conn(mi))
 	{
 		return -1;
