@@ -592,6 +592,23 @@ void pl3_browse_artist_replace_folder()
  * PLaylist Tree
  */
 
+int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	int type = pl3_cat_get_selected_browser();
+	if(event->button != 3)	
+	{
+		return FALSE;
+	}
+	if(type == PL3_CURRENT_PLAYLIST)
+	{
+
+
+	}
+	
+
+
+	return TRUE;
+}
 
 
 void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
