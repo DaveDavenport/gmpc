@@ -363,7 +363,6 @@ void pl3_xiph_fill_view(char *buffer)
 			return;
 		}
 	}
-//	xmldoc = xmlParseMemory(buffer, strlen(buffer));
 	xmldoc = xmlParseFile(string);
 	g_free(string);
 	root = xmlDocGetRootElement(xmldoc);
