@@ -156,68 +156,78 @@ int update_player()
 	}
     /* update the song title */
     
-    if(info.song != info.status->song)
-	{
-	GList *node = g_list_nth(info.playlist, info.status->song);
-	mpd_Song *song;
-	if(node != NULL){
-	song = node->data;
-	/* make a global song */
-	if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
-	{
-	msg_set_base("Gnome Music Player Client");
-	}
-	else
-	{
-    	    info.cursong = song;
-	    if(song->artist != NULL && song->title != NULL)
-		{
-		gchar *buf = NULL;
-		if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
-		else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
-		msg_set_base(buf);
-		g_free(buf);
-		}
-	    else
-		{
-		gchar *buf  = g_path_get_basename(song->file);
-		msg_set_base(buf);
-		g_free(buf);
-		}
-	}
-	}
+    if(info.song != info.status->song && info.status->state != MPD_STATUS_STATE_STOP)
+    {
+	    GList *node = g_list_nth(info.playlist, info.status->song);
+	    mpd_Song *song;
+	    if(node != NULL){
+		    song = node->data;
+		    /* make a global song */
+		    if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
+		    {
+			    msg_set_base("Gnome Music Player Client");
+		    }
+		    else
+		    {
+			    info.cursong = song;
+			    if(song->artist != NULL && song->title != NULL)
+			    {
+				    gchar *buf = NULL;
+				    if(song->title != NULL && song->artist != NULL) buf  = g_strdup_printf("%s - %s", song->title, song->artist);
+				    else buf = g_strdup("GMPC - Invalid UTF-8. please check youre locale");
+				    msg_set_base(buf);
+				    g_free(buf);
+			    }
+			    else
+			    {
+				    gchar *buf  = g_path_get_basename(song->file);
+				    msg_set_base(buf);
+				    g_free(buf);
+			    }
+		    }
+	    }
     }
- 
 
-	/* update if state changes */
-	if(info.state != info.status->state)
-		{
-		GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
-		if(info.status->state == MPD_STATUS_STATE_STOP ||info.status->state == MPD_STATUS_STATE_UNKNOWN)info.song = -1;
-		if(info.status->state == MPD_STATUS_STATE_PLAY) gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-pause.png");
-		else gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-play.png");
 
-		if(info.status->state == MPD_STATUS_STATE_UNKNOWN ||info.status->state == MPD_STATUS_STATE_STOP)
-			{	
-			msg_set_base("GMPC - Stopped");
-			}
-		info.state = info.status->state;
-		}
-	/* update random and repeat button */
-	/* lock it to stop them from toggling and triggering another toggle*/
-	if(info.status->repeat != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
-		{
-		info.conlock = TRUE;
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), info.status->repeat);
-		info.conlock = FALSE;
-		}
-	if(info.status->random != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
-		{
-		info.conlock = TRUE;
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), info.status->random);
-		info.conlock = FALSE;
-		}
-	return FALSE;
+    /* update if state changes */
+    if(info.state != info.status->state)
+    {
+	    GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
+	    if(info.status->state == MPD_STATUS_STATE_STOP || info.status->state == MPD_STATUS_STATE_UNKNOWN)
+	    {
+		    GtkWidget *entry = glade_xml_get_widget(xml_main_window, "time_entry");
+		    msg_set_base("GMPC - Stopped");
+		    if(info.time_format == TIME_FORMAT_ELAPSED)
+		    {
+			    gtk_entry_set_text(GTK_ENTRY(entry), "00:00");
+		    }
+		    else if(info.time_format == TIME_FORMAT_REMAINING) gtk_entry_set_text(GTK_ENTRY(entry), "-00:00");
+		    else	 gtk_entry_set_text(GTK_ENTRY(entry), "0.0 %%");
+		    entry =  glade_xml_get_widget(xml_main_window, "progress_slider");
+		    gtk_range_set_value(GTK_RANGE(entry), 0);
+		    
+		    info.song = -1;
+	    }
+	    if(info.status->state == MPD_STATUS_STATE_PLAY) gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-pause.png");
+	    else gtk_image_set_from_file(GTK_IMAGE(image), PIXMAP_PATH"/media-play.png");
+
+	    info.state = info.status->state;
+    }
+    /* update random and repeat button */
+    /* lock it to stop them from toggling and triggering another toggle*/
+    if(info.status->repeat != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
+    {
+	    info.conlock = TRUE;
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), info.status->repeat);
+	    info.conlock = FALSE;
+    }
+    if(info.status->random != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
+    {
+	    info.conlock = TRUE;
+	    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), info.status->random);
+	    info.conlock = FALSE;
+    }
+    return FALSE;
     }
 
 
@@ -227,120 +237,117 @@ int update_player()
 /* everything is blocked until the seek is done. */
 /* show time to seek to in entry box */
 int progress_seek_start()
-    {
-    if(info.conlock) return TRUE;
-    info.conlock = TRUE;
-    if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
+{
+	if(info.conlock) return TRUE;
+	info.conlock = TRUE;
+	if(info.status->state != MPD_STATUS_STATE_PLAY && info.status->state != MPD_STATUS_STATE_PAUSE)
 	{
-	info.conlock = FALSE;
-	 return TRUE;
-	 }
-    return FALSE;
-    }
+		info.conlock = FALSE;
+		return TRUE;
+	}
+	return FALSE;
+}
 
 void change_progress_update()
-    {
-    if(info.conlock)
-    {
-    if(info.connection != NULL)
+{
+	if(info.conlock)
 	{
-	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
-	gchar *buf = NULL;
-        gdouble value = gtk_range_get_value(scale);
-	int newtime = (int)(info.status->totalTime*(double)(value/100));
-	mpd_sendSeekCommand(info.connection,info.status->song,value);
-	mpd_finishCommand(info.connection);
-	if(check_for_errors()) return;
-	
-        if(info.time_format == TIME_FORMAT_ELAPSED)
+		if(info.connection != NULL)
 		{
-		int min = (int)(newtime/60);
-        	int sec = newtime - 60*min;
-		int t_min = (int)(info.status->totalTime/60);
-		int t_sec = info.status->totalTime - 60*t_min;
-		buf = g_strdup_printf("Seek to %02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
+			GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
+			gchar *buf = NULL;
+			gdouble value = gtk_range_get_value(scale);
+			int newtime = (int)(info.status->totalTime*(double)(value/100));
+			mpd_sendSeekCommand(info.connection,info.status->song,value);
+			mpd_finishCommand(info.connection);
+			if(check_for_errors()) return;
+
+			if(info.time_format == TIME_FORMAT_ELAPSED)
+			{
+				int min = (int)(newtime/60);
+				int sec = newtime - 60*min;
+				int t_min = (int)(info.status->totalTime/60);
+				int t_sec = info.status->totalTime - 60*t_min;
+				buf = g_strdup_printf("Seek to %02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
+			}
+			else if (info.time_format == TIME_FORMAT_REMAINING)
+			{
+				int t_min = (int)(info.status->totalTime/60);
+				int t_sec = info.status->totalTime - 60*t_min;
+				int min = (int)((info.status->totalTime -newtime)/60);
+				int sec = (info.status->totalTime -newtime) - 60*min;
+				buf = g_strdup_printf("Seek to -%02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
+			}	
+			else buf = g_strdup_printf("Seek to %3.1f%%", value);
+			msg_push_popup(buf);
+			g_free(buf);
 		}
-	else if (info.time_format == TIME_FORMAT_REMAINING)
-		{
-		int t_min = (int)(info.status->totalTime/60);
-		int t_sec = info.status->totalTime - 60*t_min;
-		int min = (int)((info.status->totalTime -newtime)/60);
-        	int sec = (info.status->totalTime -newtime) - 60*min;
-		buf = g_strdup_printf("Seek to -%02i:%02i/%02i:%02i", min, sec, t_min, t_sec);
-		}	
-	else buf = g_strdup_printf("Seek to %3.1f%%", value);
-        msg_push_popup(buf);
-        g_free(buf);
+		/* do this so the title gets updated again, even if it doesnt need scrolling */
+		scroll.pos = -1;
 	}
-    /* do this so the title gets updated again, even if it doesnt need scrolling */
-    scroll.pos = -1;
-    }
-    }    
+}    
 
 /* apply seek changes */
 int progress_seek_stop()
-    {
-  msg_pop_popup();
-    if(info.connection == NULL) return TRUE;
-     else 
+{
+	msg_pop_popup();
+	if(info.connection == NULL) return TRUE;
+	else 
 	{
-        GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
-	gdouble value = gtk_range_get_value(scale);
-	int change = (int)(info.status->totalTime*(double)(value/100));
-	mpd_sendSeekCommand(info.connection,info.status->song, change);
-	mpd_finishCommand(info.connection);
-	if(check_for_errors()) return FALSE;
-	info.status->elapsedTime = change;	
-	info.conlock = FALSE;
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "progress_slider");
+		gdouble value = gtk_range_get_value(scale);
+		int change = (int)(info.status->totalTime*(double)(value/100));
+		mpd_sendSeekCommand(info.connection,info.status->song, change);
+		mpd_finishCommand(info.connection);
+		if(check_for_errors()) return FALSE;
+		info.status->elapsedTime = change;	
+		info.conlock = FALSE;
 	}
-    return FALSE;
-    }
+	return FALSE;
+}
 
 /* if the volume slider is pressed (mouse button)  it holds the update so I Can display the volume in */
 /* the entry box and it doesn't tries to move my volume slider while sliding */
 /* also if volume isnt "slidable" block the user from changing it */
 int volume_change_start()
-    {
-    if(info.conlock) return TRUE;
-    if(info.volume == -1) return TRUE;
-    info.conlock = TRUE;
-    return FALSE;
-    }
+{
+	if(info.conlock) return TRUE;
+	if(info.volume == -1) return TRUE;
+	info.conlock = TRUE;
+	return FALSE;
+}
 
 /* if the volume changes say it in the entry box.. this looks nice :) */    
 void volume_change_update()
-    {
-    if(info.connection != NULL && info.conlock)
+{
+	if(info.connection != NULL && info.conlock)
 	{
-	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-	gdouble value = gtk_range_get_value(scale);
-	gchar *buf = g_strdup_printf("Volume %i%%", (int)value);
-        msg_push_popup(buf);
-        g_free(buf);
-	
-	mpd_sendSetvolCommand(info.connection, (int)value);
-	mpd_finishCommand(info.connection);
-	if(check_for_errors()) return;
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+		gdouble value = gtk_range_get_value(scale);
+		gchar *buf = g_strdup_printf("Volume %i%%", (int)value);
+		msg_push_popup(buf);
+		g_free(buf);
 
+		mpd_sendSetvolCommand(info.connection, (int)value);
+		mpd_finishCommand(info.connection);
+		if(check_for_errors()) return;
+
+		/* do this so the title gets updated again, even if it doesnt need scrolling */
+		/* it does look ugly .. need to find a better way */
+		scroll.pos = -1;
 	}
-    else if(info.connection != NULL)
-    {
-	    GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-	    gdouble value = gtk_range_get_value(scale);
-	    if(value != info.volume)
-	    {
-		    mpd_sendSetvolCommand(info.connection, (int)value);
-		    mpd_finishCommand(info.connection);        
-		    if(check_for_errors()) return;
-
-	    }
-
-    }
-    /* do this so the title gets updated again, even if it doesnt need scrolling */
-    /* it does look ugly .. need to find a better way */
-    scroll.pos = -1;
-
-    }
+	else if(info.connection != NULL)
+	{
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+		gdouble value = gtk_range_get_value(scale);
+		if(value != info.volume)
+		{
+			mpd_sendSetvolCommand(info.connection, (int)value);
+			mpd_finishCommand(info.connection);        
+			if(check_for_errors()) return;
+		}
+	}
+}
 /* apply changes and give mpd free */
 int volume_change_stop()
 {
@@ -348,12 +355,6 @@ int volume_change_stop()
 	if(info.connection == NULL) return TRUE;
 	else 
 	{
-		//      GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-		//	gdouble value = gtk_range_get_value(scale);
-		//	int change = (int)value - info.status->volume;
-		//	mpd_sendVolumeCommand(info.connection, change);
-		//	mpd_finishCommand(info.connection);
-		//	if(check_for_errors()) return FALSE;
 		info.conlock = FALSE;    
 	}
 	return FALSE;

@@ -216,7 +216,7 @@ void update_popup()
 {
 	if(info.popup.do_popup && info.connection != NULL && info.status != NULL)
 	{
-		if(info.status->song != info.song)
+		if(info.status->song != info.song && info.status->state != MPD_STATUS_STATE_STOP)
 		{
 			popup_window();                                     
 

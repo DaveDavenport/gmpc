@@ -91,8 +91,9 @@ int update_interface()
 		}
     
     /* return (must be true to keep timeout going) */
-	/* set these to the good value. So there only updated when changed */
-	info.playlist_id = info.status->playlist;
-	if(info.status->state != MPD_STATUS_STATE_UNKNOWN) info.song = info.status->song;
+    /* set these to the good value. So there only updated when changed */
+    info.playlist_id = info.status->playlist;
+    if(info.status->state != MPD_STATUS_STATE_UNKNOWN) info.song = info.status->song;
+    if(info.status->state == MPD_STATUS_STATE_STOP)  info.song = -1;
     return TRUE;
     }
