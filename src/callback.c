@@ -2,68 +2,7 @@
 #include <glade/glade.h>
 #include "libmpdclient.h"
 #include "main.h"
-/*
-int load_playlist()
-    {
-    mpd_InfoEntity *entity;
-    int i =1;
-    info.total_number_of_songs = 0;
-    info.total_playtime = 0;
 
-    if(info.conlock) return TRUE;
-    if(debug)g_print("start updating playlist\n");
-    if(info.playlist != NULL)
-    {
-	    while((info.playlist = g_list_next(info.playlist)))
-	    {
-		    mpd_freeSong(info.playlist->data);
-		    info.playlist->data = NULL;	    
-	    }
-	    g_list_free(info.playlist);
-	    info.playlist = NULL;
-    }
-    mpd_sendPlaylistInfoCommand(info.connection, -1);
-    while((entity = mpd_getNextInfoEntity(info.connection)))
-    {
-*/	    /*	if(!(i % rate))
-		{
-		gchar *buf = g_strdup_printf("Updating %3.1f%% done", ((i*100)/(float)info.status->playlistLength));
-		msg_push_popup(buf);
-		g_free(buf);
-		while (gtk_events_pending ()) gtk_main_iteration();
-		}
-		*/
-/*	    if(check_for_errors())
-	    {
-*/		    /* remove everything so far */
-/*		    while((info.playlist = g_list_next(info.playlist)))
-		    {
-			    mpd_freeSong(info.playlist->data);
-			    info.playlist->data = NULL;	    
-		    }
-		    g_list_free(info.playlist);
-		    info.playlist = NULL;
-
-*/		    /* this needs to be true, we did stop on error. */
-/*		    info.conlock = TRUE;
-		    return TRUE;
-	    }
-	    if(entity->type == MPD_INFO_ENTITY_TYPE_SONG)
-	    {
-		    info.playlist = g_list_append(info.playlist, mpd_songDup(entity->info.song));
-		    info.total_playtime += entity->info.song->time;
-		    info.total_number_of_songs++;
-	    }
-	    i++;
-	    mpd_freeInfoEntity(entity);
-    }
-*/  /* force update */
- /*   info.status->song = -1;
-    if(debug)g_print("done updating playlist %lu\n", (long unsigned) info.total_playtime);
-    msg_pop_popup();
-    return FALSE;
-    }
-*/
 int check_for_errors()
 {
 	/* check for an error */

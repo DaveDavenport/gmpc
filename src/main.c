@@ -202,7 +202,6 @@ int update_interface()
 			{
 				/* needed for getting the row */
 				gchar *path = g_strdup_printf("%i", ent->info.song->pos);
-//				GList *node = g_list_nth(info.playlist,ent->info.song->pos);
 				gint weight = (info.status->songid == ent->info.song->id)?
 					PANGO_WEIGHT_ULTRABOLD:PANGO_WEIGHT_NORMAL;
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
@@ -217,13 +216,7 @@ int update_interface()
 
 							-1); 
 				}
-/*				g_free(path);
-				if(node != NULL)
-				{
-					mpd_freeSong(node->data);
-					node->data = mpd_songDup(ent->info.song);
-				}
-*/			}
+			}
 			else
 			{
 				gint weight = (info.status->songid == ent->info.song->id)?
@@ -237,39 +230,21 @@ int update_interface()
 						WEIGHT_ENABLE,TRUE,
 						WEIGHT_INT, weight,
 						-1); 
-				/* add */
-//				info.playlist = g_list_append(info.playlist, mpd_songDup(ent->info.song));
 			}
 			mpd_freeInfoEntity(ent);
 			ent = mpd_getNextInfoEntity(info.connection);
 		}
 		while(info.status->playlistLength < old_length)
 		{	
-/*			GList *node = g_list_nth(info.playlist, old_length-1);
-			if(node != NULL)
-			{
-				mpd_Song *song = node->data;
-*/				gchar *path = g_strdup_printf("%i", old_length-1);
+				gchar *path = g_strdup_printf("%i", old_length-1);
 				if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(pl2_store), &iter, path))
 				{
 					gtk_list_store_remove(pl2_store, &iter);
 				}
 				g_free(path);
 				old_length--;
-/*				info.playlist = g_list_remove(info.playlist, song);
-				mpd_freeSong(song);
-
-			}
-			old_length = g_list_length(info.playlist);
-*/		}
+		}
 		info.status->song = -1;
-		/*
-		   if(load_playlist())
-		   {
-		   */		/* oeps error */
-		/*		return TRUE;
-				}
-				*/
 	}
 	info.playlist_length = info.status->playlistLength;
 	/* update the playlist */
