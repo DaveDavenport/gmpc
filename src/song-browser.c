@@ -79,6 +79,72 @@ void song_browser_create()
 	
 }
 
+void sb_row_expanded(GtkTreeView *tree, GtkTreeIter *parent, GtkTreePath *path)
+{
+	GtkWidget *cb = glade_xml_get_widget(sb_xml, "cb_type");
+	gint type;
+	mpd_InfoEntity *ent = NULL;
+	gchar *artist;
+	GtkTreeIter iter,child2;
+	/* only for id3 */
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(cb)) == 0) return;
+
+
+	gtk_tree_model_get(GTK_TREE_MODEL(sb_store),parent, SB_TYPE, &type, SB_FPATH, &artist, -1);
+	if(type == 1)
+	{
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter, parent))
+		{
+			gchar *album;
+			do{                                                                                                   
+				gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &album,-1);
+				mpd_sendSearchCommand(info.connection, MPD_TABLE_ALBUM, album);
+				while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
+				{
+					if(ent->info.song->artist!= NULL)
+					{
+						if(!g_ascii_strncasecmp(ent->info.song->artist, artist, strlen(artist)))
+						{
+							gchar buffer[1024];
+							strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+							gtk_tree_store_append(sb_store, &child2, &iter);
+							gtk_tree_store_set(sb_store, &child2,                			
+									SB_FPATH,ent->info.song->file,	
+									SB_DPATH, buffer,
+									SB_TYPE, 0,
+									SB_PIXBUF, "media-audiofile",
+									-1);
+						}
+
+					}
+					mpd_freeInfoEntity(ent);
+				} 	
+			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));                                      	
+		}
+		mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
+		while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
+		{
+			if(ent->info.song->album == NULL || strlen(ent->info.song->album) == 0)
+			{
+				gchar buffer[1024];
+				strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+				gtk_tree_store_append(sb_store, &iter, parent);
+				gtk_tree_store_set(sb_store, &iter,                			
+						SB_FPATH,ent->info.song->file,	
+						SB_DPATH, buffer,
+						SB_TYPE, 0,
+						SB_PIXBUF, "media-audiofile",
+						-1);
+
+			}
+			mpd_freeInfoEntity(ent);
+		}
+	/* we only need to fill it once */
+	/* so I now make it type 3 */
+	gtk_tree_store_set(GTK_TREE_MODEL(sb_store),parent, SB_TYPE, 2, -1);
+	}
+}
+
 void sb_fill_browser_id3()
 {
 	mpd_InfoEntity *ent = NULL;
@@ -87,7 +153,7 @@ void sb_fill_browser_id3()
 	if(info.connection == NULL) return;
 
 	mpd_sendListCommand(info.connection, MPD_TABLE_ARTIST,NULL);
-	
+
 	while((string = mpd_getNextArtist(info.connection)) != NULL)
 	{
 		gtk_tree_store_append(sb_store, &iter, NULL);    	
@@ -105,7 +171,8 @@ void sb_fill_browser_id3()
 		do
 		{
 			gchar *artist;
-			GtkTreeIter child2;
+			int nalbum = 0;
+//			GtkTreeIter child2;
 			gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &parent, SB_FPATH, &artist,-1);
 			mpd_sendListCommand(info.connection, MPD_TABLE_ALBUM, artist);
 			while((string = mpd_getNextAlbum(info.connection)) != NULL)
@@ -114,62 +181,66 @@ void sb_fill_browser_id3()
 				gtk_tree_store_set(sb_store, &iter, 
 						SB_FPATH,string,
 						SB_DPATH,string,                        			
-						SB_TYPE, 1,                             			
+						SB_TYPE, 2,                             			
 						SB_PIXBUF, "",                          		
 						-1);                                    			
 				g_free(string);
+				nalbum++;
 			}
 
+			/*
+			   if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter, &parent))
+			   {
+			   gchar *album;
 
-			if(gtk_tree_model_iter_children(GTK_TREE_MODEL(sb_store), &iter, &parent))
+			   do{
+			   gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &album,-1);
+			   mpd_sendSearchCommand(info.connection, MPD_TABLE_ALBUM, album);
+			   while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
+			   {
+			   if(ent->info.song->artist!= NULL)
+			   {
+			   if(!g_ascii_strncasecmp(ent->info.song->artist, artist, strlen(artist)))
+			   {
+			   gchar buffer[1024];
+			   strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+			   gtk_tree_store_append(sb_store, &child2, &iter);
+			   gtk_tree_store_set(sb_store, &child2,                			
+			   SB_FPATH,ent->info.song->file,	
+			   SB_DPATH, buffer,
+			   SB_TYPE, 0,
+			   SB_PIXBUF, "media-audiofile",
+			   -1);
+			   }
+
+			   }
+			   mpd_freeInfoEntity(ent);
+			   }
+			   }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));
+
+			   }
+			   */
+			if(nalbum == 0)
 			{
-				gchar *album;
-
-				do{
-					gtk_tree_model_get(GTK_TREE_MODEL(sb_store), &iter, SB_FPATH, &album,-1);
-					mpd_sendSearchCommand(info.connection, MPD_TABLE_ALBUM, album);
-					while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
-					{
-						if(ent->info.song->artist!= NULL)
-						{
-							if(!g_ascii_strncasecmp(ent->info.song->artist, artist, strlen(artist)))
-							{
-								gchar buffer[1024];
-								strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
-								gtk_tree_store_append(sb_store, &child2, &iter);
-								gtk_tree_store_set(sb_store, &child2,                			
-										SB_FPATH,ent->info.song->file,	
-										SB_DPATH, buffer,
-										SB_TYPE, 0,
-										SB_PIXBUF, "media-audiofile",
-										-1);
-							}
-
-						}
-						mpd_freeInfoEntity(ent);
-					}
-				}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &iter));
-
-			}
-			mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
-			while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
-			{
-				if(ent->info.song->album == NULL || strlen(ent->info.song->album) == 0)
+				mpd_sendSearchCommand(info.connection, MPD_TABLE_ARTIST,artist);
+				while((ent = mpd_getNextInfoEntity(info.connection)) !=NULL)
 				{
-					gchar buffer[1024];
-					strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
-					gtk_tree_store_append(sb_store, &iter, &parent);
-					gtk_tree_store_set(sb_store, &iter,                			
-							SB_FPATH,ent->info.song->file,	
-							SB_DPATH, buffer,
-							SB_TYPE, 0,
-							SB_PIXBUF, "media-audiofile",
-							-1);
+					if(ent->info.song->album == NULL || strlen(ent->info.song->album) == 0)
+					{
+						gchar buffer[1024];
+						strfsong(buffer, 1024, preferences.markup_main_display, ent->info.song);
+						gtk_tree_store_append(sb_store, &iter, &parent);
+						gtk_tree_store_set(sb_store, &iter,                			
+								SB_FPATH,ent->info.song->file,	
+								SB_DPATH, buffer,
+								SB_TYPE, 0,
+								SB_PIXBUF, "media-audiofile",
+								-1);
 
+					}
+					mpd_freeInfoEntity(ent);
 				}
-				mpd_freeInfoEntity(ent);
 			}
-
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(sb_store), &parent));
 
 	}
