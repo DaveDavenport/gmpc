@@ -6,6 +6,9 @@
 	* src/player.c:		Display goes to hh:mm mode when more then 99
 	minutes have passed.
 	* src/tray-icon.c:	possible fix for tooltip painting.
+	* src/tray-icon.d:	Added function that update the ooltip and
+	returns true
+
 
 06-10-2004 Qball, <Qball@qballcow.nl>
 	* src/tray_icon.c:	Fixed case that tooltip wouldn't go away when
