@@ -15,6 +15,7 @@ GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
 extern GtkTreeModel *pl2_store;
+
 enum{
 	PL3_CURRENT_PLAYLIST,
 	PL3_BOOKMARKS,
@@ -25,28 +26,113 @@ enum{
 } tree_type;
 
 
+enum pl3_cat_store
+{
+	PL3_CAT_TYPE,
+	PL3_CAT_TITLE,
+	PL3_CAT_INT_ID,
+	PL3_CAT_ICON_ID,
+	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
+	PL3_CAT_NROWS
+} pl3_cat_store;
+
+/* for the tree in the right pane. */
+enum pl3_store_types
+{
+	PL3_SONG_ID,
+	PL3_SONG_POS,
+	PL3_SONG_TITLE,
+	PL3_WEIGHT_INT,
+	PL3_WEIGHT_ENABLE,
+	PL3_SONG_STOCK_ID,
+	PL3_NROWS
+} pl3_store_type;
+
+/* Get the type of the selected row.. 
+ * -1 means no row selected 
+ */
+int  cat_get_selected_browser()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		gint type;
+		gtk_tree_model_get(model, &iter, 0, &type, -1);
+		if(type >= PL3_CAT_NROWS || type < 0)
+		{
+			return -1;
+		}
+		return type;
+	}
+	return -1;
+}
+
+void cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
+{
+	gint type = cat_get_selected_browser();
+	if(check_connection_state())
+	{
+		return;
+	}
+	/* nothing valid, so return */
+	if(type == -1)
+	{
+		return;
+	}
+	
+	else if(type == PL3_CURRENT_PLAYLIST)
+	{
+		/* scroll to the playing song */
+		if(info.status != NULL)
+		{
+			if(info.status->song != -1)
+			{
+			gchar *str = g_strdup_printf("%i", info.status->song);
+			GtkTreePath *path = gtk_tree_path_new_from_string(str);
+			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+				glade_xml_get_widget(pl3_xml, "playlist_tree")), 
+				path,
+				NULL,
+				TRUE,0.5,0);
+			gtk_tree_path_free(path);
+			g_free(str);
+			}                                                      		
+		}
+	}
+
+
+}
+
+
+/* add's the toplevel entry for the current playlist view */
 void add_current_playlist()
 {
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			0, PL3_CURRENT_PLAYLIST,
-			1, "Current Playlist",
-			2, "",
-			3, "media-stream",
-			4, TRUE,-1);
+			PL3_CAT_TYPE, PL3_CURRENT_PLAYLIST,
+			PL3_CAT_TITLE, "Current Playlist",
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-stream",
+			PL3_CAT_PROC, TRUE,-1);
 }
 
+
+
+/* add's the toplevel entry for the file browser, it also add's a fantom child */
 void add_file_browser()
 {
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			0, PL3_BROWSE_FILE,
-			1, "Browse Filesystem",
-			2, "/",
-			3, "gtk-directory",
-			4, FALSE,-1);
+			PL3_CAT_TYPE, PL3_BROWSE_FILE,
+			PL3_CAT_TITLE, "Browse Filesystem",
+			PL3_CAT_INT_ID, "/",
+			PL3_CAT_ICON_ID, "gtk-directory",
+			PL3_CAT_PROC, FALSE,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -57,11 +143,11 @@ void add_artist_browser()
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			0, PL3_BROWSE_ARTIST,
-			1, "Browse Artists",        	
-			2, "",
-			3, "media-artist",
-			4, FALSE,-1);
+			PL3_CAT_TYPE, PL3_BROWSE_ARTIST,
+			PL3_CAT_TITLE, "Browse Artists",        	
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_PROC, FALSE,-1);
 	/* add fantom child for lazy tree */
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
@@ -73,14 +159,13 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 	int sub_folder = 0;
 	GtkTreeIter iter;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
+	/* check the connection state and when its valid proceed */
 	if (check_connection_state ())
+	{
  		return;
+	}
  
-//	gtk_list_store_clear(pl3_store); 
- 
-	g_print("path songs: %s\n", path);	
  	mpd_sendLsInfoCommand (info.connection, path);
- 
  	ent = mpd_getNextInfoEntity (info.connection);
  	while (ent != NULL)
  	{
@@ -91,31 +176,32 @@ void view_file_browser_folder(GtkTreeIter *iter_cat)
 		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
 		{
 			gchar buffer[1024];
-			strfsong (buffer, 1024, preferences.markup_song_browser,
-					ent->info.song);
+			strfsong (buffer, 1024, preferences.markup_song_browser,ent->info.song);
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					0, ent->info.song->file,
 					2, buffer,               
-					5, "media-audiofile", -1);
+					5, "media-audiofile",
+					-1);
 
 		}
 
 		else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
 		{
-			gchar *basename =
-				g_path_get_basename (ent->info.playlistFile->path);
+			gchar *basename = g_path_get_basename (ent->info.playlistFile->path);
 			gtk_list_store_append (pl3_store, &iter);
 			gtk_list_store_set (pl3_store, &iter,
 					0, ent->info.playlistFile->path,
 					2, basename,
-					5, "gtk-index", -1);
+					5, "gtk-index", 
+					-1);
 			g_free (basename);
 		}
 
 		mpd_freeInfoEntity (ent);
 		ent = mpd_getNextInfoEntity (info.connection);
 	}
+	/* remove the fantom child if there are no subfolders anyway. */
 	if(!sub_folder)
 	{
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
@@ -130,7 +216,6 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 {
 	mpd_InfoEntity *ent = NULL;
 	char *artist, *string;
-	int sub_folder = 0;
 	GtkTreeIter iter;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (check_connection_state ())
@@ -168,7 +253,6 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 						0, ent->info.song->file,
 						5,"media-audiofile",
 						-1);
-
 			}
 			else albums++;
 			mpd_freeInfoEntity (ent);
@@ -181,9 +265,6 @@ void view_artist_browser_folder(GtkTreeIter *iter_cat)
 				gtk_tree_store_remove(pl3_tree, &iter);      		
 			}
 		}                                                                                  		
-
-
-
 	}
 	else 
 	{
@@ -222,10 +303,11 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-	/* if there is no child, this should _never happend_ (well it cna't) but to be sure */
+	
 	if (check_connection_state ())
+	{
 		return;
-	g_print("fill artist list %i\n", strlen(alb_artist));
+	}
 	if(!strlen(alb_artist))
 	{
 		/* fill artist list */
@@ -274,6 +356,8 @@ void artist_browser_fill_tree(GtkTreeIter *iter)
 		}
 	}
 }
+
+
 void file_browser_fill_tree(GtkTreeIter *iter)
 {
 	mpd_InfoEntity *ent = NULL;
@@ -281,10 +365,10 @@ void file_browser_fill_tree(GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-	g_print("path: %s\n", path);
-	/* if there is no child, this should _never happend_ (well it cna't) but to be sure */
 	if (check_connection_state ())
+	{
 		return;
+	}
 
 
 
@@ -339,7 +423,7 @@ void cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
 }
 
 
-void cat_sel_changed(GtkTreeSelection *sel)
+void cat_sel_changed()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
@@ -356,14 +440,14 @@ void cat_sel_changed(GtkTreeSelection *sel)
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
 			g_print("adding list\n");
-			gtk_tree_view_set_model(tree, pl2_store);
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
 			g_print("show songs\n");
 			gtk_list_store_clear(pl3_store);	
 			view_file_browser_folder(&iter);
-			gtk_tree_view_set_model(tree, pl3_store);
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
 
 		}
 		else if (type == PL3_BROWSE_ARTIST)
@@ -371,18 +455,16 @@ void cat_sel_changed(GtkTreeSelection *sel)
 			g_print("show songs for artist browser\n");
 			gtk_list_store_clear(pl3_store);	
 			view_artist_browser_folder(&iter);
-
-			//			view_file_browser_folder(&iter);
-			gtk_tree_view_set_model(tree, pl3_store);
-
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
 		}
-
+		/* when it's not a know type remove the model */
 		else
 		{
 			gtk_tree_view_set_model(tree, NULL);	
 		}	
 
 	}
+	/* when not connected remove the model */
 	else
 	{
 		gtk_tree_view_set_model(tree, NULL);	

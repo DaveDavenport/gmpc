@@ -78,6 +78,7 @@
 		  <property name="reorderable">False</property>
 		  <property name="enable_search">True</property>
 		  <signal name="row_expanded" handler="cat_row_expanded" last_modification_time="Fri, 22 Oct 2004 17:33:36 GMT"/>
+		  <signal name="row_activated" handler="cat_row_activated" last_modification_time="Sat, 23 Oct 2004 14:45:56 GMT"/>
 		</widget>
 	      </child>
 	    </widget>
