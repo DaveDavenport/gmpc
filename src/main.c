@@ -51,11 +51,9 @@ main_trigger_update ()
 	void
 set_default_values ()
 {
-	preferences.user_auth = FALSE;;
 	memset (preferences.password, '\0', 256);
 	strcpy (preferences.password, "");
 	preferences.timeout = 1.0;
-	preferences.autoconnect = FALSE;
 	/*
 	 * main display markup 
 	 */
@@ -247,8 +245,10 @@ update_interface ()
 		 * update the popup 
 		 */
 		update_popup ();
-		if (!preferences.autoconnect)
+		if (!cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0))
+		{
 			return TRUE;
+		}
 		/*
 		 * connect to mpd if that fails return this function 
 		 */
@@ -492,8 +492,7 @@ update_interface ()
 
 
 
-	void
-init_stock_icons ()
+void init_stock_icons ()
 {
 	GtkIconFactory *factory;
 	GdkPixbuf *pb;

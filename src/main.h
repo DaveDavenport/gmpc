@@ -114,6 +114,7 @@ typedef struct 	{
 	int up;
 	gboolean exposed;
 } scrollname;
+
 extern scrollname scroll;
 int update_player();
 void create_player();
@@ -125,10 +126,8 @@ void msg_set_base();
 /* preferences.c */
 typedef struct
 {
-	gboolean user_auth;
 	char password[256];
 	float timeout; /* seconds.ms */
-	gboolean autoconnect;
 	/* display formating */
 	gchar *markup_main_display;
 	gchar *markup_playlist;

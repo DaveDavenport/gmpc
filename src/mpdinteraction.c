@@ -4,6 +4,7 @@
 #include "libmpdclient.h"
 #include "mpdinteraction.h"
 #include "playlist2.h"
+#include "playlist3.h"
 #include "main.h"
 #include "config1.h"
 extern config_obj *config;
@@ -101,7 +102,7 @@ int connect_to_mpd()
 		info.connection = NULL;	
 		return TRUE;
 	}
-	if(preferences.user_auth == TRUE)
+	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
 		mpd_sendPasswordCommand(info.connection, preferences.password);
 		mpd_finishCommand(info.connection);
@@ -118,7 +119,7 @@ int connect_to_mpd()
 				_("You don't have enough permission to access mpd."));
 		mpd_closeConnection(info.connection);
 		info.connection = NULL;
-		preferences.autoconnect = FALSE;
+		cfg_set_single_value_as_int(config, "connection","autoconnect", 0);
 		gtk_widget_show_all(dialog);
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);

@@ -73,7 +73,8 @@ void create_preferences_window()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin")), 
 			cfg_get_single_value_as_int_with_default(config, "connection","portnumber",6600));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")), preferences.timeout);
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_autocon")), preferences.autoconnect);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_autocon")), 
+			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
@@ -159,7 +160,7 @@ void preferences_window_destroy()
 
 void update_preferences_information()
 {
-	cfg_set_single_value_as_string(config,"connection","hostname", gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))));
+	cfg_set_single_value_as_string(config,"connection","hostname", (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "hostname_entry"))));
 	cfg_set_single_value_as_int(config, "connection", "portnumber",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	preferences.timeout = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin")));
 
@@ -167,7 +168,7 @@ void update_preferences_information()
 
 void preferences_window_autoconnect(GtkToggleButton *tog)
 {
-	preferences.autoconnect = gtk_toggle_button_get_active(tog);
+	cfg_set_single_value_as_int(config, "connection", "autoconnect", gtk_toggle_button_get_active(tog));
 }
 
 void preferences_window_connect(GtkWidget *but)
@@ -330,8 +331,9 @@ void entry_auth_changed(GtkEntry *entry)
 
 void auth_enable_toggled(GtkToggleButton *but)
 {
-	preferences.user_auth = gtk_toggle_button_get_active(but);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);	
+	cfg_set_single_value_as_int(config, "connection", "useauth",gtk_toggle_button_get_active(but));
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), 
+			cfg_get_single_value_as_int_with_default(config, "connection","useauth",0));	
 }
 
 void xfade_enable_toggled(GtkToggleButton *but)
@@ -370,7 +372,9 @@ void xfade_time_changed(GtkSpinButton *but)
 void update_auth_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(xml_preferences_window, "ck_auth"), preferences.user_auth);
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), preferences.user_auth);
+			glade_xml_get_widget(xml_preferences_window, "ck_auth"), 
+			cfg_get_single_value_as_int_with_default(config, "connection", "useauth", 0));
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "entry_auth"), 
+			cfg_get_single_value_as_int_with_default(config, "connection", "useauth", 0));
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "entry_auth")),preferences.password);
 }

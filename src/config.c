@@ -28,10 +28,6 @@ void load_config ()
 		{
 			preferences.timeout = (float) g_strtod (&buffer[8], NULL);
 		}
-		else if (!strncmp (buffer, "auto-connect:", 13))
-		{
-			preferences.autoconnect = atoi (&buffer[13]);
-		}
 		else if (!strncmp (buffer, "do tray:", 8))
 		{
 			gchar *buf = g_strstrip (&buffer[8]);
@@ -96,14 +92,6 @@ void load_config ()
 			if (buf != NULL)
 			{
 				info.popup.timeout = atoi (buf);
-			}
-		}
-		else if (!strncmp (buffer, "use auth:", 9))
-		{
-			gchar *buf = g_strstrip (&buffer[9]);
-			if (buf != NULL)
-			{
-				preferences.user_auth = atoi (buf);
 			}
 		}
 		else if (!strncmp (buffer, "auth pass:", 10))
@@ -234,7 +222,6 @@ void save_config ()
 		return;
 	}
 	fprintf (fp, "timeout: %.2f\n", preferences.timeout);
-	fprintf (fp, "auto-connect: %i\n", preferences.autoconnect);
 	fprintf (fp, "do tray: %i\n", info.do_tray);
 	fprintf (fp, "do tray popup: %i\n", info.do_tray_popup);
 	fprintf (fp, "time format: %i\n", info.time_format);
@@ -243,7 +230,6 @@ void save_config ()
 	fprintf (fp, "popup stay: %i\n", info.popup.popup_stay);
 	fprintf (fp, "popup state: %i\n", info.popup.show_state);
 	fprintf (fp, "popup timeout: %i\n", info.popup.timeout);
-	fprintf (fp, "use auth: %i\n", preferences.user_auth);
 	fprintf (fp, "auth pass: %s\n", preferences.password);
 	escaped = g_strescape(preferences.markup_main_display, "");
 	fprintf (fp, "markup main display: %s\n", escaped);

@@ -243,7 +243,7 @@ void ol_create_url(GtkWidget *wid,char *url)
 
 	/* create glade file, and set parent */
 	ol_xml = glade_xml_new(GLADE_PATH"open-location.glade", "add_location",NULL);
-	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), wid);
+	gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(ol_xml, "add_location")), GTK_WINDOW(wid));
 
 	/* Accept drops from outside */
 	gtk_drag_dest_set(glade_xml_get_widget(ol_xml, "add_location"), GTK_DEST_DEFAULT_ALL, drag_types, 1, GDK_ACTION_COPY);
