@@ -1,4 +1,4 @@
-
+void pl2_set_query(const gchar *query);
 void create_playlist2();
 void update_playlist2();
 void init_playlist2();

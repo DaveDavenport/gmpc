@@ -1,0 +1,21 @@
+# files added by intltool-prepare
+[encoding: UTF-8]
+data/gmpc.desktop.in
+glade/gmpc.glade
+glade/add-browser.glade
+glade/open-location.glade
+glade/playlist.glade
+src/callback.c          
+src/player.c        
+src/strfsong.c
+src/config.c            
+src/main.c            
+src/playlist2.c     
+src/tray-icon.c
+src/misc.c            
+src/popup.c
+src/mpdinteraction.c  
+src/preferences.c
+src/id3info.c           
+src/open-location.c   
+src/song-browser.c

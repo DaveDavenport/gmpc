@@ -1,0 +1,350 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-07-03 12:52+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr ""
+
+#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:18
+msgid "Gnome Music Player Client"
+msgstr ""
+
+#: glade/gmpc.glade.h:1 glade/add-browser.glade.h:1
+#: glade/open-location.glade.h:1 glade/playlist.glade.h:1
+msgid "*"
+msgstr ""
+
+#: glade/gmpc.glade.h:2
+msgid "<b>Crossfade:</b>"
+msgstr ""
+
+#: glade/gmpc.glade.h:3
+msgid "<b>Notification Area Icon</b>"
+msgstr ""
+
+#: glade/gmpc.glade.h:4
+msgid "<b>PopUp</b>"
+msgstr ""
+
+#: glade/gmpc.glade.h:5
+msgid ""
+"<span size=\"small\"><i>You need to be connected\n"
+" in order to change these settings</i></span>"
+msgstr ""
+
+#: glade/gmpc.glade.h:7
+msgid ""
+"<span size=\"small\">Copyright ©  2003-2004 Qball Cow\n"
+"<i>Qball@qballcow.nl</i></span>"
+msgstr ""
+
+#: glade/gmpc.glade.h:9
+msgid ""
+"<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
+"0.11.1 <i>Intelligence is only skin deep</i>"
+msgstr ""
+
+#: glade/gmpc.glade.h:11
+msgid ""
+"A frontend for the music player daemon from:\n"
+"<span color=\"blue\"><u>www.musicpd.org</u></span>"
+msgstr ""
+
+#: glade/gmpc.glade.h:13
+msgid "Album:"
+msgstr ""
+
+#: glade/gmpc.glade.h:14
+msgid "Artist:"
+msgstr ""
+
+#: glade/gmpc.glade.h:15
+msgid "Configure gmpc"
+msgstr ""
+
+#: glade/gmpc.glade.h:16
+msgid "Enable"
+msgstr ""
+
+#: glade/gmpc.glade.h:17
+msgid "Filename:"
+msgstr ""
+
+#: glade/gmpc.glade.h:19
+msgid "Host:"
+msgstr ""
+
+#: glade/gmpc.glade.h:20
+msgid "Length:"
+msgstr ""
+
+#: glade/gmpc.glade.h:21
+msgid "Lower Left Corner"
+msgstr ""
+
+#: glade/gmpc.glade.h:22
+msgid "Lower Right Corner"
+msgstr ""
+
+#: glade/gmpc.glade.h:23
+msgid "Open the playlist"
+msgstr ""
+
+#: glade/gmpc.glade.h:24
+msgid "Password:"
+msgstr ""
+
+#: glade/gmpc.glade.h:25
+msgid "Port:"
+msgstr ""
+
+#: glade/gmpc.glade.h:26
+msgid "Position:"
+msgstr ""
+
+#: glade/gmpc.glade.h:27
+msgid "Search for songs from this artist in the current playlist"
+msgstr ""
+
+#: glade/gmpc.glade.h:28
+msgid "Search for songs with this title in the current playlist"
+msgstr ""
+
+#: glade/gmpc.glade.h:29
+msgid "Show State"
+msgstr ""
+
+#: glade/gmpc.glade.h:30
+msgid "Timeout (s):"
+msgstr ""
+
+#: glade/gmpc.glade.h:31
+msgid "Timeout:"
+msgstr ""
+
+#: glade/gmpc.glade.h:32
+msgid "Title:"
+msgstr ""
+
+#: glade/gmpc.glade.h:33
+msgid "Toggle Repeat <ctrl+e> or <e>"
+msgstr ""
+
+#: glade/gmpc.glade.h:34
+msgid "Toggle random <ctrl+a> or <a>"
+msgstr ""
+
+#: glade/gmpc.glade.h:35
+msgid "Track:"
+msgstr ""
+
+#: glade/gmpc.glade.h:36
+msgid "Upper Left Corner"
+msgstr ""
+
+#: glade/gmpc.glade.h:37
+msgid "Upper Right Corner"
+msgstr ""
+
+#: glade/gmpc.glade.h:38
+msgid "_About"
+msgstr ""
+
+#: glade/gmpc.glade.h:39
+msgid "_Autoconnect"
+msgstr ""
+
+#: glade/gmpc.glade.h:40
+msgid "_Connect"
+msgstr ""
+
+#: glade/gmpc.glade.h:41
+msgid "_Connection"
+msgstr ""
+
+#: glade/gmpc.glade.h:42
+msgid "_Disconnect"
+msgstr ""
+
+#: glade/gmpc.glade.h:43
+msgid "_Misc"
+msgstr ""
+
+#: glade/gmpc.glade.h:44
+msgid "_Next"
+msgstr ""
+
+#: glade/gmpc.glade.h:45
+msgid "_Play/Pause"
+msgstr ""
+
+#: glade/gmpc.glade.h:46
+msgid "_Prev"
+msgstr ""
+
+#: glade/gmpc.glade.h:47
+msgid "_Server settings"
+msgstr ""
+
+#: glade/gmpc.glade.h:48
+msgid "_Stop"
+msgstr ""
+
+#: glade/gmpc.glade.h:49
+msgid "_Use Authentication"
+msgstr ""
+
+#: glade/gmpc.glade.h:50
+msgid "enable crossfade"
+msgstr ""
+
+#: glade/gmpc.glade.h:51
+msgid "fade time (s):"
+msgstr ""
+
+#: glade/gmpc.glade.h:52
+msgid "gmpc - Preferences"
+msgstr ""
+
+#: glade/gmpc.glade.h:53
+msgid "gmpc - id3 info"
+msgstr ""
+
+#: glade/gmpc.glade.h:54
+msgid "localhost"
+msgstr ""
+
+#: glade/gmpc.glade.h:55
+msgid "n/a"
+msgstr ""
+
+#: glade/add-browser.glade.h:2
+msgid "Append selection to the playlist <Insert>"
+msgstr ""
+
+#: glade/add-browser.glade.h:3
+msgid "Browse by:"
+msgstr ""
+
+#: glade/add-browser.glade.h:4
+msgid "Close the window <Escape or ctrl-w>"
+msgstr ""
+
+#: glade/add-browser.glade.h:5
+msgid "Enter search query  <ctrl+l to grab focus>"
+msgstr ""
+
+#: glade/add-browser.glade.h:6
+msgid ""
+"Filename\n"
+"Artist\n"
+"Search Results"
+msgstr ""
+
+#: glade/add-browser.glade.h:9
+msgid "Replace playlist with selection <ctrl+Insert>"
+msgstr ""
+
+#: glade/add-browser.glade.h:10
+msgid "Song Browser"
+msgstr ""
+
+#: glade/add-browser.glade.h:11 glade/open-location.glade.h:5
+msgid "_Append"
+msgstr ""
+
+#: glade/add-browser.glade.h:12 glade/open-location.glade.h:6
+msgid "_Replace"
+msgstr ""
+
+#: glade/add-browser.glade.h:13
+msgid ""
+"for artists\n"
+"for albums\n"
+"for song title\n"
+"for filename"
+msgstr ""
+
+#: glade/open-location.glade.h:2
+msgid ""
+"<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
+"span>"
+msgstr ""
+
+#: glade/open-location.glade.h:3
+msgid "Add Location"
+msgstr ""
+
+#: glade/open-location.glade.h:4
+msgid "Stream:"
+msgstr ""
+
+#: glade/playlist.glade.h:2
+msgid "<enter playlist name>"
+msgstr ""
+
+#: glade/playlist.glade.h:3
+msgid ""
+"<span size=\"x-small\"><i>This will overwrite any playlist with the same "
+"name.</i></span>"
+msgstr ""
+
+#: glade/playlist.glade.h:4
+msgid "Add _location"
+msgstr ""
+
+#: glade/playlist.glade.h:5
+msgid ""
+"Add a stream. (you can drop a link directly from youre browser on the button)"
+msgstr ""
+
+#: glade/playlist.glade.h:6
+msgid "Removes the selected songs. <Del>"
+msgstr ""
+
+#: glade/playlist.glade.h:7
+msgid "Save Playlist"
+msgstr ""
+
+#: glade/playlist.glade.h:8
+msgid "Saves the current playlist."
+msgstr ""
+
+#: glade/playlist.glade.h:9
+msgid "Search the playlist (supports * and ?) <ctrl+l to select> "
+msgstr ""
+
+#: glade/playlist.glade.h:10
+msgid "Search:"
+msgstr ""
+
+#: glade/playlist.glade.h:11
+msgid "Show detailed information about the selected song <ctrl+i>"
+msgstr ""
+
+#: glade/playlist.glade.h:12
+msgid "_Save"
+msgstr ""
+
+#: glade/playlist.glade.h:13
+msgid "gmpc - Playlist"
+msgstr ""
+
+#: glade/playlist.glade.h:14
+msgid "name:"
+msgstr ""

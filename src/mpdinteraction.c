@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include "libmpdclient.h"
+#include "playlist2.h"
 #include "main.h"
 
 /* the internall data structure */
@@ -57,14 +58,13 @@ int disconnect_to_mpd()
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.old_pos = -1;
+	info.updating = FALSE;
 
 	/* disconnect playlist */
 	pl2_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	update_interface();
-
-
 
 
 	return FALSE;
@@ -137,7 +137,6 @@ gboolean check_connection_state()
 		return TRUE;
 	}
 	else return FALSE;
-
 }
 
 
@@ -247,4 +246,3 @@ void update_mpd_dbase()
 	info.conlock = FALSE;
 	return;
 }
-

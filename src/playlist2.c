@@ -27,6 +27,12 @@ void load_playlist2();
 guint filter_timeout = 0;
 void pl2_filter_refilter();
 
+/* function that gets called when the user clicks on a button in the song-info window */
+void pl2_set_query(const gchar *query)
+{
+	create_playlist2();
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl2_xml, "pl_searchen")), query);	
+}
 
 /* track data recieved on the open_location button and propegate it to the open-location window */
 void pl2_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
@@ -604,4 +610,3 @@ void pl2_disconnect()
 	sb_close();
 	sb_disconnect();
 }
-

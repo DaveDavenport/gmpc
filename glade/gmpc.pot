@@ -68,7 +68,6 @@ gchar *s = N_("n/a");
 gchar *s = N_("*");
 gchar *s = N_("Search for songs with this title in the current playlist");
 gchar *s = N_("Search for songs from this artist in the current playlist");
-gchar *s = N_("Search for songs from this album in the current playlist");
 gchar *s = N_("_Play/Pause");
 gchar *s = N_("_Stop");
 gchar *s = N_("_Next");

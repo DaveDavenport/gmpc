@@ -1,4 +1,12 @@
-2-07-2004 Qball <Qball@qballcow.nl>
+03-07-2004 Qball <Qball@qballcow>
+	* src/playlist.c:	Added a function to open/popup the filter and show filtered list.
+	* src/id3info.c: Uses new playlist for filter function.
+	* glade/gmpc.glade: Removed search album button in id3info window.
+	* src/id3info.c: removed find_album()
+	* src/id3info.c: show stream name in album field.
+	* main/main.c: when updating database show message in song-title window
+
+02-07-2004 Qball <Qball@qballcow.nl>
 	* Removed code in tray_icon.c that set an non-existing widget
 	sensitive
 	* Catch key presses on tree store
@@ -15,7 +23,7 @@
 
 
 
-1-07-2004 Qball <Qball@qballcow.nl>
+01-07-2004 Qball <Qball@qballcow.nl>
 	* Track window size changes and grow/shrink title box accordingly
 	* browse by search now opens an old search if the same search is done
 	again.

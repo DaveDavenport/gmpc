@@ -34,6 +34,8 @@ typedef struct
 	/* the current song */
 	int song;
 	int old_pos;
+	/* updating */
+	gboolean updating;
 	/* Elapsed or remaining time */
 	int time_format;
 	/* tray icon*/
