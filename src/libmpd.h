@@ -46,7 +46,8 @@ typedef struct _MpdObj
 	long long 	playlistid;
 	int 		songid;
 	int 		state;
-	
+	unsigned long	dbUpdateTime;	
+	int updatingDb;
 	
 	
 	/* functions to call */
@@ -75,6 +76,14 @@ typedef struct _MpdObj
 	/* error message */
 	int error;
 	char *error_msg;	
+
+	/* song datab update */
+	void *(* database_changed)(struct _MpdObj *mi,void *pointer);	
+	void *database_changed_signal_pointer;                                                     	
+
+
+
+	
 
 	/* internal values */
 	/* this "locks" the connections. so we can't have to commands competing with eachother */
@@ -138,6 +147,7 @@ void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(Mp
 void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer);
 void 		mpd_ob_signal_set_disconnect		(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect_pointer);
 void 		mpd_ob_signal_set_connect		(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect_pointer);
+void 		mpd_ob_signal_set_database_changed	(MpdObj *mi, void *(* database_changed)(MpdObj *mi, void *pointer), void *pointer);
 /* status commands */
 /* To get the function to have the  most recent info you want to call mpd_ob_status_queue_update 
  * In a gui app. you want to call this every 0.x seconds. 

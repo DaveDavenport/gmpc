@@ -42,6 +42,7 @@ void song_changed(MpdObj *mi, int oldsong, int newsong);
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
 void status_callback(MpdObj *mi);
 void connect_callback();
+void database_changed();
 /*
  * the xml fle pointer to the player window 
  */
@@ -197,6 +198,7 @@ int main (int argc, char **argv)
 	mpd_ob_signal_set_status_changed(connection, (void *)status_callback, NULL);
 	mpd_ob_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
 	mpd_ob_signal_set_connect(connection, (void *)connect_callback, NULL);
+	mpd_ob_signal_set_database_changed(connection, (void *)database_changed, NULL);
 	/*
 	 * initialize gtk 
 	 */
@@ -620,3 +622,9 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 	pl3_highlight_state_change(old_state,new_state);
 	/* make */
 }
+
+void database_changed()
+{
+	pl3_reinitialize_tree();
+}
+

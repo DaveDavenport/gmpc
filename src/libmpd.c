@@ -57,6 +57,8 @@ MpdObj * mpd_ob_create()
 	mi->playlistid = -1;
 	mi->songid = -1;
 	mi->state = -1;
+	mi->dbUpdateTime = 0;
+	mi->updatingDb = 0;
 
 	/* signals */
 	mi->playlist_changed = NULL;
@@ -68,6 +70,9 @@ MpdObj * mpd_ob_create()
 	mi->status_changed_signal_pointer = NULL;
 	/* state */
 	mi->state_changed = NULL;
+	mi->state_changed_signal_pointer = NULL;
+	/* database changed */
+	mi->database_changed = NULL;
 	mi->state_changed_signal_pointer = NULL;
 	/* disconnect signal */
 	mi->disconnect = NULL;
@@ -323,6 +328,8 @@ int mpd_ob_disconnect(MpdObj *mi)
 	mi->playlistid = -1;
 	mi->state = -1;
 	mi->songid = -1;
+	mi->dbUpdateTime = 0;
+	mi->updatingDb = 0;
 
 	/*don't reset errors */
 
@@ -505,11 +512,22 @@ int mpd_ob_status_update(MpdObj *mi)
 		mi->songid = mi->status->songid;
 
 	}
+	
 
 
 	if(mi->status_changed != NULL)
 	{                                                                      		
 		mi->status_changed(mi, mi->status_changed_signal_pointer);		
+	}
+
+
+	if(mi->status->updatingDb != mi->updatingDb)
+	{
+		if(!mi->status->updatingDb)
+		{
+			mpd_ob_stats_update(mi);
+		}
+		mi->updatingDb = mi->status->updatingDb;
 	}
 
 	return FALSE;
@@ -1359,6 +1377,20 @@ void mpd_ob_signal_set_state_changed (MpdObj *mi, void *(* state_changed)(MpdObj
 	mi->state_changed_signal_pointer = pointer;
 }
 
+void mpd_ob_signal_set_database_changed (MpdObj *mi, void *(* database_changed)(MpdObj *mi, void *pointer), void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_database_changed: MpdObj *mi == NULL");
+		return;
+	}
+	mi->database_changed = database_changed;
+	mi->database_changed_signal_pointer = pointer;
+}
+
+
+
+
 void mpd_ob_signal_set_status_changed (MpdObj *mi, void *(* status_changed)(MpdObj *mi, void *pointer),void *pointer)
 {
 	if(mi == NULL)
@@ -1985,6 +2017,18 @@ int mpd_ob_stats_update(MpdObj *mi)
 	{
 		debug_printf(DEBUG_ERROR,"mpd_ob_stats_update: Failed to grab stats from mpd\n");
 	}
+	else if(mi->stats->dbUpdateTime != mi->dbUpdateTime)
+	{
+		debug_printf(DEBUG_INFO, "mpd_ob_stats_update: database updated\n");
+		if(mi->database_changed != NULL)
+		{                                                                      		
+			mi->database_changed(mi, mi->database_changed_signal_pointer);
+		}                                                                                           		
+		mi->dbUpdateTime = mi->stats->dbUpdateTime;
+	}
+
+
+	
 	if(mpd_ob_unlock_conn(mi))
 	{
 		return TRUE;
