@@ -890,10 +890,13 @@ void load_directories(gchar *oldp)
 
 	gtk_list_store_clear(info.file_list);
 	gtk_list_store_clear(info.dir_list);
-	if(oldp != NULL)if(strcmp(info.path, "/")) 
+	if(oldp != NULL)
 	{
-		gtk_list_store_append(info.dir_list, &iter);
-		gtk_list_store_set(info.dir_list, &iter, 0,oldp , 1, "../",-1);
+		if(strcmp(info.path, "/")) 
+		{
+			gtk_list_store_append(info.dir_list, &iter);
+			gtk_list_store_set(info.dir_list, &iter, 0,oldp , 1, "../",-1);
+		}
 	}
 
 	mpd_sendLsInfoCommand(info.connection , (char *)info.path);
@@ -902,7 +905,7 @@ void load_directories(gchar *oldp)
 	{
 		if(check_for_errors())
 		{
-
+			g_print("Oeps, you better start calling Qball\n");
 			return;
 		}	
 
@@ -912,7 +915,13 @@ void load_directories(gchar *oldp)
 			gchar *base = NULL;
 			gtk_list_store_append(info.dir_list, &iter);
 			if(entity->info.directory->path == NULL)
-			base = g_path_get_basename(entity->info.directory->path);
+			{
+				g_print("now we are in shit, report this _exact_ error to qball\n");
+				base = g_strdup("No directory found, please report as a bug");
+			}
+			else base = g_path_get_basename(entity->info.directory->path);
+			
+			
 			gtk_list_store_set(info.dir_list, &iter, 0,entity->info.directory->path , 1, base,-1);
 			g_free(base);
 		}
@@ -924,8 +933,8 @@ void load_directories(gchar *oldp)
 			{
 				gchar *utf8 = g_path_get_basename(entity->info.song->file);
 				if(entity->info.song->file == NULL)
-				
-				short_title = shorter_string(utf8);
+
+					short_title = shorter_string(utf8);
 				gtk_list_store_set(info.file_list, &iter,0, entity->info.song->file,1,short_title,-1);
 				g_free(short_title);
 				g_free(utf8);
