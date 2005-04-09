@@ -177,9 +177,10 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		}
 
 
-
-		
-		gtk_widget_set_usize(tip, width+8, height+8);
+		if(width+8 > 0 && height + 8 > 0)
+		{		
+			gtk_widget_set_usize(tip, width+8, height+8);
+		}
 	}
 
 

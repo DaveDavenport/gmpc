@@ -1,5 +1,12 @@
+09-04=2005 Qball <Qball@qballcow.nl>
+	* src/plyalist3.c:	Return of the TreeFilter.. now with regex
+	support.
+
 27-03-2005 Qball <Qball@qballcow.nl>
+	* src/playlist3.c:	Add an add location to the playlist right
+	mouse menu.
 	* src/tray-icon.c:	Ctrl-click now pause/play's aswell.
+	* src/tray-icon.c:	Extra check so it won't resize < 0
 
 old:	Qball <Qball@qballcow.nl>
 	* fix for not drawn section of main window

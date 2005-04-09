@@ -37,16 +37,21 @@
 #include "osb_browser.h"
 #include "config1.h"
 #include "debug_printf.h"
-
+#include <regex.h>
 extern config_obj *config;
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
-GtkListStore *pl2_store = NULL;
+GtkListStore *pl2_store= NULL;
+GtkTreeModelFilter *pl2_store_filter = NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 void pl2_save_playlist ();
+
+regex_t filter_spec;
+int filter =0;
+guint filter_timeout = 0;
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
 /****************************************************************/
@@ -58,6 +63,59 @@ void pl3_clear_playlist()
 void pl3_shuffle_playlist()
 {
 	mpd_ob_playlist_shuffle(connection);
+}
+void clear_filter()
+{
+	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml,"entry_filter")),"");
+
+	refilter_tree();
+}
+
+int refilter_tree()
+{
+	gtk_tree_model_filter_refilter(pl2_store_filter);
+	if(filter_timeout != 0)
+	{                                       	
+		g_source_remove(filter_timeout);
+	}                                       	
+	filter_timeout = 0;
+	return FALSE;
+
+
+}
+void entry_filter_changed(GtkEntry *entry)
+{
+	if(strlen(gtk_entry_get_text(entry)))
+	{
+		regfree(&filter_spec);
+		if(!regcomp(&filter_spec, gtk_entry_get_text(entry), REG_NOSUB|REG_ICASE|REG_EXTENDED)) filter = 1;
+		else filter = 2;
+
+	}
+	else
+	{
+		filter = 0;
+	}
+	if(filter_timeout != 0)
+	{
+		g_source_remove(filter_timeout);
+	}
+	filter_timeout = g_timeout_add(800, (GSourceFunc)refilter_tree, NULL);
+	//	gtk_tree_model_filter_refilter(pl2_store_filter);
+}
+
+gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter)
+{
+	gchar * string = NULL;
+	int result = 0;
+	if(!filter) return TRUE;
+	if(filter == 2) return FALSE;
+	gtk_tree_model_get(model, iter, 2, &string, -1);
+	if(string != NULL){
+		result = (regexec(&filter_spec, string, 0, NULL,0) ==0)? TRUE:FALSE;
+	}
+	g_free(string);
+	return result;
 }
 
 /* custom search and match function, this is a workaround for the problems with in gtk+-2.6 */
@@ -77,7 +135,7 @@ gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const c
 	}
 	lkey = g_utf8_casefold(key,-1);
 	lvalue = g_utf8_casefold(value,-1);
-	
+
 	if(strstr(lvalue,lkey) != NULL)
 	{
 		ret = FALSE;
@@ -394,7 +452,7 @@ unsigned long pl3_find_view_browser()
 						PL3_SONG_POS, PL3_ENTRY_SONG, 
 						PL3_SONG_STOCK_ID, "media-audiofile", 
 						-1);
-				
+
 				data =  mpd_ob_data_get_next(data);
 			}
 		}
@@ -405,7 +463,7 @@ unsigned long pl3_find_view_browser()
 
 void pl3_find_entry_change(GtkEntry *entry)
 {
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "find_button"), (strlen(gtk_entry_get_text(entry)) > 0)?1:0);
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "find_button"), (strlen(gtk_entry_get_text(entry)) > 0)?1:0);
 
 }
 
@@ -420,7 +478,7 @@ void pl3_find_search()
 	if(!gtk_tree_selection_get_selected(selection, &model, &iter)) return;
 	name = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")));
 	if(strlen(name) == 0) return;
-	
+
 	field = g_strdup_printf("%i", gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))));
 
 
@@ -465,7 +523,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	if(type != PL3_CURRENT_PLAYLIST) return;
 	str = gtk_tree_path_to_string(path);
 
-	gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), iter,SONG_POS, &pos, -1);
+	gtk_tree_model_get(model, iter,SONG_POS, &pos, -1);
 	new_pos = atoi(str);
 	if(new_pos > pos ) new_pos --;
 	/* if there wasn't a move action we don't do anything, because this signal is trigged on every row change */
@@ -511,7 +569,7 @@ void pl3_current_playlist_delete_selected_songs ()
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store_filter);
 		/* start a command list */
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -576,21 +634,21 @@ void pl3_current_playlist_crop_selected_songs()
 		GtkTreeIter iter;
 		/* start a command list */
 		/* remove every selected song one by one */
-		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter);
+		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store_filter), &iter);
 		do{
 			int value=0;
 			if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 			{
-				gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
+				gtk_tree_model_get (GTK_TREE_MODEL(pl2_store_filter), &iter, SONG_ID, &value, -1);
 				printf("test %i\n", value);
 				mpd_ob_playlist_queue_delete_id(connection, value);				
 			}
-		} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
+		} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store_filter),&iter));
 		mpd_ob_playlist_queue_commit(connection);
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
-	
+
 	mpd_ob_status_queue_update(connection);
 }
 
@@ -598,7 +656,7 @@ void pl3_current_playlist_crop_selected_songs()
 void pl3_show_song_info ()
 {
 	int i = 0;
-	GtkTreeModel *model = GTK_TREE_MODEL (pl2_store);
+	GtkTreeModel *model = GTK_TREE_MODEL (pl2_store_filter);
 	/* get the tree selection object */
 	GtkTreeSelection *selection =
 		gtk_tree_view_get_selection (GTK_TREE_VIEW
@@ -1148,13 +1206,13 @@ void pl3_browse_delete_playlist(GtkToggleButton *bt, char *string)
 		case GTK_RESPONSE_OK:
 			mpd_ob_playlist_delete(connection, string);
 			pl3_cat_sel_changed();
-			
+
 	}
 	gtk_widget_destroy (GTK_WIDGET (dialog));
 
 
-	
-	
+
+
 
 }
 int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
@@ -1428,6 +1486,7 @@ void pl3_cat_sel_changed()
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")), 0);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "search_box"));
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "filter_hbox"));
 	/*	gtk_tree_view_set_reorderable(tree, FALSE);*/
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
@@ -1436,9 +1495,10 @@ void pl3_cat_sel_changed()
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
 			gchar *string = format_time(info.playlist_playtime);
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "filter_hbox"));
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 			g_free(string);
-			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
+			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store_filter));
 			/*			gtk_tree_view_set_reorderable(tree, TRUE);*/
 		}
 		else if (type == PL3_BROWSE_FILE)
@@ -1574,10 +1634,23 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		/* TODO: Write own fun ction */
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
+
+
+		item = gtk_image_menu_item_new_with_label("Add Location");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
+
+
+
+
 		/* add the clear widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
+
+
 
 		/* show everything and popup */
 		gtk_widget_show_all(menu);
@@ -1834,12 +1907,14 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		{
 			gchar *str = g_strdup_printf("%i", mpd_ob_player_get_current_song_pos(connection));
 			GtkTreePath *path = gtk_tree_path_new_from_string(str);
+			GtkTreePath *child_path = gtk_tree_model_filter_convert_child_path_to_path(pl2_store_filter, path);
 			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
 						glade_xml_get_widget(pl3_xml, "playlist_tree")), 
-					path,
+					child_path,
 					NULL,
 					TRUE,0.5,0);
 			gtk_tree_path_free(path);
+			gtk_tree_path_free(child_path);
 			g_free(str);
 		}                                                      		
 		return TRUE;			
@@ -1900,9 +1975,11 @@ void create_playlist3 ()
 	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
 	{
+		printf("%i %i %i %i\n", pl3_wsize.x, pl3_wsize.y, pl3_wsize.width, pl3_wsize.height);
+		gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}
 
@@ -2003,7 +2080,7 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-	g_signal_connect(G_OBJECT(pl2_store), "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
+	//	g_signal_connect(G_OBJECT(pl2_store), "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
 	/* select the current playlist */
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))

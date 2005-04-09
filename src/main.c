@@ -57,7 +57,7 @@ int update_interface ();
 guint update_timeout = 0;
 void init_stock_icons ();
 extern GtkListStore *pl2_store;
-
+extern GtkTreeModelFilter *pl2_store_filter;
 /*
  * The Config object
  */
@@ -566,6 +566,9 @@ void init_playlist ()
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT,
 			GTK_TYPE_FLOAT);
+
+	pl2_store_filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store),NULL);
+	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_store_filter), (GtkTreeModelFilterVisibleFunc)playlist_filter_func, NULL, NULL);
 }
 
 void song_changed(MpdObj *mi, int oldsong, int newsong)
