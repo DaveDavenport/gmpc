@@ -8,6 +8,7 @@ void pl3_push_statusbar_message(char *mesg);
 void pl3_disconnect();
 void pl3_cat_sel_changed();
 int pl3_close();
+int refilter_tree();
 
 
 enum{

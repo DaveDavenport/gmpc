@@ -567,7 +567,7 @@ void init_playlist ()
 			GTK_TYPE_INT,
 			GTK_TYPE_FLOAT);
 
-	pl2_store_filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store),NULL);
+	pl2_store_filter = (gpointer)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store),NULL);
 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_store_filter), (GtkTreeModelFilterVisibleFunc)playlist_filter_func, NULL, NULL);
 }
 

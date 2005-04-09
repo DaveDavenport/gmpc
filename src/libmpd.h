@@ -162,8 +162,9 @@ int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_crossfade		(MpdObj *mi);
 int		mpd_ob_status_set_crossfade		(MpdObj *mi, int crossfade_time);
+int		mpd_ob_stats_update			(MpdObj *mi);
 
-/* player commands */
+/* Player commands */
 int 		mpd_ob_player_play			(MpdObj *mi);
 int 		mpd_ob_player_play_id			(MpdObj *mi, int id);
 int 		mpd_ob_player_stop			(MpdObj *mi);

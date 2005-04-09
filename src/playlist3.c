@@ -1976,10 +1976,12 @@ void create_playlist3 ()
 	if(pl3_xml != NULL)
 	{
 		printf("%i %i %i %i\n", pl3_wsize.x, pl3_wsize.y, pl3_wsize.width, pl3_wsize.height);
-		gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		//	gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
-		gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		//		gtk_widget_show(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}
 
