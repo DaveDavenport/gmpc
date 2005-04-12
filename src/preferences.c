@@ -111,6 +111,8 @@ void create_preferences_window()
 			cfg_get_single_value_as_int_with_default(config,"playlist", "custom_stream_enable", 1));                          	
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_of")), 
 			cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));                          	
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_ps")), 
+			cfg_get_single_value_as_int_with_default(config,"playlist3", "st_cur_song", 0));                          		
 
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
@@ -404,6 +406,11 @@ void csl_enable_tb(GtkToggleButton *but)
 	pl3_reinitialize_tree();
 }
 
+void cur_song_center_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "playlist3","st_cur_song", bool1);
+}
 void open_to_position_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);

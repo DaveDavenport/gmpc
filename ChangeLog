@@ -1,5 +1,16 @@
+11-04-2005 Qball <Qball@qballcow.nl>
+	* src/playlist3.c:	Implemented auto-scroll to playiing song.
+	* src/playlist3.c:	fixed height mode implemented..  need testing.
+	* src/playlist3.c:	Another memory leak or 2.
+	* src/playlist3.c:	Fixed 2 memory leaks in find and file view browse
+	functions.
+	* src/playlist3.[c|glade]:	Implemented a database search that
+	searches through all fields and tokenized. (with regex support in tokens)
+	(murder|moani) John Lee  matches  John Lee hooker Murder  or John Moan
+	Hooker Lee.
+
 09-04=2005 Qball <Qball@qballcow.nl>
-	* src/plyalist3.c:	Return of the TreeFilter.. now with regex
+	* src/playlist3.c:	Return of the TreeFilter.. now with regex
 	support.
 
 27-03-2005 Qball <Qball@qballcow.nl>

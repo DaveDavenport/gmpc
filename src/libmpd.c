@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 #include "debug_printf.h"
 #include "libmpd.h"
 
@@ -452,6 +453,8 @@ int mpd_ob_status_update(MpdObj *mi)
 	if(mi->status == NULL)
 	{
 		debug_printf(DEBUG_ERROR,"mpd_ob_status_update: Failed to grab status from mpd\n");
+		mpd_ob_unlock_conn(mi);
+		return FALSE;
 	}
 	if(mpd_ob_unlock_conn(mi))
 	{
@@ -470,6 +473,11 @@ int mpd_ob_status_update(MpdObj *mi)
 		if(mi->playlist_changed != NULL)
 		{
 			mi->playlist_changed(mi, mi->playlistid, mi->status->playlist);
+		}
+		if(!mpd_ob_check_connected(mi))
+		{
+			return TRUE;
+
 		}
 
 
@@ -1680,6 +1688,127 @@ MpdData * mpd_ob_playlist_get_directory(MpdObj *mi,char *path)
 	return data->first;
 }
 
+MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
+{
+	MpdData *data = NULL;
+	mpd_InfoEntity *ent = NULL;
+	char ** strdata = NULL;
+	char *searchstr = NULL;
+	int i=0;
+	regex_t pattern;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_find: not connected\n");
+		return NULL;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_find: lock failed\n");
+		return NULL;
+	}
+
+	if(string == NULL || !strlen(string) )
+	{
+		debug_printf(DEBUG_INFO, "no string found");
+		mpd_ob_unlock_conn(mi);
+		return NULL;
+	}
+	else{
+		char *pstring, *temp;
+		i =1;
+		searchstr = pstring = strdup(string);
+		do{
+			temp = strsep(&pstring, " ");
+			strdata = realloc(strdata, (i+1)*sizeof(char *));
+			strdata[i-1]= temp;
+			strdata[i] = NULL;
+			i++;
+		}while(pstring != NULL);	
+	}	
+	if(strdata == NULL)
+	{
+		mpd_ob_unlock_conn(mi);
+		debug_printf(DEBUG_INFO, "no split string found");
+		return NULL;
+	}
+
+	mpd_sendListallInfoCommand(mi->connection, "/");
+	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)
+	{	
+		if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{
+			int i = 0;
+			int match = 0;
+			int loop = 1;
+			for(i=0; strdata[i] != NULL && loop; i++)
+			{
+				match = 0;
+				if(regcomp(&pattern, strdata[i], REG_EXTENDED|REG_ICASE))
+				{
+					printf("test\n");
+					loop = 0;
+					break;
+				}
+				if(ent->info.song->file && !regexec(&pattern,ent->info.song->file, 0, NULL, 0))
+				{
+					match = 1;
+				}
+				else if(ent->info.song->artist && !regexec(&pattern,ent->info.song->artist, 0, NULL, 0))
+				{
+					match = 1;
+				}
+				else if(ent->info.song->title && !regexec(&pattern,ent->info.song->title, 0, NULL, 0)) 
+				{
+					match = 1;
+				}
+				else if(ent->info.song->album && !regexec(&pattern,ent->info.song->album, 0, NULL, 0))
+				{
+					match = 1;                                                   				
+				}
+				regfree(&pattern);
+				if(!match)
+				{
+
+					loop = 0;
+
+				}
+			}
+
+			if(match)
+			{
+				if(data == NULL)
+				{
+					data = mpd_ob_new_data_struct();
+					data->first = data;
+					data->next = NULL;
+					data->prev = NULL;
+				}	
+				else
+				{
+					data->next = mpd_ob_new_data_struct();
+					data->next->first = data->first;
+					data->next->prev = data;
+					data = data->next;
+					data->next = NULL;
+				}
+				data->type = MPD_DATA_TYPE_SONG;
+				data->value.song = mpd_songDup(ent->info.song);				
+			}
+		}
+		mpd_freeInfoEntity(ent);
+	}
+	mpd_finishCommand(mi->connection);
+	free(searchstr);
+	free(strdata);
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL)
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+
 MpdData * mpd_ob_playlist_find(MpdObj *mi, int table, char *string, int exact)
 {
 	MpdData *data = NULL;
@@ -1800,7 +1929,11 @@ MpdData * mpd_ob_playlist_get_changes(MpdObj *mi,int old_playlist_id)
 	mpd_finishCommand(mi->connection);
 
 	/* unlock */
-	mpd_ob_unlock_conn(mi);
+	if(mpd_ob_unlock_conn(mi))
+	{
+		mpd_ob_free_data_ob(data);
+		return NULL;
+	}
 	if(data == NULL) 
 	{
 		return NULL;
@@ -2028,7 +2161,7 @@ int mpd_ob_stats_update(MpdObj *mi)
 	}
 
 
-	
+
 	if(mpd_ob_unlock_conn(mi))
 	{
 		return TRUE;

@@ -424,22 +424,25 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		}
 		data= mpd_ob_data_get_next(data);		
 	}
-	while (connection->status->playlistLength < old_length)
+	if(connection->status != NULL)
 	{
-		gchar *path = g_strdup_printf ("%i", old_length - 1);
-		if (gtk_tree_model_get_iter_from_string
-				(GTK_TREE_MODEL (pl2_store), &iter, path))
+		while (connection->status->playlistLength < old_length)
 		{
-			gint time = 0;
-			gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
-			if(time != MPD_SONG_NO_TIME)
+			gchar *path = g_strdup_printf ("%i", old_length - 1);
+			if (gtk_tree_model_get_iter_from_string
+					(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
-				info.playlist_playtime -= time;
-			}                                                      				
-			gtk_list_store_remove (pl2_store, &iter);
+				gint time = 0;
+				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
+				if(time != MPD_SONG_NO_TIME)
+				{
+					info.playlist_playtime -= time;
+				}                                                      				
+				gtk_list_store_remove (pl2_store, &iter);
+			}
+			g_free (path);
+			old_length--;
 		}
-		g_free (path);
-		old_length--;
 	}
 	pl3_highlight_song_change ();
 	cfg_free_string(string);

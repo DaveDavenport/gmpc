@@ -196,7 +196,12 @@ MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
 int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
 void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
 int 		mpd_ob_playlist_delete			(MpdObj *mi,char *path);
-
+/* client side search function with best "match" option..
+ * It splits the search string into tokens. (on the ' ')  every token is then matched using regex.
+ * So f.e. Murder Hooker|Davis  matches songs where title/filename/artist/album contains murder and hooker or murder davis in any order.
+ * Warning: This function can be slow.
+ */
+MpdData *	mpd_ob_playlist_token_find		(MpdObj *mi , char *string);
 /* MpdData struct functions */
 int 		mpd_ob_data_is_last			(MpdData *data);
 void 		mpd_ob_free_data_ob			(MpdData *data);
