@@ -3,6 +3,9 @@
 	(tokenized non case sens.)
 	* libmpd.c:		Implemented Client side sorting of artists
 	(for old mpd users.. needs testing
+	* main.c:		Removed connecting before gtk_main. somehow
+	this goes wrong.. (connection closed?) now after default 5 seconds
+	timeout.. (needs to be chnaged)
 
 11-04-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	Implemented auto-scroll to playiing song.
