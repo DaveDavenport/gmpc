@@ -33,8 +33,6 @@
 #include "misc.h"
 #include "mm-keys.h"
 extern int debug_level;
-extern long long unsigned total_recieved;
-extern long long unsigned total_send;
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
@@ -115,8 +113,6 @@ int main (int argc, char **argv)
 	MmKeys *keys = NULL;
 	gchar *url = NULL;
 	/* debug stuff */
-	time_t start, stop;
-	start = time(NULL);
 
 	if(argc > 1)
 	{
@@ -245,7 +241,7 @@ int main (int argc, char **argv)
 		create_tray_icon();
 	}
 	/* update the interface */
-	update_interface();
+/*	update_interface();*/
 	
 	/*
 	 * Keys
@@ -261,14 +257,6 @@ int main (int argc, char **argv)
 	 */
 
 	gtk_main ();
-	stop = time(NULL);
-	debug_printf(DEBUG_INFO,"down: %llu\nup: %llu\ntotal: %llu\n",
-			total_recieved,
-			total_send,
-			total_recieved+total_send);
-	debug_printf(DEBUG_INFO,"Network transfer: average of %.02f kb/sec\nTotal run time: %s %i seconds\n", ((total_recieved+total_send)/1024.0)/(float)(stop-start),
-			format_time(stop-start), (int)(stop-start)%60);
-
 	/* cleaning up. */
 	if(mpd_ob_check_connected(connection))
 	{
@@ -311,10 +299,7 @@ int update_interface ()
 		else
 		{
 			gtk_timeout_remove (update_timeout);
-			update_timeout =
-				gtk_timeout_add (400,
-						(GSourceFunc)
-						update_interface, NULL);
+			update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
 		}
 	}
 	/*
@@ -347,6 +332,11 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
+	if(data == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "playlist_changed_callback: what is this, stupid error\n");
+		return;
+	}
 	while(data != NULL)
 	{
 		/*
