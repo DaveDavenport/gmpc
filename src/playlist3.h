@@ -36,6 +36,7 @@ enum pl3_cat_store
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
+#define PL3_CUR_PLAYLIST 3
 #define PL3_ENTRY_STREAM 2
 #define PL3_ENTRY_PLAYLIST 1
 #define PL3_ENTRY_SONG 0
@@ -49,7 +50,7 @@ enum pl3_store_types
 	PL3_WEIGHT_INT,
 	PL3_WEIGHT_ENABLE,
 	PL3_SONG_STOCK_ID,
-	PL3_UNKOWN,
+	PL3_UNKOWN, /* song id for pl3_store */
 	PL3_YALIGN,
 	PL3_NROWS
 } pl3_store_type;

@@ -55,7 +55,6 @@ int update_interface ();
 guint update_timeout = 0;
 void init_stock_icons ();
 extern GtkListStore *pl2_store;
-extern GtkTreeModelFilter *pl2_store_filter;
 /*
  * The Config object
  */
@@ -241,7 +240,7 @@ int main (int argc, char **argv)
 		create_tray_icon();
 	}
 	/* update the interface */
-/*	update_interface();*/
+	update_interface();
 	
 	/*
 	 * Keys
@@ -258,13 +257,14 @@ int main (int argc, char **argv)
 
 	gtk_main ();
 	/* cleaning up. */
-	if(mpd_ob_check_connected(connection))
+	/* this is "slow" mostly because of gtk_list_store_clear */
+/*	if(mpd_ob_check_connected(connection))
 	{
 		mpd_ob_disconnect(connection);
 	}
 
 	mpd_ob_free(connection);	
-	config_close(config);
+*/	config_close(config);
 	return 0;
 }
 
@@ -332,11 +332,13 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
+
 	if(data == NULL)
 	{
 		debug_printf(DEBUG_ERROR, "playlist_changed_callback: what is this, stupid error\n");
 		return;
 	}
+	guint tme = time(NULL);
 	while(data != NULL)
 	{
 		/*
@@ -395,11 +397,9 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 			{
 				weight = PANGO_WEIGHT_ULTRABOLD;                                  			
 			}
-			gtk_list_store_append (pl2_store, &iter);
-			strfsong (buffer, 1024,
-					string,
-					data->value.song);
 
+			strfsong (buffer, 1024,	string,	data->value.song);
+			gtk_list_store_append (pl2_store, &iter);
 			gtk_list_store_set (pl2_store, &iter,
 					SONG_ID,data->value.song->id, 
 					SONG_POS,data->value.song->pos, 					
@@ -414,6 +414,8 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		}
 		data= mpd_ob_data_get_next(data);		
 	}
+	printf("toke %lu seconds\n", (long unsigned)time(NULL)-tme);
+
 	if(connection->status != NULL)
 	{
 		while (connection->status->playlistLength < old_length)
@@ -434,10 +436,13 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 			old_length--;
 		}
 	}
+
+
 	pl3_highlight_song_change ();
 	cfg_free_string(string);
 	info.playlist_id = new_playlist_id;
 	info.playlist_length = mpd_ob_playlist_get_playlist_length(connection);
+
 }
 
 void init_stock_icons ()
@@ -560,8 +565,6 @@ void init_playlist ()
 			GTK_TYPE_INT,
 			GTK_TYPE_FLOAT);
 
-	pl2_store_filter = (gpointer)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl2_store),NULL);
-	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl2_store_filter), (GtkTreeModelFilterVisibleFunc)playlist_filter_func, NULL, NULL);
 }
 
 void song_changed(MpdObj *mi, int oldsong, int newsong)
