@@ -474,7 +474,7 @@ unsigned long pl3_find_view_browser()
 	gtk_list_store_clear(pl3_store);
 	if(gtk_tree_selection_get_selected(selection,&model, &iter))
 	{
-		gchar *name=NULL, *field=NULL;
+		gchar *name=NULL;
 		gint num_field=0;
 		GtkTreeIter child;
 
@@ -493,11 +493,9 @@ unsigned long pl3_find_view_browser()
 		else if (num_field == 5)
 		{
 			char **filter_test = NULL;
-			char *temp = g_ascii_strup(name,-1);
-			filter_test = g_strsplit(temp, " ",0);
-			g_free(temp);
+			filter_test = mpd_misc_tokenize(name);
 
-			if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter))
+			if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter) && filter_test != NULL)
 			do
 			{
 				gchar * string = NULL, *temp = NULL;
@@ -540,7 +538,7 @@ unsigned long pl3_find_view_browser()
 				g_free(temp);                      		
 			}
 			while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store), &iter));
-			g_strfreev(filter_test);
+			mpd_misc_tokens_free(filter_test);
 
 		}
 
@@ -755,10 +753,7 @@ void pl3_current_playlist_crop_selected_songs()
 		{
 			do{
 				int value=0;
-				GtkTreeIter child;
-				gtk_tree_model_filter_convert_child_iter_to_iter(GTK_TREE_MODEL_FILTER(pl2_store), &child, &iter);
-
-				if(!gtk_tree_selection_iter_is_selected(selection, &child))
+				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 				{
 					gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
 					printf("test %i\n", value);

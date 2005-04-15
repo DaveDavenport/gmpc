@@ -1739,8 +1739,6 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 	MpdData *data = NULL;
 	mpd_InfoEntity *ent = NULL;
 	char ** strdata = NULL;
-	char *searchstr = NULL;
-	int i=0;
 	regex_t pattern;
 	if(!mpd_ob_check_connected(mi))
 	{
@@ -1760,16 +1758,7 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 		return NULL;
 	}
 	else{
-		char *pstring, *temp;
-		i =1;
-		searchstr = pstring = strdup(string);
-		do{
-			temp = strsep(&pstring, " ");
-			strdata = realloc(strdata, (i+1)*sizeof(char *));
-			strdata[i-1]= temp;
-			strdata[i] = NULL;
-			i++;
-		}while(pstring != NULL);	
+		strdata = mpd_misc_tokenize(string);
 	}	
 	if(strdata == NULL)
 	{
@@ -1844,8 +1833,11 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 		mpd_freeInfoEntity(ent);
 	}
 	mpd_finishCommand(mi->connection);
-	free(searchstr);
-	free(strdata);
+	mpd_misc_tokens_free(strdata);
+
+
+
+
 	mpd_ob_unlock_conn(mi);
 	if(data == NULL)
 	{
@@ -2394,3 +2386,48 @@ int mpd_ob_server_check_version(MpdObj *mi, int major, int minor, int micro)
 	if(mi->connection->version[2] > micro) return TRUE; 	
 	return TRUE;
 }	
+
+
+/** MISC **/
+
+char ** mpd_misc_tokenize(char *string)
+{
+	char ** result = NULL; 	/* the result with tokens 		*/
+	int i = 0;		/* position in string 			*/
+	int br = 0;		/* number for open ()[]'s		*/
+	int bpos = 0;		/* begin position of the cur. token 	*/
+
+	int tokens=0;
+	if(string == NULL) return NULL;
+	for(i=0; i < strlen(string)+1;i++)
+	{
+		/* check for opening  [( */
+		if(string[i] == '(' || string[i] == '[') br++;
+		/* check closing */
+		else if(string[i] == ')' || string[i] == ']') br--;
+		/* if multiple spaces at begin of token skip them */
+		else if(string[i] == ' ' && !(i-bpos))bpos++;
+		/* if token end or string end add token to list */
+		else if((string[i] == ' ' && !br) || string[i] == '\0')
+		{
+			result = (char **)realloc(result,(tokens+2)*sizeof(char *));
+			result[tokens] = (char *)strndup((const char *)&string[bpos], i-bpos);
+			result[tokens+1] = NULL;
+			bpos = i+1;                                         
+			tokens++;
+		}
+
+	}
+	return result;
+}
+
+void mpd_misc_tokens_free(char ** tokens)
+{
+	int i=0;
+	if(tokens == NULL) return;
+	for(i=0;tokens[i] != NULL;i++)
+	{
+		free(tokens[i]);
+	}
+	free(tokens);
+}

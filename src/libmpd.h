@@ -234,4 +234,7 @@ int 		mpd_ob_server_set_output_device		(MpdObj *mi,int device_id,int state);
 long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
 int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro);
 
+/* misc */
+char ** 	mpd_misc_tokenize			(char *string);
+void 		mpd_misc_tokens_free			(char ** tokens);
 #endif
