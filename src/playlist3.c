@@ -272,7 +272,7 @@ void pl3_custom_stream_view_browser()
 		xmlNodePtr cur = root->xmlChildrenNode;
 		while(cur != NULL)
 		{
-			if(xmlStrEqual(cur->name, "entry"))
+			if(xmlStrEqual(cur->name, (xmlChar *)"entry"))
 			{
 				xmlNodePtr cur1 = cur->xmlChildrenNode;
 				GtkTreeIter iter;
@@ -284,12 +284,12 @@ void pl3_custom_stream_view_browser()
 						-1);
 				while(cur1 != NULL)
 				{
-					if(xmlStrEqual(cur1->name, "name"))
+					if(xmlStrEqual(cur1->name,(xmlChar *)"name"))
 					{
 						gtk_list_store_set(pl3_store, &iter, PL3_SONG_TITLE, xmlNodeGetContent(cur1), -1);
-						name = xmlNodeGetContent(cur1);
+						name = (char *)xmlNodeGetContent(cur1);
 					}
-					else if(xmlStrEqual(cur1->name, "listen_url"))
+					else if(xmlStrEqual(cur1->name, (xmlChar *)"listen_url"))
 					{
 						gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, xmlNodeGetContent(cur1), -1);
 					}
@@ -351,16 +351,14 @@ void pl3_custom_stream_add_stream(gchar *name, gchar *url)
 				}
 				else
 				{
-					xmldoc = xmlNewDoc("1.0");
-					root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
+					xmldoc = xmlNewDoc((xmlChar *)"1.0");
+					root = xmlNewDocNode(xmldoc, NULL, (xmlChar *)"streams",NULL);
 					xmlDocSetRootElement(xmldoc, root);
 
 				}
-				newn = xmlNewChild(root, NULL, "entry",NULL);
-				new2 = xmlNewChild(newn, NULL, "name", 
-						gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_name"))));
-				new2 = xmlNewChild(newn, NULL, "listen_url", 
-						gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_url"))));
+				newn = xmlNewChild(root, NULL, (xmlChar *)"entry",NULL);
+				new2 = xmlNewChild(newn, NULL, (xmlChar *)"name", (xmlChar *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_name"))));
+				new2 = xmlNewChild(newn, NULL, (xmlChar *)"listen_url", (xmlChar *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "entry_url"))));
 
 				xmlSaveFile(path, xmldoc);	
 
@@ -383,8 +381,8 @@ void pl3_custom_stream_save_tree()
 	xmlNodePtr newn,new2,root;                        
 	GtkTreeIter iter;		
 
-	xmldoc = xmlNewDoc("1.0");
-	root = xmlNewDocNode(xmldoc, NULL, "streams",NULL);
+	xmldoc = xmlNewDoc((xmlChar *)"1.0");
+	root = xmlNewDocNode(xmldoc, NULL, (xmlChar *)"streams",NULL);
 	xmlDocSetRootElement(xmldoc, root);
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_store), &iter))
 	{
@@ -392,9 +390,9 @@ void pl3_custom_stream_save_tree()
 		{
 			gchar *name, *lurl;
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_store), &iter,SONG_ID, &lurl, SONG_TITLE, &name, -1);
-			newn = xmlNewChild(root, NULL, "entry",NULL);
-			new2 = xmlNewChild(newn, NULL, "name",name); 
-			new2 = xmlNewChild(newn, NULL, "listen_url", lurl);
+			newn = xmlNewChild(root, NULL, (xmlChar *)"entry",NULL);
+			new2 = xmlNewChild(newn, NULL, (xmlChar *)"name",(xmlChar *)name); 
+			new2 = xmlNewChild(newn, NULL, (xmlChar *)"listen_url", (xmlChar *)lurl);
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_store), &iter));
 
 	}
@@ -492,32 +490,33 @@ unsigned long pl3_find_view_browser()
 		}
 		else if (num_field == 5)
 		{
-			char **filter_test = NULL;
+			regex_t **filter_test = NULL;
 			filter_test = mpd_misc_tokenize(name);
+			if(filter_test == NULL)
+			{
+				printf("crap: %s\n",name);
+			}
 
 			if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter) && filter_test != NULL)
 			do
 			{
-				gchar * string = NULL, *temp = NULL;
-				int loop = TRUE;
+				gchar *temp = NULL;
+				int loop = FALSE;
 				int i = 0;
 				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, 2, &temp, -1);
-				if(temp != NULL)
-					string = g_ascii_strup(temp, -1);
 
-				if(string != NULL && filter_test != NULL)
+				if(filter_test != NULL)
 				{
-
-					for(i=0;filter_test[i] && loop;i++)
+					loop = TRUE;
+					for(i=0;filter_test[i]!= NULL && loop;i++)
 					{
-						if(strstr(string, filter_test[i]) == NULL)
+						if(regexec(filter_test[i], temp,0, NULL, 0) == REG_NOMATCH)
 						{
 							loop =  FALSE;
 						}
 
 					}	
 				}
-				g_free(string);
 				if(loop)
 				{
 					GtkTreeIter piter;
@@ -756,7 +755,6 @@ void pl3_current_playlist_crop_selected_songs()
 				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 				{
 					gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
-					printf("test %i\n", value);
 					mpd_ob_playlist_queue_delete_id(connection, value);				
 				}
 			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
@@ -2114,7 +2112,6 @@ void create_playlist3 ()
 	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
 	{
-		printf("%i %i %i %i\n", pl3_wsize.x, pl3_wsize.y, pl3_wsize.width, pl3_wsize.height);
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
@@ -2286,12 +2283,6 @@ void pl3_highlight_state_change(int old_state, int new_state)
 		pl3_highlight_song_change();
 	}
 }
-
-
-
-
-
-
 
 void pl3_highlight_song_change ()
 {

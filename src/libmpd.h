@@ -1,7 +1,7 @@
 #ifndef __MPD_LIB__
 #define __MPD_LIB__
 #include "libmpdclient.h"
-
+#include <regex.h>
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -235,6 +235,6 @@ long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
 int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro);
 
 /* misc */
-char ** 	mpd_misc_tokenize			(char *string);
-void 		mpd_misc_tokens_free			(char ** tokens);
+regex_t** 	mpd_misc_tokenize			(char *string);
+void 		mpd_misc_tokens_free			(regex_t ** tokens);
 #endif

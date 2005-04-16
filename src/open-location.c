@@ -219,7 +219,7 @@ void ol_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 {
 	GList *p = NULL, *list = NULL;
 	g_print("Drag start\n");
-	list = gnome_vfs_uri_list_parse (selection_data->data);
+	list = gnome_vfs_uri_list_parse ((const char *)selection_data->data);
 	p = list;
 
 	while (p != NULL)
@@ -231,7 +231,7 @@ void ol_drag_data_recieved(GtkWidget *window, GdkDragContext *context,
 		p = p->next;
 	}
 
-//	gnome_vfs_uri_list_free (list);
+/*	gnome_vfs_uri_list_free (list);*/
 
 	gtk_drag_finish(context, TRUE, FALSE, time);
 }

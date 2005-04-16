@@ -125,7 +125,7 @@ void pl3_xiph_fill_view(char *buffer)
 	cur = root->xmlChildrenNode;
 	while(cur != NULL)
 	{
-		if(xmlStrEqual(cur->name, "entry"))
+		if(xmlStrEqual(cur->name, (xmlChar *)"entry"))
 		{
 			xmlNodePtr cur1 = cur->xmlChildrenNode;
 			GtkTreeIter iter;
@@ -138,21 +138,21 @@ void pl3_xiph_fill_view(char *buffer)
 
 			while(cur1 != NULL)
 			{
-				if(xmlStrEqual(cur1->name, "server_name"))
+				if(xmlStrEqual(cur1->name, (xmlChar *)"server_name"))
 				{
-					name = xmlNodeGetContent(cur1);
+					name = (char *)xmlNodeGetContent(cur1);
 				}
-				else if(xmlStrEqual(cur1->name, "genre"))
+				else if(xmlStrEqual(cur1->name, (xmlChar *)"genre"))
 				{
-					genre = xmlNodeGetContent(cur1);
+					genre = (char *)xmlNodeGetContent(cur1);
 				}
-				else if (xmlStrEqual(cur1->name,"bitrate"))
+				else if (xmlStrEqual(cur1->name,(xmlChar *) "bitrate"))
 				{
-					bitrate = xmlNodeGetContent(cur1);
+					bitrate = (char *)xmlNodeGetContent(cur1);
 				}
-				else if(xmlStrEqual(cur1->name, "listen_url"))
+				else if(xmlStrEqual(cur1->name, (xmlChar *)"listen_url"))
 				{
-					string = xmlNodeGetContent(cur1);
+					string = (char *)xmlNodeGetContent(cur1);
 					gtk_list_store_set(pl3_store, &iter, PL3_SONG_ID, string, -1);
 					xmlFree(string);
 				}

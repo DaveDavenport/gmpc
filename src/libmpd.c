@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define __USE_GNU
 #include <string.h>
 #include <regex.h>
 #include "debug_printf.h"
@@ -452,6 +453,7 @@ int mpd_ob_status_update(MpdObj *mi)
 	if(mi->status != NULL)
 	{
 		mpd_freeStatus(mi->status);
+		mi->status = NULL;
 	}
 	mpd_sendStatusCommand(mi->connection);
 	mi->status = mpd_getStatus(mi->connection);
@@ -574,7 +576,7 @@ int mpd_ob_status_get_volume(MpdObj *mi)
 		printf("failed to check mi == NULL\n");
 		return -2;
 	}
-	if(!mpd_ob_status_check(mi))
+	if(!mpd_ob_status_check(mi) || !mpd_ob_check_connected(mi))
 	{
 		printf("Failed to get status\n");
 		return MPD_O_FAILED_STATUS;
@@ -963,54 +965,6 @@ int mpd_ob_player_get_repeat(MpdObj *mi)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int mpd_ob_player_set_repeat(MpdObj *mi,int repeat)
 {
 	if(!mpd_ob_check_connected(mi))
@@ -1089,15 +1043,6 @@ void mpd_ob_playlist_add(MpdObj *mi, char *path)
 	mpd_ob_playlist_queue_add(mi, path);
 	mpd_ob_playlist_queue_commit(mi);
 }
-
-
-
-
-
-
-
-
-
 
 /*******************************************************************************
  * PLAYLIST 
@@ -1738,8 +1683,7 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 {
 	MpdData *data = NULL;
 	mpd_InfoEntity *ent = NULL;
-	char ** strdata = NULL;
-	regex_t pattern;
+	regex_t ** strdata = NULL;
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_find: not connected\n");
@@ -1778,29 +1722,22 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 			for(i=0; strdata[i] != NULL && loop; i++)
 			{
 				match = 0;
-				if(regcomp(&pattern, strdata[i], REG_EXTENDED|REG_ICASE))
-				{
-					printf("test\n");
-					loop = 0;
-					break;
-				}
-				if(ent->info.song->file && !regexec(&pattern,ent->info.song->file, 0, NULL, 0))
+				if(ent->info.song->file && !regexec(strdata[i],ent->info.song->file, 0, NULL, 0))
 				{
 					match = 1;
 				}
-				else if(ent->info.song->artist && !regexec(&pattern,ent->info.song->artist, 0, NULL, 0))
+				else if(ent->info.song->artist && !regexec(strdata[i],ent->info.song->artist, 0, NULL, 0))
 				{
 					match = 1;
 				}
-				else if(ent->info.song->title && !regexec(&pattern,ent->info.song->title, 0, NULL, 0)) 
+				else if(ent->info.song->title && !regexec(strdata[i],ent->info.song->title, 0, NULL, 0)) 
 				{
 					match = 1;
 				}
-				else if(ent->info.song->album && !regexec(&pattern,ent->info.song->album, 0, NULL, 0))
+				else if(ent->info.song->album && !regexec(strdata[i],ent->info.song->album, 0, NULL, 0))
 				{
 					match = 1;                                                   				
 				}
-				regfree(&pattern);
 				if(!match)
 				{
 
@@ -2246,27 +2183,6 @@ long unsigned mpd_ob_server_get_database_update_time(MpdObj *mi)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void mpd_ob_playlist_queue_delete_id(MpdObj *mi,int id)
 {
 	if(!mpd_ob_check_connected(mi))
@@ -2390,9 +2306,9 @@ int mpd_ob_server_check_version(MpdObj *mi, int major, int minor, int micro)
 
 /** MISC **/
 
-char ** mpd_misc_tokenize(char *string)
+regex_t ** mpd_misc_tokenize(char *string)
 {
-	char ** result = NULL; 	/* the result with tokens 		*/
+	regex_t ** result = NULL; 	/* the result with tokens 		*/
 	int i = 0;		/* position in string 			*/
 	int br = 0;		/* number for open ()[]'s		*/
 	int bpos = 0;		/* begin position of the cur. token 	*/
@@ -2410,8 +2326,17 @@ char ** mpd_misc_tokenize(char *string)
 		/* if token end or string end add token to list */
 		else if((string[i] == ' ' && !br) || string[i] == '\0')
 		{
-			result = (char **)realloc(result,(tokens+2)*sizeof(char *));
-			result[tokens] = (char *)strndup((const char *)&string[bpos], i-bpos);
+			char * temp=NULL;
+			result = (regex_t **)realloc(result,(tokens+2)*sizeof(regex_t *));
+			result[tokens] = malloc(sizeof(regex_t));
+			temp = (char *)strndup((const char *)&string[bpos], i-bpos);
+			if(regcomp(result[tokens], temp, REG_EXTENDED|REG_ICASE|REG_NOSUB))
+			{
+				result[tokens+1] = NULL;
+				mpd_misc_tokens_free(result);
+				return NULL;
+			}
+			free(temp);
 			result[tokens+1] = NULL;
 			bpos = i+1;                                         
 			tokens++;
@@ -2421,12 +2346,13 @@ char ** mpd_misc_tokenize(char *string)
 	return result;
 }
 
-void mpd_misc_tokens_free(char ** tokens)
+void mpd_misc_tokens_free(regex_t ** tokens)
 {
 	int i=0;
 	if(tokens == NULL) return;
 	for(i=0;tokens[i] != NULL;i++)
 	{
+		regfree(tokens[i]);
 		free(tokens[i]);
 	}
 	free(tokens);

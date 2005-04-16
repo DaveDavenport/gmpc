@@ -240,6 +240,10 @@ int main (int argc, char **argv)
 		create_tray_icon();
 	}
 	/* update the interface */
+	while(gtk_events_pending())
+	{
+		gtk_main_iteration();
+	}
 	update_interface();
 	
 	/*
@@ -308,6 +312,7 @@ int update_interface ()
 	/*
 	 * check if busy 
 	 */
+	if(!mpd_ob_check_connected(connection)) return TRUE;
 	update_player();
 
 	/*

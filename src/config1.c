@@ -46,8 +46,8 @@ config_obj *cfg_open(gchar *url)
 	}
 	else
 	{
-		cfgo->xmldoc = xmlNewDoc("1.0");
-		cfgo->root = xmlNewDocNode(cfgo->xmldoc, NULL, "config",NULL);	
+		cfgo->xmldoc = xmlNewDoc((xmlChar *)"1.0");
+		cfgo->root = xmlNewDocNode(cfgo->xmldoc, NULL, (xmlChar *)"config",NULL);	
 		xmlDocSetRootElement(cfgo->xmldoc, cfgo->root);
 		/* save it directly */
 		cfg_save(cfgo);
@@ -94,7 +94,7 @@ xmlNodePtr cfg_get_class(config_obj *cfg, char *class)
 	}
 	do
 	{
-		if(xmlStrEqual(cur->name, class))
+		if(xmlStrEqual(cur->name, (xmlChar *)class))
 		{
 			return cur;
 		}
@@ -119,7 +119,7 @@ xmlNodePtr cfg_get_single_value(config_obj *cfg, char *class, char *key)
 	}
 	do
 	{
-		if(xmlStrEqual(cur->name, key))
+		if(xmlStrEqual(cur->name, (xmlChar *)key))
 		{
 			return cur;
 		}
@@ -138,10 +138,10 @@ void cfg_free_string(char *string)
 
 char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 {
-	xmlNodePtr cur = cfg_get_single_value(cfg,class,key);
+	xmlNodePtr cur = cfg_get_single_value(cfg, class,key);
 	if(cur != NULL)
 	{
-		return xmlNodeGetContent(cur);
+		return (char *)xmlNodeGetContent(cur);
 	}
 	return NULL;
 }
@@ -247,12 +247,12 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	cur = cfg_get_class(cfg,class);
 	if(cur == NULL)
 	{
-		cur = xmlNewChild(cfg->root, NULL, class, NULL);
+		cur = xmlNewChild(cfg->root, NULL,(xmlChar *)class, NULL);
 	}
 	string = g_markup_escape_text(value, g_utf8_strlen(value, -1));
 	if(string != NULL)
 	{
-		xmlNewChild(cur,NULL, key, string);
+		xmlNewChild(cur,NULL, (xmlChar *)key, (xmlChar *)string);
 		g_free(string);
 	}
 	cfg_save(cfg);
@@ -275,7 +275,7 @@ xmlNodePtr cfg_get_multiple_value(config_obj *cfg, char *class, char *key, char*
 	}
 	do
 	{
-		if(xmlStrEqual(cur->name, key) && xmlStrEqual(xmlGetProp(cur, (const xmlChar *)"id"),id))
+		if(xmlStrEqual(cur->name, (xmlChar *)key) && xmlStrEqual(xmlGetProp(cur, (const xmlChar *)"id"),(xmlChar *) id))
 		{
 			return cur;
 		}
@@ -314,13 +314,13 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	cur = cfg_get_class(cfg,class);
 	if(cur == NULL)
 	{
-		cur = xmlNewChild(cfg->root, NULL, class, NULL);
+		cur = xmlNewChild(cfg->root, NULL, (xmlChar *)class, NULL);
 	}
-	test = xmlNewChild(cur,NULL, key, string);
+	test = xmlNewChild(cur,NULL, (xmlChar *)key, (xmlChar *)string);
 	g_free(string);
 	string = g_markup_escape_text(id, g_utf8_strlen(id, -1));
 	g_print("id: %s\n",string);
-	xmlSetProp(test, "id",string); 
+	xmlSetProp(test, (xmlChar *)"id",(xmlChar *) string); 
 	g_free(string);
 	cfg_save(cfg);
 }
@@ -341,7 +341,7 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 	}
 	do
 	{
-		if(xmlStrEqual(cur->name, key))
+		if(xmlStrEqual(cur->name, (xmlChar *)key))
 		{
 			char *temp;
 			if(list == NULL)
@@ -357,10 +357,10 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 				list->next->prev = list;
 				list = list->next;
 			}
-			temp = xmlGetProp(cur, "id");
+			temp = (char *)xmlGetProp(cur, (xmlChar *)"id");
 			list->key = g_strdup(temp);
 			xmlFree(temp);
-			temp = xmlNodeGetContent(cur);
+			temp = (char *)xmlNodeGetContent(cur);
 			list->value = g_strdup(temp);
 			xmlFree(temp);
 		}

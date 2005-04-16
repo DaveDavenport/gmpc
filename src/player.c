@@ -256,6 +256,7 @@ void msg_pop_popup()
 
 int update_player()
 {
+	if(!mpd_ob_check_connected(connection)) return FALSE;
 	/* update the volume slider */
 	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 	if((int)gtk_range_get_value(scale) != mpd_ob_status_get_volume(connection))

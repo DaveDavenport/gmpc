@@ -1,3 +1,10 @@
+15-04-2005 Qball <qball@qballcow.nl>
+	* src/libmpd.c:		Correct parsing and tokenizing of string..
+	keeping regex correct.. (respecting () and []).
+	* src/playlist3.c:	Implemented xmms style playlist search with
+	regex support.
+	* src/libmpd.c:		Fixed disconnect segfault..
+
 13-04-2005 Qball <qball@qballcow.nl>
 	* src/playlist3.c:	Implemented xmms like search in playlist..
 	(tokenized non case sens.)
