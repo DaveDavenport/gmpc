@@ -538,6 +538,10 @@ int mpd_ob_status_update(MpdObj *mi)
 
 	if(mi->status->updatingDb != mi->updatingDb)
 	{
+		if(mi->updating_changed != NULL)
+		{
+			mi->updating_changed(mi, mi->status->updatingDb,mi->updating_signal_pointer);
+		}
 		if(!mi->status->updatingDb)
 		{
 			mpd_ob_stats_update(mi);
@@ -1345,6 +1349,26 @@ void mpd_ob_signal_set_database_changed (MpdObj *mi, void *(* database_changed)(
 	mi->database_changed = database_changed;
 	mi->database_changed_signal_pointer = pointer;
 }
+
+
+void mpd_ob_signal_set_updating_changed (MpdObj *mi, void *(* updating_changed)(MpdObj *mi,int updating, void *pointer), void *pointer)
+{
+	if(mi == NULL)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_signal_set_updating_changed: MpdObj *mi == NULL");
+		return;
+	}
+	mi->updating_changed = updating_changed;
+	mi->updating_signal_pointer = pointer;
+}
+
+
+
+
+
+
+
+
 
 
 

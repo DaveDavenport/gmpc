@@ -1,3 +1,7 @@
+17-04-2005 Qball <qball@qballcow.nl>
+	* src/libmpd.c:		Update changed notification function;
+	* src/playlist3.c:	making a status icon and status message on update changed.
+
 15-04-2005 Qball <qball@qballcow.nl>
 	* src/libmpd.c:		Correct parsing and tokenizing of string..
 	keeping regex correct.. (respecting () and []).

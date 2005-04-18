@@ -230,7 +230,8 @@ int main (int argc, char **argv)
 	/*
 	 * get the status every 1/2 second should be enough 
 	 */
-	gtk_timeout_add (500,(GSourceFunc)update_mpd_status, NULL);
+	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config, "connection","mpd-update-speed",500),
+			(GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
 
 
@@ -343,7 +344,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		debug_printf(DEBUG_ERROR, "playlist_changed_callback: what is this, stupid error\n");
 		return;
 	}
-	guint tme = time(NULL);
 	while(data != NULL)
 	{
 		/*
@@ -419,7 +419,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		}
 		data= mpd_ob_data_get_next(data);		
 	}
-	printf("toke %lu seconds\n", (long unsigned)time(NULL)-tme);
 
 	if(connection->status != NULL)
 	{

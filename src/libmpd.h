@@ -81,7 +81,8 @@ typedef struct _MpdObj
 	void *(* database_changed)(struct _MpdObj *mi,void *pointer);	
 	void *database_changed_signal_pointer;                                                     	
 
-
+	void *(* updating_changed)(struct _MpdObj *mi, int updating,void *pointer);
+	void *updating_signal_pointer;
 
 	
 
@@ -148,6 +149,8 @@ void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(Mpd
 void 		mpd_ob_signal_set_disconnect		(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect_pointer);
 void 		mpd_ob_signal_set_connect		(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect_pointer);
 void 		mpd_ob_signal_set_database_changed	(MpdObj *mi, void *(* database_changed)(MpdObj *mi, void *pointer), void *pointer);
+void 		mpd_ob_signal_set_updating_changed	(MpdObj *mi, void *(* updating_changed)(MpdObj *mi,int updating, void *pointer), void *pointer);
+
 /* status commands */
 /* To get the function to have the  most recent info you want to call mpd_ob_status_queue_update 
  * In a gui app. you want to call this every 0.x seconds. 

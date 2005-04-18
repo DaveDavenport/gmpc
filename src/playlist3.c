@@ -841,11 +841,7 @@ void pl3_browse_file_update_folder()
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		char *path;
-		char *message = NULL;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
-		message = g_strdup_printf("Updating folder '%s' recursively", path);
-		pl3_push_statusbar_message(message);
-		g_free(message);
 		mpd_ob_playlist_update_dir(connection, path);
 	}
 }
@@ -2097,6 +2093,26 @@ int pl3_close()
 	}
 	return TRUE;
 }
+void updating_changed(MpdObj *mi, int updating)
+{
+	char *mesg = "MPD database is updating";
+	gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
+	/* message auto_remove after 5 sec */
+	
+
+	printf("what is happening %i\n",updating);
+	if(pl3_xml == NULL) return;
+	if(updating >0)
+	{
+		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
+	}
+	else
+	{
+		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
+	}
+}
 
 /* create the playlist view 
  * This is done only once, for the rest its hidden, but still there
@@ -2235,6 +2251,10 @@ void create_playlist3 ()
 
 	//	g_signal_connect(G_OBJECT(pl2_store), "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
+	mpd_ob_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
+
+
+	
 	/* select the current playlist */
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
 	{
