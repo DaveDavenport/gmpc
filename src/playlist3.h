@@ -99,6 +99,7 @@ enum store_types
 
 
 
+void pl3_playlist_search();
 
 
 

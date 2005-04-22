@@ -594,6 +594,10 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 		return TRUE;
 
 	}
+	else if (event->keyval == GDK_j)
+	{
+		pl3_playlist_search();
+	}
 	return FALSE;
 }
 
