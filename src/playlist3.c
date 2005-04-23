@@ -1961,7 +1961,10 @@ void pl3_playlist_search()
 	{
 		return;
 	}
-	create_playlist3();
+	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+	{
+		create_playlist3();
+	}
 	if(pl3_xml != NULL)
 	{
 		GtkTreePath *path = gtk_tree_path_new_from_string("3");
