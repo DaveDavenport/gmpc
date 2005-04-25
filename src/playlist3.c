@@ -1965,6 +1965,10 @@ void pl3_playlist_search()
 	{
 		create_playlist3();
 	}
+	else
+	{
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+	}
 	if(pl3_xml != NULL)
 	{
 		GtkTreePath *path = gtk_tree_path_new_from_string("3");
@@ -2049,9 +2053,9 @@ void create_playlist3 ()
 	if(pl3_xml != NULL)
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
-		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		if(!pl3_wsize.x || !pl3_wsize.y) gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
+		if(!pl3_wsize.height || !pl3_wsize.width) gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}
 	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))

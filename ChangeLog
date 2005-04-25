@@ -1,3 +1,11 @@
+25-04-2005 Qball <Qball@QballCow.nl>
+	* src/libmpd.[c|h]:	Included Copyright notice in file
+	* src/player.c:		Keybinding for playlist search (j)
+	* src/player.c:		Keybinding for song information (i)
+	* src/playlist.c:	Using gtk_window_present again, maybe solving
+	thoru's focus problem.
+	* playlist:		Added alt-s focus for search entry box.
+
 17-04-2005 Qball <qball@qballcow.nl>
 	* src/libmpd.c:		Update changed notification function;
 	* src/playlist3.c:	making a status icon and status message on update changed.
