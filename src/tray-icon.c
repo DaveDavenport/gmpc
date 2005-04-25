@@ -483,7 +483,7 @@ void tray_icon_song_change()
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
 			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
 	{
-		if(popup_timeout == -1 && tip == NULL)
+		if(popup_timeout == -1 && tip == NULL&& cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5))
 		{
 			popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000,
 					(GSourceFunc)(tray_leave_cb),
@@ -493,7 +493,7 @@ void tray_icon_song_change()
 		{
 			tray_motion_cb((GtkWidget*)tray_icon,NULL,GINT_TO_POINTER(0));
 		}
-		else if(popup_timeout != -1)
+		else if(popup_timeout != -1 && cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5))
 		{
 			g_source_remove(popup_timeout);
 			popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000, 

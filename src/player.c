@@ -341,7 +341,6 @@ void player_state_changed(int old_state, int state)
 	{
 		GtkWidget *entry;
 		msg_set_base(_("GMPC - Stopped"));
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
 		if(cfg_get_single_value_as_int_with_default(config, "player", "time-format",TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
 		{
 			pango_layout_set_text(time_layout, "00:00", -1);
@@ -376,6 +375,10 @@ void player_state_changed(int old_state, int state)
 	if(state != MPD_OB_PLAYER_PLAY && state != MPD_OB_PLAYER_PAUSE)
 	{
 		msg_set_base(_("Gnome Music Player Client"));
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
+		}
 	}
 	else
 	{
@@ -384,6 +387,10 @@ void player_state_changed(int old_state, int state)
 		strfsong(buffer, 1024,string,mpd_ob_playlist_get_current_song(connection));
 		cfg_free_string(string);
 		msg_set_base(buffer);
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
+		}
 	}
 
 }
@@ -396,6 +403,10 @@ void player_song_changed(int oldsong, int newsong)
 	if(state != MPD_OB_PLAYER_PLAY && state != MPD_OB_PLAYER_PAUSE)
 	{
 		msg_set_base(_("Gnome Music Player Client"));
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
+		}
 	}
 	else
 	{
@@ -404,6 +415,10 @@ void player_song_changed(int oldsong, int newsong)
 		strfsong(buffer, 1024, string,mpd_ob_playlist_get_current_song(connection));
 		cfg_free_string(string);
 		msg_set_base(buffer);
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
+		}
 	}
 }
 

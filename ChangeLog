@@ -5,6 +5,11 @@
 	* src/playlist.c:	Using gtk_window_present again, maybe solving
 	thoru's focus problem.
 	* playlist:		Added alt-s focus for search entry box.
+	* src/playlist3.c:	Fixed keybinding when non-tree selected. (a
+	signal handler got lost somewhere.)
+	* src/player.c:		Player window shows song title.
+	* glade/playlist3.glade:	Fixed alt-s keybinding.
+
 
 17-04-2005 Qball <qball@qballcow.nl>
 	* src/libmpd.c:		Update changed notification function;
@@ -617,11 +622,11 @@ the more section
 	* lots more I forgot to changelog
 
 12-04-2004 Qball <Qball@qballcow.nl>
-    	*  Small updates.
+    *  Small updates.
 
 13-03-2004 QBall <Qball@qballcow.nl>
-    	* Fixed bug #202 (timeout for popup configurable
-    	* If you press del in the playlist window it wil remove the current selected songs.
+    * Fixed bug #202 (timeout for popup configurable
+    * If you press del in the playlist window it wil remove the current selected songs.
     *	Playlists view hide state is remembered over session.
     *	Time format is remembered over session.
     *	Fix bug #203. (crash when not connected and click on title bar)

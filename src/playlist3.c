@@ -2095,7 +2095,6 @@ void create_playlist3 ()
 	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
-	//	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,
 			renderer,
@@ -2138,7 +2137,6 @@ void create_playlist3 ()
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
-	//	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,"yalign", STOCK_ALIGN, NULL);
 
@@ -2178,7 +2176,6 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-	//	g_signal_connect(G_OBJECT(pl2_store), "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
 	mpd_ob_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
 
