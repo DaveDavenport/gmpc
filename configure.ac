@@ -49,7 +49,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="fr"
+ALL_LINGUAS="fr ru"
 
 GETTEXT_PACKAGE=gmpc
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",

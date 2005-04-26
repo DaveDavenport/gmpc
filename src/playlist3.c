@@ -2024,7 +2024,6 @@ void updating_changed(MpdObj *mi, int updating)
 	/* message auto_remove after 5 sec */
 
 
-	printf("what is happening %i\n",updating);
 	if(pl3_xml == NULL) return;
 	if(updating >0)
 	{
@@ -2144,7 +2143,8 @@ void create_playlist3 ()
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	if(cfg_get_single_value_as_int_with_default(config, "playlist3", "fixed-height", 0))
 	{                                                                                   	
-		gtk_cell_renderer_text_set_fixed_height_from_font(GTK_CELL_RENDERER_TEXT(renderer), cfg_get_single_value_as_int(config,"playlist3", "fixed-height"));
+		gtk_cell_renderer_text_set_fixed_height_from_font(GTK_CELL_RENDERER_TEXT(renderer), 
+				cfg_get_single_value_as_int(config,"playlist3", "fixed-height"));
 		gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE,NULL);
 
 
