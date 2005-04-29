@@ -1,5 +1,13 @@
+27-04-2005 Qball <Qball@qballcow.nl>
+	* doc/future.txt:	added
+	* doc/0.12.txt:		added
+	* doc/markup.txt:	added
+	* doc/keybindings.txt:	Document with some keybinding listed.
+	* src/libmpdclient.[c|h]:	Updated to svn version.
+
 26-04-2005 Qball <Qball@qballcow.nl>
 	* po/ru.po:		Added russian translation. thanks to SK
+	
 25-04-2005 Qball <Qball@QballCow.nl>
 	* src/libmpd.[c|h]:	Included Copyright notice in file
 	* src/player.c:		Keybinding for playlist search (j)

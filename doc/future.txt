@@ -1,0 +1,8 @@
+The future of gmpc will mostly be decided by the future of mpd.
+Plan's on the todo list are:
+
+* Fix stream browser
+* Provide mpd statistics. 
+* Cover art. (server side hopefully)
+* Make the code easily extendible with f.e. osd support,scribble support etc.
+

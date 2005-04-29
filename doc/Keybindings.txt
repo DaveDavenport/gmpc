@@ -1,0 +1,44 @@
+Keybindings for gmpc
+(If I forgot some, please mail me so I can update the list)
+
+Global:
+	#Winamp/Xmms bindings
+	* Z		- Previous 
+	* X/C 		- Play/Pause
+	* V 		- Stop
+	* B 		- Next
+	* J		- Search in playlist
+	
+Player:
+	* P 		- Playlist
+	* I		- Information current song	
+	* (Ctrl) R	- Repeat
+	* (Ctrl) S	- Shuffle/Random
+	* Up		- Volume Up
+	* Down		- Volume Down
+	* Left		- Skip -5 sec.
+	* Right 	- Skip +5 sec.
+	* Ctrl-Q	- Quit program.
+
+
+Playlist:
+	* Esc		- Close window
+	* F1		- View Current playlist.
+	* F2		- View File Browser
+	* F3		- View Artist Browser
+	* F4		- View Search Window
+	# Search screen
+	* Alt-s		- Move focus to search entry.
+	* Alt-f		- Search 
+	
+	# Search (not playlist search), Artist and Browse.
+	* Insert	- Add selected songs.
+	* Alt-Insert	- Replace (and play) 
+	
+	# Current Playlist
+	* Space		- Move to playing song
+	* Enter		- Play selected song
+	* Del		- Delete selected song
+
+Preferences:
+	* Escape	- Close Dialog

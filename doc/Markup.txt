@@ -1,0 +1,38 @@
+This is the song markup that can be used:
+
+All this info is read from the id3tags.
+%name% 		-Name of the playing stream.
+%artist% 	-Artist name
+%album%		-Album name
+%title%		-Song Title 
+%track%"	-Track. (as defined in the tag, this can be a single value but also a string.)
+"%time%"	-Total song time
+%date%		-The date of the song
+"%file%".  	-Filename (includes path and extention)
+%shortfile% 	-filename withouth path and extention.
+
+The [] operator  is  used  to  group  output  such  that if no metadata delimeters are found or matched between '[' and ']',  then  none of the  characters between '[' and ']' are output.  
+'&' and '|' are logical operators for and and or.  '#'  is  used  to  escape characters.   
+Some  useful examples for format are: "%shortfile%" and "[[%name% - ][%artist% - ]%title%]|[%shortfile]"
+
+Gmpc also supports breaklines, so you can display the info like:
+---------------------------------
+|Stevie Wonder			|
+|Superstitious			|
+|The Very Best off (track: 9)	|
+---------------------------------
+
+Example markup for this could be:
+[%name%: 
+&[%artist% - ]%title%]|%name%|[%artist% 
+&%title%
+&%album%]|[%artist%
+&%title%]|%shortfile%
+
+The markup editor in version 0.12 allows you to preview youre markup format. 
+The markup's arent instant apply. 
+In the playlist songs use the new markup when added later, or the id3 info has changed.
+In the file/artist/search browser the new markup is used when the data in the right pane is changed.
+In the player the new markup is used after song change.
+
+
