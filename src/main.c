@@ -617,6 +617,7 @@ void connect_callback()
 }
 void status_callback(MpdObj *mi)
 {
+	id3_status_update();
 
 }
 

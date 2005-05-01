@@ -180,12 +180,18 @@ int 		mpd_ob_status_queue_update		(MpdObj *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
 int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
 int 		mpd_ob_status_get_volume		(MpdObj *mi);
+int 		mpd_ob_status_get_bitrate		(MpdObj *mi);
 int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_crossfade		(MpdObj *mi);
 int		mpd_ob_status_set_crossfade		(MpdObj *mi, int crossfade_time);
 int		mpd_ob_stats_update			(MpdObj *mi);
 
+int		mpd_ob_stats_get_total_songs		(MpdObj *mi);
+int		mpd_ob_stats_get_total_artists		(MpdObj *mi);
+int		mpd_ob_stats_get_total_albums		(MpdObj *mi);
+int		mpd_ob_stats_get_uptime			(MpdObj *mi);
+int		mpd_ob_stats_get_playtime		(MpdObj *mi);
 /* Player commands */
 int 		mpd_ob_player_play			(MpdObj *mi);
 int 		mpd_ob_player_play_id			(MpdObj *mi, int id);

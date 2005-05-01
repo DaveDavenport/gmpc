@@ -24,6 +24,7 @@
 #include "debug_printf.h"
 #include "libmpd.h"
 
+int mpd_ob_stats_check(MpdObj *mi);
 
 enum {
 	MPD_QUEUE_ADD,
@@ -589,6 +590,81 @@ int mpd_ob_status_check(MpdObj *mi)
 }
 
 
+int mpd_ob_stats_get_total_songs(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		debug_printf(DEBUG_ERROR,"Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->stats->numberOfSongs;
+}
+
+int mpd_ob_stats_get_total_artists(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->stats->numberOfArtists;
+}
+
+int mpd_ob_stats_get_total_albums(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->stats->numberOfAlbums;
+}
+
+
+int mpd_ob_stats_get_uptime(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->stats->uptime;
+}
+
+int mpd_ob_stats_get_playtime(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->stats->playTime;
+}
 int mpd_ob_status_get_volume(MpdObj *mi)
 {
 	if(mi == NULL)
@@ -603,6 +679,25 @@ int mpd_ob_status_get_volume(MpdObj *mi)
 	}
 	return mi->status->volume;
 }
+
+
+int mpd_ob_status_get_bitrate(MpdObj *mi)
+{
+	if(mi == NULL)
+	{
+		printf("failed to check mi == NULL\n");
+		return -2;
+	}
+	if(!mpd_ob_status_check(mi) || !mpd_ob_check_connected(mi))
+	{
+		printf("Failed to get status\n");
+		return MPD_O_FAILED_STATUS;
+	}
+	return mi->status->bitRate;
+}
+
+
+
 
 int mpd_ob_status_get_total_song_time(MpdObj *mi)
 {
@@ -2199,7 +2294,7 @@ int mpd_ob_stats_check(MpdObj *mi)
 		/* try to update */
 		if(mpd_ob_stats_update(mi))
 		{
-			printf("failed to update status\n");
+			debug_printf(DEBUG_ERROR,"failed to update status\n");
 			return FALSE;
 		}
 	}
@@ -2358,9 +2453,9 @@ regex_t ** mpd_misc_tokenize(char *string)
 	for(i=0; i < strlen(string)+1;i++)
 	{
 		/* check for opening  [( */
-		if(string[i] == '(' || string[i] == '[') br++;
+		if(string[i] == '(' || string[i] == '[' || string[i] == '{') br++;
 		/* check closing */
-		else if(string[i] == ')' || string[i] == ']') br--;
+		else if(string[i] == ')' || string[i] == ']' || string[i] == '}') br--;
 		/* if multiple spaces at begin of token skip them */
 		else if(string[i] == ' ' && !(i-bpos))bpos++;
 		/* if token end or string end add token to list */

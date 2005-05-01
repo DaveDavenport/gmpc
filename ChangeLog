@@ -1,3 +1,21 @@
+30-04-2005 Qball <Qball@qballcow.nl>
+	* src/libmpd.[c|h]:	Support for stats. (total
+	songs,artists,albums,uptime,playtime)
+	* glade/gmpc.glade:	Added server stats
+	* glade/id3_info.c:	Length shows elapsed time when showing playing
+	song.
+	* glade/gmpc.glade:	in the id3_window_info changed all entries to
+	labels and added severall options.
+	* src/id3_info.c:	Added support for genre, composer,path and
+	bitrate (live updating)
+	* src/strfsong.c:	Added support for genre and composer.
+	* src/strfsong.c:	f.e. if no title %title% is never shown.
+	* src/libmpdclient.c|h:	Added support for composer and genre.
+	* src/libmpd.c:		Added mpd_ob_status_get_bitrate
+
+
+29-04-2005 Qball <Qball@qballcow.nl>
+	* glade/gmpc.glade:	Markup editor window now uses gmpc icon
 27-04-2005 Qball <Qball@qballcow.nl>
 	* doc/future.txt:	added
 	* doc/0.12.txt:		added

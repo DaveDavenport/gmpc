@@ -43,7 +43,7 @@ void update_outputs_settings();
 void create_osb_tree();
 void osb_add_edit_source();
 int update_osb_tree();
-
+void update_server_stats();
 
 
 void create_preferences_window()
@@ -102,7 +102,7 @@ void create_preferences_window()
 	update_popup_settings();
 	update_tray_settings();
 	update_auth_settings();
-
+	update_server_stats();
 
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
@@ -212,8 +212,11 @@ void preferences_window_disconnect(GtkWidget *but)
 void preferences_update()
 {
 	if(!running)return;
+
+	
 	if(mpd_ob_check_connected(connection) != connected)
 	{
+		update_server_stats();
 		if(!mpd_ob_check_connected(connection))
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
@@ -614,6 +617,50 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, state, -1);
 	}
 	gtk_tree_path_free(path);
+}
+
+
+void update_server_stats()
+{
+	if(xml_preferences_window == NULL) return;
+	if(mpd_ob_check_connected(connection))
+	{
+		gchar *temp;
+		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_songs(connection));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_songs")), temp);
+		g_free(temp);
+		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_artists(connection));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_artists")), temp);
+		g_free(temp);
+		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_albums(connection));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), temp);
+		g_free(temp);
+		temp = g_strdup_printf("%id %02i:%02i", mpd_ob_stats_get_uptime(connection)/86400,
+				mpd_ob_stats_get_uptime(connection)/3600,
+				mpd_ob_stats_get_uptime(connection)/60
+				);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), temp);
+		g_free(temp);                                                                                        		
+		temp = g_strdup_printf("%id %02i:%02i", mpd_ob_stats_get_playtime(connection)/86400,
+				mpd_ob_stats_get_playtime(connection)/3600,
+				mpd_ob_stats_get_playtime(connection)/60
+				);                                                                     		
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), temp);		
+		g_free(temp);
+		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));			
+	}
+	else
+	{
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_songs")), "N/A");
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_artists")), "N/A");
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), "N/A");
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), "N/A");
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), "N/A");		
+		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));		
+	}
+
+
+
 }
 
 void update_outputs_settings()

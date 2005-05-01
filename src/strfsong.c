@@ -176,6 +176,9 @@ static gsize _strfsong(gchar *s,
 			temp = song->name ? g_strdup(song->name) : NULL;
 		else if (strncmp("%date%", p, n) == 0)
 			temp = song->date ? g_strdup(song->date) : NULL;		
+		else if (strncmp("%genre%", p, n) == 0)
+			temp = song->genre ? g_strdup(song->genre) : NULL;		
+		
 		else if (strncmp("%shortfile%", p, n) == 0)
 		{
 			if( strstr(song->file, "://") )
@@ -196,11 +199,11 @@ static gsize _strfsong(gchar *s,
 			/* just pass-through any unknown specifiers (including esc) */
 			/* drop a null char in so printf stops at the end of this specifier,
 			   but put the real character back in (pseudo-const) */
-			if( length+templen > max )
+/*			if( length+templen > max )
 				templen = max-length;
 			strncat(s, p, templen);
 			length+=templen;
-		}
+*/		}
 		else {
 			gsize templen = strlen(temp);
 

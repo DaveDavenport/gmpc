@@ -52,6 +52,53 @@ void remove_id3_window ()
 	songs = NULL;
 }
 
+
+void id3_status_update()
+{
+	mpd_Song *song = NULL;
+	if(xml_id3_window == NULL) return;
+	if(songs == NULL) return;
+	song =  songs->data;
+	if(song == NULL) return;
+	if(song->id == mpd_ob_player_get_current_song_id(connection))
+	{
+		char *temp = g_strdup_printf("%i kb/s", mpd_ob_status_get_bitrate(connection));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
+		g_free(temp);
+
+	}
+	else
+	{
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),"<i>only availible for playing song</i>");
+	}
+	if (song->time != MPD_SONG_NO_TIME)
+	{
+		gint min = (int) (song->time / 60);
+		gint sec = song->time - min * 60;
+		gchar *buf1 =NULL;
+		if(song->id == mpd_ob_player_get_current_song_id(connection))
+		{
+			buf1 = g_strdup_printf ("%02i:%02i/%02i:%02i",
+					mpd_ob_status_get_elapsed_song_time(connection)/60,
+					mpd_ob_status_get_elapsed_song_time(connection)%60,
+					min, sec);
+		}
+		else
+		{
+			buf1= g_strdup_printf ("%02i:%02i", min, sec);
+		}
+		gtk_label_set_text (GTK_LABEL
+				(glade_xml_get_widget
+				 (xml_id3_window, "length_label")), buf1);
+		g_free (buf1);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "length_label")), "");
+	}
+
+}
+
 	void
 create_window (int song)
 {
@@ -85,100 +132,167 @@ set_text (GList * node)
 	song = node->data;
 	if (song->artist != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "artist_entry")), song->artist);
+				 (xml_id3_window, "artist_label")), song->artist);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "artist_entry")), "");
+				 (xml_id3_window, "artist_label")), "");
 	}
 	if (song->title != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "title_entry")), song->title);
+				 (xml_id3_window, "title_label")), song->title);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "title_entry")), "");
+				 (xml_id3_window, "title_label")), "");
 	}
 	if (song->album != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "album_entry")), song->album);
+				 (xml_id3_window, "album_label")), song->album);
 	}
 	else if (song->name != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "album_entry")), song->name);
+				 (xml_id3_window, "album_label")), song->name);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "album_entry")), "");
+				 (xml_id3_window, "album_label")), "");
 	}
 	if (song->date != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "date_entry")), song->date);
+				 (xml_id3_window, "date_label")), song->date);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "date_entry")), "");
+				 (xml_id3_window, "date_label")), "");
 	}
 
 	if (song->track != NULL)
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "track_entry")), song->track);
+				 (xml_id3_window, "track_label")), song->track);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "track_entry")), "");
+				 (xml_id3_window, "track_label")), "");
 	}
+	if (song->genre != NULL)
+        {
+        	gtk_label_set_text (GTK_LABEL
+        			(glade_xml_get_widget
+        			 (xml_id3_window, "genre_label")), song->genre);
+        }
+        else
+        {
+        	gtk_label_set_text (GTK_LABEL
+        			(glade_xml_get_widget
+        			 (xml_id3_window, "genre_label")), "");
+        }
+	if (song->composer != NULL)
+        {
+        	gtk_label_set_text (GTK_LABEL
+        			(glade_xml_get_widget
+        			 (xml_id3_window, "composer_label")), song->composer);
+        }
+        else
+        {
+        	gtk_label_set_text (GTK_LABEL
+        			(glade_xml_get_widget
+        			 (xml_id3_window, "composer_label")), "");
+        }
 	if (song->file != NULL)
 	{
 		gchar *buf1 = g_path_get_basename (song->file);
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "filename_entry")), buf1);
+				 (xml_id3_window, "filename_label")), buf1);
 		g_free (buf1);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "filename_entry")), "");
+				 (xml_id3_window, "filename_label")), "");
 	}
+	if (song->file != NULL)
+	{
+		gchar *buf1 = g_path_get_dirname (song->file);
+		gtk_label_set_text (GTK_LABEL
+				(glade_xml_get_widget
+				 (xml_id3_window, "path_label")), buf1);
+		g_free (buf1);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL
+				(glade_xml_get_widget
+				 (xml_id3_window, "path_label")), "");
+	}
+
+	if(song->id == mpd_ob_player_get_current_song_id(connection))
+	{
+		char *temp = g_strdup_printf("%i kbps", mpd_ob_status_get_bitrate(connection));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
+		g_free(temp);
+
+	}
+	else
+	{
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),"<i>only availible for playing song</i>");
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	if (song->time != MPD_SONG_NO_TIME)
 	{
 		gint min = (int) (song->time / 60);
 		gint sec = song->time - min * 60;
 		gchar *buf1 = g_strdup_printf ("%02i:%02i", min, sec);
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "length_entry")), buf1);
+				 (xml_id3_window, "length_label")), buf1);
 		g_free (buf1);
 	}
 	else
 	{
-		gtk_entry_set_text (GTK_ENTRY
+		gtk_label_set_text (GTK_LABEL
 				(glade_xml_get_widget
-				 (xml_id3_window, "length_entry")), "");
+				 (xml_id3_window, "length_label")), "");
 	}
 	if (g_list_previous (songs) == NULL)
 	{
