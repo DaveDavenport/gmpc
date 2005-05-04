@@ -591,7 +591,8 @@ void error_window_destroy(GtkWidget *window)
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
-	else if (xml_error_window == NULL)
+	cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
+	if (xml_error_window == NULL)
 	{
 		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
 		xml_error_window = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);

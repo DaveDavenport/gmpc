@@ -1,4 +1,5 @@
 04-04-2005 Qball <Qball@qballcow.nl>
+	* src/main.c:		Error disables autoconnect. (bug 0422)
 	* src/main.c:		Changed stock icons for
 	play/pause/stop/prev/next to gtk+-2.6 names. so they should be
 	skinned. (bug 0423)
