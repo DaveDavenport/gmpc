@@ -491,35 +491,35 @@ void init_stock_icons ()
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-play.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "media-play", set);
+	gtk_icon_factory_add (factory, "gtk-media-play", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-stop 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-stop.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "media-stop", set);
+	gtk_icon_factory_add (factory, "gtk-media-stop", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-next 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-next.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "media-next", set);
+	gtk_icon_factory_add (factory, "gtk-media-next", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-prev 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-prev.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "media-prev", set);
+	gtk_icon_factory_add (factory, "gtk-media-previous", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-pause 
 	 */
 	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-pause.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "media-pause", set);
+	gtk_icon_factory_add (factory, "gtk-media-pause", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add player-shuffle 

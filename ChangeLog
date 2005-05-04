@@ -1,3 +1,10 @@
+04-04-2005 Qball <Qball@qballcow.nl>
+	* src/main.c:		Changed stock icons for
+	play/pause/stop/prev/next to gtk+-2.6 names. so they should be
+	skinned. (bug 0423)
+	* src/player.c:		changed stock to new name.
+	* src/tray-icon.c:	changed stock to new name.
+
 30-04-2005 Qball <Qball@qballcow.nl>
 	* src/libmpd.[c|h]:	Support for stats. (total
 	songs,artists,albums,uptime,playtime)

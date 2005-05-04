@@ -600,31 +600,29 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("media-play", GTK_ICON_SIZE_MENU));
+				gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);				
 
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("media-stop", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);				
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
-				gtk_image_new_from_stock("media-next", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);				
 
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
-				gtk_image_new_from_stock("media-prev", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);				                              		
-
-
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 

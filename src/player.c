@@ -361,11 +361,11 @@ void player_state_changed(int old_state, int state)
 	}
 	if(state == MPD_OB_PLAYER_PLAY)
 	{	
-		gtk_image_set_from_stock(GTK_IMAGE(image),"media-pause", GTK_ICON_SIZE_BUTTON);
+		gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-media-pause", GTK_ICON_SIZE_BUTTON);
 	}
 	else
 	{
-		gtk_image_set_from_stock(GTK_IMAGE(image), "media-play", GTK_ICON_SIZE_BUTTON);
+		gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
 	}
 
 
@@ -631,10 +631,10 @@ void create_player()
 
 	DISPLAY_WIDTH = glade_xml_get_widget(xml_main_window, "entry_image")->allocation.width;
 	/* set icons from the custom stock set*/
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")), "media-prev", GTK_ICON_SIZE_BUTTON);
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")), "media-next", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")), "media-stop", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "media-play", GTK_ICON_SIZE_BUTTON);		
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")), "gtk-media-previous", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")), "gtk-media-next", GTK_ICON_SIZE_BUTTON);	
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")), "gtk-media-stop", GTK_ICON_SIZE_BUTTON);	
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);	
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);			
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);			
 
