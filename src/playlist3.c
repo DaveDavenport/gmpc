@@ -48,6 +48,12 @@ GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 void pl2_save_playlist ();
 
+
+
+
+
+
+
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
 /****************************************************************/
@@ -654,12 +660,12 @@ void pl3_current_playlist_crop_selected_songs()
 
 void pl3_show_song_info ()
 {
-	int i = 0;
-	GtkTreeModel *model = GTK_TREE_MODEL (pl2_store);
+	int i = 0, type = 0, r_type =0;
+	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")));
 	/* get the tree selection object */
-	GtkTreeSelection *selection =
-		gtk_tree_view_get_selection (GTK_TREE_VIEW
-				(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")));
+	type = pl3_cat_get_selected_browser();
+
 	/* check if there are selected rows */
 	if ((i = gtk_tree_selection_count_selected_rows (selection)) > 0)
 	{
@@ -672,9 +678,22 @@ void pl3_show_song_info ()
 			GtkTreeIter iter;
 			int value;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
+			gtk_tree_model_get (model, &iter, SONG_POS, &r_type, -1);
 			/* show the info for this song  */
-			call_id3_window (value);
+			if (type == PL3_CURRENT_PLAYLIST)
+			{
+				gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
+				call_id3_window (value);
+			}
+			if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
+			{
+				gtk_tree_model_get (model, &iter, PL3_UNKOWN, &value, -1);
+				call_id3_window (value);
+			}
+			else if(type == PL3_FIND)
+			{
+
+			}
 			/* go to previous song if still connected */
 		}
 		while ((list = g_list_previous (list)) && !check_connection_state ());
@@ -1272,8 +1291,14 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		{
 			if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))) == 5)
 			{
-				gtk_widget_destroy(menu);
-				return FALSE;
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_show_song_info), NULL);		
+
+
+				gtk_widget_show_all(menu);
+				gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
+				return TRUE;
 			}
 		}
 		if(gtk_tree_selection_count_selected_rows(sel) == 1)
@@ -1931,6 +1956,11 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_show_song_info ();
 		return  TRUE;
 	}
+	else if (event->keyval == GDK_i && type == PL3_FIND)
+	{
+		pl3_show_song_info ();
+		return  TRUE;
+	}                                                               	
 	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
 	{
 		if(mpd_ob_player_get_current_song_pos(connection) > 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
@@ -2349,3 +2379,27 @@ void pl2_save_playlist ()
 	/* unref the gui description */
 	g_object_unref (xml);
 }
+
+
+void pl3_playlist_changed()
+{
+	int type = 0;
+	if(pl3_xml == NULL) return;
+	type  = pl3_cat_get_selected_browser();
+	if(type ==  PL3_CURRENT_PLAYLIST)
+	{
+		gchar *string = format_time(info.playlist_playtime);
+		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+		g_free(string);
+
+
+
+
+
+
+	}
+
+
+
+}
+

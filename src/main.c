@@ -447,6 +447,8 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	info.playlist_id = new_playlist_id;
 	info.playlist_length = mpd_ob_playlist_get_playlist_length(connection);
 
+	pl3_playlist_changed();
+
 }
 
 void init_stock_icons ()

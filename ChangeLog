@@ -1,4 +1,8 @@
 04-04-2005 Qball <Qball@qballcow.nl>
+	* src/playlist3.c:	If playlist get changed update total time.
+	* src/playlist3.c:	You can now get id3 info of selected song in
+	playlist search.
+	* src/playlist3.c:	Right mouse menu playlist search
 	* src/main.c:		Error disables autoconnect. (bug 0422)
 	* src/main.c:		Changed stock icons for
 	play/pause/stop/prev/next to gtk+-2.6 names. so they should be
