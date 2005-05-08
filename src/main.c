@@ -186,7 +186,7 @@ int main (int argc, char **argv)
 		return 1;
 	}
 	/* connect signals */
-	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed);
+	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed,NULL);
 	mpd_ob_signal_set_error(connection, (void *)error_callback, NULL);
 	mpd_ob_signal_set_song_changed(connection, (void *)song_changed, NULL);
 	mpd_ob_signal_set_state_changed(connection, (void *)state_callback, NULL);

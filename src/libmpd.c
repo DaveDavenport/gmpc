@@ -83,6 +83,7 @@ MpdObj * mpd_ob_create()
 
 	/* signals */
 	mi->playlist_changed = NULL;
+	mi->playlist_changed_pointer = NULL;
 	/* song */
 	mi->song_changed = NULL;
 	mi->song_changed_signal_pointer = NULL;
@@ -102,8 +103,10 @@ MpdObj * mpd_ob_create()
 	mi->connect = NULL;
 	mi->connect_pointer = NULL;	
 
-
+	/* error signal */
 	mi->error_signal = NULL;
+	mi->error_signal_pointer = NULL;
+	
 	/* connection is locked because where not connected */
 	mi->connection_lock = TRUE;
 
@@ -496,7 +499,7 @@ int mpd_ob_status_update(MpdObj *mi)
 		/* TODO: Call defined functions */
 		if(mi->playlist_changed != NULL)
 		{
-			mi->playlist_changed(mi, mi->playlistid, mi->status->playlist);
+			mi->playlist_changed(mi, mi->playlistid, mi->status->playlist,mi->playlist_changed_pointer);
 		}
 		if(!mpd_ob_check_connected(mi))
 		{
@@ -1416,7 +1419,7 @@ void mpd_ob_signal_set_disconnect (MpdObj *mi, void *(* disconnect)(MpdObj *mi, 
 	mi->disconnect_pointer = disconnect_pointer;
 }                                                                                                                                     /* SIGNALS */
 
-void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id))
+void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id,void *pointer), void *pointer)
 {
 	if(mi == NULL)
 	{
@@ -1424,6 +1427,7 @@ void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(
 		return;
 	}
 	mi->playlist_changed = playlist_changed;
+	mi->playlist_changed_pointer = pointer;
 }
 
 

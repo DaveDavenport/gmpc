@@ -1,4 +1,10 @@
-04-04-2005 Qball <Qball@qballcow.nl>
+08-05-2005 <Qball> <Qball@qballcow.nl>
+	* src/libmpd.[c|h]:	playlist_Changed_function now accepts a
+	parameter;
+	* src/libmpd.c:		playlist_changed_pointer and error_pointer now
+	initialized to NULL
+
+04-05-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:	If playlist get changed update total time.
 	* src/playlist3.c:	You can now get id3 info of selected song in
 	playlist search.
