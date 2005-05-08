@@ -1,4 +1,5 @@
 08-05-2005 <Qball> <Qball@qballcow.nl>
+	* po/fr.po:		updated translation.
 	* src/libmpd.[c|h]:	playlist_Changed_function now accepts a
 	parameter;
 	* src/libmpd.c:		playlist_changed_pointer and error_pointer now
