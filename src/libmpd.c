@@ -2360,6 +2360,7 @@ MpdData * mpd_ob_server_get_output_devices(MpdObj *mi)
 		printf("mpd_ob_playlist_get_output_device: not connected\n");
 		return NULL;
 	}
+	/* TODO: Check version */
 	if(mpd_ob_lock_conn(mi))
 	{
 		printf("mpd_ob_playlist_output_devic: lock failed\n");

@@ -1,5 +1,11 @@
 libmpd
 
+History:
+libmpd is very new, I wrote it to abstract the mpd abstraction out of the code in gmpc. Therefor making gmpc code easier to read, but even more important easier to debug.
+Libmpd will now be released as a set of C files. The goal is to make it a seperate library.
+Comments/suggestions are more then welcome, just keep in mind this is a pre-release.
+e-mail me at: qball@qballcow.nl
+
 Goal:
 Trying to provide a easy to use high level, callback based access to mpd.  
 It tries to be fast and keep the data transfer with mpd to the minimum. Todo this it implement qeues for deleting and adding songs.
@@ -70,8 +76,11 @@ void 		mpd_ob_free				(MpdObj *mi);
 Free the object. This can be called at any time. It will close the connection and free the qeue's.
 
 
-/* signals */
-void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id));
+Signals:
+With the following functions you can connect a signal to an mpd event.
+By passing NULL you disable the signal.
+
+void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id,void *pointer),void *pointer);
 void 		mpd_ob_signal_set_error			(MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg, void *pointer),void *pointer);
 void 		mpd_ob_signal_set_song_changed		(MpdObj *mi, void *(* song_changed)(MpdObj *mi, int old_song_id, int new_song_id,void *pointer), void *pointer);
 void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(MpdObj *mi,void *pointer), void *pointer);
@@ -90,6 +99,8 @@ Only when a function is called that needs status, it's fetched from mpd.
 The status is stored until mpd_ob_status_queue_update is called again. (by the user or the lib itself)
 
 int 		mpd_ob_status_queue_update		(MpdObj *mi);
+
+Status commands:
 float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
 int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
 int 		mpd_ob_status_get_volume		(MpdObj *mi);
@@ -98,16 +109,27 @@ int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
 int		mpd_ob_status_get_crossfade		(MpdObj *mi);
 int		mpd_ob_status_set_crossfade		(MpdObj *mi, int crossfade_time);
+
+Stats info:
+Status update can queue an update of stats aswell.
+
+The stats can be forced to update using the following functions:
 int		mpd_ob_stats_update			(MpdObj *mi);
+The following function queues an update:
+int		mpd_ob_stats_queue_update		(MpdObj *mi);
 
 int		mpd_ob_stats_get_total_songs		(MpdObj *mi);
 int		mpd_ob_stats_get_total_artists		(MpdObj *mi);
 int		mpd_ob_stats_get_total_albums		(MpdObj *mi);
+The following 2 functions return the time in seconds;
 int		mpd_ob_stats_get_uptime			(MpdObj *mi);
 int		mpd_ob_stats_get_playtime		(MpdObj *mi);
-/* Player commands */
+
+
+Player commands:
 int 		mpd_ob_player_play			(MpdObj *mi);
 int 		mpd_ob_player_play_id			(MpdObj *mi, int id);
+todo: int mpd_ob_player_play_pos(MpdObj *mi)
 int 		mpd_ob_player_stop			(MpdObj *mi);
 int 		mpd_ob_player_next			(MpdObj *mi);
 int 		mpd_ob_player_prev			(MpdObj *mi);
@@ -121,7 +143,11 @@ int		mpd_ob_player_get_random		(MpdObj *mi);
 int		mpd_ob_player_set_random		(MpdObj *mi, int random);
 int 		mpd_ob_player_seek			(MpdObj *mi, int sec);
 
-/* playlist command */
+Playlist command:
+And MpdData object can contain severall different type of information, it can contain complete song info/directories/artist/albums/output_devices
+If getting directory info it's adviced to check the type of information (song or dir)
+All the data is grabbed from mpd directly.  so using the mpdData the filling of f.e. the gui can happen in the bg(and take a long time), withouth blocking the mpd connection.
+
 mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
 mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
 int 		mpd_ob_playlist_clear			(MpdObj *mi);
@@ -135,6 +161,9 @@ MpdData * 	mpd_ob_playlist_get_directory		(MpdObj *mi,char *path);
 MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exact);
 MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
 int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
+
+For adding/deleting multiple items use the queue function, that is severall time faster.
+This will trigger an playlist-update-event after every call. while the queue add's it at once.
 void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
 int 		mpd_ob_playlist_delete			(MpdObj *mi,char *path);
 
@@ -146,7 +175,7 @@ or murder "miles davis" in any order.
 Warning: This function can be slow.
 MpdData *	mpd_ob_playlist_token_find		(MpdObj *mi , char *string);
 
-/* MpdData struct functions */
+MpdData struct functions:
 int 		mpd_ob_data_is_last			(MpdData *data);
 void 		mpd_ob_free_data_ob			(MpdData *data);
 MpdData * 	mpd_ob_data_get_next			(MpdData *data);
@@ -165,20 +194,30 @@ this allows you to make this construction:
 withouth leaking memory 
 
 
-/* queing stuff */
+Queing stuff:
+
+Use these functions when adding/deleting/loading more then one item at the time.
+The "commands" will be send to mpd when playlist_queue_commit is called.
+The queue will be cleared after the data is commited, or the connection is disconnected
+
 void 		mpd_ob_playlist_queue_add		(MpdObj *mi,char *path);
 void 		mpd_ob_playlist_queue_load		(MpdObj *mi,char *path);
 void 		mpd_ob_playlist_queue_delete_id		(MpdObj *mi,int id);
-/* use these to commit the changes */
+Use these to commit the changes:
 void 		mpd_ob_playlist_queue_commit		(MpdObj *mi);
 
 
-/* Server Stuff */
+Server Stuff:
+
+Server specific functions:
+todo: Add a check function that checks if mpd supports this:
 MpdData * 	mpd_ob_server_get_output_devices	(MpdObj *mi);
 int 		mpd_ob_server_set_output_device		(MpdObj *mi,int device_id,int state);
 long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
 int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro);
 
-/* misc */
+Misc:
+These functions are using in libmpd self, I provide them because the can come in handy.
+(Gmpc uses them aswell)
 regex_t** 	mpd_misc_tokenize			(char *string);
 void 		mpd_misc_tokens_free			(regex_t ** tokens);
