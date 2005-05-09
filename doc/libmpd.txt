@@ -1,0 +1,184 @@
+libmpd
+
+Goal:
+Trying to provide a easy to use high level, callback based access to mpd.  
+It tries to be fast and keep the data transfer with mpd to the minimum. Todo this it implement qeues for deleting and adding songs.
+There is extra functionallity added for the eas of the programmer.
+<<more bla bla here>>
+It's written in plain C and uses the following header files:
+*regex.h
+*libmpdclient.h
+*stdio.h
+* stdlib.h  (using __USE_GNU)
+* debug_printf.h (should come along with libmpd)
+
+
+Status:
+Implemented:
+* Basic player access.
+* Playlist access.
+* Error handling.
+* Command queues.
+* Advanced search.
+
+ToDo:
+* Permission check.
+* translation.
+* auth after connect
+* Abstract more from libmpdclient. I still return structures and defines from libmpdclient.
+* Become an Independent library. 
+* More functionallity
+* etc.
+
+
+Error behaviour:
+libmpd checks after every command for possible error's. If an error occured libmpd wil disconnect and call the error callback.
+The error callback will contain the error Id, and a error string.
+
+Api:
+
+The main object is the MpdOb struct. The user should in NO way use any of the internal values. These can be invalid at any given time.
+The MpdOb can be created using the following functions:
+
+(All these objects are after creation not yet connected to mpd).
+
+MpdObj * 	mpd_ob_new_default			();
+This creates a new object with hostname="localhost" and port="6600"
+This function always returns an object. (given malloc doesnt fail)
+
+MpdObj * 	mpd_ob_new				(char *hostname, int port, char *password);
+This creates a object with given hostname,port and password.
+If password is NULL, no password is sended to mpd.
+
+With the following function you can modify/set connection properties:
+void 		mpd_ob_set_hostname			(MpdObj *mi, char *hostname);
+void 		mpd_ob_set_password			(MpdObj *mi, char *hostname);
+To unset the password pass NULL as argument.
+
+void 		mpd_ob_set_port				(MpdObj *mi, int port);
+void 		mpd_ob_set_connection_timeout		(MpdObj *mi, float timeout);
+
+
+int 		mpd_ob_connect				(MpdObj *mi);
+int 		mpd_ob_disconnect			(MpdObj *mi);
+int 		mpd_ob_check_connected			(MpdObj *mi);
+returns TRUE when connected
+int 		mpd_ob_check_error			(MpdObj *mi);
+returns TRUE on error
+ 
+void 		mpd_ob_free				(MpdObj *mi);
+Free the object. This can be called at any time. It will close the connection and free the qeue's.
+
+
+/* signals */
+void 		mpd_ob_signal_set_playlist_changed	(MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id));
+void 		mpd_ob_signal_set_error			(MpdObj *mi, void *(* error_signal)(MpdObj *mi, int id, char *msg, void *pointer),void *pointer);
+void 		mpd_ob_signal_set_song_changed		(MpdObj *mi, void *(* song_changed)(MpdObj *mi, int old_song_id, int new_song_id,void *pointer), void *pointer);
+void 		mpd_ob_signal_set_status_changed	(MpdObj *mi, void *(* status_changed)(MpdObj *mi,void *pointer), void *pointer);
+void 		mpd_ob_signal_set_state_changed 	(MpdObj *mi, void *(* state_changed)(MpdObj *mi, int old_state, int new_state, void *pointer),void *pointer);
+void 		mpd_ob_signal_set_disconnect		(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect_pointer);
+void 		mpd_ob_signal_set_connect		(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect_pointer);
+void 		mpd_ob_signal_set_database_changed	(MpdObj *mi, void *(* database_changed)(MpdObj *mi, void *pointer), void *pointer);
+void 		mpd_ob_signal_set_updating_changed	(MpdObj *mi, void *(* updating_changed)(MpdObj *mi,int updating, void *pointer), void *pointer);
+
+
+
+To get the function to have the  most recent info you want to call mpd_ob_status_queue_update 
+In a gui app. you want to call this every 0.x seconds. 
+mpd_ob_status_queue_update only queue's an update
+Only when a function is called that needs status, it's fetched from mpd.
+The status is stored until mpd_ob_status_queue_update is called again. (by the user or the lib itself)
+
+int 		mpd_ob_status_queue_update		(MpdObj *mi);
+float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
+int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);
+int 		mpd_ob_status_get_volume		(MpdObj *mi);
+int 		mpd_ob_status_get_bitrate		(MpdObj *mi);
+int		mpd_ob_status_get_total_song_time	(MpdObj *mi);
+int		mpd_ob_status_get_elapsed_song_time	(MpdObj *mi);
+int		mpd_ob_status_get_crossfade		(MpdObj *mi);
+int		mpd_ob_status_set_crossfade		(MpdObj *mi, int crossfade_time);
+int		mpd_ob_stats_update			(MpdObj *mi);
+
+int		mpd_ob_stats_get_total_songs		(MpdObj *mi);
+int		mpd_ob_stats_get_total_artists		(MpdObj *mi);
+int		mpd_ob_stats_get_total_albums		(MpdObj *mi);
+int		mpd_ob_stats_get_uptime			(MpdObj *mi);
+int		mpd_ob_stats_get_playtime		(MpdObj *mi);
+/* Player commands */
+int 		mpd_ob_player_play			(MpdObj *mi);
+int 		mpd_ob_player_play_id			(MpdObj *mi, int id);
+int 		mpd_ob_player_stop			(MpdObj *mi);
+int 		mpd_ob_player_next			(MpdObj *mi);
+int 		mpd_ob_player_prev			(MpdObj *mi);
+int 		mpd_ob_player_pause			(MpdObj *mi);
+int 		mpd_ob_player_get_state			(MpdObj *mi);
+int 		mpd_ob_player_get_current_song_id	(MpdObj *mi);
+int 		mpd_ob_player_get_current_song_pos	(MpdObj *mi);
+int		mpd_ob_player_get_repeat		(MpdObj *mi);
+int		mpd_ob_player_set_repeat		(MpdObj *mi, int repeat);
+int		mpd_ob_player_get_random		(MpdObj *mi);
+int		mpd_ob_player_set_random		(MpdObj *mi, int random);
+int 		mpd_ob_player_seek			(MpdObj *mi, int sec);
+
+/* playlist command */
+mpd_Song * 	mpd_ob_playlist_get_song		(MpdObj *mi, int songid);
+mpd_Song * 	mpd_ob_playlist_get_current_song	(MpdObj *mi);
+int 		mpd_ob_playlist_clear			(MpdObj *mi);
+int 		mpd_ob_playlist_shuffle			(MpdObj *mi);
+int 		mpd_ob_playlist_save			(MpdObj *mi, char *name);
+void 		mpd_ob_playlist_update_dir		(MpdObj *mi, char *path);
+void 		mpd_ob_playlist_move_pos		(MpdObj *mi, int old_pos, int new_pos);
+MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
+MpdData *	mpd_ob_playlist_get_albums		(MpdObj *mi, char *artist);
+MpdData * 	mpd_ob_playlist_get_directory		(MpdObj *mi,char *path);
+MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exact);
+MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
+int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
+void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
+int 		mpd_ob_playlist_delete			(MpdObj *mi,char *path);
+
+
+client side search function with best "match" option..
+It splits the search string into tokens. (on the ' ', and respects [()] so it won't mess up regex expre.)  every token is then matched using regex.
+So f.e. Murder (John Lee Hooker)|(Miles Davis)  matches songs where title/filename/artist/album contains murder and "john lee hooker" 
+or murder "miles davis" in any order.
+Warning: This function can be slow.
+MpdData *	mpd_ob_playlist_token_find		(MpdObj *mi , char *string);
+
+/* MpdData struct functions */
+int 		mpd_ob_data_is_last			(MpdData *data);
+void 		mpd_ob_free_data_ob			(MpdData *data);
+MpdData * 	mpd_ob_data_get_next			(MpdData *data);
+
+mpd ob data next will return NULL when there are no more items. it will also call free when called on the last item.
+if you don't want this check with mpd_ob_data_is_last before calling get_next
+this allows you to make this construction:
+	MpdData * mpd_ob_playlist_get_artists(..);
+ 	while(data != NULL)
+ 	{
+
+
+		data = mpd_ob_data_next(data);
+ 	}
+
+withouth leaking memory 
+
+
+/* queing stuff */
+void 		mpd_ob_playlist_queue_add		(MpdObj *mi,char *path);
+void 		mpd_ob_playlist_queue_load		(MpdObj *mi,char *path);
+void 		mpd_ob_playlist_queue_delete_id		(MpdObj *mi,int id);
+/* use these to commit the changes */
+void 		mpd_ob_playlist_queue_commit		(MpdObj *mi);
+
+
+/* Server Stuff */
+MpdData * 	mpd_ob_server_get_output_devices	(MpdObj *mi);
+int 		mpd_ob_server_set_output_device		(MpdObj *mi,int device_id,int state);
+long unsigned	mpd_ob_server_get_database_update_time	(MpdObj *mi);
+int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro);
+
+/* misc */
+regex_t** 	mpd_misc_tokenize			(char *string);
+void 		mpd_misc_tokens_free			(regex_t ** tokens);
