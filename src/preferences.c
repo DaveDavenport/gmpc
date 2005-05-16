@@ -125,7 +125,6 @@ void set_browser_format()
 	cfg_free_string(string);
 	if(format != NULL)
 	{
-		printf("new value: %s\n",format);
 		cfg_set_single_value_as_string(config, "playlist","browser_markup",format);
 	}
 	g_free(format);
@@ -138,7 +137,6 @@ void set_playlist_format()
 	cfg_free_string(string);
 	if(format != NULL)
 	{
-		printf("new value: %s\n",format);
 		cfg_set_single_value_as_string(config, "playlist","markup",format);
 	}
 	g_free(format);
@@ -152,7 +150,6 @@ void set_player_format()
 
 	if(format != NULL)
 	{
-		printf("new value: %s\n",format);
 		cfg_set_single_value_as_string(config, "player","display_markup",format);
 	}
 	g_free(format);

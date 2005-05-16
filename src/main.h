@@ -74,6 +74,7 @@ typedef struct 	{
 	GQueue *queue;
 	int pos;
 	int up;
+	gboolean do_scroll;
 	gboolean exposed;
 } scrollname;
 

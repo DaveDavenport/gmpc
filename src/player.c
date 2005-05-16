@@ -34,7 +34,7 @@ extern config_obj *config;
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
 
-scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE};
+scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE,TRUE};
 /* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
@@ -185,7 +185,10 @@ gboolean update_msg()
 
 		if(width > DISPLAY_WIDTH-5)
 		{
-			scroll.pos+=4;
+			if(scroll.do_scroll)
+			{
+				scroll.pos+=4;
+			}
 
 		}
 		gtk_widget_queue_draw(window);
@@ -198,8 +201,10 @@ gboolean update_msg()
 
 void msg_set_base(gchar *msg)
 {
+	int i =0;
 	if(msg == NULL) return;
 	/* don't update when its the same string :) */
+	scroll.do_scroll = TRUE;
 	if(scroll.msg != NULL)
 	{
 		if(!strcmp(scroll.msg, msg)) return;
@@ -214,6 +219,13 @@ void msg_set_base(gchar *msg)
 		scroll.base_msg = g_strdup(_("No valid UTF-8. Please check your locale"));
 	}
 	else	scroll.base_msg = g_strdup(msg);
+	for(;msg[i] != '\0';i++)
+	{
+		if(msg[i] == '\n')
+		{
+			scroll.do_scroll =FALSE;
+		}
+	}
 
 	scroll.exposed = TRUE;
 }
@@ -377,6 +389,10 @@ void player_state_changed(int old_state, int state)
 		msg_set_base(_("Gnome Music Player Client"));
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
+
+			
+
+			
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
 		}
 	}
@@ -389,6 +405,12 @@ void player_state_changed(int old_state, int state)
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
+			int i=0;
+			for(i=0;buffer[i] != '\0';i++)
+			{
+				if(buffer[i] == '\n') buffer[i] = ' ';
+			}
+
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
 		}
 	}
@@ -417,6 +439,11 @@ void player_song_changed(int oldsong, int newsong)
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
+			int i=0;
+			for(i=0;buffer[i] != '\0';i++)
+			{
+				if(buffer[i] == '\n') buffer[i] = ' ';
+			}
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
 		}
 	}
@@ -472,6 +499,7 @@ void change_progress_update()
 			g_free(buf);
 		}
 		/* do this so the title gets updated again, even if it doesnt need scrolling */
+		
 		scroll.pos = -1;
 	}
 }    

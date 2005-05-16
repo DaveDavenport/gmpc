@@ -1,3 +1,10 @@
+15-05-2005 <Qball> <Qball@qballcow.nl>	
+	* doc/libmpd.tex:	Documentation file for libmpd.. (type
+	latex2html for nice manual)
+	* src/player.c:		Remove breakline from window title
+	* src/player.c:		Don't scroll on multiline title.
+	* src/preferences.c:	removed some printf stuff.
+
 08-05-2005 <Qball> <Qball@qballcow.nl>
 	* po/fr.po:		updated translation.
 	* src/libmpd.[c|h]:	playlist_Changed_function now accepts a
