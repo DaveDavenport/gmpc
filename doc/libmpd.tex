@@ -1,538 +1,548 @@
-\documentclass[a4paper,11pt]{article}
-\usepackage[english]{babel}
-\usepackage{color,html}
-
-\newcommand{\tmstrong}[1]{\textbf{#1}}
-
-\begin{document}
-
-\title{LibMpd} 
-\author{Qball Cow}
-\maketitle
-
-\section{History}
-Libmpd is very new, I wrote it to abstract the mpd abstraction out of the code
-in gmpc. Therefor making gmpc code easier to read, but even more important
-easier to debug. Libmpd will be released as a set of C files. The final goal is
-to make it a seperate library:. Comments/suggestions are more then welcome,
-just keep in mind this is a pre-release.
-
-e-mail me at: \verb|qball@qballcow.nl|
-
-\section{Goal}
-
-Trying to provide a easy to use high level, callback based access to mpd. It
-tries to be fast and keep the data transfer with mpd to the minimum. 
-Todo this it implement qeues for deleting and adding songs. It also grabs the new status when a function actually request data from it, then it buffers it until the users qeues a new update. To make things easier for the programmer there is extra functions added.
-
-{\color{red} more bla bla here}
-
-It's written in plain C and uses the following header files
-\begin{itemize}
-  \item regex.h
-  
-  \item libmpdclient.h
-  
-  \item stdio.h
-  
-  \item stdlib.h (using  \_\_USE\_GNU)
-  
-  \item debug \_ printf.h (should come along with libmpd)
-\end{itemize}
-
-\section{Status}
-
-\subsection{Implemented}
-
-\begin{itemize}
-  \item Basic player access.
-  
-  \item Playlist access.
-  
-  \item Error handling.
-  
-  \item Command queues.
-  
-  \item Advanced search.
-\end{itemize}
-
-\subsection{ToDo}
-\begin{itemize}
-  \item Permission check.
-  
-  \item translation.
-  
-  \item auth after connect
-  
-  \item Abstract more from libmpdclient. I still return structures and defines
-  from libmpdclient.
-  
-  \item Become an Independent  library.
-  
-  \item More functionallity
-  
-  \item etc.
-\end{itemize}
-
-\section{Usage}
-Libmpd is written in an Object Oriented way. The idea is you create one, or multiple, object and program startup, and connect the needed signals, but they can also be created or destroyed at any given time. 
-You can then use the provided functions to use the availible methods and get the variables. It isn't allowed to use the variables in the structure directly, at any time there value can be undefined.
-A program will look something like:
-\begin{verbatim}
- MpdObj *mo = mpd_ob_new_default();
- ......
- mpd_ob_connect(mo);
- .....
- .....
- mpd_ob_player_play(mo);
- ......
- ......
- mpd_ob_disconnect(mo);
-\end{verbatim}
-
-
-\section{Error behaviour}
-\subsection{mpd errors}
-libmpd checks after every command for possible error's. If an error occured
-libmpd wil disconnect and call the error callback. The error callback will
-contain the error Id, and a error string.
-\subsection {internal errors}
-Libmpd uses debug-printf to print out error messages. It uses 2 levels or error output and one debug level.
-The first level only print errors out, the second errors and warning and level 3 prints alot of extra information.
-Everything is printed to stdout.
-
-\section{Download}
-Libmpd isn't packaged seperate yet. To get the most recent source grab the svn version of gmpc.\\
-you can aquire this from \verb|http://musicpd.org|.\\
-
-
-\section{Api}
-The main object is the MpdOb struct. The user should in {\tmstrong{NO}} way
-use any of the internal values. These can be invalid at any given time. The
-MpdOb can be created using the following functions:
-
-\subsection{Basic}
-\subsubsection{mpd\_ob\_new\_default();}
-All these objects are after creation not yet connected to mpd\\
-Create a new object with hostname= "localhost " and port="6600". This function always returns an object. (given malloc doesnt fail)\\
-\begin{quote}
-MpdObj * mpd\_ob\_new\_default (); 
-\end{quote}
-\textit{Return value:} An MpdObj
-
-\subsubsection{mpd\_ob\_new()}
-This creates a object with given hostname,port and password. If password is NULL, no password is sended to mpd.\\
-\begin{quote}
-MpdObj * mpd\_ob\_new (char *hostname, int port, char *password); 
-\end{quote}
-\textit{Return value:} An malloced MpdObj
-\subsubsection{mpd\_ob\_set\_hostname();}
-Set the hostname. The default=localhost.
-\begin{quote}
-void mpd\_ob\_set\_hostname (MpdObj *mi, char *hostname); 
-\end{quote}
-\textit{Return value:} none
-
-Set the password. To unset the password pass NULL as argument.\\
-\textit{Return value:} none
-\begin{quote}
-void mpd\_ob\_set\_password (MpdObj *mi, char *password); 
-\end{quote}
-Set the port number. (default 6600)\\
-\textit{Return value:} none
-\begin{quote}
-void mpd\_ob\_set\_port (MpdObj *mi, int port); 
-\end{quote}
-Set the connection timeout.\\
-\textit{Return value:} none
-\begin{quote}
-void mpd\_ob\_set\_connection\_timeout (MpdObj *mi, float timeout);
-\end{quote}
-Connect to mpd. It is adviced to have the error signal connected before calling this function.\\
-\textit{Return value:} none
-\begin{quote}
-int mpd\_ob\_connect (MpdObj *mi); 
-\end{quote}
-Disconnect from mpd. This will free all buffered data, including command queues.\\
-\textit{Return value:} TRUE when connected.
-\begin{quote}
-int mpd\_ob\_disconnect (MpdObj *mi);
-\end{quote}
-Check if the connection is up.\\
-\textit{Return value:} TRUE when there is a connection.
-\begin{quote}
-int mpd\_ob\_check\_connected (MpdObj *mi); 
-\end{quote}
-Check if there where error's in the past.\\
-\textit{return value:} TRUE on error.
-\begin{quote}
-int mpd\_ob\_check\_error (MpdObj *mi);
-\end{quote}
-
-
-
-
-
-\subsection{Signals}
-
-With the following functions you can connect a signal to an mpd event. By passing NULL you disable the signal.\\
-
-\begin{quote}
-void mpd\_ob\_signal\_set\_playlist\_changed(MpdObj *mi, void *(* playlist\_changed)(MpdObj *mi, int old\_playlist\_id, int new\_playlist\_id,void *pointer),void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_error   
-(MpdObj *mi, void *(* error\_signal)(MpdObj *mi, int id, char *msg, void *pointer),
-void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_song\_changed  
-(MpdObj *mi, void *(* song\_changed)
-(MpdObj *mi, int old\_song\_id, int new\_song\_id,void *pointer), 
-void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_status\_changed 
-(MpdObj *mi, void *(* status\_changed)(MpdObj *mi,void *pointer), void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_state\_changed  
-(MpdObj *mi, void *(* state\_changed)(MpdObj *mi, int old\_state, int new\_state, void *pointer),
-void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_disconnect  
-(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect\_pointer);
-
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_connect  
-(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect\_pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_database\_changed 
-(MpdObj *mi, void *(* database\_changed)(MpdObj *mi, void *pointer), void *pointer);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_signal\_set\_updating\_changed 
-(MpdObj *mi, void *(* updating\_changed)(MpdObj *mi,int updating, void *pointer), 
-void *pointer);
-\end{quote}
-
-
-
-\subsection{Status}
-
-
-To get the function to have the  most recent info you want to call mpd\_ob\_status\_queue\_update 
-In a gui app. you want to call this every 0.x seconds. 
-mpd\_ob\_status\_queue\_update only queue's an update
-Only when a function is called that needs status, it's fetched from mpd.
-The status is stored until mpd\_ob\_status\_queue\_update is called again. (by the user or the lib itself)
-
-\begin{quote}
-int   mpd\_ob\_status\_queue\_update  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-float   mpd\_ob\_status\_set\_volume\_as\_float (MpdObj *mi, float fvol);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_status\_set\_volume  (MpdObj *mi,int volume);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_status\_get\_volume  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_status\_get\_bitrate  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_status\_get\_total\_song\_time (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_status\_get\_elapsed\_song\_time (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_status\_get\_crossfade  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_status\_set\_crossfade  (MpdObj *mi, int crossfade\_time);
-\end{quote}
-
-\subsection {Stats}
-
-
-Stats update can queue an update of stats aswell.
-
-The stats can be forced to update using the following functions:
-
-\begin{quote}
-int  mpd\_ob\_stats\_update   (MpdObj *mi);
-\end{quote}
-
-The following function queues an update:
-\begin{quote}
-int  mpd\_ob\_stats\_queue\_update  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_stats\_get\_total\_songs  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_stats\_get\_total\_artists  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_stats\_get\_total\_albums  (MpdObj *mi);
-\end{quote}
-
-The following 2 functions return the time in seconds;
-\begin{quote}
-int  mpd\_ob\_stats\_get\_uptime   (MpdObj *mi);
-\end{quote}
-\begin{quote}
-int  mpd\_ob\_stats\_get\_playtime  (MpdObj *mi);
-\end{quote}
-
-\subsection{Player}
-\begin{quote}
-int   mpd\_ob\_player\_play   (MpdObj *mi);
-\end{quote}
-\begin{quote}
-int   mpd\_ob\_player\_play\_id   (MpdObj *mi, int id);
-\end{quote}
-
-\begin{quote}
-todo: int mpd\_ob\_player\_play\_pos(MpdObj *mi)
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_stop   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_next   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_prev   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_pause   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_get\_state   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_get\_current\_song\_id (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_get\_current\_song\_pos (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_player\_get\_repeat  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_player\_set\_repeat  (MpdObj *mi, int repeat);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_player\_get\_random  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int  mpd\_ob\_player\_set\_random  (MpdObj *mi, int random);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_player\_seek   (MpdObj *mi, int sec);
-\end{quote}
-
-\subsection{Playlist}
-
-
-And MpdData object can contain severall different type of information, it can contain complete song info/directories/artist/albums/output\_devices
-If getting directory info it's adviced to check the type of information (song or dir)
-All the data is grabbed from mpd directly.  so using the mpdData the filling of f.e. the gui can happen in the bg(and take a long time), withouth blocking the mpd connection.
-
-\begin{quote}
-mpd\_Song *  mpd\_ob\_playlist\_get\_song  (MpdObj *mi, int songid);
-\end{quote}
-
-\begin{quote}
-mpd\_Song *  mpd\_ob\_playlist\_get\_current\_song (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_playlist\_clear   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_playlist\_shuffle   (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_playlist\_save   (MpdObj *mi, char *name);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_playlist\_update\_dir  (MpdObj *mi, char *path);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_playlist\_move\_pos  (MpdObj *mi, int old\_pos, int new\_pos);
-\end{quote}
-
-\begin{quote}
-MpdData *  mpd\_ob\_playlist\_get\_artists  (MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-MpdData * mpd\_ob\_playlist\_get\_albums  (MpdObj *mi, char *artist);
-\end{quote}
-
-\begin{quote}
-MpdData *  mpd\_ob\_playlist\_get\_directory  (MpdObj *mi,char *path);
-\end{quote}
-
-\begin{quote}
-MpdData *  mpd\_ob\_playlist\_find   (MpdObj *mi, int table, char *string, int exact);
-\end{quote}
-
-\begin{quote}
-MpdData *  mpd\_ob\_playlist\_get\_changes  (MpdObj *mi,int old\_playlist\_id);
-\end{quote}
-\begin{quote}
-int  mpd\_ob\_playlist\_get\_playlist\_length (MpdObj *mi);
-\end{quote}
-
-For adding/deleting multiple items use the queue function, that is severall time faster.
-This will trigger an playlist-update-event after every call. while the queue add's it at once.
-\begin{quote}
-void  mpd\_ob\_playlist\_add   (MpdObj *mi, char *path);
-\end{quote}
-
-\begin{quote}
-int   mpd\_ob\_playlist\_delete   (MpdObj *mi,char *path);
-\end{quote}
-
-client side search function with best "match" option..
-It splits the search string into tokens. (on the ' ', and respects \[()\] so it won't mess up regex expressions.)  every token is then matched using regex.
-So f.e. Murder (John Lee Hooker)|(Miles Davis)  matches songs where title/filename/artist/album contains murder and "john lee hooker" 
-or murder "miles davis" in any order.\\
-{\color{red}{Warning: This function can be slow. For better performance use the server side use.}}
-
-\begin{quote}
-MpdData * mpd\_ob\_playlist\_token\_find  (MpdObj *mi , char *string);
-\end{quote}
-
-\subsection{MpdData struct functions}
-
-\begin{quote}
-int   mpd\_ob\_data\_is\_last   (MpdData *data);
-\end{quote}
-
-\begin{quote}
-void   mpd\_ob\_free\_data\_ob   (MpdData *data);
-\end{quote}
-
-\begin{quote}
-MpdData *  mpd\_ob\_data\_get\_next   (MpdData *data);
-\end{quote}
-
-mpd ob data next will return NULL when there are no more items. it will also call free when called on the last item.
-if you don't want this check with mpd\_ob\_data\_is\_last before calling get\_next
-this allows you to make this construction:
-
-\begin{verbatim}
-MpdData * mpd\_ob\_playlist\_get\_artists(..);
-while(data != NULL)
-{
-
-
-	data = mpd\_ob\_data\_next(data);
- }
-\end{verbatim}
-
-withouth leaking memory 
-
-
-\subsection{Queing}
-
-
-Use these functions when adding/deleting/loading more then one item at the time.
-The "commands" will be send to mpd when playlist\_queue\_commit is called.
-The queue will be cleared after the data is commited, or the connection is disconnected
-
-\begin{quote}
-void 		mpd\_ob\_playlist\_queue\_add		(MpdObj *mi,char *path);
-\end{quote}
-
-\begin{quote}
-void 		mpd\_ob\_playlist\_queue\_load		(MpdObj *mi,char *path);
-\end{quote}
-\begin{quote}
-void 		mpd\_ob\_playlist\_queue\_delete\_id		(MpdObj *mi,int id);
-\end{quote}
-
-Use these to commit the changes:
-\begin{quote}
-void 		mpd\_ob\_playlist\_queue\_commit		(MpdObj *mi);
-\end{quote}
-
-\subsection{Server Stuff}
-
-Server specific functions:
-todo: Add a check function that checks if mpd supports this:
-\begin{quote}
-MpdData * 	mpd\_ob\_server\_get\_output\_devices	(MpdObj *mi);
-\end{quote}
-
-\begin{quote}
-int 		mpd\_ob\_server\_set\_output\_device		(MpdObj *mi,int device\_id,int state);
-\end{quote}
-\begin{quote}
-long unsigned	mpd\_ob\_server\_get\_database\_update\_time	(MpdObj *mi);
-\end{quote}
-\begin{quote}
-int 		mpd\_ob\_server\_check\_version		(MpdObj *mi, int major, int minor, int micro);
-\end{quote}
-
-\subsection{Misc}
-
-
-These functions are using in libmpd self, I provide them because the can come in handy.
-(Gmpc uses them aswell)
-
-\begin{quote}
-regex\_t** 	mpd\_misc\_tokenize			(char *string);
-\end{quote}
-
-\begin{quote}
-void 		mpd\_misc\_tokens\_free			(regex\_t ** tokens);
-\end{quote}
-
-\end{document}
-
+ \documentclass[a4paper,11pt]{article}
+ \usepackage[english]{babel}
+ \usepackage{color,html}
+ 
+ \newcommand{\tmstrong}[1]{\textbf{#1}}
+ 
+ \begin{document}
+ 
+ \title{LibMpd} 
+ \author{Qball Cow}
+ \maketitle
+ 
+ \section{History}
+ Libmpd is very new, I wrote it to abstract the mpd abstraction out of the code
+ in gmpc. Therefor making gmpc code easier to read, but even more important
+ easier to debug. Libmpd will be released as a set of C files. The final goal is
+ to make it a seperate library:. Comments/suggestions are more then welcome,
+ just keep in mind this is a pre-release.
+ 
+ e-mail me at: \htmladdnormallink{qball@qballcow.nl}{mailto://qball@qballcow.nl}
+ 
+ \section{Goal}
+ 
+ Trying to provide a easy to use high level, callback based access to mpd. It
+ tries to be fast and keep the data transfer with mpd to the minimum. 
+	Todo this it implement qeues for deleting and adding songs. It also grabs the new status when a function actually request data from it, then it buffers it until the users qeues a new update. To make things easier for the programmer there is extra functions added.
+	
+	{\color{red} more bla bla here}
+	
+	It's written in plain C and uses the following header files
+	\begin{itemize}
+	  \item regex.h
+	  
+	  \item libmpdclient.h
+	  
+	  \item stdio.h
+	  
+	  \item stdlib.h (using  \_\_USE\_GNU)
+	  
+	  \item debug \_ printf.h (should come along with libmpd)
+	\end{itemize}
+	
+	\section{Status}
+	
+	\subsection{Implemented}
+	
+	\begin{itemize}
+	  \item Basic player access.
+	  
+	  \item Playlist access.
+	  
+	  \item Error handling.
+	  
+	  \item Command queues.
+	  
+	  \item Advanced search.
+	\end{itemize}
+	
+	\subsection{ToDo}
+	\begin{itemize}
+	  \item Permission check.
+	  
+	  \item translation.
+	  
+	  \item auth after connect
+	  
+	  \item Abstract more from libmpdclient. I still return structures and defines
+	  from libmpdclient.
+	  
+	  \item Become an Independent  library.
+	  
+	  \item More functionallity
+	  
+	  \item etc.
+	\end{itemize}
+	
+	\section{Usage}
+	Libmpd is written in an Object Oriented way. The idea is you create one, or multiple, object and program startup, and connect the needed signals, but they can also be created or destroyed at any given time. 
+	You can then use the provided functions to use the availible methods and get the variables. It isn't allowed to use the variables in the structure directly, at any time there value can be undefined.
+	A program will look something like:
+	\begin{verbatim}
+	 MpdObj *mo = mpd_ob_new_default();
+	 ......
+	 mpd_ob_connect(mo);
+	 .....
+	 .....
+	 mpd_ob_player_play(mo);
+	 ......
+	 ......
+	 mpd_ob_disconnect(mo);
+	\end{verbatim}
+	
+	
+	\section{Error behaviour}
+	\subsection{mpd errors}
+	libmpd checks after every command for possible error's. If an error occured
+	libmpd wil disconnect and call the error callback. The error callback will
+	contain the error Id, and a error string.
+	\subsection {internal errors}
+	Libmpd uses debug-printf to print out error messages. It uses 2 levels or error output and one debug level.
+	The first level only print errors out, the second errors and warning and level 3 prints alot of extra information.
+	Everything is printed to stdout.
+	
+	\section{Download}
+	Libmpd isn't packaged seperate yet. To get the most recent source grab the svn version of gmpc.\\
+	you can aquire this from \htmladdnormallink{musicpd.org}{http://musicpd.org}.\\
+	
+	
+	\section{Api}
+	The main object is the MpdOb struct. The user should in {\tmstrong{NO}} way
+	use any of the internal values. These can be invalid at any given time. The
+	MpdOb can be created using the following functions:
+	
+	\subsection{Basic}
+	\subsubsection{mpd\_ob\_new\_default()}
+	All these objects are after creation not yet connected to mpd\\
+	Create a new object with hostname= "localhost " and port="6600". This function always returns an object. (given malloc doesnt fail)
+	\begin{quote}
+	MpdObj * mpd\_ob\_new\_default (); 
+	\end{quote}
+	\textit{Return value:} An MpdObj
+	
+	\subsubsection{mpd\_ob\_new()}
+	This creates a object with given hostname,port and password. If password is NULL, no password is sended to mpd.
+	\begin{quote}
+	MpdObj * mpd\_ob\_new (char *hostname, int port, char *password); 
+	\end{quote}
+	\textit{Return value:} An malloced MpdObj
+	\subsubsection{mpd\_ob\_set\_hostname()}
+	Set the hostname. The default=localhost.
+	\begin{quote}
+	void mpd\_ob\_set\_hostname (MpdObj *mi, char *hostname); 
+	\end{quote}
+	\textit{Return value:} none
+	
+	\subsubsection{mpd\_ob\_set\_password()}
+	Set the password. To unset the password pass NULL as argument.
+	\begin{quote}
+	void mpd\_ob\_set\_password (MpdObj *mi, char *password); 
+	\end{quote}
+	\textit{Return value:} none
+	
+	\subsubsection{mpd\_ob\_set\_port()}
+	Set the port number. (default 6600)
+ \begin{quote}
+ void mpd\_ob\_set\_port (MpdObj *mi, int port); 
+ \end{quote}
+ \textit{Return value:} none
+ 
+ \subsubsection{mpd\_ob\_set\_connection\_timeout ()}
+ Set the connection timeout.
+ \begin{quote}
+ void mpd\_ob\_set\_connection\_timeout (MpdObj *mi, float timeout);
+ \end{quote}
+ \textit{Return value:} none
+ \subsubsection{ mpd\_ob\_connect() }
+ Connect to mpd. It is adviced to have the error signal connected before calling this function.\\
+ 
+ \begin{quote}
+ int mpd\_ob\_connect (MpdObj *mi); 
+ \end{quote}
+ \textit{Return value:} none
+ \subsubsection{mpd\_ob\_disconnect ()}
+ Disconnect from mpd. This will free all buffered data, including command queues.
+ \begin{quote}
+ int mpd\_ob\_disconnect (MpdObj *mi);
+ \end{quote}
+ \textit{Return value:} TRUE when connected.
+ \subsubsection{mpd\_ob\_check\_connected ()}
+ Check if the connection is up.
+ \begin{quote}
+ int mpd\_ob\_check\_connected (MpdObj *mi); 
+ \end{quote}
+ \textit{Return value:} TRUE when there is a connection.
+ \subsubsection{mpd\_ob\_check\_error()}
+ Check if there where error's in the past.
+ \begin{quote}
+ int mpd\_ob\_check\_error (MpdObj *mi);
+ \end{quote}
+ \textit{return value:} TRUE on error.
+ 
+ 
+ 
+ 
+ \subsection{Signals}
+ 
+	With the following functions you can connect a signal to an mpd event. By passing NULL you disable the signal.\\
+	
+	\begin{quote}
+	void mpd\_ob\_signal\_set\_playlist\_changed(MpdObj *mi, void *(* playlist\_changed)(MpdObj *mi, int old\_playlist\_id, int new\_playlist\_id,void *pointer),void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_error   
+	(MpdObj *mi, void *(* error\_signal)(MpdObj *mi, int id, char *msg, void *pointer),
+	void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_song\_changed  
+	(MpdObj *mi, void *(* song\_changed)
+	(MpdObj *mi, int old\_song\_id, int new\_song\_id,void *pointer), 
+	void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_status\_changed 
+	(MpdObj *mi, void *(* status\_changed)(MpdObj *mi,void *pointer), void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_state\_changed  
+	(MpdObj *mi, void *(* state\_changed)(MpdObj *mi, int old\_state, int new\_state, void *pointer),
+	void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_disconnect  
+	(MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer),void *disconnect\_pointer);
+	
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_connect  
+	(MpdObj *mi, void *(* connect)(MpdObj *mi, void *pointer),void *connect\_pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_database\_changed 
+	(MpdObj *mi, void *(* database\_changed)(MpdObj *mi, void *pointer), void *pointer);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_signal\_set\_updating\_changed 
+	(MpdObj *mi, void *(* updating\_changed)(MpdObj *mi,int updating, void *pointer), 
+	void *pointer);
+	\end{quote}
+	
+	
+	
+	\subsection{Status}
+	
+	
+	To get the function to have the  most recent info you want to call mpd\_ob\_status\_queue\_update 
+	In a gui app. you want to call this every 0.x seconds. 
+	mpd\_ob\_status\_queue\_update only queue's an update
+	Only when a function is called that needs status, it's fetched from mpd.
+	The status is stored until mpd\_ob\_status\_queue\_update is called again. (by the user or the lib itself)
+	
+	\begin{quote}
+	int   mpd\_ob\_status\_queue\_update  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	float   mpd\_ob\_status\_set\_volume\_as\_float (MpdObj *mi, float fvol);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_status\_set\_volume  (MpdObj *mi,int volume);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_status\_get\_volume  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_status\_get\_bitrate  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_status\_get\_total\_song\_time (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_status\_get\_elapsed\_song\_time (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_status\_get\_crossfade  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_status\_set\_crossfade  (MpdObj *mi, int crossfade\_time);
+	\end{quote}
+	
+	\subsection {Stats}
+	
+	
+	Stats update can queue an update of stats aswell.
+	
+	The stats can be forced to update using the following functions:
+	
+	\begin{quote}
+	int  mpd\_ob\_stats\_update   (MpdObj *mi);
+	\end{quote}
+	
+	The following function queues an update:
+	\begin{quote}
+	int  mpd\_ob\_stats\_queue\_update  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_stats\_get\_total\_songs  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_stats\_get\_total\_artists  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_stats\_get\_total\_albums  (MpdObj *mi);
+	\end{quote}
+	
+	The following 2 functions return the time in seconds;
+	\begin{quote}
+	int  mpd\_ob\_stats\_get\_uptime   (MpdObj *mi);
+	\end{quote}
+	\begin{quote}
+	int  mpd\_ob\_stats\_get\_playtime  (MpdObj *mi);
+	\end{quote}
+	
+	\subsection{Player}
+	\begin{quote}
+	int   mpd\_ob\_player\_play   (MpdObj *mi);
+	\end{quote}
+	\begin{quote}
+	int   mpd\_ob\_player\_play\_id   (MpdObj *mi, int id);
+	\end{quote}
+	
+	\begin{quote}
+	todo: int mpd\_ob\_player\_play\_pos(MpdObj *mi)
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_stop   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_next   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_prev   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_pause   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_get\_state   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_get\_current\_song\_id (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_get\_current\_song\_pos (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_player\_get\_repeat  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_player\_set\_repeat  (MpdObj *mi, int repeat);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_player\_get\_random  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int  mpd\_ob\_player\_set\_random  (MpdObj *mi, int random);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_player\_seek   (MpdObj *mi, int sec);
+	\end{quote}
+	
+	\subsection{Playlist}
+	
+	
+	And MpdData object can contain severall different type of information, it can contain complete song info/directories/artist/albums/output\_devices
+	If getting directory info it's adviced to check the type of information (song or dir)
+	All the data is grabbed from mpd directly.  so using the mpdData the filling of f.e. the gui can happen in the bg(and take a long time), withouth blocking the mpd connection.
+	
+	\begin{quote}
+	mpd\_Song *  mpd\_ob\_playlist\_get\_song  (MpdObj *mi, int songid);
+	\end{quote}
+	
+	\begin{quote}
+	mpd\_Song *  mpd\_ob\_playlist\_get\_current\_song (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_playlist\_clear   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_playlist\_shuffle   (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_playlist\_save   (MpdObj *mi, char *name);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_playlist\_update\_dir  (MpdObj *mi, char *path);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_playlist\_move\_pos  (MpdObj *mi, int old\_pos, int new\_pos);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData *  mpd\_ob\_playlist\_get\_artists  (MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData * mpd\_ob\_playlist\_get\_albums  (MpdObj *mi, char *artist);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData *  mpd\_ob\_playlist\_get\_directory  (MpdObj *mi,char *path);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData *  mpd\_ob\_playlist\_find   (MpdObj *mi, int table, char *string, int exact);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData *  mpd\_ob\_playlist\_get\_changes  (MpdObj *mi,int old\_playlist\_id);
+	\end{quote}
+	\begin{quote}
+	int  mpd\_ob\_playlist\_get\_playlist\_length (MpdObj *mi);
+	\end{quote}
+	
+	For adding/deleting multiple items use the queue function, that is severall time faster.
+	This will trigger an playlist-update-event after every call. while the queue add's it at once.
+	\begin{quote}
+	void  mpd\_ob\_playlist\_add   (MpdObj *mi, char *path);
+	\end{quote}
+	
+	\begin{quote}
+	int   mpd\_ob\_playlist\_delete   (MpdObj *mi,char *path);
+	\end{quote}
+	
+	client side search function with best "match" option..
+	It splits the search string into tokens. (on the ' ', and respects \[()\] so it won't mess up regex expressions.)  every token is then matched using regex.
+	So f.e. Murder (John Lee Hooker)|(Miles Davis)  matches songs where title/filename/artist/album contains murder and "john lee hooker" 
+	or murder "miles davis" in any order.\\
+	{\color{red}{Warning: This function can be slow. For better performance use the server side use.}}
+	
+	\begin{quote}
+	MpdData * mpd\_ob\_playlist\_token\_find  (MpdObj *mi , char *string);
+	\end{quote}
+	
+	\subsection{MpdData struct functions}
+	
+	\begin{quote}
+	int   mpd\_ob\_data\_is\_last   (MpdData *data);
+	\end{quote}
+	
+	\begin{quote}
+	void   mpd\_ob\_free\_data\_ob   (MpdData *data);
+	\end{quote}
+	
+	\begin{quote}
+	MpdData *  mpd\_ob\_data\_get\_next   (MpdData *data);
+	\end{quote}
+	
+	mpd ob data next will return NULL when there are no more items. it will also call free when called on the last item.
+	if you don't want this check with mpd\_ob\_data\_is\_last before calling get\_next
+	this allows you to make this construction:
+	
+	\begin{verbatim}
+	MpdData * mpd\_ob\_playlist\_get\_artists(..);
+	while(data != NULL)
+	{
+	
+	
+		data = mpd\_ob\_data\_next(data);
+	 }
+	\end{verbatim}
+	
+	withouth leaking memory 
+	
+	
+	\subsection{Queing}
+	
+	
+	Use these functions when adding/deleting/loading more then one item at the time.
+	The "commands" will be send to mpd when playlist\_queue\_commit is called.
+	The queue will be cleared after the data is commited, or the connection is disconnected
+	
+	\begin{quote}
+	void 		mpd\_ob\_playlist\_queue\_add		(MpdObj *mi,char *path);
+	\end{quote}
+	
+	\begin{quote}
+	void 		mpd\_ob\_playlist\_queue\_load		(MpdObj *mi,char *path);
+	\end{quote}
+	\begin{quote}
+	void 		mpd\_ob\_playlist\_queue\_delete\_id		(MpdObj *mi,int id);
+	\end{quote}
+	
+	Use these to commit the changes:
+	\begin{quote}
+	void 		mpd\_ob\_playlist\_queue\_commit		(MpdObj *mi);
+	\end{quote}
+	
+	\subsection{Server Stuff}
+	
+	Server specific functions:
+	todo: Add a check function that checks if mpd supports this:
+	\begin{quote}
+	MpdData * 	mpd\_ob\_server\_get\_output\_devices	(MpdObj *mi);
+	\end{quote}
+	
+	\begin{quote}
+	int 		mpd\_ob\_server\_set\_output\_device		(MpdObj *mi,int device\_id,int state);
+	\end{quote}
+	\begin{quote}
+	long unsigned	mpd\_ob\_server\_get\_database\_update\_time	(MpdObj *mi);
+	\end{quote}
+	\begin{quote}
+	int 		mpd\_ob\_server\_check\_version		(MpdObj *mi, int major, int minor, int micro);
+	\end{quote}
+	
+	\subsection{Misc}
+	
+	
+	These functions are using in libmpd self, I provide them because the can come in handy.
+	(Gmpc uses them aswell)
+	
+	\begin{quote}
+	regex\_t** 	mpd\_misc\_tokenize			(char *string);
+	\end{quote}
+	
+	\begin{quote}
+	void 		mpd\_misc\_tokens\_free			(regex\_t ** tokens);
+	\end{quote}
+	
+	\end{document}
+	
+	
