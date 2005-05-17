@@ -420,9 +420,9 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 		data= mpd_ob_data_get_next(data);		
 	}
 
-	if(connection->status != NULL)
+	if(mpd_ob_status_check(connection))
 	{
-		while (connection->status->playlistLength < old_length)
+		while (mpd_ob_playlist_get_playlist_length(connection) < old_length)
 		{
 			gchar *path = g_strdup_printf ("%i", old_length - 1);
 			if (gtk_tree_model_get_iter_from_string

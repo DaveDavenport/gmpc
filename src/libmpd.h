@@ -41,81 +41,14 @@
 #define	MPD_OB_PLAYER_STOP 	1
 #define	MPD_OB_PLAYER_UNKNOWN 	0
 
-
+/* queue struct */
 typedef struct _MpdQueue MpdQueue;
+/* main object struct. */
+typedef struct _MpdObj MpdObj;
 
-typedef struct _MpdObj 
-{
-	/* defines if we are connected */
-	/* This should be made true if and only if the connection is up and running */
-	short int 	connected;
-	/* information needed to connect to mpd */
-	char 		*hostname;
-	int 		port;
-	char 		*password;
-	float 		connection_timeout;
-
-	/* mpd's structures */
-	mpd_Connection 	*connection;
-	mpd_Status 	*status;
-	mpd_Stats 	*stats;
-	mpd_Song 	*CurrentSong;
-
-	/* information needed to detect changes on mpd's side */
-	long long 	playlistid;
-	int 		songid;
-	int 		state;
-	unsigned long	dbUpdateTime;	
-	int updatingDb;
-	
-	
-	/* functions to call */
-	void *(* playlist_changed)(struct _MpdObj *mi, int old_playlist_id, int new_playlist_id, void *pointer);	
-	void *playlist_changed_pointer;
-	/* error signal */
-	void *(* error_signal)(struct _MpdObj *mi, int id, char *msg, void *pointer);	
-	void *error_signal_pointer;
-	/* song change */
-	void *(* song_changed)(struct _MpdObj *mi, int old_song_id, int new_song_id, void *pointer);	
-	void *song_changed_signal_pointer;                                                     	
-	/* song status changed */
-	void *(* status_changed)(struct _MpdObj *mi, void *pointer);	
-	void *status_changed_signal_pointer;                                                     	
-	/* song status changed */
-	void *(* state_changed)(struct _MpdObj *mi,int old_state,int new_state, void *pointer);	
-	void *state_changed_signal_pointer;                                                     	
-
-	/* disconnect signal */
-	void *(* disconnect) (struct _MpdObj *mi, void *pointer);
-	void *disconnect_pointer;
-
-	/* connect signal */
-	void *(* connect) (struct _MpdObj *mi, void *pointer);
-	void *connect_pointer;
-	
-	/* error message */
-	int error;
-	char *error_msg;	
-
-	/* song datab update */
-	void *(* database_changed)(struct _MpdObj *mi,void *pointer);	
-	void *database_changed_signal_pointer;                                                     	
-
-	void *(* updating_changed)(struct _MpdObj *mi, int updating,void *pointer);
-	void *updating_signal_pointer;
-
-	
-
-	/* internal values */
-	/* this "locks" the connections. so we can't have to commands competing with eachother */
-	short int connection_lock;
-
-	/* queue */
-	MpdQueue *queue;
-
-}MpdObj;
-
-
+/* enumeration determining what value the MpdData structure hold. 
+ * it's allowed to have different type's of item's in one list.
+ */
 enum {
 	MPD_DATA_TYPE_NONE,
 	MPD_DATA_TYPE_ARTIST,
@@ -126,7 +59,8 @@ enum {
 	MPD_DATA_TYPE_OUTPUT_DEV
 } MpdDataType;
 
-
+/* there will be wrapper functions in the future to grab the internals.
+ */
 typedef struct _MpdData
 {
 	struct _MpdData *next;
@@ -177,6 +111,7 @@ void 		mpd_ob_signal_set_updating_changed	(MpdObj *mi, void *(* updating_changed
  * mpd_ob_status_queue_update only queue's an update
  * Only when a function is called that needs status, it's fetched from mpd.
  */
+int 		mpd_ob_status_check			(MpdObj *mi);
 int 		mpd_ob_status_queue_update		(MpdObj *mi);
 float 		mpd_ob_status_set_volume_as_float	(MpdObj *mi, float fvol);
 int 		mpd_ob_status_set_volume		(MpdObj *mi,int volume);

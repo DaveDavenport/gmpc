@@ -408,7 +408,7 @@ void player_state_changed(int old_state, int state)
 			int i=0;
 			for(i=0;buffer[i] != '\0';i++)
 			{
-				if(buffer[i] == '\n') buffer[i] = ' ';
+				if(buffer[i] == '\n') buffer[i] = '-';
 			}
 
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
@@ -442,7 +442,7 @@ void player_song_changed(int oldsong, int newsong)
 			int i=0;
 			for(i=0;buffer[i] != '\0';i++)
 			{
-				if(buffer[i] == '\n') buffer[i] = ' ';
+				if(buffer[i] == '\n') buffer[i] = '-';
 			}
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
 		}

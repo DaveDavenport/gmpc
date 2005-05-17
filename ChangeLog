@@ -1,3 +1,11 @@
+17-05-2005 <Qball> <Qball@qballcow.nl>
+	* src/libmpd.[c|h]:	Moved the struct MpdObj definition to the .c
+	file and typedeffed it in the .h file.. using internall function from
+	you're C code will now result in compile errors.
+	* src/main.c:		Removed direct usage of MpdObj internals.
+	* src/mpdinteraction.c:	Removed direct usage of MpdObj internals.
+	* src/player.c:		'\n' in window title is now replaced by a dash
+	'-'
 15-05-2005 <Qball> <Qball@qballcow.nl>	
 	* doc/libmpd.tex:	Documentation file for libmpd.. (type
 	latex2html for nice manual)
