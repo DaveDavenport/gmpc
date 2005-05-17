@@ -1,6 +1,6 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage[english]{babel}
-\usepackage{color}
+\usepackage{color,html}
 
 \newcommand{\tmstrong}[1]{\textbf{#1}}
 
@@ -11,14 +11,13 @@
 \maketitle
 
 \section{History}
-
-libmpd is very new, I wrote it to abstract the mpd abstraction out of the code
+Libmpd is very new, I wrote it to abstract the mpd abstraction out of the code
 in gmpc. Therefor making gmpc code easier to read, but even more important
-easier to debug. Libmpd will now be released as a set of C files. The goal is
-to make it a seperate library. Comments/suggestions are more then welcome,
+easier to debug. Libmpd will be released as a set of C files. The final goal is
+to make it a seperate library:. Comments/suggestions are more then welcome,
 just keep in mind this is a pre-release.
 
-e-mail me at: qball@qballcow.nl
+e-mail me at: \verb|qball@qballcow.nl|
 
 \section{Goal}
 
@@ -75,6 +74,22 @@ It's written in plain C and uses the following header files
   \item etc.
 \end{itemize}
 
+\section{Usage}
+Libmpd is written in an Object Oriented way. The idea is you create one, or multiple, object and program startup, and connect the needed signals, but they can also be created or destroyed at any given time. 
+You can then use the provided functions to use the availible methods and get the variables. It isn't allowed to use the variables in the structure directly, at any time there value can be undefined.
+A program will look something like:
+\begin{verbatim}
+	MpdObj *mo = mpd_ob_new_default();
+	......
+	mpd_ob_connect(mo);
+	.....
+	.....
+	mpd_ob_player_play(mo);
+	......
+	......
+	mpd_ob_disconnect(mo);
+\end{verbatim}
+
 
 \section{Error behaviour}
 \subsection{mpd errors}
@@ -125,7 +140,7 @@ Set the connection timeout.
 \begin{quote}
 void mpd\_ob\_set\_connection\_timeout (MpdObj *mi, float timeout);
 \end{quote}
-Connect to mpd.
+Connect to mpd. It is adviced to have the error signal connected before calling this function.
 \begin{quote}
 int mpd\_ob\_connect (MpdObj *mi); 
 \end{quote}
