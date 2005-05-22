@@ -97,19 +97,6 @@ typedef struct _MpdObj
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 int mpd_ob_stats_check(MpdObj *mi);
 
 enum {
@@ -1609,6 +1596,7 @@ MpdData *mpd_ob_new_data_struct()
 
 	data->value.artist = NULL;
 	data->value.album = NULL;
+	data->value.tag = NULL;
 	data->value.song = NULL;
 
 	return data;	
@@ -1758,6 +1746,10 @@ void mpd_ob_free_data_ob(MpdData *data)
 		if(data->type == MPD_DATA_TYPE_ARTIST)
 		{
 			free(data->value.artist);
+		}
+		else if (data->type == MPD_DATA_TYPE_TAG)
+		{
+			free(data->value.tag);
 		}
 		else if (data->type == MPD_DATA_TYPE_ALBUM)
 		{

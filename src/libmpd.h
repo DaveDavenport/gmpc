@@ -51,6 +51,7 @@ typedef struct _MpdObj MpdObj;
  */
 enum {
 	MPD_DATA_TYPE_NONE,
+	MPD_DATA_TYPE_TAG,
 	MPD_DATA_TYPE_ARTIST,
 	MPD_DATA_TYPE_ALBUM,
 	MPD_DATA_TYPE_DIRECTORY,
@@ -72,6 +73,7 @@ typedef struct _MpdData
 
 	union 
 	{
+		char *tag;
 		char *artist;
 		char *album;
 		char *directory;
