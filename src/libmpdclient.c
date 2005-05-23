@@ -1296,10 +1296,74 @@ void mpd_sendListCommand(mpd_Connection * connection, int table,
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 }
-void mpd_sendListTagCommand(mpd_Connection * connection, int table) 
+
+void mpd_sendListTagCommand(mpd_Connection * connection,int ret_table, ...) 
+{
+	char *st, *str;
+	char * string=NULL;
+	int table;
+	char * sanitStr;
+	va_list arglist;
+	if(ret_table < 0 && ret_table >= MPD_TAG_NUM_OF_ITEM_TYPES)
+	{
+		connection->error = 1;
+		sprintf(connection->errorStr,"unknown ret_table for search %i",ret_table);
+		return;
+	}
+
+	
+	va_start(arglist, ret_table);
+	string = realloc(string,strlen("search")+2+strlen(mpdTagItemKeys[ret_table]));
+	sprintf(string, "search %s",mpdTagItemKeys[ret_table]);
+	while((table = va_arg(arglist, int)) != -1)
+	{
+		printf("%i\n", table);
+		if(table >= 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
+		{
+			st = mpdTagItemKeys[table];
+			str = va_arg(arglist,char *);
+			sanitStr = mpd_sanitizeArg(str);
+			string = realloc(string, strlen(string)+strlen(st)+strlen(sanitStr)+6);
+			sprintf(string, "%s %s \"%s\"",string,st,sanitStr);
+			free(sanitStr);
+		}	
+		else {
+			connection->error = 1;
+			sprintf(connection->errorStr,"unknown table for search %i",table);
+			va_end(arglist);
+			return;
+		}
+	}
+	va_end(arglist);
+	/* set the last to '\n', should be sufficient space in the string for this */
+	string[strlen(string)] ='\n';
+	mpd_sendInfoCommand(connection,string);
+	free(string);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+void mpd_sendListTagCommand(mpd_Connection * connection, int table,...) 
 {
 	char *st;
 	char * string;
+	va_list arglist;
 	if(table > 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
 	{
 		st = mpdTagItemKeys[table];		
@@ -1316,7 +1380,7 @@ void mpd_sendListTagCommand(mpd_Connection * connection, int table)
 	free(string);
 }
 
-
+*/
 
 
 

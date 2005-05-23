@@ -943,6 +943,125 @@ void pl3_browse_replace_selected()
 	pl3_browse_add_selected();
 	mpd_ob_player_play(connection);
 }
+/* GERNRE BROWSER */
+void pl3_genre_browser_add()
+{
+	if(mpd_ob_server_check_version(connection,0,12,0))
+	{
+	GtkTreeIter iter,child;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_BROWSE_GENRE,
+			PL3_CAT_TITLE, "Browse Genre",        	
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_PROC, FALSE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	/* add fantom child for lazy tree */
+	gtk_tree_store_append(pl3_tree, &child, &iter);
+	}
+}
+
+
+void pl3_genre_browser_fill_tree(GtkTreeIter *iter)
+{
+	char *artist, *alb_artist;
+	GtkTreeIter child,child2;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
+	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
+
+	if (!mpd_ob_check_connected(connection))
+	{
+		return;
+	}
+	if(!strlen(alb_artist))
+	{
+		/* fill artist list */
+		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,MPD_TAG_ITEM_GENRE,-1);
+
+		while(data != NULL)
+		{	
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_ARTIST,
+					1, data->value.tag, /* the field */
+					2, data->value.tag, /* the artist name, if(1 and 2 together its an artist field) */
+					3, "media-artist",
+					4, FALSE,
+					PL3_CAT_ICON_SIZE,1,
+					-1);
+			gtk_tree_store_append(pl3_tree, &child2, &child);
+
+			data = mpd_ob_data_get_next(data);
+		}
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
+		{
+			gtk_tree_store_remove(pl3_tree, &child); 
+		}
+	}
+	/* if where inside a artist */
+	else if(!g_utf8_collate(artist, alb_artist))
+	{
+		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,MPD_TAG_ITEM_ARTIST,MPD_TAG_ITEM_GENRE,artist,-1 );
+		while(data != NULL){
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_ARTIST,
+					1, data->value.tag,
+					2, artist,
+					3, "media-album", 
+					4, TRUE, 
+					PL3_CAT_ICON_SIZE,1,
+					-1);
+			data = mpd_ob_data_get_next(data);
+		}
+
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
+		{
+			gtk_tree_store_remove(pl3_tree, &child); 
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1418,6 +1537,7 @@ void pl3_reinitialize_tree()
 	pl3_find_add();
 	pl3_xiph_add();
 	pl3_custom_stream_add();
+	pl3_genre_browser_add();
 
 	gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
 
@@ -1504,7 +1624,10 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		else if (type == PL3_BROWSE_ARTIST)
 		{
 			pl3_artist_browser_fill_tree(iter);
-
+		}
+		else if (type == PL3_BROWSE_GENRE)
+		{
+			pl3_genre_browser_fill_tree(iter);
 		}
 	}
 	/* avuton's Idea */

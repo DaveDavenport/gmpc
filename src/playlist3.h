@@ -20,6 +20,7 @@ enum{
 	PL3_BROWSE_XIPH,
 	PL3_BROWSE_CUSTOM_STREAM,
 	PL3_FIND,
+	PL3_BROWSE_GENRE,
 	PL3_NTYPES
 	/* more space for options, like shoutcast */
 } tree_type;

@@ -21,6 +21,7 @@
 #define __USE_GNU
 #include <string.h>
 #include <regex.h>
+#include <stdarg.h>
 #include "debug_printf.h"
 #include "libmpd.h"
 
@@ -1603,21 +1604,24 @@ MpdData *mpd_ob_new_data_struct()
 }
 
 /* prefered function */
-MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table)
+MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table,...)
 {
 	char *string = NULL;
 	MpdData *data = NULL;
+	va_list arglist;
 	if(!mpd_ob_check_connected(mi))
 	{
 		printf("mpd_ob_playlist_get_artists: not connected\n");
 		return NULL;
 	}
-	if(!mpd_ob_server_check_version(mi,0,12,0) && table > MPD_TAG_ITEM_ALBUM)
+
+	if(!mpd_ob_server_check_version(mi,0,12,0))
 	{
 
 		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_get_unique_tag:For this feature you need at least mpd version 0.12.0");
 		return NULL;
 	}
+
 	if(table < 0 || table >= MPD_TAG_NUM_OF_ITEM_TYPES)
 	{
 		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_unique_tag: Undefined table defined");
@@ -1628,8 +1632,9 @@ MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table)
 		printf("mpd_ob_playlist_get_artists: lock failed\n");
 		return NULL;
 	}
-
-	mpd_sendListTagCommand(mi->connection,table);
+	va_start(arglist, table);
+	mpd_sendListTagCommand(mi->connection,table,arglist);
+	va_end(arglist);
 	while (( string = mpd_getNextTag(mi->connection,table)) != NULL)
 	{	
 		if(data == NULL)
@@ -2127,7 +2132,122 @@ MpdData *mpd_ob_playlist_token_find(MpdObj *mi , char *string)
 	return data->first;
 }
 
+MpdData *mpd_ob_playlist_find_adv(MpdObj *mi,int exact, ...)
+{
+	MpdData *data = NULL;
+	mpd_InfoEntity *ent = NULL;
+	va_list arglist;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_find: not connected\n");
+		return NULL;
+	}
+	if(!mpd_ob_server_check_version(mi, 0,12,0))
+	{
+		debug_printf(DEBUG_WARNING, "mpd_ob_plalist_find_adv: only works with mpd higher then 0.12.0");
+		return NULL;
+	}
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_find: lock failed\n");
+		return NULL;
+	}
+	va_start(arglist, exact);
+	if(exact)
+	{
+		mpd_sendFindTagCommand(mi->connection,arglist);
+	}
+	else
+	{
+		mpd_sendSearchTagCommand(mi->connection, arglist);
+	}
+	va_end(arglist);
+	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->prev = NULL;
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->prev = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		if(ent->type == MPD_INFO_ENTITY_TYPE_DIRECTORY)
+		{
+			data->type = MPD_DATA_TYPE_DIRECTORY;
+			data->value.directory = strdup(ent->info.directory->path);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_SONG)
+		{
+			data->type = MPD_DATA_TYPE_SONG;                            	
+			data->value.song = mpd_songDup(ent->info.song);
+		}
+		else if (ent->type == MPD_INFO_ENTITY_TYPE_PLAYLISTFILE)
+		{
+			data->type = MPD_DATA_TYPE_PLAYLIST;
+			data->value.playlist = strdup(ent->info.playlistFile->path);
+		}
 
+		mpd_freeInfoEntity(ent);
+	}
+	mpd_finishCommand(mi->connection);
+
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 MpdData * mpd_ob_playlist_find(MpdObj *mi, int table, char *string, int exact)
 {
 	MpdData *data = NULL;

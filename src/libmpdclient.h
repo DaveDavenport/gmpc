@@ -426,7 +426,7 @@ char * mpd_getNextTag(mpd_Connection *connection, int table);
 void mpd_sendListCommand(mpd_Connection * connection, int table, 
 		const char * arg1);
 
-void mpd_sendListTagCommand(mpd_Connection * connection, int table);
+void mpd_sendListTagCommand(mpd_Connection * connection, int table,...);
 
 /* SIMPLE COMMANDS */
 
