@@ -1633,7 +1633,7 @@ MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table,...)
 		return NULL;
 	}
 	va_start(arglist, table);
-	mpd_sendListTagCommand(mi->connection,table,arglist);
+	mpd_sendVListTagCommand(mi->connection,table,arglist);
 	va_end(arglist);
 	while (( string = mpd_getNextTag(mi->connection,table)) != NULL)
 	{	
@@ -2155,11 +2155,11 @@ MpdData *mpd_ob_playlist_find_adv(MpdObj *mi,int exact, ...)
 	va_start(arglist, exact);
 	if(exact)
 	{
-		mpd_sendFindTagCommand(mi->connection,arglist);
+		mpd_sendVFindTagCommand(mi->connection,arglist);
 	}
 	else
 	{
-		mpd_sendSearchTagCommand(mi->connection, arglist);
+		mpd_sendVSearchTagCommand(mi->connection, arglist);
 	}
 	va_end(arglist);
 	while (( ent = mpd_getNextInfoEntity(mi->connection)) != NULL)

@@ -158,10 +158,15 @@ MpdData * 	mpd_ob_playlist_get_artists		(MpdObj *mi);
 MpdData *	mpd_ob_playlist_get_albums		(MpdObj *mi, char *artist);
 MpdData * 	mpd_ob_playlist_get_directory		(MpdObj *mi,char *path);
 MpdData * 	mpd_ob_playlist_find			(MpdObj *mi, int table, char *string, int exact);
+
 MpdData * 	mpd_ob_playlist_get_changes		(MpdObj *mi,int old_playlist_id);
 int		mpd_ob_playlist_get_playlist_length	(MpdObj *mi);
 void		mpd_ob_playlist_add			(MpdObj *mi, char *path);
 int 		mpd_ob_playlist_delete			(MpdObj *mi,char *path);
+
+/* mpd svn only functions 0.12.0 */
+MpdData * 	mpd_ob_playlist_get_unique_tags		(MpdObj *mi, int table,...);
+MpdData *	mpd_ob_playlist_find_adv		(MpdObj *mi,int exact, ...);
 /* client side search function with best "match" option..
  * It splits the search string into tokens. (on the ' ')  every token is then matched using regex.
  * So f.e. Murder Hooker|Davis  matches songs where title/filename/artist/album contains murder and hooker or murder davis in any order.

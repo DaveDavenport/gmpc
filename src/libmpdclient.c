@@ -1091,7 +1091,7 @@ char * mpd_getNextReturnElementNamed(mpd_Connection * connection,
 }
 
 char * mpd_getNextTag(mpd_Connection * connection,int table) {
-	if(table >0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
+	if(table >= 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
 	{
 		return mpd_getNextReturnElementNamed(connection,mpdTagItemKeys[table]);
 	}
@@ -1178,15 +1178,20 @@ void mpd_sendSearchCommand(mpd_Connection * connection, int table,
 	free(string);
 	free(sanitStr);
 }
+void mpd_sendSearchTagCommand(mpd_Connection *connection, ...)
+{
+	va_list arglist;
+	va_start(arglist, connection);
+	mpd_sendVSearchTagCommand(connection, arglist);
+	va_end(arglist);
+}
 
-void mpd_sendSearchTagCommand(mpd_Connection * connection, ...) 
+void mpd_sendVSearchTagCommand(mpd_Connection * connection, va_list arglist) 
 {
 	char *st, *str;
 	char * string=NULL;
 	int table;
 	char * sanitStr;
-	va_list arglist;
-	va_start(arglist, connection);
 	string = realloc(string,strlen("search")+1);
 	strcpy(string, "search");
 	while((table = va_arg(arglist, int)) != -1)
@@ -1207,22 +1212,30 @@ void mpd_sendSearchTagCommand(mpd_Connection * connection, ...)
 			return;
 		}
 	}
-	va_end(arglist);
 	/* set the last to '\n', should be sufficient space in the string for this */
-	string[strlen(string)] ='\n';
+	sprintf(string, "%s\n", string);
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 }
 
 
-void mpd_sendFindTagCommand(mpd_Connection * connection, ...) 
+void mpd_sendFindTagCommand(mpd_Connection *connection, ...)
+{
+	va_list arglist;
+	va_start(arglist, connection);
+	mpd_sendVFindTagCommand(connection, arglist);
+	va_end(arglist);
+}
+
+
+
+
+void mpd_sendVFindTagCommand(mpd_Connection * connection, va_list arglist) 
 {
 	char *st, *str;
 	char * string=NULL;
 	int table;
 	char * sanitStr;
-	va_list arglist;
-	va_start(arglist, connection);
 	string = realloc(string,strlen("find")+1);
 	strcpy(string, "find");
 	while((table = va_arg(arglist, int)) != -1)
@@ -1243,9 +1256,8 @@ void mpd_sendFindTagCommand(mpd_Connection * connection, ...)
 			return;
 		}
 	}
-	va_end(arglist);
 	/* set the last to '\n', should be sufficient space in the string for this */
-	string[strlen(string)] ='\n';
+	sprintf(string, "%s\n", string);
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 }
@@ -1297,13 +1309,19 @@ void mpd_sendListCommand(mpd_Connection * connection, int table,
 	free(string);
 }
 
-void mpd_sendListTagCommand(mpd_Connection * connection,int ret_table, ...) 
+void mpd_sendListTagCommand(mpd_Connection *connection, int ret_table, ...)
+{
+	va_list arglist;
+	va_start(arglist, ret_table);
+	mpd_sendVListTagCommand(connection, ret_table, arglist);
+	va_end(arglist);
+}
+void mpd_sendVListTagCommand(mpd_Connection * connection,int ret_table, va_list arglist) 
 {
 	char *st, *str;
 	char * string=NULL;
 	int table;
 	char * sanitStr;
-	va_list arglist;
 	if(ret_table < 0 && ret_table >= MPD_TAG_NUM_OF_ITEM_TYPES)
 	{
 		connection->error = 1;
@@ -1311,19 +1329,16 @@ void mpd_sendListTagCommand(mpd_Connection * connection,int ret_table, ...)
 		return;
 	}
 
-	
-	va_start(arglist, ret_table);
-	string = realloc(string,strlen("search")+2+strlen(mpdTagItemKeys[ret_table]));
-	sprintf(string, "search %s",mpdTagItemKeys[ret_table]);
+	string = realloc(string,strlen("list")+3+strlen(mpdTagItemKeys[ret_table]));
+	sprintf(string, "list %s",mpdTagItemKeys[ret_table]);
 	while((table = va_arg(arglist, int)) != -1)
 	{
-		printf("%i\n", table);
 		if(table >= 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
 		{
 			st = mpdTagItemKeys[table];
 			str = va_arg(arglist,char *);
 			sanitStr = mpd_sanitizeArg(str);
-			string = realloc(string, strlen(string)+strlen(st)+strlen(sanitStr)+6);
+			string = realloc(string, strlen(string)+strlen(st)+strlen(sanitStr)+7);
 			sprintf(string, "%s %s \"%s\"",string,st,sanitStr);
 			free(sanitStr);
 		}	
@@ -1334,9 +1349,8 @@ void mpd_sendListTagCommand(mpd_Connection * connection,int ret_table, ...)
 			return;
 		}
 	}
-	va_end(arglist);
 	/* set the last to '\n', should be sufficient space in the string for this */
-	string[strlen(string)] ='\n';
+	sprintf(string,"%s\n", string);
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 }
@@ -1364,7 +1378,7 @@ void mpd_sendListTagCommand(mpd_Connection * connection, int table,...)
 	char *st;
 	char * string;
 	va_list arglist;
-	if(table > 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
+	if(table >= 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
 	{
 		st = mpdTagItemKeys[table];		
 	}

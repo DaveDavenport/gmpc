@@ -1,3 +1,9 @@
+23-05-2005 <Qball> <Qball@qballcow.nl>
+	* src/libmpdclient.[c|h]:	Installed version with qball "advanced
+	search and list" functions
+	* src/libmpd.[c|h]:		support for qball patch
+	* src/plyalist3.c:		Genre browser partially implemented
+
 17-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/libmpd.[c|h]:	Moved the struct MpdObj definition to the .c
 	file and typedeffed it in the .h file.. using internall function from

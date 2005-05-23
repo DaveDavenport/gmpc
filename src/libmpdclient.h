@@ -35,7 +35,7 @@
 #define LIBMPDCLIENT_H
 
 #include <sys/time.h>
-
+#include <stdarg.h>
 #define MPD_BUFFER_MAX_LENGTH	50000
 #define MPD_WELCOME_MESSAGE	"OK MPD "
 
@@ -408,6 +408,8 @@ void mpd_sendFindCommand(mpd_Connection * connection, int table,
 
 void mpd_sendSearchTagCommand(mpd_Connection *connection, ...);
 void mpd_sendFindTagCommand(mpd_Connection *connection, ...);
+void mpd_sendVSearchTagCommand(mpd_Connection *connection, va_list arglist);
+void mpd_sendVFindTagCommand(mpd_Connection *connection, va_list arglist);
 /* LIST TAG COMMANDS */
 
 /* use this function fetch next artist entry, be sure to free the returned 
@@ -427,6 +429,7 @@ void mpd_sendListCommand(mpd_Connection * connection, int table,
 		const char * arg1);
 
 void mpd_sendListTagCommand(mpd_Connection * connection, int table,...);
+void mpd_sendVListTagCommand(mpd_Connection * connection,int ret_table, va_list arglist);
 
 /* SIMPLE COMMANDS */
 
