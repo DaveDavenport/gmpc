@@ -1612,7 +1612,7 @@ MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table)
 		printf("mpd_ob_playlist_get_artists: not connected\n");
 		return NULL;
 	}
-	if(!mpd_ob_check_version(mi,0,12,0) && table > MPD_TAG_ITEM_ALBUM)
+	if(!mpd_ob_server_check_version(mi,0,12,0) && table > MPD_TAG_ITEM_ALBUM)
 	{
 
 		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_get_unique_tag:For this feature you need at least mpd version 0.12.0");
