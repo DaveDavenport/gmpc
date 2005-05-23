@@ -1602,6 +1602,133 @@ MpdData *mpd_ob_new_data_struct()
 	return data;	
 }
 
+/* prefered function */
+MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table)
+{
+	char *string = NULL;
+	MpdData *data = NULL;
+	if(!mpd_ob_check_connected(mi))
+	{
+		printf("mpd_ob_playlist_get_artists: not connected\n");
+		return NULL;
+	}
+	if(!mpd_ob_check_version(mi,0,12,0) && table > MPD_TAG_ITEM_ALBUM)
+	{
+
+		debug_printf(DEBUG_WARNING, "mpd_ob_playlist_get_unique_tag:For this feature you need at least mpd version 0.12.0");
+		return NULL;
+	}
+	if(table < 0 || table >= MPD_TAG_NUM_OF_ITEM_TYPES)
+	{
+		debug_printf(DEBUG_ERROR, "mpd_ob_playlist_get_unique_tag: Undefined table defined");
+		return NULL;
+	}	
+	if(mpd_ob_lock_conn(mi))
+	{
+		printf("mpd_ob_playlist_get_artists: lock failed\n");
+		return NULL;
+	}
+
+	mpd_sendListTagCommand(mi->connection,table);
+	while (( string = mpd_getNextTag(mi->connection,table)) != NULL)
+	{	
+		if(data == NULL)
+		{
+			data = mpd_ob_new_data_struct();
+			data->first = data;
+			data->next = NULL;
+			data->prev = NULL;
+
+		}	
+		else
+		{
+			data->next = mpd_ob_new_data_struct();
+			data->next->first = data->first;
+			data->next->prev = data;
+			data = data->next;
+			data->next = NULL;
+		}
+		data->type = MPD_DATA_TYPE_TAG; 
+		data->value.tag = string;
+	}
+	mpd_finishCommand(mi->connection);
+
+//	data = mpd_ob_playlist_sort_artist_list(data);
+	/* unlock */
+	mpd_ob_unlock_conn(mi);
+	if(data == NULL) 
+	{
+		return NULL;
+	}
+	return data->first;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 MpdData * mpd_ob_playlist_get_artists(MpdObj *mi)
