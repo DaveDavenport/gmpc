@@ -1356,58 +1356,6 @@ void mpd_sendVListTagCommand(mpd_Connection * connection,int ret_table, va_list 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void mpd_sendListTagCommand(mpd_Connection * connection, int table,...) 
-{
-	char *st;
-	char * string;
-	va_list arglist;
-	if(table >= 0 && table < MPD_TAG_NUM_OF_ITEM_TYPES)
-	{
-		st = mpdTagItemKeys[table];		
-	}
-	else {
-		connection->error = 1;
-		strcpy(connection->errorStr,"unknown table for list");
-		return;
-	}
-	string = malloc(strlen("list")+strlen(st)+3);
-	sprintf(string,"list %s\n",st);
-
-	mpd_sendInfoCommand(connection,string);
-	free(string);
-}
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
 void mpd_sendAddCommand(mpd_Connection * connection, const char * file) {
 	char * sFile = mpd_sanitizeArg(file);
 	char * string = malloc(strlen("add")+strlen(sFile)+5);
