@@ -60,7 +60,7 @@ void id3_status_update()
 	if(songs == NULL) return;
 	song =  songs->data;
 	if(song == NULL) return;
-	if(song->id == mpd_ob_player_get_current_song_id(connection))
+	if(song->id == mpd_ob_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
 	{
 		char *temp = g_strdup_printf("%i kb/s", mpd_ob_status_get_bitrate(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
@@ -250,7 +250,7 @@ set_text (GList * node)
 				 (xml_id3_window, "path_label")), "");
 	}
 
-	if(song->id == mpd_ob_player_get_current_song_id(connection))
+	if(song->id == mpd_ob_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
 	{
 		char *temp = g_strdup_printf("%i kbps", mpd_ob_status_get_bitrate(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
@@ -326,6 +326,34 @@ id3_last_song ()
 	set_text (songs);
 }
 
+
+
+void call_id3_window_song(mpd_Song *songstr)
+{
+	if(songstr == NULL)
+	{
+		return;
+	}
+	if(xml_id3_window == NULL)
+	{
+		xml_id3_window = glade_xml_new (GLADE_PATH "gmpc.glade", "id3_info_window", NULL);
+
+		/* check for errors and axit when there is no gui file */
+		if (xml_id3_window == NULL)
+			g_error ("Couldnt initialize GUI. Please check installation\n");
+		glade_xml_signal_autoconnect (xml_id3_window);
+	}
+
+
+
+
+
+	songs = g_list_append (songs,songstr);
+	songs = g_list_last (songs);
+	set_text (songs);
+
+
+}
 	void
 call_id3_window (int song)
 {

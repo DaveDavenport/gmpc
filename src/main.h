@@ -115,3 +115,5 @@ void pl3_reinitialize_tree();
 
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void id3_status_update();
+void call_id3_window_song(mpd_Song *songstr);
+

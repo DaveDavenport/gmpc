@@ -1,5 +1,8 @@
 24-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/mpdinteraction.c:		set window title on connect/disconnect
+	* src/libmpc.d:			Support for mpdSong call of the window
+	* src/playlist3.c:		Support (mpd =0.12) for showing
+	id3tags of db items
 23-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/libmpdclient.[c|h]:	Installed version with qball "advanced
 	search and list" functions

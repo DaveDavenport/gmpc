@@ -685,13 +685,25 @@ void pl3_show_song_info ()
 				gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
 				call_id3_window (value);
 			}
-			if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
+			else if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
 			{
 				gtk_tree_model_get (model, &iter, PL3_UNKOWN, &value, -1);
 				call_id3_window (value);
 			}
-			else if(type == PL3_FIND)
+			else if(type == PL3_FIND|| type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_GENRE)
 			{
+				if(mpd_ob_server_check_version(connection,0,12,0))
+				{
+					char *path;
+					MpdData *data;
+					gtk_tree_model_get (model, &iter, PL3_SONG_ID, &path, -1);
+					data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+					while(data != NULL)
+					{
+						call_id3_window_song(mpd_songDup(data->value.song));
+						data = mpd_ob_data_get_next(data);
+					}
+				}
 
 			}
 			/* go to previous song if still connected */
@@ -948,17 +960,17 @@ void pl3_genre_browser_add()
 {
 	if(mpd_ob_server_check_version(connection,0,12,0))
 	{
-	GtkTreeIter iter,child;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_GENRE,
-			PL3_CAT_TITLE, "Browse Genre",        	
-			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "media-artist",
-			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	/* add fantom child for lazy tree */
-	gtk_tree_store_append(pl3_tree, &child, &iter);
+		GtkTreeIter iter,child;
+		gtk_tree_store_append(pl3_tree, &iter, NULL);
+		gtk_tree_store_set(pl3_tree, &iter, 
+				PL3_CAT_TYPE, PL3_BROWSE_GENRE,
+				PL3_CAT_TITLE, "Browse Genre",        	
+				PL3_CAT_INT_ID, "",
+				PL3_CAT_ICON_ID, "media-artist",
+				PL3_CAT_PROC, FALSE,
+				PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+		/* add fantom child for lazy tree */
+		gtk_tree_store_append(pl3_tree, &child, &iter);
 	}
 }
 
@@ -1544,6 +1556,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_stream_remove), NULL);
 		}
+
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
@@ -2175,7 +2188,7 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_browse_add_selected();	
 		return TRUE;
 	}
-	else if (event->keyval == GDK_i && type == PL3_CURRENT_PLAYLIST)
+	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_GENRE))
 	{
 
 		pl3_show_song_info ();
