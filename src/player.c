@@ -389,10 +389,6 @@ void player_state_changed(int old_state, int state)
 		msg_set_base(_("Gnome Music Player Client"));
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
-
-			
-
-			
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
 		}
 	}

@@ -581,17 +581,23 @@ void song_changed(MpdObj *mi, int oldsong, int newsong)
 	pl3_highlight_song_change();
 }
 
-void error_window_destroy(GtkWidget *window)
+void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 {
+
 	gtk_widget_destroy(window);
 	g_object_unref(xml_error_window);
 	xml_error_window = NULL;
+	if(response == GTK_RESPONSE_OK)
+	{
+		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
+		connect_to_mpd();      	
+	}
 }
-
 
 
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
+	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
 	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
 	cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
 	if (xml_error_window == NULL)
@@ -601,7 +607,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
 		gtk_widget_show_all(dialog);
-		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), NULL);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
 		msg_set_base(_("Gnome Music Player Client"));
 	}
 	else
@@ -615,8 +621,10 @@ void connect_callback()
 {
 	if(xml_error_window != NULL)
 	{
-		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"));
+		int autocon = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
+		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,GINT_TO_POINTER(autocon));
 	}
+	void pl3_reinitialize_tree();
 }
 void status_callback(MpdObj *mi)
 {

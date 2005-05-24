@@ -33,13 +33,17 @@ void disconnect_callback(MpdObj *mi)
 {
 	gtk_timeout_remove(update_timeout);
 	msg_set_base(_("gmpc - Disconnected"));
+	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+	{
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
+	}
 
 	scroll.exposed = 1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
 	info.old_pos = -1;
-	
+
 	/* disconnect playlist */
 	pl3_disconnect();
 
@@ -83,8 +87,10 @@ int connect_to_mpd()
 
 	/* Set the title */
 	msg_set_base(_("GMPC - Connected"));
-
-
+	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+	{
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));		
+	}
 	return FALSE;
 }
 
@@ -139,7 +145,7 @@ int play_song()
 void random_pl(GtkToggleButton *tb)
 {
 	if(gtk_toggle_button_get_active(tb) != mpd_ob_player_get_random(connection))
-	mpd_ob_player_set_random(connection, !mpd_ob_player_get_random(connection));
+		mpd_ob_player_set_random(connection, !mpd_ob_player_get_random(connection));
 }
 
 void repeat_pl(GtkToggleButton *tb)
