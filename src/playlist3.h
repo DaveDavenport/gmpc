@@ -20,7 +20,7 @@ enum{
 	PL3_BROWSE_XIPH,
 	PL3_BROWSE_CUSTOM_STREAM,
 	PL3_FIND,
-	PL3_BROWSE_GENRE,
+	PL3_BROWSE_CUSTOM_TAG,
 	PL3_NTYPES
 	/* more space for options, like shoutcast */
 } tree_type;
@@ -34,6 +34,7 @@ enum pl3_cat_store
 	PL3_CAT_ICON_ID,
 	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
 	PL3_CAT_ICON_SIZE,
+	PL3_CAT_BROWSE_FORMAT,
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
