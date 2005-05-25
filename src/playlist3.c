@@ -963,14 +963,12 @@ void pl3_browse_replace_selected()
 
 
 /************************************************************************************************/
-/* CUSTROM TAG BROWSER 										*/
+/**************************** CUSTROM TAG BROWSER ***********************************************/
 /************************************************************************************************/
 
 void pl3_custom_tag_browser_add(char *title, char *format)
 {
-/*	char *format = "album|artist";
-	char *title = "Browse Genre";
-*/	if(mpd_ob_server_check_version(connection,0,12,0) && strlen(format) && strlen(title))
+	if(mpd_ob_server_check_version(connection,0,12,0) && strlen(format) && strlen(title))
 	{
 		GtkTreeIter iter,child;
 		gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -994,11 +992,22 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	char *first_tag, *second_tag;
 	char *format;
 	char **tk_format= NULL;
+	GtkTreePath *path = NULL;
+	int depth = 0;
 	int i;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
 
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return;
+	}
+	depth = gtk_tree_path_get_depth(path) -1;
+	printf("Debug: depth %i\n", depth);
+	
 	if (!mpd_ob_check_connected(connection))
 	{
 		return;
@@ -1020,7 +1029,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		}
 	}
 
-	if(!strlen(second_tag))
+	if(depth == 0)
 	{
 		/* fill artist list */
 
@@ -1048,7 +1057,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		}
 	}
 	/* if where inside a artist */
-	else if(!g_utf8_collate(first_tag, second_tag))
+	else if(depth == 1)
 	{
 		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
 		if(data == NULL)
