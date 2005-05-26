@@ -121,6 +121,7 @@ typedef struct _MpdQueue
 }_MpdQueue;
 
 MpdData * mpd_ob_playlist_sort_artist_list(MpdData *data);
+MpdData * mpd_ob_playlist_sort_tag_list(MpdData *data);
 
 
 
@@ -1658,7 +1659,7 @@ MpdData * mpd_ob_playlist_get_unique_tags(MpdObj *mi, int table,...)
 	}
 	mpd_finishCommand(mi->connection);
 
-//	data = mpd_ob_playlist_sort_artist_list(data);
+	data = mpd_ob_playlist_sort_tag_list(data);
 	/* unlock */
 	mpd_ob_unlock_conn(mi);
 	if(data == NULL) 
