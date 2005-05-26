@@ -542,7 +542,13 @@
 	\begin{quote}
 	void 		mpd\_misc\_tokens\_free			(regex\_t ** tokens);
 	\end{quote}
-	
-	\end{document}
-	
-	
+	\subsubsection{mpd\_misc\_get\_tag\_by\_name()}
+	Converts a string to a \textit{mpd\_TagItems} (as defined in libmpdclient.h) item. \\
+	The conversion is case insensitive.\\
+	\begin{quote}
+	int 		mpd\_misc\_get\_tag\_by\_name		(char *name);
+	\end{quote}
+	\textit{Return value:} A mpd\_TagItems or -1 when fails.                                                            	
+\end{document}
+
+

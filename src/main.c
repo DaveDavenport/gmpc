@@ -226,9 +226,7 @@ int main (int argc, char **argv)
 
 	/*
 	 * create timeouts 
-	 */
-	/*
-	 * get the status every 1/2 second should be enough 
+	 * get the status every 1/2 second should be enough, but it's configurable.
 	 */
 	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config, "connection","mpd-update-speed",500),
 			(GSourceFunc)update_mpd_status, NULL);
@@ -609,12 +607,13 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		gtk_widget_show_all(dialog);
 		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
 		msg_set_base(_("Gnome Music Player Client"));
+		g_free(str);
 	}
 	else
 	{
 		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
-
+		g_free(str);
 	}
 }
 void connect_callback()

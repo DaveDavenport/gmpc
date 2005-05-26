@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ *Copyright (C) 2004-2005 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -2672,15 +2672,7 @@ void pl3_playlist_changed()
 		gchar *string = format_time(info.playlist_playtime);
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 		g_free(string);
-
-
-
-
-
-
 	}
-
-
 
 }
 

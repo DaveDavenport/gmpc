@@ -1837,6 +1837,65 @@ MpdData * mpd_ob_playlist_sort_artist_list(MpdData *data)
 }
 
 
+MpdData * mpd_ob_playlist_sort_tag_list(MpdData *data)
+{
+	int changed = 0;
+	MpdData *temp = NULL;
+	MpdData *pldata = NULL, *first = NULL;
+	if(data == NULL) return NULL;
+	first = pldata = data->first;
+	do
+	{
+		changed = 0;
+		while(pldata != NULL && pldata->next != NULL)	
+		{
+			pldata->first = first;
+			if(pldata->next->type != MPD_DATA_TYPE_TAG)
+			{
+				/* do nothing */
+			}
+			else if((pldata->type != MPD_DATA_TYPE_TAG && pldata->next->type == MPD_DATA_TYPE_TAG)||
+					(pldata->next != NULL && strcasecmp(pldata->next->value.tag,pldata->value.tag) < 0 ))
+			{
+				/* swap them.*/
+				temp = pldata->next;
+				if(temp->next != NULL)
+				{
+					temp->next->prev = pldata;
+				}
+				pldata->next = temp->next;
+				temp->next = pldata;
+				if(pldata->prev)
+				{
+					pldata->prev->next = temp;				
+				}   
+				temp->prev = pldata->prev;
+				pldata->prev = temp;
+
+				if(first == pldata)
+				{
+					first = temp;		
+				}
+				changed = TRUE;
+			}
+			pldata = pldata->next;
+		}
+		pldata = first;
+	}
+	while(changed);
+	return pldata;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 MpdData * mpd_ob_data_get_next(MpdData *data)
