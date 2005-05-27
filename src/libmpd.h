@@ -130,6 +130,9 @@ int		mpd_ob_stats_get_total_artists		(MpdObj *mi);
 int		mpd_ob_stats_get_total_albums		(MpdObj *mi);
 int		mpd_ob_stats_get_uptime			(MpdObj *mi);
 int		mpd_ob_stats_get_playtime		(MpdObj *mi);
+
+int 		mpd_ob_status_db_is_updating		(MpdObj *mi);
+
 /* Player commands */
 int 		mpd_ob_player_play			(MpdObj *mi);
 int 		mpd_ob_player_play_id			(MpdObj *mi, int id);

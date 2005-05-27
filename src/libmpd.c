@@ -774,7 +774,11 @@ int mpd_ob_status_get_bitrate(MpdObj *mi)
 	return mi->status->bitRate;
 }
 
+int mpd_ob_status_db_is_updating(MpdObj *mi)
+{
+	return mi->updatingDb;
 
+}
 
 
 int mpd_ob_status_get_total_song_time(MpdObj *mi)

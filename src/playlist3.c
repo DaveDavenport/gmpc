@@ -2489,6 +2489,10 @@ void create_playlist3 ()
 
 
 	mpd_ob_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
+	if(mpd_ob_status_db_is_updating(connection))
+	{
+		updating_changed(connection, 1);
+	}
 
 
 
