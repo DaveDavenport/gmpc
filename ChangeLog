@@ -1,3 +1,6 @@
+28-05-2005 <Qball> <Qball@qballcow.nl>
+	* glade/gmpc.glade:		Re-enabled key-bindings.
+
 24-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/mpdinteraction.c:		set window title on connect/disconnect
 	* src/libmpc.d:			Support for mpdSong call of the window

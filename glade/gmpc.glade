@@ -137,6 +137,7 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="prev_song" last_modification_time="Mon, 06 Oct 2003 11:52:21 GMT"/>
+		  <accelerator key="z" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="prev_im">
@@ -164,6 +165,8 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="play_song" last_modification_time="Mon, 06 Oct 2003 11:53:53 GMT"/>
+		  <accelerator key="x" modifiers="0" signal="clicked"/>
+		  <accelerator key="c" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="play_button_image">
@@ -191,6 +194,7 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="stop_song" last_modification_time="Mon, 06 Oct 2003 11:52:10 GMT"/>
+		  <accelerator key="v" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="stop_im">
@@ -218,6 +222,7 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="next_song" last_modification_time="Mon, 06 Oct 2003 11:52:38 GMT"/>
+		  <accelerator key="b" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="next_im">
@@ -258,6 +263,8 @@
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="random_pl" last_modification_time="Mon, 06 Oct 2003 14:18:22 GMT"/>
+		  <accelerator key="s" modifiers="0" signal="clicked"/>
+		  <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="rand_im">
@@ -287,6 +294,8 @@
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="repeat_pl" last_modification_time="Mon, 06 Oct 2003 14:18:35 GMT"/>
+		  <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
+		  <accelerator key="r" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="rep_im">
@@ -325,6 +334,7 @@
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
 		  <signal name="clicked" handler="create_preferences_window" last_modification_time="Mon, 06 Oct 2003 17:44:49 GMT"/>
+		  <accelerator key="p" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="image60">
@@ -355,6 +365,7 @@
 		  <property name="active">False</property>
 		  <property name="inconsistent">False</property>
 		  <signal name="toggled" handler="toggle_playlist3" last_modification_time="Mon, 22 Nov 2004 06:57:20 GMT"/>
+		  <accelerator key="p" modifiers="0" signal="clicked"/>
 
 		  <child>
 		    <widget class="GtkImage" id="image69">
