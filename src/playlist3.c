@@ -994,7 +994,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	char **tk_format= NULL;
 	GtkTreePath *path = NULL;
 	int depth = 0;
-	int i;
+	int len=0;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
@@ -1006,7 +1006,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
-	printf("Debug: depth %i\n", depth);
+	gtk_tree_path_free(path);	
 	
 	if (!mpd_ob_check_connected(connection))
 	{
@@ -1019,16 +1019,16 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		printf("failed to split\n");
 		return;
 	}
-	for(i=0;tk_format[i] != NULL;i++)	
+	for(len=0;tk_format[len] != NULL;len++)	
 	{
-		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
+		if(mpd_misc_get_tag_by_name(tk_format[len])== -1)
 		{
-			printf("invallid tag: %s\n", tk_format[i]);
+			printf("invallid tag: %s\n", tk_format[len]);
 			g_strfreev(tk_format);
 			return;
 		}
 	}
-
+	printf("Debug: depth %i %i\n", depth,len);
 	if(depth == 0)
 	{
 		/* fill artist list */
@@ -1047,7 +1047,10 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					PL3_CAT_ICON_SIZE,1,
 					PL3_CAT_BROWSE_FORMAT, format,
 					-1);
-			gtk_tree_store_append(pl3_tree, &child2, &child);
+			if(len > 1)
+			{
+				gtk_tree_store_append(pl3_tree, &child2, &child);
+			}
 
 			data = mpd_ob_data_get_next(data);
 		}
@@ -1071,6 +1074,40 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					1, data->value.tag,
 					2, first_tag,
 					3, "media-artist", 
+					4, FALSE, 
+					PL3_CAT_ICON_SIZE,1,
+					PL3_CAT_BROWSE_FORMAT, format,
+					-1);
+			data = mpd_ob_data_get_next(data);
+			if(len > 2)
+			{
+				gtk_tree_store_append(pl3_tree, &child2, &child);			
+			}                                                        		}
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
+		{
+			gtk_tree_store_remove(pl3_tree, &child); 
+		}
+	}
+	else if(depth == 2 && len >= 2)
+	{
+		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,
+				mpd_misc_get_tag_by_name(tk_format[2]),
+				mpd_misc_get_tag_by_name(tk_format[1]),first_tag,
+				mpd_misc_get_tag_by_name(tk_format[0]),second_tag,-1 );
+		if(data == NULL)
+		{
+			printf("no sub data %s %s %s %s %s\n",
+					tk_format[2],
+					tk_format[1],first_tag,
+					tk_format[0],second_tag);
+		}
+		while(data != NULL){
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_CUSTOM_TAG,
+					1, data->value.tag,
+					2, second_tag,
+					3, "media-artist", 
 					4, TRUE, 
 					PL3_CAT_ICON_SIZE,1,
 					PL3_CAT_BROWSE_FORMAT, format,
@@ -1080,7 +1117,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
-		}
+		}                                                                                       		
 	}
 	g_strfreev(tk_format);
 }
@@ -1089,7 +1126,8 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
-	int i = 0;
+	int i = 0, depth;
+	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
@@ -1100,11 +1138,27 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		return 0;
 	}
-	if(strlen(first_tag) == 0)
+
+
+
+
+
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return 0;
+	}
+	depth = gtk_tree_path_get_depth(path) -1;
+	gtk_tree_path_free(path);	
+	
+	if(depth == 0)
 	{
 		/*lowest level, do nothing */
 		return 0;
-	}
+	}                                    	
+	
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
@@ -1115,17 +1169,17 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 	for(i=0;tk_format[i] != NULL;i++)	
 	{
-	
+
 		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
 		{
 
 			g_strfreev(tk_format);
 			return 0;
 		}
-		
+
 	}
 
-	if(!g_utf8_collate(first_tag,second_tag))
+	if(depth == 1)
 	{
 		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE, mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
 		/* artist is selected */
@@ -1153,7 +1207,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			data = mpd_ob_data_get_next(data);
 		}
 	}
-	else 
+	else if(depth == 2)
 	{
 		/* artist and album is selected */
 		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,mpd_misc_get_tag_by_name(tk_format[0]),first_tag,mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
@@ -1181,6 +1235,41 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 			data = mpd_ob_data_get_next(data);
 		}
+
+	}
+	else if (depth == 3)
+	{
+		/* artist and album is selected */
+		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,
+				mpd_misc_get_tag_by_name(tk_format[0]),	first_tag,
+				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
+		while (data != NULL)
+		{
+			gchar buffer[1024];
+			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+			strfsong (buffer, 1024,markdata,data->value.song);
+			cfg_free_string(markdata);
+			if(data->value.song->time != MPD_SONG_NO_TIME)
+			{
+				time += data->value.song->time;
+			}
+			if(data->value.song->file == NULL)
+			{
+				debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
+			}
+			gtk_list_store_append (pl3_store, &iter);                                                                                                                 		
+			gtk_list_store_set (pl3_store, &iter,
+					2, buffer,
+					0, data->value.song->file,
+					1, PL3_ENTRY_SONG,
+					5,"media-audiofile",
+					-1);
+
+			data = mpd_ob_data_get_next(data);
+		}
+
+
+
 
 	}
 
@@ -1694,7 +1783,7 @@ void pl3_reinitialize_tree()
 	pl3_find_add();
 	pl3_xiph_add();
 	pl3_custom_stream_add();
-	pl3_custom_tag_browser_add("Genre Browser", "genre|artist");
+	pl3_custom_tag_browser_add("Genre Browser", "genre|album|artist");
 	pl3_custom_tag_browser_add("Album Browser", "album|artist");
 	pl3_custom_tag_browser_add("Date Browser", "date|album");
 
