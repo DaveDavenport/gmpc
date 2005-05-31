@@ -468,46 +468,7 @@ void pl3_find_search()
 {
 
 	pl3_find_view_browser();
-	return;
-	/*	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-		GtkTreeIter iter,child,tst;
-		GtkTreePath *path;
-		const char *name;
-		gchar *field;
-		if(!gtk_tree_selection_get_selected(selection, &model, &iter)) return;
-		name = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(pl3_xml, "search_entry")));
-		if(strlen(name) == 0) return;
-
-		field = g_strdup_printf("%i", gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))));
-
-
-		if(gtk_tree_model_iter_parent(model, &tst, &iter))
-		{
-		gtk_tree_store_append(pl3_tree, &child,&tst);
-		}
-		else
-		{
-		gtk_tree_store_append(pl3_tree, &child,&iter);
-		}
-
-		gtk_tree_store_set(pl3_tree, &child,
-		PL3_CAT_TYPE, PL3_FIND,
-		PL3_CAT_TITLE, name,
-		PL3_CAT_INT_ID, field,
-		PL3_CAT_ICON_ID, "gtk-find",
-		PL3_CAT_PROC, TRUE,
-		PL3_CAT_ICON_SIZE,1,
-		-1);
-		path = gtk_tree_model_get_path(model,&iter);
-		gtk_tree_view_expand_to_path(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path);
-		gtk_tree_path_free(path);
-
-		gtk_tree_selection_select_iter(selection, &child);
-
-
-		g_free(field);
-		*/
+	return;	
 }
 
 /*****************************************************************
@@ -1352,6 +1313,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;                      	
+	gtk_tree_path_free(path);
 	if(artist == NULL || string == NULL)
 	{
 		return 0;
@@ -1457,7 +1419,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;                      	
-
+	gtk_tree_path_free(path);
 
 
 	if (!mpd_ob_check_connected(connection))
