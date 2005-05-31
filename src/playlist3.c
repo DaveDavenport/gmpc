@@ -1337,21 +1337,31 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *artist, *string;
 	GtkTreeIter iter;
+	GtkTreePath *path = NULL;
+	int depth = 0;
 	long unsigned time =0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (check_connection_state ())
 		return 0;
 
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return 0;
+	}
+	depth = gtk_tree_path_get_depth(path) -1;                      	
 	if(artist == NULL || string == NULL)
 	{
 		return 0;
 	}
-	if(strlen(artist) == 0)
+	if(depth == 0)
 	{
 		/*lowest level, do nothing */
 		return 0;
 	}
-	if(!g_utf8_collate(artist,string))
+	if(depth == 1)
 	{
 		int albums = 0;
 		MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
@@ -1393,7 +1403,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			}
 		}                                                                                  		
 	}
-	else 
+	else if(depth ==2)
 	{
 		/* artist and album is selected */
 		MpdData *data = mpd_ob_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
@@ -1434,15 +1444,27 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 {
 	char *artist, *alb_artist;
+	int depth =0;
+	GtkTreePath *path = NULL;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return;
+	}
+	depth = gtk_tree_path_get_depth(path) -1;                      	
+
+
 
 	if (!mpd_ob_check_connected(connection))
 	{
 		return;
 	}
-	if(!strlen(alb_artist))
+	if(depth == 0)
 	{
 		/* fill artist list */
 		MpdData *data = mpd_ob_playlist_get_artists(connection);
@@ -1468,7 +1490,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		}
 	}
 	/* if where inside a artist */
-	else if(!g_utf8_collate(artist, alb_artist))
+	else if(depth == 1)
 	{
 		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
 		while(data != NULL){
