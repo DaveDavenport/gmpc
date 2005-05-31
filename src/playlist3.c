@@ -1043,7 +1043,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			if(len > 2)
 			{
 				gtk_tree_store_append(pl3_tree, &child2, &child);			
-			}                                                        		}
+			}                                                        		
+		}
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gtk_tree_store_remove(pl3_tree, &child); 
@@ -1062,12 +1063,21 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					tk_format[1],first_tag,
 					tk_format[0],second_tag);
 		}
+		printf("sub data %s %s %s %s %s\n",
+				tk_format[2],
+					tk_format[1],first_tag,
+					tk_format[0],second_tag);
+
+
+
+
+		
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
 					1, data->value.tag,
-					2, second_tag,
+					2, first_tag,
 					3, "media-artist", 
 					4, TRUE, 
 					PL3_CAT_ICON_SIZE,1,
@@ -1100,11 +1110,6 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 
-
-
-
-
-
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
@@ -1112,11 +1117,12 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
-	gtk_tree_path_free(path);	
+
 	
 	if(depth == 0)
 	{
 		/*lowest level, do nothing */
+		gtk_tree_path_free(path);	
 		return 0;
 	}                                    	
 	
@@ -1124,6 +1130,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	if(tk_format ==NULL)
 	{
 		printf("failed to split\n");
+		gtk_tree_path_free(path);	
 		return 0;
 	}
 
@@ -1135,6 +1142,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 
 			g_strfreev(tk_format);
+			gtk_tree_path_free(path);	
 			return 0;
 		}
 
@@ -1142,7 +1150,8 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 	if(depth == 1)
 	{
-		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE, mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
+		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE, 
+				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
 		/* artist is selected */
 		while(data != NULL)
 		{
@@ -1171,7 +1180,9 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	else if(depth == 2)
 	{
 		/* artist and album is selected */
-		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,mpd_misc_get_tag_by_name(tk_format[0]),first_tag,mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
+		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,
+				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
+				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
 		while (data != NULL)
 		{
 			gchar buffer[1024];
@@ -1200,40 +1211,47 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	else if (depth == 3)
 	{
-		/* artist and album is selected */
-		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,
-				mpd_misc_get_tag_by_name(tk_format[0]),	first_tag,
-				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
-		while (data != NULL)
+		char *first;
+		/* take the upper one */
+		if(gtk_tree_path_up(path)&&gtk_tree_path_up(path))
 		{
-			gchar buffer[1024];
-			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			strfsong (buffer, 1024,markdata,data->value.song);
-			cfg_free_string(markdata);
-			if(data->value.song->time != MPD_SONG_NO_TIME)
-			{
-				time += data->value.song->time;
-			}
-			if(data->value.song->file == NULL)
-			{
-				debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
-			}
-			gtk_list_store_append (pl3_store, &iter);                                                                                                                 		
-			gtk_list_store_set (pl3_store, &iter,
-					2, buffer,
-					0, data->value.song->file,
-					1, PL3_ENTRY_SONG,
-					5,"media-audiofile",
-					-1);
+			MpdData *data  = NULL;
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
-			data = mpd_ob_data_get_next(data);
+			/* artist and album is selected */
+			data = mpd_ob_playlist_find_adv(connection,TRUE,
+					mpd_misc_get_tag_by_name(tk_format[0]),	first,
+					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
+					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
+			while (data != NULL)
+			{
+				gchar buffer[1024];
+				char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+				strfsong (buffer, 1024,markdata,data->value.song);
+				cfg_free_string(markdata);
+				if(data->value.song->time != MPD_SONG_NO_TIME)
+				{
+					time += data->value.song->time;
+				}
+				if(data->value.song->file == NULL)
+				{
+					debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
+				}
+				gtk_list_store_append (pl3_store, &iter);                                                                                                                 		
+				gtk_list_store_set (pl3_store, &iter,
+						2, buffer,
+						0, data->value.song->file,
+						1, PL3_ENTRY_SONG,
+						5,"media-audiofile",
+						-1);
+
+				data = mpd_ob_data_get_next(data);
+			}
+
 		}
-
-
-
-
 	}
-
+	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
 	return time;
 }
@@ -1767,7 +1785,8 @@ void pl3_reinitialize_tree()
 	pl3_find_add();
 	pl3_xiph_add();
 	pl3_custom_stream_add();
-	pl3_custom_tag_browser_add("Genre Browser", "genre|album|artist");
+	pl3_custom_tag_browser_add("Artist Browser", "artist|date|album");
+	pl3_custom_tag_browser_add("Genre Browser", "genre|artist");
 	pl3_custom_tag_browser_add("Album Browser", "album|artist");
 	pl3_custom_tag_browser_add("Date Browser", "date|album");
 

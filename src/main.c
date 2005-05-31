@@ -339,7 +339,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 
 	if(data == NULL)
 	{
-		debug_printf(DEBUG_ERROR, "playlist_changed_callback: what is this, stupid error\n");
 		return;
 	}
 	while(data != NULL)

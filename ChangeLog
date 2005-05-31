@@ -1,6 +1,9 @@
 31-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/playlist3.c:		possibly Fixed bug in artist browser that
 	caused artist "Eric Clapton" and album "Eric Clapton" didnt work.
+	* src/playlist3.c:		Custom browser, support for up to 3
+	levels deep.
+	* src/main.c:			Removed wrong error message.
 
 28-05-2005 <Qball> <Qball@qballcow.nl>
 	* glade/gmpc.glade:		Re-enabled key-bindings.
