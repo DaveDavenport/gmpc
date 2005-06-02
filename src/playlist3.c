@@ -1102,10 +1102,8 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreeIter iter;
 	long unsigned time =0;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
-	if (check_connection_state ())
-		return 0;
 
-	if(first_tag == NULL || second_tag == NULL)
+	if (check_connection_state ())
 	{
 		return 0;
 	}
@@ -1257,42 +1255,10 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***********************************************************************
- *  ARTIST BROWSER
- */
+/****************************************************************************************
+ *  ARTIST BROWSER									*
+ *  When mpd 0.12 is stable this function is deprecated, but needed for pre-0.12 mpd's  *
+ ****************************************************************************************/
 
 
 
@@ -2013,7 +1979,9 @@ void pl3_cat_sel_changed()
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 }
 
-
+/* when libmpd signals a playlist change, the total time of the playlist might has changed aswell.
+ * so we need to update it.
+ */
 void pl3_playlist_change()
 {
 	gint type = pl3_cat_get_selected_browser();

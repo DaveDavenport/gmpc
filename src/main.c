@@ -337,10 +337,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 
 	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
 
-	if(data == NULL)
-	{
-		return;
-	}
 	while(data != NULL)
 	{
 		/*

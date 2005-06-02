@@ -35,7 +35,6 @@ extern config_obj *config;
 gint DISPLAY_WIDTH = 240;
 
 scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE,TRUE};
-/* wrapper functions for the title entry box. */
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
@@ -112,12 +111,13 @@ void display_exposed(GtkWidget *window)
 	else{
 		if(width-scroll.pos > DISPLAY_WIDTH)
 		{
-		gdk_draw_layout(GDK_DRAWABLE(window->window), 
-			window->style->text_gc[GTK_STATE_NORMAL], 
-			-scroll.pos, MAX(0, (req.height-height)/2),
-			layout);
+			gdk_draw_layout(GDK_DRAWABLE(window->window), 
+					window->style->text_gc[GTK_STATE_NORMAL], 
+					-scroll.pos, MAX(0, (req.height-height)/2),
+					layout);
 		}
-		else{
+		else
+		{
 			gdk_draw_layout(GDK_DRAWABLE(window->window), 
 					window->style->text_gc[GTK_STATE_NORMAL], 
 					-scroll.pos, MAX(0, (req.height-height)/2),
@@ -167,7 +167,7 @@ gboolean update_msg()
 		pango_layout_set_text(layout, scroll.msg, -1);
 		pango_layout_get_size(layout, &width, NULL);
 		width = width/PANGO_SCALE;
-		if(width > DISPLAY_WIDTH-5)
+		if(width > DISPLAY_WIDTH-5 && scroll.do_scroll)
 		{
 			char *temp= scroll.msg;
 			scroll.msg = g_strdup_printf("%s  ***  ", scroll.msg);
@@ -188,6 +188,11 @@ gboolean update_msg()
 			if(scroll.do_scroll)
 			{
 				scroll.pos+=4;
+			}
+			else
+			{
+				scroll.pos = -2;
+
 			}
 
 		}
@@ -255,7 +260,7 @@ void msg_pop_popup()
 	if(scroll.popup_msg != NULL)
 	{
 		char *msg = g_queue_peek_tail(scroll.queue);
-	
+
 		g_queue_pop_tail(scroll.queue);
 		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
 		g_free(msg);
@@ -294,10 +299,10 @@ int update_player()
 			int r_sec = totalTime - elapsedTime - r_min*60;
 			gchar *buf = NULL;
 
-			
+
 			if(cfg_get_single_value_as_int_with_default(config, "player", "time-format", TIME_FORMAT_ELAPSED) == TIME_FORMAT_ELAPSED)
 			{
-			/* if more then 100 minutes player change to hh:mm */
+				/* if more then 100 minutes player change to hh:mm */
 				if(abs(e_min) >= 100)
 				{
 					e_sec = (e_min % 60);
@@ -307,7 +312,7 @@ int update_player()
 			}
 			else if (cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
-			/* if more then 100 minutes player change to hh:mm */
+				/* if more then 100 minutes player change to hh:mm */
 				if(abs(r_min) >= 100)
 				{                                                               				
 					r_sec = (r_min % 60);
@@ -495,7 +500,7 @@ void change_progress_update()
 			g_free(buf);
 		}
 		/* do this so the title gets updated again, even if it doesnt need scrolling */
-		
+
 		scroll.pos = -1;
 	}
 }    

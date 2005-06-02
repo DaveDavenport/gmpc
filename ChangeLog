@@ -1,3 +1,14 @@
+
+
+02-06-2005 <Qball> <Qball@qballcow.nl>
+	* src/player.c:			Don't display *** in title when
+	multiline.
+	* src/player.c:			Multiline title's that are to width
+	arent drawn on the edge anymore. (there now is a 2px left margin)
+	* src/main.c:			Fixed bugs that when songs are removed
+	at the end of the playlist the playlist isn't updated. 
+
+
 31-05-2005 <Qball> <Qball@qballcow.nl>
 	* src/playlist3.c:		possibly Fixed bug in artist browser that
 	caused artist "Eric Clapton" and album "Eric Clapton" didnt work.
