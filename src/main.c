@@ -261,13 +261,13 @@ int main (int argc, char **argv)
 	gtk_main ();
 	/* cleaning up. */
 	/* this is "slow" mostly because of gtk_list_store_clear */
-/*	if(mpd_ob_check_connected(connection))
+	if(mpd_ob_check_connected(connection))
 	{
 		mpd_ob_disconnect(connection);
 	}
 
 	mpd_ob_free(connection);	
-*/	config_close(config);
+	config_close(config);
 	return 0;
 }
 

@@ -2728,6 +2728,11 @@ void pl3_playlist_changed()
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 		g_free(string);
 	}
+	if(type == PL3_FIND)
+	{
+		pl3_find_view_browser();
+
+	}
 
 }
 
