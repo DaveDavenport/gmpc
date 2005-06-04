@@ -262,22 +262,6 @@ set_text (GList * node)
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),"<i>only availible for playing song</i>");
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 	if (song->time != MPD_SONG_NO_TIME)
 	{
 		gint min = (int) (song->time / 60);

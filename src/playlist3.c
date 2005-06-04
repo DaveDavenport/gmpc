@@ -17,8 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
@@ -47,12 +45,6 @@ GtkListStore *pl2_store= NULL;
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 void pl2_save_playlist ();
-
-
-
-
-
-
 
 /****************************************************************/
 /* We want to move this to mpdinteraction 			*/
@@ -84,7 +76,7 @@ gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const c
 	}
 	lkey = g_utf8_casefold(key,-1);
 	lvalue = g_utf8_casefold(value,-1);
-
+	/* str str seems faster then the glib function todo this */
 	if(strstr(lvalue,lkey) != NULL)
 	{
 		ret = FALSE;
@@ -679,7 +671,7 @@ void pl3_show_song_info ()
 
 /********************************************************
  * FILE BROWSER 				  	*
- */
+ ********************************************************/
 void pl3_browse_file_add_folder()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -901,7 +893,10 @@ void pl3_browse_add_selected()
 		{
 			message = g_strdup_printf("Added %i streams", songs);
 		}
-		else message = g_strdup_printf("Added %i songs", songs);
+		else
+		{
+			message = g_strdup_printf("Added %i songs", songs);
+		}
 		pl3_push_statusbar_message(message);
 		g_free(message);                                       	
 	}
@@ -1023,7 +1018,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(depth == 1)
 	{
-		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
+		MpdData *data = mpd_ob_playlist_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),
+				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
 		if(data == NULL)
 		{
 			printf("no sub data\n");
@@ -1063,13 +1059,17 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					tk_format[1],first_tag,
 					tk_format[0],second_tag);
 		}
-		printf("sub data %s %s %s %s %s\n",
-				tk_format[2],
+
+		/*
+		else
+		{
+			printf("sub data %s %s %s %s %s\n",
+					tk_format[2],
 					tk_format[1],first_tag,
 					tk_format[0],second_tag);
 
-
-
+		}
+		*/
 
 		
 		while(data != NULL){
@@ -2123,10 +2123,6 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
-
-
-
-
 			}
 		}
 		/* show everything and popup */
@@ -2289,7 +2285,8 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_browse_add_selected();	
 		return TRUE;
 	}
-	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG))
+	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || type == PL3_BROWSE_FILE || 
+				type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG))
 	{
 
 		pl3_show_song_info ();
@@ -2454,12 +2451,6 @@ void create_playlist3 ()
 	}
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
-	/*
-	   if(cfg_get_single_value_as_int_with_default(config, "playlist3", "fixed-height", 0))
-	   {
-	   gtk_tree_view_set_fixed_height_mode(tree, TRUE);
-	   }
-	   */
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 
 	/* draw the column with the songs */

@@ -35,7 +35,6 @@ void ol_destroy()
 }
 void ol_file_close()
 {
-	printf("test\n");
 }
 
 void ol_file_read(GnomeVFSAsyncHandle *hand, GnomeVFSResult result, gchar *buffer)
@@ -77,17 +76,13 @@ void ol_file_read(GnomeVFSAsyncHandle *hand, GnomeVFSResult result, gchar *buffe
 			}
 		}
 		g_strfreev(list);
-		printf("gkkkn\n");
-/*		gnome_vfs_async_close(hand, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         				*/
 	}
 	else
 	{
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(ol_xml, "label_message")),
 				_("<span size=\"x-small\"><i>Failed to read the file.</i></span>"));       			
 		working = FALSE;
-		printf("fdaljdlk\n");
 		gtk_widget_set_sensitive(glade_xml_get_widget(ol_xml, "add_location"),TRUE);
-/*		gnome_vfs_async_close(hand, (GnomeVFSAsyncCloseCallback)ol_file_close, NULL);         		*/
 	}       
 
 

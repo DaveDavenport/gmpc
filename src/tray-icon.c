@@ -364,28 +364,21 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 				y = y_tv -5-(height+8);
 			}
 			/* place the window */
-//			gtk_window_move(GTK_WINDOW(tip), x, y);
-	
-			
 			break;
 		case 1:
 			x =y=0;
-//			gtk_window_move(GTK_WINDOW(tip), 0,0);
 			break;
 		case 2:
 			x= msize.width-width;
 			y=0;
-//			gtk_window_move(GTK_WINDOW(tip), msize.width-width, 0);	
 			break;
 		case 3:
 			x = 0;
 			y = msize.height-height;
-//			gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height);	
 			break;
 		case 4:
 			x= msize.width-width;
 			y = msize.height-height;
-//			gtk_window_move(GTK_WINDOW(tip), msize.width-width, msize.height-height);	
 			break;                                                  				
 	}
 	gtk_window_move(GTK_WINDOW(tip),x,y);
