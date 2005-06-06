@@ -84,13 +84,14 @@ int connect_to_mpd()
 
 
 	update_mpd_status();
-
+	mpd_ob_stats_update(connection);
 	/* Set the title */
 	msg_set_base(_("GMPC - Connected"));
 	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 	{
 		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));		
 	}
+
 	return FALSE;
 }
 

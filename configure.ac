@@ -5,7 +5,7 @@ AM_INIT_AUTOMAKE(gmpc, 0.12.0)
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_INTLTOOL
+AC_PROG_INTLTOOL([0.21])
 
 
 AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
@@ -53,7 +53,7 @@ ALL_LINGUAS="fr ru"
 
 GETTEXT_PACKAGE=gmpc
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
-		   [The package name for gettext])
+		   [GMPC gettext package])
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GLIB_GNU_GETTEXT
 

@@ -394,18 +394,23 @@ void osb_enable_tb(GtkToggleButton *but)
 {
 
 	int bool1  = gtk_toggle_button_get_active(but);
-	cfg_set_single_value_as_int(config, "osb","enable", bool1);
-	pl3_reinitialize_tree();
+	if(bool1 != cfg_get_single_value_as_int_with_default(config, "osb", "enable", 0))
+	{
+		cfg_set_single_value_as_int(config, "osb","enable", bool1);
+		pl3_reinitialize_tree();
+	}
 }
 
 
 void csl_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
-	cfg_set_single_value_as_int(config, "playlist","custom_stream_enable", bool1);
-	pl3_reinitialize_tree();
+	if(bool1 != cfg_get_single_value_as_int_with_default(config,  "playlist","custom_stream_enable", 0))
+	{                                                                   	
+		cfg_set_single_value_as_int(config, "playlist","custom_stream_enable", bool1);
+		pl3_reinitialize_tree();
+	}
 }
-
 void cur_song_center_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);

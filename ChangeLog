@@ -1,3 +1,7 @@
+06-06-2005 <Qball> <Qball@qballcow.nl>
+	* src/main.c:			Fixed one of my annoyances.. the
+	playlist reinitializes when opening preferences menu.
+
 04-06-2005 <Qball> <Qball@qballcow.nl>	
 	* src/playlist3.c:		Fixed bug that when playlist changes
 	the playlist search doesn't update.

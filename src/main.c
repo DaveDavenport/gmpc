@@ -78,8 +78,7 @@ void main_trigger_update ()
 /*
  * sets default values in the main struct's 
  */
-	void
-set_default_values ()
+void set_default_values ()
 {
 	/*
 	 * playlist number this is to check if the playlist changed 
@@ -257,15 +256,10 @@ int main (int argc, char **argv)
 	/*
 	 * run the main loop 
 	 */
-
+	/* add a handler that disconnects mpd if the mainloop get destroyed */
+	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
 	gtk_main ();
 	/* cleaning up. */
-	/* this is "slow" mostly because of gtk_list_store_clear */
-	if(mpd_ob_check_connected(connection))
-	{
-		mpd_ob_disconnect(connection);
-	}
-
 	mpd_ob_free(connection);	
 	config_close(config);
 	return 0;
@@ -618,7 +612,7 @@ void connect_callback()
 		int autocon = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
 		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,GINT_TO_POINTER(autocon));
 	}
-	void pl3_reinitialize_tree();
+	pl3_reinitialize_tree();
 }
 void status_callback(MpdObj *mi)
 {
