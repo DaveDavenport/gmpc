@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <glade/glade.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <time.h>

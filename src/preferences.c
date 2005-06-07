@@ -638,14 +638,14 @@ void update_server_stats()
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), temp);
 		g_free(temp);
 		temp = g_strdup_printf("%id %02i:%02i", mpd_ob_stats_get_uptime(connection)/86400,
-				mpd_ob_stats_get_uptime(connection)/3600,
-				mpd_ob_stats_get_uptime(connection)/60
+				(mpd_ob_stats_get_uptime(connection)%86400)/3600,
+				(mpd_ob_stats_get_uptime(connection)%3600)/60
 				);
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), temp);
 		g_free(temp);                                                                                        		
 		temp = g_strdup_printf("%id %02i:%02i", mpd_ob_stats_get_playtime(connection)/86400,
-				mpd_ob_stats_get_playtime(connection)/3600,
-				mpd_ob_stats_get_playtime(connection)/60
+				(mpd_ob_stats_get_uptime(connection)%86400)/3600,
+				(mpd_ob_stats_get_uptime(connection)%3600)/60
 				);                                                                     		
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), temp);		
 		g_free(temp);

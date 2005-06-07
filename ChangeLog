@@ -1,3 +1,9 @@
+07-06-2005 <Qball> <Qball@qballcow.nl>
+	* src/id3info.c:		Fixed bug: 440
+	* src/id3info.c:		Fixed bug: 443
+	* src/preferences.c:		Possible fix for bug: 442
+	
+
 06-06-2005 <Qball> <Qball@qballcow.nl>
 	* src/main.c:			Fixed one of my annoyances.. the
 	playlist reinitializes when opening preferences menu.

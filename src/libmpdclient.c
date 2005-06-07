@@ -31,6 +31,7 @@
 
 */
 
+
 #include "libmpdclient.h"
 
 #include <errno.h>
@@ -39,7 +40,10 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <sys/param.h>
+
+
 #include <string.h>
+#include <strings.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -122,8 +126,8 @@ mpd_ReturnElement * mpd_newReturnElement(const char * name, const char * value)
 {
 	mpd_ReturnElement * ret = malloc(sizeof(mpd_ReturnElement));
 
-	ret->name = strdup(name);
-	ret->value = strdup(value);
+	ret->name = (char *)strdup(name);
+	ret->value = (char *)strdup(value);
 
 	return ret;
 }

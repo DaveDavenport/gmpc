@@ -58,32 +58,32 @@ void esf_render_example(GtkTextBuffer *buffer)
 	char *format = NULL;
 	GtkTextIter start_iter, stop_iter;
 	mpd_Song *song = mpd_newSong();
-	song->file = strdup(filename);
+	song->file = g_strdup(filename);
 	song->time = song_time;
 
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_artist"))))
 	{
-		song->artist = strdup(artist);
+		song->artist = g_strdup(artist);
 	}
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_album"))))
 	{
-		song->album = strdup(album);
+		song->album = g_strdup(album);
 	}                                                                                              	
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_title"))))
 	{
-		song->title = strdup(title);
+		song->title = g_strdup(title);
 	}                                 
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_track"))))
 	{
-		song->track = strdup(track);
+		song->track = g_strdup(track);
 	}                                 
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_date"))))
 	{
-		song->date = strdup(date);
+		song->date = g_strdup(date);
 	}                                 
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_stream"))))
 	{
-		song->name = strdup(stream_name);
+		song->name = g_strdup(stream_name);
 	}                                                                                            	
 
 
