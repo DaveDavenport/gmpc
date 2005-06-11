@@ -1,3 +1,6 @@
+08-06-2005 <Qball> <Qball@qballcow.nl>
+	* src/tray-icon.c:		Fixed progress bar on dark themes.
+
 07-06-2005 <Qball> <Qball@qballcow.nl>
 	* src/id3info.c:		Fixed bug: 440
 	* src/id3info.c:		Fixed bug: 443
