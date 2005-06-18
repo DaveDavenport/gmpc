@@ -192,7 +192,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 					FALSE,4,height+5-12, width ,8);                              		
 			width2 = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
 			gdk_draw_rectangle(widget->window, 
-					widget->style->fg_gc[GTK_STATE_NORMAL],
+					widget->style->mid_gc[GTK_STATE_NORMAL],
 					TRUE,4,height+5-12, width2 ,8);
 			gdk_draw_rectangle(widget->window, 
 					widget->style->fg_gc[GTK_STATE_NORMAL],
