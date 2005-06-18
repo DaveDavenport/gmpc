@@ -1,3 +1,13 @@
+19-06-2005 <Qball> <Qball@qballcow.nl>
+	* src/preferences/trayicon.c:	Removed fading of popup. (for
+	stability)
+	* src/main.h:			Include "../config.h" -> should fix
+	NLS stuff and debug compile flag.
+	* configure.ac:			Added AM_GNU_GETTEXT([external])  (Is
+	this needed?)
+	* src/player.c:			Added a function that replaced '\n'
+	for window title to ' - ' (fix for bug 435)
+
 08-06-2005 <Qball> <Qball@qballcow.nl>
 	* src/tray-icon.c:		Fixed progress bar on dark themes.
 

@@ -1,5 +1,4 @@
 # files added by intltool-prepare
-[encoding: UTF-8]
 data/gmpc.desktop.in
 glade/gmpc.glade
 glade/add-browser.glade

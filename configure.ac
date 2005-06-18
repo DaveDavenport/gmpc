@@ -1,11 +1,13 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(gmpc, 0.12.0)
+AM_INIT_AUTOMAKE(gmpc, 0.12.0,qball@qballcow.nl)
 
 # Checks for programs.
-AC_PROG_CC
+
 AC_PROG_INTLTOOL([0.21])
+AC_PROG_LIBTOOL
+AC_PROG_CC
 
 
 AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
@@ -52,16 +54,23 @@ dnl please keep them in alphabetical order
 ALL_LINGUAS="fr ru"
 
 GETTEXT_PACKAGE=gmpc
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",
-		   [GMPC gettext package])
 AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",[GMPC gettext package])
 AM_GLIB_GNU_GETTEXT
 
+
+AM_GNU_GETTEXT([external])
 # setting correct paths
 PACKAGE_LOCALE_DIR="${PACKAGE_PREFIX}/${DATADIRNAME}/locale"
-AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",
-		   [The package's locale path for gettext])
+AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's locale path for gettext])
 
+
+PIXMAP_PATH="${PACKAGE_PREFIX}/${DATADIRNAME}/${PACKAGE}/";
+
+AC_DEFINE_UNQUOTED(GLADE_PATH,"$PIXMAP_PATH",[The package's glade path])
+AC_DEFINE_UNQUOTED(PIXMAP_PATH,"$PIXMAP_PATH",[The package's pixmap path])
+
+AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 if test x${enable_debug} = xyes; then
 	AC_DEFINE(DEBUG, 1, [Enable extra debug output])

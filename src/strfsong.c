@@ -195,7 +195,7 @@ static gsize _strfsong(gchar *s,
 
 		if( temp == NULL)
 		{
-			gsize templen=n;
+			/*gsize templen=n;*/
 			/* just pass-through any unknown specifiers (including esc) */
 			/* drop a null char in so printf stops at the end of this specifier,
 			   but put the real character back in (pseudo-const) */

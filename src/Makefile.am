@@ -22,7 +22,8 @@ gmpc_SOURCES=\
 	edit_markup.c\
 	config1.c
 
-INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG
+#INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
+INCLUDES= @gmpc_CFLAGS@ -Wall   
 LIBS = @gmpc_LIBS@ @LIBS@  
 
 

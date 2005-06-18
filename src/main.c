@@ -216,10 +216,7 @@ int main (int argc, char **argv)
 		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
 		info.hidden = TRUE;
 	}
-	else
-	{
 
-	}
 
 	/* create the store for the playlist */
 	init_playlist ();

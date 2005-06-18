@@ -36,14 +36,14 @@
 
 extern config_obj *config;
 
-const char *filename = _("/path/to/file_name.mp3");
-const char *artist = _("I. am Artist");
-const char *album = _("To Album or Not To Album");
-const char *title = _("Am I a Visible Title");
-const char *track = _("01/24");
-const char *date = _("25 Feb 2005");
-unsigned int song_time =  645;
-const char *stream_name = _("MPD's Streaming server");
+
+
+
+
+
+
+
+
 
 GladeXML *xml_esf  = NULL;
 GtkTextBuffer *buffer= NULL;
@@ -54,6 +54,19 @@ GtkTextBuffer *buffer= NULL;
 
 void esf_render_example(GtkTextBuffer *buffer)
 {
+	char *filename = _("/path/to/file_name.mp3");
+	char *artist = _("I. am Artist");
+	char *album = _("To Album or Not To Album");
+	char *title = _("Am I a Visible Title");
+	char *track = _("01/24");
+	char *date = _("25 Feb 2005");
+	unsigned int song_time =  645;
+	char *stream_name = _("MPD's Streaming server");
+
+
+
+
+
 	char *result_buffer[1024];
 	char *format = NULL;
 	GtkTextIter start_iter, stop_iter;
@@ -118,7 +131,7 @@ char * edit_song_markup(char *format)
 		gtk_text_buffer_set_text(buffer, format, -1);
 	}
 	g_free(str_format);
-	
+
 	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 	{
 		case GTK_RESPONSE_OK:

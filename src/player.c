@@ -385,10 +385,6 @@ void player_state_changed(int old_state, int state)
 		gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
 	}
 
-
-
-	/* make a global song */
-
 	if(state != MPD_OB_PLAYER_PLAY && state != MPD_OB_PLAYER_PAUSE)
 	{
 		msg_set_base(_("Gnome Music Player Client"));
@@ -406,13 +402,37 @@ void player_state_changed(int old_state, int state)
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
-			int i=0;
+			int i=0,j=0;
+			int stripes = 0;
+			char *new_buf = NULL;
+			/* calculate the number of needed "stripes" */
 			for(i=0;buffer[i] != '\0';i++)
 			{
-				if(buffer[i] == '\n') buffer[i] = '-';
+				if(buffer[i] == '\n') stripes++; 
 			}
+			/* malloc a new string.. size of old string + the number of needed "stripes"*2 ('\n' -> ' - ' == +2 chars) + a ending \0*/
+			new_buf = (char *)g_malloc0((i+2*stripes+1)*sizeof(char ));
+			
+			for(i=0;buffer[i] != '\0';i++)
+			{
 
-			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
+				if(buffer[i] == '\n')
+				{
+					new_buf[j] = ' ';
+					new_buf[j+1] = '-';
+					new_buf[j+2] = ' ';
+					j+=2;
+				}
+				else
+				{
+					new_buf[j] = buffer[i];
+				}
+				j++;
+			}
+			
+
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), new_buf);	
+			g_free(new_buf);
 		}
 	}
 
@@ -440,12 +460,35 @@ void player_song_changed(int oldsong, int newsong)
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
-			int i=0;
+			int i=0,j=0;
+			int stripes = 0;
+			char *new_buf = NULL;
+			/* calculate the number of needed "stripes" */
 			for(i=0;buffer[i] != '\0';i++)
 			{
-				if(buffer[i] == '\n') buffer[i] = '-';
+				if(buffer[i] == '\n') stripes++; 
 			}
-			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), buffer);	
+			/* malloc a new string.. size of old string + the number of needed "stripes"*2 ('\n' -> ' - ' == +2 chars) + a ending \0*/
+			new_buf = (char *)g_malloc0((i+2*stripes+1)*sizeof(char ));
+			/* iterate through the string and copy it.. when meeting '\n' insert ' - ' */
+			for(i=0;buffer[i] != '\0';i++)
+			{
+
+				if(buffer[i] == '\n')
+				{
+					new_buf[j] = ' ';
+					new_buf[j+1] = '-';
+					new_buf[j+2] = ' ';
+					j+=2;
+				}
+				else
+				{
+					new_buf[j] = buffer[i];
+				}
+				j++;
+			}
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), new_buf);	
+			g_free(new_buf);
 		}
 	}
 }

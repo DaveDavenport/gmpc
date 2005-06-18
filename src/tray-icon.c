@@ -26,9 +26,7 @@ PangoLayout *tray_layout_tooltip = NULL;
 guint tray_timeout = -1;
 
 guint popup_timeout = -1;
-guint compf_timeout = -1;
 
-GdkPixbuf *bg = NULL;
 GdkPixbuf *dest = NULL;
 int compf= 50;
 
@@ -194,7 +192,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 					FALSE,4,height+5-12, width ,8);                              		
 			width2 = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
 			gdk_draw_rectangle(widget->window, 
-					widget->style->mid_gc[GTK_STATE_NORMAL],
+					widget->style->fg_gc[GTK_STATE_NORMAL],
 					TRUE,4,height+5-12, width2 ,8);
 			gdk_draw_rectangle(widget->window, 
 					widget->style->fg_gc[GTK_STATE_NORMAL],
@@ -203,45 +201,11 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	}
 	g_free(tooltiptext);
 
-	if(bg != NULL && compf)
-	{
-		gdk_window_set_back_pixmap(widget->window,NULL,FALSE);
-		if(dest == NULL)
-		{
-			dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, TRUE, 8, width+8, height+8);
-		}
-		else
-		{
-			gdk_pixbuf_fill(dest,0x00000000);
-		}
-		
-		gdk_pixbuf_composite(bg,dest,0,0,width+8,height+8,0,0,1,1,GDK_INTERP_BILINEAR,compf);
-		gdk_draw_pixbuf(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],dest,0,0,0,0,-1,-1,GDK_RGB_DITHER_NONE,0,0);
-	}
-	
 	return TRUE;
 }
 
 
 
-int compf_change(GtkWidget *widget)
-{
-	if(tip == NULL || widget == NULL) return FALSE;
-	if(compf > 30)
-	{
-		compf-=30;
-	}
-	else compf = 0;	
-	gtk_widget_queue_draw(widget);
-	if(compf == 0)
-	{
-
-		compf_timeout = -1;
-		return FALSE;
-	}
-	return TRUE;
-
-}
 /* fix it the ugly way */
 int tooltip_queue_draw(GtkWidget *widget)
 {
@@ -382,10 +346,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			break;                                                  				
 	}
 	gtk_window_move(GTK_WINDOW(tip),x,y);
-	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-fadein",1) && bg == NULL)
-	{
-		bg = gdk_pixbuf_get_from_drawable(NULL,gdk_screen_get_root_window(screen),NULL,x,y,0,0,width+8,height+8);
-	}
 	gtk_widget_show_all(tip);	
 
 
@@ -393,10 +353,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(400, (GSourceFunc)
 			tooltip_queue_draw, eventb);
-	if(bg != NULL)
-	{
-		compf_timeout = g_timeout_add(100, (GSourceFunc) compf_change, eventb);
-	}
+	
+	
 	g_free(tooltiptext);
 	return TRUE;
 }
@@ -405,15 +363,14 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
-	if(compf_timeout != -1) g_source_remove(compf_timeout);
 	popup_timeout = -1;
 	tray_timeout = -1;
-	compf_timeout = -1;
-	if(bg != NULL)
-	{
-		g_object_unref(bg);
-		bg = NULL;
-	}
+
+
+
+
+
+
 	if(tip != NULL)
 	{
 		gtk_widget_destroy(tip);
