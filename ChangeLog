@@ -1,3 +1,9 @@
+06-07-2005 <Qball> <Qball@qballcow.nl>
+	* src/preferences.c:		Made the id3-browser gui working.
+	* src/playlist3.c:		Made the id3-browser use the config
+	values when building browsers.
+	* src/libmpd.h:			Added tag's for use in C++
+
 19-06-2005 <Qball> <Qball@qballcow.nl>
 	* src/preferences/trayicon.c:	Removed fading of popup. (for
 	stability)

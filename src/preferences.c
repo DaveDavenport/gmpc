@@ -44,7 +44,9 @@ void create_osb_tree();
 void osb_add_edit_source();
 int update_osb_tree();
 void update_server_stats();
-
+/* advanced id3 browser */
+void pref_id3b_init();
+void pref_id3b_fill();
 
 void create_preferences_window()
 {
@@ -103,7 +105,7 @@ void create_preferences_window()
 	update_tray_settings();
 	update_auth_settings();
 	update_server_stats();
-
+	pref_id3b_init();
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
 			cfg_get_single_value_as_int_with_default(config,"osb", "enable", 0));        
@@ -686,4 +688,155 @@ void update_outputs_settings()
 	{
 		gtk_widget_set_sensitive(GTK_WIDGET(frame), FALSE);
 	}
+}
+
+
+/****************************************************************/
+/* 		Advanced Browser				*/
+/****************************************************************/
+void pref_id3b_row_remove()
+{
+	GtkWidget *tree = glade_xml_get_widget(xml_preferences_window,"id3b_tree");
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+	GtkTreeIter iter;
+	if(gtk_tree_selection_get_selected(selection,&model,&iter))
+	{             
+		gchar *title;
+		gtk_tree_model_get(model,&iter,0,&title,-1);		
+		cfg_del_multiple_value(config, "playlist", "advbrows",title);
+		pref_id3b_fill();
+	}
+}
+
+void pref_id3b_row_changed(GtkTreeView *tree)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
+	GtkTreeModel *model = gtk_tree_view_get_model(tree);
+	GtkTreeIter iter;
+	if(gtk_tree_selection_get_selected(selection,&model,&iter))
+	{
+		gchar *format, *title;
+		gchar ** tk_format = NULL;
+		gtk_tree_model_get(model,&iter,0,&title,1,&format, -1);
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "id3b_entry")),title);
+		tk_format = g_strsplit(format, "|",0);
+		if(tk_format ==NULL)
+		{                                     		
+			debug_printf(DEBUG_INFO,"pref_id3b_row_changed: failed to split\n");
+			return;
+		}
+		else
+		{		
+			if(tk_format[0] != NULL)		
+			{
+				gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),
+						mpd_misc_get_tag_by_name(tk_format[0])+1);
+				if(tk_format[1] != NULL)
+				{
+					gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),
+							mpd_misc_get_tag_by_name(tk_format[1])+1);
+					if(tk_format[2] != NULL)
+					{
+						gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),
+								mpd_misc_get_tag_by_name(tk_format[2])+1);		
+					}
+				}
+			}
+			g_strfreev(tk_format);
+
+		}
+	}
+	else
+	{
+		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "id3b_entry")),"");
+		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),0);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),0);
+		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),0);
+	}
+}
+
+void pref_id3b_add_entry()
+{
+	GString *format = g_string_new("");
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1"))))
+	{
+		g_string_append_printf(format, "%s|",
+				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1"))));
+	}
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2"))))
+	{
+		g_string_append_printf(format, "%s|",
+				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2"))));
+	}
+	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3"))))
+	{
+		g_string_append_printf(format, "%s|",
+				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3"))));
+	}
+	if(format->len)
+	{
+		g_string_erase(format, format->len-1,-1);
+		if(strlen(gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "id3b_entry")))))
+		{
+			cfg_set_multiple_value_as_string(config, "playlist", "advbrows",
+					(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "id3b_entry"))),
+					format->str);
+		}
+	}
+	g_string_free(format, TRUE);
+	pref_id3b_fill();
+}
+
+
+void pref_id3b_fill()
+{
+	GtkWidget *tree = glade_xml_get_widget(xml_preferences_window,"id3b_tree");
+	conf_mult_obj *list;
+	GtkListStore *ls = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(tree)));
+	list = cfg_get_multiple_as_string(config, "playlist", "advbrows");
+	gtk_list_store_clear(ls);	
+	if(list != NULL)
+	{
+		conf_mult_obj *data = list;
+		do{
+			if(strlen(data->key) && strlen(data->value))
+			{
+				GtkTreeIter iter;
+				gtk_list_store_append(ls, &iter);
+				gtk_list_store_set(ls,&iter,0,data->key,1,data->value,2,TRUE,-1);
+			}
+			data = data->next;
+		}
+		while(data);
+		cfg_free_multiple(list);
+	}
+}
+
+void pref_id3b_init()
+{
+	GtkCellRenderer *renderer = NULL;
+	GtkListStore *ab_lstore = NULL;
+	GtkWidget *tree = glade_xml_get_widget(xml_preferences_window,"id3b_tree");
+
+	/* create model to store the data in */
+	ab_lstore = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+	/* add model to tree */
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(ab_lstore)); 
+
+	/* add columns */
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),0,_("Name"), renderer,
+			"text",0,
+			"editable",2,
+			NULL);
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),1,_("Format"), renderer,
+			"text",1,
+			NULL);          
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),0);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),0);
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),0);
+	pref_id3b_fill();
+
 }

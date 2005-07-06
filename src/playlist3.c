@@ -922,24 +922,48 @@ void pl3_browse_replace_selected()
 /**************************** CUSTROM TAG BROWSER ***********************************************/
 /************************************************************************************************/
 
-void pl3_custom_tag_browser_add(char *title, char *format)
+void pl3_custom_tag_browser_add()
 {
-	if(mpd_ob_server_check_version(connection,0,12,0) && strlen(format) && strlen(title))
+	if(mpd_ob_server_check_version(connection,0,12,0))
 	{
-		GtkTreeIter iter,child;
-		gtk_tree_store_append(pl3_tree, &iter, NULL);
-		gtk_tree_store_set(pl3_tree, &iter, 
-				PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
-				PL3_CAT_TITLE, title,        	
-				PL3_CAT_INT_ID, "",
-				PL3_CAT_ICON_ID, "media-artist",
-				PL3_CAT_PROC, FALSE,
-				PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
-				PL3_CAT_BROWSE_FORMAT, format,
-				-1);
-		/* add fantom child for lazy tree */
-		gtk_tree_store_append(pl3_tree, &child, &iter);
+		conf_mult_obj *list;
+		list = cfg_get_multiple_as_string(config, "playlist", "advbrows");
+		if(list != NULL)
+		{
+			conf_mult_obj *data = list;
+			do{
+				if(strlen(data->key) && strlen(data->value))
+				{
+					pl3_custom_tag_browser_add_single(data->key, data->value);
+				}
+				data = data->next;
+			}while(data != NULL);
+			cfg_free_multiple(list);
+		}
+		
 	}
+	else
+	{
+		debug_printf(DEBUG_INFO, "pl3_custom_tag_browser_add(): Option not supported for mpd version < 0.12");
+	}
+}
+
+
+void pl3_custom_tag_browser_add_single(char *title, char *format)
+{
+	GtkTreeIter iter,child;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
+			PL3_CAT_TITLE, title,        	
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_PROC, FALSE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
+			PL3_CAT_BROWSE_FORMAT, format,
+			-1);
+	/* add fantom child for lazy tree */
+	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
 
 
@@ -963,7 +987,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
 	gtk_tree_path_free(path);	
-	
+
 	if (!mpd_ob_check_connected(connection))
 	{
 		return;
@@ -1061,17 +1085,17 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		}
 
 		/*
-		else
-		{
-			printf("sub data %s %s %s %s %s\n",
-					tk_format[2],
-					tk_format[1],first_tag,
-					tk_format[0],second_tag);
+		   else
+		   {
+		   printf("sub data %s %s %s %s %s\n",
+		   tk_format[2],
+		   tk_format[1],first_tag,
+		   tk_format[0],second_tag);
 
-		}
-		*/
+		   }
+		   */
 
-		
+
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
@@ -1116,14 +1140,14 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
 
-	
+
 	if(depth == 0)
 	{
 		/*lowest level, do nothing */
 		gtk_tree_path_free(path);	
 		return 0;
 	}                                    	
-	
+
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
@@ -1751,11 +1775,13 @@ void pl3_reinitialize_tree()
 	pl3_find_add();
 	pl3_xiph_add();
 	pl3_custom_stream_add();
-	pl3_custom_tag_browser_add("Artist Browser", "artist|date|album");
-	pl3_custom_tag_browser_add("Genre Browser", "genre|artist");
-	pl3_custom_tag_browser_add("Album Browser", "album|artist");
-	pl3_custom_tag_browser_add("Date Browser", "date|album");
-
+	/*
+	   pl3_custom_tag_browser_add("Artist Browser", "artist|date|album");
+	   pl3_custom_tag_browser_add("Genre Browser", "genre|artist");
+	   pl3_custom_tag_browser_add("Album Browser", "album|artist");
+	   pl3_custom_tag_browser_add("Date Browser", "date|album");
+	   */
+	pl3_custom_tag_browser_add();
 	gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
 
 	gtk_tree_selection_select_path(sel, path);               		

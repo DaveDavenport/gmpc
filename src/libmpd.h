@@ -17,6 +17,19 @@
  * Boston, MA 02111-1307, USA.
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+
+
+
+
+
+
+
 #ifndef __MPD_LIB__
 #define __MPD_LIB__
 #include "libmpdclient.h"
@@ -212,4 +225,8 @@ int 		mpd_ob_server_check_version		(MpdObj *mi, int major, int minor, int micro)
 regex_t** 	mpd_misc_tokenize			(char *string);
 void 		mpd_misc_tokens_free			(regex_t ** tokens);
 int 		mpd_misc_get_tag_by_name		(char *name);
+#endif
+
+#ifdef __cplusplus
+}
 #endif

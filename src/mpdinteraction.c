@@ -17,6 +17,7 @@ int update_mpd_status()
 {
 	if(!mpd_ob_check_connected(connection)) return TRUE;
 	mpd_ob_status_queue_update(connection);
+/*	mpd_ob_status_update(connection);*/
 
 	/* unlock it */
 	return TRUE;

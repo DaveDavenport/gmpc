@@ -2786,7 +2786,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
 		<widget class="GtkLabel" id="label76">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;Copyright ©  2003-2004 Qball Cow
+		  <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;Copyright ©  2003-2005 Qball Cow
 &lt;i&gt;Qball@qballcow.nl&lt;/i&gt;&lt;/span&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
@@ -2922,8 +2922,7 @@ Name
 Genre
 Date
 Composer
-Performer
-filename</property>
+Performer</property>
 		      <property name="add_tearoffs">False</property>
 		      <property name="focus_on_click">True</property>
 		    </widget>
@@ -3025,8 +3024,7 @@ Name
 Genre
 Date
 Composer
-Performer
-filename</property>
+Performer</property>
 		      <property name="add_tearoffs">False</property>
 		      <property name="focus_on_click">True</property>
 		    </widget>
@@ -3047,6 +3045,7 @@ filename</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <property name="focus_on_click">True</property>
+		      <signal name="clicked" handler="pref_id3b_add_entry" last_modification_time="Wed, 06 Jul 2005 15:36:56 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="left_attach">6</property>
@@ -3066,6 +3065,7 @@ filename</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <property name="focus_on_click">True</property>
+		      <signal name="clicked" handler="pref_id3b_row_remove" last_modification_time="Wed, 06 Jul 2005 19:40:53 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="left_attach">6</property>
@@ -3089,8 +3089,7 @@ Name
 Genre
 Date
 Composer
-Performer
-filename</property>
+Performer</property>
 		      <property name="add_tearoffs">False</property>
 		      <property name="focus_on_click">True</property>
 		    </widget>
@@ -3124,12 +3123,13 @@ filename</property>
 		      <property name="visible">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="headers_visible">True</property>
-		      <property name="rules_hint">False</property>
+		      <property name="rules_hint">True</property>
 		      <property name="reorderable">False</property>
 		      <property name="enable_search">True</property>
 		      <property name="fixed_height_mode">False</property>
 		      <property name="hover_selection">False</property>
 		      <property name="hover_expand">False</property>
+		      <signal name="cursor_changed" handler="pref_id3b_row_changed" last_modification_time="Wed, 06 Jul 2005 18:01:37 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
