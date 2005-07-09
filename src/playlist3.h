@@ -75,37 +75,12 @@ enum store_types
 	NROWS
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void pl3_playlist_search();
 
 void pl3_playlist_changed();
-
-
+void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
+void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
+void pl3_custom_tag_browser_reload();
 
 
 #endif

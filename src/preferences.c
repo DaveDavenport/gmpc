@@ -4,6 +4,7 @@
 #include <time.h>
 #include "libmpdclient.h"
 #include "main.h"
+#include "playlist3.h"
 #include "config1.h"
 #include "debug_printf.h"
 extern config_obj *config;
@@ -706,7 +707,9 @@ void pref_id3b_row_remove()
 		gtk_tree_model_get(model,&iter,0,&title,-1);		
 		cfg_del_multiple_value(config, "playlist", "advbrows",title);
 		pref_id3b_fill();
+		pl3_custom_tag_browser_reload();
 	}
+	
 }
 
 void pref_id3b_row_changed(GtkTreeView *tree)
@@ -786,6 +789,7 @@ void pref_id3b_add_entry()
 	}
 	g_string_free(format, TRUE);
 	pref_id3b_fill();
+	pl3_custom_tag_browser_reload();
 }
 
 
@@ -811,6 +815,7 @@ void pref_id3b_fill()
 		while(data);
 		cfg_free_multiple(list);
 	}
+	
 }
 
 void pref_id3b_init()

@@ -1,3 +1,15 @@
+10-07-2005 Qball <Qball@qballcow.nl>
+	* src/preferences.c:		If tag-browser's are changed, update
+	the tree in the playlist.
+	* src/playlist3.c:		Moved the tag browser's to a submenu. 
+	* src/playlist3.c:		Made a reload function that only
+	reloads the items in the tag-browser. (For preferences)
+	* glade/gmpc.glade:		Changed location of the id3-browser
+	int he pref menu, rename id3-browser to tag-browser.
+	* src/playlist3.c:		If scroll to current song enabled, the
+	playlist scroll's to the current song when current-playlist is
+	selected.
+
 06-07-2005 <Qball> <Qball@qballcow.nl>
 	* src/preferences.c:		Made the id3-browser gui working.
 	* src/playlist3.c:		Made the id3-browser use the config
