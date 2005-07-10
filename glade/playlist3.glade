@@ -58,8 +58,9 @@
 		  <property name="hover_expand">False</property>
 		  <signal name="row_expanded" handler="pl3_cat_row_expanded" last_modification_time="Mon, 25 Oct 2004 05:44:21 GMT"/>
 		  <signal name="row_activated" handler="pl3_cat_row_activated" last_modification_time="Mon, 25 Oct 2004 05:44:07 GMT"/>
-		  <signal name="button_release_event" handler="pl3_cat_tree_button_press_event" last_modification_time="Sat, 25 Jun 2005 18:47:25 GMT"/>
+		  <signal name="button_release_event" handler="pl3_cat_tree_button_release_event" last_modification_time="Sun, 10 Jul 2005 10:13:26 GMT"/>
 		  <signal name="key_press_event" handler="pl3_cat_key_press_event" last_modification_time="Tue, 02 Nov 2004 08:42:09 GMT"/>
+		  <signal name="button_press_event" handler="pl3_cat_tree_button_press_event" last_modification_time="Sun, 10 Jul 2005 10:14:03 GMT"/>
 		</widget>
 	      </child>
 	    </widget>
@@ -98,8 +99,9 @@
 		      <property name="hover_selection">False</property>
 		      <property name="hover_expand">False</property>
 		      <signal name="row_activated" handler="pl3_playlist_row_activated" last_modification_time="Mon, 25 Oct 2004 05:47:00 GMT"/>
-		      <signal name="button_release_event" handler="pl3_playlist_button_press_event" last_modification_time="Sat, 25 Jun 2005 18:47:33 GMT"/>
+		      <signal name="button_release_event" handler="pl3_playlist_button_release_event" last_modification_time="Sun, 10 Jul 2005 10:13:36 GMT"/>
 		      <signal name="key_press_event" handler="pl3_playlist_key_press_event" last_modification_time="Tue, 02 Nov 2004 08:42:01 GMT"/>
+		      <signal name="button_press_event" handler="pl3_playlist_button_press_event" last_modification_time="Sun, 10 Jul 2005 10:13:46 GMT"/>
 		    </widget>
 		  </child>
 		</widget>

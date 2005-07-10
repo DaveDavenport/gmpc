@@ -1258,7 +1258,19 @@ void pl3_browse_delete_playlist(GtkToggleButton *bt, char *string)
 
 
 }
+
+
 int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_ob_check_connected(connection))	
+	{
+		return FALSE;                                                                                           	
+	}
+	return TRUE;
+
+}
+int pl3_playlist_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	int type = pl3_cat_get_selected_browser();
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
@@ -1685,7 +1697,19 @@ void pl3_playlist_change()
 
 /* handle right mouse clicks on the cat tree view */
 /* gonna be a big function*/
+
+
 int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_ob_check_connected(connection))	
+	{
+		return FALSE;                                                                                           	
+	}
+	return TRUE;
+
+}
+int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	gint type  = pl3_cat_get_selected_browser();
 	if(type == -1 || check_connection_state())

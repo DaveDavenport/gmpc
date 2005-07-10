@@ -1,6 +1,10 @@
 10-07-2005 Qball <Qball@qballcow.nl>
 	* configure.ac:			--disable-gnome-vfs will remove the
 	gnome-vfs dependency of gmpc.
+	* glade/pl3.glade:		Add button-press handler.
+	* src/playlist3.c:		Fix right mouse behauviour
+	* src/preferences.c:		Fix for bug: 442 
+
 
 10-07-2005 Qball <Qball@qballcow.nl>
 	* src/preferences.c:		If tag-browser's are changed, update
@@ -46,6 +50,7 @@
 04-06-2005 <Qball> <Qball@qballcow.nl>	
 	* src/playlist3.c:		Fixed bug that when playlist changes
 	the playlist search doesn't update.
+
 
 
 02-06-2005 <Qball> <Qball@qballcow.nl>
