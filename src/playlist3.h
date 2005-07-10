@@ -1,6 +1,8 @@
 #ifndef __PLAYLIST3_H__
 #define __PLAYLIST3_H__
 
+extern GtkTreeStore *pl3_tree;
+extern GtkListStore *pl3_store;
 
 void create_playlist3 ();
 void pl3_update();
@@ -78,9 +80,9 @@ enum store_types
 void pl3_playlist_search();
 
 void pl3_playlist_changed();
-void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
-void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
-void pl3_custom_tag_browser_reload();
+
+
+
 
 
 #endif
