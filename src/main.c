@@ -23,7 +23,6 @@
 #include <string.h>
 #include <strings.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs.h>
 #include <time.h>
 #include "debug_printf.h"
 #include "libmpdclient.h"
@@ -33,6 +32,11 @@
 #include "strfsong.h"
 #include "misc.h"
 #include "mm-keys.h"
+
+#ifdef ENABLE_GNOME_VFS
+	#include <libgnomevfs/gnome-vfs.h>
+#endif
+
 extern int debug_level;
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
 void init_playlist ();
@@ -198,7 +202,9 @@ int main (int argc, char **argv)
 	 * initialize gtk 
 	 */
 	gtk_init (&argc, &argv);
+#ifdef ENABLE_GNOME_VFS
 	gnome_vfs_init ();
+#endif
 
 	/*
 	 * stock icons 

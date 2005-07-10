@@ -48,6 +48,7 @@ GtkTreePath *path = NULL;
 
 void pl3_xiph_add()
 {
+#ifdef ENABLE_GNOME_VFS
 	GtkTreeIter iter,child;
 	conf_mult_obj *list;
 
@@ -85,6 +86,7 @@ void pl3_xiph_add()
 		}while(data  != NULL);
 		cfg_free_multiple(list);
 	}
+#endif
 }
 
 
@@ -176,6 +178,7 @@ void pl3_xiph_fill_view(char *buffer)
 
 void pl3_xiph_view_browser(gchar *url,gchar *name)
 {
+#ifdef ENABLE_GNOME_VFS
 	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
 	gtk_list_store_clear(pl3_store);
 	if(g_file_test(string, G_FILE_TEST_EXISTS))
@@ -187,6 +190,7 @@ void pl3_xiph_view_browser(gchar *url,gchar *name)
 		start_transfer(url,(void *)pl3_xiph_fill_view,NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
 	g_free(string);
+#endif
 }
 
 

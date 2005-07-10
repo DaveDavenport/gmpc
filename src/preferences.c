@@ -5,6 +5,7 @@
 #include "libmpdclient.h"
 #include "main.h"
 #include "playlist3.h"
+#include "tag-browser.h"
 #include "config1.h"
 #include "debug_printf.h"
 extern config_obj *config;
@@ -117,6 +118,12 @@ void create_preferences_window()
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_ps")), 
 			cfg_get_single_value_as_int_with_default(config,"playlist3", "st_cur_song", 0));                          		
 
+#ifdef ENABLE_GNOME_VFS
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vbox_stream"),TRUE);	
+	gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_stream"));	
+
+#endif 
+	
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 }

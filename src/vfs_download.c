@@ -19,6 +19,10 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
+#include <glade/glade.h>
+#include "main.h"
+
+#ifdef ENABLE_GNOME_VFS
 #include "vfs_download.h"
 
 #define BUF_SIZE 512
@@ -119,3 +123,4 @@ void get_file(dl_info *di)
 			GNOME_VFS_OPEN_READ,GNOME_VFS_PRIORITY_DEFAULT,
 			(GnomeVFSAsyncOpenCallback) file_opened, di);      	
 }
+#endif

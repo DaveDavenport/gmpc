@@ -3,13 +3,18 @@
 #include <string.h>
 #include <strings.h>
 #include <glade/glade.h>
-#include <libgnomevfs/gnome-vfs.h>
+
 #include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
 #include "open-location.h"
 
+
 #define MAX_PLAYLIST_SIZE 10000
+
+#ifdef ENABLE_GNOME_VFS
+#include <libgnomevfs/gnome-vfs.h>
+
 
 GladeXML *ol_xml = NULL;
 GnomeVFSAsyncHandle *handle = NULL;
@@ -277,3 +282,4 @@ void ol_create(GtkWidget *wid)
 	ol_create_url(wid, NULL);
 
 }
+#endif

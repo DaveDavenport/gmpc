@@ -1,4 +1,8 @@
 10-07-2005 Qball <Qball@qballcow.nl>
+	* configure.ac:			--disable-gnome-vfs will remove the
+	gnome-vfs dependency of gmpc.
+
+10-07-2005 Qball <Qball@qballcow.nl>
 	* src/preferences.c:		If tag-browser's are changed, update
 	the tree in the playlist.
 	* src/playlist3.c:		Moved the tag browser's to a submenu. 

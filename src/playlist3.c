@@ -125,6 +125,7 @@ int  pl3_cat_get_selected_browser()
  */
 void pl3_custom_stream_add()
 {
+#ifdef ENABLE_GNOME_VFS
 	GtkTreeIter iter,child;
 	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "custom_stream_enable", TRUE))
 	{
@@ -146,6 +147,7 @@ void pl3_custom_stream_add()
 			PL3_CAT_ICON_ID, "icecast",
 			PL3_CAT_PROC, FALSE,          	
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+#endif
 }
 
 void pl3_custom_stream_view_browser()
@@ -910,7 +912,9 @@ void pl3_browse_add_selected()
 			}
 			else if(type == PL3_ENTRY_STREAM)
 			{
+#ifdef ENABLE_GNOME_VFS
 				ol_create_url(glade_xml_get_widget(pl3_xml, "pl3_win"), name);
+#endif
 			}
 			else if (type == PL3_ENTRY_PLAYLIST)
 			{
@@ -1707,13 +1711,13 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		/* TODO: Write own fun ction */
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
 
-
+#ifdef ENABLE_GNOME_VFS
 		item = gtk_image_menu_item_new_with_label("Add Location");
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
-
+#endif
 
 
 

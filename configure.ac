@@ -11,6 +11,7 @@ AC_PROG_CC
 
 
 AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
+AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,disable_gnome_vfs=no)
 # Checks for libraries.
 
 # Checks for header files.
@@ -30,13 +31,22 @@ PKG_CHECK_MODULES(gmpc,
 	gobject-2.0 >= 2.4
 	gtk+-2.0 >= 2.4
 	libglade-2.0
-	gnome-vfs-2.0
 	libxml-2.0
+	gmodule-2.0
 ])
+if test x${disable_gnome_vfs} = xno; then
+	PKG_CHECK_MODULES(gmpc_gvfs, [gnome-vfs-2.0])
+	AC_DEFINE(ENABLE_GNOME_VFS, 1, [Enable extra options that use gnome-vfs])
 
 
 
+fi
 
+AC_SUBST(gmpc_LIBS)
+AC_SUBST(gmpc_CFLAGS)
+
+AC_SUBST(gmpc_gvfs_LIBS)
+AC_SUBST(gmpc_gvfs_CFLAGS)
 
 
 # installation paths
