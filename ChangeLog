@@ -5,7 +5,7 @@
 	* src/playlist3.c:		Fix right mouse behauviour
 	* src/preferences.c:		Fix for bug: 442 
 	* glade/gmpc.glade:		Fix for bug: 441
-
+	* glade/gmpc.glade:		esc/ctrl-w now closes the pref window.
 
 10-07-2005 Qball <Qball@qballcow.nl>
 	* src/preferences.c:		If tag-browser's are changed, update

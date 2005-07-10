@@ -439,7 +439,8 @@
   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="focus_on_map">True</property>
   <property name="has_separator">False</property>
-  <signal name="response" handler="preferences_window_destroy" last_modification_time="Fri, 09 Jul 2004 12:27:45 GMT"/>
+  <signal name="close" handler="preferences_window_destroy" last_modification_time="Sun, 10 Jul 2005 13:09:33 GMT"/>
+  <signal name="response" handler="preferences_window_destroy" last_modification_time="Sun, 10 Jul 2005 13:11:42 GMT"/>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox1">
@@ -463,6 +464,8 @@
 	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-7</property>
 	      <signal name="clicked" handler="preferences_window_destroy" last_modification_time="Mon, 12 Jan 2004 17:09:22 GMT"/>
+	      <accelerator key="w" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
+	      <accelerator key="Escape" modifiers="0" signal="clicked"/>
 	    </widget>
 	  </child>
 	</widget>
@@ -2679,7 +2682,7 @@ Performer</property>
 		  <child>
 		    <widget class="GtkLabel" id="label134">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;&lt;i&gt;The configured ID3 browsers will only show up with mpd version 0.12 or above.&lt;/i&gt;&lt;/span&gt;</property>
+		      <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;&lt;i&gt;The configured Tag browsers will only show up with mpd version 0.12 or above.&lt;/i&gt;&lt;/span&gt;</property>
 		      <property name="use_underline">False</property>
 		      <property name="use_markup">True</property>
 		      <property name="justify">GTK_JUSTIFY_LEFT</property>
