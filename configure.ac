@@ -11,7 +11,7 @@ AC_PROG_CC
 
 
 AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
-AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,disable_gnome_vfs=no)
+AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,enable_gnome_vfs=yes)
 # Checks for libraries.
 
 # Checks for header files.
@@ -34,7 +34,7 @@ PKG_CHECK_MODULES(gmpc,
 	libxml-2.0
 	gmodule-2.0
 ])
-if test x${disable_gnome_vfs} = xno; then
+if test x${enable_gnome_vfs} = xyes; then
 	PKG_CHECK_MODULES(gmpc_gvfs, [gnome-vfs-2.0])
 	AC_DEFINE(ENABLE_GNOME_VFS, 1, [Enable extra options that use gnome-vfs])
 
@@ -88,3 +88,17 @@ fi
 
 
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in)
+echo ""
+echo ""
+echo "-------------- Status --------------"
+if test x${enable_debug} = xyes; then
+	echo "Extra debug output is: 	enabled. (you can change debug level by passing --debug-level=[1,2,3] to gmpc. higher is more info)"
+else
+	echo "Extra debug output is:	disabled."
+fi
+
+if test x${enable_gnome_vfs} = xyes; then
+	echo "Gnome VFS support is: 	enabled."
+else
+	echo "Gnome VFS support is:	disabled."
+fi

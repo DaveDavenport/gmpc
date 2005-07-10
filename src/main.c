@@ -122,9 +122,9 @@ int main (int argc, char **argv)
 		int i;
 		for(i = 1; i< argc; i++)
 		{
-			if(!strncasecmp(argv[i], "--enable-debug=", 15))
+			if(!strncasecmp(argv[i], "--debug-level=", 14))
 			{
-				debug_level = atoi(&argv[i][15]);
+				debug_level = atoi(&argv[i][14]);
 				debug_level = (debug_level < 0)? 0:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
 			}
 		}

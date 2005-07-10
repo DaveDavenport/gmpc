@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include "config.h"
 #include "debug_printf.h"
 
 #define RED "\x1b[31;01m"
