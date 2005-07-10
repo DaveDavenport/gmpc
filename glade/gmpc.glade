@@ -4103,7 +4103,7 @@ Performer</property>
 		      <child>
 			<widget class="GtkLabel" id="label132">
 			  <property name="visible">True</property>
-			  <property name="label" translatable="yes">Reconnect</property>
+			  <property name="label" translatable="yes">_Reconnect</property>
 			  <property name="use_underline">True</property>
 			  <property name="use_markup">False</property>
 			  <property name="justify">GTK_JUSTIFY_LEFT</property>

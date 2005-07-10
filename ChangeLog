@@ -4,6 +4,7 @@
 	* glade/pl3.glade:		Add button-press handler.
 	* src/playlist3.c:		Fix right mouse behauviour
 	* src/preferences.c:		Fix for bug: 442 
+	* glade/gmpc.glade:		Fix for bug: 441
 
 
 10-07-2005 Qball <Qball@qballcow.nl>
