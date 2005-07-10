@@ -16,6 +16,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #define __USE_GNU
@@ -652,7 +653,7 @@ int mpd_ob_status_check(MpdObj *mi)
 {
 	if(!mpd_ob_check_connected(mi))
 	{
-		printf("not connected\n");
+		debug_printf(DEBUG_INFO,"mpd_ob_status_check: not connected\n");
 		return FALSE;
 	}
 	if(mi->status == NULL)
@@ -660,7 +661,7 @@ int mpd_ob_status_check(MpdObj *mi)
 		/* try to update */
 		if(mpd_ob_status_update(mi))
 		{
-			printf("failed to update status\n");
+			debug_printf(DEBUG_INFO, "mpd_ob_status_check: failed to update status\n");
 			return FALSE;
 		}
 	}
@@ -672,7 +673,7 @@ int mpd_ob_stats_get_total_songs(MpdObj *mi)
 {
 	if(mi == NULL)
 	{
-		printf("failed to check mi == NULL\n");
+		debug_printf(DEBUG_WARNING, "mpd_ob_stats_get_total_songs: failed to check mi == NULL\n");
 		return -2;
 	}
 	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
@@ -687,7 +688,7 @@ int mpd_ob_stats_get_total_artists(MpdObj *mi)
 {
 	if(mi == NULL)
 	{
-		printf("failed to check mi == NULL\n");
+		debug_printf(DEBUG_WARNING, "mpd_ob_stats_get_total_artists: failed to check mi == NULL\n");
 		return -2;
 	}
 	if(!mpd_ob_stats_check(mi) || !mpd_ob_check_connected(mi))
@@ -1484,9 +1485,8 @@ void mpd_ob_signal_set_connect (MpdObj *mi, void *(* connect)(MpdObj *mi, void *
 	}
 	mi->connect = connect;
 	mi->connect_pointer = connect_pointer;
-}                                                                                                                                     /* SIGNALS */
-
-
+}
+/* SIGNALS */
 void mpd_ob_signal_set_disconnect (MpdObj *mi, void *(* disconnect)(MpdObj *mi, void *pointer), void *disconnect_pointer)
 {
 	if(mi == NULL)
@@ -1496,8 +1496,9 @@ void mpd_ob_signal_set_disconnect (MpdObj *mi, void *(* disconnect)(MpdObj *mi, 
 	}
 	mi->disconnect = disconnect;
 	mi->disconnect_pointer = disconnect_pointer;
-}                                                                                                                                     /* SIGNALS */
+}
 
+/* SIGNALS */
 void mpd_ob_signal_set_playlist_changed (MpdObj *mi, void *(* playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id,void *pointer), void *pointer)
 {
 	if(mi == NULL)
@@ -1890,17 +1891,6 @@ MpdData * mpd_ob_playlist_sort_tag_list(MpdData *data)
 	while(changed);
 	return pldata;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 MpdData * mpd_ob_data_get_next(MpdData *data)
