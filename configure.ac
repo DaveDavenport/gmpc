@@ -69,7 +69,7 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",[GMPC gettext package])
 AM_GLIB_GNU_GETTEXT
 
 
-AM_GNU_GETTEXT([external])
+#AM_GNU_GETTEXT([external])
 # setting correct paths
 PACKAGE_LOCALE_DIR="${PACKAGE_PREFIX}/${DATADIRNAME}/locale"
 AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's locale path for gettext])
