@@ -168,3 +168,9 @@ int seek_ns(int n)
 	return seek_ps(-n);
 }
 
+		
+/* returns TRUE when an error */
+int check_for_errors()
+{
+	return mpd_ob_check_error(connection);
+}

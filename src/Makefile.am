@@ -3,7 +3,6 @@ bin_PROGRAMS=gmpc
 gmpc_SOURCES=\
 	main.c\
 	mpdinteraction.c\
-	callback.c\
 	player.c\
 	preferences.c\
 	id3info.c\
