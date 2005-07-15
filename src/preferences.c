@@ -203,9 +203,9 @@ void preferences_window_connect(GtkWidget *but)
 	if(!mpd_ob_check_connected(connection))
 		if(!connect_to_mpd())
 		{
-			gtk_timeout_remove(update_timeout);
-			update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-		}
+/*	gtk_timeout_remove(update_timeout);
+	update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
+*/		}
 }
 
 void preferences_window_disconnect(GtkWidget *but)

@@ -299,9 +299,9 @@ int update_interface ()
 		/* connected succesfull */
 		else
 		{
-			gtk_timeout_remove (update_timeout);
+	/*		gtk_timeout_remove (update_timeout);
 			update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
-		}
+	*/	}
 	}
 	/*
 	 * now start updating the rest 
@@ -616,6 +616,9 @@ void connect_callback()
 		int autocon = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
 		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,GINT_TO_POINTER(autocon));
 	}
+	gtk_timeout_remove (update_timeout);
+	update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
+	
 	pl3_reinitialize_tree();
 }
 void status_callback(MpdObj *mi)
