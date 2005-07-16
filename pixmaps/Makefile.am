@@ -4,7 +4,7 @@ gmpcicon_DATA = gmpc.png
 appicondir = $(datadir)/gmpc/
 appicon_DATA =	media-audiofile.png\
 	media-stream.png\
-	media-artist.svg\
+	media-artist.png\
 	media-play.png\
 	media-pause.png\
 	media-next.png\
@@ -13,7 +13,7 @@ appicon_DATA =	media-audiofile.png\
 	gmpc.png\
 	media-album.png\
 	media-stop.png\
-	media-playlist.svg\
+	media-playlist.png\
 	player-repeat.png\
 	player-shuffle.png\
 	icecast.png
@@ -26,12 +26,12 @@ EXTRA_DIST = media-audiofile.png\
 	media-prev.png\
 	gmpc-tray.png\
 	gmpc.png\
-	media-artist.svg\
+	media-artist.png\
 	media-album.png\
 	media-stop.png\
 	player-repeat.png\
 	player-shuffle.png\
-	media-playlist.svg\
+	media-playlist.png\
 	icecast.png
 
 
