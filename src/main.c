@@ -467,7 +467,7 @@ void init_stock_icons ()
 	/*
 	 * add media-artist 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-artist.svg", NULL);
+	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-artist.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-artist", set);
 	g_object_unref (G_OBJECT (pb));
@@ -541,7 +541,7 @@ void init_stock_icons ()
 	/*
 	 * add media playlist
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-playlist.svg", NULL);
+	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-playlist.png", NULL);
 	set = gtk_icon_set_new_from_pixbuf (pb);                        	
 	gtk_icon_factory_add (factory, "media-playlist", set);
 	g_object_unref (G_OBJECT (pb));                
