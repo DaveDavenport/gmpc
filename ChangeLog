@@ -1,4 +1,8 @@
 16-07-2005 Qball <Qball@qballcow.nl>
+	* configure.ac:			Depend on libmpd-0.01
+	* src/libmpd.[c|h]:		removed
+	* src/libmpdclient.[c|h]:	removed
+	* src/debug_printf.[c|h]:	removed
 	* pixmap/media-playlist.png:	Added
 	* moved used images to svg
 

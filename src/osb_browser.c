@@ -27,9 +27,9 @@
 #include <time.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include "libmpdclient.h"
-#include "strfsong.h"
 #include "main.h"
+#include "strfsong.h"
+
 #include "misc.h"
 #include "playlist3.h"
 #include "open-location.h"

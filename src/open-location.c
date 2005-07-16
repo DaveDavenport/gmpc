@@ -4,7 +4,6 @@
 #include <strings.h>
 #include <glade/glade.h>
 
-#include "libmpdclient.h"
 #include "main.h"
 #include "misc.h"
 #include "open-location.h"

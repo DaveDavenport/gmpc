@@ -24,8 +24,6 @@
 #include <strings.h>
 #include <glade/glade.h>
 #include <time.h>
-#include "debug_printf.h"
-#include "libmpdclient.h"
 #include "config1.h"
 #include "playlist3.h"
 #include "main.h"

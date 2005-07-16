@@ -2,12 +2,10 @@
 #include <glade/glade.h>
 #include <string.h>
 #include <time.h>
-#include "libmpdclient.h"
 #include "main.h"
 #include "playlist3.h"
 #include "tag-browser.h"
 #include "config1.h"
-#include "debug_printf.h"
 extern config_obj *config;
 
 enum

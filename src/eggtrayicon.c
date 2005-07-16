@@ -26,7 +26,6 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "libmpdclient.h"
 #include <X11/Xatom.h>
 #include "main.h"
 

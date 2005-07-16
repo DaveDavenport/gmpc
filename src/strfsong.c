@@ -30,7 +30,7 @@
 #include <string.h>
 #include <glib.h>
 #include "misc.h"
-#include "libmpdclient.h"
+#include <libmpd/libmpdclient.h>
 #include "strfsong.h"
 
 static gchar * skip(gchar * p) 

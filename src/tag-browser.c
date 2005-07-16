@@ -2,12 +2,11 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "libmpdclient.h"
-#include "strfsong.h"
+
 #include "main.h"
+#include "strfsong.h"
 #include "playlist3.h"
 #include "tag-browser.h"
-#include "debug_printf.h"
 #include "config1.h"
 
 extern config_obj *config;

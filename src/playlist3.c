@@ -25,10 +25,9 @@
 #include <time.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include "libmpdclient.h"
-#include "strfsong.h"
-#include "main.h"
 
+#include "main.h"
+#include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "tag-browser.h"
@@ -36,7 +35,6 @@
 #include "vfs_download.h"
 #include "osb_browser.h"
 #include "config1.h"
-#include "debug_printf.h"
 #include <regex.h>
 
 

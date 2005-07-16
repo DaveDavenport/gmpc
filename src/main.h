@@ -17,7 +17,9 @@
 
 
 #include "config-defaults.h"
-#include "libmpd.h"
+#include <libmpd/libmpd.h>
+#include <libmpd/libmpdclient.h>
+#include <libmpd/debug_printf.h>
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;

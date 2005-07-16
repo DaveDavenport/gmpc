@@ -33,6 +33,7 @@ PKG_CHECK_MODULES(gmpc,
 	libglade-2.0
 	libxml-2.0
 	gmodule-2.0
+	libmpd-0.01
 ])
 if test x${enable_gnome_vfs} = xyes; then
 	PKG_CHECK_MODULES(gmpc_gvfs, [gnome-vfs-2.0])

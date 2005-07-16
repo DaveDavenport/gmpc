@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "libmpdclient.h"
 #include "mpdinteraction.h"
 #include "playlist3.h"
 #include "main.h"
 #include "config1.h"
-#include "debug_printf.h"
 extern config_obj *config;
 extern GtkListStore *pl2_store;
 /* the internall data structure */

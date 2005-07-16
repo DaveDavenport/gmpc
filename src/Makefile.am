@@ -6,8 +6,6 @@ gmpc_SOURCES=\
 	player.c\
 	preferences.c\
 	id3info.c\
-	libmpdclient.c\
-	libmpd.c\
 	eggtrayicon.c\
 	tray-icon.c\
 	misc.c\
@@ -16,7 +14,6 @@ gmpc_SOURCES=\
 	mm-keys.c\
 	playlist3.c\
 	vfs_download.c\
-	debug_printf.c\
 	osb_browser.c\
 	edit_markup.c\
 	tag-browser.c\
@@ -34,11 +31,8 @@ EXTRA_DIST = 	playlist3.h\
 		strfsong.h\
 		misc.h\
 		eggtrayicon.h\
-		libmpdclient.h\
-		libmpd.h\
 		vfs_download.h\
 		mpdinteraction.h\
-		debug_printf.h\
 		osb_browser.h\
 		config-defaults.h\
 		tag-browser.h\
