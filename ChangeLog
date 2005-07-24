@@ -4,7 +4,7 @@
 	* src/libmpdclient.[c|h]:	removed
 	* src/debug_printf.[c|h]:	removed
 	* pixmap/media-playlist.png:	Added
-	* moved used images to svg
+	* moved used images to svg:	?
 
 10-07-2005 Qball <Qball@qballcow.nl>
 	* configure.ac:			--disable-gnome-vfs will remove the
