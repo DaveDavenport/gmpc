@@ -291,7 +291,7 @@ In Playlist</property>
 	  <property name="layout_style">GTK_BUTTONBOX_END</property>
 
 	  <child>
-	    <widget class="GtkButton" id="button13">
+	    <widget class="GtkButton" id="but_cancel">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label">gtk-cancel</property>
@@ -303,7 +303,7 @@ In Playlist</property>
 	  </child>
 
 	  <child>
-	    <widget class="GtkButton" id="button14">
+	    <widget class="GtkButton" id="but_save">
 	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="has_default">True</property>

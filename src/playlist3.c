@@ -2401,10 +2401,31 @@ void pl2_save_playlist ()
 				{
 					if(mpd_ob_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST )
 					{
-						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists</i>"), str);
+						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
 						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
 						gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
-						run = TRUE;
+						/* ask to replace */
+						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), FALSE);
+/*						gtk_button_set_use_stock(GTK_BUTTON(glade_xml_get_widget(xml, "but_save")), GTK_STOCK_YES);	
+						gtk_button_set_use_stock(GTK_BUTTON(glade_xml_get_widget(xml, "but_cancel")), GTK_STOCK_NO);	
+*/						switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+						{
+							case GTK_RESPONSE_OK:
+								run = FALSE;
+								mpd_ob_playlist_delete(connection, str);
+								mpd_ob_playlist_save(connection,str);
+								break;
+							default:
+								run = TRUE;
+						}
+						/* return to stare */
+/*						gtk_button_set_use_stock(GTK_BUTTON(glade_xml_get_widget(xml, "but_save")), GTK_STOCK_SAVE);	
+						gtk_button_set_use_stock(GTK_BUTTON(glade_xml_get_widget(xml, "but_cancel")), GTK_STOCK_CANCEL);
+*/						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
+						gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
+						
+						
+
 						g_free(errormsg);
 					}
 				}

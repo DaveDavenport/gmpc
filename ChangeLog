@@ -7,6 +7,9 @@
 	selecting another entry. so the "formula" will always match
 	* src/playlist3.c:		Fixed spelling + marked string for
 	translation
+	* src/playlist3.c:		Possibility to overwrite playlists.
+	(with warning)
+	* src/preferences.c:		Set connection timeout real-time.
 
 	
 16-07-2005 Qball <Qball@qballcow.nl>

@@ -187,7 +187,12 @@ void update_preferences_information()
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "port_spin"))));
 	cfg_set_single_value_as_float(config,"connection","timeout",
 			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
-
+	/* update timeout live */
+	if(mpd_ob_check_connected(connection))
+	{
+		mpd_ob_set_connection_timeout(connection, 
+			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
+	}
 }
 
 void preferences_window_autoconnect(GtkToggleButton *tog)
@@ -256,7 +261,6 @@ void popup_timeout_changed()
 {
 	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout", 
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout"))));
-	mpd_ob_set_connection_timeout(connection, gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "popup_timeout"))));
 }
 
 void update_popup_settings()
