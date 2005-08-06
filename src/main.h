@@ -1,3 +1,7 @@
+#ifndef __MAIN_H__
+
+#define __MAIN_H__
+
 #include "config.h"
 
 #ifdef ENABLE_NLS
@@ -131,3 +135,6 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
 void status_callback(MpdObj *mi);
 void connect_callback();
 void database_changed();
+void main_quit();
+
+#endif

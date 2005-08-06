@@ -677,7 +677,8 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	}
 	else if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
 	{
-		gtk_main_quit();
+		/*gtk_main_quit();*/
+		main_quit();
 		return TRUE;
 
 	}

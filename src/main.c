@@ -265,6 +265,17 @@ int main (int argc, char **argv)
 }
 
 
+void main_quit()
+{
+	mpd_ob_signal_set_disconnect(connection, NULL, NULL);
+	if(mpd_ob_check_connected(connection))
+	{
+		mpd_ob_disconnect(connection);
+	}
+	gtk_main_quit();
+
+}
+
 int update_interface ()
 {
 	/*

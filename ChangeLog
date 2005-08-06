@@ -10,6 +10,10 @@
 	* src/playlist3.c:		Possibility to overwrite playlists.
 	(with warning)
 	* src/preferences.c:		Set connection timeout real-time.
+	* src/main.c:			Custom quit function.  (to stop segf.
+	on program exit)
+	* glade/gmpc.glade:		call custom quit function.
+	* src/player.c:			call custom quit function.
 
 	
 16-07-2005 Qball <Qball@qballcow.nl>
