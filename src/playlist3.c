@@ -2401,7 +2401,7 @@ void pl2_save_playlist ()
 				{
 					if(mpd_ob_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST )
 					{
-						gchar *errormsg = g_strdup_printf("<i>Playlist <b>\"%s\"</b> allready exists</i>", str);
+						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists</i>"), str);
 						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
 						gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
 						run = TRUE;

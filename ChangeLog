@@ -5,6 +5,8 @@
 	gtk+-2.6 or higher
 	* src/preferences.c:		All combo boxes are reset when
 	selecting another entry. so the "formula" will always match
+	* src/playlist3.c:		Fixed spelling + marked string for
+	translation
 
 	
 16-07-2005 Qball <Qball@qballcow.nl>
