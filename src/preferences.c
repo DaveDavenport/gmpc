@@ -736,6 +736,10 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 		}
 		else
 		{		
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),0);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),0);
+		
 			if(tk_format[0] != NULL)		
 			{
 				gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),
@@ -769,18 +773,36 @@ void pref_id3b_add_entry()
 	GString *format = g_string_new("");
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1"))))
 	{
-		g_string_append_printf(format, "%s|",
-				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1"))));
+		GtkTreeIter iter;
+		char *string;
+		if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),&iter))
+		{
+			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
+							GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")))),&iter, 0,&string, -1);
+			g_string_append_printf(format, "%s|",string);
+		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2"))))
 	{
-		g_string_append_printf(format, "%s|",
-				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2"))));
+		GtkTreeIter iter;
+		char *string;
+		if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),&iter))
+		{
+			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
+							GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")))),&iter, 0,&string, -1);
+			g_string_append_printf(format, "%s|",string);
+		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3"))))
 	{
-		g_string_append_printf(format, "%s|",
-				gtk_combo_box_get_active_text(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3"))));
+		GtkTreeIter iter;
+		char *string;
+		if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),&iter))
+		{
+			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
+							GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")))),&iter, 0,&string, -1);
+			g_string_append_printf(format, "%s|",string);
+		}
 	}
 	if(format->len)
 	{
@@ -820,7 +842,7 @@ void pref_id3b_fill()
 		while(data);
 		cfg_free_multiple(list);
 	}
-	
+
 }
 
 void pref_id3b_init()

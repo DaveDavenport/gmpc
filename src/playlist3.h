@@ -74,6 +74,7 @@ enum store_types
 	SONG_STOCK_ID,
 	SONG_TIME,
 	STOCK_ALIGN,
+	SONG_TYPE, /* 0 = file, 1 = stream */
 	NROWS
 };
 

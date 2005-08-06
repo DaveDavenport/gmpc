@@ -2289,7 +2289,11 @@ void pl3_highlight_state_change(int old_state, int new_state)
 		temp = g_strdup_printf ("%i", info.old_pos);
 		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, -1);
+			int song_type;
+			gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
+					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
+					-1);
 		}
 		g_free (temp);
 		/* reset old pos */
@@ -2319,9 +2323,9 @@ void pl3_highlight_song_change ()
 		temp = g_strdup_printf ("%i", info.old_pos);
 		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
 		{
-			gint song_id = 0;
+			gint song_id = 0, song_type = 0;
 			/* check if we have the song we want */
-			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,&song_id, -1);
+			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,&song_id,SONG_TYPE,&song_type, -1);
 			/* if the old song is the new song (so tags updated) quit */
 			if (song_id == mpd_ob_player_get_current_song_id(connection))
 			{
@@ -2329,8 +2333,9 @@ void pl3_highlight_song_change ()
 				return;
 			}
 			/* unhighlight the song */
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,
-					PANGO_WEIGHT_NORMAL, -1);
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
+					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",    			
+					-1);
 		}
 		g_free (temp);
 		/* reset old pos */
@@ -2350,7 +2355,8 @@ void pl3_highlight_song_change ()
 			{
 				debug_printf(DEBUG_ERROR,"pl3_highlight_song_change: Error %i %i should be the same\n", pos,mpd_ob_player_get_current_song_pos(connection));
 			}
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD, -1);
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,SONG_STOCK_ID,"gtk-media-play", -1);
+			
 			if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0) && 
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{
@@ -2433,4 +2439,5 @@ void pl3_playlist_changed()
 	}
 
 }
+
 

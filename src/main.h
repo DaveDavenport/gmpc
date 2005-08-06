@@ -121,3 +121,13 @@ gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void id3_status_update();
 void call_id3_window_song(mpd_Song *songstr);
 
+
+
+void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
+void init_playlist ();
+void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
+void song_changed(MpdObj *mi, int oldsong, int newsong);
+void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
+void status_callback(MpdObj *mi);
+void connect_callback();
+void database_changed();

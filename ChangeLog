@@ -1,3 +1,12 @@
+06-08-2005 Qball <Qball@qballcow.nl>
+	* src/playlist3.c/main.c:	Row highlight when playing now also
+	changes the icon.
+	* src/preferences.c:		Remove functions that depend on
+	gtk+-2.6 or higher
+	* src/preferences.c:		All combo boxes are reset when
+	selecting another entry. so the "formula" will always match
+
+	
 16-07-2005 Qball <Qball@qballcow.nl>
 	* configure.ac:			Depend on libmpd-0.01
 	* src/libmpd.[c|h]:		removed

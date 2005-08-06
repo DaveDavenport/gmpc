@@ -36,14 +36,7 @@
 #endif
 
 extern int debug_level;
-void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
-void init_playlist ();
-void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
-void song_changed(MpdObj *mi, int oldsong, int newsong);
-void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
-void status_callback(MpdObj *mi);
-void connect_callback();
-void database_changed();
+
 /*
  * the xml fle pointer to the player window 
  */
@@ -123,7 +116,7 @@ int main (int argc, char **argv)
 			if(!strncasecmp(argv[i], "--debug-level=", 14))
 			{
 				debug_level = atoi(&argv[i][14]);
-				debug_level = (debug_level < 0)? 0:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
+				debug_level = (debug_level < 0)? -1:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
 			}
 		}
 
@@ -255,11 +248,15 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 
+
+
+
+	/* add a handler that disconnects mpd if the mainloop get destroyed */
+	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
+
 	/*
 	 * run the main loop 
 	 */
-	/* add a handler that disconnects mpd if the mainloop get destroyed */
-	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
 	gtk_main ();
 	/* cleaning up. */
 	mpd_ob_free(connection);	
@@ -376,6 +373,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 						SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 						SONG_TIME,data->value.song->time,
 						STOCK_ALIGN, 0.0,
+						SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
 						-1);
 			}
 			g_free(path);
@@ -403,6 +401,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_TIME,data->value.song->time,
 					STOCK_ALIGN,0.0,
+					SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
 					-1);
 
 		}
@@ -558,7 +557,8 @@ void init_playlist ()
 			G_TYPE_BOOLEAN,	/* weight color */
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT,
-			GTK_TYPE_FLOAT);
+			GTK_TYPE_FLOAT,
+			GTK_TYPE_INT);
 
 }
 

@@ -9,8 +9,6 @@ AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
 
-
-AC_ARG_ENABLE(debug,[  --enable-debug     enable extra debug output.],,enable_debug=no)
 AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,enable_gnome_vfs=yes)
 # Checks for libraries.
 
@@ -83,21 +81,11 @@ AC_DEFINE_UNQUOTED(PIXMAP_PATH,"$PIXMAP_PATH",[The package's pixmap path])
 
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
-if test x${enable_debug} = xyes; then
-	AC_DEFINE(DEBUG, 1, [Enable extra debug output])
-fi
-
 
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in)
 echo ""
 echo ""
 echo "-------------- Status --------------"
-if test x${enable_debug} = xyes; then
-	echo "Extra debug output is: 	enabled. (you can change debug level by passing --debug-level=[1,2,3] to gmpc. higher is more info)"
-else
-	echo "Extra debug output is:	disabled."
-fi
-
 if test x${enable_gnome_vfs} = xyes; then
 	echo "Gnome VFS support is: 	enabled."
 else
