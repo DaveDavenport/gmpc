@@ -3176,7 +3176,7 @@ Performer</property>
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="label" translatable="yes">&lt;span size=&quot;xx-large&quot;&gt;&lt;b&gt;Gnome Music Player Client&lt;/b&gt;&lt;/span&gt;
-0.12 &lt;i&gt;???&lt;/i&gt;</property>
+0.12 &lt;i&gt;Better late then never&lt;/i&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
 		  <property name="justify">GTK_JUSTIFY_CENTER</property>
