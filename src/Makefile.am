@@ -17,6 +17,7 @@ gmpc_SOURCES=\
 	osb_browser.c\
 	edit_markup.c\
 	tag-browser.c\
+	pl3_custom_stream.c\
 	config1.c
 
 #INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
@@ -36,5 +37,6 @@ EXTRA_DIST = 	playlist3.h\
 		osb_browser.h\
 		config-defaults.h\
 		tag-browser.h\
+		pl3_custom_stream.h\
 		config1.h
 		
