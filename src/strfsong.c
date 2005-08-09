@@ -162,39 +162,40 @@ static gsize _strfsong(gchar *s,
 		n = end - p + 1;
 		if(*end != '%')
 			n--;
-		else if (strncmp("%file%", p, n) == 0)
+		else if (memcmp("%file%", p, n) == 0)
 			temp = g_strdup(song->file);
-		else if (strncmp("%artist%", p, n) == 0)
+		else if (memcmp("%artist%", p, n) == 0)
 			temp = song->artist ? g_strdup(song->artist) : NULL;
-		else if (strncmp("%title%", p, n) == 0)
+		else if (memcmp("%title%", p, n) == 0)
 			temp = song->title ? g_strdup(song->title) : NULL;
-		else if (strncmp("%album%", p, n) == 0)
+		else if (memcmp("%album%", p, n) == 0)
 			temp = song->album ? g_strdup(song->album) : NULL;
-		else if (strncmp("%track%", p, n) == 0)
+		else if (memcmp("%track%", p, n) == 0)
 			temp = song->track ? g_strdup(song->track) : NULL;
-		else if (strncmp("%name%", p, n) == 0)
+		else if (memcmp("%name%", p, n) == 0)
 			temp = song->name ? g_strdup(song->name) : NULL;
-		else if (strncmp("%date%", p, n) == 0)
+		else if (memcmp("%date%", p, n) == 0)
 			temp = song->date ? g_strdup(song->date) : NULL;		
-		else if (strncmp("%genre%", p, n) == 0)
+		else if (memcmp("%genre%", p, n) == 0)
 			temp = song->genre ? g_strdup(song->genre) : NULL;		
 		
-		else if (strncmp("%shortfile%", p, n) == 0)
+		else if (memcmp("%shortfile%", p, n) == 0)
 		{
 			if( strstr(song->file, "://") )
 				temp = g_strdup(song->file);
 			else
 				temp = remove_extention_and_basepath(song->file);
 		}
-		else if (strncmp("%time%", p, n) == 0)
+		else if (memcmp("%time%", p, n) == 0)
 		{
 			if (song->time != MPD_SONG_NO_TIME) {
 				temp = g_strdup_printf("%02d:%02d", song->time/60,song->time % 60);;
 			}
 		}
-
+/*
 		if( temp == NULL)
 		{
+	*/
 			/*gsize templen=n;*/
 			/* just pass-through any unknown specifiers (including esc) */
 			/* drop a null char in so printf stops at the end of this specifier,
@@ -203,8 +204,8 @@ static gsize _strfsong(gchar *s,
 				templen = max-length;
 			strncat(s, p, templen);
 			length+=templen;
-*/		}
-		else {
+		}
+*/		if(temp != NULL) {
 			gsize templen = strlen(temp);
 
 			found = TRUE;

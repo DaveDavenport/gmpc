@@ -1,5 +1,7 @@
 09-08-2005 Qball <Qball@qballcow.nl>
 	* src/pl3_custom_stream.c|h:	Moving some code.
+	* src/strfsong.c:		Changed strncmp to memcmp
+	(:%s/strncmp/memcmp) does this help? profiler shows some gain.
 
 06-08-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c/main.c:	Row highlight when playing now also
