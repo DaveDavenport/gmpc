@@ -1,3 +1,6 @@
+11-09-2005 Qball <Qball@qballcow.nl>
+	* po/POTFILES.in:		fixed entries, so make dist works. 
+
 09-08-2005 Qball <Qball@qballcow.nl>
 	* src/pl3_custom_stream.c|h:	Moving some code.
 	* src/strfsong.c:		Changed strncmp to memcmp
