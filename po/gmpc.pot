@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-11 19:35+0200\n"
+"POT-Creation-Date: 2005-08-14 20:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,10 +21,10 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
 #. set up tray icon
-#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:57 src/main.c:611
+#: data/gmpc.desktop.in.h:2 glade/gmpc.glade.h:57 src/main.c:616
 #: src/mpdinteraction.c:37 src/mpdinteraction.c:91 src/player.c:164
 #: src/player.c:390 src/player.c:393 src/player.c:448 src/player.c:451
-#: src/tray-icon.c:599
+#: src/tray-icon.c:636
 msgid "Gnome Music Player Client"
 msgstr ""
 
@@ -666,7 +666,7 @@ msgstr ""
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr ""
 
-#: src/playlist3.c:2189
+#: src/playlist3.c:2193
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -686,22 +686,26 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: src/tag-browser.c:31 src/tag-browser.c:78
+#: src/tag-browser.c:32 src/tag-browser.c:79
 msgid "Tag Browser"
 msgstr ""
 
-#: src/tray-icon.c:551
+#: src/tray-icon.c:453
+msgid "Now Playing"
+msgstr ""
+
+#: src/tray-icon.c:588
 msgid "Pl_ay/Pause"
 msgstr ""
 
-#: src/tray-icon.c:558
+#: src/tray-icon.c:595
 msgid "_Stop"
 msgstr ""
 
-#: src/tray-icon.c:564
+#: src/tray-icon.c:601
 msgid "_Next"
 msgstr ""
 
-#: src/tray-icon.c:571
+#: src/tray-icon.c:608
 msgid "_Previous"
 msgstr ""
