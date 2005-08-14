@@ -221,8 +221,8 @@ msgid ""
 "<span size=\"small\"><i>The configured Tag browsers will only show up with "
 "mpd version 0.12 or above.</i></span>"
 msgstr ""
-"<span size=\"small\"><i>Les navigateurs par tag configurés ne seront affichés "
-"qu'avec mpd version 0.12 ou supérieure.</i></span>"
+"<span size=\"small\"><i>Les navigateurs par tag configurés ne seront "
+"affichés qu'avec mpd version 0.12 ou supérieure.</i></span>"
 
 #: glade/gmpc.glade.h:33
 msgid ""
@@ -252,8 +252,8 @@ msgid ""
 "<span size=\"small\"><i>You need to be connected in order to see the "
 "statistics</i></span>"
 msgstr ""
-"<span size=\"small\"><i>La connexion doit être établie "
-"pour voir les statistiques</i></span>"
+"<span size=\"small\"><i>La connexion doit être établie pour voir les "
+"statistiques</i></span>"
 
 #: glade/gmpc.glade.h:38
 msgid ""
