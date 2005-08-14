@@ -1,3 +1,8 @@
+14-09-2005 Qball <Qball@qballcow.nl>
+	* src/tray-icon.c:		Added libnotify support (exp.)
+	* src/main.c:			Added libnotify init
+	* contifure.ac:			Added libnotify compile option
+	(--enable-notify)
 11-09-2005 Qball <Qball@qballcow.nl>
 	* po/POTFILES.in:		fixed entries, so make dist works. 
 

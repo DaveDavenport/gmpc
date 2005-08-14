@@ -21,8 +21,8 @@ gmpc_SOURCES=\
 	config1.c
 
 #INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
-INCLUDES= @gmpc_CFLAGS@ $(gmpc_gvfs_CFLAGS) -Wall   
-LIBS = @gmpc_LIBS@ @LIBS@ $(gmpc_gvfs_LIBS) 
+INCLUDES= @gmpc_CFLAGS@ $(gmpc_gvfs_CFLAGS) $(gmpc_libnotify_CFLAGS) -Wall   
+LIBS = @gmpc_LIBS@ @LIBS@ $(gmpc_gvfs_LIBS) $(gmpc_libnotify_LIBS)
 
 
 EXTRA_DIST = 	playlist3.h\
