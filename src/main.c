@@ -265,6 +265,7 @@ int main (int argc, char **argv)
 	/* cleaning up. */
 	mpd_ob_free(connection);	
 	config_close(config);
+	gtk_list_store_clear(pl2_store);
 	return 0;
 }
 

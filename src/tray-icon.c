@@ -449,23 +449,16 @@ void tray_icon_song_change()
 		notify_hints_set_int(hints, "y", y_tv+GTK_WIDGET(tray_icon)->allocation.height);
 
 	}
-	n = notify_send_notification(
-			n, // replaces nothing
-			NULL,
-			NOTIFY_URGENCY_NORMAL,
-			"Now Playing",
-			text,
-			icon, // no icon
-			TRUE, cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5),
-			hints, //  hints
-			NULL, // no user data
-			0); // no actions
+	n = notify_send_notification(n, NULL, NOTIFY_URGENCY_NORMAL,
+			_("Now Playing"), text,
+			icon,TRUE, cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5),
+			hints,NULL,0); 
 
 	notify_icon_destroy(icon);
 	g_free(text);
 	if (!n) {
 		fprintf(stderr, "failed to send notification\n");
-		return 1;
+		return;
 	}
 
 	return ;
