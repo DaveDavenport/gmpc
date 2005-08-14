@@ -1,4 +1,6 @@
 14-09-2005 Qball <Qball@qballcow.nl>
+	* src/tag-browser.c:		add/replace supported added from right
+	mouse menu in tree.
 	* src/tray-icon.c:		Added libnotify support (exp.)
 	* src/main.c:			Added libnotify init
 	* contifure.ac:			Added libnotify compile option

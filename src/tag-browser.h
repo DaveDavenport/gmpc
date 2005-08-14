@@ -7,7 +7,7 @@ void pl3_custom_tag_browser_reload();
 void pl3_custom_tag_browser_add();
 void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter);
 long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
-
+void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event);
 
 
 

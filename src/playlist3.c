@@ -1633,6 +1633,10 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 
 	}
+	else if (type ==  PL3_BROWSE_CUSTOM_TAG)
+	{
+		pl3_custom_tag_browser_right_mouse_menu(event);
+	}
 
 	return TRUE;
 }

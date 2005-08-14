@@ -8,7 +8,8 @@
 #include "playlist3.h"
 #include "tag-browser.h"
 #include "config1.h"
-
+void pl3_custom_tag_browser_add_folder();
+void pl3_custom_tag_browser_replace_folder();
 extern config_obj *config;
 extern GladeXML *pl3_xml;
 /************************************************************************************************/
@@ -406,4 +407,190 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
 	return time;
+}
+
+
+void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event)
+{
+	/* we need an model and a iter */
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
+	int depth = 0;
+	GtkTreePath *path;	
+	/* se need a GtkTreeSelection to know what is selected */
+	GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	
+	/* get and check for selected */
+	if(!gtk_tree_selection_get_selected(selection,&model, &iter))
+	{
+		/* Nothin selected? then we don't have todo anything */
+		return;
+	}
+	/* now we want to know what level we are, and what we need to show */
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+	if(path == NULL)
+	{
+		debug_printf(DEBUG_INFO,"Failed to get path\n");
+		return;
+	}
+	depth = gtk_tree_path_get_depth(path);
+
+	gtk_tree_path_free(path);	
+	if(depth > 2)
+	{
+		/* here we have:  Add. Replace*/
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_add_folder), NULL);		
+
+
+		/* add the replace widget */
+		item = gtk_image_menu_item_new_with_label("Replace");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_replace_folder), NULL);
+		
+		gtk_widget_show_all(GTK_WIDGET(menu));
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
+	}
+}
+void pl3_custom_tag_browser_replace_folder()
+{
+	/* clear the playlist */
+	mpd_ob_playlist_clear(connection);
+	/* add the songs */
+	pl3_custom_tag_browser_add_folder();
+	/* play */
+	mpd_ob_player_play(connection);
+}
+void pl3_custom_tag_browser_add_folder()
+{
+	char *first_tag, *second_tag, *format;
+	char **tk_format;
+	int i = 0, depth;
+	GtkTreePath *path;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter,iter_cat;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	/* get and check for selected */
+	if(!gtk_tree_selection_get_selected(selection,&model, &iter_cat))
+	{
+		/* Nothin selected? then we don't have todo anything */
+		return;
+	}
+
+	if (check_connection_state ())
+	{
+		return;
+	}
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return;
+	}
+	depth = gtk_tree_path_get_depth(path) -2;
+
+
+	if(depth <= 0)
+	{
+		/*lowest level, do nothing */
+		gtk_tree_path_free(path);	
+		return;
+	}                                    	
+
+	tk_format = g_strsplit(format, "|",0);
+	if(tk_format ==NULL)
+	{
+		printf("failed to split\n");
+		gtk_tree_path_free(path);	
+		return;
+	}
+
+
+	for(i=0;tk_format[i] != NULL;i++)	
+	{
+
+		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
+		{
+
+			g_strfreev(tk_format);
+			gtk_tree_path_free(path);	
+			return;
+		}
+
+	}
+
+	if(depth == 1)
+	{
+		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE, 
+				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
+		/* lowest level selected*/
+		if(data != NULL)
+		{
+			while(data != NULL)
+			{
+				mpd_ob_playlist_queue_add(connection,data->value.song->file);
+				data = mpd_ob_data_get_next(data);
+			}
+			mpd_ob_playlist_queue_commit(connection);
+		}
+	}
+	else if(depth == 2)
+	{
+		/* second level */
+		MpdData *data = mpd_ob_playlist_find_adv(connection,TRUE,
+				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
+				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
+
+		if(data != NULL)
+		{
+			while(data != NULL)
+			{
+				mpd_ob_playlist_queue_add(connection,data->value.song->file);
+				data = mpd_ob_data_get_next(data);
+			}
+			mpd_ob_playlist_queue_commit(connection);
+		}
+
+	}
+	else if (depth == 3)
+	{
+		char *first;
+		/* take the upper one */
+		/* go 2 up */
+		if(gtk_tree_path_up(path) && gtk_tree_path_up(path))
+		{
+			MpdData *data  = NULL;
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
+
+			/* artist and album is selected */
+			data = mpd_ob_playlist_find_adv(connection,TRUE,
+					mpd_misc_get_tag_by_name(tk_format[0]),	first,
+					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
+					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
+
+			if(data != NULL)
+			{
+				while(data != NULL)
+				{
+					mpd_ob_playlist_queue_add(connection,data->value.song->file);
+					data = mpd_ob_data_get_next(data);
+				}
+				mpd_ob_playlist_queue_commit(connection);
+			}
+
+		}
+	}
+	gtk_tree_path_free(path);	
+	g_strfreev(tk_format);
+	return ;
 }
