@@ -36,6 +36,9 @@ PKG_CHECK_MODULES(gmpc,
 	gmodule-2.0
 	libmpd-0.01 
 ])
+AC_SUBST(gmpc_LIBS)
+AC_SUBST(gmpc_CFLAGS)
+
 if test x${enable_gnome_vfs} = xyes; then
 	PKG_CHECK_MODULES(gmpc_gvfs, [gnome-vfs-2.0])
 	AC_DEFINE(ENABLE_GNOME_VFS, 1, [Enable extra options that use gnome-vfs])
@@ -46,8 +49,8 @@ if test x${enable_libnotify} = xyes; then
 	AC_DEFINE(ENABLE_LIBNOTIFY, 1, [Enable extra options that use gnome-vfs])
 fi
 
-AC_SUBST(gmpc_LIBS)
-AC_SUBST(gmpc_CFLAGS)
+
+
 
 AC_SUBST(gmpc_gvfs_LIBS)
 AC_SUBST(gmpc_gvfs_CFLAGS)

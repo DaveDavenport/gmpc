@@ -712,42 +712,36 @@ msgid "%i days %02i hours %02i minutes"
 msgstr ""
 
 #: src/preferences.c:865
-#, fuzzy
 msgid "Name"
 msgstr "Nom :"
 
 #: src/preferences.c:870
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #: src/tag-browser.c:32 src/tag-browser.c:79
-#, fuzzy
 msgid "Tag Browser"
-msgstr "Navigateur de chansons"
+msgstr "Navigateur par tag"
 
 #: src/tray-icon.c:453
 msgid "Now Playing"
 msgstr ""
 
 #: src/tray-icon.c:588
-#, fuzzy
 msgid "Pl_ay/Pause"
-msgstr "Lecture/Pause"
+msgstr "L_ecture/Pause"
 
 #: src/tray-icon.c:595
-#, fuzzy
 msgid "_Stop"
-msgstr "Stop"
+msgstr "_Stop"
 
 #: src/tray-icon.c:601
-#, fuzzy
 msgid "_Next"
-msgstr "Suivant"
+msgstr "Suiva_nt"
 
 #: src/tray-icon.c:608
-#, fuzzy
 msgid "_Previous"
-msgstr "Précédent"
+msgstr "_Précédent"
 
 #~ msgid "Fade In"
 #~ msgstr "Ouverture en fondu"
