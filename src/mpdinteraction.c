@@ -42,7 +42,7 @@ void disconnect_callback(MpdObj *mi)
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
 	info.old_pos = -1;
-
+	
 	/* disconnect playlist */
 	pl3_disconnect();
 
