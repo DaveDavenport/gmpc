@@ -2247,4 +2247,21 @@ void pl3_playlist_changed()
 
 }
 
+void pl3_detach_playlist()
+{
+
+
+
+
+
+
+
+
+}
+
+void pl3_attach_playlist()
+{
+
+
+}
 
