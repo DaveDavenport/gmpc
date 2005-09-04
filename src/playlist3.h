@@ -40,10 +40,11 @@ enum pl3_cat_store
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
-#define PL3_CUR_PLAYLIST 3
-#define PL3_ENTRY_STREAM 2
-#define PL3_ENTRY_PLAYLIST 1
-#define PL3_ENTRY_SONG 0
+#define PL3_ENTRY_DIRECTORY 16
+#define PL3_CUR_PLAYLIST 8
+#define PL3_ENTRY_STREAM 4
+#define PL3_ENTRY_PLAYLIST 2
+#define PL3_ENTRY_SONG 1
 
 /* for the tree in the right pane. */
 enum pl3_store_types

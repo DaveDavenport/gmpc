@@ -1,3 +1,6 @@
+04-09-2005 Qball <Qball@qballcow.nl>
+	* src/playlist3.c:		Show folders in right pane view.
+
 01-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		enabled moving by dnd 
 	* glade/playlist3.glade:	row reordering
