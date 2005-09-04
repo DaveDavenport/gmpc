@@ -40,6 +40,7 @@
 
 extern config_obj *config;
 GladeXML *pl3_xml = NULL;
+GladeXML *detach_pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
 GtkListStore *pl2_store= NULL;
@@ -47,7 +48,7 @@ GtkListStore *pl2_store= NULL;
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 void pl2_save_playlist ();
-
+void pl3_detach_playlist();
 
 
 
@@ -1299,12 +1300,6 @@ void pl3_reinitialize_tree()
 	pl3_find_add();
 	pl3_xiph_add();
 	pl3_custom_stream_add();
-	/*
-	   pl3_custom_tag_browser_add("Artist Browser", "artist|date|album");
-	   pl3_custom_tag_browser_add("Genre Browser", "genre|artist");
-	   pl3_custom_tag_browser_add("Album Browser", "album|artist");
-	   pl3_custom_tag_browser_add("Date Browser", "date|album");
-	 */
 	pl3_custom_tag_browser_add();
 	gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
 
@@ -1581,8 +1576,14 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
 #endif
+		item = gtk_image_menu_item_new_with_label("Detach");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_YES, GTK_ICON_SIZE_MENU));
 
-
+		/* add the save widget */
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		/* TODO: Write own fun ction */
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_detach_playlist), NULL);
 
 		/* add the clear widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
@@ -2298,19 +2299,47 @@ void pl3_playlist_changed()
 
 void pl3_detach_playlist()
 {
+	GtkWidget *tree = NULL;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	if(detach_pl3_xml)
+	{
+		/* bring to front */
+		return;
+	}
+	detach_pl3_xml = glade_xml_new(GLADE_PATH "playlist3.glade", "detach_playlist_win", NULL);
+	tree = glade_xml_get_widget(detach_pl3_xml, "treeview"); 
+	renderer = gtk_cell_renderer_pixbuf_new ();
+
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,"yalign", STOCK_ALIGN, NULL);
+
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_set_attributes (column,renderer,
+			"text", SONG_TITLE,
+			"weight", WEIGHT_INT,
+			"weight-set", WEIGHT_ENABLE, 				
+			NULL);                               		
+	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
 
-
-
-
-
+	/* connect signals that are defined in the gui description */
+	glade_xml_signal_autoconnect (detach_pl3_xml);
 
 }
 
 void pl3_attach_playlist()
 {
-
-
+	printf("destroing detach window\n");
+	if(detach_pl3_xml)
+	{
+		gtk_widget_destroy(glade_xml_get_widget(detach_pl3_xml, "detach_playlist_win"));
+		g_object_unref(detach_pl3_xml);
+		detach_pl3_xml = NULL;
+	}
 }
 

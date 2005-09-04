@@ -1,5 +1,8 @@
 04-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		Show folders in right pane view.
+	* src/playlist3.c:		First attemped at detachable playlist window.
+	* glade/playlist3.glade:	Added a empty window for detachable
+	* playlist window.
 
 01-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		enabled moving by dnd 
