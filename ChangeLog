@@ -3,6 +3,7 @@
 	* src/playlist3.c:		First attemped at detachable playlist window.
 	* glade/playlist3.glade:	Added a empty window for detachable
 	* playlist window.
+	*** TESTING MARKUP *** playlist3.c and strfsong.c
 
 01-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		enabled moving by dnd 

@@ -2059,7 +2059,7 @@ void create_playlist3 ()
 	else
 	{
 		gtk_tree_view_column_set_attributes (column,renderer,
-				"text", SONG_TITLE,
+				"markup", SONG_TITLE,
 				"weight", WEIGHT_INT,
 				"weight-set", WEIGHT_ENABLE, 				
 				NULL);                               		
@@ -2318,7 +2318,7 @@ void pl3_detach_playlist()
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes (column,renderer,
-			"text", SONG_TITLE,
+			"markup", SONG_TITLE,
 			"weight", WEIGHT_INT,
 			"weight-set", WEIGHT_ENABLE, 				
 			NULL);                               		
