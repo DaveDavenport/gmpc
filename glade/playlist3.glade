@@ -841,6 +841,8 @@ In Playlist</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
+  <property name="default_width">400</property>
+  <property name="default_height">400</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">gmpc.png</property>
@@ -874,6 +876,7 @@ In Playlist</property>
 	  <property name="fixed_height_mode">False</property>
 	  <property name="hover_selection">False</property>
 	  <property name="hover_expand">False</property>
+	  <signal name="row_activated" handler="pl3_dp_row_activated" last_modification_time="Mon, 05 Sep 2005 09:29:34 GMT"/>
 	</widget>
       </child>
     </widget>

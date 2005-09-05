@@ -207,31 +207,11 @@ static gsize _strfsong(gchar *s,
 		}
 */		if(temp != NULL) {
 			gsize templen = strlen(temp);
-			int i = 0, final_size=0;
-			for(i=0; temp[i] != '\0';i++)
-			{
-				final_size++;
-				if(temp[i] == '&') final_size += 4;
-			}
-			
 			found = TRUE;
-			if( length+final_size > max )
-				final_size = max-length;
-			for(i=0; temp[i] != '\0';i++)
-			{
-				s[length] = temp[i];
-				if(temp[i] == '&')
-				{
-					s[length+1] = 'a';
-					s[length+2] = 'm';
-					s[length+3] = 'p';
-					s[length+4] = ';';
-					length+=4;
-				}
-				length++;
-			}
-/*			strncat(s, temp, templen);*/
-//			length+=templen;
+			if( length+templen > max )
+				templen = max-length;
+			strncat(s, temp, templen);
+			length+=templen;
 			g_free(temp);
 		}
 

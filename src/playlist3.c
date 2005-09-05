@@ -49,7 +49,7 @@ GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 void pl2_save_playlist ();
 void pl3_detach_playlist();
-
+void pl3_dp_scroll_current_song(int songid);
 
 
 /****************************************************************/
@@ -265,7 +265,7 @@ void pl3_find_search()
 void pl3_current_browser_scroll_to_current_song()
 {
 	/* scroll to the playing song */
-	if(mpd_ob_player_get_current_song_pos(connection) > 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
+	if(mpd_ob_player_get_current_song_pos(connection) >= 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
 	{
 		gchar *str = g_strdup_printf("%i", mpd_ob_player_get_current_song_pos(connection));
 		GtkTreePath *path = gtk_tree_path_new_from_string(str);
@@ -2059,7 +2059,7 @@ void create_playlist3 ()
 	else
 	{
 		gtk_tree_view_column_set_attributes (column,renderer,
-				"markup", SONG_TITLE,
+				"text", SONG_TITLE,
 				"weight", WEIGHT_INT,
 				"weight-set", WEIGHT_ENABLE, 				
 				NULL);                               		
@@ -2200,6 +2200,7 @@ void pl3_highlight_song_change ()
 			if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0) && 
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{
+				pl3_dp_scroll_current_song(mpd_ob_player_get_current_song_pos(connection));
 				pl3_current_browser_scroll_to_current_song();
 			}
 		}
@@ -2296,6 +2297,11 @@ void pl3_playlist_changed()
 	}
 
 }
+/*********************************************************************
+ *  Detach browser, not sure if I want to keep this thing
+ */
+
+
 
 void pl3_detach_playlist()
 {
@@ -2305,6 +2311,7 @@ void pl3_detach_playlist()
 	if(detach_pl3_xml)
 	{
 		/* bring to front */
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(detach_pl3_xml, "detach_playlist_win")));
 		return;
 	}
 	detach_pl3_xml = glade_xml_new(GLADE_PATH "playlist3.glade", "detach_playlist_win", NULL);
@@ -2318,7 +2325,7 @@ void pl3_detach_playlist()
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes (column,renderer,
-			"markup", SONG_TITLE,
+			"text", SONG_TITLE,
 			"weight", WEIGHT_INT,
 			"weight-set", WEIGHT_ENABLE, 				
 			NULL);                               		
@@ -2326,10 +2333,23 @@ void pl3_detach_playlist()
 
 
 	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
+	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),(GtkTreeViewSearchEqualFunc)pl3_playlist_tree_search_func, NULL,NULL);
 
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (detach_pl3_xml);
 
+}
+void pl3_dp_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
+{
+	gint songid;
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl2_store), &iter, tp))
+	{
+
+		gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter,PL3_SONG_ID, &songid,-1);
+		mpd_ob_player_play_id(connection, songid); 
+	}
 }
 
 void pl3_attach_playlist()
@@ -2343,3 +2363,26 @@ void pl3_attach_playlist()
 	}
 }
 
+void pl3_dp_scroll_current_song(int songid)
+{
+	if(detach_pl3_xml == NULL)
+	{
+		return;
+	}
+	/* scroll to the playing song */
+	if(songid >= 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
+	{
+		gchar *str = g_strdup_printf("%i", songid);
+		GtkTreePath *path = gtk_tree_path_new_from_string(str);
+		if(path != NULL)
+		{
+			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(
+						glade_xml_get_widget(detach_pl3_xml, "treeview")), 
+					path,
+					NULL,
+					TRUE,0.5,0);
+		}
+		gtk_tree_path_free(path);
+		g_free(str);
+	}      
+}
