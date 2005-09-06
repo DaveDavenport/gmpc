@@ -38,6 +38,17 @@
 #include <regex.h>
 #include "pl3_custom_stream.h"
 
+
+static GtkTargetEntry drag_types[] =
+{
+	{ "text/plain", GTK_TARGET_SAME_APP, 100},
+};
+
+
+
+
+
+
 extern config_obj *config;
 GladeXML *pl3_xml = NULL;
 GladeXML *detach_pl3_xml = NULL;
@@ -724,11 +735,11 @@ void pl3_browse_add_selected()
 		gint type =  pl3_cat_get_selected_browser();
 		if(type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
 		{
-			message = g_strdup_printf("Added %i streams", songs);
+			message = g_strdup_printf("Added %i stream%s", songs,(songs > 1)? "s":"");
 		}
 		else
 		{
-			message = g_strdup_printf("Added %i songs", songs);
+			message = g_strdup_printf("Added %i song%s", songs, (songs > 1)? "s":"");
 		}
 		pl3_push_statusbar_message(message);
 		g_free(message);                                       	
@@ -2025,6 +2036,8 @@ void create_playlist3 ()
 	tree = glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 
+	gtk_tree_view_enable_model_drag_source(tree, 0, drag_types, 1, GDK_ACTION_COPY); 
+
 	gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection
 				(GTK_TREE_VIEW (tree))),
 			GTK_SELECTION_MULTIPLE);
@@ -2301,6 +2314,81 @@ void pl3_playlist_changed()
  *  Detach browser, not sure if I want to keep this thing
  */
 
+int pl3_dp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guint time)
+{
+	int type = pl3_cat_get_selected_browser();
+	GtkTreePath *path=NULL;
+	int pos = 0;
+	gtk_tree_view_get_dest_row_at_pos(tree,x,y, &path, &pos);
+	int position = -1;
+
+
+
+
+
+
+	if(path != NULL)
+	{
+		gchar *str = gtk_tree_path_to_string(path);
+		printf("string: %s\n", str);
+		position = atoi(str);
+		if(pos == GTK_TREE_VIEW_DROP_AFTER)
+		{
+			position++;
+		}
+		g_free(str);
+	}
+	else
+	{
+		printf("failed %i\n",pos);
+	}
+	if(type == PL3_CURRENT_PLAYLIST)
+	{
+		if(position==-1)
+		{
+			gtk_drag_finish(drag_context,FALSE,FALSE,time);
+			return FALSE;
+		}	
+		else
+		{
+			GtkTreeIter iter;
+			GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree"));
+			GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
+			GtkTreeModel *model = GTK_TREE_MODEL (pl2_store);
+			GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
+			int songs=0;
+			gchar *message;
+
+
+			if(rows != NULL)
+			{
+				gint id;
+				GList *node = g_list_first(rows);
+				do
+				{
+					GtkTreePath *path = node->data;
+					gtk_tree_model_get_iter (GTK_TREE_MODEL (pl2_store), &iter, path);
+					gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,&id,-1);	  
+					/* does this bitmask thingy works ok? I think it hsould */
+					mpd_ob_playlist_move_pos(connection, id,position);
+					position++;
+				}while((node = g_list_next(node)) != NULL);
+				g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+				g_list_free (rows);
+			}
+		}
+	}
+	else
+	{
+		pl3_browse_add_selected();	
+	}
+
+	gtk_drag_finish(drag_context,TRUE,FALSE,time);
+	return TRUE;
+}
+
+
+
 
 
 void pl3_detach_playlist()
@@ -2316,6 +2404,11 @@ void pl3_detach_playlist()
 	}
 	detach_pl3_xml = glade_xml_new(GLADE_PATH "playlist3.glade", "detach_playlist_win", NULL);
 	tree = glade_xml_get_widget(detach_pl3_xml, "treeview"); 
+
+
+	gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree),drag_types, 1, GDK_ACTION_COPY); 
+	g_signal_connect(G_OBJECT(tree), "drag-drop", pl3_dp_dnd, NULL);
+
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
