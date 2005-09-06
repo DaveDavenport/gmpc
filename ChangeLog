@@ -1,6 +1,9 @@
 06-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		Fixed single/multiple
 	* src/preferences.c:		Fixed single/multiple
+	* src/playlist3.c:		move.
+
+	
 05-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		Fixed scroll to bug.
 	* src/playlist3.c:		added scroll to in detach playlist.

@@ -2036,7 +2036,7 @@ void create_playlist3 ()
 	tree = glade_xml_get_widget (pl3_xml, "playlist_tree");
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 
-	gtk_tree_view_enable_model_drag_source(tree, 0, drag_types, 1, GDK_ACTION_COPY); 
+	gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), 0, drag_types, 1, GDK_ACTION_COPY); 
 
 	gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection
 				(GTK_TREE_VIEW (tree))),
@@ -2096,7 +2096,7 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-	g_signal_connect(pl2_store, "row-changed", pl3_current_playlist_row_changed, NULL);
+	g_signal_connect(pl2_store, "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
 	mpd_ob_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
 	if(mpd_ob_status_db_is_updating(connection))
@@ -2318,8 +2318,8 @@ int pl3_dp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 {
 	int type = pl3_cat_get_selected_browser();
 	GtkTreePath *path=NULL;
-	int pos = 0;
-	gtk_tree_view_get_dest_row_at_pos(tree,x,y, &path, &pos);
+	GtkTreeViewDropPosition pos = 0;
+	gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(tree),x,y, &path, &pos);
 	int position = -1;
 
 
@@ -2356,8 +2356,6 @@ int pl3_dp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 			GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
 			GtkTreeModel *model = GTK_TREE_MODEL (pl2_store);
 			GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
-			int songs=0;
-			gchar *message;
 
 
 			if(rows != NULL)
@@ -2407,7 +2405,7 @@ void pl3_detach_playlist()
 
 
 	gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree),drag_types, 1, GDK_ACTION_COPY); 
-	g_signal_connect(G_OBJECT(tree), "drag-drop", pl3_dp_dnd, NULL);
+	g_signal_connect(G_OBJECT(tree), "drag-drop", G_CALLBACK(pl3_dp_dnd), NULL);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
@@ -2424,8 +2422,7 @@ void pl3_detach_playlist()
 			NULL);                               		
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
-
-	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(pl2_store));
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),(GtkTreeViewSearchEqualFunc)pl3_playlist_tree_search_func, NULL,NULL);
 
