@@ -41,7 +41,7 @@
 
 static GtkTargetEntry drag_types[] =
 {
-	{ "text/plain", GTK_TARGET_SAME_APP, 100},
+	{ "pm_data", GTK_TARGET_SAME_APP, 100},
 };
 
 
@@ -293,14 +293,6 @@ void pl3_current_browser_scroll_to_current_song()
 	}      
 }
 
-
-
-
-
-
-
-
-
 void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter)
 {
 	gint pos, new_pos;
@@ -408,7 +400,6 @@ void pl3_current_playlist_delete_selected_songs ()
 	mpd_ob_status_queue_update(connection);
 }
 
-/* how am I going to fix this */
 void pl3_current_playlist_crop_selected_songs()
 {
 	/* grab the selection from the tree */
@@ -735,11 +726,11 @@ void pl3_browse_add_selected()
 		gint type =  pl3_cat_get_selected_browser();
 		if(type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
 		{
-			message = g_strdup_printf("Added %i stream%s", songs,(songs > 1)? "s":"");
+			message = g_strdup_printf("Added %i stream%s", songs,(songs != 1)? "s":"");
 		}
 		else
 		{
-			message = g_strdup_printf("Added %i song%s", songs, (songs > 1)? "s":"");
+			message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		}
 		pl3_push_statusbar_message(message);
 		g_free(message);                                       	
@@ -807,12 +798,40 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	if(depth == 0)
 	{
 		/*lowest level, do nothing */
+		/* fill artist list */
+		MpdData *data = mpd_ob_playlist_get_artists(connection);
+
+		while(data != NULL)
+		{	
+			gtk_list_store_append (pl3_store,&iter);
+			gtk_list_store_set (pl3_store,&iter,
+					0, data->value.artist,
+					1, PL3_ENTRY_ARTIST, /* the field */
+					2, data->value.artist, /* the artist name, if(1 and 2 together its an artist field) */
+					5, "media-artist",
+					-1);
+
+			data = mpd_ob_data_get_next(data);
+		}
 		return 0;
 	}
 	if(depth == 1)
 	{
 		int albums = 0;
-		MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
+		while(data != NULL){
+			gtk_list_store_append (pl3_store, &iter);
+			gtk_list_store_set (pl3_store,&iter,
+					0, artist,
+					1, PL3_ENTRY_ALBUM,
+					2, data->value.album,
+					5, "media-album", 
+					-1);
+			data = mpd_ob_data_get_next(data);
+		}
+
+
+		data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 		/* artist is selected */
 		while(data != NULL)
 		{
@@ -1239,7 +1258,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
 			pl3_push_statusbar_message("Loaded playlist");
 			mpd_ob_playlist_queue_load(connection, song_id);
 		}
-		else if (r_type == PL3_ENTRY_DIRECTORY)
+		else if (r_type&(PL3_ENTRY_DIRECTORY|PL3_ENTRY_ARTIST))
 		{
 			GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 			GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);

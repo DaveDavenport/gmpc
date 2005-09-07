@@ -40,6 +40,8 @@ enum pl3_cat_store
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
+#define PL3_ENTRY_ALBUM 64
+#define PL3_ENTRY_ARTIST 32
 #define PL3_ENTRY_DIRECTORY 16
 #define PL3_CUR_PLAYLIST 8
 #define PL3_ENTRY_STREAM 4
