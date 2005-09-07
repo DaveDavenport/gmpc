@@ -30,6 +30,7 @@
 #include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
+#include "playlist3-file-browser.h"
 #include "tag-browser.h"
 #include "open-location.h"
 #include "vfs_download.h"
@@ -43,10 +44,6 @@ static GtkTargetEntry drag_types[] =
 {
 	{ "pm_data", GTK_TARGET_SAME_APP, 100},
 };
-
-
-
-
 
 
 extern config_obj *config;
@@ -492,187 +489,6 @@ void pl3_show_song_info ()
 }
 
 
-/********************************************************
- * FILE BROWSER 				  	*
- ********************************************************/
-void pl3_browse_file_add_folder()
-{
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-
-	if(check_connection_state())
-	{
-		return;
-	}
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		char *path;
-		char *message = NULL;
-		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
-		message = g_strdup_printf("Added folder '%s' recursively", path);
-		pl3_push_statusbar_message(message);
-		g_free(message);
-		mpd_ob_playlist_queue_add(connection, path);
-		mpd_ob_playlist_queue_commit(connection);
-	}
-}
-
-void pl3_browse_file_update_folder()
-{
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-
-	if(check_connection_state())
-	{
-		return;
-	}
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		char *path;
-		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
-		mpd_ob_playlist_update_dir(connection, path);
-	}
-}
-
-void pl3_browse_file_replace_folder()
-{
-	pl3_clear_playlist();
-	pl3_browse_file_add_folder();	
-	mpd_ob_player_play(connection);
-}
-
-
-/* add's the toplevel entry for the file browser, it also add's a fantom child */
-void pl3_file_browser_add()
-{
-	GtkTreeIter iter,child;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_FILE,
-			PL3_CAT_TITLE, "Browse Filesystem",
-			PL3_CAT_INT_ID, "/",
-			PL3_CAT_ICON_ID, "gtk-open",
-			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	/* add fantom child for lazy tree */
-	gtk_tree_store_append(pl3_tree, &child, &iter);
-}
-
-long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
-{
-	MpdData* data =NULL;
-	char *path;
-	int sub_folder = 0;
-	GtkTreeIter iter;
-	long  unsigned time=0;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
-
-	/* check the connection state and when its valid proceed */
-	if (check_connection_state ())
-	{
-		return 0;
-	}
-
-	data = mpd_ob_playlist_get_directory(connection, path);
-	while (data != NULL)
-	{
-		if (data->type == MPD_DATA_TYPE_DIRECTORY)
-		{
-			gchar *basename = g_path_get_basename(data->value.directory);
-			gtk_list_store_append (pl3_store, &iter);
-			gtk_list_store_set (pl3_store, &iter,
-					0, data->value.directory,
-					1, PL3_ENTRY_DIRECTORY,
-					2, basename,               
-					5, "gtk-open",
-					-1);
-			g_free(basename);
-			sub_folder++;
-		}
-		else if (data->type == MPD_DATA_TYPE_SONG)
-		{
-			gchar buffer[1024];
-			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			strfsong (buffer, 1024, markdata,data->value.song);
-			cfg_free_string(markdata);
-			if(data->value.song->time != MPD_SONG_NO_TIME)
-			{
-				time += data->value.song->time;			
-			}
-
-			gtk_list_store_append (pl3_store, &iter);
-			gtk_list_store_set (pl3_store, &iter,
-					0, data->value.song->file,
-					1, PL3_ENTRY_SONG,
-					2, buffer,               
-					5, "media-audiofile",
-					-1);
-
-		}
-
-		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
-		{
-			gchar *basename = g_path_get_basename (data->value.playlist);
-			gtk_list_store_append (pl3_store, &iter);
-			gtk_list_store_set (pl3_store, &iter,
-					0, data->value.playlist,
-					1, PL3_ENTRY_PLAYLIST,
-					2, basename,
-					5, "media-playlist", 
-					-1);
-			g_free (basename);
-		}
-		data = mpd_ob_data_get_next(data);
-	}
-	/* remove the fantom child if there are no subfolders anyway. */
-	if(!sub_folder)
-	{
-		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
-		{
-			gtk_tree_store_remove(pl3_tree, &iter);      		
-		}
-	}
-	return time;
-}
-
-
-void pl3_file_browser_fill_tree(GtkTreeIter *iter)
-{
-	char *path;
-	MpdData *data = NULL;
-	GtkTreeIter child,child2;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
-	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-
-	data = mpd_ob_playlist_get_directory(connection, path);
-	while (data != NULL)
-	{
-		if (data->type == MPD_DATA_TYPE_DIRECTORY)
-		{
-			gchar *basename =
-				g_path_get_basename (data->value.directory);
-			gtk_tree_store_append (pl3_tree, &child, iter);
-			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_FILE,
-					1, basename,
-					2, data->value.directory,
-					3, "gtk-open",
-					4, FALSE,
-					PL3_CAT_ICON_SIZE,1,
-					-1);
-			gtk_tree_store_append(pl3_tree, &child2, &child);
-
-			g_free (basename);
-		}
-		data = mpd_ob_data_get_next(data);
-	}
-	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
-	{
-		gtk_tree_store_remove(pl3_tree, &child); 
-	}
-}
 /*******************************************************
  * Combined functions 
  */
@@ -1325,7 +1141,7 @@ void pl3_reinitialize_tree()
 	gtk_tree_store_clear(pl3_tree);
 	/* add the current playlist */
 	pl3_current_playlist_add();
-	pl3_file_browser_add();       	
+	pl3_browse_file_add();       	
 	pl3_artist_browser_add();
 	pl3_find_add();
 	pl3_xiph_add();
@@ -1390,14 +1206,13 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		/* if connection down, don't let the treeview open */
 		gtk_tree_view_collapse_row(tree,path);
 		return;
-
 	}
 
 	if(!read)
 	{
 		if(type == PL3_BROWSE_FILE)
 		{
-			pl3_file_browser_fill_tree(iter);
+			pl3_browse_file_fill_tree(iter);
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
@@ -1442,14 +1257,7 @@ void pl3_cat_sel_changed()
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
-			long unsigned time= 0;
-			gchar *string;
-			gtk_list_store_clear(pl3_store);	
-			time = pl3_file_browser_view_folder(&iter);
-			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-			string = format_time(time);
-			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-			g_free(string);
+			pl3_browse_file_cat_sel_changed(tree,&iter);
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
@@ -1628,32 +1436,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	}
 	else if (type == PL3_BROWSE_FILE)
 	{
-		/* here we have:  Add. Replace, (update?)*/
-		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();	
-		/* add the add widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_add_folder), NULL);		
-
-		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_replace_folder), NULL);				
-
-		/* add the update widget */
-		item = gtk_image_menu_item_new_with_label("Update");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_file_update_folder), NULL);				
-
-		/* show everything and popup */
-		gtk_widget_show_all(menu);                                                        		
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-
+		pl3_browse_file_cat_popup(tree,event);
 	}
 	else if (type == PL3_BROWSE_ARTIST)
 	{
@@ -1828,13 +1611,9 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	/* call default */
 	gint type = pl3_cat_get_selected_browser();
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
+	if(type == PL3_BROWSE_FILE)
 	{
-		pl3_browse_file_replace_folder();		
-	}
-	else if(event->keyval == GDK_Insert && type == PL3_BROWSE_FILE)
-	{
-		pl3_browse_file_add_folder();		
+		pl3_browse_file_cat_key_press(event);
 	}
 	else if (event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
 	{
@@ -1852,6 +1631,13 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	gint type = pl3_cat_get_selected_browser();
+	if(type == PL3_BROWSE_FILE)
+	{
+		if(pl3_browse_file_playlist_key_press(event))
+		{
+			return TRUE;
+		}
+	}
 	if(event->keyval == GDK_Delete && type == PL3_CURRENT_PLAYLIST)
 	{
 		pl3_current_playlist_delete_selected_songs ();
@@ -1863,19 +1649,19 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		return TRUE;
 	}
 	else if (event->keyval == GDK_Insert &&  event->state == GDK_CONTROL_MASK &&
-			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
+			(type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{
 		pl3_browse_replace_selected();	
 		return TRUE;
 	}
 
 	else if (event->keyval == GDK_Insert && 
-			(type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
+			(type == PL3_BROWSE_ARTIST || type == PL3_FIND || type == PL3_BROWSE_XIPH))
 	{
 		pl3_browse_add_selected();	
 		return TRUE;
 	}
-	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || type == PL3_BROWSE_FILE || 
+	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || 
 				type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG))
 	{
 

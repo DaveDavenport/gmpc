@@ -84,7 +84,8 @@ enum store_types
 void pl3_playlist_search();
 
 void pl3_playlist_changed();
-
+void pl3_clear_playlist();
+void pl3_show_song_info ();
 
 
 
