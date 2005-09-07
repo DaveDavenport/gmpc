@@ -290,7 +290,7 @@ int pl3_browse_file_playlist_key_press(GdkEventKey *event)
 
 
 
-void pl3_browse_file_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter)
+void pl3_browse_file_cat_sel_changed(GtkTreeView *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;
