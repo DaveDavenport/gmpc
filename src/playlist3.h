@@ -88,6 +88,8 @@ void pl3_clear_playlist();
 void pl3_show_song_info ();
 
 int pl3_cat_get_selected_browser();
+void pl3_clear_playlist();
+void pl3_shuffle_playlist();
 
 
 #endif

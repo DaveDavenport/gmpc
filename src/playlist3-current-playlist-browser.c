@@ -204,3 +204,56 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	g_free(str);
 }
 
+void pl3_browser_current_playlist_playlist_popup(GtkTreeView *tree, GdkEventButton *event)
+{
+		/* del, crop */
+		GtkWidget *item;
+		GtkWidget *menu = gtk_menu_new();	
+		/* add the delete widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browser_current_playlist_delete_selected_songs), NULL);
+
+
+		/* add the delete widget */
+		item = gtk_image_menu_item_new_with_label("Crop");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browser_current_playlist_crop_selected_songs), NULL);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
+		/* add the clear widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);		
+
+
+		/* add the shuffle widget */
+		item = gtk_image_menu_item_new_with_label("Shuffle");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_shuffle_playlist), NULL);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
+
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_show_song_info), NULL);		
+
+
+
+
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
+}
+
+void pl3_browser_current_playlist_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col)
+{
+	GtkTreeIter iter;
+	gint song_id;
+	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path);
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+	mpd_ob_player_play_id(connection, song_id);
+}
