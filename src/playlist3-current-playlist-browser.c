@@ -257,3 +257,13 @@ void pl3_browser_current_playlist_row_activated(GtkTreeView *tree, GtkTreePath *
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
 	mpd_ob_player_play_id(connection, song_id);
 }
+
+void pl3_browser_current_playlist_show_info(GtkTreeView *tree, GtkTreeIter *iter)
+{
+	gint value;
+	gtk_tree_model_get (gtk_tree_view_get_model(tree), iter, SONG_ID, &value, -1);
+	call_id3_window (value);
+
+}
+
+

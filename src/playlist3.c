@@ -296,9 +296,10 @@ void pl3_show_song_info ()
 			/* show the info for this song  */
 			if (type == PL3_CURRENT_PLAYLIST)
 			{
-				gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
+				pl3_browser_current_playlist_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")), &iter);
+/*				gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
 				call_id3_window (value);
-			}
+*/			}
 			else if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
 			{
 				gtk_tree_model_get (model, &iter, PL3_UNKOWN, &value, -1);
