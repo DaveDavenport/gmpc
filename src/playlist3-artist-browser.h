@@ -5,5 +5,6 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_artist_browser_fill_tree(GtkTreeIter *iter);
 void pl3_artist_browser_add_folder();
 void pl3_artist_browser_replace_folder();
+void pl3_artist_browser_category_key_press(GdkEventKey *event);
 
 #endif

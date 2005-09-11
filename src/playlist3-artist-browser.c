@@ -340,4 +340,15 @@ void pl3_artist_browser_replace_folder()
    mpd_ob_player_play(connection);
 }
 
+void pl3_artist_browser_category_key_press(GdkEventKey *event)
+{
+   if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert )
+   {
+      pl3_artist_browser_replace_folder();
+   }
+   else if (event->keyval == GDK_Insert)
+   {
+      pl3_artist_browser_add_folder();
+   }
+}
 
