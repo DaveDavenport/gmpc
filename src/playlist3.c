@@ -1092,19 +1092,12 @@ void create_playlist3 ()
    renderer = gtk_cell_renderer_pixbuf_new ();
    column = gtk_tree_view_column_new ();
    gtk_tree_view_column_pack_start (column, renderer, FALSE);
-   gtk_tree_view_column_set_attributes (column,
-	 renderer,
-	 "stock-id",3,"stock-size",5,NULL);
-
+   gtk_tree_view_column_set_attributes (column, renderer, "stock-id",3,"stock-size",5,NULL);
 
    renderer = gtk_cell_renderer_text_new ();
-
    /* insert the column in the tree */
    gtk_tree_view_column_pack_start (column, renderer, TRUE);
-   gtk_tree_view_column_set_attributes (column,
-	 renderer,
-	 "text", 1,
-	 NULL);
+   gtk_tree_view_column_set_attributes (column, renderer, "text", 1, NULL);
    gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
    gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
@@ -1117,10 +1110,7 @@ void create_playlist3 ()
 
    gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), 0, drag_types, 1, GDK_ACTION_COPY); 
 
-   gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection
-	    (GTK_TREE_VIEW (tree))),
-	 GTK_SELECTION_MULTIPLE);
-
+   gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection(GTK_TREE_VIEW (tree))),GTK_SELECTION_MULTIPLE);
 
    pl3_store = gtk_list_store_new (PL3_NROWS, 
 	 GTK_TYPE_STRING,
@@ -1146,15 +1136,11 @@ void create_playlist3 ()
 	    cfg_get_single_value_as_int(config,"playlist3", "fixed-height"));
       gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE,NULL);
 
-
    }
    else
    {
-      gtk_tree_view_column_set_attributes (column,renderer,
-	    "text", SONG_TITLE,
-	    "weight", WEIGHT_INT,
-	    "weight-set", WEIGHT_ENABLE, 				
-	    NULL);                               		
+      gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE,
+	    "weight", WEIGHT_INT,"weight-set", WEIGHT_ENABLE, NULL);                               		
    }
    /* insert the column in the tree */
    gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
@@ -1294,7 +1280,6 @@ void pl3_highlight_song_change ()
    }
 }
 
-
 /* create a dialog that allows the user to save the current playlist */
 void pl2_save_playlist ()
 {
@@ -1344,8 +1329,6 @@ void pl2_save_playlist ()
 		  /* return to stare */
 		  gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
 		  gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
-
-
 
 		  g_free(errormsg);
 	       }
