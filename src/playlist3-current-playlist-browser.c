@@ -266,4 +266,80 @@ void pl3_browser_current_playlist_show_info(GtkTreeView *tree, GtkTreeIter *iter
 
 }
 
+void pl3_browser_current_playlist_category_selection_changed(GtkTreeView *tree)
+{
+		pl3_browser_current_playlist_playlist_changed();
+		gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
+		if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0))
+		{
+			pl3_browser_current_playlist_scroll_to_current_song();
+		}
+}
+
+void pl3_browser_current_playlist_playlist_changed()
+{
+	gchar *string = format_time(info.playlist_playtime);
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);	
+	g_free(string);
+}
+
+
+void pl3_browser_current_playlist_category_popup(GtkTreeView *tree, GdkEventButton *event)
+{
+	/* here we have:  Save, Clear*/
+	GtkWidget *item;
+	GtkWidget *menu = gtk_menu_new();	
+	/* add the save widget */
+	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	/* TODO: Write own fun ction */
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
+
+#ifdef ENABLE_GNOME_VFS
+	item = gtk_image_menu_item_new_with_label("Add Location");
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+			gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
+#endif
+	item = gtk_image_menu_item_new_with_label("Detach");
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+			gtk_image_new_from_stock(GTK_STOCK_YES, GTK_ICON_SIZE_MENU));
+
+	/* add the save widget */
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	/* TODO: Write own fun ction */
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_detach_playlist), NULL);
+
+	/* add the clear widget */
+	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
+
+
+
+	/* show everything and popup */
+	gtk_widget_show_all(menu);
+	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+}
+
+int  pl3_browser_current_playlist_button_press_event(GdkEventKey *event)
+{
+	if(event->keyval == GDK_Delete)
+	{
+		pl3_browser_current_playlist_delete_selected_songs ();
+		return TRUE;                                          		
+	}
+	else if(event->keyval == GDK_i)
+	{
+		pl3_show_song_info();
+		return TRUE;
+	}
+	else if (event->keyval == GDK_space)
+	{
+		pl3_browser_current_playlist_scroll_to_current_song();
+		return TRUE;			
+	}
+	return FALSE;	
+}
 

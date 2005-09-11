@@ -297,15 +297,17 @@ void pl3_show_song_info ()
 			if (type == PL3_CURRENT_PLAYLIST)
 			{
 				pl3_browser_current_playlist_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")), &iter);
-/*				gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
-				call_id3_window (value);
-*/			}
+			}
 			else if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
 			{
 				gtk_tree_model_get (model, &iter, PL3_UNKOWN, &value, -1);
 				call_id3_window (value);
 			}
-			else if(type == PL3_FIND|| type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG)
+			else if (type == PL3_BROWSE_FILE)
+			{
+				pl3_browser_file_show_info(&iter);
+			}
+			else if(type == PL3_FIND || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG)
 			{
 				if(mpd_ob_server_check_version(connection,0,12,0))
 				{
@@ -939,7 +941,7 @@ void pl3_reinitialize_tree()
 	gtk_tree_store_clear(pl3_tree);
 	/* add the current playlist */
 	pl3_browser_current_playlist_add();
-	pl3_browse_file_add();       	
+	pl3_browser_file_add();       	
 	pl3_artist_browser_add();
 	pl3_find_add();
 	pl3_xiph_add();
@@ -1010,7 +1012,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	{
 		if(type == PL3_BROWSE_FILE)
 		{
-			pl3_browse_file_fill_tree(iter);
+			pl3_browser_file_fill_tree(iter);
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
@@ -1044,18 +1046,11 @@ void pl3_cat_sel_changed()
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
-			gchar *string = format_time(info.playlist_playtime);
-			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-			g_free(string);
-			gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl2_store));
-			if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0))
-			{
-				pl3_browser_current_playlist_scroll_to_current_song();
-			}
+			pl3_browser_current_playlist_category_selection_changed(tree);
 		}
 		else if (type == PL3_BROWSE_FILE)
 		{
-			pl3_browse_file_cat_sel_changed(GTK_TREE_VIEW(tree),&iter);
+			pl3_browser_file_cat_sel_changed(GTK_TREE_VIEW(tree),&iter);
 		}
 		else if (type == PL3_BROWSE_ARTIST)
 		{
@@ -1150,20 +1145,6 @@ void pl3_cat_sel_changed()
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
 }
 
-/* when libmpd signals a playlist change, the total time of the playlist might has changed aswell.
- * so we need to update it.
- */
-void pl3_playlist_change()
-{
-	gint type = pl3_cat_get_selected_browser();
-	if(type == PL3_CURRENT_PLAYLIST)
-	{
-		gchar *string = format_time(info.playlist_playtime);
-		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-		g_free(string);
-	}
-}
-
 
 /* handle right mouse clicks on the cat tree view */
 /* gonna be a big function*/
@@ -1196,45 +1177,11 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	/* if it's the current playlist */
 	if(type == PL3_CURRENT_PLAYLIST)
 	{
-		/* here we have:  Save, Clear*/
-		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();	
-		/* add the save widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		/* TODO: Write own fun ction */
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
-
-#ifdef ENABLE_GNOME_VFS
-		item = gtk_image_menu_item_new_with_label("Add Location");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
-#endif
-		item = gtk_image_menu_item_new_with_label("Detach");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_YES, GTK_ICON_SIZE_MENU));
-
-		/* add the save widget */
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		/* TODO: Write own fun ction */
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_detach_playlist), NULL);
-
-		/* add the clear widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
-
-
-
-		/* show everything and popup */
-		gtk_widget_show_all(menu);
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		pl3_browser_current_playlist_category_popup(tree,event);
 	}
 	else if (type == PL3_BROWSE_FILE)
 	{
-		pl3_browse_file_cat_popup(tree,event);
+		pl3_browser_file_cat_popup(tree,event);
 	}
 	else if (type == PL3_BROWSE_ARTIST)
 	{
@@ -1411,7 +1358,7 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	gint type = pl3_cat_get_selected_browser();
 	if(type == PL3_BROWSE_FILE)
 	{
-		pl3_browse_file_cat_key_press(event);
+		pl3_browser_file_cat_key_press(event);
 	}
 	else if (event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert && type == PL3_BROWSE_ARTIST)
 	{
@@ -1431,17 +1378,19 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	gint type = pl3_cat_get_selected_browser();
 	if(type == PL3_BROWSE_FILE)
 	{
-		if(pl3_browse_file_playlist_key_press(event))
+		if(pl3_browser_file_playlist_key_press(event))
 		{
 			return TRUE;
 		}
 	}
-	if(event->keyval == GDK_Delete && type == PL3_CURRENT_PLAYLIST)
+	else if (type == PL3_CURRENT_PLAYLIST)
 	{
-		pl3_browser_current_playlist_delete_selected_songs ();
-		return TRUE;
+		if(pl3_browser_current_playlist_button_press_event(event))
+		{
+			return TRUE;
+		}
 	}
-	else if (event->keyval == GDK_Delete && type == PL3_BROWSE_CUSTOM_STREAM)
+	if (event->keyval == GDK_Delete && type == PL3_BROWSE_CUSTOM_STREAM)
 	{
 		pl3_custom_stream_remove();	
 		return TRUE;
@@ -1459,8 +1408,7 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_browse_add_selected();	
 		return TRUE;
 	}
-	else if (event->keyval == GDK_i && (type == PL3_CURRENT_PLAYLIST || 
-				type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG))
+	else if (event->keyval == GDK_i && (type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG))
 	{
 
 		pl3_show_song_info ();
@@ -1471,11 +1419,6 @@ int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_show_song_info ();
 		return  TRUE;
 	}                                                               	
-	else if (event->keyval == GDK_space && type == PL3_CURRENT_PLAYLIST)
-	{
-		pl3_browser_current_playlist_scroll_to_current_song();
-		return TRUE;			
-	}
 	/* call default */
 	return pl3_window_key_press_event(mw,event);
 }
@@ -1902,9 +1845,7 @@ void pl3_playlist_changed()
 	type  = pl3_cat_get_selected_browser();
 	if(type ==  PL3_CURRENT_PLAYLIST)
 	{
-		gchar *string = format_time(info.playlist_playtime);
-		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-		g_free(string);
+		pl3_browser_current_playlist_playlist_changed();
 	}
 	if(type == PL3_FIND)
 	{
@@ -2079,3 +2020,4 @@ void pl3_dp_scroll_current_song(int songid)
 		g_free(str);
 	}      
 }
+
