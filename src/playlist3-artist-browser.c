@@ -37,7 +37,6 @@
 #include "osb_browser.h"
 #include "config1.h"
 #include <regex.h>
-#include "pl3_custom_stream.h"
 
 
 extern config_obj *config;
@@ -277,7 +276,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 
 
 
-void pl3_browse_artist_add_folder()
+void pl3_artist_browser_add_folder()
 {
    GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
    GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -334,10 +333,10 @@ void pl3_browse_artist_add_folder()
 
 }
 
-void pl3_browse_artist_replace_folder()
+void pl3_artist_browser_replace_folder()
 {
    pl3_clear_playlist();
-   pl3_browse_artist_add_folder();
+   pl3_artist_browser_add_folder();
    mpd_ob_player_play(connection);
 }
 

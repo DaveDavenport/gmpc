@@ -36,7 +36,7 @@
 #include "osb_browser.h"
 #include "config1.h"
 #include <regex.h>
-#include "pl3_custom_stream.h"
+#include "playlist3-custom-stream-browser.h"
 
 extern config_obj *config;
 extern GladeXML *pl3_xml;

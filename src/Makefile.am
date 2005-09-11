@@ -17,10 +17,11 @@ gmpc_SOURCES=\
 	osb_browser.c\
 	edit_markup.c\
 	tag-browser.c\
-	pl3_custom_stream.c\
+	playlist3-custom-stream-browser.c\
 	playlist3-file-browser.c\
 	playlist3-current-playlist-browser.c\
 	playlist3-artist-browser.c\
+	playlist3-find-browser.c\
 	config1.c
 
 #INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
@@ -40,9 +41,10 @@ EXTRA_DIST = 	playlist3.h\
 		osb_browser.h\
 		config-defaults.h\
 		tag-browser.h\
-		pl3_custom_stream.h\
+		playlist3-custom-stream-browser.h\
 		playlist3-file-browser.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
+		playlist3-find-browser.h\
 		config1.h
 		
