@@ -6,7 +6,7 @@
 #include "main.h"
 #include "strfsong.h"
 #include "playlist3.h"
-#include "tag-browser.h"
+#include "playlist3-tag-browser.h"
 #include "config1.h"
 void pl3_custom_tag_browser_add_folder();
 void pl3_custom_tag_browser_replace_folder();

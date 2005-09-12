@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
-#include <time.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
@@ -30,12 +29,9 @@
 #include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
-#include "tag-browser.h"
 #include "open-location.h"
 #include "vfs_download.h"
-#include "osb_browser.h"
 #include "config1.h"
-#include <regex.h>
 #include "playlist3-custom-stream-browser.h"
 
 extern config_obj *config;
@@ -43,11 +39,6 @@ extern GladeXML *pl3_xml;
 extern GtkTreeStore *pl3_tree;
 extern GtkListStore *pl3_store;
 extern GtkListStore *pl2_store;
-
-
-
-
-
 
 
 /***********************************

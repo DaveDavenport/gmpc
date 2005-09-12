@@ -22,13 +22,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
-#include <time.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"
+#include "open-location.h"
+#include "vfs_download.h"
+#include "config1.h"
+
 #include "playlist3.h"
 /* every part split out over multiple files */
 #include "playlist3-find-browser.h"
@@ -36,14 +37,8 @@
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
 #include "playlist3-custom-stream-browser.h"
-
-#include "tag-browser.h"
-#include "open-location.h"
-#include "vfs_download.h"
-#include "osb_browser.h"
-#include "config1.h"
-#include <regex.h>
-
+#include "playlist3-tag-browser.h"
+#include "playlist3-osb-browser.h"
 
 
 static GtkTargetEntry drag_types[] =
@@ -495,7 +490,7 @@ void pl3_reinitialize_tree()
    pl3_browser_file_add();       	
    pl3_artist_browser_add();
    pl3_find_browser_add();
-   pl3_xiph_add();
+   pl3_osb_browser_add();
    pl3_custom_stream_add();
    pl3_custom_tag_browser_add();
    gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "cat_tree"));
@@ -643,7 +638,7 @@ void pl3_cat_sel_changed()
 
 	 if(url != NULL && strlen(url) > 0) 
 	 {
-	    pl3_xiph_view_browser(url,name);
+	    pl3_osb_browser_view_browser(url,name);
 	 }
 	 else
 	 {
@@ -759,7 +754,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
       /* add the add widget */
       item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_add_source), NULL);		
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_add_source), NULL);		
 
       if(gtk_tree_selection_get_selected(selec,&model, &iter))
       {
@@ -768,11 +763,11 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	 {
 	    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_del_source), NULL);		
+	    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_del_source), NULL);		
 
 	    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
 	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_xiph_refresh), NULL);		
+	    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_refresh), NULL);		
 	 }
       }
       /* show everything and popup */

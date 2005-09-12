@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ * Copyright (C) 2004-2005 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,14 +17,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
 #include <time.h>
+#include <unistd.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include "main.h"
@@ -46,7 +45,7 @@ GtkTreePath *path = NULL;
  * XIPH BROWSER
  */
 
-void pl3_xiph_add()
+void pl3_osb_browser_add()
 {
 #ifdef ENABLE_GNOME_VFS
 	GtkTreeIter iter,child;
@@ -90,7 +89,7 @@ void pl3_xiph_add()
 }
 
 
-void pl3_xiph_fill_view(char *buffer)
+void pl3_osb_browser_fill_view(char *buffer)
 {
 	xmlDocPtr xmldoc;
 	xmlNodePtr root;
@@ -176,18 +175,18 @@ void pl3_xiph_fill_view(char *buffer)
 	xmlCleanupParser();
 }
 
-void pl3_xiph_view_browser(gchar *url,gchar *name)
+void pl3_osb_browser_view_browser(gchar *url,gchar *name)
 {
 #ifdef ENABLE_GNOME_VFS
 	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
 	gtk_list_store_clear(pl3_store);
 	if(g_file_test(string, G_FILE_TEST_EXISTS))
 	{
-		pl3_xiph_fill_view(NULL);
+		pl3_osb_browser_fill_view(NULL);
 	}
 	else
 	{
-		start_transfer(url,(void *)pl3_xiph_fill_view,NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
+		start_transfer(url,(void *)pl3_osb_browser_fill_view,NULL, glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
 	g_free(string);
 #endif
@@ -195,7 +194,7 @@ void pl3_xiph_view_browser(gchar *url,gchar *name)
 
 
 
-void pl3_xiph_refresh()
+void pl3_osb_browser_refresh()
 {
 	gchar *name, *string, *url;
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -210,10 +209,10 @@ void pl3_xiph_refresh()
 	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
 	unlink(string);
 	g_free(string);
-	pl3_xiph_view_browser(url, name);
+	pl3_osb_browser_view_browser(url, name);
 }
 
-void pl3_xiph_del_source()
+void pl3_osb_browser_del_source()
 {
 	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(pl3_xml,"pl3_win")),
 			GTK_DIALOG_MODAL,
@@ -243,7 +242,7 @@ void pl3_xiph_del_source()
 	gtk_widget_destroy(dialog);
 }
 
-void pl3_xiph_add_source()
+void pl3_osb_browser_add_source()
 {
 	GladeXML *gxml =glade_xml_new (GLADE_PATH "playlist3.glade", "osb_add_dialog", NULL);
 	GtkWidget *dialog = glade_xml_get_widget(gxml, "osb_add_dialog");

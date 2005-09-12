@@ -22,21 +22,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
-#include <time.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
-#include "tag-browser.h"
 #include "open-location.h"
 #include "vfs_download.h"
-#include "osb_browser.h"
 #include "config1.h"
-#include <regex.h>
 
 
 extern config_obj *config;

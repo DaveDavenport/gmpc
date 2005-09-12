@@ -4,7 +4,7 @@
 #include <time.h>
 #include "main.h"
 #include "playlist3.h"
-#include "tag-browser.h"
+#include "playlist3-tag-browser.h"
 #include "config1.h"
 extern config_obj *config;
 

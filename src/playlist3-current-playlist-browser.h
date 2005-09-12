@@ -10,8 +10,8 @@ void pl3_browser_current_playlist_row_activated(GtkTreeView *tree, GtkTreePath *
 void pl3_browser_current_playlist_show_info(GtkTreeView *tree, GtkTreeIter *iter);
 void pl3_browser_current_playlist_playlist_changed();
 void pl3_browser_current_playlist_category_popup(GtkTreeView *tree,GdkEventButton *event);
-
-
+void pl3_browser_current_playlist_category_selection_changed(GtkTreeView *tree);
+int  pl3_browser_current_playlist_button_press_event(GdkEventKey *event);
 /* probly doesnt belong here */
 void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter);
 
