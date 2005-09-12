@@ -47,7 +47,7 @@ extern GtkListStore *pl2_store;
  * Find Browser
  */
 /* add's the toplevel entry for the current playlist view */
-void pl_find_browser_add()
+void pl3_find_browser_add()
 {
    GtkTreeIter iter;
    gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -60,7 +60,7 @@ void pl_find_browser_add()
 	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 }
 
-unsigned long pl_find_browser_view_browser()
+unsigned long pl3_find_browser_view_browser()
 {
    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
    GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -166,15 +166,15 @@ unsigned long pl_find_browser_view_browser()
 }
 
 
-void pl_find_browser_entry_change(GtkEntry *entry)
+void pl3_find_browser_entry_change(GtkEntry *entry)
 {
    gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "find_button"), (strlen(gtk_entry_get_text(entry)) > 0)?1:0);
 
 }
 
-void pl_find_browser_search()
+void pl3_find_browser_search()
 {
 
-   pl_find_browser_view_browser();
+   pl3_find_browser_view_browser();
    return;	
 }

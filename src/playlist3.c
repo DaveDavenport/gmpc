@@ -31,6 +31,7 @@
 #include "misc.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
+#include "playlist3-find-browser.h"
 #include "playlist3-file-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
@@ -493,7 +494,7 @@ void pl3_reinitialize_tree()
    pl3_browser_current_playlist_add();
    pl3_browser_file_add();       	
    pl3_artist_browser_add();
-   pl_find_browser_add();
+   pl3_find_browser_add();
    pl3_xiph_add();
    pl3_custom_stream_add();
    pl3_custom_tag_browser_add();
@@ -628,7 +629,7 @@ void pl3_cat_sel_changed()
 	 gtk_list_store_clear(pl3_store);
 	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
 	 gtk_widget_show_all(glade_xml_get_widget(pl3_xml, "search_box"));
-	 time = pl_find_browser_view_browser();
+	 time = pl3_find_browser_view_browser();
 	 string = format_time(time);
 	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 	 g_free(string);
@@ -1357,7 +1358,7 @@ void pl3_playlist_changed()
    }
    if(type == PL3_FIND)
    {
-      pl_find_browser_view_browser();
+      pl3_find_browser_view_browser();
 
    }
 
