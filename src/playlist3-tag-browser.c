@@ -594,3 +594,21 @@ void pl3_custom_tag_browser_add_folder()
 	g_strfreev(tk_format);
 	return ;
 }
+
+void pl3_custom_tag_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)
+{
+	GtkTreeModel *model = gtk_tree_view_get_model(tree);
+	if(mpd_ob_server_check_version(connection,0,12,0))
+	{
+		char *path;
+		MpdData *data;
+		gtk_tree_model_get (model, iter, PL3_SONG_ID, &path, -1);
+		data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+		while(data != NULL)
+		{
+			call_id3_window_song(mpd_songDup(data->value.song));
+			data = mpd_ob_data_get_next(data);
+		}
+	}
+}
+

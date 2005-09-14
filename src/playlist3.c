@@ -151,7 +151,6 @@ void pl3_show_song_info ()
       do
       {
 	 GtkTreeIter iter;
-	 int value;
 	 gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 	 gtk_tree_model_get (model, &iter, SONG_POS, &r_type, -1);
 	 /* show the info for this song  */
@@ -159,30 +158,21 @@ void pl3_show_song_info ()
 	 {
 	    pl3_browser_current_playlist_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")), &iter);
 	 }
-	 else if(type == PL3_FIND && r_type == PL3_CUR_PLAYLIST)
-	 {
-	    gtk_tree_model_get (model, &iter, PL3_UNKOWN, &value, -1);
-	    call_id3_window (value);
-	 }
 	 else if (type == PL3_BROWSE_FILE)
 	 {
 	    pl3_browser_file_show_info(&iter);
 	 }
-	 else if(type == PL3_FIND || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_ARTIST || type == PL3_BROWSE_CUSTOM_TAG)
+	 else if (type == PL3_BROWSE_ARTIST)
 	 {
-	    if(mpd_ob_server_check_version(connection,0,12,0))
-	    {
-	       char *path;
-	       MpdData *data;
-	       gtk_tree_model_get (model, &iter, PL3_SONG_ID, &path, -1);
-	       data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-	       while(data != NULL)
-	       {
-		  call_id3_window_song(mpd_songDup(data->value.song));
-		  data = mpd_ob_data_get_next(data);
-	       }
-	    }
-
+	    pl3_artist_browser_show_info(&iter);
+	 }
+	 else if (type == PL3_FIND)
+	 {
+	    pl3_find_browser_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")),&iter);
+	 }
+	 else if(type == PL3_BROWSE_CUSTOM_TAG)
+	 {
+	    pl3_custom_tag_browser_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")),&iter);
 	 }
 	 /* go to previous song if still connected */
       }
@@ -430,7 +420,7 @@ void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewC
       {
 	 GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	 GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	 GtkTreeIter iter;                                                                                                			
+	 GtkTreeIter iter;
 
 	 if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	 {

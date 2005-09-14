@@ -172,3 +172,29 @@ void pl3_find_browser_search()
    pl3_find_browser_view_browser();
    return;	
 }
+
+
+void pl3_find_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)
+{
+   char *path;
+   GtkTreeModel *model = gtk_tree_view_get_model(tree);
+   int type,id;
+   MpdData *data;
+   gtk_tree_model_get (model, iter, SONG_POS, &type,-1);
+   if(type == PL3_CUR_PLAYLIST)
+   {
+	   gtk_tree_model_get(model,iter,PL3_UNKOWN, &id,-1);
+	    call_id3_window (id);
+   }
+   else
+   {
+	   gtk_tree_model_get(model,iter,PL3_SONG_ID, &path,-1);
+	   data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+	   while(data != NULL)                                                            	
+	   {
+		   call_id3_window_song(mpd_songDup(data->value.song));
+		   data = mpd_ob_data_get_next(data);                                        
+	   }
+   }
+}
+

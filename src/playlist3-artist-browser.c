@@ -346,3 +346,15 @@ void pl3_artist_browser_category_key_press(GdkEventKey *event)
    }
 }
 
+void pl3_artist_browser_show_info(GtkTreeIter *iter)
+{
+   char *path;
+   MpdData *data;
+   gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), iter, PL3_SONG_ID, &path, -1);
+   data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+   while(data != NULL)                                                            	
+   {
+      call_id3_window_song(mpd_songDup(data->value.song));
+      data = mpd_ob_data_get_next(data);                                        
+   }
+}
