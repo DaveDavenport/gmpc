@@ -198,3 +198,24 @@ void pl3_find_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)
    }
 }
 
+void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
+{
+      GtkTreeIter iter;
+      gchar *song_id;
+      gint r_type;
+      gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+      gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
+      if(song_id == NULL) return;
+      if (r_type == PL3_CUR_PLAYLIST)
+      {
+	 int id=-1;
+	 gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_UNKOWN,&id, -1);
+	 mpd_ob_player_play_id(connection, id);
+      }
+      else
+      {
+	 pl3_push_statusbar_message("Added a song");
+	 mpd_ob_playlist_queue_add(connection, song_id);
+      }
+      mpd_ob_playlist_queue_commit(connection);
+}

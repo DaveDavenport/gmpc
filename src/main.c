@@ -578,6 +578,36 @@ void init_playlist ()
 
 }
 
+
+/* this function takes care the right row is highlighted */
+void playlist_highlight_state_change(int old_state, int new_state)
+{
+   GtkTreeIter iter;
+   gchar *temp;
+   /* unmark the old pos if it exists */
+   if (info.old_pos != -1 && mpd_ob_player_get_state(connection) <= MPD_OB_PLAYER_STOP)
+   {
+      /* create a string so I can get the right iter */
+      temp = g_strdup_printf ("%i", info.old_pos);
+      if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
+      {
+	 int song_type;
+	 gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
+	 gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
+	       SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
+	       -1);
+      }
+      g_free (temp);
+      /* reset old pos */
+      info.old_pos = -1;
+   }                                                           
+   /* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
+   if(old_state <= MPD_OB_PLAYER_STOP && old_state < new_state)
+   {
+      pl3_highlight_song_change();
+   }
+}
+
 void song_changed(MpdObj *mi, int oldsong, int newsong)
 {
 	/* player changed */
@@ -646,7 +676,7 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 {
 	player_state_changed(old_state, new_state);
 	tray_icon_state_change();
-	pl3_highlight_state_change(old_state,new_state);
+	playlist_highlight_state_change(old_state,new_state);
 	/* make */
 }
 

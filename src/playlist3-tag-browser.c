@@ -612,3 +612,14 @@ void pl3_custom_tag_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)
 	}
 }
 
+void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
+{
+      GtkTreeIter iter;
+      gchar *song_id;
+      gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+      gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+      if(song_id == NULL) return;
+      pl3_push_statusbar_message("Added a song");
+      mpd_ob_playlist_queue_add(connection, song_id);
+      mpd_ob_playlist_queue_commit(connection);
+}

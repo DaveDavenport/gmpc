@@ -274,4 +274,7 @@ void pl3_osb_browser_add_source()
 	gtk_widget_destroy(dialog);
 	g_object_unref(gxml);
 }
-
+void pl3_osb_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
+{
+   pl3_browse_add_selected();
+}

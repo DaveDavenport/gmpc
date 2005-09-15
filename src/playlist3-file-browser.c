@@ -309,4 +309,58 @@ void pl3_browser_file_show_info(GtkTreeIter *iter)
 		}                                                                              	
 	}
 }
+void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
+{
+   GtkTreeIter iter;
+   gchar *song_id;
+   gint r_type;
+   gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+   gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
+   if(song_id == NULL)
+   {
 
+      return;
+   }
+   if(r_type&PL3_ENTRY_PLAYLIST)
+   {	
+      pl3_push_statusbar_message("Loaded playlist");
+      mpd_ob_playlist_queue_load(connection, song_id);
+   }
+   else if (r_type&PL3_ENTRY_DIRECTORY)
+   {
+      GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+      GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+      GtkTreeIter iter;
+
+      if(gtk_tree_selection_get_selected(selec,&model, &iter))
+      {
+	 GtkTreeIter citer;
+	 GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+	 gtk_tree_view_expand_row(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")), path, FALSE);
+	 gtk_tree_path_free(path);
+	 if(gtk_tree_model_iter_children(model, &citer, &iter))
+	 {
+	    do{
+	       char *name = NULL;
+	       gtk_tree_model_get(model, &citer, 2, &name, -1);
+	       if(strcmp(name, song_id) == 0)
+	       {
+		  gtk_tree_selection_select_iter(selec,&citer);						
+		  path = gtk_tree_model_get_path(model, &citer);
+		  gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")), path,NULL,TRUE,0.5,0);
+		  gtk_tree_path_free(path);
+		  break;
+
+	       }
+	    }while(gtk_tree_model_iter_next(model, &citer));
+	 }	
+
+      }
+   }
+   else
+   {
+      pl3_push_statusbar_message("Added a song");
+      mpd_ob_playlist_queue_add(connection, song_id);
+   }
+   mpd_ob_playlist_queue_commit(connection);
+}
