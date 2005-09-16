@@ -256,3 +256,25 @@ void pl3_custom_stream_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
    pl3_browse_add_selected();
 }
+
+void pl3_custom_stream_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
+{
+	char *id;
+	GtkTreeIter parent;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter,PL3_CAT_INT_ID , &id, -1);
+	if(strlen(id) != 0)
+	{
+		pl3_custom_stream_add_stream(NULL,NULL);
+		gtk_tree_model_iter_parent(GTK_TREE_MODEL(pl3_tree), &parent, iter);
+		gtk_tree_selection_select_iter(selec, &parent);   					
+
+	}
+	else
+	{	
+		gtk_list_store_clear(pl3_store);
+		pl3_custom_stream_view_browser();
+		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
+	}
+}

@@ -27,7 +27,6 @@
 #include "strfsong.h"
 #include "misc.h"
 #include "open-location.h"
-#include "vfs_download.h"
 #include "config1.h"
 
 #include "playlist3.h"
@@ -547,76 +546,24 @@ void pl3_cat_sel_changed()
       }
       else if (type == PL3_BROWSE_ARTIST)
       {
-	 long unsigned time= 0;
-	 gchar *string;        			
-	 gtk_list_store_clear(pl3_store);	
-	 time = pl3_artist_browser_view_folder(&iter);
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-	 string = format_time(time);
-	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-	 g_free(string);
+	 pl3_artist_browser_category_selection_changed(tree,&iter);
       }
       else if (type == PL3_BROWSE_CUSTOM_TAG)
       {
-	 long unsigned time= 0;
-	 gchar *string;        			
-	 gtk_list_store_clear(pl3_store);	
-	 time = pl3_custom_tag_browser_view_folder(&iter);
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-	 string = format_time(time);
-	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-	 g_free(string);
+	 pl3_custom_tag_browser_category_selection_changed(tree,&iter);
       }
       else if (type == PL3_FIND)
       {
-	 long unsigned time = 0;
-	 gchar *string;	
-	 gtk_list_store_clear(pl3_store);
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-	 gtk_widget_show_all(glade_xml_get_widget(pl3_xml, "search_box"));
-	 time = pl3_find_browser_view_browser();
-	 string = format_time(time);
-	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-	 g_free(string);
-
+	 pl3_find_browser_category_selection_changed(tree,&iter);
       }
       else if(type == PL3_BROWSE_XIPH)
       {
-	 gchar *url =NULL,*name = NULL;
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-	 gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name,-1);
-
-	 if(url != NULL && strlen(url) > 0) 
-	 {
-	    pl3_osb_browser_view_browser(url,name);
-	 }
-	 else
-	 {
-	    gtk_list_store_clear(pl3_store);
-	 }
-	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
+	 pl3_osb_browser_category_selection_changed(tree,&iter);
       }
       else if(type == PL3_BROWSE_CUSTOM_STREAM)
       {
-	 char *id;
-	 GtkTreeIter parent;
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
-	 gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID , &id, -1);
-	 if(strlen(id) != 0)
-	 {
-	    pl3_custom_stream_add_stream(NULL,NULL);
-	    gtk_tree_model_iter_parent(model, &parent, &iter);
-	    gtk_tree_selection_select_iter(selec, &parent);   					
-
-	 }
-	 else
-	 {	
-	    gtk_list_store_clear(pl3_store);
-	    pl3_custom_stream_view_browser();
-	    gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
-	 }
+	 pl3_custom_stream_category_selection_changed(tree,&iter);
       }
-
       /* when it's not a know type remove the model */
       else
       {
@@ -1262,7 +1209,6 @@ void pl2_save_playlist ()
    /* unref the gui description */
    g_object_unref (xml);
 }
-
 
 void pl3_playlist_changed()
 {

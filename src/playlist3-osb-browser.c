@@ -278,3 +278,20 @@ void pl3_osb_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
    pl3_browse_add_selected();
 }
+
+void pl3_osb_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter)
+{
+	gchar *url =NULL,*name = NULL;
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name,-1);
+
+	if(url != NULL && strlen(url) > 0) 
+	{
+		pl3_osb_browser_view_browser(url,name);
+	}
+	else
+	{
+		gtk_list_store_clear(pl3_store);
+	}
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
+}

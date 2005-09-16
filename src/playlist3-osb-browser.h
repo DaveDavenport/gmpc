@@ -8,4 +8,5 @@ void pl3_osb_browser_refresh();
 void pl3_osb_browser_add_source();
 void pl3_osb_browser_del_source();
 void pl3_osb_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
+void pl3_osb_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter);
 #endif

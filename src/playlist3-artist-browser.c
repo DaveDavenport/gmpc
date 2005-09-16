@@ -371,7 +371,7 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
       return;
    }
-   if (r_type&PL3_ENTRY_ARTIST)
+   if (r_type&(PL3_ENTRY_ARTIST|PL3_ENTRY_ALBUM))
    {
       GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
       GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -399,7 +399,6 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	       }
 	    }while(gtk_tree_model_iter_next(model, &citer));
 	 }	
-
       }
    }
    else
@@ -408,4 +407,16 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
       mpd_ob_playlist_queue_add(connection, song_id);
    }
    mpd_ob_playlist_queue_commit(connection);            
+}
+
+void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
+{
+	long unsigned time= 0;
+	gchar *string;        			
+	gtk_list_store_clear(pl3_store);	
+	time = pl3_artist_browser_view_folder(iter);
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+	string = format_time(time);
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+	g_free(string);
 }

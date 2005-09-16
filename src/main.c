@@ -23,6 +23,8 @@
 #include <string.h>
 #include <strings.h>
 #include <glade/glade.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
 #include "config1.h"
 #include "playlist3.h"
