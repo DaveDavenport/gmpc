@@ -13,6 +13,11 @@ src/open-location.c
 src/player.c
 src/playlist3.c
 src/preferences.c
-src/tag-browser.c
 src/tray-icon.c
+data/gmpc.desktop.in.h
+glade/add-browser.glade.h
+glade/gmpc.glade.h
+glade/open-location.glade.h
+glade/playlist3.glade.h
+src/playlist3-tag-browser.c
 
