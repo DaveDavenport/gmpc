@@ -59,6 +59,7 @@ unsigned long pl3_find_browser_view_browser()
    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")));
    GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
    GtkTreeIter iter;
+   char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
    int time=0;
    gtk_list_store_clear(pl3_store);
    if(gtk_tree_selection_get_selected(selection,&model, &iter))
@@ -131,32 +132,65 @@ unsigned long pl3_find_browser_view_browser()
 		   mpd_misc_tokens_free(filter_test);
 
 	   }
-
+	   
 	   while (data != NULL)
 	   {
 		   gchar buffer[1024];
-		   char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-		   if(data->value.song->time != MPD_SONG_NO_TIME)
-		   {
-			   time += data->value.song->time;
-		   }
+		  if(data->type == MPD_DATA_TYPE_SONG)
+		  { 
+			  if(data->value.song->time != MPD_SONG_NO_TIME)
+			  {
+				  time += data->value.song->time;
+			  }
 
-		   strfsong (buffer, 1024, markdata,
-				   data->value.song);
-		   cfg_free_string(markdata);
-		   /* add as child of the above created parent folder */
-		   gtk_list_store_append (pl3_store, &child);
-		   gtk_list_store_set (pl3_store, &child,
-				   PL3_SONG_ID, data->value.song->file,
-				   PL3_SONG_TITLE, buffer,
-				   PL3_SONG_POS, PL3_ENTRY_SONG, 
-				   PL3_SONG_STOCK_ID, "media-audiofile", 
-				   -1);
+			  strfsong (buffer, 1024, markdata,
+					  data->value.song);
 
-		   data =  mpd_ob_data_get_next(data);
+			  /* add as child of the above created parent folder */
+			  gtk_list_store_append (pl3_store, &child);
+			  gtk_list_store_set (pl3_store, &child,
+					  PL3_SONG_ID, data->value.song->file,
+					  PL3_SONG_TITLE, buffer,
+					  PL3_SONG_POS, PL3_ENTRY_SONG, 
+					  PL3_SONG_STOCK_ID, "media-audiofile", 
+					  -1);
+		  }
+		  else if (data->type == MPD_DATA_TYPE_ARTIST)
+		  {
+			  gtk_list_store_prepend (pl3_store, &child);
+			  gtk_list_store_set (pl3_store, &child,
+					  PL3_SONG_ID, data->value.artist,
+					  PL3_SONG_TITLE, data->value.artist,
+					  PL3_SONG_POS, PL3_ENTRY_ARTIST, 
+					  PL3_SONG_STOCK_ID, "media-artist", 			  
+					  -1);
+		  }
+		  else if (data->type == MPD_DATA_TYPE_ALBUM)
+		  {
+			  char *buffer = NULL;
+			  if(data->value.artist)
+			  {
+				buffer = g_strdup_printf("%s - %s", data->value.artist, data->value.album);
+			  }
+			  else
+			  {
+				buffer = g_strdup(data->value.album);
+			  }
+			  gtk_list_store_prepend (pl3_store, &child);                             		  
+			  gtk_list_store_set (pl3_store, &child,                                  		  
+					  PL3_SONG_ID, data->value.album,
+					  PL3_SONG_TITLE, buffer,
+					  PL3_SONG_POS, PL3_ENTRY_ALBUM, 
+					  PL3_SONG_STOCK_ID, "media-album", 			  
+					  -1);
+			  g_free(buffer);
+		  }
+                                                                                                  		  
+		  data =  mpd_ob_data_get_next(data);
 	   }
 
    }
+   cfg_free_string(markdata);
    return time;
 }
 
