@@ -91,7 +91,7 @@ void create_preferences_window()
 	update_server_settings();
 
 	/* set the right sensitive stuff */
-	if(!mpd_ob_check_connected(connection))
+	if(!mpd_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
@@ -188,9 +188,9 @@ void update_preferences_information()
 	cfg_set_single_value_as_float(config,"connection","timeout",
 			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
 	/* update timeout live */
-	if(mpd_ob_check_connected(connection))
+	if(mpd_check_connected(connection))
 	{
-		mpd_ob_set_connection_timeout(connection, 
+		mpd_set_connection_timeout(connection, 
 			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
 	}
 }
@@ -203,7 +203,7 @@ void preferences_window_autoconnect(GtkToggleButton *tog)
 void preferences_window_connect(GtkWidget *but)
 {
 	debug_printf(DEBUG_INFO,"*DEBUG** connect\n");
-	if(!mpd_ob_check_connected(connection))
+	if(!mpd_check_connected(connection))
 		if(!connect_to_mpd())
 		{
 /*	gtk_timeout_remove(update_timeout);
@@ -224,10 +224,10 @@ void preferences_update()
 	if(!running)return;
 
 	
-	if(mpd_ob_check_connected(connection) != connected)
+	if(mpd_check_connected(connection) != connected)
 	{
 		update_server_stats();
-		if(!mpd_ob_check_connected(connection))
+		if(!mpd_check_connected(connection))
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
@@ -242,7 +242,7 @@ void preferences_update()
 			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
 		update_outputs_settings();
-		connected = mpd_ob_check_connected(connection);
+		connected = mpd_check_connected(connection);
 	} 
 }
 
@@ -278,7 +278,7 @@ void update_popup_settings()
 
 void update_server_settings()
 {
-	if(!mpd_ob_check_connected(connection))
+	if(!mpd_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
 		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
@@ -290,7 +290,7 @@ void update_server_settings()
 		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	}	
 
-	if(mpd_ob_status_get_crossfade(connection) == 0)
+	if(mpd_status_get_crossfade(connection) == 0)
 	{
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), FALSE);
@@ -299,7 +299,7 @@ void update_server_settings()
 	else {
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(xml_preferences_window, "cb_fading"), TRUE);
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), mpd_ob_status_get_crossfade(connection));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")), mpd_status_get_crossfade(connection));
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "sb_fade_time"), TRUE);
 
 	}
@@ -362,11 +362,11 @@ void xfade_enable_toggled(GtkToggleButton *but)
 	if(bool1)
 	{
 		int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "sb_fade_time")));	
-		mpd_ob_status_set_crossfade(connection, fade_time);
+		mpd_status_set_crossfade(connection, fade_time);
 	}
 	else 
 	{
-		mpd_ob_status_set_crossfade(connection, 0);
+		mpd_status_set_crossfade(connection, 0);
 	}	
 }
 
@@ -377,7 +377,7 @@ void xfade_time_changed(GtkSpinButton *but)
 	{
 		return;
 	}
-	mpd_ob_status_set_crossfade(connection, fade_time);
+	mpd_status_set_crossfade(connection, fade_time);
 }
 
 
@@ -619,7 +619,7 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 		gtk_tree_model_get(model, &iter, ENABLED_COL, &state, -1);
 		gtk_tree_model_get(model, &iter, ID_COL, &id, -1);
 		state = !state;
-		mpd_ob_server_set_output_device(connection, id, state);
+		mpd_server_set_output_device(connection, id, state);
 
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, ENABLED_COL, state, -1);
 	}
@@ -630,29 +630,29 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 void update_server_stats()
 {
 	if(xml_preferences_window == NULL) return;
-	if(mpd_ob_check_connected(connection))
+	if(mpd_check_connected(connection))
 	{
 		gchar *temp;
-		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_songs(connection));
+		temp = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_songs")), temp);
 		g_free(temp);
-		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_artists(connection));
+		temp = g_strdup_printf("%i", mpd_stats_get_total_artists(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_artists")), temp);
 		g_free(temp);
-		temp = g_strdup_printf("%i", mpd_ob_stats_get_total_albums(connection));
+		temp = g_strdup_printf("%i", mpd_stats_get_total_albums(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), temp);
 		g_free(temp);
 		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"), 
-				mpd_ob_stats_get_uptime(connection)/86400,((mpd_ob_stats_get_uptime(connection)/86400) != 1)? "s":"",
-				(mpd_ob_stats_get_uptime(connection)%86400)/3600,((mpd_ob_stats_get_uptime(connection)%86400)/3600 != 1)? "s":"",
-				(mpd_ob_stats_get_uptime(connection)%3600)/60,((mpd_ob_stats_get_uptime(connection)%3600)/60 != 1)? "s":""
+				mpd_stats_get_uptime(connection)/86400,((mpd_stats_get_uptime(connection)/86400) != 1)? "s":"",
+				(mpd_stats_get_uptime(connection)%86400)/3600,((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? "s":"",
+				(mpd_stats_get_uptime(connection)%3600)/60,((mpd_stats_get_uptime(connection)%3600)/60 != 1)? "s":""
 				);
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), temp);
 		g_free(temp);                                                                                        		
 		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"), 
-				mpd_ob_stats_get_playtime(connection)/86400,((mpd_ob_stats_get_playtime(connection)/86400) != 1)? "s":"",
-				(mpd_ob_stats_get_playtime(connection)%86400)/3600,((mpd_ob_stats_get_playtime(connection)%86400)/3600 != 1)? "s":"",
-				(mpd_ob_stats_get_playtime(connection)%3600)/60,((mpd_ob_stats_get_playtime(connection)%3600)/60 != 1)? "s":""
+				mpd_stats_get_playtime(connection)/86400,((mpd_stats_get_playtime(connection)/86400) != 1)? "s":"",
+				(mpd_stats_get_playtime(connection)%86400)/3600,((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? "s":"",
+				(mpd_stats_get_playtime(connection)%3600)/60,((mpd_stats_get_playtime(connection)%3600)/60 != 1)? "s":""
 				);                                                                     		
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), temp);		
 		g_free(temp);
@@ -681,9 +681,9 @@ void update_outputs_settings()
 	frame = GTK_FRAME(glade_xml_get_widget(xml_preferences_window, "frm_outputs"));
 	store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tv_outputs"))));
 	gtk_list_store_clear(store);
-	if(mpd_ob_check_connected(connection) && mpd_ob_server_check_version(connection, 0,12,0))
+	if(mpd_check_connected(connection) && mpd_server_check_version(connection, 0,12,0))
 	{
-		MpdData *data = mpd_ob_server_get_output_devices(connection);
+		MpdData *data = mpd_server_get_output_devices(connection);
 		while(data != NULL && data->value.output_dev->id != -10)
 		{
 			gtk_list_store_append(store, &iter);
@@ -691,7 +691,7 @@ void update_outputs_settings()
 					0, data->value.output_dev->enabled?TRUE:FALSE, 
 					1, data->value.output_dev->name, 
 					2, data->value.output_dev->id, -1);
-			data = mpd_ob_data_get_next(data);
+			data = mpd_data_get_next(data);
 		}
 		gtk_widget_set_sensitive(GTK_WIDGET(frame), TRUE);
 		gtk_widget_show_all(GTK_WIDGET(frame));            		

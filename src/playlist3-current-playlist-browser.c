@@ -40,9 +40,9 @@ extern GtkListStore *pl2_store;
 void pl3_current_playlist_browser_scroll_to_current_song()
 {
 	/* scroll to the playing song */
-	if(mpd_ob_player_get_current_song_pos(connection) >= 0 && mpd_ob_playlist_get_playlist_length(connection)  > 0)
+	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0)
 	{
-		gchar *str = g_strdup_printf("%i", mpd_ob_player_get_current_song_pos(connection));
+		gchar *str = g_strdup_printf("%i", mpd_player_get_current_song_pos(connection));
 		GtkTreePath *path = gtk_tree_path_new_from_string(str);
 		if(path != NULL)
 		{
@@ -98,11 +98,11 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 			int value;
 			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
 			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
-			mpd_ob_playlist_queue_delete_id(connection, value);			
+			mpd_playlist_queue_delete_id(connection, value);			
 		} while ((llist = g_list_next (llist)));
 
 		/* close the list, so it will be executed */
-		mpd_ob_playlist_queue_commit(connection);
+		mpd_playlist_queue_commit(connection);
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
@@ -129,14 +129,14 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 		{
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
-				mpd_ob_playlist_clear(connection);
+				mpd_playlist_clear(connection);
 		}
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
 
-	mpd_ob_status_queue_update(connection);
+	mpd_status_queue_update(connection);
 }
 
 void pl3_current_playlist_browser_crop_selected_songs()
@@ -159,17 +159,17 @@ void pl3_current_playlist_browser_crop_selected_songs()
 				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 				{
 					gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
-					mpd_ob_playlist_queue_delete_id(connection, value);				
+					mpd_playlist_queue_delete_id(connection, value);				
 				}
 			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
-			mpd_ob_playlist_queue_commit(connection);
+			mpd_playlist_queue_commit(connection);
 		}
 
 	}
 	/* update everything if where still connected */
 	gtk_tree_selection_unselect_all(selection);
 
-	mpd_ob_status_queue_update(connection);
+	mpd_status_queue_update(connection);
 }
 
 /* should this be here? */
@@ -192,7 +192,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	}
 
 
-	mpd_ob_playlist_move_pos(connection, pos, new_pos);
+	mpd_playlist_move_pos(connection, pos, new_pos);
 	gtk_list_store_set(pl2_store,iter, SONG_POS, new_pos, -1);
 	g_free(str);
 }
@@ -248,7 +248,7 @@ void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *
 	gint song_id;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
-	mpd_ob_player_play_id(connection, song_id);
+	mpd_player_play_id(connection, song_id);
 }
 
 void pl3_current_playlist_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)

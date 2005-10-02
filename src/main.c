@@ -178,21 +178,21 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* Create connection object */
-	connection = mpd_ob_new_default();
+	connection = mpd_new_default();
 	if(connection == NULL)
 	{
 		debug_printf(DEBUG_ERROR,"main.c: Failed to create connection obj\n");
 		return 1;
 	}
 	/* connect signals */
-	mpd_ob_signal_set_playlist_changed(connection, (void *)playlist_changed,NULL);
-	mpd_ob_signal_set_error(connection, (void *)error_callback, NULL);
-	mpd_ob_signal_set_song_changed(connection, (void *)song_changed, NULL);
-	mpd_ob_signal_set_state_changed(connection, (void *)state_callback, NULL);
-	mpd_ob_signal_set_status_changed(connection, (void *)status_callback, NULL);
-	mpd_ob_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
-	mpd_ob_signal_set_connect(connection, (void *)connect_callback, NULL);
-	mpd_ob_signal_set_database_changed(connection, (void *)database_changed, NULL);
+	mpd_signal_set_playlist_changed(connection, (void *)playlist_changed,NULL);
+	mpd_signal_set_error(connection, (void *)error_callback, NULL);
+	mpd_signal_set_song_changed(connection, (void *)song_changed, NULL);
+	mpd_signal_set_state_changed(connection, (void *)state_callback, NULL);
+	mpd_signal_set_status_changed(connection, (void *)status_callback, NULL);
+	mpd_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
+	mpd_signal_set_connect(connection, (void *)connect_callback, NULL);
+	mpd_signal_set_database_changed(connection, (void *)database_changed, NULL);
 	/*
 	 * initialize gtk 
 	 */
@@ -265,7 +265,7 @@ int main (int argc, char **argv)
 	 */
 	gtk_main ();
 	/* cleaning up. */
-	mpd_ob_free(connection);	
+	mpd_free(connection);	
 	config_close(config);
 	gtk_list_store_clear(pl2_store);
 	return 0;
@@ -274,10 +274,10 @@ int main (int argc, char **argv)
 
 void main_quit()
 {
-	mpd_ob_signal_set_disconnect(connection, NULL, NULL);
-	if(mpd_ob_check_connected(connection))
+	mpd_signal_set_disconnect(connection, NULL, NULL);
+	if(mpd_check_connected(connection))
 	{
-		mpd_ob_disconnect(connection);
+		mpd_disconnect(connection);
 	}
 	gtk_main_quit();
 
@@ -293,7 +293,7 @@ int update_interface ()
 	/*
 	 * check if there is an connection. (that is when connection == NULL) 
 	 */
-	if (!mpd_ob_check_connected(connection))
+	if (!mpd_check_connected(connection))
 	{
 		/*
 		 * update the popup 
@@ -322,7 +322,7 @@ int update_interface ()
 	/*
 	 * check if busy 
 	 */
-	if(!mpd_ob_check_connected(connection)) return TRUE;
+	if(!mpd_check_connected(connection)) return TRUE;
 	update_player();
 
 	/*
@@ -346,7 +346,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	old_length = info.playlist_length;
 	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
-	data = mpd_ob_playlist_get_changes(mi,info.playlist_id);
+	data = mpd_playlist_get_changes(mi,info.playlist_id);
 
 	while(data != NULL)
 	{
@@ -364,7 +364,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 				/* overwriting existing entry */
 				gint weight = PANGO_WEIGHT_NORMAL;
 				gint time=0;
-				if (data->value.song->id == mpd_ob_player_get_current_song_id(connection))
+				if (data->value.song->id == mpd_player_get_current_song_id(connection))
 				{
 					weight = PANGO_WEIGHT_ULTRABOLD;
 				}
@@ -403,7 +403,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 			{
 				info.playlist_playtime += data->value.song->time;
 			}
-			if (data->value.song->id == mpd_ob_player_get_current_song_id(connection))
+			if (data->value.song->id == mpd_player_get_current_song_id(connection))
 			{
 				weight = PANGO_WEIGHT_ULTRABOLD;                                  			
 			}
@@ -423,12 +423,12 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					-1);
 
 		}
-		data= mpd_ob_data_get_next(data);		
+		data= mpd_data_get_next(data);		
 	}
 
-	if(mpd_ob_status_check(connection))
+	if(mpd_status_check(connection))
 	{
-		while (mpd_ob_playlist_get_playlist_length(connection) < old_length)
+		while (mpd_playlist_get_playlist_length(connection) < old_length)
 		{
 			gchar *path = g_strdup_printf ("%i", old_length - 1);
 			if (gtk_tree_model_get_iter_from_string
@@ -451,7 +451,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	pl3_highlight_song_change ();
 	cfg_free_string(string);
 	info.playlist_id = new_playlist_id;
-	info.playlist_length = mpd_ob_playlist_get_playlist_length(connection);
+	info.playlist_length = mpd_playlist_get_playlist_length(connection);
 
 	pl3_playlist_changed();
 
@@ -587,7 +587,7 @@ void playlist_highlight_state_change(int old_state, int new_state)
    GtkTreeIter iter;
    gchar *temp;
    /* unmark the old pos if it exists */
-   if (info.old_pos != -1 && mpd_ob_player_get_state(connection) <= MPD_OB_PLAYER_STOP)
+   if (info.old_pos != -1 && mpd_player_get_state(connection) <= MPD_PLAYER_STOP)
    {
       /* create a string so I can get the right iter */
       temp = g_strdup_printf ("%i", info.old_pos);
@@ -604,7 +604,7 @@ void playlist_highlight_state_change(int old_state, int new_state)
       info.old_pos = -1;
    }                                                           
    /* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
-   if(old_state <= MPD_OB_PLAYER_STOP && old_state < new_state)
+   if(old_state <= MPD_PLAYER_STOP && old_state < new_state)
    {
       pl3_highlight_song_change();
    }

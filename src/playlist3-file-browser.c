@@ -54,8 +54,8 @@ void pl3_browser_file_add_folder()
 		message = g_strdup_printf("Added folder '%s' recursively", path);
 		pl3_push_statusbar_message(message);
 		g_free(message);
-		mpd_ob_playlist_queue_add(connection, path);
-		mpd_ob_playlist_queue_commit(connection);
+		mpd_playlist_queue_add(connection, path);
+		mpd_playlist_queue_commit(connection);
 	}
 }
 
@@ -73,7 +73,7 @@ void pl3_browser_file_update_folder()
 	{
 		char *path;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
-		mpd_ob_playlist_update_dir(connection, path);
+		mpd_playlist_update_dir(connection, path);
 	}
 }
 
@@ -81,7 +81,7 @@ void pl3_browser_file_replace_folder()
 {
 	pl3_clear_playlist();
 	pl3_browser_file_add_folder();	
-	mpd_ob_player_play(connection);
+	mpd_player_play(connection);
 }
 
 
@@ -117,7 +117,7 @@ long unsigned pl3_browser_file_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 
-	data = mpd_ob_playlist_get_directory(connection, path);
+	data = mpd_playlist_get_directory(connection, path);
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -166,7 +166,7 @@ long unsigned pl3_browser_file_view_folder(GtkTreeIter *iter_cat)
 					-1);
 			g_free (basename);
 		}
-		data = mpd_ob_data_get_next(data);
+		data = mpd_data_get_next(data);
 	}
 	/* remove the fantom child if there are no subfolders anyway. */
 	if(!sub_folder)
@@ -188,7 +188,7 @@ void pl3_browser_file_fill_tree(GtkTreeIter *iter)
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
 
-	data = mpd_ob_playlist_get_directory(connection, path);
+	data = mpd_playlist_get_directory(connection, path);
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -208,7 +208,7 @@ void pl3_browser_file_fill_tree(GtkTreeIter *iter)
 
 			g_free (basename);
 		}
-		data = mpd_ob_data_get_next(data);
+		data = mpd_data_get_next(data);
 	}
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 	{
@@ -296,16 +296,16 @@ void pl3_browser_file_cat_sel_changed(GtkTreeView *tree,GtkTreeIter *iter)
 }
 void pl3_browser_file_show_info(GtkTreeIter *iter)
 {
-	if(mpd_ob_server_check_version(connection,0,12,0))
+	if(mpd_server_check_version(connection,0,12,0))
 	{
 		char *path;
 		MpdData *data;
 		gtk_tree_model_get (GTK_TREE_MODEL(pl3_store), iter, PL3_SONG_ID, &path, -1);
-		data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+		data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 		while(data != NULL)
 		{
 			call_id3_window_song(mpd_songDup(data->value.song));
-			data = mpd_ob_data_get_next(data);
+			data = mpd_data_get_next(data);
 		}                                                                              	
 	}
 }
@@ -324,7 +324,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
    if(r_type&PL3_ENTRY_PLAYLIST)
    {	
       pl3_push_statusbar_message("Loaded playlist");
-      mpd_ob_playlist_queue_load(connection, song_id);
+      mpd_playlist_queue_load(connection, song_id);
    }
    else if (r_type&PL3_ENTRY_DIRECTORY)
    {
@@ -360,7 +360,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
    else
    {
       pl3_push_statusbar_message("Added a song");
-      mpd_ob_playlist_queue_add(connection, song_id);
+      mpd_playlist_queue_add(connection, song_id);
    }
-   mpd_ob_playlist_queue_commit(connection);
+   mpd_playlist_queue_commit(connection);
 }

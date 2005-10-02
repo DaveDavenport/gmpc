@@ -13,9 +13,9 @@ internal_data info;
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 int update_mpd_status()
 {
-	if(!mpd_ob_check_connected(connection)) return TRUE;
-	mpd_ob_status_queue_update(connection);
-/*	mpd_ob_status_update(connection);*/
+	if(!mpd_check_connected(connection)) return TRUE;
+	mpd_status_queue_update(connection);
+/*	mpd_status_update(connection);*/
 
 	/* unlock it */
 	return TRUE;
@@ -24,7 +24,7 @@ int update_mpd_status()
 int disconnect_to_mpd()
 {
 	/* disconnect */
-	mpd_ob_disconnect(connection);
+	mpd_disconnect(connection);
 	return FALSE;
 }
 
@@ -59,23 +59,23 @@ int connect_to_mpd()
 	scroll.exposed = 1;
 	info.playlist_playtime = 0;
 	string =cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
-	mpd_ob_set_hostname(connection,string);
+	mpd_set_hostname(connection,string);
 	cfg_free_string(string);
-	mpd_ob_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
-	mpd_ob_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
+	mpd_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
+	mpd_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
 
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
 		string = cfg_get_single_value_as_string_with_default(config, "connection","password", "");
-		mpd_ob_set_password(connection,string);
+		mpd_set_password(connection,string);
 		cfg_free_string(string);
 	}
 	else
 	{
-		mpd_ob_set_password(connection,"");
+		mpd_set_password(connection,"");
 	}
 
-	if(mpd_ob_connect(connection) < 0)
+	if(mpd_connect(connection) < 0)
 	{
 		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
@@ -83,7 +83,7 @@ int connect_to_mpd()
 
 
 	update_mpd_status();
-	mpd_ob_stats_update(connection);
+	mpd_stats_update(connection);
 	/* Set the title */
 	msg_set_base(_("GMPC - Connected"));
 	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
@@ -98,7 +98,7 @@ int connect_to_mpd()
 
 gboolean check_connection_state()
 {
-	return !mpd_ob_check_connected(connection);
+	return !mpd_check_connected(connection);
 }
 
 
@@ -112,52 +112,52 @@ gboolean check_connection_state()
 /* returns FALSE when everything went ok */
 int next_song()
 {
-	mpd_ob_player_next(connection);
+	mpd_player_next(connection);
 	return FALSE;
 }
 
 int prev_song()
 {
-	mpd_ob_player_prev(connection);
+	mpd_player_prev(connection);
 	return FALSE;
 }
 
 int stop_song()
 {
-	mpd_ob_player_stop(connection);
+	mpd_player_stop(connection);
 	return FALSE;
 }
 
 int play_song()
 {
-	int state = mpd_ob_player_get_state(connection);
-	if(state == MPD_OB_PLAYER_STOP)
+	int state = mpd_player_get_state(connection);
+	if(state == MPD_PLAYER_STOP)
 	{
-		mpd_ob_player_play(connection);
+		mpd_player_play(connection);
 	}
-	else if (state == MPD_OB_PLAYER_PAUSE || state == MPD_OB_PLAYER_PLAY)
+	else if (state == MPD_PLAYER_PAUSE || state == MPD_PLAYER_PLAY)
 	{
-		mpd_ob_player_pause(connection);
+		mpd_player_pause(connection);
 	}
 	return FALSE;	
 }
 
 void random_pl(GtkToggleButton *tb)
 {
-	if(gtk_toggle_button_get_active(tb) != mpd_ob_player_get_random(connection))
-		mpd_ob_player_set_random(connection, !mpd_ob_player_get_random(connection));
+	if(gtk_toggle_button_get_active(tb) != mpd_player_get_random(connection))
+		mpd_player_set_random(connection, !mpd_player_get_random(connection));
 }
 
 void repeat_pl(GtkToggleButton *tb)
 {
-	if(gtk_toggle_button_get_active(tb) != mpd_ob_player_get_repeat(connection))
-		mpd_ob_player_set_repeat(connection, !mpd_ob_player_get_repeat(connection));
+	if(gtk_toggle_button_get_active(tb) != mpd_player_get_repeat(connection))
+		mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 }
 
 /* TODO: Changed return Values, check for possible errors */
 int seek_ps(int n)
 {
-	mpd_ob_player_seek(connection, mpd_ob_status_get_elapsed_song_time(connection)+n);
+	mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection)+n);
 	return FALSE;
 }
 
@@ -170,5 +170,5 @@ int seek_ns(int n)
 /* returns TRUE when an error */
 int check_for_errors()
 {
-	return mpd_ob_check_error(connection);
+	return mpd_check_error(connection);
 }

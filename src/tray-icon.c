@@ -42,22 +42,22 @@ gchar *tray_get_tooltip_text()
 	gchar result[1024];
 	gchar *retval;
 	int id;
-	if(mpd_ob_check_connected(connection) && mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
+	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
-		mpd_Song *song = mpd_ob_playlist_get_current_song(connection);
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */
-		if(mpd_ob_status_get_total_song_time(connection) > 0)
+		if(mpd_status_get_total_song_time(connection) > 0)
 		{
 			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i/%02i:%02i</span>",
-					mpd_ob_status_get_elapsed_song_time(connection)/60, mpd_ob_status_get_elapsed_song_time(connection) %60,
-					mpd_ob_status_get_total_song_time(connection)/60, mpd_ob_status_get_total_song_time(connection) %60);
+					mpd_status_get_elapsed_song_time(connection)/60, mpd_status_get_elapsed_song_time(connection) %60,
+					mpd_status_get_total_song_time(connection)/60, mpd_status_get_total_song_time(connection) %60);
 		}
 		else
 		{
 			g_string_append_printf(string, "\n<span size=\"small\">Time:\t%02i:%02i</span>",
-					mpd_ob_status_get_elapsed_song_time(connection)/60, mpd_ob_status_get_elapsed_song_time(connection) %60);
+					mpd_status_get_elapsed_song_time(connection)/60, mpd_status_get_elapsed_song_time(connection) %60);
 		}
 	}
 	else
@@ -105,7 +105,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	height= PANGO_PIXELS(height);
 
 
-	if(mpd_ob_status_get_total_song_time(connection)> 0)
+	if(mpd_status_get_total_song_time(connection)> 0)
 	{
 		height = height+12;
 	}
@@ -186,15 +186,15 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	}
 
 
-	if(mpd_ob_check_connected(connection))
+	if(mpd_check_connected(connection))
 	{
-		if(mpd_ob_status_get_total_song_time(connection) > 0)
+		if(mpd_status_get_total_song_time(connection) > 0)
 		{
 
 			int width2 = 0;
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					FALSE,4,height+5-12, width ,8);                              		
-			width2 = (mpd_ob_status_get_elapsed_song_time(connection)/(float)mpd_ob_status_get_total_song_time(connection))*width;
+			width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*width;
 			gdk_draw_rectangle(widget->window, 
 					widget->style->mid_gc[GTK_STATE_NORMAL],
 					TRUE,4,height+5-12, width2 ,8);
@@ -299,7 +299,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
 	height= PANGO_PIXELS(height)+8;
-	if(mpd_ob_status_get_total_song_time(connection) > 0)
+	if(mpd_status_get_total_song_time(connection) > 0)
 	{
 		height = height+12;
 	}
@@ -394,7 +394,7 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 /* gtk will call this function when the image is exposed and the data is gone */
 void exposed_signal(GtkWidget *event)
 {
-	int state = mpd_ob_player_get_state(connection);
+	int state = mpd_player_get_state(connection);
 	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
 
 	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);		
@@ -410,17 +410,17 @@ void exposed_signal(GtkWidget *event)
 		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
 	}
 
-	if(state == MPD_OB_PLAYER_STOP)
+	if(state == MPD_PLAYER_STOP)
 	{
 		GdkPoint points[5] = {{4,1},{4,8}, {11,8},{11,1},{4,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
 	}
-	else if(state == MPD_OB_PLAYER_PLAY)
+	else if(state == MPD_PLAYER_PLAY)
 	{
 		GdkPoint points[4] = {{5,1},{5,11}, {10,6},{5,1}};
 		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 4);
 	}
-	else if(state == MPD_OB_PLAYER_PAUSE)
+	else if(state == MPD_PLAYER_PAUSE)
 	{
 		GdkPoint points[5] = {{4,1},{4,8}, {6,8},{6,1},{4,1}};
 		GdkPoint points2[5] = {{8,1},{8,8}, {10,8},{10,1},{8,1}};	
@@ -468,7 +468,7 @@ void tray_icon_song_change()
 
 
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
-			mpd_ob_player_get_state(connection) != MPD_OB_PLAYER_STOP)
+			mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		if(popup_timeout == -1 && tip == NULL&& cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5))
 		{

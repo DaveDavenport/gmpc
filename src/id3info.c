@@ -59,9 +59,9 @@ void id3_status_update()
 	if(songs == NULL) return;
 	song =  songs->data;
 	if(song == NULL) return;
-	if(song->id == mpd_ob_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
+	if(song->id == mpd_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
 	{
-		char *temp = g_strdup_printf("%i kb/s", mpd_ob_status_get_bitrate(connection));
+		char *temp = g_strdup_printf("%i kb/s", mpd_status_get_bitrate(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
 		g_free(temp);
 
@@ -75,11 +75,11 @@ void id3_status_update()
 		gint min = (int) (song->time / 60);
 		gint sec = song->time - min * 60;
 		gchar *buf1 =NULL;
-		if(song->id == mpd_ob_player_get_current_song_id(connection))
+		if(song->id == mpd_player_get_current_song_id(connection))
 		{
 			buf1 = g_strdup_printf ("%02i:%02i/%02i:%02i",
-					mpd_ob_status_get_elapsed_song_time(connection)/60,
-					mpd_ob_status_get_elapsed_song_time(connection)%60,
+					mpd_status_get_elapsed_song_time(connection)/60,
+					mpd_status_get_elapsed_song_time(connection)%60,
 					min, sec);
 		}
 		else
@@ -100,7 +100,7 @@ void id3_status_update()
 
 void create_window (int song)
 {
-	mpd_Song *songstr = mpd_ob_playlist_get_song(connection, song);
+	mpd_Song *songstr = mpd_playlist_get_song(connection, song);
 	if(songstr == NULL)
 	{
 		return;
@@ -210,9 +210,9 @@ void set_text (GList * node)
 		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "path_label")), "");
 	}
 
-	if(song->id == mpd_ob_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
+	if(song->id == mpd_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
 	{
-		char *temp = g_strdup_printf("%i kbps", mpd_ob_status_get_bitrate(connection));
+		char *temp = g_strdup_printf("%i kbps", mpd_status_get_bitrate(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
 		g_free(temp);
 
@@ -303,7 +303,7 @@ void call_id3_window (int song)
 	}
 	else
 	{
-		mpd_Song  *songstr = mpd_ob_playlist_get_song(connection, song);
+		mpd_Song  *songstr = mpd_playlist_get_song(connection, song);
 		if(songstr != NULL)
 		{
 			songs = g_list_append (songs,songstr);

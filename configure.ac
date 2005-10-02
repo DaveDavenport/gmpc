@@ -34,7 +34,7 @@ PKG_CHECK_MODULES(gmpc,
 	libglade-2.0
 	libxml-2.0
 	gmodule-2.0
-	libmpd >= 0.0.9
+	libmpd >= 0.0.9.3
 ])
 AC_SUBST(gmpc_LIBS)
 AC_SUBST(gmpc_CFLAGS)

@@ -87,7 +87,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
    {
       /*lowest level, do nothing */
       /* fill artist list */
-      MpdData *data = mpd_ob_playlist_get_artists(connection);
+      MpdData *data = mpd_playlist_get_artists(connection);
 
       while(data != NULL)
       {	
@@ -99,14 +99,14 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	       5, "media-artist",
 	       -1);
 
-	 data = mpd_ob_data_get_next(data);
+	 data = mpd_data_get_next(data);
       }
       return 0;
    }
    if(depth == 1)
    {
       int albums = 0;
-      MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
+      MpdData *data = mpd_playlist_get_albums(connection,artist);
       while(data != NULL){
 	 gtk_list_store_append (pl3_store, &iter);
 	 gtk_list_store_set (pl3_store,&iter,
@@ -115,11 +115,11 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	       2, data->value.album,
 	       5, "media-album", 
 	       -1);
-	 data = mpd_ob_data_get_next(data);
+	 data = mpd_data_get_next(data);
       }
 
 
-      data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+      data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
       /* artist is selected */
       while(data != NULL)
       {
@@ -150,7 +150,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		      }
 		      else albums++;
 	      }
-	      data = mpd_ob_data_get_next(data);
+	      data = mpd_data_get_next(data);
       }
 
       if(!albums)
@@ -164,7 +164,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
    else if(depth ==2)
    {
 	   /* artist and album is selected */
-	   MpdData *data = mpd_ob_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
+	   MpdData *data = mpd_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
 	   while (data != NULL)
 	   {
 		   if(data->type == MPD_DATA_TYPE_SONG)
@@ -194,7 +194,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 			   }
 		   }
-		   data = mpd_ob_data_get_next(data);
+		   data = mpd_data_get_next(data);
 	   }
 
    }
@@ -221,14 +221,14 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	gtk_tree_path_free(path);
 
 
-	if (!mpd_ob_check_connected(connection))
+	if (!mpd_check_connected(connection))
 	{
 		return;
 	}
 	if(depth == 0)
 	{
 		/* fill artist list */
-		MpdData *data = mpd_ob_playlist_get_artists(connection);
+		MpdData *data = mpd_playlist_get_artists(connection);
 
 		while(data != NULL)
 		{	
@@ -243,7 +243,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
 
-			data = mpd_ob_data_get_next(data);
+			data = mpd_data_get_next(data);
 		}
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
@@ -253,7 +253,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(depth == 1)
 	{
-		MpdData *data = mpd_ob_playlist_get_albums(connection,artist);
+		MpdData *data = mpd_playlist_get_albums(connection,artist);
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
@@ -264,7 +264,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 					4, TRUE, 
 					PL3_CAT_ICON_SIZE,1,
 					-1);
-			data = mpd_ob_data_get_next(data);
+			data = mpd_data_get_next(data);
 		}
 
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
@@ -282,7 +282,7 @@ void pl3_artist_browser_add_folder()
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
-	if(!mpd_ob_check_connected(connection))
+	if(!mpd_check_connected(connection))
 	{
 		return;
 	}
@@ -298,11 +298,11 @@ void pl3_artist_browser_add_folder()
 		{
 			/* artist selected */
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
-			MpdData * data = mpd_ob_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+			MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 			while (data != NULL)
 			{                                                                         			
-				mpd_ob_playlist_queue_add(connection, data->value.song->file);
-				data = mpd_ob_data_get_next(data);
+				mpd_playlist_queue_add(connection, data->value.song->file);
+				data = mpd_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
 			g_free(message);
@@ -313,14 +313,14 @@ void pl3_artist_browser_add_folder()
 			/* album selected */
 			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
 			gchar *message = g_strdup_printf("Added songs from album '%s' ",title);
-			MpdData *data = mpd_ob_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
+			MpdData *data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
 			while (data != NULL)
 			{
 				if (!g_utf8_collate (data->value.song->artist, artist))
 				{
-					mpd_ob_playlist_queue_add(connection,data->value.song->file);
+					mpd_playlist_queue_add(connection,data->value.song->file);
 				}
-				data = mpd_ob_data_get_next(data);
+				data = mpd_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
 			g_free(message);
@@ -328,7 +328,7 @@ void pl3_artist_browser_add_folder()
 		}
 
 		/* if there are items in the add list add them to the playlist */
-		mpd_ob_playlist_queue_commit(connection);
+		mpd_playlist_queue_commit(connection);
 	}
 
 }
@@ -337,7 +337,7 @@ void pl3_artist_browser_replace_folder()
 {
 	pl3_clear_playlist();
 	pl3_artist_browser_add_folder();
-	mpd_ob_player_play(connection);
+	mpd_player_play(connection);
 }
 
 void pl3_artist_browser_category_key_press(GdkEventKey *event)
@@ -357,11 +357,11 @@ void pl3_artist_browser_show_info(GtkTreeIter *iter)
 	char *path;
 	MpdData *data;
 	gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), iter, PL3_SONG_ID, &path, -1);
-	data = mpd_ob_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+	data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 	while(data != NULL)                                                            	
 	{
 		call_id3_window_song(mpd_songDup(data->value.song));
-		data = mpd_ob_data_get_next(data);                                        
+		data = mpd_data_get_next(data);                                        
 	}
 }
 
@@ -410,9 +410,9 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	else
 	{
 		pl3_push_statusbar_message("Added a song");
-		mpd_ob_playlist_queue_add(connection, song_id);
+		mpd_playlist_queue_add(connection, song_id);
 	}
-	mpd_ob_playlist_queue_commit(connection);            
+	mpd_playlist_queue_commit(connection);            
 }
 
 void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
