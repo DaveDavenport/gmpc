@@ -2,6 +2,7 @@
 #include <glade/glade.h>
 #include <string.h>
 #include <time.h>
+#include <config.h>
 #include "main.h"
 #include "playlist3.h"
 #include "playlist3-tag-browser.h"

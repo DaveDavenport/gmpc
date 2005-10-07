@@ -300,8 +300,11 @@ void pl3_artist_browser_add_folder()
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
 			MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 			while (data != NULL)
-			{                                                                         			
-				mpd_playlist_queue_add(connection, data->value.song->file);
+			{                    
+				if(data->type == MPD_DATA_TYPE_SONG)
+				{				
+					mpd_playlist_queue_add(connection, data->value.song->file);
+				}
 				data = mpd_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
@@ -316,9 +319,12 @@ void pl3_artist_browser_add_folder()
 			MpdData *data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
 			while (data != NULL)
 			{
-				if (!g_utf8_collate (data->value.song->artist, artist))
+				if(data->type == MPD_DATA_TYPE_SONG)
 				{
-					mpd_playlist_queue_add(connection,data->value.song->file);
+					if (!g_utf8_collate (data->value.song->artist, artist))
+					{
+						mpd_playlist_queue_add(connection,data->value.song->file);
+					}
 				}
 				data = mpd_data_get_next(data);
 			}
@@ -360,7 +366,10 @@ void pl3_artist_browser_show_info(GtkTreeIter *iter)
 	data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 	while(data != NULL)                                                            	
 	{
-		call_id3_window_song(mpd_songDup(data->value.song));
+		if(data->type == MPD_DATA_TYPE_SONG)
+		{
+			call_id3_window_song(mpd_songDup(data->value.song));
+		}
 		data = mpd_data_get_next(data);                                        
 	}
 }

@@ -1,3 +1,6 @@
+07-10-2005 Qball <Qball@qballcow.nl>
+	* apply DJWLindenaar's win32 patch
+
 06-09-2005 Qball <Qball@qballcow.nl>
 	* src/playlist3.c:		Fixed single/multiple
 	* src/preferences.c:		Fixed single/multiple

@@ -1,3 +1,13 @@
+#include <config.h>
+#ifndef ENABLE_TRAYICON
+
+int create_tray_icon()  { return 1; }
+int destroy_tray_icon() { return 1; }
+void tray_icon_song_change() {}
+void tray_icon_state_change() {}
+
+#else	
+
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
@@ -662,4 +672,4 @@ int create_tray_icon()
 }
 
 
-
+#endif

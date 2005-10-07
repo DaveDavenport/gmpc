@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
+#include <config.h>
 #include "main.h"
 
 GladeXML *xml_id3_window = NULL;

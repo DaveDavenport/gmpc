@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
+#include <config.h>
 #include "main.h"
 
 #ifdef ENABLE_GNOME_VFS

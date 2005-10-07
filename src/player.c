@@ -24,6 +24,7 @@
 #include <glade/glade.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
+#include <config.h>
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"

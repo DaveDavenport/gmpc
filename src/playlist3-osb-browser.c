@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <config.h>
 #include "main.h"
 #include "strfsong.h"
 
@@ -104,7 +105,7 @@ void pl3_osb_browser_fill_view(char *buffer)
 	}
 
 	gtk_tree_model_get(model, &iter, PL3_CAT_TITLE, &name, -1);
-	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	string = g_strdup_printf("%s/.gmpc/%s", g_get_home_dir(), name);
 	g_free(name);
 	if(buffer != NULL)
 	{
@@ -178,7 +179,7 @@ void pl3_osb_browser_fill_view(char *buffer)
 void pl3_osb_browser_view_browser(gchar *url,gchar *name)
 {
 #ifdef ENABLE_GNOME_VFS
-	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	gchar *string = g_strdup_printf("%s/.gmpc/%s", g_get_home_dir(), name);
 	gtk_list_store_clear(pl3_store);
 	if(g_file_test(string, G_FILE_TEST_EXISTS))
 	{
@@ -206,7 +207,7 @@ void pl3_osb_browser_refresh()
 	}
 	gtk_tree_model_get(model, &iter,PL3_CAT_INT_ID, &url, PL3_CAT_TITLE, &name, -1);
 	if(url == NULL || name == NULL ) return;
-	string = g_strdup_printf("%s/.gmpc/%s", g_getenv("HOME"), name);
+	string = g_strdup_printf("%s/.gmpc/%s", g_get_home_dir(), name);
 	unlink(string);
 	g_free(string);
 	pl3_osb_browser_view_browser(url, name);

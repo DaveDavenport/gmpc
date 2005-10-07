@@ -18,6 +18,8 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#include <config.h>
+#ifdef ENABLE_MMKEYS
 
 #include <stdio.h>
 #include "mm-keys.h"
@@ -228,3 +230,5 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 		return GDK_FILTER_CONTINUE;
 	}
 }
+
+#endif

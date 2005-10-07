@@ -3,7 +3,7 @@
 #include <string.h>
 #include <strings.h>
 #include <glade/glade.h>
-
+#include <config.h>
 #include "main.h"
 #include "misc.h"
 #include "open-location.h"

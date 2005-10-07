@@ -11,7 +11,8 @@ AC_PROG_CC
 
 AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,enable_gnome_vfs=yes)
 AC_ARG_ENABLE(libnotify,[  --enable-libnotify     disable extra options that use gnome-vfs.],,enable_libnotify=no)
-
+AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys     Disable multimedia keys support.],,enable_mmkeys=yes)
+AC_ARG_ENABLE(trayicon,[  --disable-trayicon     Disable tray icon support.],,enable_trayicon=yes)
 
 # Checks for libraries.
 
@@ -49,6 +50,13 @@ if test x${enable_libnotify} = xyes; then
 	AC_DEFINE(ENABLE_LIBNOTIFY, 1, [Enable extra options that use gnome-vfs])
 fi
 
+if test x${enable_mmkeys} = xyes; then
+	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
+fi
+
+if test x${enable_trayicon} = xyes; then
+	AC_DEFINE(ENABLE_TRAYICON, 1, [Enable tray icon support])
+fi
 
 
 
@@ -92,6 +100,18 @@ AC_DEFINE_UNQUOTED(PIXMAP_PATH,"$PIXMAP_PATH",[The package's pixmap path])
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 
+EXTRA_CFLAGS=
+EXTRA_LDFLAGS=
+case $host in
+  *-*-mingw32* | *-*-windows)
+    EXTRA_CFLAGS="-mno-cygwin -mwindows"
+    EXTRA_LDFLAGS="-export-all-symbols -mwindows" ;;
+  *-*-cygwin*)
+    EXTRA_LDFLAGS=-export-all-symbols ;;
+esac
+AC_SUBST(EXTRA_CFLAGS)
+AC_SUBST(EXTRA_LDFLAGS)
+
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in)
 echo ""
 echo ""
@@ -105,4 +125,14 @@ if test x${enable_libnotify} = xyes; then
 	echo "Gnome Notification support is: 	enabled."
 else
 	echo "Gnome Notification support is:	disabled."
+fi
+if test x${enable_mmkeys} = xyes; then
+	echo "Multimedia keys support is:  	enabled"
+else
+	echo "Multimedia keys support is:  	disabled"
+fi
+if test x${enable_trayicon} = xyes; then
+	echo "Tray icon support is:         	enabled"
+else
+	echo "Tray icon support is:	   	disabled"
 fi

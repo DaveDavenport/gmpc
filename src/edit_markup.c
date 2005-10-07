@@ -25,6 +25,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <time.h>
+#include <config.h>
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"

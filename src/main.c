@@ -26,12 +26,17 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <config.h>
 #include "config1.h"
 #include "playlist3.h"
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"
-#include "mm-keys.h"
+
+#ifdef ENABLE_MMKEYS
+  #include "mm-keys.h"
+#endif
+
 #ifdef ENABLE_LIBNOTIFY
 	#include <libnotify/notify.h>
 #endif
@@ -108,7 +113,9 @@ void set_default_values ()
 
 int main (int argc, char **argv)
 {
+#ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
+#endif
 	gchar *url = NULL;
 	/* debug stuff */
 
@@ -140,7 +147,7 @@ int main (int argc, char **argv)
 	set_default_values ();
 
 	/* Check for and create dir if availible */
-	url = g_strdup_printf("%s/.gmpc/", g_getenv("HOME"));
+	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "main.c: Checking for %s existence",url);
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
@@ -163,7 +170,7 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* OPEN CONFIG FILE */
-	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_getenv("HOME"));
+	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
@@ -245,6 +252,7 @@ int main (int argc, char **argv)
 	}
 	update_interface();
 	
+#ifdef ENABLE_MMKEYS
 	/*
 	 * Keys
 	 */
@@ -253,7 +261,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
-
+#endif
 
 
 

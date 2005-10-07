@@ -24,7 +24,7 @@
 #include <glade/glade.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-
+#include <config.h>
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"
@@ -75,7 +75,7 @@ void pl3_custom_stream_view_browser()
 {
 
 	/* make this path configurable, we don't use gnome-vfs for nothing */
-	gchar *path = g_strdup_printf("/%s/.gmpc.cst",g_getenv("HOME"));
+	gchar *path = g_strdup_printf("/%s/.gmpc.cst",g_get_home_dir());
 	if(g_file_test(path, G_FILE_TEST_EXISTS))
 	{
 		xmlDocPtr xmldoc = xmlParseFile(path);
@@ -152,7 +152,7 @@ void pl3_custom_stream_add_stream(gchar *name, gchar *url)
 	{
 		case GTK_RESPONSE_OK:
 			{
-				gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
+				gchar *path = g_strdup_printf("%s/.gmpc.cst",g_get_home_dir());
 				xmlDocPtr xmldoc;
 				xmlNodePtr newn,new2,root;
 				if(g_file_test(path, G_FILE_TEST_EXISTS))
@@ -187,7 +187,7 @@ void pl3_custom_stream_add_stream(gchar *name, gchar *url)
 /**/
 void pl3_custom_stream_save_tree()
 {
-	gchar *path = g_strdup_printf("%s/.gmpc.cst",g_getenv("HOME"));
+	gchar *path = g_strdup_printf("%s/.gmpc.cst",g_get_home_dir());
 	xmlDocPtr xmldoc;
 	xmlNodePtr newn,new2,root;                        
 	GtkTreeIter iter;		

@@ -11,7 +11,6 @@ gmpc_SOURCES=\
 	misc.c\
 	strfsong.c\
 	open-location.c\
-	mm-keys.c\
 	playlist3.c\
 	vfs_download.c\
 	edit_markup.c\
@@ -22,12 +21,13 @@ gmpc_SOURCES=\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
 	playlist3-osb-browser.c\
+	mm-keys.c\
 	config1.c
 
 #INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
-INCLUDES= @gmpc_CFLAGS@ $(gmpc_gvfs_CFLAGS) $(gmpc_libnotify_CFLAGS) -Wall   
+INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@ $(gmpc_gvfs_CFLAGS) $(gmpc_libnotify_CFLAGS) -Wall   
 LIBS = @gmpc_LIBS@ @LIBS@ $(gmpc_gvfs_LIBS) $(gmpc_libnotify_LIBS)
-
+LDFLAGS = @EXTRA_LDFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
@@ -47,4 +47,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-find-browser.h\
 		playlist3-osb-browser.h\
 		config1.h
-		
+
+
