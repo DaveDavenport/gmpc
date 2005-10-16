@@ -33,9 +33,147 @@
 #include "config1.h"
 
 
+void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
+
+
+
+
+
+
+
+
+
+
+
 extern config_obj *config;
 extern GladeXML *pl3_xml;
-extern GtkListStore *pl2_store;
+
+
+
+enum{
+	PL3_AB_ARTIST,
+	PL3_AB_TYPE,
+	PL3_AB_TITLE,
+	PL3_AB_ICON,
+	PL3_AB_ROWS
+};
+
+
+/* internal */
+GtkWidget *pl3_ab_tree = NULL;
+GtkListStore *pl3_ab_store = NULL;
+GtkWidget *pl3_ab_sw = NULL;
+
+int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
+	{
+		return FALSE;                                                                                           	
+	}
+	return TRUE;
+}
+
+void pl3_artist_browser_init()
+{
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column = NULL;
+	GValue value;
+	pl3_ab_store = gtk_list_store_new (PL3_AB_ROWS, 
+			GTK_TYPE_STRING, /* path to file */
+			GTK_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
+			GTK_TYPE_STRING,	/* title to display */
+			GTK_TYPE_STRING); /* icon type */
+
+
+
+	renderer = gtk_cell_renderer_pixbuf_new ();
+
+	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PL3_AB_ICON,NULL);
+	memset(&value, 0, sizeof(value));
+	/* set value for ALL */
+	g_value_init(&value, G_TYPE_FLOAT);
+	g_value_set_float(&value, 0.0);
+	g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
+
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_set_attributes (column,renderer,"text", PL3_AB_TITLE, NULL);
+
+
+	/* set up the tree */
+	pl3_ab_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_ab_store));
+	/* insert the column in the tree */
+	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_ab_tree), column);                                         	
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_ab_tree), FALSE);
+	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_ab_tree), TRUE);
+	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree)), GTK_SELECTION_MULTIPLE);
+
+	/* setup signals */
+	g_signal_connect(G_OBJECT(pl3_ab_tree), "row-activated",G_CALLBACK(pl3_artist_browser_row_activated), NULL); 
+//	g_signal_connect(G_OBJECT(pl3_ab_tree), "button-press-event", G_CALLBACK(pl3_artist_browser_button_press_event), NULL);
+//	g_signal_connect(G_OBJECT(pl3_ab_tree), "button-release-event", G_CALLBACK(pl3_artist_browser_button_release_event), NULL);
+//	g_signal_connect(G_OBJECT(pl3_ab_tree), "key-press-event", G_CALLBACK(pl3_browser_file_playlist_key_press), NULL);
+
+	/* set up the scrolled window */
+	pl3_ab_sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_SHADOW_ETCHED_IN);
+	gtk_container_add(GTK_CONTAINER(pl3_ab_sw), pl3_ab_tree);
+
+	/* set initial state */
+	printf("initialized current playlist treeview\n");
+	g_object_ref(G_OBJECT(pl3_ab_sw));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /****************************************************************************************
@@ -61,144 +199,144 @@ void pl3_artist_browser_add()
 
 long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
-   char *artist, *string;
-   GtkTreeIter iter;
-   GtkTreePath *path = NULL;
-   int depth = 0;
-   long unsigned time =0;
-   gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
-   if (check_connection_state ())
-      return 0;
+	char *artist, *string;
+	GtkTreeIter iter;
+	GtkTreePath *path = NULL;
+	int depth = 0;
+	long unsigned time =0;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
+	if (check_connection_state ())
+		return 0;
 
 
-   path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
-   if(path == NULL)
-   {
-      printf("Failed to get path\n");
-      return 0;
-   }
-   depth = gtk_tree_path_get_depth(path) -1;                      	
-   gtk_tree_path_free(path);
-   if(artist == NULL || string == NULL)
-   {
-      return 0;
-   }
-   if(depth == 0)
-   {
-      /*lowest level, do nothing */
-      /* fill artist list */
-      MpdData *data = mpd_playlist_get_artists(connection);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
+	if(path == NULL)
+	{
+		printf("Failed to get path\n");
+		return 0;
+	}
+	depth = gtk_tree_path_get_depth(path) -1;                      	
+	gtk_tree_path_free(path);
+	if(artist == NULL || string == NULL)
+	{
+		return 0;
+	}
+	if(depth == 0)
+	{
+		/*lowest level, do nothing */
+		/* fill artist list */
+		MpdData *data = mpd_playlist_get_artists(connection);
 
-      while(data != NULL)
-      {	
-	 gtk_list_store_append (pl3_store,&iter);
-	 gtk_list_store_set (pl3_store,&iter,
-	       0, data->value.artist,
-	       1, PL3_ENTRY_ARTIST, /* the field */
-	       2, data->value.artist, /* the artist name, if(1 and 2 together its an artist field) */
-	       5, "media-artist",
-	       -1);
+		while(data != NULL)
+		{	
+			gtk_list_store_append (pl3_ab_store,&iter);
+			gtk_list_store_set (pl3_ab_store,&iter,
+					PL3_AB_ARTIST, data->value.artist,
+					PL3_AB_TYPE, PL3_ENTRY_ARTIST, /* the field */
+					PL3_AB_TITLE, data->value.artist, /* the artist name, if(1 and 2 together its an artist field) */
+					PL3_AB_ICON, "media-artist",
+					-1);
 
-	 data = mpd_data_get_next(data);
-      }
-      return 0;
-   }
-   if(depth == 1)
-   {
-      int albums = 0;
-      MpdData *data = mpd_playlist_get_albums(connection,artist);
-      while(data != NULL){
-	 gtk_list_store_append (pl3_store, &iter);
-	 gtk_list_store_set (pl3_store,&iter,
-	       0, artist,
-	       1, PL3_ENTRY_ALBUM,
-	       2, data->value.album,
-	       5, "media-album", 
-	       -1);
-	 data = mpd_data_get_next(data);
-      }
+			data = mpd_data_get_next(data);
+		}
+		return 0;
+	}
+	if(depth == 1)
+	{
+		int albums = 0;
+		MpdData *data = mpd_playlist_get_albums(connection,artist);
+		while(data != NULL){
+			gtk_list_store_append (pl3_ab_store, &iter);
+			gtk_list_store_set (pl3_ab_store,&iter,
+					PL3_AB_ARTIST, artist,
+					PL3_AB_TYPE, PL3_ENTRY_ALBUM,
+					PL3_AB_TITLE, data->value.album,
+					PL3_AB_ICON, "media-album", 
+					-1);
+			data = mpd_data_get_next(data);
+		}
 
 
-      data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
-      /* artist is selected */
-      while(data != NULL)
-      {
-	      if(data->type == MPD_DATA_TYPE_SONG)
-	      {
-		      if (data->value.song->album == NULL
-				      || strlen (data->value.song->album) == 0)
-		      {
-			      gchar buffer[1024];
-			      char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			      strfsong (buffer, 1024,markdata,data->value.song);
-			      cfg_free_string(markdata);
-			      if(data->value.song->time != MPD_SONG_NO_TIME)
-			      {
-				      time += data->value.song->time;
-			      }
-			      if(data->value.song->file == NULL)
-			      {
-				      debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
-			      }
-			      gtk_list_store_append (pl3_store, &iter);
-			      gtk_list_store_set (pl3_store, &iter,
-					      2, buffer,
-					      0, data->value.song->file,
-					      1, PL3_ENTRY_SONG,
-					      5,"media-audiofile",
-					      -1);
-		      }
-		      else albums++;
-	      }
-	      data = mpd_data_get_next(data);
-      }
+		data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+		/* artist is selected */
+		while(data != NULL)
+		{
+			if(data->type == MPD_DATA_TYPE_SONG)
+			{
+				if (data->value.song->album == NULL
+						|| strlen (data->value.song->album) == 0)
+				{
+					gchar buffer[1024];
+					char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+					strfsong (buffer, 1024,markdata,data->value.song);
+					cfg_free_string(markdata);
+					if(data->value.song->time != MPD_SONG_NO_TIME)
+					{
+						time += data->value.song->time;
+					}
+					if(data->value.song->file == NULL)
+					{
+						debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
+					}
+					gtk_list_store_append (pl3_ab_store, &iter);
+					gtk_list_store_set (pl3_ab_store, &iter,
+							PL3_AB_TITLE, 	buffer,
+							PL3_AB_ARTIST, 	data->value.song->file,
+							PL3_AB_TYPE, 	PL3_ENTRY_SONG,
+							PL3_AB_ICON,	"media-audiofile",
+							-1);
+				}
+				else albums++;
+			}
+			data = mpd_data_get_next(data);
+		}
 
-      if(!albums)
-      {
-	      if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
-	      {
-		      gtk_tree_store_remove(pl3_tree, &iter);      		
-	      }
-      }                                                                                  		
-   }
-   else if(depth ==2)
-   {
-	   /* artist and album is selected */
-	   MpdData *data = mpd_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
-	   while (data != NULL)
-	   {
-		   if(data->type == MPD_DATA_TYPE_SONG)
-		   {
-			   if (data->value.song->artist!= NULL
-					   && !g_utf8_collate (data->value.song->artist, artist))
-			   {
-				   gchar buffer[1024];
-				   char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-				   strfsong (buffer, 1024,markdata,data->value.song);
-				   cfg_free_string(markdata);
-				   if(data->value.song->time != MPD_SONG_NO_TIME)
-				   {
-					   time += data->value.song->time;
-				   }
-				   if(data->value.song->file == NULL)
-				   {
-					   debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
-				   }
-				   gtk_list_store_append (pl3_store, &iter);
-				   gtk_list_store_set (pl3_store, &iter,
-						   2, buffer,
-						   0, data->value.song->file,
-						   1, PL3_ENTRY_SONG,
-						   5,"media-audiofile",
-						   -1);
+		if(!albums)
+		{
+			if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
+			{
+				gtk_tree_store_remove(pl3_tree, &iter);      		
+			}
+		}                                                                                  		
+	}
+	else if(depth ==2)
+	{
+		/* artist and album is selected */
+		MpdData *data = mpd_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
+		while (data != NULL)
+		{
+			if(data->type == MPD_DATA_TYPE_SONG)
+			{
+				if (data->value.song->artist!= NULL
+						&& !g_utf8_collate (data->value.song->artist, artist))
+				{
+					gchar buffer[1024];
+					char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+					strfsong (buffer, 1024,markdata,data->value.song);
+					cfg_free_string(markdata);
+					if(data->value.song->time != MPD_SONG_NO_TIME)
+					{
+						time += data->value.song->time;
+					}
+					if(data->value.song->file == NULL)
+					{
+						debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
+					}
+					gtk_list_store_append (pl3_ab_store, &iter);
+					gtk_list_store_set (pl3_ab_store, &iter,
+							PL3_AB_TITLE, buffer,
+							PL3_AB_ARTIST, data->value.song->file,
+							PL3_AB_TYPE, PL3_ENTRY_SONG,
+							PL3_AB_ICON,"media-audiofile",
+							-1);
 
-			   }
-		   }
-		   data = mpd_data_get_next(data);
-	   }
+				}
+			}
+			data = mpd_data_get_next(data);
+		}
 
-   }
-   return time;
+	}
+	return time;
 }
 
 
@@ -362,7 +500,7 @@ void pl3_artist_browser_show_info(GtkTreeIter *iter)
 {
 	char *path;
 	MpdData *data;
-	gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), iter, PL3_SONG_ID, &path, -1);
+	gtk_tree_model_get (GTK_TREE_MODEL(pl3_ab_store), iter, PL3_SONG_ID, &path, -1);
 	data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 	while(data != NULL)                                                            	
 	{
@@ -428,10 +566,25 @@ void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter
 {
 	long unsigned time= 0;
 	gchar *string;        			
-	gtk_list_store_clear(pl3_store);	
+	gtk_list_store_clear(pl3_ab_store);	
 	time = pl3_artist_browser_view_folder(iter);
-	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_store));
+	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_ab_store));
 	string = format_time(time);
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 	g_free(string);
+}
+
+void pl3_artist_browser_selected()
+{
+	if(pl3_ab_tree == NULL)
+	{
+		pl3_artist_browser_init();
+	}
+
+	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_ab_sw);
+	gtk_widget_show_all(pl3_ab_sw);
+}
+void pl3_artist_browser_unselected()
+{
+	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_ab_sw);
 }

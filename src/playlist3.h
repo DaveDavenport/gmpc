@@ -55,10 +55,8 @@ enum pl3_store_types
 	PL3_SONG_POS,
 	PL3_SONG_TITLE,
 	PL3_WEIGHT_INT,
-	PL3_WEIGHT_ENABLE,
 	PL3_SONG_STOCK_ID,
 	PL3_UNKOWN, /* song id for pl3_store */
-	PL3_YALIGN,
 	PL3_NROWS
 } pl3_store_type;
 
@@ -73,10 +71,8 @@ enum store_types
 	SONG_POS,
 	SONG_TITLE,
 	WEIGHT_INT,
-	WEIGHT_ENABLE,
 	SONG_STOCK_ID,
 	SONG_TIME,
-	STOCK_ALIGN,
 	SONG_TYPE, /* 0 = file, 1 = stream */
 	NROWS
 };

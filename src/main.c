@@ -394,11 +394,9 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 						SONG_ID,data->value.song->id, 
 						SONG_POS,data->value.song->pos, 					
 						SONG_TITLE, buffer,
-						WEIGHT_ENABLE, TRUE, 
 						WEIGHT_INT, weight,
 						SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 						SONG_TIME,data->value.song->time,
-						STOCK_ALIGN, 0.0,
 						SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
 						-1);
 			}
@@ -422,15 +420,15 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 					SONG_ID,data->value.song->id, 
 					SONG_POS,data->value.song->pos, 					
 					SONG_TITLE, buffer,
-					WEIGHT_ENABLE, TRUE, 
 					WEIGHT_INT, weight,
 					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_TIME,data->value.song->time,
-					STOCK_ALIGN,0.0,
 					SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
 					-1);
 
 		}
+
+		
 		data= mpd_data_get_next(data);		
 	}
 
@@ -576,14 +574,13 @@ void init_stock_icons ()
 void init_playlist ()
 {
 	/* create initial tree store */
-	pl2_store = gtk_list_store_new (NROWS, GTK_TYPE_INT,	/* song id */
+	pl2_store = gtk_list_store_new (NROWS, 
+			GTK_TYPE_INT,	/* song id */
 			GTK_TYPE_INT,	/* pos id */
 			GTK_TYPE_STRING,	/* song title */
 			GTK_TYPE_INT,	/* weight int */
-			G_TYPE_BOOLEAN,	/* weight color */
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT,
-			GTK_TYPE_FLOAT,
 			GTK_TYPE_INT);
 
 }
