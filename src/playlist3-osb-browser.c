@@ -277,7 +277,7 @@ void pl3_osb_browser_add_source()
 }
 void pl3_osb_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
-   pl3_browse_add_selected();
+//   pl3_browse_add_selected();
 }
 
 void pl3_osb_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter)

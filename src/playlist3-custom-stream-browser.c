@@ -254,7 +254,7 @@ void pl3_custom_stream_remove()
 
 void pl3_custom_stream_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
-   pl3_browse_add_selected();
+//   pl3_browse_add_selected();
 }
 
 void pl3_custom_stream_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
