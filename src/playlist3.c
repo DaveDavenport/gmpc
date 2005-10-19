@@ -157,7 +157,7 @@ void pl3_show_song_info ()
 	 /* show the info for this song  */
 	 if (type == PL3_FIND)
 	 {
-	    pl3_find_browser_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")),&iter);
+	    //pl3_find_browser_show_info(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree")),&iter);
 	 }
 	 else if(type == PL3_BROWSE_CUSTOM_TAG)
 	 {
@@ -172,79 +172,6 @@ void pl3_show_song_info ()
    }
 }
 
-
-/*******************************************************
- * Combined functions 
- */
-
-/*void pl3_browse_add_selected()
-{
-   GtkTreeIter iter;
-   GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "playlist_tree"));
-   GtkTreeSelection *selection = gtk_tree_view_get_selection (tree);
-   GtkTreeModel *model = GTK_TREE_MODEL (pl3_store);
-   GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
-   int songs=0;
-   gchar *message;
-
-
-   if(rows != NULL)
-   {
-      gchar *name;
-      gint type;
-      GList *node = g_list_first(rows);
-      do
-      {
-	 GtkTreePath *path = node->data;
-	 gtk_tree_model_get_iter (GTK_TREE_MODEL (pl3_store), &iter, path);
-	 gtk_tree_model_get (GTK_TREE_MODEL (pl3_store), &iter, 0,&name, 1, &type, -1);	  
-*/	 /* does this bitmask thingy works ok? I think it hsould */
-/*	 if(type&(PL3_ENTRY_SONG|PL3_ENTRY_DIRECTORY))
-	 {
-*/	    /* add them to the add list */
-/*	    mpd_playlist_queue_add(connection, name);
-	 }
-	 else if(type == PL3_ENTRY_STREAM)
-	 {
-#ifdef ENABLE_GNOME_VFS
-	    ol_create_url(glade_xml_get_widget(pl3_xml, "pl3_win"), name);
-#endif
-	 }
-	 else if (type == PL3_ENTRY_PLAYLIST)
-	 {
-	    mpd_playlist_queue_load(connection, name);
-	 }
-	 songs++;
-      }while((node = g_list_next(node)) != NULL);
-   }
- */  /* if there are items in the add list add them to the playlist */
-/*   mpd_playlist_queue_commit(connection);
-   if(songs != 0)
-   {
-      gint type =  pl3_cat_get_selected_browser();
-      if(type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM)
-      {
-	 message = g_strdup_printf("Added %i stream%s", songs,(songs != 1)? "s":"");
-      }
-      else
-      {
-	 message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
-      }
-      pl3_push_statusbar_message(message);
-      g_free(message);                                       	
-   }
-
-   g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
-   g_list_free (rows);
-}
-
-void pl3_browse_replace_selected()
-{
-   pl3_clear_playlist();
-   pl3_browse_add_selected();
-   mpd_player_play(connection);
-}
-*/
 /**************************************************
  * PLaylist Tree
  */
@@ -286,91 +213,7 @@ int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 }
 int pl3_playlist_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
-/*	int type = pl3_cat_get_selected_browser();
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || !gtk_tree_selection_count_selected_rows(sel) || !mpd_check_connected(connection))	
-	{
-		return FALSE;
-	}
-	if (type == PL3_BROWSE_FILE || type == PL3_BROWSE_ARTIST || type == PL3_FIND || 
-			type == PL3_BROWSE_XIPH || type == PL3_BROWSE_CUSTOM_STREAM || type == PL3_BROWSE_CUSTOM_TAG)
-	{
-
-*/		/* del, crop */
-/*		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();
-*/		/* don't show it when where listing custom streams... 
-		 * show always when version 12..  or when searching in playlist.
-		 */	
-/*		if(gtk_tree_selection_count_selected_rows(sel) == 1)
-		{	
-			GtkTreeModel *model = GTK_TREE_MODEL(pl3_store);	
-			GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
-			if(list != NULL)
-			{
-				GtkTreeIter iter;
-				int row_type;
-				char *path;
-				list = g_list_first(list);
-				gtk_tree_model_get_iter(model, &iter, list->data);
-				gtk_tree_model_get(model, &iter,0,&path,1, &row_type, -1); 
-
-				if(row_type&PL3_ENTRY_SONG)
-				{
-
-					if(type != PL3_BROWSE_CUSTOM_STREAM && 
-							(mpd_server_check_version(connection,0,12,0) ||
-							 (gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))) == 5 &&
-							  type == PL3_FIND)))
-					{
-						item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
-						gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-						g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_show_song_info), NULL);		
-
-						if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector"))) == 5 && type == PL3_FIND)
-						{
-							gtk_widget_show_all(menu);
-							gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
-							return TRUE;
-						}
-					}
-				}
-				if(row_type == PL3_ENTRY_PLAYLIST)
-				{
-					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
-					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_delete_playlist), path);
-				}
-
-
-				g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
-				g_list_free (list);
-			}
-		}
-*/		/* add the delete widget */
-/*		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_add_selected), NULL);
-
-*/		/* add the replace widget */
-/*		item = gtk_image_menu_item_new_with_label("Replace");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_replace_selected), NULL);
-
-		if(type == PL3_BROWSE_CUSTOM_STREAM)
-		{
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);                          		
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_stream_remove), NULL);
-		}
-
-
-		gtk_widget_show_all(menu);
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
-	}
-*/	return TRUE;
+	return TRUE;
 }
 
 
@@ -524,6 +367,10 @@ void pl3_cat_sel_changed()
 			{
 				pl3_artist_browser_unselected(container);
 			}
+			else if (old_type == PL3_FIND)
+			{
+				pl3_find_browser_unselected(container);
+			}
 		}
 
 		if(type == PL3_CURRENT_PLAYLIST)
@@ -549,6 +396,7 @@ void pl3_cat_sel_changed()
 		}
 		else if (type == PL3_FIND)
 		{
+			if(old_type != type) pl3_find_browser_selected(container);
 			pl3_find_browser_category_selection_changed(tree,&iter);
 		}
 		else if(type == PL3_BROWSE_XIPH)
@@ -951,50 +799,6 @@ void create_playlist3 ()
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
-
-	/* right column */
-/*	tree = glade_xml_get_widget (pl3_xml, "playlist_tree");
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 2);
-
-	gtk_tree_view_enable_model_drag_source(GTK_TREE_VIEW(tree), 0, drag_types, 1, GDK_ACTION_COPY); 
-
-	gtk_tree_selection_set_mode (GTK_TREE_SELECTION(gtk_tree_view_get_selection(GTK_TREE_VIEW (tree))),GTK_SELECTION_MULTIPLE);
-
-	pl3_store = gtk_list_store_new (PL3_NROWS, 
-			GTK_TYPE_STRING,
-			GTK_TYPE_INT,
-			GTK_TYPE_STRING,	
-			G_TYPE_BOOLEAN,
-			GTK_TYPE_STRING,
-			GTK_TYPE_INT);
-
-	renderer = gtk_cell_renderer_pixbuf_new ();
-
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,NULL);
-	memset(&value, 0, sizeof(value));
-*/	/* set value for ALL */
-/*	g_value_init(&value, G_TYPE_FLOAT);
-	g_value_set_float(&value, 0.0);
-	g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-*/	/* set value for ALL */
-/*	memset(&value, 0, sizeof(value));
-	g_value_init(&value, G_TYPE_BOOLEAN);
-	g_value_set_boolean(&value, TRUE);
-	gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE, "weight", WEIGHT_INT,NULL);
-	g_object_set_property(G_OBJECT(renderer), "weight-set", &value); 
-
-
-*/	/* insert the column in the tree */
-/*	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
-
-	gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(tree),(GtkTreeViewSearchEqualFunc)pl3_playlist_tree_search_func, NULL,NULL);
-
-*/	/* blaad */
 	pl3_reinitialize_tree();
 
 	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_field_selector")),0);
