@@ -311,7 +311,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	height= PANGO_PIXELS(height)+8;
 	if(mpd_status_get_total_song_time(connection) > 0)
 	{
-		height = height+12;
+		height = height+8;
 	}
 	gtk_widget_set_usize(tip, width,height);
 
@@ -324,7 +324,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	{
 		case 0:
 			gdk_window_get_origin(tv->window, &x_tv, &y_tv);
-			x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - width/2;
+			x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
 			y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
 			/* check borders left, right*/	
@@ -379,11 +379,6 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
 	popup_timeout = -1;
 	tray_timeout = -1;
-
-
-
-
-
 
 	if(tip != NULL)
 	{
