@@ -396,8 +396,10 @@ void pl3_cat_sel_changed()
 		}
 		else if (type == PL3_FIND)
 		{
-			if(old_type != type) pl3_find_browser_selected(container);
-			pl3_find_browser_category_selection_changed(tree,&iter);
+			if(old_type != type){
+			       	pl3_find_browser_selected(container);
+				pl3_find_browser_category_selection_changed(tree,&iter);
+			}
 		}
 		else if(type == PL3_BROWSE_XIPH)
 		{
