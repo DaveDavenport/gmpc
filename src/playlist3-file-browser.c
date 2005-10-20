@@ -362,7 +362,7 @@ int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	}
 	else
 	{
-		return FALSE;
+		return pl3_window_key_press_event(tree,event);
 	}
 	return TRUE;
 }

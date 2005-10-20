@@ -98,6 +98,7 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "row-activated",G_CALLBACK(pl3_current_playlist_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-release-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_cp_tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), NULL);
 
 
 	g_signal_connect(pl2_store, "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
@@ -438,6 +439,6 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 		pl3_current_playlist_browser_scroll_to_current_song();
 		return TRUE;			
 	}
-	return FALSE;	
+	return pl3_window_key_press_event(GTK_WIDGET(tree),event);
 }
 

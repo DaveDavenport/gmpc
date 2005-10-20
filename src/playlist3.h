@@ -11,8 +11,7 @@ void pl3_push_rsb_message(gchar *string);
 void pl3_disconnect();
 void pl3_cat_sel_changed();
 int pl3_close();
-int refilter_tree();
-
+int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event);
 
 enum{
 	PL3_CURRENT_PLAYLIST,

@@ -543,7 +543,7 @@ void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter
 	pl3_push_rsb_message(string);	
 	g_free(string);
 	/* store the tree */
-	pl3_cat_tree= tree;
+	pl3_cat_tree= GTK_WIDGET(tree);
 }
 
 void pl3_artist_browser_selected(GtkWidget *container)
@@ -708,7 +708,7 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	}
 	else
 	{
-		return FALSE;
+		return pl3_window_key_press_event(tree,event);
 	}
 	return TRUE;
 }
