@@ -176,7 +176,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		/*lowest level, do nothing */
 		/* fill artist list */
 		MpdData *data = mpd_playlist_get_artists(connection);
-
+		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_ab_tree), NULL);
 		while(data != NULL)
 		{	
 			gtk_list_store_append (pl3_ab_store,&iter);
@@ -189,6 +189,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 			data = mpd_data_get_next(data);
 		}
+		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_ab_tree), GTK_TREE_MODEL(pl3_ab_store));
 		return 0;
 	}
 	if(depth == 1)

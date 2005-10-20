@@ -601,3 +601,8 @@ void pl3_file_browser_add_selected()
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
 	g_list_free (rows);
 }
+
+
+
+
+
