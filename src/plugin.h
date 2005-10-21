@@ -39,6 +39,15 @@ enum
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
+
+
+/* structures */
+
+typedef struct {
+	void (*construct)(GtkWidget *container);
+	void (*destroy)(GtkWidget *container);
+} gmpcPrefPlugin;
+
 typedef struct {
 	void (*add)(GtkWidget *cat_tree);
 	void (*selected)(GtkWidget *container);
@@ -66,6 +75,7 @@ typedef struct {
 	/* depending on type of plugin */
 	gmpcPlBrowserPlugin 	*browser;
 	gmpcMpdSignals		*mpd;
+	gmpcPrefPlugin		*pref;
 } gmpcPlugin;
 
 

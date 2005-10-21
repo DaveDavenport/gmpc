@@ -19,7 +19,7 @@ enum
         ID_COL,
         N_COLUMNS
 };
-
+GtkListStore *plugin_store = NULL;
 
 
 GladeXML *xml_preferences_window;
@@ -52,10 +52,38 @@ void update_server_stats();
 void pref_id3b_init();
 void pref_id3b_fill();
 
+int plugin_last;
+
+void pref_plugin_changed()
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
+	GtkTreeView *tree = GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(plugin_store);
+	GtkTreeIter iter;
+	int id = 0;
+	if(plugin_last >= 0)
+	{
+		plugins[plugin_last]->pref->destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+		plugin_last = -1;
+
+	}	
+	if(gtk_tree_selection_get_selected(sel, &model, &iter))
+	{
+		gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &id, -1);
+		plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+		plugin_last = id;
+	}
+}
+
+
 void create_preferences_window()
 {
 	GtkWidget *dialog;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	int i=0;
 	char *string = NULL;
+	plugin_last = -1;
 	if(running)
 	{
 		if(xml_preferences_window == NULL)
@@ -125,7 +153,34 @@ void create_preferences_window()
 	gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_stream"));	
 
 #endif 
+
+	plugin_store = gtk_list_store_new(2, GTK_TYPE_INT, GTK_TYPE_STRING);
+	column = gtk_tree_view_column_new ();
+	renderer = gtk_cell_renderer_text_new ();
+	gtk_tree_view_column_pack_start (column, renderer, TRUE);
+	gtk_tree_view_column_set_attributes (column,renderer,"text", 1, NULL);	
+	gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")), column);
+
+
+	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")))), 
+				"changed", G_CALLBACK(pref_plugin_changed), NULL);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")), plugin_store);
+
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->pref != NULL)
+		{
+			GtkTreeIter iter;
+			char *string = g_strdup_printf("%s (%i.%i.%i)", plugins[i]->name, plugins[i]->version[0], plugins[i]->version[1], plugins[i]->version[2]);
+			gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
+			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, plugins[i]->id^PLUGIN_ID_MARK, 1, string, -1);
+			g_free(string);
+		
+		}
+	}
 	
+
+
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 }

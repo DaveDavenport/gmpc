@@ -3,30 +3,31 @@
 #include <gmodule.h>
 #include "main.h"
 
-
-
-
-
-int plugin_load(char *path)
+int plugin_load(char *path, char *file)
 {
 	GModule *handle;
 	gmpcPlugin *plug = NULL;
+	gchar *string = NULL;
+	gchar *full_path = g_strdup_printf("%s/%s", path, file);	
 	if(path == NULL)
 	{
 		return 1;
 	}
-	handle = g_module_open(path, G_MODULE_BIND_LAZY);
+	handle = g_module_open(full_path, G_MODULE_BIND_LAZY);
+	g_free(full_path);
 	if (!handle) {
 		fprintf (stderr, "%s\n", g_module_error());
+
 		return 1;
 	}
-
-	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
+	string = g_strndup(file, strlen(file)-3);
+	if(!g_module_symbol(handle, string, (gpointer)&plug)){
 		fprintf (stderr, "%s\n", g_module_error());
+		g_free(string);
 		g_module_close(handle);
 		return 1;
 	}
-
+	g_free(string);
 	if(plug == NULL)
 	{
 		fprintf (stderr, "failed to get plug\n");
@@ -49,8 +50,8 @@ void load_plugins_from_dir(gchar *path)
 		const gchar *dirname = NULL;
 		while((dirname = g_dir_read_name(dir)) != NULL)
 		{
-			gchar *full_path = g_strdup_printf("%s/%s", path, dirname);	
-			if(!plugin_load(full_path))
+		
+			if(!plugin_load(path,dirname))
 			{
 				printf("%i. plugin '%s' loaded ",plugins[num_plugins-1]->id^PLUGIN_ID_MARK, plugins[num_plugins-1]->name);
 				switch(plugins[num_plugins-1]->plugin_type){
@@ -68,7 +69,6 @@ void load_plugins_from_dir(gchar *path)
 						break;
 				}
 			}
-			g_free(full_path);
 		}
 		g_dir_close(dir);
 	}

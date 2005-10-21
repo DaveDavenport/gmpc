@@ -216,6 +216,7 @@ void pl3_reinitialize_tree()
 	{
 		if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER)
 		{
+			printf("adding plugin id: %i %i\n", i,plugins[i]->id^PLUGIN_ID_MARK);
 			plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
 		}
 	}
@@ -339,7 +340,7 @@ void pl3_cat_sel_changed()
 			}
 			else if (old_type|PLUGIN_ID_MARK && old_type > 0)
 			{
-				printf("%i\n", old_type);
+				printf("old_type: %i\n", old_type);
 				plugins[old_type^PLUGIN_ID_MARK]->browser->unselected(container);
 			}
 		}
@@ -383,8 +384,9 @@ void pl3_cat_sel_changed()
 		}
 		else if(type|PLUGIN_ID_MARK)
 		{
+			printf("plugins: %s\n", plugins[type^PLUGIN_ID_MARK]->name);
 			if(old_type != type)plugins[type^PLUGIN_ID_MARK]->browser->selected(container);
-			plugins[type^PLUGIN_ID_MARK]->browser->cat_selection_changed(tree,&iter);
+			plugins[type^PLUGIN_ID_MARK]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
 		old_type = type;
 	}
