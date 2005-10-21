@@ -31,7 +31,7 @@ gmpcMpdSignals osd_gms = {
 };
 /* main plugin_osd info */
 gmpcPlugin plugin_osd = {
-	"osd plugin_osd",
+	"osd plugin",
 	{0,0,1},
 	GMPC_PLUGIN_NO_GUI,
 	0,
@@ -101,14 +101,18 @@ void osd_destroy(GtkWidget *container)
 void osd_construct(GtkWidget *container)
 {
 	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable OSD");
+	GtkWidget *label = NULL;
 	osd_vbox = gtk_vbox_new(FALSE,6);
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
 			cfg_get_single_value_as_int_with_default(config, "osd-plugin", "enable", 0));
 
-
+	label = gtk_label_new("OSD Plugin");
+	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"large\"><b>OSD Plugin</b></span>");
+	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+	
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(osd_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(osd_vbox), gtk_label_new("OSD Plugin"), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(osd_vbox), label,FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), enable_cg, FALSE, FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(container), osd_vbox);
 	gtk_widget_show_all(container);
