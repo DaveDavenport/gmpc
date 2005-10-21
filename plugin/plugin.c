@@ -30,7 +30,12 @@ void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
 	if(song)
 	{
 		if(song->artist != NULL){
-			gchar *url = g_strdup_printf("http://wikipedia.com/wiki/%s", song->artist);
+			int i;
+			gchar *url = g_strdup_printf("http://wikipedia.com/w/index.php?printable=yes&title=%s", song->artist);
+			for(i=0;i< strlen(url);i++){
+				if(url[i] == ' ') url[i] = '_';
+			}
+			printf("%s\n", url);
 			gtk_moz_embed_load_url(moz,url);
 			g_free(url);
 		}
@@ -42,13 +47,16 @@ void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
 
 void wp_init()
 {
+	GtkWidget *sw =gtk_frame_new(NULL);
+	gtk_frame_set_shadow_type(GTK_FRAME(sw), GTK_SHADOW_ETCHED_IN);
 	vbox = gtk_vbox_new(FALSE, 6);
 	moz = gtk_moz_embed_new();
 	if(moz == NULL)
 	{
 		printf("Failed to create mozilla object\n");
 	}
-	gtk_box_pack_start_defaults(vbox, moz);
+	gtk_container_add(GTK_CONTAINER(sw), moz);
+	gtk_box_pack_start_defaults(GTK_BOX(vbox), sw);
 	gtk_widget_show_all(vbox);
 	g_object_ref(G_OBJECT(vbox));
 }
