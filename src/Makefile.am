@@ -2,6 +2,7 @@ bin_PROGRAMS=gmpc
 
 gmpc_SOURCES=\
 	main.c\
+	plugin.c\
 	mpdinteraction.c\
 	player.c\
 	preferences.c\
@@ -31,6 +32,7 @@ LDFLAGS = @EXTRA_LDFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
+		plugin.h\
 	   	mm-keys.h\
 		open-location.h\
 		strfsong.h\

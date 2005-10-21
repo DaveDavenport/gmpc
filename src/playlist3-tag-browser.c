@@ -1,24 +1,36 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <glade/glade.h>
+
+#include "plugin.h"
 
 #include "main.h"
 #include "misc.h"
 #include "strfsong.h"
 #include "playlist3.h"
 #include "playlist3-tag-browser.h"
-#include "config1.h"
 
 
+void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
+void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
+void pl3_custom_tag_browser_reload();
+
+void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_custom_tag_browser_add_folder();
 void pl3_custom_tag_browser_replace_folder();
+void pl3_tag_browser_add_selected();
+void pl3_tag_browser_replace_selected();
+void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
+void pl3_tag_browser_show_info();
+int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 
-extern config_obj *config;
 extern GladeXML *pl3_xml;
 
+
 enum{
-	PL3_TB_ARTIST,
+	PL3_TB_PATH,
 	PL3_TB_TYPE,
 	PL3_TB_TITLE,
 	PL3_TB_ICON,
@@ -82,10 +94,10 @@ void pl3_tag_browser_init()
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree)), GTK_SELECTION_MULTIPLE);
 
 	/* setup signals */
-//	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",G_CALLBACK(pl3_artist_browser_row_activated), NULL); 
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-press-event", G_CALLBACK(pl3_tag_browser_button_press_event), NULL);
-//	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event", G_CALLBACK(pl3_artist_browser_button_release_event), NULL);
-//	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event", G_CALLBACK(pl3_artist_browser_playlist_key_press), NULL);
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event", G_CALLBACK(pl3_custom_tag_browser_button_release_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event", G_CALLBACK(pl3_tag_browser_playlist_key_press), NULL);
 
 	/* set up the scrolled window */
 	pl3_tb_sw = gtk_scrolled_window_new(NULL, NULL);
@@ -99,86 +111,6 @@ void pl3_tag_browser_init()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void pl3_custom_tag_browser_reload()
 {
 	GtkTreeIter iter;
@@ -187,25 +119,25 @@ void pl3_custom_tag_browser_reload()
 		return;
 	}
 
-	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tb_tree),&iter))
+	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree),&iter))
 	{
 		gchar *title = NULL;
 		do{
-			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree), &iter, PL3_CAT_TITLE, &title, -1);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, PL3_CAT_TITLE, &title, -1);
 			if(!strcmp(title, _("Tag Browser")))
 			{
 				GtkTreeIter child;
-				if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tb_tree), &child, &iter))
+				if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter))
 				{
 					do{
-						gtk_tree_store_remove(pl3_tb_tree, &child);
+						gtk_tree_store_remove(pl3_tree, &child);
 
-					}while(gtk_tree_store_iter_is_valid(pl3_tb_tree, &child));
+					}while(gtk_tree_store_iter_is_valid(pl3_tree, &child));
 				}
 				pl3_custom_tag_browser_list_add(&iter);
 				return;
 			}
-		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tb_tree), &iter));
+		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter));
 	}
 }
 
@@ -236,8 +168,8 @@ void pl3_custom_tag_browser_add()
 
 
 		/* add the root node to tag-browser */
-		gtk_tree_store_append(pl3_tb_tree, &iter, NULL);
-		gtk_tree_store_set(pl3_tb_tree, &iter, 
+		gtk_tree_store_append(pl3_tree, &iter, NULL);
+		gtk_tree_store_set(pl3_tree, &iter, 
 				PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
 				PL3_CAT_TITLE, _("Tag Browser"),        	
 				PL3_CAT_INT_ID, "",
@@ -258,8 +190,8 @@ void pl3_custom_tag_browser_add()
 void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format)
 {
 	GtkTreeIter iter,child;
-	gtk_tree_store_append(pl3_tb_tree, &iter, piter);
-	gtk_tree_store_set(pl3_tb_tree, &iter, 
+	gtk_tree_store_append(pl3_tree, &iter, piter);
+	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
 			PL3_CAT_TITLE, title,        	
 			PL3_CAT_INT_ID, "",
@@ -269,7 +201,7 @@ void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *fo
 			PL3_CAT_BROWSE_FORMAT, format,
 			-1);
 	/* add fantom child for lazy tree */
-	gtk_tree_store_append(pl3_tb_tree, &child, &iter);
+	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
 
 
@@ -282,10 +214,10 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	int depth = 0;
 	int len=0;
 	GtkTreeIter child,child2;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
-	gtk_tree_store_set(pl3_tb_tree, iter, 4, TRUE, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_PROC, TRUE, -1);
 
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tb_tree), iter);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
 	{
 		printf("Failed to get path\n");
@@ -321,8 +253,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 
 		while(data != NULL)
 		{	
-			gtk_tree_store_append (pl3_tb_tree, &child, iter);
-			gtk_tree_store_set (pl3_tb_tree, &child,
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
 					1, data->value.tag, /* the field */
 					2, data->value.tag, /* the artist name, if(1 and 2 together its an artist field) */
@@ -333,14 +265,14 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					-1);
 			if(len > 1)
 			{
-				gtk_tree_store_append(pl3_tb_tree, &child2, &child);
+				gtk_tree_store_append(pl3_tree, &child2, &child);
 			}
 
 			data = mpd_data_get_next(data);
 		}
-		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tb_tree), &child, iter))
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
-			gtk_tree_store_remove(pl3_tb_tree, &child); 
+			gtk_tree_store_remove(pl3_tree, &child); 
 		}
 	}
 	/* if where inside a artist */
@@ -353,8 +285,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			printf("no sub data\n");
 		}
 		while(data != NULL){
-			gtk_tree_store_append (pl3_tb_tree, &child, iter);
-			gtk_tree_store_set (pl3_tb_tree, &child,
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
 					1, data->value.tag,
 					2, first_tag,
@@ -366,12 +298,12 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			data = mpd_data_get_next(data);
 			if(len > 2)
 			{
-				gtk_tree_store_append(pl3_tb_tree, &child2, &child);			
+				gtk_tree_store_append(pl3_tree, &child2, &child);			
 			}                                                        		
 		}
-		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tb_tree), &child, iter))
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
-			gtk_tree_store_remove(pl3_tb_tree, &child); 
+			gtk_tree_store_remove(pl3_tree, &child); 
 		}
 	}
 	else if(depth == 2 && len >= 2)
@@ -390,8 +322,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		}
 
 		while(data != NULL){
-			gtk_tree_store_append (pl3_tb_tree, &child, iter);
-			gtk_tree_store_set (pl3_tb_tree, &child,
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
 					1, data->value.tag,
 					2, first_tag,
@@ -402,9 +334,9 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 					-1);
 			data = mpd_data_get_next(data);
 		}
-		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tb_tree), &child, iter))
+		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
-			gtk_tree_store_remove(pl3_tb_tree, &child); 
+			gtk_tree_store_remove(pl3_tree, &child); 
 		}                                                                                       		
 	}
 	g_strfreev(tk_format);
@@ -418,14 +350,14 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 
 	if (check_connection_state ())
 	{
 		return 0;
 	}
 
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tb_tree), iter_cat);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
 		printf("Failed to get path\n");
@@ -484,10 +416,10 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			}
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
-					2, buffer,
-					0, data->value.song->file,
-					1, PL3_ENTRY_SONG,
-					5,"media-audiofile",
+					PL3_TB_TITLE, buffer,
+					PL3_TB_PATH, data->value.song->file,
+					PL3_TB_TYPE, PL3_ENTRY_SONG,
+					PL3_TB_ICON,"media-audiofile",
 					-1);
 			data = mpd_data_get_next(data);
 		}
@@ -514,10 +446,10 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			}
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
-					2, buffer,
-					0, data->value.song->file,
-					1, PL3_ENTRY_SONG,
-					5,"media-audiofile",
+					PL3_TB_TITLE, buffer,
+					PL3_TB_PATH, data->value.song->file,
+					PL3_TB_TYPE, PL3_ENTRY_SONG,
+					PL3_TB_ICON,"media-audiofile",
 					-1);
 
 			data = mpd_data_get_next(data);
@@ -532,8 +464,8 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		if(gtk_tree_path_up(path) && gtk_tree_path_up(path))
 		{
 			MpdData *data  = NULL;
-			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tb_tree), &iter, path);
-			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree), &iter, 1, &first, -1);
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
 			data = mpd_playlist_find_adv(connection,TRUE,
@@ -557,10 +489,10 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 				}
 				gtk_list_store_append (pl3_tb_store, &iter);
 				gtk_list_store_set (pl3_tb_store, &iter,
-						2, buffer,
-						0, data->value.song->file,
-						1, PL3_ENTRY_SONG,
-						5,"media-audiofile",
+						PL3_TB_TITLE, buffer,
+						PL3_TB_PATH, data->value.song->file,
+						PL3_TB_TYPE, PL3_ENTRY_SONG,
+						PL3_TB_ICON,"media-audiofile",
 						-1);
 
 				data = mpd_data_get_next(data);
@@ -576,7 +508,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event)
 {
 	/* we need an model and a iter */
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tb_tree);
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 	int depth = 0;
 	GtkTreePath *path;	
@@ -590,7 +522,7 @@ void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event)
 		return;
 	}
 	/* now we want to know what level we are, and what we need to show */
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tb_tree), &iter);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
 	if(path == NULL)
 	{
 		debug_printf(DEBUG_INFO,"Failed to get path\n");
@@ -637,7 +569,7 @@ void pl3_custom_tag_browser_add_folder()
 	char **tk_format;
 	int i = 0, depth;
 	GtkTreePath *path;
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tb_tree);
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter,iter_cat;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	/* get and check for selected */
@@ -651,9 +583,9 @@ void pl3_custom_tag_browser_add_folder()
 	{
 		return;
 	}
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tb_tree), &iter_cat);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
 	{
 		printf("Failed to get path\n");
@@ -732,8 +664,8 @@ void pl3_custom_tag_browser_add_folder()
 		if(gtk_tree_path_up(path) && gtk_tree_path_up(path))
 		{
 			MpdData *data  = NULL;
-			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tb_tree), &iter, path);
-			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tb_tree), &iter, 1, &first, -1);
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
 			data = mpd_playlist_find_adv(connection,TRUE,
@@ -758,29 +690,12 @@ void pl3_custom_tag_browser_add_folder()
 	return ;
 }
 
-void pl3_custom_tag_browser_show_info(GtkTreeView *tree, GtkTreeIter *iter)
-{
-	GtkTreeModel *model = gtk_tree_view_get_model(tree);
-	if(mpd_server_check_version(connection,0,12,0))
-	{
-		char *path;
-		MpdData *data;
-		gtk_tree_model_get (model, iter, PL3_SONG_ID, &path, -1);
-		data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-		while(data != NULL)
-		{
-			call_id3_window_song(mpd_songDup(data->value.song));
-			data = mpd_data_get_next(data);
-		}
-	}
-}
-
 void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
       GtkTreeIter iter;
       gchar *song_id;
       gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-      gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+      gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_id, -1);
       if(song_id == NULL) return;
       pl3_push_statusbar_message("Added a song");
       mpd_playlist_queue_add(connection, song_id);
@@ -793,9 +708,186 @@ void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTree
 	 gchar *string;        			
 	 gtk_list_store_clear(pl3_tb_store);	
 	 time = pl3_custom_tag_browser_view_folder(iter);
-	 gtk_tree_view_set_model(tree, GTK_TREE_MODEL(pl3_tb_store));
 	 string = format_time(time);
-	 gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+	 pl3_push_rsb_message(string);
 	 g_free(string);
 }
+void pl3_tag_browser_selected(GtkWidget *container)
+{
+	if(pl3_tb_tree == NULL)
+	{
+		pl3_tag_browser_init();
+	}
 
+	gtk_container_add(GTK_CONTAINER(container), pl3_tb_sw);
+	gtk_widget_show_all(pl3_tb_sw);
+}
+void pl3_tag_browser_unselected(GtkWidget *container)
+{
+	gtk_container_remove(GTK_CONTAINER(container),pl3_tb_sw);
+}
+
+
+void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
+{
+	if(event->button == 3)
+	{
+		/* we need an model and a iter */
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+		GtkTreeIter iter;
+		int depth = 0;
+		GtkTreePath *path;	
+		/* se need a GtkTreeSelection to know what is selected */
+		GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+
+		/* get and check for selected */
+		if(!gtk_tree_selection_get_selected(selection,&model, &iter))
+		{
+			/* Nothin selected? then we don't have todo anything */
+			return;
+		}
+		/* now we want to know what level we are, and what we need to show */
+		path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+		if(path == NULL)
+		{
+			debug_printf(DEBUG_INFO,"Failed to get path\n");
+			return;
+		}
+		depth = gtk_tree_path_get_depth(path);
+
+		gtk_tree_path_free(path);	
+		if(depth > 2)
+		{
+			/* here we have:  Add. Replace*/
+			GtkWidget *item;
+			GtkWidget *menu = gtk_menu_new();	
+			/* add the add widget */
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_add_selected), NULL);		
+
+
+			/* add the replace widget */
+			item = gtk_image_menu_item_new_with_label("Replace");
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_replace_selected), NULL);
+
+			gtk_widget_show_all(GTK_WIDGET(menu));
+			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+
+		}
+	}
+}
+
+
+void pl3_tag_browser_replace_selected()
+{
+	mpd_playlist_clear(connection);
+	pl3_tag_browser_add_selected();
+	mpd_player_play(connection);	
+
+}
+
+
+
+
+void pl3_tag_browser_add_selected()
+{
+	GtkTreeIter iter;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_tb_tree));
+	GtkTreeModel *model = GTK_TREE_MODEL (pl3_tb_store);
+	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
+	int songs=0;
+	gchar *message;
+	if(rows != NULL)
+	{
+		gchar *name;
+		gint type;
+		GList *node = g_list_first(rows);
+		do
+		{
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (model, &iter, path);
+			gtk_tree_model_get (model, &iter, PL3_TB_PATH,&name, PL3_TB_TYPE, &type, -1);	  
+			/* does this bitmask thingy works ok? I think it hsould */
+			if(type&(PL3_ENTRY_SONG))
+			{
+				/* add them to the add list */
+				mpd_playlist_queue_add(connection, name);
+				songs++;
+			}
+		}while((node = g_list_next(node)) != NULL);
+	}
+	/* if there are items in the add list add them to the playlist */
+	mpd_playlist_queue_commit(connection);
+	if(songs != 0)
+	{
+		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
+		pl3_push_statusbar_message(message);
+		g_free(message);                                       	
+	}
+
+	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+	g_list_free (rows);
+}
+
+void pl3_tag_browser_show_info()
+{
+	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_tb_tree));
+	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_tb_tree));
+	if(!mpd_server_check_version(connection,0,12,0))
+	{
+		return;
+	}
+	if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	{                                                                                     	
+		GList *list = NULL;
+		list = gtk_tree_selection_get_selected_rows (selection, &model);              	
+		/* iterate over every row */
+		list = g_list_last (list);
+		do
+		{
+			GtkTreeIter iter;
+			char *path;
+			MpdData *data;
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);		      			
+			gtk_tree_model_get (GTK_TREE_MODEL(pl3_tb_store), &iter, PL3_TB_PATH, &path, -1);
+			data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+			while(data != NULL)                                                            	
+			{
+				if(data->type == MPD_DATA_TYPE_SONG)
+				{
+					call_id3_window_song(mpd_songDup(data->value.song));
+				}
+				data = mpd_data_get_next(data);                                        
+			}
+		}
+		while ((list = g_list_previous (list)) && !check_connection_state ());
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);              		      
+		g_list_free (list);
+	}
+}
+
+int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
+{
+	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	{
+		pl3_tag_browser_replace_selected();		
+	}
+	else if(event->keyval == GDK_Insert)
+	{
+		pl3_tag_browser_add_selected();		
+	}
+	else if(event->keyval == GDK_i)
+	{
+		pl3_tag_browser_show_info();
+	}
+	else
+	{
+		return pl3_window_key_press_event(tree,event);
+	}
+	return TRUE;
+}

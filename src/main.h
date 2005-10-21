@@ -23,6 +23,13 @@
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
 #include <libmpd/debug_printf.h>
+#include <glade/glade.h>
+#include "plugin.h"
+
+extern gmpcPlugin **plugins;
+extern int num_plugins;
+
+
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
@@ -135,4 +142,7 @@ void connect_callback();
 void database_changed();
 void main_quit();
 
+
+/* plugin */
+void load_plugins_from_dir(gchar *path);
 #endif

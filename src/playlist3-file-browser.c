@@ -23,6 +23,10 @@
 #include <string.h>
 #include <glade/glade.h>
 
+
+#include "plugin.h"
+
+
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"

@@ -1,5 +1,6 @@
 #ifndef __CONFIG_1_H__
 #define __CONFIG_1_H__
+#include <gtk/gtk.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #define CFG_INT_NOT_DEFINED -65536

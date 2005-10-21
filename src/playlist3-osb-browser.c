@@ -28,7 +28,11 @@
 #include <libxml/tree.h>
 #include <config.h>
 #include "main.h"
-#include "strfsong.h"
+
+#include "plugin.h"
+
+
+
 
 #include "misc.h"
 #include "playlist3.h"

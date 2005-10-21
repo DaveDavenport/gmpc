@@ -28,26 +28,6 @@ enum{
 } tree_type;
 
 
-enum pl3_cat_store
-{
-	PL3_CAT_TYPE,
-	PL3_CAT_TITLE,
-	PL3_CAT_INT_ID,
-	PL3_CAT_ICON_ID,
-	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
-	PL3_CAT_ICON_SIZE,
-	PL3_CAT_BROWSE_FORMAT,
-	PL3_CAT_NROWS
-} pl3_cat_store;
-
-#define PL3_ENTRY_ALBUM 64
-#define PL3_ENTRY_ARTIST 32
-#define PL3_ENTRY_DIRECTORY 16
-#define PL3_CUR_PLAYLIST 8
-#define PL3_ENTRY_STREAM 4
-#define PL3_ENTRY_PLAYLIST 2
-#define PL3_ENTRY_SONG 1
-
 /* for the tree in the right pane. */
 enum pl3_store_types
 {

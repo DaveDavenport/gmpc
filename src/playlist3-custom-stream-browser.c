@@ -26,6 +26,9 @@
 #include <libxml/tree.h>
 #include <config.h>
 #include "main.h"
+
+#include "plugin.h"
+
 #include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
@@ -278,3 +281,41 @@ void pl3_custom_stream_category_selection_changed(GtkTreeView *tree,GtkTreeIter 
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

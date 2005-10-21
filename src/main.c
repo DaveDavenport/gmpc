@@ -27,6 +27,9 @@
 #include <sys/types.h>
 #include <time.h>
 #include <config.h>
+
+
+#include "plugin.h"
 #include "config1.h"
 #include "playlist3.h"
 #include "main.h"
@@ -45,6 +48,10 @@
 #endif
 
 extern int debug_level;
+
+gmpcPlugin **plugins = NULL;
+int num_plugins = 0;
+
 
 /*
  * the xml fle pointer to the player window 
@@ -168,7 +175,16 @@ int main (int argc, char **argv)
 		debug_printf(DEBUG_INFO, "main.c: %s exist and is directory",url);
 	}
 	g_free(url);
-
+	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
+	if(g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		load_plugins_from_dir(url);	
+	}
+	else
+	{
+		g_mkdir(url, 0777);
+	}
+	g_free(url);
 	/* OPEN CONFIG FILE */
 	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
