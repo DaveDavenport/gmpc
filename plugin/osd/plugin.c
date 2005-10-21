@@ -6,7 +6,7 @@
 #include "../../src/misc.h"
 #include <xosd.h>
 
-GtkWidget *vbox = NULL;
+GtkWidget *osd_vbox = NULL;
 xosd *osd = NULL;
 
 void osd_song_changed(MpdObj *mi, int old_song, int new_song);
@@ -15,7 +15,7 @@ void osd_state_changed(MpdObj *mi, int old_state, int new_state);
 void osd_construct(GtkWidget *container);
 void osd_destroy(GtkWidget *container);
 
-gmpcPrefPlugin gpp = {
+gmpcPrefPlugin osd_gpp = {
 	osd_construct,
 	osd_destroy
 };
@@ -23,7 +23,7 @@ gmpcPrefPlugin gpp = {
 
 
 /* set the signals I want */
-gmpcMpdSignals gms = {
+gmpcMpdSignals osd_gms = {
 	NULL,
 	osd_song_changed,
 	NULL,
@@ -36,8 +36,8 @@ gmpcPlugin plugin_osd = {
 	GMPC_PLUGIN_NO_GUI,
 	0,
 	NULL,
-	&gms,
-	&gpp
+	&osd_gms,
+	&osd_gpp
 };
 
 void osd_init()
@@ -95,20 +95,21 @@ void osd_enable_toggle(GtkWidget *wid)
 }
 void osd_destroy(GtkWidget *container)
 {
-	gtk_container_remove(GTK_CONTAINER(container), vbox);
+	gtk_container_remove(GTK_CONTAINER(container), osd_vbox);
 }
 
 void osd_construct(GtkWidget *container)
 {
-	vbox = gtk_vbox_new(FALSE,6);
 	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable OSD");
+	osd_vbox = gtk_vbox_new(FALSE,6);
+
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
 			cfg_get_single_value_as_int_with_default(config, "osd-plugin", "enable", 0));
 
 
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(osd_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(vbox), gtk_label_new("OSD Plugin"), FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(vbox), enable_cg, FALSE, FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(container), vbox);
+	gtk_box_pack_start(GTK_BOX(osd_vbox), gtk_label_new("OSD Plugin"), FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(osd_vbox), enable_cg, FALSE, FALSE, 0);
+	gtk_container_add(GTK_CONTAINER(container), osd_vbox);
 	gtk_widget_show_all(container);
 }

@@ -171,9 +171,10 @@ void create_preferences_window()
 		if(plugins[i]->pref != NULL)
 		{
 			GtkTreeIter iter;
-			char *string = g_strdup_printf("%s (%i.%i.%i)", plugins[i]->name, plugins[i]->version[0], plugins[i]->version[1], plugins[i]->version[2]);
+			char *string = g_strdup_printf("%s (%i.%i.%i)", 
+					plugins[i]->name, plugins[i]->version[0], plugins[i]->version[1], plugins[i]->version[2]);
 			gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, plugins[i]->id^PLUGIN_ID_MARK, 1, string, -1);
+			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, string, -1);
 			g_free(string);
 		
 		}
