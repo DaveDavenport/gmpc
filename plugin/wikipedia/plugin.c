@@ -28,21 +28,13 @@ gmpcPlBrowserPlugin wp_gbp = {
 	wp_changed
 };
 
-gmpcMpdSignals wp_gms = {
-	NULL,
-	NULL,
-	NULL,
-	NULL
-};
-
-
 gmpcPlugin plugin_wp = {
 	"wikipedia plugin",
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
 	&wp_gbp,
-	&wp_gms,
+	NULL,
 	&wp_gpp
 };
 void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
