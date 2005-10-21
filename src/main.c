@@ -141,14 +141,14 @@ int main (int argc, char **argv)
 	}
 
 
-	
+
 #ifdef ENABLE_NLS
 	debug_printf(DEBUG_INFO, "main.c: Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
-	
+
 	/* initialize the settings */
 	debug_printf(DEBUG_INFO, "main.c: loading default values");
 	set_default_values ();
@@ -190,7 +190,7 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
-	
+
 	/* test if config open  */
 	if(config == NULL)
 	{
@@ -267,7 +267,7 @@ int main (int argc, char **argv)
 		gtk_main_iteration();
 	}
 	update_interface();
-	
+
 #ifdef ENABLE_MMKEYS
 	/*
 	 * Keys
@@ -336,9 +336,9 @@ int update_interface ()
 		/* connected succesfull */
 		else
 		{
-	/*		gtk_timeout_remove (update_timeout);
-			update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
-	*/	}
+			/*		gtk_timeout_remove (update_timeout);
+					update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
+					*/	}
 	}
 	/*
 	 * now start updating the rest 
@@ -359,7 +359,7 @@ int update_interface ()
 void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 {
 	MpdData *data = NULL;
-
+	int i;
 	/*
 	 * so I don't have to check all the time 
 	 */
@@ -405,7 +405,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 				strfsong (buffer, 1024,
 						string,
 						data->value.song);						
-		
+
 				gtk_list_store_set (pl2_store, &iter,
 						SONG_ID,data->value.song->id, 
 						SONG_POS,data->value.song->pos, 					
@@ -444,7 +444,7 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 
 		}
 
-		
+
 		data= mpd_data_get_next(data);		
 	}
 
@@ -476,6 +476,18 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	info.playlist_length = mpd_playlist_get_playlist_length(connection);
 
 	pl3_playlist_changed();
+
+
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd != NULL)
+		{
+			if(plugins[i]->mpd->playlist_changed != NULL)
+			{
+				plugins[i]->mpd->playlist_changed(mi, old_playlist_id, new_playlist_id);
+			}
+		}
+	}
 
 }
 
@@ -605,38 +617,54 @@ void init_playlist ()
 /* this function takes care the right row is highlighted */
 void playlist_highlight_state_change(int old_state, int new_state)
 {
-   GtkTreeIter iter;
-   gchar *temp;
-   /* unmark the old pos if it exists */
-   if (info.old_pos != -1 && mpd_player_get_state(connection) <= MPD_PLAYER_STOP)
-   {
-      /* create a string so I can get the right iter */
-      temp = g_strdup_printf ("%i", info.old_pos);
-      if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
-      {
-	 int song_type;
-	 gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
-	 gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
-	       SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
-	       -1);
-      }
-      g_free (temp);
-      /* reset old pos */
-      info.old_pos = -1;
-   }                                                           
-   /* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
-   if(old_state <= MPD_PLAYER_STOP && old_state < new_state)
-   {
-      pl3_highlight_song_change();
-   }
+	GtkTreeIter iter;
+	gchar *temp;
+	/* unmark the old pos if it exists */
+	if (info.old_pos != -1 && mpd_player_get_state(connection) <= MPD_PLAYER_STOP)
+	{
+		/* create a string so I can get the right iter */
+		temp = g_strdup_printf ("%i", info.old_pos);
+		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
+		{
+			int song_type;
+			gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
+					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
+					-1);
+		}
+		g_free (temp);
+		/* reset old pos */
+		info.old_pos = -1;
+	}                                                           
+	/* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
+	if(old_state <= MPD_PLAYER_STOP && old_state < new_state)
+	{
+		pl3_highlight_song_change();
+	}
 }
 
 void song_changed(MpdObj *mi, int oldsong, int newsong)
 {
+	int i;
 	/* player changed */
 	player_song_changed(oldsong, newsong);
 	tray_icon_song_change();
 	pl3_highlight_song_change();
+
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd != NULL)
+		{
+
+			if(plugins[i]->mpd->song_changed != NULL)
+			{
+				plugins[i]->mpd->song_changed(mi, oldsong, newsong);
+			}
+		}
+	}
+
+
+
 }
 
 void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
@@ -685,22 +713,45 @@ void connect_callback()
 	}
 	gtk_timeout_remove (update_timeout);
 	update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
-	
+
 	pl3_reinitialize_tree();
 }
 void status_callback(MpdObj *mi)
 {
+	int i;
 	id3_status_update();
 
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd != NULL)
+		{                          		
+			if(plugins[i]->mpd->status_changed != NULL)
+			{
+				plugins[i]->mpd->status_changed(mi);
+			}
+		}
+	}
 }
 
 
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 {
+	int i;
 	player_state_changed(old_state, new_state);
 	tray_icon_state_change();
 	playlist_highlight_state_change(old_state,new_state);
 	/* make */
+	for(i=0; i< num_plugins; i++)
+	{
+
+		if(plugins[i]->mpd != NULL)
+		{                          		
+			if(plugins[i]->mpd->state_changed != NULL)
+			{
+				plugins[i]->mpd->state_changed(mi, old_state, new_state);
+			}
+		}
+	}
 }
 
 void database_changed()

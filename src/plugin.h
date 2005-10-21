@@ -11,7 +11,8 @@ extern config_obj *config;
 /* Plugin Type */
 enum {
 	GMPC_PLUGIN_DUMMY,
-	GMPC_PLUGIN_PL_BROWSER
+	GMPC_PLUGIN_PL_BROWSER,
+	GMPC_PLUGIN_NO_GUI
 };
 
 
@@ -45,15 +46,26 @@ typedef struct {
 	void (*cat_selection_changed)(GtkWidget *tree, GtkTreeIter *iter);
 } gmpcPlBrowserPlugin;
 
+typedef struct {
+	void	(*playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id);
+	void	(*song_changed)(MpdObj *mi, int old_song_id, int new_song_id);
+	void 	(*status_changed)(MpdObj *mi);
+	void 	(*state_changed)(MpdObj *mi, int old_state, int new_state);
+} gmpcMpdSignals;
+
+
+
+
 /* sturcture */
 typedef struct {
-	char 	*name;
-	int	version[3];
-	int 	plugin_type;
+	char 			*name;
+	int			version[3];
+	int 			plugin_type;
 	/* unique plugin id */
-	int 	id; /* do not fill in, is done by gmpc */
+	int 			id; /* do not fill in, is done by gmpc */
 	/* depending on type of plugin */
-	gmpcPlBrowserPlugin *browser;
+	gmpcPlBrowserPlugin 	*browser;
+	gmpcMpdSignals		*mpd;
 } gmpcPlugin;
 
 

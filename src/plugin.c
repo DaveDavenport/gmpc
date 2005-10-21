@@ -60,6 +60,9 @@ void load_plugins_from_dir(gchar *path)
 					case GMPC_PLUGIN_PL_BROWSER:
 						printf("type: playlist browser\n");
 						break;
+					case GMPC_PLUGIN_NO_GUI:
+						printf("type: no gui\n");
+						break;
 					default:
 						printf("type: unkown\n");
 						break;

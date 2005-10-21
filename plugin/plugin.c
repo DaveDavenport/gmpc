@@ -10,7 +10,9 @@ void wp_changed(GtkWidget *tree, GtkTreeIter *iter);
 
 GtkWidget *moz = NULL;
 GtkWidget *vbox = NULL;
+GtkWidget *pgb = NULL;
 
+/* Needed plugin stuff */
 gmpcPlBrowserPlugin gbp = {
 	wp_add,
 	wp_selected,
@@ -18,12 +20,21 @@ gmpcPlBrowserPlugin gbp = {
 	wp_changed
 };
 
+gmpcMpdSignals gms = {
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+
 gmpcPlugin plugin = {
 	"wikipedia plugin",
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	&gbp
+	&gbp,
+	&gms
 };
 void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
@@ -31,7 +42,7 @@ void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
 	{
 		if(song->artist != NULL){
 			int i;
-			gchar *url = g_strdup_printf("http://wikipedia.com/w/index.php?printable=yes&title=%s", song->artist);
+			gchar *url = g_strdup_printf("http://wikipedia.com/w/index.php?useskin=chick&title=%s", song->artist);
 			for(i=0;i< strlen(url);i++){
 				if(url[i] == ' ') url[i] = '_';
 			}
@@ -45,6 +56,21 @@ void wp_changed(GtkWidget *tree, GtkTreeIter *iter){
 	}
 }
 
+void wp_progress(GtkMozEmbed *mozem, int cur, int max)
+{
+/*	float progress = cur/(float)max;
+	printf("%i %i\n", cur,max);
+	progress = (progress<0)? 0:(progress>1)? 1:progress;
+	if(max == -1)
+	{
+		gtk_progress_bar_pulse(GTK_PROGRESS_BAR(pgb));
+	}
+	else
+	{
+		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pgb),progress); 
+	}
+*/
+}
 void wp_init()
 {
 	GtkWidget *sw =gtk_frame_new(NULL);
@@ -57,8 +83,11 @@ void wp_init()
 	}
 	gtk_container_add(GTK_CONTAINER(sw), moz);
 	gtk_box_pack_start_defaults(GTK_BOX(vbox), sw);
+	pgb = gtk_progress_bar_new();
+/*	gtk_box_pack_start(GTK_BOX(vbox), pgb, FALSE, TRUE, 0);*/
 	gtk_widget_show_all(vbox);
 	g_object_ref(G_OBJECT(vbox));
+	g_signal_connect(moz, "progress", G_CALLBACK(wp_progress), NULL);
 }
 
 void wp_add(GtkWidget *cat_tree)
