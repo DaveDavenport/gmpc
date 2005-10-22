@@ -35,6 +35,15 @@
 #include "vfs_download.h"
 #include "config1.h"
 
+
+static GtkTargetEntry drag_types[] =
+{
+   { "pm_data", GTK_TARGET_SAME_APP, 100},
+};
+
+
+
+
 /* just for here */
 void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
 int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
@@ -61,6 +70,87 @@ int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventB
 	}
 	return TRUE;
 }
+
+int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guint time)
+{
+	GtkTreePath *path=NULL;
+	GtkTreeViewDropPosition pos = 0;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
+	gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(tree),x,y, &path, &pos);
+	int position = -1;
+
+	if(path != NULL)
+	{
+		gchar *str = gtk_tree_path_to_string(path);
+		printf("string: %s\n", str);
+		position = atoi(str);
+		if(pos == GTK_TREE_VIEW_DROP_AFTER)
+		{
+//			position++;
+			printf("drop after\n");
+		}
+		else if(pos == GTK_TREE_VIEW_DROP_BEFORE)
+		{
+
+		}
+		g_free(str);
+	}
+	else
+	{
+		printf("failed %i\n",pos);
+	}
+	if (gtk_tree_selection_count_selected_rows (selection) > 0 && position >=0)
+	{
+		GList *list = NULL, *llist = NULL;
+		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		/* start a command list */
+		/* grab the selected songs */
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+		/* grab the last song that is selected */
+		llist = g_list_first (list);
+		/* remove every selected song one by one */
+		int test=0;
+		do{
+			GtkTreeIter iter;
+			int value;
+			int dest = position;
+			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+			gtk_tree_model_get (model, &iter, SONG_POS, &value, -1);
+			if(position < value && pos ==  GTK_TREE_VIEW_DROP_AFTER) dest++;
+			mpd_playlist_move_pos(connection, value-test,dest);			
+			if(position > value) test++;
+			if(position < value)position++;
+			
+		} while ((llist = g_list_next (llist)));
+
+		/* close the list, so it will be executed */
+//		mpd_playlist_queue_commit(connection);
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+	gtk_tree_selection_unselect_all(selection);
+	return TRUE;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void pl3_current_playlist_browser_init()
 {
@@ -107,19 +197,24 @@ void pl3_current_playlist_browser_init()
 
 	g_signal_connect(pl2_store, "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
-	
+
 	/* set up the scrolled window */
 	pl3_cp_sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_SHADOW_ETCHED_IN);
 	gtk_container_add(GTK_CONTAINER(pl3_cp_sw), pl3_cp_tree);
 
+
+	gtk_drag_source_set(GTK_WIDGET(pl3_cp_tree), GDK_BUTTON1_MASK, drag_types, 1, GDK_ACTION_COPY);
+	gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW(pl3_cp_tree), drag_types, 1, GDK_ACTION_COPY);
+	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
+
 	/* set initial state */
-//	gtk_widget_hide(pl3_cp_sw);
+	//	gtk_widget_hide(pl3_cp_sw);
 	printf("initialized current playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_cp_sw));
 	/* this got to change */
-//	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox2")), pl3_cp_sw, 1,1,0);
+	//	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox2")), pl3_cp_sw, 1,1,0);
 }
 
 

@@ -110,12 +110,24 @@ void osd_destroy(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container), osd_vbox);
 }
+void osd_color_set(GtkColorButton *colorbut)
+{
+	GdkColor color;
+	gchar *string = NULL;
+	gtk_color_button_get_color(colorbut, &color);
+	string = g_strdup_printf("#%02x%02x%02x", color.red>>8, color.green>>8, color.blue>>8);
+	cfg_set_single_value_as_string(config, "osd-plugin", "colour", string);
+	xosd_set_colour(osd,string);
+	g_free(string);
+}
 
 void osd_construct(GtkWidget *container)
 {
 	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable OSD");
 	GtkWidget *label = NULL;
 	GtkWidget *wid2 = NULL;
+	gchar *string = NULL;
+	GdkColor color;
 	osd_vbox = gtk_vbox_new(FALSE,6);
 	if(osd == NULL) osd_init();
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
@@ -129,7 +141,7 @@ void osd_construct(GtkWidget *container)
 	gtk_box_pack_start(GTK_BOX(osd_vbox), label,FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), enable_cg, FALSE, FALSE, 0);
 
-
+	/* timeout */
 	wid2 = gtk_hbox_new(FALSE,6);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), wid2,FALSE, FALSE, 0);
 	label = gtk_label_new("Timeout:");                                                                                                                	
@@ -139,7 +151,20 @@ void osd_construct(GtkWidget *container)
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(label),(gdouble)cfg_get_single_value_as_int_with_default(config, "osd-plugin","timeout",3));
 	g_signal_connect(G_OBJECT(label), "value-changed", G_CALLBACK(osd_spin_value_changed), NULL);
 
+	/* Color Selector */
+	wid2 = gtk_hbox_new(FALSE,6);
+	gtk_box_pack_start(GTK_BOX(osd_vbox), wid2,FALSE, FALSE, 0);
+	label = gtk_label_new("Colour:");                                                                                                                	
+	gtk_box_pack_start(GTK_BOX(wid2), label,FALSE, FALSE, 0);
+	string = cfg_get_single_value_as_string_with_default(config, "osd-plugin", "colour", "LawnGreen");
+	gdk_color_parse(string,&color);
+	cfg_free_string(string);
 
+	label = gtk_color_button_new_with_color(&color);
+	gtk_box_pack_start(GTK_BOX(wid2), label,FALSE, FALSE, 0);
+	g_signal_connect(G_OBJECT(label), "color-set", G_CALLBACK(osd_color_set), NULL);
+	
+	
 
 
 	gtk_container_add(GTK_CONTAINER(container), osd_vbox);
