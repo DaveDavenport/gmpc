@@ -13,21 +13,19 @@ int plugin_load(char *path, char *file)
 	{
 		return 1;
 	}
-	handle = g_module_open(full_path, G_MODULE_BIND_LAZY);
+	handle = g_module_open(full_path, G_MODULE_BIND_LAZY|G_MODULE_BIND_LOCAL);
 	g_free(full_path);
 	if (!handle) {
 		fprintf (stderr, "%s\n", g_module_error());
 
 		return 1;
 	}
-	string = g_strndup(file, strlen(file)-3);
-	if(!g_module_symbol(handle, string, (gpointer)&plug)){
+	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
 		fprintf (stderr, "%s\n", g_module_error());
 		g_free(string);
 		g_module_close(handle);
 		return 1;
 	}
-	g_free(string);
 	if(plug == NULL)
 	{
 		fprintf (stderr, "failed to get plug\n");

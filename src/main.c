@@ -40,9 +40,6 @@
   #include "mm-keys.h"
 #endif
 
-#ifdef ENABLE_LIBNOTIFY
-	#include <libnotify/notify.h>
-#endif
 #ifdef ENABLE_GNOME_VFS
 	#include <libgnomevfs/gnome-vfs.h>
 #endif
@@ -222,9 +219,6 @@ int main (int argc, char **argv)
 	gtk_init (&argc, &argv);
 #ifdef ENABLE_GNOME_VFS
 	gnome_vfs_init ();
-#endif
-#ifdef ENABLE_LIBNOTIFY
-	notify_init("Gnome Music Player Client");
 #endif
 	/*
 	 * stock icons 

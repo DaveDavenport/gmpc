@@ -10,7 +10,6 @@ AC_PROG_LIBTOOL
 AC_PROG_CC
 
 AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,enable_gnome_vfs=yes)
-AC_ARG_ENABLE(libnotify,[  --enable-libnotify     disable extra options that use gnome-vfs.],,enable_libnotify=no)
 AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys     Disable multimedia keys support.],,enable_mmkeys=yes)
 AC_ARG_ENABLE(trayicon,[  --disable-trayicon     Disable tray icon support.],,enable_trayicon=yes)
 
@@ -45,10 +44,6 @@ if test x${enable_gnome_vfs} = xyes; then
 	AC_DEFINE(ENABLE_GNOME_VFS, 1, [Enable extra options that use gnome-vfs])
 fi
 
-if test x${enable_libnotify} = xyes; then
-	PKG_CHECK_MODULES(gmpc_libnotify, [libnotify])
-	AC_DEFINE(ENABLE_LIBNOTIFY, 1, [Enable extra options that use gnome-vfs])
-fi
 
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
@@ -63,8 +58,6 @@ fi
 AC_SUBST(gmpc_gvfs_LIBS)
 AC_SUBST(gmpc_gvfs_CFLAGS)
 
-AC_SUBST(gmpc_libnotify_LIBS)
-AC_SUBST(gmpc_libnotify_CFLAGS)
 
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -120,11 +113,6 @@ if test x${enable_gnome_vfs} = xyes; then
 	echo "Gnome VFS support is:	 	enabled."
 else
 	echo "Gnome VFS support is:		disabled."
-fi
-if test x${enable_libnotify} = xyes; then
-	echo "Gnome Notification support is: 	enabled."
-else
-	echo "Gnome Notification support is:	disabled."
 fi
 if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:  	enabled"

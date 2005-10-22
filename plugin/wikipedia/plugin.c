@@ -28,7 +28,7 @@ gmpcPlBrowserPlugin wp_gbp = {
 	wp_changed
 };
 
-gmpcPlugin plugin_wp = {
+gmpcPlugin plugin = {
 	"wikipedia plugin",
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
@@ -96,10 +96,10 @@ void wp_add(GtkWidget *cat_tree)
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
 	GtkTreeIter iter;
 	if(!cfg_get_single_value_as_int_with_default(config, "wp-plugin", "enable", 0)) return;
-	printf("adding plugin_wp: %i '%s'\n", plugin_wp.id, plugin_wp.name);
+	printf("adding plugin_wp: %i '%s'\n", plugin.id, plugin.name);
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, plugin_wp.id,
+			PL3_CAT_TYPE, plugin.id,
 			PL3_CAT_TITLE, "Wikipedia Lookup",
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-info",

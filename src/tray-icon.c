@@ -17,11 +17,6 @@ void tray_icon_state_change() {}
 #include "misc.h"
 #include "strfsong.h"
 #include "config1.h"
-#ifdef ENABLE_LIBNOTIFY
-	#include <libnotify/notify.h>
-	NotifyHandle *n = NULL;
-
-#endif
 
 int playlist_hidden = FALSE;
 extern config_obj *config;
@@ -439,39 +434,6 @@ void exposed_signal(GtkWidget *event)
 /* this function updates the trayicon on changes */
 void tray_icon_song_change()
 {
-#ifdef ENABLE_LIBNOTIFY
-	char *text = tray_get_tooltip_text();
-	NotifyHints *hints = NULL;
-	NotifyIcon *icon = notify_icon_new_from_uri(PIXMAP_PATH"media-audiofile.png");
-	if(tray_icon)
-	{
-		int x_tv, y_tv;
-	
-		gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
-		
-		hints = notify_hints_new();
-		notify_hints_set_int(hints, "x", x_tv+(GTK_WIDGET(tray_icon)->allocation.width)/2);
-		notify_hints_set_int(hints, "y", y_tv+GTK_WIDGET(tray_icon)->allocation.height);
-
-	}
-	n = notify_send_notification(n, NULL, NOTIFY_URGENCY_NORMAL,
-			_("Now Playing"), text,
-			icon,TRUE, cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5),
-			hints,NULL,0); 
-
-	notify_icon_destroy(icon);
-	g_free(text);
-	if (!n) {
-		fprintf(stderr, "failed to send notification\n");
-		return;
-	}
-
-	return ;
-
-#endif
-
-
-
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
 			mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{

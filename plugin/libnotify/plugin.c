@@ -38,8 +38,8 @@ gmpcMpdSignals libnotify_gms = {
 	NULL,
 	libnotify_state_changed
 };
-/* main plugin_libnotify info */
-gmpcPlugin plugin_libnotify = {
+/* main plugin info */
+gmpcPlugin plugin= {
 	"libnotify plugin",
 	{0,0,1},
 	GMPC_PLUGIN_NO_GUI,
@@ -186,7 +186,7 @@ void libnotify_destroy(GtkWidget *container)
 
 void libnotify_construct(GtkWidget *container)
 {
-	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable OSD");
+	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable LibNotify");
 	GtkWidget *label = NULL;
 	GtkWidget *wid2 = NULL;
 	libnotify_vbox = gtk_vbox_new(FALSE,6);

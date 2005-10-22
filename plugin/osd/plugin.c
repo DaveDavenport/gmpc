@@ -30,7 +30,7 @@ gmpcMpdSignals osd_gms = {
 	osd_state_changed
 };
 /* main plugin_osd info */
-gmpcPlugin plugin_osd = {
+gmpcPlugin plugin = {
 	"osd plugin",
 	{0,0,1},
 	GMPC_PLUGIN_NO_GUI,
