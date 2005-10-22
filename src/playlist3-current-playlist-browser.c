@@ -129,6 +129,7 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
 	}
+	gtk_drag_finish(drag_context, TRUE, FALSE, time);
 	gtk_tree_selection_unselect_all(selection);
 	return TRUE;
 }
@@ -207,6 +208,8 @@ void pl3_current_playlist_browser_init()
 
 	gtk_drag_source_set(GTK_WIDGET(pl3_cp_tree), GDK_BUTTON1_MASK, drag_types, 1, GDK_ACTION_COPY);
 	gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW(pl3_cp_tree), drag_types, 1, GDK_ACTION_COPY);
+/*	gtk_drag_source_set_icon_name(pl3_cp_tree, "gtk-dnd");*/
+
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 	/* set initial state */

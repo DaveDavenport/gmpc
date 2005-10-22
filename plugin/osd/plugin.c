@@ -63,6 +63,7 @@ void osd_song_changed(MpdObj *mi, int old_song, int new_song)
 	{
 		return;
 	}
+	printf("song changed\n");	
 	if(osd == NULL) osd_init();
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
@@ -79,7 +80,7 @@ void osd_state_changed(MpdObj *mi, int old_state, int new_state)
 	{                                                                                   	
 		return;                                                                     	
 	}                                                                                   	
-	
+	printf("state changed\n");	
 	if(osd == NULL) osd_init();
 	if(new_state == MPD_STATUS_STATE_PLAY)
 	{
