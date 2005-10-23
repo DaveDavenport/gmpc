@@ -178,7 +178,8 @@ static gsize _strfsong(gchar *s,
 			temp = song->date ? g_strdup(song->date) : NULL;		
 		else if (memcmp("%genre%", p, n) == 0)
 			temp = song->genre ? g_strdup(song->genre) : NULL;		
-		
+		else if (memcmp("%plpos%", p, n) == 0)
+			temp = song->pos >= 0 ? g_strdup_printf("%i", song->pos) : NULL;				
 		else if (memcmp("%shortfile%", p, n) == 0)
 		{
 			if( strstr(song->file, "://") )
