@@ -60,6 +60,7 @@ typedef struct {
 	void	(*song_changed)(MpdObj *mi, int old_song_id, int new_song_id);
 	void 	(*status_changed)(MpdObj *mi);
 	void 	(*state_changed)(MpdObj *mi, int old_state, int new_state);
+	void 	(*database_changed)(MpdObj *mi);
 } gmpcMpdSignals;
 
 

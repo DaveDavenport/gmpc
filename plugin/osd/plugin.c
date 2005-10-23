@@ -27,7 +27,8 @@ gmpcMpdSignals osd_gms = {
 	NULL,
 	osd_song_changed,
 	NULL,
-	osd_state_changed
+	osd_state_changed,
+	NULL
 };
 /* main plugin_osd info */
 gmpcPlugin plugin = {
@@ -63,7 +64,6 @@ void osd_song_changed(MpdObj *mi, int old_song, int new_song)
 	{
 		return;
 	}
-	printf("song changed\n");	
 	if(osd == NULL) osd_init();
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
@@ -80,7 +80,6 @@ void osd_state_changed(MpdObj *mi, int old_state, int new_state)
 	{                                                                                   	
 		return;                                                                     	
 	}                                                                                   	
-	printf("state changed\n");	
 	if(osd == NULL) osd_init();
 	if(new_state == MPD_STATUS_STATE_PLAY)
 	{
@@ -145,7 +144,7 @@ void osd_construct(GtkWidget *container)
 	/* timeout */
 	wid2 = gtk_hbox_new(FALSE,6);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), wid2,FALSE, FALSE, 0);
-	label = gtk_label_new("Timeout:");                                                                                                                	
+	label = gtk_label_new("Timeout:"); 
 	gtk_box_pack_start(GTK_BOX(wid2), label,FALSE, FALSE, 0);
 	label = gtk_spin_button_new_with_range(1.0,10.0,1.0); 
 	gtk_box_pack_start(GTK_BOX(wid2), label,FALSE, FALSE, 0);
@@ -155,7 +154,7 @@ void osd_construct(GtkWidget *container)
 	/* Color Selector */
 	wid2 = gtk_hbox_new(FALSE,6);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), wid2,FALSE, FALSE, 0);
-	label = gtk_label_new("Colour:");                                                                                                                	
+	label = gtk_label_new("Colour:");        
 	gtk_box_pack_start(GTK_BOX(wid2), label,FALSE, FALSE, 0);
 	string = cfg_get_single_value_as_string_with_default(config, "osd-plugin", "colour", "LawnGreen");
 	gdk_color_parse(string,&color);

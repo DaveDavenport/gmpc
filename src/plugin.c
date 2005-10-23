@@ -9,6 +9,7 @@ int plugin_load(char *path, char *file)
 	gmpcPlugin *plug = NULL;
 	gchar *string = NULL;
 	gchar *full_path = g_strdup_printf("%s/%s", path, file);	
+	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
 	if(path == NULL)
 	{
 		return 1;
@@ -16,23 +17,25 @@ int plugin_load(char *path, char *file)
 	handle = g_module_open(full_path, G_MODULE_BIND_LAZY|G_MODULE_BIND_LOCAL);
 	g_free(full_path);
 	if (!handle) {
-		fprintf (stderr, "%s\n", g_module_error());
+		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s\n", g_module_error());
 
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
-		fprintf (stderr, "%s\n", g_module_error());
+		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
 		g_free(string);
 		g_module_close(handle);
 		return 1;
 	}
 	if(plug == NULL)
 	{
-		fprintf (stderr, "failed to get plug\n");
+		debug_printf(DEBUG_WARNING, "plugin load: unkown type of plugin.\n");
 		g_module_close(handle);
 		return 1;
 	}
+	/* set plugin id */
 	plug->id = num_plugins|PLUGIN_ID_MARK;
+	/* put it in the list */
 	num_plugins++;
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
 	plugins[num_plugins-1] = plug;

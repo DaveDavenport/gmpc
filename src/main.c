@@ -28,7 +28,6 @@
 #include <time.h>
 #include <config.h>
 
-
 #include "plugin.h"
 #include "config1.h"
 #include "playlist3.h"
@@ -37,11 +36,11 @@
 #include "misc.h"
 
 #ifdef ENABLE_MMKEYS
-  #include "mm-keys.h"
+#include "mm-keys.h"
 #endif
 
 #ifdef ENABLE_GNOME_VFS
-	#include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs.h>
 #endif
 
 extern int debug_level;
@@ -179,7 +178,7 @@ int main (int argc, char **argv)
 	}
 	else
 	{
-		g_mkdir(url, 0777);
+		mkdir(url, 0777);
 	}
 	g_free(url);
 	/* OPEN CONFIG FILE */
@@ -327,12 +326,6 @@ int update_interface ()
 		{
 			return TRUE;
 		}
-		/* connected succesfull */
-		else
-		{
-			/*		gtk_timeout_remove (update_timeout);
-					update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
-					*/	}
 	}
 	/*
 	 * now start updating the rest 
@@ -698,7 +691,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		g_free(str);
 	}
 }
-void connect_callback()
+void connect_callback(MpdObj *mi)
 {
 	if(xml_error_window != NULL)
 	{
@@ -748,8 +741,18 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 	}
 }
 
-void database_changed()
+void database_changed(MpdObj *mi)
 {
+	int i;
 	pl3_reinitialize_tree();
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd != NULL)
+		{                          		
+			if(plugins[i]->mpd->database_changed != NULL)
+			{
+				plugins[i]->mpd->database_changed(mi);
+			}
+		}
+	}
 }
-

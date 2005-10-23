@@ -138,8 +138,8 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 void song_changed(MpdObj *mi, int oldsong, int newsong);
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
 void status_callback(MpdObj *mi);
-void connect_callback();
-void database_changed();
+void connect_callback(MpdObj *mi);
+void database_changed(MpdObj *mi);
 void main_quit();
 
 

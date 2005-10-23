@@ -36,7 +36,8 @@ gmpcMpdSignals libnotify_gms = {
 	NULL,
 	libnotify_song_changed,
 	NULL,
-	libnotify_state_changed
+	libnotify_state_changed,
+	NULL
 };
 /* main plugin info */
 gmpcPlugin plugin= {
