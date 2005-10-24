@@ -39,7 +39,7 @@
 #include "playlist3-current-playlist-browser.h"
 #include "playlist3-custom-stream-browser.h"
 #include "playlist3-tag-browser.h"
-#include "playlist3-osb-browser.h"
+//#include "playlist3-osb-browser.h"
 
 
 /*static GtkTargetEntry drag_types[] =
@@ -122,7 +122,7 @@ int  pl3_cat_get_selected_browser()
    {
       gint type;
       gtk_tree_model_get(model, &iter, 0, &type, -1);
-      if(type >= PL3_NTYPES || type < 0)
+      if(type < 0)
       {
 	 return -1;
       }
@@ -178,19 +178,20 @@ int pl3_playlist_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 
 void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
 {
-	gint type = pl3_cat_get_selected_browser();
+/*	gint type = pl3_cat_get_selected_browser();
 	if(type == -1 || check_connection_state())
 	{
 		return;
 	}
 	else if (type == PL3_BROWSE_CUSTOM_STREAM)
 	{
-		pl3_custom_stream_row_activated(tree,tp);
+//		pl3_custom_stream_row_activated(tree,tp);
 	}
 	else if (type == PL3_BROWSE_XIPH)
 	{
-		pl3_osb_browser_row_activated(tree,tp);
+//		pl3_osb_browser_row_activated(tree,tp);
 	}
+	*/
 }
 
 /**************************************************
@@ -388,11 +389,11 @@ void pl3_cat_sel_changed()
 		}
 		else if(type == PL3_BROWSE_XIPH)
 		{
-			pl3_osb_browser_category_selection_changed(tree,&iter);
+//			pl3_osb_browser_category_selection_changed(tree,&iter);
 		}
 		else if(type == PL3_BROWSE_CUSTOM_STREAM)
 		{
-			pl3_custom_stream_category_selection_changed(tree,&iter);
+			//pl3_custom_stream_category_selection_changed(tree,&iter);
 		}
 		else if(type|PLUGIN_ID_MARK)
 		{
@@ -419,70 +420,51 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 }
 int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
+	int i;
 	gint type  = pl3_cat_get_selected_browser();
+	int menu_items = 0;
+	GtkWidget *menu = NULL;
+	printf("type == %i\n", type);
 	if(type == -1 || check_connection_state())
 	{
 		/* no selections, or no usefull one.. so propagate the signal */
 		return FALSE;
 	}
-
+	menu = gtk_menu_new();
 	if(event->button != 3)
 	{
 		/* if its not the right mouse button propagate the signal */
 		return FALSE;
 	}
 	/* if it's the current playlist */
-	if (type == PL3_CURRENT_PLAYLIST)
-	{
-		pl3_current_playlist_browser_cat_menu_popup(tree,event);
-	}
-	else if (type == PL3_BROWSE_FILE)
-	{
-		pl3_file_browser_cat_popup(tree,event);
-	}
-	else if (type == PL3_BROWSE_ARTIST)
-	{
-		pl3_artist_browser_cat_popup(tree,event);
-	}
-	else if (type == PL3_BROWSE_XIPH)
-	{
-		/* here we have:  Add. Replace*/
-		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();	
-		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-		GtkTreeIter iter;
-		char *id;
+	menu_items 	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
+	menu_items	+= pl3_file_browser_cat_popup(menu,type,tree,event);
+	menu_items	+= pl3_artist_browser_cat_popup(menu, type, tree, event);
+	menu_items	+= pl3_custom_tag_browser_right_mouse_menu(menu,type,GTK_WIDGET(tree),event);
 
-		/* add the add widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_add_source), NULL);		
 
-		if(gtk_tree_selection_get_selected(selec,&model, &iter))
+
+	for(i=0; i< num_plugins;i++)
+	{
+		if(plugins[i]->browser != NULL)
 		{
-			gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &id, -1);
-			if(strlen(id) > 0)
+			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
-				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_del_source), NULL);		
-
-				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_osb_browser_refresh), NULL);		
+				menu_items += plugins[i]->browser->cat_right_mouse_menu(menu,type,GTK_WIDGET(tree), event);
 			}
 		}
-		/* show everything and popup */
-		gtk_widget_show_all(menu);                                                        		
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-
 	}
-	else if (type ==  PL3_BROWSE_CUSTOM_TAG)
+
+	/* plugins */
+	if(menu_items)
 	{
-		pl3_custom_tag_browser_right_mouse_menu(event);
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);		
 	}
-
+	else
+	{
+		gtk_widget_destroy(menu);
+	}
 	return TRUE;
 }
 
@@ -609,14 +591,14 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 }
 
 int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
-{
+{/*
 	gint type = pl3_cat_get_selected_browser();
 	if (event->keyval == GDK_Delete && type == PL3_BROWSE_CUSTOM_STREAM)
 	{
-		pl3_custom_stream_remove();	
+//		pl3_custom_stream_remove();	
 		return TRUE;
 	}
-	/* call default */
+*/	/* call default */
 	return pl3_window_key_press_event(mw,event);
 }
 

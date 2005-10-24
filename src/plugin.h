@@ -8,7 +8,7 @@
 extern MpdObj *connection;
 extern config_obj *config;
 
-/* Plugin Type */
+/* Plugin Type's */
 enum {
 	GMPC_PLUGIN_DUMMY,
 	GMPC_PLUGIN_PL_BROWSER,
@@ -42,17 +42,25 @@ enum
 
 
 /* structures */
-
+/** gmpcPrefPlugin: need to be instant apply. 
+ * Plugin is expected to fill the container with it preferences widgets. (gtk_container_add)
+ * if destroy is called, it needs to detacht it from the container (gtk_container_remove)
+ */
 typedef struct {
 	void (*construct)(GtkWidget *container);
 	void (*destroy)(GtkWidget *container);
 } gmpcPrefPlugin;
 
+/** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser 
+ */
 typedef struct {
 	void (*add)(GtkWidget *cat_tree);
 	void (*selected)(GtkWidget *container);
 	void (*unselected)(GtkWidget *container);
 	void (*cat_selection_changed)(GtkWidget *tree, GtkTreeIter *iter);
+	void (*fill_tree)(GtkTreeView *tree,GtkTreeIter *iter); /* not yet implemented */
+	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event); 
+	void (*cat_key_press)(GdkEventKey *event, int selected_type); /* not yet implemented */
 } gmpcPlBrowserPlugin;
 
 typedef struct {

@@ -12,8 +12,7 @@ void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTree
 
 
 
-void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event);
-
+int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 
 
 

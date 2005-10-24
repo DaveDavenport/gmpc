@@ -15,6 +15,7 @@ void osb_browser_replace_selected();
 void osb_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 int osb_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 void osb_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
+int osb_cat_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 /* preferences */
 void osb_construct(GtkWidget *container);
 void osb_destroy(GtkWidget *container);
@@ -49,7 +50,10 @@ gmpcPlBrowserPlugin osb_gbp = {
 	osb_add,
 	osb_selected,
 	osb_unselected,
-	osb_changed
+	osb_changed,
+	NULL,
+	osb_cat_popup,
+	NULL
 };
 
 gmpcPlugin plugin = {
@@ -492,4 +496,49 @@ void osb_construct(GtkWidget *container)
 {
 }
 
+int osb_cat_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
+{
 
+	if(type == 0)
+	{
+		GtkWidget *item;
+		item = gtk_image_menu_item_new_with_label("Add Location");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+//		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
+		return 1;
+	}
+	if(type == plugin.id)
+	{
+		/* here we have:  Add. Replace*/
+		GtkWidget *item;
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+		GtkTreeIter iter;
+		char *id;
+
+		/* add the add widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(osb_browser_add_source), NULL);		
+
+		if(gtk_tree_selection_get_selected(selec,&model, &iter))
+		{
+			gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &id, -1);
+			if(strlen(id) > 0)
+			{
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(osb_browser_del_source), NULL);		
+
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REFRESH,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(osb_browser_refresh), NULL);		
+			}
+		}
+		/* show everything and popup */
+		return 1;
+	}
+	return 0;
+}

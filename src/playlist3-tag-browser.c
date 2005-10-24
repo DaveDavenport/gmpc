@@ -505,54 +505,55 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-void pl3_custom_tag_browser_right_mouse_menu(GdkEventButton *event)
+int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
 	/* we need an model and a iter */
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-	int depth = 0;
-	GtkTreePath *path;	
-	/* se need a GtkTreeSelection to know what is selected */
-	GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	
-	/* get and check for selected */
-	if(!gtk_tree_selection_get_selected(selection,&model, &iter))
+	if(type == PL3_BROWSE_CUSTOM_TAG)
 	{
-		/* Nothin selected? then we don't have todo anything */
-		return;
+		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+		GtkTreeIter iter;
+		int depth = 0;
+		GtkTreePath *path;	
+		/* se need a GtkTreeSelection to know what is selected */
+		GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+
+		/* get and check for selected */
+		if(!gtk_tree_selection_get_selected(selection,&model, &iter))
+		{
+			/* Nothin selected? then we don't have todo anything */
+			return 0;
+		}
+		/* now we want to know what level we are, and what we need to show */
+		path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+		if(path == NULL)
+		{
+			debug_printf(DEBUG_INFO,"Failed to get path\n");
+			return 0;
+		}
+		depth = gtk_tree_path_get_depth(path);
+
+		gtk_tree_path_free(path);	
+		if(depth > 2)
+		{
+			/* here we have:  Add. Replace*/
+			GtkWidget *item;
+			/* add the add widget */
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_add_folder), NULL);		
+
+
+			/* add the replace widget */
+			item = gtk_image_menu_item_new_with_label("Replace");
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_replace_folder), NULL);
+
+			return 1;
+		}
 	}
-	/* now we want to know what level we are, and what we need to show */
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
-	if(path == NULL)
-	{
-		debug_printf(DEBUG_INFO,"Failed to get path\n");
-		return;
-	}
-	depth = gtk_tree_path_get_depth(path);
-
-	gtk_tree_path_free(path);	
-	if(depth > 2)
-	{
-		/* here we have:  Add. Replace*/
-		GtkWidget *item;
-		GtkWidget *menu = gtk_menu_new();	
-		/* add the add widget */
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_add_folder), NULL);		
-
-
-		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_replace_folder), NULL);
-		
-		gtk_widget_show_all(GTK_WIDGET(menu));
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-
-	}
+	return 0;
 }
 void pl3_custom_tag_browser_replace_folder()
 {
@@ -692,25 +693,25 @@ void pl3_custom_tag_browser_add_folder()
 
 void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
-      GtkTreeIter iter;
-      gchar *song_id;
-      gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-      gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_id, -1);
-      if(song_id == NULL) return;
-      pl3_push_statusbar_message("Added a song");
-      mpd_playlist_queue_add(connection, song_id);
-      mpd_playlist_queue_commit(connection);
+	GtkTreeIter iter;
+	gchar *song_id;
+	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_id, -1);
+	if(song_id == NULL) return;
+	pl3_push_statusbar_message("Added a song");
+	mpd_playlist_queue_add(connection, song_id);
+	mpd_playlist_queue_commit(connection);
 }
 
 void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
 {
-	 long unsigned time= 0;
-	 gchar *string;        			
-	 gtk_list_store_clear(pl3_tb_store);	
-	 time = pl3_custom_tag_browser_view_folder(iter);
-	 string = format_time(time);
-	 pl3_push_rsb_message(string);
-	 g_free(string);
+	long unsigned time= 0;
+	gchar *string;        			
+	gtk_list_store_clear(pl3_tb_store);	
+	time = pl3_custom_tag_browser_view_folder(iter);
+	string = format_time(time);
+	pl3_push_rsb_message(string);
+	g_free(string);
 }
 void pl3_tag_browser_selected(GtkWidget *container)
 {

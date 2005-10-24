@@ -25,7 +25,10 @@ gmpcPlBrowserPlugin wp_gbp = {
 	wp_add,
 	wp_selected,
 	wp_unselected,
-	wp_changed
+	wp_changed,
+	NULL,
+	NULL,
+	NULL
 };
 
 gmpcPlugin plugin = {

@@ -16,14 +16,15 @@ gmpc_SOURCES=\
 	vfs_download.c\
 	edit_markup.c\
 	playlist3-tag-browser.c\
-	playlist3-custom-stream-browser.c\
 	playlist3-file-browser.c\
 	playlist3-current-playlist-browser.c\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
-	playlist3-osb-browser.c\
 	mm-keys.c\
 	config1.c
+
+#	playlist3-custom-stream-browser.c
+#	playlist3-osb-browser.c
 
 #INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
 INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@ $(gmpc_gvfs_CFLAGS) $(gmpc_libnotify_CFLAGS) -Wall   
@@ -42,12 +43,11 @@ EXTRA_DIST = 	playlist3.h\
 		mpdinteraction.h\
 		config-defaults.h\
 		playlist3-tag-browser.h\
-		playlist3-custom-stream-browser.h\
 		playlist3-file-browser.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
-		playlist3-osb-browser.h\
 		config1.h
 
-
+#		playlist3-osb-browser.h
+#	playlist3-custom-stream-browser.h

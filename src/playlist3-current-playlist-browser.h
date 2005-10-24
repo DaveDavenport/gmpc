@@ -10,5 +10,5 @@ void pl3_current_playlist_browser_playlist_changed();
 void pl3_current_playlist_browser_selected();
 void pl3_current_playlist_browser_unselected();
 
-void pl3_current_playlist_browser_cat_menu_popup(GtkTreeView *tree, GdkEventButton *event);
+int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTreeView *tree, GdkEventButton *event);
 #endif

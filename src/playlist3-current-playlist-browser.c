@@ -493,11 +493,12 @@ void pl3_current_playlist_browser_playlist_changed()
 }
 
 
-void pl3_current_playlist_browser_cat_menu_popup(GtkTreeView *tree, GdkEventButton *event)
+int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTreeView *tree, GdkEventButton *event)
 {
 	/* here we have:  Save, Clear*/
 	GtkWidget *item;
-	GtkWidget *menu = gtk_menu_new();	
+//	GtkWidget *menu = gtk_menu_new();	
+	if(type != PL3_CURRENT_PLAYLIST) return 0;
 	/* add the save widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -518,10 +519,10 @@ void pl3_current_playlist_browser_cat_menu_popup(GtkTreeView *tree, GdkEventButt
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
 
 
-
+	return 1;
 	/* show everything and popup */
-	gtk_widget_show_all(menu);
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+//	gtk_widget_show_all(menu);
+//	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 }
 
 int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event)
