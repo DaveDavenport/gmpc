@@ -70,8 +70,14 @@ void pref_plugin_changed()
 	if(gtk_tree_selection_get_selected(sel, &model, &iter))
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &id, -1);
-		plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
-		plugin_last = id;
+		if(plugins[id]->pref)
+		{
+			if(plugins[id]->pref->construct)
+			{
+				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+				plugin_last = id;
+			}
+		}
 	}
 }
 
@@ -163,7 +169,7 @@ void create_preferences_window()
 
 
 	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")))), 
-				"changed", G_CALLBACK(pref_plugin_changed), NULL);
+			"changed", G_CALLBACK(pref_plugin_changed), NULL);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")), plugin_store);
 
 	for(i=0; i< num_plugins; i++)
@@ -176,10 +182,10 @@ void create_preferences_window()
 			gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, string, -1);
 			g_free(string);
-		
+
 		}
 	}
-	
+
 
 
 	glade_xml_signal_autoconnect(xml_preferences_window);	
@@ -251,7 +257,7 @@ void update_preferences_information()
 	if(mpd_check_connected(connection))
 	{
 		mpd_set_connection_timeout(connection, 
-			gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
+				gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(xml_preferences_window, "timeout_spin"))));
 	}
 }
 
@@ -266,9 +272,9 @@ void preferences_window_connect(GtkWidget *but)
 	if(!mpd_check_connected(connection))
 		if(!connect_to_mpd())
 		{
-/*	gtk_timeout_remove(update_timeout);
-	update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-*/		}
+			/*	gtk_timeout_remove(update_timeout);
+				update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
+				*/		}
 }
 
 void preferences_window_disconnect(GtkWidget *but)
@@ -283,7 +289,7 @@ void preferences_update()
 {
 	if(!running)return;
 
-	
+
 	if(mpd_check_connected(connection) != connected)
 	{
 		update_server_stats();
@@ -780,7 +786,7 @@ void pref_id3b_row_remove()
 		pref_id3b_fill();
 		pl3_custom_tag_browser_reload();
 	}
-	
+
 }
 
 void pref_id3b_row_changed(GtkTreeView *tree)
@@ -805,7 +811,7 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),0);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb2")),0);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb3")),0);
-		
+
 			if(tk_format[0] != NULL)		
 			{
 				gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(xml_preferences_window, "id3b_cb1")),

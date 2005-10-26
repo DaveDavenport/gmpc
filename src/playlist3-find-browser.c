@@ -30,8 +30,6 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-find-browser.h"
-#include "open-location.h"
-#include "vfs_download.h"
 #include "config1.h"
 
 void pl3_find_browser_search();

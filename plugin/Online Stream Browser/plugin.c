@@ -2,6 +2,8 @@
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 #include <glade/glade.h>
+#include "vfs_download.h"
+#include "open-location.h"
 #include "../../src/plugin.h"
 #include "../../config.h"
 
@@ -41,8 +43,10 @@ enum{
 
 /* Plugin info */
 gmpcPrefPlugin osb_gpp = {
-	osb_construct,
-	osb_destroy
+	//osb_construct,
+	//osb_destroy
+	NULL,
+	NULL
 };
 
 /* Needed plugin_wp stuff */
@@ -257,7 +261,7 @@ void osb_browser_view_browser(gchar *url,gchar *name)
 	}
 	else
 	{
-		start_transfer(url,(void *)osb_browser_fill_view,NULL, pl3_osb_tree);
+		start_transfer(url,(void *)osb_browser_fill_view,NULL, NULL);
 	}
 	g_free(string);
 }
@@ -314,13 +318,13 @@ void osb_init()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_osb_tree), column);                                         	
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_osb_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_osb_tree), TRUE);
-	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_osb_tree)), GTK_SELECTION_MULTIPLE);
+	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_osb_tree)), GTK_SELECTION_SINGLE);
 
 	/* setup signals */
-	   g_signal_connect(G_OBJECT(pl3_osb_tree), "row-activated",G_CALLBACK(osb_browser_row_activated), NULL); 
-	   g_signal_connect(G_OBJECT(pl3_osb_tree), "button-press-event", G_CALLBACK(osb_browser_button_press_event), NULL);
-	   g_signal_connect(G_OBJECT(pl3_osb_tree), "button-release-event", G_CALLBACK(osb_browser_button_release_event), NULL);
-	   g_signal_connect(G_OBJECT(pl3_osb_tree), "key-press-event", G_CALLBACK(osb_browser_playlist_key_press), NULL);
+	g_signal_connect(G_OBJECT(pl3_osb_tree), "row-activated",G_CALLBACK(osb_browser_row_activated), NULL); 
+	g_signal_connect(G_OBJECT(pl3_osb_tree), "button-press-event", G_CALLBACK(osb_browser_button_press_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_osb_tree), "button-release-event", G_CALLBACK(osb_browser_button_release_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_osb_tree), "key-press-event", G_CALLBACK(osb_browser_playlist_key_press), NULL);
 	/* set up the scrolled window */
 	pl3_osb_sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_osb_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
@@ -422,13 +426,14 @@ void osb_browser_add_selected()
 			if(type&(PL3_ENTRY_STREAM))
 			{
 				/* add them to the add list */
-				mpd_playlist_queue_add(connection, name);
+//				mpd_playlist_queue_add(connection, name);
+				ol_create_url(NULL,name);
 				songs++;
 			}
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
-	mpd_playlist_queue_commit(connection);
+//	mpd_playlist_queue_commit(connection);
 	if(songs != 0)
 	{
 		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
@@ -506,7 +511,7 @@ int osb_cat_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *ev
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-//		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
+		g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
 		return 1;
 	}
 	if(type == plugin.id)

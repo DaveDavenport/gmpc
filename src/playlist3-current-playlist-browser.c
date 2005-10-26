@@ -31,8 +31,6 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
-#include "open-location.h"
-#include "vfs_download.h"
 #include "config1.h"
 
 
@@ -504,14 +502,6 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTr
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	/* TODO: Write own fun ction */
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
-
-#ifdef ENABLE_GNOME_VFS
-	item = gtk_image_menu_item_new_with_label("Add Location");
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-			gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(ol_create), NULL);
-#endif
 
 	/* add the clear widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);

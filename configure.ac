@@ -9,7 +9,6 @@ AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
 
-AC_ARG_ENABLE(gnome-vfs,[  --disable-gnome-vfs     disable extra options that use gnome-vfs.],,enable_gnome_vfs=yes)
 AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys     Disable multimedia keys support.],,enable_mmkeys=yes)
 AC_ARG_ENABLE(trayicon,[  --disable-trayicon     Disable tray icon support.],,enable_trayicon=yes)
 
@@ -39,11 +38,6 @@ PKG_CHECK_MODULES(gmpc,
 AC_SUBST(gmpc_LIBS)
 AC_SUBST(gmpc_CFLAGS)
 
-if test x${enable_gnome_vfs} = xyes; then
-	PKG_CHECK_MODULES(gmpc_gvfs, [gnome-vfs-2.0])
-	AC_DEFINE(ENABLE_GNOME_VFS, 1, [Enable extra options that use gnome-vfs])
-fi
-
 
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
@@ -55,8 +49,6 @@ fi
 
 
 
-AC_SUBST(gmpc_gvfs_LIBS)
-AC_SUBST(gmpc_gvfs_CFLAGS)
 
 
 # installation paths
@@ -109,11 +101,6 @@ AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po
 echo ""
 echo ""
 echo "-------------- Status --------------"
-if test x${enable_gnome_vfs} = xyes; then
-	echo "Gnome VFS support is:	 	enabled."
-else
-	echo "Gnome VFS support is:		disabled."
-fi
 if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:  	enabled"
 else

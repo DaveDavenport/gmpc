@@ -28,7 +28,6 @@
 #include "main.h"
 #include "strfsong.h"
 #include "misc.h"
-#include "open-location.h"
 #include "config1.h"
 
 #include "playlist3.h"

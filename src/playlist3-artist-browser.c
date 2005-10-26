@@ -31,8 +31,6 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
-#include "open-location.h"
-#include "vfs_download.h"
 #include "config1.h"
 
 
