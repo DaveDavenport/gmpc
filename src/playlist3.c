@@ -50,39 +50,6 @@ GtkListStore *pl2_store= NULL;
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 
-/* custom search and match function, this is a workaround for the problems with in gtk+-2.6 */
-gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const char *key, GtkTreeIter *iter)
-{
-	char *value= NULL;
-	char *lkey, *lvalue;
-	int ret = TRUE;
-	if(iter == NULL)
-	{
-		return TRUE;
-	}
-	gtk_tree_model_get(model, iter, column, &value, -1);
-	if(value == NULL || key == NULL)
-	{
-		return TRUE;
-	}
-	lkey = g_utf8_casefold(key,-1);
-	lvalue = g_utf8_casefold(value,-1);
-	/* str str seems faster then the glib function todo this */
-	if(strstr(lvalue,lkey) != NULL)
-	{
-		ret = FALSE;
-	}
-	g_free(lkey);
-	g_free(lvalue);
-	return ret;
-}
-
-
-/********************************************************************
- * Misc functions 
- */
-
-
 /* Get the type of the selected row.. 
  * -1 means no row selected 
  */
