@@ -429,7 +429,7 @@ void pl3_artist_browser_add_folder()
 
 void pl3_artist_browser_replace_folder()
 {
-	pl3_clear_playlist();
+	mpd_playlist_clear(connection);
 	pl3_artist_browser_add_folder();
 	mpd_player_play(connection);
 }

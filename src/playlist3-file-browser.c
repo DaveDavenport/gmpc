@@ -43,7 +43,7 @@ void pl3_file_browser_show_info();
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_file_browser_update_folder();
 void pl3_file_browser_add_folder();
-
+void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string);
 enum{
 	PL3_FB_PATH,
 	PL3_FB_TYPE,
@@ -167,7 +167,7 @@ void pl3_file_browser_update_folder()
 
 void pl3_file_browser_replace_folder()
 {
-	pl3_clear_playlist();
+	mpd_playlist_clear(connection);
 	pl3_file_browser_add_folder();	
 	mpd_player_play(connection);
 }
@@ -533,7 +533,7 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				//g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_browse_delete_playlist), path);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), path);
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
@@ -606,7 +606,28 @@ void pl3_file_browser_add_selected()
 	g_list_free (rows);
 }
 
+void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string)
+{
+	/* create a warning message dialog */
+	GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
+			(glade_xml_get_widget
+			 (pl3_xml, "pl3_win")),
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_WARNING,
+			GTK_BUTTONS_NONE,
+			_("Are you sure you want to clear the selected playlist?"));
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_NO,
+			GTK_RESPONSE_CANCEL, GTK_STOCK_YES,
+			GTK_RESPONSE_OK, NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+			GTK_RESPONSE_CANCEL);
 
+	switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			mpd_playlist_delete(connection, string);
+			pl3_cat_sel_changed();
 
-
-
+	}
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+}

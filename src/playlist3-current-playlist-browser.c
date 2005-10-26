@@ -48,6 +48,10 @@ int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEve
 int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event);
 void pl3_current_playlist_browser_show_info();
 void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter);
+void pl2_save_playlist ();
+void pl3_current_playlist_browser_shuffle_playlist();
+void pl3_current_playlist_browser_clear_playlist();
+
 
 
 /* external objects */
@@ -401,14 +405,14 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		/* add the clear widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);		
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clear_playlist), NULL);		
 
 
 		/* add the shuffle widget */
 		item = gtk_image_menu_item_new_with_label("Shuffle");
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_shuffle_playlist), NULL);		
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_shuffle_playlist), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
@@ -506,13 +510,11 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTr
 	/* add the clear widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_clear_playlist), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clear_playlist), NULL);
 
 
 	return 1;
 	/* show everything and popup */
-//	gtk_widget_show_all(menu);
-//	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 }
 
 int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event)
@@ -535,3 +537,77 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	return pl3_window_key_press_event(GTK_WIDGET(tree),event);
 }
 
+/* create a dialog that allows the user to save the current playlist */
+void pl2_save_playlist ()
+{
+	gchar *str;
+	GladeXML *xml = NULL;
+	int run = TRUE;
+	/* check if the connection is up */
+	if (check_connection_state ())
+		return;
+
+	/* create the interface */
+	xml = glade_xml_new (GLADE_PATH "playlist3.glade", "save_pl", NULL);
+
+	/* run the interface */
+	do
+	{
+		switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+		{
+			case GTK_RESPONSE_OK:
+				run = FALSE;
+				/* if the users agrees do the following: */
+				/* get the song-name */
+				str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
+						(glade_xml_get_widget (xml, "pl-entry")));
+				/* check if the user entered a name, we can't do withouth */
+				/* TODO: disable ok button when nothing is entered */
+				/* also check if there is a connection */
+				if (strlen (str) != 0 && !check_connection_state ())
+				{
+					if(mpd_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST )
+					{
+						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
+						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
+						gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
+						/* ask to replace */
+						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), FALSE);
+						switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+						{
+							case GTK_RESPONSE_OK:
+								run = FALSE;
+								mpd_playlist_delete(connection, str);
+								mpd_playlist_save(connection,str);
+								break;
+							default:
+								run = TRUE;
+						}
+						/* return to stare */
+						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
+						gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
+
+						g_free(errormsg);
+					}
+				}
+				break;
+			default:
+				run = FALSE;
+		}
+	}while(run);
+	/* destroy the window */
+	gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
+
+	/* unref the gui description */
+	g_object_unref (xml);
+}
+
+void pl3_current_playlist_browser_clear_playlist()
+{
+   mpd_playlist_clear(connection);
+}
+
+void pl3_current_playlist_browser_shuffle_playlist()
+{
+   mpd_playlist_shuffle(connection);
+}

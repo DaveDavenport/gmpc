@@ -36,16 +36,8 @@
 #include "playlist3-file-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
-#include "playlist3-custom-stream-browser.h"
 #include "playlist3-tag-browser.h"
-//#include "playlist3-osb-browser.h"
 
-
-/*static GtkTargetEntry drag_types[] =
-{
-   { "pm_data", GTK_TARGET_SAME_APP, 100},
-};
-*/
 int old_type = -1;
 
 extern config_obj *config;
@@ -57,49 +49,32 @@ GtkListStore *pl2_store= NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
-void pl2_save_playlist ();
-void pl3_detach_playlist();
-void pl3_dp_scroll_current_song(int songid);
-
-
-/****************************************************************/
-/* We want to move this to mpdinteraction 			*/
-/****************************************************************/
-void pl3_clear_playlist()
-{
-   mpd_playlist_clear(connection);
-}
-
-void pl3_shuffle_playlist()
-{
-   mpd_playlist_shuffle(connection);
-}
 
 /* custom search and match function, this is a workaround for the problems with in gtk+-2.6 */
 gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const char *key, GtkTreeIter *iter)
 {
-   char *value= NULL;
-   char *lkey, *lvalue;
-   int ret = TRUE;
-   if(iter == NULL)
-   {
-      return TRUE;
-   }
-   gtk_tree_model_get(model, iter, column, &value, -1);
-   if(value == NULL || key == NULL)
-   {
-      return TRUE;
-   }
-   lkey = g_utf8_casefold(key,-1);
-   lvalue = g_utf8_casefold(value,-1);
-   /* str str seems faster then the glib function todo this */
-   if(strstr(lvalue,lkey) != NULL)
-   {
-      ret = FALSE;
-   }
-   g_free(lkey);
-   g_free(lvalue);
-   return ret;
+	char *value= NULL;
+	char *lkey, *lvalue;
+	int ret = TRUE;
+	if(iter == NULL)
+	{
+		return TRUE;
+	}
+	gtk_tree_model_get(model, iter, column, &value, -1);
+	if(value == NULL || key == NULL)
+	{
+		return TRUE;
+	}
+	lkey = g_utf8_casefold(key,-1);
+	lvalue = g_utf8_casefold(value,-1);
+	/* str str seems faster then the glib function todo this */
+	if(strstr(lvalue,lkey) != NULL)
+	{
+		ret = FALSE;
+	}
+	g_free(lkey);
+	g_free(lvalue);
+	return ret;
 }
 
 
@@ -113,85 +88,23 @@ gboolean pl3_playlist_tree_search_func(GtkTreeModel *model, gint column, const c
  */
 int  pl3_cat_get_selected_browser()
 {
-   GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-   GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-   GtkTreeIter iter;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter;
 
-   if(gtk_tree_selection_get_selected(selec,&model, &iter))
-   {
-      gint type;
-      gtk_tree_model_get(model, &iter, 0, &type, -1);
-      if(type < 0)
-      {
-	 return -1;
-      }
-      return type;
-   }
-   return -1;
-}
-
-/**************************************************
- * PLaylist Tree
- */
-void pl3_browse_delete_playlist(GtkToggleButton *bt, char *string)
-{
-   /* create a warning message dialog */
-   GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
-	    (glade_xml_get_widget
-	     (pl3_xml, "pl3_win")),
-	    GTK_DIALOG_MODAL,
-	    GTK_MESSAGE_WARNING,
-	    GTK_BUTTONS_NONE,
-	    _("Are you sure you want to clear the selected playlist?"));
-   gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_NO,
-	 GTK_RESPONSE_CANCEL, GTK_STOCK_YES,
-	 GTK_RESPONSE_OK, NULL);
-   gtk_dialog_set_default_response (GTK_DIALOG (dialog),
-	 GTK_RESPONSE_CANCEL);
-
-   switch (gtk_dialog_run (GTK_DIALOG (dialog)))
-   {
-      case GTK_RESPONSE_OK:
-	 mpd_playlist_delete(connection, string);
-	 pl3_cat_sel_changed();
-
-   }
-   gtk_widget_destroy (GTK_WIDGET (dialog));
-}
-
-int pl3_playlist_button_press_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
-		return FALSE;                                                                                           	
+		gint type;
+		gtk_tree_model_get(model, &iter, 0, &type, -1);
+		if(type < 0)
+		{
+			return -1;
+		}
+		return type;
 	}
-	return TRUE;
-
+	return -1;
 }
-int pl3_playlist_button_release_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	return TRUE;
-}
 
-
-void pl3_playlist_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
-{
-/*	gint type = pl3_cat_get_selected_browser();
-	if(type == -1 || check_connection_state())
-	{
-		return;
-	}
-	else if (type == PL3_BROWSE_CUSTOM_STREAM)
-	{
-//		pl3_custom_stream_row_activated(tree,tp);
-	}
-	else if (type == PL3_BROWSE_XIPH)
-	{
-//		pl3_osb_browser_row_activated(tree,tp);
-	}
-	*/
-}
 
 /**************************************************
  * Category Tree 
@@ -219,8 +132,6 @@ void pl3_reinitialize_tree()
 	pl3_file_browser_add();       	
 	pl3_artist_browser_add();
 	pl3_find_browser_add();
-	//	pl3_osb_browser_add();
-	//	pl3_custom_stream_add();
 	pl3_custom_tag_browser_add();
 
 	for(i=0; i< num_plugins;i++)
@@ -305,6 +216,16 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		{
 			pl3_custom_tag_browser_fill_tree(iter);
 		}
+		else if(type|PLUGIN_ID_MARK)
+		{
+			if(plugins[type^PLUGIN_ID_MARK]->browser != NULL)
+			{
+				if(plugins[type^PLUGIN_ID_MARK]->browser->fill_tree != NULL)
+				{
+					plugins[type^PLUGIN_ID_MARK]->browser->fill_tree(tree, iter);
+				}
+			}
+		}
 	}
 	/* avuton's Idea */
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "open-to-position",0))
@@ -385,14 +306,6 @@ void pl3_cat_sel_changed()
 				pl3_find_browser_selected(container);
 				pl3_find_browser_category_selection_changed(tree,&iter);
 			}
-		}
-		else if(type == PL3_BROWSE_XIPH)
-		{
-//			pl3_osb_browser_category_selection_changed(tree,&iter);
-		}
-		else if(type == PL3_BROWSE_CUSTOM_STREAM)
-		{
-			//pl3_custom_stream_category_selection_changed(tree,&iter);
 		}
 		else if(type|PLUGIN_ID_MARK)
 		{
@@ -542,19 +455,19 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	}
 
 	/* default gmpc/xmms/winamp key's*/
-	else if (event->keyval == GDK_z && event->state == 0)
+	else if (event->keyval == GDK_z )
 	{
 		prev_song();	
 	}
-	else if ((event->keyval == GDK_x || event->keyval == GDK_c )&& event->state == 0)
+	else if (event->keyval == GDK_x || event->keyval == GDK_c) 
 	{
 		play_song();	
 	}
-	else if (event->keyval == GDK_v && event->state == 0)
+	else if (event->keyval == GDK_v)
 	{
 		stop_song();
 	}
-	else if (event->keyval == GDK_b && event->state == 0)
+	else if (event->keyval == GDK_b)
 	{
 		next_song();
 	}
@@ -586,18 +499,6 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 
 	}
 
-	return pl3_window_key_press_event(mw,event);
-}
-
-int pl3_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event)
-{/*
-	gint type = pl3_cat_get_selected_browser();
-	if (event->keyval == GDK_Delete && type == PL3_BROWSE_CUSTOM_STREAM)
-	{
-//		pl3_custom_stream_remove();	
-		return TRUE;
-	}
-*/	/* call default */
 	return pl3_window_key_press_event(mw,event);
 }
 
@@ -758,16 +659,11 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-
-
 	mpd_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
 	if(mpd_status_db_is_updating(connection))
 	{
 		updating_changed(connection, 1);
 	}
-
-
-
 
 	/* select the current playlist */
 	if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
@@ -853,71 +749,6 @@ void pl3_highlight_song_change ()
 		/* set highlighted position */
 		info.old_pos = mpd_player_get_current_song_pos(connection);
 	}
-}
-
-/* create a dialog that allows the user to save the current playlist */
-void pl2_save_playlist ()
-{
-	gchar *str;
-	GladeXML *xml = NULL;
-	int run = TRUE;
-	/* check if the connection is up */
-	if (check_connection_state ())
-		return;
-
-	/* create the interface */
-	xml = glade_xml_new (GLADE_PATH "playlist3.glade", "save_pl", NULL);
-
-	/* run the interface */
-	do
-	{
-		switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
-		{
-			case GTK_RESPONSE_OK:
-				run = FALSE;
-				/* if the users agrees do the following: */
-				/* get the song-name */
-				str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
-						(glade_xml_get_widget (xml, "pl-entry")));
-				/* check if the user entered a name, we can't do withouth */
-				/* TODO: disable ok button when nothing is entered */
-				/* also check if there is a connection */
-				if (strlen (str) != 0 && !check_connection_state ())
-				{
-					if(mpd_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST )
-					{
-						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
-						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
-						gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
-						/* ask to replace */
-						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), FALSE);
-						switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
-						{
-							case GTK_RESPONSE_OK:
-								run = FALSE;
-								mpd_playlist_delete(connection, str);
-								mpd_playlist_save(connection,str);
-								break;
-							default:
-								run = TRUE;
-						}
-						/* return to stare */
-						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
-						gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
-
-						g_free(errormsg);
-					}
-				}
-				break;
-			default:
-				run = FALSE;
-		}
-	}while(run);
-	/* destroy the window */
-	gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
-
-	/* unref the gui description */
-	g_object_unref (xml);
 }
 
 void pl3_playlist_changed()
