@@ -44,9 +44,6 @@ void update_display_settings();
 void create_outputs_tree();
 void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view);
 void update_outputs_settings();
-void create_osb_tree();
-void osb_add_edit_source();
-int update_osb_tree();
 void update_server_stats();
 /* advanced id3 browser */
 void pref_id3b_init();
@@ -57,7 +54,6 @@ int plugin_last;
 void pref_plugin_changed()
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
-	GtkTreeView *tree = GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree"));
 	GtkTreeModel *model = GTK_TREE_MODEL(plugin_store);
 	GtkTreeIter iter;
 	int id = 0;
@@ -74,11 +70,18 @@ void pref_plugin_changed()
 		{
 			if(plugins[id]->pref->construct)
 			{
+				char *buf = g_strdup_printf("<span size=\"x-large\"><b>%s</b></span>\n<i>Version: %i.%i.%i</i>", 
+					plugins[id]->name,
+					plugins[id]->version[0],plugins[id]->version[1], plugins[id]->version[2]);
 				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
 				plugin_last = id;
+				gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),buf);
+				g_free(buf);
+				return;
 			}
 		}
 	}
+	gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")), "<span size=\"x-large\"><b>Plugins</b></span>\n<i>None Selected</i>");
 }
 
 
@@ -87,6 +90,7 @@ void create_preferences_window()
 	GtkWidget *dialog;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+	GtkWidget *label;
 	int i=0;
 	char *string = NULL;
 	plugin_last = -1;
@@ -120,8 +124,6 @@ void create_preferences_window()
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_autocon")), 
 			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
 	create_outputs_tree();
-	create_osb_tree();
-	update_osb_tree();
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
@@ -145,23 +147,14 @@ void create_preferences_window()
 	update_server_stats();
 	pref_id3b_init();
 
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "osb_ck_enable")), 
-			cfg_get_single_value_as_int_with_default(config,"osb", "enable", 0));        
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "csl_ck_enable")), 
-			cfg_get_single_value_as_int_with_default(config,"playlist", "custom_stream_enable", 1));                          	
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_of")), 
 			cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));                          	
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_preferences_window, "ck_ps")), 
 			cfg_get_single_value_as_int_with_default(config,"playlist3", "st_cur_song", 0));                          		
 
-#ifdef ENABLE_GNOME_VFS
-	gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vbox_stream"),TRUE);	
-	gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_stream"));	
-
-#endif 
-
 	plugin_store = gtk_list_store_new(2, GTK_TYPE_INT, GTK_TYPE_STRING);
 	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_title(column, _("Plugins:"));
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes (column,renderer,"text", 1, NULL);	
@@ -170,24 +163,21 @@ void create_preferences_window()
 
 	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")))), 
 			"changed", G_CALLBACK(pref_plugin_changed), NULL);
-	gtk_tree_view_set_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")), plugin_store);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")), GTK_TREE_MODEL(plugin_store));
 
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->pref != NULL)
 		{
 			GtkTreeIter iter;
-			char *string = g_strdup_printf("%s (%i.%i.%i)", 
-					plugins[i]->name, plugins[i]->version[0], plugins[i]->version[1], plugins[i]->version[2]);
 			gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, string, -1);
-			g_free(string);
-
+			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
 		}
 	}
-
-
-
+	label = glade_xml_get_widget(xml_preferences_window, "plugin_label_box");
+	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->bg[GTK_STATE_SELECTED]);
+	label = glade_xml_get_widget(xml_preferences_window, "plugin_label");
+	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &dialog->style->fg[GTK_STATE_SELECTED]);
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 }
@@ -297,14 +287,12 @@ void preferences_update()
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), TRUE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), FALSE);	    
-			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
 			gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
 		else
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_con"), FALSE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "bt_dis"), TRUE);	   
-			gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
 			gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		}
 		update_outputs_settings();
@@ -346,13 +334,11 @@ void update_server_settings()
 {
 	if(!mpd_check_connected(connection))
 	{
-		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), FALSE);
 		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 		return;
 	}
 	else 
 	{
-		gtk_widget_set_sensitive(glade_xml_get_widget(xml_preferences_window, "vb_server_set"), TRUE);
 		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hb_warning_mesg"));
 	}	
 
@@ -461,27 +447,6 @@ void update_auth_settings()
 	cfg_free_string(string);
 }
 
-void osb_enable_tb(GtkToggleButton *but)
-{
-
-	int bool1  = gtk_toggle_button_get_active(but);
-	if(bool1 != cfg_get_single_value_as_int_with_default(config, "osb", "enable", 0))
-	{
-		cfg_set_single_value_as_int(config, "osb","enable", bool1);
-		pl3_reinitialize_tree();
-	}
-}
-
-
-void csl_enable_tb(GtkToggleButton *but)
-{
-	int bool1  = gtk_toggle_button_get_active(but);
-	if(bool1 != cfg_get_single_value_as_int_with_default(config,  "playlist","custom_stream_enable", 0))
-	{                                                                   	
-		cfg_set_single_value_as_int(config, "playlist","custom_stream_enable", bool1);
-		pl3_reinitialize_tree();
-	}
-}
 void cur_song_center_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
@@ -491,152 +456,6 @@ void open_to_position_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","open-to-position", bool1);
-}
-
-void create_osb_tree()
-{
-	GtkListStore *model;
-	GtkCellRenderer *cell;
-	GtkTreeViewColumn *col;
-	GtkTreeView *tree;
-
-	tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
-	model = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT);
-	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(model));
-	g_object_unref(G_OBJECT(model));
-
-	cell = gtk_cell_renderer_text_new();
-	col = gtk_tree_view_column_new();
-	gtk_tree_view_column_pack_start(col, cell, TRUE);
-	gtk_tree_view_column_add_attribute(col, cell, "text", 0);
-	gtk_tree_view_column_set_title(col, "Name:");
-	gtk_tree_view_append_column(tree, col);
-
-	cell = gtk_cell_renderer_text_new();
-	col = gtk_tree_view_column_new();
-	gtk_tree_view_column_pack_start(col, cell, TRUE);
-	gtk_tree_view_column_add_attribute(col, cell, "text", 1);
-	gtk_tree_view_column_set_title(col, "Uri");
-	gtk_tree_view_append_column(tree, col);
-}
-
-void osb_del_source()
-{
-	GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
-	GtkTreeModel *model = gtk_tree_view_get_model(tree);                                         	
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)tree);
-	GtkTreeIter iter;
-	if(gtk_tree_selection_get_selected(selec, &model, &iter))
-	{
-		GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(xml_preferences_window,"preferences_window")),
-				GTK_DIALOG_MODAL,
-				GTK_MESSAGE_WARNING,
-				GTK_BUTTONS_YES_NO,
-				"Are you sure you want to delete this source?");
-
-		switch(gtk_dialog_run(GTK_DIALOG(dialog)))
-		{
-			case GTK_RESPONSE_YES:
-				{
-					char *id;
-					gtk_tree_model_get(model, &iter, 0, &id, -1);
-					cfg_del_multiple_value(config, "osb", "streams",id);
-					gtk_list_store_remove((gpointer)model, &iter);
-					pl3_reinitialize_tree();
-				}
-			default:
-				break;
-		}
-		gtk_widget_destroy(dialog);
-	}
-}
-void osb_add_source()
-{
-	osb_add_edit_source(0);
-}
-void osb_edit_source()
-{
-	osb_add_edit_source(1);
-}
-void osb_add_edit_source(int edit)
-{
-	GladeXML *gxml;
-	GtkWidget *dialog;
-	if(edit)
-	{
-		GtkTreeView *tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
-		GtkTreeModel *model = gtk_tree_view_get_model(tree);                                         	
-		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)tree);
-		GtkTreeIter iter;
-		gchar *id, *path;
-		if(gtk_tree_selection_get_selected(selec, &model, &iter))
-		{
-			gxml =glade_xml_new (GLADE_PATH "playlist3.glade", "osb_add_dialog", NULL);
-			dialog =  glade_xml_get_widget(gxml, "osb_add_dialog");
-			gtk_tree_model_get(model, &iter, 0, &id,1, &path, -1);
-			gtk_widget_set_sensitive(glade_xml_get_widget(gxml, "entry_name"),FALSE);
-			gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_name")),id);
-			gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_url")),path);
-		}
-		else
-		{
-			return;
-		}
-	}
-	else
-	{
-		gxml =glade_xml_new (GLADE_PATH "playlist3.glade", "osb_add_dialog", NULL);
-		dialog =  glade_xml_get_widget(gxml, "osb_add_dialog");
-	}
-
-	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
-	{
-		case GTK_RESPONSE_YES:
-			{
-				const gchar *key = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_name")));
-				const gchar *value = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(gxml, "entry_url")));
-				cfg_set_multiple_value_as_string(config,"osb", "streams", (gchar *)key, (gchar *)value);
-				pl3_reinitialize_tree();
-				update_osb_tree();
-			}
-		default:
-			break;
-
-	}
-
-	gtk_widget_destroy(dialog);
-	g_object_unref(gxml);
-}
-
-
-
-int update_osb_tree()
-{
-	GtkTreeView *tree;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	conf_mult_obj *list;
-	tree = GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "tree_osb"));
-	model = gtk_tree_view_get_model(tree);
-
-	gtk_list_store_clear((gpointer)model);
-	list = cfg_get_multiple_as_string(config, "osb", "streams");
-	if(list != NULL)
-	{
-		conf_mult_obj *data = list;
-		do{
-			if(data->key != NULL && data->value != NULL)
-			{
-				gtk_list_store_append((gpointer)model, &iter);
-				gtk_list_store_set((gpointer)model, &iter, 
-						0, data->key,
-						1, data->value,-1);
-			}
-			data = data->next;
-		}while(data  != NULL);
-		cfg_free_multiple(list);
-	}
-	return 0;
 }
 
 
@@ -722,7 +541,7 @@ void update_server_stats()
 				);                                                                     		
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), temp);		
 		g_free(temp);
-		gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));			
+		//gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));			
 	}
 	else
 	{
@@ -731,7 +550,7 @@ void update_server_stats()
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), "N/A");
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), "N/A");
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), "N/A");		
-		gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));		
+		//gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));		
 	}
 
 

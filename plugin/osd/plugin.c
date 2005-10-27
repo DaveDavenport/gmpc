@@ -133,12 +133,7 @@ void osd_construct(GtkWidget *container)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
 			cfg_get_single_value_as_int_with_default(config, "osd-plugin", "enable", 0));
 
-	label = gtk_label_new("OSD Plugin");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"large\"><b>OSD Plugin</b></span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-	
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(osd_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(osd_vbox), label,FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(osd_vbox), enable_cg, FALSE, FALSE, 0);
 
 	/* timeout */

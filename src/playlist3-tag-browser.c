@@ -15,7 +15,7 @@
 
 void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
 void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
-void pl3_custom_tag_browser_reload();
+
 
 void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_custom_tag_browser_add_folder();

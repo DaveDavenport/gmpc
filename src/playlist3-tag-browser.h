@@ -8,7 +8,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter);
 long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter);
 
-
+void pl3_custom_tag_browser_reload();
 
 
 

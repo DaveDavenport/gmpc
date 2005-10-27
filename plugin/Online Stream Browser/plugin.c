@@ -7,6 +7,8 @@
 #include "../../src/plugin.h"
 #include "../../config.h"
 
+GtkWidget *osb_pref_vbox = NULL;
+
 void osb_add(GtkWidget *cat_tree);
 void osb_selected(GtkWidget *container);
 void osb_unselected(GtkWidget *container);
@@ -43,10 +45,8 @@ enum{
 
 /* Plugin info */
 gmpcPrefPlugin osb_gpp = {
-	//osb_construct,
-	//osb_destroy
-	NULL,
-	NULL
+	osb_construct,
+	osb_destroy
 };
 
 /* Needed plugin_wp stuff */
@@ -490,15 +490,32 @@ void osb_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 	return;
 }
-
+void osb_enable_toggle(GtkWidget *wid)
+{
+	int kk = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wid));
+	cfg_set_single_value_as_int(config, "osb", "enable", kk);
+	pl3_reinitialize_tree();
+}
 
 /* PREFERENCES */
 void osb_destroy(GtkWidget *container)
 {
+	gtk_container_remove(GTK_CONTAINER(container), osb_pref_vbox);
 }
 
 void osb_construct(GtkWidget *container)
 {
+	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable Online Stream Browser");
+	GtkWidget *label = NULL;
+	osb_pref_vbox = gtk_vbox_new(FALSE,6);
+
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
+			cfg_get_single_value_as_int_with_default(config, "osb", "enable", 0));
+	
+	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(osb_enable_toggle), NULL);
+	gtk_box_pack_start(GTK_BOX(osb_pref_vbox), enable_cg, FALSE, FALSE, 0);
+	gtk_container_add(GTK_CONTAINER(container), osb_pref_vbox);
+	gtk_widget_show_all(container);
 }
 
 int osb_cat_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)

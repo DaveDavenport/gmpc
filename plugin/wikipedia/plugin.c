@@ -32,7 +32,7 @@ gmpcPlBrowserPlugin wp_gbp = {
 };
 
 gmpcPlugin plugin = {
-	"wikipedia plugin",
+	"WikiPedia",
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
@@ -150,12 +150,8 @@ void wp_construct(GtkWidget *container)
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
 			cfg_get_single_value_as_int_with_default(config, "wp-plugin", "enable", 0));
-	label = gtk_label_new("WikiPedia Plugin");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"large\"><b>WikiPedia Plugin</b></span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 	
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(wp_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(wp_pref_vbox),label, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(wp_pref_vbox), enable_cg, FALSE, FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(container), wp_pref_vbox);
 	gtk_widget_show_all(container);

@@ -195,12 +195,7 @@ void libnotify_construct(GtkWidget *container)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
 			cfg_get_single_value_as_int_with_default(config, "libnotify-plugin", "enable", 0));
 
-	label = gtk_label_new("LibNotify Plugin");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"large\"><b>LibNotify Plugin</b></span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-	
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(libnotify_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(libnotify_vbox), label,FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(libnotify_vbox), enable_cg, FALSE, FALSE, 0);
 	wid2 = gtk_hbox_new(FALSE,6);
 	gtk_box_pack_start(GTK_BOX(libnotify_vbox), wid2,FALSE, FALSE, 0);
