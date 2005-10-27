@@ -566,7 +566,7 @@ void pl2_save_playlist ()
 				/* also check if there is a connection */
 				if (strlen (str) != 0 && !check_connection_state ())
 				{
-					if(mpd_playlist_save(connection, str) == MPD_O_PLAYLIST_EXIST )
+					if(mpd_playlist_save(connection, str) == MPD_PLAYLIST_EXIST )
 					{
 						gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
 						gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
