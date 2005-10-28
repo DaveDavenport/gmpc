@@ -39,7 +39,7 @@
 #include "mm-keys.h"
 #endif
 
-
+void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 extern int debug_level;
 
 gmpcPlugin **plugins = NULL;
@@ -200,10 +200,15 @@ int main (int argc, char **argv)
 		debug_printf(DEBUG_ERROR,"main.c: Failed to create connection obj\n");
 		return 1;
 	}
+	/* New Signal */
+	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
+
+	
 	/* connect signals */
 	mpd_signal_set_playlist_changed(connection, (void *)playlist_changed,NULL);
 	mpd_signal_set_error(connection, (void *)error_callback, NULL);
 	mpd_signal_set_song_changed(connection, (void *)song_changed, NULL);
+	
 	mpd_signal_set_state_changed(connection, (void *)state_callback, NULL);
 	mpd_signal_set_status_changed(connection, (void *)status_callback, NULL);
 	mpd_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
@@ -624,14 +629,35 @@ void playlist_highlight_state_change(int old_state, int new_state)
 	}
 }
 
+
+void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(what&MPD_CST_SONGID)
+	{
+		player_song_changed();
+		tray_icon_song_change();
+		pl3_highlight_song_change();		
+	}
+	if(what&MPD_CST_DATABASE)
+	{
+		pl3_reinitialize_tree();
+	}
+	if(what&MPD_CST_UPDATINT)
+	{
+
+
+	}
+
+
+
+
+}
+
+
+
 void song_changed(MpdObj *mi, int oldsong, int newsong)
 {
 	int i;
-	/* player changed */
-	player_song_changed(oldsong, newsong);
-	tray_icon_song_change();
-	pl3_highlight_song_change();
-
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->mpd != NULL)
@@ -738,7 +764,7 @@ void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 void database_changed(MpdObj *mi)
 {
 	int i;
-	pl3_reinitialize_tree();
+	
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->mpd != NULL)

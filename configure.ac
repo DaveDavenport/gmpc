@@ -25,7 +25,7 @@ AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
 
 
-PKG_CHECK_MODULES(gmpc,
+PKG_CHECK_MODULES([gmpc],
 [
 	glib-2.0 >= 2.4
 	gobject-2.0 >= 2.4

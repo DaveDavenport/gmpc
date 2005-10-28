@@ -537,20 +537,20 @@ int pl3_close()
 void updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = "MPD database is updating";
-	gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
-	/* message auto_remove after 5 sec */
-
-
-	if(pl3_xml == NULL) return;
-	if(updating >0)
+	if(pl3_xml != NULL)
 	{
-		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
-	}
-	else
-	{
-		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
+		gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
+
+		if(updating >0)
+		{
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
+		}
+		else
+		{
+			gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
+		}
 	}
 }
 

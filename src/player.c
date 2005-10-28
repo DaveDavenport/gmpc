@@ -154,15 +154,13 @@ gboolean update_msg()
 	{
 		if(scroll.msg != NULL) g_free(scroll.msg);
 		/* set the correct message in the msg box. and set posistion on 0 */
-		if(scroll.popup_msg != NULL)
-		{
+		if(scroll.popup_msg != NULL) {
 			scroll.msg = g_strdup(scroll.popup_msg);
-		}	
-		else if(scroll.base_msg != NULL)
-		{
+		} else if(scroll.base_msg != NULL){
 			scroll.msg = g_strdup(scroll.base_msg);
+		} else {
+			scroll.msg = g_strdup(_("Gnome Music Player Client"));
 		}
-		else scroll.msg = g_strdup(_("Gnome Music Player Client"));
 		scroll.pos = 0;
 		scroll.up = 0;
 		pango_layout_set_text(layout, scroll.msg, -1);
@@ -210,7 +208,7 @@ void msg_set_base(gchar *msg)
 	int i =0;
 	if(msg == NULL) return;
 	/* don't update when its the same string :) */
-	scroll.do_scroll = TRUE;
+
 	if(scroll.msg != NULL)
 	{
 		if(!strcmp(scroll.msg, msg)) return;
@@ -220,11 +218,14 @@ void msg_set_base(gchar *msg)
 		g_free(scroll.base_msg);
 		scroll.base_msg = NULL;
 	}
-	if(!g_utf8_validate(msg, -1, NULL))
-	{
+	if(!g_utf8_validate(msg, -1, NULL)){
 		scroll.base_msg = g_strdup(_("No valid UTF-8. Please check your locale"));
 	}
-	else	scroll.base_msg = g_strdup(msg);
+	else {
+		scroll.base_msg = g_strdup(msg);
+	}
+
+	scroll.do_scroll = TRUE;
 	for(;msg[i] != '\0';i++)
 	{
 		if(msg[i] == '\n')
@@ -440,7 +441,7 @@ void player_state_changed(int old_state, int state)
 }
 
 
-void player_song_changed(int oldsong, int newsong)
+void player_song_changed()
 {
 	int state = mpd_player_get_state(connection);
 
