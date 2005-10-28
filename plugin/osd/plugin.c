@@ -9,9 +9,7 @@
 GtkWidget *osd_vbox = NULL;
 xosd *osd = NULL;
 
-void osd_song_changed(MpdObj *mi, int old_song, int new_song);
-void osd_state_changed(MpdObj *mi, int old_state, int new_state);
-
+void osd_mpd_status_changed(MpdObj *mi, ChangedStatusType what, void *data);
 void osd_construct(GtkWidget *container);
 void osd_destroy(GtkWidget *container);
 
@@ -21,15 +19,6 @@ gmpcPrefPlugin osd_gpp = {
 };
 
 
-
-/* set the signals I want */
-gmpcMpdSignals osd_gms = {
-	NULL,
-	osd_song_changed,
-	NULL,
-	osd_state_changed,
-	NULL
-};
 /* main plugin_osd info */
 gmpcPlugin plugin = {
 	"osd plugin",
@@ -37,7 +26,7 @@ gmpcPlugin plugin = {
 	GMPC_PLUGIN_NO_GUI,
 	0,
 	NULL,
-	&osd_gms,
+	&osd_mpd_status_changed,
 	&osd_gpp
 };
 
@@ -57,7 +46,7 @@ void osd_init()
 }
 
 
-void osd_song_changed(MpdObj *mi, int old_song, int new_song)
+void osd_song_changed(MpdObj *mi)
 {
 	mpd_Song *song = NULL;
 	if(!cfg_get_single_value_as_int_with_default(config, "osd-plugin", "enable", 0))
@@ -74,18 +63,17 @@ void osd_song_changed(MpdObj *mi, int old_song, int new_song)
 	}
 }
 
-void osd_state_changed(MpdObj *mi, int old_state, int new_state)
+void osd_state_changed(MpdObj *mi)
 {
 	if(!cfg_get_single_value_as_int_with_default(config, "osd-plugin", "enable", 0))
 	{                                                                                   	
 		return;                                                                     	
 	}                                                                                   	
 	if(osd == NULL) osd_init();
-	if(new_state == MPD_STATUS_STATE_PLAY)
+	if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY)
 	{
-		osd_song_changed(mi,1,1);
+		osd_song_changed(mi);
 	}
-
 }
 
 void osd_enable_toggle(GtkWidget *wid)
@@ -164,4 +152,20 @@ void osd_construct(GtkWidget *container)
 
 	gtk_container_add(GTK_CONTAINER(container), osd_vbox);
 	gtk_widget_show_all(container);
+}
+
+
+
+/* mpd changed */
+
+void   osd_mpd_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_SONGID)
+	{
+		osd_song_changed(mi);
+	}
+	if(what&MPD_CST_STATE)
+	{
+		osd_state_changed(mi);
+	}
 }

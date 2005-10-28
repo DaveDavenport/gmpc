@@ -36,7 +36,7 @@ extern MpdObj *connection;
 typedef struct
 {
 	/* playlist number this is to check if the playlist changed */
-	int playlist_id;
+	long long playlist_id;
 	int playlist_length;
 	int playlist_playtime;
 	/* the current song */
@@ -103,6 +103,7 @@ void player_song_changed();
 void player_state_changed(int state);
 void create_preferences_window();
 void preferences_update();
+void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 /* id3info.c*/
 void call_id3_window(int song);
@@ -132,7 +133,7 @@ void call_id3_window_song(mpd_Song *songstr);
 
 
 
-void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id);
+void playlist_changed(MpdObj *mi);
 void init_playlist ();
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 void song_changed(MpdObj *mi, int oldsong, int newsong);

@@ -186,7 +186,7 @@ gboolean update_msg()
 		{
 			if(scroll.do_scroll)
 			{
-				scroll.pos+=4;
+				scroll.pos+=3;
 			}
 			else
 			{
@@ -277,12 +277,12 @@ int update_player()
 {
 	if(!mpd_check_connected(connection)) return FALSE;
 	/* update the volume slider */
-	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+/*	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 	if((int)gtk_range_get_value(scale) != mpd_status_get_volume(connection))
 	{
 		gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
 	}    
-
+*/
 	/* things that only need to be updated during playing */
 	{
 		int totalTime = mpd_status_get_total_song_time(connection);
@@ -339,19 +339,39 @@ int update_player()
 		}
 	}
 
-	/* update random and repeat button */
-	/* lock it to stop them from toggling and triggering another toggle*/
-	if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
-	{
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")), mpd_player_get_repeat(connection));
-	}
-	if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
-	{
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")), mpd_player_get_random(connection));
-	}
+
 	return FALSE;
 }
 
+void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(what&MPD_CST_RANDOM)
+	{
+		if(mpd_player_get_random(connection) != 
+				gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")),
+				       mpd_player_get_random(connection));
+		}
+	}
+	if(what&MPD_CST_REPEAT)
+	{
+		if(mpd_player_get_repeat(connection) != 
+				gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")),
+				       mpd_player_get_repeat(connection));
+		}
+	}
+	if(what&MPD_CST_VOLUME)
+	{
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
+		if((int)gtk_range_get_value(scale) != mpd_status_get_volume(connection))
+		{
+			gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
+		}    
+	}
+}	
 
 void player_state_changed(int state)
 {
@@ -414,7 +434,7 @@ void player_state_changed(int state)
 			}
 			/* malloc a new string.. size of old string + the number of needed "stripes"*2 ('\n' -> ' - ' == +2 chars) + a ending \0*/
 			new_buf = (char *)g_malloc0((i+2*stripes+1)*sizeof(char ));
-			
+
 			for(i=0;buffer[i] != '\0';i++)
 			{
 
@@ -431,7 +451,7 @@ void player_state_changed(int state)
 				}
 				j++;
 			}
-			
+
 
 			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), new_buf);	
 			g_free(new_buf);
@@ -709,10 +729,9 @@ void create_player()
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")), "gtk-media-previous", GTK_ICON_SIZE_BUTTON);
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")), "gtk-media-next", GTK_ICON_SIZE_BUTTON);	
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")), "gtk-media-stop", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);			
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);			
-
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);
 
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);
@@ -736,7 +755,7 @@ void create_player()
 			G_CALLBACK(player_key_press),
 			NULL);
 	/* check for errors and axit when there is no gui file */
-	gtk_timeout_add(300, (GSourceFunc)update_msg, NULL);
+	gtk_timeout_add(200, (GSourceFunc)update_msg, NULL);
 	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
 	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
 }

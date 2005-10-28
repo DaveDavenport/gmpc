@@ -70,9 +70,6 @@ gmpcPlugin plugin = {
 	&osb_gpp
 };
 
-
-
-
 void osb_browser_refresh()
 {
 	gchar *name, *string, *url;

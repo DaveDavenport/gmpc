@@ -39,6 +39,7 @@
 #include "mm-keys.h"
 #endif
 
+void connection_changed(MpdObj *mi, int connect, gpointer data);
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 extern int debug_level;
 
@@ -202,18 +203,9 @@ int main (int argc, char **argv)
 	}
 	/* New Signal */
 	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
-
+	mpd_signal_connect_error(connection, error_callback, NULL);
+	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);	
 	
-	/* connect signals */
-	mpd_signal_set_playlist_changed(connection, (void *)playlist_changed,NULL);
-	mpd_signal_set_error(connection, (void *)error_callback, NULL);
-	mpd_signal_set_song_changed(connection, (void *)song_changed, NULL);
-	
-	mpd_signal_set_state_changed(connection, (void *)state_callback, NULL);
-	mpd_signal_set_status_changed(connection, (void *)status_callback, NULL);
-	mpd_signal_set_disconnect(connection, (void *)disconnect_callback, NULL);	
-	mpd_signal_set_connect(connection, (void *)connect_callback, NULL);
-	mpd_signal_set_database_changed(connection, (void *)database_changed, NULL);
 	/*
 	 * initialize gtk 
 	 */
@@ -290,7 +282,7 @@ int main (int argc, char **argv)
 
 void main_quit()
 {
-	mpd_signal_set_disconnect(connection, NULL, NULL);
+	mpd_signal_connect_connection_changed(connection, NULL, NULL);	
 	if(mpd_check_connected(connection))
 	{
 		mpd_disconnect(connection);
@@ -342,10 +334,10 @@ int update_interface ()
 }
 
 
-void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
+void playlist_changed(MpdObj *mi)
 {
 	MpdData *data = NULL;
-	int i;
+	long long new_playlist_id = mpd_playlist_get_playlist_id(connection);
 	/*
 	 * so I don't have to check all the time 
 	 */
@@ -462,18 +454,6 @@ void playlist_changed(MpdObj *mi, int old_playlist_id, int new_playlist_id)
 	info.playlist_length = mpd_playlist_get_playlist_length(connection);
 
 	pl3_playlist_changed();
-
-
-	for(i=0; i< num_plugins; i++)
-	{
-		if(plugins[i]->mpd != NULL)
-		{
-			if(plugins[i]->mpd->playlist_changed != NULL)
-			{
-				plugins[i]->mpd->playlist_changed(mi, old_playlist_id, new_playlist_id);
-			}
-		}
-	}
 
 }
 
@@ -596,12 +576,11 @@ void init_playlist ()
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT,
 			GTK_TYPE_INT);
-
 }
 
 
 /* this function takes care the right row is highlighted */
-void playlist_highlight_state_change(int old_state, int new_state)
+void playlist_highlight_state_change()
 {
 	GtkTreeIter iter;
 	gchar *temp;
@@ -622,8 +601,7 @@ void playlist_highlight_state_change(int old_state, int new_state)
 		/* reset old pos */
 		info.old_pos = -1;
 	}                                                           
-	/* if the old state was stopped. (or  unkown) and the new state is play or pause highight the song again */	
-	if(old_state <= MPD_PLAYER_STOP && old_state < new_state)
+	if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY)
 	{
 		pl3_highlight_song_change();
 	}
@@ -632,6 +610,7 @@ void playlist_highlight_state_change(int old_state, int new_state)
 
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+	int i;
 	if(what&MPD_CST_SONGID)
 	{
 		player_song_changed();
@@ -645,33 +624,30 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	if(what&MPD_CST_UPDATING)
 	{
 		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
-
 	}
 	if(what&MPD_CST_STATE)
 	{
 		player_state_changed(mpd_player_get_state(connection));
 		tray_icon_state_change();
-
+		playlist_highlight_state_change();
 	}
-}
+	if(what&MPD_CST_PLAYLIST)
+	{
+		playlist_changed(mi);
+	}
 
-void song_changed(MpdObj *mi, int oldsong, int newsong)
-{
-	int i;
+	/* make the player handle signals */
+	player_mpd_state_changed(mi,what,userdata);
+
+
+	
 	for(i=0; i< num_plugins; i++)
 	{
-		if(plugins[i]->mpd != NULL)
+		if(plugins[i]->mpd_status_changed!= NULL)
 		{
-
-			if(plugins[i]->mpd->song_changed != NULL)
-			{
-				plugins[i]->mpd->song_changed(mi, oldsong, newsong);
-			}
+			plugins[i]->mpd_status_changed(mi,what,NULL);
 		}
 	}
-
-
-
 }
 
 void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
@@ -725,54 +701,16 @@ void connect_callback(MpdObj *mi)
 	pl3_reinitialize_tree();
 }
 
-void status_callback(MpdObj *mi)
-{
-	int i;
-	id3_status_update();
 
-	for(i=0; i< num_plugins; i++)
+void connection_changed(MpdObj *mi, int connect, gpointer data)
+{
+	if(connect)
 	{
-		if(plugins[i]->mpd != NULL)
-		{                          		
-			if(plugins[i]->mpd->status_changed != NULL)
-			{
-				plugins[i]->mpd->status_changed(mi);
-			}
-		}
+		connect_callback(mi);
+	}
+	else
+	{
+		disconnect_callback(mi);
 	}
 }
 
-
-void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
-{
-	int i;
-	playlist_highlight_state_change(old_state,new_state);
-	/* make */
-	for(i=0; i< num_plugins; i++)
-	{
-
-		if(plugins[i]->mpd != NULL)
-		{                          		
-			if(plugins[i]->mpd->state_changed != NULL)
-			{
-				plugins[i]->mpd->state_changed(mi, old_state, new_state);
-			}
-		}
-	}
-}
-
-void database_changed(MpdObj *mi)
-{
-	int i;
-	
-	for(i=0; i< num_plugins; i++)
-	{
-		if(plugins[i]->mpd != NULL)
-		{                          		
-			if(plugins[i]->mpd->database_changed != NULL)
-			{
-				plugins[i]->mpd->database_changed(mi);
-			}
-		}
-	}
-}

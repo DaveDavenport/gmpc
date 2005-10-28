@@ -18,8 +18,9 @@ int libnotify_initialized = 0;
 extern EggTrayIcon *tray_icon;
 GtkWidget *libnotify_vbox = NULL;
 
-void libnotify_song_changed(MpdObj *mi, int old_song, int new_song);
-void libnotify_state_changed(MpdObj *mi, int old_state, int new_state);
+void libnotify_song_changed(MpdObj *mi);
+void libnotify_state_changed(MpdObj *mi);
+void libnotify_mpd_status_changed(MpdObj *mi, ChangedStatusType what, void *data);
 
 void libnotify_construct(GtkWidget *container);
 void libnotify_destroy(GtkWidget *container);
@@ -30,15 +31,6 @@ gmpcPrefPlugin libnotify_gpp = {
 };
 
 
-
-/* set the signals I want */
-gmpcMpdSignals libnotify_gms = {
-	NULL,
-	libnotify_song_changed,
-	NULL,
-	libnotify_state_changed,
-	NULL
-};
 /* main plugin info */
 gmpcPlugin plugin= {
 	"libnotify plugin",
@@ -46,7 +38,7 @@ gmpcPlugin plugin= {
 	GMPC_PLUGIN_NO_GUI,
 	0,
 	NULL,
-	&libnotify_gms,
+	libnotify_mpd_status_changed,
 	&libnotify_gpp
 };
 
@@ -149,7 +141,7 @@ void libnotify_do_popup()
 }
 
 
-void libnotify_song_changed(MpdObj *mi, int old_song, int new_song)
+void libnotify_song_changed(MpdObj *mi)
 {
 	mpd_Song *song = NULL;
 	if(!cfg_get_single_value_as_int_with_default(config, "libnotify-plugin", "enable", 0))
@@ -160,7 +152,7 @@ void libnotify_song_changed(MpdObj *mi, int old_song, int new_song)
 	libnotify_do_popup();
 }
 
-void libnotify_state_changed(MpdObj *mi, int old_state, int new_state)
+void libnotify_state_changed(MpdObj *mi)
 {
 	if(!cfg_get_single_value_as_int_with_default(config, "libnotify-plugin", "enable", 0))
 	{                                                                                   	
@@ -208,4 +200,17 @@ void libnotify_construct(GtkWidget *container)
 	
 	gtk_container_add(GTK_CONTAINER(container), libnotify_vbox);
 	gtk_widget_show_all(container);
+}
+
+
+void   libnotify_mpd_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_SONGID)
+	{
+		libnotify_song_changed(mi);
+	}
+	if(what&MPD_CST_STATE)
+	{
+		libnotify_state_changed(mi);
+	}
 }

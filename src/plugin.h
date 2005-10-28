@@ -63,14 +63,6 @@ typedef struct {
 	void (*cat_key_press)(GdkEventKey *event, int selected_type); /* not yet implemented */
 } gmpcPlBrowserPlugin;
 
-typedef struct {
-	void	(*playlist_changed)(MpdObj *mi, int old_playlist_id, int new_playlist_id);
-	void	(*song_changed)(MpdObj *mi, int old_song_id, int new_song_id);
-	void 	(*status_changed)(MpdObj *mi);
-	void 	(*state_changed)(MpdObj *mi, int old_state, int new_state);
-	void 	(*database_changed)(MpdObj *mi);
-} gmpcMpdSignals;
-
 
 
 
@@ -81,9 +73,11 @@ typedef struct {
 	int 			plugin_type;
 	/* unique plugin id */
 	int 			id; /* do not fill in, is done by gmpc */
-	/* depending on type of plugin */
+	/* Browser Plugins */
 	gmpcPlBrowserPlugin 	*browser;
-	gmpcMpdSignals		*mpd;
+	/* plugin with one signal for changes on Mpd */
+	StatusChangedCallback 	mpd_status_changed;
+	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
 } gmpcPlugin;
 
