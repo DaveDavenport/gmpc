@@ -642,18 +642,18 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	{
 		pl3_reinitialize_tree();
 	}
-	if(what&MPD_CST_UPDATINT)
+	if(what&MPD_CST_UPDATING)
 	{
-
+		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
 
 	}
+	if(what&MPD_CST_STATE)
+	{
+		player_state_changed(mpd_player_get_state(connection));
+		tray_icon_state_change();
 
-
-
-
+	}
 }
-
-
 
 void song_changed(MpdObj *mi, int oldsong, int newsong)
 {
@@ -711,6 +711,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		g_free(str);
 	}
 }
+
 void connect_callback(MpdObj *mi)
 {
 	if(xml_error_window != NULL)
@@ -723,6 +724,7 @@ void connect_callback(MpdObj *mi)
 
 	pl3_reinitialize_tree();
 }
+
 void status_callback(MpdObj *mi)
 {
 	int i;
@@ -744,8 +746,6 @@ void status_callback(MpdObj *mi)
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data)
 {
 	int i;
-	player_state_changed(old_state, new_state);
-	tray_icon_state_change();
 	playlist_highlight_state_change(old_state,new_state);
 	/* make */
 	for(i=0; i< num_plugins; i++)

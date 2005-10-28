@@ -1,6 +1,8 @@
 #ifndef __PLAYLIST3_H__
 #define __PLAYLIST3_H__
 
+#include <libmpd/libmpd.h>
+
 extern GtkTreeStore *pl3_tree;
 extern GtkListStore *pl3_store;
 
@@ -64,5 +66,6 @@ void pl3_clear_playlist();
 void pl3_show_song_info ();
 
 int pl3_cat_get_selected_browser();
+void pl3_updating_changed(MpdObj *mi, int updating);
 
 #endif

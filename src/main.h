@@ -100,7 +100,7 @@ void msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
 void player_song_changed();
-void player_state_changed(int old_state, int state);
+void player_state_changed(int state);
 void create_preferences_window();
 void preferences_update();
 

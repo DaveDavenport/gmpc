@@ -353,7 +353,7 @@ int update_player()
 }
 
 
-void player_state_changed(int old_state, int state)
+void player_state_changed(int state)
 {
 	GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)

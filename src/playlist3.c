@@ -534,7 +534,7 @@ int pl3_close()
 	}
 	return TRUE;
 }
-void updating_changed(MpdObj *mi, int updating)
+void pl3_updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = "MPD database is updating";
 	if(pl3_xml != NULL)
@@ -626,10 +626,9 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-	mpd_signal_set_updating_changed(connection, (void *)updating_changed, NULL);
 	if(mpd_status_db_is_updating(connection))
 	{
-		updating_changed(connection, 1);
+		pl3_updating_changed(connection, 1);
 	}
 
 	/* select the current playlist */
