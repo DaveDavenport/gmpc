@@ -564,6 +564,7 @@ void create_playlist3 ()
 	GtkWidget *tree;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
+	gchar *path = NULL;
 	GtkTreeIter iter;
 	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
@@ -581,7 +582,9 @@ void create_playlist3 ()
 	}
 
 	/* load gui desciption */
-	pl3_xml = glade_xml_new (GLADE_PATH "playlist3.glade", "pl3_win", NULL);
+	path = gmpc_get_full_glade_path("playlist3.glade");
+	pl3_xml = glade_xml_new (path, "pl3_win", NULL);
+	g_free(path);
 	if(pl3_xml == NULL)
 	{
 		debug_printf(DEBUG_ERROR, "create_playlist3: Failed to open playlist3.glade.\n");

@@ -719,7 +719,10 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 /* create the player and connect signals */
 void create_player()
 {
-	xml_main_window = glade_xml_new(GLADE_PATH"gmpc.glade", "main_window", NULL);
+	char *path = gmpc_get_full_glade_path("gmpc.glade");
+	xml_main_window = glade_xml_new(path, "main_window", NULL);
+	g_free(path);
+
 	/* check for errors and axit when there is no gui file */
 	if(xml_main_window == NULL)  g_error(_("Couldnt initialize GUI. Please check installation\n"));
 	glade_xml_signal_autoconnect(xml_main_window);

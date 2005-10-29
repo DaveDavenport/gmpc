@@ -1,3 +1,8 @@
+29-10-2005 Qball <Qball@qballcow.nl>
+	* glade/image path are now retrieved using
+	gmpc_get_full_{glade|image}_path. this is needed for win32 installer.
+
+
 07-10-2005 Qball <Qball@qballcow.nl>
 	* apply DJWLindenaar's win32 patch
 

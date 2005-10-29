@@ -144,6 +144,9 @@ void database_changed(MpdObj *mi);
 void main_quit();
 
 
+char *gmpc_get_full_image_path(char *filename);
+char *gmpc_get_full_glade_path(char *filename);
+
 /* plugin */
 void load_plugins_from_dir(gchar *path);
 #endif

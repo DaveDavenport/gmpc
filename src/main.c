@@ -71,6 +71,20 @@ config_obj *config = NULL;
 MpdObj *connection = NULL;
 
 
+
+
+char *gmpc_get_full_image_path(char *filename)
+{
+	return g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
+}
+
+char *gmpc_get_full_glade_path(char *filename)
+{
+	return g_strdup_printf("%s/%s", GLADE_PATH, filename);
+}
+
+
+
 void main_trigger_update ()
 {
 	if (check_connection_state(info))
@@ -462,34 +476,44 @@ void init_stock_icons ()
 	GtkIconFactory *factory;
 	GdkPixbuf *pb;
 	GtkIconSet *set;
+	char *path;
 	factory = gtk_icon_factory_new ();
 
 	/*
 	 * add media-audiofile 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-audiofile.png",
-			NULL);
+	path = gmpc_get_full_image_path("media-audiofile.png");
+	pb = gdk_pixbuf_new_from_file (path ,NULL);
+	g_free(path);
+
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-audiofile", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-stream 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-stream.png", NULL);
+	path = gmpc_get_full_image_path("media-stream.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
+
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-stream", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-artist 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-artist.png", NULL);
+	path = gmpc_get_full_image_path("media-artist.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-artist", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-album 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-album.png", NULL);
+	path = gmpc_get_full_image_path("media-album.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-album", set);
 	g_object_unref (G_OBJECT (pb));
@@ -497,50 +521,63 @@ void init_stock_icons ()
 	/*
 	 * add media-play 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-play.png", NULL);
+	path = gmpc_get_full_image_path("media-play.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gtk-media-play", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-stop 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-stop.png", NULL);
+	path = gmpc_get_full_image_path("media-stop.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gtk-media-stop", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-next 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-next.png", NULL);
+	path = gmpc_get_full_image_path("media-next.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gtk-media-next", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-prev 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-prev.png", NULL);
+	path = gmpc_get_full_image_path("media-prev.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gtk-media-previous", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add media-pause 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-pause.png", NULL);
+	path = gmpc_get_full_image_path("media-pause.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gtk-media-pause", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add player-shuffle 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "player-shuffle.png",
-			NULL);
+	path = gmpc_get_full_image_path("player-shuffle.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-random", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
 	 * add playerrepeat 
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "player-repeat.png", NULL);
+	path = gmpc_get_full_image_path("player-repeat.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-repeat", set);
 	g_object_unref (G_OBJECT (pb));
@@ -548,7 +585,9 @@ void init_stock_icons ()
 	/*
 	 * add icecast
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "icecast.png", NULL);
+	path = gmpc_get_full_image_path("icecast.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb); 
 	gtk_icon_factory_add (factory, "icecast", set);
 	g_object_unref (G_OBJECT (pb));
@@ -556,7 +595,9 @@ void init_stock_icons ()
 	/*
 	 * add media playlist
 	 */
-	pb = gdk_pixbuf_new_from_file (PIXMAP_PATH "media-playlist.png", NULL);
+	path = gmpc_get_full_image_path("media-playlist.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);                        	
 	gtk_icon_factory_add (factory, "media-playlist", set);
 	g_object_unref (G_OBJECT (pb));                
@@ -672,7 +713,9 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 	if (xml_error_window == NULL)
 	{
 		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
-		xml_error_window = glade_xml_new(GLADE_PATH"gmpc.glade", "error_dialog",NULL);
+		gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+		xml_error_window = glade_xml_new(path,"error_dialog",NULL);
+		g_free(path);
 		GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
 		gtk_widget_show_all(dialog);

@@ -101,14 +101,16 @@ void id3_status_update()
 
 void create_window (int song)
 {
+	char *path;
 	mpd_Song *songstr = mpd_playlist_get_song(connection, song);
+
 	if(songstr == NULL)
 	{
 		return;
 	}
-	
-	xml_id3_window = glade_xml_new (GLADE_PATH "gmpc.glade", "id3_info_window", NULL);
-
+	path = gmpc_get_full_glade_path("gmpc.glade");	
+	xml_id3_window = glade_xml_new (path,"id3_info_window", NULL);
+	g_free(path);
 	/* check for errors and axit when there is no gui file */
 	if (xml_id3_window == NULL)
 	{
@@ -277,7 +279,9 @@ void call_id3_window_song(mpd_Song *songstr)
 	}
 	if(xml_id3_window == NULL)
 	{
-		xml_id3_window = glade_xml_new (GLADE_PATH "gmpc.glade", "id3_info_window", NULL);
+		char *path = gmpc_get_full_glade_path("gmpc.glade");
+		xml_id3_window = glade_xml_new (path, "id3_info_window", NULL);
+		g_free(path);
 
 		/* check for errors and axit when there is no gui file */
 		if (xml_id3_window == NULL)

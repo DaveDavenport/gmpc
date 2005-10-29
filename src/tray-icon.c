@@ -594,6 +594,7 @@ int create_tray_icon()
 {
 	GdkPixbuf  *temp;
 	GtkWidget *event;
+	gchar *path;
 	GtkWidget *ali;
 	if(tray_icon != NULL)
 	{
@@ -609,7 +610,9 @@ int create_tray_icon()
 	gtk_container_add(GTK_CONTAINER(tray_icon), ali);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	/* set image */
-	temp = gdk_pixbuf_new_from_file(PIXMAP_PATH"gmpc-tray.png",NULL);
+	path = gmpc_get_full_image_path("gmpc-tray.png");
+	temp = gdk_pixbuf_new_from_file(path,NULL);
+	g_free(path);
 	logo = gdk_pixbuf_scale_simple(temp, 20,20, GDK_INTERP_BILINEAR);
 	g_object_unref(temp);
 

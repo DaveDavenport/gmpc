@@ -548,7 +548,9 @@ void pl2_save_playlist ()
 		return;
 
 	/* create the interface */
-	xml = glade_xml_new (GLADE_PATH "playlist3.glade", "save_pl", NULL);
+	str = gmpc_get_full_glade_path("playlist3.glade");
+	xml = glade_xml_new (str, "save_pl", NULL);
+	g_free(str);
 
 	/* run the interface */
 	do

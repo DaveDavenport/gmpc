@@ -107,7 +107,9 @@ void create_preferences_window()
 			return;
 		}
 	}
-	xml_preferences_window = glade_xml_new(GLADE_PATH"gmpc.glade", "preferences_window", NULL);
+	string = gmpc_get_full_glade_path("gmpc.glade");
+	xml_preferences_window = glade_xml_new(string, "preferences_window", NULL);
+	g_free(string);
 	/* check for errors and axit when there is no gui file */
 	if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 

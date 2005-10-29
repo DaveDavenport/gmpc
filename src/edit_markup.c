@@ -120,8 +120,11 @@ char * edit_song_markup(char *format)
 {
 	char *str_format = NULL;
 	GtkTextIter start_iter, stop_iter;				
-	xml_esf= glade_xml_new(GLADE_PATH"gmpc.glade", "esf_dialog",NULL);
-	GtkWidget *dialog = glade_xml_get_widget(xml_esf, "esf_dialog");
+	GtkWidget *dialog;
+	char *path = gmpc_get_full_glade_path("gmpc.glade");
+	xml_esf= glade_xml_new(path, "esf_dialog",NULL);
+	g_free(path);
+	dialog = glade_xml_get_widget(xml_esf, "esf_dialog");
 	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(glade_xml_get_widget(xml_esf, "textview_markup")));
 	glade_xml_signal_autoconnect (xml_esf);
 	g_signal_connect(G_OBJECT(buffer), "changed", G_CALLBACK(esf_render_example), NULL);
