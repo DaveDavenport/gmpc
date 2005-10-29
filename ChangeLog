@@ -1,4 +1,8 @@
 29-10-2005 Qball <Qball@qballcow.nl>
+	* Moved more stuff in player.c to new signal.
+	* Made dependency for fixed libmpd signals
+	* Added display showing repeat/volume/random changes.. even not
+	initiate by gmpc
 	* code cleanups... now compiles with -ansi.
 	* restoring position after hide now works again.
 	* glade/image path are now retrieved using

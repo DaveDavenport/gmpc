@@ -96,7 +96,7 @@ extern scrollname scroll;
 int update_player();
 void create_player();
 gboolean update_msg();
-void msg_pop_popup();
+int msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
 void player_song_changed();

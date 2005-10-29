@@ -649,9 +649,9 @@ void playlist_highlight_state_change()
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
+	printf("%i\n", what);
 	if(what&MPD_CST_SONGID)
 	{
-		player_song_changed();
 		tray_icon_song_change();
 		pl3_highlight_song_change();		
 	}
@@ -665,7 +665,6 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_STATE)
 	{
-		player_state_changed(mpd_player_get_state(connection));
 		tray_icon_state_change();
 		playlist_highlight_state_change();
 	}

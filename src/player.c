@@ -31,10 +31,10 @@
 #include "playlist3.h"
 #include "config1.h"
 extern config_obj *config;
-
+void volume_change_update();
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
-
+guint msg_timeout = 0;
 scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE,TRUE};
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
@@ -240,34 +240,54 @@ void msg_set_base(gchar *msg)
 void msg_push_popup(gchar *msg)
 {
 	if(msg == NULL) return;
+	if(msg_timeout)
+	{
+		g_source_remove(msg_timeout);
+		msg_timeout = 0;
+	}
+
 	if(scroll.queue == NULL)
 	{
-		scroll.queue = g_queue_new();
+	/*	scroll.queue = g_queue_new();*/
 	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-		g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check your locale")));
-		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
+	/*	g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check your locale")));*/
+		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check your locale"));/*g_queue_peek_tail(scroll.queue);*/
 	}
 	else
 	{
-		g_queue_push_tail(scroll.queue,g_strdup(msg));
-		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
+	/*	g_queue_push_tail(scroll.queue,g_strdup(msg));*/
+		scroll.popup_msg =g_strdup(msg);/* g_queue_peek_tail(scroll.queue);*/
 	}
 	scroll.exposed = TRUE;
 }
-
-void msg_pop_popup()
+void msg_push_popup_timeout(gchar *msg, int timeout)
 {
+	msg_push_popup(msg);
+	msg_timeout = g_timeout_add(timeout, (GSourceFunc)msg_pop_popup, NULL);
+}
+
+int msg_pop_popup()
+{
+	if(msg_timeout)
+	{
+		g_source_remove(msg_timeout);
+		msg_timeout = 0;
+	}
 	if(scroll.popup_msg != NULL)
 	{
-		char *msg = g_queue_peek_tail(scroll.queue);
+		/*char *msg = g_queue_peek_tail(scroll.queue);
 
 		g_queue_pop_tail(scroll.queue);
 		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
 		g_free(msg);
+		*/
+		g_free(scroll.popup_msg);
+		scroll.popup_msg = NULL;
 	}
 	scroll.exposed = TRUE;
+	return FALSE;
 }
 
 /* this updates the player.. this is called from the update function */
@@ -276,13 +296,6 @@ void msg_pop_popup()
 int update_player()
 {
 	if(!mpd_check_connected(connection)) return FALSE;
-	/* update the volume slider */
-/*	GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
-	if((int)gtk_range_get_value(scale) != mpd_status_get_volume(connection))
-	{
-		gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
-	}    
-*/
 	/* things that only need to be updated during playing */
 	{
 		int totalTime = mpd_status_get_total_song_time(connection);
@@ -345,14 +358,18 @@ int update_player()
 
 void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+	gchar *msg = NULL;
 	if(what&MPD_CST_RANDOM)
 	{
-		if(mpd_player_get_random(connection) != 
+				if(mpd_player_get_random(connection) != 
 				gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")),
 				       mpd_player_get_random(connection));
 		}
+		msg = g_strdup_printf("%s: %s", _("Random"), (mpd_player_get_random(connection))?_("On"):_("Off"));
+		msg_push_popup_timeout(msg, 2000);	
+		g_free(msg);
 	}
 	if(what&MPD_CST_REPEAT)
 	{
@@ -362,6 +379,10 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")),
 				       mpd_player_get_repeat(connection));
 		}
+		msg = g_strdup_printf("%s: %s", _("Repeat"), (mpd_player_get_repeat(connection))?_("On"):_("Off"));
+		msg_push_popup_timeout(msg, 2000);	
+		g_free(msg);
+		
 	}
 	if(what&MPD_CST_VOLUME)
 	{
@@ -370,7 +391,23 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		{
 			gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
 		}    
+		msg = g_strdup_printf("%s: %03i%%", _("Volume"), mpd_status_get_volume(connection));
+		msg_push_popup_timeout(msg, 2000);	
+		g_free(msg);                                                                                       		
 	}
+	if(what&MPD_CST_SONGID)
+	{
+		/* we want to see the new song */
+		msg_pop_popup();
+		player_song_changed();
+	}
+	if(what&MPD_CST_STATE)
+	{
+		/* we want to see the new song */
+		msg_pop_popup();                 		
+		player_state_changed(mpd_player_get_state(connection));
+	}
+	
 }	
 
 void player_state_changed(int state)
@@ -598,7 +635,6 @@ int volume_change_start()
 	if(!mpd_check_connected(connection) || volume) return TRUE;
 	if(mpd_status_get_volume(connection) == -1) return TRUE;
 	volume = TRUE;
-	msg_push_popup("Volume: ");
 	return FALSE;
 }
 
@@ -609,11 +645,7 @@ void volume_change_update()
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
-		gchar *buf = g_strdup_printf(_("Volume %i%%"), (int)value);
-		msg_pop_popup();
-		msg_push_popup(buf);
-		g_free(buf);
-
+	
 		if(mpd_status_set_volume(connection,(int)value) < 0)
 		{
 			return;
@@ -639,7 +671,6 @@ void volume_change_update()
 /* apply changes and give mpd free */
 int volume_change_stop()
 {
-	msg_pop_popup();
 	volume = FALSE;
 	if(!mpd_check_connected(connection)) return TRUE;
 	return FALSE;

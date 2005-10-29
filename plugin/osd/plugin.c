@@ -185,6 +185,18 @@ void osd_construct(GtkWidget *container)
 	gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,1,2);	
 	g_signal_connect(G_OBJECT(label), "color-set", G_CALLBACK(osd_color_set), NULL);
 
+
+
+	/* position selector */
+	/* TODO*/
+
+
+
+
+
+
+
+	
 	/* x-offset */
 	label = gtk_label_new("X-Offset:"); 
 	gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
@@ -224,19 +236,20 @@ void   osd_mpd_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
 	if(what&(MPD_CST_SONGID|MPD_CST_STATE))
 	{
 		osd_song_changed(mi);
+		return;
 	}
 	/* don't do this on song change */
-	if(what == MPD_CST_VOLUME)
+	if(what&MPD_CST_VOLUME)
 	{
 		xosd_display(osd, 0,XOSD_string,"Volume:");
 		xosd_display(osd, 1,XOSD_slider,mpd_status_get_volume(mi));
 	}
-	if(what == MPD_CST_REPEAT)
+	if(what&MPD_CST_REPEAT)
 	{
 		xosd_display(osd, 0,XOSD_string,"Repeat:");
 		xosd_display(osd, 1,XOSD_string,(mpd_player_get_repeat(mi))?"On":"Off");
 	}
-	if(what == MPD_CST_RANDOM)
+	if(what&MPD_CST_RANDOM)
 	{
 		xosd_display(osd, 0,XOSD_string,"Random:");
 		xosd_display(osd, 1,XOSD_string,(mpd_player_get_random(mi))?"On":"Off");
