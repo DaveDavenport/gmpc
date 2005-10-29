@@ -190,6 +190,7 @@ int main (int argc, char **argv)
 		mkdir(url, 0777);
 	}
 	g_free(url);
+	add_plugin(&tray_icon_plug);
 	/* OPEN CONFIG FILE */
 	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
@@ -649,7 +650,10 @@ void playlist_highlight_state_change()
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
-	printf("%i\n", what);
+	debug_printf(DEBUG_INFO, "StatusChanged: %i", what);
+	
+	
+	
 	if(what&MPD_CST_SONGID)
 	{
 		tray_icon_song_change();
@@ -665,7 +669,6 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_STATE)
 	{
-		tray_icon_state_change();
 		playlist_highlight_state_change();
 	}
 	if(what&MPD_CST_PLAYLIST)

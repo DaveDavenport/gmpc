@@ -113,6 +113,7 @@ void update_tray_icon();
 int create_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
+extern gmpcPlugin tray_icon_plug; 
 /* popup.c: update_popup() */
 void destroy_tray_icon();
 
@@ -149,4 +150,5 @@ char *gmpc_get_full_glade_path(char *filename);
 
 /* plugin */
 void load_plugins_from_dir(gchar *path);
+void add_plugin(gmpcPlugin *plug);
 #endif

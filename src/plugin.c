@@ -3,6 +3,18 @@
 #include <gmodule.h>
 #include "main.h"
 
+
+void add_plugin(gmpcPlugin *plug)
+{
+	/* set plugin id */
+	plug->id = num_plugins|PLUGIN_ID_MARK;
+	/* put it in the list */                                           	
+	num_plugins++;
+	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
+	plugins[num_plugins-1] = plug;
+	plugins[num_plugins] = NULL;                                       	
+
+}
 int plugin_load(char *path, const char *file)
 {
 	GModule *handle;
@@ -33,13 +45,7 @@ int plugin_load(char *path, const char *file)
 		g_module_close(handle);
 		return 1;
 	}
-	/* set plugin id */
-	plug->id = num_plugins|PLUGIN_ID_MARK;
-	/* put it in the list */
-	num_plugins++;
-	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
-	plugins[num_plugins-1] = plug;
-	plugins[num_plugins] = NULL;
+	add_plugin(plug);
 	return 0;
 }
 

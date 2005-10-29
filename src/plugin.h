@@ -12,7 +12,8 @@ extern config_obj *config;
 enum {
 	GMPC_PLUGIN_DUMMY,
 	GMPC_PLUGIN_PL_BROWSER,
-	GMPC_PLUGIN_NO_GUI
+	GMPC_PLUGIN_NO_GUI,
+	GMPC_INTERNALL
 };
 
 

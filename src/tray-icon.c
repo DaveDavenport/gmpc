@@ -18,6 +18,14 @@ void tray_icon_state_change() {}
 #include "strfsong.h"
 #include "config1.h"
 
+
+void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
+
+
+
+
+
+
 int playlist_hidden = FALSE;
 extern config_obj *config;
 extern GladeXML *pl3_xml;
@@ -38,6 +46,21 @@ guint popup_timeout = -1;
 
 GdkPixbuf *dest = NULL;
 int compf= 50;
+
+gmpcPlugin tray_icon_plug = {
+	"Tray Icon",
+	{1,1,1},
+	GMPC_INTERNALL,
+	0,
+	NULL,
+	&TrayStatusChanged,	
+	NULL
+};
+
+
+
+
+
 
 /**/
 gchar *tray_get_tooltip_text()
@@ -631,5 +654,16 @@ int create_tray_icon()
 	return FALSE;
 }
 
+void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(what&MPD_CST_STATE)
+	{
+		tray_icon_state_change();
+	}
+	if(what&MPD_CST_SONGID)
+	{
+		tray_icon_song_change();
+	}
+}
 
 #endif
