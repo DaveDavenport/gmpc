@@ -1,4 +1,6 @@
 29-10-2005 Qball <Qball@qballcow.nl>
+	* code cleanups... now compiles with -ansi.
+	* restoring position after hide now works again.
 	* glade/image path are now retrieved using
 	gmpc_get_full_{glade|image}_path. this is needed for win32 installer.
 

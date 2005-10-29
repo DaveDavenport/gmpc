@@ -376,7 +376,6 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		GtkTreeIter iter;
 		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-		//		gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "playlist_tree"));
 
 		/* select the current playlist */
 		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
@@ -452,6 +451,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	/* call default */
+	int i;
 	gint type = pl3_cat_get_selected_browser();
 	if(type == PL3_BROWSE_FILE)
 	{
@@ -465,7 +465,17 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 
 	}
-
+	
+	for(i=0; i< num_plugins;i++)
+	{
+		if(plugins[i]->browser != NULL)
+		{
+			if(plugins[i]->browser->cat_key_press != NULL)
+			{
+        			plugins[i]->browser->cat_key_press(mw,event,type);
+        		}
+        	}
+        }
 	return pl3_window_key_press_event(mw,event);
 }
 
@@ -569,9 +579,10 @@ void create_playlist3 ()
 	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
 	{
+
+		if(pl3_wsize.x  >0 || pl3_wsize.y>0) gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
+		if(pl3_wsize.height>0 || pl3_wsize.width>0) gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-		if(!pl3_wsize.x || !pl3_wsize.y) gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
-		if(!pl3_wsize.height || !pl3_wsize.width) gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}

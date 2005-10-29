@@ -543,7 +543,6 @@ void update_server_stats()
 				);                                                                     		
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), temp);		
 		g_free(temp);
-		//gtk_widget_hide(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));			
 	}
 	else
 	{
@@ -552,7 +551,6 @@ void update_server_stats()
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_albums")), "N/A");
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_uptime")), "N/A");
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "ss_label_playtime")), "N/A");		
-		//gtk_widget_show(glade_xml_get_widget(xml_preferences_window, "hbox_connected"));		
 	}
 
 

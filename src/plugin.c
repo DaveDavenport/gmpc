@@ -3,7 +3,7 @@
 #include <gmodule.h>
 #include "main.h"
 
-int plugin_load(char *path, char *file)
+int plugin_load(char *path, const char *file)
 {
 	GModule *handle;
 	gmpcPlugin *plug = NULL;

@@ -70,9 +70,6 @@ config_obj *config = NULL;
  */
 MpdObj *connection = NULL;
 
-
-
-
 char *gmpc_get_full_image_path(char *filename)
 {
 	return g_strdup_printf("%s/%s", PIXMAP_PATH, filename);

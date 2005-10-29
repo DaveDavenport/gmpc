@@ -88,7 +88,6 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 		position = atoi(str);
 		if(pos == GTK_TREE_VIEW_DROP_AFTER)
 		{
-//			position++;
 			printf("drop after\n");
 		}
 		else if(pos == GTK_TREE_VIEW_DROP_BEFORE)
@@ -125,8 +124,6 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 			
 		} while ((llist = g_list_next (llist)));
 
-		/* close the list, so it will be executed */
-//		mpd_playlist_queue_commit(connection);
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
@@ -135,24 +132,6 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 	gtk_tree_selection_unselect_all(selection);
 	return TRUE;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void pl3_current_playlist_browser_init()
@@ -215,11 +194,8 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 	/* set initial state */
-	//	gtk_widget_hide(pl3_cp_sw);
 	printf("initialized current playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_cp_sw));
-	/* this got to change */
-	//	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox2")), pl3_cp_sw, 1,1,0);
 }
 
 
@@ -499,7 +475,6 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTr
 {
 	/* here we have:  Save, Clear*/
 	GtkWidget *item;
-//	GtkWidget *menu = gtk_menu_new();	
 	if(type != PL3_CURRENT_PLAYLIST) return 0;
 	/* add the save widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
@@ -514,7 +489,6 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTr
 
 
 	return 1;
-	/* show everything and popup */
 }
 
 int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event)
