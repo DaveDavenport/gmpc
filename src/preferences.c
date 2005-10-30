@@ -60,20 +60,20 @@ void pref_plugin_changed()
 	if(gtk_tree_selection_get_selected(sel, &model, &iter))
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &id, -1);
-		if(plugins[id]->pref)
+		if(id >= 0 && plugins[id]->pref)
 		{
 			if(plugins[id]->pref->construct)
 			{
 				char *buf = NULL;
 				if(plugins[id]->plugin_type != GMPC_INTERNALL)
 				{
-					buf = g_strdup_printf("<span size=\"x-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
+					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
 							plugins[id]->name,
 							plugins[id]->version[0],plugins[id]->version[1], plugins[id]->version[2]);
 				}
 				else
 				{
-					buf = g_strdup_printf("<span size=\"x-large\"><b>%s</b></span>",
+					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
 							plugins[id]->name); 					
 				}
 
@@ -85,9 +85,9 @@ void pref_plugin_changed()
 			}
 		}
 	}
-	gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")), "<span size=\"x-large\"><b>Plugins</b></span>\n<i>None Selected</i>");
+	gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),
+		       	"<span size=\"xx-large\"><b>Nothing Selected</b></span>");
 }
-
 
 void create_preferences_window()
 {
@@ -95,6 +95,7 @@ void create_preferences_window()
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkWidget *label;
+	int plugs = 0;
 	int i=0;
 	char *string = NULL;
 	plugin_last = -1;
@@ -130,7 +131,7 @@ void create_preferences_window()
 	gtk_tree_view_column_set_title(column, _("Plugins:"));
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,renderer,"text", 1, NULL);	
+	gtk_tree_view_column_set_attributes (column,renderer,"markup", 1, NULL);	
 	gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")), column);
 
 
@@ -138,15 +139,45 @@ void create_preferences_window()
 			"changed", G_CALLBACK(pref_plugin_changed), NULL);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")), GTK_TREE_MODEL(plugin_store));
 
+	/* internals */
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->pref != NULL)
 		{
-			GtkTreeIter iter;
-			gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-			gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
+			if(plugins[i]->plugin_type == GMPC_INTERNALL)
+			{
+				GtkTreeIter iter;
+				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
+				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
+				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
+							GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
+				{
+					gtk_tree_selection_select_iter(gtk_tree_view_get_selection(
+							GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree"))),&iter);
+				}
+			}
+			else
+			{
+				plugs++;
+			}
 		}
 	}
+	/* plugins */
+	if(plugs)
+	{
+		GtkTreeIter iter;
+		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
+		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,-1, 1,"<b>Plugins:</b>", -1);
+		for(i=0; i< num_plugins; i++)
+		{
+			if(plugins[i]->pref != NULL && plugins[i]->plugin_type != GMPC_INTERNALL)
+			{
+				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
+				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
+			}
+		}
+	}
+
 	label = glade_xml_get_widget(xml_preferences_window, "plugin_label_box");
 	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->bg[GTK_STATE_SELECTED]);
 	label = glade_xml_get_widget(xml_preferences_window, "plugin_label");

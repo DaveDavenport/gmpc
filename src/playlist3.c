@@ -566,10 +566,15 @@ void pl3_push_rsb_message(gchar *string)
 
 int pl3_close()
 {
-	if(pl3_xml != NULL)
+	if(pl3_xml != NULL && !pl3_hidden)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+	
+		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
+		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
+		cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
+		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 
 		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 		{
@@ -638,6 +643,20 @@ void create_playlist3 ()
 	{
 		debug_printf(DEBUG_ERROR, "create_playlist3: Failed to open playlist3.glade.\n");
 		return;
+	}
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+	{
+		pl3_wsize.x = 		cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
+		pl3_wsize.y = 		cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
+		pl3_wsize.width = 	cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
+		pl3_wsize.height = 	cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+
+		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
+		}
+		if(pl3_wsize.height>0 || pl3_wsize.width>0) {
+			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
+		}
 	}
 	if (pl3_tree == NULL)
 	{
@@ -757,7 +776,7 @@ void pl3_highlight_song_change ()
 			}
 			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,SONG_STOCK_ID,"gtk-media-play", -1);
 
-			if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0) && 
+			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) && 
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{
 				pl3_current_playlist_browser_scroll_to_current_song();
@@ -790,14 +809,18 @@ void pl3_playlist_changed()
 void cur_song_center_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
-	cfg_set_single_value_as_int(config, "playlist3","st_cur_song", bool1);
+	cfg_set_single_value_as_int(config, "playlist","st_cur_song", bool1);
 }
 void open_to_position_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","open-to-position", bool1);
 }
-
+void save_possize_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "playlist","savepossize", bool1);
+}
 void set_browser_format()
 {
 	char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
@@ -856,8 +879,9 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_of")), 
 				cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));                          	
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_ps")), 
-				cfg_get_single_value_as_int_with_default(config,"playlist3", "st_cur_song", 0));	
-
+				cfg_get_single_value_as_int_with_default(config,"playlist", "st_cur_song", 0));	
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")), 
+				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));	
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);

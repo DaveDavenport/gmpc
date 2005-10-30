@@ -2419,7 +2419,6 @@ Lower Right Corner</property>
 
   <child>
     <widget class="GtkVBox" id="playlist-vbox">
-      <property name="border_width">12</property>
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">8</property>
@@ -2495,6 +2494,26 @@ Lower Right Corner</property>
 		      <property name="inconsistent">False</property>
 		      <property name="draw_indicator">True</property>
 		      <signal name="toggled" handler="cur_song_center_enable_tb" last_modification_time="Mon, 11 Apr 2005 20:56:17 GMT"/>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkCheckButton" id="ck_possize">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="label" translatable="yes">Save position and size between sessions</property>
+		      <property name="use_underline">True</property>
+		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
+		      <property name="active">False</property>
+		      <property name="inconsistent">False</property>
+		      <property name="draw_indicator">True</property>
+		      <signal name="toggled" handler="save_possize_enable_tb" last_modification_time="Sun, 30 Oct 2005 19:19:20 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>

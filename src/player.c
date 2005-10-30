@@ -395,6 +395,19 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		msg_push_popup_timeout(msg, 2000);	
 		g_free(msg);                                                                                       		
 	}
+	if(what&MPD_CST_CROSSFADE)
+	{
+		if(mpd_status_get_crossfade(connection) >0)
+		{
+			msg = g_strdup_printf("%s: %i sec", _("Crossfade"), mpd_status_get_crossfade(connection));
+		}
+		else
+		{
+			msg = g_strdup_printf("%s: %s", _("Crossfade"), _("Off"));
+		}
+		msg_push_popup_timeout(msg, 2000);	
+		g_free(msg);
+	}
 	if(what&MPD_CST_SONGID)
 	{
 		/* we want to see the new song */
@@ -407,7 +420,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		msg_pop_popup();                 		
 		player_state_changed(mpd_player_get_state(connection));
 	}
-	
+
 }	
 
 void player_state_changed(int state)
@@ -645,7 +658,7 @@ void volume_change_update()
 	{
 		GtkRange *scale = (GtkRange *)glade_xml_get_widget(xml_main_window, "volume_slider");
 		gdouble value = gtk_range_get_value(scale);
-	
+
 		if(mpd_status_set_volume(connection,(int)value) < 0)
 		{
 			return;

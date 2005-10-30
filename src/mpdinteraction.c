@@ -19,14 +19,14 @@ gmpcPrefPlugin server_gpp = {
 	server_pref_construct,
 	server_pref_destroy
 };
-
+void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 gmpcPlugin server_plug = {
 	"Server Settings",
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
 	NULL,
-	NULL,	
+	&ServerStatusChangedCallback,
 	&server_gpp
 };
 enum
@@ -378,9 +378,31 @@ void xfade_time_changed(GtkSpinButton *but)
 	}
 	mpd_status_set_crossfade(connection, fade_time);
 }
+void xfade_update()
+{
+	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));	
+	if(mpd_status_get_crossfade(connection) > 0)
+	{
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
+				mpd_status_get_crossfade(connection));
+	}
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(server_pref_xml, "cb_fading")),
+			mpd_status_get_crossfade(connection)?TRUE:FALSE);
+
+	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(server_pref_xml, "sb_fade_time")), 
+			(mpd_status_get_crossfade(connection))?TRUE:FALSE);
+
+}
 
 
-
+void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(!server_pref_xml)return;
+	if(what&MPD_CST_CROSSFADE)
+	{
+		xfade_update();
+	}
+}
 
 
 
@@ -407,7 +429,7 @@ void server_pref_construct(GtkWidget *container)
 		create_outputs_tree();
 		update_outputs_settings();
 		update_server_stats();
-			if(!mpd_check_connected(connection))
+		if(!mpd_check_connected(connection))
 		{
 			gtk_widget_show(glade_xml_get_widget(server_pref_xml, "hb_warning_mesg"));
 			return;
@@ -439,7 +461,7 @@ void server_pref_construct(GtkWidget *container)
 /**************************************************
  * Connection Preferences *
  */
- /* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
+/* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
 
 
 
@@ -567,26 +589,6 @@ void connection_pref_construct(GtkWidget *container)
 			cfg_get_single_value_as_float_with_default(config,"connection", "timeout",1.0));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(connection_pref_xml, "ck_autocon")), 
 			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	if(connection_pref_xml)
 	{
