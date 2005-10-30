@@ -72,7 +72,8 @@ void osd_song_changed(MpdObj *mi)
 		}
 		else if(mpd_player_get_state(connection) == MPD_STATUS_STATE_STOP)
 		{
-			xosd_display (osd, 0, XOSD_string,"Stopped:");
+			xosd_hide(osd);
+			return;
 		}                                                                 		
 		else
 		{

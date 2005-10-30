@@ -20,9 +20,9 @@ void tray_icon_state_change() {}
 
 
 void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
-
-
-
+GladeXML *tray_pref_xml = NULL;
+void tray_icon_pref_construct(GtkWidget *container);
+void tray_icon_pref_destroy(GtkWidget *container);
 
 
 
@@ -47,14 +47,23 @@ guint popup_timeout = -1;
 GdkPixbuf *dest = NULL;
 int compf= 50;
 
+
+gmpcPrefPlugin tray_gpp = {
+	tray_icon_pref_construct,
+	tray_icon_pref_destroy
+};
+
+
+
+
 gmpcPlugin tray_icon_plug = {
-	"Tray Icon",
+	"Notification",
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
 	NULL,
 	&TrayStatusChanged,	
-	NULL
+	&tray_gpp
 };
 
 
@@ -665,5 +674,114 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 		tray_icon_song_change();
 	}
 }
+/* PREFERENCES */
 
+
+void tray_enable_toggled(GtkToggleButton *but)
+{
+	debug_printf(DEBUG_INFO,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
+	cfg_set_single_value_as_int(config, "tray-icon", "enable", (int)gtk_toggle_button_get_active(but));
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
+	{
+		create_tray_icon();
+	}
+	else
+	{
+		destroy_tray_icon();
+	}
+}
+
+void hide_player_toggled(GtkToggleButton *but)
+{
+	cfg_set_single_value_as_int(config, "player", "hide-startup", (int)gtk_toggle_button_get_active(but));
+}
+
+
+
+
+
+
+
+/* this sets all the settings in the notification area preferences correct */
+void tray_update_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(tray_pref_xml, "ck_tray_enable"), 
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE));
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(tray_pref_xml, "ck_hide_player"), 
+			cfg_get_single_value_as_int_with_default(config, "player", "hide-startup", DEFAULT_HIDE_ON_STARTUP));
+
+}
+
+void popup_enable_toggled(GtkToggleButton *but)
+{
+	cfg_set_single_value_as_int(config, "tray-icon", "do-popup", gtk_toggle_button_get_active(but));
+}
+
+
+void popup_position_changed(GtkComboBox *om)
+{
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-location", gtk_combo_box_get_active(om));
+}
+
+void popup_timeout_changed()
+{
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout", 
+			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_pref_xml, "popup_timeout"))));
+}
+
+void update_popup_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(tray_pref_xml, "ck_popup_enable"),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tray_pref_xml, "om_popup_position")),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0));
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_pref_xml, "popup_timeout")),
+			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 5));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void tray_icon_pref_destroy(GtkWidget *container)
+{
+	if(tray_pref_xml)
+	{
+		GtkWidget *vbox = glade_xml_get_widget(tray_pref_xml, "tray-pref-vbox");
+		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		g_object_unref(tray_pref_xml);
+		tray_pref_xml = NULL;
+	}
+}
+void tray_icon_pref_construct(GtkWidget *container)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	tray_pref_xml = glade_xml_new(path, "tray-pref-vbox",NULL);
+
+	if(tray_pref_xml)
+	{
+		GtkWidget *vbox = glade_xml_get_widget(tray_pref_xml, "tray-pref-vbox");
+		gtk_container_add(GTK_CONTAINER(container),vbox);
+		tray_update_settings();
+		update_popup_settings();
+		glade_xml_signal_autoconnect(tray_pref_xml);
+
+
+	}
+}
 #endif

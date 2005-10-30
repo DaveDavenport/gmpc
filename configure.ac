@@ -89,10 +89,10 @@ EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
 case $host in
   *-*-mingw32* | *-*-windows)
-    EXTRA_CFLAGS="-mno-cygwin -mwindows"
-    EXTRA_LDFLAGS="-export-all-symbols -mwindows" ;;
+    EXTRA_CFLAGS="-mno-cygwin -mwindows -mms-bitfields"
+    EXTRA_LDFLAGS="-export-all-symbols -mwindows -mms-bitfields" ;;
   *-*-cygwin*)
-    EXTRA_LDFLAGS=-export-all-symbols ;;
+    EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
 esac
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)

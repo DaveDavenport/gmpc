@@ -29,7 +29,11 @@
 extern gmpcPlugin **plugins;
 extern int num_plugins;
 
-
+extern gmpcPlugin connection_plug;
+extern gmpcPlugin about_plug; 
+extern gmpcPlugin playlist_plug; 
+extern gmpcPlugin server_plug; 
+extern gmpcPlugin tag_plug; 
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
@@ -113,14 +117,16 @@ void update_tray_icon();
 int create_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
+#ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug; 
+#endif
 /* popup.c: update_popup() */
 void destroy_tray_icon();
 
 /* main.h*/
 void main_trigger_update();
 
-
+void preferences_update();
 int  seek_ns(int n);
 int  seek_ps(int n);
 

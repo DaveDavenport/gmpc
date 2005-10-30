@@ -72,12 +72,46 @@ MpdObj *connection = NULL;
 
 char *gmpc_get_full_image_path(char *filename)
 {
-	return g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
+	gchar *path;
+#ifdef WIN32
+	gchar *packagedir;
+	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+	debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+	
+	path = g_build_filename(packagedir, "data", "images", filename, NULL);
+	
+	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
+	 * a pointer which is returned on further calls to g_win32_get...
+	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
+	 * 
+	 * g_free(packagedir);
+	 */
+#else
+	path = g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
+#endif
+	return path;
 }
 
 char *gmpc_get_full_glade_path(char *filename)
 {
-	return g_strdup_printf("%s/%s", GLADE_PATH, filename);
+	gchar *path;
+#ifdef WIN32
+	gchar *packagedir;
+	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+	debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+	
+	path = g_build_filename(packagedir, "data", "glade", filename, NULL);
+	
+	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
+	 * a pointer which is returned on further calls to g_win32_get...
+	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
+	 * 
+	 * g_free(packagedir);
+	 */
+#else	
+	path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
+#endif
+	return path;
 }
 
 
@@ -180,6 +214,19 @@ int main (int argc, char **argv)
 		debug_printf(DEBUG_INFO, "main.c: %s exist and is directory",url);
 	}
 	g_free(url);
+
+
+	add_plugin(&connection_plug);
+	add_plugin(&server_plug);
+	add_plugin(&playlist_plug);
+	add_plugin(&tag_plug);
+#ifdef ENABLE_TRAYICON	
+	add_plugin(&tray_icon_plug);
+#endif
+	add_plugin(&about_plug);
+
+
+	/* plugins */	
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
@@ -190,7 +237,7 @@ int main (int argc, char **argv)
 		mkdir(url, 0777);
 	}
 	g_free(url);
-	add_plugin(&tray_icon_plug);
+
 	/* OPEN CONFIG FILE */
 	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
@@ -308,7 +355,6 @@ int update_interface ()
 	/*
 	 * update the preferences menu, I call this as soon as possible so the preferences menu can detect update 
 	 */
-	preferences_update ();
 
 	/*
 	 * check if there is an connection. (that is when connection == NULL) 
@@ -746,6 +792,7 @@ void connect_callback(MpdObj *mi)
 
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
+	preferences_update();
 	if(connect)
 	{
 		connect_callback(mi);
