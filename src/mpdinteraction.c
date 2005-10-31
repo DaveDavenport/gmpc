@@ -183,6 +183,7 @@ int stop_song()
 int play_song()
 {
 	int state = mpd_player_get_state(connection);
+	printf("state: %i %i\n", state, MPD_PLAYER_PLAY);
 	if(state == MPD_PLAYER_STOP)
 	{
 		mpd_player_play(connection);

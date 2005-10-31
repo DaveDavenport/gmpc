@@ -355,10 +355,6 @@ void main_quit()
 int update_interface ()
 {
 	/*
-	 * update the preferences menu, I call this as soon as possible so the preferences menu can detect update 
-	 */
-
-	/*
 	 * check if there is an connection. (that is when connection == NULL) 
 	 */
 	if (!mpd_check_connected(connection))
@@ -381,15 +377,7 @@ int update_interface ()
 	/*
 	 * now start updating the rest 
 	 */
-	/*
-	 * check if busy 
-	 */
-	if(!mpd_check_connected(connection)) return TRUE;
 	update_player();
-
-	/*
-	 * set these to the good value. So there only updated when changed 
-	 */
 	return TRUE;
 }
 
