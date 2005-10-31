@@ -32,7 +32,7 @@ gmpcPlugin about_plug = {
 };
 /* End About */
 GtkListStore *plugin_store = NULL;
-GladeXML *xml_preferences_window;
+GladeXML *xml_preferences_window = NULL;
 gboolean running = 0, connected = 0;
 
 void update_auth_settings();
@@ -194,6 +194,12 @@ void set_display_default_sd()
 void preferences_window_destroy()
 {
 	GtkWidget *dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
+	if(plugin_last >= 0)
+	{
+		plugins[plugin_last]->pref->destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+		plugin_last = -1;
+
+	}	                                                                                                     	
 	gtk_widget_destroy(dialog);
 	g_object_unref(xml_preferences_window);
 	xml_preferences_window = NULL;

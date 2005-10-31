@@ -359,6 +359,7 @@ int update_player()
 void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	gchar *msg = NULL;
+	if(xml_main_window == NULL)return;
 	if(what&MPD_CST_RANDOM)
 	{
 				if(mpd_player_get_random(connection) != 
