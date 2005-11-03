@@ -65,6 +65,7 @@ gmpcPlugin plugin = {
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
+	NULL,
 	&osb_gbp,
 	NULL,
 	&osb_gpp
