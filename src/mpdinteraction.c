@@ -26,6 +26,7 @@ gmpcPlugin server_plug = {
 	GMPC_INTERNALL,
 	0,
 	NULL,
+	NULL,
 	&ServerStatusChangedCallback,
 	&server_gpp
 };
@@ -51,6 +52,7 @@ gmpcPlugin connection_plug = {
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
+	NULL,
 	NULL,
 	NULL,	
 	&connection_gpp
@@ -381,7 +383,6 @@ void xfade_time_changed(GtkSpinButton *but)
 }
 void xfade_update()
 {
-	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));	
 	if(mpd_status_get_crossfade(connection) > 0)
 	{
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")),

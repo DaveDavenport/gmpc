@@ -110,11 +110,6 @@ void pl3_find_fill_combo()
 }
 
 
-
-
-
-
-
 void pl3_find_browser_init()
 {
 	GtkCellRenderer *renderer;
@@ -198,12 +193,6 @@ void pl3_find_browser_init()
 	
 	g_object_ref(G_OBJECT(pl3_findb_vbox));
 }
-
-
-
-
-
-
 
 void pl3_find_browser_selected(GtkWidget *container)
 {

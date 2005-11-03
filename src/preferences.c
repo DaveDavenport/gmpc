@@ -27,6 +27,7 @@ gmpcPlugin about_plug = {
 	GMPC_INTERNALL,
 	0,
 	NULL,
+	NULL,
 	NULL,	
 	&about_gpp
 };

@@ -62,6 +62,7 @@ gmpcPlugin tray_icon_plug = {
 	GMPC_INTERNALL,
 	0,
 	NULL,
+	NULL,
 	&TrayStatusChanged,	
 	&tray_gpp
 };
@@ -622,6 +623,32 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	return FALSE;    
 }
 
+int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
+{
+	if(event->type == GDK_SCROLL)
+	{
+		if(event->direction == GDK_SCROLL_UP)
+		{
+			mpd_status_set_volume(connection,mpd_status_get_volume(connection)+5);		
+		}
+		else if (event->direction == GDK_SCROLL_DOWN)
+		{
+			mpd_status_set_volume(connection,mpd_status_get_volume(connection)-5);		
+		}
+		else if(event->direction == GDK_SCROLL_LEFT)
+		{
+			mpd_player_prev(connection);
+		}
+		else if (event->direction == GDK_SCROLL_RIGHT)
+		{
+			mpd_player_next(connection);
+		}
+	}
+
+	return FALSE;
+}
+
+
 int create_tray_icon()
 {
 	GdkPixbuf  *temp;
@@ -656,6 +683,7 @@ int create_tray_icon()
 			G_CALLBACK(tray_motion_cb), GINT_TO_POINTER(1));
 	g_signal_connect(G_OBJECT(event), "leave-notify-event",
 			G_CALLBACK(tray_leave_cb), NULL);
+	g_signal_connect(G_OBJECT(event), "scroll-event", G_CALLBACK(scroll_event), NULL);
 	/* show all */
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	if(tps == NULL)	tps = gtk_tooltips_new();

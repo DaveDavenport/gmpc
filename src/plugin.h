@@ -9,12 +9,12 @@ extern MpdObj *connection;
 extern config_obj *config;
 
 /* Plugin Type's */
-enum {
+typedef enum {
 	GMPC_PLUGIN_DUMMY,
 	GMPC_PLUGIN_PL_BROWSER,
 	GMPC_PLUGIN_NO_GUI,
 	GMPC_INTERNALL
-};
+} PluginType;
 
 
 
@@ -69,11 +69,13 @@ typedef struct {
 
 /* sturcture */
 typedef struct {
-	char 			*name;
-	int			version[3];
-	int 			plugin_type;
+	char 			*name;		/* Name of the plugin */
+	int			version[3];	/* Version number */
+	PluginType		plugin_type;	/* Type of Plugin */
 	/* unique plugin id */
 	int 			id; /* do not fill in, is done by gmpc */
+	/* path where the plugin is (only directory) can be used to get location of f.e. glade/images */
+	char			*path;	/* Do not fill in, done by gmpc */
 	/* Browser Plugins */
 	gmpcPlBrowserPlugin 	*browser;
 	/* plugin with one signal for changes on Mpd */

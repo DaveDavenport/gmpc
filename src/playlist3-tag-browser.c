@@ -11,7 +11,7 @@
 #include "strfsong.h"
 #include "playlist3.h"
 #include "playlist3-tag-browser.h"
-
+void pref_id3b_fill();
 
 /* Connection settings plugin */
 void tag_pref_construct(GtkWidget *container);
@@ -27,6 +27,7 @@ gmpcPlugin tag_plug = {
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
+	NULL,
 	NULL,
 	NULL,	
 	&tag_gpp
@@ -1099,7 +1100,6 @@ void tag_pref_destroy(GtkWidget *container)
 }
 void tag_pref_construct(GtkWidget *container)
 {
-	gchar *string;
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	tag_pref_xml = glade_xml_new(path, "tag-vbox",NULL);
 	if(tag_pref_xml)

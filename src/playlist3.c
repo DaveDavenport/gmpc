@@ -65,6 +65,7 @@ gmpcPlugin playlist_plug = {
 	GMPC_INTERNALL,
 	0,
 	NULL,
+	NULL,
 	NULL,	
 	&playlist_gpp
 };

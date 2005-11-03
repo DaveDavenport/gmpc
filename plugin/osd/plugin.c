@@ -26,6 +26,7 @@ gmpcPlugin plugin = {
 	GMPC_PLUGIN_NO_GUI,
 	0,
 	NULL,
+	NULL,
 	&osd_mpd_status_changed,
 	&osd_gpp
 };

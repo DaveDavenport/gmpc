@@ -175,6 +175,12 @@ int main (int argc, char **argv)
 				debug_level = atoi(&argv[i][14]);
 				debug_level = (debug_level < 0)? -1:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
 			}
+			else if (!strncasecmp(argv[i], "--version", 9))
+			{
+				printf("Gnome Music Player Client\n");
+				printf("Version: %s\n", PACKAGE_VERSION);
+				exit(0);
+			}
 		}
 
 	}

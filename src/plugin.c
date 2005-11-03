@@ -45,6 +45,9 @@ int plugin_load(char *path, const char *file)
 		g_module_close(handle);
 		return 1;
 	}
+	/* set path, plugins might want this for images and glade files. */
+	plug->path = g_strdup(path);
+	/* add the plugin to the list */
 	add_plugin(plug);
 	return 0;
 }
