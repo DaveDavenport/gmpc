@@ -210,10 +210,10 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
 		{
-			gchar *basename = g_path_get_basename(data->value.directory);
+			gchar *basename = g_path_get_basename(data->directory);
 			gtk_list_store_append (pl3_fb_store, &iter);
 			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->value.directory,
+					PL3_FB_PATH, data->directory,
 					PL3_FB_TYPE, PL3_ENTRY_DIRECTORY,
 					PL3_FB_TITLE, basename,               
 					PL3_FB_ICON, "gtk-open",
@@ -225,16 +225,16 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			gchar buffer[1024];
 			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			strfsong (buffer, 1024, markdata,data->value.song);
+			strfsong (buffer, 1024, markdata,data->song);
 			cfg_free_string(markdata);
-			if(data->value.song->time != MPD_SONG_NO_TIME)
+			if(data->song->time != MPD_SONG_NO_TIME)
 			{
-				time += data->value.song->time;			
+				time += data->song->time;			
 			}
 
 			gtk_list_store_append (pl3_fb_store, &iter);
 			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->value.song->file,
+					PL3_FB_PATH, data->song->file,
 					PL3_FB_TYPE, PL3_ENTRY_SONG,
 					PL3_FB_TITLE, buffer,               
 					PL3_FB_ICON, "media-audiofile",
@@ -244,10 +244,10 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 
 		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
 		{
-			gchar *basename = g_path_get_basename (data->value.playlist);
+			gchar *basename = g_path_get_basename (data->playlist);
 			gtk_list_store_append (pl3_fb_store, &iter);
 			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->value.playlist,
+					PL3_FB_PATH, data->playlist,
 					PL3_FB_TYPE, PL3_ENTRY_PLAYLIST,
 					PL3_FB_TITLE, basename,
 					PL3_FB_ICON, "media-playlist", 
@@ -282,12 +282,12 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
 		{
 			gchar *basename =
-				g_path_get_basename (data->value.directory);
+				g_path_get_basename (data->directory);
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_FILE,
 					1, basename,
-					2, data->value.directory,
+					2, data->directory,
 					3, "gtk-open",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
@@ -427,7 +427,7 @@ void pl3_file_browser_show_info()
 				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
-					call_id3_window_song(mpd_songDup(data->value.song));
+					call_id3_window_song(mpd_songDup(data->song));
 					data = mpd_data_get_next(data);
 				}
 			}	

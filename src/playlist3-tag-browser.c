@@ -276,8 +276,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
-					1, data->value.tag, /* the field */
-					2, data->value.tag, /* the artist name, if(1 and 2 together its an artist field) */
+					1, data->tag, /* the field */
+					2, data->tag, /* the artist name, if(1 and 2 together its an artist field) */
 					3, "media-album",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
@@ -308,7 +308,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
-					1, data->value.tag,
+					1, data->tag,
 					2, first_tag,
 					3, "media-artist", 
 					4, FALSE, 
@@ -345,7 +345,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_CUSTOM_TAG,
-					1, data->value.tag,
+					1, data->tag,
 					2, first_tag,
 					3, "media-artist", 
 					4, TRUE, 
@@ -424,20 +424,20 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			gchar buffer[1024];
 			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			strfsong (buffer, 1024,markdata,data->value.song);
+			strfsong (buffer, 1024,markdata,data->song);
 			cfg_free_string(markdata);
-			if(data->value.song->time != MPD_SONG_NO_TIME)
+			if(data->song->time != MPD_SONG_NO_TIME)
 			{
-				time += data->value.song->time;
+				time += data->song->time;
 			}
-			if(data->value.song->file == NULL)
+			if(data->song->file == NULL)
 			{
 				debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
 			}
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
 					PL3_TB_TITLE, buffer,
-					PL3_TB_PATH, data->value.song->file,
+					PL3_TB_PATH, data->song->file,
 					PL3_TB_TYPE, PL3_ENTRY_SONG,
 					PL3_TB_ICON,"media-audiofile",
 					-1);
@@ -454,20 +454,20 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			gchar buffer[1024];
 			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			strfsong (buffer, 1024,markdata,data->value.song);
+			strfsong (buffer, 1024,markdata,data->song);
 			cfg_free_string(markdata);
-			if(data->value.song->time != MPD_SONG_NO_TIME)
+			if(data->song->time != MPD_SONG_NO_TIME)
 			{
-				time += data->value.song->time;
+				time += data->song->time;
 			}
-			if(data->value.song->file == NULL)
+			if(data->song->file == NULL)
 			{
 				debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
 			}
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
 					PL3_TB_TITLE, buffer,
-					PL3_TB_PATH, data->value.song->file,
+					PL3_TB_PATH, data->song->file,
 					PL3_TB_TYPE, PL3_ENTRY_SONG,
 					PL3_TB_ICON,"media-audiofile",
 					-1);
@@ -497,20 +497,20 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 				gchar buffer[1024];
 				char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",
 						DEFAULT_MARKUP_BROWSER);
-				strfsong (buffer, 1024,markdata,data->value.song);
+				strfsong (buffer, 1024,markdata,data->song);
 				cfg_free_string(markdata);
-				if(data->value.song->time != MPD_SONG_NO_TIME)
+				if(data->song->time != MPD_SONG_NO_TIME)
 				{
-					time += data->value.song->time;
+					time += data->song->time;
 				}
-				if(data->value.song->file == NULL)
+				if(data->song->file == NULL)
 				{
 					debug_printf(DEBUG_WARNING,"pl3_browser_view_folder: crap mpdSong has no file attribute.\n");
 				}
 				gtk_list_store_append (pl3_tb_store, &iter);
 				gtk_list_store_set (pl3_tb_store, &iter,
 						PL3_TB_TITLE, buffer,
-						PL3_TB_PATH, data->value.song->file,
+						PL3_TB_PATH, data->song->file,
 						PL3_TB_TYPE, PL3_ENTRY_SONG,
 						PL3_TB_ICON,"media-audiofile",
 						-1);
@@ -653,7 +653,7 @@ void pl3_custom_tag_browser_add_folder()
 		{
 			while(data != NULL)
 			{
-				mpd_playlist_queue_add(connection,data->value.song->file);
+				mpd_playlist_queue_add(connection,data->song->file);
 				data = mpd_data_get_next(data);
 			}
 			mpd_playlist_queue_commit(connection);
@@ -670,7 +670,7 @@ void pl3_custom_tag_browser_add_folder()
 		{
 			while(data != NULL)
 			{
-				mpd_playlist_queue_add(connection,data->value.song->file);
+				mpd_playlist_queue_add(connection,data->song->file);
 				data = mpd_data_get_next(data);
 			}
 			mpd_playlist_queue_commit(connection);
@@ -698,7 +698,7 @@ void pl3_custom_tag_browser_add_folder()
 			{
 				while(data != NULL)
 				{
-					mpd_playlist_queue_add(connection,data->value.song->file);
+					mpd_playlist_queue_add(connection,data->song->file);
 					data = mpd_data_get_next(data);
 				}
 				mpd_playlist_queue_commit(connection);
@@ -880,7 +880,7 @@ void pl3_tag_browser_show_info()
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
 				{
-					call_id3_window_song(mpd_songDup(data->value.song));
+					call_id3_window_song(mpd_songDup(data->song));
 				}
 				data = mpd_data_get_next(data);                                        
 			}

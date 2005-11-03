@@ -295,13 +295,13 @@ void update_outputs_settings()
 	if(mpd_check_connected(connection) && mpd_server_check_version(connection, 0,12,0))
 	{
 		MpdData *data = mpd_server_get_output_devices(connection);
-		while(data != NULL && data->value.output_dev->id != -10)
+		while(data != NULL && data->output_dev->id != -10)
 		{
 			gtk_list_store_append(store, &iter);
 			gtk_list_store_set(store, &iter, 
-					0, data->value.output_dev->enabled?TRUE:FALSE, 
-					1, data->value.output_dev->name, 
-					2, data->value.output_dev->id, -1);
+					0, data->output_dev->enabled?TRUE:FALSE, 
+					1, data->output_dev->name, 
+					2, data->output_dev->id, -1);
 			data = mpd_data_get_next(data);
 		}
 		gtk_widget_set_sensitive(GTK_WIDGET(frame), TRUE);

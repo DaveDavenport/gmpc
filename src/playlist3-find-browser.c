@@ -321,47 +321,47 @@ unsigned long pl3_find_browser_view_browser()
 		   gchar buffer[1024];
 		  if(data->type == MPD_DATA_TYPE_SONG)
 		  { 
-			  if(data->value.song->time != MPD_SONG_NO_TIME)
+			  if(data->song->time != MPD_SONG_NO_TIME)
 			  {
-				  time += data->value.song->time;
+				  time += data->song->time;
 			  }
 
 			  strfsong (buffer, 1024, markdata,
-					  data->value.song);
+					  data->song);
 
 			  /* add as child of the above created parent folder */
 			  gtk_list_store_append (pl3_findb_store, &child);
 			  gtk_list_store_set (pl3_findb_store, &child,
-					  PL3_FINDB_PATH, data->value.song->file,
+					  PL3_FINDB_PATH, data->song->file,
 					  PL3_FINDB_TITLE, buffer,
 					  PL3_FINDB_TYPE, PL3_ENTRY_SONG, 
 					  PL3_FINDB_ICON, "media-audiofile", 
 					  -1);
 		  }
-		  else if (data->type == MPD_DATA_TYPE_ARTIST)
+		  else if (data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
 		  {
 			  gtk_list_store_prepend (pl3_findb_store, &child);
 			  gtk_list_store_set (pl3_findb_store, &child,
-					  PL3_FINDB_PATH, data->value.artist,
-					  PL3_FINDB_TITLE, data->value.artist,
+					  PL3_FINDB_PATH, data->tag,
+					  PL3_FINDB_TITLE, data->tag,
 					  PL3_FINDB_TYPE, PL3_ENTRY_ARTIST, 
 					  PL3_FINDB_ICON, "media-artist", 			  
 					  -1);
 		  }
-		  else if (data->type == MPD_DATA_TYPE_ALBUM)
+		  else if (data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM)
 		  {
 			  char *buffer = NULL;
-			  if(data->value.artist)
+			  if(data->tag)
 			  {
-				buffer = g_strdup_printf("%s - %s", data->value.artist, data->value.album);
+				buffer = g_strdup_printf("%s - %s", data->tag, data->tag);
 			  }
 			  else
 			  {
-				buffer = g_strdup(data->value.album);
+				buffer = g_strdup(data->tag);
 			  }
 			  gtk_list_store_prepend (pl3_findb_store, &child);                             		  
 			  gtk_list_store_set (pl3_findb_store, &child,                                  		  
-					  PL3_FINDB_PATH, data->value.album,
+					  PL3_FINDB_PATH, data->tag,
 					  PL3_FINDB_TITLE, buffer,
 					  PL3_FINDB_TYPE, PL3_ENTRY_ALBUM, 
 					  PL3_FINDB_ICON, "media-album", 			  
@@ -420,7 +420,7 @@ void pl3_find_browser_show_info()
 				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)                                                            	
 				{
-					call_id3_window_song(mpd_songDup(data->value.song));
+					call_id3_window_song(mpd_songDup(data->song));
 					data = mpd_data_get_next(data);                                        
 				}
 			}

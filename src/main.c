@@ -409,18 +409,18 @@ void playlist_changed(MpdObj *mi)
 		/*
 		 * decide wether to update or to add 
 		 */
-		if(data->value.song->pos < old_length)
+		if(data->song->pos < old_length)
 		{
 			/*
 			 * needed for getting the row 
 			 */
-			gchar *path = g_strdup_printf ("%i", data->value.song->pos);	
+			gchar *path = g_strdup_printf ("%i", data->song->pos);	
 			if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
 				/* overwriting existing entry */
 				gint weight = PANGO_WEIGHT_NORMAL;
 				gint time=0;
-				if (data->value.song->id == mpd_player_get_current_song_id(connection))
+				if (data->song->id == mpd_player_get_current_song_id(connection))
 				{
 					weight = PANGO_WEIGHT_ULTRABOLD;
 				}
@@ -430,22 +430,22 @@ void playlist_changed(MpdObj *mi)
 				{
 					info.playlist_playtime -= time;
 				}
-				if(data->value.song->time != MPD_SONG_NO_TIME)
+				if(data->song->time != MPD_SONG_NO_TIME)
 				{
-					info.playlist_playtime += data->value.song->time;
+					info.playlist_playtime += data->song->time;
 				}
 				strfsong (buffer, 1024,
 						string,
-						data->value.song);						
+						data->song);						
 
 				gtk_list_store_set (pl2_store, &iter,
-						SONG_ID,data->value.song->id, 
-						SONG_POS,data->value.song->pos, 					
+						SONG_ID,data->song->id, 
+						SONG_POS,data->song->pos, 					
 						SONG_TITLE, buffer,
 						WEIGHT_INT, weight,
-						SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-						SONG_TIME,data->value.song->time,
-						SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
+						SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
+						SONG_TIME,data->song->time,
+						SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
 						-1);
 			}
 			g_free(path);
@@ -453,25 +453,25 @@ void playlist_changed(MpdObj *mi)
 		else
 		{
 			int weight = PANGO_WEIGHT_NORMAL;
-			if(data->value.song->time != MPD_SONG_NO_TIME)
+			if(data->song->time != MPD_SONG_NO_TIME)
 			{
-				info.playlist_playtime += data->value.song->time;
+				info.playlist_playtime += data->song->time;
 			}
-			if (data->value.song->id == mpd_player_get_current_song_id(connection))
+			if (data->song->id == mpd_player_get_current_song_id(connection))
 			{
 				weight = PANGO_WEIGHT_ULTRABOLD;                                  			
 			}
 
-			strfsong (buffer, 1024,	string,	data->value.song);
+			strfsong (buffer, 1024,	string,	data->song);
 			gtk_list_store_append (pl2_store, &iter);
 			gtk_list_store_set (pl2_store, &iter,
-					SONG_ID,data->value.song->id, 
-					SONG_POS,data->value.song->pos, 					
+					SONG_ID,data->song->id, 
+					SONG_POS,data->song->pos, 					
 					SONG_TITLE, buffer,
 					WEIGHT_INT, weight,
-					SONG_STOCK_ID,(strstr(data->value.song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-					SONG_TIME,data->value.song->time,
-					SONG_TYPE, (strstr(data->value.song->file,"://") == NULL)?0:1,
+					SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
+					SONG_TIME,data->song->time,
+					SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
 					-1);
 
 		}
