@@ -383,7 +383,7 @@ int update_interface ()
 	/*
 	 * now start updating the rest 
 	 */
-	update_player();
+	//update_player();
 	return TRUE;
 }
 

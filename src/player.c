@@ -351,8 +351,6 @@ int update_player()
 			g_free(buf);
 		}
 	}
-
-
 	return FALSE;
 }
 
@@ -362,7 +360,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 	if(xml_main_window == NULL)return;
 	if(what&MPD_CST_RANDOM)
 	{
-				if(mpd_player_get_random(connection) != 
+		if(mpd_player_get_random(connection) != 
 				gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button"))))
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rand_button")),
@@ -421,7 +419,14 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		msg_pop_popup();                 		
 		player_state_changed(mpd_player_get_state(connection));
 	}
-
+	if(what&MPD_CST_TOTAL_TIME)
+	{
+		update_player();
+	}
+	if(what&MPD_CST_ELAPSED_TIME)
+	{
+		update_player();
+	}
 }	
 
 void player_state_changed(int state)
