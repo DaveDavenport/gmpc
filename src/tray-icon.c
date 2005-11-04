@@ -23,9 +23,6 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 GladeXML *tray_pref_xml = NULL;
 void tray_icon_pref_construct(GtkWidget *container);
 void tray_icon_pref_destroy(GtkWidget *container);
-
-
-
 int playlist_hidden = FALSE;
 extern config_obj *config;
 extern GladeXML *pl3_xml;
@@ -66,11 +63,6 @@ gmpcPlugin tray_icon_plug = {
 	&TrayStatusChanged,	
 	&tray_gpp
 };
-
-
-
-
-
 
 /**/
 gchar *tray_get_tooltip_text()
@@ -298,16 +290,9 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			return FALSE;
 		}
 	}
-
-
-
-
-
 	tooltiptext = tray_get_tooltip_text();
 	gdk_screen_get_monitor_geometry(
 			screen, monitor, &msize);
-
-
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	eventb = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
@@ -608,15 +593,13 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
 				gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));                            		
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);				                              		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                                                      		
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(gtk_main_quit), NULL);				                              		
-
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);       
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(gtk_main_quit), NULL);		
 		gtk_widget_show_all(menu);	
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, event->time);
 	}
@@ -769,22 +752,6 @@ void update_popup_settings()
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_pref_xml, "popup_timeout")),
 			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 5));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void tray_icon_pref_destroy(GtkWidget *container)
 {

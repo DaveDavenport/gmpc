@@ -327,9 +327,6 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 #endif
-
-
-
 	/* add a handler that disconnects mpd if the mainloop get destroyed */
 	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
 
@@ -360,30 +357,18 @@ void main_quit()
 
 int update_interface ()
 {
-	/*
-	 * check if there is an connection. (that is when connection == NULL) 
-	 */
-	if (!mpd_check_connected(connection))
-	{
-		/*
-		 * update the popup 
-		 */
-		if (!cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0))
-		{
+	/* check if there is an connection. (that is when connection == NULL) */
+	if (!mpd_check_connected(connection)){
+		 /* update the popup  */
+		if (!cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)){
 			return TRUE;
 		}
-		/*
-		 * connect to mpd if that fails return this function 
-		 */
-		if (connect_to_mpd ())
-		{
+		/* connect to mpd if that fails return this function  */
+		if (connect_to_mpd ()){
 			return TRUE;
 		}
 	}
-	/*
-	 * now start updating the rest 
-	 */
-	//update_player();
+	/* now start updating the rest */
 	return TRUE;
 }
 
