@@ -144,8 +144,11 @@ void pl3_reinitialize_tree()
 	{
 		if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER)
 		{
-			printf("adding plugin id: %i %i\n", i,plugins[i]->id^PLUGIN_ID_MARK);
-			plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
+			if(plugins[i]->browser && plugins[i]->browser->add)
+			{
+				printf("adding plugin id: %i %i\n", i,plugins[i]->id^PLUGIN_ID_MARK);
+				plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
+			}
 		}
 	}
 
@@ -366,6 +369,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	{
 		if(plugins[i]->browser != NULL)
 		{
+			printf("bpl: %i\n", i);
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
 				menu_items += plugins[i]->browser->cat_right_mouse_menu(menu,type,GTK_WIDGET(tree), event);

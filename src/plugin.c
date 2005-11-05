@@ -60,7 +60,6 @@ void load_plugins_from_dir(gchar *path)
 		const gchar *dirname = NULL;
 		while((dirname = g_dir_read_name(dir)) != NULL)
 		{
-		
 			if(!plugin_load(path,dirname))
 			{
 				printf("%i. plugin '%s' loaded ",plugins[num_plugins-1]->id^PLUGIN_ID_MARK, plugins[num_plugins-1]->name);

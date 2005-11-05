@@ -232,6 +232,9 @@ int main (int argc, char **argv)
 	add_plugin(&about_plug);
 
 
+	url = g_strdup_printf("%s%s",GLADE_PATH, "plugins");
+	load_plugins_from_dir(url);
+	g_free(url);
 	/* plugins */	
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
