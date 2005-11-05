@@ -1102,6 +1102,7 @@ void tag_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	tag_pref_xml = glade_xml_new(path, "tag-vbox",NULL);
+	g_free(path);
 	if(tag_pref_xml)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(tag_pref_xml, "tag-vbox");

@@ -10,8 +10,13 @@
 #include "playlist3.h"
 #include "playlist3-tag-browser.h"
 #include "config1.h"
+
+#define PLUGIN_STATS -200
 extern config_obj *config;
 
+void plugin_stats_construct(GtkWidget *container);
+void plugin_stats_destroy(GtkWidget *container);
+GladeXML *plugin_stat_xml = NULL;
 /* About "plugin" */
 void about_pref_construct(GtkWidget *container);
 void about_pref_destroy(GtkWidget *container);
@@ -58,6 +63,10 @@ void pref_plugin_changed()
 		plugin_last = -1;
 
 	}	
+	else if(plugin_last == PLUGIN_STATS)
+	{
+		plugin_stats_destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+	}
 	if(gtk_tree_selection_get_selected(sel, &model, &iter))
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &id, -1);
@@ -85,9 +94,18 @@ void pref_plugin_changed()
 				return;
 			}
 		}
+		else if(id == PLUGIN_STATS)
+		{
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),
+					_("<span size=\"xx-large\"><b>Plugins</b></span>"));
+			
+			plugin_stats_construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+			plugin_last = id;
+			return;
+		}
 	}
 	gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),
-		       	"<span size=\"xx-large\"><b>Nothing Selected</b></span>");
+			"<span size=\"xx-large\"><b>Nothing Selected</b></span>");
 }
 
 void create_preferences_window()
@@ -122,7 +140,6 @@ void create_preferences_window()
 
 	/* set info from struct */
 	/* hostname */
-	//create_outputs_tree();
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
@@ -151,10 +168,10 @@ void create_preferences_window()
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
-							GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
+								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
 				{
 					gtk_tree_selection_select_iter(gtk_tree_view_get_selection(
-							GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree"))),&iter);
+								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree"))),&iter);
 				}
 			}
 			else
@@ -168,7 +185,7 @@ void create_preferences_window()
 	{
 		GtkTreeIter iter;
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,-1, 1,"<b>Plugins:</b>", -1);
+		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,PLUGIN_STATS, 1,"<b>Plugins:</b>", -1);
 		for(i=0; i< num_plugins; i++)
 		{
 			if(plugins[i]->pref != NULL && plugins[i]->plugin_type != GMPC_INTERNALL)
@@ -201,6 +218,10 @@ void preferences_window_destroy()
 		plugin_last = -1;
 
 	}	                                                                                                     	
+	else if(plugin_last == PLUGIN_STATS)
+	{
+		plugin_stats_destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+	}
 	gtk_widget_destroy(dialog);
 	g_object_unref(xml_preferences_window);
 	xml_preferences_window = NULL;
@@ -226,5 +247,47 @@ void about_pref_construct(GtkWidget *container)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(about_pref_xml, "about-vbox");
 		gtk_container_add(GTK_CONTAINER(container),vbox);
+	}
+}
+
+
+void plugin_stats_construct(GtkWidget *container)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	plugin_stat_xml = glade_xml_new(path, "plugin_stat_tb",NULL);
+	g_free(path);
+	if(plugin_stat_xml)
+	{
+		int plug_brow = 0, plug_misc =0,i=0;
+		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
+		for(i=0;i<num_plugins;i++)
+		{
+			if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
+			else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
+		}	
+		path = g_strdup_printf("%i", plug_brow+plug_misc);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_plug_label")),path);
+		g_free(path);
+
+		path = g_strdup_printf("%i", plug_brow);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_brow_label")),path);
+		g_free(path);
+
+		path = g_strdup_printf("%i", plug_misc);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_misc_label")),path);
+		g_free(path);
+
+		gtk_container_add(GTK_CONTAINER(container),vbox);
+	}
+
+}
+void plugin_stats_destroy(GtkWidget *container)
+{
+	if(plugin_stat_xml)
+	{
+		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
+		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		g_object_unref(plugin_stat_xml);
+		plugin_stat_xml = NULL;
 	}
 }
