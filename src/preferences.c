@@ -117,7 +117,7 @@ void create_preferences_window()
 	int plugs = 0;
 	int i=0;
 	char *string = NULL;
-	plugin_last = -1;
+
 	if(running)
 	{
 		if(xml_preferences_window == NULL)
@@ -131,6 +131,7 @@ void create_preferences_window()
 			return;
 		}
 	}
+	plugin_last = -1;
 	string = gmpc_get_full_glade_path("gmpc.glade");
 	xml_preferences_window = glade_xml_new(string, "preferences_window", NULL);
 	g_free(string);
