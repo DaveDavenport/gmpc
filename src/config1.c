@@ -81,7 +81,7 @@ void cfg_save(config_obj *cfgo)
 	{
 		return;
 	}
-	xmlSaveFile(cfgo->url, cfgo->xmldoc);
+	xmlSaveFormatFile(cfgo->url, cfgo->xmldoc,1);
 	return;
 }
 
