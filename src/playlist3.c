@@ -70,25 +70,6 @@ gmpcPlugin playlist_plug = {
 	&playlist_gpp
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Get the type of the selected row.. 
  * -1 means no row selected 
  */
