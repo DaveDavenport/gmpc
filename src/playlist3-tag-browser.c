@@ -157,6 +157,7 @@ void pl3_custom_tag_browser_reload()
 				pl3_custom_tag_browser_list_add(&iter);
 				return;
 			}
+			g_free(title);
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter));
 	}
 }
@@ -234,8 +235,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	int depth = 0;
 	int len=0;
 	GtkTreeIter child,child2;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
-	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_PROC, TRUE, -1);
+	
+	
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
@@ -245,16 +246,23 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
 	gtk_tree_path_free(path);	
+	if (!mpd_check_connected(connection) || depth < 0)
+	{                                                	
+		return;                                  	
+	}                                                	
 
-	if (!mpd_check_connected(connection) || path < 0)
-	{
-		return;
-	}
+
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_PROC, TRUE, -1);
+
 
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
 		printf("failed to split\n");
+		if(first_tag)g_free(first_tag);
+		if(second_tag)g_free(second_tag);
+		if(format)g_free(format);
 		return;
 	}
 	for(len=0;tk_format[len] != NULL;len++)	
@@ -262,6 +270,9 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		if(mpd_misc_get_tag_by_name(tk_format[len])== -1)
 		{
 			printf("invallid tag: %s\n", tk_format[len]);
+			if(first_tag)g_free(first_tag);
+			if(second_tag)g_free(second_tag);
+			if(format)g_free(format);        			
 			g_strfreev(tk_format);
 			return;
 		}
@@ -360,6 +371,9 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		}                                                                                       		
 	}
 	g_strfreev(tk_format);
+	if(first_tag)g_free(first_tag);
+	if(second_tag)g_free(second_tag);
+	if(format)g_free(format);
 }
 
 long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
@@ -370,17 +384,22 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	
 
 	if (check_connection_state ())
 	{
 		return 0;
 	}
-
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
 		printf("Failed to get path\n");
+		if(first_tag)g_free(first_tag);
+		if(second_tag)g_free(second_tag);
+		if(format)g_free(format);
+
+
 		return 0;
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
@@ -390,6 +409,9 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		/*lowest level, do nothing */
 		gtk_tree_path_free(path);	
+		if(first_tag)g_free(first_tag);
+		if(second_tag)g_free(second_tag);
+		if(format)g_free(format);        		
 		return 0;
 	}                                    	
 
@@ -398,6 +420,10 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		printf("failed to split\n");
 		gtk_tree_path_free(path);	
+		if(first_tag)g_free(first_tag);
+		if(second_tag)g_free(second_tag);
+		if(format)g_free(format);
+
 		return 0;
 	}
 
@@ -517,10 +543,15 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 				data = mpd_data_get_next(data);
 			}
+			g_free(first);
 		}
 	}
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
+	if(first_tag)g_free(first_tag);
+	if(second_tag)g_free(second_tag);
+	if(format)g_free(format);
+
 	return time;
 }
 
@@ -604,7 +635,7 @@ void pl3_custom_tag_browser_add_folder()
 	{
 		return;
 	}
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
@@ -621,11 +652,14 @@ void pl3_custom_tag_browser_add_folder()
 		gtk_tree_path_free(path);	
 		return;
 	}                                    	
-
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
 		printf("failed to split\n");
+		if(second_tag) g_free(second_tag);
+		if(first_tag) g_free(first_tag);
+		if(format) g_free(format);
 		gtk_tree_path_free(path);	
 		return;
 	}
@@ -639,6 +673,10 @@ void pl3_custom_tag_browser_add_folder()
 
 			g_strfreev(tk_format);
 			gtk_tree_path_free(path);	
+			if(second_tag) g_free(second_tag);
+			if(first_tag) g_free(first_tag);
+		if(format) g_free(format);
+			
 			return;
 		}
 
@@ -703,11 +741,14 @@ void pl3_custom_tag_browser_add_folder()
 				}
 				mpd_playlist_queue_commit(connection);
 			}
-
+			g_free(first);
 		}
 	}
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
+	if(second_tag) g_free(second_tag);
+	if(first_tag) g_free(first_tag);
+	if(format) g_free(format);
 	return ;
 }
 
@@ -721,6 +762,7 @@ void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	pl3_push_statusbar_message("Added a song");
 	mpd_playlist_queue_add(connection, song_id);
 	mpd_playlist_queue_commit(connection);
+	g_free(song_id);
 }
 
 void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
@@ -824,11 +866,12 @@ void pl3_tag_browser_add_selected()
 	gchar *message;
 	if(rows != NULL)
 	{
-		gchar *name;
+
 		gint type;
 		GList *node = g_list_first(rows);
 		do
 		{
+			gchar *name;
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter (model, &iter, path);
 			gtk_tree_model_get (model, &iter, PL3_TB_PATH,&name, PL3_TB_TYPE, &type, -1);	  
@@ -839,6 +882,7 @@ void pl3_tag_browser_add_selected()
 				mpd_playlist_queue_add(connection, name);
 				songs++;
 			}
+			g_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
@@ -884,6 +928,7 @@ void pl3_tag_browser_show_info()
 				}
 				data = mpd_data_get_next(data);                                        
 			}
+			g_free(path);
 		}
 		while ((list = g_list_previous (list)) && !check_connection_state ());
 		/* free list */
@@ -929,6 +974,7 @@ void pref_id3b_row_remove()
 		cfg_del_multiple_value(config, "playlist", "advbrows",title);
 		pref_id3b_fill();
 		pl3_custom_tag_browser_reload();
+		g_free(title);
 	}
 
 }
@@ -948,6 +994,8 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 		if(tk_format ==NULL)
 		{                                     		
 			debug_printf(DEBUG_INFO,"pref_id3b_row_changed: failed to split\n");
+			g_free(format);
+			g_free(title);
 			return;
 		}
 		else
@@ -974,6 +1022,10 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 			g_strfreev(tk_format);
 
 		}
+		g_free(format);
+		g_free(title);
+
+		
 	}
 	else
 	{
@@ -996,6 +1048,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb1")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
+			g_free(string);
 		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb2"))))
@@ -1007,6 +1060,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb2")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
+			g_free(string);
 		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3"))))
@@ -1018,6 +1072,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
+			g_free(string);
 		}
 	}
 	if(format->len)

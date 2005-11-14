@@ -436,6 +436,7 @@ void pl3_file_browser_show_info()
 					data = mpd_data_get_next(data);
 				}
 			}	
+			g_free(path);
 		}
 		while ((list = g_list_previous (list)) && !check_connection_state ());
 		/* free list */
@@ -499,6 +500,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		mpd_playlist_queue_add(connection, song_id);
 	}
 	mpd_playlist_queue_commit(connection);
+	g_free(song_id);
 }
 
 
@@ -542,6 +544,7 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
+			g_free(path);
 		}
 	}
 	/* add the delete widget */
@@ -596,6 +599,7 @@ void pl3_file_browser_add_selected()
 				mpd_playlist_queue_load(connection, name);
 			}
 			songs++;
+			g_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */

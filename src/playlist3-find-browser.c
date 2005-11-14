@@ -403,7 +403,7 @@ void pl3_find_browser_show_info()
 		do
 		{
 			GtkTreeIter iter;
-			char *path;
+
 			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_findb_tree));
 			int type,id;
 			MpdData *data;
@@ -416,6 +416,7 @@ void pl3_find_browser_show_info()
 			}
 			else
 			{
+				char *path;
 				gtk_tree_model_get(model,&iter,PL3_FINDB_PATH, &path,-1);
 				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)                                                            	
@@ -423,6 +424,7 @@ void pl3_find_browser_show_info()
 					call_id3_window_song(mpd_songDup(data->song));
 					data = mpd_data_get_next(data);                                        
 				}
+				g_free(path);
 			}
 		}
 		while ((list = g_list_previous (list)) && !check_connection_state ());
@@ -462,6 +464,7 @@ void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	/* commit queue, if PL3_CUR_PLAYLIST, then queue is empty, and I don't mind */
 	mpd_playlist_queue_commit(connection);
+	g_free(song_id);
 }
 
 void pl3_find_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter)
@@ -515,7 +518,6 @@ void pl3_find_browser_add_selected()
 	GtkTreeModel *model = GTK_TREE_MODEL (pl3_findb_store);
 	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
 	int songs=0;
-	gchar *message;
 	if(rows != NULL)
 	{
 		gchar *name;
@@ -533,13 +535,14 @@ void pl3_find_browser_add_selected()
 				mpd_playlist_queue_add(connection, name);
 			}
 			songs++;
+			g_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
 	if(songs != 0)
 	{
-		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
+		gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		pl3_push_statusbar_message(message);
 		g_free(message);                                       	
 	}
