@@ -253,11 +253,13 @@ void msg_push_popup(gchar *msg)
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
 	/*	g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check your locale")));*/
+		if(scroll.popup_msg)g_free(scroll.popup_msg);
 		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check your locale"));/*g_queue_peek_tail(scroll.queue);*/
 	}
 	else
 	{
 	/*	g_queue_push_tail(scroll.queue,g_strdup(msg));*/
+		if(scroll.popup_msg)g_free(scroll.popup_msg);
 		scroll.popup_msg =g_strdup(msg);/* g_queue_peek_tail(scroll.queue);*/
 	}
 	scroll.exposed = TRUE;

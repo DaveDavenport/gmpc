@@ -72,6 +72,7 @@ void config_close(config_obj *cfgo)
 		xmlFreeDoc(cfgo->xmldoc);
 
 	}
+	xmlCleanupParser();
 	g_free(cfgo);
 }
 

@@ -341,6 +341,7 @@ int main (int argc, char **argv)
 	mpd_free(connection);	
 	config_close(config);
 	gtk_list_store_clear(pl2_store);
+	g_object_unref(pl2_store);
 	return 0;
 }
 
