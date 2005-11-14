@@ -144,6 +144,7 @@ void pl3_file_browser_add_folder()
 		g_free(message);
 		mpd_playlist_queue_add(connection, path);
 		mpd_playlist_queue_commit(connection);
+		g_free(path);
 	}
 }
 
@@ -162,6 +163,7 @@ void pl3_file_browser_update_folder()
 		char *path;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
 		mpd_playlist_update_dir(connection, path);
+		g_free(path);
 	}
 }
 
@@ -197,13 +199,14 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	int sub_folder = 0;
 	GtkTreeIter iter;
 	long  unsigned time=0;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
+	
 
 	/* check the connection state and when its valid proceed */
 	if (check_connection_state ())
 	{
 		return 0;
 	}
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
 
 	data = mpd_playlist_get_directory(connection, path);
 	while (data != NULL)
@@ -264,6 +267,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 			gtk_tree_store_remove(pl3_tree, &iter);      		
 		}
 	}
+	g_free(path);
 	return time;
 }
 
@@ -302,6 +306,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 	{
 		gtk_tree_store_remove(pl3_tree, &child); 
 	}
+	g_free(path);
 }
 
 
