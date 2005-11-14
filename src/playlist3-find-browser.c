@@ -247,7 +247,11 @@ unsigned long pl3_find_browser_view_browser()
 	   gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &cc_iter);
 
 	   gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store),&cc_iter , 0, &num_field, -1);
-	   if(name == NULL || !strlen(name)) return 0 ;
+	   if(name == NULL || !strlen(name))
+	   {
+		   cfg_free_string(markdata);
+		   return 0 ;
+	   }
 	   /* do the actual search */
 	   if(num_field < 50)
 	   {

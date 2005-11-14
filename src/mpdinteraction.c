@@ -427,7 +427,7 @@ void server_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	server_pref_xml = glade_xml_new(path, "server-vbox",NULL);
-
+	g_free(path);
 	if(server_pref_xml)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(server_pref_xml, "server-vbox");
@@ -584,6 +584,7 @@ void connection_pref_construct(GtkWidget *container)
 	gchar *string;
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	connection_pref_xml = glade_xml_new(path, "connection-vbox",NULL);
+	g_free(path);
 	update_auth_settings();
 	string = cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry")), string);
