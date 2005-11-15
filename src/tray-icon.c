@@ -26,7 +26,7 @@ void tray_icon_pref_destroy(GtkWidget *container);
 GladeXML *tray_pref_xml = NULL;
 
 int playlist_hidden = FALSE;
-extern config_obj *config;
+
 extern GladeXML *pl3_xml;
 
 EggTrayIcon *tray_icon = NULL;

@@ -26,6 +26,8 @@
 #include <glade/glade.h>
 #include "plugin.h"
 
+
+extern config_obj *config;
 extern gmpcPlugin **plugins;
 extern int num_plugins;
 
