@@ -814,3 +814,15 @@ void create_player()
 	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
 	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
 }
+
+void player_destroy()
+{
+	GtkWidget *mw = glade_xml_get_widget(xml_main_window, "main_window");
+	g_object_unref(layout);
+	g_object_unref(time_layout);
+	if(mw)gtk_widget_destroy(mw);
+	g_object_unref(xml_main_window);
+	if(scroll.msg)g_free(scroll.msg);
+	if(scroll.base_msg)g_free(scroll.base_msg);
+	if(scroll.popup_msg)g_free(scroll.popup_msg);
+}

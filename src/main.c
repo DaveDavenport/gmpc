@@ -332,11 +332,11 @@ int main (int argc, char **argv)
 #endif
 	/* add a handler that disconnects mpd if the mainloop get destroyed */
 	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
-
 	/*
 	 * run the main loop 
 	 */
 	gtk_main ();
+	player_destroy();
 	/* cleaning up. */
 	mpd_free(connection);	
 	config_close(config);
@@ -356,7 +356,6 @@ void main_quit()
 		mpd_disconnect(connection);
 	}
 	gtk_main_quit();
-
 }
 
 int update_interface ()

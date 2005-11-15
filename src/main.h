@@ -95,7 +95,7 @@ typedef struct 	{
 	gboolean do_scroll;
 	gboolean exposed;
 } scrollname;
-
+void player_destroy();
 extern scrollname scroll;
 int update_player();
 void create_player();
