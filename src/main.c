@@ -178,7 +178,7 @@ int main (int argc, char **argv)
 			else if (!strncasecmp(argv[i], "--version", 9))
 			{
 				printf("Gnome Music Player Client\n");
-				printf("Version: %s\n", PACKAGE_VERSION);
+				printf("Version: %s\n", VERSION);
 				exit(0);
 			}
 		}

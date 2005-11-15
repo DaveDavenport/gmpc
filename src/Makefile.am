@@ -24,9 +24,11 @@ gmpc_SOURCES=\
 #	playlist3-custom-stream-browser.c
 #	playlist3-osb-browser.c
 
-#INCLUDES= @gmpc_CFLAGS@ -DPIXMAP_PATH=\""$(datadir)/gmpc/"\" -Wall -DGLADE_PATH=\""$(datadir)/gmpc/"\" -DDEBUG  
-INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@  $(gmpc_libnotify_CFLAGS) -Wall   
-LIBS = @gmpc_LIBS@ @LIBS@ $(gmpc_libnotify_LIBS)
+INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@   -Wall \
+	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
+	-DGLADE_PATH=\""$(pkgdatadir)"\" \
+	-DVERSION=\"@VERSION@\"
+LIBS = @gmpc_LIBS@ @LIBS@ 
 LDFLAGS = @EXTRA_LDFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
