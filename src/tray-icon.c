@@ -18,15 +18,17 @@ void tray_icon_state_change() {}
 #include "strfsong.h"
 #include "config1.h"
 
-
-void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
-GladeXML *tray_pref_xml = NULL;
+void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
+void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 void tray_icon_pref_construct(GtkWidget *container);
 void tray_icon_pref_destroy(GtkWidget *container);
+
+GladeXML *tray_pref_xml = NULL;
+
 int playlist_hidden = FALSE;
 extern config_obj *config;
 extern GladeXML *pl3_xml;
-void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
+
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
@@ -42,16 +44,14 @@ guint tray_timeout = -1;
 guint popup_timeout = -1;
 
 GdkPixbuf *dest = NULL;
-int compf= 50;
 
+
+/* plugin structure */
 
 gmpcPrefPlugin tray_gpp = {
 	tray_icon_pref_construct,
 	tray_icon_pref_destroy
 };
-
-
-
 
 gmpcPlugin tray_icon_plug = {
 	"Notification",
@@ -116,7 +116,12 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	GtkStyle *style;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = tray_get_tooltip_text();
-	if(tooltiptext == NULL) tooltiptext = g_strdup("Gnome Music Player Deamon");
+	
+	if(tooltiptext == NULL)
+	{
+		tooltiptext = g_strdup(_("Gnome Music Player Deamon"));
+	}
+
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
 	pango_layout_set_width(tray_layout_tooltip, 500000);
@@ -151,8 +156,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		if(tv != NULL)
 		{
 			screen = gtk_widget_get_screen(tv);
-			monitor = gdk_screen_get_monitor_at_window(
-					screen, tv->window);       			
+			monitor = gdk_screen_get_monitor_at_window(screen, tv->window);       			
 		}
 		else
 		{
@@ -162,8 +166,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 
 
-		gdk_screen_get_monitor_geometry(
-				screen, monitor, &msize);
+		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 
 		/* calculate position */
 		switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
@@ -189,9 +192,6 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				}
 				/* place the window */
 				gtk_window_move(GTK_WINDOW(tip), x, y);
-
-
-
 				break;
 			case 1:
 				gtk_window_move(GTK_WINDOW(tip), 0,0);
@@ -225,7 +225,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					FALSE,4,height+5-12, width ,8);                              		
 			width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*width;
-			gdk_draw_rectangle(widget->window, 
+			gdk_draw_rectangle(widget->window,
 					widget->style->mid_gc[GTK_STATE_NORMAL],
 					TRUE,4,height+5-12, width2 ,8);
 			gdk_draw_rectangle(widget->window, 
@@ -264,7 +264,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	char *tooltiptext = NULL;
 	GtkWidget *eventb;
 	GdkScreen *screen;
-	compf = 255;
 	if(tv != NULL)
 	{
 		screen = gtk_widget_get_screen(tv);
@@ -294,6 +293,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gdk_screen_get_monitor_geometry(
 			screen, monitor, &msize);
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
+
+	
 	eventb = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
 			G_CALLBACK(tray_leave_cb), NULL);
@@ -313,11 +314,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
 	pango_layout_set_width(tray_layout_tooltip, 500000);
 	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
-
-
-
-
-
 
 	pango_layout_get_size(tray_layout_tooltip, &width, &height);
 	width= PANGO_PIXELS(width)+8;
@@ -559,10 +555,6 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
 	{
 		play_song();
-
-
-
-
 	}
 	else if(event->button == 3)
 	{
@@ -584,8 +576,8 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);				
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
-				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
+		gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);				
 
@@ -597,6 +589,16 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+
+		item = gtk_image_menu_item_new_with_mnemonic(_("Pla_ylist"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
+		gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);				
+
+		item = gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);		
+		
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);       
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(gtk_main_quit), NULL);		
@@ -707,12 +709,6 @@ void hide_player_toggled(GtkToggleButton *but)
 	cfg_set_single_value_as_int(config, "player", "hide-startup", (int)gtk_toggle_button_get_active(but));
 }
 
-
-
-
-
-
-
 /* this sets all the settings in the notification area preferences correct */
 void tray_update_settings()
 {
@@ -775,8 +771,6 @@ void tray_icon_pref_construct(GtkWidget *container)
 		tray_update_settings();
 		update_popup_settings();
 		glade_xml_signal_autoconnect(tray_pref_xml);
-
-
 	}
 }
 #endif

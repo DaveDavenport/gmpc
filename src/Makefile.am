@@ -24,7 +24,7 @@ gmpc_SOURCES=\
 #	playlist3-custom-stream-browser.c
 #	playlist3-osb-browser.c
 
-INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@   -Wall \
+INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@   -Wall -Werror \
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"
