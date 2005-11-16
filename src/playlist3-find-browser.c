@@ -26,7 +26,6 @@
 #include "plugin.h"
 
 #include "main.h"
-#include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-find-browser.h"
@@ -330,7 +329,7 @@ unsigned long pl3_find_browser_view_browser()
 				  time += data->song->time;
 			  }
 
-			  strfsong (buffer, 1024, markdata,
+			  mpd_song_markup(buffer, 1024, markdata,
 					  data->song);
 
 			  /* add as child of the above created parent folder */

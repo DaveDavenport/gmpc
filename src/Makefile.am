@@ -10,7 +10,6 @@ gmpc_SOURCES=\
 	eggtrayicon.c\
 	tray-icon.c\
 	misc.c\
-	strfsong.c\
 	playlist3.c\
 	edit_markup.c\
 	playlist3-tag-browser.c\
@@ -35,7 +34,6 @@ EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 		plugin.h\
 	   	mm-keys.h\
-		strfsong.h\
 		misc.h\
 		eggtrayicon.h\
 		mpdinteraction.h\

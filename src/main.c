@@ -32,7 +32,6 @@
 #include "config1.h"
 #include "playlist3.h"
 #include "main.h"
-#include "strfsong.h"
 #include "misc.h"
 
 #ifdef ENABLE_MMKEYS
@@ -422,7 +421,7 @@ void playlist_changed(MpdObj *mi)
 				{
 					info.playlist_playtime += data->song->time;
 				}
-				strfsong (buffer, 1024,
+				mpd_song_markup (buffer, 1024,
 						string,
 						data->song);						
 
@@ -450,7 +449,7 @@ void playlist_changed(MpdObj *mi)
 				weight = PANGO_WEIGHT_ULTRABOLD;                                  			
 			}
 
-			strfsong (buffer, 1024,	string,	data->song);
+			mpd_song_markup (buffer, 1024,	string,	data->song);
 			gtk_list_store_append (pl2_store, &iter);
 			gtk_list_store_set (pl2_store, &iter,
 					SONG_ID,data->song->id, 

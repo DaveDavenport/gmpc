@@ -15,7 +15,6 @@ void tray_icon_state_change() {}
 #include "eggtrayicon.h"
 #include "main.h"
 #include "misc.h"
-#include "strfsong.h"
 #include "config1.h"
 
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
@@ -75,7 +74,7 @@ gchar *tray_get_tooltip_text()
 	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
+		mpd_song_markup(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */
 		if(mpd_status_get_total_song_time(connection) > 0)

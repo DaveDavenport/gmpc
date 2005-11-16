@@ -27,7 +27,6 @@
 #include <config.h>
 #include "main.h"
 #include "misc.h"
-#include "strfsong.h"
 #include "playlist3.h"
 #include "config1.h"
 extern config_obj *config;
@@ -477,7 +476,7 @@ void player_state_changed(int state)
 	{
 		gchar buffer[1024];
 		char *string =cfg_get_single_value_as_string_with_default(config, "player","display_markup",DEFAULT_PLAYER_MARKUP);
-		strfsong(buffer, 1024,string,mpd_playlist_get_current_song(connection));
+		mpd_song_markup(buffer, 1024,string,mpd_playlist_get_current_song(connection));
 		cfg_free_string(string);
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
@@ -535,7 +534,7 @@ void player_song_changed()
 	{
 		gchar buffer[1024];
 		char *string = cfg_get_single_value_as_string_with_default(config, "player","display_markup",DEFAULT_PLAYER_MARKUP);
-		strfsong(buffer, 1024, string,mpd_playlist_get_current_song(connection));
+		mpd_song_markup(buffer, 1024, string,mpd_playlist_get_current_song(connection));
 		cfg_free_string(string);
 		msg_set_base(buffer);
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))

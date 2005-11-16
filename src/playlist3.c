@@ -26,7 +26,6 @@
 
 #include "plugin.h"
 #include "main.h"
-#include "strfsong.h"
 #include "misc.h"
 #include "config1.h"
 

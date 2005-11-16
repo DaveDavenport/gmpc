@@ -27,7 +27,6 @@
 #include <time.h>
 #include <config.h>
 #include "main.h"
-#include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "config1.h"
@@ -102,7 +101,7 @@ void esf_render_example(GtkTextBuffer *buffer)
 	gtk_text_buffer_get_start_iter(buffer, &start_iter);
 	gtk_text_buffer_get_end_iter(buffer, &stop_iter);
 	format = gtk_text_buffer_get_text(buffer,&start_iter, &stop_iter, FALSE);
-	strfsong ((char *)result_buffer, 1024,format, song);
+	mpd_song_markup((char *)result_buffer, 1024,format, song);
 
 	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_esf, "label_example")), (const char *)result_buffer);
 	mpd_freeSong(song);

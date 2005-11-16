@@ -27,7 +27,6 @@
 #include "plugin.h"
 
 #include "main.h"
-#include "strfsong.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
@@ -226,7 +225,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				{
 					gchar buffer[1024];
 					char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-					strfsong (buffer, 1024,markdata,data->song);
+					mpd_song_markup(buffer, 1024,markdata,data->song);
 					cfg_free_string(markdata);
 					if(data->song->time != MPD_SONG_NO_TIME)
 					{
@@ -270,7 +269,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				{
 					gchar buffer[1024];
 					char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-					strfsong (buffer, 1024,markdata,data->song);
+					mpd_song_markup(buffer, 1024,markdata,data->song);
 					cfg_free_string(markdata);
 					if(data->song->time != MPD_SONG_NO_TIME)
 					{
