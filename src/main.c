@@ -709,7 +709,6 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	player_mpd_state_changed(mi,what,userdata);
 
 
-	
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->mpd_status_changed!= NULL)
@@ -728,7 +727,7 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 	if(response == GTK_RESPONSE_OK)
 	{
 		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
-		connect_to_mpd();      	
+		connect_to_mpd();
 	}
 }
 
@@ -736,26 +735,63 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
-	if(error_id == 15 && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)) return;
-	cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
-	if (xml_error_window == NULL)
+	/* if we are not connected we show a reconnect */
+	if(!mpd_check_connected(mi))
 	{
-		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
-		gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-		xml_error_window = glade_xml_new(path,"error_dialog",NULL);
-		g_free(path);
-		GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
-		gtk_widget_show_all(dialog);
-		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
-		msg_set_base(_("Gnome Music Player Client"));
-		g_free(str);
+		/* no response? then we just ignore it when autoconnecting. */
+		if(error_id == 15 && autoconnect) return;
+		cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
+		if (xml_error_window == NULL)
+		{
+			gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
+			gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+			xml_error_window = glade_xml_new(path,"error_dialog",NULL);
+			g_free(path);
+			GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
+			gtk_widget_show_all(dialog);
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
+			msg_set_base(_("Gnome Music Player Client"));
+			g_free(str);
+		}
+		else
+		{
+			gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
+			g_free(str);
+		}
 	}
 	else
 	{
-		gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str); 
-		g_free(str);
+		if(error_id == MPD_ACK_ERROR_PASSWORD)
+		{
+
+
+		}
+		else if (error_id == MPD_ACK_ERROR_PERMISSION)
+		{
+			GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_INFO,
+					GTK_BUTTONS_CLOSE,
+					_("You have insufficient rights to use this functionality"));
+
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+			gtk_widget_show_all(dialog);
+
+		}
+		else {
+
+			GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_("Mpd Returned the following error:\n<i>\"%s\"</i>"),
+					error_msg);
+
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+			gtk_widget_show_all(dialog);
+		}
 	}
 }
 

@@ -134,7 +134,7 @@ int connect_to_mpd()
 		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
 	}
-
+	mpd_send_password(connection);
 
 
 
