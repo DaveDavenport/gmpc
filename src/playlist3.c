@@ -872,3 +872,8 @@ void playlist_pref_construct(GtkWidget *container)
 		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
 }
+
+void pl3_database_changed()
+{
+		pl3_file_browser_reupdate();
+}

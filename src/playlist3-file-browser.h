@@ -8,5 +8,6 @@ void pl3_file_browser_cat_sel_changed(GtkTreeView *tree,GtkTreeIter *iter);
 void pl3_file_browser_fill_tree(GtkTreeIter *iter);
 int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkEventButton *event);
 void pl3_file_browser_cat_key_press(GdkEventKey *event);
-
+/* testing */
+void pl3_file_browser_reupdate();
 #endif

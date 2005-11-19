@@ -67,5 +67,5 @@ void pl3_show_song_info ();
 
 int pl3_cat_get_selected_browser();
 void pl3_updating_changed(MpdObj *mi, int updating);
-
+void pl3_database_changed();
 #endif

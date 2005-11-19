@@ -507,7 +507,7 @@ void init_stock_icons ()
 	factory = gtk_icon_factory_new ();
 
 	/*
-	 * add media-audiofile 
+	 * add media-audiofile
 	 */
 	path = gmpc_get_full_image_path("media-audiofile.png");
 	pb = gdk_pixbuf_new_from_file (path ,NULL);
@@ -517,7 +517,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-audiofile", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-stream 
+	 * add media-stream
 	 */
 	path = gmpc_get_full_image_path("media-stream.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -527,7 +527,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-stream", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-artist 
+	 * add media-artist
 	 */
 	path = gmpc_get_full_image_path("media-artist.png");
 	pb = gdk_pixbuf_new_from_file (path,NULL);
@@ -536,7 +536,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-artist", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-album 
+	 * add media-album
 	 */
 	path = gmpc_get_full_image_path("media-album.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -546,7 +546,7 @@ void init_stock_icons ()
 	g_object_unref (G_OBJECT (pb));
 
 	/*
-	 * add media-play 
+	 * add media-play
 	 */
 	path = gmpc_get_full_image_path("media-play.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -555,7 +555,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "gtk-media-play", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-stop 
+	 * add media-stop
 	 */
 	path = gmpc_get_full_image_path("media-stop.png");
 	pb = gdk_pixbuf_new_from_file (path,NULL);
@@ -564,7 +564,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "gtk-media-stop", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-next 
+	 * add media-next
 	 */
 	path = gmpc_get_full_image_path("media-next.png");
 	pb = gdk_pixbuf_new_from_file (path,NULL);
@@ -573,7 +573,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "gtk-media-next", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-prev 
+	 * add media-prev
 	 */
 	path = gmpc_get_full_image_path("media-prev.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -582,7 +582,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "gtk-media-previous", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add media-pause 
+	 * add media-pause
 	 */
 	path = gmpc_get_full_image_path("media-pause.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -591,7 +591,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "gtk-media-pause", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add player-shuffle 
+	 * add player-shuffle
 	 */
 	path = gmpc_get_full_image_path("player-shuffle.png");
 	pb = gdk_pixbuf_new_from_file (path,NULL);
@@ -600,7 +600,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-random", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add playerrepeat 
+	 * add playerrepeat
 	 */
 	path = gmpc_get_full_image_path("player-repeat.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
@@ -615,7 +615,7 @@ void init_stock_icons ()
 	path = gmpc_get_full_image_path("icecast.png");
 	pb = gdk_pixbuf_new_from_file (path,NULL);
 	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb); 
+	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "icecast", set);
 	g_object_unref (G_OBJECT (pb));
 
@@ -636,7 +636,7 @@ void init_stock_icons ()
 void init_playlist ()
 {
 	/* create initial tree store */
-	pl2_store = gtk_list_store_new (NROWS, 
+	pl2_store = gtk_list_store_new (NROWS,
 			GTK_TYPE_INT,	/* song id */
 			GTK_TYPE_INT,	/* pos id */
 			GTK_TYPE_STRING,	/* song title */
@@ -661,14 +661,14 @@ void playlist_highlight_state_change()
 		{
 			int song_type;
 			gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL,
 					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
 					-1);
 		}
 		g_free (temp);
 		/* reset old pos */
 		info.old_pos = -1;
-	}  
+	}
 	if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY)
 	{
 		pl3_highlight_song_change();
@@ -690,7 +690,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_DATABASE)
 	{
-		pl3_reinitialize_tree();
+		pl3_database_changed();
 	}
 	if(what&MPD_CST_UPDATING)
 	{
