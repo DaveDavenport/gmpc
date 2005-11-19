@@ -76,9 +76,9 @@ char *gmpc_get_full_image_path(char *filename)
 	gchar *packagedir;
 	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
 	debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-	
+
 	path = g_build_filename(packagedir, "data", "images", filename, NULL);
-	
+
 	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
@@ -423,11 +423,11 @@ void playlist_changed(MpdObj *mi)
 				}
 				mpd_song_markup (buffer, 1024,
 						string,
-						data->song);						
+						data->song);
 
 				gtk_list_store_set (pl2_store, &iter,
-						SONG_ID,data->song->id, 
-						SONG_POS,data->song->pos, 					
+						SONG_ID,data->song->id,
+						SONG_POS,data->song->pos,
 						SONG_TITLE, buffer,
 						WEIGHT_INT, weight,
 						SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
@@ -446,14 +446,14 @@ void playlist_changed(MpdObj *mi)
 			}
 			if (data->song->id == mpd_player_get_current_song_id(connection))
 			{
-				weight = PANGO_WEIGHT_ULTRABOLD;                                  			
+				weight = PANGO_WEIGHT_ULTRABOLD;
 			}
 
 			mpd_song_markup (buffer, 1024,	string,	data->song);
 			gtk_list_store_append (pl2_store, &iter);
 			gtk_list_store_set (pl2_store, &iter,
-					SONG_ID,data->song->id, 
-					SONG_POS,data->song->pos, 					
+					SONG_ID,data->song->id,
+					SONG_POS,data->song->pos,
 					SONG_TITLE, buffer,
 					WEIGHT_INT, weight,
 					SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
@@ -464,7 +464,7 @@ void playlist_changed(MpdObj *mi)
 		}
 
 
-		data= mpd_data_get_next(data);		
+		data= mpd_data_get_next(data);
 	}
 
 	if(mpd_status_check(connection))
@@ -480,7 +480,7 @@ void playlist_changed(MpdObj *mi)
 				if(time != MPD_SONG_NO_TIME)
 				{
 					info.playlist_playtime -= time;
-				}                                                      				
+				}
 				gtk_list_store_remove (pl2_store, &iter);
 			}
 			g_free (path);
@@ -625,9 +625,9 @@ void init_stock_icons ()
 	path = gmpc_get_full_image_path("media-playlist.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
 	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);                        	
+	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "media-playlist", set);
-	g_object_unref (G_OBJECT (pb));                
+	g_object_unref (G_OBJECT (pb));
 
 	gtk_icon_factory_add_default (factory);
 }
@@ -668,7 +668,7 @@ void playlist_highlight_state_change()
 		g_free (temp);
 		/* reset old pos */
 		info.old_pos = -1;
-	}                                                           
+	}  
 	if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY)
 	{
 		pl3_highlight_song_change();
@@ -680,13 +680,13 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 {
 	int i;
 	debug_printf(DEBUG_INFO, "StatusChanged: %i", what);
-	
-	
-	
+
+
+
 	if(what&MPD_CST_SONGID)
 	{
 		tray_icon_song_change();
-		pl3_highlight_song_change();		
+		pl3_highlight_song_change();
 	}
 	if(what&MPD_CST_DATABASE)
 	{
@@ -731,6 +731,45 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 	}
 }
 
+void password_dialog(int failed)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	GladeXML *xml = glade_xml_new(path, "password-dialog",NULL);
+	g_free(path);
+	if(!xml) return;
+	if(failed)
+	{
+		path = g_strdup_printf("Failed to set password on: '%s'\nPlease try again",
+				cfg_get_single_value_as_string(config, "connection", "hostname"));
+	}
+	else
+	{
+		path = g_strdup_printf("Please enter your password for: '%s'",
+				cfg_get_single_value_as_string(config, "connection", "hostname"));
+
+	}
+	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml, "pass_label")),path);
+	g_free(path);
+	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml, "password-dialog"))))
+	{
+		case GTK_RESPONSE_OK:
+			{
+				path = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "pass_entry")));
+				mpd_set_password(connection, path);
+				if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml, "ck_save_pass"))))
+				{
+					cfg_set_single_value_as_string(config, "connection", "password", path);
+				}
+				mpd_send_password(connection);
+			}
+		default:
+			break;
+
+
+	}
+	gtk_widget_destroy(glade_xml_get_widget(xml, "password-dialog"));
+	g_object_unref(xml);
+}
 
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
@@ -765,8 +804,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 	{
 		if(error_id == MPD_ACK_ERROR_PASSWORD)
 		{
-
-
+			password_dialog(TRUE);
 		}
 		else if (error_id == MPD_ACK_ERROR_PERMISSION)
 		{

@@ -62,9 +62,9 @@ GtkWidget *pl3_fb_sw = NULL;
 int pl3_file_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
+	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
 	{
-		return FALSE;                                                                                           	
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -74,7 +74,7 @@ void pl3_file_browser_init()
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
-	pl3_fb_store = gtk_list_store_new (PL3_FB_ROWS, 
+	pl3_fb_store = gtk_list_store_new (PL3_FB_ROWS,
 			GTK_TYPE_STRING, /* path to file */
 			GTK_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
 			GTK_TYPE_STRING,	/* title to display */
@@ -91,7 +91,7 @@ void pl3_file_browser_init()
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
 	g_value_set_float(&value, 0.0);
-	g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
+	g_object_set_property(G_OBJECT(renderer), "yalign", &value);
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
@@ -101,13 +101,13 @@ void pl3_file_browser_init()
 	/* set up the tree */
 	pl3_fb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store));
 	/* insert the column in the tree */
-	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_fb_tree), column);                                         	
+	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_fb_tree), column);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree)), GTK_SELECTION_MULTIPLE);
 
 	/* setup signals */
-	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL); 
+	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-press-event", G_CALLBACK(pl3_file_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "key-press-event", G_CALLBACK(pl3_file_browser_playlist_key_press), NULL);
