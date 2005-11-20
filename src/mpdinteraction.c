@@ -88,7 +88,8 @@ void disconnect_callback(MpdObj *mi)
 	msg_set_base(_("gmpc - Disconnected"));
 	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 	{
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+				_("Gnome Music Player Client"));
 	}
 
 	scroll.exposed = 1;
@@ -96,7 +97,7 @@ void disconnect_callback(MpdObj *mi)
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
 	info.old_pos = -1;
-	
+
 	/* disconnect playlist */
 	pl3_disconnect();
 
@@ -134,7 +135,10 @@ int connect_to_mpd()
 		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
 	}
-	mpd_send_password(connection);
+	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
+	{
+		mpd_send_password(connection);
+	}
 
 
 
@@ -142,12 +146,12 @@ int connect_to_mpd()
 	msg_set_base(_("GMPC - Connected"));
 	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 	{
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));		
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
 	}
 
 	update_mpd_status();
 	mpd_stats_update(connection);
-	
+
 	return FALSE;
 }
 
