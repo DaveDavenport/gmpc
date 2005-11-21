@@ -146,7 +146,8 @@ int connect_to_mpd()
 	msg_set_base(_("GMPC - Connected"));
 	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 	{
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+				_("Gnome Music Player Client"));
 	}
 
 	update_mpd_status();
@@ -165,7 +166,7 @@ gboolean check_connection_state()
 
 
 /******************************************************
- * PLAYER FUNCTIONS 
+ * PLAYER FUNCTIONS
  */
 
 
@@ -201,7 +202,7 @@ int play_song()
 	{
 		mpd_player_pause(connection);
 	}
-	return FALSE;	
+	return FALSE;
 }
 
 void random_pl(GtkToggleButton *tb)
@@ -228,7 +229,7 @@ int seek_ns(int n)
 	return seek_ps(-n);
 }
 
-		
+
 /* returns TRUE when an error */
 int check_for_errors()
 {
@@ -237,7 +238,7 @@ int check_for_errors()
 
 
 /*****************************************************************
- * Preferences 
+ * Preferences
  */
 void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
 {
@@ -312,7 +313,7 @@ void update_outputs_settings()
 			data = mpd_data_get_next(data);
 		}
 		gtk_widget_set_sensitive(GTK_WIDGET(frame), TRUE);
-		gtk_widget_show_all(GTK_WIDGET(frame));            		
+		gtk_widget_show_all(GTK_WIDGET(frame));
 	}
 	else
 	{
@@ -328,36 +329,53 @@ void update_server_stats()
 	{
 		gchar *temp;
 		temp = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")), temp);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")), 
+				temp);
 		g_free(temp);
 		temp = g_strdup_printf("%i", mpd_stats_get_total_artists(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")), temp);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")), 
+				temp);
 		g_free(temp);
 		temp = g_strdup_printf("%i", mpd_stats_get_total_albums(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")), temp);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")), 
+				temp);
+		g_free(temp);
+		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"),
+				mpd_stats_get_uptime(connection)/86400,
+				((mpd_stats_get_uptime(connection)/86400) != 1)? "s":"",
+				(mpd_stats_get_uptime(connection)%86400)/3600,
+				((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? "s":"",
+				(mpd_stats_get_uptime(connection)%3600)/60,
+				((mpd_stats_get_uptime(connection)%3600)/60 != 1)? "s":""
+				);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")),
+				temp);
 		g_free(temp);
 		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"), 
-				mpd_stats_get_uptime(connection)/86400,((mpd_stats_get_uptime(connection)/86400) != 1)? "s":"",
-				(mpd_stats_get_uptime(connection)%86400)/3600,((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? "s":"",
-				(mpd_stats_get_uptime(connection)%3600)/60,((mpd_stats_get_uptime(connection)%3600)/60 != 1)? "s":""
+				mpd_stats_get_playtime(connection)/86400,
+				((mpd_stats_get_playtime(connection)/86400) != 1)? "s":"",
+				(mpd_stats_get_playtime(connection)%86400)/3600,
+				((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? "s":"",
+				(mpd_stats_get_playtime(connection)%3600)/60,
+				((mpd_stats_get_playtime(connection)%3600)/60 != 1)? "s":""
 				);
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")), temp);
-		g_free(temp);                                                                                        		
-		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"), 
-				mpd_stats_get_playtime(connection)/86400,((mpd_stats_get_playtime(connection)/86400) != 1)? "s":"",
-				(mpd_stats_get_playtime(connection)%86400)/3600,((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? "s":"",
-				(mpd_stats_get_playtime(connection)%3600)/60,((mpd_stats_get_playtime(connection)%3600)/60 != 1)? "s":""
-				);                                                                     		
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")), temp);		
+
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")), 
+				temp);
 		g_free(temp);
 	}
 	else
 	{
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")), "N/A");
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")), "N/A");
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")), "N/A");
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")), "N/A");
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")), "N/A");		
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")),
+				_("N/A"));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")),
+				_("N/A"));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")),
+				_("N/A"));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")),
+				_("N/A"));
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")),
+				_("N/A"));
 	}
 
 
@@ -370,19 +388,22 @@ void xfade_enable_toggled(GtkToggleButton *but)
 	gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"), bool1);
 	if(bool1)
 	{
-		int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));	
+		int fade_time = gtk_spin_button_get_value_as_int(
+				GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));
 		mpd_status_set_crossfade(connection, fade_time);
 	}
-	else 
+	else
 	{
 		mpd_status_set_crossfade(connection, 0);
-	}	
+	}
 }
 
 void xfade_time_changed(GtkSpinButton *but)
 {
-	int fade_time = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));	
-	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(server_pref_xml, "cb_fading"))))
+	int fade_time = gtk_spin_button_get_value_as_int(
+			GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")));
+	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+					glade_xml_get_widget(server_pref_xml, "cb_fading"))))
 	{
 		return;
 	}
@@ -392,13 +413,15 @@ void xfade_update()
 {
 	if(mpd_status_get_crossfade(connection) > 0)
 	{
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(
+				glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
 				mpd_status_get_crossfade(connection));
 	}
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(server_pref_xml, "cb_fading")),
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+			glade_xml_get_widget(server_pref_xml, "cb_fading")),
 			mpd_status_get_crossfade(connection)?TRUE:FALSE);
 
-	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(server_pref_xml, "sb_fade_time")), 
+	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
 			(mpd_status_get_crossfade(connection))?TRUE:FALSE);
 
 }
@@ -443,23 +466,26 @@ void server_pref_construct(GtkWidget *container)
 			gtk_widget_show(glade_xml_get_widget(server_pref_xml, "hb_warning_mesg"));
 			return;
 		}
-		else 
+		else
 		{
 			gtk_widget_hide(glade_xml_get_widget(server_pref_xml, "hb_warning_mesg"));
-		}	
-
+		}
 
 		if(mpd_status_get_crossfade(connection) == 0)
 		{
 			gtk_toggle_button_set_active((GtkToggleButton *)
 					glade_xml_get_widget(server_pref_xml, "cb_fading"), FALSE);
-			gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"), FALSE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"),
+					FALSE);
 		}
 		else {
 			gtk_toggle_button_set_active((GtkToggleButton *)
 					glade_xml_get_widget(server_pref_xml, "cb_fading"), TRUE);
-			gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(server_pref_xml, "sb_fade_time")), mpd_status_get_crossfade(connection));
-			gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"), TRUE);
+			gtk_spin_button_set_value(GTK_SPIN_BUTTON(
+					glade_xml_get_widget(server_pref_xml,"sb_fade_time")),
+					mpd_status_get_crossfade(connection));
+			gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"),
+					TRUE);
 
 		}
 		gtk_container_add(GTK_CONTAINER(container),vbox);
@@ -482,12 +508,12 @@ void preferences_update()
 	if(!mpd_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_con"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_dis"), FALSE);	    
+		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_dis"), FALSE);
 	}
 	else
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_con"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_dis"), TRUE);	   
+		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_dis"), TRUE);
 	}
 }
 void entry_auth_changed(GtkEntry *entry)

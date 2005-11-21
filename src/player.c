@@ -713,7 +713,6 @@ void time_format_toggle()
 void id3_info()
 {
 	if(!mpd_check_connected(connection)) return;
-	if(mpd_player_get_current_song_id(connection) > 0);
 	call_id3_window(mpd_player_get_current_song_id(connection));
 }
 
