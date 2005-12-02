@@ -49,6 +49,7 @@ GtkListStore *pl2_store= NULL;
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 
+void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 /* Playlist "Plugin" */
 void playlist_pref_construct(GtkWidget *container);
 void playlist_pref_destroy(GtkWidget *container);
@@ -65,7 +66,7 @@ gmpcPlugin playlist_plug = {
 	0,
 	NULL,
 	NULL,
-	NULL,	
+	&playlist_status_changed,
 	&playlist_gpp
 };
 
@@ -677,6 +678,13 @@ void create_playlist3 ()
 
 	pl3_reinitialize_tree();
 
+
+	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", FALSE))
+	{
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox_playlist_player"));
+		playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME,NULL);
+	}
+
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
 	/* connect signals that are defined in the gui description */
@@ -862,7 +870,7 @@ void playlist_pref_construct(GtkWidget *container)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_of")), 
-				cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));                          	
+				cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_ps")), 
 				cfg_get_single_value_as_int_with_default(config,"playlist", "st_cur_song", 0));	
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")), 
@@ -877,3 +885,114 @@ void pl3_database_changed()
 {
 		pl3_file_browser_reupdate();
 }
+
+void playlist_player_set_song(MpdObj *mi)
+{
+	char buffer[1024];
+	mpd_Song *song = mpd_playlist_get_current_song(mi);
+	if(song)
+	{
+		int id;
+		GString *string = g_string_new("");
+		char *mark =cfg_get_single_value_as_string_with_default(
+				config,
+				"playlist",
+				"player_markup",
+				DEFAULT_PLAYLIST_PLAYER_MARKUP);
+		mpd_song_markup(buffer, 1024,mark,song);
+		cfg_free_string(mark);
+
+		g_string_append(string,buffer);
+		for(id=0;id < string->len; id++)
+		{
+			if(string->str[id] == '&')
+			{
+				g_string_insert(string, id+1, "amp;");
+				id++;
+			}
+		}
+
+		gtk_label_set_markup(GTK_LABEL
+				(glade_xml_get_widget(pl3_xml,"pp_label")),
+				string->str);
+		g_string_free(string, TRUE);
+	}
+	else
+	{
+		gtk_label_set_markup(GTK_LABEL
+				(glade_xml_get_widget(pl3_xml,"pp_label")),
+				"<span size=\"large\" weight=\"bold\">Not Playing</span>");
+	}
+}
+
+void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(!pl3_xml)return;
+	if(what&MPD_CST_STATE)
+	{
+		int state = mpd_player_get_state(mi);
+		switch(state){
+			case MPD_STATUS_STATE_PLAY:
+				gtk_image_set_from_stock(GTK_IMAGE(
+							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
+						"gtk-media-pause",GTK_ICON_SIZE_BUTTON);
+				playlist_player_set_song(mi);
+				break;
+			case MPD_STATUS_STATE_PAUSE:
+				gtk_image_set_from_stock(GTK_IMAGE(
+							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
+						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
+				gtk_label_set_markup(GTK_LABEL
+						(glade_xml_get_widget(pl3_xml,"pp_label")),
+						"<span size=\"large\" weight=\"bold\">Paused</span>");
+
+				break;
+			default:
+				gtk_image_set_from_stock(GTK_IMAGE(
+							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
+						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
+				gtk_label_set_markup(GTK_LABEL
+						(glade_xml_get_widget(pl3_xml,"pp_label")),
+						"<span size=\"large\" weight=\"bold\">Not Playing</span>");
+		}
+
+	}
+	if(what&MPD_CST_SONGID)
+	{
+
+		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
+		{
+			playlist_player_set_song(mi);
+		}
+
+	}
+	if(what&MPD_CST_ELAPSED_TIME)
+	{
+		char *string = NULL;
+		int totalTime = mpd_status_get_total_song_time(connection);
+		int elapsedTime = mpd_status_get_elapsed_song_time(connection);
+		gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
+				(elapsedTime/(float)totalTime)*100.0);
+		if(elapsedTime/60 >99)
+		{
+			string = g_strdup_printf("%02i:%02i",
+					(elapsedTime/3600),
+					(elapsedTime/60)%60);
+		}
+		else{
+			string = g_strdup_printf("%02i:%02i",
+					(elapsedTime/60),
+					elapsedTime%60);
+		}
+
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
+				string);
+		g_free(string);
+	}
+
+
+
+}
+
+
+

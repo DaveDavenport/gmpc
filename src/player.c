@@ -323,17 +323,17 @@ int update_player()
 				{
 					e_sec = (e_min % 60);
 					e_min = (int)(e_min/60);
-				}                                				
+				}
 				buf = g_strdup_printf("%02i:%02i", abs(e_min), abs(e_sec));
 			}
 			else if (cfg_get_single_value_as_int(config, "player", "time-format") == TIME_FORMAT_REMAINING)
 			{
 				/* if more then 100 minutes player change to hh:mm */
 				if(abs(r_min) >= 100)
-				{                                                               				
+				{
 					r_sec = (r_min % 60);
 					r_min = (int)(r_min/60);
-				}                                								
+				}
 				buf = g_strdup_printf("-%02i:%02i", abs(r_min), abs(r_sec));
 			}
 			else{
