@@ -47,7 +47,7 @@ int num_plugins = 0;
 
 
 /*
- * the xml fle pointer to the player window 
+ * the xml fle pointer to the player window
  */
 GladeXML *xml_main_window = NULL;
 GladeXML *xml_error_window = NULL;
@@ -64,7 +64,7 @@ extern GtkListStore *pl2_store;
  * The Config object
  */
 config_obj *config = NULL;
-/* 
+/*
  * The Connection object
  */
 MpdObj *connection = NULL;
@@ -82,7 +82,7 @@ char *gmpc_get_full_image_path(char *filename)
 	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
-	 * 
+	 *
 	 * g_free(packagedir);
 	 */
 #else
@@ -98,16 +98,16 @@ char *gmpc_get_full_glade_path(char *filename)
 	gchar *packagedir;
 	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
 	debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-	
+
 	path = g_build_filename(packagedir, "data", "glade", filename, NULL);
-	
+
 	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
-	 * 
+	 *
 	 * g_free(packagedir);
 	 */
-#else	
+#else
 	path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
 #endif
 	return path;
@@ -126,22 +126,22 @@ void main_trigger_update ()
 
 
 /*
- * sets default values in the main struct's 
+ * sets default values in the main struct's
  */
 void set_default_values ()
 {
 	/*
-	 * playlist number this is to check if the playlist changed 
+	 * playlist number this is to check if the playlist changed
 	 */
 	info.playlist_id = -1;
 	info.playlist_length = 0;
 	info.playlist_playtime = 0;
 	/*
-	 * the current song 
+	 * the current song
 	 */
 	info.old_pos = -1;
 	/*
-	 * tray icon 
+	 * tray icon
 	 */
 	info.hidden = FALSE;
 
@@ -149,7 +149,7 @@ void set_default_values ()
 	info.sb_hidden = FALSE;
 
 	/*
-	 * updating 
+	 * updating
 	 */
 	info.updating = FALSE;
 }
@@ -225,7 +225,7 @@ int main (int argc, char **argv)
 	add_plugin(&server_plug);
 	add_plugin(&playlist_plug);
 	add_plugin(&tag_plug);
-#ifdef ENABLE_TRAYICON	
+#ifdef ENABLE_TRAYICON
 	add_plugin(&tray_icon_plug);
 #endif
 	add_plugin(&about_plug);
@@ -234,11 +234,11 @@ int main (int argc, char **argv)
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
 	load_plugins_from_dir(url);
 	g_free(url);
-	/* plugins */	
+	/* plugins */
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
-		load_plugins_from_dir(url);	
+		load_plugins_from_dir(url);
 	}
 	else
 	{
@@ -271,23 +271,23 @@ int main (int argc, char **argv)
 	/* New Signal */
 	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
 	mpd_signal_connect_error(connection, error_callback, NULL);
-	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);	
-	
+	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
+
 	/*
-	 * initialize gtk 
+	 * initialize gtk
 	 */
 	gtk_init (&argc, &argv);
 	/*
-	 * stock icons 
+	 * stock icons
 	 */
 	init_stock_icons ();
 
 
 	/*
-	 * create the main window, This is done before anything else (but after command line check) 
+	 * create the main window, This is done before anything else (but after command line check)
 	 */
 	create_player ();
-	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) &&  
+	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) && 
 			cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
 	{
 		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));

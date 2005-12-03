@@ -28,7 +28,7 @@ typedef enum {
 #define PL3_ENTRY_SONG 1
 
 /* the gtk_tree_store row's */
-enum 
+enum
 {
 	PL3_CAT_TYPE,
 	PL3_CAT_TITLE,
@@ -43,7 +43,7 @@ enum
 
 
 /* structures */
-/** gmpcPrefPlugin: need to be instant apply. 
+/** gmpcPrefPlugin: need to be instant apply.
  * Plugin is expected to fill the container with it preferences widgets. (gtk_container_add)
  * if destroy is called, it needs to detacht it from the container (gtk_container_remove)
  */
@@ -52,16 +52,17 @@ typedef struct {
 	void (*destroy)(GtkWidget *container);
 } gmpcPrefPlugin;
 
-/** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser 
+/** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser
  */
 typedef struct {
 	void (*add)(GtkWidget *cat_tree);
 	void (*selected)(GtkWidget *container);
 	void (*unselected)(GtkWidget *container);
 	void (*cat_selection_changed)(GtkWidget *tree, GtkTreeIter *iter);
-	void (*fill_tree)(GtkTreeView *tree,GtkTreeIter *iter); 
-	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event); 
-	void (*cat_key_press)(GtkWidget *tree, GdkEventKey *event, int selected_type); /* not yet implemented */
+	void (*fill_tree)(GtkTreeView *tree,GtkTreeIter *iter);
+	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
+	void (*cat_key_press)(GtkWidget *tree, GdkEventKey *event, int selected_type);
+	/* not yet implemented */
 } gmpcPlBrowserPlugin;
 
 
@@ -69,17 +70,17 @@ typedef struct {
 
 /* sturcture */
 typedef struct {
-	char 			*name;		/* Name of the plugin */
+	char			*name;		/* Name of the plugin */
 	int			version[3];	/* Version number */
 	PluginType		plugin_type;	/* Type of Plugin */
 	/* unique plugin id */
-	int 			id; /* do not fill in, is done by gmpc */
+	int			id; /* do not fill in, is done by gmpc */
 	/* path where the plugin is (only directory) can be used to get location of f.e. glade/images */
 	char			*path;	/* Do not fill in, done by gmpc */
 	/* Browser Plugins */
-	gmpcPlBrowserPlugin 	*browser;
+	gmpcPlBrowserPlugin	*browser;
 	/* plugin with one signal for changes on Mpd */
-	StatusChangedCallback 	mpd_status_changed;
+	StatusChangedCallback	mpd_status_changed;
 	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
 } gmpcPlugin;
@@ -87,4 +88,4 @@ typedef struct {
 
 
 
-#endif 
+#endif
