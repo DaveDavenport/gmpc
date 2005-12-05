@@ -94,7 +94,7 @@ int  pl3_cat_get_selected_browser()
 
 
 /**************************************************
- * Category Tree 
+ * Category Tree
  */
 void pl3_reinitialize_tree()
 {
@@ -102,7 +102,6 @@ void pl3_reinitialize_tree()
 	if(pl3_xml == NULL) return;
 	GtkTreePath *path = gtk_tree_path_new_from_string("0");
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-	printf("%i %i\n", old_type, old_type&PLUGIN_ID_MARK);
 	if((old_type&PLUGIN_ID_MARK) != 0)
 	{
 		if(old_type >= 0)
@@ -268,7 +267,7 @@ void pl3_cat_sel_changed()
 				old_type = -1;
 			}
 		}
-
+		pl3_push_rsb_message("");
 		if(type == PL3_CURRENT_PLAYLIST)
 		{
 			if(old_type != type)
@@ -300,7 +299,6 @@ void pl3_cat_sel_changed()
 		}
 		else if(type|PLUGIN_ID_MARK)
 		{
-			printf("plugins: %s\n", plugins[type^PLUGIN_ID_MARK]->name);
 			if(old_type != type)plugins[type^PLUGIN_ID_MARK]->browser->selected(container);
 			plugins[type^PLUGIN_ID_MARK]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
@@ -329,7 +327,6 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	gint type  = pl3_cat_get_selected_browser();
 	int menu_items = 0;
 	GtkWidget *menu = NULL;
-	printf("type == %i\n", type);
 	if(type == -1 || check_connection_state())
 	{
 		/* no selections, or no usefull one.. so propagate the signal */
@@ -342,7 +339,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 		return FALSE;
 	}
 	/* if it's the current playlist */
-	menu_items 	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
+	menu_items	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
 	menu_items	+= pl3_file_browser_cat_popup(menu,type,tree,event);
 	menu_items	+= pl3_artist_browser_cat_popup(menu, type, tree, event);
 	menu_items	+= pl3_custom_tag_browser_right_mouse_menu(menu,type,GTK_WIDGET(tree),event);
