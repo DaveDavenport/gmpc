@@ -220,14 +220,19 @@ int main (int argc, char **argv)
 	}
 	g_free(url);
 
-
+	/* this shows the connection preferences */
 	add_plugin(&connection_plug);
+	/* this the server preferences */
 	add_plugin(&server_plug);
+	/* this shows the playlist preferences */
 	add_plugin(&playlist_plug);
+	/* this shows the markup stuff */
 	add_plugin(&tag_plug);
 #ifdef ENABLE_TRAYICON
+	/* the tray icon */
 	add_plugin(&tray_icon_plug);
 #endif
+	/* the about windows :D*/
 	add_plugin(&about_plug);
 
 
@@ -387,7 +392,8 @@ void playlist_changed(MpdObj *mi)
 	gchar buffer[1024];
 	debug_printf(DEBUG_INFO, "playlist_changed_callback: playlist changed\n");
 	old_length = info.playlist_length;
-	char *string = cfg_get_single_value_as_string_with_default(config, "playlist","markup", DEFAULT_PLAYLIST_MARKUP);
+	char *string = cfg_get_single_value_as_string_with_default(config, 
+			"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_playlist_get_changes(mi,info.playlist_id);
 

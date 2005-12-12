@@ -8,11 +8,11 @@ void add_plugin(gmpcPlugin *plug)
 {
 	/* set plugin id */
 	plug->id = num_plugins|PLUGIN_ID_MARK;
-	/* put it in the list */                                           	
+	/* put it in the list */
 	num_plugins++;
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
 	plugins[num_plugins-1] = plug;
-	plugins[num_plugins] = NULL;                                       	
+	plugins[num_plugins] = NULL;
 
 }
 int plugin_load(char *path, const char *file)
@@ -20,7 +20,7 @@ int plugin_load(char *path, const char *file)
 	GModule *handle;
 	gmpcPlugin *plug = NULL;
 	gchar *string = NULL;
-	gchar *full_path = g_strdup_printf("%s/%s", path, file);	
+	gchar *full_path = g_strdup_printf("%s/%s", path, file);
 	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
 	if(path == NULL)
 	{

@@ -368,21 +368,21 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 				       mpd_player_get_random(connection));
 		}
 		msg = g_strdup_printf("%s: %s", _("Random"), (mpd_player_get_random(connection))?_("On"):_("Off"));
-		msg_push_popup_timeout(msg, 2000);	
+		msg_push_popup_timeout(msg, 2000);
 		g_free(msg);
 	}
 	if(what&MPD_CST_REPEAT)
 	{
-		if(mpd_player_get_repeat(connection) != 
+		if(mpd_player_get_repeat(connection) !=
 				gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button"))))
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "rep_button")),
 				       mpd_player_get_repeat(connection));
 		}
 		msg = g_strdup_printf("%s: %s", _("Repeat"), (mpd_player_get_repeat(connection))?_("On"):_("Off"));
-		msg_push_popup_timeout(msg, 2000);	
+		msg_push_popup_timeout(msg, 2000);
 		g_free(msg);
-		
+
 	}
 	if(what&MPD_CST_VOLUME)
 	{
@@ -390,10 +390,10 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		if((int)gtk_range_get_value(scale) != mpd_status_get_volume(connection))
 		{
 			gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
-		}    
+		}
 		msg = g_strdup_printf("%s: %03i%%", _("Volume"), mpd_status_get_volume(connection));
-		msg_push_popup_timeout(msg, 2000);	
-		g_free(msg);                                                                                       		
+		msg_push_popup_timeout(msg, 2000);
+		g_free(msg);
 	}
 	if(what&MPD_CST_CROSSFADE)
 	{
@@ -405,7 +405,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		{
 			msg = g_strdup_printf("%s: %s", _("Crossfade"), _("Off"));
 		}
-		msg_push_popup_timeout(msg, 2000);	
+		msg_push_popup_timeout(msg, 2000);
 		g_free(msg);
 	}
 	if(what&MPD_CST_SONGID)
@@ -417,7 +417,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 	if(what&MPD_CST_STATE)
 	{
 		/* we want to see the new song */
-		msg_pop_popup();                 		
+		msg_pop_popup();
 		player_state_changed(mpd_player_get_state(connection));
 	}
 	if(what&MPD_CST_TOTAL_TIME)
@@ -428,7 +428,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 	{
 		update_player();
 	}
-}	
+}
 
 void player_state_changed(int state)
 {
@@ -446,7 +446,7 @@ void player_state_changed(int state)
 			pango_layout_set_text(time_layout, "-00:00", -1);
 
 		}
-		else	
+		else
 		{
 			pango_layout_set_text(time_layout, "0.0 %", -1);
 		}
@@ -456,7 +456,7 @@ void player_state_changed(int state)
 
 	}
 	if(state == MPD_PLAYER_PLAY)
-	{	
+	{
 		gtk_image_set_from_stock(GTK_IMAGE(image),"gtk-media-pause", GTK_ICON_SIZE_BUTTON);
 	}
 	else
@@ -469,7 +469,8 @@ void player_state_changed(int state)
 		msg_set_base(_("Gnome Music Player Client"));
 		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
 		{
-			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), _("Gnome Music Player Client"));	
+			gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+					_("Gnome Music Player Client"));
 		}
 	}
 	else
@@ -684,7 +685,7 @@ void volume_change_update()
 			if(mpd_status_set_volume(connection, (int)value) < 0)
 			{
 				return;
-			}                                                 			
+			}
 		}
 	}
 }

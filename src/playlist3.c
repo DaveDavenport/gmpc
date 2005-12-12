@@ -1011,25 +1011,28 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		int elapsedTime = mpd_status_get_elapsed_song_time(connection);
 		gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
 				(elapsedTime/(float)totalTime)*100.0);
-		if(elapsedTime/60 >99)
+		if(elapsedTime/60 >99 || totalTime/60 > 99)
 		{
-			string = g_strdup_printf("%02i:%02i",
+			string = g_strdup_printf("%02i:%02i - %02i:%02i",
 					(elapsedTime/3600),
-					(elapsedTime/60)%60);
+					(elapsedTime/60)%60,
+					(totalTime/3600),
+					(totalTime/60)%60
+					);
 		}
 		else{
-			string = g_strdup_printf("%02i:%02i",
+			string = g_strdup_printf("%02i:%02i - %02i:%02i",
 					(elapsedTime/60),
-					elapsedTime%60);
+					elapsedTime%60,
+					(totalTime/60),
+					(totalTime%60)
+					);
 		}
 
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
 				string);
 		g_free(string);
 	}
-
-
-
 }
 
 
