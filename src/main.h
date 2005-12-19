@@ -87,7 +87,7 @@ gboolean check_connection_state();
 
 /* player.c*/
 /* scrolling title in main window */
-typedef struct 	{	
+typedef struct 	{
 	char *msg;
 	char *base_msg;
 	char *popup_msg;

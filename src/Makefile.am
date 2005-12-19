@@ -20,15 +20,31 @@ gmpc_SOURCES=\
 	mm-keys.c\
 	config1.c
 
-#	playlist3-custom-stream-browser.c
-#	playlist3-osb-browser.c
-
-INCLUDES= @gmpc_CFLAGS@ @EXTRA_CFLAGS@   -Wall -Werror \
+INCLUDES= @EXTRA_CFLAGS@   -Wall -Werror \
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"
-LIBS = @gmpc_LIBS@ @LIBS@ 
-LDFLAGS = @EXTRA_LDFLAGS@
+
+LIBS = \
+	@glib_LIBS@ @LIBS@ \
+	@libmpd_LIBS@ \
+	@gobject_LIBS@\
+	@libxml_LIBS@ \
+	@gtk_LIBS@\
+	@gmodule_LIBS@\
+	@libglade_LIBS@
+
+LDFLAGS = \
+	@EXTRA_LDFLAGS@
+
+CFLAGS = @CFLAGS@\
+	@glib_CFLAGS@\
+	@libmpd_CFLAGS@ \
+	@gobject_LIBS@\
+	@libxml_CFLAGS@ \
+	@gtk_CFLAGS@\
+	@gmodule_CFLAGS@\
+	@libglade_CFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
@@ -44,6 +60,3 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
 		config1.h
-
-#		playlist3-osb-browser.h
-#	playlist3-custom-stream-browser.h

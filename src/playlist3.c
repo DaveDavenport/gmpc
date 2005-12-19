@@ -39,7 +39,6 @@
 
 int old_type = -1;
 
-extern config_obj *config;
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
@@ -75,7 +74,8 @@ gmpcPlugin playlist_plug = {
  */
 int  pl3_cat_get_selected_browser()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
@@ -610,16 +610,32 @@ void create_playlist3 ()
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
 	GtkTreeIter iter;
+	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 	if(pl3_xml != NULL)
 	{
 
-		if(pl3_wsize.x  >0 || pl3_wsize.y>0) gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
-		if(pl3_wsize.height>0 || pl3_wsize.width>0) gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
+		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.x,
+					pl3_wsize.y);
+		}
+		if(pl3_wsize.height>0 || pl3_wsize.width>0) {
+			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.width,
+					pl3_wsize.height);
+		}
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return;
 	}
+	/* set the toggle button in the main windows, if it isn't allready in
+	 * the propper state
+	 *
+	 * Setting the toggle button will "re-call" this function again, so
+	 * step out of this function, and when it gets called again it skips
+	 * this part.
+	 */
 	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
@@ -635,20 +651,24 @@ void create_playlist3 ()
 		debug_printf(DEBUG_ERROR, "create_playlist3: Failed to open playlist3.glade.\n");
 		return;
 	}
+	/* restore the window's position and size */
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
 	{
-		pl3_wsize.x = 		cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
-		pl3_wsize.y = 		cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
-		pl3_wsize.width = 	cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
-		pl3_wsize.height = 	cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
+		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
+		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
+		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
 
 		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
-			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), pl3_wsize.x, pl3_wsize.y);
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.x, pl3_wsize.y);
 		}
 		if(pl3_wsize.height>0 || pl3_wsize.width>0) {
-			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),pl3_wsize.width, pl3_wsize.height);
+			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.width, pl3_wsize.height);
 		}
 	}
+	/* create tree store for the "category" view */
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
@@ -751,8 +771,8 @@ void pl3_highlight_song_change ()
 				return;
 			}
 			/* unhighlight the song */
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL, 
-					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",    			
+			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL,
+					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
 					-1);
 		}
 		g_free (temp);
@@ -760,7 +780,7 @@ void pl3_highlight_song_change ()
 		info.old_pos = -1;
 	}
 	/* check if we need to highlight a song */
-	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0) 
+	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
 	{
 		temp = g_strdup_printf ("%i", mpd_player_get_current_song_pos(connection));
 		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (pl2_store), &iter, temp))
@@ -771,11 +791,16 @@ void pl3_highlight_song_change ()
 			/* check if we have the right song, if not, print an error */
 			if (pos != mpd_player_get_current_song_pos(connection))
 			{
-				debug_printf(DEBUG_ERROR,"pl3_highlight_song_change: Error %i %i should be the same\n", pos,mpd_player_get_current_song_pos(connection));
+				debug_printf(DEBUG_ERROR,"pl3_highlight_song_change: Error %i "\
+						" %i should be the same\n",
+						pos,
+						mpd_player_get_current_song_pos(connection));
 			}
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,SONG_STOCK_ID,"gtk-media-play", -1);
+			gtk_list_store_set (pl2_store, &iter,
+					WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,
+					SONG_STOCK_ID,"gtk-media-play", -1);
 
-			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) && 
+			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) &&
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{
 				pl3_current_playlist_browser_scroll_to_current_song();
@@ -802,7 +827,7 @@ void pl3_playlist_changed()
 	}
 }
 /****************************************************************************************
- *  PREFERENCES 									*
+ *  PREFERENCES										*
  ****************************************************************************************/
 void playlist3_player_enable_tb(GtkToggleButton *but)
 {
@@ -924,6 +949,8 @@ void pl3_database_changed()
 	pl3_file_browser_reupdate();
 }
 
+
+/* Playlist player */
 void playlist_player_set_song(MpdObj *mi)
 {
 	char buffer[1024];
@@ -1009,6 +1036,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		char *string = NULL;
 		int totalTime = mpd_status_get_total_song_time(connection);
 		int elapsedTime = mpd_status_get_elapsed_song_time(connection);
+		if(mpd_check_connected(connection))
+		{
 		gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
 				(elapsedTime/(float)totalTime)*100.0);
 		if(elapsedTime/60 >99 || totalTime/60 > 99)
@@ -1027,6 +1056,12 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 					(totalTime/60),
 					(totalTime%60)
 					);
+		}
+		}
+		else
+		{
+			string = g_strdup(_("Not Connected"));
+			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
 		}
 
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),

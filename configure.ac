@@ -24,19 +24,42 @@ AC_C_CONST
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
 
+# Split this out, because pkgconfig macro doesn't return nicely what is missing
 
-PKG_CHECK_MODULES([gmpc],
-[
-	glib-2.0 >= 2.4
-	gobject-2.0 >= 2.4
-	gtk+-2.0 >= 2.4
-	libglade-2.0
-	libxml-2.0
-	gmodule-2.0
-	libmpd >= 0.0.9.15
-])
-AC_SUBST(gmpc_LIBS)
-AC_SUBST(gmpc_CFLAGS)
+# glib
+PKG_CHECK_MODULES([glib], glib-2.0 >= 2.4)
+AC_SUBST(glib_LIBS)
+AC_SUBST(glib_CFLAGS)
+
+# gobject
+PKG_CHECK_MODULES([gobject], gobject-2.0 >= 2.4)
+AC_SUBST(gobject_LIBS)
+AC_SUBST(gobject_CFLAGS)
+
+#gtk
+PKG_CHECK_MODULES([gtk], gtk+-2.0 >= 2.4)
+AC_SUBST(gtk_LIBS)
+AC_SUBST(gtk_CFLAGS)
+
+#gmodule
+PKG_CHECK_MODULES([gmodule], gmodule-2.0 >= 2.4)
+AC_SUBST(gmodule_LIBS)
+AC_SUBST(gmodule_CFLAGS)
+
+# libmpd
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.0.9.15)
+AC_SUBST(libmpd_LIBS)
+AC_SUBST(libmpd_CFLAGS)
+
+# libxml
+PKG_CHECK_MODULES([libxml], libxml-2.0)
+AC_SUBST(libxml_LIBS)
+AC_SUBST(libxml_CFLAGS)
+
+# libglade
+PKG_CHECK_MODULES([libglade], libglade-2.0)
+AC_SUBST(libglade_LIBS)
+AC_SUBST(libglade_CFLAGS)
 
 
 if test x${enable_mmkeys} = xyes; then
@@ -106,3 +129,4 @@ if test x${enable_trayicon} = xyes; then
 else
 	echo "Tray icon support is:	   	disabled"
 fi
+

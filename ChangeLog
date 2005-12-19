@@ -1,3 +1,8 @@
+19-12-2005 Qball <Qball@qballcow.nl>
+	* Changed configure script to check for gtk/glib seperately,
+	this to "fix" the annoyance of pkg_check_modules not reporting what
+	dependency is misisng
+
 29-10-2005 Qball <Qball@qballcow.nl>
 	* Moved more stuff in player.c to new signal.
 	* Made dependency for fixed libmpd signals
