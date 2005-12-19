@@ -29,7 +29,23 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "config1.h"
-extern config_obj *config;
+
+
+/* player.c*/
+/* scrolling title in main window */
+typedef struct 	{
+	char *msg;
+	char *base_msg;
+	char *popup_msg;
+	GQueue *queue;
+	int pos;
+	int up;
+	gboolean do_scroll;
+	gboolean exposed;
+} scrollname;
+
+
+
 void volume_change_update();
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
@@ -55,11 +71,11 @@ void time_exposed(GtkWidget *window)
 	height = height/PANGO_SCALE;
 	gtk_widget_size_request(window, &req);
 
-	
+
 	if(height+6 != req.height || width+6 > req.width)
 	{
-		gtk_widget_set_size_request(window,width+6,height+6);	
-	}                                                       	
+		gtk_widget_set_size_request(window,width+6,height+6);
+	}
 
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->base_gc[GTK_STATE_NORMAL],

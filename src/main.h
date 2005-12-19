@@ -27,15 +27,24 @@
 #include "plugin.h"
 
 
+/* the config object */
 extern config_obj *config;
+/* the plugin list */
 extern gmpcPlugin **plugins;
+/* num of plugins */
 extern int num_plugins;
 
+
+/* the plugins :D */
 extern gmpcPlugin connection_plug;
-extern gmpcPlugin about_plug; 
-extern gmpcPlugin playlist_plug; 
-extern gmpcPlugin server_plug; 
-extern gmpcPlugin tag_plug; 
+extern gmpcPlugin about_plug;
+extern gmpcPlugin playlist_plug;
+extern gmpcPlugin server_plug;
+extern gmpcPlugin tag_plug;
+#ifdef ENABLE_TRAYICON
+extern gmpcPlugin tray_icon_plug;
+#endif
+
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
@@ -85,20 +94,8 @@ void disconnect_callback(MpdObj *mi);
 gboolean check_connection_state();
 
 
-/* player.c*/
-/* scrolling title in main window */
-typedef struct 	{
-	char *msg;
-	char *base_msg;
-	char *popup_msg;
-	GQueue *queue;
-	int pos;
-	int up;
-	gboolean do_scroll;
-	gboolean exposed;
-} scrollname;
 void player_destroy();
-extern scrollname scroll;
+
 int update_player();
 void create_player();
 gboolean update_msg();
@@ -119,9 +116,9 @@ void update_tray_icon();
 int create_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
-#ifdef ENABLE_TRAYICON
-extern gmpcPlugin tray_icon_plug; 
-#endif
+
+
+
 /* popup.c: update_popup() */
 void destroy_tray_icon();
 

@@ -12,7 +12,6 @@
 #include "config1.h"
 
 #define PLUGIN_STATS -200
-extern config_obj *config;
 
 void plugin_stats_construct(GtkWidget *container);
 void plugin_stats_destroy(GtkWidget *container);

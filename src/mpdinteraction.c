@@ -5,7 +5,6 @@
 #include "playlist3.h"
 #include "main.h"
 #include "config1.h"
-extern config_obj *config;
 extern GtkListStore *pl2_store;
 /* the internall data structure */
 internal_data info;
@@ -92,7 +91,7 @@ void disconnect_callback(MpdObj *mi)
 				_("Gnome Music Player Client"));
 	}
 
-	scroll.exposed = 1;
+	//scroll.exposed = 1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
@@ -111,7 +110,7 @@ void disconnect_callback(MpdObj *mi)
 int connect_to_mpd()
 {
 	char *string = NULL;
-	scroll.exposed = 1;
+	//scroll.exposed = 1;
 	info.playlist_playtime = 0;
 	string =cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
 	mpd_set_hostname(connection,string);

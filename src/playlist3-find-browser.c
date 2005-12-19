@@ -40,7 +40,6 @@ void pl3_find_browser_add_selected();
 void pl3_find_browser_replace_selected();
 void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 
-extern config_obj *config;
 extern GladeXML *pl3_xml;
 extern GtkListStore *pl2_store;
 
@@ -57,10 +56,6 @@ enum{
 #define PL3_FINDB_CB_ALL 88
 #define	PL3_FINDB_CB_PLAYLIST 99
 
-
-
-
-extern config_obj *config;
 extern GladeXML *pl3_xml;
 
 /* internal */

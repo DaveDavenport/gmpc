@@ -32,22 +32,9 @@
 #include "config1.h"
 
 
-extern config_obj *config;
-
-
-
-
-
-
-
-
-
 
 GladeXML *xml_esf  = NULL;
 GtkTextBuffer *buffer= NULL;
-
-
-
 
 
 void esf_render_example(GtkTextBuffer *buffer)

@@ -40,7 +40,7 @@ LDFLAGS = \
 CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
 	@libmpd_CFLAGS@ \
-	@gobject_LIBS@\
+	@gobject_CFLAGS@\
 	@libxml_CFLAGS@ \
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\

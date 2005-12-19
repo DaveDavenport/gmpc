@@ -39,10 +39,6 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 void pl3_artist_browser_add_selected();
 void pl3_artist_browser_replace_selected();
 int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
-extern config_obj *config;
-
-
-
 
 enum{
 	PL3_AB_ARTIST,

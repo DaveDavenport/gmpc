@@ -37,6 +37,9 @@
 #include "playlist3-current-playlist-browser.h"
 #include "playlist3-tag-browser.h"
 
+void pl3_show_and_position_window();
+
+
 int old_type = -1;
 
 GladeXML *pl3_xml = NULL;
@@ -514,12 +517,14 @@ void pl3_playlist_search()
 	{
 		return;
 	}
-	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+					glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		create_playlist3();
 	}
 	else
 	{
+//		pl3_show_and_position_window();
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 	}
 	if(pl3_xml != NULL)
@@ -601,7 +606,22 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 /* create the playlist view 
  * This is done only once, for the rest its hidden, but still there
  */
-
+void pl3_show_and_position_window()
+{
+	if(!pl3_xml) return;
+	if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
+		gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+				pl3_wsize.x,
+				pl3_wsize.y);
+	}
+	if(pl3_wsize.height>0 || pl3_wsize.width>0) {
+		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+				pl3_wsize.width,
+				pl3_wsize.height);
+	}
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+}
 void create_playlist3 ()
 {
 	GtkCellRenderer *renderer;
@@ -612,24 +632,7 @@ void create_playlist3 ()
 	GtkTreeIter iter;
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
-	if(pl3_xml != NULL)
-	{
-
-		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
-			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.x,
-					pl3_wsize.y);
-		}
-		if(pl3_wsize.height>0 || pl3_wsize.width>0) {
-			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.width,
-					pl3_wsize.height);
-		}
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-		return;
-	}
-	/* set the toggle button in the main windows, if it isn't allready in
+		/* set the toggle button in the main windows, if it isn't allready in
 	 * the propper state
 	 *
 	 * Setting the toggle button will "re-call" this function again, so
@@ -639,6 +642,12 @@ void create_playlist3 ()
 	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
+		return;
+	}
+
+	if(pl3_xml != NULL)
+	{
+		pl3_show_and_position_window();
 		return;
 	}
 
@@ -1038,25 +1047,25 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		int elapsedTime = mpd_status_get_elapsed_song_time(connection);
 		if(mpd_check_connected(connection))
 		{
-		gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
-				(elapsedTime/(float)totalTime)*100.0);
-		if(elapsedTime/60 >99 || totalTime/60 > 99)
-		{
-			string = g_strdup_printf("%02i:%02i - %02i:%02i",
-					(elapsedTime/3600),
-					(elapsedTime/60)%60,
-					(totalTime/3600),
-					(totalTime/60)%60
-					);
-		}
-		else{
-			string = g_strdup_printf("%02i:%02i - %02i:%02i",
-					(elapsedTime/60),
-					elapsedTime%60,
-					(totalTime/60),
-					(totalTime%60)
-					);
-		}
+			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
+					(elapsedTime/(float)totalTime)*100.0);
+			if(elapsedTime/60 >99 || totalTime/60 > 99)
+			{
+				string = g_strdup_printf("%02i:%02i - %02i:%02i",
+						(elapsedTime/3600),
+						(elapsedTime/60)%60,
+						(totalTime/3600),
+						(totalTime/60)%60
+						);
+			}
+			else{
+				string = g_strdup_printf("%02i:%02i - %02i:%02i",
+						(elapsedTime/60),
+						elapsedTime%60,
+						(totalTime/60),
+						(totalTime%60)
+						);
+			}
 		}
 		else
 		{

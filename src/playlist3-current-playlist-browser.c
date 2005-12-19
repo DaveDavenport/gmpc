@@ -55,7 +55,6 @@ void pl3_current_playlist_browser_clear_playlist();
 
 
 /* external objects */
-extern config_obj *config;
 extern GladeXML *pl3_xml;
 extern GtkListStore *pl2_store;
 

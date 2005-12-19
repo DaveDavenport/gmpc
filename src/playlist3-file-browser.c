@@ -53,7 +53,6 @@ enum{
 	PL3_FB_ROWS
 };
 
-extern config_obj *config;
 extern GladeXML *pl3_xml;
 
 GtkTreeRowReference *pl3_fb_tree_ref = NULL;
