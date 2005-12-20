@@ -69,6 +69,7 @@ gmpcPlugin playlist_plug = {
 	NULL,
 	NULL,
 	&playlist_status_changed,
+	NULL,
 	&playlist_gpp
 };
 
@@ -155,7 +156,7 @@ void pl3_disconnect()
 void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
 {
 	gint type = pl3_cat_get_selected_browser();
-	if(check_connection_state())
+	if(!mpd_check_connected(connection))
 	{
 		return;
 	}
@@ -189,7 +190,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	gint type,read;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, 0, &type,4,&read, -1);
 	/* check if the connection isnt down */
-	if(check_connection_state())
+	if(!mpd_check_connected(connection))
 	{
 		/* if connection down, don't let the treeview open */
 		gtk_tree_view_collapse_row(tree,path);
@@ -330,7 +331,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	gint type  = pl3_cat_get_selected_browser();
 	int menu_items = 0;
 	GtkWidget *menu = NULL;
-	if(type == -1 || check_connection_state())
+	if(type == -1 || !mpd_check_connected(connection))
 	{
 		/* no selections, or no usefull one.. so propagate the signal */
 		return FALSE;
@@ -394,7 +395,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		pl3_close();
 	}
 
-	if(check_connection_state())
+	if(!mpd_check_connected(connection))
 	{
 		return FALSE;
 	}

@@ -81,6 +81,8 @@ typedef struct {
 	gmpcPlBrowserPlugin	*browser;
 	/* plugin with one signal for changes on Mpd */
 	StatusChangedCallback	mpd_status_changed;
+	/* (dis)connect signal */
+	ConnectionChangedCallback mpd_connection_changed;
 	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
 } gmpcPlugin;

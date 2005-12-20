@@ -44,8 +44,9 @@ typedef struct 	{
 	gboolean exposed;
 } scrollname;
 
-
-
+GladeXML *xml_main_window = NULL;
+void player_song_changed();
+void player_state_changed(int state);
 void volume_change_update();
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
@@ -826,8 +827,22 @@ void create_player()
 			NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(200, (GSourceFunc)update_msg, NULL);
-	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
-	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
+//	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
+//	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
+
+	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) &&
+	cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
+	{
+		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		info.hidden = TRUE;
+	}
+	else
+	{
+		gtk_widget_show(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+	}
+
+
+
 }
 
 void player_destroy()

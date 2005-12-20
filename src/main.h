@@ -88,10 +88,6 @@ void random_pl();
 void repeat_pl();
 void update_mpd_dbase();
 int disconnect_to_mpd();
-void disconnect_callback(MpdObj *mi);
-
-/* returns FALSE when connected */
-gboolean check_connection_state();
 
 
 void player_destroy();
@@ -102,10 +98,7 @@ gboolean update_msg();
 int msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
-void player_song_changed();
-void player_state_changed(int state);
 void create_preferences_window();
-void preferences_update();
 void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 /* id3info.c*/
@@ -125,7 +118,6 @@ void destroy_tray_icon();
 /* main.h*/
 void main_trigger_update();
 
-void preferences_update();
 int  seek_ns(int n);
 int  seek_ps(int n);
 
@@ -136,20 +128,19 @@ void pl3_reinitialize_tree();
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void id3_status_update();
 void call_id3_window_song(mpd_Song *songstr);
-
-
-
 void playlist_changed(MpdObj *mi);
-void init_playlist ();
+
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 void song_changed(MpdObj *mi, int oldsong, int newsong);
 void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
 void status_callback(MpdObj *mi);
-void connect_callback(MpdObj *mi);
-void database_changed(MpdObj *mi);
+
 void main_quit();
 
-
+/*
+ * functions to get patch to different files.
+ * This is needed to make the windows port work.
+ */
 char *gmpc_get_full_image_path(char *filename);
 char *gmpc_get_full_glade_path(char *filename);
 

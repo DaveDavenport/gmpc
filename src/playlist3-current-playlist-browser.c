@@ -435,13 +435,13 @@ void pl3_current_playlist_browser_show_info()
 		do
 		{
 			GtkTreeIter iter;
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);		      
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
 			call_id3_window (value);
 		}
-		while ((list = g_list_previous (list)) && !check_connection_state ());
+		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);              		      
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
 }
@@ -524,9 +524,10 @@ void pl2_save_playlist ()
 	GladeXML *xml = NULL;
 	int run = TRUE;
 	/* check if the connection is up */
-	if (check_connection_state ())
+	if (!mpd_check_connected(connection))
+	{
 		return;
-
+	}
 	/* create the interface */
 	str = gmpc_get_full_glade_path("playlist3.glade");
 	xml = glade_xml_new (str, "save_pl", NULL);
@@ -546,7 +547,7 @@ void pl2_save_playlist ()
 				/* check if the user entered a name, we can't do withouth */
 				/* TODO: disable ok button when nothing is entered */
 				/* also check if there is a connection */
-				if (strlen (str) != 0 && !check_connection_state ())
+				if (strlen (str) != 0 && mpd_check_connected(connection))
 				{
 					if(mpd_playlist_save(connection, str) == MPD_PLAYLIST_EXIST )
 					{

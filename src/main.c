@@ -37,7 +37,7 @@
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
 #endif
-
+void init_playlist_store ();
 void connection_changed(MpdObj *mi, int connect, gpointer data);
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 extern int debug_level;
@@ -49,7 +49,7 @@ int num_plugins = 0;
 /*
  * the xml fle pointer to the player window
  */
-GladeXML *xml_main_window = NULL;
+
 GladeXML *xml_error_window = NULL;
 
 int update_interface ();
@@ -117,7 +117,7 @@ char *gmpc_get_full_glade_path(char *filename)
 
 void main_trigger_update ()
 {
-	if (check_connection_state(info))
+	if (!mpd_check_connected(connection))
 	{
 		update_mpd_status ();
 		update_interface ();
@@ -292,16 +292,9 @@ int main (int argc, char **argv)
 	 * create the main window, This is done before anything else (but after command line check)
 	 */
 	create_player ();
-	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) && 
-			cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
-	{
-		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
-		info.hidden = TRUE;
-	}
-
 
 	/* create the store for the playlist */
-	init_playlist ();
+	init_playlist_store ();
 
 	/*
 	 * create timeouts 
@@ -639,7 +632,7 @@ void init_stock_icons ()
 }
 
 
-void init_playlist ()
+void init_playlist_store ()
 {
 	/* create initial tree store */
 	pl2_store = gtk_list_store_new (NROWS,
@@ -855,6 +848,17 @@ void connect_callback(MpdObj *mi)
 
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
+	int i=0;
+
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd_connection_changed!= NULL)
+		{
+			plugins[i]->mpd_connection_changed(mi,connect,NULL);
+		}
+	}
+
+/*
 	preferences_update();
 	if(connect)
 	{
@@ -864,5 +868,6 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	{
 		disconnect_callback(mi);
 	}
+*/
 }
 

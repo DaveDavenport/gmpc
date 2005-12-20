@@ -59,7 +59,8 @@ gmpcPlugin tray_icon_plug = {
 	0,
 	NULL,
 	NULL,
-	&TrayStatusChanged,	
+	&TrayStatusChanged,
+	NULL,
 	&tray_gpp
 };
 
@@ -292,8 +293,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gdk_screen_get_monitor_geometry(
 			screen, monitor, &msize);
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
+	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 
-	
 	eventb = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
 			G_CALLBACK(tray_leave_cb), NULL);

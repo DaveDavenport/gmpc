@@ -405,7 +405,7 @@ void pl3_find_browser_show_info()
 			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_findb_tree));
 			int type,id;
 			MpdData *data;
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);		      			
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (model, &iter, PL3_FINDB_TYPE, &type,-1);
 			if(type == PL3_CUR_PLAYLIST)
 			{
@@ -417,17 +417,17 @@ void pl3_find_browser_show_info()
 				char *path;
 				gtk_tree_model_get(model,&iter,PL3_FINDB_PATH, &path,-1);
 				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-				while(data != NULL)                                                            	
+				while(data != NULL)
 				{
 					call_id3_window_song(mpd_songDup(data->song));
-					data = mpd_data_get_next(data);                                        
+					data = mpd_data_get_next(data);
 				}
 				g_free(path);
 			}
 		}
-		while ((list = g_list_previous (list)) && !check_connection_state ());
+		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);              		      
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
 

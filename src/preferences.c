@@ -32,7 +32,8 @@ gmpcPlugin about_plug = {
 	0,
 	NULL,
 	NULL,
-	NULL,	
+	NULL,
+	NULL,
 	&about_gpp
 };
 /* End About */

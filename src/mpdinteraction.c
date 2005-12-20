@@ -8,8 +8,10 @@
 extern GtkListStore *pl2_store;
 /* the internall data structure */
 internal_data info;
-
-
+/* old stuff */
+void preferences_update();
+void connect_callback(MpdObj *mi);
+void disconnect_callback(MpdObj *mi);
 /* Server Settings plugin */
 void server_pref_construct(GtkWidget *container);
 void server_pref_destroy(GtkWidget *container);
@@ -18,7 +20,8 @@ gmpcPrefPlugin server_gpp = {
 	server_pref_construct,
 	server_pref_destroy
 };
-void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
+void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
+void ServerStatusChangedCallback (MpdObj *mi, ChangedStatusType what, void *userdata);
 gmpcPlugin server_plug = {
 	"Server Settings",
 	{1,1,1},
@@ -27,6 +30,7 @@ gmpcPlugin server_plug = {
 	NULL,
 	NULL,
 	&ServerStatusChangedCallback,
+	&ServerConnectionChangedCallback,
 	&server_gpp
 };
 enum
@@ -53,7 +57,8 @@ gmpcPlugin connection_plug = {
 	0,
 	NULL,
 	NULL,
-	NULL,	
+	NULL,
+	NULL,
 	&connection_gpp
 };
 
@@ -101,7 +106,7 @@ void disconnect_callback(MpdObj *mi)
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	preferences_update();
+	
 	info.updating = FALSE;
 	gtk_list_store_clear(pl2_store);
 }
@@ -156,12 +161,18 @@ int connect_to_mpd()
 }
 
 /* DEFAULT FUNCTIONS */
-
-gboolean check_connection_state()
+void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data)
 {
-	return !mpd_check_connected(connection);
+	if(connected)
+	{
+		connect_callback(mi);
+	}
+	else
+	{
+		disconnect_callback(mi);
+	}
+	preferences_update();
 }
-
 
 
 /******************************************************
@@ -192,7 +203,6 @@ int stop_song()
 int play_song()
 {
 	int state = mpd_player_get_state(connection);
-	printf("state: %i %i\n", state, MPD_PLAYER_PLAY);
 	if(state == MPD_PLAYER_STOP)
 	{
 		mpd_player_play(connection);

@@ -131,7 +131,7 @@ void pl3_file_browser_add_folder()
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
-	if(check_connection_state())
+	if(!mpd_check_connected(connection))
 	{
 		return;
 	}
@@ -155,7 +155,7 @@ void pl3_file_browser_update_folder()
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
-	if(check_connection_state())
+	if(!mpd_check_connected(connection))
 	{
 		return;
 	}
@@ -310,7 +310,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 
 
 	/* check the connection state and when its valid proceed */
-	if (check_connection_state ())
+	if (!mpd_check_connected(connection))
 	{
 		return 0;
 	}
@@ -546,7 +546,7 @@ void pl3_file_browser_show_info()
 			}
 			g_free(path);
 		}
-		while ((list = g_list_previous (list)) && !check_connection_state ());
+		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);

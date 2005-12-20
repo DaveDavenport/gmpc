@@ -28,7 +28,8 @@ gmpcPlugin tag_plug = {
 	0,
 	NULL,
 	NULL,
-	NULL,	
+	NULL,
+	NULL,
 	&tag_gpp
 };
 
@@ -385,7 +386,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	long unsigned time =0;
 	
 
-	if (check_connection_state ())
+	if (!mpd_check_connected(connection))
 	{
 		return 0;
 	}
@@ -630,7 +631,7 @@ void pl3_custom_tag_browser_add_folder()
 		return;
 	}
 
-	if (check_connection_state ())
+	if (!mpd_check_connected(connection))
 	{
 		return;
 	}
@@ -929,7 +930,7 @@ void pl3_tag_browser_show_info()
 			}
 			g_free(path);
 		}
-		while ((list = g_list_previous (list)) && !check_connection_state ());
+		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);              		      
 		g_list_free (list);
