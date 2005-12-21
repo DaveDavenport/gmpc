@@ -62,7 +62,7 @@ void pref_plugin_changed()
 		plugins[plugin_last]->pref->destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
 		plugin_last = -1;
 
-	}	
+	}
 	else if(plugin_last == PLUGIN_STATS)
 	{
 		plugin_stats_destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
@@ -84,7 +84,7 @@ void pref_plugin_changed()
 				else
 				{
 					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
-							plugins[id]->name); 					
+							plugins[id]->name);
 				}
 
 				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
@@ -96,10 +96,12 @@ void pref_plugin_changed()
 		}
 		else if(id == PLUGIN_STATS)
 		{
-			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, 
+						"plugin_label")),
 					_("<span size=\"xx-large\"><b>Plugins</b></span>"));
-			
-			plugin_stats_construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+
+			plugin_stats_construct(glade_xml_get_widget(xml_preferences_window,
+						"plugin_container"));
 			plugin_last = id;
 			return;
 		}
@@ -163,7 +165,7 @@ void create_preferences_window()
 	{
 		if(plugins[i]->pref != NULL)
 		{
-			if(!(plugins[i]->id&PLUGIN_ID_MARK))
+			if(plugins[i]->id&PLUGIN_ID_INTERNALL)
 			{
 				GtkTreeIter iter;
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
@@ -191,7 +193,7 @@ void create_preferences_window()
 		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,PLUGIN_STATS, 1,"<b>Plugins:</b>", -1);
 		for(i=0; i< num_plugins; i++)
 		{
-			if(plugins[i]->pref != NULL && plugins[i]->plugin_type != GMPC_INTERNALL)
+			if(plugins[i]->pref != NULL && plugins[i]->id&PLUGIN_ID_MARK)
 			{
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
@@ -268,9 +270,12 @@ void plugin_stats_construct(GtkWidget *container)
 		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
 		for(i=0;i<num_plugins;i++)
 		{
-			if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
-			else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
-		}	
+			if(plugins[i]->id&PLUGIN_ID_MARK)
+			{
+				if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
+				else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
+			}
+		}
 		path = g_strdup_printf("%i", plug_brow+plug_misc);
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_plug_label")),path);
 		g_free(path);

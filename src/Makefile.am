@@ -48,6 +48,7 @@ CFLAGS = @CFLAGS@\
 
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
+		player.h\
 		plugin.h\
 	   	mm-keys.h\
 		misc.h\

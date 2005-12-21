@@ -508,7 +508,6 @@ void pl3_playlist_search()
 	}
 	else
 	{
-//		pl3_show_and_position_window();
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 	}
 	if(pl3_xml != NULL)

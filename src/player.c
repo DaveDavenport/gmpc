@@ -33,17 +33,17 @@
 
 /* player.c*/
 /* scrolling title in main window */
-typedef struct 	{
+typedef struct	{
 	char *msg;
 	char *base_msg;
 	char *popup_msg;
-	GQueue *queue;
 	int pos;
 	int up;
 	gboolean do_scroll;
 	gboolean exposed;
 } scrollname;
 
+GtkAllocation player_wsize = {0,0,0,0};
 GladeXML *xml_main_window = NULL;
 void player_song_changed();
 void player_state_changed(int state);
@@ -51,12 +51,13 @@ void volume_change_update();
 #define TITLE_LENGTH 42
 gint DISPLAY_WIDTH = 240;
 guint msg_timeout = 0;
-scrollname scroll = {NULL, NULL, NULL,NULL, 0,0, TRUE,TRUE};
+scrollname scroll = {NULL, NULL, NULL,/*NULL,*/ 0,0, TRUE,TRUE};
 PangoLayout *layout = NULL, *time_layout = NULL;
 guint expose_display_id = 0;
 
 guint seek = FALSE;
 guint volume = FALSE;
+gboolean player_hidden = FALSE;
 
 void title_size_allocate(GtkWidget *widget, GtkAllocation *allocation)
 {
@@ -117,7 +118,7 @@ void display_exposed(GtkWidget *window)
 			window->style->base_gc[GTK_STATE_NORMAL],
 			TRUE,
 			0,0,
-			DISPLAY_WIDTH,req.height);                            
+			DISPLAY_WIDTH,req.height); 
 	if(width <= DISPLAY_WIDTH-5)
 	{
 		gdk_draw_layout(GDK_DRAWABLE(window->window), 
@@ -159,9 +160,9 @@ void display_exposed(GtkWidget *window)
 			window->style->dark_gc[GTK_STATE_NORMAL],
 			FALSE,
 			0,0,
-			DISPLAY_WIDTH-1,req.height-1);                              
+			DISPLAY_WIDTH-1,req.height-1);
 	g_signal_handler_unblock(G_OBJECT(window), expose_display_id);
-}	
+}
 gboolean update_msg()
 {
 	int width;
@@ -262,21 +263,15 @@ void msg_push_popup(gchar *msg)
 		msg_timeout = 0;
 	}
 
-	if(scroll.queue == NULL)
-	{
-	/*	scroll.queue = g_queue_new();*/
-	}
 	if(!g_utf8_validate(msg, -1, NULL))
 	{
-	/*	g_queue_push_tail(scroll.queue,g_strdup(_("No valid UTF-8. Please check your locale")));*/
 		if(scroll.popup_msg)g_free(scroll.popup_msg);
-		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check your locale"));/*g_queue_peek_tail(scroll.queue);*/
+		scroll.popup_msg = g_strdup(_("No valid UTF-8. Please check your locale"));
 	}
 	else
 	{
-	/*	g_queue_push_tail(scroll.queue,g_strdup(msg));*/
 		if(scroll.popup_msg)g_free(scroll.popup_msg);
-		scroll.popup_msg =g_strdup(msg);/* g_queue_peek_tail(scroll.queue);*/
+		scroll.popup_msg =g_strdup(msg);
 	}
 	scroll.exposed = TRUE;
 }
@@ -295,12 +290,6 @@ int msg_pop_popup()
 	}
 	if(scroll.popup_msg != NULL)
 	{
-		/*char *msg = g_queue_peek_tail(scroll.queue);
-
-		g_queue_pop_tail(scroll.queue);
-		scroll.popup_msg = g_queue_peek_tail(scroll.queue);
-		g_free(msg);
-		*/
 		g_free(scroll.popup_msg);
 		scroll.popup_msg = NULL;
 	}
@@ -782,10 +771,39 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	}
 	return FALSE;
 }
+void player_hide()
+{
+	if(xml_main_window)
+	{
+		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), 
+				&player_wsize.x, &player_wsize.y);
+		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		player_hidden = TRUE;
+	}
+}
 
+
+void player_show()
+{
+	if(xml_main_window)
+	{
+		if(player_wsize.x && player_wsize.y)
+		{
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+				player_wsize.x, player_wsize.y);
+		}
+		gtk_widget_show(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		player_hidden = FALSE;
+	}
+}
+
+int player_get_hidden()
+{
+	return player_hidden;
+}
 
 /* create the player and connect signals */
-void create_player()
+void player_create()
 {
 	char *path = gmpc_get_full_glade_path("gmpc.glade");
 	xml_main_window = glade_xml_new(path, "main_window", NULL);
@@ -797,12 +815,18 @@ void create_player()
 
 	DISPLAY_WIDTH = glade_xml_get_widget(xml_main_window, "entry_image")->allocation.width;
 	/* set icons from the custom stock set*/
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")), "gtk-media-previous", GTK_ICON_SIZE_BUTTON);
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")), "gtk-media-next", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")), "gtk-media-stop", GTK_ICON_SIZE_BUTTON);	
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")), "media-random", GTK_ICON_SIZE_BUTTON);
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")), "media-repeat", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "prev_im")),
+			"gtk-media-previous", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "next_im")),
+			"gtk-media-next", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "stop_im")),
+			"gtk-media-stop", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "play_button_image")),
+			"gtk-media-play", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rand_im")),
+			"media-random", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_main_window, "rep_im")),
+			"media-repeat", GTK_ICON_SIZE_BUTTON);
 
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "entry_image"),TRUE);
 	gtk_widget_set_app_paintable(glade_xml_get_widget(xml_main_window, "time_image"),TRUE);
@@ -821,28 +845,26 @@ void create_player()
 	pango_layout_set_text(time_layout, "00:00", -1);
 
 	g_signal_connect(
-			G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),		
+			G_OBJECT(glade_xml_get_widget(xml_main_window, "main_window")),	
 			"key-press-event",
 			G_CALLBACK(player_key_press),
 			NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(200, (GSourceFunc)update_msg, NULL);
-//	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
-//	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
+	//	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
+	//	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
 
 	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) &&
-	cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
+			cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
 	{
-		gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
-		info.hidden = TRUE;
+		player_hide();
+
+
 	}
 	else
 	{
-		gtk_widget_show(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
+		player_show();
 	}
-
-
-
 }
 
 void player_destroy()

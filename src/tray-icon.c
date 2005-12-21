@@ -34,8 +34,6 @@ GladeXML *tray_xml = NULL;
 GdkPixbuf *logo = NULL;
 GtkTooltips *tps = NULL;
 extern int pl3_hidden;
-/* size main window (I know odd place)*/
-GtkAllocation player_wsize = {0,0,0,0};
 GtkWidget *tip = NULL;
 PangoLayout *tray_layout_tooltip = NULL;
 
@@ -411,14 +409,15 @@ void exposed_signal(GtkWidget *event)
 	int state = mpd_player_get_state(connection);
 	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
 
-	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);		
+	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],
+			logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);
 
 	if(state < 0)
 	{
 		return;
 	}
 
-	if(info.hidden == TRUE)
+	if(player_get_hidden())
 	{
 		GdkPoint points[6] = {{19,13},{19,19}, {19,16},{16,16},{16,13},{16,19}};
 		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
@@ -493,10 +492,9 @@ void tray_icon_destroyed()
 	{
 		g_idle_add((GSourceFunc)create_tray_icon, NULL);
 	}
-	if(info.hidden)
+	if(player_get_hidden())
 	{
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")));
-		info.hidden = FALSE;
+		player_show();
 		if(playlist_hidden)
 		{
 			create_playlist3();
@@ -522,12 +520,9 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
-		if(info.hidden )
+		if(player_get_hidden())
 		{
-			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), player_wsize.x, player_wsize.y);
-			gtk_widget_show(glade_xml_get_widget(xml_main_window, "main_window"));
-
-			info.hidden = FALSE;
+			player_show();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 			if(playlist_hidden)
 			{
@@ -537,12 +532,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		}
 		else
 		{
-			gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), &player_wsize.x, &player_wsize.y);
-			gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")), &player_wsize.width, &player_wsize.height);
-
-
-			gtk_widget_hide(GTK_WIDGET(glade_xml_get_widget(xml_main_window, "main_window")));
-			info.hidden = TRUE;
+			player_hide();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 			if(pl3_xml != NULL && !pl3_hidden)
 			{

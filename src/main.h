@@ -16,7 +16,7 @@
 #define _(String) String
 #endif
 
-#define SEEK_STEP 3
+
 
 
 #include "config-defaults.h"
@@ -24,8 +24,11 @@
 #include <libmpd/libmpdclient.h>
 #include <libmpd/debug_printf.h>
 #include <glade/glade.h>
+#include "config1.h"
 #include "plugin.h"
-
+#include "player.h"
+#include "playlist3.h"
+#include "mpdinteraction.h"
 
 /* the config object */
 extern config_obj *config;
@@ -39,7 +42,7 @@ extern int num_plugins;
 extern gmpcPlugin connection_plug;
 extern gmpcPlugin about_plug;
 extern gmpcPlugin playlist_plug;
-extern gmpcPlugin server_plug;
+
 
 #ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug;
@@ -56,11 +59,6 @@ typedef struct
 	int playlist_playtime;
 	/* the current song */
 	int old_pos;
-	/* updating */
-	gboolean updating;
-	/* misc*/
-	gboolean hidden;
-	gboolean sb_hidden;
 } internal_data;
 
 enum{
@@ -73,29 +71,12 @@ extern internal_data info;
 extern guint update_timeout;
 int update_interface();
 
-/* callback.c */
-/*int load_playlist();*/
-
 /* mpdinteraction.c*/
 int update_mpd_status();
-int connect_to_mpd();
-int play_song();
-int stop_song();
-int next_song();
-int prev_song();
-void random_pl();
-void repeat_pl();
 
-void player_destroy();
 
-int update_player();
-void create_player();
-gboolean update_msg();
-int msg_pop_popup();
-void msg_push_popup();
-void msg_set_base();
 void create_preferences_window();
-void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+
 
 /* id3info.c*/
 void call_id3_window(int song);
@@ -106,8 +87,6 @@ int create_tray_icon();
 /* main.h*/
 void main_trigger_update();
 
-int  seek_ns(int n);
-int  seek_ps(int n);
 
 void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);
@@ -117,8 +96,6 @@ gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void id3_status_update();
 void call_id3_window_song(mpd_Song *songstr);
 void playlist_changed(MpdObj *mi);
-
-
 
 void main_quit();
 

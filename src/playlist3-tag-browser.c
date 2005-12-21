@@ -98,10 +98,10 @@ GtkWidget *pl3_tb_sw = NULL;
 int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || 
+	if(event->button != 3 ||
 		gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
 	{
-		return FALSE; 	
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -139,16 +139,20 @@ void pl3_tag_browser_init()
 	/* set up the tree */
 	pl3_tb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_tb_store));
 	/* insert the column in the tree */
-	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_tb_tree), column);                                         	
+	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_tb_tree), column);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_tb_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_tb_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree)), GTK_SELECTION_MULTIPLE);
 
 	/* setup signals */
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-press-event", G_CALLBACK(pl3_tag_browser_button_press_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event", G_CALLBACK(pl3_custom_tag_browser_button_release_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event", G_CALLBACK(pl3_tag_browser_playlist_key_press), NULL);
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",
+			G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-press-event",
+			G_CALLBACK(pl3_tag_browser_button_press_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event",
+			G_CALLBACK(pl3_custom_tag_browser_button_release_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event",
+			G_CALLBACK(pl3_tag_browser_playlist_key_press), NULL);
 
 	/* set up the scrolled window */
 	pl3_tb_sw = gtk_scrolled_window_new(NULL, NULL);
@@ -223,7 +227,7 @@ void pl3_custom_tag_browser_add()
 		gtk_tree_store_append(pl3_tree, &iter, NULL);
 		gtk_tree_store_set(pl3_tree, &iter, 
 				PL3_CAT_TYPE, tag_plug.id,
-				PL3_CAT_TITLE, _("Tag Browser"),        	
+				PL3_CAT_TITLE, _("Tag Browser"),
 				PL3_CAT_INT_ID, "",
 				PL3_CAT_ICON_ID, "media-artist",
 				PL3_CAT_PROC, TRUE,

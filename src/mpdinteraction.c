@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <glade/glade.h>
-#include "mpdinteraction.h"
-#include "playlist3.h"
+
+
 #include "main.h"
 #include "config1.h"
 extern GtkListStore *pl2_store;
@@ -99,8 +99,6 @@ void disconnect_callback(MpdObj *mi)
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	
-	info.updating = FALSE;
 	gtk_list_store_clear(pl2_store);
 }
 

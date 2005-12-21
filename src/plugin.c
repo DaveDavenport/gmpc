@@ -67,7 +67,9 @@ void load_plugins_from_dir(gchar *path)
 		{
 			if(!plugin_load(path,dirname))
 			{
-				printf("%i. plugin '%s' loaded ",plugins[num_plugins-1]->id^PLUGIN_ID_MARK, plugins[num_plugins-1]->name);
+				printf("%i. plugin '%s' loaded ",
+						plugins[num_plugins-1]->id,
+						plugins[num_plugins-1]->name);
 				switch(plugins[num_plugins-1]->plugin_type){
 					case GMPC_PLUGIN_DUMMY:
 						printf("type: dummy\n");

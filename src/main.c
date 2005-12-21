@@ -29,8 +29,6 @@
 #include <config.h>
 
 #include "plugin.h"
-#include "config1.h"
-#include "playlist3.h"
 #include "main.h"
 #include "misc.h"
 
@@ -143,18 +141,6 @@ void set_default_values ()
 	 * the current song
 	 */
 	info.old_pos = -1;
-	/*
-	 * tray icon
-	 */
-	info.hidden = FALSE;
-
-	/* */
-	info.sb_hidden = FALSE;
-
-	/*
-	 * updating
-	 */
-	info.updating = FALSE;
 }
 
 
@@ -294,7 +280,7 @@ int main (int argc, char **argv)
 	/*
 	 * create the main window, This is done before anything else (but after command line check)
 	 */
-	create_player ();
+	player_create ();
 
 	/* create the store for the playlist */
 	init_playlist_store ();
@@ -303,7 +289,8 @@ int main (int argc, char **argv)
 	 * create timeouts 
 	 * get the status every 1/2 second should be enough, but it's configurable.
 	 */
-	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config, "connection","mpd-update-speed",500),
+	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config,
+				"connection","mpd-update-speed",500),
 			(GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
 
@@ -330,15 +317,16 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 #endif
-	/* add a handler that disconnects mpd if the mainloop get destroyed */
-	gtk_quit_add(0, (GtkFunction)mpd_disconnect, connection);
 	/*
-	 * run the main loop 
+	 * run the main loop
 	 */
 	gtk_main ();
+	/*
+	 * Main Loop ended
+	 */
 	player_destroy();
 	/* cleaning up. */
-	mpd_free(connection);	
+	mpd_free(connection);
 	config_close(config);
 	gtk_list_store_clear(pl2_store);
 	g_object_unref(pl2_store);
@@ -360,15 +348,15 @@ void main_quit()
 
 int update_interface ()
 {
-	/* check if there is an connection. (that is when connection == NULL) */
+	/* check if there is an connection.*/ 
 	if (!mpd_check_connected(connection)){
 		 /* update the popup  */
-		if (!cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0)){
-			return TRUE;
-		}
-		/* connect to mpd if that fails return this function  */
-		if (connect_to_mpd ()){
-			return TRUE;
+		if (cfg_get_single_value_as_int_with_default(config, 
+					"connection",
+					"autoconnect",
+					0))
+		{
+			connect_to_mpd ();
 		}
 	}
 	/* now start updating the rest */
@@ -860,16 +848,5 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 		}
 	}
 
-/*
-	preferences_update();
-	if(connect)
-	{
-		connect_callback(mi);
-	}
-	else
-	{
-		disconnect_callback(mi);
-	}
-*/
 }
 
