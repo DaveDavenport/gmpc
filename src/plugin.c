@@ -3,11 +3,16 @@
 #include <gmodule.h>
 #include "main.h"
 
+int plugin_get_pos(int id)
+{
+	return id&(PLUGIN_ID_MARK-1);
+}
 
-void add_plugin(gmpcPlugin *plug)
+void add_plugin(gmpcPlugin *plug, int plugin)
 {
 	/* set plugin id */
-	plug->id = num_plugins|PLUGIN_ID_MARK;
+	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
+	printf("plugin %i %s\n", plug->id, plug->name);
 	/* put it in the list */
 	num_plugins++;
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
@@ -48,7 +53,7 @@ int plugin_load(char *path, const char *file)
 	/* set path, plugins might want this for images and glade files. */
 	plug->path = g_strdup(path);
 	/* add the plugin to the list */
-	add_plugin(plug);
+	add_plugin(plug,1);
 	return 0;
 }
 

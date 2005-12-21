@@ -2,11 +2,8 @@
 #ifndef ENABLE_TRAYICON
 
 int create_tray_icon()  { return 1; }
-int destroy_tray_icon() { return 1; }
-void tray_icon_song_change() {}
-void tray_icon_state_change() {}
 
-#else	
+#else
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -16,6 +13,10 @@ void tray_icon_state_change() {}
 #include "main.h"
 #include "misc.h"
 #include "config1.h"
+
+void destroy_tray_icon();
+void tray_icon_song_change();
+void tray_icon_state_change();
 
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
@@ -284,14 +285,13 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		{
 			tray_leave_cb(NULL, NULL, 0);
 		}
-		else 
+		else
 		{
 			return FALSE;
 		}
 	}
 	tooltiptext = tray_get_tooltip_text();
-	gdk_screen_get_monitor_geometry(
-			screen, monitor, &msize);
+	gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 
@@ -299,7 +299,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
 			G_CALLBACK(tray_leave_cb), NULL);
 
-	gtk_container_add(GTK_CONTAINER(tip), eventb);	
+	gtk_container_add(GTK_CONTAINER(tip), eventb);
 	gtk_widget_set_app_paintable(eventb, TRUE);
 
 	gtk_window_set_resizable(GTK_WINDOW(tip), FALSE);

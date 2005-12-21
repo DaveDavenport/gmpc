@@ -40,7 +40,7 @@ extern gmpcPlugin connection_plug;
 extern gmpcPlugin about_plug;
 extern gmpcPlugin playlist_plug;
 extern gmpcPlugin server_plug;
-extern gmpcPlugin tag_plug;
+
 #ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug;
 #endif
@@ -75,7 +75,6 @@ int update_interface();
 
 /* callback.c */
 /*int load_playlist();*/
-int check_for_errors();
 
 /* mpdinteraction.c*/
 int update_mpd_status();
@@ -86,9 +85,6 @@ int next_song();
 int prev_song();
 void random_pl();
 void repeat_pl();
-void update_mpd_dbase();
-int disconnect_to_mpd();
-
 
 void player_destroy();
 
@@ -105,15 +101,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 void call_id3_window(int song);
 
 /* do tray */
-void update_tray_icon();
 int create_tray_icon();
-void tray_icon_song_change();
-void tray_icon_state_change();
-
-
-
-/* popup.c: update_popup() */
-void destroy_tray_icon();
 
 /* main.h*/
 void main_trigger_update();
@@ -130,10 +118,7 @@ void id3_status_update();
 void call_id3_window_song(mpd_Song *songstr);
 void playlist_changed(MpdObj *mi);
 
-void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
-void song_changed(MpdObj *mi, int oldsong, int newsong);
-void state_callback(MpdObj *mi, int old_state, int new_state, gpointer data);
-void status_callback(MpdObj *mi);
+
 
 void main_quit();
 
@@ -146,5 +131,6 @@ char *gmpc_get_full_glade_path(char *filename);
 
 /* plugin */
 void load_plugins_from_dir(gchar *path);
-void add_plugin(gmpcPlugin *plug);
+void add_plugin(gmpcPlugin *plug, int plugin);
+int plugin_get_pos(int id);
 #endif

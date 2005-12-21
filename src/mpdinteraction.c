@@ -79,13 +79,6 @@ int update_mpd_status()
 	return TRUE;
 }
 
-int disconnect_to_mpd()
-{
-	/* disconnect */
-	mpd_disconnect(connection);
-	return FALSE;
-}
-
 void disconnect_callback(MpdObj *mi)
 {
 	gtk_timeout_remove(update_timeout);
@@ -236,13 +229,6 @@ int seek_ps(int n)
 int seek_ns(int n)
 {
 	return seek_ps(-n);
-}
-
-
-/* returns TRUE when an error */
-int check_for_errors()
-{
-	return mpd_check_error(connection);
 }
 
 
@@ -572,8 +558,7 @@ void preferences_window_connect(GtkWidget *but)
 void preferences_window_disconnect(GtkWidget *but)
 {
 	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
-	disconnect_to_mpd();
-	/*	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(connection_pref_xml, "db_lu")),"n/a");*/
+	mpd_disconnect(connection);
 }
 
 

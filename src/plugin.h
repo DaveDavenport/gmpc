@@ -5,15 +5,16 @@
 #define __GMPC_PLUGIN_H__
 
 #define PLUGIN_ID_MARK 1024
+#define PLUGIN_ID_INTERNALL 2048
 extern MpdObj *connection;
 extern config_obj *config;
 
 /* Plugin Type's */
 typedef enum {
-	GMPC_PLUGIN_DUMMY,
-	GMPC_PLUGIN_PL_BROWSER,
-	GMPC_PLUGIN_NO_GUI,
-	GMPC_INTERNALL
+	GMPC_PLUGIN_DUMMY	= 1,
+	GMPC_PLUGIN_PL_BROWSER	= 2,
+	GMPC_PLUGIN_NO_GUI	= 4,
+	GMPC_INTERNALL		= 8
 } PluginType;
 
 

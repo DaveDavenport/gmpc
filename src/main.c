@@ -34,6 +34,9 @@
 #include "main.h"
 #include "misc.h"
 
+/* as internall plugin */
+#include "playlist3-tag-browser.h"
+
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
 #endif
@@ -41,7 +44,7 @@ void init_playlist_store ();
 void connection_changed(MpdObj *mi, int connect, gpointer data);
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 extern int debug_level;
-
+void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 gmpcPlugin **plugins = NULL;
 int num_plugins = 0;
 
@@ -221,19 +224,19 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* this shows the connection preferences */
-	add_plugin(&connection_plug);
+	add_plugin(&connection_plug,0);
 	/* this the server preferences */
-	add_plugin(&server_plug);
+	add_plugin(&server_plug,0);
 	/* this shows the playlist preferences */
-	add_plugin(&playlist_plug);
+	add_plugin(&playlist_plug,0);
 	/* this shows the markup stuff */
-	add_plugin(&tag_plug);
+	add_plugin(&tag_plug,0);
 #ifdef ENABLE_TRAYICON
 	/* the tray icon */
-	add_plugin(&tray_icon_plug);
+	add_plugin(&tray_icon_plug,0);
 #endif
 	/* the about windows :D*/
-	add_plugin(&about_plug);
+	add_plugin(&about_plug,0);
 
 
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
@@ -328,7 +331,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 #endif
 	/* add a handler that disconnects mpd if the mainloop get destroyed */
-	gtk_quit_add(0, (GtkFunction)disconnect_to_mpd, NULL);
+	gtk_quit_add(0, (GtkFunction)mpd_disconnect, connection);
 	/*
 	 * run the main loop 
 	 */
@@ -684,7 +687,6 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 
 	if(what&MPD_CST_SONGID)
 	{
-		tray_icon_song_change();
 		pl3_highlight_song_change();
 	}
 	if(what&MPD_CST_DATABASE)

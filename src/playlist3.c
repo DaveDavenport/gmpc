@@ -35,7 +35,6 @@
 #include "playlist3-file-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
-#include "playlist3-tag-browser.h"
 
 void pl3_show_and_position_window();
 
@@ -106,12 +105,12 @@ void pl3_reinitialize_tree()
 	if(pl3_xml == NULL) return;
 	GtkTreePath *path = gtk_tree_path_new_from_string("0");
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-	if((old_type&PLUGIN_ID_MARK) != 0)
+	if((old_type&PLUGIN_ID_MARK || old_type&PLUGIN_ID_INTERNALL) != 0)
 	{
 		if(old_type >= 0)
 		{
 			GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
-			plugins[old_type^PLUGIN_ID_MARK]->browser->unselected(container);
+			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 			old_type = -1;
 		}
 	}
@@ -122,15 +121,14 @@ void pl3_reinitialize_tree()
 	pl3_file_browser_add();
 	pl3_artist_browser_add();
 	pl3_find_browser_add();
-	pl3_custom_tag_browser_add();
 
 	for(i=0; i< num_plugins;i++)
 	{
-		if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER)
+		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
 		{
 			if(plugins[i]->browser && plugins[i]->browser->add)
 			{
-				printf("adding plugin id: %i %i\n", i,plugins[i]->id^PLUGIN_ID_MARK);
+				printf("adding plugin id: %i %i\n", i,plugin_get_pos(plugins[i]->id));
 				plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
 			}
 		}
@@ -196,6 +194,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		gtk_tree_view_collapse_row(tree,path);
 		return;
 	}
+	printf("fill_tree: %i\n", type);
 	if(!read)
 	{
 		if(type == PL3_BROWSE_FILE)
@@ -206,17 +205,13 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		{
 			pl3_artist_browser_fill_tree(iter);
 		}
-		else if (type == PL3_BROWSE_CUSTOM_TAG)
+		else if(type&PLUGIN_ID_MARK || type&PLUGIN_ID_INTERNALL)
 		{
-			pl3_custom_tag_browser_fill_tree(iter);
-		}
-		else if(type|PLUGIN_ID_MARK)
-		{
-			if(plugins[type^PLUGIN_ID_MARK]->browser != NULL)
+			if(plugins[plugin_get_pos(type)]->browser != NULL)
 			{
-				if(plugins[type^PLUGIN_ID_MARK]->browser->fill_tree != NULL)
+				if(plugins[plugin_get_pos(type)]->browser->fill_tree != NULL)
 				{
-					plugins[type^PLUGIN_ID_MARK]->browser->fill_tree(tree, iter);
+					plugins[plugin_get_pos(type)]->browser->fill_tree(tree, iter);
 				}
 			}
 		}
@@ -260,14 +255,10 @@ void pl3_cat_sel_changed()
 			{
 				pl3_find_browser_unselected(container);
 			}
-			else if (old_type == PL3_BROWSE_CUSTOM_TAG)
-			{
-				pl3_tag_browser_unselected(container);
-			}
-			else if (old_type|PLUGIN_ID_MARK && old_type > 0)
+			else if ((old_type&PLUGIN_ID_MARK || old_type&PLUGIN_ID_INTERNALL) && old_type > 0)
 			{
 				printf("old_type: %i\n", old_type);
-				plugins[old_type^PLUGIN_ID_MARK]->browser->unselected(container);
+				plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 				old_type = -1;
 			}
 		}
@@ -289,11 +280,6 @@ void pl3_cat_sel_changed()
 			if(old_type != type) pl3_artist_browser_selected(container);
 			pl3_artist_browser_category_selection_changed(tree,&iter);
 		}
-		else if (type == PL3_BROWSE_CUSTOM_TAG)
-		{
-			if(old_type != type) pl3_tag_browser_selected(container);
-			pl3_custom_tag_browser_category_selection_changed(tree,&iter);
-		}
 		else if (type == PL3_FIND)
 		{
 			if(old_type != type){
@@ -301,10 +287,11 @@ void pl3_cat_sel_changed()
 				pl3_find_browser_category_selection_changed(tree,&iter);
 			}
 		}
-		else if(type|PLUGIN_ID_MARK)
+		else if(type&PLUGIN_ID_MARK || type&PLUGIN_ID_INTERNALL)
 		{
-			if(old_type != type)plugins[type^PLUGIN_ID_MARK]->browser->selected(container);
-			plugins[type^PLUGIN_ID_MARK]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
+			printf("plugin: %i selected\n", type);
+			if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
+			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
 		old_type = type;
 	}
@@ -346,18 +333,18 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	menu_items	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
 	menu_items	+= pl3_file_browser_cat_popup(menu,type,tree,event);
 	menu_items	+= pl3_artist_browser_cat_popup(menu, type, tree, event);
-	menu_items	+= pl3_custom_tag_browser_right_mouse_menu(menu,type,GTK_WIDGET(tree),event);
-
-
 
 	for(i=0; i< num_plugins;i++)
 	{
 		if(plugins[i]->browser != NULL)
 		{
-			printf("bpl: %i\n", i);
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
-				menu_items += plugins[i]->browser->cat_right_mouse_menu(menu,type,GTK_WIDGET(tree), event);
+				menu_items += plugins[i]->browser->cat_right_mouse_menu(
+						menu,
+						type,
+						GTK_WIDGET(tree),
+						event);
 			}
 		}
 	}
@@ -493,10 +480,6 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	else if (type == PL3_BROWSE_ARTIST)
 	{
 		pl3_artist_browser_category_key_press(event);
-	}
-	else if (type == PL3_BROWSE_CUSTOM_TAG)
-	{
-
 	}
 
 	for(i=0; i< num_plugins;i++)

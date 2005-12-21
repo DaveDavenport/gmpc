@@ -12,6 +12,26 @@
 #include "playlist3-tag-browser.h"
 void pref_id3b_fill();
 
+void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree,GtkTreeIter *iter);
+void pl3_tag_browser_selected(GtkWidget *container);
+void pl3_tag_browser_unselected(GtkWidget *container);
+void pl3_custom_tag_browser_add();
+int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
+long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
+void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
+
+void pl3_custom_tag_browser_reload();
+
+
+
+
+
+
+
+
+
+
+
 /* Connection settings plugin */
 void tag_pref_construct(GtkWidget *container);
 void tag_pref_destroy(GtkWidget *container);
@@ -21,13 +41,24 @@ gmpcPrefPlugin tag_gpp = {
 	tag_pref_destroy
 };
 
+
+gmpcPlBrowserPlugin tag_gbp = {
+	pl3_custom_tag_browser_add,
+	pl3_tag_browser_selected,
+	pl3_tag_browser_unselected,
+	pl3_custom_tag_browser_category_selection_changed,
+	pl3_custom_tag_browser_fill_tree,
+	pl3_custom_tag_browser_right_mouse_menu,
+	NULL
+};
+
 gmpcPlugin tag_plug = {
 	"Tag Browser",
 	{1,1,1},
-	GMPC_INTERNALL,
+	GMPC_PLUGIN_PL_BROWSER,
 	0,
 	NULL,
-	NULL,
+	&tag_gbp,
 	NULL,
 	NULL,
 	&tag_gpp
@@ -126,7 +157,7 @@ void pl3_tag_browser_init()
 	gtk_container_add(GTK_CONTAINER(pl3_tb_sw), pl3_tb_tree);
 
 	/* set initial state */
-	printf("initialized artist playlist treeview\n");
+	printf("initialized tag playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_tb_sw));
 }
 
@@ -191,7 +222,7 @@ void pl3_custom_tag_browser_add()
 		/* add the root node to tag-browser */
 		gtk_tree_store_append(pl3_tree, &iter, NULL);
 		gtk_tree_store_set(pl3_tree, &iter, 
-				PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
+				PL3_CAT_TYPE, tag_plug.id,
 				PL3_CAT_TITLE, _("Tag Browser"),        	
 				PL3_CAT_INT_ID, "",
 				PL3_CAT_ICON_ID, "media-artist",
@@ -213,7 +244,7 @@ void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *fo
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, piter);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_CUSTOM_TAG,
+			PL3_CAT_TYPE, tag_plug.id,
 			PL3_CAT_TITLE, title,        	
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
@@ -226,7 +257,7 @@ void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *fo
 }
 
 
-void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
+void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 {
 	char *first_tag, *second_tag;
 	char *format;
@@ -237,7 +268,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	
 	
-
+	printf("tag fill tree\n");
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
 	{
@@ -247,9 +278,9 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 	depth = gtk_tree_path_get_depth(path) -2;
 	gtk_tree_path_free(path);	
 	if (!mpd_check_connected(connection) || depth < 0)
-	{                                                	
-		return;                                  	
-	}                                                	
+	{
+		return;
+	}
 
 
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &first_tag,2,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
@@ -286,7 +317,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		{	
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_CUSTOM_TAG,
+					0, tag_plug.id,
 					1, data->tag, /* the field */
 					2, data->tag, /* the artist name, if(1 and 2 together its an artist field) */
 					3, "media-album",
@@ -318,7 +349,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_CUSTOM_TAG,
+					0, tag_plug.id,
 					1, data->tag,
 					2, first_tag,
 					3, "media-artist", 
@@ -355,7 +386,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeIter *iter)
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_CUSTOM_TAG,
+					0, tag_plug.id,
 					1, data->tag,
 					2, first_tag,
 					3, "media-artist", 
@@ -559,7 +590,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
 	/* we need an model and a iter */
-	if(type == PL3_BROWSE_CUSTOM_TAG)
+	if(type == tag_plug.id)
 	{
 		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
 		GtkTreeIter iter;
@@ -765,7 +796,7 @@ void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	g_free(song_id);
 }
 
-void pl3_custom_tag_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
+void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;        			
@@ -907,9 +938,9 @@ void pl3_tag_browser_show_info()
 		return;
 	}
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
-	{                                                                                     	
+	{
 		GList *list = NULL;
-		list = gtk_tree_selection_get_selected_rows (selection, &model);              	
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
 		/* iterate over every row */
 		list = g_list_last (list);
 		do
@@ -917,22 +948,22 @@ void pl3_tag_browser_show_info()
 			GtkTreeIter iter;
 			char *path;
 			MpdData *data;
-			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);		      			
+			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (GTK_TREE_MODEL(pl3_tb_store), &iter, PL3_TB_PATH, &path, -1);
 			data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-			while(data != NULL)                                                            	
+			while(data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
 				{
 					call_id3_window_song(mpd_songDup(data->song));
 				}
-				data = mpd_data_get_next(data);                                        
+				data = mpd_data_get_next(data);
 			}
 			g_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);              		      
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
 }
@@ -941,11 +972,11 @@ int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
 	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
-		pl3_tag_browser_replace_selected();		
+		pl3_tag_browser_replace_selected();
 	}
 	else if(event->keyval == GDK_Insert)
 	{
-		pl3_tag_browser_add_selected();		
+		pl3_tag_browser_add_selected();
 	}
 	else if(event->keyval == GDK_i)
 	{
@@ -968,9 +999,9 @@ void pref_id3b_row_remove()
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
 	GtkTreeIter iter;
 	if(gtk_tree_selection_get_selected(selection,&model,&iter))
-	{             
+	{
 		gchar *title;
-		gtk_tree_model_get(model,&iter,0,&title,-1);		
+		gtk_tree_model_get(model,&iter,0,&title,-1);
 		cfg_del_multiple_value(config, "playlist", "advbrows",title);
 		pref_id3b_fill();
 		pl3_custom_tag_browser_reload();
@@ -992,19 +1023,19 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(tag_pref_xml, "id3b_entry")),title);
 		tk_format = g_strsplit(format, "|",0);
 		if(tk_format ==NULL)
-		{                                     		
+		{
 			debug_printf(DEBUG_INFO,"pref_id3b_row_changed: failed to split\n");
 			g_free(format);
 			g_free(title);
 			return;
 		}
 		else
-		{		
+		{
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb1")),0);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb2")),0);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3")),0);
 
-			if(tk_format[0] != NULL)		
+			if(tk_format[0] != NULL)
 			{
 				gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb1")),
 						mpd_misc_get_tag_by_name(tk_format[0])+1);

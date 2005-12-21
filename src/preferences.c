@@ -163,11 +163,13 @@ void create_preferences_window()
 	{
 		if(plugins[i]->pref != NULL)
 		{
-			if(plugins[i]->plugin_type == GMPC_INTERNALL)
+			if(!(plugins[i]->id&PLUGIN_ID_MARK))
 			{
 				GtkTreeIter iter;
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
+				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
+						0, plugin_get_pos(plugins[i]->id)/*^PLUGIN_ID_MARK*/,
+						1, plugins[i]->name, -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
 				{
@@ -192,7 +194,10 @@ void create_preferences_window()
 			if(plugins[i]->pref != NULL && plugins[i]->plugin_type != GMPC_INTERNALL)
 			{
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, (plugins[i]->id)^PLUGIN_ID_MARK, 1, plugins[i]->name, -1);
+				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
+						0, plugin_get_pos(plugins[i]->id),
+						1, plugins[i]->name,
+						-1);
 			}
 		}
 	}
