@@ -20,7 +20,7 @@ gmpc_SOURCES=\
 	mm-keys.c\
 	config1.c
 
-INCLUDES= @EXTRA_CFLAGS@   -Wall -Werror \
+INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"
