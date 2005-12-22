@@ -210,29 +210,29 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* this shows the connection preferences */
-	add_plugin(&connection_plug,0);
+	plugin_add(&connection_plug,0);
 	/* this the server preferences */
-	add_plugin(&server_plug,0);
+	plugin_add(&server_plug,0);
 	/* this shows the playlist preferences */
-	add_plugin(&playlist_plug,0);
+	plugin_add(&playlist_plug,0);
 	/* this shows the markup stuff */
-	add_plugin(&tag_plug,0);
+	plugin_add(&tag_plug,0);
 #ifdef ENABLE_TRAYICON
 	/* the tray icon */
-	add_plugin(&tray_icon_plug,0);
+	plugin_add(&tray_icon_plug,0);
 #endif
 	/* the about windows :D*/
-	add_plugin(&about_plug,0);
+	plugin_add(&about_plug,0);
 
 
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
-	load_plugins_from_dir(url);
+	plugin_load_dir(url);
 	g_free(url);
 	/* plugins */
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
-		load_plugins_from_dir(url);
+		plugin_load_dir(url);
 	}
 	else
 	{
@@ -338,7 +338,7 @@ void main_quit()
 {
 	/* so it saves the playlist pos */
 	pl3_close();
-	mpd_signal_connect_connection_changed(connection, NULL, NULL);	
+	mpd_signal_connect_connection_changed(connection, NULL, NULL);
 	if(mpd_check_connected(connection))
 	{
 		mpd_disconnect(connection);
@@ -348,10 +348,10 @@ void main_quit()
 
 int update_interface ()
 {
-	/* check if there is an connection.*/ 
+	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
 		 /* update the popup  */
-		if (cfg_get_single_value_as_int_with_default(config, 
+		if (cfg_get_single_value_as_int_with_default(config,
 					"connection",
 					"autoconnect",
 					0))

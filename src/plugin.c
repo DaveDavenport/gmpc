@@ -8,7 +8,7 @@ int plugin_get_pos(int id)
 	return id&(PLUGIN_ID_MARK-1);
 }
 
-void add_plugin(gmpcPlugin *plug, int plugin)
+void plugin_add(gmpcPlugin *plug, int plugin)
 {
 	/* set plugin id */
 	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
@@ -53,11 +53,11 @@ int plugin_load(char *path, const char *file)
 	/* set path, plugins might want this for images and glade files. */
 	plug->path = g_strdup(path);
 	/* add the plugin to the list */
-	add_plugin(plug,1);
+	plugin_add(plug,1);
 	return 0;
 }
 
-void load_plugins_from_dir(gchar *path)
+void plugin_load_dir(gchar *path)
 {
 	GDir *dir = g_dir_open(path, 0, NULL);
 	if(dir)

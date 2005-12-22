@@ -60,9 +60,9 @@ GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
+	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
 	{
-		return FALSE;                                                                                           	
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -99,7 +99,7 @@ void pl3_artist_browser_init()
 	/* set up the tree */
 	pl3_ab_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_ab_store));
 	/* insert the column in the tree */
-	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_ab_tree), column);                                         	
+	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_ab_tree), column);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_ab_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_ab_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree)), GTK_SELECTION_MULTIPLE);
@@ -250,7 +250,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			{
 				gtk_tree_store_remove(pl3_tree, &iter);      		
 			}
-		}                                                                                  		
+		}
 	}
 	else if(depth ==2)
 	{
@@ -304,8 +304,8 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	if (!mpd_check_connected(connection))
 	{
-	return;                      	
-}                                    	
+		return;
+	}
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
@@ -313,12 +313,12 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		printf("Failed to get path\n");
 		return;
 	}
-	depth = gtk_tree_path_get_depth(path) -1;                      	
+	depth = gtk_tree_path_get_depth(path) -1;
 	gtk_tree_path_free(path);
 
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 1, &artist,2,&alb_artist, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-	
+
 
 	if(depth == 0)
 	{
@@ -326,7 +326,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		MpdData *data = mpd_playlist_get_artists(connection);
 
 		while(data != NULL)
-		{	
+		{
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_ARTIST,
@@ -399,9 +399,9 @@ void pl3_artist_browser_add_folder()
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
 			MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 			while (data != NULL)
-			{                    
+			{
 				if(data->type == MPD_DATA_TYPE_SONG)
-				{				
+				{
 					mpd_playlist_queue_add(connection, data->song->file);
 				}
 				data = mpd_data_get_next(data);
@@ -434,11 +434,8 @@ void pl3_artist_browser_add_folder()
 		/* if there are items in the add list add them to the playlist */
 		mpd_playlist_queue_commit(connection);
 		if(artist)g_free(artist);
-		if(title)g_free(title);  		
+		if(title)g_free(title);
 	}
-	
-	
-	
 }
 
 void pl3_artist_browser_replace_folder()
@@ -530,15 +527,16 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					gtk_tree_model_get(model, &citer, 2, &name, -1);
 					if(strcmp(name, song_id) == 0)
 					{
-						gtk_tree_selection_select_iter(selec,&citer);						
+						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
-						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cat_tree), path,NULL,TRUE,0.5,0);
+						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cat_tree),
+								path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
 						break;
 
 					}
 				}while(gtk_tree_model_iter_next(model, &citer));
-			}	
+			}
 		}
 	}
 	else
@@ -546,14 +544,14 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		pl3_push_statusbar_message("Added a song");
 		mpd_playlist_queue_add(connection, song_id);
 	}
-	mpd_playlist_queue_commit(connection);            
+	mpd_playlist_queue_commit(connection);
 	if(song_id)g_free(song_id);
 }
 
 void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
-	gchar *string;        			
+	gchar *string;
 	gtk_list_store_clear(pl3_ab_store);	
 	time = pl3_artist_browser_view_folder(iter);
 	string = format_time(time);
@@ -689,7 +687,7 @@ void pl3_artist_browser_add_selected()
 							songs++;
 							mpd_playlist_queue_add(connection,data->song->file);
 						}
-					}                                                                         				
+					}
 					data = mpd_data_get_next(data);
 				}
 			}
@@ -702,7 +700,7 @@ void pl3_artist_browser_add_selected()
 	{
 		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		pl3_push_statusbar_message(message);
-		g_free(message);                                       	
+		g_free(message);
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);

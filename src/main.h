@@ -107,7 +107,7 @@ char *gmpc_get_full_image_path(char *filename);
 char *gmpc_get_full_glade_path(char *filename);
 
 /* plugin */
-void load_plugins_from_dir(gchar *path);
-void add_plugin(gmpcPlugin *plug, int plugin);
+void plugin_load_dir(gchar *path);
+void plugin_add(gmpcPlugin *plug, int plugin);
 int plugin_get_pos(int id);
 #endif
