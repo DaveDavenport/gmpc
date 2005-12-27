@@ -597,7 +597,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					}
 					g_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
-			}	
+			}
 
 		}
 	}

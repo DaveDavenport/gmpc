@@ -233,9 +233,9 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					}
 					gtk_list_store_append (pl3_ab_store, &iter);
 					gtk_list_store_set (pl3_ab_store, &iter,
-							PL3_AB_TITLE, 	buffer,
-							PL3_AB_ARTIST, 	data->song->file,
-							PL3_AB_TYPE, 	PL3_ENTRY_SONG,
+							PL3_AB_TITLE,	buffer,
+							PL3_AB_ARTIST,	data->song->file,
+							PL3_AB_TYPE,	PL3_ENTRY_SONG,
 							PL3_AB_ICON,	"media-audiofile",
 							-1);
 				}
@@ -248,7 +248,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
 			{
-				gtk_tree_store_remove(pl3_tree, &iter);      		
+				gtk_tree_store_remove(pl3_tree, &iter);
 			}
 		}
 	}
@@ -291,7 +291,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	g_free(artist);
 	g_free(string);
-	
+
 	return time;
 }
 
@@ -552,10 +552,10 @@ void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter
 {
 	long unsigned time= 0;
 	gchar *string;
-	gtk_list_store_clear(pl3_ab_store);	
+	gtk_list_store_clear(pl3_ab_store);
 	time = pl3_artist_browser_view_folder(iter);
 	string = format_time(time);
-	pl3_push_rsb_message(string);	
+	pl3_push_rsb_message(string);
 	g_free(string);
 	/* store the tree */
 	pl3_cat_tree= GTK_WIDGET(tree);
@@ -582,12 +582,12 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 	GtkWidget *item;
 	GtkWidget *menu = gtk_menu_new();
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree));
-	/* don't show it when where listing custom streams... 
+	/* don't show it when where listing custom streams...
 	 * show always when version 12..  or when searching in playlist.
-	 */	
+	 */
 	if(gtk_tree_selection_count_selected_rows(sel) == 1)
-	{	
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_ab_store);	
+	{
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_ab_store);
 		GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
 		if(list != NULL)
 		{
@@ -596,34 +596,34 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 			char *path;
 			list = g_list_first(list);
 			gtk_tree_model_get_iter(model, &iter, list->data);
-			gtk_tree_model_get(model, &iter,PL3_AB_ARTIST,&path,PL3_AB_TYPE, &row_type, -1); 
+			gtk_tree_model_get(model, &iter,PL3_AB_ARTIST,&path,PL3_AB_TYPE, &row_type, -1);
 			if(row_type&PL3_ENTRY_SONG)
 			{
 				if(mpd_server_check_version(connection,0,12,0))
 				{
 					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
-					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_show_info), NULL);		
+					gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+					g_signal_connect(G_OBJECT(item), "activate",
+							G_CALLBACK(pl3_artist_browser_show_info), NULL);
 				}
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
 		}
 	}
-	/* add the add widget */
-	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_add_selected), NULL);
-
 	/* add the replace widget */
 	item = gtk_image_menu_item_new_with_label("Replace");
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 			gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_replace_selected), NULL);
+	/* add the add widget */
+	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_add_selected), NULL);
 
 	gtk_widget_show_all(menu);
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
+	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 	return;
 }
 
@@ -631,8 +631,7 @@ void pl3_artist_browser_replace_selected()
 {
 	mpd_playlist_clear(connection);
 	pl3_artist_browser_add_selected();
-	mpd_player_play(connection);	
-
+	mpd_player_play(connection);
 }
 void pl3_artist_browser_add_selected()
 {
@@ -651,7 +650,7 @@ void pl3_artist_browser_add_selected()
 		{
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter (model, &iter, path);
-			gtk_tree_model_get (model, &iter, PL3_AB_ARTIST,&name, PL3_AB_TYPE, &type, -1);	  
+			gtk_tree_model_get (model, &iter, PL3_AB_ARTIST,&name, PL3_AB_TYPE, &type, -1);
 			/* does this bitmask thingy works ok? I think it hsould */
 			if(type&(PL3_ENTRY_SONG))
 			{
@@ -676,7 +675,7 @@ void pl3_artist_browser_add_selected()
 			{
 				MpdData *data = NULL;
 				char *album;
-				gtk_tree_model_get (model, &iter, PL3_AB_TITLE,&album,-1);	  
+				gtk_tree_model_get (model, &iter, PL3_AB_TITLE,&album,-1);
 				data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, album, TRUE);
 				while (data != NULL)
 				{
@@ -711,11 +710,11 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
 	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
-		pl3_artist_browser_replace_selected();		
+		pl3_artist_browser_replace_selected();
 	}
 	else if(event->keyval == GDK_Insert)
 	{
-		pl3_artist_browser_add_selected();		
+		pl3_artist_browser_add_selected();
 	}
 	else if(event->keyval == GDK_i)
 	{
@@ -737,7 +736,7 @@ int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, Gd
 		/* add the add widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_add_folder), NULL);		
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_add_folder), NULL);
 
 		/* add the replace widget */
 		item = gtk_image_menu_item_new_with_label("Replace");

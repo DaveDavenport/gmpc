@@ -542,7 +542,7 @@ void pl3_find_browser_add_selected()
 	{
 		gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		pl3_push_statusbar_message(message);
-		g_free(message);                                       	
+		g_free(message);
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
@@ -565,7 +565,7 @@ void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 			GtkWidget *menu = gtk_menu_new();
 			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_show_info), NULL);		
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_show_info), NULL);
 			gtk_widget_show_all(menu);
 			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 		}
@@ -575,14 +575,23 @@ void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 			GtkWidget *menu = gtk_menu_new();
 			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_add_selected), NULL);		
+			g_signal_connect(G_OBJECT(item), "activate",
+					G_CALLBACK(pl3_find_browser_add_selected), NULL);
 			/* add the replace widget */
 			item = gtk_image_menu_item_new_with_label("Replace");
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_replace_selected), NULL);
+			g_signal_connect(G_OBJECT(item), "activate",
+					G_CALLBACK(pl3_find_browser_replace_selected), NULL);
 
+			if(mpd_server_check_version(connection,0,12,0))
+			{
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate",
+						G_CALLBACK(pl3_find_browser_show_info), NULL);
+			}
 			gtk_widget_show_all(menu);
 			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 		}
@@ -615,5 +624,4 @@ void pl3_find_browser_search_playlist()
 
 		gtk_widget_grab_focus(pl3_findb_entry);
 	}
-
 }

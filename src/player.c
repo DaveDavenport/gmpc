@@ -155,7 +155,6 @@ void display_exposed(GtkWidget *window)
 
 		}
 	}
-
 	gdk_draw_rectangle(GDK_DRAWABLE(window->window),
 			window->style->dark_gc[GTK_STATE_NORMAL],
 			FALSE,
@@ -208,9 +207,7 @@ gboolean update_msg()
 			else
 			{
 				scroll.pos = -2;
-
 			}
-
 		}
 		gtk_widget_queue_draw(window);
 
