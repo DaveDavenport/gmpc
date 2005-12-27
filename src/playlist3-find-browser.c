@@ -259,7 +259,7 @@ unsigned long pl3_find_browser_view_browser()
 		   }
 	   }
 	   else if(num_field == PL3_FINDB_CB_ALL){
-		   data = mpd_playlist_token_find(connection, name);
+		   data = mpd_database_token_find(connection, name);
 	   }
 	   else if (num_field == PL3_FINDB_CB_PLAYLIST)
 	   {
