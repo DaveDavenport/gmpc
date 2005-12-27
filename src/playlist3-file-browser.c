@@ -163,7 +163,7 @@ void pl3_file_browser_update_folder()
 	{
 		char *path;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
-		mpd_playlist_update_dir(connection, path);
+		mpd_database_update_dir(connection, path);
 		g_free(path);
 	}
 }

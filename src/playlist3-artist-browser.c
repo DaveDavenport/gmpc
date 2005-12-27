@@ -161,7 +161,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		printf("Failed to get path\n");
 		return 0;
 	}
-	depth = gtk_tree_path_get_depth(path) -1;                      	
+	depth = gtk_tree_path_get_depth(path) -1;
 	gtk_tree_path_free(path);
 	if(artist == NULL || string == NULL)
 	{
@@ -173,10 +173,10 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		/*lowest level, do nothing */
 		/* fill artist list */
-		MpdData *data = mpd_playlist_get_artists(connection);
+		MpdData *data = mpd_database_get_artists(connection);
 		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_ab_tree), NULL);
 		while(data != NULL)
-		{	
+		{
 			gtk_list_store_append (pl3_ab_store,&iter);
 			gtk_list_store_set (pl3_ab_store,&iter,
 					PL3_AB_ARTIST, data->tag,
@@ -197,7 +197,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	if(depth == 1)
 	{
 		int albums = 0;
-		MpdData *data = mpd_playlist_get_albums(connection,artist);
+		MpdData *data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
 			gtk_list_store_append (pl3_ab_store, &iter);
 			gtk_list_store_set (pl3_ab_store,&iter,
@@ -323,7 +323,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	if(depth == 0)
 	{
 		/* fill artist list */
-		MpdData *data = mpd_playlist_get_artists(connection);
+		MpdData *data = mpd_database_get_artists(connection);
 
 		while(data != NULL)
 		{
@@ -348,7 +348,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(depth == 1)
 	{
-		MpdData *data = mpd_playlist_get_albums(connection,artist);
+		MpdData *data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
