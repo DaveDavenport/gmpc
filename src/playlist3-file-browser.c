@@ -594,9 +594,8 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 						path = gtk_tree_model_get_path(model, &citer);
 						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")), path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
-						break;
-
 					}
+					g_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}	
 
