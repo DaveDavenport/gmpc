@@ -176,22 +176,22 @@ int main (int argc, char **argv)
 
 
 #ifdef ENABLE_NLS
-	debug_printf(DEBUG_INFO, "main.c: Setting NLS");
+	debug_printf(DEBUG_INFO, "Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
 	/* initialize the settings */
-	debug_printf(DEBUG_INFO, "main.c: loading default values");
+	debug_printf(DEBUG_INFO, "loading default values");
 	set_default_values ();
 
 	/* Check for and create dir if availible */
 	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
-	debug_printf(DEBUG_INFO, "main.c: Checking for %s existence",url);
+	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
-		debug_printf(DEBUG_INFO, "main.c: Trying to create %s",url);
+		debug_printf(DEBUG_INFO, "Trying to create %s",url);
 		if(mkdir(url,0777) < 0)
 		{
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
@@ -205,7 +205,7 @@ int main (int argc, char **argv)
 	}
 	else
 	{
-		debug_printf(DEBUG_INFO, "main.c: %s exist and is directory",url);
+		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
 	}
 	g_free(url);
 
@@ -249,7 +249,7 @@ int main (int argc, char **argv)
 	/* test if config open  */
 	if(config == NULL)
 	{
-		debug_printf(DEBUG_ERROR,"main.c: Failed to save/load configuration:\n%s\n",url);
+		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
 		return 1;
 	}
 
@@ -259,7 +259,7 @@ int main (int argc, char **argv)
 	connection = mpd_new_default();
 	if(connection == NULL)
 	{
-		debug_printf(DEBUG_ERROR,"main.c: Failed to create connection obj\n");
+		debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
 		return 1;
 	}
 	/* New Signal */
@@ -369,14 +369,14 @@ void playlist_changed(MpdObj *mi)
 	MpdData *data = NULL;
 	long long new_playlist_id = mpd_playlist_get_playlist_id(connection);
 	/*
-	 * so I don't have to check all the time 
+	 * so I don't have to check all the time
 	 */
 	gint old_length = 0;
 	GtkTreeIter iter;
 	gchar buffer[1024];
-	debug_printf(DEBUG_INFO, "playlist_changed_callback: playlist changed\n");
+	debug_printf(DEBUG_INFO, "playlist changed\n");
 	old_length = info.playlist_length;
-	char *string = cfg_get_single_value_as_string_with_default(config, 
+	char *string = cfg_get_single_value_as_string_with_default(config,
 			"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_playlist_get_changes(mi,info.playlist_id);
@@ -384,14 +384,14 @@ void playlist_changed(MpdObj *mi)
 	while(data != NULL)
 	{
 		/*
-		 * decide wether to update or to add 
+		 * decide wether to update or to add
 		 */
 		if(data->song->pos < old_length)
 		{
 			/*
-			 * needed for getting the row 
+			 * needed for getting the row
 			 */
-			gchar *path = g_strdup_printf ("%i", data->song->pos);	
+			gchar *path = g_strdup_printf ("%i", data->song->pos);
 			if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, path))
 			{
 				/* overwriting existing entry */
@@ -669,9 +669,6 @@ void playlist_highlight_state_change()
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
-	debug_printf(DEBUG_INFO, "StatusChanged: %i", what);
-
-
 
 	if(what&MPD_CST_SONGID)
 	{
@@ -826,8 +823,12 @@ void connect_callback(MpdObj *mi)
 {
 	if(xml_error_window != NULL)
 	{
-		int autocon = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
-		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,GINT_TO_POINTER(autocon));
+		int autocon = cfg_get_single_value_as_int_with_default(config,
+				"connection",
+				"autoconnect",
+				DEFAULT_AUTOCONNECT);
+		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
+				GINT_TO_POINTER(autocon));
 	}
 	gtk_timeout_remove (update_timeout);
 	update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);

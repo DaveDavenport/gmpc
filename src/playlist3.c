@@ -640,7 +640,7 @@ void create_playlist3 ()
 	g_free(path);
 	if(pl3_xml == NULL)
 	{
-		debug_printf(DEBUG_ERROR, "create_playlist3: Failed to open playlist3.glade.\n");
+		debug_printf(DEBUG_ERROR, "Failed to open playlist3.glade.\n");
 		return;
 	}
 	/* restore the window's position and size */
@@ -783,7 +783,7 @@ void pl3_highlight_song_change ()
 			/* check if we have the right song, if not, print an error */
 			if (pos != mpd_player_get_current_song_pos(connection))
 			{
-				debug_printf(DEBUG_ERROR,"pl3_highlight_song_change: Error %i "\
+				debug_printf(DEBUG_ERROR,"Error %i "\
 						" %i should be the same\n",
 						pos,
 						mpd_player_get_current_song_pos(connection));
@@ -1061,6 +1061,3 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		g_free(string);
 	}
 }
-
-
-

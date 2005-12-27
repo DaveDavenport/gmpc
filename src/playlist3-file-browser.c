@@ -645,31 +645,41 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 							G_CALLBACK(pl3_file_browser_show_info), NULL);
 				}
 			}
-			if(row_type == PL3_ENTRY_PLAYLIST)
+			else if(row_type == PL3_ENTRY_PLAYLIST)
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), path);
+			}
+			else if(row_type == PL3_ENTRY_DIRECTORY)
+			{
+				item = gtk_image_menu_item_new_with_label("Update");
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate",
+						G_CALLBACK(pl3_file_browser_update_folder), NULL);
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
 			g_free(path);
 		}
 	}
-	/* add the delete widget */
-	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
 
-	/* add the replace widget */
+	/* replace the replace widget */
 	item = gtk_image_menu_item_new_with_label("Replace");
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 			gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
 
+	/* add the delete widget */
+	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
+
 	gtk_widget_show_all(menu);
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
+	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 	return;
 }
 void pl3_file_browser_replace_selected()
@@ -696,7 +706,7 @@ void pl3_file_browser_add_selected()
 		{
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter (model, &iter, path);
-			gtk_tree_model_get (model, &iter, PL3_FB_PATH,&name, PL3_FB_TYPE, &type, -1);	  
+			gtk_tree_model_get (model, &iter, PL3_FB_PATH,&name, PL3_FB_TYPE, &type, -1);
 			/* does this bitmask thingy works ok? I think it hsould */
 			if(type&(PL3_ENTRY_SONG|PL3_ENTRY_DIRECTORY))
 			{

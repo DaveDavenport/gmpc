@@ -70,10 +70,6 @@ if test x${enable_trayicon} = xyes; then
 	AC_DEFINE(ENABLE_TRAYICON, 1, [Enable tray icon support])
 fi
 
-
-
-
-
 # installation paths
 AC_MSG_CHECKING(prefix)
 

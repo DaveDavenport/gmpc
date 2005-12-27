@@ -663,9 +663,9 @@ void pl3_artist_browser_add_selected()
 			{
 				MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, name, TRUE);
 				while (data != NULL)
-				{                    
+				{
 					if(data->type == MPD_DATA_TYPE_SONG)
-					{				
+					{
 						mpd_playlist_queue_add(connection, data->song->file);
 						songs++;
 					}
