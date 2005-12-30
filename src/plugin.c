@@ -31,16 +31,21 @@ int plugin_load(char *path, const char *file)
 	{
 		return 1;
 	}
-	handle = g_module_open(full_path, G_MODULE_BIND_LAZY|G_MODULE_BIND_LOCAL);
+	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
 	g_free(full_path);
 	if (!handle) {
+		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s\n", g_module_error());
-
+		show_error_message(message);
+		g_free(message);
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
+		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
+		show_error_message(message);
 		g_free(string);
+		g_free(message);
 		g_module_close(handle);
 		return 1;
 	}
@@ -65,26 +70,32 @@ void plugin_load_dir(gchar *path)
 		const gchar *dirname = NULL;
 		while((dirname = g_dir_read_name(dir)) != NULL)
 		{
-			if(!plugin_load(path,dirname))
+			gchar *full_path = g_strdup_printf("%s/%s",path,dirname);
+			printf("%s\n", full_path);
+			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
 			{
-				printf("%i. plugin '%s' loaded ",
-						plugins[num_plugins-1]->id,
-						plugins[num_plugins-1]->name);
-				switch(plugins[num_plugins-1]->plugin_type){
-					case GMPC_PLUGIN_DUMMY:
-						printf("type: dummy\n");
-						break;
-					case GMPC_PLUGIN_PL_BROWSER:
-						printf("type: playlist browser\n");
-						break;
-					case GMPC_PLUGIN_NO_GUI:
-						printf("type: no gui\n");
-						break;
-					default:
-						printf("type: unkown\n");
-						break;
+				if(!plugin_load(path,dirname))
+				{
+					printf("%i. plugin '%s' loaded ",
+							plugins[num_plugins-1]->id,
+							plugins[num_plugins-1]->name);
+					switch(plugins[num_plugins-1]->plugin_type){
+						case GMPC_PLUGIN_DUMMY:
+							printf("type: dummy\n");
+							break;
+						case GMPC_PLUGIN_PL_BROWSER:
+							printf("type: playlist browser\n");
+							break;
+						case GMPC_PLUGIN_NO_GUI:
+							printf("type: no gui\n");
+							break;
+						default:
+							printf("type: unkown\n");
+							break;
+					}
 				}
 			}
+			g_free(full_path);
 		}
 		g_dir_close(dir);
 	}

@@ -30,6 +30,7 @@ gmpcPlugin about_plug = {
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
+	NULL, /* initialize */
 	NULL,
 	NULL,
 	NULL,

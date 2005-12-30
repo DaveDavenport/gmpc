@@ -29,6 +29,7 @@ gmpcPlugin server_plug = {
 	0,
 	NULL,
 	NULL,
+	NULL,
 	&ServerStatusChangedCallback,
 	&ServerConnectionChangedCallback,
 	&server_gpp
@@ -55,6 +56,7 @@ gmpcPlugin connection_plug = {
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
+	NULL, /* init function */
 	NULL,
 	NULL,
 	NULL,

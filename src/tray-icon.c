@@ -1,10 +1,5 @@
 #include <config.h>
-#ifndef ENABLE_TRAYICON
-
-int create_tray_icon()  { return 1; }
-
-#else
-
+#ifdef ENABLE_TRAYICON
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
@@ -22,6 +17,12 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 void tray_icon_pref_construct(GtkWidget *container);
 void tray_icon_pref_destroy(GtkWidget *container);
+/* do tray */
+int create_tray_icon();
+void tray_init();
+
+
+
 
 GladeXML *tray_pref_xml = NULL;
 
@@ -56,12 +57,32 @@ gmpcPlugin tray_icon_plug = {
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
-	NULL,
+	NULL,		/* path */
+	&tray_init, 	/*initialize function */
 	NULL,
 	&TrayStatusChanged,
 	NULL,
 	&tray_gpp
 };
+
+
+void tray_init()
+{
+	/* create a tray icon */
+	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
+	{
+		create_tray_icon();
+	}
+}
+
+
+
+
+
+
+
+
+
 
 /**/
 gchar *tray_get_tooltip_text()
@@ -115,7 +136,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	GtkStyle *style;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = tray_get_tooltip_text();
-	
+
 	if(tooltiptext == NULL)
 	{
 		tooltiptext = g_strdup(_("Gnome Music Player Deamon"));
@@ -374,8 +395,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(400, (GSourceFunc)
 			tooltip_queue_draw, eventb);
-	
-	
+
+
 	g_free(tooltiptext);
 	return TRUE;
 }
@@ -567,7 +588,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
-		gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);				
 
@@ -582,13 +603,13 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("Pla_ylist"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
-		gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);				
 
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);		
-		
+
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);       
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(gtk_main_quit), NULL);		

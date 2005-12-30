@@ -147,6 +147,7 @@ void set_default_values ()
 
 int main (int argc, char **argv)
 {
+	int i;
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
 #endif
@@ -186,6 +187,20 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "loading default values");
 	set_default_values ();
 
+
+	/*
+	 * initialize gtk
+	 */
+	debug_printf(DEBUG_INFO, "Initializing gtk ");
+	gtk_init (&argc, &argv);
+
+	/*
+	 * stock icons
+	 */
+	debug_printf(DEBUG_INFO, "Loading stock icons");
+	init_stock_icons ();
+
+	
 	/* Check for and create dir if availible */
 	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
@@ -242,7 +257,7 @@ int main (int argc, char **argv)
 
 	/* OPEN CONFIG FILE */
 	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
-	debug_printf(DEBUG_INFO, "main.c: Trying to open the config file: %s", url);
+	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
 
@@ -267,15 +282,15 @@ int main (int argc, char **argv)
 	mpd_signal_connect_error(connection, error_callback, NULL);
 	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
 
-	/*
-	 * initialize gtk
-	 */
-	gtk_init (&argc, &argv);
-	/*
-	 * stock icons
-	 */
-	init_stock_icons ();
 
+	/* time todo some initialisation of plugins */
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+	{
+		if(plugins[i]->init)
+		{
+			plugins[i]->init();
+		}
+	}
 
 	/*
 	 * create the main window, This is done before anything else (but after command line check)
@@ -294,12 +309,6 @@ int main (int argc, char **argv)
 			(GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
 
-
-	/* create a tray icon */
-	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
-	{
-		create_tray_icon();
-	}
 	/* update the interface */
 	while(gtk_events_pending())
 	{
@@ -851,3 +860,14 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 
 }
 
+void show_error_message(gchar *string)
+{
+	GtkWidget *dialog = NULL;
+	dialog = gtk_message_dialog_new_with_markup(NULL,                                
+			GTK_DIALOG_DESTROY_WITH_PARENT,
+                        GTK_MESSAGE_ERROR,
+                        GTK_BUTTONS_CLOSE,
+			string);
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+	gtk_widget_show(dialog);
+}

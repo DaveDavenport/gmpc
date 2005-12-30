@@ -23,15 +23,6 @@ void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIt
 void pl3_custom_tag_browser_reload();
 
 
-
-
-
-
-
-
-
-
-
 /* Connection settings plugin */
 void tag_pref_construct(GtkWidget *container);
 void tag_pref_destroy(GtkWidget *container);
@@ -57,6 +48,7 @@ gmpcPlugin tag_plug = {
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
+	NULL, /* initialize */
 	NULL,
 	&tag_gbp,
 	NULL,

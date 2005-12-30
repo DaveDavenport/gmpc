@@ -81,8 +81,8 @@ void create_preferences_window();
 /* id3info.c*/
 void call_id3_window(int song);
 
-/* do tray */
-int create_tray_icon();
+
+
 
 /* main.h*/
 void main_trigger_update();
@@ -110,4 +110,8 @@ char *gmpc_get_full_glade_path(char *filename);
 void plugin_load_dir(gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin);
 int plugin_get_pos(int id);
+
+
+
+void show_error_message(gchar *string);
 #endif

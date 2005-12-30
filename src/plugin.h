@@ -17,8 +17,6 @@ typedef enum {
 	GMPC_INTERNALL		= 8
 } PluginType;
 
-
-
 /* usefull defines */
 #define PL3_ENTRY_ALBUM 64
 #define PL3_ENTRY_ARTIST 32
@@ -78,6 +76,8 @@ typedef struct {
 	int			id; /* do not fill in, is done by gmpc */
 	/* path where the plugin is (only directory) can be used to get location of f.e. glade/images */
 	char			*path;	/* Do not fill in, done by gmpc */
+	/* function gets called on startup */
+	void			(*init)(void);
 	/* Browser Plugins */
 	gmpcPlBrowserPlugin	*browser;
 	/* plugin with one signal for changes on Mpd */
