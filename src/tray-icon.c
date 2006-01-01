@@ -12,7 +12,7 @@
 void destroy_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
-
+void tray_cover_art_fetched(mpd_Song *song);
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 void tray_icon_pref_construct(GtkWidget *container);
@@ -20,9 +20,6 @@ void tray_icon_pref_destroy(GtkWidget *container);
 /* do tray */
 int create_tray_icon();
 void tray_init();
-
-
-
 
 GladeXML *tray_pref_xml = NULL;
 
@@ -42,7 +39,7 @@ guint tray_timeout = -1;
 
 guint popup_timeout = -1;
 
-GdkPixbuf *dest = NULL;
+GdkPixbuf *cover_pb = NULL;
 
 
 /* plugin structure */
@@ -132,7 +129,8 @@ gchar *tray_get_tooltip_text()
 
 int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 {
-	int width, height;
+	int width=4, height=0;
+	int lwidth=0,  lheight=0;
 	GtkStyle *style;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = tray_get_tooltip_text();
@@ -146,18 +144,24 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
 	pango_layout_set_width(tray_layout_tooltip, 500000);
 	style = widget->style;
-
+	pango_layout_get_pixel_size(tray_layout_tooltip, &lwidth, &lheight);
 
 	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
 			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
 
+	if(cover_pb)
+	{
+		width = 80+8;
+		height = 80+4;
+		gdk_draw_pixbuf(widget->window, NULL, cover_pb, 0,0,4,4,-1,-1,GDK_RGB_DITHER_NONE,0,0);	
+	}
 
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
-			NULL, widget, "tooltip", 4, 4, tray_layout_tooltip);
+			NULL, widget, "tooltip", width, 4, tray_layout_tooltip);
 
-	pango_layout_get_size(tray_layout_tooltip, &width, &height);
-	width= PANGO_PIXELS(width);
-	height= PANGO_PIXELS(height);
+
+	width  += lwidth;
+	height = (height > lheight)? height:lheight;
 
 
 	if(mpd_status_get_total_song_time(connection)> 0)
@@ -413,12 +417,13 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 		gtk_widget_destroy(tip);
 		g_object_unref(tray_layout_tooltip);
 	}
+/*	
 	if(dest != NULL)
 	{
 		g_object_unref(dest);
 		dest= NULL;
 	}
-
+*/
 	tip = NULL;
 }
 
@@ -488,6 +493,27 @@ void tray_icon_song_change()
 					(GSourceFunc)(tray_leave_cb),			
 					NULL);
 		}
+
+		if(cover_pb){
+			g_object_unref(cover_pb);
+			cover_pb = NULL;
+		}
+		if(cover_pb == NULL){
+			gchar *path= NULL;
+			int ret = 0; 
+			ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
+			if(ret == COVER_ART_OK_LOCAL)
+			{
+				cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+			}
+			else if (ret == COVER_ART_NOT_FETCHED)
+			{
+
+				cover_art_fetch_image(mpd_playlist_get_current_song(connection),
+						(GSourceFunc)tray_cover_art_fetched);
+			}
+			if(path)g_free(path);
+		}                                                                                          		
 	}
 }
 
@@ -685,6 +711,29 @@ int create_tray_icon()
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
 	return FALSE;
+}
+void tray_cover_art_fetched(mpd_Song *song)
+{
+	mpd_Song *current = mpd_playlist_get_current_song(connection);
+	if(current->artist && current->album)
+	{
+		if(!strcmp(current->artist,song->artist) &&
+				!strcmp(current->album, song->album))
+		{
+			if(tip && !cover_pb)
+			{
+				gchar *path= NULL;
+				int ret = 0; 
+				ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
+				if(ret == COVER_ART_OK_LOCAL)
+				{                                                                                  				
+					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+				}
+				if(path)g_free(path);
+
+			}
+		}
+	}
 }
 
 void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)

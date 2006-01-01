@@ -29,6 +29,7 @@
 #include "player.h"
 #include "playlist3.h"
 #include "mpdinteraction.h"
+#include "cover-art.h"
 
 /* the config object */
 extern config_obj *config;
@@ -74,19 +75,13 @@ int update_interface();
 /* mpdinteraction.c*/
 int update_mpd_status();
 
-
 void create_preferences_window();
-
 
 /* id3info.c*/
 void call_id3_window(int song);
 
-
-
-
 /* main.h*/
 void main_trigger_update();
-
 
 void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);

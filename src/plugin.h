@@ -14,7 +14,8 @@ typedef enum {
 	GMPC_PLUGIN_DUMMY	= 1,
 	GMPC_PLUGIN_PL_BROWSER	= 2,
 	GMPC_PLUGIN_NO_GUI	= 4,
-	GMPC_INTERNALL		= 8
+	GMPC_INTERNALL		= 8,
+	GMPC_PLUGIN_COVER_ART	= 16
 } PluginType;
 
 /* usefull defines */
@@ -64,6 +65,11 @@ typedef struct {
 	/* not yet implemented */
 } gmpcPlBrowserPlugin;
 
+typedef struct {
+	int (*fetch_image_path)(mpd_Song *song, gchar **path);
+	void (*fetch_image)(mpd_Song *song, GSourceFunc function);
+
+} gmpcCoverArtPlugin;
 
 
 
@@ -86,6 +92,9 @@ typedef struct {
 	ConnectionChangedCallback mpd_connection_changed;
 	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
+	/* Cover art plugin */
+	gmpcCoverArtPlugin	*coverart;
+	
 } gmpcPlugin;
 
 

@@ -1,6 +1,7 @@
 bin_PROGRAMS=gmpc
 
 gmpc_SOURCES=\
+	cover-art.c\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -47,6 +48,7 @@ CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
+		cover-art.h\
 	    	main.h\
 		player.h\
 		plugin.h\

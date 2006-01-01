@@ -121,6 +121,24 @@ void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
+void id3_cover_art_fetched(mpd_Song *song)
+{
+	mpd_Song *current = NULL;
+	if(songs == NULL) return;
+	if(songs->data== NULL) return;
+	current = songs->data;
+	if(current->artist && current->album)
+	{
+		if(!strcmp(current->artist,song->artist) &&
+				!strcmp(current->album, song->album))
+		{
+			set_text(songs);	
+		}
+	}
+}
+
+
+
 
 void set_text (GList * node)
 {
@@ -254,6 +272,26 @@ void set_text (GList * node)
 	else
 	{
 		gtk_widget_set_sensitive (glade_xml_get_widget(xml_id3_window, "button_next"), TRUE);
+	}
+	{
+		gchar *path= NULL;
+		int ret = 0;
+		ret = cover_art_fetch_image_path(song, &path);
+		if(ret == COVER_ART_OK_LOCAL)
+		{
+			gtk_image_set_from_file(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")), path);
+			gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_image"));
+		}
+		else{
+			gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_image"));
+		}
+		if(path) g_free(path);
+		if(ret == COVER_ART_NOT_FETCHED)
+		{
+				cover_art_fetch_image(mpd_playlist_get_current_song(connection),
+						(GSourceFunc)id3_cover_art_fetched);
+		}
+
 	}
 }
 
