@@ -124,6 +124,7 @@ void create_window (int song)
 void id3_cover_art_fetched(mpd_Song *song)
 {
 	mpd_Song *current = NULL;
+	printf("Cover Fetched\n");
 	if(songs == NULL) return;
 	if(songs->data== NULL) return;
 	current = songs->data;
@@ -132,6 +133,7 @@ void id3_cover_art_fetched(mpd_Song *song)
 		if(!strcmp(current->artist,song->artist) &&
 				!strcmp(current->album, song->album))
 		{
+			printf("Reshowing info\n");
 			set_text(songs);	
 		}
 	}
@@ -277,10 +279,14 @@ void set_text (GList * node)
 		gchar *path= NULL;
 		int ret = 0;
 		ret = cover_art_fetch_image_path(song, &path);
+		printf("%i %s\n", ret, path);
 		if(ret == COVER_ART_OK_LOCAL)
 		{
-			gtk_image_set_from_file(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")), path);
+			GdkPixbuf *pb = NULL;
+			pb = gdk_pixbuf_new_from_file_at_size(path,300,300,NULL);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_image"));
+			g_object_unref(pb);
 		}
 		else{
 			gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_image"));
@@ -288,8 +294,9 @@ void set_text (GList * node)
 		if(path) g_free(path);
 		if(ret == COVER_ART_NOT_FETCHED)
 		{
-				cover_art_fetch_image(mpd_playlist_get_current_song(connection),
-						(GSourceFunc)id3_cover_art_fetched);
+			printf("Trying to fetch cover\n");
+			cover_art_fetch_image(song,
+					(GSourceFunc)id3_cover_art_fetched);
 		}
 
 	}

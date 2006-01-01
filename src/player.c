@@ -394,7 +394,7 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 		{
 			gtk_range_set_value(scale, (double)mpd_status_get_volume(connection));
 		}
-		msg = g_strdup_printf("%s: %03i%%", _("Volume"), mpd_status_get_volume(connection));
+		msg = g_strdup_printf("%s: %3i%%", _("Volume"), mpd_status_get_volume(connection));
 		msg_push_popup_timeout(msg, 2000);
 		g_free(msg);
 	}

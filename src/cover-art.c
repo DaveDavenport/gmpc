@@ -49,13 +49,16 @@ void cover_art_fetch_image(mpd_Song *song, GSourceFunc function){
 				int retv = plugins[i]->coverart->fetch_image_path(song, &temp_path);
 				if(retv == COVER_ART_OK_LOCAL || retv == COVER_ART_OK_REMOTE)
 				{
+					printf("Not fetching image, allready availible %s\n",temp_path);
 					if(temp_path)g_free(temp_path);
+
 					return;
 				}
 				else if(retv == COVER_ART_NOT_FETCHED)
 				{
 					if(plugins[i]->coverart->fetch_image)
 					{
+						printf("starting '%s' image fetch\n", plugins[i]->name);
 						plugins[i]->coverart->fetch_image(song, function);
 					}
 					return;
