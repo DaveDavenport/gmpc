@@ -37,7 +37,7 @@
 #include "playlist3-current-playlist-browser.h"
 
 void pl3_show_and_position_window();
-
+static void playlist_player_update_image(MpdObj *mi);
 
 int old_type = -1;
 
@@ -982,7 +982,46 @@ void playlist_player_set_song(MpdObj *mi)
 				"<span size=\"large\" weight=\"bold\">Not Playing</span>");
 	}
 }
+static void playlist_player_update_image_callback(mpd_Song *song)
+{
+	mpd_Song *current = mpd_playlist_get_current_song(connection);
+	if(!strcmp(song->artist, current->artist) &&
+			!strcmp(song->album, current->album))
+	{
+		playlist_player_update_image(connection);
+	}
+}
 
+static void playlist_player_update_image(MpdObj *mi)
+{
+	gchar *path= NULL;
+	int ret = 0;
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	ret = cover_art_fetch_image_path(song, &path);
+	printf("%i %s\n", ret, path);                 	
+	if(ret == COVER_ART_OK_LOCAL) {
+		GdkPixbuf *pb = NULL;
+		pb = gdk_pixbuf_new_from_file_at_size(path,60,60,NULL);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+		g_object_unref(pb);
+	}
+	else{
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+	}
+	if(path) g_free(path);
+	if(ret == COVER_ART_NOT_FETCHED)
+	{
+		printf("Trying to fetch cover\n");
+		cover_art_fetch_image(song,                                                                             	
+				(GSourceFunc)playlist_player_update_image_callback);                                  		
+	}
+
+}
+static void playlist_player_clear_image()
+{
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+}
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	if(!pl3_xml)return;
@@ -1006,6 +1045,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 				break;
 			default:
+				playlist_player_clear_image();
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
@@ -1017,12 +1057,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}
 	if(what&MPD_CST_SONGID)
 	{
-
 		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
 		{
 			playlist_player_set_song(mi);
 		}
-
+		playlist_player_update_image(mi);
 	}
 	if(what&MPD_CST_ELAPSED_TIME)
 	{

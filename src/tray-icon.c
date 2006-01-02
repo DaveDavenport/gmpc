@@ -519,10 +519,21 @@ void tray_icon_song_change()
 
 void tray_icon_state_change()
 {
-	if(!cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE))
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE))
 	{
-		return;
+		int state = mpd_player_get_state(connection);
+		if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN)
+		{
+			if(cover_pb) g_object_unref(cover_pb);
+			cover_pb = NULL;
+		}
+		else if(state == MPD_STATUS_STATE_PLAY){
+			tray_icon_song_change();
+		}
 	}
+	else return;
+
+
 	gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 
 }
@@ -742,7 +753,7 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		tray_icon_state_change();
 	}
-	if(what&MPD_CST_SONGID)
+	else if(what&MPD_CST_SONGID)
 	{
 		tray_icon_song_change();
 	}

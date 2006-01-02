@@ -133,6 +133,20 @@
 	      </child>
 
 	      <child>
+		<widget class="GtkImage" id="pp_cover_image">
+		  <property name="xalign">0.5</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="padding">0</property>
+		  <property name="expand">False</property>
+		  <property name="fill">True</property>
+		</packing>
+	      </child>
+
+	      <child>
 		<widget class="GtkLabel" id="pp_label">
 		  <property name="visible">True</property>
 		  <property name="label" translatable="yes">&lt;span size=&quot;large&quot; weight=&quot;bold&quot;&gt;Not Playing&lt;/span&gt;</property>
