@@ -19,6 +19,7 @@ gmpc_SOURCES=\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
 	mm-keys.c\
+	qthread.c\
 	config1.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
@@ -33,7 +34,8 @@ LIBS = \
 	@libxml_LIBS@ \
 	@gtk_LIBS@\
 	@gmodule_LIBS@\
-	@libglade_LIBS@
+	@libglade_LIBS@\
+	@gthread_LIBS@
 
 LDFLAGS = \
 	@EXTRA_LDFLAGS@
@@ -45,7 +47,8 @@ CFLAGS = @CFLAGS@\
 	@libxml_CFLAGS@ \
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
-	@libglade_CFLAGS@
+	@libglade_CFLAGS@\
+	@gthread_CFLAGS@
 
 EXTRA_DIST = 	playlist3.h\
 		cover-art.h\
@@ -62,4 +65,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
+		qthread.h\
 		config1.h

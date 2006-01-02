@@ -194,6 +194,10 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
 
+	/* initialize threading */
+	debug_printf(DEBUG_INFO,"Initializing threading");
+	qthread_init();
+
 	/*
 	 * stock icons
 	 */

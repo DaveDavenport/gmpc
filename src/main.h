@@ -30,6 +30,7 @@
 #include "playlist3.h"
 #include "mpdinteraction.h"
 #include "cover-art.h"
+#include "qthread.h"
 
 /* the config object */
 extern config_obj *config;

@@ -61,6 +61,10 @@ PKG_CHECK_MODULES([libglade], libglade-2.0)
 AC_SUBST(libglade_LIBS)
 AC_SUBST(libglade_CFLAGS)
 
+# gthread
+PKG_CHECK_MODULES([gthread], gthread-2.0)
+AC_SUBST(gthread_LIBS)
+AC_SUBST(gthread_CFLAGS)
 
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
