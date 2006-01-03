@@ -1014,7 +1014,7 @@ static void playlist_player_update_image(MpdObj *mi)
 	{
 		printf("Trying to fetch cover\n");
 		cover_art_fetch_image(song,                                                                             	
-				(GSourceFunc)playlist_player_update_image_callback);                                  		
+				(CoverArtCallback)playlist_player_update_image_callback,NULL);
 	}
 
 }

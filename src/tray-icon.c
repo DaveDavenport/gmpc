@@ -510,7 +510,7 @@ void tray_icon_song_change()
 			{
 
 				cover_art_fetch_image(mpd_playlist_get_current_song(connection),
-						(GSourceFunc)tray_cover_art_fetched);
+						(CoverArtCallback)tray_cover_art_fetched,NULL);
 			}
 			if(path)g_free(path);
 		}                                                                                          		

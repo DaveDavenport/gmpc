@@ -268,6 +268,7 @@ void plugin_stats_construct(GtkWidget *container)
 	if(plugin_stat_xml)
 	{
 		int plug_brow = 0, plug_misc =0,i=0;
+		int cover_prov = 0;
 		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
 		for(i=0;i<num_plugins;i++)
 		{
@@ -275,9 +276,10 @@ void plugin_stats_construct(GtkWidget *container)
 			{
 				if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
 				else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
+				else if (plugins[i]->plugin_type == GMPC_PLUGIN_COVER_ART)cover_prov++; 
 			}
 		}
-		path = g_strdup_printf("%i", plug_brow+plug_misc);
+		path = g_strdup_printf("%i", plug_brow+plug_misc+cover_prov);
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_plug_label")),path);
 		g_free(path);
 
@@ -289,6 +291,11 @@ void plugin_stats_construct(GtkWidget *container)
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_misc_label")),path);
 		g_free(path);
 
+		path = g_strdup_printf("%i", cover_prov);
+		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "cover_prov_label")),path);
+		g_free(path);
+
+		
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 	}
 

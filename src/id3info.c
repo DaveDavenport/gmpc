@@ -296,7 +296,7 @@ void set_text (GList * node)
 		{
 			printf("Trying to fetch cover\n");
 			cover_art_fetch_image(song,
-					(GSourceFunc)id3_cover_art_fetched);
+					(CoverArtCallback)id3_cover_art_fetched,NULL);
 		}
 
 	}
