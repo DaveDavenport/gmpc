@@ -9,15 +9,11 @@ src/edit_markup.c
 src/eggtrayicon.c
 src/main.c
 src/mpdinteraction.c
-src/open-location.c
 src/player.c
 src/playlist3.c
 src/preferences.c
 src/tray-icon.c
-data/gmpc.desktop.in.h
-glade/add-browser.glade.h
-glade/gmpc.glade.h
-glade/open-location.glade.h
-glade/playlist3.glade.h
 src/playlist3-tag-browser.c
+src/playlist3-current-playlist-browser.c
+src/playlist3-file-browser.c
 

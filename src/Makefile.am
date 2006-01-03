@@ -50,11 +50,14 @@ CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@
 
+gmpcinclude_HEADERS = \
+		plugin.h	\
+		cover-art.h	
+gmpcincludedir =$(includedir)/gmpc/
+
 EXTRA_DIST = 	playlist3.h\
-		cover-art.h\
 	    	main.h\
 		player.h\
-		plugin.h\
 	   	mm-keys.h\
 		misc.h\
 		eggtrayicon.h\
