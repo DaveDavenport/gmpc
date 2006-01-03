@@ -71,7 +71,8 @@ typedef struct {
 
 } gmpcCoverArtPlugin;
 
-
+/* Unique number */
+#define PLUGIN_API_VERSION 10
 
 /* sturcture */
 typedef struct {
