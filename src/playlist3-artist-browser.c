@@ -160,7 +160,8 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 				ret = cover_art_fetch_image_path(song, &path); 
 				if(ret == COVER_ART_OK_LOCAL)
 				{                                                                					
-					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,100,100,NULL);
+					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",80);
+					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
 					g_object_unref(pb);
 
@@ -240,16 +241,12 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			ret = cover_art_fetch_image_path(&song, &path); 
 			if(ret == COVER_ART_OK_LOCAL)
 			{
-				pb = gdk_pixbuf_new_from_file_at_size(path,100,100,NULL);
+				int size = cfg_get_single_value_as_int_with_default(config, "cover-art","browser-size", 80);
+				pb = gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
 			}	
 			else
 			{
 				pb = gtk_widget_render_icon(pl3_ab_tree, "media-album", GTK_ICON_SIZE_MENU,NULL);
-
-
-
-
-
 			}
 			gtk_list_store_append (pl3_ab_store, &iter);
 			gtk_list_store_set (pl3_ab_store,&iter,

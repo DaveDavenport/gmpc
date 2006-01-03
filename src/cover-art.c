@@ -25,6 +25,10 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 {
 	int i=0;
 	int can_try = 0;
+	if(!cfg_get_single_value_as_int_with_default(config, "cover-art", "enable",TRUE))
+	{
+		return COVER_ART_NO_IMAGE;
+	}
 	for(i =  0; plugins[i] != NULL; i++)
 	{
 		if(plugins[i]->plugin_type == GMPC_PLUGIN_COVER_ART)
@@ -65,12 +69,12 @@ void cover_art_execute_signal(ca_callback *function, mpd_Song *song)
 	g_free(function);
 }
 /*
-void cover_art_free_signal(ca_callback *function)
-{
-	printf("Freeing: %p\n", function);
-	g_free(function);
-}
-*/
+   void cover_art_free_signal(ca_callback *function)
+   {
+   printf("Freeing: %p\n", function);
+   g_free(function);
+   }
+   */
 int cover_art_check_fetch_done(ca_dl *cd)
 {
 	if(qthread_is_done(cd->qt))
@@ -78,8 +82,8 @@ int cover_art_check_fetch_done(ca_dl *cd)
 		fetch_que_list = g_list_remove(fetch_que_list,cd);
 		/* execute signals */
 		g_queue_foreach(cd->function,(GFunc)cover_art_execute_signal, cd->song); 
-/*		g_queue_foreach(cd->function,(GFunc)cover_art_free_signal, NULL); 
-*/		g_queue_free(cd->function);
+		/*		g_queue_foreach(cd->function,(GFunc)cover_art_free_signal, NULL); 
+		*/		g_queue_free(cd->function);
 		/* free song */
 		mpd_freeSong(cd->song);
 		/* cleanup thread */
