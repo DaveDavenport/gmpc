@@ -151,8 +151,8 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 	if(cover_pb)
 	{
-		width = 80+8;
-		height = 80+4;
+		width = gdk_pixbuf_get_width(cover_pb)+8;
+		height = gdk_pixbuf_get_height(cover_pb);
 		gdk_draw_pixbuf(widget->window, NULL, cover_pb, 0,0,4,4,-1,-1,GDK_RGB_DITHER_NONE,0,0);	
 	}
 
@@ -161,12 +161,30 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 
 	width  += lwidth;
-	height = (height > lheight)? height:lheight;
-
 
 	if(mpd_status_get_total_song_time(connection)> 0)
 	{
-		height = height+12;
+		int width2 = 0;
+		if((lheight+12) >=(height))
+		{
+			height = lheight+8;
+		}
+
+		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+				FALSE,width-lwidth,lheight+4, lwidth ,8);                              		
+		width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*lwidth;
+		gdk_draw_rectangle(widget->window,
+				widget->style->mid_gc[GTK_STATE_NORMAL],
+				TRUE,width-lwidth,lheight+4, width2 ,8);
+		gdk_draw_rectangle(widget->window, 
+				widget->style->fg_gc[GTK_STATE_NORMAL],
+				FALSE,width-lwidth,lheight+4, width2 ,8);
+	}
+	else {
+		if(lheight > (height))
+		{
+			height = lheight+4;
+		}
 	}
 
 	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
@@ -239,24 +257,6 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		}
 	}
 
-
-	if(mpd_check_connected(connection))
-	{
-		if(mpd_status_get_total_song_time(connection) > 0)
-		{
-
-			int width2 = 0;
-			gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+5-12, width ,8);                              		
-			width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*width;
-			gdk_draw_rectangle(widget->window,
-					widget->style->mid_gc[GTK_STATE_NORMAL],
-					TRUE,4,height+5-12, width2 ,8);
-			gdk_draw_rectangle(widget->window, 
-					widget->style->fg_gc[GTK_STATE_NORMAL],
-					FALSE,4,height+5-12, width2 ,8);
-		}
-	}
 	g_free(tooltiptext);
 
 	return TRUE;
@@ -417,13 +417,13 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 		gtk_widget_destroy(tip);
 		g_object_unref(tray_layout_tooltip);
 	}
-/*	
-	if(dest != NULL)
-	{
+	/*	
+		if(dest != NULL)
+		{
 		g_object_unref(dest);
 		dest= NULL;
-	}
-*/
+		}
+		*/
 	tip = NULL;
 }
 

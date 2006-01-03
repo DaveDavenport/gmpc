@@ -7,5 +7,5 @@
 #define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
 
 
-#define DEFAULT_PLAYLIST_PLAYER_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\" weight=\"bold\">%title%</span>\n][%artist%]|%shortfile%|"
+#define DEFAULT_PLAYLIST_PLAYER_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\" weight=\"bold\">%title%</span>\n][%artist%][\n<span size=\"small\">%album%</span>]|%shortfile%|"
 
