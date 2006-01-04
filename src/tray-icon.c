@@ -493,28 +493,29 @@ void tray_icon_song_change()
 					(GSourceFunc)(tray_leave_cb),			
 					NULL);
 		}
-
-		if(cover_pb){
-			g_object_unref(cover_pb);
-			cover_pb = NULL;
-		}
-		if(cover_pb == NULL){
-			gchar *path= NULL;
-			int ret = 0; 
-			ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
-			if(ret == COVER_ART_OK_LOCAL)
-			{
-				cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
-			}
-			else if (ret == COVER_ART_NOT_FETCHED)
-			{
-
-				cover_art_fetch_image(mpd_playlist_get_current_song(connection),
-						(CoverArtCallback)tray_cover_art_fetched,NULL);
-			}
-			if(path)g_free(path);
-		}                                                                                          		
 	}
+	/* always do this, so the cover art also shows when you do a mouse over */
+	if(cover_pb){
+		g_object_unref(cover_pb);
+		cover_pb = NULL;
+	}
+	if(cover_pb == NULL){
+		gchar *path= NULL;
+		int ret = 0; 
+		ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
+		if(ret == COVER_ART_OK_LOCAL)
+		{
+			cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+		}
+		else if (ret == COVER_ART_NOT_FETCHED)
+		{
+
+			cover_art_fetch_image(mpd_playlist_get_current_song(connection),
+					(CoverArtCallback)tray_cover_art_fetched,NULL);
+		}
+		if(path)g_free(path);
+	}                                                                                          		
+
 }
 
 void tray_icon_state_change()
