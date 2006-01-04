@@ -520,22 +520,20 @@ void tray_icon_song_change()
 
 void tray_icon_state_change()
 {
-	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE))
+	int state = mpd_player_get_state(connection);
+	if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN)
 	{
-		int state = mpd_player_get_state(connection);
-		if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN)
-		{
-			if(cover_pb) g_object_unref(cover_pb);
-			cover_pb = NULL;
-		}
-		else if(state == MPD_STATUS_STATE_PLAY){
-			tray_icon_song_change();
-		}
+		if(cover_pb) g_object_unref(cover_pb);
+		cover_pb = NULL;
 	}
-	else return;
+	else if(state == MPD_STATUS_STATE_PLAY){
+		tray_icon_song_change();
+	}
 
-
-	gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+	if(tray_icon)
+	{
+		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+	}
 
 }
 
@@ -573,7 +571,14 @@ void destroy_tray_icon()
  * button3: menu
  */
 
-
+void tray_icon_info()
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song)
+	{
+		call_id3_window_song(song);
+	}
+}
 
 int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
@@ -644,7 +649,17 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);				
+		
+		if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY ||
+				mpd_player_get_state(connection) == MPD_STATUS_STATE_PAUSE)
+		{
+			item = gtk_image_menu_item_new_with_mnemonic(_("Song _Information"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
+					gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));                            		
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tray_icon_info), NULL);				
 
+		}		
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);		
 

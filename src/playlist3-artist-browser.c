@@ -238,6 +238,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			GdkPixbuf *pb = NULL;
 			song.artist = artist;
 			song.album = data->tag;			
+			song.file = NULL;
 			ret = cover_art_fetch_image_path(&song, &path); 
 			if(ret == COVER_ART_OK_LOCAL)
 			{
