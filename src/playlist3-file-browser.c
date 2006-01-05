@@ -303,7 +303,7 @@ void pl3_file_browser_reupdate()
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	MpdData* data =NULL;
-	char *path,*subdir;
+	char *path;
 	int sub_folder = 0;
 	GtkTreeIter iter;
 	long  unsigned time=0;
