@@ -20,6 +20,8 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gstdio.h>
+
 #include "config1.h"
 void cfg_remove_node(config_obj *cfg, config_node *node);
 config_node *cfg_add_class(config_obj *cfg, char *class);
@@ -254,7 +256,7 @@ void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	for(temp = node;temp != NULL; temp = temp->next){
 		if(temp->type == TYPE_CATEGORY)
 		{
-			fprintf(fp, "[%s]\n",temp->name);
+			fprintf(fp, "\n[%s]\n\n",temp->name);
 			cfg_save_category(cfg,temp->children,fp);
 		}
 		if(temp->type == TYPE_ITEM_MULTIPLE)
@@ -300,6 +302,9 @@ void cfg_save(config_obj *cfgo)
 		if(!fp) return;
 		cfg_save_category(cfgo,cfgo->root, fp);	
 		fclose(fp);
+#ifndef WIN32
+		g_chmod(cfgo->url, 0600);
+#endif
 
 	}
 	//	xmlSaveFormatFile(cfgo->url, cfgo->xmldoc,1);
