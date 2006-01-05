@@ -124,6 +124,7 @@ void pl3_find_browser_init()
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PL3_FINDB_ICON,NULL);
 	memset(&value, 0, sizeof(value));
