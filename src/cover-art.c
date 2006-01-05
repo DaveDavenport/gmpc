@@ -40,11 +40,17 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 				if(retv == COVER_ART_OK_LOCAL || retv == COVER_ART_OK_REMOTE)
 				{
 					*path = temp_path;
+					debug_printf(DEBUG_INFO,"%s has image \n", plugins[i]->name);
 					return retv;
 				}
 				else if(retv == COVER_ART_NOT_FETCHED)
 				{
+					debug_printf(DEBUG_INFO,"%s can try \n", plugins[i]->name);
 					can_try = 1;
+				}
+				else if (retv == COVER_ART_NO_IMAGE)
+				{
+					debug_printf(DEBUG_INFO,"%s has no image\n", plugins[i]->name);
 				}
 			}
 		}	

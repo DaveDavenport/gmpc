@@ -129,7 +129,6 @@ void pl3_reinitialize_tree()
 		{
 			if(plugins[i]->browser && plugins[i]->browser->add)
 			{
-				printf("adding plugin id: %i %i\n", i,plugin_get_pos(plugins[i]->id));
 				plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
 			}
 		}
@@ -195,7 +194,6 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		gtk_tree_view_collapse_row(tree,path);
 		return;
 	}
-	printf("fill_tree: %i\n", type);
 	if(!read)
 	{
 		if(type == PL3_BROWSE_FILE)
@@ -258,7 +256,6 @@ void pl3_cat_sel_changed()
 			}
 			else if ((old_type&PLUGIN_ID_MARK || old_type&PLUGIN_ID_INTERNALL) && old_type > 0)
 			{
-				printf("old_type: %i\n", old_type);
 				plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 				old_type = -1;
 			}
@@ -290,7 +287,6 @@ void pl3_cat_sel_changed()
 		}
 		else if(type&PLUGIN_ID_MARK || type&PLUGIN_ID_INTERNALL)
 		{
-			printf("plugin: %i selected\n", type);
 			if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
 			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
@@ -998,7 +994,6 @@ static void playlist_player_update_image(MpdObj *mi)
 	int ret = 0;
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	ret = cover_art_fetch_image_path(song, &path);
-	printf("%i %s\n", ret, path);                 	
 	if(ret == COVER_ART_OK_LOCAL) {
 		GdkPixbuf *pb = NULL;
 		pb = gdk_pixbuf_new_from_file_at_size(path,60,60,NULL);
@@ -1012,7 +1007,6 @@ static void playlist_player_update_image(MpdObj *mi)
 	if(path) g_free(path);
 	if(ret == COVER_ART_NOT_FETCHED)
 	{
-		printf("Trying to fetch cover\n");
 		cover_art_fetch_image(song,                                                                             	
 				(CoverArtCallback)playlist_player_update_image_callback,NULL);
 	}

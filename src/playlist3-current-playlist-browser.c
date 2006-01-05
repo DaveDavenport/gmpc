@@ -83,11 +83,9 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 	if(path != NULL)
 	{
 		gchar *str = gtk_tree_path_to_string(path);
-		printf("string: %s\n", str);
 		position = atoi(str);
 		if(pos == GTK_TREE_VIEW_DROP_AFTER)
 		{
-			printf("drop after\n");
 		}
 		else if(pos == GTK_TREE_VIEW_DROP_BEFORE)
 		{
@@ -97,7 +95,6 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 	}
 	else
 	{
-		printf("failed %i\n",pos);
 	}
 	if (gtk_tree_selection_count_selected_rows (selection) > 0 && position >=0)
 	{
@@ -200,7 +197,6 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 	/* set initial state */
-	printf("initialized current playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_cp_sw));
 }
 

@@ -12,7 +12,6 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 {
 	/* set plugin id */
 	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
-	printf("plugin %i %s\n", plug->id, plug->name);
 	/* put it in the list */
 	num_plugins++;
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
@@ -94,28 +93,11 @@ void plugin_load_dir(gchar *path)
 		while((dirname = g_dir_read_name(dir)) != NULL)
 		{
 			gchar *full_path = g_strdup_printf("%s/%s",path,dirname);
-			printf("%s\n", full_path);
 			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
 			{
-				if(!plugin_load(path,dirname))
-				{
-					printf("%i. plugin '%s' loaded ",
-							plugins[num_plugins-1]->id,
-							plugins[num_plugins-1]->name);
-					switch(plugins[num_plugins-1]->plugin_type){
-						case GMPC_PLUGIN_DUMMY:
-							printf("type: dummy\n");
-							break;
-						case GMPC_PLUGIN_PL_BROWSER:
-							printf("type: playlist browser\n");
-							break;
-						case GMPC_PLUGIN_NO_GUI:
-							printf("type: no gui\n");
-							break;
-						default:
-							printf("type: unkown\n");
-							break;
-					}
+				if(plugin_load(path,dirname)){
+					debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
+				
 				}
 			}
 			g_free(full_path);

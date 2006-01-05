@@ -158,7 +158,6 @@ void pl3_find_browser_init()
 	gtk_container_add(GTK_CONTAINER(pl3_findb_sw), pl3_findb_tree);
 
 	/* set initial state */
-	printf("initialized find playlist treeview\n");
 
 	pl3_findb_vbox = gtk_vbox_new(FALSE, 6);
 	hbox = gtk_hbox_new(FALSE,6);
@@ -267,7 +266,6 @@ unsigned long pl3_find_browser_view_browser()
 		   filter_test = mpd_misc_tokenize(name);
 		   if(filter_test == NULL)
 		   {
-			   printf("crap: %s\n",name);
 		   }
 
 		   if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter) && filter_test != NULL)

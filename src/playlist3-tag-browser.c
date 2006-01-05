@@ -153,7 +153,6 @@ void pl3_tag_browser_init()
 	gtk_container_add(GTK_CONTAINER(pl3_tb_sw), pl3_tb_tree);
 
 	/* set initial state */
-	printf("initialized tag playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_tb_sw));
 }
 
@@ -264,11 +263,9 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	GtkTreeIter child,child2;
 	
 	
-	printf("tag fill tree\n");
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
 	{
-		printf("Failed to get path\n");
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
@@ -286,7 +283,6 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		printf("failed to split\n");
 		if(first_tag)g_free(first_tag);
 		if(second_tag)g_free(second_tag);
 		if(format)g_free(format);
@@ -296,7 +292,6 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	{
 		if(mpd_misc_get_tag_by_name(tk_format[len])== -1)
 		{
-			printf("invallid tag: %s\n", tk_format[len]);
 			if(first_tag)g_free(first_tag);
 			if(second_tag)g_free(second_tag);
 			if(format)g_free(format);        			
@@ -340,7 +335,6 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
 		if(data == NULL)
 		{
-			printf("no sub data\n");
 		}
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
@@ -421,7 +415,6 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
-		printf("Failed to get path\n");
 		if(first_tag)g_free(first_tag);
 		if(second_tag)g_free(second_tag);
 		if(format)g_free(format);
@@ -445,7 +438,6 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		printf("failed to split\n");
 		gtk_tree_path_free(path);	
 		if(first_tag)g_free(first_tag);
 		if(second_tag)g_free(second_tag);
@@ -667,7 +659,6 @@ void pl3_custom_tag_browser_add_folder()
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
 	{
-		printf("Failed to get path\n");
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
@@ -683,7 +674,6 @@ void pl3_custom_tag_browser_add_folder()
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		printf("failed to split\n");
 		if(second_tag) g_free(second_tag);
 		if(first_tag) g_free(first_tag);
 		if(format) g_free(format);

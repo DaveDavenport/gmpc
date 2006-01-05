@@ -121,7 +121,6 @@ void pl3_artist_browser_init()
 	gtk_container_add(GTK_CONTAINER(pl3_ab_sw), pl3_ab_tree);
 
 	/* set initial state */
-	printf("initialized artist playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_ab_sw));
 }
 
@@ -148,7 +147,6 @@ void pl3_artist_browser_add()
 
 void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *ref)
 {
-	printf("Cover Fetched\n");
 	if(song == NULL || ref == NULL) return;
 	else
 	{		
@@ -194,7 +192,6 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
-		printf("Failed to get path\n");
 		return 0;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
@@ -384,7 +381,6 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
 	{
-		printf("Failed to get path\n");
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -1;
@@ -603,7 +599,6 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					gtk_tree_model_get(model, &citer, 1, &name, -1);
 					if(strcmp(name, (r_type&PL3_ENTRY_ARTIST)?artist:album) == 0)
 					{
-						printf("%s %s %s\n", name, artist, album);
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
 						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cat_tree),
