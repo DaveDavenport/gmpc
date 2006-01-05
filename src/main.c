@@ -52,7 +52,7 @@ int num_plugins = 0;
  */
 
 GladeXML *xml_error_window = NULL;
-
+GladeXML *xml_password_window = NULL;
 int update_interface ();
 
 /*
@@ -732,10 +732,12 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 
 void password_dialog(int failed)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	GladeXML *xml = glade_xml_new(path, "password-dialog",NULL);
+	gchar *path  = NULL;
+	if(xml_password_window) return;
+	path = gmpc_get_full_glade_path("gmpc.glade");
+	xml_password_window = glade_xml_new(path, "password-dialog",NULL);
 	g_free(path);
-	if(!xml) return;
+	if(!xml_password_window) return;
 	if(failed)
 	{
 		path = g_strdup_printf("Failed to set password on: '%s'\nPlease try again",
@@ -747,16 +749,17 @@ void password_dialog(int failed)
 				cfg_get_single_value_as_string(config, "connection", "hostname"));
 
 	}
-	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml, "pass_label")),path);
+	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
 	g_free(path);
-	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml, "password-dialog"))))
+	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
 	{
 		case GTK_RESPONSE_OK:
 			{
-				path = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml, "pass_entry")));
+				path = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_password_window, "pass_entry")));
 				mpd_set_password(connection, path);
-				if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml, "ck_save_pass"))))
+				if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_password_window, "ck_save_pass"))))
 				{
+					cfg_set_single_value_as_int(config, "connection", "useauth", TRUE);
 					cfg_set_single_value_as_string(config, "connection", "password", path);
 				}
 				mpd_send_password(connection);
@@ -766,8 +769,9 @@ void password_dialog(int failed)
 
 
 	}
-	gtk_widget_destroy(glade_xml_get_widget(xml, "password-dialog"));
-	g_object_unref(xml);
+	gtk_widget_destroy(glade_xml_get_widget(xml_password_window, "password-dialog"));
+	g_object_unref(xml_password_window);
+	xml_password_window = NULL;
 }
 
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
@@ -807,15 +811,16 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		}
 		else if (error_id == MPD_ACK_ERROR_PERMISSION)
 		{
-			GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
-					GTK_DIALOG_MODAL,
-					GTK_MESSAGE_INFO,
-					GTK_BUTTONS_CLOSE,
-					_("You have insufficient rights to use this functionality"));
+			password_dialog(FALSE);
+			/*GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
+			  GTK_DIALOG_MODAL,
+			  GTK_MESSAGE_INFO,
+			  GTK_BUTTONS_CLOSE,
+			  _("You have insufficient rights to use this functionality"));
 
-			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-			gtk_widget_show_all(dialog);
-
+			  g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+			  gtk_widget_show_all(dialog);
+			  */
 		}
 		else {
 
@@ -869,8 +874,8 @@ void show_error_message(gchar *string)
 	GtkWidget *dialog = NULL;
 	dialog = gtk_message_dialog_new_with_markup(NULL,                                
 			GTK_DIALOG_DESTROY_WITH_PARENT,
-                        GTK_MESSAGE_ERROR,
-                        GTK_BUTTONS_CLOSE,
+			GTK_MESSAGE_ERROR,
+			GTK_BUTTONS_CLOSE,
 			string);
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
 	gtk_widget_show(dialog);
