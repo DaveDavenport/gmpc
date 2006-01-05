@@ -86,7 +86,7 @@ void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 		}
 
 		/* next, ignore commants  and there must be a category*/
-		else if(cur && (c  == '#' || c == '/' || c == '\n')){
+		else if(cur && (c  == '#' || c == '/' || c == '\n' || c == ';')){
 			while(c != EOF && c != '\n') c = fgetc(fp);
 		}
 		else if(cur){
@@ -137,7 +137,7 @@ void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 						len++;
 					}
 					c = fgetc(fp);
-				}while((c != '\n' || quote) && c != EOF && quote >= 0);
+				}while((c != '\n' || quote) && c != EOF && quote >= 0 && len < 1024);
 				new->value = g_strndup(buffer, len);
 				if(multiple){
 					cfg_add_child(multiple,new);
@@ -264,9 +264,9 @@ void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 		}
 		if(temp->type == TYPE_ITEM_MULTIPLE)
 		{
-			fprintf(fp, "{%s}\n",temp->name);
+			fprintf(fp, "\n{%s}\n",temp->name);
 			cfg_save_category(cfg,temp->children,fp);
-			fprintf(fp, "{}\n");
+			fprintf(fp, "{}\n\n");
 		}                                                		
 		else if (temp->type == TYPE_ITEM)
 		{
@@ -303,6 +303,10 @@ void cfg_save(config_obj *cfgo)
 	{
 		FILE *fp = fopen(cfgo->url, "w");
 		if(!fp) return;
+		fprintf(fp, "# The GMPC Config file\n"\
+				"# Lines starting with '#' '/' and ';' are coments, and ignored\n"\
+				"# Also empty lines are ignored.\n"\
+				"# User comments will get lost\n");
 		cfg_save_category(cfgo,cfgo->root, fp);	
 		fclose(fp);
 #ifndef WIN32

@@ -260,7 +260,7 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* OPEN CONFIG FILE */
-	url = g_strdup_printf("%s/.gmpc/gmpc.xml", g_get_home_dir());
+	url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
