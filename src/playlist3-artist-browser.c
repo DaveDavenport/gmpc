@@ -87,6 +87,7 @@ void pl3_artist_browser_init()
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
+	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"pixbuf", PL3_AB_ICON,NULL);
 	memset(&value, 0, sizeof(value));
@@ -300,7 +301,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 							PL3_AB_TITLE,	buffer,
 							PL3_AB_ARTIST,  data->song->artist,
 							PL3_AB_ALBUM,   data->song->album,
-							PL3_AB_ARTIST,	data->song->file,
+							PL3_AB_FILE,	data->song->file,
 							PL3_AB_TYPE,	PL3_ENTRY_SONG,
 							PL3_AB_ICON,	pb,
 							-1);
@@ -348,7 +349,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 							PL3_AB_TITLE, buffer,
 							PL3_AB_ARTIST, data->song->artist,
 							PL3_AB_ALBUM, data->song->album,
-							PL3_AB_ARTIST, data->song->file,
+							PL3_AB_FILE, data->song->file,
 							PL3_AB_TYPE, PL3_ENTRY_SONG,
 							PL3_AB_ICON,pb,
 							-1);
@@ -719,24 +720,27 @@ void pl3_artist_browser_add_selected()
 	gchar *message;
 	if(rows != NULL)
 	{
-		gchar *name;
+		gchar *artist,*album,*file;
 		gint type;
 		GList *node = g_list_first(rows);
 		do
 		{
 			GtkTreePath *path = node->data;
 			gtk_tree_model_get_iter (model, &iter, path);
-			gtk_tree_model_get (model, &iter, PL3_AB_ARTIST,&name, PL3_AB_TYPE, &type, -1);
+			gtk_tree_model_get (model, &iter, PL3_AB_ARTIST,&artist, 
+					PL3_AB_FILE, &file,
+					PL3_AB_ALBUM, &album,
+					PL3_AB_TYPE, &type, -1);
 			/* does this bitmask thingy works ok? I think it hsould */
 			if(type&(PL3_ENTRY_SONG))
 			{
 				/* add them to the add list */
-				mpd_playlist_queue_add(connection, name);
+				mpd_playlist_queue_add(connection, file);
 				songs++;
 			}
 			else if (type&PL3_ENTRY_ARTIST)
 			{
-				MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, name, TRUE);
+				MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
@@ -750,14 +754,12 @@ void pl3_artist_browser_add_selected()
 			else if (type&PL3_ENTRY_ALBUM)
 			{
 				MpdData *data = NULL;
-				char *album;
-				gtk_tree_model_get (model, &iter, PL3_AB_TITLE,&album,-1);
 				data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, album, TRUE);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
 					{
-						if (!g_utf8_collate (data->song->artist, name))
+						if (!g_utf8_collate (data->song->artist, artist))
 						{
 							songs++;
 							mpd_playlist_queue_add(connection,data->song->file);
@@ -766,6 +768,9 @@ void pl3_artist_browser_add_selected()
 					data = mpd_data_get_next(data);
 				}
 			}
+			if(artist)g_free(artist);
+			if(album)g_free(album);
+			if(file)g_free(file);
 
 		}while((node = g_list_next(node)) != NULL);
 	}
