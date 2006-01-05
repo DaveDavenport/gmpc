@@ -999,8 +999,15 @@ static void playlist_player_update_image(MpdObj *mi)
 		GdkPixbuf *pb = NULL;
 		pb = gdk_pixbuf_new_from_file_at_size(path,60,60,NULL);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
-		g_object_unref(pb);
+/*		if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY ||
+				mpd_player_get_state(connection) == MPD_STATUS_STATE_PAUSE)
+		{
+*/			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+/*		}
+		else{
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+		}
+*/		g_object_unref(pb);
 	}
 	else{
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
@@ -1025,10 +1032,12 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_STATUS_STATE_PLAY:
+				
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-pause",GTK_ICON_SIZE_BUTTON);
 				playlist_player_set_song(mi);
+				playlist_player_update_image(mi);
 				break;
 			case MPD_STATUS_STATE_PAUSE:
 				gtk_image_set_from_stock(GTK_IMAGE(
@@ -1056,7 +1065,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			playlist_player_set_song(mi);
 		}
-		playlist_player_update_image(mi);
+		if(mpd_player_get_state(mi) != MPD_STATUS_STATE_STOP &&
+				mpd_player_get_state(mi) != MPD_STATUS_STATE_UNKNOWN)
+		{
+			playlist_player_update_image(mi);
+		}
 	}
 	if(what&MPD_CST_ELAPSED_TIME)
 	{
