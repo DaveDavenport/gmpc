@@ -49,6 +49,7 @@ GtkListStore *pl2_store= NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
+static int pl3p_seek = FALSE;
 
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 /* Playlist "Plugin" */
@@ -1064,8 +1065,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		int elapsedTime = mpd_status_get_elapsed_song_time(connection);
 		if(mpd_check_connected(connection))
 		{
-			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
-					(elapsedTime/(float)totalTime)*100.0);
+			if(!pl3p_seek)
+			{
+				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
+						(elapsedTime/(float)totalTime)*100.0);
+			}
 			if(elapsedTime/60 >99 || totalTime/60 > 99)
 			{
 				string = g_strdup_printf("%02i:%02i - %02i:%02i",
@@ -1094,4 +1098,43 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				string);
 		g_free(string);
 	}
+}
+
+
+/* start seeking in the song..  only allow this when you're playing or paused */
+/* block it other wise. */
+/* everything is blocked until the seek is done. */
+/* show time to seek to in entry box */
+int pl3_progress_seek_start()
+{
+	if(mpd_player_get_state(connection) != MPD_PLAYER_PLAY && 
+			mpd_player_get_state(connection) != MPD_PLAYER_PAUSE)
+	{
+		return TRUE;
+	}
+	pl3p_seek = TRUE;
+	return FALSE;
+}
+
+
+/* apply seek changes */
+int pl3_progress_seek_stop()
+{
+	msg_pop_popup();
+	pl3p_seek = FALSE;
+	if(!mpd_check_connected(connection))
+	{
+		return TRUE;
+	}
+	else if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY || mpd_player_get_state(connection) == MPD_PLAYER_PAUSE)
+	{
+		GtkRange *scale = (GtkRange *)glade_xml_get_widget(pl3_xml, "pp_progres");
+		gdouble value = gtk_range_get_value(scale);
+		if(value >=0)
+		{
+			int change = (int)(mpd_status_get_total_song_time(connection)*(double)(value/100));
+			mpd_player_seek(connection, change);
+		}
+	}
+	return FALSE;
 }

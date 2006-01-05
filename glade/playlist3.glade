@@ -243,6 +243,8 @@
 		      <property name="update_policy">GTK_UPDATE_CONTINUOUS</property>
 		      <property name="inverted">False</property>
 		      <property name="adjustment">0 0 100 0 0 0</property>
+		      <signal name="button_press_event" handler="pl3_progress_seek_start" last_modification_time="Thu, 05 Jan 2006 20:23:29 GMT"/>
+		      <signal name="button_release_event" handler="pl3_progress_seek_stop" last_modification_time="Thu, 05 Jan 2006 20:23:38 GMT"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">0</property>
