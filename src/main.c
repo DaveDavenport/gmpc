@@ -764,7 +764,10 @@ void password_dialog(int failed)
 				}
 				mpd_send_password(connection);
 			}
+			break;
 		default:
+			cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
+			mpd_disconnect(connection);
 			break;
 
 
