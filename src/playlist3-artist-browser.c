@@ -42,6 +42,8 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 
 enum{
 	PL3_AB_ARTIST,
+	PL3_AB_ALBUM,
+	PL3_AB_FILE,
 	PL3_AB_TYPE,
 	PL3_AB_TITLE,
 	PL3_AB_ICON,
@@ -73,9 +75,11 @@ void pl3_artist_browser_init()
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
 	pl3_ab_store = gtk_list_store_new (PL3_AB_ROWS, 
-			GTK_TYPE_STRING, /* path to file */
-			GTK_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
-			GTK_TYPE_STRING,	/* title to display */
+			GTK_TYPE_STRING, /* PL3_AB_ARTIST */
+			GTK_TYPE_STRING, /* PL3_AB_ALBUM  */
+			GTK_TYPE_STRING, /* PL3_AB_FILE */
+			GTK_TYPE_INT,	 /* PL3_AB_TYPE  */
+			GTK_TYPE_STRING, /* PL3_AB_TITLE */
 			GDK_TYPE_PIXBUF); /* icon type */
 
 
@@ -252,6 +256,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			gtk_list_store_append (pl3_ab_store, &iter);
 			gtk_list_store_set (pl3_ab_store,&iter,
 					PL3_AB_ARTIST, artist,
+					PL3_AB_ALBUM, data->tag,
 					PL3_AB_TYPE, PL3_ENTRY_ALBUM,
 					PL3_AB_TITLE, data->tag,
 					PL3_AB_ICON,pb,
@@ -296,6 +301,8 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					gtk_list_store_append (pl3_ab_store, &iter);
 					gtk_list_store_set (pl3_ab_store, &iter,
 							PL3_AB_TITLE,	buffer,
+							PL3_AB_ARTIST,  data->song->artist,
+							PL3_AB_ALBUM,   data->song->album,
 							PL3_AB_ARTIST,	data->song->file,
 							PL3_AB_TYPE,	PL3_ENTRY_SONG,
 							PL3_AB_ICON,	pb,
@@ -342,6 +349,8 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					gtk_list_store_append (pl3_ab_store, &iter);
 					gtk_list_store_set (pl3_ab_store, &iter,
 							PL3_AB_TITLE, buffer,
+							PL3_AB_ARTIST, data->song->artist,
+							PL3_AB_ALBUM, data->song->album,
 							PL3_AB_ARTIST, data->song->file,
 							PL3_AB_TYPE, PL3_ENTRY_SONG,
 							PL3_AB_ICON,pb,
@@ -564,15 +573,17 @@ void pl3_artist_browser_show_info()
 void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
 	GtkTreeIter iter;
-	gchar *song_id;
+	gchar *artist = NULL;
+	gchar *album = NULL;
+	gchar *file = NULL;
 	gint r_type;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
-	if(song_id == NULL)
-	{
-
-		return;
-	}
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, 
+			PL3_AB_ARTIST, &artist,
+			PL3_AB_ALBUM, &album,
+			PL3_AB_FILE, &file,
+			PL3_AB_TYPE,&r_type,
+			-1);
 	if (r_type&(PL3_ENTRY_ARTIST|PL3_ENTRY_ALBUM))
 	{
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
@@ -589,17 +600,19 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			{
 				do{
 					char *name = NULL;
-					gtk_tree_model_get(model, &citer, 2, &name, -1);
-					if(strcmp(name, song_id) == 0)
+					gtk_tree_model_get(model, &citer, 1, &name, -1);
+					if(strcmp(name, (r_type&PL3_ENTRY_ARTIST)?artist:album) == 0)
 					{
+						printf("%s %s %s\n", name, artist, album);
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
 						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cat_tree),
 								path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
+						g_free(name);
 						break;
-
 					}
+					g_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
 		}
@@ -607,10 +620,13 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	else
 	{
 		pl3_push_statusbar_message("Added a song");
-		mpd_playlist_queue_add(connection, song_id);
+		mpd_playlist_queue_add(connection, file);
 	}
+
 	mpd_playlist_queue_commit(connection);
-	if(song_id)g_free(song_id);
+	if(file)g_free(file);
+	if(artist) g_free(artist);
+	if(album) g_free(album);
 }
 
 void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
@@ -647,7 +663,7 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 	GtkWidget *item;
 	GtkWidget *menu = gtk_menu_new();
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree));
-	/* don't show it when where listing custom streams...
+	/* 
 	 * show always when version 12..  or when searching in playlist.
 	 */
 	if(gtk_tree_selection_count_selected_rows(sel) == 1)

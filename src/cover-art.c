@@ -68,13 +68,7 @@ void cover_art_execute_signal(ca_callback *function, mpd_Song *song)
 	function->function(song,function->userdata);
 	g_free(function);
 }
-/*
-   void cover_art_free_signal(ca_callback *function)
-   {
-   printf("Freeing: %p\n", function);
-   g_free(function);
-   }
-   */
+
 int cover_art_check_fetch_done(ca_dl *cd)
 {
 	if(qthread_is_done(cd->qt))
@@ -82,8 +76,7 @@ int cover_art_check_fetch_done(ca_dl *cd)
 		fetch_que_list = g_list_remove(fetch_que_list,cd);
 		/* execute signals */
 		g_queue_foreach(cd->function,(GFunc)cover_art_execute_signal, cd->song); 
-		/*		g_queue_foreach(cd->function,(GFunc)cover_art_free_signal, NULL); 
-		*/		g_queue_free(cd->function);
+		g_queue_free(cd->function);
 		/* free song */
 		mpd_freeSong(cd->song);
 		/* cleanup thread */
