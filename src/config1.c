@@ -20,14 +20,18 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib/gstdio.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
+
 
 #include "config1.h"
 void cfg_remove_node(config_obj *cfg, config_node *node);
 config_node *cfg_add_class(config_obj *cfg, char *class);
 config_node *cfg_new_node();
 void cfg_add_child(config_node *parent, config_node *child);
-	
+
 void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 {
 	char buffer[1024];
@@ -80,14 +84,13 @@ void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			/* seek end of line */
 			while(c != EOF && c != '\n') c = fgetc(fp);
 		}
-		
+
 		/* next, ignore commants  and there must be a category*/
 		else if(cur && (c  == '#' || c == '/' || c == '\n')){
 			while(c != EOF && c != '\n') c = fgetc(fp);
 		}
 		else if(cur){
 			config_node *new = NULL;
-			gchar *key = NULL;
 			len = 0;
 			while(c != '=' && c != EOF){
 				buffer[len] = c;
@@ -97,7 +100,7 @@ void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			if(len < 256 && len > 0)
 			{
 				int quote=0;
-	
+
 				/* write key name */
 				new = cfg_new_node();
 				new->type = TYPE_ITEM;
@@ -303,7 +306,7 @@ void cfg_save(config_obj *cfgo)
 		cfg_save_category(cfgo,cfgo->root, fp);	
 		fclose(fp);
 #ifndef WIN32
-		g_chmod(cfgo->url, 0600);
+		chmod(cfgo->url, 0600);
 #endif
 
 	}
@@ -528,15 +531,15 @@ config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, cha
 {
 	config_node *node = cfg_get_single_value(cfg,class,key);
 	if(node == NULL){
-	 	printf("node %s not found\n", key);      
+		printf("node %s not found\n", key);      
 		return NULL;
 	}
 	if(node->type != TYPE_ITEM_MULTIPLE){
 		printf("no multiple\n");
-	       	return NULL;
+		return NULL;
 	}
 	if(node->children == NULL){
-	 	printf("empty multiple\n");      
+		printf("empty multiple\n");      
 		return NULL;
 	}
 	/* first*/
