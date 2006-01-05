@@ -303,7 +303,7 @@ void pl3_file_browser_reupdate()
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	MpdData* data =NULL;
-	char *path;
+	char *path,*subdir;
 	int sub_folder = 0;
 	GtkTreeIter iter;
 	long  unsigned time=0;
@@ -315,6 +315,17 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		return 0;
 	}
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
+	if(strcmp(path,"/"))
+	{
+		gtk_list_store_append (pl3_fb_store, &iter);
+		gtk_list_store_set (pl3_fb_store, &iter,
+				PL3_FB_PATH,path, 
+				PL3_FB_TYPE, PL3_ENTRY_DIR_UP,
+				PL3_FB_TITLE, "..",
+				PL3_FB_ICON, "gtk-open",
+				-1);
+	}
+
 
 	data = mpd_playlist_get_directory(connection, path);
 	while (data != NULL)
@@ -599,6 +610,25 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
 
+		}
+	}
+	else if (r_type&PL3_ENTRY_DIR_UP)
+	{
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+		GtkTreeIter iter;
+
+		if(gtk_tree_selection_get_selected(selec,&model, &iter))
+		{
+			GtkTreeIter piter;
+			if(gtk_tree_model_iter_parent(model, &piter, &iter))
+			{
+				GtkTreePath *path = NULL;
+				gtk_tree_selection_select_iter(selec,&piter);
+				path = gtk_tree_model_get_path(model, &piter);
+				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(glade_xml_get_widget (pl3_xml, "cat_tree")), path,NULL,TRUE,0.5,0);
+				gtk_tree_path_free(path);
+			}
 		}
 	}
 	else

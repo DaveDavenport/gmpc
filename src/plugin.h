@@ -19,6 +19,7 @@ typedef enum {
 } PluginType;
 
 /* usefull defines */
+#define PL3_ENTRY_DIR_UP 128
 #define PL3_ENTRY_ALBUM 64
 #define PL3_ENTRY_ARTIST 32
 #define PL3_ENTRY_DIRECTORY 16
