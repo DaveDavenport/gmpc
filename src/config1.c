@@ -20,13 +20,37 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
-
+#ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
-
-
-
+#endif
 #include "config1.h"
+
+typedef enum _ConfigNodeType  {
+	TYPE_CATEGORY,
+	TYPE_ITEM,
+	TYPE_ITEM_MULTIPLE
+} ConfigNodeType;
+
+typedef struct _config_node {
+	struct _config_node *next;
+	struct _config_node *prev;
+	struct _config_node *parent;
+	gchar *name;
+	ConfigNodeType type;
+	/* union this? */
+	struct _config_node *children; /* TYPE_CATEGORY */
+	gchar *value;/* TYPE_ITEM* */
+
+} config_node;
+
+
+typedef struct _config_obj
+{
+	gchar *url;
+	config_node *root;
+} _config_obj;
+
 void cfg_remove_node(config_obj *cfg, config_node *node);
 config_node *cfg_add_class(config_obj *cfg, char *class);
 config_node *cfg_new_node();
@@ -314,7 +338,6 @@ void cfg_save(config_obj *cfgo)
 #endif
 
 	}
-	//	xmlSaveFormatFile(cfgo->url, cfgo->xmldoc,1);
 	return;
 }
 
@@ -452,7 +475,6 @@ void cfg_remove_node(config_obj *cfg, config_node *node)
 {
 	if(node->type != TYPE_ITEM)
 	{
-		printf("Still children in the node, going to delete it recursive\n");
 		while(node->children)
 		{
 			cfg_remove_node(cfg,node->children);
@@ -535,15 +557,12 @@ config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, cha
 {
 	config_node *node = cfg_get_single_value(cfg,class,key);
 	if(node == NULL){
-		printf("node %s not found\n", key);      
 		return NULL;
 	}
 	if(node->type != TYPE_ITEM_MULTIPLE){
-		printf("no multiple\n");
 		return NULL;
 	}
 	if(node->children == NULL){
-		printf("empty multiple\n");      
 		return NULL;
 	}
 	/* first*/
@@ -551,7 +570,6 @@ config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, cha
 	while(node->prev != NULL) node = node->prev;
 	/* get item */
 	for(; node != NULL;node = node->next) {
-		printf("%s\n", node->name);
 		if(!strcmp(node->name, id)) 
 		{
 			return node;
@@ -573,7 +591,6 @@ void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id)
 void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, char *id, char *value)
 {
 	config_node *cur = cfg_get_multiple_value(cfg, class,key,id);
-	printf("found node: %p\n",cur);
 	if(cur != NULL)
 	{
 		if(cur->value) g_free(cur->value);

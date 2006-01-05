@@ -1,39 +1,9 @@
 #ifndef __CONFIG_1_H__
 #define __CONFIG_1_H__
 #include <gtk/gtk.h>
-#include <libxml/parser.h>
-#include <libxml/tree.h>
 #define CFG_INT_NOT_DEFINED -65536
 
-typedef enum _ConfigNodeType  {
-	TYPE_CATEGORY,
-	TYPE_ITEM,
-	TYPE_ITEM_MULTIPLE
-} ConfigNodeType;
-
-
-
-typedef struct _config_node {
-	struct _config_node *next;
-	struct _config_node *prev;
-	struct _config_node *parent;
-	gchar *name;
-	ConfigNodeType type;
-	/* union this? */
-	struct _config_node *children; /* TYPE_CATEGORY */
-	gchar *value;/* TYPE_ITEM* */
-
-} config_node;
-
-
-typedef struct config_obj
-{
-	gchar *url;
-	config_node *root;
-//	xmlDocPtr xmldoc;
-//	xmlNodePtr root;
-} config_obj;
-
+typedef struct _config_obj config_obj;
 
 typedef struct conf_mult_obj
 {
