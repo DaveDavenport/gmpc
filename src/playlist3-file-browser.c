@@ -294,7 +294,6 @@ void pl3_file_browser_reupdate()
 			pl3_file_browser_reupdate_folder(&parent, "/");
 
 		}
-
 		mpd_data_free(data);
 		gtk_tree_path_free(path);
 	}
@@ -646,10 +645,14 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
 void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
-	if(event->button != 3) return;
+
+	int has_item = 0;
 	GtkWidget *item;
-	GtkWidget *menu = gtk_menu_new();
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
+	GtkWidget *menu = NULL;
+	GtkTreeSelection *sel = NULL;
+	if(event->button != 3) return;
+	menu = gtk_menu_new();
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
 	/* don't show it when where listing custom streams... 
 	 * show always when version 12..  or when searching in playlist.
 	 */
@@ -673,13 +676,16 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 					g_signal_connect(G_OBJECT(item), "activate",
 							G_CALLBACK(pl3_file_browser_show_info), NULL);
+					has_item = 1;
 				}
+
 			}
 			else if(row_type == PL3_ENTRY_PLAYLIST)
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), path);
+				has_item = 1;
 			}
 			else if(row_type == PL3_ENTRY_DIRECTORY)
 			{
@@ -689,27 +695,54 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate",
 						G_CALLBACK(pl3_file_browser_update_folder), NULL);
+				has_item = 1;
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
 			g_free(path);
+			if(row_type != PL3_ENTRY_DIR_UP)
+			{
+				/* replace the replace widget */
+				item = gtk_image_menu_item_new_with_label("Replace");
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
+
+				/* add the delete widget */
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+				gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
+				has_item = 1;
+			}
 		}
+
+
 	}
+	else
+	{
 
-	/* replace the replace widget */
-	item = gtk_image_menu_item_new_with_label("Replace");
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-			gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
+		/* replace the replace widget */
+		item = gtk_image_menu_item_new_with_label("Replace");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
 
-	/* add the delete widget */
-	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
-
-	gtk_widget_show_all(menu);
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		/* add the delete widget */
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+		gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
+		has_item = 1;
+	}
+	if(has_item)
+	{
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+	}
+	else{
+		gtk_widget_destroy(menu);
+	}
 	return;
 }
 void pl3_file_browser_replace_selected()
