@@ -45,7 +45,9 @@ GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
 GtkListStore *pl3_store = NULL;
 GtkListStore *pl2_store= NULL;
+/* The Clipboard */
 
+GQueue *pl3_queue = NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
@@ -634,7 +636,10 @@ void create_playlist3 ()
 		pl3_show_and_position_window();
 		return;
 	}
-
+	if(!pl3_queue)
+	{
+		pl3_queue= g_queue_new();
+	}
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);

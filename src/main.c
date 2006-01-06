@@ -356,6 +356,7 @@ void main_quit()
 	{
 		mpd_disconnect(connection);
 	}
+
 	gtk_main_quit();
 }
 
@@ -436,6 +437,7 @@ void playlist_changed(MpdObj *mi)
 						SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 						SONG_TIME,data->song->time,
 						SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
+						SONG_PATH, data->song->file,
 						-1);
 			}
 			g_free(path);
@@ -462,6 +464,7 @@ void playlist_changed(MpdObj *mi)
 					SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
 					SONG_TIME,data->song->time,
 					SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
+					SONG_PATH, data->song->file,
 					-1);
 
 		}
@@ -646,7 +649,8 @@ void init_playlist_store ()
 			GTK_TYPE_INT,	/* weight int */
 			GTK_TYPE_STRING,	/* stock-id */
 			GTK_TYPE_INT,
-			GTK_TYPE_INT);
+			GTK_TYPE_INT,
+			GTK_TYPE_STRING);
 }
 
 

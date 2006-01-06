@@ -56,6 +56,7 @@ enum store_types
 	SONG_STOCK_ID,
 	SONG_TIME,
 	SONG_TYPE, /* 0 = file, 1 = stream */
+	SONG_PATH,
 	NROWS
 };
 
@@ -68,4 +69,6 @@ void pl3_show_song_info ();
 int pl3_cat_get_selected_browser();
 void pl3_updating_changed(MpdObj *mi, int updating);
 void pl3_database_changed();
+
+extern GQueue *pl3_queue;
 #endif

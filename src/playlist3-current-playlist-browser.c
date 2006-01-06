@@ -51,7 +51,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 void pl2_save_playlist ();
 void pl3_current_playlist_browser_shuffle_playlist();
 void pl3_current_playlist_browser_clear_playlist();
-
+void pl3_current_playlist_browser_add_to_clipboard(int cut);
 
 
 /* external objects */
@@ -300,6 +300,177 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 
 	mpd_status_queue_update(connection);
 }
+void pl3_current_playlist_browser_clipboard_add_foreach(char *path, gpointer data)
+{
+	int pos = GPOINTER_TO_INT(data);
+	mpd_playlist_add(connection,path);
+	g_free(path);
+}
+void pl3_current_playlist_browser_clipboard_paste()
+{
+	int id = 0;
+	if(g_queue_get_length(pl3_queue) > 0)
+	{
+		g_queue_foreach(pl3_queue, (GFunc)(pl3_current_playlist_browser_clipboard_add_foreach), GINT_TO_POINTER(id));
+		/* how do I remove all elements propperly at once? */
+		g_queue_free(pl3_queue);
+		pl3_queue = g_queue_new();
+	}
+}
+void pl3_current_playlist_browser_clipboard_cut()
+{
+	pl3_current_playlist_browser_add_to_clipboard(1);
+}
+void pl3_current_playlist_browser_clipboard_copy()
+{
+	pl3_current_playlist_browser_add_to_clipboard(0);
+}
+
+void pl3_current_playlist_browser_add_to_clipboard(int cut)
+{
+	/* grab the selection from the tree */
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
+	/* check if where connected */
+	/* see if there is a row selected */
+	if (gtk_tree_selection_count_selected_rows (selection) > 0)
+	{
+		GList *list = NULL, *llist = NULL;
+		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		/* start a command list */
+		/* grab the selected songs */
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
+		/* grab the last song that is selected */
+		llist = g_list_first (list);
+		/* remove every selected song one by one */
+		do{
+			GtkTreeIter iter;
+			int value;
+			char *path = NULL;
+			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+			gtk_tree_model_get (model, &iter, SONG_ID, &value,SONG_PATH,&path, -1);
+			g_queue_push_tail(pl3_queue, path);
+			if(cut)
+			{
+				mpd_playlist_queue_delete_id(connection, value);			
+			}
+		} while ((llist = g_list_next (llist)));
+
+		/* close the list, so it will be executed */
+		if(cut)
+		{
+			mpd_playlist_queue_commit(connection);
+		}
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free (list);
+	}
+
+	/* update everything if where still connected */
+	gtk_tree_selection_unselect_all(selection);
+	if(cut)
+	{
+		mpd_status_queue_update(connection);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void pl3_current_playlist_browser_crop_selected_songs()
 {
@@ -400,6 +571,23 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_show_info), NULL);		
 
 
+	/*	
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_cut), NULL);		
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_copy), NULL);		
+
+		
+		if(g_queue_get_length(pl3_queue)>0)
+		{
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_paste), NULL);		
+
+		}
+		*/	
 
 
 		gtk_widget_show_all(menu);
@@ -583,10 +771,10 @@ void pl2_save_playlist ()
 
 void pl3_current_playlist_browser_clear_playlist()
 {
-   mpd_playlist_clear(connection);
+	mpd_playlist_clear(connection);
 }
 
 void pl3_current_playlist_browser_shuffle_playlist()
 {
-   mpd_playlist_shuffle(connection);
+	mpd_playlist_shuffle(connection);
 }

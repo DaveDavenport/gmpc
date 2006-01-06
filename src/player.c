@@ -751,7 +751,7 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 		mpd_status_set_volume(connection,mpd_status_get_volume(connection) -5);
 		return TRUE;
 	}
-	else if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
+	else if (event->keyval == GDK_q && event->state&GDK_CONTROL_MASK)
 	{
 		/*gtk_main_quit();*/
 		main_quit();
@@ -866,12 +866,16 @@ void player_create()
 
 void player_destroy()
 {
-	GtkWidget *mw = glade_xml_get_widget(xml_main_window, "main_window");
-	g_object_unref(layout);
-	g_object_unref(time_layout);
-	if(mw)gtk_widget_destroy(mw);
-	g_object_unref(xml_main_window);
-	if(scroll.msg)g_free(scroll.msg);
-	if(scroll.base_msg)g_free(scroll.base_msg);
-	if(scroll.popup_msg)g_free(scroll.popup_msg);
+	if(xml_main_window)
+	{
+		GtkWidget *mw = glade_xml_get_widget(xml_main_window, "main_window");
+		g_object_unref(layout);
+		g_object_unref(time_layout);
+		if(mw)gtk_widget_destroy(mw);
+		g_object_unref(xml_main_window);
+		xml_main_window = NULL;
+		if(scroll.msg)g_free(scroll.msg);
+		if(scroll.base_msg)g_free(scroll.base_msg);
+		if(scroll.popup_msg)g_free(scroll.popup_msg);
+	}
 }
