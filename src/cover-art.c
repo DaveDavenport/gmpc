@@ -161,7 +161,6 @@ void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer us
 				{
 					if(plugins[i]->coverart->fetch_image)
 					{
-					//	cover_art_thread_fetch_image(plugins[i],song,function,userdata);
 						if(priority > plugins[i]->coverart->get_priority())
 						{
 							plugin = plugins[i];
