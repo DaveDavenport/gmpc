@@ -24,6 +24,7 @@ GList *fetch_que_list = NULL;
 CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 {
 	int i=0;
+	int priority = 1000;
 	int can_try = 0;
 	if(!cfg_get_single_value_as_int_with_default(config, "cover-art", "enable",TRUE))
 	{
@@ -39,9 +40,16 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 				int retv = plugins[i]->coverart->fetch_image_path(song, &temp_path);
 				if(retv == COVER_ART_OK_LOCAL || retv == COVER_ART_OK_REMOTE)
 				{
-					*path = temp_path;
+					if(priority > plugins[i]->coverart->get_priority())
+					{
+						if(*path){
+							g_free(*path);
+							*path = NULL;
+						}
+						*path = temp_path;
+						priority = plugins[i]->coverart->get_priority();
+					}
 					debug_printf(DEBUG_INFO,"%s has image \n", plugins[i]->name);
-					return retv;
 				}
 				else if(retv == COVER_ART_NOT_FETCHED)
 				{
@@ -54,6 +62,12 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 				}
 			}
 		}	
+	}
+	if(*path)
+	{
+		debug_printf(DEBUG_INFO,"returned image: %s", *path);
+		return 	COVER_ART_OK_LOCAL;
+
 	}
 	if(can_try)
 	{
@@ -126,6 +140,8 @@ void cover_art_thread_fetch_image(gmpcPlugin *plug, mpd_Song *song, CoverArtCall
 
 void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer userdata){
 	int i=0;
+	int priority = 1000;
+	gmpcPlugin *plugin = NULL;
 	for(i =  0; plugins[i] != NULL; i++)
 	{
 		if(plugins[i]->plugin_type == GMPC_PLUGIN_COVER_ART)
@@ -145,11 +161,21 @@ void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer us
 				{
 					if(plugins[i]->coverart->fetch_image)
 					{
-						cover_art_thread_fetch_image(plugins[i],song,function,userdata);
+					//	cover_art_thread_fetch_image(plugins[i],song,function,userdata);
+						if(priority > plugins[i]->coverart->get_priority())
+						{
+							plugin = plugins[i];
+							priority = plugins[i]->coverart->get_priority();
+						}
 					}
-					return;
 				}
 			}
 		}	                                                                           	
+
+	}
+	if(plugin != NULL)
+	{
+		debug_printf(DEBUG_INFO,"Trying to fetch image from: %s\n", plugin->name);
+		cover_art_thread_fetch_image(plugin,song,function,userdata);
 	}
 }

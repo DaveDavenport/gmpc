@@ -69,11 +69,11 @@ typedef struct {
 typedef struct {
 	int (*fetch_image_path)(mpd_Song *song, gchar **path);
 	void (*fetch_image)(mpd_Song *song, GSourceFunc function);
-
+	int (*get_priority)(); /* the lower the better */
 } gmpcCoverArtPlugin;
 
 /* Unique number */
-#define PLUGIN_API_VERSION 10
+#define PLUGIN_API_VERSION 11
 
 /* sturcture */
 typedef struct {
