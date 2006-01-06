@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
