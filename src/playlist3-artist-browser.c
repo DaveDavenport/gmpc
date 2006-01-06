@@ -548,7 +548,7 @@ void pl3_artist_browser_show_info()
 			char *path;
 			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get (GTK_TREE_MODEL(pl3_ab_store), &iter, PL3_AB_ARTIST, &path, -1);
+			gtk_tree_model_get (GTK_TREE_MODEL(pl3_ab_store), &iter, PL3_AB_FILE, &path, -1);
 			data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 			while(data != NULL)
 			{
