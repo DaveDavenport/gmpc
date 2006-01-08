@@ -76,11 +76,6 @@ void tray_init()
 
 
 
-
-
-
-
-
 /**/
 gchar *tray_get_tooltip_text()
 {
@@ -190,7 +185,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
 	{
 		int x_tv,y_tv;
-		int x,y;
+		int x=0,y=0;
 		GdkRectangle msize;
 		GtkWidget *tv = (GtkWidget *)tray_icon;
 		GdkScreen *screen;
@@ -210,6 +205,8 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 
+		y+=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
+		x+=cfg_get_single_value_as_int_with_default(config, "tray-icon","x-offset",0);						
 		/* calculate position */
 		switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 		{
@@ -236,16 +233,18 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				gtk_window_move(GTK_WINDOW(tip), x, y);
 				break;
 			case 1:
-				gtk_window_move(GTK_WINDOW(tip), 0,0);
+
+
+				gtk_window_move(GTK_WINDOW(tip), x,y);
 				break;
 			case 2:
-				gtk_window_move(GTK_WINDOW(tip), msize.width-width-8, 0);	
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-8-x, y);	
 				break;
 			case 3:
-				gtk_window_move(GTK_WINDOW(tip), 0, msize.height-height-8);	
+				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-8-y);	
 				break;
 			case 4:
-				gtk_window_move(GTK_WINDOW(tip), msize.width-width-8, msize.height-height-8);	
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-8-x, msize.height-height-8-y);	
 				break;                                                  				
 
 		}
@@ -269,6 +268,14 @@ int tooltip_queue_draw(GtkWidget *widget)
 {
 	gtk_widget_queue_draw(widget);
 	return TRUE;
+}
+
+int popup_press_event(GtkWidget *wid, GdkEventKey *event)
+{
+	tray_leave_cb(wid,NULL,NULL);
+
+
+	return FALSE;
 }
 
 /*
@@ -318,9 +325,10 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 
+
 	eventb = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(tip), "button-press-event",
-			G_CALLBACK(tray_leave_cb), NULL);
+			G_CALLBACK(popup_press_event), NULL);
 
 	gtk_container_add(GTK_CONTAINER(tip), eventb);
 	gtk_widget_set_app_paintable(eventb, TRUE);
@@ -351,6 +359,10 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	/* calculate position */
 
 	gdk_window_get_origin(tv->window, &x_tv, &y_tv);
+	y+=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
+	x+=cfg_get_single_value_as_int_with_default(config, "tray-icon","x-offset",0);			
+
+	
 	/* calculate position */
 	switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 	{
@@ -376,19 +388,18 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			/* place the window */
 			break;
 		case 1:
-			x =y=0;
 			break;
 		case 2:
-			x= msize.width-width;
-			y=0;
+			x= msize.width-width-x;
+			y=y;
 			break;
 		case 3:
-			x = 0;
-			y = msize.height-height;
+			x = x;
+			y = msize.height-height-y;
 			break;
 		case 4:
-			x= msize.width-width;
-			y = msize.height-height;
+			x= msize.width-width-x;
+			y = msize.height-height-y;
 			break;                                                  				
 	}
 	gtk_window_move(GTK_WINDOW(tip),x,y);
