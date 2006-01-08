@@ -588,20 +588,26 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		{
 			player_show();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-			if(playlist_hidden)
+			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
 			{
-				create_playlist3();
-				playlist_hidden = FALSE;
+				if(playlist_hidden)
+				{
+					create_playlist3();
+					playlist_hidden = FALSE;
+				}
 			}
 		}
 		else
 		{
 			player_hide();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-			if(pl3_xml != NULL && !pl3_hidden)
+			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
 			{
-				pl3_close();
-				playlist_hidden = TRUE;
+				if(pl3_xml != NULL && !pl3_hidden)
+				{
+					pl3_close();
+					playlist_hidden = TRUE;
+				}
 			}
 
 		}
@@ -649,7 +655,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);				
-		
+
 		if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY ||
 				mpd_player_get_state(connection) == MPD_STATUS_STATE_PAUSE)
 		{
