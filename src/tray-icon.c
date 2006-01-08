@@ -587,7 +587,7 @@ void tray_icon_info()
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
-		call_id3_window_song(song);
+		call_id3_window_song(mpd_songDup(song));
 	}
 }
 

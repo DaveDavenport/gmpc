@@ -953,7 +953,71 @@ void pl3_database_changed()
 {
 	pl3_file_browser_reupdate();
 }
+static void pl3_player_repeat()
+{
+	mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
+}
+static void pl3_player_random()
+{
+	mpd_player_set_random(connection, !mpd_player_get_random(connection));
+}
 
+int playlist_player_button_press_event (GtkWidget *event_box, GdkEventButton *event)
+{
+	if(!mpd_check_connected(connection)) return FALSE;
+	if(event->button == 1)
+	{
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
+		if(song)
+		{
+			call_id3_window_song(mpd_songDup(song));
+		}
+	}
+	if(event->button == 3)
+	{
+		GtkWidget *item = NULL;
+		GtkWidget *menu = gtk_menu_new();
+
+		item = gtk_check_menu_item_new_with_label("Repeat");
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), mpd_player_get_repeat(connection));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_player_repeat), NULL);	
+
+		item = gtk_check_menu_item_new_with_label("Random");
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), mpd_player_get_random(connection));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_player_random), NULL);	
+		item = gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+
+
+		item = gtk_check_menu_item_new_with_label("Hide Player");
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), player_get_hidden());
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		if(player_get_hidden()) {
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(player_show), NULL);
+		}
+		else {
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(player_hide), NULL);
+		}
+		
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_preferences_window), NULL);
+
+		item = gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);      
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(main_quit), NULL);		
+
+		gtk_widget_show_all(menu);
+		gtk_menu_popup(GTK_MENU(menu), NULL,NULL,NULL,NULL,event->button,event->time);
+	}
+	return FALSE;
+}
 
 /* Playlist player */
 void playlist_player_set_song(MpdObj *mi)
