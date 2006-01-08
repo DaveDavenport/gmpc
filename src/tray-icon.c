@@ -614,7 +614,19 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	}
 	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
 	{
-		play_song();
+		gchar *string = cfg_get_single_value_as_string_with_default(config, "tray-icon","middle-mouse-action","pause");
+		if(!strcmp(string,"pause") || !strcmp(string,"play")){
+			play_song();
+		}
+		else if (!strcmp(string,"next")) {
+			next_song();
+		}
+		else if (!strcmp(string,"prev")) {
+			prev_song();
+		}
+		else if (!strcmp(string,"stop")) {
+			stop_song();
+		}
 	}
 	else if(event->button == 3)
 	{
