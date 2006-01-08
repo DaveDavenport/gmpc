@@ -554,48 +554,59 @@ void init_stock_icons ()
 	/*
 	 * add media-play
 	 */
-	path = gmpc_get_full_image_path("media-play.png");
-	pb = gdk_pixbuf_new_from_file (path, NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "gtk-media-play", set);
-	g_object_unref (G_OBJECT (pb));
+	if(!gtk_icon_factory_lookup_default("gtk-media-play")) {
+		path = gmpc_get_full_image_path("media-play.png");
+		pb = gdk_pixbuf_new_from_file (path, NULL);
+		g_free(path);
+		set = gtk_icon_set_new_from_pixbuf (pb);
+		gtk_icon_factory_add (factory, "gtk-media-play", set);
+		g_object_unref (G_OBJECT (pb));
+	}
+	
 	/*
 	 * add media-stop
 	 */
-	path = gmpc_get_full_image_path("media-stop.png");
-	pb = gdk_pixbuf_new_from_file (path,NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "gtk-media-stop", set);
-	g_object_unref (G_OBJECT (pb));
+	if(!gtk_icon_factory_lookup_default("gtk-media-stop")) {
+		path = gmpc_get_full_image_path("media-stop.png");
+		pb = gdk_pixbuf_new_from_file (path,NULL);
+		g_free(path);
+		set = gtk_icon_set_new_from_pixbuf (pb);
+		gtk_icon_factory_add (factory, "gtk-media-stop", set);
+		g_object_unref (G_OBJECT (pb));
+	}
 	/*
 	 * add media-next
 	 */
-	path = gmpc_get_full_image_path("media-next.png");
-	pb = gdk_pixbuf_new_from_file (path,NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "gtk-media-next", set);
-	g_object_unref (G_OBJECT (pb));
+	if(!gtk_icon_factory_lookup_default("gtk-media-next")) {
+		path = gmpc_get_full_image_path("media-next.png");
+		pb = gdk_pixbuf_new_from_file (path,NULL);
+		g_free(path);
+		set = gtk_icon_set_new_from_pixbuf (pb);
+		gtk_icon_factory_add (factory, "gtk-media-next", set);
+		g_object_unref (G_OBJECT (pb));
+	}
 	/*
 	 * add media-prev
 	 */
-	path = gmpc_get_full_image_path("media-prev.png");
-	pb = gdk_pixbuf_new_from_file (path, NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "gtk-media-previous", set);
-	g_object_unref (G_OBJECT (pb));
+	if(!gtk_icon_factory_lookup_default("gtk-media-previous")) {
+		path = gmpc_get_full_image_path("media-prev.png");
+		pb = gdk_pixbuf_new_from_file (path, NULL);
+		g_free(path);
+		set = gtk_icon_set_new_from_pixbuf (pb);
+		gtk_icon_factory_add (factory, "gtk-media-previous", set);
+		g_object_unref (G_OBJECT (pb));
+	}
 	/*
 	 * add media-pause
 	 */
-	path = gmpc_get_full_image_path("media-pause.png");
-	pb = gdk_pixbuf_new_from_file (path, NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "gtk-media-pause", set);
-	g_object_unref (G_OBJECT (pb));
+	if(!gtk_icon_factory_lookup_default("gtk-media-pause")) {
+		path = gmpc_get_full_image_path("media-pause.png");
+		pb = gdk_pixbuf_new_from_file (path, NULL);
+		g_free(path);
+		set = gtk_icon_set_new_from_pixbuf (pb);
+		gtk_icon_factory_add (factory, "gtk-media-pause", set);
+		g_object_unref (G_OBJECT (pb));
+	}
 	/*
 	 * add player-shuffle
 	 */

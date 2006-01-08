@@ -174,9 +174,10 @@
 			      <signal name="clicked" handler="next_song" last_modification_time="Fri, 02 Dec 2005 12:03:14 GMT"/>
 
 			      <child>
-				<widget class="GtkImage" id="image9">
+				<widget class="GtkImage" id="image11">
 				  <property name="visible">True</property>
-				  <property name="pixbuf">media-next.png</property>
+				  <property name="stock">gtk-media-next</property>
+				  <property name="icon_size">4</property>
 				  <property name="xalign">0.5</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
@@ -203,7 +204,8 @@
 			      <child>
 				<widget class="GtkImage" id="pp_but_play_img">
 				  <property name="visible">True</property>
-				  <property name="pixbuf">media-play.png</property>
+				  <property name="stock">gtk-media-play</property>
+				  <property name="icon_size">4</property>
 				  <property name="xalign">0.5</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
@@ -228,9 +230,10 @@
 			      <signal name="clicked" handler="prev_song" last_modification_time="Fri, 02 Dec 2005 12:03:22 GMT"/>
 
 			      <child>
-				<widget class="GtkImage" id="image7">
+				<widget class="GtkImage" id="image10">
 				  <property name="visible">True</property>
-				  <property name="pixbuf">media-prev.png</property>
+				  <property name="stock">gtk-media-previous</property>
+				  <property name="icon_size">4</property>
 				  <property name="xalign">0.5</property>
 				  <property name="yalign">0.5</property>
 				  <property name="xpad">0</property>
