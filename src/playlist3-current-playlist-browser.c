@@ -61,6 +61,7 @@ extern GtkListStore *pl2_store;
 /* internal */
 GtkWidget *pl3_cp_tree = NULL;
 GtkWidget *pl3_cp_sw = NULL;
+GtkWidget *pl3_cp_vbox = NULL;
 
 int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
@@ -133,6 +134,7 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 void pl3_current_playlist_browser_init()
 {
 	GtkCellRenderer *renderer;
+	GtkWidget *vbox = NULL;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
 
@@ -187,8 +189,11 @@ void pl3_current_playlist_browser_init()
 	pl3_cp_sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add(GTK_CONTAINER(pl3_cp_sw), pl3_cp_tree);
+	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
 
+	gtk_container_add(GTK_CONTAINER(pl3_cp_sw), pl3_cp_tree);
+	gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), pl3_cp_sw, TRUE, TRUE,0);
+	gtk_widget_show_all(pl3_cp_sw);
 
 	gtk_drag_source_set(GTK_WIDGET(pl3_cp_tree), GDK_BUTTON1_MASK, drag_types, 1, GDK_ACTION_COPY);
 	gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW(pl3_cp_tree), drag_types, 1, GDK_ACTION_COPY);
@@ -197,7 +202,7 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 	/* set initial state */
-	g_object_ref(G_OBJECT(pl3_cp_sw));
+	g_object_ref(G_OBJECT(pl3_cp_vbox));
 }
 
 
@@ -632,13 +637,13 @@ void pl3_current_playlist_browser_show_info()
 
 void pl3_current_playlist_browser_selected()
 {
-	if(pl3_cp_tree == NULL)
+	if(pl3_cp_vbox == NULL)
 	{
 		pl3_current_playlist_browser_init();
 	}
 
-	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_sw);
-	gtk_widget_show_all(pl3_cp_sw);
+	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
+	gtk_widget_show(pl3_cp_vbox);
 	pl3_current_playlist_browser_playlist_changed();
 
 
@@ -649,7 +654,7 @@ void pl3_current_playlist_browser_selected()
 }
 void pl3_current_playlist_browser_unselected()
 {
-	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_sw);
+	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
 }
 
 
