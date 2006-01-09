@@ -546,17 +546,24 @@ void pl3_artist_browser_show_info()
 		{
 			GtkTreeIter iter;
 			char *path;
+			int type;
 			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get (GTK_TREE_MODEL(pl3_ab_store), &iter, PL3_AB_FILE, &path, -1);
-			data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-			while(data != NULL)
+			gtk_tree_model_get (GTK_TREE_MODEL(pl3_ab_store), &iter,
+					PL3_AB_FILE, &path,
+					PL3_AB_TYPE, &type,
+					-1);
+			if(type == PL3_ENTRY_SONG)
 			{
-				if(data->type == MPD_DATA_TYPE_SONG)
+				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				while(data != NULL)
 				{
-					call_id3_window_song(mpd_songDup(data->song));
+					if(data->type == MPD_DATA_TYPE_SONG)
+					{
+						call_id3_window_song(mpd_songDup(data->song));
+					}
+					data = mpd_data_get_next(data);
 				}
-				data = mpd_data_get_next(data);
 			}
 			if(path)g_free(path);
 		}
