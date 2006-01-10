@@ -20,7 +20,8 @@ gmpc_SOURCES=\
 	playlist3-find-browser.c\
 	mm-keys.c\
 	qthread.c\
-	config1.c
+	config1.c\
+	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
@@ -69,4 +70,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
+		TreeSearchWidget.h\
 		qthread.h

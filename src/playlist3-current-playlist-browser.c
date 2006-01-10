@@ -32,7 +32,7 @@
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
 #include "config1.h"
-
+#include "TreeSearchWidget.h"
 
 static GtkTargetEntry drag_types[] =
 {
@@ -62,8 +62,7 @@ extern GtkListStore *pl2_store;
 GtkWidget *pl3_cp_tree = NULL;
 GtkWidget *pl3_cp_sw = NULL;
 GtkWidget *pl3_cp_vbox = NULL;
-GtkWidget *pl3_cp_search_hbox=NULL;
-GtkWidget *pl3_cp_search_entry=NULL;
+TreeSearch *tree_search = NULL;
 
 int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
@@ -131,79 +130,12 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 	gtk_tree_selection_unselect_all(selection);
 	return TRUE;
 }
-void pl3_current_playlist_search_next_iter(GtkTreeModel *model,GtkTreeIter *iter) {
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
-	const char *text = gtk_entry_get_text(GTK_ENTRY(pl3_cp_search_entry));
-	regex_t regt;
-	if(strlen(text) == 0)
-	{
-		gtk_tree_selection_unselect_all(selection);       
-		return;
-	}
-	if(regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB)) {
-		gtk_tree_selection_unselect_all(selection);       
-		return;
-	}
-		
-	if(strlen(text) >0)
-	{
-		do{
-			char *title;
-			gtk_tree_model_get(model, iter,SONG_TITLE, &title, -1); 
-			if(!regexec(&regt, title, 0,NULL,0))
-			{
-		
-				GtkTreePath *path = gtk_tree_model_get_path(model, iter);
-				gtk_tree_selection_unselect_all(selection);
-				gtk_tree_selection_select_iter(selection, iter);
-				gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree), path,NULL,TRUE,0.5,0.5);
-				g_free(title);
-				gtk_tree_path_free(path);
-				return;
-			}
-			g_free(title);
-		} while(gtk_tree_model_iter_next(model,  iter));
-		gtk_tree_selection_unselect_all(selection);       
-	}
-	return;
-}
-void pl3_current_playlist_search()
+
+void pl3_current_playlist_search_activate()
 {
-	GtkTreeIter iter;
 	GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
-	if (gtk_tree_selection_count_selected_rows (selection) == 1)
-	{
-
-		GList *list = NULL;
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
-		gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) list->data);
-		pl3_current_playlist_search_next_iter(model,&iter);
-		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
-		g_list_free (list);
-	}
-	else{
-		if(gtk_tree_model_get_iter_first(model, &iter))
-		{
-			pl3_current_playlist_search_next_iter(model,&iter);
-		}
-	}
-
-}
-void pl3_current_playlist_search_hide()
-{
-	gtk_widget_hide(pl3_cp_search_hbox);
-	gtk_widget_grab_focus(pl3_cp_tree);
-
-}
-
-void pl3_current_playlist_search_activate(GtkEntry *entry)
-{
-	const gchar *text = gtk_entry_get_text(entry);
-	GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
-	if (gtk_tree_selection_count_selected_rows (selection) == 1 && strlen(text))            
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
 	{
 		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
 		pl3_current_playlist_browser_row_activated(GTK_TREE_VIEW(pl3_cp_tree),(GtkTreePath *)list->data, NULL);	
@@ -211,14 +143,13 @@ void pl3_current_playlist_search_activate(GtkEntry *entry)
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
 	}
-	pl3_current_playlist_search_hide();
 }
 
 void pl3_current_playlist_browser_init()
 {
-	GtkWidget *wid = NULL;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
+
 	GValue value;
 
 
@@ -285,22 +216,10 @@ void pl3_current_playlist_browser_init()
 
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
-	pl3_cp_search_hbox = gtk_hbox_new(FALSE, 6);
-	wid = gtk_label_new("Find");	
-	gtk_box_pack_start(GTK_BOX(pl3_cp_search_hbox), wid, FALSE, TRUE, 0);
-	pl3_cp_search_entry = gtk_entry_new();
-	g_signal_connect(G_OBJECT(pl3_cp_search_entry), "changed", G_CALLBACK(pl3_current_playlist_search), NULL);
-	g_signal_connect(G_OBJECT(pl3_cp_search_entry), "activate", G_CALLBACK(pl3_current_playlist_search_activate), NULL);
 
-	gtk_box_pack_start(GTK_BOX(pl3_cp_search_hbox), pl3_cp_search_entry, FALSE, TRUE, 0);
-	wid = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
-	gtk_box_pack_start(GTK_BOX(pl3_cp_search_hbox), wid, FALSE, TRUE, 0);
-	wid = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
-	gtk_box_pack_start(GTK_BOX(pl3_cp_search_hbox), wid, FALSE, TRUE, 0);
-	wid = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
-	gtk_box_pack_end(GTK_BOX(pl3_cp_search_hbox), wid, FALSE, TRUE, 0);
-	g_signal_connect_swapped(G_OBJECT(wid), "clicked", G_CALLBACK(pl3_current_playlist_search_hide), pl3_cp_search_hbox);	
-	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), pl3_cp_search_hbox, FALSE, TRUE, 0);	
+	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), SONG_TITLE);
+	g_signal_connect(G_OBJECT(tree_search), "result-activate", G_CALLBACK(pl3_current_playlist_search_activate),NULL);
+	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(tree_search), FALSE, TRUE, 0);	
 	/* set initial state */
 	g_object_ref(G_OBJECT(pl3_cp_vbox));
 }
@@ -706,8 +625,7 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	}
 	else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
 	{
-		gtk_widget_show_all(pl3_cp_search_hbox);
-		gtk_widget_grab_focus(pl3_cp_search_entry);
+		treesearch_start(tree_search);
 		return TRUE;
 	}
 	return pl3_window_key_press_event(GTK_WIDGET(tree),event);

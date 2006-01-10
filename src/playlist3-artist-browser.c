@@ -31,7 +31,7 @@
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
 #include "config1.h"
-
+#include "TreeSearchWidget.h"
 
 void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_artist_browser_show_info();
@@ -54,8 +54,8 @@ enum{
 /* internal */
 GtkWidget *pl3_ab_tree = NULL;
 GtkListStore *pl3_ab_store = NULL;
-GtkWidget *pl3_ab_sw = NULL;
-
+GtkWidget *pl3_ab_vbox = NULL;
+GtkWidget *pl3_ab_tree_search = NULL;
 
 GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 
@@ -69,11 +69,23 @@ int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *eve
 	}
 	return TRUE;
 }
+static void pl3_artist_browser_search_activate()
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_ab_store);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
+	{
+		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
+		pl3_artist_browser_row_activated(GTK_TREE_VIEW(pl3_ab_tree),(GtkTreePath *)list->data);	
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
 
 void pl3_artist_browser_init()
 {
-
-
+	GtkWidget *pl3_ab_sw = NULL;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
@@ -111,7 +123,8 @@ void pl3_artist_browser_init()
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_ab_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_ab_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree)), GTK_SELECTION_MULTIPLE);
-
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_ab_tree), FALSE);
+	
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_ab_tree), "row-activated",G_CALLBACK(pl3_artist_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(pl3_ab_tree), "button-press-event", G_CALLBACK(pl3_artist_browser_button_press_event), NULL);
@@ -122,11 +135,18 @@ void pl3_artist_browser_init()
 	pl3_ab_sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_SHADOW_ETCHED_IN);
+
+	pl3_ab_vbox = gtk_vbox_new(FALSE, 6);
+	
 	gtk_container_add(GTK_CONTAINER(pl3_ab_sw), pl3_ab_tree);
 
-
+	gtk_box_pack_start(GTK_BOX(pl3_ab_vbox), pl3_ab_sw, TRUE, TRUE,0);
+	gtk_widget_show_all(pl3_ab_sw);	
+	pl3_ab_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_ab_tree), PL3_AB_TITLE);
+	gtk_box_pack_end(GTK_BOX(pl3_ab_vbox), pl3_ab_tree_search, FALSE, TRUE,0);
+	g_signal_connect(G_OBJECT(pl3_ab_tree_search),"result-activate", G_CALLBACK(pl3_artist_browser_search_activate), NULL);
 	/* set initial state */
-	g_object_ref(G_OBJECT(pl3_ab_sw));
+	g_object_ref(G_OBJECT(pl3_ab_vbox));
 }
 
 
@@ -526,6 +546,10 @@ void pl3_artist_browser_category_key_press(GdkEventKey *event)
 	{
 		pl3_artist_browser_replace_folder();
 	}
+
+
+
+
 	else if (event->keyval == GDK_Insert)
 	{
 		pl3_artist_browser_add_folder();
@@ -656,12 +680,12 @@ void pl3_artist_browser_selected(GtkWidget *container)
 		pl3_artist_browser_init();
 	}
 
-	gtk_container_add(GTK_CONTAINER(container), pl3_ab_sw);
-	gtk_widget_show_all(pl3_ab_sw);
+	gtk_container_add(GTK_CONTAINER(container), pl3_ab_vbox);
+	gtk_widget_show(pl3_ab_vbox);
 }
 void pl3_artist_browser_unselected(GtkWidget *container)
 {
-	gtk_container_remove(GTK_CONTAINER(container),pl3_ab_sw);
+	gtk_container_remove(GTK_CONTAINER(container),pl3_ab_vbox);
 }
 
 void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
@@ -804,6 +828,10 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	{
 		pl3_artist_browser_replace_selected();
 	}
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f)
+	{
+		treesearch_start(TREESEARCH(pl3_ab_tree_search));
+	}                                                                	
 	else if(event->keyval == GDK_Insert)
 	{
 		pl3_artist_browser_add_selected();

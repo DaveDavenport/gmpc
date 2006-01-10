@@ -32,6 +32,7 @@
 #include "playlist3.h"
 #include "playlist3-file-browser.h"
 #include "config1.h"
+#include "TreeSearchWidget.h"
 
 void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
@@ -59,7 +60,8 @@ GtkTreeRowReference *pl3_fb_tree_ref = NULL;
 /* internal */
 GtkWidget *pl3_fb_tree = NULL;
 GtkListStore *pl3_fb_store = NULL;
-GtkWidget *pl3_fb_sw = NULL;
+GtkWidget *pl3_fb_vbox = NULL;
+GtkWidget *pl3_fb_tree_search = NULL;
 
 int pl3_file_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
@@ -71,8 +73,24 @@ int pl3_file_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event
 	return TRUE;
 }
 
+static void pl3_file_browser_search_activate()
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
+	{
+		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
+		pl3_file_browser_row_activated(GTK_TREE_VIEW(pl3_fb_tree),(GtkTreePath *)list->data);	
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
+
+
 void pl3_file_browser_init()
 {
+	GtkWidget *pl3_fb_sw = NULL;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
@@ -108,6 +126,7 @@ void pl3_file_browser_init()
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree)), GTK_SELECTION_MULTIPLE);
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
 
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
@@ -120,10 +139,20 @@ void pl3_file_browser_init()
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_fb_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_fb_sw), GTK_SHADOW_ETCHED_IN);
 	gtk_container_add(GTK_CONTAINER(pl3_fb_sw), pl3_fb_tree);
+	pl3_fb_vbox = gtk_vbox_new(FALSE, 6);
 
+
+	gtk_box_pack_start(GTK_BOX(pl3_fb_vbox), pl3_fb_sw, TRUE, TRUE,0);
+	gtk_widget_show_all(pl3_fb_sw);	
+	pl3_fb_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_fb_tree), PL3_FB_TITLE);
+	gtk_box_pack_end(GTK_BOX(pl3_fb_vbox), pl3_fb_tree_search, FALSE, TRUE,0);
+	g_signal_connect(G_OBJECT(pl3_fb_tree_search),"result-activate", G_CALLBACK(pl3_file_browser_search_activate), NULL);
+
+
+	
 	/* set initial state */
 	debug_printf(DEBUG_INFO,"initialized current playlist treeview\n");
-	g_object_ref(G_OBJECT(pl3_fb_sw));
+	g_object_ref(G_OBJECT(pl3_fb_vbox));
 }
 
 void pl3_file_browser_add_folder()
@@ -480,6 +509,10 @@ int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	{
 		pl3_file_browser_replace_selected();
 	}
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f)
+	{
+		treesearch_start(TREESEARCH(pl3_fb_tree_search));
+	}                                                                		
 	else if(event->keyval == GDK_Insert)
 	{
 		pl3_file_browser_add_selected();
@@ -515,12 +548,12 @@ void pl3_file_browser_selected()
 		pl3_file_browser_init();
 	}
 
-	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_sw);
-	gtk_widget_show_all(pl3_fb_sw);
+	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_vbox);
+	gtk_widget_show(pl3_fb_vbox);
 }
 void pl3_file_browser_unselected()
 {
-	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_sw);
+	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_vbox);
 }
 
 
