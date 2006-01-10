@@ -56,6 +56,7 @@ GtkWidget *pl3_ab_tree = NULL;
 GtkListStore *pl3_ab_store = NULL;
 GtkWidget *pl3_ab_sw = NULL;
 
+
 GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 
 
@@ -71,6 +72,8 @@ int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *eve
 
 void pl3_artist_browser_init()
 {
+
+
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
@@ -120,6 +123,7 @@ void pl3_artist_browser_init()
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_SHADOW_ETCHED_IN);
 	gtk_container_add(GTK_CONTAINER(pl3_ab_sw), pl3_ab_tree);
+
 
 	/* set initial state */
 	g_object_ref(G_OBJECT(pl3_ab_sw));
