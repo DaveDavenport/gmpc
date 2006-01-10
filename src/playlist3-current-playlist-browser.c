@@ -705,7 +705,6 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	}
 	else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
 	{
-		printf("test\n");
 		gtk_widget_show_all(pl3_cp_search_hbox);
 		gtk_widget_grab_focus(pl3_cp_search_entry);
 		return TRUE;
