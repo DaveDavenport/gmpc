@@ -198,6 +198,16 @@ static int treesearch_entry_key_press(GtkWidget *entry, GdkEventKey *event, Tree
 		treesearch_close(NULL,ts);
 		return TRUE;
 	}
+	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return)&& event->state&GDK_CONTROL_MASK)
+	{
+		treesearch_entry_activate(NULL,ts);
+		return TRUE;
+	}
+	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return))
+	{
+		treesearch_close(NULL,ts);
+		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -214,7 +224,7 @@ static void treesearch_init (TreeSearch *ts)
 	ts->entry = gtk_entry_new();
 	gtk_box_pack_start(GTK_BOX(vbox), ts->entry, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(ts->entry), "changed", G_CALLBACK(treesearch_entry_changed), ts);
-	g_signal_connect(G_OBJECT(ts->entry), "activate", G_CALLBACK(treesearch_entry_activate), ts);
+//	g_signal_connect(G_OBJECT(ts->entry), "activate", G_CALLBACK(treesearch_entry_activate), ts);
 	g_signal_connect(G_OBJECT(ts->entry), "key-press-event", G_CALLBACK(treesearch_entry_key_press), ts);
 
 	ts->but_down = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
