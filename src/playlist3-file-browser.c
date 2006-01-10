@@ -463,7 +463,7 @@ int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkE
 
 void pl3_file_browser_cat_key_press(GdkEventKey *event)
 {
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
 		pl3_file_browser_replace_folder();
 	}
@@ -476,7 +476,7 @@ void pl3_file_browser_cat_key_press(GdkEventKey *event)
 
 int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
 		pl3_file_browser_replace_selected();
 	}

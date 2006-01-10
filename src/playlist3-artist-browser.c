@@ -522,7 +522,7 @@ void pl3_artist_browser_replace_folder()
 
 void pl3_artist_browser_category_key_press(GdkEventKey *event)
 {
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert )
+	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert )
 	{
 		pl3_artist_browser_replace_folder();
 	}
@@ -800,7 +800,7 @@ void pl3_artist_browser_add_selected()
 
 int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
 		pl3_artist_browser_replace_selected();
 	}

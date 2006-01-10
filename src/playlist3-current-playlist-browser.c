@@ -200,9 +200,10 @@ void pl3_current_playlist_search_hide()
 
 void pl3_current_playlist_search_activate(GtkEntry *entry)
 {
+	const gchar *text = gtk_entry_get_text(entry);
 	GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
-	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
+	if (gtk_tree_selection_count_selected_rows (selection) == 1 && strlen(text))            
 	{
 		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
 		pl3_current_playlist_browser_row_activated(GTK_TREE_VIEW(pl3_cp_tree),(GtkTreePath *)list->data, NULL);	

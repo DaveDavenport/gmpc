@@ -957,7 +957,7 @@ void pl3_tag_browser_show_info()
 
 int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
-	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
 		pl3_tag_browser_replace_selected();
 	}
