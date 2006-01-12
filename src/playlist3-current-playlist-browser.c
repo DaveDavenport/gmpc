@@ -170,15 +170,19 @@ void pl3_current_playlist_browser_init()
 	memset(&value, 0, sizeof(value));
 	g_value_init(&value, G_TYPE_BOOLEAN);
 	g_value_set_boolean(&value, TRUE);
-	memset(&value, 0, sizeof(value));
+	
+
+	gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE, "weight", WEIGHT_INT,NULL);
+	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);                                    	
+
 
 #if GTK_CHECK_VERSION(2,6,0)
+	memset(&value, 0, sizeof(value));
 	g_value_init(&value, G_TYPE_INT);
 	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
 	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
 #endif
-	gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE, "weight", WEIGHT_INT,NULL);
-	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);                                    	
+
 
 
 	/* set up the tree */
