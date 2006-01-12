@@ -1138,7 +1138,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		}
 
 	}
-	if(what&MPD_CST_SONGID || what&MPD_CST_SONGPOS)
+	if(what&MPD_CST_SONGID || what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
 		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
 		{
@@ -1149,13 +1149,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				mpd_player_get_state(mi) != MPD_STATUS_STATE_UNKNOWN)
 		{
 			playlist_player_update_image(mi);
-		}
-	}
-	if(what&MPD_CST_PLAYLIST)
-	{
-		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
-		{
-			playlist_player_set_song(mi);                		
 		}
 	}
 	if(what&MPD_CST_ELAPSED_TIME)
