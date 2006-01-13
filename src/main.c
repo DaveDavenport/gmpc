@@ -880,7 +880,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 void show_error_message(gchar *string)
 {
 	GtkWidget *dialog = NULL;
-	dialog = gtk_message_dialog_new_with_markup(NULL,                                
+	dialog = gtk_message_dialog_new_with_markup(NULL,
 			GTK_DIALOG_DESTROY_WITH_PARENT,
 			GTK_MESSAGE_ERROR,
 			GTK_BUTTONS_CLOSE,

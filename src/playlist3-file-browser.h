@@ -10,4 +10,9 @@ int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkE
 void pl3_file_browser_cat_key_press(GdkEventKey *event);
 /* testing */
 void pl3_file_browser_reupdate();
+
+
+
+void pl3_file_browser_disconnect();
+
 #endif

@@ -74,7 +74,6 @@ gmpcPlugin connection_plug = {
 int update_mpd_status()
 {
 	if(!mpd_check_connected(connection)) return TRUE;
-//	mpd_status_queue_update(connection);
 	mpd_status_update(connection);
 
 	/* unlock it */
@@ -458,11 +457,12 @@ void server_pref_construct(GtkWidget *container)
 		update_server_stats();
 		if(!mpd_check_connected(connection))
 		{
+			gtk_widget_set_sensitive(vbox,FALSE);
 			gtk_widget_show(glade_xml_get_widget(server_pref_xml, "hb_warning_mesg"));
-			return;
 		}
 		else
 		{
+			gtk_widget_set_sensitive(vbox,TRUE);
 			gtk_widget_hide(glade_xml_get_widget(server_pref_xml, "hb_warning_mesg"));
 		}
 
@@ -579,16 +579,6 @@ void update_auth_settings()
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth")),string);
 	cfg_free_string(string);
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

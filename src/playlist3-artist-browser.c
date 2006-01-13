@@ -60,6 +60,11 @@ GtkWidget *pl3_ab_tree_search = NULL;
 GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 
 
+GtkTreeRowReference *pl3_ab_tree_ref = NULL;
+
+
+
+
 int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
@@ -157,17 +162,29 @@ void pl3_artist_browser_init()
 
 void pl3_artist_browser_add()
 {
-   GtkTreeIter iter,child;
-   gtk_tree_store_append(pl3_tree, &iter, NULL);
-   gtk_tree_store_set(pl3_tree, &iter, 
-	 PL3_CAT_TYPE, PL3_BROWSE_ARTIST,
-	 PL3_CAT_TITLE, "Browse Artists",        	
-	 PL3_CAT_INT_ID, "",
-	 PL3_CAT_ICON_ID, "media-artist",
-	 PL3_CAT_PROC, FALSE,
-	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-   /* add fantom child for lazy tree */
-   gtk_tree_store_append(pl3_tree, &child, &iter);
+	GtkTreePath *path;
+	GtkTreeIter iter,child;
+	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gtk_tree_store_set(pl3_tree, &iter, 
+			PL3_CAT_TYPE, PL3_BROWSE_ARTIST,
+			PL3_CAT_TITLE, "Browse Artists",        	
+			PL3_CAT_INT_ID, "",
+			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_PROC, FALSE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+	/* add fantom child for lazy tree */
+	gtk_tree_store_append(pl3_tree, &child, &iter);
+	if(pl3_ab_tree_ref)
+	{
+		gtk_tree_row_reference_free(pl3_ab_tree_ref);
+		pl3_ab_tree_ref = NULL;
+	}
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+	if(path)
+	{
+		pl3_ab_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
+		gtk_tree_path_free(path);
+	}
 }
 
 void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *ref)
@@ -864,4 +881,27 @@ int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, Gd
 		return 1;
 	}
 	return 0;
+}
+
+
+
+void pl3_artist_browser_disconnect()
+{
+	if(pl3_ab_tree_ref) {
+		GtkTreeIter iter;
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
+		if(path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path))
+		{
+			GtkTreeIter child;
+			int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter);
+			while(valid){
+				valid = gtk_tree_store_remove(pl3_tree,&child);
+			}
+			/* set unopened */
+			gtk_tree_store_set(pl3_tree,&iter,PL3_CAT_PROC,FALSE,-1);
+			/* add phantom child */
+			gtk_tree_store_append(pl3_tree, &child, &iter);
+		}
+		if(pl3_ab_store) gtk_list_store_clear(pl3_ab_store);
+	}
 }

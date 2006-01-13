@@ -148,8 +148,6 @@ void pl3_file_browser_init()
 	gtk_box_pack_end(GTK_BOX(pl3_fb_vbox), pl3_fb_tree_search, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(pl3_fb_tree_search),"result-activate", G_CALLBACK(pl3_file_browser_search_activate), NULL);
 
-
-	
 	/* set initial state */
 	debug_printf(DEBUG_INFO,"initialized current playlist treeview\n");
 	g_object_ref(G_OBJECT(pl3_fb_vbox));
@@ -857,4 +855,26 @@ void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string)
 
 	}
 	gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+void pl3_file_browser_disconnect()
+{
+
+	if(pl3_fb_tree_ref) {
+		GtkTreeIter iter;
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
+		if(path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path))
+		{
+			GtkTreeIter child;
+			int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter);
+			while(valid){
+				valid = gtk_tree_store_remove(pl3_tree,&child);
+			}
+			/* set unopened */
+			gtk_tree_store_set(pl3_tree,&iter,PL3_CAT_PROC,FALSE,-1);
+			/* add phantom child */
+			gtk_tree_store_append(pl3_tree, &child, &iter);
+		}
+	}
+	if(pl3_fb_store)gtk_list_store_clear(pl3_fb_store);
 }

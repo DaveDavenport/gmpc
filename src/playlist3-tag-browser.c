@@ -21,11 +21,16 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
 
 void pl3_custom_tag_browser_reload();
-
+void tag_connection(MpdObj *mi, int connect,gpointer user);
 
 /* Connection settings plugin */
 void tag_pref_construct(GtkWidget *container);
 void tag_pref_destroy(GtkWidget *container);
+
+
+GtkTreeRowReference *pl3_tag_tree_ref = NULL;
+
+
 GladeXML *tag_pref_xml = NULL;
 gmpcPrefPlugin tag_gpp = {
 	tag_pref_construct,
@@ -48,12 +53,13 @@ gmpcPlugin tag_plug = {
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL, /* initialize */
-	NULL,
-	&tag_gbp,
-	NULL,
-	NULL,
-	&tag_gpp
+	NULL,			/* name*/
+	NULL,			/* init */
+	&tag_gbp,		/* Browser */
+	NULL,			/* status changed */
+	&tag_connection,	/* connection */
+	&tag_gpp,		/* Preferences */
+	NULL			/*cover art */
 };
 
 void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
@@ -210,6 +216,7 @@ void pl3_custom_tag_browser_list_add(GtkTreeIter *iter)
 }
 void pl3_custom_tag_browser_add()
 {
+	GtkTreePath *path;
 	if(mpd_server_check_version(connection,0,12,0))
 	{
 		GtkTreeIter iter;
@@ -217,7 +224,7 @@ void pl3_custom_tag_browser_add()
 
 		/* add the root node to tag-browser */
 		gtk_tree_store_append(pl3_tree, &iter, NULL);
-		gtk_tree_store_set(pl3_tree, &iter, 
+		gtk_tree_store_set(pl3_tree, &iter,
 				PL3_CAT_TYPE, tag_plug.id,
 				PL3_CAT_TITLE, _("Tag Browser"),
 				PL3_CAT_INT_ID, "",
@@ -227,11 +234,21 @@ void pl3_custom_tag_browser_add()
 				PL3_CAT_BROWSE_FORMAT, "",
 				-1);
 		pl3_custom_tag_browser_list_add(&iter);
-	}
-	else
+
+	if(pl3_tag_tree_ref)
 	{
-		debug_printf(DEBUG_INFO, "pl3_custom_tag_browser_add(): Option not supported for mpd version < 0.12");
+		gtk_tree_row_reference_free(pl3_tag_tree_ref);
+		pl3_tag_tree_ref = NULL;
 	}
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+	if(path)
+	{
+		pl3_tag_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
+		gtk_tree_path_free(path);
+	}
+
+	}
+
 }
 
 
@@ -1182,6 +1199,31 @@ void tag_pref_construct(GtkWidget *container)
 		pref_id3b_init();
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(tag_pref_xml);
+	}
+}
+
+void tag_connection(MpdObj *mi, int connect, gpointer data)
+{
+	if(!pl3_tree) return;
+	if(connect) {
+		if(!pl3_tag_tree_ref) {
+			/* add tag list */
+			pl3_custom_tag_browser_add();
+		}
+	}else{
+		GtkTreeIter iter;
+		if(pl3_tag_tree_ref) {
+			/* remove tag list */
+			GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_tag_tree_ref);
+			if(path){
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path)) {
+				gtk_tree_store_remove(pl3_tree, &iter);
+				}
+				gtk_tree_path_free(path);
+			}
+			gtk_tree_row_reference_free(pl3_tag_tree_ref);
+			pl3_tag_tree_ref = NULL;
+		}
 	}
 }
 

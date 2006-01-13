@@ -624,3 +624,9 @@ void pl3_find_browser_search_playlist()
 		gtk_widget_grab_focus(pl3_findb_entry);
 	}
 }
+
+void pl3_find_browser_disconnect()
+{
+	if(pl3_findb_store) gtk_list_store_clear(pl3_findb_store);
+}
+
