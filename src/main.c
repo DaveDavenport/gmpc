@@ -116,16 +116,6 @@ char *gmpc_get_full_glade_path(char *filename)
 
 
 
-void main_trigger_update ()
-{
-	if (!mpd_check_connected(connection))
-	{
-		update_mpd_status ();
-		update_interface ();
-	}
-}
-
-
 /*
  * sets default values in the main struct's
  */

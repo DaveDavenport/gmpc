@@ -169,7 +169,7 @@ void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer us
 					}
 				}
 			}
-		}	                                                                           	
+		}
 
 	}
 	if(plugin != NULL)
@@ -177,4 +177,39 @@ void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer us
 		debug_printf(DEBUG_INFO,"Trying to fetch image from: %s\n", plugin->name);
 		cover_art_thread_fetch_image(plugin,song,function,userdata);
 	}
+}
+
+CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar **path)
+{
+	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
+	MpdData *data = mpd_playlist_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
+			MPD_TAG_ITEM_ALBUM,album,-1);
+	if(data){
+		CoverArtResult ret =COVER_ART_NO_IMAGE;
+		if(data->type == MPD_DATA_TYPE_SONG)
+		{
+			 ret = cover_art_fetch_image_path(data->song,path);
+		}
+		mpd_data_free(data);
+		return ret;
+	}
+
+	return COVER_ART_NO_IMAGE;
+}
+
+
+void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback function,gpointer userdata)
+{
+	if(!mpd_server_check_version(connection,0,12,0))return;
+	MpdData *data = mpd_playlist_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
+			MPD_TAG_ITEM_ALBUM,album,-1);
+	if(data){
+		if(data->type == MPD_DATA_TYPE_SONG)
+		{
+			 cover_art_fetch_image(data->song,function, userdata);
+		}
+		mpd_data_free(data);
+	}
+
+	return ;
 }

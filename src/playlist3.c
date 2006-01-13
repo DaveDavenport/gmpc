@@ -1142,7 +1142,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
 		{
-			printf("song change\n");
 			playlist_player_set_song(mi);
 		}
 		if(mpd_player_get_state(mi) != MPD_STATUS_STATE_STOP &&

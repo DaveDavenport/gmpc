@@ -10,7 +10,8 @@ typedef enum _CoverArtResult{
 
 CoverArtResult cover_art_fetch_image_path (mpd_Song *song,gchar **path);
 void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function, gpointer userdata);
-
+void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback function,gpointer userdata);
+CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar **path);
 
 
 

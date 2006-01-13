@@ -174,7 +174,7 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 {
 	if(song == NULL || ref == NULL) return;
 	else
-	{		
+	{
 		GtkTreeIter iter;
 		GtkTreePath *path = gtk_tree_row_reference_get_path(ref);
 		if(path)
@@ -186,7 +186,7 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 				int ret = 0;
 				ret = cover_art_fetch_image_path(song, &path); 
 				if(ret == COVER_ART_OK_LOCAL)
-				{                                                                					
+				{
 					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",80);
 					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
@@ -195,7 +195,7 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 				}
 			}
 			gtk_tree_path_free(path);
-		}	
+		}
 	}
 	gtk_tree_row_reference_free(ref);
 }
@@ -256,16 +256,12 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	if(depth == 1)
 	{
 		int albums = 0;
-		mpd_Song song;
 		MpdData *data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
 			char *path = NULL;
 			int ret = 0;
 			GdkPixbuf *pb = NULL;
-			song.artist = artist;
-			song.album = data->tag;			
-			song.file = NULL;
-			ret = cover_art_fetch_image_path(&song, &path); 
+			ret = cover_art_fetch_image_path_aa(artist,data->tag, &path);
 			if(ret == COVER_ART_OK_LOCAL)
 			{
 				int size = cfg_get_single_value_as_int_with_default(config, "cover-art","browser-size", 80);
@@ -288,7 +284,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			{
 				GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
 				GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
-				cover_art_fetch_image(&song,
+				cover_art_fetch_image_aa(artist,data->tag,
 						(CoverArtCallback)pl3_artist_browser_cover_art_fetched,rowref);
 				gtk_tree_path_free(path);
 			}

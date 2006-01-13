@@ -254,7 +254,8 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 			if(ppath && data)
 			{
 				MpdData *list = NULL;
-				for(list = mpd_data_get_first(data);!mpd_data_is_last(list) && !found;list = mpd_data_get_next(list))
+				for(list = mpd_data_get_first(data);!mpd_data_is_last(list) && !found;
+						list = mpd_data_get_next(list))
 				{
 					if(data->type ==  MPD_DATA_TYPE_DIRECTORY)
 					{
@@ -273,10 +274,12 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter);
 				data = mpd_data_delete_item(data);
 			}
+			g_free(ppath);
 		}
 		if(data)
 		{
 			GtkTreeIter child,child2;
+			data = mpd_data_get_first(data);
 			while (data != NULL)
 			{
 				if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -512,7 +515,7 @@ int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f)
 	{
 		treesearch_start(TREESEARCH(pl3_fb_tree_search));
-	}                                                                		
+	}
 	else if(event->keyval == GDK_Insert)
 	{
 		pl3_file_browser_add_selected();

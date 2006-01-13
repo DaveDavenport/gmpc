@@ -3587,7 +3587,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
 	  <property name="update_policy">GTK_UPDATE_ALWAYS</property>
 	  <property name="snap_to_ticks">False</property>
 	  <property name="wrap">False</property>
-	  <property name="adjustment">1.05 0.05 60 0.05 10 10</property>
+	  <property name="adjustment">1.04999995232 0.0500000007451 60 0.0500000007451 10 10</property>
 	  <signal name="changed" handler="update_preferences_information" last_modification_time="Sun, 18 Jan 2004 21:20:41 GMT"/>
 	</widget>
 	<packing>

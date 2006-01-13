@@ -58,7 +58,7 @@ int plugin_load(char *path, const char *file)
 		show_error_message(message);
 		g_free(string);
 		g_free(message);
-		g_module_close(handle);                                                                 		
+		g_module_close(handle);
 		return 1;
 	}
 
@@ -97,7 +97,7 @@ void plugin_load_dir(gchar *path)
 			{
 				if(plugin_load(path,dirname)){
 					debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
-				
+
 				}
 			}
 			g_free(full_path);
