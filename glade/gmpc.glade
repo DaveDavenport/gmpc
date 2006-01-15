@@ -2781,7 +2781,7 @@ Lower Right Corner</property>
 	  <child>
 	    <widget class="GtkLabel" id="label104">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;&lt;i&gt;These setting will apply when reconnected &lt;/i&gt;&lt;/span&gt;</property>
+	      <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;&lt;i&gt;Changes become active on reconnect&lt;/i&gt;&lt;/span&gt;</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -2856,7 +2856,7 @@ Lower Right Corner</property>
 		<widget class="GtkCheckButton" id="cb_fading">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">enable crossfade</property>
+		  <property name="label" translatable="yes">Enable crossfade</property>
 		  <property name="use_underline">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
