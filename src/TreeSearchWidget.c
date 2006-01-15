@@ -6,7 +6,7 @@
 static void treesearch_class_init          (TreeSearchClass *klass);
 static void treesearch_init                (TreeSearch      *ts);
 static void treesearch_close(GtkButton *button, TreeSearch *ts);
-
+static void treesearch_entry_changed(GtkEntry *entry, TreeSearch *ts);
 enum {
 	RESULT_ACTIVATE,
 	LAST_SIGNAL
@@ -72,6 +72,7 @@ void treesearch_start(TreeSearch *ts)
 {
 	gtk_widget_show(GTK_WIDGET(ts));
 	gtk_widget_grab_focus(ts->entry);
+	treesearch_entry_changed(ts->entry, ts);
 }
 
 static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter) {
