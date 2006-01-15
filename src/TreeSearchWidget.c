@@ -122,6 +122,14 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 						}
 					}
 				}
+				else{
+					GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+					gtk_tree_selection_unselect_all(selection);                                       					
+					gtk_tree_selection_select_iter(selection, &iter);
+					gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(ts->treeview), path,NULL,TRUE,0.5,0.5);
+					gtk_tree_view_set_cursor(GTK_TREE_VIEW(ts->treeview), path, NULL,0);
+					gtk_tree_path_free(path);
+				}
 		}
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
