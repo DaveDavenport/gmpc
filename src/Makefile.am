@@ -54,7 +54,8 @@ CFLAGS = @CFLAGS@\
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		cover-art.h	\
-		config1.h
+		config1.h	\
+		qthread.h
 gmpcincludedir =$(includedir)/gmpc/
 
 EXTRA_DIST = 	playlist3.h\
@@ -70,5 +71,4 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
-		TreeSearchWidget.h\
-		qthread.h
+		TreeSearchWidget.h
