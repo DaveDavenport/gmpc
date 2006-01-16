@@ -21,5 +21,5 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 
 
 
-
+void cover_art_init();
 #endif

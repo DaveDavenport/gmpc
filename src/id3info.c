@@ -62,7 +62,7 @@ void id3_status_update()
 	if(song == NULL) return;
 	if(song->id == mpd_player_get_current_song_id(connection) && song->id != MPD_SONG_NO_ID)
 	{
-		char *temp = g_strdup_printf("%i kb/s", mpd_status_get_bitrate(connection));
+		char *temp = g_strdup_printf("%i kbps", mpd_status_get_bitrate(connection));
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
 		g_free(temp);
 

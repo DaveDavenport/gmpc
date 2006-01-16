@@ -187,7 +187,7 @@ int main (int argc, char **argv)
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	qthread_init();
-
+	cover_art_init();
 	/*
 	 * stock icons
 	 */
@@ -711,7 +711,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 
 	/* make the player handle signals */
 	player_mpd_state_changed(mi,what,userdata);
-
+	id3_status_update();
 
 	for(i=0; i< num_plugins; i++)
 	{

@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+
+
 #include "main.h"
 #include "plugin.h"
 
@@ -20,6 +25,8 @@ typedef struct _ca_callback{
 } ca_callback;
 GList *fetch_que_list = NULL;
 
+config_obj *cover_index= NULL;
+
 
 CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 {
@@ -29,6 +36,15 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	if(!cfg_get_single_value_as_int_with_default(config, "cover-art", "enable",TRUE))
 	{
 		return COVER_ART_NO_IMAGE;
+	}
+
+	if(song->artist && song->album){
+		gchar *cipath = cfg_get_single_value_as_string(cover_index, song->artist, song->album);
+		if(cipath)
+		{
+			*path = g_strdup(cipath);
+			return COVER_ART_OK_LOCAL;
+		}
 	}
 	for(i =  0; plugins[i] != NULL; i++)
 	{
@@ -65,6 +81,9 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	}
 	if(*path)
 	{
+		if(song->artist && song->album){
+			cfg_set_single_value_as_string(cover_index, song->artist, song->album,*path);
+		}
 		debug_printf(DEBUG_INFO,"returned image: %s", *path);
 		return 	COVER_ART_OK_LOCAL;
 
@@ -188,7 +207,7 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 		CoverArtResult ret =COVER_ART_NO_IMAGE;
 		if(data->type == MPD_DATA_TYPE_SONG)
 		{
-			 ret = cover_art_fetch_image_path(data->song,path);
+			ret = cover_art_fetch_image_path(data->song,path);
 		}
 		mpd_data_free(data);
 		return ret;
@@ -206,10 +225,27 @@ void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback func
 	if(data){
 		if(data->type == MPD_DATA_TYPE_SONG)
 		{
-			 cover_art_fetch_image(data->song,function, userdata);
+			cover_art_fetch_image(data->song,function, userdata);
 		}
 		mpd_data_free(data);
 	}
 
 	return ;
+}
+
+
+void cover_art_init()
+{
+	gchar *url = g_strdup_printf("%s/.covers/", g_get_home_dir());
+	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
+		if(mkdir(url, 0755)<0){
+			g_error("Cannot make %s\n", url);
+		}
+	}
+	g_free(url);
+	url = g_strdup_printf("%s/.covers/covers.db", g_get_home_dir());
+
+	cover_index = cfg_open(url);
+
+	g_free(url);
 }
