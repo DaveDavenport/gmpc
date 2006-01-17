@@ -66,6 +66,10 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 		gchar *cipath = cfg_get_single_value_as_string(cover_index, song->artist, song->album);
 		if(cipath)
 		{
+			if(strlen(cipath) == 0)
+			{
+				return COVER_ART_NO_IMAGE;
+			}
 			*path = g_strdup(cipath);
 			return COVER_ART_OK_LOCAL;
 		}
@@ -115,6 +119,11 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	if(can_try)
 	{
 		return COVER_ART_NOT_FETCHED;
+	}
+	else{
+		if(song->artist && song->album){
+			cfg_set_single_value_as_string(cover_index, song->artist, song->album,"");
+		}
 	}
 	return COVER_ART_NO_IMAGE;
 }
@@ -272,12 +281,12 @@ void cover_art_init()
 	g_free(url);
 
 	/* test code 
-	conf_mult_obj *mult = cfg_get_class_list(cover_index);
-	for(;mult->next != NULL; mult = mult->next){
-		printf("%s\n", mult->key);
-	}
-	cfg_free_multiple(mult);
-	*/
+	   conf_mult_obj *mult = cfg_get_class_list(cover_index);
+	   for(;mult->next != NULL; mult = mult->next){
+	   printf("%s\n", mult->key);
+	   }
+	   cfg_free_multiple(mult);
+	   */
 }
 void cover_art_manager_close(GtkWidget *widget)
 {
@@ -362,7 +371,11 @@ void cover_art_manager_load_tree(GtkTreeStore *cam_ts)
 					int size = cfg_get_single_value_as_int_with_default(config,
 							"cover-art", "browser-size",80);
 
-					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(mult2->value,size,size,NULL);
+					GdkPixbuf *pb = NULL;
+					if(mult2->value != NULL)
+					{
+						pb =gdk_pixbuf_new_from_file_at_size(mult2->value,size,size,NULL);
+					}
 
 
 					gtk_tree_store_append(cam_ts, &child,&iter);
@@ -373,7 +386,7 @@ void cover_art_manager_load_tree(GtkTreeStore *cam_ts)
 							3, mult2->key, /*album */
 							4, 1,
 							-1);
-					g_object_unref(pb);
+					if(pb)g_object_unref(pb);
 					g_free(string);
 					if(mult2->next == NULL){
 						cfg_free_multiple(mult2);
