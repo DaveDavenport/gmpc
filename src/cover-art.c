@@ -33,8 +33,10 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	int i=0;
 	int priority = 1000;
 	int can_try = 0;
-	if(!cfg_get_single_value_as_int_with_default(config, "cover-art", "enable",TRUE))
-	{
+	if(!cfg_get_single_value_as_int_with_default(config, "cover-art", "enable",TRUE)) {
+		return COVER_ART_NO_IMAGE;
+	}
+	if(song == NULL) {
 		return COVER_ART_NO_IMAGE;
 	}
 
