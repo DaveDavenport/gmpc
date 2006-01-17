@@ -44,7 +44,7 @@ extern int num_plugins;
 extern gmpcPlugin connection_plug;
 extern gmpcPlugin about_plug;
 extern gmpcPlugin playlist_plug;
-
+extern gmpcPlugin cover_art_plug;
 
 #ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug;

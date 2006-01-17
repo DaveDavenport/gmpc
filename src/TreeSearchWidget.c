@@ -72,7 +72,7 @@ void treesearch_start(TreeSearch *ts)
 {
 	gtk_widget_show(GTK_WIDGET(ts));
 	gtk_widget_grab_focus(ts->entry);
-	treesearch_entry_changed(ts->entry, ts);
+	treesearch_entry_changed(GTK_ENTRY(ts->entry), ts);
 }
 
 static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter) {
@@ -107,6 +107,7 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 		if(gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) list->data))
 		{
 			if(gtk_tree_model_iter_next(model, &iter))
+			{
 				if(treesearch_search_from_iter_forward(ts, &iter))
 				{
 					GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
@@ -122,7 +123,7 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 						}
 					}
 				}
-				else{
+				else {
 					GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 					gtk_tree_selection_unselect_all(selection);                                       					
 					gtk_tree_selection_select_iter(selection, &iter);
@@ -130,6 +131,7 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 					gtk_tree_view_set_cursor(GTK_TREE_VIEW(ts->treeview), path, NULL,0);
 					gtk_tree_path_free(path);
 				}
+			}
 		}
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
@@ -233,7 +235,7 @@ static void treesearch_init (TreeSearch *ts)
 	ts->entry = gtk_entry_new();
 	gtk_box_pack_start(GTK_BOX(vbox), ts->entry, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(ts->entry), "changed", G_CALLBACK(treesearch_entry_changed), ts);
-//	g_signal_connect(G_OBJECT(ts->entry), "activate", G_CALLBACK(treesearch_entry_activate), ts);
+	//	g_signal_connect(G_OBJECT(ts->entry), "activate", G_CALLBACK(treesearch_entry_activate), ts);
 	g_signal_connect(G_OBJECT(ts->entry), "key-press-event", G_CALLBACK(treesearch_entry_key_press), ts);
 
 	ts->but_down = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);

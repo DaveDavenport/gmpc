@@ -232,6 +232,7 @@ int main (int argc, char **argv)
 #endif
 	/* the about windows :D*/
 	plugin_add(&about_plug,0);
+	plugin_add(&cover_art_plug,0);
 
 
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");

@@ -5,10 +5,32 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-
-
 #include "main.h"
 #include "plugin.h"
+
+GladeXML *cam_pref_xml = NULL;
+
+void cover_art_pref_construct(GtkWidget *container);
+void cover_art_pref_destroy(GtkWidget *container);
+void cover_art_manager_load_tree(GtkTreeStore *cam_ts);
+
+gmpcPrefPlugin cover_art_gpp = {
+	cover_art_pref_construct,
+	cover_art_pref_destroy
+};
+
+gmpcPlugin cover_art_plug = {
+	"Cover Art",
+	{1,1,1},
+	GMPC_INTERNALL,
+	0,
+	NULL,
+	NULL,
+	NULL,
+	NULL,	
+	NULL,	
+	&cover_art_gpp
+};
 
 typedef struct _ca_dl {
 	struct _ca_dl *next;
@@ -256,9 +278,16 @@ void cover_art_init()
 	}
 	cfg_free_multiple(mult);
 	*/
-	cover_art_manager_create();
 }
+void cover_art_manager_close(GtkWidget *widget)
+{
+	GladeXML *camxml = glade_get_widget_tree(widget);
+	if(camxml){
+		gtk_widget_destroy(glade_xml_get_widget(camxml, "cam-win"));
+		g_object_unref(camxml);
+	}
 
+}
 
 void cover_art_manager_create()
 {
@@ -296,7 +325,7 @@ void cover_art_manager_create()
 	gtk_tree_view_column_set_spacing(column,6);
 
 	gtk_tree_view_column_set_sort_column_id (column, 0);
-	gtk_tree_sortable_set_sort_column_id(cam_ts, 0, GTK_SORT_ASCENDING);
+	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(cam_ts), 0, GTK_SORT_ASCENDING);
 
 
 	label = glade_xml_get_widget(camxml, "title_label_box");
@@ -305,6 +334,7 @@ void cover_art_manager_create()
 	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &label->style->fg[GTK_STATE_SELECTED]);
 
 	cover_art_manager_load_tree(cam_ts);
+	glade_xml_signal_autoconnect(camxml);
 
 }
 void cover_art_manager_load_tree(GtkTreeStore *cam_ts) 
@@ -355,6 +385,7 @@ void cover_art_manager_load_tree(GtkTreeStore *cam_ts)
 				}
 
 			}
+			while(gtk_events_pending()) gtk_main_iteration();
 			if(mult->next == NULL)
 			{
 				cfg_free_multiple(mult);
@@ -367,5 +398,40 @@ void cover_art_manager_load_tree(GtkTreeStore *cam_ts)
 	}
 
 
+}
+
+
+void cover_art_pref_destroy(GtkWidget *container)
+{
+	if(cam_pref_xml)
+	{
+		GtkWidget *vbox = glade_xml_get_widget(cam_pref_xml, "cam-vbox");
+		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		g_object_unref(cam_pref_xml);
+		cam_pref_xml = NULL;
+	}
+}
+void cover_art_pref_toggle_enable(GtkToggleButton *tog)
+{
+	cfg_set_single_value_as_int(config, "cover-art", "enable", gtk_toggle_button_get_active(tog));
+}
+
+void cover_art_cover_manager(GtkButton *but)
+{
+	cover_art_manager_create();
+}
+
+
+
+void cover_art_pref_construct(GtkWidget *container)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	cam_pref_xml = glade_xml_new(path, "cam-vbox",NULL);
+	g_free(path);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(cam_pref_xml, "tb-enable-cam")), 
+			cfg_get_single_value_as_int_with_default(config,"cover-art", "enable", TRUE));
+
+	gtk_container_add(GTK_CONTAINER(container),glade_xml_get_widget(cam_pref_xml, "cam-vbox"));
+	glade_xml_signal_autoconnect(cam_pref_xml);
 }
 
