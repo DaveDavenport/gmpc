@@ -666,3 +666,57 @@ void cfg_free_multiple(conf_mult_obj *data)
 		}
 	}
 }
+
+conf_mult_obj *cfg_get_class_list(config_obj *data)
+{
+	conf_mult_obj *list = NULL;
+	config_node *root = NULL;
+	if(!data) return NULL;
+	if(!data->root) return NULL;
+
+	root = data->root;
+	while(root->prev != NULL) root = root->prev;
+	do {
+		if(root->type == TYPE_CATEGORY)
+		{
+			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
+			temp->value = NULL;
+			temp->key = root->name;
+			temp->next = list;
+			if(temp->next) temp->next->prev = temp;
+			list = temp;
+		}
+		root=root->next;
+	}while(root!= NULL);		
+	while(list->prev != NULL) list = list->prev;
+	return list;
+}
+
+conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
+{
+	conf_mult_obj *list = NULL;
+	config_node *root = NULL;
+	if(data == NULL) return NULL;
+	if(data->root == NULL) return NULL;
+
+	root = cfg_get_class(data,class);
+	if(!root) return NULL;
+	root = root->children;
+	if(!root) return NULL;
+	while(root->prev != NULL) root = root->prev;
+	do {
+		if(root->type == TYPE_ITEM)
+		{
+			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
+			temp->value = root->value;
+			temp->key = root->name;
+			temp->next = list;
+			if(temp->next) temp->next->prev = temp;
+			list = temp;
+		}
+		root=root->next;
+	}while(root!= NULL);
+	while(list->prev != NULL) list = list->prev;
+	return list;
+}
+

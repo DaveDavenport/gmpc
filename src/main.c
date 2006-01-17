@@ -187,7 +187,7 @@ int main (int argc, char **argv)
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	qthread_init();
-	cover_art_init();
+
 	/*
 	 * stock icons
 	 */
@@ -263,7 +263,7 @@ int main (int argc, char **argv)
 	}
 
 	g_free(url);
-
+	cover_art_init();
 	/* Create connection object */
 	connection = mpd_new_default();
 	if(connection == NULL)

@@ -34,6 +34,11 @@ float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, c
 /* del */
 void cfg_del_single_value(config_obj *cfg, char *class, char *key);
 
+
+
+conf_mult_obj *cfg_get_class_list(config_obj *data);
+conf_mult_obj *cfg_get_key_list(config_obj *data,char *key);
+
 /* multiple */
 void cfg_free_multiple(conf_mult_obj *data);
 conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *key);
