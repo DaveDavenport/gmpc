@@ -716,6 +716,8 @@ void time_format_toggle()
 /* the id3 info screen */
 void id3_info()
 {
+	int state = mpd_player_get_state(connection);
+	if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN) return;
 	if(!mpd_check_connected(connection)) return;
 	call_id3_window(mpd_player_get_current_song_id(connection));
 }
