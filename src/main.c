@@ -143,7 +143,7 @@ int main (int argc, char **argv)
 #endif
 	gchar *url = NULL;
 	/* debug stuff */
-
+	debug_level = DEBUG_ERROR;
 	if(argc > 1)
 	{
 		int i;
