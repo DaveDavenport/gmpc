@@ -110,4 +110,5 @@ int plugin_get_pos(int id);
 
 
 void show_error_message(gchar *string);
+int cover_art_edit_cover(gchar *artist, gchar *album);
 #endif

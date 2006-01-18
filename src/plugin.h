@@ -100,6 +100,9 @@ typedef struct {
 } gmpcPlugin;
 
 
-
+/* Playlist 3 helper functions */
+gboolean playlist3_get_active();
+GtkTreeStore *playlist3_get_category_tree_store();
+GtkTreeView *playlist3_get_category_tree_view();
 
 #endif

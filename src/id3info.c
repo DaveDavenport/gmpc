@@ -137,7 +137,35 @@ void id3_cover_art_fetched(mpd_Song *song)
 	}
 }
 
+void id3_cover_art_clicked()
+{
+	mpd_Song *song;
+	if(songs == NULL)  return;
+	if(songs->data == NULL) return;
+	song = songs->data;
+	if(song->artist && song->album)
+	{
+		if(cover_art_edit_cover(song->artist, song->album))
+		{
+			GdkPixbuf *pb = NULL;
+			gchar *path = NULL;
+			int ret = cover_art_fetch_image_path(song, &path);
+			if(ret == COVER_ART_OK_LOCAL){
+				pb = gdk_pixbuf_new_from_file_at_size(path,300,300,NULL);                                    		
+				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),pb);
+				gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_event"));
+				g_object_unref(pb);           
+			}
+			else{
+				gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
+			}			
+			if(path) g_free(path);
+		}                                                                                                    		
 
+
+
+	}
+}
 
 
 void set_text (GList * node)
@@ -195,21 +223,21 @@ void set_text (GList * node)
 		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "track_label")), "");
 	}
 	if (song->genre != NULL)
-        {
-        	gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "genre_label")), song->genre);
-        }
-        else
-        {
-        	gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "genre_label")), "");
-        }
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "genre_label")), song->genre);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "genre_label")), "");
+	}
 	if (song->composer != NULL)
-        {
-        	gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), song->composer);
-        }
-        else
-        {
-        	gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), "");
-        }
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), song->composer);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), "");
+	}
 	if (song->file != NULL)
 	{
 		gchar *buf1 = g_path_get_basename (song->file);
@@ -273,7 +301,7 @@ void set_text (GList * node)
 	{
 		gtk_widget_set_sensitive (glade_xml_get_widget(xml_id3_window, "button_next"), TRUE);
 	}
-	{
+	if(song){
 		gchar *path= NULL;
 		int ret = 0;
 		ret = cover_art_fetch_image_path(song, &path);
@@ -282,11 +310,11 @@ void set_text (GList * node)
 			GdkPixbuf *pb = NULL;
 			pb = gdk_pixbuf_new_from_file_at_size(path,300,300,NULL);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),pb);
-			gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_image"));
+			gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_event"));
 			g_object_unref(pb);
 		}
 		else{
-			gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_image"));
+			gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
 		}
 		if(path) g_free(path);
 		if(ret == COVER_ART_NOT_FETCHED)

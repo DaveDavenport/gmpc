@@ -136,7 +136,7 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 					}
 				}
 				else {
-					GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+					//GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 				}
 			}
 		}
