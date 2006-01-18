@@ -21,6 +21,7 @@ gmpc_SOURCES=\
 	mm-keys.c\
 	qthread.c\
 	config1.c\
+	cover-art-manager.c\
 	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
