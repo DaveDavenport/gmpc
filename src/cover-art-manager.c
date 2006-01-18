@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
+#include "TreeSearchWidget.h"
 #include "main.h"
 #include "plugin.h"
 
@@ -12,6 +13,7 @@ GladeXML *cam_pref_xml = NULL;
 extern config_obj *cover_index;
 
 
+void cover_art_manager_close(GtkWidget *widget);
 void cover_art_pref_construct(GtkWidget *container);
 void cover_art_pref_destroy(GtkWidget *container);
 void cover_art_manager_load_tree(GtkTreeStore *cam_ts);
@@ -35,6 +37,22 @@ gmpcPlugin cover_art_plug = {
 	&cover_art_gpp
 };
 
+int cover_art_manager_key_release(GtkWidget *tree, GdkEventKey *event, GtkWidget *tree_search)
+{
+	if(event->keyval == GDK_f)
+	{
+		treesearch_start(TREESEARCH(tree_search));
+		return TRUE;
+	}
+	else if (event->keyval == GDK_Escape)
+	{
+		cover_art_manager_close(tree);
+
+	}
+	return FALSE;
+}
+
+
 void cover_art_manager_close(GtkWidget *widget)
 {
 	GladeXML *camxml = glade_get_widget_tree(widget);
@@ -51,6 +69,7 @@ void cover_art_manager_create()
 	GtkTreeViewColumn *column = NULL;
 	GtkCellRenderer *renderer = NULL;
 	GtkWidget *label = NULL;
+	GtkWidget *tree_search = NULL;
 	GladeXML *camxml = NULL;
 	gchar *camp = gmpc_get_full_glade_path("gmpc.glade");
 	camxml = glade_xml_new(camp, "cam-win",NULL);
@@ -69,6 +88,8 @@ void cover_art_manager_create()
 	gtk_tree_view_set_model(
 			GTK_TREE_VIEW(glade_xml_get_widget(camxml, "camtree")),
 			GTK_TREE_MODEL(cam_ts));
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(glade_xml_get_widget(camxml, "camtree")), FALSE);
+
 	column = gtk_tree_view_column_new ();
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
@@ -82,8 +103,10 @@ void cover_art_manager_create()
 	gtk_tree_view_column_set_spacing(column,6);
 
 	gtk_tree_view_column_set_sort_column_id (column, 0);
+	
 
-
+	tree_search = treesearch_new(GTK_TREE_VIEW(glade_xml_get_widget(camxml, "camtree")),0);
+	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(camxml, "cam-vbox")), tree_search, FALSE, TRUE, 0);
 
 	label = glade_xml_get_widget(camxml, "title_label_box");
 	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &label->style->bg[GTK_STATE_SELECTED]);
@@ -92,6 +115,7 @@ void cover_art_manager_create()
 
 	cover_art_manager_load_tree(cam_ts);
 	glade_xml_signal_autoconnect(camxml);
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(camxml, "camtree")), "key-press-event", G_CALLBACK(cover_art_manager_key_release),tree_search);
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(camxml, "camtree")), "row-expanded", G_CALLBACK(cover_art_manager_load_albums), NULL);
 	gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(cam_ts), 0, GTK_SORT_ASCENDING);
 }
