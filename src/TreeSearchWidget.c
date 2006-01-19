@@ -80,6 +80,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 	const char *text = gtk_entry_get_text(GTK_ENTRY(ts->entry));
 	regex_t regt;
 	if(regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB)) {
+		regfree(&regt);
 		return FALSE;
 	}
 
@@ -90,6 +91,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 		if(title && !regexec(&regt, title, 0,NULL,0))
 		{
 			g_free(title);
+			regfree(&regt);
 			return TRUE;
 		}
 		else if(gtk_tree_model_iter_children(model,&child, iter))
@@ -98,6 +100,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 			if(treesearch_search_from_iter_forward(ts, &child))
 			{
 				*iter = child;
+				regfree(&regt);
 				g_free(title);
 				return TRUE;
 			}
@@ -105,6 +108,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 		}
 		g_free(title);
 	} while(gtk_tree_model_iter_next(model,  iter));
+	regfree(&regt);
 	return FALSE;
 }
 static void treesearch_search_next(GtkButton *but,TreeSearch *ts){

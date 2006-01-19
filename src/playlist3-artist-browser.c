@@ -199,17 +199,18 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 
 			if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_ab_store), &iter, path))
 			{
-				char *path = NULL;
+				char *coverpath = NULL;
 				int ret = 0;
-				ret = cover_art_fetch_image_path(song, &path); 
+				ret = cover_art_fetch_image_path(song, &coverpath); 
 				if(ret == COVER_ART_OK_LOCAL)
 				{
 					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",80);
-					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
+					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
 					g_object_unref(pb);
 
 				}
+				if(coverpath)g_free(coverpath);
 			}
 			gtk_tree_path_free(path);
 		}
@@ -275,14 +276,14 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		int albums = 0;
 		MpdData *data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
-			char *path = NULL;
+			char *coverpath = NULL;
 			int ret = 0;
 			GdkPixbuf *pb = NULL;
-			ret = cover_art_fetch_image_path_aa(artist,data->tag, &path);
+			ret = cover_art_fetch_image_path_aa(artist,data->tag, &coverpath);
 			if(ret == COVER_ART_OK_LOCAL)
 			{
 				int size = cfg_get_single_value_as_int_with_default(config, "cover-art","browser-size", 80);
-				pb = gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
+				pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
 			}	
 			else
 			{
@@ -306,7 +307,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				gtk_tree_path_free(path);
 			}
 			g_object_unref(pb);
-
+			if(coverpath) g_free(coverpath);
 			data = mpd_data_get_next(data);
 		}
 
