@@ -860,8 +860,6 @@ void connect_callback(MpdObj *mi)
 	}
 	gtk_timeout_remove (update_timeout);
 	update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
-
-	pl3_reinitialize_tree();
 }
 
 

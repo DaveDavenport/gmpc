@@ -102,14 +102,10 @@ int  pl3_cat_get_selected_browser()
 /**************************************************
  * Category Tree
  */
-void pl3_reinitialize_tree()
+void pl3_initialize_tree()
 {
 	int i;
-	static int done = 0;
 	if(pl3_xml == NULL) return;
-	/* nasty hack to check some stuff */
-	if(done)return;
-	done = 1;
 
 	GtkTreePath *path = gtk_tree_path_new_from_string("0");
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
@@ -157,7 +153,6 @@ void pl3_disconnect()
 		pl3_file_browser_disconnect();
 		pl3_artist_browser_disconnect();
 		pl3_find_browser_disconnect();
-		//	pl3_reinitialize_tree();
 	}
 }
 
@@ -713,7 +708,7 @@ void create_playlist3 ()
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
-	pl3_reinitialize_tree();
+	pl3_initialize_tree();
 
 
 	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", FALSE))

@@ -850,7 +850,7 @@ void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string)
 	switch (gtk_dialog_run (GTK_DIALOG (dialog)))
 	{
 		case GTK_RESPONSE_OK:
-			mpd_playlist_delete(connection, string);
+			mpd_database_delete_playlist(connection, string);
 			pl3_cat_sel_changed();
 
 	}

@@ -47,7 +47,7 @@ AC_SUBST(gmodule_LIBS)
 AC_SUBST(gmodule_CFLAGS)
 
 # libmpd
-PKG_CHECK_MODULES([libmpd], libmpd >= 0.0.9.17)
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.0.9.19)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
