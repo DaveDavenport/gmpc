@@ -86,7 +86,6 @@ void main_trigger_update();
 
 void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);
-void pl3_reinitialize_tree();
 
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void id3_status_update();
