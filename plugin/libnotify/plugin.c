@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
-#include "../../config.h"
-#include "../../src/plugin.h"
-#include "../../src/strfsong.h"
+#include <gmpc/config1.h>
+#include <gmpc/plugin.h>
+#include <gmpc/cover-art.h>
 #include "../../src/eggtrayicon.h"
-#include "../../src/misc.h"
 #include <libnotify/notify.h>
+#include <libmpd/libmpd.h>
 
 #define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
 
@@ -30,17 +30,20 @@ gmpcPrefPlugin libnotify_gpp = {
 	libnotify_destroy
 };
 
-
+int plugin_api_version = PLUGIN_API_VERSION;
 /* main plugin info */
 gmpcPlugin plugin= {
 	"libnotify plugin",
 	{0,0,1},
 	GMPC_PLUGIN_NO_GUI,
 	0,
-	NULL,
-	NULL,
+	NULL, /*path*/
+	NULL, /*init*/
+	NULL,/* borwser */
 	libnotify_mpd_status_changed,
-	&libnotify_gpp
+	NULL,
+	&libnotify_gpp,
+		NULL
 };
 
 gchar *libnotify_get_text()
@@ -53,7 +56,7 @@ gchar *libnotify_get_text()
 	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		strfsong(result, 1024, DEFAULT_TRAY_MARKUP, song);
+		mpd_song_markup(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 		/* add time */
 		if(mpd_status_get_total_song_time(connection) > 0)
@@ -101,8 +104,18 @@ void libnotify_do_popup()
 {
 	char *text = libnotify_get_text();
 	char *title = NULL;
+	NotifyIcon *icon = NULL;
+	char *path = NULL;
+	int result;
+	printf("Popup: %s\n", text);
 	NotifyHints *hints = NULL;
-	NotifyIcon *icon = notify_icon_new_from_uri(PIXMAP_PATH"media-audiofile.png");
+
+	result = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
+	if(result == COVER_ART_OK_LOCAL){
+		icon = notify_icon_new_from_uri(path);
+	}else{
+	icon = notify_icon_new_from_uri("/home/qball/.local/share/gmpc/media-audiofile.png");
+	}
 	if(tray_icon)
 	{
 		int x_tv, y_tv;

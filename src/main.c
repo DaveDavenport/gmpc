@@ -638,6 +638,18 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-playlist", set);
 	g_object_unref (G_OBJECT (pb));
 
+
+	/*
+	 * add media playlist
+	 */
+	path = gmpc_get_full_image_path("gmpc.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc", set);
+	g_object_unref (G_OBJECT (pb));
+
+
 	gtk_icon_factory_add_default (factory);
 }
 

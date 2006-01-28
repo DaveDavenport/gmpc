@@ -9,6 +9,8 @@
 #include "misc.h"
 #include "config1.h"
 
+
+#define BORDER_WIDTH 6
 void destroy_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
@@ -124,7 +126,7 @@ gchar *tray_get_tooltip_text()
 
 int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 {
-	int width=4, height=0;
+	int width=BORDER_WIDTH, height=0;
 	int lwidth=0,  lheight=0;
 	GtkStyle *style;
 	int from_tray = GPOINTER_TO_INT(n);
@@ -141,18 +143,50 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	style = widget->style;
 	pango_layout_get_pixel_size(tray_layout_tooltip, &lwidth, &lheight);
 
-	gtk_paint_flat_box (style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_OUT,
-			NULL, widget, "tooltip", 0, 0, -1, -1);                     	
+	gtk_window_get_size(GTK_WINDOW(tip), &width, &height);
+	gdk_draw_rectangle(widget->window, widget->style->white_gc, TRUE, 0,0,width, height);
+	gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 0,0,width-1, height-1);
 
 	if(cover_pb)
 	{
-		width = gdk_pixbuf_get_width(cover_pb)+8;
-		height = gdk_pixbuf_get_height(cover_pb);
-		gdk_draw_pixbuf(widget->window, NULL, cover_pb, 0,0,4,4,-1,-1,GDK_RGB_DITHER_NONE,0,0);	
+		width = gdk_pixbuf_get_width(cover_pb)+BORDER_WIDTH*2;
+		/* draw rectangle, width of image + 2x border */
+		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
+		
+		height = gdk_pixbuf_get_height(cover_pb)+BORDER_WIDTH;
+		/* draw image outline */
+		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
+				BORDER_WIDTH-1,BORDER_WIDTH-1,
+				width-2*BORDER_WIDTH+1,height-BORDER_WIDTH+1);
+		/* add a right border to the image */
+		width+=BORDER_WIDTH;
+		/* draw image */
+		gdk_draw_pixbuf(widget->window, NULL, cover_pb, 
+				0,0,
+				BORDER_WIDTH,BORDER_WIDTH,
+				-1,-1,
+				GDK_RGB_DITHER_NONE,0,0);	
+	}
+	else{
+		GdkPixbuf *pb = gtk_widget_render_icon(widget, "gmpc", GTK_ICON_SIZE_DND,NULL);
+		width = gdk_pixbuf_get_width(pb)+BORDER_WIDTH*2;
+		/* draw rectangle, width of image + 2x border */
+		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
+		
+		height = gdk_pixbuf_get_height(pb)+BORDER_WIDTH;
+		/* add a right border to the image */
+		width+=BORDER_WIDTH;
+		/* draw image */
+		gdk_draw_pixbuf(widget->window, NULL, pb, 
+				0,0,
+				BORDER_WIDTH,BORDER_WIDTH,
+				-1,-1,
+				GDK_RGB_DITHER_NONE,0,0);	
+		if(pb) g_object_unref(pb);
 	}
 
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
-			NULL, widget, "tooltip", width, 4, tray_layout_tooltip);
+			NULL, widget, "tooltip", width, BORDER_WIDTH, tray_layout_tooltip);
 
 
 	width  += lwidth;
@@ -160,29 +194,29 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 	if(mpd_status_get_total_song_time(connection)> 0)
 	{
 		int width2 = 0;
-		if((lheight+12) >=(height))
+		if((lheight+8+BORDER_WIDTH) >=(height))
 		{
-			height = lheight+8;
+			height = lheight+BORDER_WIDTH+8;
 		}
 
 		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-				FALSE,width-lwidth,lheight+4, lwidth ,8);                              		
+				FALSE,width-lwidth,lheight+BORDER_WIDTH, lwidth ,8);                              		
 		width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*lwidth;
 		gdk_draw_rectangle(widget->window,
 				widget->style->mid_gc[GTK_STATE_NORMAL],
-				TRUE,width-lwidth,lheight+4, width2 ,8);
+				TRUE,width-lwidth,lheight+BORDER_WIDTH, width2 ,8);
 		gdk_draw_rectangle(widget->window, 
 				widget->style->fg_gc[GTK_STATE_NORMAL],
-				FALSE,width-lwidth,lheight+4, width2 ,8);
+				FALSE,width-lwidth,lheight+BORDER_WIDTH, width2 ,8);
 	}
 	else {
 		if(lheight > (height))
 		{
-			height = lheight+4;
+			height = lheight+BORDER_WIDTH;
 		}
 	}
 
-	if(widget->allocation.width != width+8 || widget->allocation.height != height + 8)
+	if(widget->allocation.width != width+BORDER_WIDTH || widget->allocation.height != height + BORDER_WIDTH)
 	{
 		int x_tv,y_tv;
 		int x=0,y=0;
@@ -216,18 +250,18 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
 				/* check borders left, right*/	
-				if((x+width+8) > msize.width+msize.x)
+				if((x+width+BORDER_WIDTH) > msize.width+msize.x)
 				{	
-					x = msize.x+msize.width-(width+8);
+					x = msize.x+msize.width-(width+BORDER_WIDTH);
 				}
 				else if(x < 0)
 				{
 					x= 0;
 				}
 				/* check up down.. if can't place it below, place it above */
-				if( y+height+8 > msize.height+msize.y) 
+				if( y+height+BORDER_WIDTH > msize.height+msize.y) 
 				{
-					y = y_tv -5-(height+8);
+					y = y_tv -5-(height+BORDER_WIDTH);
 				}
 				/* place the window */
 				gtk_window_move(GTK_WINDOW(tip), x, y);
@@ -238,21 +272,21 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				gtk_window_move(GTK_WINDOW(tip), x,y);
 				break;
 			case 2:
-				gtk_window_move(GTK_WINDOW(tip),msize.width-width-8-x, y);	
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-BORDER_WIDTH-x, y);	
 				break;
 			case 3:
-				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-8-y);	
+				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-BORDER_WIDTH-y);	
 				break;
 			case 4:
-				gtk_window_move(GTK_WINDOW(tip),msize.width-width-8-x, msize.height-height-8-y);	
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-BORDER_WIDTH-x, msize.height-height-BORDER_WIDTH-y);	
 				break;                                                  				
 
 		}
 
 
-		if(width+8 > 0 && height + 8 > 0)
+		if(width+BORDER_WIDTH > 0 && height + BORDER_WIDTH > 0)
 		{		
-			gtk_widget_set_usize(tip, width+8, height+8);
+			gtk_widget_set_usize(tip, width+BORDER_WIDTH, height+BORDER_WIDTH);
 		}
 	}
 
