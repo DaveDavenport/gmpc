@@ -1099,15 +1099,8 @@ static void playlist_player_update_image(MpdObj *mi)
 		GdkPixbuf *pb = NULL;
 		pb = gdk_pixbuf_new_from_file_at_size(path,60,60,NULL);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-		/*		if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY ||
-				mpd_player_get_state(connection) == MPD_STATUS_STATE_PAUSE)
-				{
-				*/			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
-		/*		}
-				else{
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
-				}
-				*/		g_object_unref(pb);
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+		g_object_unref(pb);
 	}
 	else{
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
