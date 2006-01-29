@@ -1080,10 +1080,12 @@ void playlist_player_set_song(MpdObj *mi)
 static void playlist_player_update_image_callback(mpd_Song *song)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	if(!strcmp(song->artist, current->artist) &&
-			!strcmp(song->album, current->album))
-	{
-		playlist_player_update_image(connection);
+	if(song != NULL && current  != NULL) {
+		if(!strcmp(song->artist, current->artist) &&
+				!strcmp(song->album, current->album))
+		{
+			playlist_player_update_image(connection);
+		}
 	}
 }
 
