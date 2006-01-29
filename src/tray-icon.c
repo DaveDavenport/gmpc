@@ -232,10 +232,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		else
 		{
 			screen = gdk_screen_get_default();
-			tv = glade_xml_get_widget(xml_main_window, "main_window");
 		}
-
-
 
 		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 
@@ -244,40 +241,41 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		/* calculate position */
 		switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 		{
-			case 0:
-				gdk_window_get_origin(tv->window, &x_tv, &y_tv);
-				x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
-				y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
-
-				/* check borders left, right*/	
-				if((x+width+BORDER_WIDTH) > msize.width+msize.x)
-				{	
-					x = msize.x+msize.width-(width+BORDER_WIDTH);
-				}
-				else if(x < 0)
+			case 0: /* tooltip */
+				if(tv)
 				{
-					x= 0;
-				}
-				/* check up down.. if can't place it below, place it above */
-				if( y+height+BORDER_WIDTH > msize.height+msize.y) 
-				{
-					y = y_tv -5-(height+BORDER_WIDTH);
-				}
-				/* place the window */
-				gtk_window_move(GTK_WINDOW(tip), x, y);
-				break;
-			case 1:
+					gdk_window_get_origin(tv->window, &x_tv, &y_tv);
+					x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
+					y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
-
+					/* check borders left, right*/	
+					if((x+width+BORDER_WIDTH) > msize.width+msize.x)
+					{	
+						x = msize.x+msize.width-(width+BORDER_WIDTH);
+					}
+					else if(x < 0)
+					{
+						x= 0;
+					}
+					/* check up down.. if can't place it below, place it above */
+					if( y+height+BORDER_WIDTH > msize.height+msize.y) 
+					{
+						y = y_tv -5-(height+BORDER_WIDTH);
+					}
+					/* place the window */
+					gtk_window_move(GTK_WINDOW(tip), x, y);
+					break;
+				}
+			case 1: /* upper left */
 				gtk_window_move(GTK_WINDOW(tip), x,y);
 				break;
-			case 2:
+			case 2: /* upper right */
 				gtk_window_move(GTK_WINDOW(tip),msize.width-width-BORDER_WIDTH-x, y);	
 				break;
-			case 3:
+			case 3: /* lower left */
 				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-BORDER_WIDTH-y);	
 				break;
-			case 4:
+			case 4: /* lower right */
 				gtk_window_move(GTK_WINDOW(tip),msize.width-width-BORDER_WIDTH-x, msize.height-height-BORDER_WIDTH-y);	
 				break;                                                  				
 
@@ -337,11 +335,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	else
 	{
 		screen = gdk_screen_get_default();
-		/*TODO set tv to a valid widget? */
-		tv = glade_xml_get_widget(xml_main_window, "main_window");
 	}
-
-
 
 	if(tip != NULL)
 	{
@@ -376,19 +370,9 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gtk_widget_ensure_style (eventb);
 
 	tray_layout_tooltip = gtk_widget_create_pango_layout (eventb, NULL);
+	/* set wrapping */
 	pango_layout_set_wrap(tray_layout_tooltip, PANGO_WRAP_WORD);
-	pango_layout_set_width(tray_layout_tooltip, 500000);
-	pango_layout_set_markup(tray_layout_tooltip, tooltiptext, strlen(tooltiptext));
-
-	pango_layout_get_size(tray_layout_tooltip, &width, &height);
-	width= PANGO_PIXELS(width)+8;
-	height= PANGO_PIXELS(height)+8;
-	if(mpd_status_get_total_song_time(connection) > 0)
-	{
-		height = height+8;
-	}
-	gtk_widget_set_usize(tip, width,height);
-
+	pango_layout_set_width(tray_layout_tooltip, 100000);
 
 	/* calculate position */
 
@@ -396,31 +380,33 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	y+=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
 	x+=cfg_get_single_value_as_int_with_default(config, "tray-icon","x-offset",0);			
 
-	
+
 	/* calculate position */
 	switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 	{
 		case 0:
-			gdk_window_get_origin(tv->window, &x_tv, &y_tv);
-			x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
-			y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
+			if(tv){
+				gdk_window_get_origin(tv->window, &x_tv, &y_tv);
+				x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
+				y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
 
-			/* check borders left, right*/	
-			if((x+width+8) > msize.width+msize.x)
-			{	
-				x = msize.x+msize.width-(width+8);
+				/* check borders left, right*/	
+				if((x+width+8) > msize.width+msize.x)
+				{	
+					x = msize.x+msize.width-(width+8);
+				}
+				else if(x < 0)
+				{
+					x= 0;
+				}
+				/* check up down.. if can't place it below, place it above */
+				if( y+height+8 > msize.height+msize.y) 
+				{
+					y = y_tv -5-(height+8);
+				}
+				/* place the window */
+				break;
 			}
-			else if(x < 0)
-			{
-				x= 0;
-			}
-			/* check up down.. if can't place it below, place it above */
-			if( y+height+8 > msize.height+msize.y) 
-			{
-				y = y_tv -5-(height+8);
-			}
-			/* place the window */
-			break;
 		case 1:
 			break;
 		case 2:

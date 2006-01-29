@@ -834,15 +834,6 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 		else if (error_id == MPD_ACK_ERROR_PERMISSION)
 		{
 			password_dialog(FALSE);
-			/*GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
-			  GTK_DIALOG_MODAL,
-			  GTK_MESSAGE_INFO,
-			  GTK_BUTTONS_CLOSE,
-			  _("You have insufficient rights to use this functionality"));
-
-			  g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-			  gtk_widget_show_all(dialog);
-			  */
 		}
 		else {
 
@@ -878,7 +869,7 @@ void connect_callback(MpdObj *mi)
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
-
+	player_connection_changed(mi,connect);
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->mpd_connection_changed!= NULL)

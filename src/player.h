@@ -17,4 +17,5 @@ int msg_pop_popup();
 void msg_push_popup();
 void msg_set_base();
 
+void player_connection_changed(MpdObj *mi, int connect);
 #endif

@@ -83,13 +83,6 @@ int update_mpd_status()
 void disconnect_callback(MpdObj *mi)
 {
 	gtk_timeout_remove(update_timeout);
-	msg_set_base(_("gmpc - Disconnected"));
-	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
-	{
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
-				_("Gnome Music Player Client"));
-	}
-
 	//scroll.exposed = 1;
 	info.playlist_id = -1;
 	info.playlist_length = -1;
@@ -139,13 +132,6 @@ int connect_to_mpd()
 
 
 	/* Set the title */
-	msg_set_base(_("GMPC - Connected"));
-	if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
-	{
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
-				_("Gnome Music Player Client"));
-	}
-
 	update_mpd_status();
 	mpd_stats_update(connection);
 
@@ -408,11 +394,11 @@ void xfade_update()
 	if(mpd_status_get_crossfade(connection) > 0)
 	{
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(
-				glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
+					glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
 				mpd_status_get_crossfade(connection));
 	}
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
-			glade_xml_get_widget(server_pref_xml, "cb_fading")),
+				glade_xml_get_widget(server_pref_xml, "cb_fading")),
 			mpd_status_get_crossfade(connection)?TRUE:FALSE);
 
 	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(server_pref_xml, "sb_fade_time")),
@@ -477,7 +463,7 @@ void server_pref_construct(GtkWidget *container)
 			gtk_toggle_button_set_active((GtkToggleButton *)
 					glade_xml_get_widget(server_pref_xml, "cb_fading"), TRUE);
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(
-					glade_xml_get_widget(server_pref_xml,"sb_fade_time")),
+						glade_xml_get_widget(server_pref_xml,"sb_fade_time")),
 					mpd_status_get_crossfade(connection));
 			gtk_widget_set_sensitive(glade_xml_get_widget(server_pref_xml, "sb_fade_time"),
 					TRUE);

@@ -165,6 +165,7 @@ void display_exposed(GtkWidget *window)
 gboolean update_msg()
 {
 	int width;
+	if(!xml_main_window) return TRUE;
 	/* scroll will be -1 when there is getting stuff updated. hopefully this fixes the nasty segfault in pango*/
 	if(scroll.exposed)
 	{
@@ -299,6 +300,7 @@ int msg_pop_popup()
 
 int update_player()
 {
+	if(!xml_main_window) return FALSE;
 	if(!mpd_check_connected(connection)) return FALSE;
 	/* things that only need to be updated during playing */
 	{
@@ -435,7 +437,10 @@ void player_mpd_state_changed(MpdObj *mi, ChangedStatusType what, void *userdata
 
 void player_state_changed(int state)
 {
-	GtkWidget *image = glade_xml_get_widget(xml_main_window, "play_button_image");
+	
+	GtkWidget *image = NULL;
+	if(!xml_main_window) return;
+	image = glade_xml_get_widget(xml_main_window, "play_button_image");
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
 		GtkWidget *entry;
@@ -525,7 +530,7 @@ void player_state_changed(int state)
 void player_song_changed()
 {
 	int state = mpd_player_get_state(connection);
-
+	if(!xml_main_window) return;
 	if(state != MPD_PLAYER_PLAY && state != MPD_PLAYER_PAUSE)
 	{
 		msg_set_base(_("Gnome Music Player Client"));
@@ -879,5 +884,33 @@ void player_destroy()
 		if(scroll.msg)g_free(scroll.msg);
 		if(scroll.base_msg)g_free(scroll.base_msg);
 		if(scroll.popup_msg)g_free(scroll.popup_msg);
+	}
+}
+
+void player_connection_changed(MpdObj *mi, int connect)
+{
+	if(connect){
+		msg_set_base(_("GMPC - Connected"));
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			if(xml_main_window != NULL)
+			{
+
+				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+						_("Gnome Music Player Client"));
+			}
+		}                                                                                                     		
+	}
+	else
+	{
+		msg_set_base(_("gmpc - Disconnected"));
+		if(cfg_get_single_value_as_int_with_default(config, "player", "window-title",TRUE))
+		{
+			if(xml_main_window != NULL)
+			{
+				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(xml_main_window, "main_window")),
+						_("Gnome Music Player Client"));
+			}
+		}
 	}
 }
