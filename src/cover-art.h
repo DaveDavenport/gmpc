@@ -14,6 +14,9 @@ void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback func
 CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar **path);
 
 
+/* no cache */
+CoverArtResult cover_art_fetch_image_path_no_cache(mpd_Song *song, gchar **path);
+
 
 
 

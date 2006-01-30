@@ -69,7 +69,7 @@ void cover_art_manager_row_activated(GtkTreeView *tree, GtkTreePath *path)
 	if(gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path))
 	{
 		gint type;
-		
+
 		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, 4, &type, -1);
 		if(type == 1)
 		{

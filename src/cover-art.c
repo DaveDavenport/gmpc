@@ -27,7 +27,7 @@ GList *fetch_que_list = NULL;
 config_obj *cover_index= NULL;
 
 
-CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
+CoverArtResult cover_art_fetch_image_path_real(mpd_Song *song, gchar **path, gboolean cache)
 {
 	int i=0;
 	int priority = 1000;
@@ -39,8 +39,9 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 		return COVER_ART_NO_IMAGE;
 	}
 
-	if(song->artist && song->album){
+	if(song->artist && song->album && cache){
 		gchar *cipath = cfg_get_single_value_as_string(cover_index, song->artist, song->album);
+		debug_printf(DEBUG_INFO,"query cover art cache");
 		if(cipath)
 		{
 			if(strlen(cipath) == 0)
@@ -86,7 +87,7 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	}
 	if(*path)
 	{
-		if(song->artist && song->album){
+		if(song->artist && song->album && cache){
 			cfg_set_single_value_as_string(cover_index, song->artist, song->album,*path);
 		}
 		debug_printf(DEBUG_INFO,"returned image: %s", *path);
@@ -105,6 +106,15 @@ CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
 	return COVER_ART_NO_IMAGE;
 }
 
+CoverArtResult cover_art_fetch_image_path(mpd_Song *song, gchar **path)
+{
+	return cover_art_fetch_image_path_real(song, path,TRUE);
+}
+
+CoverArtResult cover_art_fetch_image_path_no_cache(mpd_Song *song, gchar **path)
+{
+	return cover_art_fetch_image_path_real(song, path,FALSE);
+}
 
 void __internall_fetch_cover_art(ca_dl *cd)
 {
@@ -210,6 +220,20 @@ void cover_art_fetch_image(mpd_Song *song, CoverArtCallback function,gpointer us
 
 CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar **path)
 {
+	if(artist && album){
+		gchar *cipath = cfg_get_single_value_as_string(cover_index, artist, album);
+		debug_printf(DEBUG_INFO,"query cover art cache");
+		if(cipath)
+		{
+			if(strlen(cipath) == 0)
+			{
+				return COVER_ART_NO_IMAGE;
+			}
+			*path = g_strdup(cipath);
+			return COVER_ART_OK_LOCAL;
+		}
+	}
+
 	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
 	MpdData *data = mpd_playlist_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
