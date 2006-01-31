@@ -16,6 +16,7 @@ typedef struct _ca_dl {
 	qthread *qt;
 	GQueue *function;
 	mpd_Song *song;
+	int retval;
 }ca_dl;
 
 typedef struct _ca_callback{
@@ -119,7 +120,7 @@ CoverArtResult cover_art_fetch_image_path_no_cache(mpd_Song *song, gchar **path)
 void __internall_fetch_cover_art(ca_dl *cd)
 {
 	debug_printf(DEBUG_INFO,"Starting cover art fetch with plugin: %s\n", cd->plug->name);
-	cd->plug->coverart->fetch_image(cd->song,NULL);
+	cd->retval = cd->plug->coverart->fetch_image(cd->song,NULL);
 }
 void cover_art_execute_signal(ca_callback *function, mpd_Song *song)
 {
@@ -133,6 +134,15 @@ int cover_art_check_fetch_done(ca_dl *cd)
 	if(qthread_is_done(cd->qt))
 	{
 		fetch_que_list = g_list_remove(fetch_que_list,cd);
+		/* when found execute signal */
+		if(!cd->retval){
+			/* update cache */
+			if(cd->song->artist && cd->song->album){
+				cfg_set_single_value_as_string(cover_index,
+						cd->song->artist,
+						cd->song->album,"");
+			}
+		}
 		/* execute signals */
 		g_queue_foreach(cd->function,(GFunc)cover_art_execute_signal, cd->song); 
 		g_queue_free(cd->function);
@@ -171,6 +181,7 @@ void cover_art_thread_fetch_image(gmpcPlugin *plug, mpd_Song *song, CoverArtCall
 	list->song = mpd_songDup(song);
 	list->qt = qthread_new((GSourceFunc)__internall_fetch_cover_art, list);
 	list->function = g_queue_new();
+	list->retval = FALSE;
 	g_queue_push_tail(list->function, cc);
 	fetch_que_list = g_list_append(fetch_que_list, list);
 	qthread_run(list->qt);

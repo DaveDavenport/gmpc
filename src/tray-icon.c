@@ -317,17 +317,16 @@ int popup_press_event(GtkWidget *wid, GdkEventKey *event)
 
 gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
-	int width,height;
-	GtkWidget *tv = (GtkWidget *)tray_icon;
-	GdkRectangle msize;
-	int x=0,y=0;
-	int x_tv,y_tv;
-	int monitor =0;
+//	GtkWidget *tv = (GtkWidget *)tray_icon;
+//	GdkRectangle msize;
+//	int x=0,y=0;
+//	int x_tv,y_tv;
+//	int monitor =0;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
 	GtkWidget *eventb;
-	GdkScreen *screen;
-	if(tv != NULL)
+//	GdkScreen *screen;
+/*	if(tv != NULL)
 	{
 		screen = gtk_widget_get_screen(tv);
 		monitor = gdk_screen_get_monitor_at_window(screen, tv->window);
@@ -336,7 +335,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	{
 		screen = gdk_screen_get_default();
 	}
-
+*/
 	if(tip != NULL)
 	{
 		if(from_tray)
@@ -349,7 +348,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		}
 	}
 	tooltiptext = tray_get_tooltip_text();
-	gdk_screen_get_monitor_geometry(screen, monitor, &msize);
+/*	gdk_screen_get_monitor_geometry(screen, monitor, &msize);
+*/
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 
@@ -375,22 +375,23 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	pango_layout_set_width(tray_layout_tooltip, 100000);
 
 	/* calculate position */
-
+/*
 	gdk_window_get_origin(tv->window, &x_tv, &y_tv);
 	y+=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
 	x+=cfg_get_single_value_as_int_with_default(config, "tray-icon","x-offset",0);			
-
+*/
 
 	/* calculate position */
+	/* in first expose the widget will be located */
+	/*
 	switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))
 	{
 		case 0:
 			if(tv){
 				gdk_window_get_origin(tv->window, &x_tv, &y_tv);
-				x = (int)/*event->x_root*/x_tv + tv->allocation.width/2 - (width)/2;
-				y = (int)/*event->y_root*/y_tv+(tv->allocation.height) +5;	
+				x = (int)x_tv + tv->allocation.width/2 - (width)/2;
+				y = (int)y_tv+(tv->allocation.height) +5;	
 
-				/* check borders left, right*/	
 				if((x+width+8) > msize.width+msize.x)
 				{	
 					x = msize.x+msize.width-(width+8);
@@ -399,12 +400,10 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 				{
 					x= 0;
 				}
-				/* check up down.. if can't place it below, place it above */
 				if( y+height+8 > msize.height+msize.y) 
 				{
 					y = y_tv -5-(height+8);
 				}
-				/* place the window */
 				break;
 			}
 		case 1:
@@ -423,10 +422,10 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			break;                                                  				
 	}
 	gtk_window_move(GTK_WINDOW(tip),x,y);
+	*/
 	gtk_widget_show_all(tip);	
 
 
-	/* testing of rounded corners, because this breaks consistency its a hidden option.*/
 	if(tray_timeout != -1) g_source_remove(tray_timeout);
 	tray_timeout = g_timeout_add(400, (GSourceFunc)
 			tooltip_queue_draw, eventb);
