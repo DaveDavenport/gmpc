@@ -1081,11 +1081,9 @@ static void playlist_player_update_image_callback(mpd_Song *song)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
 	if(song != NULL && current  != NULL) {
-		if(song->artist && song->album &&
-				current->artist && current->album)
+		if(song->file && current->file)
 		{
-			if(!strcmp(song->artist, current->artist) &&
-					!strcmp(song->album, current->album))
+			if(!strcmp(song->file, current->file))
 			{
 				playlist_player_update_image(connection);
 			}
