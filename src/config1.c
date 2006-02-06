@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -209,7 +209,7 @@ config_obj *cfg_open(gchar *url)
 }
 
 
-void config_close(config_obj *cfgo)
+void cfg_close(config_obj *cfgo)
 {
 	if(cfgo == NULL)
 	{

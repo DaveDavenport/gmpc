@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004-2005 Qball Cow <Qball@qballcow.nl>
+ *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -1126,7 +1126,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		int state = mpd_player_get_state(mi);
 		switch(state){
-			case MPD_STATUS_STATE_PLAY:
+			case MPD_PLAYER_PLAY:
 
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
@@ -1134,7 +1134,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				playlist_player_set_song(mi);
 				playlist_player_update_image(mi);
 				break;
-			case MPD_STATUS_STATE_PAUSE:
+			case MPD_PLAYER_PAUSE:
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
@@ -1156,12 +1156,12 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}
 	if(what&MPD_CST_SONGID || what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
-		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY)
+		if(mpd_player_get_state(mi) == MPD_PLAYER_PLAY)
 		{
 			playlist_player_set_song(mi);
 		}
-		if(mpd_player_get_state(mi) != MPD_STATUS_STATE_STOP &&
-				mpd_player_get_state(mi) != MPD_STATUS_STATE_UNKNOWN)
+		if(mpd_player_get_state(mi) != MPD_PLAYER_STOP &&
+				mpd_player_get_state(mi) != MPD_PLAYER_UNKNOWN)
 		{
 			playlist_player_update_image(mi);
 		}

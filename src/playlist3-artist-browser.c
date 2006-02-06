@@ -63,7 +63,25 @@ GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 GtkTreeRowReference *pl3_ab_tree_ref = NULL;
 
 
+void pl3_artist_browser_dbase_updated()
+{
+	if(pl3_ab_tree_ref){
+		GtkTreeIter parent, child;
+		GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_ab_tree_ref);
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
+		if(!path) return;
+		if(gtk_tree_model_get_iter(model, &parent, path)){
+			while(gtk_tree_model_iter_children(model, &child,&parent))
+			{
+				gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
+			}
+		}
+		/* add fake, and set not-openend bit */
+		gtk_tree_store_append(pl3_tree, &child, &parent);
+		gtk_tree_store_set(GTK_TREE_STORE(model), &parent, PL3_CAT_PROC,FALSE,-1);
 
+	}
+}
 
 int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
@@ -129,7 +147,7 @@ void pl3_artist_browser_init()
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_ab_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_ab_tree)), GTK_SELECTION_MULTIPLE);
 	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_ab_tree), FALSE);
-	
+
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_ab_tree), "row-activated",G_CALLBACK(pl3_artist_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(pl3_ab_tree), "button-press-event", G_CALLBACK(pl3_artist_browser_button_press_event), NULL);
@@ -142,7 +160,7 @@ void pl3_artist_browser_init()
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_ab_sw), GTK_SHADOW_ETCHED_IN);
 
 	pl3_ab_vbox = gtk_vbox_new(FALSE, 6);
-	
+
 	gtk_container_add(GTK_CONTAINER(pl3_ab_sw), pl3_ab_tree);
 
 	gtk_box_pack_start(GTK_BOX(pl3_ab_vbox), pl3_ab_sw, TRUE, TRUE,0);

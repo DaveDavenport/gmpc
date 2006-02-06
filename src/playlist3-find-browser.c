@@ -71,7 +71,7 @@ int pl3_find_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
 	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
 	{
-		return FALSE;                                                                                           	
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -228,6 +228,7 @@ unsigned long pl3_find_browser_view_browser()
    GtkTreeIter iter;
    char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
    int time=0;
+   gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_findb_tree), NULL);
    gtk_list_store_clear(pl3_findb_store);
    if(TRUE)
    {
@@ -244,10 +245,9 @@ unsigned long pl3_find_browser_view_browser()
 	   if(name == NULL || !strlen(name))
 	   {
 		   cfg_free_string(markdata);
-		   return 0 ;
 	   }
 	   /* do the actual search */
-	   if(num_field < 50)
+	   else if(num_field < 50)
 	   {
 		   if(mpd_server_check_version(connection,0,12,0))
 		   {
@@ -356,20 +356,21 @@ unsigned long pl3_find_browser_view_browser()
 			  {
 				buffer = g_strdup(data->tag);
 			  }
-			  gtk_list_store_prepend (pl3_findb_store, &child);                             		  
-			  gtk_list_store_set (pl3_findb_store, &child,                                  		  
+			  gtk_list_store_prepend (pl3_findb_store, &child);
+			  gtk_list_store_set (pl3_findb_store, &child,
 					  PL3_FINDB_PATH, data->tag,
 					  PL3_FINDB_TITLE, buffer,
-					  PL3_FINDB_TYPE, PL3_ENTRY_ALBUM, 
-					  PL3_FINDB_ICON, "media-album", 			  
+					  PL3_FINDB_TYPE, PL3_ENTRY_ALBUM,
+					  PL3_FINDB_ICON, "media-album",
 					  -1);
 			  g_free(buffer);
 		  }
-                                                                                                  		  
+
 		  data =  mpd_data_get_next(data);
 	   }
 
    }
+   gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_findb_tree), GTK_TREE_MODEL(pl3_findb_store));
    cfg_free_string(markdata);
    return time;
 }
@@ -392,9 +393,9 @@ void pl3_find_browser_show_info()
 		return;
 	}
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
-	{                                                                                     	
+	{
 		GList *list = NULL;
-		list = gtk_tree_selection_get_selected_rows (selection, &model);              	
+		list = gtk_tree_selection_get_selected_rows (selection, &model);
 		/* iterate over every row */
 		list = g_list_last (list);
 		do

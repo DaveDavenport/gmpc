@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -40,18 +40,13 @@ GtkTextBuffer *buffer= NULL;
 void esf_render_example(GtkTextBuffer *buffer)
 {
 	char *filename = _("/path/to/file_name.mp3");
-	char *artist = _("I. am Artist");
-	char *album = _("To Album or Not To Album");
-	char *title = _("Am I a Visible Title");
+	char *artist = _("I'm Artist");
+	char *album = _("Sing or Swing you want");
+	char *title = _("The kernel jazz");
 	char *track = _("01/24");
-	char *date = _("25 Feb 2005");
+	char *date = _("2 Feb 2006");
 	unsigned int song_time =  645;
 	char *stream_name = _("MPD's Streaming server");
-
-
-
-
-
 	char *result_buffer[1024];
 	char *format = NULL;
 	GtkTextIter start_iter, stop_iter;
@@ -66,23 +61,23 @@ void esf_render_example(GtkTextBuffer *buffer)
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_album"))))
 	{
 		song->album = g_strdup(album);
-	}                                                                                              	
+	}
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_title"))))
 	{
 		song->title = g_strdup(title);
-	}                                 
+	}
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_track"))))
 	{
 		song->track = g_strdup(track);
-	}                                 
+	}
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_date"))))
 	{
 		song->date = g_strdup(date);
-	}                                 
+	}
 	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_stream"))))
 	{
 		song->name = g_strdup(stream_name);
-	}                                                                                            	
+	}
 
 
 	gtk_text_buffer_get_start_iter(buffer, &start_iter);
@@ -105,7 +100,7 @@ void esf_reload()
 char * edit_song_markup(char *format)
 {
 	char *str_format = NULL;
-	GtkTextIter start_iter, stop_iter;				
+	GtkTextIter start_iter, stop_iter;
 	GtkWidget *dialog;
 	char *path = gmpc_get_full_glade_path("gmpc.glade");
 	xml_esf= glade_xml_new(path, "esf_dialog",NULL);

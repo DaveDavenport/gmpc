@@ -194,6 +194,7 @@ void pl3_file_browser_update_folder()
 		mpd_database_update_dir(connection, path);
 		g_free(path);
 	}
+
 }
 
 void pl3_file_browser_replace_folder()
@@ -324,6 +325,10 @@ void pl3_file_browser_reupdate()
 			pl3_file_browser_reupdate_folder(&parent, "/");
 
 		}
+		/* update right view */
+		printf("test\n");
+		gtk_list_store_clear(pl3_fb_store);
+		pl3_file_browser_view_folder(&parent);
 		mpd_data_free(data);
 		gtk_tree_path_free(path);
 	}

@@ -283,7 +283,7 @@ void cover_art_init()
 {
 	gchar *url = g_strdup_printf("%s/.covers/", g_get_home_dir());
 	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
-		if(mkdir(url, 0755)<0){
+		if(mkdir(url, 0700)<0){
 			g_error("Cannot make %s\n", url);
 		}
 	}

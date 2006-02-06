@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +13,7 @@
 
 GladeXML *cam_pref_xml = NULL;
 extern config_obj *cover_index;
-
+extern int errno;
 
 void cover_art_manager_close(GtkWidget *widget);
 void cover_art_pref_construct(GtkWidget *container);
@@ -278,6 +280,24 @@ void cover_art_cover_manager(GtkButton *but)
 	cover_art_manager_create();
 }
 
+void cover_art_clear_cache(GtkButton *but)
+{
+	if(cover_index){
+		gchar *url = g_strdup_printf("%s/.covers/covers.db", g_get_home_dir());
+		/* close the cache */
+		cfg_close(cover_index);
+		/* remove th file */
+		if(g_file_test(url, G_FILE_TEST_EXISTS))
+		{
+			if(unlink(url) < 0){
+				debug_printf(DEBUG_ERROR, "Failed to remove cover art cache: %s\n",
+						strerror(errno));
+			}
+		}
+		cover_index = cfg_open(url);
+		g_free(url);
+	}
+}
 
 
 void cover_art_pref_construct(GtkWidget *container)

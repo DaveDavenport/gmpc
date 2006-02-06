@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ * Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -34,6 +34,7 @@
 
 /* as internall plugin */
 #include "playlist3-tag-browser.h"
+#include "playlist3-artist-browser.h"
 
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
@@ -83,9 +84,11 @@ char *gmpc_get_full_image_path(char *filename)
 	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
-	 *
-	 * g_free(packagedir);
 	 */
+#if CHECK_GLIB_VERSION(2,8,4)
+	  g_free(packagedir);
+#endif
+
 #else
 	path = g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
 #endif
@@ -105,9 +108,11 @@ char *gmpc_get_full_glade_path(char *filename)
 	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
-	 *
-	 * g_free(packagedir);
 	 */
+#if CHECK_GLIB_VERSION(2,8,4)
+	 g_free(packagedir);
+#endif
+
 #else
 	path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
 #endif
@@ -201,7 +206,7 @@ int main (int argc, char **argv)
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
 		debug_printf(DEBUG_INFO, "Trying to create %s",url);
-		if(mkdir(url,0777) < 0)
+		if(mkdir(url,0700) < 0)
 		{
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
 			return 1;
@@ -332,7 +337,7 @@ int main (int argc, char **argv)
 	player_destroy();
 	/* cleaning up. */
 	mpd_free(connection);
-	config_close(config);
+	cfg_close(config);
 	gtk_list_store_clear(pl2_store);
 	g_object_unref(pl2_store);
 	return 0;
@@ -709,6 +714,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	if(what&MPD_CST_DATABASE)
 	{
 		pl3_database_changed();
+		pl3_artist_browser_dbase_updated();
 	}
 	if(what&MPD_CST_UPDATING)
 	{

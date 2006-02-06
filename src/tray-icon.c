@@ -544,19 +544,18 @@ void tray_icon_song_change()
 					(CoverArtCallback)tray_cover_art_fetched,NULL);
 		}
 		if(path)g_free(path);
-	}                                                                                          		
-
+	}
 }
 
 void tray_icon_state_change()
 {
 	int state = mpd_player_get_state(connection);
-	if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN)
+	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
 		if(cover_pb) g_object_unref(cover_pb);
 		cover_pb = NULL;
 	}
-	else if(state == MPD_STATUS_STATE_PLAY){
+	else if(state == MPD_PLAYER_PLAY){
 		tray_icon_song_change();
 	}
 
@@ -668,56 +667,56 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);				
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
 
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));                            		
+				gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);				
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
-				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));                            		
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);				
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
 
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                		
-				gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));                            		
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
 		item = gtk_separator_menu_item_new();
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
 		item = gtk_image_menu_item_new_with_mnemonic(_("Pla_ylist"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
-				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));                            		
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);				
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_playlist3), NULL);
 
-		if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY ||
-				mpd_player_get_state(connection) == MPD_STATUS_STATE_PAUSE)
+		if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY ||
+				mpd_player_get_state(connection) == MPD_PLAYER_PAUSE)
 		{
 			item = gtk_image_menu_item_new_with_mnemonic(_("Song _Information"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),                                                                	
-					gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));                            		
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tray_icon_info), NULL);				
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tray_icon_info), NULL);
 
-		}		
+		}
 		item = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);       
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(main_quit), NULL);		
-		gtk_widget_show_all(menu);	
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(main_quit), NULL);
+		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, event->time);
 	}
-	return FALSE;    
+	return FALSE;
 }
 
 int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
@@ -726,11 +725,11 @@ int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 	{
 		if(event->direction == GDK_SCROLL_UP)
 		{
-			mpd_status_set_volume(connection,mpd_status_get_volume(connection)+5);		
+			mpd_status_set_volume(connection,mpd_status_get_volume(connection)+5);
 		}
 		else if (event->direction == GDK_SCROLL_DOWN)
 		{
-			mpd_status_set_volume(connection,mpd_status_get_volume(connection)-5);		
+			mpd_status_set_volume(connection,mpd_status_get_volume(connection)-5);
 		}
 		else if(event->direction == GDK_SCROLL_LEFT)
 		{
@@ -801,7 +800,7 @@ void tray_cover_art_fetched(mpd_Song *song)
 				int ret = 0; 
 				ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
 				if(ret == COVER_ART_OK_LOCAL)
-				{                                                                                  				
+				{
 					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
 				}
 				if(path)g_free(path);
@@ -869,7 +868,7 @@ void popup_position_changed(GtkComboBox *om)
 
 void popup_timeout_changed()
 {
-	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout", 
+	cfg_set_single_value_as_int(config, "tray-icon", "popup-timeout",
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_pref_xml, "popup_timeout"))));
 }
 

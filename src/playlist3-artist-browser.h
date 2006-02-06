@@ -9,7 +9,7 @@ void pl3_artist_browser_unselected(GtkWidget *container);
 int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkEventButton *event);
 void pl3_artist_browser_category_key_press(GdkEventKey *event);
 
-
+void pl3_artist_browser_dbase_updated();
 void pl3_artist_browser_disconnect();
 
 #endif

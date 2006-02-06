@@ -1,5 +1,5 @@
 /*
- *Copyright (C) 2004 Qball Cow <Qball@qballcow.nl>
+ *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -722,7 +722,7 @@ void time_format_toggle()
 void id3_info()
 {
 	int state = mpd_player_get_state(connection);
-	if(state == MPD_STATUS_STATE_STOP || state == MPD_STATUS_STATE_UNKNOWN) return;
+	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
 	if(!mpd_check_connected(connection)) return;
 	call_id3_window(mpd_player_get_current_song_id(connection));
 }
