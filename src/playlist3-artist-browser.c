@@ -245,6 +245,9 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreePath *path = NULL;
 	int depth = 0;
 	long unsigned time =0;
+
+	if(pl3_ab_tree == NULL || pl3_ab_store == NULL) return 0;
+	
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (!mpd_check_connected(connection))
 		return 0;

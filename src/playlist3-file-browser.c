@@ -305,34 +305,33 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 }
 void pl3_file_browser_reupdate()
 {
-	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
-	if(path)
-	{
-		GtkTreeIter parent;
-		MpdData *data = mpd_playlist_get_directory(connection, "/");
-		gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
-		if(data == NULL)
+	if(pl3_fb_tree_ref){
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
+		if(path)
 		{
-			GtkTreeIter iter;
-			int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, &parent);
-			debug_printf(DEBUG_INFO,"clearing complete tree\n");
-			while(valid){
-				valid = gtk_tree_store_remove(pl3_tree,&iter);
+			GtkTreeIter parent;
+			MpdData *data = mpd_playlist_get_directory(connection, "/");
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
+			if(data == NULL)
+			{
+				GtkTreeIter iter;
+				int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, &parent);
+				debug_printf(DEBUG_INFO,"clearing complete tree\n");
+				while(valid){
+					valid = gtk_tree_store_remove(pl3_tree,&iter);
+				}
 			}
-		}
-		else
-		{
-			pl3_file_browser_reupdate_folder(&parent, "/");
+			else
+			{
+				pl3_file_browser_reupdate_folder(&parent, "/");
 
+			}
+			/* update right view */
+			pl3_file_browser_view_folder(&parent);
+			mpd_data_free(data);
+			gtk_tree_path_free(path);
 		}
-		/* update right view */
-		printf("test\n");
-		gtk_list_store_clear(pl3_fb_store);
-		pl3_file_browser_view_folder(&parent);
-		mpd_data_free(data);
-		gtk_tree_path_free(path);
 	}
-	/* TODO: update the selected folder */
 }
 
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
@@ -343,12 +342,14 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreeIter iter;
 	long  unsigned time=0;
 
-
+	if(pl3_fb_store == NULL) return 0;
+	gtk_list_store_clear(pl3_fb_store);
 	/* check the connection state and when its valid proceed */
 	if (!mpd_check_connected(connection))
 	{
 		return 0;
 	}
+
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
 	if(strcmp(path,"/"))
 	{
@@ -540,7 +541,7 @@ void pl3_file_browser_cat_sel_changed(GtkTreeView *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;
-	gtk_list_store_clear(pl3_fb_store);
+
 	time = pl3_file_browser_view_folder(iter);
 	string = format_time(time);
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
