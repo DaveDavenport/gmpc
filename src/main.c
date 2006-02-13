@@ -385,7 +385,7 @@ void playlist_changed(MpdObj *mi)
 	gint old_length = 0;
 	GtkTreeIter iter;
 	gchar buffer[1024];
-	debug_printf(DEBUG_INFO, "playlist changed\n");
+	debug_printf(DEBUG_INFO, "playlist changed length: %i %i\n",info.playlist_length, mpd_playlist_get_playlist_length(mi));
 	old_length = info.playlist_length;
 	char *string = cfg_get_single_value_as_string_with_default(config,
 			"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
@@ -470,7 +470,7 @@ void playlist_changed(MpdObj *mi)
 		data= mpd_data_get_next(data);
 	}
 
-	if(mpd_status_check(connection))
+	if(mpd_status_check(connection) != MPD_OK)
 	{
 		while (mpd_playlist_get_playlist_length(connection) < old_length)
 		{
