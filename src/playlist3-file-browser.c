@@ -252,18 +252,20 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 2, &ppath,-1);
 			if(ppath && data)
 			{
-				MpdData *list = NULL;
-				for(list = mpd_data_get_first(data);!mpd_data_is_last(list) && !found;
-						list = mpd_data_get_next(list))
-				{
-					if(data->type ==  MPD_DATA_TYPE_DIRECTORY)
+				MpdData *list = mpd_data_get_first(data);
+				do{
+					if(list->type ==  MPD_DATA_TYPE_DIRECTORY)
 					{
-						if(!strcmp(ppath, data->directory)) found = TRUE;
+						if(!strcmp(ppath, list->directory)){
+							data = list;
+						       	found = TRUE;
+						}
 					}
-				}
+				}while(!mpd_data_is_last(list) && (list = mpd_data_get_next(list)));
 			}
 			if(!found)
 			{
+				/** removes the row, and set iter to the next one */
 				valid = gtk_tree_store_remove(pl3_tree, &iter);
 			}
 			else
@@ -327,6 +329,14 @@ void pl3_file_browser_reupdate()
 
 			}
 			/* update right view */
+			if(pl3_cat_get_selected_browser() == PL3_BROWSE_FILE)
+			{
+				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+						glade_xml_get_widget (pl3_xml, "cat_tree"));
+				GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+
+				gtk_tree_selection_get_selected(selec,&model, &parent);
+			}
 			pl3_file_browser_view_folder(&parent);
 			mpd_data_free(data);
 			gtk_tree_path_free(path);
