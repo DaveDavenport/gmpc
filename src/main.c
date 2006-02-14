@@ -391,7 +391,7 @@ void playlist_changed(MpdObj *mi)
 			"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 
 	data = mpd_playlist_get_changes(mi,info.playlist_id);
-
+	printf("pointer %p\n", data);
 	while(data != NULL)
 	{
 		/*
@@ -470,7 +470,7 @@ void playlist_changed(MpdObj *mi)
 		data= mpd_data_get_next(data);
 	}
 
-	if(mpd_status_check(connection) != MPD_OK)
+	if(mpd_status_check(connection) == MPD_OK)
 	{
 		while (mpd_playlist_get_playlist_length(connection) < old_length)
 		{
