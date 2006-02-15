@@ -246,7 +246,7 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 	}
 
 	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
-	MpdData *data = mpd_playlist_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
+	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
 	if(data){
 		CoverArtResult ret =COVER_ART_NO_IMAGE;
@@ -265,7 +265,7 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback function,gpointer userdata)
 {
 	if(!mpd_server_check_version(connection,0,12,0))return;
-	MpdData *data = mpd_playlist_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
+	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
 	if(data){
 		if(data->type == MPD_DATA_TYPE_SONG)

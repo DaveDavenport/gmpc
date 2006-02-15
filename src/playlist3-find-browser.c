@@ -251,11 +251,11 @@ unsigned long pl3_find_browser_view_browser()
 	   {
 		   if(mpd_server_check_version(connection,0,12,0))
 		   {
-			   data = mpd_playlist_find_adv(connection,FALSE, num_field, name, -1);
+			   data = mpd_database_find_adv(connection,FALSE, num_field, name, -1);
 		   }
 		   else
 		   {
-			   data = mpd_playlist_find(connection, num_field, name, FALSE);
+			   data = mpd_database_find(connection, num_field, name, FALSE);
 		   }
 	   }
 	   else if(num_field == PL3_FINDB_CB_ALL){
@@ -416,7 +416,7 @@ void pl3_find_browser_show_info()
 			{
 				char *path;
 				gtk_tree_model_get(model,&iter,PL3_FINDB_PATH, &path,-1);
-				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
 					call_id3_window_song(mpd_songDup(data->song));
@@ -430,15 +430,7 @@ void pl3_find_browser_show_info()
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
-
-
-
-
 }
-
-
-
-
 
 void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {

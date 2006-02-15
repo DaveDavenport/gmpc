@@ -235,7 +235,7 @@ void pl3_file_browser_add()
 }
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 {
-	MpdData *data = mpd_playlist_get_directory(connection,path);
+	MpdData *data = mpd_database_get_directory(connection,path);
 	if(data == NULL)
 	{
 		/* clear the tree */
@@ -312,7 +312,7 @@ void pl3_file_browser_reupdate()
 		if(path)
 		{
 			GtkTreeIter parent;
-			MpdData *data = mpd_playlist_get_directory(connection, "/");
+			MpdData *data = mpd_database_get_directory(connection, "/");
 			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
 			if(data == NULL)
 			{
@@ -373,7 +373,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 
 
-	data = mpd_playlist_get_directory(connection, path);
+	data = mpd_database_get_directory(connection, path);
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -445,7 +445,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
 
-	data = mpd_playlist_get_directory(connection, path);
+	data = mpd_database_get_directory(connection, path);
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -598,7 +598,7 @@ void pl3_file_browser_show_info()
 			gtk_tree_model_get (GTK_TREE_MODEL(pl3_fb_store), &iter,PL3_FB_TYPE,&type, PL3_FB_PATH, &path, -1);
 			if(type == PL3_ENTRY_SONG)
 			{
-				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
 					call_id3_window_song(mpd_songDup(data->song));

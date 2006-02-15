@@ -333,7 +333,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		}
 
 
-		data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+		data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 		/* artist is selected */
 		while(data != NULL)
 		{
@@ -382,7 +382,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	else if(depth ==2)
 	{
 		/* artist and album is selected */
-		MpdData *data = mpd_playlist_find(connection,MPD_TABLE_ALBUM, string, TRUE);
+		MpdData *data = mpd_database_find(connection,MPD_TABLE_ALBUM, string, TRUE);
 		while (data != NULL)
 		{
 			if(data->type == MPD_DATA_TYPE_SONG)
@@ -527,7 +527,7 @@ void pl3_artist_browser_add_folder()
 		{
 			/* artist selected */
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
-			MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+			MpdData * data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 			while (data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
@@ -545,7 +545,7 @@ void pl3_artist_browser_add_folder()
 			/* album selected */
 			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
 			gchar *message = g_strdup_printf("Added songs from album '%s' ",title);
-			MpdData *data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, title, TRUE);
+			MpdData *data = mpd_database_find(connection, MPD_TABLE_ALBUM, title, TRUE);
 			while (data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
@@ -618,7 +618,7 @@ void pl3_artist_browser_show_info()
 					-1);
 			if(type == PL3_ENTRY_SONG)
 			{
-				data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
@@ -810,7 +810,7 @@ void pl3_artist_browser_add_selected()
 			}
 			else if (type&PL3_ENTRY_ARTIST)
 			{
-				MpdData * data = mpd_playlist_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+				MpdData * data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
@@ -824,7 +824,7 @@ void pl3_artist_browser_add_selected()
 			else if (type&PL3_ENTRY_ALBUM)
 			{
 				MpdData *data = NULL;
-				data = mpd_playlist_find(connection, MPD_TABLE_ALBUM, album, TRUE);
+				data = mpd_database_find(connection, MPD_TABLE_ALBUM, album, TRUE);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)

@@ -320,7 +320,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	/* the things we do when on level 0 */
 	if(depth == 0)
 	{
-		MpdData *data = mpd_playlist_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
+		MpdData *data = mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
 
 		while(data != NULL)
 		{	
@@ -349,7 +349,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(depth == 1)
 	{
-		MpdData *data = mpd_playlist_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),
+		MpdData *data = mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
 		if(data == NULL)
 		{
@@ -378,7 +378,7 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	}
 	else if(depth == 2 && len >= 2)
 	{
-		MpdData *data = mpd_playlist_get_unique_tags(connection,
+		MpdData *data = mpd_database_get_unique_tags(connection,
 				mpd_misc_get_tag_by_name(tk_format[2]),
 				mpd_misc_get_tag_by_name(tk_format[1]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[0]),second_tag,
@@ -480,7 +480,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 	if(depth == 1)
 	{
-		MpdData *data = mpd_playlist_find_adv(connection,TRUE, 
+		MpdData *data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
 		/* lowest level selected*/
 		while(data != NULL)
@@ -510,7 +510,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	else if(depth == 2)
 	{
 		/* second level */
-		MpdData *data = mpd_playlist_find_adv(connection,TRUE,
+		MpdData *data = mpd_database_find_adv(connection,TRUE,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
 		while (data != NULL)
@@ -551,7 +551,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
-			data = mpd_playlist_find_adv(connection,TRUE,
+			data = mpd_database_find_adv(connection,TRUE,
 					mpd_misc_get_tag_by_name(tk_format[0]),	first,
 					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
 					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
@@ -719,7 +719,7 @@ void pl3_custom_tag_browser_add_folder()
 
 	if(depth == 1)
 	{
-		MpdData *data = mpd_playlist_find_adv(connection,TRUE, 
+		MpdData *data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
 		/* lowest level selected*/
 		if(data != NULL)
@@ -735,7 +735,7 @@ void pl3_custom_tag_browser_add_folder()
 	else if(depth == 2)
 	{
 		/* second level */
-		MpdData *data = mpd_playlist_find_adv(connection,TRUE,
+		MpdData *data = mpd_database_find_adv(connection,TRUE,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
 
@@ -762,7 +762,7 @@ void pl3_custom_tag_browser_add_folder()
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
-			data = mpd_playlist_find_adv(connection,TRUE,
+			data = mpd_database_find_adv(connection,TRUE,
 					mpd_misc_get_tag_by_name(tk_format[0]),	first,
 					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
 					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
@@ -954,7 +954,7 @@ void pl3_tag_browser_show_info()
 			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (GTK_TREE_MODEL(pl3_tb_store), &iter, PL3_TB_PATH, &path, -1);
-			data = mpd_playlist_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+			data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 			while(data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
