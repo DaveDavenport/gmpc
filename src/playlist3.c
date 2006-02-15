@@ -370,6 +370,19 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
  */
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
+	if(event->keyval == GDK_F12)
+	{
+		GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
+		GdkWindowState state = gdk_window_get_state(win->window);	
+		if(state&GDK_WINDOW_STATE_FULLSCREEN)
+		{
+			gtk_window_unfullscreen(GTK_WINDOW(win));
+		}
+		else{
+			gtk_window_fullscreen(GTK_WINDOW(win));
+		}
+
+	}
 	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
 	{
 		/* disabled because of problems with gtk 2.6 */
