@@ -43,7 +43,7 @@ void pl3_file_browser_show_info();
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_file_browser_update_folder();
 void pl3_file_browser_add_folder();
-void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string);
+void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
 
 enum{
@@ -734,7 +734,7 @@ void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), path);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), NULL);
 				has_item = 1;
 			}
 			else if(row_type == PL3_ENTRY_DIRECTORY)
@@ -847,8 +847,10 @@ void pl3_file_browser_add_selected()
 	g_list_free (rows);
 }
 
-void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string)
+void pl3_file_browser_delete_playlist(GtkMenuItem *bt)
 {
+	char *path= NULL;
+	GtkTreeSelection *sel = NULL;
 	/* create a warning message dialog */
 	GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
 			(glade_xml_get_widget
@@ -857,20 +859,45 @@ void pl3_file_browser_delete_playlist(GtkToggleButton *bt, char *string)
 			GTK_MESSAGE_WARNING,
 			GTK_BUTTONS_NONE,
 			_("Are you sure you want to clear the selected playlist?"));
+
 	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_NO,
 			GTK_RESPONSE_CANCEL, GTK_STOCK_YES,
 			GTK_RESPONSE_OK, NULL);
 	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 			GTK_RESPONSE_CANCEL);
 
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
+	if(gtk_tree_selection_count_selected_rows(sel) == 1)
+	{
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store);
+		GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
+		if(list != NULL)
+		{
+			GtkTreeIter iter;
+
+			list = g_list_first(list);
+			gtk_tree_model_get_iter(model, &iter, list->data);
+			gtk_tree_model_get(model, &iter,PL3_FB_PATH,&path,-1); 
+			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
+			g_list_free (list);
+		}
+	}
+
+	
+	if(path == NULL){
+		gtk_widget_destroy(dialog);
+		return;
+	}	
+
 	switch (gtk_dialog_run (GTK_DIALOG (dialog)))
 	{
 		case GTK_RESPONSE_OK:
-			mpd_database_delete_playlist(connection, string);
+			mpd_database_delete_playlist(connection, path);
 			pl3_cat_sel_changed();
 
 	}
 	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free(path);
 }
 
 void pl3_file_browser_disconnect()
