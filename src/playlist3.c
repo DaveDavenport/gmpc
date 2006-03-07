@@ -774,39 +774,14 @@ void pl3_highlight_song_change ()
 		return;
 	}
 
-	/* unmark the old pos if it exists */
-	if (info.old_pos != -1)
-	{
-		/* create a string so I can get the right iter */
-		temp = g_strdup_printf ("%i", info.old_pos);
-		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
-		{
-			gint song_id = 0, song_type = 0;
-			/* check if we have the song we want */
-			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_ID,&song_id,SONG_TYPE,&song_type, -1);
-			/* if the old song is the new song (so tags updated) quit */
-			if (song_id == mpd_player_get_current_song_id(connection))
-			{
-				g_free (temp);
-				return;
-			}
-			/* unhighlight the song */
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL,
-					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
-					-1);
-		}
-		g_free (temp);
-		/* reset old pos */
-		info.old_pos = -1;
-	}
 	/* check if we need to highlight a song */
 	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
 	{
 		temp = g_strdup_printf ("%i", mpd_player_get_current_song_pos(connection));
-		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (pl2_store), &iter, temp))
+		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (playlist), &iter, temp))
 		{
 			gint pos;
-			gtk_tree_model_get (GTK_TREE_MODEL (pl2_store), &iter, SONG_POS,
+			gtk_tree_model_get (GTK_TREE_MODEL (playlist), &iter, PLAYLIST_LIST_COL_SONG_POS,
 					&pos, -1);
 			/* check if we have the right song, if not, print an error */
 			if (pos != mpd_player_get_current_song_pos(connection))
@@ -816,10 +791,10 @@ void pl3_highlight_song_change ()
 						pos,
 						mpd_player_get_current_song_pos(connection));
 			}
-			gtk_list_store_set (pl2_store, &iter,
+/*			gtk_list_store_set (pl2_store, &iter,
 					WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,
 					SONG_STOCK_ID,"gtk-media-play", -1);
-
+*/
 			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) &&
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{
@@ -828,7 +803,6 @@ void pl3_highlight_song_change ()
 		}
 		g_free (temp);
 		/* set highlighted position */
-		info.old_pos = mpd_player_get_current_song_pos(connection);
 	}
 }
 
@@ -927,6 +901,7 @@ void set_playlist_format()
 	if(format != NULL)
 	{
 		cfg_set_single_value_as_string(config, "playlist","markup",format);
+		playlist_list_set_markup(playlist,format);
 	}
 	g_free(format);
 }

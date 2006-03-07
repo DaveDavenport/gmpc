@@ -39,7 +39,7 @@ static GtkTargetEntry drag_types[] =
    { "pm_data", GTK_TARGET_SAME_APP, 100},
 };
 
-
+GtkTreeModel *playlist = NULL;
 
 
 /* just for here */
@@ -101,7 +101,7 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 	if (gtk_tree_selection_count_selected_rows (selection) > 0 && position >=0)
 	{
 		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		GtkTreeModel *model = GTK_TREE_MODEL(playlist/*pl2_store*/);
 		/* start a command list */
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -114,7 +114,7 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 			int value;
 			int dest = position;
 			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, SONG_POS, &value, -1);
+			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_SONG_POS, &value, -1);
 			if(position < value && pos ==  GTK_TREE_VIEW_DROP_AFTER) dest++;
 			mpd_playlist_move_pos(connection, value-test,dest);			
 			if(position > value) test++;
@@ -133,7 +133,7 @@ int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guin
 
 void pl3_current_playlist_search_activate()
 {
-	GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+	GtkTreeModel *model = GTK_TREE_MODEL(/*pl2_store*/playlist);
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
 	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
 	{
@@ -150,14 +150,14 @@ void pl3_current_playlist_browser_init()
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 
-	GValue value;
+	GValue value = {-1,};
 
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,NULL);
+//	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,NULL);
 	memset(&value, 0, sizeof(value));
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
@@ -169,11 +169,13 @@ void pl3_current_playlist_browser_init()
 	/* set value for ALL */
 	memset(&value, 0, sizeof(value));
 	g_value_init(&value, G_TYPE_BOOLEAN);
-	g_value_set_boolean(&value, TRUE);
-	
-
-	gtk_tree_view_column_set_attributes (column,renderer,"text", SONG_TITLE, "weight", WEIGHT_INT,NULL);
-	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);                                    	
+	g_value_set_boolean(&value, TRUE);//PANGO_WEIGHT_ULTRABOLD);
+	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);
+    
+	gtk_tree_view_column_set_attributes (column,renderer,
+			"text",PLAYLIST_LIST_COL_MARKUP /*SONG_TITLE*/, 
+			"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
+			NULL);
 
 
 #if GTK_CHECK_VERSION(2,6,0)
@@ -186,7 +188,8 @@ void pl3_current_playlist_browser_init()
 
 
 	/* set up the tree */
-	pl3_cp_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl2_store));
+	//pl3_cp_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl2_store));
+	pl3_cp_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(playlist));
 	/* insert the column in the tree */
 	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
@@ -201,7 +204,7 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), NULL);
 
 
-	g_signal_connect(pl2_store, "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
+//	g_signal_connect(playlist/*pl2_store*/, "row-changed", G_CALLBACK(pl3_current_playlist_row_changed), NULL);
 
 
 	/* set up the scrolled window */
@@ -221,7 +224,7 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 
-	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), SONG_TITLE);
+	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), PLAYLIST_LIST_COL_SONG_TITLE);
 	g_signal_connect(G_OBJECT(tree_search), "result-activate", G_CALLBACK(pl3_current_playlist_search_activate),NULL);
 	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(tree_search), FALSE, TRUE, 0);	
 	/* set initial state */
@@ -276,7 +279,7 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		GtkTreeModel *model = GTK_TREE_MODEL(playlist/*pl2_store*/);
 		/* start a command list */
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -287,7 +290,7 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 			GtkTreeIter iter;
 			int value;
 			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
+			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_SONG_ID, &value, -1);
 			mpd_playlist_queue_delete_id(connection, value);			
 		} while ((llist = g_list_next (llist)));
 
@@ -363,7 +366,7 @@ void pl3_current_playlist_browser_add_to_clipboard(int cut)
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl2_store);
+		GtkTreeModel *model = GTK_TREE_MODEL(playlist/*pl2_store*/);
 		/* start a command list */
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -375,7 +378,7 @@ void pl3_current_playlist_browser_add_to_clipboard(int cut)
 			int value;
 			char *path = NULL;
 			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, SONG_ID, &value,SONG_PATH,&path, -1);
+			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_SONG_ID, &value,PLAYLIST_LIST_COL_SONG_FILE,&path, -1);
 			g_queue_push_tail(pl3_queue, path);
 			if(cut)
 			{
@@ -414,16 +417,16 @@ void pl3_current_playlist_browser_crop_selected_songs()
 
 		/* start a command list */
 		/* remove every selected song one by one */
-		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl2_store), &iter))
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist/*pl2_store*/), &iter))
 		{
 			do{
 				int value=0;
 				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 				{
-					gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_ID, &value, -1);
+					gtk_tree_model_get (GTK_TREE_MODEL(playlist/*pl2_store*/), &iter, PLAYLIST_LIST_COL_SONG_ID, &value, -1);
 					mpd_playlist_queue_delete_id(connection, value);				
 				}
-			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(pl2_store),&iter));
+			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist/*pl2_store*/),&iter));
 			mpd_playlist_queue_commit(connection);
 		}
 
@@ -443,7 +446,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	if(type != PL3_CURRENT_PLAYLIST) return;
 	str = gtk_tree_path_to_string(path);
 
-	gtk_tree_model_get(model, iter,SONG_POS, &pos, -1);
+	gtk_tree_model_get(model, iter,PLAYLIST_LIST_COL_SONG_POS, &pos, -1);
 	new_pos = atoi(str);
 	if(new_pos > pos ) new_pos --;
 	/* if there wasn't a move action we don't do anything, because this signal is trigged on every row change */
@@ -453,9 +456,8 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 		return;
 	}
 
-
 	mpd_playlist_move_pos(connection, pos, new_pos);
-	gtk_list_store_set(pl2_store,iter, SONG_POS, new_pos, -1);
+//	gtk_list_store_set(pl2_store,iter, SONG_POS, new_pos, -1);
 	g_free(str);
 }
 
@@ -530,7 +532,7 @@ void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *
 	GtkTreeIter iter;
 	gint song_id;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path);
-	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, -1);
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PLAYLIST_LIST_COL_SONG_ID,&song_id, -1);
 	mpd_player_play_id(connection, song_id);
 }
 
@@ -548,9 +550,10 @@ void pl3_current_playlist_browser_show_info()
 		do
 		{
 			GtkTreeIter iter;
+			mpd_Song *song = NULL;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get (model, &iter, SONG_ID, &value, -1);
-			call_id3_window (value);
+			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
+			call_id3_window_song (mpd_songDup(song));
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */

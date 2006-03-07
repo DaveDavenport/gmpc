@@ -18,6 +18,7 @@ gmpc_SOURCES=\
 	playlist3-current-playlist-browser.c\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
+	playlist-list.c\
 	mm-keys.c\
 	qthread.c\
 	config1.c\
@@ -72,4 +73,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
+		playlist-list.h\
 		TreeSearchWidget.h

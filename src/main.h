@@ -28,9 +28,12 @@
 #include "plugin.h"
 #include "player.h"
 #include "playlist3.h"
+#include "playlist-list.h"
 #include "mpdinteraction.h"
 #include "cover-art.h"
 #include "qthread.h"
+
+extern GtkTreeModel *playlist;
 
 /* the config object */
 extern config_obj *config;

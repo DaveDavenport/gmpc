@@ -61,7 +61,6 @@ int update_interface ();
  */
 guint update_timeout = 0;
 void init_stock_icons ();
-extern GtkListStore *pl2_store;
 /*
  * The Config object
  */
@@ -338,8 +337,7 @@ int main (int argc, char **argv)
 	/* cleaning up. */
 	mpd_free(connection);
 	cfg_close(config);
-	gtk_list_store_clear(pl2_store);
-	g_object_unref(pl2_store);
+	g_object_unref(playlist);
 	return 0;
 }
 
@@ -372,132 +370,6 @@ int update_interface ()
 	}
 	/* now start updating the rest */
 	return TRUE;
-}
-
-
-void playlist_changed(MpdObj *mi)
-{
-	MpdData *data = NULL;
-	long long new_playlist_id = mpd_playlist_get_playlist_id(connection);
-	/*
-	 * so I don't have to check all the time
-	 */
-	gint old_length = 0;
-	GtkTreeIter iter;
-	gchar buffer[1024];
-	debug_printf(DEBUG_INFO, "playlist changed length: %i %i\n",info.playlist_length, mpd_playlist_get_playlist_length(mi));
-	old_length = info.playlist_length;
-	char *string = cfg_get_single_value_as_string_with_default(config,
-			"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
-
-	data = mpd_playlist_get_changes(mi,info.playlist_id);
-	while(data != NULL)
-	{
-		/*
-		 * decide wether to update or to add
-		 */
-		if(data->song->pos < old_length)
-		{
-			/*
-			 * needed for getting the row
-			 */
-			gchar *path = g_strdup_printf ("%i", data->song->pos);
-			if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, path))
-			{
-				/* overwriting existing entry */
-				gint weight = PANGO_WEIGHT_NORMAL;
-				gint time=0;
-				if (data->song->id == mpd_player_get_current_song_id(connection))
-				{
-					weight = PANGO_WEIGHT_ULTRABOLD;
-				}
-				/* get old time */
-				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
-				if(time != MPD_SONG_NO_TIME)
-				{
-					info.playlist_playtime -= time;
-				}
-				if(data->song->time != MPD_SONG_NO_TIME)
-				{
-					info.playlist_playtime += data->song->time;
-				}
-				mpd_song_markup (buffer, 1024,
-						string,
-						data->song);
-
-				gtk_list_store_set (pl2_store, &iter,
-						SONG_ID,data->song->id,
-						SONG_POS,data->song->pos,
-						SONG_TITLE, buffer,
-						WEIGHT_INT, weight,
-						SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-						SONG_TIME,data->song->time,
-						SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
-						SONG_PATH, data->song->file,
-						-1);
-			}
-			g_free(path);
-		}
-		else
-		{
-			int weight = PANGO_WEIGHT_NORMAL;
-			if(data->song->time != MPD_SONG_NO_TIME)
-			{
-				info.playlist_playtime += data->song->time;
-			}
-			if (data->song->id == mpd_player_get_current_song_id(connection))
-			{
-				weight = PANGO_WEIGHT_ULTRABOLD;
-			}
-
-			mpd_song_markup (buffer, 1024,	string,	data->song);
-			gtk_list_store_append (pl2_store, &iter);
-			gtk_list_store_set (pl2_store, &iter,
-					SONG_ID,data->song->id,
-					SONG_POS,data->song->pos,
-					SONG_TITLE, buffer,
-					WEIGHT_INT, weight,
-					SONG_STOCK_ID,(strstr(data->song->file,"://") == NULL) ?"media-audiofile"	: "media-stream",
-					SONG_TIME,data->song->time,
-					SONG_TYPE, (strstr(data->song->file,"://") == NULL)?0:1,
-					SONG_PATH, data->song->file,
-					-1);
-
-		}
-
-
-		data= mpd_data_get_next(data);
-	}
-
-	if(mpd_status_check(connection) == MPD_OK)
-	{
-		while (mpd_playlist_get_playlist_length(connection) < old_length)
-		{
-			gchar *path = g_strdup_printf ("%i", old_length - 1);
-			if (gtk_tree_model_get_iter_from_string
-					(GTK_TREE_MODEL (pl2_store), &iter, path))
-			{
-				gint time = 0;
-				gtk_tree_model_get(GTK_TREE_MODEL(pl2_store), &iter, SONG_TIME, &time, -1);
-				if(time != MPD_SONG_NO_TIME)
-				{
-					info.playlist_playtime -= time;
-				}
-				gtk_list_store_remove (pl2_store, &iter);
-			}
-			g_free (path);
-			old_length--;
-		}
-	}
-
-
-	pl3_highlight_song_change ();
-	cfg_free_string(string);
-	info.playlist_id = new_playlist_id;
-	info.playlist_length = mpd_playlist_get_playlist_length(connection);
-
-	pl3_playlist_changed();
-
 }
 
 void init_stock_icons ()
@@ -660,52 +532,23 @@ void init_stock_icons ()
 
 void init_playlist_store ()
 {
-	/* create initial tree store */
-	pl2_store = gtk_list_store_new (NROWS,
-			GTK_TYPE_INT,	/* song id */
-			GTK_TYPE_INT,	/* pos id */
-			GTK_TYPE_STRING,	/* song title */
-			GTK_TYPE_INT,	/* weight int */
-			GTK_TYPE_STRING,	/* stock-id */
-			GTK_TYPE_INT,
-			GTK_TYPE_INT,
-			GTK_TYPE_STRING);
-}
 
+	playlist = playlist_list_new();
 
-/* this function takes care the right row is highlighted */
-void playlist_highlight_state_change()
-{
-	GtkTreeIter iter;
-	gchar *temp;
-	/* unmark the old pos if it exists */
-	if (info.old_pos != -1 && mpd_player_get_state(connection) <= MPD_PLAYER_STOP)
-	{
-		/* create a string so I can get the right iter */
-		temp = g_strdup_printf ("%i", info.old_pos);
-		if (gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL (pl2_store), &iter, temp))
-		{
-			int song_type;
-			gtk_tree_model_get (GTK_TREE_MODEL(pl2_store), &iter, SONG_TYPE, &song_type, -1);
-			gtk_list_store_set (pl2_store, &iter, WEIGHT_INT,PANGO_WEIGHT_NORMAL,
-					SONG_STOCK_ID, (!song_type)?"media-audiofile":"media-stream",
-					-1);
-		}
-		g_free (temp);
-		/* reset old pos */
-		info.old_pos = -1;
-	}
-	if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY)
-	{
-		pl3_highlight_song_change();
-	}
+	playlist_list_set_markup(playlist,cfg_get_single_value_as_string_with_default(config,
+                                       			"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
+
+	
 }
 
 
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
-
+	if(what&MPD_CST_SONGPOS)
+	{
+		playlist_list_set_current_song_pos(playlist, mpd_player_get_current_song_pos(mi));
+	}
 	if(what&MPD_CST_SONGID)
 	{
 		pl3_highlight_song_change();
@@ -713,7 +556,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	if(what&MPD_CST_DATABASE)
 	{
 		pl3_database_changed();
-		pl3_artist_browser_dbase_updated();
+	//	pl3_artist_browser_dbase_updated();
 	}
 	if(what&MPD_CST_UPDATING)
 	{
@@ -721,11 +564,19 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_STATE)
 	{
-		playlist_highlight_state_change();
+		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_STOP){
+			playlist_list_set_current_song_pos(playlist, -1);
+		}
+		else if (mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY) {
+			playlist_list_set_current_song_pos(playlist, mpd_player_get_current_song_pos(mi));
+		}
+		
+//		playlist_highlight_state_change();
 	}
 	if(what&MPD_CST_PLAYLIST)
 	{
-		playlist_changed(mi);
+		playlist_list_data_update(playlist,mi);
+		//playlist_changed(mi);
 	}
 
 	/* make the player handle signals */
