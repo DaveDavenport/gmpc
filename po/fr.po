@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-18 13:25+0100\n"
+"POT-Creation-Date: 2006-03-04 14:18+0100\n"
 "PO-Revision-Date: 2004-07-04 00:28+0200\n"
 "Last-Translator: Mathieu Doidy <mdoidy@roulaize.net>\n"
 "Language-Team: French\n"
@@ -250,8 +250,9 @@ msgstr ""
 " pour pouvoir changer ces paramètres</i></span>"
 
 #: glade/gmpc.glade.h:37
+#, fuzzy
 msgid ""
-"<span size=\"small\">Copyright ©  2003-2005 Qball Cow\n"
+"<span size=\"small\">Copyright ©  2003-2006 Qball Cow\n"
 "<i>Qball@qballcow.nl</i></span>"
 msgstr ""
 "<span size=\"small\">Copyright ©  2003-2004 Qball Cow\n"
@@ -272,9 +273,10 @@ msgstr ""
 "0.12 <i>Mieux vaut tard que jamais</i>"
 
 #: glade/gmpc.glade.h:42
+#, fuzzy
 msgid ""
 "<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
-"0.12 <i>Better late then never</i>"
+"0.13.0 <i>Cover Art Frenzy</i>"
 msgstr ""
 "<span size=\"xx-large\"><b>Gnome Music Player Client</b></span>\n"
 "0.12 <i>Mieux vaut tard que jamais</i>"
@@ -793,7 +795,7 @@ msgid ""
 "Overwrite?</i>"
 msgstr ""
 
-#: src/playlist3-file-browser.c:859
+#: src/playlist3-file-browser.c:861
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Êtes vous sûr de vouloir vider la liste de lecture ?"
 

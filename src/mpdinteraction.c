@@ -93,7 +93,8 @@ void disconnect_callback(MpdObj *mi)
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	gtk_list_store_clear(pl2_store);
+	//gtk_list_store_clear(pl2_store);
+	/* TODO: clear custom tree model */
 }
 
 /* the functiont that connects to mpd */
