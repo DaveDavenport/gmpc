@@ -94,6 +94,7 @@ void disconnect_callback(MpdObj *mi)
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	//gtk_list_store_clear(pl2_store);
+	playlist_list_clear(playlist);
 	/* TODO: clear custom tree model */
 }
 

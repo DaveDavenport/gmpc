@@ -86,4 +86,5 @@ CustomList       *playlist_list_new (void);
 void playlist_list_set_current_song_pos(CustomList *cl, int new_pos);
 gchar *playlist_list_get_markup(CustomList *cl);
 void playlist_list_set_markup(CustomList *cl, gchar *markup);
+void playlist_list_clear(CustomList *list);
 #endif /* _playlist_list_h_included_ */
