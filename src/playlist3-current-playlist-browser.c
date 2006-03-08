@@ -224,7 +224,7 @@ void pl3_current_playlist_browser_init()
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 
-	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), PLAYLIST_LIST_COL_SONG_TITLE);
+	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), PLAYLIST_LIST_COL_MARKUP);
 	g_signal_connect(G_OBJECT(tree_search), "result-activate", G_CALLBACK(pl3_current_playlist_search_activate),NULL);
 	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(tree_search), FALSE, TRUE, 0);	
 	/* set initial state */
