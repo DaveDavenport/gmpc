@@ -119,21 +119,6 @@ char *gmpc_get_full_glade_path(char *filename)
 
 
 
-/*
- * sets default values in the main struct's
- */
-void set_default_values ()
-{
-	/*
-	 * playlist number this is to check if the playlist changed
-	 */
-	info.playlist_id = -1;
-	info.playlist_length = 0;
-	info.playlist_playtime = 0;
-}
-
-
-
 int main (int argc, char **argv)
 {
 	int i;
@@ -174,7 +159,6 @@ int main (int argc, char **argv)
 
 	/* initialize the settings */
 	debug_printf(DEBUG_INFO, "loading default values");
-	set_default_values ();
 
 
 	/*

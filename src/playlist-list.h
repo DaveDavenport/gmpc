@@ -63,6 +63,7 @@ struct _CustomList
 	MpdData *mpdata;
 	char *markup;
 	gint            n_columns;
+	guint 		playtime;
 
 	GType           column_types[PLAYLIST_LIST_N_COLUMNS];
 
@@ -88,4 +89,5 @@ gchar *playlist_list_get_markup(CustomList *cl);
 void playlist_list_set_markup(CustomList *cl, gchar *markup);
 void playlist_list_clear(CustomList *list);
 void playlist_list_data_update(CustomList *cl ,MpdObj *mi);
+guint playlist_list_get_playtime(CustomList *cl);
 #endif /* _playlist_list_h_included_ */

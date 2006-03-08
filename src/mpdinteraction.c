@@ -5,8 +5,6 @@
 #include "main.h"
 #include "config1.h"
 
-/* the internall data structure */
-internal_data info;
 /* old stuff */
 void preferences_update();
 void connect_callback(MpdObj *mi);
@@ -82,10 +80,6 @@ int update_mpd_status()
 void disconnect_callback(MpdObj *mi)
 {
 	gtk_timeout_remove(update_timeout);
-	//scroll.exposed = 1;
-	info.playlist_id = -1;
-	info.playlist_length = -1;
-	info.playlist_playtime = 0;
 
 	/* disconnect playlist */
 	pl3_disconnect();
@@ -99,7 +93,6 @@ int connect_to_mpd()
 {
 	char *string = NULL;
 	//scroll.exposed = 1;
-	info.playlist_playtime = 0;
 	string =cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
 	mpd_set_hostname(connection,string);
 	cfg_free_string(string);

@@ -56,13 +56,6 @@ extern gmpcPlugin tray_icon_plug;
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
-typedef struct
-{
-	/* playlist number this is to check if the playlist changed */
-	long long playlist_id;
-	int playlist_length;
-	int playlist_playtime;
-} internal_data;
 
 enum{
 	TIME_FORMAT_ELAPSED,
@@ -70,7 +63,6 @@ enum{
 	TIME_FORMAT_PERCENTAGE
 };
 
-extern internal_data info;
 extern guint update_timeout;
 int update_interface();
 

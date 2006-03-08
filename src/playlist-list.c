@@ -64,7 +64,6 @@ void playlist_list_set_current_song_pos(CustomList *cl, int new_pos)
 	GtkTreeIter iter;
 	int song = cl->current_song_pos;
 	cl->current_song_pos = new_pos;
-	printf("song highlight %i\n", new_pos);	
 	/* old song pos (song) is valid, make sure the row is updated so it shows unhighligted */
 	if(song >=0 && song < cl->num_rows)
 	{
@@ -126,6 +125,15 @@ void playlist_list_set_markup(CustomList *cl, gchar *markup)
 		gtk_tree_path_free(path);
 	}
 }
+
+
+guint playlist_list_get_playtime(CustomList *cl)
+{
+    if(cl){
+	return cl->playtime;
+    }
+    return 0;
+}
 /*****************************************************************************
  *
  *  playlist_list_get_type: here we register our new type and its interfaces
@@ -137,134 +145,141 @@ void playlist_list_set_markup(CustomList *cl, gchar *markup)
 
 void playlist_list_data_update(CustomList *cl ,MpdObj *mi)
 {
-	MpdData *data =mpd_playlist_get_changes(mi, cl->playlist_id);
-	GtkTreePath *path = NULL;
-	GtkTreeIter iter;
-	if(cl->mpdata == NULL)
-	{
-		MpdData *temp = cl->mpdata;
-		cl->mpdata = data;
-		/* start sending signals */
-		for(temp = mpd_data_get_first(data);temp;temp = mpd_data_get_next_real(temp,FALSE)){
+    MpdData *data =mpd_playlist_get_changes(mi, cl->playlist_id);
+    GtkTreePath *path = NULL;
+    GtkTreeIter iter;
+    if(cl->mpdata == NULL)
+    {
+	MpdData *temp = cl->mpdata;
+	cl->mpdata = data;
+	/* start sending signals */
+	for(temp = mpd_data_get_first(data);temp;temp = mpd_data_get_next_real(temp,FALSE)){
 
-			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path, temp->song->pos);
-			iter.stamp = cl->stamp;
-			iter.user_data = temp;
-			iter.user_data2 = NULL;
-			iter.user_data3 = NULL;
-			gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path, &iter);
-			gtk_tree_path_free(path);
-			cl->num_rows++;
-		}
+	    path = gtk_tree_path_new();
+	    gtk_tree_path_append_index(path, temp->song->pos);
+	    iter.stamp = cl->stamp;
+	    iter.user_data = temp;
+	    iter.user_data2 = NULL;
+	    iter.user_data3 = NULL;
+	    gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path, &iter);
+	    gtk_tree_path_free(path);
+	    cl->playtime += temp->song->time;
+	    cl->num_rows++;
 	}
-	else if(data){
-		MpdData *temp = mpd_data_get_first(cl->mpdata);
-		do{
-			gint pos = data->song->pos;
-			if(cl->num_rows > 0 && pos < cl->num_rows)
-			{
-				for(;temp->song->pos != pos;temp = mpd_data_get_next_real(temp, FALSE));
-				/* remove old song */
-				mpd_freeSong(temp->song);
-				/* move new one in */
-				temp->song = data->song;
-				data->song = NULL;
-				/* path */
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, temp->song->pos);
-				/* iter */
-				iter.stamp = cl->stamp;
-				iter.user_data = temp;
-				iter.user_data2 = NULL;
-				iter.user_data3 = NULL;
-				/* changed */
-				gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path, &iter);
-				gtk_tree_path_free(path);
+    }
+    else if(data){
+	MpdData *temp = mpd_data_get_first(cl->mpdata);
+	do{
+	    gint pos = data->song->pos;
+	    if(cl->num_rows > 0 && pos < cl->num_rows)
+	    {
+		for(;temp->song->pos != pos;temp = mpd_data_get_next_real(temp, FALSE));
+		/* remove old song */
+		cl->playtime -= temp->song->time;
+		mpd_freeSong(temp->song);
+		/* move new one in */
+		temp->song = data->song;
+		data->song = NULL;
+		cl->playtime += temp->song->time;
+		/* path */
+		path = gtk_tree_path_new();
+		gtk_tree_path_append_index(path, temp->song->pos);
+		/* iter */
+		iter.stamp = cl->stamp;
+		iter.user_data = temp;
+		iter.user_data2 = NULL;
+		iter.user_data3 = NULL;
+		/* changed */
+		gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path, &iter);
+		gtk_tree_path_free(path);
 
 
-			}
-			else{
-				/* Get the last one */
-				for(;temp&& !mpd_data_is_last(temp);temp = mpd_data_get_next_real(temp,FALSE));
-				temp = mpd_new_data_struct_append(temp);
-				/* set values */
-				cl->mpdata = temp;//mpd_data_get_first(temp);
-				temp->type = MPD_DATA_TYPE_SONG;
-				/* move song */
-				temp->song = data->song;
-				data->song = NULL;
-				/* create path */
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, temp->song->pos);
-				/* create iter */
-				iter.stamp = cl->stamp;
-				iter.user_data = temp;
-				iter.user_data2 = NULL;
-				iter.user_data3 = NULL;
-				/* send signal*/
-				gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path, &iter);
-				gtk_tree_path_free(path);
+	    }
+	    else{
+		/* Get the last one */
+		for(;temp&& !mpd_data_is_last(temp);temp = mpd_data_get_next_real(temp,FALSE));
+		temp = mpd_new_data_struct_append(temp);
+		/* set values */
+		cl->mpdata = temp;//mpd_data_get_first(temp);
+		temp->type = MPD_DATA_TYPE_SONG;
+		/* move song */
+		temp->song = data->song;
+		data->song = NULL;
+		/* calculate time */
+		cl->playtime += temp->song->time;
+		/* create path */
+		path = gtk_tree_path_new();
+		gtk_tree_path_append_index(path, temp->song->pos);
+		/* create iter */
+		iter.stamp = cl->stamp;
+		iter.user_data = temp;
+		iter.user_data2 = NULL;
+		iter.user_data3 = NULL;
+		/* send signal*/
+		gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path, &iter);
+		gtk_tree_path_free(path);
 
-				cl->num_rows++;
-			}
-		}while((data = mpd_data_get_next(data)));
-	}
-	if(cl->num_rows > mpd_playlist_get_playlist_length(mi) && cl->mpdata)
-	{
-		MpdData *temp = mpd_data_get_first(cl->mpdata);
-		gint new_length =  mpd_playlist_get_playlist_length(mi);
-		while(temp){
+		cl->num_rows++;
+	    }
+	}while((data = mpd_data_get_next(data)));
+    }
+    if(cl->num_rows > mpd_playlist_get_playlist_length(mi) && cl->mpdata)
+    {
+	MpdData *temp = mpd_data_get_first(cl->mpdata);
+	gint new_length =  mpd_playlist_get_playlist_length(mi);
+	while(temp){
 
-			/* nasty trick to make it go backwards, otherwise gtk thinks everything
-			 * is out of sync
-			 */
-			for(; !mpd_data_is_last(temp);temp = mpd_data_get_next_real(temp,FALSE));
-			if(temp->song->pos >=new_length)
-			{
-				int pos = temp->song->pos;
-				temp = mpd_data_delete_item(temp);
-				cl->mpdata = temp;//mpd_data_get_first(temp);
-				cl->num_rows--;
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path,pos);
-				gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl), path);
-				gtk_tree_path_free(path);
-			}
-			else{
-				temp= NULL;
-			}
-		}
+	    /* nasty trick to make it go backwards, otherwise gtk thinks everything
+	     * is out of sync
+	     */
+	    for(; !mpd_data_is_last(temp);temp = mpd_data_get_next_real(temp,FALSE));
+	    if(temp->song->pos >=new_length)
+	    {
+		int pos = temp->song->pos;
+		cl->playtime -= temp->song->time;
+		temp = mpd_data_delete_item(temp);
+		cl->mpdata = temp;//mpd_data_get_first(temp);
+		cl->num_rows--;
+		path = gtk_tree_path_new();
+		gtk_tree_path_append_index(path,pos);
+		gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl), path);
+		gtk_tree_path_free(path);
+	    }
+	    else{
+		temp= NULL;
+	    }
 	}
-	if(cl->mpdata)
-	{
-		cl->mpdata = mpd_data_get_first(cl->mpdata);
-	}
-	if(cl->num_rows != mpd_playlist_get_playlist_length(mi))
-	{
-		printf("sync went wrong %i %i\n",cl->num_rows,
-				mpd_playlist_get_playlist_length(mi));
-	}
-	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+    }
+    if(cl->mpdata)
+    {
+	cl->mpdata = mpd_data_get_first(cl->mpdata);
+    }
+    if(cl->num_rows != mpd_playlist_get_playlist_length(mi))
+    {
+	printf("sync went wrong %i %i\n",cl->num_rows,
+		mpd_playlist_get_playlist_length(mi));
+    }
+    cl->playlist_id = mpd_playlist_get_playlist_id(mi);
 }
 
 void playlist_list_clear(CustomList *list)
 {
-	MpdData_real *temp= (MpdData_real *)list->mpdata;
-	for(; !mpd_data_is_last((MpdData*)temp);temp = (MpdData_real*)mpd_data_get_next_real((MpdData*)temp,FALSE));
-	if(temp)do{
-	    GtkTreePath *path = gtk_tree_path_new();
-	    list->num_rows--;
-	    gtk_tree_path_append_index(path,temp->song->pos);
-	    gtk_tree_model_row_deleted(GTK_TREE_MODEL(list), path);
-	    gtk_tree_path_free(path);
-	   temp = temp->prev; 
-	}while(temp);
-	mpd_data_free(list->mpdata);
-	list->mpdata = NULL;
-	list->playlist_id = -1;
-	list->num_rows = 0;
-	list->current_song_pos= -1;
+    MpdData_real *temp= (MpdData_real *)list->mpdata;
+    for(; !mpd_data_is_last((MpdData*)temp);temp = (MpdData_real*)mpd_data_get_next_real((MpdData*)temp,FALSE));
+    if(temp)do{
+	GtkTreePath *path = gtk_tree_path_new();
+	list->num_rows--;
+	gtk_tree_path_append_index(path,temp->song->pos);
+	gtk_tree_model_row_deleted(GTK_TREE_MODEL(list), path);
+	gtk_tree_path_free(path);
+	temp = temp->prev; 
+    }while(temp);
+    mpd_data_free(list->mpdata);
+    list->mpdata = NULL;
+    list->playlist_id = -1;
+    list->num_rows = 0;
+    list->playtime = 0;
+    list->current_song_pos= -1;
 }
 
 GType playlist_list_get_type (void)
@@ -391,6 +406,8 @@ static void playlist_list_init (CustomList *playlist_list)
     playlist_list->mpdata = NULL;
     playlist_list->playlist_id = -1;
     playlist_list->current_song_pos = -1;
+
+    playlist_list->playtime = 0;
     /* default markup */
     playlist_list->markup = g_strdup("[%title%[ - %artist%]]|%shortfile%");
 

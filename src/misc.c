@@ -23,16 +23,16 @@
 
 gchar * format_time(unsigned long seconds)
 {
+	GString *str = NULL;
 	int days = seconds/86400;
 	int houres = (seconds % 86400)/3600;
 	int minutes = (seconds % 3600)/60;
 	char *ret;
 	if(seconds == 0)
 	{
-		GString *str = g_string_new(NULL);
-		return str->str;
+		return g_strdup("");
 	}
-	GString *str = g_string_new(" Total time: ");
+	str = g_string_new(" Total time: ");
 	if(days != 0)
 	{
 		g_string_append_printf(str, "%i days ", days);
