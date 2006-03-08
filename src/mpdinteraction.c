@@ -2,10 +2,9 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-
 #include "main.h"
 #include "config1.h"
-extern GtkListStore *pl2_store;
+
 /* the internall data structure */
 internal_data info;
 /* old stuff */
@@ -87,15 +86,12 @@ void disconnect_callback(MpdObj *mi)
 	info.playlist_id = -1;
 	info.playlist_length = -1;
 	info.playlist_playtime = 0;
-	info.old_pos = -1;
 
 	/* disconnect playlist */
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
-	//gtk_list_store_clear(pl2_store);
-	playlist_list_clear(playlist);
-	/* TODO: clear custom tree model */
+	playlist_list_clear(PLAYLIST_LIST(playlist));
 }
 
 /* the functiont that connects to mpd */

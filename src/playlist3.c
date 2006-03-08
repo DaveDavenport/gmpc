@@ -43,7 +43,6 @@ int old_type = -1;
 
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
-GtkListStore *pl2_store= NULL;
 /* The Clipboard */
 
 GQueue *pl3_queue = NULL;
@@ -791,10 +790,7 @@ void pl3_highlight_song_change ()
 						pos,
 						mpd_player_get_current_song_pos(connection));
 			}
-/*			gtk_list_store_set (pl2_store, &iter,
-					WEIGHT_INT,PANGO_WEIGHT_ULTRABOLD,
-					SONG_STOCK_ID,"gtk-media-play", -1);
-*/
+
 			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) &&
 					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
 			{

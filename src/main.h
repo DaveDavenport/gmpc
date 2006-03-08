@@ -62,8 +62,6 @@ typedef struct
 	long long playlist_id;
 	int playlist_length;
 	int playlist_playtime;
-	/* the current song */
-	int old_pos;
 } internal_data;
 
 enum{

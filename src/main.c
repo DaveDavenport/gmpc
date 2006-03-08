@@ -47,7 +47,6 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 gmpcPlugin **plugins = NULL;
 int num_plugins = 0;
 
-
 /*
  * the xml fle pointer to the player window
  */
@@ -131,10 +130,6 @@ void set_default_values ()
 	info.playlist_id = -1;
 	info.playlist_length = 0;
 	info.playlist_playtime = 0;
-	/*
-	 * the current song
-	 */
-	info.old_pos = -1;
 }
 
 
@@ -533,9 +528,9 @@ void init_stock_icons ()
 void init_playlist_store ()
 {
 
-	playlist = playlist_list_new();
+	playlist = (GtkTreeModel *)playlist_list_new();
 
-	playlist_list_set_markup(playlist,cfg_get_single_value_as_string_with_default(config,
+	playlist_list_set_markup((CustomList *)playlist,cfg_get_single_value_as_string_with_default(config,
                                        			"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
 
 	
@@ -547,7 +542,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	int i;
 	if(what&MPD_CST_SONGPOS)
 	{
-		playlist_list_set_current_song_pos(playlist, mpd_player_get_current_song_pos(mi));
+		playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), mpd_player_get_current_song_pos(mi));
 	}
 	if(what&MPD_CST_SONGID)
 	{
@@ -565,18 +560,15 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	if(what&MPD_CST_STATE)
 	{
 		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_STOP){
-			playlist_list_set_current_song_pos(playlist, -1);
+			playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), -1);
 		}
 		else if (mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY) {
-			playlist_list_set_current_song_pos(playlist, mpd_player_get_current_song_pos(mi));
+			playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), mpd_player_get_current_song_pos(mi));
 		}
-		
-//		playlist_highlight_state_change();
 	}
 	if(what&MPD_CST_PLAYLIST)
 	{
-		playlist_list_data_update(playlist,mi);
-		//playlist_changed(mi);
+		playlist_list_data_update(PLAYLIST_LIST(playlist),mi);
 	}
 
 	/* make the player handle signals */
