@@ -333,7 +333,7 @@ unsigned long pl3_find_browser_view_browser()
 					       PL3_FINDB_TYPE, PL3_CUR_PLAYLIST,
 					       PL3_FINDB_PID, id,
 					       PL3_FINDB_TITLE, temp,
-					       PL3_FINDB_ICON, "media-song", 
+					       PL3_FINDB_ICON, "media-audiofile",
 					       -1); 	
 				       //g_free(icon);
 				       g_free(temp);                      		

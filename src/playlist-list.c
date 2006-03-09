@@ -401,6 +401,7 @@ static void playlist_list_init (CustomList *playlist_list)
     playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH] = G_TYPE_INT; 
     playlist_list->column_types[PLAYLIST_LIST_COL_SONG_POS] = G_TYPE_INT; 
     playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ID] = G_TYPE_INT; 
+    playlist_list->column_types[PLAYLIST_LIST_COL_ICON_ID] = G_TYPE_STRING; 
 
     playlist_list->num_rows = 0;
     playlist_list->mpdata = NULL;
@@ -663,6 +664,22 @@ playlist_list_get_value (GtkTreeModel *tree_model,
 	case PLAYLIST_LIST_COL_SONG_ID:
 	    g_value_set_int(value, data->song->id);
 	    break;
+
+	case PLAYLIST_LIST_COL_ICON_ID:
+	    if(data->song->pos == PLAYLIST_LIST(tree_model)->current_song_pos){
+		    g_value_set_string(value, "gtk-media-play");
+	    }
+	    else if(strstr(data->song->file, "://"))
+	    {
+		    g_value_set_string(value, "media-stream");
+	    }
+	    else
+	    {
+		    g_value_set_string(value, "media-audiofile");
+	    }
+	    break;
+
+	    
 
     }
 }

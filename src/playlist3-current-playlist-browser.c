@@ -156,7 +156,7 @@ void pl3_current_playlist_browser_init()
 
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-//	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", SONG_STOCK_ID,NULL);
+	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PLAYLIST_LIST_COL_ICON_ID,NULL);
 	memset(&value, 0, sizeof(value));
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
