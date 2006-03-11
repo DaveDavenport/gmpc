@@ -535,7 +535,6 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	if(what&MPD_CST_DATABASE)
 	{
 		pl3_database_changed();
-	//	pl3_artist_browser_dbase_updated();
 	}
 	if(what&MPD_CST_UPDATING)
 	{
