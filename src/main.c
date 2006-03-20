@@ -142,6 +142,7 @@ int main (int argc, char **argv)
 			{
 				printf("Gnome Music Player Client\n");
 				printf("Version: %s\n", VERSION);
+				printf("Revision: %s\n",REVISION);
 				exit(0);
 			}
 		}
