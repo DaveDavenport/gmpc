@@ -737,13 +737,13 @@ int player_key_press(GtkWidget *mw, GdkEventKey *event,gpointer data)
 	/* go back 10 seconds */
 	if(event->keyval == GDK_Left)
 	{
-		seek_ns(SEEK_STEP);
+		seek_ns(cfg_get_single_value_as_int_with_default(config, "player", "seek-step",SEEK_STEP));
 		return TRUE;	
 	}
 	/* go forward 10 seconds */
 	else if (event->keyval == GDK_Right)
 	{
-		seek_ps(SEEK_STEP);
+		seek_ps(cfg_get_single_value_as_int_with_default(config, "player", "seek-step",SEEK_STEP));
 		return TRUE;	
 	}
 	/* volume up */
@@ -855,8 +855,6 @@ void player_create()
 			NULL);
 	/* check for errors and axit when there is no gui file */
 	gtk_timeout_add(200, (GSourceFunc)update_msg, NULL);
-	//	time_exposed(glade_xml_get_widget(xml_main_window, "time_image"));
-	//	display_exposed(glade_xml_get_widget(xml_main_window, "entry_image"));
 
 	if(cfg_get_single_value_as_int_with_default(config,"tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE) &&
 			cfg_get_single_value_as_int_with_default(config,"player", "hide-startup", DEFAULT_HIDE_ON_STARTUP))
