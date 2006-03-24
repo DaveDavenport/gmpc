@@ -552,8 +552,11 @@ void tray_icon_state_change()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
-		if(cover_pb) g_object_unref(cover_pb);
-		cover_pb = NULL;
+		if(cover_pb)
+		{
+			g_object_unref(cover_pb);
+			cover_pb = NULL;
+		}
 	}
 	else if(state == MPD_PLAYER_PLAY){
 		tray_icon_song_change();
@@ -769,7 +772,7 @@ int create_tray_icon()
 	temp = gdk_pixbuf_new_from_file(path,NULL);
 	g_free(path);
 	logo = gdk_pixbuf_scale_simple(temp, 20,20, GDK_INTERP_BILINEAR);
-	g_object_unref(temp);
+	if(temp) g_object_unref(temp);
 
 	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);

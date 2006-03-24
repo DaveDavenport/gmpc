@@ -15,12 +15,14 @@ appicon_DATA =	media-audiofile.png\
 	media-stop.png\
 	media-playlist.png\
 	player-repeat.png\
+	broken.png\
 	player-shuffle.png\
 	icecast.png
 
 EXTRA_DIST = media-audiofile.png\
 	media-stream.png\
 	media-play.png\
+	broken.png\
 	media-pause.png\
 	media-next.png\
 	media-prev.png\

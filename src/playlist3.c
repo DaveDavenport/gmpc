@@ -1094,8 +1094,7 @@ static void playlist_player_update_image(MpdObj *mi)
 	if(path) g_free(path);
 	if(ret == COVER_ART_NOT_FETCHED)
 	{
-		cover_art_fetch_image(song,                                                                             	
-				(CoverArtCallback)playlist_player_update_image_callback,NULL);
+		cover_art_fetch_image(song, (CoverArtCallback)playlist_player_update_image_callback,NULL);
 	}
 
 }

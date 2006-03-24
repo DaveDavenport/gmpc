@@ -43,14 +43,21 @@ CoverArtResult cover_art_fetch_image_path_real(mpd_Song *song, gchar **path, gbo
 	if(song->artist && song->album && cache){
 		gchar *cipath = cfg_get_single_value_as_string(cover_index, song->artist, song->album);
 		debug_printf(DEBUG_INFO,"query cover art cache");
-		if(cipath)
+		if(cipath )
 		{
 			if(strlen(cipath) == 0)
 			{
 				return COVER_ART_NO_IMAGE;
 			}
-			*path = g_strdup(cipath);
-			return COVER_ART_OK_LOCAL;
+			if(g_file_test(cipath, G_FILE_TEST_EXISTS))
+			{
+				*path = g_strdup(cipath);
+				return COVER_ART_OK_LOCAL;
+			}
+			else
+			{
+				debug_printf(DEBUG_WARNING, "Cached image not found\n");
+			}
 		}
 	}
 	for(i =  0; plugins[i] != NULL; i++)
