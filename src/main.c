@@ -122,6 +122,7 @@ char *gmpc_get_full_glade_path(char *filename)
 int main (int argc, char **argv)
 {
 	int i;
+	char *config_path = NULL;
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
 #endif
@@ -144,6 +145,11 @@ int main (int argc, char **argv)
 				printf("Version: %s\n", VERSION);
 				printf("Revision: %s\n",REVISION);
 				exit(0);
+			}
+			else if (!strncasecmp(argv[i], "--config=", 9))
+			{
+				config_path = g_strdup(&argv[i][9]);
+
 			}
 		}
 
@@ -236,10 +242,15 @@ int main (int argc, char **argv)
 	g_free(url);
 
 	/* OPEN CONFIG FILE */
-	url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
+	if(!config_path)
+	{
+		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
+	}
+	else{
+		url = config_path;
+	}
 	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
-
 
 	/* test if config open  */
 	if(config == NULL)
@@ -339,7 +350,7 @@ int update_interface ()
 {
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
-		 /* update the popup  */
+		/* update the popup  */
 		if (cfg_get_single_value_as_int_with_default(config,
 					"connection",
 					"autoconnect",
@@ -410,7 +421,7 @@ void init_stock_icons ()
 		gtk_icon_factory_add (factory, "gtk-media-play", set);
 		g_object_unref (G_OBJECT (pb));
 	}
-	
+
 	/*
 	 * add media-stop
 	 */
@@ -516,9 +527,9 @@ void init_playlist_store ()
 	playlist = (GtkTreeModel *)playlist_list_new();
 
 	playlist_list_set_markup((CustomList *)playlist,cfg_get_single_value_as_string_with_default(config,
-                                       			"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
+				"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
 
-	
+
 }
 
 
