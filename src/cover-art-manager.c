@@ -335,6 +335,32 @@ void cover_art_edit_path_changed(GtkWidget *filechooser)
 
 }
 
+void cover_art_query_providers(GtkWidget *button)
+{
+	GladeXML *cae_xml = glade_get_widget_tree(button);
+	gchar *path = NULL;
+	const gchar *artist = 	gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_artist")));
+	const gchar *album = 		gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_album")));
+	int result = cover_art_fetch_image_path_aa_no_cache((char *)artist, (char *)album, &path);
+
+	if(result == COVER_ART_OK_LOCAL)
+	{
+		if(path){
+			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path, 250,250,NULL);
+			if(pb)
+			{
+				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")), pb);
+				g_object_unref(pb);                                                                    		
+			}         
+		}
+		else{
+			gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
+		}
+	}
+	if(path) g_free(path);
+	
+}
+
 int cover_art_edit_cover(gchar *artist, gchar *album)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");

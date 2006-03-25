@@ -210,7 +210,13 @@ static void treesearch_entry_activate(GtkEntry *entry, TreeSearch *ts)
 }
 static int treesearch_entry_key_press(GtkWidget *entry, GdkEventKey *event, TreeSearch *ts)
 {
-	if(event->keyval == GDK_Down)
+	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return)&& event->state&GDK_CONTROL_MASK)
+	{
+		treesearch_entry_activate(NULL,ts);
+		return TRUE;
+	}
+	
+	if(event->keyval == GDK_Down || event->keyval == GDK_Return || event->keyval == GDK_KP_Enter)
 	{
 		treesearch_search_next(NULL,ts);
 		return TRUE;
@@ -220,11 +226,11 @@ static int treesearch_entry_key_press(GtkWidget *entry, GdkEventKey *event, Tree
 		treesearch_close(NULL,ts);
 		return TRUE;
 	}
-	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return)&& event->state&GDK_CONTROL_MASK)
-	{
-		treesearch_entry_activate(NULL,ts);
-		return TRUE;
-	}
+
+
+
+
+
 	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return))
 	{
 		treesearch_close(NULL,ts);

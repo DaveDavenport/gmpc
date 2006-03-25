@@ -16,7 +16,7 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 
 /* no cache */
 CoverArtResult cover_art_fetch_image_path_no_cache(mpd_Song *song, gchar **path);
-
+CoverArtResult cover_art_fetch_image_path_aa_no_cache(gchar *artist,gchar *album, gchar **path);
 
 
 
