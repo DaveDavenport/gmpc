@@ -276,7 +276,7 @@ void playlist_list_clear(CustomList * list)
 			gtk_tree_path_free(path);
 			temp = temp->prev;
 		} while (temp);
-	mpd_data_free(list->mpdata);
+	if(list->mpdata) mpd_data_free(list->mpdata);
 	list->mpdata = NULL;
 	list->playlist_id = -1;
 	list->num_rows = 0;
@@ -433,7 +433,7 @@ static void playlist_list_finalize(GObject * object)
 	CustomList *cl = PLAYLIST_LIST(object);
 	printf("Finalize\n");
 	/* free all records and free all memory used by the list */
-	mpd_data_free(cl->mpdata);
+	if(cl->mpdata)mpd_data_free(cl->mpdata);
 	if (cl->markup)
 		g_free(cl->markup);
 
