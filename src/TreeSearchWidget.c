@@ -139,13 +139,15 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 						}
 					}
 				}
-				else {
-					//GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
-				}
 			}
 		}
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
+	}
+	if(but)
+	{
+		gtk_widget_grab_focus(GTK_WIDGET(but));
+
 	}
 }
 static void treesearch_entry_changed(GtkEntry *entry, TreeSearch *ts)
@@ -226,11 +228,6 @@ static int treesearch_entry_key_press(GtkWidget *entry, GdkEventKey *event, Tree
 		treesearch_close(NULL,ts);
 		return TRUE;
 	}
-
-
-
-
-
 	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return))
 	{
 		treesearch_close(NULL,ts);
