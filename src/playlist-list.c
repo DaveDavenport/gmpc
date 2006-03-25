@@ -255,8 +255,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 		cl->mpdata = mpd_data_get_first(cl->mpdata);
 	}
 	if (cl->num_rows != mpd_playlist_get_playlist_length(mi)) {
-		printf("sync went wrong %i %i\n", cl->num_rows,
-		       mpd_playlist_get_playlist_length(mi));
+		debug_printf(DEBUG_ERROR, "sync went wrong %i %i\n", cl->num_rows,mpd_playlist_get_playlist_length(mi));
 	}
 	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
 }
@@ -431,7 +430,7 @@ static void playlist_list_init(CustomList * playlist_list)
 static void playlist_list_finalize(GObject * object)
 {
 	CustomList *cl = PLAYLIST_LIST(object);
-	printf("Finalize\n");
+	debug_printf(DEBUG_INFO, "Finalize playlist-backend\n");
 	/* free all records and free all memory used by the list */
 	if(cl->mpdata)mpd_data_free(cl->mpdata);
 	if (cl->markup)
