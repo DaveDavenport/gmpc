@@ -712,9 +712,11 @@ void connect_callback(MpdObj *mi)
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
+	debug_printf(DEBUG_INFO, "Connection changed\n");
 	player_connection_changed(mi,connect);
 	for(i=0; i< num_plugins; i++)
 	{
+		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
 		if(plugins[i]->mpd_connection_changed!= NULL)
 		{
 			plugins[i]->mpd_connection_changed(mi,connect,NULL);

@@ -85,7 +85,9 @@ void disconnect_callback(MpdObj *mi)
 	pl3_disconnect();
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
+	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
 	playlist_list_clear(PLAYLIST_LIST(playlist));
+	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
 }
 
 /* the functiont that connects to mpd */

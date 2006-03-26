@@ -265,9 +265,13 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 void playlist_list_clear(CustomList * list)
 {
 	MpdData_real *temp = (MpdData_real *) list->mpdata;
-	for (; !mpd_data_is_last((MpdData *) temp);
-			temp =
-			(MpdData_real *) mpd_data_get_next_real((MpdData *) temp, FALSE)) ;
+	if(temp == NULL) {
+		return;
+	}
+	/* get the last one */
+	for (; !mpd_data_is_last((MpdData *) temp); temp = (MpdData_real *) mpd_data_get_next_real((MpdData *) temp, FALSE)) ;
+
+
 	if (temp)
 		do {
 			GtkTreePath *path = gtk_tree_path_new();
