@@ -165,13 +165,20 @@ void pl3_file_browser_add_folder()
 	}
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
-		char *path;
+		char *path, *icon;
 		char *message = NULL;
-		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path, -1);
+		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path,3, &icon, -1);
+	
+	
 		message = g_strdup_printf("Added folder '%s' recursively", path);
 		pl3_push_statusbar_message(message);
 		g_free(message);
-		mpd_playlist_queue_add(connection, path);
+		if(strcmp("media-playlist", icon)) {                                 		
+			mpd_playlist_queue_add(connection, path);
+		}
+		else {
+			mpd_playlist_queue_load(connection, path);
+		}
 		mpd_playlist_queue_commit(connection);
 		g_free(path);
 	}
@@ -350,10 +357,11 @@ void pl3_file_browser_reupdate()
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	MpdData* data =NULL;
-	char *path;
+	char *path = NULL, *icon = NULL;
 	int sub_folder = 0;
 	GtkTreeIter iter;
 	long  unsigned time=0;
+	int support_playlist = (mpd_server_check_command_allowed(connection, "listplaylistinfo") == MPD_SERVER_COMMAND_ALLOWED);
 
 	if(pl3_fb_store == NULL) return 0;
 	gtk_list_store_clear(pl3_fb_store);
@@ -362,10 +370,10 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	{
 		return 0;
 	}
-
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
-	if(path)
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path,3,&icon, -1);
+	if(strcmp("media-playlist",icon))
 	{
+		debug_printf(DEBUG_INFO,"View Folder\n");
 		if(strcmp(path,"/"))
 		{
 			gtk_list_store_append (pl3_fb_store, &iter);
@@ -381,7 +389,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		data = mpd_database_get_directory(connection, path);
 	}
 	else{
-		gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 1 , &path, -1);
+		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
 	while (data != NULL)
@@ -431,6 +439,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 					PL3_FB_ICON, "media-playlist",
 					-1);
 			g_free (basename);
+			if(support_playlist) sub_folder++;
 		}
 		data = mpd_data_get_next(data);
 	}
@@ -476,17 +485,19 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 
 			g_free (basename);
 		}
-		if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
+		else if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
 		{
+			gchar *basename = g_path_get_basename(data->playlist);
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
 					0, PL3_BROWSE_FILE,
-					1, data->playlist,
-					2, NULL,
+					1, basename,
+					2, data->playlist,
 					3, "media-playlist",
 					4, TRUE,
 					PL3_CAT_ICON_SIZE,1,
 					-1);
+			g_free(basename);
 		}
 		data = mpd_data_get_next(data);
 	}
