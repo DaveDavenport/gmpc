@@ -1,5 +1,4 @@
 bin_PROGRAMS=gmpc
-
 gmpc_SOURCES=\
 	cover-art.c\
 	main.c\
