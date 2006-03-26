@@ -1,7 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <libmpd/debug_printf.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpd-internal.h>
 #include "playlist-list.h"
-extern MpdObj *mi;
 
 /* boring declarations of local functions */
 
@@ -18,38 +20,38 @@ static GtkTreeModelFlags playlist_list_get_flags(GtkTreeModel * tree_model);
 static gint playlist_list_get_n_columns(GtkTreeModel * tree_model);
 
 static GType playlist_list_get_column_type(GtkTreeModel * tree_model,
-					   gint index);
+		gint index);
 
 static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
-				       GtkTreeIter * iter, GtkTreePath * path);
+		GtkTreeIter * iter, GtkTreePath * path);
 
 static GtkTreePath *playlist_list_get_path(GtkTreeModel * tree_model,
-					   GtkTreeIter * iter);
+		GtkTreeIter * iter);
 
 static void playlist_list_get_value(GtkTreeModel * tree_model,
-				    GtkTreeIter * iter,
-				    gint column, GValue * value);
+		GtkTreeIter * iter,
+		gint column, GValue * value);
 
 static gboolean playlist_list_iter_next(GtkTreeModel * tree_model,
-					GtkTreeIter * iter);
+		GtkTreeIter * iter);
 
 static gboolean playlist_list_iter_children(GtkTreeModel * tree_model,
-					    GtkTreeIter * iter,
-					    GtkTreeIter * parent);
+		GtkTreeIter * iter,
+		GtkTreeIter * parent);
 
 static gboolean playlist_list_iter_has_child(GtkTreeModel * tree_model,
-					     GtkTreeIter * iter);
+		GtkTreeIter * iter);
 
 static gint playlist_list_iter_n_children(GtkTreeModel * tree_model,
-					  GtkTreeIter * iter);
+		GtkTreeIter * iter);
 
 static gboolean playlist_list_iter_nth_child(GtkTreeModel * tree_model,
-					     GtkTreeIter * iter,
-					     GtkTreeIter * parent, gint n);
+		GtkTreeIter * iter,
+		GtkTreeIter * parent, gint n);
 
 static gboolean playlist_list_iter_parent(GtkTreeModel * tree_model,
-					  GtkTreeIter * iter,
-					  GtkTreeIter * child);
+		GtkTreeIter * iter,
+		GtkTreeIter * child);
 
 /* GObject stuff - nothing to worry about */
 static GObjectClass *parent_class = NULL;
@@ -68,7 +70,7 @@ void playlist_list_set_current_song_pos(CustomList * cl, int new_pos)
 		if (playlist_list_get_iter(GTK_TREE_MODEL(cl), &iter, path)) {
 			/* changed */
 			gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path,
-						   &iter);
+					&iter);
 		}
 		gtk_tree_path_free(path);
 	}
@@ -81,7 +83,7 @@ void playlist_list_set_current_song_pos(CustomList * cl, int new_pos)
 		if (playlist_list_get_iter(GTK_TREE_MODEL(cl), &iter, path)) {
 			/* changed */
 			gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path,
-						   &iter);
+					&iter);
 		}
 		gtk_tree_path_free(path);
 	}
@@ -108,7 +110,7 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 	/* start sending signals */
 	/* all rows are dirty now */
 	for (temp = mpd_data_get_first(temp); temp;
-	     temp = mpd_data_get_next_real(temp, FALSE)) {
+			temp = mpd_data_get_next_real(temp, FALSE)) {
 
 		path = gtk_tree_path_new();
 		gtk_tree_path_append_index(path, temp->song->pos);
@@ -150,7 +152,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 		cl->mpdata = data;
 		/* start sending signals */
 		for (temp = mpd_data_get_first(data); temp;
-		     temp = mpd_data_get_next_real(temp, FALSE)) {
+				temp = mpd_data_get_next_real(temp, FALSE)) {
 
 			path = gtk_tree_path_new();
 			gtk_tree_path_append_index(path, temp->song->pos);
@@ -159,7 +161,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 			iter.user_data2 = NULL;
 			iter.user_data3 = NULL;
 			gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path,
-						    &iter);
+					&iter);
 			gtk_tree_path_free(path);
 			cl->playtime += temp->song->time;
 			cl->num_rows++;
@@ -170,8 +172,8 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 			gint pos = data->song->pos;
 			if (cl->num_rows > 0 && pos < cl->num_rows) {
 				for (; temp->song->pos != pos;
-				     temp =
-				     mpd_data_get_next_real(temp, FALSE)) ;
+						temp =
+						mpd_data_get_next_real(temp, FALSE)) ;
 				/* remove old song */
 				cl->playtime -= temp->song->time;
 				mpd_freeSong(temp->song);
@@ -182,7 +184,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 				/* path */
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path,
-							   temp->song->pos);
+						temp->song->pos);
 				/* iter */
 				iter.stamp = cl->stamp;
 				iter.user_data = temp;
@@ -190,14 +192,14 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 				iter.user_data3 = NULL;
 				/* changed */
 				gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),
-							   path, &iter);
+						path, &iter);
 				gtk_tree_path_free(path);
 
 			} else {
 				/* Get the last one */
 				for (; temp && !mpd_data_is_last(temp);
-				     temp =
-				     mpd_data_get_next_real(temp, FALSE)) ;
+						temp =
+						mpd_data_get_next_real(temp, FALSE)) ;
 				temp = mpd_new_data_struct_append(temp);
 				/* set values */
 				cl->mpdata = temp;	//mpd_data_get_first(temp);
@@ -210,7 +212,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 				/* create path */
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path,
-							   temp->song->pos);
+						temp->song->pos);
 				/* create iter */
 				iter.stamp = cl->stamp;
 				iter.user_data = temp;
@@ -218,7 +220,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 				iter.user_data3 = NULL;
 				/* send signal */
 				gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl),
-							    path, &iter);
+						path, &iter);
 				gtk_tree_path_free(path);
 
 				cl->num_rows++;
@@ -234,7 +236,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 			 * is out of sync
 			 */
 			for (; !mpd_data_is_last(temp);
-			     temp = mpd_data_get_next_real(temp, FALSE)) ;
+					temp = mpd_data_get_next_real(temp, FALSE)) ;
 			if (temp->song->pos >= new_length) {
 				int pos = temp->song->pos;
 				cl->playtime -= temp->song->time;
@@ -244,7 +246,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path, pos);
 				gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl),
-							   path);
+						path);
 				gtk_tree_path_free(path);
 			} else {
 				temp = NULL;
@@ -264,8 +266,8 @@ void playlist_list_clear(CustomList * list)
 {
 	MpdData_real *temp = (MpdData_real *) list->mpdata;
 	for (; !mpd_data_is_last((MpdData *) temp);
-	     temp =
-	     (MpdData_real *) mpd_data_get_next_real((MpdData *) temp, FALSE)) ;
+			temp =
+			(MpdData_real *) mpd_data_get_next_real((MpdData *) temp, FALSE)) ;
 	if (temp)
 		do {
 			GtkTreePath *path = gtk_tree_path_new();
@@ -306,8 +308,8 @@ GType playlist_list_get_type(void)
 		};
 
 		playlist_list_type =
-		    g_type_register_static(G_TYPE_OBJECT, "CustomList",
-					   &playlist_list_info, (GTypeFlags) 0);
+			g_type_register_static(G_TYPE_OBJECT, "CustomList",
+					&playlist_list_info, (GTypeFlags) 0);
 	}
 
 	/* Here we register our GtkTreeModel interface with the type system */
@@ -319,8 +321,8 @@ GType playlist_list_get_type(void)
 		};
 
 		g_type_add_interface_static(playlist_list_type,
-					    GTK_TYPE_TREE_MODEL,
-					    &tree_model_info);
+				GTK_TYPE_TREE_MODEL,
+				&tree_model_info);
 	}
 
 	return playlist_list_type;
@@ -384,24 +386,15 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_MPDSONG] = G_TYPE_POINTER;
 	playlist_list->column_types[PLAYLIST_LIST_COL_MARKUP] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_PLAYING] = G_TYPE_BOOLEAN;
-	playlist_list->column_types[PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT] =
-	    G_TYPE_INT;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_FILE] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ARTIST] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ALBUM] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_TITLE] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_TRACK] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_NAME] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_COMPOSER] =
-	    G_TYPE_STRING;
-	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_DATE] =
-	    G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_FILE] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ARTIST] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ALBUM] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_TITLE] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_TRACK] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_NAME] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_COMPOSER] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_DATE] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_POS] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ID] = G_TYPE_INT;
@@ -478,12 +471,12 @@ static gint playlist_list_get_n_columns(GtkTreeModel * tree_model)
  *
  *****************************************************************************/
 
-static GType
+	static GType
 playlist_list_get_column_type(GtkTreeModel * tree_model, gint index)
 {
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), G_TYPE_INVALID);
 	g_return_val_if_fail(index < PLAYLIST_LIST(tree_model)->n_columns
-			     && index >= 0, G_TYPE_INVALID);
+			&& index >= 0, G_TYPE_INVALID);
 
 	return PLAYLIST_LIST(tree_model)->column_types[index];
 }
@@ -499,7 +492,7 @@ playlist_list_get_column_type(GtkTreeModel * tree_model, gint index)
  *****************************************************************************/
 
 static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
-				       GtkTreeIter * iter, GtkTreePath * path)
+		GtkTreeIter * iter, GtkTreePath * path)
 {
 	CustomList *playlist_list = PLAYLIST_LIST(tree_model);
 	MpdData *data;
@@ -526,7 +519,7 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
 	if (n < data->song->pos)
 		data = mpd_data_get_first(data);
 	for (; data != NULL && data->song->pos != n;
-	     data = mpd_data_get_next_real(data, FALSE)) ;
+			data = mpd_data_get_next_real(data, FALSE)) ;
 
 	g_assert(data->song->pos == n);
 
@@ -549,7 +542,7 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
  *****************************************************************************/
 
 static GtkTreePath *playlist_list_get_path(GtkTreeModel * tree_model,
-					   GtkTreeIter * iter)
+		GtkTreeIter * iter)
 {
 	GtkTreePath *path;
 	CustomList *playlist_list;
@@ -576,9 +569,9 @@ static GtkTreePath *playlist_list_get_path(GtkTreeModel * tree_model,
  *
  *****************************************************************************/
 
-static void
+	static void
 playlist_list_get_value(GtkTreeModel * tree_model,
-			GtkTreeIter * iter, gint column, GValue * value)
+		GtkTreeIter * iter, gint column, GValue * value)
 {
 	MpdData *data = NULL;
 
@@ -593,82 +586,82 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 	g_return_if_fail(data != NULL);
 
 	switch (column) {
-	case PLAYLIST_LIST_COL_MPDSONG:
-		g_value_set_pointer(value, data->song);
-		break;
-	case PLAYLIST_LIST_COL_PLAYING:
-		if (data->song->pos ==
-		    PLAYLIST_LIST(tree_model)->current_song_pos) {
-			g_value_set_boolean(value, TRUE);
-		} else {
-			g_value_set_boolean(value, FALSE);
-		}
-		break;
-	case PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT:
-		if (data->song->pos ==
-		    PLAYLIST_LIST(tree_model)->current_song_pos) {
-			g_value_set_int(value, PANGO_WEIGHT_ULTRABOLD);
-		} else {
-			g_value_set_int(value, PANGO_WEIGHT_NORMAL);
-		}
-		break;
-	case PLAYLIST_LIST_COL_MARKUP:
-		{
-			/* we want to go cache this stuff */
-			gchar buffer[1024];
-			mpd_song_markup(buffer, 1024,
-					PLAYLIST_LIST(tree_model)->markup,
-					data->song);
-			g_value_set_string(value, buffer);
+		case PLAYLIST_LIST_COL_MPDSONG:
+			g_value_set_pointer(value, data->song);
 			break;
-		}
-	case PLAYLIST_LIST_COL_SONG_FILE:
-		g_value_set_string(value, data->song->file);
-		break;
-	case PLAYLIST_LIST_COL_SONG_ARTIST:
-		g_value_set_string(value, data->song->artist);
-		break;
-	case PLAYLIST_LIST_COL_SONG_ALBUM:
-		g_value_set_string(value, data->song->album);
-		break;
-	case PLAYLIST_LIST_COL_SONG_TITLE:
-		g_value_set_string(value, data->song->title);
-		break;
-	case PLAYLIST_LIST_COL_SONG_GENRE:
-		g_value_set_string(value, data->song->genre);
-		break;
-	case PLAYLIST_LIST_COL_SONG_TRACK:
-		g_value_set_string(value, data->song->track);
-		break;
-	case PLAYLIST_LIST_COL_SONG_NAME:
-		g_value_set_string(value, data->song->name);
-		break;
-	case PLAYLIST_LIST_COL_SONG_COMPOSER:
-		g_value_set_string(value, data->song->composer);
-		break;
-	case PLAYLIST_LIST_COL_SONG_DATE:
-		g_value_set_string(value, data->song->date);
-		break;
-	case PLAYLIST_LIST_COL_SONG_LENGTH:
-		g_value_set_int(value, data->song->time);
-		break;
-	case PLAYLIST_LIST_COL_SONG_POS:
-		g_value_set_int(value, data->song->pos);
-		break;
-	case PLAYLIST_LIST_COL_SONG_ID:
-		g_value_set_int(value, data->song->id);
-		break;
+		case PLAYLIST_LIST_COL_PLAYING:
+			if (data->song->pos ==
+					PLAYLIST_LIST(tree_model)->current_song_pos) {
+				g_value_set_boolean(value, TRUE);
+			} else {
+				g_value_set_boolean(value, FALSE);
+			}
+			break;
+		case PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT:
+			if (data->song->pos ==
+					PLAYLIST_LIST(tree_model)->current_song_pos) {
+				g_value_set_int(value, PANGO_WEIGHT_ULTRABOLD);
+			} else {
+				g_value_set_int(value, PANGO_WEIGHT_NORMAL);
+			}
+			break;
+		case PLAYLIST_LIST_COL_MARKUP:
+			{
+				/* we want to go cache this stuff */
+				gchar buffer[1024];
+				mpd_song_markup(buffer, 1024,
+						PLAYLIST_LIST(tree_model)->markup,
+						data->song);
+				g_value_set_string(value, buffer);
+				break;
+			}
+		case PLAYLIST_LIST_COL_SONG_FILE:
+			g_value_set_string(value, data->song->file);
+			break;
+		case PLAYLIST_LIST_COL_SONG_ARTIST:
+			g_value_set_string(value, data->song->artist);
+			break;
+		case PLAYLIST_LIST_COL_SONG_ALBUM:
+			g_value_set_string(value, data->song->album);
+			break;
+		case PLAYLIST_LIST_COL_SONG_TITLE:
+			g_value_set_string(value, data->song->title);
+			break;
+		case PLAYLIST_LIST_COL_SONG_GENRE:
+			g_value_set_string(value, data->song->genre);
+			break;
+		case PLAYLIST_LIST_COL_SONG_TRACK:
+			g_value_set_string(value, data->song->track);
+			break;
+		case PLAYLIST_LIST_COL_SONG_NAME:
+			g_value_set_string(value, data->song->name);
+			break;
+		case PLAYLIST_LIST_COL_SONG_COMPOSER:
+			g_value_set_string(value, data->song->composer);
+			break;
+		case PLAYLIST_LIST_COL_SONG_DATE:
+			g_value_set_string(value, data->song->date);
+			break;
+		case PLAYLIST_LIST_COL_SONG_LENGTH:
+			g_value_set_int(value, data->song->time);
+			break;
+		case PLAYLIST_LIST_COL_SONG_POS:
+			g_value_set_int(value, data->song->pos);
+			break;
+		case PLAYLIST_LIST_COL_SONG_ID:
+			g_value_set_int(value, data->song->id);
+			break;
 
-	case PLAYLIST_LIST_COL_ICON_ID:
-		if (data->song->pos ==
-		    PLAYLIST_LIST(tree_model)->current_song_pos) {
-			g_value_set_string(value, "gtk-media-play");
-		} else if (strstr(data->song->file, "://")) {
-			g_value_set_string(value, "media-stream");
-		} else {
-			g_value_set_string(value, "media-audiofile");
-		}
-		break;
+		case PLAYLIST_LIST_COL_ICON_ID:
+			if (data->song->pos ==
+					PLAYLIST_LIST(tree_model)->current_song_pos) {
+				g_value_set_string(value, "gtk-media-play");
+			} else if (strstr(data->song->file, "://")) {
+				g_value_set_string(value, "media-stream");
+			} else {
+				g_value_set_string(value, "media-audiofile");
+			}
+			break;
 
 	}
 }
@@ -680,7 +673,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
  *
  *****************************************************************************/
 
-static gboolean
+	static gboolean
 playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 {
 	CustomList *playlist_list;
@@ -716,14 +709,14 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
  *
  *****************************************************************************/
 
-static gboolean
+	static gboolean
 playlist_list_iter_children(GtkTreeModel * tree_model,
-			    GtkTreeIter * iter, GtkTreeIter * parent)
+		GtkTreeIter * iter, GtkTreeIter * parent)
 {
 	CustomList *playlist_list;
 
 	g_return_val_if_fail(parent == NULL
-			     || parent->user_data != NULL, FALSE);
+			|| parent->user_data != NULL, FALSE);
 
 	/* this is a list, nodes have no children */
 	if (parent)
@@ -754,7 +747,7 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
  *
  *****************************************************************************/
 
-static gboolean
+	static gboolean
 playlist_list_iter_has_child(GtkTreeModel * tree_model, GtkTreeIter * iter)
 {
 	return FALSE;
@@ -772,7 +765,7 @@ playlist_list_iter_has_child(GtkTreeModel * tree_model, GtkTreeIter * iter)
  *
  *****************************************************************************/
 
-static gint
+	static gint
 playlist_list_iter_n_children(GtkTreeModel * tree_model, GtkTreeIter * iter)
 {
 	CustomList *playlist_list;
@@ -800,9 +793,9 @@ playlist_list_iter_n_children(GtkTreeModel * tree_model, GtkTreeIter * iter)
  *
  *****************************************************************************/
 
-static gboolean
+	static gboolean
 playlist_list_iter_nth_child(GtkTreeModel * tree_model,
-			     GtkTreeIter * iter, GtkTreeIter * parent, gint n)
+		GtkTreeIter * iter, GtkTreeIter * parent, gint n)
 {
 	CustomList *playlist_list;
 	MpdData *data;
@@ -825,7 +818,7 @@ playlist_list_iter_nth_child(GtkTreeModel * tree_model,
 	if (data->song->pos > n)
 		data = mpd_data_get_first(data);
 	for (; data->song->pos != n &&
-	     !mpd_data_is_last(data); data = mpd_data_get_next(data)) ;
+			!mpd_data_is_last(data); data = mpd_data_get_next(data)) ;
 
 	g_assert(data != NULL);
 	g_assert(data->song->pos == n);
@@ -845,9 +838,9 @@ playlist_list_iter_nth_child(GtkTreeModel * tree_model,
  *
  *****************************************************************************/
 
-static gboolean
+	static gboolean
 playlist_list_iter_parent(GtkTreeModel * tree_model,
-			  GtkTreeIter * iter, GtkTreeIter * child)
+		GtkTreeIter * iter, GtkTreeIter * child)
 {
 	return FALSE;
 }

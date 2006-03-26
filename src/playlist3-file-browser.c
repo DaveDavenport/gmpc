@@ -361,19 +361,26 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path, -1);
-	if(strcmp(path,"/"))
+	if(path)
 	{
-		gtk_list_store_append (pl3_fb_store, &iter);
-		gtk_list_store_set (pl3_fb_store, &iter,
-				PL3_FB_PATH,path, 
-				PL3_FB_TYPE, PL3_ENTRY_DIR_UP,
-				PL3_FB_TITLE, "..",
-				PL3_FB_ICON, "gtk-open",
-				-1);
+		if(strcmp(path,"/"))
+		{
+			gtk_list_store_append (pl3_fb_store, &iter);
+			gtk_list_store_set (pl3_fb_store, &iter,
+					PL3_FB_PATH,path, 
+					PL3_FB_TYPE, PL3_ENTRY_DIR_UP,
+					PL3_FB_TITLE, "..",
+					PL3_FB_ICON, "gtk-open",
+					-1);
+		}
+
+
+		data = mpd_database_get_directory(connection, path);
 	}
-
-
-	data = mpd_database_get_directory(connection, path);
+	else{
+		gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 1 , &path, -1);
+		data = mpd_database_get_playlist_content(connection, path);
+	}
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -440,11 +447,12 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 {
 	char *path;
+	int support_playlist = (mpd_server_check_command_allowed(connection, "listPlaylistInfo") == MPD_SERVER_COMMAND_ALLOWED);
 	MpdData *data = NULL;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);
 	gtk_tree_store_set(pl3_tree, iter, 4, TRUE, -1);
-
+	
 	data = mpd_database_get_directory(connection, path);
 	while (data != NULL)
 	{
@@ -464,6 +472,18 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 			gtk_tree_store_append(pl3_tree, &child2, &child);
 
 			g_free (basename);
+		}
+		if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
+		{
+			gtk_tree_store_append (pl3_tree, &child, iter);
+			gtk_tree_store_set (pl3_tree, &child,
+					0, PL3_BROWSE_FILE,
+					1, data->playlist,
+					2, NULL,
+					3, "media-playlist",
+					4, TRUE,
+					PL3_CAT_ICON_SIZE,1,
+					-1);
 		}
 		data = mpd_data_get_next(data);
 	}
@@ -883,7 +903,7 @@ void pl3_file_browser_delete_playlist(GtkMenuItem *bt)
 		}
 	}
 
-	
+
 	if(path == NULL){
 		gtk_widget_destroy(dialog);
 		return;
