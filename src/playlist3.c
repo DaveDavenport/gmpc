@@ -1103,15 +1103,29 @@ static void playlist_player_update_image(MpdObj *mi)
 		gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 		g_object_unref(pb);
+		if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0))
+		{
+			int width = gtk_paned_get_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")));
+			if(width <= 0) width = cfg_get_single_value_as_int(config, "playlist", "pane-pos");
+			if(width <= 0) width = 100;
+			else if(width > 200) width = 200;
+			width-=16;
+			pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+			g_object_unref(pb);
+		}
 	}
 	else{
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 	}
 	if(path) g_free(path);
 	if(ret == COVER_ART_NOT_FETCHED)
 	{
 		cover_art_fetch_image(song, (CoverArtCallback)playlist_player_update_image_callback,NULL);
 	}
+
 
 }
 static void playlist_player_clear_image()
