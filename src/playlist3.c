@@ -630,7 +630,7 @@ void pl3_show_and_position_window()
 void create_playlist3 ()
 {
 	GtkCellRenderer *renderer;
-	GtkWidget *tree,*temp,*button;
+	GtkWidget *tree;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
