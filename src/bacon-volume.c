@@ -161,7 +161,7 @@ bacon_volume_button_new (GtkIconSize size,
 
   button = g_object_new (BACON_TYPE_VOLUME_BUTTON, NULL);
   button->size = size;
-  gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+  gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NORMAL);
 
 #ifndef HAVE_GTK_ONLY
   /* image */

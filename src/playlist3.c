@@ -738,7 +738,7 @@ void create_playlist3 ()
 
 
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
-	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox8")), volume_slider, FALSE, TRUE, 0);
+	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_playlist_player")), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
 	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME,NULL);
 	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
@@ -1098,7 +1098,8 @@ static void playlist_player_update_image(MpdObj *mi)
 	ret = cover_art_fetch_image_path(song, &path);
 	if(ret == COVER_ART_OK_LOCAL) {
 		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_size(path,60,60,NULL);
+		GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "alignment1")->allocation;
+		pb = gdk_pixbuf_new_from_file_at_size(path,-1,(alloc.height > 20)?alloc.height:40,NULL);
 		gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 		g_object_unref(pb);
