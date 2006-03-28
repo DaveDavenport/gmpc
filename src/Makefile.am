@@ -22,6 +22,7 @@ gmpc_SOURCES=\
 	qthread.c\
 	config1.c\
 	cover-art-manager.c\
+	bacon-volume.c\
 	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
@@ -73,4 +74,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-artist-browser.h\
 		playlist3-find-browser.h\
 		playlist-list.h\
+		bacon-volume.h\
 		TreeSearchWidget.h

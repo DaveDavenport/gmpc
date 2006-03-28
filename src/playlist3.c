@@ -23,7 +23,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <config.h>
-
+#include "bacon-volume.h"
 #include "plugin.h"
 #include "main.h"
 #include "misc.h"
@@ -35,7 +35,7 @@
 #include "playlist3-file-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
-
+void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
 
@@ -56,6 +56,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 void playlist_pref_construct(GtkWidget *container);
 void playlist_pref_destroy(GtkWidget *container);
 GladeXML *playlist_pref_xml = NULL;
+
+
+GtkWidget *volume_slider = NULL;
+
+
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
 	playlist_pref_destroy
@@ -625,7 +630,7 @@ void pl3_show_and_position_window()
 void create_playlist3 ()
 {
 	GtkCellRenderer *renderer;
-	GtkWidget *tree;
+	GtkWidget *tree,*temp,*button;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
@@ -730,7 +735,14 @@ void create_playlist3 ()
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 	}
-	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME,NULL);
+
+
+	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
+	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox8")), volume_slider, FALSE, TRUE, 0);
+	gtk_widget_show_all(volume_slider);
+	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME,NULL);
+	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
+
 
 
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
@@ -1192,6 +1204,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				string);
 		g_free(string);
 	}
+	if(what&MPD_CST_VOLUME)
+	{
+		bacon_volume_button_set_value(BACON_VOLUME_BUTTON(volume_slider),mpd_status_get_volume(connection));
+
+	}
 }
 
 
@@ -1232,3 +1249,9 @@ int pl3_progress_seek_stop()
 	}
 	return FALSE;
 }
+void playlist_player_volume_changed(BaconVolumeButton *vol_but)
+{
+	int volume = bacon_volume_button_get_value(vol_but);
+	mpd_status_set_volume(connection, volume);
+}
+
