@@ -10,6 +10,8 @@ appicon_DATA =	media-audiofile.png\
 	media-next.png\
 	media-prev.png\
 	gmpc-tray.png\
+	gmpc-tray-play.png\
+	gmpc-tray-pause.png\
 	gmpc.png\
 	media-album.png\
 	media-stop.png\
@@ -19,21 +21,4 @@ appicon_DATA =	media-audiofile.png\
 	player-shuffle.png\
 	icecast.png
 
-EXTRA_DIST = media-audiofile.png\
-	media-stream.png\
-	media-play.png\
-	broken.png\
-	media-pause.png\
-	media-next.png\
-	media-prev.png\
-	gmpc-tray.png\
-	gmpc.png\
-	media-artist.png\
-	media-album.png\
-	media-stop.png\
-	player-repeat.png\
-	player-shuffle.png\
-	media-playlist.png\
-	icecast.png
-
-
+EXTRA_DIST = $(appicon_DATA)

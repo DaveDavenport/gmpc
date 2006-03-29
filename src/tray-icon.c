@@ -31,7 +31,7 @@ extern GladeXML *pl3_xml;
 
 EggTrayIcon *tray_icon = NULL;
 GladeXML *tray_xml = NULL;
-GdkPixbuf *logo = NULL;
+GtkWidget *logo = NULL;
 GtkTooltips *tps = NULL;
 extern int pl3_hidden;
 GtkWidget *tip = NULL;
@@ -460,6 +460,7 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 
 /* this draws the actual image to the window */
 /* gtk will call this function when the image is exposed and the data is gone */
+/*
 void exposed_signal(GtkWidget *event)
 {
 	int state = mpd_player_get_state(connection);
@@ -499,7 +500,7 @@ void exposed_signal(GtkWidget *event)
 	else return;
 
 }
-
+*/
 /* this function updates the trayicon on changes */
 void tray_icon_song_change()
 {
@@ -552,6 +553,7 @@ void tray_icon_state_change()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
+		if(tray_icon)gtk_image_set_from_stock(logo, "gmpc-tray", GTK_ICON_SIZE_SMALL_TOOLBAR);
 		if(cover_pb)
 		{
 			g_object_unref(cover_pb);
@@ -559,7 +561,11 @@ void tray_icon_state_change()
 		}
 	}
 	else if(state == MPD_PLAYER_PLAY){
+		if(tray_icon)	gtk_image_set_from_stock(logo, "gmpc-tray-play", GTK_ICON_SIZE_SMALL_TOOLBAR);
 		tray_icon_song_change();
+	}
+	else if(state == MPD_PLAYER_PAUSE){
+		if(tray_icon)gtk_image_set_from_stock(logo, "gmpc-tray-pause", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	}
 
 	if(tray_icon)
@@ -761,20 +767,22 @@ int create_tray_icon()
 	/* set up tray icon */
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
-	gtk_widget_set_usize(event, 20,20);
-	gtk_widget_set_app_paintable(event, TRUE);
-	ali = gtk_alignment_new(0.5,0.5,0,0);
-	gtk_container_add(GTK_CONTAINER(ali), event);
-	gtk_container_add(GTK_CONTAINER(tray_icon), ali);
+	logo = 	gtk_image_new_from_stock("gmpc-tray",GTK_ICON_SIZE_SMALL_TOOLBAR);//gtk_event_box_new();
+//	gtk_widget_set_usize(event, 20,20);
+//	gtk_widget_set_app_paintable(event, TRUE);
+//	ali = gtk_alignment_new(0.5,0.5,0,0);
+//	gtk_container_add(GTK_CONTAINER(ali), event);
+	gtk_container_add(GTK_CONTAINER(tray_icon), event);
+	gtk_container_add(GTK_CONTAINER(event), logo);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	/* set image */
-	path = gmpc_get_full_image_path("gmpc-tray.png");
+/*	path = gmpc_get_full_image_path("gmpc-tray.png");
 	temp = gdk_pixbuf_new_from_file(path,NULL);
 	g_free(path);
 	logo = gdk_pixbuf_scale_simple(temp, 20,20, GDK_INTERP_BILINEAR);
 	if(temp) g_object_unref(temp);
-
-	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
+*/
+//	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
