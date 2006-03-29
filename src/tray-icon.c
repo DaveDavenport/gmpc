@@ -457,50 +457,6 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 	tip = NULL;
 }
 
-
-/* this draws the actual image to the window */
-/* gtk will call this function when the image is exposed and the data is gone */
-/*
-void exposed_signal(GtkWidget *event)
-{
-	int state = mpd_player_get_state(connection);
-	gdk_draw_rectangle(event->window, event->style->bg_gc[GTK_STATE_NORMAL], TRUE, 0,0,20,20);
-
-	gdk_draw_pixbuf(event->window,event->style->bg_gc[GTK_STATE_NORMAL],
-			logo, 0,0,0,0,20,20, GDK_RGB_DITHER_MAX,0,0);
-
-	if(state < 0)
-	{
-		return;
-	}
-
-	if(player_get_hidden())
-	{
-		GdkPoint points[6] = {{19,13},{19,19}, {19,16},{16,16},{16,13},{16,19}};
-		gdk_draw_lines(event->window, event->style->fg_gc[GTK_STATE_NORMAL], points, 6);
-	}
-
-	if(state == MPD_PLAYER_STOP)
-	{
-		GdkPoint points[5] = {{4,1},{4,8}, {11,8},{11,1},{4,1}};
-		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
-	}
-	else if(state == MPD_PLAYER_PLAY)
-	{
-		GdkPoint points[4] = {{5,1},{5,11}, {10,6},{5,1}};
-		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 4);
-	}
-	else if(state == MPD_PLAYER_PAUSE)
-	{
-		GdkPoint points[5] = {{4,1},{4,8}, {6,8},{6,1},{4,1}};
-		GdkPoint points2[5] = {{8,1},{8,8}, {10,8},{10,1},{8,1}};	
-		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points, 5);
-		gdk_draw_polygon(event->window, event->style->fg_gc[GTK_STATE_NORMAL],TRUE, points2, 5);
-	}
-	else return;
-
-}
-*/
 /* this function updates the trayicon on changes */
 void tray_icon_song_change()
 {
@@ -553,7 +509,7 @@ void tray_icon_state_change()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
-		if(tray_icon)gtk_image_set_from_stock(logo, "gmpc-tray", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", GTK_ICON_SIZE_SMALL_TOOLBAR);
 		if(cover_pb)
 		{
 			g_object_unref(cover_pb);
@@ -561,11 +517,11 @@ void tray_icon_state_change()
 		}
 	}
 	else if(state == MPD_PLAYER_PLAY){
-		if(tray_icon)	gtk_image_set_from_stock(logo, "gmpc-tray-play", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)	gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-play", GTK_ICON_SIZE_SMALL_TOOLBAR);
 		tray_icon_song_change();
 	}
 	else if(state == MPD_PLAYER_PAUSE){
-		if(tray_icon)gtk_image_set_from_stock(logo, "gmpc-tray-pause", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-pause", GTK_ICON_SIZE_SMALL_TOOLBAR);
 	}
 
 	if(tray_icon)
@@ -756,10 +712,7 @@ int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 
 int create_tray_icon()
 {
-	GdkPixbuf  *temp;
 	GtkWidget *event;
-	gchar *path;
-	GtkWidget *ali;
 	if(tray_icon != NULL)
 	{
 		return FALSE;
@@ -768,21 +721,9 @@ int create_tray_icon()
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
 	logo = 	gtk_image_new_from_stock("gmpc-tray",GTK_ICON_SIZE_SMALL_TOOLBAR);//gtk_event_box_new();
-//	gtk_widget_set_usize(event, 20,20);
-//	gtk_widget_set_app_paintable(event, TRUE);
-//	ali = gtk_alignment_new(0.5,0.5,0,0);
-//	gtk_container_add(GTK_CONTAINER(ali), event);
 	gtk_container_add(GTK_CONTAINER(tray_icon), event);
 	gtk_container_add(GTK_CONTAINER(event), logo);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
-	/* set image */
-/*	path = gmpc_get_full_image_path("gmpc-tray.png");
-	temp = gdk_pixbuf_new_from_file(path,NULL);
-	g_free(path);
-	logo = gdk_pixbuf_scale_simple(temp, 20,20, GDK_INTERP_BILINEAR);
-	if(temp) g_object_unref(temp);
-*/
-//	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(exposed_signal), NULL);
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
