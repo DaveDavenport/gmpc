@@ -1182,8 +1182,8 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 	if(active){
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
-		gtk_box_pack_end_defaults(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox1")),
-				title);
+		//gtk_box_pack_end_defaults(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox1")),
+		//		title);
 	}
 	else{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));

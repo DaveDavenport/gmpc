@@ -39,6 +39,8 @@
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
 #endif
+extern GladeXML *pl3_xml;
+extern GtkWidget *pl3_cp_tree;
 void init_playlist_store ();
 void connection_changed(MpdObj *mi, int connect, gpointer data);
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
@@ -594,7 +596,11 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_PLAYLIST)
 	{
-		playlist_list_data_update(PLAYLIST_LIST(playlist),mi);
+		GtkProgressBar *pb = NULL;
+		if(pl3_xml){
+			pb = (GtkProgressBar *)glade_xml_get_widget(pl3_xml, "pl3_progressbar");
+		}
+		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,pl3_cp_tree,pb);
 	}
 
 	/* make the player handle signals */

@@ -170,6 +170,9 @@ void pl3_current_playlist_browser_init()
 	g_value_init(&value, G_TYPE_BOOLEAN);
 	g_value_set_boolean(&value, TRUE);//PANGO_WEIGHT_ULTRABOLD);
 	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);
+	gtk_tree_view_column_set_fixed_width(column, 20);
+	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
+
  	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
    	if(cfg_get_single_value_as_int_with_default(config, "playlist", "1columnstyle", TRUE))
 	{
@@ -232,8 +235,9 @@ void pl3_current_playlist_browser_init()
 	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
 	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
 #endif                                                              		
-	}
 
+	}
+	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 
 
 

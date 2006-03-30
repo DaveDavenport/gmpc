@@ -89,6 +89,6 @@ void playlist_list_set_current_song_pos(CustomList *cl, int new_pos);
 gchar *playlist_list_get_markup(CustomList *cl);
 void playlist_list_set_markup(CustomList *cl, gchar *markup);
 void playlist_list_clear(CustomList *list);
-void playlist_list_data_update(CustomList *cl ,MpdObj *mi);
+void playlist_list_data_update(CustomList *cl ,MpdObj *mi,GtkTreeView *tree,GtkWidget *pb);
 guint playlist_list_get_playtime(CustomList *cl);
 #endif /* _playlist_list_h_included_ */

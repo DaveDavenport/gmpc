@@ -145,7 +145,36 @@ typedef struct {
 	CustomList *cl;
 	MpdObj *mi;
 	MpdData *data;
+	GtkTreeView *tree;
+	GtkWidget *progress;
+	int total_length;
 }pass_data;
+
+
+int playlist_list_data_fill_initial(pass_data *pd)
+{
+	GtkTreePath *path = NULL;
+	GtkTreeIter iter;
+	if(pd->data == NULL) return FALSE;
+	/* start sending signals */
+	path = gtk_tree_path_new();
+	gtk_tree_path_append_index(path, pd->data->song->pos);
+	iter.stamp = pd->cl->stamp;
+	iter.user_data = pd->data;
+	iter.user_data2 = NULL;
+	iter.user_data3 = NULL;
+	gtk_tree_model_row_inserted(GTK_TREE_MODEL(pd->cl), path,
+			&iter);
+	gtk_tree_path_free(path);
+	pd->cl->playtime += pd->data->song->time;
+	pd->cl->num_rows++;
+	pd->data = mpd_data_get_next_real(pd->data, FALSE);
+	if(pd->cl->num_rows%100 == 0) {
+		if(pd->progress) gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pd->progress), pd->cl->num_rows/(float)pd->total_length);
+	}
+	return TRUE;
+}
+/* TODO move this to multiple itterations too */
 int playlist_list_data_update_data(pass_data *pd)
 {
 	MpdData *data= pd->data;
@@ -153,33 +182,7 @@ int playlist_list_data_update_data(pass_data *pd)
 	CustomList *cl = pd->cl;
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
-	g_free(pd);
-	if (cl->mpdata == NULL) {
-		MpdData *temp = cl->mpdata;
-		cl->mpdata = data;
-		/* start sending signals */
-		for (temp = mpd_data_get_first(data); temp;
-				temp = mpd_data_get_next_real(temp, FALSE)) {
-
-			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path, temp->song->pos);
-			iter.stamp = cl->stamp;
-			iter.user_data = temp;
-			iter.user_data2 = NULL;
-			iter.user_data3 = NULL;
-			gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path,
-					&iter);
-			gtk_tree_path_free(path);
-			cl->playtime += temp->song->time;
-			cl->num_rows++;
-			/*while(gtk_events_pending())
-			{
-				gtk_main_iteration();
-			}
-			*/
-
-		}
-	} else if (data) {
+	if (data) {
 		MpdData *temp = mpd_data_get_first(cl->mpdata);
 		do {
 			gint pos = data->song->pos;
@@ -242,7 +245,7 @@ int playlist_list_data_update_data(pass_data *pd)
 	}
 	if (cl->num_rows > mpd_playlist_get_playlist_length(mi) && cl->mpdata) {
 		MpdData *temp = mpd_data_get_first(cl->mpdata);
-		gint new_length = mpd_playlist_get_playlist_length(mi);
+		gint new_length = pd->total_length;// mpd_playlist_get_playlist_length(mi);
 		while (temp) {
 
 			/* nasty trick to make it go backwards, otherwise gtk thinks everything
@@ -266,22 +269,46 @@ int playlist_list_data_update_data(pass_data *pd)
 			}
 		}
 	}
-	if (cl->mpdata) {
-		cl->mpdata = mpd_data_get_first(cl->mpdata);
-	}
-	if (cl->num_rows != mpd_playlist_get_playlist_length(mi)) {
-		debug_printf(DEBUG_ERROR, "sync went wrong %i %i\n", cl->num_rows,mpd_playlist_get_playlist_length(mi));
-	}
-	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+
 	return FALSE;
 }
-void playlist_list_data_update(CustomList * cl, MpdObj * mi) {
+
+void playlist_list_data_update_done(pass_data *pd)
+{
+	if (pd->cl->num_rows != mpd_playlist_get_playlist_length(pd->mi)) {
+		debug_printf(DEBUG_ERROR, "sync went wrong %i %i\n", pd->cl->num_rows,mpd_playlist_get_playlist_length(pd->mi));
+	}                                                                                                           	
+	if (pd->cl->mpdata) {
+		pd->cl->mpdata = mpd_data_get_first(pd->cl->mpdata);
+	}                                               	
+	pd->cl->playlist_id = mpd_playlist_get_playlist_id(pd->mi);
+	if(pd->tree){
+		printf("re-set model\n");	
+		gtk_tree_view_set_model(pd->tree, GTK_TREE_MODEL(pd->cl));
+	}
+	g_free(pd);
+	if(pd->progress) gtk_widget_hide(pd->progress);
+}
+
+void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree, GtkWidget *pb) {
 	MpdData *data = mpd_playlist_get_changes(mi, cl->playlist_id);
 	pass_data *pd = g_malloc0(sizeof(*pd));
 	pd->cl = cl;
 	pd->mi = mi;
 	pd->data = data;
-	g_idle_add((GSourceFunc)playlist_list_data_update_data,pd);
+	pd->tree = tree;
+	pd->progress = pb;
+	pd->total_length =  mpd_playlist_get_playlist_length(mi);
+	if(pd->tree)gtk_tree_view_set_model(tree, NULL);
+	if(pd->progress) gtk_widget_show(pd->progress);
+	if(cl->mpdata == NULL)
+	{
+		cl->mpdata = data;
+		g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)playlist_list_data_fill_initial,pd,playlist_list_data_update_done);
+	}else{
+		
+		g_idle_add_full(G_PRIORITY_HIGH_IDLE,(GSourceFunc)playlist_list_data_update_data,pd,playlist_list_data_update_done);
+	}
 
 }
 
