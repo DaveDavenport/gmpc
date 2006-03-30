@@ -289,7 +289,6 @@ int main (int argc, char **argv)
 	//player_create ();
 	/* create the store for the playlist */
 	init_playlist_store ();
-	//
 	create_playlist3();
 
 

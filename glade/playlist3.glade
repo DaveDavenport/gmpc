@@ -52,7 +52,7 @@
 		      <signal name="activate" handler="preferences_window_connect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image101">
+			<widget class="GtkImage" id="image113">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-apply</property>
 			  <property name="icon_size">1</property>
@@ -73,7 +73,7 @@
 		      <signal name="activate" handler="preferences_window_disconnect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image102">
+			<widget class="GtkImage" id="image114">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cancel</property>
 			  <property name="icon_size">1</property>
@@ -135,10 +135,9 @@
 		      <property name="label" translatable="yes">Play/Pause</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="play_song" last_modification_time="Thu, 30 Mar 2006 10:03:00 GMT"/>
-		      <accelerator key="x" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image103">
+			<widget class="GtkImage" id="image115">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -157,10 +156,9 @@
 		      <property name="label" translatable="yes">Stop</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="stop_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
-		      <accelerator key="v" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image104">
+			<widget class="GtkImage" id="image116">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -185,10 +183,9 @@
 		      <property name="label" translatable="yes">Next</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="next_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
-		      <accelerator key="b" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image105">
+			<widget class="GtkImage" id="image117">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -207,10 +204,9 @@
 		      <property name="label" translatable="yes">Previous</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="prev_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
-		      <accelerator key="z" modifiers="0" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image106">
+			<widget class="GtkImage" id="image118">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -270,7 +266,7 @@
 		      <signal name="activate" handler="id3_info" last_modification_time="Thu, 30 Mar 2006 10:43:49 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image107">
+			<widget class="GtkImage" id="image119">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>

@@ -141,12 +141,19 @@ guint playlist_list_get_playtime(CustomList * cl)
  *                        will need to do it here.
  *
  *****************************************************************************/
-
-void playlist_list_data_update(CustomList * cl, MpdObj * mi)
+typedef struct {
+	CustomList *cl;
+	MpdObj *mi;
+	MpdData *data;
+}pass_data;
+int playlist_list_data_update_data(pass_data *pd)
 {
-	MpdData *data = mpd_playlist_get_changes(mi, cl->playlist_id);
+	MpdData *data= pd->data;
+	MpdObj *mi = pd->mi;
+	CustomList *cl = pd->cl;
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
+	g_free(pd);
 	if (cl->mpdata == NULL) {
 		MpdData *temp = cl->mpdata;
 		cl->mpdata = data;
@@ -165,6 +172,12 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 			gtk_tree_path_free(path);
 			cl->playtime += temp->song->time;
 			cl->num_rows++;
+			/*while(gtk_events_pending())
+			{
+				gtk_main_iteration();
+			}
+			*/
+
 		}
 	} else if (data) {
 		MpdData *temp = mpd_data_get_first(cl->mpdata);
@@ -260,7 +273,21 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi)
 		debug_printf(DEBUG_ERROR, "sync went wrong %i %i\n", cl->num_rows,mpd_playlist_get_playlist_length(mi));
 	}
 	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+	return FALSE;
 }
+void playlist_list_data_update(CustomList * cl, MpdObj * mi) {
+	MpdData *data = mpd_playlist_get_changes(mi, cl->playlist_id);
+	pass_data *pd = g_malloc0(sizeof(*pd));
+	pd->cl = cl;
+	pd->mi = mi;
+	pd->data = data;
+	g_idle_add((GSourceFunc)playlist_list_data_update_data,pd);
+
+}
+
+
+
+
 
 void playlist_list_clear(CustomList * list)
 {
