@@ -520,15 +520,18 @@ void pl3_playlist_search()
 	{
 		return;
 	}
-	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+	
+/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
 					glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		create_playlist3();
 	}
 	else
-	{
+	*/
+	if(pl3_xml){
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 	}
+	
 	if(pl3_xml != NULL)
 	{
 		GtkTreePath *path = gtk_tree_path_new_from_string("3");
@@ -575,12 +578,12 @@ int pl3_close()
 		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 		cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
 					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
-		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+/*		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 		{
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
 			return TRUE;
 		}
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));
+*/		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		pl3_hidden = TRUE;
 		return TRUE;
 	}
@@ -644,12 +647,12 @@ void create_playlist3 ()
 	 * step out of this function, and when it gets called again it skips
 	 * this part.
 	 */
-	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
 	{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
 		return;
 	}
-
+*/
 	if(pl3_xml != NULL)
 	{
 		pl3_show_and_position_window();

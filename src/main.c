@@ -286,10 +286,14 @@ int main (int argc, char **argv)
 	/*
 	 * create the main window, This is done before anything else (but after command line check)
 	 */
-	player_create ();
-
+	//player_create ();
 	/* create the store for the playlist */
 	init_playlist_store ();
+	//
+	create_playlist3();
+
+
+
 
 	/*
 	 * create timeouts 
