@@ -567,6 +567,10 @@ void pl3_push_rsb_message(gchar *string)
 
 int pl3_close()
 {
+	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1) == 0) {
+		main_quit();
+		return;
+	}
 	if(pl3_xml != NULL && !pl3_hidden)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
@@ -743,10 +747,17 @@ void create_playlist3 ()
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_playlist_player")), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
-	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME,NULL);
+	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
 	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 
+
+
+	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_check_cover_image")),
+		cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0));
+
+
+	
 
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
@@ -1118,6 +1129,9 @@ static void playlist_player_update_image(MpdObj *mi)
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			g_object_unref(pb);
 		}
+		else{
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+		}
 	}
 	else{
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
@@ -1135,15 +1149,74 @@ static void playlist_player_clear_image()
 {
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 }
+
+void playlist_menu_repeat_changed(GtkCheckMenuItem *menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if(active != mpd_player_get_repeat(connection))
+	{
+		mpd_player_set_repeat(connection, active);
+	}
+}
+void playlist_menu_random_changed(GtkCheckMenuItem *menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if(active != mpd_player_get_random(connection))
+	{
+		mpd_player_set_random(connection, active);
+	}
+}
+
+void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
+	playlist_player_update_image(connection);
+}
+
+void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	GtkWidget *title  = glade_xml_get_widget(pl3_xml, "pp_label");
+	g_object_ref(title);
+	if(active){
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
+		gtk_box_pack_end_defaults(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox1")),
+				title);
+	}
+	else{
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
+	}
+}
+
+
+
+void playlist_connection_changed(MpdObj *mi, int connect)
+{
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), !connect);
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
+	if(connect) {
+
+
+	}
+
+
+
+
+}
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+	GtkWidget *image = NULL;
 	if(!pl3_xml)return;
 	if(what&MPD_CST_STATE)
 	{
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_PLAYER_PLAY:
-
+				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-pause",GTK_ICON_SIZE_BUTTON);
@@ -1151,6 +1224,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				playlist_player_update_image(mi);
 				break;
 			case MPD_PLAYER_PAUSE:
+				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);                     				
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
@@ -1160,6 +1235,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 				break;
 			default:
+				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);                     								
 				playlist_player_clear_image();
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
@@ -1182,6 +1259,16 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			playlist_player_update_image(mi);
 		}
 	}
+	if(what&MPD_CST_REPEAT)
+	{
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
+					mpd_player_get_repeat(connection));
+	}
+	if(what&MPD_CST_RANDOM)
+	{
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
+					mpd_player_get_random(connection));
+	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
 	{
 		char *string = NULL;

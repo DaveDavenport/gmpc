@@ -45,14 +45,14 @@
 		<widget class="GtkMenu" id="menuitem1_menu">
 
 		  <child>
-		    <widget class="GtkImageMenuItem" id="connect1">
+		    <widget class="GtkImageMenuItem" id="menu_connect">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Connect</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="preferences_window_connect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image113">
+			<widget class="GtkImage" id="image173">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-apply</property>
 			  <property name="icon_size">1</property>
@@ -66,14 +66,14 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkImageMenuItem" id="disconnect1">
+		    <widget class="GtkImageMenuItem" id="menu_disconnect">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">_Disconnect</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="preferences_window_disconnect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image114">
+			<widget class="GtkImage" id="image174">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cancel</property>
 			  <property name="icon_size">1</property>
@@ -137,7 +137,7 @@
 		      <signal name="activate" handler="play_song" last_modification_time="Thu, 30 Mar 2006 10:03:00 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image115">
+			<widget class="GtkImage" id="image175">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -158,7 +158,7 @@
 		      <signal name="activate" handler="stop_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image116">
+			<widget class="GtkImage" id="image176">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -185,7 +185,7 @@
 		      <signal name="activate" handler="next_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image117">
+			<widget class="GtkImage" id="image177">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -206,7 +206,7 @@
 		      <signal name="activate" handler="prev_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image118">
+			<widget class="GtkImage" id="image178">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -226,22 +226,22 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkCheckMenuItem" id="repeat1">
+		    <widget class="GtkCheckMenuItem" id="menu_repeat">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Repeat</property>
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
-		      <signal name="activate" handler="repeat_pl" last_modification_time="Thu, 30 Mar 2006 10:09:44 GMT"/>
+		      <signal name="activate" handler="playlist_menu_repeat_changed" last_modification_time="Thu, 30 Mar 2006 13:35:00 GMT"/>
 		    </widget>
 		  </child>
 
 		  <child>
-		    <widget class="GtkCheckMenuItem" id="random1">
+		    <widget class="GtkCheckMenuItem" id="menu_random">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Random</property>
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
-		      <signal name="activate" handler="random_pl" last_modification_time="Thu, 30 Mar 2006 10:09:44 GMT"/>
+		      <signal name="activate" handler="playlist_menu_random_changed" last_modification_time="Thu, 30 Mar 2006 13:35:00 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -266,7 +266,7 @@
 		      <signal name="activate" handler="id3_info" last_modification_time="Thu, 30 Mar 2006 10:43:49 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image119">
+			<widget class="GtkImage" id="image179">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>
@@ -276,6 +276,26 @@
 			  <property name="ypad">0</property>
 			</widget>
 		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkCheckMenuItem" id="menu_check_cover_image">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">_Show Large Cover Image</property>
+		      <property name="use_underline">True</property>
+		      <property name="active">False</property>
+		      <signal name="activate" handler="playlist_menu_cover_image_changed" last_modification_time="Thu, 30 Mar 2006 13:58:11 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkCheckMenuItem" id="mini_mode1">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Mini Mode</property>
+		      <property name="use_underline">True</property>
+		      <property name="active">False</property>
+		      <signal name="activate" handler="playlist_menu_mini_mode_changed" last_modification_time="Thu, 30 Mar 2006 14:03:03 GMT"/>
 		    </widget>
 		  </child>
 		</widget>

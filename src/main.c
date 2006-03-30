@@ -339,7 +339,7 @@ int main (int argc, char **argv)
 void main_quit()
 {
 	/* so it saves the playlist pos */
-	pl3_close();
+//	pl3_close();
 	mpd_signal_connect_connection_changed(connection, NULL, NULL);
 	if(mpd_check_connected(connection))
 	{
@@ -745,6 +745,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	int i=0;
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	player_connection_changed(mi,connect);
+	playlist_connection_changed(mi, connect);
 	for(i=0; i< num_plugins; i++)
 	{
 		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
