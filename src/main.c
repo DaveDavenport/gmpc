@@ -596,11 +596,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_PLAYLIST)
 	{
-		GtkProgressBar *pb = NULL;
-		if(pl3_xml){
-			pb = (GtkProgressBar *)glade_xml_get_widget(pl3_xml, "pl3_progressbar");
-		}
-		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,pl3_cp_tree,pb);
+		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,pl3_cp_tree);
 	}
 
 	/* make the player handle signals */

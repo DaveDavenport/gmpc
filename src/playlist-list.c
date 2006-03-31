@@ -146,7 +146,6 @@ typedef struct {
 	MpdObj *mi;
 	MpdData *data;
 	GtkTreeView *tree;
-	GtkWidget *progress;
 	int total_length;
 }pass_data;
 
@@ -169,9 +168,6 @@ int playlist_list_data_fill_initial(pass_data *pd)
 	pd->cl->playtime += pd->data->song->time;
 	pd->cl->num_rows++;
 	pd->data = mpd_data_get_next_real(pd->data, FALSE);
-	if(pd->cl->num_rows%100 == 0) {
-		if(pd->progress) gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pd->progress), pd->cl->num_rows/(float)pd->total_length);
-	}
 	return TRUE;
 }
 /* TODO move this to multiple itterations too */
@@ -287,20 +283,17 @@ void playlist_list_data_update_done(pass_data *pd)
 		gtk_tree_view_set_model(pd->tree, GTK_TREE_MODEL(pd->cl));
 	}
 	g_free(pd);
-	if(pd->progress) gtk_widget_hide(pd->progress);
 }
 
-void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree, GtkWidget *pb) {
+void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree) {
 	MpdData *data = mpd_playlist_get_changes(mi, cl->playlist_id);
 	pass_data *pd = g_malloc0(sizeof(*pd));
 	pd->cl = cl;
 	pd->mi = mi;
 	pd->data = data;
 	pd->tree = tree;
-	pd->progress = pb;
 	pd->total_length =  mpd_playlist_get_playlist_length(mi);
 	if(pd->tree)gtk_tree_view_set_model(tree, NULL);
-	if(pd->progress) gtk_widget_show(pd->progress);
 	if(cl->mpdata == NULL)
 	{
 		cl->mpdata = data;
