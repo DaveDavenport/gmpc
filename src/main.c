@@ -341,7 +341,6 @@ int main (int argc, char **argv)
 void main_quit()
 {
 	/* so it saves the playlist pos */
-//	pl3_close();
 	mpd_signal_connect_connection_changed(connection, NULL, NULL);
 	if(mpd_check_connected(connection))
 	{

@@ -25,7 +25,7 @@ void tray_init();
 
 GladeXML *tray_pref_xml = NULL;
 
-int playlist_hidden = FALSE;
+//int pl3_hidden = FALSE;
 
 extern GladeXML *pl3_xml;
 
@@ -546,7 +546,7 @@ void tray_icon_destroyed()
 	if(player_get_hidden())
 	{
 		player_show();
-		if(playlist_hidden)
+		if(pl3_hidden)
 		{
 			create_playlist3();
 		}
@@ -578,34 +578,35 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
-		if(player_get_hidden())
-		{
-			player_show();
+//		if(player_get_hidden())
+//		{
+//			player_show();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
-			{
-				if(playlist_hidden)
+//			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
+//			{
+				if(pl3_hidden)
 				{
 					create_playlist3();
-					playlist_hidden = FALSE;
 				}
-			}
-		}
-		else
-		{
-			player_hide();
+				else{
+					pl3_hide();
+				}
+//			}
+//		}
+//		else
+//		{
+///			player_hide();
 			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
+/*			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
 			{
-				if(pl3_xml != NULL && !pl3_hidden)
+			if(pl3_xml != NULL && !pl3_hidden)
 				{
-					pl3_close();
-					playlist_hidden = TRUE;
+				
 				}
 			}
 
 		}
-	}
+*/	}
 	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
 	{
 		gchar *string = cfg_get_single_value_as_string_with_default(config, "tray-icon","middle-mouse-action","pause");

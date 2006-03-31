@@ -174,7 +174,7 @@ void pl3_current_playlist_browser_init()
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
 
  	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
-   	if(cfg_get_single_value_as_int_with_default(config, "playlist", "1columnstyle", TRUE))
+   	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "morecolumnstyle", TRUE))
 	{
 		gtk_tree_view_column_set_attributes (column,renderer,
 				"text",PLAYLIST_LIST_COL_MARKUP /*SONG_TITLE*/, 
@@ -182,59 +182,75 @@ void pl3_current_playlist_browser_init()
 				NULL);
 	
 
-
-#if GTK_CHECK_VERSION(2,6,0)
-	memset(&value, 0, sizeof(value));
-	g_value_init(&value, G_TYPE_INT);
-	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-#endif
+		memset(&value, 0, sizeof(value));
+		g_value_init(&value, G_TYPE_INT);
+		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
 		gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
 	}
 	else{
 		renderer = gtk_cell_renderer_text_new();
-		column = gtk_tree_view_column_new_with_attributes ("Artist", renderer,"text", PLAYLIST_LIST_COL_SONG_ARTIST, NULL);
+		column = gtk_tree_view_column_new_with_attributes ("Artist", renderer,
+				"text", PLAYLIST_LIST_COL_SONG_ARTIST, 
+				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
+				NULL);
 		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_column_set_fixed_width(column, 200);
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  		
-#if GTK_CHECK_VERSION(2,6,0)
-	memset(&value, 0, sizeof(value));
-	g_value_init(&value, G_TYPE_INT);
-	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-#endif
-		
-		
+		memset(&value, 0, sizeof(value));
+		g_value_init(&value, G_TYPE_INT);
+		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
+
+
 		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes ("Title", renderer,"text", PLAYLIST_LIST_COL_SONG_TITLEFILE, NULL);
+		column = gtk_tree_view_column_new_with_attributes ("Title", renderer,
+				"text", PLAYLIST_LIST_COL_SONG_TITLEFILE, 
+				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
+				NULL);
 		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_column_set_fixed_width(column, 200);
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
-	#if GTK_CHECK_VERSION(2,6,0)
-    	memset(&value, 0, sizeof(value));
-    	g_value_init(&value, G_TYPE_INT);
-    	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+		memset(&value, 0, sizeof(value));
+		g_value_init(&value, G_TYPE_INT);
+		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
 		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);		
-    #endif
-		
-		
+
 
 		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes ("Album", renderer,"text", PLAYLIST_LIST_COL_SONG_ALBUM, NULL);
+		column = gtk_tree_view_column_new_with_attributes ("Album", renderer,
+				"text", PLAYLIST_LIST_COL_SONG_ALBUM, 
+				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
+				NULL);
 		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_column_set_fixed_width(column, 200);
 
 		gtk_tree_view_column_set_resizable(column, TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  				
 
-#if GTK_CHECK_VERSION(2,6,0)
-	memset(&value, 0, sizeof(value));
-	g_value_init(&value, G_TYPE_INT);
-	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-#endif                                                              		
+		memset(&value, 0, sizeof(value));
+		g_value_init(&value, G_TYPE_INT);
+		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
+
+
+		renderer = gtk_cell_renderer_text_new ();
+		column = gtk_tree_view_column_new_with_attributes (_("Genre"), renderer,
+				"text", PLAYLIST_LIST_COL_SONG_GENRE, 
+				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
+				NULL);
+		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
+		gtk_tree_view_column_set_fixed_width(column, 200);
+
+		gtk_tree_view_column_set_resizable(column, TRUE);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  				
+
+		memset(&value, 0, sizeof(value));
+		g_value_init(&value, G_TYPE_INT);
+		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
 
 	}
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
@@ -246,6 +262,8 @@ void pl3_current_playlist_browser_init()
 
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree)), GTK_SELECTION_MULTIPLE);
+
+	/* Disable search, we have a custom search */
 	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
 
 	/* setup signals */
@@ -569,8 +587,9 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
+		return TRUE;
 	}
-	return 1;
+	return FALSE;
 }
 
 void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col)
@@ -638,7 +657,7 @@ void pl3_current_playlist_browser_playlist_changed()
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
 	g_free(string);
 	g_free(mesg);
-	
+
 }
 
 

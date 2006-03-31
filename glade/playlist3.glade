@@ -52,7 +52,7 @@
 		      <signal name="activate" handler="preferences_window_connect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image173">
+			<widget class="GtkImage" id="image227">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-apply</property>
 			  <property name="icon_size">1</property>
@@ -68,12 +68,13 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="menu_disconnect">
 		      <property name="visible">True</property>
+		      <property name="sensitive">False</property>
 		      <property name="label" translatable="yes">_Disconnect</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="preferences_window_disconnect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image174">
+			<widget class="GtkImage" id="image228">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-cancel</property>
 			  <property name="icon_size">1</property>
@@ -137,7 +138,7 @@
 		      <signal name="activate" handler="play_song" last_modification_time="Thu, 30 Mar 2006 10:03:00 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image175">
+			<widget class="GtkImage" id="image229">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -158,7 +159,7 @@
 		      <signal name="activate" handler="stop_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image176">
+			<widget class="GtkImage" id="image230">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -185,7 +186,7 @@
 		      <signal name="activate" handler="next_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image177">
+			<widget class="GtkImage" id="image231">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -206,7 +207,7 @@
 		      <signal name="activate" handler="prev_song" last_modification_time="Thu, 30 Mar 2006 10:04:37 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image178">
+			<widget class="GtkImage" id="image232">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -232,6 +233,7 @@
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
 		      <signal name="activate" handler="playlist_menu_repeat_changed" last_modification_time="Thu, 30 Mar 2006 13:35:00 GMT"/>
+		      <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 		    </widget>
 		  </child>
 
@@ -242,6 +244,7 @@
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
 		      <signal name="activate" handler="playlist_menu_random_changed" last_modification_time="Thu, 30 Mar 2006 13:35:00 GMT"/>
+		      <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -266,7 +269,7 @@
 		      <signal name="activate" handler="id3_info" last_modification_time="Thu, 30 Mar 2006 10:43:49 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image179">
+			<widget class="GtkImage" id="image233">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>
@@ -290,12 +293,13 @@
 		  </child>
 
 		  <child>
-		    <widget class="GtkCheckMenuItem" id="mini_mode1">
+		    <widget class="GtkCheckMenuItem" id="mini_mode">
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">Mini Mode</property>
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
 		      <signal name="activate" handler="playlist_menu_mini_mode_changed" last_modification_time="Thu, 30 Mar 2006 14:03:03 GMT"/>
+		      <accelerator key="m" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -348,41 +352,13 @@
 		  <property name="visible">True</property>
 		  <property name="visible_window">True</property>
 		  <property name="above_child">False</property>
-		  <signal name="button_press_event" handler="playlist_player_button_press_event" last_modification_time="Sun, 08 Jan 2006 14:00:26 GMT"/>
 
 		  <child>
-		    <widget class="GtkHBox" id="hbox9">
-		      <property name="visible">True</property>
-		      <property name="homogeneous">False</property>
-		      <property name="spacing">6</property>
-
-		      <child>
-			<widget class="GtkAlignment" id="alignment1">
-			  <property name="visible">True</property>
-			  <property name="xalign">0</property>
-			  <property name="yalign">0</property>
-			  <property name="xscale">1</property>
-			  <property name="yscale">1</property>
-			  <property name="top_padding">0</property>
-			  <property name="bottom_padding">0</property>
-			  <property name="left_padding">0</property>
-			  <property name="right_padding">0</property>
-
-			  <child>
-			    <widget class="GtkImage" id="pp_cover_image">
-			      <property name="xalign">0</property>
-			      <property name="yalign">0</property>
-			      <property name="xpad">0</property>
-			      <property name="ypad">0</property>
-			    </widget>
-			  </child>
-			</widget>
-			<packing>
-			  <property name="padding">0</property>
-			  <property name="expand">False</property>
-			  <property name="fill">True</property>
-			</packing>
-		      </child>
+		    <widget class="GtkImage" id="pp_cover_image">
+		      <property name="xalign">0</property>
+		      <property name="yalign">0</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
 		    </widget>
 		  </child>
 		</widget>
@@ -524,12 +500,12 @@
 			  <property name="justify">GTK_JUSTIFY_CENTER</property>
 			  <property name="wrap">False</property>
 			  <property name="selectable">False</property>
-			  <property name="xalign">0.5</property>
+			  <property name="xalign">1</property>
 			  <property name="yalign">0.5</property>
 			  <property name="xpad">0</property>
 			  <property name="ypad">0</property>
 			  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-			  <property name="width_chars">-1</property>
+			  <property name="width_chars">20</property>
 			  <property name="single_line_mode">False</property>
 			  <property name="angle">0</property>
 			</widget>
@@ -558,7 +534,7 @@
 		      <property name="digits">1</property>
 		      <property name="update_policy">GTK_UPDATE_CONTINUOUS</property>
 		      <property name="inverted">False</property>
-		      <property name="adjustment">0 0 100 0.10000000149 0 0</property>
+		      <property name="adjustment">0.10000000149 0 100 0.10000000149 0 0</property>
 		      <signal name="button_press_event" handler="pl3_progress_seek_start" last_modification_time="Thu, 05 Jan 2006 20:23:29 GMT"/>
 		      <signal name="button_release_event" handler="pl3_progress_seek_stop" last_modification_time="Thu, 05 Jan 2006 20:23:38 GMT"/>
 		    </widget>
@@ -580,6 +556,31 @@
 	      <property name="padding">0</property>
 	      <property name="expand">True</property>
 	      <property name="fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="pp_label_mini">
+	      <property name="can_focus">True</property>
+	      <property name="label" translatable="yes">&lt;span size=&quot;large&quot; weight=&quot;bold&quot;&gt;Not Playing&lt;/span&gt;</property>
+	      <property name="use_underline">False</property>
+	      <property name="use_markup">True</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">False</property>
+	      <property name="selectable">True</property>
+	      <property name="xalign">0</property>
+	      <property name="yalign">0</property>
+	      <property name="xpad">6</property>
+	      <property name="ypad">6</property>
+	      <property name="ellipsize">PANGO_ELLIPSIZE_END</property>
+	      <property name="width_chars">-1</property>
+	      <property name="single_line_mode">False</property>
+	      <property name="angle">0</property>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
 	    </packing>
 	  </child>
 

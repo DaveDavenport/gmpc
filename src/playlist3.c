@@ -329,12 +329,13 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 		/* no selections, or no usefull one.. so propagate the signal */
 		return FALSE;
 	}
-	menu = gtk_menu_new();
+
 	if(event->button != 3)
 	{
 		/* if its not the right mouse button propagate the signal */
 		return FALSE;
 	}
+	menu = gtk_menu_new();
 	/* if it's the current playlist */
 	menu_items	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
 	menu_items	+= pl3_file_browser_cat_popup(menu,type,tree,event);
@@ -567,10 +568,24 @@ void pl3_push_rsb_message(gchar *string)
 
 int pl3_close()
 {
-	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1) == 0) {
-		main_quit();
-		return;
+	if(pl3_xml != NULL && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
+	{
+		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
+		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+
+		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
+		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
+		cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
+		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
+		cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
+					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
 	}
+	main_quit();
+	return 1;
+}
+
+int pl3_hide()
+{
 	if(pl3_xml != NULL && !pl3_hidden)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
@@ -582,12 +597,7 @@ int pl3_close()
 		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 		cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
 					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
-/*		if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
-		{
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")), FALSE);
-			return TRUE;
-		}
-*/		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		pl3_hidden = TRUE;
 		return TRUE;
 	}
@@ -631,7 +641,7 @@ void pl3_show_and_position_window()
 	}
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-	
+
 }
 
 void create_playlist3 ()
@@ -644,19 +654,19 @@ void create_playlist3 ()
 	GtkTreeIter iter;
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
-		/* set the toggle button in the main windows, if it isn't allready in
+	/* set the toggle button in the main windows, if it isn't allready in
 	 * the propper state
 	 *
 	 * Setting the toggle button will "re-call" this function again, so
 	 * step out of this function, and when it gets called again it skips
 	 * this part.
 	 */
-/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
-	{
+	/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+		{
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_main_window, "tb_pl2")),TRUE);
 		return;
-	}
-*/
+		}
+		*/
 	if(pl3_xml != NULL)
 	{
 		pl3_show_and_position_window();
@@ -734,7 +744,7 @@ void create_playlist3 ()
 
 	/* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-	
+
 	pl3_initialize_tree();
 
 
@@ -754,10 +764,10 @@ void create_playlist3 ()
 
 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_check_cover_image")),
-		cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0));
+			cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0));
 
 
-	
+
 
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
@@ -1033,7 +1043,7 @@ int playlist_player_button_press_event (GtkWidget *event_box, GdkEventButton *ev
 		else {
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(player_hide), NULL);
 		}
-		
+
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_preferences_window), NULL);
@@ -1081,6 +1091,10 @@ void playlist_player_set_song(MpdObj *mi)
 		gtk_label_set_markup(GTK_LABEL
 				(glade_xml_get_widget(pl3_xml,"pp_label")),
 				string->str);
+		gtk_label_set_markup(GTK_LABEL
+				(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+				string->str);
+
 		g_string_free(string, TRUE);
 	}
 	else
@@ -1088,6 +1102,10 @@ void playlist_player_set_song(MpdObj *mi)
 		gtk_label_set_markup(GTK_LABEL
 				(glade_xml_get_widget(pl3_xml,"pp_label")),
 				"<span size=\"large\" weight=\"bold\">Not Playing</span>");
+
+		gtk_label_set_markup(GTK_LABEL
+				(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+				"<span size=\"large\" weight=\"bold\">Not Playing</span>");		
 	}
 }
 static void playlist_player_update_image_callback(mpd_Song *song)
@@ -1106,7 +1124,7 @@ static void playlist_player_update_image_callback(mpd_Song *song)
 
 static void playlist_player_update_image(MpdObj *mi)
 {
-	if(mpd_check_connected(connection))
+	if(mpd_check_connected(connection) && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
 	{
 		gchar *path= NULL;
 		int ret = 0;      		
@@ -1114,7 +1132,7 @@ static void playlist_player_update_image(MpdObj *mi)
 		ret = cover_art_fetch_image_path(song, &path);
 		if(ret == COVER_ART_OK_LOCAL) {
 			GdkPixbuf *pb = NULL;
-			GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "alignment1")->allocation;
+			GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "eventbox2")->allocation;
 			pb = gdk_pixbuf_new_from_file_at_size(path,-1,(alloc.height > 20)?alloc.height:40,NULL);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
@@ -1182,18 +1200,30 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
-	GtkWidget *title  = glade_xml_get_widget(pl3_xml, "pp_label");
-	g_object_ref(title);
 	if(active){
+		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 		//gtk_box_pack_end_defaults(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox1")),
 		//		title);
+
+		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), FALSE);
 	}
 	else{
+		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+				pl3_wsize.width, pl3_wsize.height);
+
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
+		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), TRUE);
 	}
+	playlist_player_update_image(connection);
 }
 
 
@@ -1238,6 +1268,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Paused</span>");
 
+				gtk_label_set_markup(GTK_LABEL
+						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+						"<span size=\"large\" weight=\"bold\">Paused</span>");				
+
 				break;
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
@@ -1249,6 +1283,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Not Playing</span>");
+
+				gtk_label_set_markup(GTK_LABEL
+						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+						"<span size=\"large\" weight=\"bold\">Not Playing</span>");				
 		}
 
 	}
