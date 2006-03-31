@@ -75,9 +75,6 @@ void tray_init()
 }
 
 
-
-
-
 /**/
 gchar *tray_get_tooltip_text()
 {

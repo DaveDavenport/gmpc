@@ -586,6 +586,7 @@ int pl3_close()
 
 int pl3_hide()
 {
+	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1) == 0) return 1;
 	if(pl3_xml != NULL && !pl3_hidden)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
