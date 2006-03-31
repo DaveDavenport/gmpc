@@ -191,7 +191,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 
 	width  += lwidth;
 
-	if(mpd_status_get_total_song_time(connection)> 0)
+	if(mpd_check_connected(connection) && mpd_status_get_total_song_time(connection)> 0)
 	{
 		int width2 = 0;
 		if((lheight+8+BORDER_WIDTH) >=(height))

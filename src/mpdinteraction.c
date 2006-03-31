@@ -5,6 +5,8 @@
 #include "main.h"
 #include "config1.h"
 
+extern GtkWidget *pl3_cp_tree;
+
 /* old stuff */
 void preferences_update();
 void connect_callback(MpdObj *mi);
@@ -86,7 +88,7 @@ void disconnect_callback(MpdObj *mi)
 
 	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
-	playlist_list_clear(PLAYLIST_LIST(playlist));
+	playlist_list_clear(PLAYLIST_LIST(playlist),pl3_cp_tree);
 	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
 }
 

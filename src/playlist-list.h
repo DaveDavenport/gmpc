@@ -25,6 +25,7 @@ enum
 	PLAYLIST_LIST_COL_SONG_ARTIST,	/* artist name */
 	PLAYLIST_LIST_COL_SONG_ALBUM,	/* album name */
 	PLAYLIST_LIST_COL_SONG_TITLE,	/* song title */
+	PLAYLIST_LIST_COL_SONG_TITLEFILE,	/* song title */
 	PLAYLIST_LIST_COL_SONG_GENRE,	/* song genre */
 	PLAYLIST_LIST_COL_SONG_TRACK,	/* song track */
 	PLAYLIST_LIST_COL_SONG_NAME,	/* stream name */
@@ -88,7 +89,7 @@ CustomList       *playlist_list_new (void);
 void playlist_list_set_current_song_pos(CustomList *cl, int new_pos);
 gchar *playlist_list_get_markup(CustomList *cl);
 void playlist_list_set_markup(CustomList *cl, gchar *markup);
-void playlist_list_clear(CustomList *list);
+void playlist_list_clear(CustomList *list,GtkTreeView *tree);
 void playlist_list_data_update(CustomList *cl ,MpdObj *mi,GtkTreeView *tree);
 guint playlist_list_get_playtime(CustomList *cl);
 #endif /* _playlist_list_h_included_ */

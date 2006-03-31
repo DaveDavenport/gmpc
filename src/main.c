@@ -596,7 +596,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 	if(what&MPD_CST_PLAYLIST)
 	{
-		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,pl3_cp_tree);
+		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,GTK_TREE_VIEW(pl3_cp_tree));
 	}
 
 	/* make the player handle signals */
