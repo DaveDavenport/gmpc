@@ -749,7 +749,7 @@ void create_playlist3 ()
 	pl3_initialize_tree();
 
 
-	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", FALSE))
+	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", TRUE))
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 	}
@@ -984,7 +984,7 @@ void playlist_pref_construct(GtkWidget *container)
 				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_playlist_player")),
-				cfg_get_single_value_as_int_with_default(config,"playlist", "player", 0));
+				cfg_get_single_value_as_int_with_default(config,"playlist", "player", TRUE));
 
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
@@ -1198,6 +1198,20 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 	playlist_player_update_image(connection);
 }
 
+void playlist_menu_left_bar_changed(GtkCheckMenuItem *menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if(active) {
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
+	}
+	else {
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
+	}
+
+
+
+}
+
 void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
@@ -1208,8 +1222,7 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
-		//gtk_box_pack_end_defaults(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox1")),
-		//		title);
+		/*gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menubar1"));*/
 
 		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), FALSE);
 	}
@@ -1222,6 +1235,7 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
+		/*gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));*/
 		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), TRUE);
 	}
 	playlist_player_update_image(connection);
