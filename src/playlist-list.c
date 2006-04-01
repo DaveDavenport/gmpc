@@ -148,6 +148,7 @@ typedef struct {
 	MpdData *iter;
 	GtkTreeView *tree;
 	int total_length;
+	gdouble adjustment;
 }pass_data;
 
 
@@ -292,7 +293,16 @@ void playlist_list_data_update_done(pass_data *pd)
 	}                                               	
 	pd->cl->playlist_id = mpd_playlist_get_playlist_id(pd->mi);
 	if(pd->tree){
+		GtkAdjustment *ad = NULL;
 		gtk_tree_view_set_model(pd->tree, GTK_TREE_MODEL(pd->cl));
+		while(gtk_events_pending()) gtk_main_iteration();
+		ad = gtk_tree_view_get_vadjustment(pd->tree);
+		if(pd->adjustment > -1){
+			gtk_adjustment_set_value(ad,pd->adjustment);
+		}
+
+
+		
 	}
 	g_free(pd);
 }
@@ -305,10 +315,17 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree) {
 	pd->data = data;
 	pd->tree = tree;
 	pd->iter =NULL;
+	pd->adjustment = -1;
 	pd->total_length =  mpd_playlist_get_playlist_length(mi);
-	if(pd->tree)gtk_tree_view_set_model(tree, NULL);
+	if(pd->tree) {
+		GtkAdjustment *ad = gtk_tree_view_get_vadjustment(pd->tree);
+		pd->adjustment = gtk_adjustment_get_value(ad);
+		gtk_tree_view_set_model(tree, NULL);
+	}
 	if(cl->mpdata == NULL)
 	{
+		/* Don't want to remember the adjustment here, because it's an initial fill */
+		pd->adjustment = -1;
 		cl->mpdata = data;
 		g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)playlist_list_data_fill_initial,pd,playlist_list_data_update_done);
 	}else{
@@ -701,7 +718,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 				gchar *path = g_path_get_basename(data->song->file);
 				g_value_set_string(value, path);
 				g_free(path);
-				
+
 			}else{
 				g_value_set_string(value, data->song->title);
 			}

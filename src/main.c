@@ -677,7 +677,6 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
 	debug_printf(DEBUG_INFO, "Connection changed\n");
-	//player_connection_changed(mi,connect);
 	playlist_connection_changed(mi, connect);
 	for(i=0; i< num_plugins; i++)
 	{
