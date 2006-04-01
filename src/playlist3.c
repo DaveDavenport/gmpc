@@ -397,10 +397,6 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		pl3_close();
 	}
-	else if (event->keyval == GDK_Escape)
-	{
-		pl3_close();
-	}
 
 	if(!mpd_check_connected(connection))
 	{

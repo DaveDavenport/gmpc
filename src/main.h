@@ -26,7 +26,6 @@
 #include <glade/glade.h>
 #include "config1.h"
 #include "plugin.h"
-#include "player.h"
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
