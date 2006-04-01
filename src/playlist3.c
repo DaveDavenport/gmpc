@@ -230,7 +230,14 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
 	}
 }
-
+void pl3_cat_combo_changed(GtkComboBox *box)
+{
+	GtkTreeIter iter;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	if(gtk_combo_box_get_active_iter(box, &iter)) {
+		gtk_tree_selection_select_iter(selec, &iter);
+	}
+}
 
 void pl3_cat_sel_changed()
 {
@@ -245,6 +252,10 @@ void pl3_cat_sel_changed()
 	{
 		gint type;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
+		gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+				&iter);
+
+		
 		if(old_type != type )
 		{
 			if(old_type == PL3_CURRENT_PLAYLIST)
@@ -742,6 +753,28 @@ void create_playlist3 ()
 	/* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 
+
+
+
+
+
+
+	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+			GTK_TREE_MODEL(pl3_tree));
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,FALSE); 
+	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
+			"stock-id", 3);                                                                                          	
+/*	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
+			"stock-size", 5);                                                                                          		
+*/	renderer = gtk_cell_renderer_text_new ();
+	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,TRUE); 
+	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
+			"text", 1);
+
+	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
+			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
+	
 	pl3_initialize_tree();
 
 
