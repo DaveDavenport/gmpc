@@ -165,7 +165,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				GDK_RGB_DITHER_NONE,0,0);	
 	}
 	else{
-		GdkPixbuf *pb = gtk_widget_render_icon(widget, "gmpc",GTK_ICON_SIZE_DND,NULL);
+		GdkPixbuf *pb = gtk_widget_render_icon(widget, "media-no-cover",-1/*GTK_ICON_SIZE_DND*/,NULL);
 		width = gdk_pixbuf_get_width(pb)+BORDER_WIDTH*2;
 		/* draw rectangle, width of image + 2x border */
 		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);

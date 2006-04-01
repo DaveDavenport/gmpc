@@ -265,7 +265,7 @@ void pl3_cat_clear_crumb()
 {
 	GtkTreePath *path = NULL;
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeIter temp,iter;
+	GtkTreeIter iter;
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter test2;
 	/* clean up the old paths before clearing it.. */
@@ -282,12 +282,12 @@ void pl3_cat_clear_crumb()
 	gtk_tree_model_get_iter_first(model, &test2);
 	do 
 	{
-		GtkTreeIter crumb, temp_iter;
+		GtkTreeIter crumb;
 		GtkTreePath *addpath = NULL;
 		gchar *text, *icon;          				
 		/* Add the "Base Class" */
 		gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
-		gtk_list_store_append(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+		gtk_list_store_append(pl3_crumbs, &crumb);
 		addpath = gtk_tree_model_get_path(model, &test2);
 		gtk_list_store_set(pl3_crumbs, &crumb,
 				0, text,                                           				
@@ -353,7 +353,7 @@ void pl3_cat_sel_changed()
 				gchar *text, *icon;          				
 				/* Add the "Base Class" */
 				gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
-				gtk_list_store_append(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+				gtk_list_store_append(pl3_crumbs, &crumb);
 				addpath = gtk_tree_model_get_path(model, &test2);
 				gtk_list_store_set(pl3_crumbs, &crumb,
 						0, text,                                           				
@@ -373,7 +373,7 @@ void pl3_cat_sel_changed()
 						gtk_tree_model_get_iter(model, &temp_iter, path);
 						gtk_tree_model_get(model, &temp_iter, 1, &text, 3, &icon, -1);
 
-						gtk_list_store_insert_before(GTK_TREE_MODEL(pl3_crumbs), &crumb, parent);
+						gtk_list_store_insert_before(pl3_crumbs, &crumb, parent);
 						gtk_list_store_set(pl3_crumbs, &crumb,
 								0, text,
 								1,icon,
