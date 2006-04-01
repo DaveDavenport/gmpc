@@ -944,10 +944,17 @@ void create_playlist3 ()
 	/* update image */
 	playlist_player_update_image(connection);
 
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
+
+	/* restore playlist only mode */
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "playlist-only-mode", FALSE))
+	{
+		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_playlist_only")),
+				1);
+	}                                                                                                           	
+
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
 	if(mpd_status_db_is_updating(connection))
 	{
@@ -1375,6 +1382,7 @@ void playlist_menu_left_bar_changed(GtkCheckMenuItem *menu)
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
 	}
+	cfg_set_single_value_as_int(config, "playlist", "playlist-only-mode", active);
 
 
 
