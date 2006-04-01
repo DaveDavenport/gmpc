@@ -296,30 +296,60 @@ void pl3_cat_sel_changed()
 
 		if(!checked)
 		{
+			GtkTreeIter test2;
 			/* clean up the old paths before clearing it.. */
 			gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
 			/* clear the list */
 			gtk_list_store_clear(pl3_crumbs);
+
+			/* Get the first iter, and get the path to "cicle" over */
+			gtk_tree_model_get_iter_first(model, &test2);
 			path = gtk_tree_model_get_path(model, &iter);
-			do {	
+			do 
+			{
 				GtkTreeIter crumb, temp_iter;
-				gchar *text, *icon;
-				gtk_tree_model_get_iter(model, &temp_iter, path);
-				gtk_tree_model_get(model, &temp_iter, 1, &text, 3, &icon, -1);
-
-				gtk_list_store_prepend(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+				GtkTreePath *addpath = NULL;
+				gchar *text, *icon;          				
+				/* Add the "Base Class" */
+				gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
+				gtk_list_store_append(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+				addpath = gtk_tree_model_get_path(model, &test2);
 				gtk_list_store_set(pl3_crumbs, &crumb,
-						0, text,
+						0, text,                                           				
 						1,icon,
-						2,gtk_tree_path_copy(path),
+						2,addpath,
+						3,20,
 						-1);
-				if(!checked){
-					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+				if(!gtk_tree_path_compare(path, addpath)){
+					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), &crumb); 
+				}	
 
-							&crumb);
-					checked = 1;
+				/* if Needed Add Childs */
+				if(gtk_tree_store_is_ancestor(GTK_TREE_STORE(model),&test2, &iter))
+				{
+					GtkTreeIter *parent = NULL;
+					do {	
+						gtk_tree_model_get_iter(model, &temp_iter, path);
+						gtk_tree_model_get(model, &temp_iter, 1, &text, 3, &icon, -1);
+
+						gtk_list_store_insert_before(GTK_TREE_MODEL(pl3_crumbs), &crumb, parent);
+						gtk_list_store_set(pl3_crumbs, &crumb,
+								0, text,
+								1,icon,
+								2,gtk_tree_path_copy(path),
+								3,20+(gtk_tree_path_get_depth(path))*10,
+								-1);
+						if(!checked){
+							gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+
+									&crumb);
+							checked = 1;
+						}
+						parent = &crumb;
+					}while(gtk_tree_path_up(path) && gtk_tree_path_get_depth(path) > 1);
+
 				}
-			}while(gtk_tree_path_up(path) && gtk_tree_path_get_depth(path) > 0);
+			}while(gtk_tree_model_iter_next(model, &test2));
 			gtk_tree_path_free(path);	
 		}
 
@@ -727,6 +757,7 @@ void create_playlist3 ()
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
 	GtkTreeIter iter;
+	GValue value; 
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 	/* set the toggle button in the main windows, if it isn't allready in
@@ -821,10 +852,11 @@ void create_playlist3 ()
 
 
 
-	pl3_crumbs = gtk_list_store_new(3, 
+	pl3_crumbs = gtk_list_store_new(4, 
 			G_TYPE_STRING, /* text */
 			G_TYPE_STRING, /* stock id */
-			G_TYPE_POINTER /* Tree Path */);
+			G_TYPE_POINTER, /* Tree Path */
+			G_TYPE_INT);
 
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 			GTK_TREE_MODEL(pl3_crumbs));
@@ -832,6 +864,12 @@ void create_playlist3 ()
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,FALSE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
 			"stock-id", 1);                                                                                          	
+	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
+			"width", 3);                        
+	memset(&value, 0, sizeof(value));
+	g_value_init(&value,G_TYPE_FLOAT);
+	g_value_set_float(&value, 1.0);
+	g_object_set_property(G_OBJECT(renderer), "xalign", &value);
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,TRUE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
@@ -1290,9 +1328,11 @@ void playlist_menu_left_bar_changed(GtkCheckMenuItem *menu)
 	int active = gtk_check_menu_item_get_active(menu);
 	if(active) {
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
 	}
 	else {
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
 	}
 
 

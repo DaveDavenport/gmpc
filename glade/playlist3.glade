@@ -698,7 +698,6 @@
 
 	      <child>
 		<widget class="GtkComboBox" id="cb_cat_selector">
-		  <property name="visible">True</property>
 		  <property name="add_tearoffs">False</property>
 		  <property name="focus_on_click">True</property>
 		</widget>
