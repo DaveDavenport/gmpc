@@ -231,14 +231,12 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	}
 }
 
-void pl3_cat_combo_changed_row_deleted(GtkListStore *store, GtkTreePath *path)
+gboolean pl3_cat_combo_row_foreach(GtkListStore *store, GtkTreePath *path, GtkTreeIter iter)
 {
-	GtkTreeIter iter;
-	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(store), &iter, path)){
-		GtkTreePath *oldpath;
-		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 2, &oldpath, -1);
-		gtk_tree_path_free(oldpath);
-	}
+	GtkTreePath *oldpath;
+	gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 2, &oldpath, -1);
+	gtk_tree_path_free(oldpath);
+	return FALSE;
 }
 void pl3_cat_combo_changed(GtkComboBox *box)
 {
@@ -250,7 +248,15 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &path, -1);
 		if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
 		{
-			gtk_tree_selection_select_iter(selec, &cat_iter);
+			if(gtk_tree_path_get_depth(path)>0)
+			{
+				GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
+				if(!gtk_tree_selection_iter_is_selected(selec, &cat_iter))
+				{
+					gtk_tree_selection_select_iter(selec, &cat_iter);
+					gtk_tree_view_scroll_to_cell(tree, path, NULL,TRUE, 0.5, 0);
+				}
+			}
 		}
 	}
 }
@@ -289,6 +295,9 @@ void pl3_cat_sel_changed()
 
 		if(!checked)
 		{
+			/* clean up the old paths before clearing it.. */
+			gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
+			/* clear the list */
 			gtk_list_store_clear(pl3_crumbs);
 			path = gtk_tree_model_get_path(model, &iter);
 			do {	
@@ -303,8 +312,6 @@ void pl3_cat_sel_changed()
 						1,icon,
 						2,gtk_tree_path_copy(path),
 						-1);
-
-
 				if(!checked){
 					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 
@@ -831,8 +838,6 @@ void create_playlist3 ()
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
-	g_signal_connect(pl3_crumbs,
-			"row-deleted", G_CALLBACK(pl3_cat_combo_changed_row_deleted), NULL);      	
 	pl3_initialize_tree();
 
 
