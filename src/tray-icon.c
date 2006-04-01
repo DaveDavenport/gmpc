@@ -165,7 +165,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				GDK_RGB_DITHER_NONE,0,0);	
 	}
 	else{
-		GdkPixbuf *pb = gtk_widget_render_icon(widget, "gmpc", GTK_ICON_SIZE_DND,NULL);
+		GdkPixbuf *pb = gtk_widget_render_icon(widget, "gmpc",GTK_ICON_SIZE_DND,NULL);
 		width = gdk_pixbuf_get_width(pb)+BORDER_WIDTH*2;
 		/* draw rectangle, width of image + 2x border */
 		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
@@ -506,7 +506,7 @@ void tray_icon_state_change()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", -1);
 		if(cover_pb)
 		{
 			g_object_unref(cover_pb);
@@ -514,11 +514,11 @@ void tray_icon_state_change()
 		}
 	}
 	else if(state == MPD_PLAYER_PLAY){
-		if(tray_icon)	gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-play", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)	gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-play", -1);
 		tray_icon_song_change();
 	}
 	else if(state == MPD_PLAYER_PAUSE){
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-pause", GTK_ICON_SIZE_SMALL_TOOLBAR);
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-pause", -1);
 	}
 
 	if(tray_icon)
@@ -718,7 +718,7 @@ int create_tray_icon()
 	/* set up tray icon */
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
-	logo = 	gtk_image_new_from_stock("gmpc-tray",GTK_ICON_SIZE_SMALL_TOOLBAR);//gtk_event_box_new();
+	logo = 	gtk_image_new_from_stock("gmpc-tray",-1);//gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(tray_icon), event);
 	gtk_container_add(GTK_CONTAINER(event), logo);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
