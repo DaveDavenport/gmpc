@@ -261,6 +261,47 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 		}
 	}
 }
+void pl3_cat_clear_crumb()
+{
+	GtkTreePath *path = NULL;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeIter temp,iter;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter test2;
+	/* clean up the old paths before clearing it.. */
+	gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
+	/* clear the list */
+	gtk_list_store_clear(pl3_crumbs);
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+
+		/* Get the first iter, and get the path to "cicle" over */
+	
+		path = gtk_tree_model_get_path(model, &iter);
+	}
+	gtk_tree_model_get_iter_first(model, &test2);
+	do 
+	{
+		GtkTreeIter crumb, temp_iter;
+		GtkTreePath *addpath = NULL;
+		gchar *text, *icon;          				
+		/* Add the "Base Class" */
+		gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
+		gtk_list_store_append(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+		addpath = gtk_tree_model_get_path(model, &test2);
+		gtk_list_store_set(pl3_crumbs, &crumb,
+				0, text,                                           				
+				1,icon,
+				2,addpath,
+				3,20,
+				-1);
+		if(path && !gtk_tree_path_compare(path, addpath)){
+			gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), &crumb); 
+		}	
+
+	}while(gtk_tree_model_iter_next(model, &test2));
+	if(path)gtk_tree_path_free(path);	
+}
 
 void pl3_cat_sel_changed()
 {
@@ -1378,6 +1419,17 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	/* update the image */
 	playlist_player_update_image(connection);
 
+	pl3_cat_clear_crumb();;
+
+	if(connect){
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+				glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);                      		
+		GtkTreeIter iter;
+		if(gtk_tree_model_get_iter_first(model, &iter)){
+			gtk_tree_selection_select_iter(selec, &iter);
+		}
+	}
 
 }
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
