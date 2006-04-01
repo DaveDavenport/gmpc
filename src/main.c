@@ -682,6 +682,11 @@ void connect_callback(MpdObj *mi)
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
+	/* send password, first thing we do */
+	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
+	{
+		mpd_send_password(connection);
+	}                                                                              	
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	playlist_connection_changed(mi, connect);
 	for(i=0; i< num_plugins; i++)

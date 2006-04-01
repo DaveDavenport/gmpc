@@ -119,12 +119,13 @@ int connect_to_mpd()
 		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
 	}
+	/*
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
 		mpd_send_password(connection);
 	}
 
-
+	*/
 
 	/* Set the title */
 	update_mpd_status();
