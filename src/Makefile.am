@@ -4,7 +4,6 @@ gmpc_SOURCES=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
-	player.c\
 	preferences.c\
 	id3info.c\
 	eggtrayicon.c\
@@ -62,7 +61,6 @@ gmpcincludedir =$(includedir)/gmpc/
 
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
-		player.h\
 	   	mm-keys.h\
 		misc.h\
 		eggtrayicon.h\

@@ -1034,17 +1034,6 @@ int playlist_player_button_press_event (GtkWidget *event_box, GdkEventButton *ev
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
 
-
-		item = gtk_check_menu_item_new_with_label("Hide Player");
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), player_get_hidden());
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		if(player_get_hidden()) {
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(player_show), NULL);
-		}
-		else {
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(player_hide), NULL);
-		}
-
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PREFERENCES,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(create_preferences_window), NULL);
@@ -1224,7 +1213,7 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 		/*gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menubar1"));*/
 
-		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), FALSE);
+		gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
 	}
 	else{
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
@@ -1236,7 +1225,7 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
 		/*gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));*/
-		gtk_window_set_resizable(glade_xml_get_widget(pl3_xml, "pl3_win"), TRUE);
+		gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
 	}
 	playlist_player_update_image(connection);
 }
@@ -1394,7 +1383,6 @@ int pl3_progress_seek_start()
 /* apply seek changes */
 int pl3_progress_seek_stop()
 {
-	msg_pop_popup();
 	pl3p_seek = FALSE;
 	if(!mpd_check_connected(connection))
 	{
@@ -1418,3 +1406,10 @@ void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 	mpd_status_set_volume(connection, volume);
 }
 
+void id3_info()
+{
+	int state = mpd_player_get_state(connection);
+	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
+	if(!mpd_check_connected(connection)) return;
+	call_id3_window(mpd_player_get_current_song_id(connection));
+}

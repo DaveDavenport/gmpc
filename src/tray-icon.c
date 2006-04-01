@@ -540,13 +540,9 @@ void tray_icon_destroyed()
 	{
 		g_idle_add((GSourceFunc)create_tray_icon, NULL);
 	}
-	if(player_get_hidden())
+	if(pl3_hidden)
 	{
-		player_show();
-		if(pl3_hidden)
-		{
-			create_playlist3();
-		}
+		create_playlist3();
 	}
 }
 
@@ -575,35 +571,35 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
-//		if(player_get_hidden())
-//		{
-//			player_show();
-			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-//			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
-//			{
-				if(pl3_hidden)
-				{
-					create_playlist3();
-				}
-				else{
-					pl3_hide();
-				}
-//			}
-//		}
-//		else
-//		{
-///			player_hide();
-			gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-/*			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
-			{
-			if(pl3_xml != NULL && !pl3_hidden)
-				{
-				
-				}
-			}
-
+		//		if(player_get_hidden())
+		//		{
+		//			player_show();
+		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+		//			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
+		//			{
+		if(pl3_hidden)
+		{
+			create_playlist3();
 		}
-*/	}
+		else{
+			pl3_hide();
+		}
+		//			}
+		//		}
+		//		else
+		//		{
+		///			player_hide();
+		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
+		/*			if(cfg_get_single_value_as_int_with_default(config,"playlist","hide-with-player",1))
+					{
+					if(pl3_xml != NULL && !pl3_hidden)
+					{
+
+					}
+					}
+
+					}
+					*/	}
 	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
 	{
 		gchar *string = cfg_get_single_value_as_string_with_default(config, "tray-icon","middle-mouse-action","pause");

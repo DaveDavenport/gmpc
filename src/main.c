@@ -198,6 +198,7 @@ int main (int argc, char **argv)
 	else if (!g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
 		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
+		debug_printf(DEBUG_ERROR, "Quitting.\n");
 		return 1;
 	}
 	else
@@ -206,6 +207,8 @@ int main (int argc, char **argv)
 	}
 	g_free(url);
 
+	/** Add the internall plugins 
+	 */
 	/* this shows the connection preferences */
 	plugin_add(&connection_plug,0);
 	/* this the server preferences */
@@ -223,10 +226,12 @@ int main (int argc, char **argv)
 	plugin_add(&about_plug,0);
 	
 
-
+	/* load dynamic plugins */
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
 	plugin_load_dir(url);
 	g_free(url);
+
+	/* user space dynamic plugins */
 	/* plugins */
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
@@ -258,6 +263,7 @@ int main (int argc, char **argv)
 	}
 
 	g_free(url);
+	/* initialize the cover art */
 	cover_art_init();
 	/* Create connection object */
 	connection = mpd_new_default();
@@ -281,10 +287,6 @@ int main (int argc, char **argv)
 		}
 	}
 
-	/*
-	 * create the main window, This is done before anything else (but after command line check)
-	 */
-	//player_create ();
 	/* create the store for the playlist */
 	init_playlist_store ();
 	create_playlist3();
@@ -301,12 +303,7 @@ int main (int argc, char **argv)
 			(GSourceFunc)update_mpd_status, NULL);
 	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
 
-	/* update the interface */
-	while(gtk_events_pending())
-	{
-		gtk_main_iteration();
-	}
-	update_interface();
+	gtk_init_add((GSourceFunc)update_interface, NULL);
 
 #ifdef ENABLE_MMKEYS
 	/*
@@ -322,10 +319,6 @@ int main (int argc, char **argv)
 	 * run the main loop
 	 */
 	gtk_main ();
-	/*
-	 * Main Loop ended
-	 */
-	player_destroy();
 	/* cleaning up. */
 	mpd_free(connection);
 	cfg_close(config);
@@ -539,7 +532,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 
 	/* make the player handle signals */
-	player_mpd_state_changed(mi,what,userdata);
+	//player_mpd_state_changed(mi,what,userdata);
 	id3_status_update();
 
 	for(i=0; i< num_plugins; i++)
@@ -630,7 +623,6 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
 			gtk_widget_show_all(dialog);
 			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
-			msg_set_base(_("Gnome Music Player Client"));
 			g_free(str);
 		}
 		else
@@ -685,7 +677,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
 	debug_printf(DEBUG_INFO, "Connection changed\n");
-	player_connection_changed(mi,connect);
+	//player_connection_changed(mi,connect);
 	playlist_connection_changed(mi, connect);
 	for(i=0; i< num_plugins; i++)
 	{
