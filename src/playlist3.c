@@ -43,9 +43,9 @@ int old_type = -1;
 
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
-/* The Clipboard */
+GtkListStore *pl3_crumbs = NULL;
 
-GQueue *pl3_queue = NULL;
+
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
@@ -230,12 +230,28 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
 	}
 }
+
+void pl3_cat_combo_changed_row_deleted(GtkListStore *store, GtkTreePath *path)
+{
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter(GTK_TREE_MODEL(store), &iter, path)){
+		GtkTreePath *oldpath;
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 2, &oldpath, -1);
+		gtk_tree_path_free(oldpath);
+	}
+}
 void pl3_cat_combo_changed(GtkComboBox *box)
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	if(gtk_combo_box_get_active_iter(box, &iter)) {
-		gtk_tree_selection_select_iter(selec, &iter);
+		GtkTreeIter cat_iter;
+		GtkTreePath *path = NULL;
+		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &path, -1);
+		if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
+		{
+			gtk_tree_selection_select_iter(selec, &cat_iter);
+		}
 	}
 }
 
@@ -251,11 +267,54 @@ void pl3_cat_sel_changed()
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
+		int checked = 0;
+		GtkTreePath *path;
+		GtkTreeIter temp;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
-		gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
-				&iter);
 
-		
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_crumbs), &temp)){
+			GtkTreePath *path, *old_path;
+			path = gtk_tree_model_get_path(model, &iter);
+
+			do{
+				gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs),&temp, 2, &old_path, -1);
+				if(!gtk_tree_path_compare(path, old_path)){
+					checked = 1;
+					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+							&temp);                                                                               					
+				}	
+			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_crumbs), &temp));
+			gtk_tree_path_free(path);
+		}
+
+		if(!checked)
+		{
+			gtk_list_store_clear(pl3_crumbs);
+			path = gtk_tree_model_get_path(model, &iter);
+			do {	
+				GtkTreeIter crumb, temp_iter;
+				gchar *text, *icon;
+				gtk_tree_model_get_iter(model, &temp_iter, path);
+				gtk_tree_model_get(model, &temp_iter, 1, &text, 3, &icon, -1);
+
+				gtk_list_store_prepend(GTK_TREE_MODEL(pl3_crumbs), &crumb);
+				gtk_list_store_set(pl3_crumbs, &crumb,
+						0, text,
+						1,icon,
+						2,gtk_tree_path_copy(path),
+						-1);
+
+
+				if(!checked){
+					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
+
+							&crumb);
+					checked = 1;
+				}
+			}while(gtk_tree_path_up(path) && gtk_tree_path_get_depth(path) > 0);
+			gtk_tree_path_free(path);	
+		}
+
 		if(old_type != type )
 		{
 			if(old_type == PL3_CURRENT_PLAYLIST)
@@ -528,18 +587,18 @@ void pl3_playlist_search()
 	{
 		return;
 	}
-	
-/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
-					glade_xml_get_widget(xml_main_window, "tb_pl2"))))
-	{
+
+	/*	if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+		glade_xml_get_widget(xml_main_window, "tb_pl2"))))
+		{
 		create_playlist3();
-	}
-	else
-	*/
+		}
+		else
+		*/
 	if(pl3_xml){
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 	}
-	
+
 	if(pl3_xml != NULL)
 	{
 		GtkTreePath *path = gtk_tree_path_new_from_string("3");
@@ -680,10 +739,6 @@ void create_playlist3 ()
 		pl3_show_and_position_window();
 		return;
 	}
-	if(!pl3_queue)
-	{
-		pl3_queue= g_queue_new();
-	}
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);
@@ -758,23 +813,26 @@ void create_playlist3 ()
 
 
 
+	pl3_crumbs = gtk_list_store_new(3, 
+			G_TYPE_STRING, /* text */
+			G_TYPE_STRING, /* stock id */
+			G_TYPE_POINTER /* Tree Path */);
 
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
-			GTK_TREE_MODEL(pl3_tree));
+			GTK_TREE_MODEL(pl3_crumbs));
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,FALSE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"stock-id", 3);                                                                                          	
-/*	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"stock-size", 5);                                                                                          		
-*/	renderer = gtk_cell_renderer_text_new ();
+			"stock-id", 1);                                                                                          	
+	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,TRUE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"text", 1);
+			"text", 0);
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
-	
+	g_signal_connect(pl3_crumbs,
+			"row-deleted", G_CALLBACK(pl3_cat_combo_changed_row_deleted), NULL);      	
 	pl3_initialize_tree();
 
 
