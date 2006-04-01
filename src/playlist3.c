@@ -231,10 +231,10 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	}
 }
 
-gboolean pl3_cat_combo_row_foreach(GtkListStore *store, GtkTreePath *path, GtkTreeIter iter)
+gboolean pl3_cat_combo_row_foreach(GtkTreeModel *store, GtkTreePath *path, GtkTreeIter iter,gpointer data)
 {
 	GtkTreePath *oldpath;
-	gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 2, &oldpath, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs), &iter, 2, &oldpath, -1);
 	gtk_tree_path_free(oldpath);
 	return FALSE;
 }
