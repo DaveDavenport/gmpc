@@ -317,6 +317,12 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree) {
 	pd->iter =NULL;
 	pd->adjustment = -1;
 	pd->total_length =  mpd_playlist_get_playlist_length(mi);
+
+	/* if the ammount of rows haven't changed, don't detach view */	
+	if(pd->total_length == cl->num_rows)
+	{
+		pd->tree= NULL;
+	}
 	if(pd->tree) {
 		GtkAdjustment *ad = gtk_tree_view_get_vadjustment(pd->tree);
 		pd->adjustment = gtk_adjustment_get_value(ad);
