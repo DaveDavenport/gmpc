@@ -862,6 +862,8 @@ void create_playlist3 ()
 
 
 
+	/* update image */
+	playlist_player_update_image(connection);
 
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
@@ -1215,8 +1217,8 @@ static void playlist_player_update_image(MpdObj *mi)
 		ret = cover_art_fetch_image_path(song, &path);
 		if(ret == COVER_ART_OK_LOCAL) {
 			GdkPixbuf *pb = NULL;
-			GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "eventbox2")->allocation;
-			pb = gdk_pixbuf_new_from_file_at_size(path,-1,(alloc.height > 20)?alloc.height:40,NULL);
+			//GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "eventbox2")->allocation;
+			pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);//gdk_pixbuf_new_from_file_at_size(path,-1,(alloc.height > 20)?alloc.height:40,NULL);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 			g_object_unref(pb);
@@ -1237,7 +1239,9 @@ static void playlist_player_update_image(MpdObj *mi)
 			}
 		}
 		else{
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+			gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
+			//gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 		}
 		if(path) g_free(path);
@@ -1253,7 +1257,8 @@ static void playlist_player_update_image(MpdObj *mi)
 }
 static void playlist_player_clear_image()
 {
-	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+	//	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
 }
 
 void playlist_menu_repeat_changed(GtkCheckMenuItem *menu)
@@ -1329,12 +1334,9 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 {
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), !connect);
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
-	if(!connect) {
-		playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
-
-	}
-
-
+	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
+	/* update the image */
+	playlist_player_update_image(connection);
 
 
 }
