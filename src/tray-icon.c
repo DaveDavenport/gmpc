@@ -25,7 +25,6 @@ void tray_init();
 
 GladeXML *tray_pref_xml = NULL;
 
-//int pl3_hidden = FALSE;
 
 extern GladeXML *pl3_xml;
 
@@ -489,7 +488,7 @@ void tray_icon_song_change()
 		ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
 		if(ret == COVER_ART_OK_LOCAL)
 		{
-			cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+			cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
 		}
 		else if (ret == COVER_ART_NOT_FETCHED)
 		{
@@ -498,6 +497,17 @@ void tray_icon_song_change()
 					(CoverArtCallback)tray_cover_art_fetched,NULL);
 		}
 		if(path)g_free(path);
+	}
+}
+
+void tray_icon_connection_changed(MpdObj *mi, int connect)
+{
+	if(connect){
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", -1);
+		tray_icon_state_change();
+	}
+	else{
+		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-disconnected", -1);
 	}
 }
 
@@ -714,7 +724,7 @@ int create_tray_icon()
 	/* set up tray icon */
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
-	logo = 	gtk_image_new_from_stock("gmpc-tray",-1);//gtk_event_box_new();
+	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);//gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(tray_icon), event);
 	gtk_container_add(GTK_CONTAINER(event), logo);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
@@ -747,7 +757,7 @@ void tray_cover_art_fetched(mpd_Song *song)
 				ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
 				if(ret == COVER_ART_OK_LOCAL)
 				{
-					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
 				}
 				if(path)g_free(path);
 

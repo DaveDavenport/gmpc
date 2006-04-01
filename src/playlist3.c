@@ -1303,8 +1303,7 @@ static void playlist_player_update_image(MpdObj *mi)
 		ret = cover_art_fetch_image_path(song, &path);
 		if(ret == COVER_ART_OK_LOCAL) {
 			GdkPixbuf *pb = NULL;
-			//GtkAllocation alloc = glade_xml_get_widget(pl3_xml, "eventbox2")->allocation;
-			pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);//gdk_pixbuf_new_from_file_at_size(path,-1,(alloc.height > 20)?alloc.height:40,NULL);
+			pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 			g_object_unref(pb);

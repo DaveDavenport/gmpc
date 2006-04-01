@@ -478,6 +478,17 @@ void init_stock_icons ()
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gmpc-tray-pause", set);
 	g_object_unref (G_OBJECT (pb));
+
+
+	path = gmpc_get_full_image_path("gmpc-tray-disconnected.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc-tray-disconnected", set);
+	g_object_unref (G_OBJECT (pb));
+
+
+	
 	
 
 
@@ -689,6 +700,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	}                                                                              	
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	playlist_connection_changed(mi, connect);
+	tray_icon_connection_changed(mi, connect);
 	for(i=0; i< num_plugins; i++)
 	{
 		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
@@ -697,7 +709,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 			plugins[i]->mpd_connection_changed(mi,connect,NULL);
 		}
 	}
-
+	mpd_status_update(mi);
 }
 
 void show_error_message(gchar *string)

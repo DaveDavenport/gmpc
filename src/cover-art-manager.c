@@ -86,7 +86,7 @@ void cover_art_manager_row_activated(GtkTreeView *tree, GtkTreePath *path)
 					path = cfg_get_single_value_as_string(cover_index, artist, album);
 					if(path){
 						int size = cfg_get_single_value_as_int_with_default(config,
-								"cover-art", "browser-size",80);
+								"cover-art", "browser-size",64);
 						pb =gdk_pixbuf_new_from_file_at_size(path,size,size,NULL);
 					}
 					gtk_tree_store_set(GTK_TREE_STORE(gtk_tree_view_get_model(tree)), &iter, 1, pb,-1);
@@ -191,7 +191,7 @@ void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter)
 			while(mult2 != NULL){
 				gchar *string = g_markup_printf_escaped("<i>%s</i>",mult2->key);
 				int size = cfg_get_single_value_as_int_with_default(config,
-						"cover-art", "browser-size",80);
+						"cover-art", "browser-size",64);
 
 				GdkPixbuf *pb = NULL;
 				if(mult2->value != NULL)

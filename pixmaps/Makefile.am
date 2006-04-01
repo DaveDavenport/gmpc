@@ -9,6 +9,7 @@ appicon_DATA =	media-audiofile.png\
 	gmpc-tray-play.png\
 	gmpc-tray-pause.png\
 	gmpc-no-cover.png\
+	gmpc-tray-disconnected.png\
 	gmpc.png\
 	media-album.png\
 	media-playlist.png\
