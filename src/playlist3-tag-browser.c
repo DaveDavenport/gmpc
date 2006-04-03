@@ -818,6 +818,7 @@ void pl3_tag_browser_selected(GtkWidget *container)
 	}
 
 	gtk_container_add(GTK_CONTAINER(container), pl3_tb_sw);
+	gtk_widget_grab_focus(pl3_tb_tree);
 	gtk_widget_show_all(pl3_tb_sw);
 }
 void pl3_tag_browser_unselected(GtkWidget *container)

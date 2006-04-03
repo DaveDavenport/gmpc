@@ -195,6 +195,7 @@ void pl3_find_browser_selected(GtkWidget *container)
 	}
 
 	gtk_container_add(GTK_CONTAINER(container),pl3_findb_vbox);
+	gtk_widget_grab_focus(pl3_findb_tree);
 	gtk_widget_show_all(pl3_findb_vbox);
 }
 void pl3_find_browser_unselected(GtkWidget *container)

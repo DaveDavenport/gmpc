@@ -571,7 +571,7 @@ void pl3_current_playlist_browser_selected()
 	gtk_widget_show(pl3_cp_vbox);
 	pl3_current_playlist_browser_playlist_changed();
 
-
+	gtk_widget_grab_focus(pl3_cp_tree);
 	if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0))
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();

@@ -600,6 +600,7 @@ void pl3_file_browser_selected()
 	}
 
 	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_vbox);
+	gtk_widget_grab_focus(pl3_fb_tree);
 	gtk_widget_show(pl3_fb_vbox);
 }
 void pl3_file_browser_unselected()

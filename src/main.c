@@ -292,8 +292,6 @@ int main (int argc, char **argv)
 	create_playlist3();
 
 
-
-
 	/*
 	 * create timeouts 
 	 * get the status every 1/2 second should be enough, but it's configurable.

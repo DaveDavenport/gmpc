@@ -96,7 +96,6 @@ void disconnect_callback(MpdObj *mi)
 int connect_to_mpd()
 {
 	char *string = NULL;
-	//scroll.exposed = 1;
 	string =cfg_get_single_value_as_string_with_default(config, "connection","hostname","localhost");
 	mpd_set_hostname(connection,string);
 	cfg_free_string(string);

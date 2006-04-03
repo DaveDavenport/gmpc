@@ -716,6 +716,7 @@ void pl3_artist_browser_selected(GtkWidget *container)
 	}
 
 	gtk_container_add(GTK_CONTAINER(container), pl3_ab_vbox);
+	gtk_widget_grab_focus(pl3_ab_tree);
 	gtk_widget_show(pl3_ab_vbox);
 }
 void pl3_artist_browser_unselected(GtkWidget *container)
