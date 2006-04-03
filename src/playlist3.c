@@ -1269,6 +1269,53 @@ static void playlist_player_update_image_callback(mpd_Song *song)
 	}
 }
 
+
+static void draw_border (GdkPixbuf *pixbuf)
+{
+	int width, height, rowstride, n_channels;
+	guchar *pixels, *p;
+	int x,y;
+
+	/**
+	 * Draw Border
+	 */
+	
+	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+
+	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
+	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
+
+	width = gdk_pixbuf_get_width (pixbuf);
+	height = gdk_pixbuf_get_height (pixbuf);
+
+	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+	pixels = gdk_pixbuf_get_pixels (pixbuf);
+	y=0;
+	for(x=0; x<width;x++)
+	{
+		p = pixels + y * rowstride + x * n_channels;
+		p[0] = p[1] = p[2] = 0;
+	}
+	x=0;
+	for(y=0; y<width;y++)
+	{
+		p = pixels + y * rowstride + x * n_channels;
+		p[0] = p[1] = p[2] = 0;
+	}                                               	
+	x=width-1;
+	for(y=0; y<width;y++)
+	{
+		p = pixels + y * rowstride + x * n_channels;
+		p[0] = p[1] = p[2] = 0;
+	}                                               	
+	y=height-1;
+	for(x=0; x<width;x++)
+	{
+		p = pixels + y * rowstride + x * n_channels;
+		p[0] = p[1] = p[2] = 0;
+	}                                               	
+}
+
 static void playlist_player_update_image(MpdObj *mi)
 {
 	if(mpd_check_connected(connection) && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
@@ -1280,6 +1327,7 @@ static void playlist_player_update_image(MpdObj *mi)
 		if(ret == COVER_ART_OK_LOCAL) {
 			GdkPixbuf *pb = NULL;
 			pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
+			draw_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 			g_object_unref(pb);
