@@ -300,8 +300,10 @@ void pl3_current_playlist_browser_init()
 
 void pl3_current_playlist_browser_scroll_to_current_song()
 {
+	if(pl3_cp_tree == NULL) return;
 	/* scroll to the playing song */
-	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0)
+	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
+			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
 	{
 		gchar *str = g_strdup_printf("%i", mpd_player_get_current_song_pos(connection));
 		GtkTreePath *path = gtk_tree_path_new_from_string(str);
@@ -572,10 +574,12 @@ void pl3_current_playlist_browser_selected()
 	pl3_current_playlist_browser_playlist_changed();
 
 	gtk_widget_grab_focus(pl3_cp_tree);
-	if(cfg_get_single_value_as_int_with_default(config, "playlist3", "st_cur_song", 0))
+	/*
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();
 	}
+	*/
 }
 void pl3_current_playlist_browser_unselected()
 {

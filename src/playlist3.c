@@ -904,7 +904,7 @@ void create_playlist3 ()
 
 
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
-	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_playlist_player")), volume_slider, FALSE, TRUE, 0);
+	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
 	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
 	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
@@ -1434,6 +1434,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		GtkTreeIter iter;
 		if(gtk_tree_model_get_iter_first(model, &iter)){
 			gtk_tree_selection_select_iter(selec, &iter);
+
 		}
 
 		string = g_strdup_printf("%s - %s %s",
@@ -1451,7 +1452,10 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);		
 		g_free(string);                                                                    	
 	}
-
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
+	{
+		pl3_current_playlist_browser_scroll_to_current_song();
+	}
 
 }
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
