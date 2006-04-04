@@ -22,6 +22,7 @@ gmpc_SOURCES=\
 	config1.c\
 	cover-art-manager.c\
 	bacon-volume.c\
+	sm.c\
 	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
@@ -37,7 +38,8 @@ LIBS = \
 	@gtk_LIBS@\
 	@gmodule_LIBS@\
 	@libglade_LIBS@\
-	@gthread_LIBS@
+	@gthread_LIBS@\
+	@sm_LIBS@
 
 LDFLAGS = \
 	@EXTRA_LDFLAGS@
@@ -50,7 +52,8 @@ CFLAGS = @CFLAGS@\
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
-	@gthread_CFLAGS@
+	@gthread_CFLAGS@\
+	@sm_CFLAGS@
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
@@ -73,4 +76,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-find-browser.h\
 		playlist-list.h\
 		bacon-volume.h\
+		sm.h\
 		TreeSearchWidget.h

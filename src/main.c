@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <config.h>
-
+#include "sm.h"
 #include "plugin.h"
 #include "main.h"
 #include "misc.h"
@@ -172,6 +172,8 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
 
+	smc_connect(argc, argv);
+	
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	qthread_init();

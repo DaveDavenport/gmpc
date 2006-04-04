@@ -66,6 +66,12 @@ PKG_CHECK_MODULES([gthread], gthread-2.0)
 AC_SUBST(gthread_LIBS)
 AC_SUBST(gthread_CFLAGS)
 
+
+# gthread
+PKG_CHECK_MODULES([sm], sm)
+AC_SUBST(sm_LIBS)
+AC_SUBST(sm_CFLAGS)
+
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
 fi
