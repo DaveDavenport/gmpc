@@ -1269,6 +1269,32 @@ static void playlist_player_update_image_callback(mpd_Song *song)
 	}
 }
 
+int pl3_pixbuf_border(GdkPixbuf *pb)
+{
+	int x,y,width,height;
+	int pixel;
+	int n_channels = gdk_pixbuf_get_n_channels(pb);
+	int rowstride = gdk_pixbuf_get_rowstride(pb);	
+	guchar *pixels;
+	width = gdk_pixbuf_get_width (pb);
+	height = gdk_pixbuf_get_height (pb);
+	pixels = gdk_pixbuf_get_pixels(pb);
+
+	for(y=0;y<height;y++)
+	{
+		for(x=0;x<width;x++)
+		{
+			if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
+			{
+				for(pixel=0; pixel < n_channels;pixel++)
+				{
+					pixels[x*n_channels+y*rowstride+pixel] = 0;
+				}
+			}
+		}
+	}
+}
+
 static void playlist_player_update_image(MpdObj *mi)
 {
 	if(mpd_check_connected(connection) && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
@@ -1280,6 +1306,7 @@ static void playlist_player_update_image(MpdObj *mi)
 		if(ret == COVER_ART_OK_LOCAL) {
 			GdkPixbuf *pb = NULL;
 			pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
+			if(pb) pl3_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 			g_object_unref(pb);
@@ -1374,15 +1401,15 @@ void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 		gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
 	}
 	else{
-		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-				pl3_wsize.width, pl3_wsize.height);
+		gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
+		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),	pl3_wsize.width, pl3_wsize.height);
 
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
-		gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
+
 	}
 	playlist_player_update_image(connection);
 }
