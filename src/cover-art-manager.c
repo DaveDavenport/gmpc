@@ -314,7 +314,7 @@ void cover_art_pref_construct(GtkWidget *container)
 
 void cover_art_remove_image(GtkWidget *button){
 	GladeXML *cae_xml = glade_get_widget_tree(button);
-	gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")),"");
+	gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")));
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
 }
 void cover_art_edit_path_changed(GtkWidget *filechooser)
@@ -374,7 +374,7 @@ int cover_art_edit_cover(gchar *artist, gchar *album)
 	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_album")), album);
 	if(artist && album) {
 		path = cfg_get_single_value_as_string(cover_index, artist, album);
-		if(path){
+		if(path && *path){
 			GdkPixbuf *pb = NULL;
 			gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")),
 					path);
@@ -384,6 +384,9 @@ int cover_art_edit_cover(gchar *artist, gchar *album)
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")), pb);
 				g_object_unref(pb);
 			}
+		}
+		else{
+			gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")));
 		}
 	}
 
