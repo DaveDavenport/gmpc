@@ -117,7 +117,7 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 		/* create an iter */
 		iter.stamp = cl->stamp;
 		iter.user_data = temp;
-		iter.user_data2 = NULL;
+		iter.user_data2 = GINT_TO_POINTER(temp->song->pos);
 		iter.user_data3 = NULL;
 		/* propegate change */
 		gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path, &iter);
@@ -162,7 +162,7 @@ int playlist_list_data_fill_initial(pass_data *pd)
 	gtk_tree_path_append_index(path, pd->data->song->pos);
 	iter.stamp = pd->cl->stamp;
 	iter.user_data = pd->data;
-	iter.user_data2 = NULL;
+	iter.user_data2 = GINT_TO_POINTER(pd->data->song->pos);
 	iter.user_data3 = NULL;
 	gtk_tree_model_row_inserted(GTK_TREE_MODEL(pd->cl), path,
 			&iter);
@@ -239,7 +239,7 @@ int playlist_list_data_update_data(pass_data *pd)
 		/* iter */
 		iter.stamp = cl->stamp;
 		iter.user_data = temp;
-		iter.user_data2 = NULL;
+		iter.user_data2 = GINT_TO_POINTER(temp->song->pos);
 		iter.user_data3 = NULL;
 		/* changed */
 		gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),
@@ -267,7 +267,7 @@ int playlist_list_data_update_data(pass_data *pd)
 		/* create iter */
 		iter.stamp = cl->stamp;
 		iter.user_data = temp;
-		iter.user_data2 = NULL;
+		iter.user_data2 = GINT_TO_POINTER(temp->song->pos);
 		iter.user_data3 = NULL;
 		/* send signal */
 		gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl),
@@ -622,7 +622,7 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
 	/* We simply store a pointer to our custom record in the iter */
 	iter->stamp = playlist_list->stamp;
 	iter->user_data = data;
-	iter->user_data2 = NULL;	/* unused */
+	iter->user_data2 = GINT_TO_POINTER(data->song->pos);	/* unused */
 	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
@@ -681,7 +681,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 
 	if(data->song->file[0] == 'x' && data->song->file[1] == '\0') {
 /*		printf("loading: %i\n", data->song->id);*/
-		mpd_Song *song = mpd_playlist_get_song(connection, data->song->id);
+		mpd_Song *song = mpd_playlist_get_song_from_pos(connection, GPOINTER_TO_INT(iter->user_data2));
 		mpd_freeSong(data->song);
 		data->song = song;
 	}	
@@ -806,6 +806,7 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 
 	iter->stamp = playlist_list->stamp;
 	iter->user_data = data;
+	iter->user_data2 = GINT_TO_POINTER(GPOINTER_TO_INT(iter->user_data2)+1);
 
 	return TRUE;
 }

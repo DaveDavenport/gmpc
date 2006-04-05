@@ -64,7 +64,7 @@ struct _CustomList
 	guint           num_rows;    /* number of rows that we have   */
 	guint		playlist_id;
 	gint		current_song_pos;
-	MpdData *mpdata;
+	MpdData		*mpdata;
 	char *markup;
 	gint            n_columns;
 	guint 		playtime;
