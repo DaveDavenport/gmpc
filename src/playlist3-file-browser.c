@@ -46,6 +46,9 @@ void pl3_file_browser_add_folder();
 void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
 
+int pl3_fb_filling = FALSE;
+int pl3_fb_filling_kill = FALSE;
+
 enum{
 	PL3_FB_PATH,
 	PL3_FB_TYPE,
@@ -100,12 +103,16 @@ void pl3_file_browser_init()
 			GTK_TYPE_STRING,	/* title to display */
 			GTK_TYPE_STRING); /* icon type */
 
-
+	/* set up the tree */
+	pl3_fb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store));
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 
 	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	gtk_tree_view_column_set_fixed_width(column, 300);
+	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
+
+	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PL3_FB_ICON,NULL);
 	memset(&value, 0, sizeof(value));
@@ -119,8 +126,8 @@ void pl3_file_browser_init()
 	gtk_tree_view_column_set_attributes (column,renderer,"text", PL3_FB_TITLE, NULL);
 
 
-	/* set up the tree */
-	pl3_fb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store));
+
+
 	/* insert the column in the tree */
 	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_fb_tree), column);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
@@ -354,9 +361,105 @@ void pl3_file_browser_reupdate()
 	}
 }
 
+typedef struct {
+	MpdData *data;
+	int sub_folder;
+	int time;
+	int support_playlist;
+	GtkTreeIter *iter_cat;
+}pl3_fb_lf_pb;
+
+void pl3_fb_lazy_fill_destroy(pl3_fb_lf_pb *pb)
+{
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store));
+	g_free(pb);
+	if(pl3_fb_filling_kill)
+	{
+		pl3_fb_filling_kill = FALSE;
+	}
+	else pl3_fb_filling = FALSE;
+}
+
+int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
+{
+	GtkTreeIter iter;
+	MpdData *data = pd->data;
+	if(pl3_fb_filling_kill) {
+		if(data) mpd_data_free(data);
+		return FALSE;
+	}
+	if (data != NULL)
+ 	{
+
+ 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
+ 		{
+ 			gchar *basename = g_path_get_basename(data->directory);
+ 			gtk_list_store_append (pl3_fb_store, &iter);
+ 			gtk_list_store_set (pl3_fb_store, &iter,
+ 					PL3_FB_PATH, data->directory,
+ 					PL3_FB_TYPE, PL3_ENTRY_DIRECTORY,
+ 					PL3_FB_TITLE, basename,
+ 					PL3_FB_ICON, "gtk-open",
+ 					-1);
+ 			g_free(basename);
+ 			(pd->sub_folder)++;
+ 		}
+ 		else if (data->type == MPD_DATA_TYPE_SONG)
+ 		{
+ 			gchar buffer[1024];
+ 			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+ 			mpd_song_markup(buffer, 1024, markdata,data->song);
+ 			cfg_free_string(markdata);
+ 			if(data->song->time != MPD_SONG_NO_TIME)
+ 			{
+ 				pd->time += data->song->time;
+ 			}
+ 
+ 			gtk_list_store_append (pl3_fb_store, &iter);
+ 			gtk_list_store_set (pl3_fb_store, &iter,
+ 					PL3_FB_PATH, data->song->file,
+ 					PL3_FB_TYPE, PL3_ENTRY_SONG,
+ 					PL3_FB_TITLE, buffer,
+ 					PL3_FB_ICON, "media-audiofile",
+ 					-1);
+ 
+ 		}
+ 
+ 		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
+ 		{
+ 			gchar *basename = g_path_get_basename (data->playlist);
+ 			gtk_list_store_append (pl3_fb_store, &iter);
+ 			gtk_list_store_set (pl3_fb_store, &iter,
+ 					PL3_FB_PATH, data->playlist,
+ 					PL3_FB_TYPE, PL3_ENTRY_PLAYLIST,
+ 					PL3_FB_TITLE, basename,
+ 					PL3_FB_ICON, "media-playlist",
+ 					-1);
+ 			g_free (basename);
+ 			if(pd->support_playlist) (pd->sub_folder)++;
+ 		}
+ 		pd->data = mpd_data_get_next(data);
+		return TRUE;
+ 	}
+ 	/* remove the fantom child if there are no subfolders anyway. */
+	/* TODO: Fix this:
+	 * It seems the iter isn't valid at this point anymore.
+ 	if(!(pd->sub_folder))
+ 	{
+ 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, pd->iter_cat))
+ 		{
+ 			gtk_tree_store_remove(pl3_tree, &iter);
+ 		}
+ 	}
+	*/
+	return FALSE;
+} 
+
+
 long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
-	MpdData* data =NULL;
+	pl3_fb_lf_pb *pb = NULL;
+		MpdData* data =NULL;
 	char *path = NULL, *icon = NULL;
 	int sub_folder = 0;
 	GtkTreeIter iter;
@@ -392,6 +495,9 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
+
+	g_free(path);
+	/*
 	while (data != NULL)
 	{
 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
@@ -443,7 +549,9 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		}
 		data = mpd_data_get_next(data);
 	}
+	*/
 	/* remove the fantom child if there are no subfolders anyway. */
+	/*
 	if(!sub_folder)
 	{
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, iter_cat))
@@ -451,7 +559,20 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 			gtk_tree_store_remove(pl3_tree, &iter);
 		}
 	}
-	g_free(path);
+	*/
+	pb = g_malloc0(sizeof(*pb));
+	pb->data= data;
+	pb->sub_folder = 0;
+	pb->time = 0;
+	pb->support_playlist = support_playlist;
+	pb->iter_cat = iter_cat;
+
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), NULL);
+	if(pl3_fb_filling){
+		pl3_fb_filling_kill = TRUE;
+	}
+	pl3_fb_filling = TRUE;
+	g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)pl3_fb_lazy_fill,pb, (GDestroyNotify)pl3_fb_lazy_fill_destroy);
 	return time;
 }
 
