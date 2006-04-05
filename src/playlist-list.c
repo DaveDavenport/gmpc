@@ -684,8 +684,6 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		mpd_Song *song = mpd_playlist_get_song(connection, data->song->id);
 		mpd_freeSong(data->song);
 		data->song = song;
-
-
 	}	
 	
 

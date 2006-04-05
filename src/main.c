@@ -172,7 +172,9 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
 
+#ifdef ENABLE_SM
 	smc_connect(argc, argv);
+#endif	
 	
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");

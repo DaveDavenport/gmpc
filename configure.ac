@@ -9,6 +9,7 @@ AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
 
+AC_ARG_ENABLE(sm,[  --disable-sm     Disable Session Support.],,enable_sm=yes)
 AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys     Disable multimedia keys support.],,enable_mmkeys=yes)
 AC_ARG_ENABLE(trayicon,[  --disable-trayicon     Disable tray icon support.],,enable_trayicon=yes)
 
@@ -67,10 +68,14 @@ AC_SUBST(gthread_LIBS)
 AC_SUBST(gthread_CFLAGS)
 
 
-# gthread
-PKG_CHECK_MODULES([sm], sm)
-AC_SUBST(sm_LIBS)
-AC_SUBST(sm_CFLAGS)
+# sm
+if test x${enable_sm} = xyes; then
+	PKG_CHECK_MODULES([sm], sm)
+	AC_SUBST(sm_LIBS)
+	AC_SUBST(sm_CFLAGS)
+	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
+
+fi
 
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
@@ -142,13 +147,17 @@ echo ""
 echo ""
 echo "-------------- Status --------------"
 if test x${enable_mmkeys} = xyes; then
-	echo "Multimedia keys support is:  	enabled"
+	echo "Multimedia keys support is:  		enabled"
 else
-	echo "Multimedia keys support is:  	disabled"
+	echo "Multimedia keys support is:  		disabled"
 fi
 if test x${enable_trayicon} = xyes; then
-	echo "Tray icon support is:         	enabled"
+	echo "Tray icon support is:			enabled"
 else
-	echo "Tray icon support is:	   	disabled"
+	echo "Tray icon support is:			disabled"
 fi
-
+if test x${enable_sm} = xyes; then
+	echo "Session Manager support is:      	enabled"
+else
+	echo "Session Manager support is:	   	disabled"
+fi

@@ -18,7 +18,8 @@
  *  To get a copy of the GNU General Puplic License, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+#include <config.h>
+#ifdef ENABLE_SM
 
 #include <string.h>
 #include <unistd.h>
@@ -168,13 +169,7 @@ void smc_connect(gint argc, gchar **argv)
 	props[2] = &restart;
 	props[3] = &clone;
 	props[4] = &pid;
-#if 0
-	/* Make this an option? */
-	props[5] = &restart_style;
-	SmcSetProperties(smc_connection, 6, props);
-#else
 	SmcSetProperties(smc_connection, 5, props);
-#endif
 
 	g_free(restart.vals);
 
@@ -182,3 +177,5 @@ void smc_connect(gint argc, gchar **argv)
 	gdk_input_add(IceConnectionNumber(ice_connection), GDK_INPUT_READ,
 			(GdkInputFunction) cb_ice_connection_messages, ice_connection);
 }
+
+#endif
