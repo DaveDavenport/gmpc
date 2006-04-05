@@ -3,6 +3,8 @@
 
 #include <gtk/gtk.h>
 
+extern MpdObj *connection;
+
 /* Some boilerplate GObject defines. 'klass' is used
  *   instead of 'class', because 'class' is a C++ keyword */
 
