@@ -5,6 +5,9 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist-list.h"
 
+#include <glade/glade.h>
+extern GladeXML *pl3_xml;
+
 /* boring declarations of local functions */
 
 static void playlist_list_init(CustomList * pkg_tree);
@@ -201,6 +204,10 @@ int playlist_list_data_update_data(pass_data *pd)
 			{
 				int pos = temp->song->pos;
 				cl->playtime -= temp->song->time;
+				if((temp->song->file)[0] != 'x' && (temp->song->file)[1] != '\0')
+				{
+					cl->loaded--;
+				}
 				temp = mpd_data_delete_item(temp);
 				cl->mpdata = temp;	//mpd_data_get_first(temp);
 				cl->num_rows--;
@@ -225,6 +232,7 @@ int playlist_list_data_update_data(pass_data *pd)
 		for (; temp->song->pos != pos;
 				temp =
 				mpd_data_get_next_real(temp, FALSE)) ;
+		cl->loaded--;
 		/* remove old song */
 		cl->playtime -= temp->song->time;
 		mpd_freeSong(temp->song);
@@ -372,6 +380,7 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	list->mpdata = NULL;
 	list->playlist_id = -1;
 	list->num_rows = 0;
+	list->loaded = 0;
 	list->playtime = 0;
 	list->current_song_pos = -1;
 	if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(list));
@@ -495,6 +504,7 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_ICON_ID] = G_TYPE_STRING;
 
 	playlist_list->num_rows = 0;
+	playlist_list->loaded = 0;
 	playlist_list->mpdata = NULL;
 	playlist_list->playlist_id = -1;
 	playlist_list->current_song_pos = -1;
@@ -680,10 +690,12 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 	g_return_if_fail(data != NULL);
 
 	if(data->song->file[0] == 'x' && data->song->file[1] == '\0') {
-/*		printf("loading: %i\n", data->song->id);*/
 		mpd_Song *song = mpd_playlist_get_song(connection,data->song->id);
 		mpd_freeSong(data->song);
 		data->song = song;
+		PLAYLIST_LIST(tree_model)->loaded++;
+		if(pl3_xml)gtk_progress_bar_set_fraction(
+				glade_xml_get_widget(pl3_xml, "progressbar_dbg"), PLAYLIST_LIST(tree_model)->loaded/(float)(PLAYLIST_LIST(tree_model)->num_rows));
 	}	
 	
 

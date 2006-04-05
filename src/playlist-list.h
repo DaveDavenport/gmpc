@@ -62,6 +62,7 @@ struct _CustomList
 	GObject         parent;      /* this MUST be the first member */
 
 	guint           num_rows;    /* number of rows that we have   */
+	guint			loaded;
 	guint		playlist_id;
 	gint		current_song_pos;
 	MpdData		*mpdata;
