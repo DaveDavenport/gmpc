@@ -189,6 +189,10 @@ int playlist_list_data_update_data(pass_data *pd)
 	CustomList *cl = pd->cl;
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
+	if(pd->total_length != pd->cl->num_rows){
+		if(pd->data)mpd_data_free(pd->data);
+		return FALSE;
+	}
 	if(pd->data == NULL) {
 		if(pd->iter == NULL) pd->iter = mpd_data_get_first(cl->mpdata);
 		if (cl->num_rows > mpd_playlist_get_playlist_length(mi) && cl->mpdata) 
@@ -296,13 +300,21 @@ int playlist_list_fetch_data(pass_data *pd)
 		g_free(pd);
 	   	return FALSE;
 	}
+	if(pd->total_length != pd->cl->num_rows){
+		printf("Somehow where not working on the same playlist again, aborting background update\n");
+		g_free(pd);
+		return FALSE;
+		
+	}
 	if(pd->data->song->file[0] == 'x' && pd->data->song->file[1] == '\0') {
+		double perc = PLAYLIST_LIST(pd->cl)->loaded/(double)(PLAYLIST_LIST(pd->cl)->num_rows);
 		mpd_Song *song = mpd_playlist_get_song(connection,pd->data->song->id);
 		mpd_freeSong(pd->data->song);
 		pd->data->song = song;
 		PLAYLIST_LIST(pd->cl)->loaded++;
-		if(pl3_xml && !(pd->cl->loaded % 50))gtk_progress_bar_set_fraction(
-				glade_xml_get_widget(pl3_xml, "progressbar_dbg"), PLAYLIST_LIST(pd->cl)->loaded/(float)(PLAYLIST_LIST(pd->cl)->num_rows));
+		
+		if(pl3_xml && !(pd->cl->loaded % 50) && perc <= 1)gtk_progress_bar_set_fraction(
+				glade_xml_get_widget(pl3_xml, "progressbar_dbg"),perc );
 	}	                                                                                                                                         	
 	pd->data = mpd_data_get_next_real(pd->data,FALSE);
 	return TRUE;
