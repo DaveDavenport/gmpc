@@ -681,7 +681,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 
 	if(data->song->file[0] == 'x' && data->song->file[1] == '\0') {
 /*		printf("loading: %i\n", data->song->id);*/
-		mpd_Song *song = mpd_playlist_get_song_from_pos(connection, GPOINTER_TO_INT(iter->user_data2));
+		mpd_Song *song = mpd_playlist_get_song(connection,data->song->id);
 		mpd_freeSong(data->song);
 		data->song = song;
 	}	
