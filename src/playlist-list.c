@@ -290,6 +290,23 @@ int playlist_list_data_update_data(pass_data *pd)
 	return TRUE;
 }
 
+int playlist_list_fetch_data(pass_data *pd)
+{
+	if(pd->data == NULL){
+		g_free(pd);
+	   	return FALSE;
+	}
+	if(pd->data->song->file[0] == 'x' && pd->data->song->file[1] == '\0') {
+		mpd_Song *song = mpd_playlist_get_song(connection,pd->data->song->id);
+		mpd_freeSong(pd->data->song);
+		pd->data->song = song;
+		PLAYLIST_LIST(pd->cl)->loaded++;
+		if(pl3_xml && !(pd->cl->loaded % 50))gtk_progress_bar_set_fraction(
+				glade_xml_get_widget(pl3_xml, "progressbar_dbg"), PLAYLIST_LIST(pd->cl)->loaded/(float)(PLAYLIST_LIST(pd->cl)->num_rows));
+	}	                                                                                                                                         	
+	pd->data = mpd_data_get_next_real(pd->data,FALSE);
+	return TRUE;
+}
 
 void playlist_list_data_update_done(pass_data *pd)
 {
@@ -311,7 +328,13 @@ void playlist_list_data_update_done(pass_data *pd)
 		}
 	}
 	if(pd->cell) gtk_tree_path_free(pd->cell);
+	if(pd->cl->mpdata){
+		pd->data = mpd_data_get_first(pd->cl->mpdata);
+		g_idle_add_full(G_PRIORITY_LOW,playlist_list_fetch_data,pd,NULL );
+		return;
+	}
 	g_free(pd);
+
 }
 
 void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree) {
