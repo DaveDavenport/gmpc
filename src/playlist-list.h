@@ -45,6 +45,32 @@ typedef struct _CustomList       CustomList;
 typedef struct _CustomListClass  CustomListClass;
 
 
+typedef enum {
+	PD_STATE_NONE,	
+	PD_STATE_STOP,
+	PD_STATE_RESTART,
+	PD_STATE_INITIAL_FILL,
+	PD_STATE_UPDATE,
+	PD_STATE_CLEANUP,
+	PD_STATE_BACKGROUND_FILL,
+	PD_STATE_ERROR
+}PDState;
+typedef struct {
+	int state;
+	CustomList *cl;
+	MpdObj *mi;
+	MpdData *data;
+	MpdData *iter;
+	GtkTreeView *tree;
+	int total_length;
+	GtkTreePath *cell;
+}pass_data;
+
+
+
+
+
+
 
 
 
@@ -73,6 +99,7 @@ struct _CustomList
 	GType           column_types[PLAYLIST_LIST_N_COLUMNS];
 
 	gint            stamp;       /* Random integer to check whether an iter belongs to our model */
+	pass_data		pd;
 };
 
 
