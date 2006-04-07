@@ -150,18 +150,16 @@ guint playlist_list_get_playtime(CustomList * cl)
 int playlist_list_lazy_fill(CustomList *cl)
 {
 	int i = 0;
-	for(i=0;i< 10;i++)
-	{
-		if(cl->pd.total_length >= cl->num_rows){
-		 	cl->pd.timeout = 0;  
-			return FALSE;
-		}
-		if(cl->playlist[cl->pd.total_length] == NULL)
-		{
-			cl->playlist[cl->pd.total_length] = mpd_playlist_get_song_from_pos(cl->pd.mi,cl->pd.total_length);
-		}
-		cl->pd.total_length++;
+	if(cl->pd.total_length >= cl->num_rows ||
+			!mpd_check_connected(cl->pd.mi)){
+		cl->pd.timeout = 0;  
+		return FALSE;
 	}
+	if(cl->playlist[cl->pd.total_length] == NULL)
+	{
+		cl->playlist[cl->pd.total_length] = mpd_playlist_get_song_from_pos(cl->pd.mi,cl->pd.total_length);
+	}
+	cl->pd.total_length++;
 	return TRUE;
 }
 
@@ -302,8 +300,9 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
 	{
 		cl->pd.total_length = 0;	
-		//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
-		cl->pd.timeout = g_timeout_add(10, (GSourceFunc)playlist_list_lazy_fill, cl);
+		cl->pd.timeout = g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
+/*		cl->pd.timeout = g_timeout_add(20, (GSourceFunc)playlist_list_lazy_fill, cl);
+ *		*/
 	}
 	return;
 }
