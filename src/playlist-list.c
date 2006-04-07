@@ -518,9 +518,12 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree) {
 			printf("Playlist sync error\n");
 			return;
 		}
-		cl->pd.total_length = 0;	
-		//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
-		g_timeout_add(10, playlist_list_lazy_fill, cl);
+		if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
+		{
+			cl->pd.total_length = 0;	
+			//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
+			g_timeout_add(10, playlist_list_lazy_fill, cl);
+		}
 		return;
 		/* if the ammount of rows haven't changed, don't detach view,
 		 * It makes it look a bit better.
