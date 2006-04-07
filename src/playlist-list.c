@@ -230,7 +230,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 					gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl),path);
 					gtk_tree_path_free(path);
 					cl->num_rows--;
-					if(cl->playlist[i])mpd_freeSong(cl->playlist[i]);
+					if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
 					/* To be sure */
 					cl->playlist[i] = NULL;
 				}
@@ -259,7 +259,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 				GtkTreePath *path = NULL;
 				GtkTreeIter iter;
 				i = data->song->pos;
-				if(cl->playlist[i])
+				if((cl->playlist[i]))
 				{
 					mpd_freeSong((cl->playlist[i]));
 					cl->playlist[i] = NULL;		
@@ -327,7 +327,7 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 		gtk_tree_path_append_index(path, i);
 		gtk_tree_model_row_deleted(GTK_TREE_MODEL(list), path);
 		gtk_tree_path_free(path);
-		if(list->playlist[i])mpd_freeSong(list->playlist[i]);
+		if((list->playlist[i]))mpd_freeSong((list->playlist[i]));
 	}	
 	if(list->num_rows != 0) printf("Error removing data\n");
 	/* free the array of pointers */
@@ -505,7 +505,7 @@ static void playlist_list_finalize(GObject * object)
 	/* TODO NEEDS UPDATING */
 	for(i=0; i < cl->num_rows;i++)
 	{
-		if(cl->playlist[i])mpd_freeSong(cl->playlist[i]);
+		if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
 	}
 	if(cl->playlist)g_free(cl->playlist);
 
