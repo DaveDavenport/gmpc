@@ -59,12 +59,9 @@ typedef struct {
 	int state;
 	CustomList *cl;
 	MpdObj *mi;
-	MpdData *data;
-	MpdData *iter;
 	GtkTreeView *tree;
 	int total_length;
-	GtkTreePath *cell;
-
+	guint timeout;
 
 }pass_data;
 

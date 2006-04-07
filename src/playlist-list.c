@@ -152,7 +152,10 @@ int playlist_list_lazy_fill(CustomList *cl)
 	int i = 0;
 	for(i=0;i< 10;i++)
 	{
-		if(cl->pd.total_length >= cl->num_rows) return FALSE;
+		if(cl->pd.total_length >= cl->num_rows){
+		 	cl->pd.timeout = 0;  
+			return FALSE;
+		}
 		if(cl->playlist[cl->pd.total_length] == NULL)
 		{
 			cl->playlist[cl->pd.total_length] = mpd_playlist_get_song_from_pos(cl->pd.mi,cl->pd.total_length);
@@ -176,12 +179,14 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		MpdData *data =NULL;// mpd_playlist_get_changes(mi, cl->playlist_id);
 		cl->pd.cl = cl;
 		cl->pd.mi = mi;
-		cl->pd.data = data;
 		cl->pd.tree = tree;
-		cl->pd.iter =NULL;
-		cl->pd.cell = NULL;
 		cl->pd.total_length = new_length;
 
+		if(cl->pd.timeout)
+		{
+			g_source_remove(cl->pd.timeout);
+			cl->pd.timeout = 0;
+		}
 		/**
 		 * INITIAL FILL 
 		 */
@@ -256,7 +261,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 				i = data->song->pos;
 				if(cl->playlist[i])
 				{
-					mpd_freeSong(cl->playlist[i]);
+					mpd_freeSong((cl->playlist[i]));
 					cl->playlist[i] = NULL;		
 				}
 				/* if where on a "unpatched" mpd we can directly add the song to the list */
@@ -292,7 +297,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		{
 			cl->pd.total_length = 0;	
 			//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
-			g_timeout_add(10, (GSourceFunc)playlist_list_lazy_fill, cl);
+			cl->pd.timeout = g_timeout_add(10, (GSourceFunc)playlist_list_lazy_fill, cl);
 		}
 		return;
 	}
@@ -307,7 +312,12 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 {
 	int i=0;
 	if(tree)gtk_tree_view_set_model(tree, NULL);
-	/* get the last one */
+
+	if(list->pd.timeout)
+	{
+		g_source_remove(list->pd.timeout);
+		list->pd.timeout = 0;
+	}
 
 
 	for(i=list->num_rows-1;i>=0;i--)
@@ -464,6 +474,7 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->current_song_pos = -1;
 
 	playlist_list->playlist = NULL;
+	playlist_list->pd.timeout = 0;
 
 	playlist_list->playtime = 0;
 	playlist_list->pd.state = PD_STATE_NONE; 
@@ -483,14 +494,23 @@ static void playlist_list_init(CustomList * playlist_list)
 
 static void playlist_list_finalize(GObject * object)
 {
-	//CustomList *cl = PLAYLIST_LIST(object);
+	int i=0;
+	CustomList *cl = PLAYLIST_LIST(object);
 	debug_printf(DEBUG_INFO, "Finalize playlist-backend\n");
 	/* free all records and free all memory used by the list */
-/*	if(cl->mpdata)mpd_data_free(cl->mpdata);
-	if (cl->markup)
+	/*	if(cl->mpdata)mpd_data_free(cl->mpdata);
+		if (cl->markup)
 		g_free(cl->markup);
-*/
+		*/
 	/* TODO NEEDS UPDATING */
+	for(i=0; i < cl->num_rows;i++)
+	{
+		if(cl->playlist[i])mpd_freeSong(cl->playlist[i]);
+	}
+	if(cl->playlist)g_free(cl->playlist);
+
+
+	
 	/* must chain up - finalize parent */
 	(*parent_class->finalize) (object);
 }
