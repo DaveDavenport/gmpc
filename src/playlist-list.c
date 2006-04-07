@@ -630,19 +630,15 @@ static GtkTreePath *playlist_list_get_path(GtkTreeModel * tree_model,
 		GtkTreeIter * iter)
 {
 	GtkTreePath *path;
-	CustomList *playlist_list;
-	MpdData *data;
 
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), NULL);
 	g_return_val_if_fail(iter != NULL, NULL);
 	g_return_val_if_fail(iter->user_data != NULL, NULL);
 
-	playlist_list = PLAYLIST_LIST(tree_model);
 
-	data = (MpdData *) iter->user_data;
 
 	path = gtk_tree_path_new();
-	gtk_tree_path_append_index(path, data->song->pos);
+	gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data2));
 
 	return path;
 }
