@@ -169,143 +169,143 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 {
 	/* Check the state of the state machine */
 	/* if the state machine is doing something, tell it to restart */
-	if(cl->pd.state != PD_STATE_NONE) {
-		cl->pd.state = PD_STATE_RESTART;
+	int i=0;
+	int new_length =   mpd_playlist_get_playlist_length(mi);
+	MpdData *data =NULL;// mpd_playlist_get_changes(mi, cl->playlist_id);
+	cl->pd.cl = cl;
+	cl->pd.mi = mi;
+	cl->pd.tree = tree;
+	cl->pd.total_length = new_length;
+
+	if(cl->pd.timeout)
+	{
+		g_source_remove(cl->pd.timeout);
+		cl->pd.timeout = 0;
+	}
+	/**
+	 * INITIAL FILL 
+	 */
+	/* No need to idle time this, because it hardly does anything */
+	/* TODO: Detach model? */
+	if(cl->num_rows == 0){
+		GtkTreePath *path = NULL;
+		GtkTreeIter iter;        			
+		if(cl->playlist != NULL) printf("Errr error, leaking memory\n");
+		cl->playlist = g_malloc0(new_length * sizeof(mpd_Song *));
+
+		for(i=0; i< new_length;i++){
+			/* start sending signals */
+			path = gtk_tree_path_new();
+			gtk_tree_path_append_index(path, i);
+			iter.stamp = cl->stamp;
+			iter.user_data = cl->playlist[i];
+			iter.user_data2 = GINT_TO_POINTER(i);
+			iter.user_data3 = NULL;
+			gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path,
+					&iter);
+			gtk_tree_path_free(path);
+			cl->num_rows++;
+		}
+		if(cl->num_rows != new_length)
+		{
+			printf("Nasty sync error on initial fill\n");
+		}
 	}
 	else
 	{
-		int i=0;
-		int new_length =   mpd_playlist_get_playlist_length(mi);
-		MpdData *data =NULL;// mpd_playlist_get_changes(mi, cl->playlist_id);
-		cl->pd.cl = cl;
-		cl->pd.mi = mi;
-		cl->pd.tree = tree;
-		cl->pd.total_length = new_length;
+		/* Deleting rows */
+		/* Same, does this needs to be a background process? */
+		if(cl->num_rows > new_length){
 
-		if(cl->pd.timeout)
-		{
-			g_source_remove(cl->pd.timeout);
-			cl->pd.timeout = 0;
-		}
-		/**
-		 * INITIAL FILL 
-		 */
-		/* No need to idle time this, because it hardly does anything */
-		/* TODO: Detach model? */
-		if(cl->num_rows == 0){
-			GtkTreePath *path = NULL;
-			GtkTreeIter iter;        			
-			if(cl->playlist != NULL) printf("Errr error, leaking memory\n");
-			cl->playlist = g_malloc0(new_length * sizeof(mpd_Song *));
-
-			for(i=0; i< new_length;i++){
-				/* start sending signals */
+			GtkTreePath *path;
+			for(i=cl->num_rows-1; i >= new_length;i--)
+			{
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path, i);
-				iter.stamp = cl->stamp;
-				iter.user_data = cl->playlist[i];
-				iter.user_data2 = GINT_TO_POINTER(i);
-				iter.user_data3 = NULL;
-				gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl), path,
-						&iter);
+				gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl),path);
 				gtk_tree_path_free(path);
-				cl->num_rows++;
+				cl->num_rows--;
+				if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
+				/* To be sure */
+				cl->playlist[i] = NULL;
 			}
-			if(cl->num_rows != new_length)
-			{
-				printf("Nasty sync error on initial fill\n");
-			}
+			if(cl->num_rows != new_length) printf("Failed to purge items from list correctly\n");
+			/* resize array */
+			cl->playlist = g_realloc(cl->playlist,new_length*sizeof(mpd_Song *));
 		}
-		else
+		if(new_length > cl->num_rows)
 		{
-			/* Deleting rows */
-			/* Same, does this needs to be a background process? */
-			if(cl->num_rows > new_length){
-
-				GtkTreePath *path;
-				for(i=cl->num_rows-1; i >= new_length;i--)
-				{
-					path = gtk_tree_path_new();
-					gtk_tree_path_append_index(path, i);
-					gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl),path);
-					gtk_tree_path_free(path);
-					cl->num_rows--;
-					if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
-					/* To be sure */
-					cl->playlist[i] = NULL;
-				}
-				if(cl->num_rows != new_length) printf("Failed to purge items from list correctly\n");
-				/* resize array */
-				cl->playlist = g_realloc(cl->playlist,new_length*sizeof(mpd_Song *));
-			}
-			if(new_length > cl->num_rows)
+			/* resize array */
+			cl->playlist = g_realloc(cl->playlist,new_length*sizeof(mpd_Song *));
+			/* all added items must be initializes */
+			/* TODO, change this to a memset? */
+			for(i= cl->num_rows; i < new_length;i++)
 			{
-				/* resize array */
-				cl->playlist = g_realloc(cl->playlist,new_length*sizeof(mpd_Song *));
-				cl->num_rows = new_length;
+				cl->playlist[i] = NULL;
 			}
-
-
-			/* Now we need to process updated songs, 
-			 * What we do is, delete all cached data and give an update event */
-			/* For unpatched mpd I should directly move the mpd_Song
-			*/
-			/* this might be worth puttin in a background process */
-
-			for(data = mpd_playlist_get_changes(mi, cl->playlist_id);
-					data != NULL;
-					data = mpd_data_get_next(data))
-			{
-				GtkTreePath *path = NULL;
-				GtkTreeIter iter;
-				i = data->song->pos;
-				if(i >= cl->num_rows)
-				{
-					printf("%i - %i\n", i, cl->num_rows);
-					g_assert(i >= cl->num_rows);
-				}
-				if((cl->playlist[i]))
-				{
-					mpd_freeSong((cl->playlist[i]));
-					cl->playlist[i] = NULL;		
-				}
-				/* if where on a "unpatched" mpd we can directly add the song to the list */
-				if(data->song->file[0] != 'x' && data->song->file[1] != '\0')
-				{
-					cl->playlist[i] = data->song;	
-					data->song = NULL;
-				}
-				/* to be sure */
-				else{
-					cl->playlist[i] = NULL;
-				}
-
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path,i);
-				/* iter */
-				iter.stamp = cl->stamp;
-				iter.user_data = NULL;
-				iter.user_data2 = GINT_TO_POINTER(i);
-				iter.user_data3 = NULL;
-				/* changed */
-				gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),path, &iter);
-				gtk_tree_path_free(path);
-			}
+			cl->num_rows = new_length;
 		}
-		cl->playlist_id = mpd_playlist_get_playlist_id(mi);
 
-		if(cl->num_rows != new_length){
-			printf("Playlist sync error %i %i\n", cl->num_rows, new_length);
-			return;
-		}
-		if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
+
+		/* Now we need to process updated songs, 
+		 * What we do is, delete all cached data and give an update event */
+		/* For unpatched mpd I should directly move the mpd_Song
+		*/
+		/* this might be worth puttin in a background process */
+
+		for(data = mpd_playlist_get_changes(mi, cl->playlist_id);
+				data != NULL;
+				data = mpd_data_get_next(data))
 		{
-			cl->pd.total_length = 0;	
-			//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
-			cl->pd.timeout = g_timeout_add(10, (GSourceFunc)playlist_list_lazy_fill, cl);
+			GtkTreePath *path = NULL;
+			GtkTreeIter iter;
+			i = data->song->pos;
+			if(i >= cl->num_rows)
+			{
+				printf("%i - %i\n", i, cl->num_rows);
+				g_assert(i >= cl->num_rows);
+			}
+			if((cl->playlist[i]))
+			{
+				mpd_freeSong((cl->playlist[i]));
+				cl->playlist[i] = NULL;		
+			}
+			/* if where on a "unpatched" mpd we can directly add the song to the list */
+			if(data->song->file[0] != 'x' && data->song->file[1] != '\0')
+			{
+				cl->playlist[i] = data->song;	
+				data->song = NULL;
+			}
+			/* to be sure */
+			else{
+				cl->playlist[i] = NULL;
+			}
+
+			path = gtk_tree_path_new();
+			gtk_tree_path_append_index(path,i);
+			/* iter */
+			iter.stamp = cl->stamp;
+			iter.user_data = NULL;
+			iter.user_data2 = GINT_TO_POINTER(i);
+			iter.user_data3 = NULL;
+			/* changed */
+			gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),path, &iter);
+			gtk_tree_path_free(path);
 		}
+	}
+	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+
+	if(cl->num_rows != new_length){
+		printf("Playlist sync error %i %i\n", cl->num_rows, new_length);
 		return;
 	}
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
+	{
+		cl->pd.total_length = 0;	
+		//g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
+		cl->pd.timeout = g_timeout_add(10, (GSourceFunc)playlist_list_lazy_fill, cl);
+	}
+	return;
 }
 
 
@@ -515,7 +515,7 @@ static void playlist_list_finalize(GObject * object)
 	if(cl->playlist)g_free(cl->playlist);
 
 
-	
+
 	/* must chain up - finalize parent */
 	(*parent_class->finalize) (object);
 }
