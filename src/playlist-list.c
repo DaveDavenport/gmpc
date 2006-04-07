@@ -7,7 +7,6 @@
 #include "main.h"
 
 #include <glade/glade.h>
-extern GladeXML *pl3_xml;
 
 /* boring declarations of local functions */
 
@@ -102,9 +101,9 @@ gchar *playlist_list_get_markup(CustomList * cl)
 /* set the markup string */
 void playlist_list_set_markup(CustomList * cl, gchar * markup)
 {
+	int i=0;
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
-	MpdData *temp = cl->mpdata;
 	if (!markup)
 		return;
 	if (cl->markup)
@@ -113,15 +112,14 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 
 	/* start sending signals */
 	/* all rows are dirty now */
-	for (temp = mpd_data_get_first(temp); temp;
-			temp = mpd_data_get_next_real(temp, FALSE)) {
-
+	for(i=0; i<cl->num_rows;i++)
+	{
 		path = gtk_tree_path_new();
-		gtk_tree_path_append_index(path, temp->song->pos);
+		gtk_tree_path_append_index(path, i);
 		/* create an iter */
 		iter.stamp = cl->stamp;
-		iter.user_data = temp;
-		iter.user_data2 = GINT_TO_POINTER(temp->song->pos);
+		iter.user_data = cl->playlist[i];
+		iter.user_data2 = GINT_TO_POINTER(i);
 		iter.user_data3 = NULL;
 		/* propegate change */
 		gtk_tree_model_row_changed(GTK_TREE_MODEL(cl), path, &iter);
@@ -149,7 +147,6 @@ guint playlist_list_get_playtime(CustomList * cl)
 
 int playlist_list_lazy_fill(CustomList *cl)
 {
-	int i = 0;
 	if(cl->pd.total_length >= cl->num_rows ||
 			!mpd_check_connected(cl->pd.mi)){
 		cl->pd.timeout = 0;  
@@ -169,8 +166,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	/* if the state machine is doing something, tell it to restart */
 	int i=0;
 	int new_length =   mpd_playlist_get_playlist_length(mi);
-	MpdData *data =NULL;// mpd_playlist_get_changes(mi, cl->playlist_id);
-	cl->pd.cl = cl;
+	MpdData *data =NULL;
 	cl->pd.mi = mi;
 	cl->pd.tree = tree;
 	cl->pd.total_length = new_length;
@@ -184,11 +180,12 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	 * INITIAL FILL 
 	 */
 	/* No need to idle time this, because it hardly does anything */
-	/* TODO: Detach model? */
 	if(cl->num_rows == 0){
 		GtkTreePath *path = NULL;
 		GtkTreeIter iter;        			
-		if(cl->playlist != NULL) printf("Errr error, leaking memory\n");
+
+		if(tree)gtk_tree_view_set_model(tree, NULL);
+		if(cl->playlist != NULL) debug_printf(DEBUG_ERROR,"Errr error, leaking memory\n");
 		cl->playlist = g_malloc0(new_length * sizeof(mpd_Song *));
 
 		for(i=0; i< new_length;i++){
@@ -208,6 +205,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		{
 			printf("Nasty sync error on initial fill\n");
 		}
+		if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(cl));
 	}
 	else
 	{
@@ -300,9 +298,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
 	{
 		cl->pd.total_length = 0;	
-		cl->pd.timeout = g_idle_add_full(G_PRIORITY_LOW, playlist_list_lazy_fill, cl, NULL);
-/*		cl->pd.timeout = g_timeout_add(20, (GSourceFunc)playlist_list_lazy_fill, cl);
- *		*/
+		cl->pd.timeout = g_idle_add_full(G_PRIORITY_LOW, (GSourceFunc)playlist_list_lazy_fill, cl, NULL);
 	}
 	return;
 }
@@ -338,20 +334,13 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	g_free(list->playlist);
 	list->playlist = NULL;
 
-	list->mpdata = NULL;
 	list->playlist_id = -1;
 	list->num_rows = 0;
-	list->loaded = 0;
 	list->playtime = 0;
 	list->current_song_pos = -1;
 
 	if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(list));
 
-	/* kill update */
-	if(list->pd.state != PD_STATE_NONE)
-	{
-		list->pd.state = PD_STATE_STOP;
-	}
 }
 
 GType playlist_list_get_type(void)
@@ -472,8 +461,6 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_ICON_ID] = G_TYPE_STRING;
 
 	playlist_list->num_rows = 0;
-	playlist_list->loaded = 0;
-	playlist_list->mpdata = NULL;
 	playlist_list->playlist_id = -1;
 	playlist_list->current_song_pos = -1;
 
@@ -481,7 +468,6 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->pd.timeout = 0;
 
 	playlist_list->playtime = 0;
-	playlist_list->pd.state = PD_STATE_NONE; 
 	/* default markup */
 	playlist_list->markup = g_strdup("[%title%[ - %artist%]]|%shortfile%");
 
@@ -501,12 +487,6 @@ static void playlist_list_finalize(GObject * object)
 	int i=0;
 	CustomList *cl = PLAYLIST_LIST(object);
 	debug_printf(DEBUG_INFO, "Finalize playlist-backend\n");
-	/* free all records and free all memory used by the list */
-	/*	if(cl->mpdata)mpd_data_free(cl->mpdata);
-		if (cl->markup)
-		g_free(cl->markup);
-		*/
-	/* TODO NEEDS UPDATING */
 	for(i=0; i < cl->num_rows;i++)
 	{
 		if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
@@ -597,19 +577,7 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
 	/* Check if valid */
 	if (n >= playlist_list->num_rows || n < 0)
 		return FALSE;
-	/*
-	   data = playlist_list->mpdata;
-	   g_assert(data != NULL);
 
-	   if (n < data->song->pos)
-	   data = mpd_data_get_first(data);
-	   for (; data != NULL && data->song->pos != n;
-	   data = mpd_data_get_next_real(data, FALSE)) ;
-
-	   g_assert(data->song->pos == n);
-
-	   playlist_list->mpdata = data;
-	   */
 	/* We simply store a pointer to our custom record in the iter */
 	iter->stamp = playlist_list->stamp;
 	iter->user_data = playlist_list->playlist[n];
@@ -670,9 +638,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data2));
 
 		PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data2)] = song;
-		/*		if(pl3_xml)gtk_progress_bar_set_fraction(
-				glade_xml_get_widget(pl3_xml, "progressbar_dbg"), PLAYLIST_LIST(tree_model)->loaded/(float)(PLAYLIST_LIST(tree_model)->num_rows));
-				*/	
+
 	}	
 
 
@@ -836,7 +802,6 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
 
 	/* Set iter to first item in list */
 	iter->stamp = playlist_list->stamp;
-	iter->user_data = mpd_data_get_first((MpdData *) playlist_list->mpdata);
 
 	return TRUE;
 }

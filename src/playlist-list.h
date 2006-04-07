@@ -45,35 +45,14 @@ typedef struct _CustomList       CustomList;
 typedef struct _CustomListClass  CustomListClass;
 
 
-typedef enum {
-	PD_STATE_NONE,	
-	PD_STATE_STOP,
-	PD_STATE_RESTART,
-	PD_STATE_INITIAL_FILL,
-	PD_STATE_UPDATE,
-	PD_STATE_CLEANUP,
-	PD_STATE_BACKGROUND_FILL,
-	PD_STATE_ERROR
-}PDState;
+
 typedef struct {
-	int state;
-	CustomList *cl;
 	MpdObj *mi;
 	GtkTreeView *tree;
 	int total_length;
 	guint timeout;
 
 }pass_data;
-
-
-
-
-
-
-
-
-
-
 
 /* CustomList: this structure contains everything we need for our
  *             model implementation. You can add extra fields to
@@ -90,13 +69,11 @@ struct _CustomList
 
 	mpd_Song **playlist;
 	
-	guint			loaded;
-	guint		playlist_id;
-	gint		current_song_pos;
-	MpdData		*mpdata;
-	char *markup;
+	guint			playlist_id;
+	gint			current_song_pos;
+	char 			*markup;
 	gint            n_columns;
-	guint 		playtime;
+	guint 			playtime;
 
 	GType           column_types[PLAYLIST_LIST_N_COLUMNS];
 
