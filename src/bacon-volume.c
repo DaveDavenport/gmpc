@@ -583,7 +583,7 @@ bacon_volume_scale_value_changed (GtkRange * range)
   g_free (s);
 #else
   const char *s;
-  GdkPixbuf *buf;
+  GdkPixbuf *buf=NULL;
 
   if (val == adj->lower)
     s = "stock_volume-0";
@@ -604,9 +604,7 @@ bacon_volume_scale_value_changed (GtkRange * range)
   }
   else
   {
-	  buf = gtk_icon_theme_load_icon (button->theme, "gmpc-volume", w, 0, NULL);
-	  gtk_image_set_from_pixbuf (GTK_IMAGE (button->image), buf);
-	  g_object_unref(buf);
+	  gtk_image_set_from_stock(GTK_IMAGE (button->image), "gmpc-volume", button->size);
   }
 #endif
 

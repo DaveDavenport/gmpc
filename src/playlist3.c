@@ -1297,7 +1297,7 @@ void pl3_pixbuf_border(GdkPixbuf *pb)
 
 static void playlist_player_update_image(MpdObj *mi)
 {
-	if(mpd_check_connected(connection) && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
+	if(mpd_check_connected(connection)/* && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
 	{
 		gchar *path= NULL;
 		int ret = 0;      		
