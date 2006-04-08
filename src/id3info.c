@@ -157,7 +157,10 @@ void id3_cover_art_clicked()
 				g_object_unref(pb);           
 			}
 			else{
-				gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
+				gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
+				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),
+						"media-no-cover", -1);                                                   				
+				//gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
 			}			
 			if(path) g_free(path);
 		}                                                                                                    		
@@ -314,7 +317,10 @@ void set_text (GList * node)
 			g_object_unref(pb);
 		}
 		else{
-			gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
+			gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
+			//gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
+			gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),
+					"media-no-cover", -1);
 		}
 		if(path) g_free(path);
 		if(ret == COVER_ART_NOT_FETCHED)

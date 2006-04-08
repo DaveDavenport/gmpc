@@ -1279,6 +1279,7 @@
 
 	  <child>
 	    <widget class="GtkEventBox" id="cover_event">
+	      <property name="visible">True</property>
 	      <property name="visible_window">True</property>
 	      <property name="above_child">False</property>
 	      <signal name="button_press_event" handler="id3_cover_art_clicked" last_modification_time="Wed, 18 Jan 2006 16:57:10 GMT"/>

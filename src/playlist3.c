@@ -1623,6 +1623,15 @@ int pl3_progress_seek_stop()
 	}
 	return FALSE;
 }
+
+void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
+{
+/*	if(event->type == GDK_2BUTTON_PRESS)
+	{
+*/		id3_info();	
+/*	}*/
+}
+
 void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 {
 	int volume = bacon_volume_button_get_value(vol_but);

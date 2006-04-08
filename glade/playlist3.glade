@@ -368,6 +368,7 @@
 		  <property name="visible">True</property>
 		  <property name="visible_window">True</property>
 		  <property name="above_child">False</property>
+		  <signal name="button_press_event" handler="playlist_player_cover_art_pressed" last_modification_time="Sat, 08 Apr 2006 18:41:58 GMT"/>
 
 		  <child>
 		    <widget class="GtkImage" id="pp_cover_image">
