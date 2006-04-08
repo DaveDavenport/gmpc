@@ -1269,7 +1269,7 @@ static void playlist_player_update_image_callback(mpd_Song *song)
 	}
 }
 
-int pl3_pixbuf_border(GdkPixbuf *pb)
+void pl3_pixbuf_border(GdkPixbuf *pb)
 {
 	int x,y,width,height;
 	int pixel;

@@ -187,7 +187,7 @@ void pl3_current_playlist_destroy()
 {
 	if(pl3_cp_tree)
 	{
-		GList *iter,*cols = gtk_tree_view_get_columns(pl3_cp_tree);
+		GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
 		for(iter = cols; iter; iter = g_list_next(iter))
 		{
 			gpointer data = g_object_get_data(G_OBJECT(iter->data), "colid");
@@ -228,6 +228,11 @@ void pl3_current_playlist_browser_init()
 	//	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ICON));
 	columns[PL_COLUMN_ICON] = column;
+	sprintf(smallstring,"%i", PL_COLUMN_ICON);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}                                                                                                          	
 
 	/* markup column */
 	column = pl3_current_playlist_add_column(pl3_cp_tree,_("Markup"), PLAYLIST_LIST_COL_MARKUP,-1);
@@ -517,6 +522,54 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	g_free(str);
 }
 
+void pl3_current_playlist_checkbox_selected(GtkCheckButton *cb)
+{
+	int active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb));
+	GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN(g_object_get_data(G_OBJECT(cb), "column"));
+	int colid = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "colid"));
+	gchar  *string = g_strdup_printf("%i", colid);
+	gtk_tree_view_column_set_visible(column, active);
+	cfg_set_single_value_as_int(config, "current-playlist-column-enable",string, active);	
+	g_free(string);
+}
+
+void pl3_current_playlist_enable_columns()
+{
+	GtkWidget *dialog = NULL;
+	GList *cols, *iter;
+	GtkWidget *vbox;
+	GtkWidget *label;
+	dialog = gtk_dialog_new_with_buttons("Select Columns", 
+			NULL,
+			GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+			GTK_STOCK_CLOSE,
+			GTK_RESPONSE_OK,
+			NULL);
+
+	vbox = gtk_vbox_new(FALSE,6);
+	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
+
+	label = gtk_label_new("Enable/Disable columns");
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
+	gtk_container_set_border_width(GTK_CONTAINER(dialog), 3);
+	gtk_container_set_border_width(GTK_CONTAINER(vbox), 9);
+
+
+	cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
+	for(iter = cols; iter; iter = g_list_next(iter))
+	{
+		GtkWidget *but = gtk_check_button_new_with_label(gtk_tree_view_column_get_title(GTK_TREE_VIEW_COLUMN(iter->data)));		
+		g_object_set_data(G_OBJECT(but), "column", iter->data);
+		gtk_box_pack_start(GTK_BOX(vbox), but, FALSE, TRUE,0);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(but), gtk_tree_view_column_get_visible(GTK_TREE_VIEW_COLUMN(iter->data)));
+		g_signal_connect(G_OBJECT(but), "toggled", G_CALLBACK(pl3_current_playlist_checkbox_selected), NULL);
+
+	}
+	g_list_free(cols);
+	gtk_widget_show_all(dialog);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+}
 int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -556,6 +609,25 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_show_info), NULL);		
+
+
+
+		/* add the shuffle widget */
+		item = gtk_image_menu_item_new_with_label("Columns");
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_enable_columns), NULL);		
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+
+
+
+
+
+
+
+
+		
 
 
 		gtk_widget_show_all(menu);
