@@ -783,13 +783,12 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
 {
 	CustomList *playlist_list;
 
-	g_return_val_if_fail(parent == NULL, FALSE);
+	//g_return_val_if_fail(parent == NULL, FALSE);
+	
 
 	/* this is a list, nodes have no children */
 	if (parent)
 		return FALSE;
-
-	/* parent == NULL is a special case; we need to return the first top-level row */
 
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), FALSE);
 
@@ -801,6 +800,8 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
 
 	/* Set iter to first item in list */
 	iter->stamp = playlist_list->stamp;
+	iter->user_data = playlist_list->playlist[0];
+	iter->user_data2 = GINT_TO_POINTER(0);
 
 	return TRUE;
 }
