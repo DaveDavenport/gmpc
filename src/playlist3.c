@@ -36,7 +36,7 @@
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
 
-
+void id3_info();
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
