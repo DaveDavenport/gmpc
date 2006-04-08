@@ -225,7 +225,7 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",64);
 					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
-					g_object_unref(pb);
+					if(pb)g_object_unref(pb);
 
 				}
 				if(coverpath)g_free(coverpath);
@@ -327,7 +327,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 						(CoverArtCallback)pl3_artist_browser_cover_art_fetched,rowref);
 				gtk_tree_path_free(path);
 			}
-			g_object_unref(pb);
+			if(pb)g_object_unref(pb);
 			if(coverpath) g_free(coverpath);
 			data = mpd_data_get_next(data);
 		}
@@ -364,7 +364,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 							PL3_AB_TYPE,	PL3_ENTRY_SONG,
 							PL3_AB_ICON,	pb,
 							-1);
-					g_object_unref(pb);
+					if(pb)g_object_unref(pb);
 				}
 				else albums++;
 			}
@@ -412,7 +412,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 							PL3_AB_TYPE, PL3_ENTRY_SONG,
 							PL3_AB_ICON,pb,
 							-1);
-					g_object_unref(pb);
+					if(pb)g_object_unref(pb);
 
 				}
 			}
