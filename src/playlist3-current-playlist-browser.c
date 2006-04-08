@@ -233,6 +233,7 @@ void pl3_current_playlist_browser_init()
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}                                                                                                          	
+	gtk_tree_view_column_set_reorderable(column, TRUE);
 
 	/* markup column */
 	column = pl3_current_playlist_add_column(pl3_cp_tree,_("Markup"), PLAYLIST_LIST_COL_MARKUP,-1);
@@ -321,6 +322,12 @@ void pl3_current_playlist_browser_init()
 
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree)), GTK_SELECTION_MULTIPLE);
+
+
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist", "header",TRUE))
+	{
+		gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
+	}
 
 	/* Disable search, we have a custom search */
 	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
@@ -522,6 +529,15 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	g_free(str);
 }
 
+void pl3_current_playlist_header_toggle(GtkCheckButton *cb)
+{
+	int active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb));
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree),
+			active);
+	cfg_set_single_value_as_int(config, "current-playlist", "header", active);
+
+
+}
 void pl3_current_playlist_checkbox_selected(GtkCheckButton *cb)
 {
 	int active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb));
@@ -558,13 +574,26 @@ void pl3_current_playlist_enable_columns()
 	cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
 	for(iter = cols; iter; iter = g_list_next(iter))
 	{
-		GtkWidget *but = gtk_check_button_new_with_label(gtk_tree_view_column_get_title(GTK_TREE_VIEW_COLUMN(iter->data)));		
+		GtkWidget *but = NULL;
+		int colid = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(iter->data), "colid"));
+		if(colid != PL_COLUMN_ICON)
+		{
+			but = gtk_check_button_new_with_label(gtk_tree_view_column_get_title(GTK_TREE_VIEW_COLUMN(iter->data)));		
+		}else{
+			but  = gtk_check_button_new_with_label(_("Status Icon"));			
+		}
 		g_object_set_data(G_OBJECT(but), "column", iter->data);
 		gtk_box_pack_start(GTK_BOX(vbox), but, FALSE, TRUE,0);
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(but), gtk_tree_view_column_get_visible(GTK_TREE_VIEW_COLUMN(iter->data)));
 		g_signal_connect(G_OBJECT(but), "toggled", G_CALLBACK(pl3_current_playlist_checkbox_selected), NULL);
 
 	}
+	label = gtk_check_button_new_with_label(_("Show Column Headers"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),
+			gtk_tree_view_get_headers_visible(GTK_TREE_VIEW(pl3_cp_tree)));
+	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
+	g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(pl3_current_playlist_header_toggle), NULL);
+	
 	g_list_free(cols);
 	gtk_widget_show_all(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
