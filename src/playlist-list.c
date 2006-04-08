@@ -783,8 +783,7 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
 {
 	CustomList *playlist_list;
 
-	g_return_val_if_fail(parent == NULL
-			|| parent->user_data != NULL, FALSE);
+	g_return_val_if_fail(parent == NULL, FALSE);
 
 	/* this is a list, nodes have no children */
 	if (parent)

@@ -26,7 +26,6 @@
 #include <regex.h>
 #include "plugin.h"
 
-
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
@@ -144,10 +143,55 @@ void pl3_current_playlist_search_activate()
 	}
 }
 
-void pl3_current_playlist_browser_init()
+static GtkTreeViewColumn * pl3_current_playlist_add_column(GtkWidget *tree, char *columnname, int valuerow, int position)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
+	GValue value = {0,};
+
+	renderer = gtk_cell_renderer_text_new();
+	column = gtk_tree_view_column_new_with_attributes (columnname, renderer,
+			"text", valuerow, 
+			"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT,
+			NULL);
+	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_set_fixed_width(column, 200);
+	gtk_tree_view_column_set_resizable(column, TRUE);
+
+	g_value_init(&value, G_TYPE_INT);
+	g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
+
+
+//	gtk_tree_view_insert_column (GTK_TREE_VIEW (tree), column,position);                                         	  		
+	gtk_tree_view_column_set_reorderable(column, TRUE);
+	return column;
+}
+
+void pl3_current_playlist_column_changed(GtkTreeView *tree, GtkTreeViewColumn **columns)
+{
+	int position = 0;
+	GList *iter,*cols = gtk_tree_view_get_columns(tree);
+	printf("changed\n");
+	for(iter = cols; iter; iter = g_list_next(iter))
+	{
+		gpointer data = g_object_get_data(G_OBJECT(iter->data), "colid");
+		int colid = GPOINTER_TO_INT(data);
+		char *string = g_strdup_printf("%i", position);
+		cfg_set_single_value_as_int(config, "current-playlist-column-pos", string, colid);
+		position++;
+		g_free(string);
+	}
+	g_list_free(cols);
+}
+
+
+void pl3_current_playlist_browser_init()
+{
+	int position = 0;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column = NULL;
+	GtkTreeViewColumn *columns[PL_COLUMN_TOTAL];
 
 	GValue value = {-1,};
 	/* set up the tree */
@@ -162,98 +206,80 @@ void pl3_current_playlist_browser_init()
 	g_value_init(&value, G_TYPE_FLOAT);
 	g_value_set_float(&value, 0.0);
 	g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	/* set value for ALL */
-	memset(&value, 0, sizeof(value));
-	g_value_init(&value, G_TYPE_BOOLEAN);
-	g_value_set_boolean(&value, TRUE);//PANGO_WEIGHT_ULTRABOLD);
-	g_object_set_property(G_OBJECT(renderer), "weight-set", &value);
 	gtk_tree_view_column_set_fixed_width(column, 20);
-	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);	
 
- 	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
-   	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "morecolumnstyle", TRUE))
+//	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ICON));
+	columns[PL_COLUMN_ICON] = column;
+
+	/* markup column */
+	column = pl3_current_playlist_add_column(pl3_cp_tree,_("Markup"), PLAYLIST_LIST_COL_MARKUP,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "markup-column", FALSE))
 	{
-		gtk_tree_view_column_set_attributes (column,renderer,
-				"text",PLAYLIST_LIST_COL_MARKUP /*SONG_TITLE*/, 
-				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
-				NULL);
-	
-
-		memset(&value, 0, sizeof(value));
-		g_value_init(&value, G_TYPE_INT);
-		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-		gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree), FALSE);
+		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
-	else{
-		renderer = gtk_cell_renderer_text_new();
-		column = gtk_tree_view_column_new_with_attributes ("Artist", renderer,
-				"text", PLAYLIST_LIST_COL_SONG_ARTIST, 
-				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
-				NULL);
-		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_column_set_fixed_width(column, 200);
-		gtk_tree_view_column_set_resizable(column, TRUE);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  		
-		memset(&value, 0, sizeof(value));
-		g_value_init(&value, G_TYPE_INT);
-		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-
-
-		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes ("Title", renderer,
-				"text", PLAYLIST_LIST_COL_SONG_TITLEFILE, 
-				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
-				NULL);
-		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_column_set_fixed_width(column, 200);
-		gtk_tree_view_column_set_resizable(column, TRUE);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
-		memset(&value, 0, sizeof(value));
-		g_value_init(&value, G_TYPE_INT);
-		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);		
-
-
-		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes ("Album", renderer,
-				"text", PLAYLIST_LIST_COL_SONG_ALBUM, 
-				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
-				NULL);
-		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_column_set_fixed_width(column, 200);
-
-		gtk_tree_view_column_set_resizable(column, TRUE);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  				
-
-		memset(&value, 0, sizeof(value));
-		g_value_init(&value, G_TYPE_INT);
-		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-
-
-		renderer = gtk_cell_renderer_text_new ();
-		column = gtk_tree_view_column_new_with_attributes (_("Genre"), renderer,
-				"text", PLAYLIST_LIST_COL_SONG_GENRE, 
-				"weight", PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT/*WEIGHT_INT*/,
-				NULL);
-		gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_column_set_fixed_width(column, 200);
-
-		gtk_tree_view_column_set_resizable(column, TRUE);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  				
-
-		memset(&value, 0, sizeof(value));
-		g_value_init(&value, G_TYPE_INT);
-		g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-		g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_MARKUP));
+	columns[PL_COLUMN_MARKUP] = column;
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Artist"), PLAYLIST_LIST_COL_SONG_ARTIST,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "artist-column", TRUE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ARTIST));
+	columns[PL_COLUMN_ARTIST] = column;
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Track"), PLAYLIST_LIST_COL_SONG_TRACK,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "track-column", FALSE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}                                                                                                     	
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_TRACK));
+	columns[PL_COLUMN_TRACK] = column;
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Title"), PLAYLIST_LIST_COL_SONG_TITLEFILE,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "title-column", TRUE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_TITLEFILE));
+	columns[PL_COLUMN_TITLEFILE] = column;
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Album"), PLAYLIST_LIST_COL_SONG_ALBUM,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "album-column", TRUE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ALBUM));
+	columns[PL_COLUMN_ALBUM] = column;
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Genre"), PLAYLIST_LIST_COL_SONG_GENRE,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "genre-column", TRUE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_GENRE));
+	columns[PL_COLUMN_GENRE] = column;
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Composer"), PLAYLIST_LIST_COL_SONG_COMPOSER,-1);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "composer-column", FALSE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}                                                                                                     	
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_COMPOSER));
+	columns[PL_COLUMN_COMPOSER] = column;
+
+	for(position=0; position<PL_COLUMN_TOTAL;position++)
+	{
+		gchar *string = g_strdup_printf("%i", position);
+		int pos = cfg_get_single_value_as_int_with_default(config, "current-playlist-column-pos", string, position);
+		gtk_tree_view_append_column(GTK_TREE_VIEW(pl3_cp_tree), columns[pos]);
+		g_free(string);
+	}
+
+
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
+	g_signal_connect(G_OBJECT(pl3_cp_tree),"columns-changed", G_CALLBACK(pl3_current_playlist_column_changed), columns);
 
 
 
@@ -504,6 +530,8 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_show_info), NULL);		
 
 
+
+
 		/*	
 			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -577,11 +605,11 @@ void pl3_current_playlist_browser_selected()
 
 	gtk_widget_grab_focus(pl3_cp_tree);
 	/*
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
-	{
-		pl3_current_playlist_browser_scroll_to_current_song();
-	}
-	*/
+	   if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
+	   {
+	   pl3_current_playlist_browser_scroll_to_current_song();
+	   }
+	   */
 }
 void pl3_current_playlist_browser_unselected()
 {

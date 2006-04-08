@@ -70,5 +70,15 @@ int pl3_cat_get_selected_browser();
 void pl3_updating_changed(MpdObj *mi, int updating);
 void pl3_database_changed();
 
-extern GQueue *pl3_queue;
+enum PlaylistColums {
+	PL_COLUMN_ICON,
+	PL_COLUMN_MARKUP,
+	PL_COLUMN_ARTIST,
+	PL_COLUMN_TRACK,
+	PL_COLUMN_TITLEFILE,
+	PL_COLUMN_ALBUM,	
+	PL_COLUMN_GENRE,
+	PL_COLUMN_COMPOSER,
+	PL_COLUMN_TOTAL
+};
 #endif
