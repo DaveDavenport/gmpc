@@ -148,7 +148,6 @@ static GtkTreeViewColumn * pl3_current_playlist_add_column(GtkWidget *tree, char
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value = {0,};
-
 	renderer = gtk_cell_renderer_text_new();
 	column = gtk_tree_view_column_new_with_attributes (columnname, renderer,
 			"text", valuerow, 
@@ -168,11 +167,10 @@ static GtkTreeViewColumn * pl3_current_playlist_add_column(GtkWidget *tree, char
 	return column;
 }
 
-void pl3_current_playlist_column_changed(GtkTreeView *tree, GtkTreeViewColumn **columns)
+void pl3_current_playlist_column_changed(GtkTreeView *tree)
 {
 	int position = 0;
 	GList *iter,*cols = gtk_tree_view_get_columns(tree);
-	printf("changed\n");
 	for(iter = cols; iter; iter = g_list_next(iter))
 	{
 		gpointer data = g_object_get_data(G_OBJECT(iter->data), "colid");
@@ -185,6 +183,23 @@ void pl3_current_playlist_column_changed(GtkTreeView *tree, GtkTreeViewColumn **
 	g_list_free(cols);
 }
 
+void pl3_current_playlist_destroy()
+{
+	if(pl3_cp_tree)
+	{
+		GList *iter,*cols = gtk_tree_view_get_columns(pl3_cp_tree);
+		for(iter = cols; iter; iter = g_list_next(iter))
+		{
+			gpointer data = g_object_get_data(G_OBJECT(iter->data), "colid");
+			int colid = GPOINTER_TO_INT(data);
+			gchar *string = g_strdup_printf("%i", colid);
+			int width = gtk_tree_view_column_get_width(GTK_TREE_VIEW_COLUMN(iter->data));
+			cfg_set_single_value_as_int(config, "current-playlist-column-width", string,width);
+			g_free(string);
+		}
+		g_list_free(cols);
+	}
+}
 
 void pl3_current_playlist_browser_init()
 {
@@ -209,7 +224,7 @@ void pl3_current_playlist_browser_init()
 	gtk_tree_view_column_set_fixed_width(column, 20);
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);	
 
-//	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
+	//	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ICON));
 	columns[PL_COLUMN_ICON] = column;
 
@@ -272,16 +287,18 @@ void pl3_current_playlist_browser_init()
 	for(position=0; position<PL_COLUMN_TOTAL;position++)
 	{
 		gchar *string = g_strdup_printf("%i", position);
+		int size;
 		int pos = cfg_get_single_value_as_int_with_default(config, "current-playlist-column-pos", string, position);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(pl3_cp_tree), columns[pos]);
 		g_free(string);
+		string = g_strdup_printf("%i", pos);
+		size = 	cfg_get_single_value_as_int_with_default(config, "current-playlist-column-width", string,200);
+		gtk_tree_view_column_set_fixed_width(columns[pos], (size>0)?size:200);	
 	}
 
 
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
-	g_signal_connect(G_OBJECT(pl3_cp_tree),"columns-changed", G_CALLBACK(pl3_current_playlist_column_changed), columns);
-
-
+	g_signal_connect(G_OBJECT(pl3_cp_tree),"columns-changed", G_CALLBACK(pl3_current_playlist_column_changed), NULL);
 
 	/* insert the column in the tree */
 
