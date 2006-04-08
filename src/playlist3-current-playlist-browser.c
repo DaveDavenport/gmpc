@@ -204,6 +204,7 @@ void pl3_current_playlist_destroy()
 void pl3_current_playlist_browser_init()
 {
 	int position = 0;
+	gchar smallstring[6];
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GtkTreeViewColumn *columns[PL_COLUMN_TOTAL];
@@ -230,14 +231,17 @@ void pl3_current_playlist_browser_init()
 
 	/* markup column */
 	column = pl3_current_playlist_add_column(pl3_cp_tree,_("Markup"), PLAYLIST_LIST_COL_MARKUP,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "markup-column", FALSE))
+	sprintf(smallstring,"%i", PL_COLUMN_MARKUP);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_MARKUP));
+
 	columns[PL_COLUMN_MARKUP] = column;
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Artist"), PLAYLIST_LIST_COL_SONG_ARTIST,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "artist-column", TRUE))
+	sprintf(smallstring,"%i", PL_COLUMN_ARTIST);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -245,7 +249,8 @@ void pl3_current_playlist_browser_init()
 	columns[PL_COLUMN_ARTIST] = column;
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Track"), PLAYLIST_LIST_COL_SONG_TRACK,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "track-column", FALSE))
+	sprintf(smallstring,"%i", PL_COLUMN_TRACK);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}                                                                                                     	
@@ -253,7 +258,8 @@ void pl3_current_playlist_browser_init()
 	columns[PL_COLUMN_TRACK] = column;
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Title"), PLAYLIST_LIST_COL_SONG_TITLEFILE,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "title-column", TRUE))
+	sprintf(smallstring,"%i", PL_COLUMN_TITLEFILE);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -261,7 +267,8 @@ void pl3_current_playlist_browser_init()
 	columns[PL_COLUMN_TITLEFILE] = column;
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Album"), PLAYLIST_LIST_COL_SONG_ALBUM,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "album-column", TRUE))
+	sprintf(smallstring,"%i", PL_COLUMN_ALBUM);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable",smallstring, TRUE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -269,7 +276,8 @@ void pl3_current_playlist_browser_init()
 	columns[PL_COLUMN_ALBUM] = column;
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Genre"), PLAYLIST_LIST_COL_SONG_GENRE,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "genre-column", TRUE))
+	sprintf(smallstring,"%i", PL_COLUMN_GENRE);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -277,7 +285,8 @@ void pl3_current_playlist_browser_init()
 	columns[PL_COLUMN_GENRE] = column;
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Composer"), PLAYLIST_LIST_COL_SONG_COMPOSER,-1);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column", "composer-column", FALSE))
+	sprintf(smallstring,"%i", PL_COLUMN_COMPOSER);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}                                                                                                     	
@@ -286,14 +295,16 @@ void pl3_current_playlist_browser_init()
 
 	for(position=0; position<PL_COLUMN_TOTAL;position++)
 	{
-		gchar *string = g_strdup_printf("%i", position);
+		sprintf(smallstring, "%i", position);
 		int size;
-		int pos = cfg_get_single_value_as_int_with_default(config, "current-playlist-column-pos", string, position);
+		int pos = cfg_get_single_value_as_int_with_default(config, "current-playlist-column-pos",smallstring, position);
 		gtk_tree_view_append_column(GTK_TREE_VIEW(pl3_cp_tree), columns[pos]);
-		g_free(string);
-		string = g_strdup_printf("%i", pos);
-		size = 	cfg_get_single_value_as_int_with_default(config, "current-playlist-column-width", string,200);
-		gtk_tree_view_column_set_fixed_width(columns[pos], (size>0)?size:200);	
+		sprintf(smallstring, "%i", pos);
+		size = 	cfg_get_single_value_as_int_with_default(config, "current-playlist-column-width", smallstring,200);
+		if(pos != PL_COLUMN_ICON)
+		{
+			gtk_tree_view_column_set_fixed_width(columns[pos], (size>0)?size:200);	
+		}
 	}
 
 
@@ -545,27 +556,6 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_show_info), NULL);		
-
-
-
-
-		/*	
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_cut), NULL);		
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY,NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_copy), NULL);		
-
-
-			if(g_queue_get_length(pl3_queue)>0)
-			{
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE,NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clipboard_paste), NULL);		
-
-			}
-			*/	
 
 
 		gtk_widget_show_all(menu);
