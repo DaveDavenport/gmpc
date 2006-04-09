@@ -589,8 +589,8 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
 
 	/* We simply store a pointer to our custom record in the iter */
 	iter->stamp = playlist_list->stamp;
-	iter->user_data = playlist_list->playlist[n];
-	iter->user_data2 = GINT_TO_POINTER(n);	
+	iter->user_data = GINT_TO_POINTER(n);	
+	iter->user_data2 = NULL;	/* unused */
 	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
@@ -610,12 +610,11 @@ static GtkTreePath *playlist_list_get_path(GtkTreeModel * tree_model,
 
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), NULL);
 	g_return_val_if_fail(iter != NULL, NULL);
-	g_return_val_if_fail(iter->user_data != NULL, NULL);
 
 
 
 	path = gtk_tree_path_new();
-	gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data2));
+	gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data));
 
 	return path;
 }
@@ -638,13 +637,13 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 
 	g_value_init(value, PLAYLIST_LIST(tree_model)->column_types[column]);
 
-	song = PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data2)];
+	song = PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)];
 
 
 	if(song == NULL) {
-		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data2));
+		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data));
 
-		PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data2)] = song;
+		PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)] = song;
 
 	}	
 
@@ -759,7 +758,7 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 
 	playlist_list = PLAYLIST_LIST(tree_model);
 
-	row = GPOINTER_TO_INT(iter->user_data2);
+	row = GPOINTER_TO_INT(iter->user_data);
 	row++;
 	
 	/* Is row still a valid list row? */
@@ -767,8 +766,9 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 		return FALSE;
 
 	iter->stamp = playlist_list->stamp;
-	iter->user_data = playlist_list->playlist[row];
-	iter->user_data2 = GINT_TO_POINTER(row);
+	iter->user_data = GINT_TO_POINTER(row);
+	iter->user_data2 = NULL;	/* unused */
+	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
 }
@@ -804,8 +804,9 @@ playlist_list_iter_children(GtkTreeModel * tree_model,
 
 	/* Set iter to first item in list */
 	iter->stamp = playlist_list->stamp;
-	iter->user_data = playlist_list->playlist[0];
-	iter->user_data2 = GINT_TO_POINTER(0);
+	iter->user_data = GINT_TO_POINTER(0);
+	iter->user_data2 = NULL;	/* unused */
+	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
 }
@@ -842,7 +843,7 @@ playlist_list_iter_n_children(GtkTreeModel * tree_model, GtkTreeIter * iter)
 	CustomList *playlist_list;
 
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), -1);
-	g_return_val_if_fail(iter == NULL || iter->user_data != NULL, FALSE);
+	g_return_val_if_fail(iter == NULL, FALSE);
 
 	playlist_list = PLAYLIST_LIST(tree_model);
 
@@ -885,8 +886,9 @@ playlist_list_iter_nth_child(GtkTreeModel * tree_model,
 
 	/* to improve lineair searches? */
 	iter->stamp = playlist_list->stamp;
-	iter->user_data = playlist_list->playlist[n];
-	iter->user_data2 = GINT_TO_POINTER(n);
+	iter->user_data = GINT_TO_POINTER(n);
+	iter->user_data2 = NULL;	/* unused */
+	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
 }
