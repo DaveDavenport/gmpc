@@ -169,6 +169,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	MpdData *data =NULL;
 	cl->pd.mi = mi;
 	cl->pd.tree = tree;
+	int old_length = cl->pd.total_length;
 	cl->pd.total_length = new_length;
 
 	if(cl->pd.timeout)
@@ -285,8 +286,16 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			iter.user_data2 = GINT_TO_POINTER(i);
 			iter.user_data3 = NULL;
 			/* changed */
-			gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),path, &iter);
-			gtk_tree_path_free(path);
+			if((data->song->pos) > (old_length-1))
+			{
+				gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl),path, &iter);
+				gtk_tree_path_free(path);
+			}
+			else
+			{
+				gtk_tree_model_row_changed(GTK_TREE_MODEL(cl),path, &iter);
+				gtk_tree_path_free(path);
+			}
 		}
 	}
 	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
