@@ -1645,3 +1645,14 @@ void id3_info()
 	if(!mpd_check_connected(connection)) return;
 	call_id3_window(mpd_player_get_current_song_id(connection));
 }
+
+void about_window()
+{
+	gchar *path = gmpc_get_full_glade_path("playlist3.glade");
+	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
+	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
+	g_free(path);
+	gtk_dialog_run(dialog);
+	gtk_widget_destroy(dialog);
+	g_object_unref(diagxml);
+}

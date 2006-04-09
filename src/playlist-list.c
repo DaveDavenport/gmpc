@@ -590,7 +590,7 @@ static gboolean playlist_list_get_iter(GtkTreeModel * tree_model,
 	/* We simply store a pointer to our custom record in the iter */
 	iter->stamp = playlist_list->stamp;
 	iter->user_data = playlist_list->playlist[n];
-	iter->user_data2 = GINT_TO_POINTER(n);	/* unused */
+	iter->user_data2 = GINT_TO_POINTER(n);	
 	iter->user_data3 = NULL;	/* unused */
 
 	return TRUE;
@@ -638,10 +638,8 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 
 	g_value_init(value, PLAYLIST_LIST(tree_model)->column_types[column]);
 
-	//	data = (MpdData *) iter->user_data;
 	song = PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data2)];
 
-	//g_return_if_fail(data != NULL);
 
 	if(song == NULL) {
 		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data2));
@@ -756,15 +754,15 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 	int row = 0;
 	g_return_val_if_fail(CUSTOM_IS_LIST(tree_model), FALSE);
 
-	if (iter == NULL /*|| iter->user_data == NULL*/)
+	if (iter == NULL )
 		return FALSE;
 
 	playlist_list = PLAYLIST_LIST(tree_model);
 
-	//	data = (MpdData *) iter->user_data;
 	row = GPOINTER_TO_INT(iter->user_data2);
 	row++;
-	/* Is this the last record in the list? */
+	
+	/* Is row still a valid list row? */
 	if (row >= PLAYLIST_LIST(tree_model)->num_rows)
 		return FALSE;
 
@@ -885,18 +883,7 @@ playlist_list_iter_nth_child(GtkTreeModel * tree_model,
 	if (n >= playlist_list->num_rows)
 		return FALSE;
 
-	/*: if n > data->song->pos then up, else get the first item */
-	/*	data = (MpdData *) playlist_list->mpdata;
-		if (data->song->pos > n)
-		data = mpd_data_get_first(data);
-		for (; data->song->pos != n &&
-		!mpd_data_is_last(data); data = mpd_data_get_next(data)) ;
-
-		g_assert(data != NULL);
-		g_assert(data->song->pos == n);
-		*/
 	/* to improve lineair searches? */
-	//	playlist_list->mpdata = data;
 	iter->stamp = playlist_list->stamp;
 	iter->user_data = playlist_list->playlist[n];
 	iter->user_data2 = GINT_TO_POINTER(n);
