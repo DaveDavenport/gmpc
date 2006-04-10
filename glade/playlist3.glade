@@ -1469,19 +1469,4 @@
   </child>
 </widget>
 
-<widget class="GtkAboutDialog" id="aboutdialog">
-  <property name="visible">True</property>
-  <property name="destroy_with_parent">True</property>
-  <property name="name" translatable="yes">gmpc</property>
-  <property name="copyright" translatable="yes">Copyright 2003-2006 by Qball Cow</property>
-  <property name="license" translatable="yes">GPL v2
-See: http://www.gnu.org/licenses/gpl.txt</property>
-  <property name="wrap_license">False</property>
-  <property name="website">http://qballcow.nl</property>
-  <property name="authors">Qball Cow &lt;Qball@qballcow.nl&gt;</property>
-  <property name="artists">Chromakode</property>
-  <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
-  <property name="logo">gmpc.png</property>
-</widget>
-
 </glade-interface>

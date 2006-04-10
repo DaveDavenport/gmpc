@@ -13,6 +13,7 @@ void pl3_push_rsb_message(gchar *string);
 void pl3_disconnect();
 void pl3_cat_sel_changed();
 int pl3_close();
+int pl3_hide();
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event);
 
 enum{
@@ -29,18 +30,6 @@ enum{
 	/* more space for options, like shoutcast */
 } tree_type;
 
-
-/* for the tree in the right pane. */
-enum pl3_store_types
-{
-	PL3_SONG_ID,
-	PL3_SONG_POS,
-	PL3_SONG_TITLE,
-	PL3_WEIGHT_INT,
-	PL3_SONG_STOCK_ID,
-	PL3_UNKOWN, /* song id for pl3_store */
-	PL3_NROWS
-} pl3_store_type;
 
 gboolean toggle_playlist3(GtkToggleButton *tb);
 
@@ -69,6 +58,7 @@ void pl3_show_song_info ();
 int pl3_cat_get_selected_browser();
 void pl3_updating_changed(MpdObj *mi, int updating);
 void pl3_database_changed();
+void playlist_connection_changed(MpdObj *mi, int connect);
 
 enum PlaylistColums {
 	PL_COLUMN_ICON,

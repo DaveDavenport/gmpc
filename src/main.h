@@ -44,7 +44,9 @@ extern int num_plugins;
 
 /* the plugins :D */
 extern gmpcPlugin connection_plug;
+/*
 extern gmpcPlugin about_plug;
+*/
 extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
 
@@ -100,6 +102,9 @@ int plugin_get_pos(int id);
 
 
 
-void show_error_message(gchar *string);
+void show_error_message(gchar *string, int block);
 int cover_art_edit_cover(gchar *artist, gchar *album);
+
+
+void tray_icon_connection_changed(MpdObj *mi, int connect);
 #endif

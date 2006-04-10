@@ -461,7 +461,6 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	pl3_fb_lf_pb *pb = NULL;
 		MpdData* data =NULL;
 	char *path = NULL, *icon = NULL;
-	int sub_folder = 0;
 	GtkTreeIter iter;
 	long  unsigned time=0;
 	int support_playlist = (mpd_server_check_command_allowed(connection, "listplaylistinfo") == MPD_SERVER_COMMAND_ALLOWED);
@@ -711,19 +710,18 @@ void pl3_file_browser_show_info()
 void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
 	GtkTreeIter iter;
-	gchar *song_id;
+	gchar *song_path;
 	gint r_type;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_SONG_ID,&song_id, PL3_SONG_POS, &r_type, -1);
-	if(song_id == NULL)
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FB_PATH,&song_path, PL3_FB_TYPE, &r_type, -1);
+	if(song_path == NULL)
 	{
-
 		return;
 	}
 	if(r_type&PL3_ENTRY_PLAYLIST)
 	{
 		pl3_push_statusbar_message("Loaded playlist");
-		mpd_playlist_queue_load(connection, song_id);
+		mpd_playlist_queue_load(connection, song_path);
 	}
 	else if (r_type&PL3_ENTRY_DIRECTORY)
 	{
@@ -742,7 +740,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 				do{
 					char *name = NULL;
 					gtk_tree_model_get(model, &citer, 2, &name, -1);
-					if(strcmp(name, song_id) == 0)
+					if(strcmp(name, song_path) == 0)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
@@ -777,10 +775,10 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	else
 	{
 		pl3_push_statusbar_message("Added a song");
-		mpd_playlist_queue_add(connection, song_id);
+		mpd_playlist_queue_add(connection, song_path);
 	}
 	mpd_playlist_queue_commit(connection);
-	g_free(song_id);
+	g_free(song_path);
 }
 
 

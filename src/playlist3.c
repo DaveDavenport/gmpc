@@ -790,6 +790,11 @@ void create_playlist3 ()
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 
+	/**
+	 * If the playlist allready exists,
+	 * It is probly coming from a hidden state,
+	 * so re-position the window 
+	 */
 	if(pl3_xml != NULL)
 	{
 		pl3_show_and_position_window();
@@ -799,28 +804,30 @@ void create_playlist3 ()
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);
 	g_free(path);
+	/*
+	 * Check if the file is loaded, if not then show an error message and abort the program
+	 */
 	if(pl3_xml == NULL)
 	{
 		debug_printf(DEBUG_ERROR, "Failed to open playlist3.glade.\n");
-		return;
+		show_error_message(_("Failed to open the interface description file!\n"
+					"Please reinstall gmpc"), TRUE);
+		abort();
 	}
-	/* restore the window's position and size */
+
+
+	/* restore the window's position and size, if the user wants this.*/
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
 	{
+		/* Load values from config file */
 		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
 		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
 		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
 		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+		/* restore location + position */
+		pl3_show_and_position_window();
 
-		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
-			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.x, pl3_wsize.y);
-		}
-		if(pl3_wsize.height>0 || pl3_wsize.width>0) {
-			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.width, pl3_wsize.height);
-		}
-
+		/* restore pane position */
 		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
 		{
 
@@ -846,7 +853,6 @@ void create_playlist3 ()
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 
-	/* draw the column with the songs */
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
@@ -866,9 +872,10 @@ void create_playlist3 ()
 
 
 
-
-
-
+	/**
+	 * Bread Crumb system.
+	 * TODO: Needs some fixing, to keep in sync
+	 */
 	pl3_crumbs = gtk_list_store_new(4, 
 			G_TYPE_STRING, /* text */
 			G_TYPE_STRING, /* stock id */
@@ -894,31 +901,34 @@ void create_playlist3 ()
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
+
+	/* initialize the category view */ 
 	pl3_initialize_tree();
 
 
+	/* show/hide the player.. */
+       	/* TODO: Do we want to  hide this with the new layout? 
+	*/	
 	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", TRUE))
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 	}
 
-
+	/* Add volume slider. */
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
 	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
 	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
-
-
-
+	/* Restore values from config */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_check_cover_image")),
 			cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0));
 
-
-
+	/* Make sure change is applied */
 	/* update image */
 	playlist_player_update_image(connection);
+
 
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
@@ -1098,7 +1108,7 @@ void set_playlist_format()
 	}
 	g_free(format);
 }
-
+/*
 void set_player_format()
 {
 	char *string = cfg_get_single_value_as_string_with_default(config, "player", "display_markup",	DEFAULT_PLAYER_MARKUP);
@@ -1111,7 +1121,7 @@ void set_player_format()
 	}
 	g_free(format);
 }
-
+*/
 void playlist_pref_destroy(GtkWidget *container)
 {
 	if(playlist_pref_xml)
@@ -1648,11 +1658,11 @@ void id3_info()
 
 void about_window()
 {
-	gchar *path = gmpc_get_full_glade_path("playlist3.glade");
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
 	g_free(path);
-	gtk_dialog_run(dialog);
+	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 	g_object_unref(diagxml);
 }

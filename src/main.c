@@ -31,10 +31,17 @@
 #include "plugin.h"
 #include "main.h"
 #include "misc.h"
+#ifdef DEBUG
+/* Testing */
+#include <sys/time.h>
 
+struct timeval tv_old = {0,0};
+#endif
 /* as internall plugin */
 #include "playlist3-tag-browser.h"
 #include "playlist3-artist-browser.h"
+#include "playlist3-current-playlist-browser.h"
+
 
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
@@ -71,6 +78,29 @@ config_obj *config = NULL;
  */
 MpdObj *connection = NULL;
 
+
+inline void tic()
+{
+#ifdef DEBUG
+	if(tv_old.tv_sec){
+		abort();
+	}
+	gettimeofday(&tv_old, NULL);
+#endif
+}
+inline void tac(char *name)
+{
+#ifdef DEBUG
+	struct timeval tv = tv_old;
+	if(!tv_old.tv_sec){
+		abort();            	
+	}
+	gettimeofday(&tv_old, NULL);
+	printf("%40s: %llu usec\n", name,(guint64)(tv_old.tv_usec-tv.tv_usec));
+	tv_old.tv_sec = 0;
+#endif
+}
+
 char *gmpc_get_full_image_path(char *filename)
 {
 	gchar *path;
@@ -86,7 +116,7 @@ char *gmpc_get_full_image_path(char *filename)
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
 	 */
 #if CHECK_GLIB_VERSION(2,8,4)
-	  g_free(packagedir);
+	g_free(packagedir);
 #endif
 
 #else
@@ -110,7 +140,7 @@ char *gmpc_get_full_glade_path(char *filename)
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
 	 */
 #if CHECK_GLIB_VERSION(2,8,4)
-	 g_free(packagedir);
+	g_free(packagedir);
 #endif
 
 #else
@@ -129,6 +159,7 @@ int main (int argc, char **argv)
 	MmKeys *keys = NULL;
 #endif
 	gchar *url = NULL;
+	tic();
 	/* debug stuff */
 	debug_level = DEBUG_ERROR;
 	if(argc > 1)
@@ -156,37 +187,49 @@ int main (int argc, char **argv)
 		}
 
 	}
+	tac("Parsing options");
 
 
 
 #ifdef ENABLE_NLS
+	tic();
 	debug_printf(DEBUG_INFO, "Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
+	tac("setting NLS");
 #endif
 
 	/*
 	 * initialize gtk
 	 */
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
+	tic();
 	gtk_init (&argc, &argv);
+	tac("Gtk Init");
 
 #ifdef ENABLE_SM
+	tic();
 	smc_connect(argc, argv);
+	tac("Sm Connection");
 #endif	
-	
+
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
+	tic();
 	qthread_init();
+	tac("Initialise threading");
 
 	/*
 	 * stock icons
 	 */
 	debug_printf(DEBUG_INFO, "Loading stock icons");
+	tic();
 	init_stock_icons ();
+	tac("Loading stock icons");
 
-	
+
+	tic();
 	/* Check for and create dir if availible */
 	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
@@ -210,9 +253,12 @@ int main (int argc, char **argv)
 		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
 	}
 	g_free(url);
+	tac("Setting up user directories");
 
+
+	tic();
 	/** Add the internall plugins 
-	 */
+	*/
 	/* this shows the connection preferences */
 	plugin_add(&connection_plug,0);
 	/* this the server preferences */
@@ -227,16 +273,20 @@ int main (int argc, char **argv)
 #endif
 	plugin_add(&cover_art_plug,0);
 	/* the about windows :D*/
-	plugin_add(&about_plug,0);
-	
+/*	plugin_add(&about_plug,0);
+ */
+	tac("Adding internall plugins");
 
+	tic();
 	/* load dynamic plugins */
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
 	plugin_load_dir(url);
 	g_free(url);
+	tac("Loading global plugins");
 
 	/* user space dynamic plugins */
 	/* plugins */
+	tic();
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
@@ -247,7 +297,9 @@ int main (int argc, char **argv)
 		mkdir(url, 0777);
 	}
 	g_free(url);
+	tac("Loading user plugins");
 
+	tic();
 	/* OPEN CONFIG FILE */
 	if(!config_path)
 	{
@@ -259,6 +311,7 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
+
 	/* test if config open  */
 	if(config == NULL)
 	{
@@ -267,8 +320,15 @@ int main (int argc, char **argv)
 	}
 
 	g_free(url);
+	tac("Opening config");
+
+	
 	/* initialize the cover art */
+	tic();
 	cover_art_init();
+	tac("Initialising cover art system");
+
+	tic();
 	/* Create connection object */
 	connection = mpd_new_default();
 	if(connection == NULL)
@@ -276,12 +336,14 @@ int main (int argc, char **argv)
 		debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
 		return 1;
 	}
+
 	/* New Signal */
 	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
 	mpd_signal_connect_error(connection, error_callback, NULL);
 	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
+	tac("Creating mpd connection object");
 
-
+	tic();
 	/* time todo some initialisation of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
 	{
@@ -290,11 +352,15 @@ int main (int argc, char **argv)
 			plugins[i]->init();
 		}
 	}
+	tac("Initializing plugins");
 
 	/* create the store for the playlist */
+	tic();
 	init_playlist_store ();
+	tac("Playlist store");
+	tic();
 	create_playlist3();
-
+	tac("Creating playlist");
 
 	/*
 	 * create timeouts 
@@ -311,11 +377,13 @@ int main (int argc, char **argv)
 	/*
 	 * Keys
 	 */
+	tic();
 	keys = mmkeys_new();
 	g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
+	tac("Initialise mmkeys");
 #endif
 	/*
 	 * run the main loop
@@ -506,7 +574,7 @@ void init_stock_icons ()
 	g_object_unref (G_OBJECT (pb));
 
 
-	
+
 	gtk_icon_factory_add_default (factory);
 }
 
@@ -720,7 +788,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	mpd_status_update(mi);
 }
 
-void show_error_message(gchar *string)
+void show_error_message(gchar *string, int block)
 {
 	GtkWidget *dialog = NULL;
 	dialog = gtk_message_dialog_new_with_markup(NULL,
@@ -729,5 +797,12 @@ void show_error_message(gchar *string)
 			GTK_BUTTONS_CLOSE,
 			string);
 	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-	gtk_widget_show(dialog);
+	if(block)
+	{
+		gtk_dialog_run(GTK_DIALOG(dialog));
+	}
+	else
+	{
+		gtk_widget_show(dialog);
+	}
 }

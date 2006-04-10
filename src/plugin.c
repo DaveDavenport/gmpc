@@ -36,14 +36,14 @@ int plugin_load(char *path, const char *file)
 	if (!handle) {
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s\n", g_module_error());
-		show_error_message(message);
+		show_error_message(message, FALSE);
 		g_free(message);
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin_api_version", (gpointer)&api_version)){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
-		show_error_message(message);
+		show_error_message(message,FALSE);
 		g_free(string);
 		g_free(message);
 		g_module_close(handle);
@@ -55,7 +55,7 @@ int plugin_load(char *path, const char *file)
 				file, *api_version, PLUGIN_API_VERSION);
 		debug_printf(DEBUG_ERROR, "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
 			       file, *api_version, PLUGIN_API_VERSION);
-		show_error_message(message);
+		show_error_message(message,FALSE);
 		g_free(string);
 		g_free(message);
 		g_module_close(handle);
@@ -65,7 +65,7 @@ int plugin_load(char *path, const char *file)
 	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
-		show_error_message(message);
+		show_error_message(message,FALSE);
 		g_free(string);
 		g_free(message);
 		g_module_close(handle);

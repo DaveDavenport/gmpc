@@ -714,21 +714,12 @@ void tray_enable_toggled(GtkToggleButton *but)
 	}
 }
 
-void hide_player_toggled(GtkToggleButton *but)
-{
-	cfg_set_single_value_as_int(config, "player", "hide-startup", (int)gtk_toggle_button_get_active(but));
-}
-
 /* this sets all the settings in the notification area preferences correct */
 void tray_update_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(tray_pref_xml, "ck_tray_enable"), 
 			cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", DEFAULT_TRAY_ICON_ENABLE));
-	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(tray_pref_xml, "ck_hide_player"), 
-			cfg_get_single_value_as_int_with_default(config, "player", "hide-startup", DEFAULT_HIDE_ON_STARTUP));
-
 }
 
 void popup_enable_toggled(GtkToggleButton *but)
