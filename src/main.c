@@ -239,14 +239,16 @@ int main (int argc, char **argv)
 		if(mkdir(url,0700) < 0)
 		{
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
-			return 1;
+			show_error_message("Failed to create ~/.gmpc/.", TRUE);
+			abort();
 		}
 	}
 	else if (!g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
 		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
 		debug_printf(DEBUG_ERROR, "Quitting.\n");
-		return 1;
+		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
+		abort();
 	}
 	else
 	{
@@ -316,7 +318,8 @@ int main (int argc, char **argv)
 	if(config == NULL)
 	{
 		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
-		return 1;
+		show_error_message("Failed to load the configuration system", TRUE);
+		abort();
 	}
 
 	g_free(url);
