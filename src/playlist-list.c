@@ -286,7 +286,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			iter.user_data2 = GINT_TO_POINTER(i);
 			iter.user_data3 = NULL;
 			/* changed */
-			if((data->song->pos) > (old_length-1))
+			if(i > (old_length-1))
 			{
 				gtk_tree_model_row_inserted(GTK_TREE_MODEL(cl),path, &iter);
 				gtk_tree_path_free(path);
