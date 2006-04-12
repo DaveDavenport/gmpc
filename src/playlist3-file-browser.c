@@ -46,8 +46,7 @@ void pl3_file_browser_add_folder();
 void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
 
-int pl3_fb_filling = FALSE;
-int pl3_fb_filling_kill = FALSE;
+guint pl3_fb_filling_source = 0;
 
 enum{
 	PL3_FB_PATH,
@@ -372,25 +371,22 @@ typedef struct {
 void pl3_fb_lazy_fill_destroy(pl3_fb_lf_pb *pb)
 {
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store));
-	g_free(pb);
-	if(pl3_fb_filling_kill)
+	if(pb->data)
 	{
-		pl3_fb_filling_kill = FALSE;
+		mpd_data_free(pb->data);
 	}
-	else pl3_fb_filling = FALSE;
+	g_free(pb);
+	pb = NULL;
+	/* remove the context id, so we don't try to remove it another time. */
+	pl3_fb_filling_source = 0;
 }
 
 int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
 {
 	GtkTreeIter iter;
 	MpdData *data = pd->data;
-	if(pl3_fb_filling_kill) {
-		if(data) mpd_data_free(data);
-		return FALSE;
-	}
 	if (data != NULL)
  	{
-
  		if (data->type == MPD_DATA_TYPE_DIRECTORY)
  		{
  			gchar *basename = g_path_get_basename(data->directory);
@@ -504,11 +500,10 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	pb->iter_cat = iter_cat;
 
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), NULL);
-	if(pl3_fb_filling){
-		pl3_fb_filling_kill = TRUE;
+	if(pl3_fb_filling_source){
+		g_source_remove(pl3_fb_filling_source);
 	}
-	pl3_fb_filling = TRUE;
-	g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)pl3_fb_lazy_fill,pb, (GDestroyNotify)pl3_fb_lazy_fill_destroy);
+	pl3_fb_filling_source = g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)pl3_fb_lazy_fill,pb, (GDestroyNotify)pl3_fb_lazy_fill_destroy);
 	return time;
 }
 
