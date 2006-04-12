@@ -669,7 +669,7 @@ int create_tray_icon()
 void tray_cover_art_fetched(mpd_Song *song)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	if(current->artist && current->album)
+	if(current && current->artist && current->album)
 	{
 		if(!strcmp(current->artist,song->artist) &&
 				!strcmp(current->album, song->album))

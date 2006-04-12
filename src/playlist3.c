@@ -1328,6 +1328,7 @@ static void playlist_player_update_image(MpdObj *mi)
 				else if(width > 200) width = 200;
 				width-=16;
 				pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
+				if(pb) pl3_pixbuf_border(pb);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
 				gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 				g_object_unref(pb);

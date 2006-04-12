@@ -707,6 +707,8 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	GtkTreeIter iter;
 	gchar *song_path;
 	gint r_type;
+	int playlist_length = mpd_playlist_get_playlist_length(connection);
+
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FB_PATH,&song_path, PL3_FB_TYPE, &r_type, -1);
 	if(song_path == NULL)
@@ -772,7 +774,14 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		pl3_push_statusbar_message("Added a song");
 		mpd_playlist_queue_add(connection, song_path);
 	}
+	
 	mpd_playlist_queue_commit(connection);
+
+	if(playlist_length == 0)
+	{
+		mpd_player_play(connection);
+	}
+
 	g_free(song_path);
 }
 

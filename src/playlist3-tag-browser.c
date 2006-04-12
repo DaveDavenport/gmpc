@@ -790,14 +790,21 @@ void pl3_custom_tag_browser_add_folder()
 void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
 	GtkTreeIter iter;
-	gchar *song_id;
+	gchar *song_path;
+	int playlist_length = mpd_playlist_get_playlist_length(connection);
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_id, -1);
-	if(song_id == NULL) return;
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_path, -1);
+	/* if we fail to get the path, bail out */
+	if(song_path == NULL) return;
 	pl3_push_statusbar_message("Added a song");
-	mpd_playlist_queue_add(connection, song_id);
-	mpd_playlist_queue_commit(connection);
-	g_free(song_id);
+	mpd_playlist_add(connection, song_path);
+	/* if there was no song in the playlist, play it */
+	if(playlist_length == 0)
+	{
+		mpd_player_play(connection);
+	}
+	/* free memory */
+	g_free(song_path);
 }
 
 void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)

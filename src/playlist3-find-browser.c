@@ -482,178 +482,185 @@ void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	    mpd_player_play_id(connection, id);
 	    break;
 	default:
-	    pl3_push_statusbar_message("Added a song");
-	    mpd_playlist_queue_add(connection, song_id);
+	    {
+		    int playlist_length = mpd_playlist_get_playlist_length(connection);
+		    pl3_push_statusbar_message("Added a song");
+		    mpd_playlist_add(connection, song_id);
+		    /* if there was no song in the playlist, play it */
+		    if(playlist_length == 0)
+		    {
+			mpd_player_play(connection);
+		    }
+	    }
 	    break;
     }
-    /* commit queue, if PL3_CUR_PLAYLIST, then queue is empty, and I don't mind */
-    mpd_playlist_queue_commit(connection);
+
     g_free(song_id);
 }
 
 void pl3_find_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter)
 {
-    long unsigned time = 0;
-    gchar *string;	
-    gtk_list_store_clear(pl3_findb_store);
-    time = pl3_find_browser_view_browser();
-    string = format_time(time);
-    gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-    g_free(string);
+	long unsigned time = 0;
+	gchar *string;	
+	gtk_list_store_clear(pl3_findb_store);
+	time = pl3_find_browser_view_browser();
+	string = format_time(time);
+	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+	g_free(string);
 }
 int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
-    if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
-    {
-	pl3_find_browser_replace_selected();		
-    }
-    else if(event->keyval == GDK_Insert)
-    {
-	pl3_find_browser_add_selected();		
-    }
-    else if(event->keyval == GDK_i)
-    {
-	pl3_find_browser_show_info();
-    }
-    else if(event->keyval == GDK_j)
-    {
-	pl3_find_browser_search_playlist();
-    }
-    else
-    {
-	return pl3_window_key_press_event(tree,event);
-    }
-    return TRUE;
+	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+	{
+		pl3_find_browser_replace_selected();		
+	}
+	else if(event->keyval == GDK_Insert)
+	{
+		pl3_find_browser_add_selected();		
+	}
+	else if(event->keyval == GDK_i)
+	{
+		pl3_find_browser_show_info();
+	}
+	else if(event->keyval == GDK_j)
+	{
+		pl3_find_browser_search_playlist();
+	}
+	else
+	{
+		return pl3_window_key_press_event(tree,event);
+	}
+	return TRUE;
 }
 
 void pl3_find_browser_replace_selected()
 {
-    mpd_playlist_clear(connection);
-    pl3_find_browser_add_selected();
-    mpd_player_play(connection);	
+	mpd_playlist_clear(connection);
+	pl3_find_browser_add_selected();
+	mpd_player_play(connection);	
 
 }
 
 
 void pl3_find_browser_add_selected()
 {
-    GtkTreeIter iter;
-    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_findb_tree));
-    GtkTreeModel *model = GTK_TREE_MODEL (pl3_findb_store);
-    GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
-    int songs=0;
-    if(rows != NULL)
-    {
-	gchar *name;
-	gint type;
-	GList *node = g_list_first(rows);
-	do
+	GtkTreeIter iter;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_findb_tree));
+	GtkTreeModel *model = GTK_TREE_MODEL (pl3_findb_store);
+	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
+	int songs=0;
+	if(rows != NULL)
 	{
-	    GtkTreePath *path = node->data;
-	    gtk_tree_model_get_iter (model, &iter, path);
-	    gtk_tree_model_get (model, &iter, PL3_FINDB_PATH,&name, PL3_FINDB_TYPE, &type, -1);	  
-	    /* does this bitmask thingy works ok? I think it hsould */
-	    if(type&(PL3_ENTRY_SONG))
-	    {
-		/* add them to the add list */
-		mpd_playlist_queue_add(connection, name);
-	    }
-	    songs++;
-	    g_free(name);
-	}while((node = g_list_next(node)) != NULL);
-    }
-    /* if there are items in the add list add them to the playlist */
-    mpd_playlist_queue_commit(connection);
-    if(songs != 0)
-    {
-	gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
-	pl3_push_statusbar_message(message);
-	g_free(message);
-    }
+		gchar *name;
+		gint type;
+		GList *node = g_list_first(rows);
+		do
+		{
+			GtkTreePath *path = node->data;
+			gtk_tree_model_get_iter (model, &iter, path);
+			gtk_tree_model_get (model, &iter, PL3_FINDB_PATH,&name, PL3_FINDB_TYPE, &type, -1);	  
+			/* does this bitmask thingy works ok? I think it hsould */
+			if(type&(PL3_ENTRY_SONG))
+			{
+				/* add them to the add list */
+				mpd_playlist_queue_add(connection, name);
+			}
+			songs++;
+			g_free(name);
+		}while((node = g_list_next(node)) != NULL);
+	}
+	/* if there are items in the add list add them to the playlist */
+	mpd_playlist_queue_commit(connection);
+	if(songs != 0)
+	{
+		gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
+		pl3_push_statusbar_message(message);
+		g_free(message);
+	}
 
-    g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
-    g_list_free (rows);
+	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
+	g_list_free (rows);
 }
 
 
 void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
-    if(event->button != 3) return;
-    else if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_findb_tree))) > 0)
-    {
-	GtkTreeIter iter;
-	int type = 0;
-	gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &iter);
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store),&iter, 0,&type, -1);
-	if(type == PL3_FINDB_CB_PLAYLIST && mpd_server_check_version(connection, 0,12,0))
+	if(event->button != 3) return;
+	else if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_findb_tree))) > 0)
 	{
-	    GtkWidget *item;
-	    GtkWidget *menu = gtk_menu_new();
-	    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
-	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_show_info), NULL);
-	    gtk_widget_show_all(menu);
-	    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-	}
-	else
-	{
-	    GtkWidget *item;
-	    GtkWidget *menu = gtk_menu_new();
-	    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	    g_signal_connect(G_OBJECT(item), "activate",
-		    G_CALLBACK(pl3_find_browser_add_selected), NULL);
-	    /* add the replace widget */
-	    item = gtk_image_menu_item_new_with_label("Replace");
-	    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-		    gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-	    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	    g_signal_connect(G_OBJECT(item), "activate",
-		    G_CALLBACK(pl3_find_browser_replace_selected), NULL);
+		GtkTreeIter iter;
+		int type = 0;
+		gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &iter);
+		gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store),&iter, 0,&type, -1);
+		if(type == PL3_FINDB_CB_PLAYLIST && mpd_server_check_version(connection, 0,12,0))
+		{
+			GtkWidget *item;
+			GtkWidget *menu = gtk_menu_new();
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find_browser_show_info), NULL);
+			gtk_widget_show_all(menu);
+			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		}
+		else
+		{
+			GtkWidget *item;
+			GtkWidget *menu = gtk_menu_new();
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate",
+					G_CALLBACK(pl3_find_browser_add_selected), NULL);
+			/* add the replace widget */
+			item = gtk_image_menu_item_new_with_label("Replace");
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate",
+					G_CALLBACK(pl3_find_browser_replace_selected), NULL);
 
-	    if(mpd_server_check_version(connection,0,12,0))
-	    {
-		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate",
-			G_CALLBACK(pl3_find_browser_show_info), NULL);
-	    }
-	    gtk_widget_show_all(menu);
-	    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+			if(mpd_server_check_version(connection,0,12,0))
+			{
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate",
+						G_CALLBACK(pl3_find_browser_show_info), NULL);
+			}
+			gtk_widget_show_all(menu);
+			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		}
 	}
-    }
-    return;
+	return;
 }
 
 void pl3_find_browser_playlist_changed()
 {
-    if(pl3_findb_tree != NULL)
-    {
-	pl3_find_browser_view_browser();
-    }
+	if(pl3_findb_tree != NULL)
+	{
+		pl3_find_browser_view_browser();
+	}
 }
 
 void pl3_find_browser_search_playlist()
 {
-    if(pl3_findb_tree)
-    {
-	GtkTreeIter iter;
-	gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_findb_combo_store), &iter);
-	do{
-	    int id=0;
-	    gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store), &iter, 0, &id, -1);
-	    if(id == PL3_FINDB_CB_PLAYLIST)
-	    {
-		gtk_combo_box_set_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &iter);
-	    }
-	}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_findb_combo_store), &iter));
+	if(pl3_findb_tree)
+	{
+		GtkTreeIter iter;
+		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_findb_combo_store), &iter);
+		do{
+			int id=0;
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store), &iter, 0, &id, -1);
+			if(id == PL3_FINDB_CB_PLAYLIST)
+			{
+				gtk_combo_box_set_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &iter);
+			}
+		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_findb_combo_store), &iter));
 
-	gtk_widget_grab_focus(pl3_findb_entry);
-    }
+		gtk_widget_grab_focus(pl3_findb_entry);
+	}
 }
 
 void pl3_find_browser_disconnect()
 {
-    if(pl3_findb_store) gtk_list_store_clear(pl3_findb_store);
+	if(pl3_findb_store) gtk_list_store_clear(pl3_findb_store);
 }
 
