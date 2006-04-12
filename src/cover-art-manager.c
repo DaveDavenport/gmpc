@@ -222,8 +222,8 @@ void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter)
 	}
 	gtk_tree_store_set(GTK_TREE_STORE(cam_ts), iter, 5,TRUE, -1);
 	g_free(artist);      
-
 }
+
 void cover_art_manager_load_tree(GtkTreeStore *cam_ts) 
 {
 	if(cover_index){
@@ -334,6 +334,34 @@ void cover_art_edit_path_changed(GtkWidget *filechooser)
 	}
 
 }
+void cam_cover_art_fetched(mpd_Song *song,GladeXML *cae_xml)
+{
+	gtk_widget_set_sensitive(glade_xml_get_widget(cae_xml, "cover-art-edit"), TRUE);
+	if(song == NULL )
+	{
+		gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
+
+	}
+	else{
+		char *coverpath = NULL;
+		int ret = 0;
+		ret = cover_art_fetch_image_path(song, &coverpath); 
+		if(ret == COVER_ART_OK_LOCAL)
+		{
+			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath, 250,250,NULL);
+			if(pb)
+			{
+				gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")),
+						coverpath);
+				
+				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")), pb);
+				g_object_unref(pb);                                                                    		
+			}         
+
+		}
+		if(coverpath)g_free(coverpath);
+	}
+}
 
 void cover_art_query_providers(GtkWidget *button)
 {
@@ -342,13 +370,15 @@ void cover_art_query_providers(GtkWidget *button)
 	const gchar *artist = 	gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_artist")));
 	const gchar *album = 		gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_album")));
 	int result = cover_art_fetch_image_path_aa_no_cache((char *)artist, (char *)album, &path);
-
 	if(result == COVER_ART_OK_LOCAL)
 	{
 		if(path){
 			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path, 250,250,NULL);
 			if(pb)
 			{
+				gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")),
+						path);
+				
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")), pb);
 				g_object_unref(pb);                                                                    		
 			}         
@@ -357,8 +387,15 @@ void cover_art_query_providers(GtkWidget *button)
 			gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
 		}
 	}
+	else if(result == COVER_ART_NOT_FETCHED)
+	{
+		gtk_widget_set_sensitive(glade_xml_get_widget(cae_xml, "cover-art-edit"), FALSE);
+		cover_art_fetch_image_aa((char *)artist,(char *)album,
+				(CoverArtCallback)cam_cover_art_fetched,cae_xml);
+
+	}
 	if(path) g_free(path);
-	
+
 }
 
 int cover_art_edit_cover(gchar *artist, gchar *album)
@@ -407,8 +444,6 @@ int cover_art_edit_cover(gchar *artist, gchar *album)
 		case GTK_RESPONSE_OK:
 			{
 				gchar * path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")));
-				const gchar *artist =  gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_artist")));
-				const gchar *album = gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_album")));
 				if(artist != NULL && album != NULL)
 				{
 					if(path){

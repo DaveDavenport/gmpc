@@ -252,7 +252,7 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 		}
 	}
 
-	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
+/*	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
 	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
 	if(data){
@@ -264,16 +264,40 @@ CoverArtResult cover_art_fetch_image_path_aa(gchar *artist,gchar *album, gchar *
 		mpd_data_free(data);
 		return ret;
 	}
+*/
+	if(artist && album)
+	{
+		int ret = COVER_ART_NO_IMAGE;
+		mpd_Song *song = mpd_newSong();
+		song->artist = g_strdup(artist);
+		song->album = g_strdup(album);
+		ret = cover_art_fetch_image_path(song,path);
+		mpd_freeSong(song);
+		return ret;
 
+	}
 	return COVER_ART_NO_IMAGE;
 }
 
 
 void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback function,gpointer userdata)
 {
-	if(!mpd_server_check_version(connection,0,12,0))return;
+/*	if(!mpd_server_check_version(connection,0,12,0))return;
 	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
+
+*/
+	if(artist && album)
+	{
+		mpd_Song *song = mpd_newSong();
+		song->artist = g_strdup(artist);
+		song->album = g_strdup(album);
+		cover_art_fetch_image(song,function, userdata);
+		mpd_freeSong(song);
+
+	}
+
+/*
 	if(data){
 		if(data->type == MPD_DATA_TYPE_SONG)
 		{
@@ -281,7 +305,7 @@ void cover_art_fetch_image_aa(gchar *artist, gchar *album, CoverArtCallback func
 		}
 		mpd_data_free(data);
 	}
-
+*/
 	return ;
 }
 
@@ -315,7 +339,7 @@ CoverArtResult cover_art_fetch_image_path_aa_no_cache(gchar *artist,gchar *album
 		}
 	}
 
-	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
+/*	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
 	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
 			MPD_TAG_ITEM_ALBUM,album,-1);
 	if(data){
@@ -326,6 +350,18 @@ CoverArtResult cover_art_fetch_image_path_aa_no_cache(gchar *artist,gchar *album
 		}
 		mpd_data_free(data);
 		return ret;
+	}
+*/
+	if(artist && album)
+	{
+		int ret = COVER_ART_NO_IMAGE;
+		mpd_Song *song = mpd_newSong();
+		song->artist = g_strdup(artist);
+		song->album = g_strdup(album);
+		ret = cover_art_fetch_image_path_no_cache(song,path);
+		mpd_freeSong(song);
+		return ret;
+
 	}
 
 	return COVER_ART_NO_IMAGE;
