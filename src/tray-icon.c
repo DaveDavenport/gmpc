@@ -660,6 +660,10 @@ int create_tray_icon()
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
+	/* make sure the icon gets updated propperly */
+	tray_icon_connection_changed(connection, mpd_check_connected(connection));
+	tray_icon_state_change();
+
 	return FALSE;
 }
 void tray_cover_art_fetched(mpd_Song *song)
