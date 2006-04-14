@@ -325,19 +325,6 @@ void cover_art_init()
 }
 CoverArtResult cover_art_fetch_image_path_aa_no_cache(gchar *artist,gchar *album, gchar **path)
 {
-	if(artist && album){
-		gchar *cipath = cfg_get_single_value_as_string(cover_index, artist, album);
-		debug_printf(DEBUG_INFO,"query cover art cache");
-		if(cipath)
-		{
-			if(strlen(cipath) == 0)
-			{
-				return COVER_ART_NO_IMAGE;
-			}
-			*path = g_strdup(cipath);
-			return COVER_ART_OK_LOCAL;
-		}
-	}
 
 /*	if(!mpd_server_check_version(connection,0,12,0))return COVER_ART_NO_IMAGE;
 	MpdData *data = mpd_database_find_adv(connection, FALSE, MPD_TAG_ITEM_ARTIST, artist,
