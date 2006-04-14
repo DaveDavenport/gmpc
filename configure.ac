@@ -9,15 +9,17 @@ AC_PROG_INTLTOOL(gmpc,[0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
 
-AC_ARG_ENABLE(sm,[  --disable-sm     Disable Session Support.],,enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys     Disable multimedia keys support.],,enable_mmkeys=yes)
-AC_ARG_ENABLE(trayicon,[  --disable-trayicon     Disable tray icon support.],,enable_trayicon=yes)
+AC_ARG_ENABLE(sm,[  --disable-sm            Disable Session Support.],,enable_sm=yes)
+AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
+AC_ARG_ENABLE(trayicon,[  --disable-trayicon      Disable tray icon support.],,enable_trayicon=yes)
 
 # Checks for libraries.
 
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
+AC_CHECK_HEADER([regex.h], [],
+                [AC_MSG_ERROR([Required header regex.h not found.])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

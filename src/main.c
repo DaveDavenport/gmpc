@@ -115,7 +115,7 @@ char *gmpc_get_full_image_path(char *filename)
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
 	 */
-#if CHECK_GLIB_VERSION(2,8,4)
+#if GLIB_CHECK_VERSION(2,8,4)
 	g_free(packagedir);
 #endif
 
@@ -139,7 +139,7 @@ char *gmpc_get_full_glade_path(char *filename)
 	 * a pointer which is returned on further calls to g_win32_get...
 	 * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
 	 */
-#if CHECK_GLIB_VERSION(2,8,4)
+#if GLIB_CHECK_VERSION(2,8,4)
 	g_free(packagedir);
 #endif
 
@@ -781,7 +781,9 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	}                                                                              	
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	playlist_connection_changed(mi, connect);
+#ifdef ENABLE_TRAYICON
 	tray_icon_connection_changed(mi, connect);
+#endif
 	for(i=0; i< num_plugins; i++)
 	{
 		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
