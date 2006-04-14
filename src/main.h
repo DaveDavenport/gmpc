@@ -49,6 +49,7 @@ extern gmpcPlugin about_plug;
 */
 extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
+extern gmpcPlugin info_plugin;
 
 #ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug;

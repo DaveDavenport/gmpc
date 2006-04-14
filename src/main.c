@@ -267,6 +267,8 @@ int main (int argc, char **argv)
 	plugin_add(&server_plug,0);
 	/* this shows the playlist preferences */
 	plugin_add(&playlist_plug,0);
+	/* The new testing information plugin */
+	plugin_add(&info_plugin,0);            	
 	/* this shows the markup stuff */
 	plugin_add(&tag_plug,0);
 #ifdef ENABLE_TRAYICON

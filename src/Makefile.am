@@ -23,6 +23,7 @@ gmpc_SOURCES=\
 	cover-art-manager.c\
 	bacon-volume.c\
 	sm.c\
+	information.c\
 	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
