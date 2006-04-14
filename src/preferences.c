@@ -78,7 +78,7 @@ void pref_plugin_changed()
 			if(plugins[id]->pref->construct)
 			{
 				char *buf = NULL;
-				if(plugins[id]->plugin_type != GMPC_INTERNALL)
+				if(plugins[id]->plugin_type != GMPC_INTERNALL && !(plugins[id]->id&PLUGIN_ID_INTERNALL))
 				{
 					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
 							plugins[id]->name,
