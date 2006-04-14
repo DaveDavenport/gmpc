@@ -371,7 +371,7 @@ void info_add(GtkWidget *cat_tree)
 	GtkTreePath *path;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	GtkTreeIter iter;
-	if(!cfg_get_single_value_as_int_with_default(config, "information", "enable", 0)) return;
+	if(!cfg_get_single_value_as_int_with_default(config, "information", "enable", TRUE)) return;
 	printf("adding plugin_wp: %i '%s'\n", info_plugin.id, info_plugin.name);
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter,
