@@ -815,26 +815,6 @@ void create_playlist3 ()
 		abort();
 	}
 
-
-	/* restore the window's position and size, if the user wants this.*/
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
-	{
-		/* Load values from config file */
-		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
-		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
-		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
-		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
-		/* restore location + position */
-		pl3_show_and_position_window();
-
-		/* restore pane position */
-		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
-		{
-
-			gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
-					cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-		}
-	}
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL)
 	{
@@ -940,7 +920,6 @@ void create_playlist3 ()
 				1);
 	}                                                                                                           	
 
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
 	if(mpd_status_db_is_updating(connection))
 	{
@@ -952,6 +931,31 @@ void create_playlist3 ()
 	{
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
+
+	/* restore the window's position and size, if the user wants this.*/
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+	{
+		/* Load values from config file */
+		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
+		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
+		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
+		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+		/* restore location + position */
+		pl3_show_and_position_window();
+
+		/* restore pane position */
+		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
+		{
+
+			gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
+					cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
+		}
+	}
+	else
+	{
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+	}
+
 }
 
 /* toggles the playlist on or off */
@@ -1109,19 +1113,19 @@ void set_playlist_format()
 	g_free(format);
 }
 /*
-void set_player_format()
-{
-	char *string = cfg_get_single_value_as_string_with_default(config, "player", "display_markup",	DEFAULT_PLAYER_MARKUP);
-	char *format = edit_song_markup(string);
-	cfg_free_string(string);
+   void set_player_format()
+   {
+   char *string = cfg_get_single_value_as_string_with_default(config, "player", "display_markup",	DEFAULT_PLAYER_MARKUP);
+   char *format = edit_song_markup(string);
+   cfg_free_string(string);
 
-	if(format != NULL)
-	{
-		cfg_set_single_value_as_string(config, "player","display_markup",format);
-	}
-	g_free(format);
-}
-*/
+   if(format != NULL)
+   {
+   cfg_set_single_value_as_string(config, "player","display_markup",format);
+   }
+   g_free(format);
+   }
+   */
 void playlist_pref_destroy(GtkWidget *container)
 {
 	if(playlist_pref_xml)
@@ -1637,10 +1641,10 @@ int pl3_progress_seek_stop()
 
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
 {
-/*	if(event->type == GDK_2BUTTON_PRESS)
-	{
-*/		id3_info();	
-/*	}*/
+	/*	if(event->type == GDK_2BUTTON_PRESS)
+		{
+		*/		id3_info();	
+	/*	}*/
 }
 
 void playlist_player_volume_changed(BaconVolumeButton *vol_but)
