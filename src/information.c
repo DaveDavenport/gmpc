@@ -386,7 +386,7 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 		g_object_get(G_OBJECT(tag), "name", &name,NULL);
 
 		/*gint page = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "page")); */
-		if (!strcmp(name, "link")/*page != 0*/) 
+		if (name && !strcmp(name, "link")/*page != 0*/) 
 		{
 			hovering = TRUE;
 			break;
