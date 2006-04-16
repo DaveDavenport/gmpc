@@ -172,7 +172,7 @@ void info_show_song(mpd_Song *song)
 	/* Delete Old Song url */
 	if(current_song)
 	{
-			mpd_freeSong(current_song);
+		mpd_freeSong(current_song);
 	}
 	current_song = mpd_songDup(song);
 	/* delete old tags */
@@ -232,6 +232,19 @@ void info_show_song(mpd_Song *song)
 		}
 		g_free(string);
 	}
+	/** ARTIST **/
+	if(song->artist)
+	{
+		/* Set tag for link */
+		tag = gtk_text_buffer_create_tag(buffer, "artist-url", NULL);
+		tag_list = g_list_append(tag_list, tag);
+		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("artist:"), g_free);
+
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Artist: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->artist,-1,"item-value","link","artist-url",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+	}
+	
 	if(song->album)
 	{
 		/* Set tag for link */
@@ -245,8 +258,14 @@ void info_show_song(mpd_Song *song)
 	}
 	if(song->genre)
 	{
+		/* Set tag for link */
+		tag = gtk_text_buffer_create_tag(buffer, "genre-url", NULL);
+		tag_list = g_list_append(tag_list, tag);
+		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("genre:"), g_free);
+
+
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre: ", -1,"item","bold",NULL);
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->genre, -1,"item-value",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->genre, -1,"item-value","genre-url","link",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->date)
@@ -382,11 +401,10 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 	for (tagp = tags;  tagp != NULL;  tagp = tagp->next)
 	{
 		GtkTextTag *tag = tagp->data;
-		gchar *name= NULL;
-		g_object_get(G_OBJECT(tag), "name", &name,NULL);
+		gchar *name= g_object_get_data(G_OBJECT(tag), "url");
 
 		/*gint page = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "page")); */
-		if (name && !strcmp(name, "link")/*page != 0*/) 
+		if (name/*page != 0*/) 
 		{
 			hovering = TRUE;
 			break;
@@ -449,9 +467,11 @@ visibility_notify_event (GtkWidget          *text_view,
 
 void follow_if_link(GtkWidget *text_view, GtkTextIter *iter)
 {
+	int loaded = FALSE;
+	MpdData *data = NULL;
 	GSList *titer, *tags = gtk_text_iter_get_tags(iter);
 
-	for(titer = tags;titer != NULL; titer = g_slist_next(titer))
+	for(titer = tags;titer != NULL && !loaded; titer = g_slist_next(titer))
 	{
 		GtkTextTag *tag = GTK_TEXT_TAG(titer->data);
 		char *url = g_object_get_data(G_OBJECT(tag), "url");
@@ -460,27 +480,46 @@ void follow_if_link(GtkWidget *text_view, GtkTextIter *iter)
 			if(!strncmp("album:", url, 6))
 			{
 				char *album = &url[6];
-				MpdData *data = mpd_database_find_adv(connection, TRUE, 
+				data = mpd_database_find_adv(connection, TRUE, 
 						MPD_TAG_ITEM_ARTIST, current_song->artist,
 						MPD_TAG_ITEM_ALBUM, album, -1);
-				if(data)
-				{	
-					mpd_playlist_clear(connection);
-					for(;data; data = mpd_data_get_next(data))
-					{
-						mpd_playlist_queue_add(connection, data->song->file);
-					}
-					mpd_playlist_queue_commit(connection);
-					mpd_player_play(connection);
+			}
+			else if (!strncmp("artist:", url, 7))
+			{
+				data = mpd_database_find_adv(connection, TRUE, 
+						MPD_TAG_ITEM_ARTIST, current_song->artist,-1);
+			}
+			else if (!strncmp("genre:", url, 6) && current_song->genre)
+			{
+				data = mpd_database_find_adv(connection, TRUE, 
+						MPD_TAG_ITEM_GENRE, current_song->genre,-1);
+			}                                                         			
+			if(data)
+			{	
+				mpd_playlist_clear(connection);
+				for(;data; data = mpd_data_get_next(data))
+				{
+					mpd_playlist_queue_add(connection, data->song->file);
 				}
+				mpd_playlist_queue_commit(connection);
+				mpd_player_play(connection);
+				data= NULL;
+				loaded = TRUE;
 			}
 
 		}
+
+
+
 	}
 	/* Free the list */	
 	if (tags) 
 	{
 		g_slist_free (tags);
+	}
+	if(loaded)
+	{
+		info_show_current_song();
 	}
 }
 
