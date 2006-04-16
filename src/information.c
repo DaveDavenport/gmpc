@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glade/glade.h>
+#include <gdk/gdkkeysyms.h>
 #include "plugin.h"
 #include "cover-art.h"
 
@@ -16,7 +17,13 @@ GtkWidget *info_vbox = NULL;
 void info_construct(GtkWidget *container);
 void info_destroy(GtkWidget *container);
 
+gboolean hovering_over_link = FALSE;
+GdkCursor *hand_cursor = NULL;
+GdkCursor *regular_cursor = NULL;
 
+
+GList *tag_list = NULL;
+static mpd_Song *current_song = NULL;
 extern GladeXML *pl3_xml;
 
 gmpcPrefPlugin info_gpp = {
@@ -69,12 +76,6 @@ void info_changed(GtkWidget *tree, GtkTreeIter *iter){
 
 }
 
-/** FUNCTIONS FOR GENERATING HTML **/
-
-/* getting cover images
- * We use gmpc cover art support now 
- */
-
 static gchar * info_get_cover_image_url(mpd_Song *song)
 {
 	gchar *path = NULL;
@@ -111,8 +112,55 @@ static void pl3_pixbuf_border(GdkPixbuf *pb)
 	}
 }
 
+void add_default_tags(GtkTextBuffer *buffer)
+{
+	GtkTextTag *tag;
+	tag = gtk_text_buffer_create_tag(buffer, "bold", 
+			"weight", PANGO_WEIGHT_BOLD,
+			NULL);               
+
+
+	tag = gtk_text_buffer_create_tag(buffer, "title", 
+			"size-points", (gdouble)24.0,
+			"paragraph-background-gdk", &(moz->style->bg[GTK_STATE_SELECTED]),
+			"foreground-gdk", &(moz->style->fg[GTK_STATE_SELECTED]),
+			NULL);
+
+	tag = gtk_text_buffer_create_tag(buffer, "artist", 
+			"size-points", (gdouble)14.0,
+			"paragraph-background-gdk",&(moz->style->bg[GTK_STATE_SELECTED]),
+			"foreground-gdk",&(moz->style->fg[GTK_STATE_SELECTED]),
+			NULL);                            	
+	tag = gtk_text_buffer_create_tag(buffer, "bar", 
+			"size-points", (gdouble)3.0,
+			"paragraph-background-gdk",&(moz->style->fg[GTK_STATE_NORMAL]),
+			NULL);                            	
+	tag = gtk_text_buffer_create_tag(buffer, "album-value", 
+			"rise", 26*PANGO_SCALE,
+			"size-points", (gdouble)10.0,			
+			NULL);                            	
+
+	tag = gtk_text_buffer_create_tag(buffer, "item", 
+			"size-points", (gdouble)10.0,			
+			"left-margin", 6,
+			NULL);               
+	tag = gtk_text_buffer_create_tag(buffer, "item-value", 
+			"size-points", (gdouble)10.0,			
+			"left-margin", 6,
+			NULL);              
+
+	tag = gtk_text_buffer_create_tag(buffer, "small-album", 
+			"size-points", (gdouble)10.0,			
+			"left-margin", 6,
+			"pixels-below-lines", 6,
+			NULL);              
+
+	tag= gtk_text_buffer_create_tag(buffer, "link", "underline", TRUE,NULL);
+}
 void info_show_song(mpd_Song *song)
 {
+	GtkTextTag *tag = NULL;
+	GtkTextTagTable *table = NULL;
 	MpdData *data = NULL;
 	GtkTextIter iter, start, stop;
 	gchar *string = NULL;
@@ -121,6 +169,26 @@ void info_show_song(mpd_Song *song)
 	gtk_text_buffer_get_end_iter(buffer, &stop);
 	gtk_text_buffer_delete(buffer,&start,&stop);
 
+	/* Delete Old Song url */
+	if(current_song)
+	{
+			mpd_freeSong(current_song);
+	}
+	current_song = mpd_songDup(song);
+	/* delete old tags */
+	table = gtk_text_buffer_get_tag_table (buffer);
+	if(tag_list)
+	{
+		GList *titer = NULL;
+
+		for(titer = tag_list; titer; titer = g_list_next(titer))
+		{
+			gtk_text_tag_table_remove(table, GTK_TEXT_TAG(titer->data));
+		}
+		g_list_free(tag_list);
+		tag_list = NULL;
+	}
+	/* if song not valid stop then...  We want nice message here */
 	if(song->title == NULL || song->artist == NULL) return;
 	gtk_text_buffer_get_start_iter(buffer, &iter);
 
@@ -166,8 +234,13 @@ void info_show_song(mpd_Song *song)
 	}
 	if(song->album)
 	{
+		/* Set tag for link */
+		tag = gtk_text_buffer_create_tag(buffer, "album-url", NULL);
+		tag_list = g_list_append(tag_list, tag);
+		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", song->album), g_free);
+
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album: ", -1,"item","bold",NULL);
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->album, -1,"item-value",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->album, -1,"item-value","link","album-url",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->genre)
@@ -233,11 +306,11 @@ void info_show_song(mpd_Song *song)
 		if(data)
 		{
 			int albums = 0;
-			
 			for(;data != NULL; data = mpd_data_get_next(data))
 			{
 				char *falbum = data->tag;
-				if(strcmp(song->album,falbum)) {
+				if(strcmp(song->album,falbum)) 
+				{
 					char *path = NULL;
 					GdkPixbuf *pb = NULL;
 					albums++;
@@ -253,41 +326,228 @@ void info_show_song(mpd_Song *song)
 					if(!pb)
 					{
 						pb = gtk_widget_render_icon(moz, "media-no-cover" , -1, NULL);
-						if(pb == NULL)
-						{
-							printf("icon theme icon not found\n");
-						}
 					}
 					if(pb)
 					{
 						pl3_pixbuf_border(pb);
 						gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);
-
 						gtk_text_buffer_get_end_iter(buffer, &start);
 						gtk_text_iter_backward_char(&start);
 						gtk_text_buffer_get_end_iter(buffer, &stop);
 						gtk_text_buffer_apply_tag_by_name(buffer, "small-album", &start, &stop);
-
 						g_object_unref(pb);
 					}
-
-
 					if(path)g_free(path);
-					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "  ", -1,"album-value",NULL);
-					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, falbum, -1,"album-value",NULL);
-					
+					/* Set tag for link */
+					tag = gtk_text_buffer_create_tag(buffer,NULL, NULL);
+					tag_list = g_list_append(tag_list, tag);
+					g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", falbum), g_free);
+
+
+					gtk_text_buffer_insert_with_tags(buffer, &iter, "  ", -1,
+							gtk_text_tag_table_lookup(table,"album-value"),
+							tag,
+							NULL);
+					gtk_text_buffer_insert_with_tags(buffer, &iter, falbum, -1,
+							gtk_text_tag_table_lookup(table,"album-value"),
+							gtk_text_tag_table_lookup(table,"link"),
+							tag,
+							NULL);
 					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"album-value",NULL);
 				}
-				
+
 			}
 		}
 
 	}	
 }
 
+
+/* Looks at all tags covering the position (x, y) in the text view, 
+ * and if one of them is a link, change the cursor to the "hands" cursor
+ * typically used by web browsers.
+ */
+static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
+{
+	GSList *tags = NULL, *tagp = NULL;
+	GtkTextBuffer *buffer;
+	GtkTextIter iter;
+	gboolean hovering = FALSE;
+
+	buffer = gtk_text_view_get_buffer (text_view);
+
+	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
+
+	tags = gtk_text_iter_get_tags (&iter);
+	for (tagp = tags;  tagp != NULL;  tagp = tagp->next)
+	{
+		GtkTextTag *tag = tagp->data;
+		gchar *name= NULL;
+		g_object_get(G_OBJECT(tag), "name", &name,NULL);
+
+		/*gint page = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "page")); */
+		if (!strcmp(name, "link")/*page != 0*/) 
+		{
+			hovering = TRUE;
+			break;
+		}
+	}
+
+	if (hovering != hovering_over_link)
+	{
+		hovering_over_link = hovering;
+
+		if (hovering_over_link)
+		{
+			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
+		}
+		else
+			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), regular_cursor);
+	}
+
+	if (tags) 
+		g_slist_free (tags);
+}
+
+/* Update the cursor image if the pointer moved. 
+*/
+	static gboolean
+motion_notify_event (GtkWidget      *text_view,
+		GdkEventMotion *event)
+{
+	gint x, y;
+
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+			GTK_TEXT_WINDOW_WIDGET,
+			event->x, event->y, &x, &y);
+
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y);
+
+	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+	return FALSE;
+}
+
+/* Also update the cursor image if the window becomes visible
+ * (e.g. when a window covering it got iconified).
+ */
+	static gboolean
+visibility_notify_event (GtkWidget          *text_view,
+		GdkEventVisibility *event)
+{
+	gint wx, wy, bx, by;
+
+	gdk_window_get_pointer (text_view->window, &wx, &wy, NULL);
+
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+			GTK_TEXT_WINDOW_WIDGET,
+			wx, wy, &bx, &by);
+
+	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), bx, by);
+
+	return FALSE;
+}
+
+void follow_if_link(GtkWidget *text_view, GtkTextIter *iter)
+{
+	GSList *titer, *tags = gtk_text_iter_get_tags(iter);
+
+	for(titer = tags;titer != NULL; titer = g_slist_next(titer))
+	{
+		GtkTextTag *tag = GTK_TEXT_TAG(titer->data);
+		char *url = g_object_get_data(G_OBJECT(tag), "url");
+		if(url)
+		{
+			if(!strncmp("album:", url, 6))
+			{
+				char *album = &url[6];
+				MpdData *data = mpd_database_find_adv(connection, TRUE, 
+						MPD_TAG_ITEM_ARTIST, current_song->artist,
+						MPD_TAG_ITEM_ALBUM, album, -1);
+				if(data)
+				{	
+					mpd_playlist_clear(connection);
+					for(;data; data = mpd_data_get_next(data))
+					{
+						mpd_playlist_queue_add(connection, data->song->file);
+					}
+					mpd_playlist_queue_commit(connection);
+					mpd_player_play(connection);
+				}
+			}
+
+		}
+	}
+	/* Free the list */	
+	if (tags) 
+	{
+		g_slist_free (tags);
+	}
+}
+
+/* Links can be activated by pressing Enter.
+*/
+	static gboolean
+key_press_event (GtkWidget *text_view,
+		GdkEventKey *event)
+{
+	GtkTextIter iter;
+	GtkTextBuffer *buffer;
+	switch (event->keyval)
+	{
+		case GDK_Return: 
+		case GDK_KP_Enter:
+			buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+			gtk_text_buffer_get_iter_at_mark (buffer, &iter, 
+					gtk_text_buffer_get_insert (buffer));
+			follow_if_link (text_view, &iter);
+			break;
+
+		default:
+			break;
+	}
+	return FALSE;
+}
+
+
+/* Links can also be activated by clicking.
+*/
+static gboolean event_after (GtkWidget *text_view,
+		GdkEvent  *ev)
+{
+	GtkTextIter start, end, iter;
+	GtkTextBuffer *buffer;
+	GdkEventButton *event;
+	gint x, y;
+
+	if (ev->type != GDK_BUTTON_RELEASE)
+		return FALSE;
+
+	event = (GdkEventButton *)ev;
+
+	if (event->button != 1)
+		return FALSE;
+
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
+
+	/* we shouldn't follow a link if the user has selected something */
+	gtk_text_buffer_get_selection_bounds (buffer, &start, &end);
+	if (gtk_text_iter_get_offset (&start) != gtk_text_iter_get_offset (&end))
+		return FALSE;
+
+	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), 
+			GTK_TEXT_WINDOW_WIDGET,
+			event->x, event->y, &x, &y);
+
+	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, x, y);
+
+
+	follow_if_link (text_view, &iter);
+	return FALSE;
+}
+
+
 static void info_init()
 {
-	GtkTextTag *tag = NULL;
 	GtkTextBuffer *buffer = NULL;
 	GtkWidget *tmp = NULL,*hbox = NULL,*label = NULL;
 	GtkWidget *button = NULL;
@@ -319,51 +579,39 @@ static void info_init()
 	buffer = gtk_text_buffer_new(NULL);
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(moz),buffer);
 	if(buffer == NULL) printf("help\n");
-
-	tag = gtk_text_buffer_create_tag(buffer, "bold", 
-			"weight", PANGO_WEIGHT_BOLD,
-			NULL);               
-
-
-	tag = gtk_text_buffer_create_tag(buffer, "title", 
-			"size-points", (gdouble)24.0,
-			"paragraph-background-gdk", &(info_vbox->style->bg[GTK_STATE_SELECTED]),
-			"foreground-gdk", &(info_vbox->style->fg[GTK_STATE_SELECTED]),
-			NULL);
-
-	tag = gtk_text_buffer_create_tag(buffer, "artist", 
-			"size-points", (gdouble)14.0,
-			"paragraph-background-gdk",&(info_vbox->style->bg[GTK_STATE_SELECTED]),
-			"foreground-gdk",&(info_vbox->style->fg[GTK_STATE_SELECTED]),
-			NULL);                            	
-	tag = gtk_text_buffer_create_tag(buffer, "bar", 
-			"size-points", (gdouble)3.0,
-			"paragraph-background-gdk",&(info_vbox->style->fg[GTK_STATE_NORMAL]),
-			NULL);                            	
-	tag = gtk_text_buffer_create_tag(buffer, "album-value", 
-			"rise", 26*PANGO_SCALE,
-			"size-points", (gdouble)10.0,			
-			NULL);                            	
-
-	tag = gtk_text_buffer_create_tag(buffer, "item", 
-			"size-points", (gdouble)10.0,			
-			"left-margin", 6,
-			NULL);               
-	tag = gtk_text_buffer_create_tag(buffer, "item-value", 
-			"size-points", (gdouble)10.0,			
-			"left-margin", 6,
-			NULL);              
-
-	tag = gtk_text_buffer_create_tag(buffer, "small-album", 
-			"size-points", (gdouble)10.0,			
-			"left-margin", 6,
-			"pixels-below-lines", 6,
-			NULL);              
+	/* Add a default set of tags. Think of bold, and some default layout stuff
+	 * These are persistent of program existance
+	 */
+	add_default_tags(buffer);
 
 
 
 	gtk_widget_show_all(info_vbox);
 	g_object_ref(G_OBJECT(info_vbox));
+
+
+
+
+
+	hand_cursor = gdk_cursor_new (GDK_HAND2);
+	regular_cursor = gdk_cursor_new (GDK_XTERM);
+
+
+
+
+	g_signal_connect (moz, "key-press-event", 
+			G_CALLBACK (key_press_event), NULL);
+	g_signal_connect (moz, "event-after", 
+			G_CALLBACK (event_after), NULL);
+	g_signal_connect (moz, "motion-notify-event", 
+			G_CALLBACK (motion_notify_event), NULL);
+	g_signal_connect (moz, "visibility-notify-event", 
+			G_CALLBACK (visibility_notify_event), NULL);
+
+
+
+
+
 
 }
 
