@@ -52,6 +52,7 @@ static void meta_data_sort_plugins()
 MetaDataResult meta_data_get_path(mpd_Song *song, MetaDataType type, char **path)
 {
    int retval = META_DATA_UNAVAILABLE;
+   /* Check if there is actually something to search for. */
    if(!song || *path)
    {
 	  return retval;
