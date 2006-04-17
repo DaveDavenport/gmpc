@@ -24,6 +24,7 @@ gmpc_SOURCES=\
 	bacon-volume.c\
 	sm.c\
 	information.c\
+	metadata.c\
 	TreeSearchWidget.c
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
@@ -78,4 +79,5 @@ EXTRA_DIST = 	playlist3.h\
 		playlist-list.h\
 		bacon-volume.h\
 		sm.h\
+		metadata.h\
 		TreeSearchWidget.h
