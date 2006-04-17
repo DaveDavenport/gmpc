@@ -40,6 +40,8 @@ void id3_info();
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
+/* TODO: Move to misc file */
+void pl3_pixbuf_border(GdkPixbuf *pb);
 
 int old_type = -1;
 

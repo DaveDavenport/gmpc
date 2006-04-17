@@ -12,11 +12,10 @@ typedef enum {
 typedef enum {
 	META_DATA_AVAILABLE,
 	META_DATA_UNAVAILABLE,
-	META_DATA_NEED_FETCH
+	META_DATA_FETCHING
 } MetaDataResult;
 
 typedef gboolean (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
-MetaDataResult meta_data_get_path(mpd_Song *song, MetaDataType type, char **path);
 void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);
 
 
