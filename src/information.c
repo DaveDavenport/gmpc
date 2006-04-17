@@ -294,6 +294,26 @@ void info_show_song(mpd_Song *song)
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 		g_free(string);
 	}
+	if(song->artist && song->album)
+	{
+		char *path = g_strdup_printf("%s/.covers/%s-%s.albuminfo",
+							g_get_home_dir(),song->artist,song->album);
+		if(g_file_test(path, G_FILE_TEST_EXISTS))
+		{
+			char *content;
+			gsize length;
+			if(g_file_get_contents(path,&content,&length, NULL))
+			{
+				gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album Info:\n", -1,"item","bold",NULL);
+				gtk_text_buffer_insert_with_tags_by_name(buffer, &iter,content, length,"item",NULL);
+				gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+
+				g_free(content);
+			}
+		}
+		g_free(path);
+	}
+	
 	if(song->artist && song->album && mpd_server_check_version(connection, 0,12,0))
 	{
 		data = mpd_database_find_adv(connection,TRUE, 
@@ -512,6 +532,7 @@ void follow_if_link(GtkWidget *text_view, GtkTextIter *iter)
 
 
 	}
+
 	/* Free the list */	
 	if (tags) 
 	{
@@ -596,6 +617,7 @@ static void info_init()
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	moz = gtk_text_view_new();
+	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(moz), GTK_WRAP_WORD);
 	gtk_container_set_border_width(GTK_CONTAINER(sw), 6);
 	gtk_container_add(GTK_CONTAINER(sw), moz);
 	gtk_box_pack_start_defaults(GTK_BOX(info_vbox), sw);
