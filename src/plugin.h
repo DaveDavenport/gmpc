@@ -1,6 +1,9 @@
 #include "config1.h"
+
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
+#include "metadata.h"
+
 #ifndef __GMPC_PLUGIN_H__
 #define __GMPC_PLUGIN_H__
 
@@ -11,11 +14,12 @@ extern config_obj *config;
 
 /* Plugin Type's */
 typedef enum {
-	GMPC_PLUGIN_DUMMY	= 1,
+	GMPC_PLUGIN_DUMMY		= 1,
 	GMPC_PLUGIN_PL_BROWSER	= 2,
-	GMPC_PLUGIN_NO_GUI	= 4,
-	GMPC_INTERNALL		= 8,
-	GMPC_PLUGIN_COVER_ART	= 16
+	GMPC_PLUGIN_NO_GUI		= 4,
+	GMPC_INTERNALL			= 8,
+	GMPC_PLUGIN_COVER_ART	= 16,
+	GMPC_PLUGIN_META_DATA	= 32
 } PluginType;
 
 /* usefull defines */
@@ -72,8 +76,13 @@ typedef struct {
 	int (*get_priority)(); /* the lower the better */
 } gmpcCoverArtPlugin;
 
+typedef struct {
+	int (*get_priority)();
+	int (*get_image)(mpd_Song *song, int type, char **path);
+} gmpcMetaDataPlugin;
+
 /* Unique number */
-#define PLUGIN_API_VERSION 11
+#define PLUGIN_API_VERSION 12
 
 /* sturcture */
 typedef struct {
@@ -96,6 +105,8 @@ typedef struct {
 	gmpcPrefPlugin		*pref;
 	/* Cover art plugin */
 	gmpcCoverArtPlugin	*coverart;
+
+	gmpcMetaDataPlugin *metadata;
 	
 } gmpcPlugin;
 

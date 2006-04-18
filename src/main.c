@@ -219,7 +219,11 @@ int main (int argc, char **argv)
 	tic();
 	qthread_init();
 	tac("Initialise threading");
+	
 
+	tic();
+	meta_data_init();
+	tac("Init metadata");
 	/*
 	 * stock icons
 	 */

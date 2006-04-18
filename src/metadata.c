@@ -2,113 +2,254 @@
 #include "metadata.h"
 #include "cover-art.h"
 
-MetaDataResult meta_data_get_path(mpd_Song *song, MetaDataType type, char **path);
+int meta_num_plugins=0;
+gmpcPlugin **meta_plugins = NULL;
+
+
+/**
+ * This is queue is used to send commands to the retrieval queue
+ */
+GAsyncQueue *meta_commands = NULL;
+/**
+ * This queue is used to send replies back.
+ */
+GAsyncQueue *meta_results = NULL;
+/**
+ * TODO: Make the config system thread safe 
+ */
+
 
 typedef struct {
+	guint id;
+	/* Data */
 	mpd_Song *song;
 	MetaDataCallback callback;
-	MetaDataType type;
 	gpointer data;
+	MetaDataType type;
+	/* Resuls  */
+	MetaDataResult result;
+	char *result_path;
+
 
 } meta_thread_data;
-void meta_data_recieved_image(mpd_Song *song, meta_thread_data *data)
+
+
+/**
+ * Checking the cache 
+ * !!NEEDS TO BE THREAD SAFE !!
+ */
+
+MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
 {
-	char *path = NULL;
-	printf("bg fetch done\n");
-	MetaDataResult ret = meta_data_get_path(song, data->type, &path);
-	data->callback(song,(ret==META_DATA_AVAILABLE)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE,path, data->data);
-	mpd_freeSong(data->song);
-	g_free(data);
-	if(path) g_free(path);
+
+	return META_DATA_FETCHING;	
 }
 
-void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data)
+void meta_data_retrieve_thread()
 {
-	char *path = NULL;
-	MetaDataResult ret = meta_data_get_path(song, type, &path);
-	if(ret == META_DATA_FETCHING)
-	{
-		meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
-		mtd->song = mpd_songDup(song);
-		mtd->callback = callback;
-		mtd->data = data;
-		mtd->type = type;
-		cover_art_fetch_image(song, (CoverArtCallback)meta_data_recieved_image, mtd);
+	meta_thread_data *data = NULL;
+	/**
+	 * A continues loop, waiting for new commands to arrive
+	 */
+	do{
+		/**
+		 * Get command from queue
+		 */
+		data = g_async_queue_pop(meta_commands);	
+		printf("Meta Retrieval Thread: [%u] Got command\n",data->id);
+		/* 
+		 * Set default return values
+		 * TODO: Is this needed, because the cache will "init" them.
+		 */
+
+		data->result = META_DATA_UNAVAILABLE;
+		data->result_path = NULL;
+
+		/*
+		 * Check cache *again*
+		 * because between the time this command was commited, and the time 
+		 * we start processing it, the result may allready been retrieved
+		 * TODO: Make an option to _force_ it to recheck (aka bypass cache 
+		 */
+		data->result = meta_data_get_from_cache(data->song,data->type, &(data->result_path));
+		/**
+		 * Handle cache result.
+		 * If the cache returns it doesn't have anything (that it needs fetching)
+		 * Start fetching 
+		 */
+		if(data->result == META_DATA_FETCHING)
+		{
+			char *path = NULL;
+			int i = 0;
+			MetaDataResult ret = META_DATA_UNAVAILABLE;
+			/* 
+			 * Set default return values
+			 * Need to be reset, because of cache fetch
+			 */
+			data->result = META_DATA_UNAVAILABLE;
+			data->result_path = NULL;            			
+			/* 
+			 * start fetching the results 
+			 */
+			/**
+			 * Loop through all the plugins until we don't have plugins anymore, or we have a result.
+			 */
+			for(i=0;i<(meta_num_plugins) && data->result != META_DATA_AVAILABLE;i++)
+			{
+				/* *
+				 * Get image function is only allowed to return META_DATA_AVAILABLE or META_DATA_UNAVAILABLE
+				 */
+				data->result = meta_plugins[i]->metadata->get_image(data->song, data->type, &path);
+				data->result_path = path;
+			}
+
+		}
+
+		/**
+		 * Push the result back
+		 */	
+		g_async_queue_push(meta_results, data);		
+		/**
+		 * clear our reference to the object
+		 */
+
+		data = NULL;
+	}while(1);
+}
+
+
+gboolean meta_data_handle_results()
+{
+	meta_thread_data *data = NULL;
+
+	/**
+	 *  Check if there are results to handle
+	 *  do this until the list is clear
+	 */
+	for(data = g_async_queue_try_pop(meta_results);data;
+			data = g_async_queue_try_pop(meta_results))
+	{	
+		printf("Meta Data: [%u] Handling results\n",data->id);
+		printf("Had: %s\n", data->result_path);
+		data->callback(data->song, data->result,data->result_path, data->data);
+		if(data->result_path)g_free(data->result_path);
+		mpd_freeSong(data->song);
+		g_free(data);
 	}
-	callback(song, ret, path, data);
-	if(path)g_free(path);
+	/**
+	 * Keep the timer running
+	 */
+	return TRUE;
 }
 
 /**
- * Sorting the plugins on priority.
- * The higher the number the more important
+ * Initialize
  */
-static void meta_data_sort_plugins()
+
+void meta_data_init()
 {
-
-
-}
-
-MetaDataResult meta_data_get_path(mpd_Song *song, MetaDataType type, char **path)
-{
-   int retval = META_DATA_UNAVAILABLE;
-   /* Check if there is actually something to search for. */
-   if(!song || *path)
-   {
-	  return retval;
-   }
-   /**
-	* Query Cache.
-	* If found, return path.
-	*/
-
-
-   /**
-	* Sort the plugins on priority.
-	* Only do this on priority change/adding of plugins?
-	* if sorted it shouldn't take to much time.
-	*/
-
-	meta_data_sort_plugins();
-
-
-	/** 
-	 * Walk through every plugin and see if it has the metadata is availible.
-	 * There are 3 possible returns for a plugin:
-	 * 1. Cover Art Available.
-	 * 2. No Cover Art Available. (f.e. not supported)
-	 * 3. Needs to fetch information.
-	 * In case 3. we don't directly want to run that (do we?), it returns NEED_FETCHING.
-	 * This will trigger the process to be threaded and executed.
+	/**
+	 * The command queue
 	 */
-   
-   switch(type)	
-   {
-	  case META_ALBUM_ART:
-		 {
-			int val = cover_art_fetch_image_path(song, path);
-			if(val == COVER_ART_OK_LOCAL)
-			{
-			   retval = META_DATA_AVAILABLE;
-			}
-			else if(val == COVER_ART_NOT_FETCHED)
-			{
-			   retval = META_DATA_FETCHING;
-			}
-			else
-			{
-			   if(*path) g_free(*path);
-			}
-			break;
-		 }
-	  default:
-		 break;
-   }
+	meta_commands = g_async_queue_new();
+	/**
+	 * the result queue
+	 */
+	meta_results = g_async_queue_new();
+	/**
+	 * Create the retrieval thread
+	 */
+	g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, FALSE, NULL);
+	/**
+	 * Set a timer on checking the results
+	 * for now every 50 ms?
+	 */
+	g_timeout_add(50,(GSourceFunc)meta_data_handle_results, NULL);
 
-
-   /**
-	*  Update Cache
-	*  Save it or it isn't found.
-	*/
-   return retval;
 }
+/**
+ * Function called by the "client" 
+ */
+void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data)
+{
+	MetaDataResult ret;
+	char *path = NULL;
+
+	/**
+	 * if there is no callback, it's a programming error.
+	 */
+	g_assert(callback != NULL);
+
+	/**
+	 * If there is no song, then the same.
+	 */
+	g_return_if_fail(song != NULL);
+
+	/**
+	 * Check cache for result.
+	 */
+	ret = meta_data_get_from_cache(song, type, &path);
+
+	/**
+	 * If the data is know. (and doesn't need fectching) 
+	 * call the callback and stop
+	 */
+	if(ret != META_DATA_FETCHING)
+	{
+		/* Call the callback function */
+		callback(song, ret, path,data);
+		/* clean up path if exists */
+		if(path) g_free(path);
+		/* return */
+		return;
+	}
+
+
+	/**
+	 * If no result, start a thread and start fetching the data from there
+	 */
+
+	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	mtd->id = g_random_int();
+	mtd->song = mpd_songDup(song);
+	mtd->callback = callback;
+	mtd->data = data;
+	mtd->type = type;
+	g_async_queue_push(meta_commands, mtd);
+	mtd = NULL;
+
+	/**
+	 * Call the callback to let the client know where are going todo a 
+	 * background fetch
+	 */
+
+
+	callback(song, META_DATA_FETCHING,NULL, data);
+	/*	if(path)g_free(path);*/
+}
+
+
+void meta_data_add_plugin(gmpcPlugin *plug)
+{
+	int i=0;
+	int changed = FALSE;	
+	meta_num_plugins++;
+	meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPlugin **));
+	meta_plugins[meta_num_plugins-1] = plug;
+	meta_plugins[meta_num_plugins] = NULL;
+
+	do{	
+		changed=0;
+		for(i=0; i< (meta_num_plugins-1);i++)
+		{
+			if(meta_plugins[i]->metadata->get_priority() < meta_plugins[i+1]->metadata->get_priority())
+			{
+				gmpcPlugin *temp = meta_plugins[i];
+				changed=1;
+				meta_plugins[i] = meta_plugins[i+1];
+				meta_plugins[i+1] = temp;
+			}
+		}
+	}while(changed);
+}
+

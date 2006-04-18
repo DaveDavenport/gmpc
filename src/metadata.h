@@ -1,6 +1,6 @@
 #ifndef __METADATA_H__
 #define __METADATA_H__
-
+#include "plugin.h"
 typedef enum {
 	META_ALBUM_ART = 1, 	/* Album Cover art 	*/
 	META_ARTIST_ART = 2, 	/* Artist  image 	*/
@@ -18,6 +18,6 @@ typedef enum {
 typedef gboolean (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);
 
-
+void meta_data_init();
 
 #endif

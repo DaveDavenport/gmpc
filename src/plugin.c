@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 #include <gmodule.h>
 #include "main.h"
+#include "metadata.h"
 
 int plugin_get_pos(int id)
 {
@@ -17,7 +18,11 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
 	plugins[num_plugins-1] = plug;
 	plugins[num_plugins] = NULL;
-
+	
+	if(plug->plugin_type == GMPC_PLUGIN_META_DATA)
+	{
+		meta_data_add_plugin(plug);
+	}
 }
 int plugin_load(char *path, const char *file)
 {

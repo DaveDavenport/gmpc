@@ -61,6 +61,7 @@ gmpcinclude_HEADERS = \
 		plugin.h	\
 		cover-art.h	\
 		config1.h	\
+		metadata.h\
 		qthread.h
 gmpcincludedir =$(includedir)/gmpc/
 

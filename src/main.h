@@ -26,6 +26,7 @@
 #include <glade/glade.h>
 #include "config1.h"
 #include "plugin.h"
+#include "metadata.h"
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
@@ -108,4 +109,13 @@ int cover_art_edit_cover(gchar *artist, gchar *album);
 
 
 void tray_icon_connection_changed(MpdObj *mi, int connect);
+
+
+
+
+/**
+ * Metadata 
+ */
+
+void meta_data_add_plugin(gmpcPlugin *plug);
 #endif
