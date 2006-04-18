@@ -587,7 +587,7 @@ void connection_pref_construct(GtkWidget *container)
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin")), 
 			cfg_get_single_value_as_int_with_default(config, "connection","portnumber",6600));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin")), 
-			cfg_get_single_value_as_float_with_default(config,"connection", "timeout",1.0));
+			(gdouble)cfg_get_single_value_as_float_with_default(config,"connection", "timeout",1.0));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(connection_pref_xml, "ck_autocon")), 
 			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
 

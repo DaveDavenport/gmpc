@@ -351,7 +351,6 @@ int main (int argc, char **argv)
 	mpd_signal_connect_error(connection, error_callback, NULL);
 	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
 	tac("Creating mpd connection object");
-
 	tic();
 	/* time todo some initialisation of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
@@ -368,6 +367,7 @@ int main (int argc, char **argv)
 	init_playlist_store ();
 	tac("Playlist store");
 	tic();
+	debug_printf(DEBUG_INFO, "Create playlist\n");
 	create_playlist3();
 	tac("Creating playlist");
 
@@ -574,6 +574,13 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "media-no-cover", set);
 	g_object_unref (G_OBJECT (pb));
 
+
+	path = gmpc_get_full_image_path("gmpc-loading-cover.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	g_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);              	
+	gtk_icon_factory_add (factory, "media-loading-cover", set);  	
+	g_object_unref (G_OBJECT (pb));
 
 	path = gmpc_get_full_image_path("stock_volume.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);

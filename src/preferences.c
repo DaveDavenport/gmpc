@@ -17,28 +17,7 @@ void plugin_stats_construct(GtkWidget *container);
 void plugin_stats_destroy(GtkWidget *container);
 GladeXML *plugin_stat_xml = NULL;
 /* About "plugin" */
-/*
-void about_pref_construct(GtkWidget *container);
-void about_pref_destroy(GtkWidget *container);
-GladeXML *about_pref_xml = NULL;
-gmpcPrefPlugin about_gpp = {
-	about_pref_construct,
-	about_pref_destroy
-};
 
-gmpcPlugin about_plug = {
-	"About",
-	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	&about_gpp
-};
-*/
 /* End About */
 GtkListStore *plugin_store = NULL;
 GladeXML *xml_preferences_window = NULL;

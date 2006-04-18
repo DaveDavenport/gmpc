@@ -1308,6 +1308,12 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 					gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 				}
 			}
+			else if (ret == META_DATA_FETCHING)
+			{
+				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-loading-cover", -1);				
+				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+			}
 			else{
 				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);

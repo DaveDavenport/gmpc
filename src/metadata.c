@@ -1,6 +1,10 @@
+#include <string.h>
 #include "main.h"
+
 #include "metadata.h"
 #include "cover-art.h"
+
+extern config_obj *cover_index;
 
 int meta_num_plugins=0;
 gmpcPlugin **meta_plugins = NULL;
@@ -14,11 +18,10 @@ GAsyncQueue *meta_commands = NULL;
  * This queue is used to send replies back.
  */
 GAsyncQueue *meta_results = NULL;
+
 /**
  * TODO: Make the config system thread safe 
  */
-
-
 typedef struct {
 	guint id;
 	/* Data */
@@ -34,13 +37,116 @@ typedef struct {
 } meta_thread_data;
 
 
+
+void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
+{
+	if(!song) return;
+	if(type == META_ALBUM_ART)
+	{
+		if(song->artist && song->album)
+		{
+			char *temp = g_strdup_printf("album:%s", song->album);
+			if(result == META_DATA_AVAILABLE)
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
+			}
+			else
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,"");
+			}
+			g_free(temp);
+		}
+	}
+	else if(type == META_ALBUM_TXT)
+	{
+		if(song->artist && song->album)
+		{
+			char *temp = g_strdup_printf("albumtxt:%s", song->album);                   		
+			if(result == META_DATA_AVAILABLE)
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
+			}
+			else
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,"");
+			}                                                                        		
+			g_free(temp);
+		}
+
+	}
+}
+
 /**
  * Checking the cache 
  * !!NEEDS TO BE THREAD SAFE !!
  */
 
+
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
 {
+	if(!song)
+	{
+		return META_DATA_UNAVAILABLE;	
+	}
+	/* Get values acording to type */
+	if(type == META_ALBUM_ART)
+	{
+		gchar *temp = NULL;
+		if(!song->artist || !song->album)
+		{
+			return META_DATA_UNAVAILABLE;	
+		}
+		temp = g_strdup_printf("album:%s", song->album);
+		*path = cfg_get_single_value_as_string(cover_index,song->artist,  temp);
+		g_free(temp);
+		if(*path)
+		{
+			/* if path length is NULL, then data unavailible */
+			if(strlen(*path) == 0)
+			{
+				g_free(*path);
+				*path = NULL;
+				return META_DATA_UNAVAILABLE;	
+			}
+			/* return that data is availible */
+			return META_DATA_AVAILABLE;
+		}
+		/* else default to fetching */
+	}
+	else if(type == META_ALBUM_TXT)
+	{
+		gchar *temp = NULL;
+		if(!song->artist || !song->album)
+		{
+			return META_DATA_UNAVAILABLE;	
+		}
+		temp = g_strdup_printf("album:%s", song->album);
+		*path = cfg_get_single_value_as_string(cover_index,song->artist,  temp);
+		g_free(temp);
+		if(*path)
+		{
+			/* if path length is NULL, then data unavailible */
+			if(strlen(*path) == 0)
+			{
+				g_free(*path);                                                  		
+				*path = NULL;
+				return META_DATA_UNAVAILABLE;	
+			}
+			/* return that data is availible */
+			return META_DATA_AVAILABLE;
+		}
+	}
+	else if (type == META_ARTIST_ART)
+	{
+
+
+	}
+	else if (type == META_ARTIST_TXT)
+	{
+
+
+
+	}
 
 	return META_DATA_FETCHING;	
 }
@@ -81,7 +187,6 @@ void meta_data_retrieve_thread()
 		{
 			char *path = NULL;
 			int i = 0;
-			MetaDataResult ret = META_DATA_UNAVAILABLE;
 			/* 
 			 * Set default return values
 			 * Need to be reset, because of cache fetch
@@ -104,6 +209,10 @@ void meta_data_retrieve_thread()
 			}
 
 		}
+		/** 
+		 * update cache 
+		 */
+		meta_data_set_cache(data->song, data->type, data->result, data->result_path);
 
 		/**
 		 * Push the result back
@@ -112,7 +221,6 @@ void meta_data_retrieve_thread()
 		/**
 		 * clear our reference to the object
 		 */
-
 		data = NULL;
 	}while(1);
 }

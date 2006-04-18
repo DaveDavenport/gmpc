@@ -49,10 +49,15 @@ typedef struct _config_node {
 typedef struct _config_obj
 {
 	gchar *url;
+	GMutex *lock;
 	config_node *root;
 } _config_obj;
 
-void cfg_remove_node(config_obj *cfg, config_node *node);
+void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value);
+
+
+void cfg_save(config_obj *cfgo);
+void __int_cfg_remove_node(config_obj *cfg, config_node *node);
 config_node *cfg_add_class(config_obj *cfg, char *class);
 config_node *cfg_new_node();
 void cfg_add_child(config_node *parent, config_node *child);
@@ -192,9 +197,11 @@ config_obj *cfg_open(gchar *url)
 	{
 		return NULL;
 	}
-
+	cfgo->lock = g_mutex_new();
+	g_mutex_lock(cfgo->lock);
 	cfgo->url = g_strdup(url);
 	cfgo->root = NULL;
+
 	if(g_file_test(cfgo->url, G_FILE_TEST_EXISTS))
 	{
 		FILE *fp = fopen(cfgo->url, "r");
@@ -204,7 +211,7 @@ config_obj *cfg_open(gchar *url)
 			fclose(fp);
 		}
 	}
-
+	g_mutex_unlock(cfgo->lock);
 	return cfgo;
 }
 
@@ -215,11 +222,14 @@ void cfg_close(config_obj *cfgo)
 	{
 		return;
 	}
+	g_mutex_lock(cfgo->lock);
 	if(cfgo->url != NULL)
 	{
 		g_free(cfgo->url);
 	}
-	while(cfgo->root)cfg_remove_node(cfgo,cfgo->root);
+	while(cfgo->root)__int_cfg_remove_node(cfgo,cfgo->root);
+	g_mutex_unlock(cfgo->lock);
+	g_mutex_free(cfgo->lock);
 	g_free(cfgo);
 }
 config_node *cfg_new_node()
@@ -315,7 +325,6 @@ void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 			fputs("\"\n",fp);
 		}
 	}
-
 }
 
 void cfg_save(config_obj *cfgo)
@@ -363,8 +372,8 @@ config_node *cfg_get_class(config_obj *cfg, char *class)
 config_node *cfg_get_single_value(config_obj *cfg, char *class, char *key)
 {
 	/* take children */
-	config_node *cur = cfg_get_class(cfg, class);
-
+	config_node *cur = NULL;
+	cur = cfg_get_class(cfg, class);
 	if(cur == NULL || cur->children == NULL)
 	{
 		return NULL;
@@ -376,7 +385,6 @@ config_node *cfg_get_single_value(config_obj *cfg, char *class, char *key)
 			return cur;
 		}
 	}
-
 	return NULL;                                     	
 }
 
@@ -384,101 +392,158 @@ void cfg_free_string(char *string)
 {
 	if(string != NULL)
 	{
+		g_free(string);
 	}
 }
 
-char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
+char * __int_cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 {
 	config_node *cur = cfg_get_single_value(cfg, class,key);
 	if(cur != NULL)
 	{
 		if(cur->type == TYPE_ITEM)
 		{
-			return (char *)cur->value;
+			return g_strdup((char *)cur->value);
 		}
 	}
 	return NULL;
 }
 
-char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class, char *key , char *def)
+char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 {
-	char *retv = cfg_get_single_value_as_string(cfg,class,key);
-	if(retv == NULL)
-	{
-		cfg_set_single_value_as_string(cfg,class,key,def);
-		retv = cfg_get_single_value_as_string(cfg,class,key);
-	}
+	char *retv = NULL;
+	g_mutex_lock(cfg->lock);
+	retv = __int_cfg_get_single_value_as_string(cfg,class,key);
+	g_mutex_unlock(cfg->lock);
 	return retv;
 }
 
-int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
+
+char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class, char *key , char *def)
 {
-	config_node *cur = cfg_get_single_value(cfg, class,key);
+	char *retv = NULL;
+   	g_mutex_lock(cfg->lock);
+	retv = __int_cfg_get_single_value_as_string(cfg,class,key);
+	if(retv == NULL)
+	{
+		__int_cfg_set_single_value_as_string(cfg,class,key,def);
+		retv = __int_cfg_get_single_value_as_string(cfg,class,key);
+	}
+	g_mutex_unlock(cfg->lock);
+	return retv;
+}
+
+int __int_cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
+{
+	config_node *cur =NULL;
+	int retv = CFG_INT_NOT_DEFINED;
+
+	cur = cfg_get_single_value(cfg, class,key);
 	if(cur != NULL)
 	{
 		if(cur->type == TYPE_ITEM)
 		{
-			return (int)g_ascii_strtoull(cur->value,NULL,0);	
-
+			retv = (int)g_ascii_strtoull(cur->value,NULL,0);	
 		}
 	}
-	return CFG_INT_NOT_DEFINED;
+
+	return retv; 
+}
+int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
+{
+	int retv = 0;
+	g_mutex_lock(cfg->lock);
+	retv = __int_cfg_get_single_value_as_int(cfg, class, key);
+	g_mutex_unlock(cfg->lock);
+	return retv;
 }
 
 void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
 {
-	gchar *	temp = g_strdup_printf("%i",value);
-	cfg_set_single_value_as_string(cfg,class,key,temp);
+	gchar *	temp = NULL;
+	g_mutex_lock(cfg->lock);
+	temp  = g_strdup_printf("%i",value);
+	__int_cfg_set_single_value_as_string(cfg,class,key,temp);
+	g_free(temp);
+	g_mutex_unlock(cfg->lock);
+}
+void __int_cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
+{
+	gchar *	temp = NULL;
+	temp  = g_strdup_printf("%i",value);
+	__int_cfg_set_single_value_as_string(cfg,class,key,temp);
 	g_free(temp);
 }
 int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def)
 {
-	int retv = cfg_get_single_value_as_int(cfg,class,key);
+	int retv = CFG_INT_NOT_DEFINED;
+	g_mutex_lock(cfg->lock);		
+	retv = __int_cfg_get_single_value_as_int(cfg,class,key);
 	if(retv == CFG_INT_NOT_DEFINED)
 	{
-		cfg_set_single_value_as_int(cfg,class,key,def);
-		retv = cfg_get_single_value_as_int(cfg,class,key);		
+		__int_cfg_set_single_value_as_int(cfg,class,key,def);
+		retv = __int_cfg_get_single_value_as_int(cfg,class,key);		
 	}
+	g_mutex_unlock(cfg->lock);		
 	return retv;
 }
 /* float */
-float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
+float __int_cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
 {
-	char * temp = cfg_get_single_value_as_string(cfg,class,key);
+	config_node *cur =NULL;
+	cur = cfg_get_single_value(cfg,class,key);
 	float result = 0;
-	if(temp == NULL)
+	if(cur == NULL)
 	{
 		return CFG_INT_NOT_DEFINED;
 	}
 	/* make it return an error */
-	result = g_ascii_strtod(temp,NULL);
+	result = g_ascii_strtod(cur->value,NULL);
 	return result;
+}
+
+float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
+{
+	float retv = 0;
+	g_mutex_lock(cfg->lock);
+	retv = __int_cfg_get_single_value_as_float(cfg,class,key);
+	g_mutex_unlock(cfg->lock);
+	return retv;
 }
 
 void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, float value)
 {
-	char *value1 = g_strdup_printf("%f", value);
-	cfg_set_single_value_as_string(cfg,class,key,value1);
+	char *value1 = NULL;
+	g_mutex_lock(cfg->lock);
+	value1 = g_strdup_printf("%f", value);
+	__int_cfg_set_single_value_as_string(cfg,class,key,value1);
 	g_free(value1);
+	g_mutex_unlock(cfg->lock);
 }
 float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def)
 {
-	float retv = cfg_get_single_value_as_float(cfg,class,key);
+	float retv = 0;
+	g_mutex_lock(cfg->lock);
+	retv = __int_cfg_get_single_value_as_float(cfg,class,key);
 	if(retv == CFG_INT_NOT_DEFINED)
 	{
-		cfg_set_single_value_as_float(cfg,class,key,def);
-		retv = cfg_get_single_value_as_float(cfg,class,key);		
+		char * value1 = g_strdup_printf("%f", def);
+		__int_cfg_set_single_value_as_string(cfg,class,key,value1);
+		g_free(value1);
+		retv = __int_cfg_get_single_value_as_float(cfg,class,key);		
 	}
+	g_mutex_unlock(cfg->lock);
 	/* make it return an error */
 	return retv;
 }
-void cfg_remove_node(config_obj *cfg, config_node *node)
+
+void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 {
 	if(node->type != TYPE_ITEM)
 	{
 		while(node->children)
 		{
-			cfg_remove_node(cfg,node->children);
+			__int_cfg_remove_node(cfg,node->children);
 		}
 	}
 	/*  only child, and I have a parent */
@@ -523,13 +588,18 @@ void cfg_remove_node(config_obj *cfg, config_node *node)
 }
 void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 {
-	config_node *node = cfg_get_single_value(cfg,class,key);
-	if(node == NULL) return;
-	cfg_remove_node(cfg,node);
-	cfg_save(cfg);
+	config_node *node = NULL;
+	g_mutex_lock(cfg->lock);
+   	node = cfg_get_single_value(cfg,class,key);
+	if(node != NULL)
+	{
+		__int_cfg_remove_node(cfg,node);
+		cfg_save(cfg);
+	}
+	g_mutex_unlock(cfg->lock);
 }
 
-void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
+void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
 {
 	config_node *newnode = cfg_get_single_value(cfg,class,key);
 	if(newnode == NULL)
@@ -549,6 +619,13 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 	if(newnode->value) g_free(newnode->value);
 	newnode->value = g_strdup(value);	
 	cfg_save(cfg);
+}
+
+void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
+{
+	g_mutex_lock(cfg->lock);
+	__int_cfg_set_single_value_as_string(cfg, class,key,value);
+	g_mutex_unlock(cfg->lock);
 }
 
 /* multiple values */
@@ -581,17 +658,22 @@ config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, cha
 
 void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id)
 {
-	config_node *cur = cfg_get_multiple_value(cfg, class,key,id);
+	config_node *cur = NULL;
+	g_mutex_lock(cfg->lock);
+	cur = cfg_get_multiple_value(cfg, class,key,id);
 	if(cur != NULL)
 	{
-		cfg_remove_node(cfg,cur);
+		__int_cfg_remove_node(cfg,cur);
 		cfg_save(cfg);
 	}
+	g_mutex_unlock(cfg->lock);
 }
 
 void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, char *id, char *value)
 {
-	config_node *cur = cfg_get_multiple_value(cfg, class,key,id);
+	config_node *cur = NULL;
+	g_mutex_lock(cfg->lock);
+	cur = cfg_get_multiple_value(cfg, class,key,id);
 	if(cur != NULL)
 	{
 		if(cur->value) g_free(cur->value);
@@ -619,29 +701,32 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 		cfg_add_child(node,cur);
 		cfg_save(cfg);
 	}
+	g_mutex_unlock(cfg->lock);
 }
 
 conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *key)
 {
-	config_node *cur = cfg_get_single_value(cfg, class,key);
+	conf_mult_obj *list = NULL;
+	config_node *cur = NULL;
+	g_mutex_lock(cfg->lock);
+	cur = cfg_get_single_value(cfg, class,key);
 	if(cur && cur->type == TYPE_ITEM_MULTIPLE && cur->children != NULL)
 	{
-		conf_mult_obj *list = NULL;
 		cur = cur->children;	
 		/* get first */
 		while(cur->prev != NULL) cur = cur->prev;
 		do {
 			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
-			temp->value = cur->value;
-			temp->key = cur->name;
+			temp->value = g_strdup(cur->value);
+			temp->key = g_strdup(cur->name);
 			temp->next = list;
 			if(temp->next) temp->next->prev = temp;
 			list = temp;
 			cur = cur->next;
 		}while(cur != NULL);		
-		return list;
 	}
-	return NULL;
+	g_mutex_unlock(cfg->lock);
+	return list;
 }
 void cfg_free_multiple(conf_mult_obj *data)
 {
@@ -654,6 +739,8 @@ void cfg_free_multiple(conf_mult_obj *data)
 	}
 	while(list != NULL)
 	{
+		if(list->value)	g_free(list->value);
+		if(list->key)	g_free(list->key);  		
 		if(list->next != NULL)
 		{
 			if(list->prev)g_free(list->prev);
@@ -673,7 +760,7 @@ conf_mult_obj *cfg_get_class_list(config_obj *data)
 	config_node *root = NULL;
 	if(!data) return NULL;
 	if(!data->root) return NULL;
-
+	g_mutex_lock(data->lock);
 	root = data->root;
 	while(root->prev != NULL) root = root->prev;
 	do {
@@ -681,7 +768,7 @@ conf_mult_obj *cfg_get_class_list(config_obj *data)
 		{
 			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
 			temp->value = NULL;
-			temp->key = root->name;
+			temp->key = g_strdup(root->name);
 			temp->next = list;
 			if(temp->next) temp->next->prev = temp;
 			list = temp;
@@ -689,6 +776,7 @@ conf_mult_obj *cfg_get_class_list(config_obj *data)
 		root=root->next;
 	}while(root!= NULL);		
 	while(list->prev != NULL) list = list->prev;
+	g_mutex_unlock(data->lock);
 	return list;
 }
 
@@ -698,18 +786,21 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
 	config_node *root = NULL;
 	if(data == NULL) return NULL;
 	if(data->root == NULL) return NULL;
-
+	g_mutex_lock(data->lock);
 	root = cfg_get_class(data,class);
-	if(!root) return NULL;
+	if(!root || !root->children)
+	{
+		g_mutex_unlock(data->lock);
+		return NULL;
+	}
 	root = root->children;
-	if(!root) return NULL;
 	while(root->prev != NULL) root = root->prev;
 	do {
 		if(root->type == TYPE_ITEM)
 		{
 			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
-			temp->value = root->value;
-			temp->key = root->name;
+			temp->value = g_strdup(root->value);
+			temp->key = g_strdup(root->name);
 			temp->next = list;
 			if(temp->next) temp->next->prev = temp;
 			list = temp;
@@ -717,6 +808,7 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
 		root=root->next;
 	}while(root!= NULL);
 	while(list->prev != NULL) list = list->prev;
+	g_mutex_unlock(data->lock);
 	return list;
 }
 
