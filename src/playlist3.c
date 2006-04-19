@@ -1269,6 +1269,59 @@ void playlist_player_set_song(MpdObj *mi)
 				"<span size=\"large\" weight=\"bold\">Not Playing</span>");		
 	}
 }
+
+static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
+{
+	mpd_Song *current = mpd_playlist_get_current_song(connection);
+	if( current  == NULL) return;
+	printf("Callback artist image: %s %i\n",path, ret);	
+	if(song->file && current->file)
+	{
+		if(!strcmp(song->file, current->file))
+		{
+			/*
+			   playlist_player_update_image(connection);
+			   */
+			if(ret == META_DATA_AVAILABLE)
+			{
+				GdkPixbuf *pb = NULL;
+				if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0))
+				{
+					int width = gtk_paned_get_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")));
+					if(width <= 0) width = cfg_get_single_value_as_int(config, "playlist", "pane-pos");
+					if(width <= 0) width = 100;
+					else if(width > 200) width = 200;
+					width-=16;
+					pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
+					if(pb) draw_pixbuf_border(pb);
+					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
+					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+					g_object_unref(pb);
+				}
+				else{
+					gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+				}
+			}
+			else if (ret == META_DATA_FETCHING)
+			{
+				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+			}
+			else{
+				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
 static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
@@ -1289,33 +1342,15 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
 				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				g_object_unref(pb);
-				if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0))
-				{
-					int width = gtk_paned_get_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")));
-					if(width <= 0) width = cfg_get_single_value_as_int(config, "playlist", "pane-pos");
-					if(width <= 0) width = 100;
-					else if(width > 200) width = 200;
-					width-=16;
-					pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
-					if(pb) draw_pixbuf_border(pb);
-					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
-					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-					g_object_unref(pb);
-				}
-				else{
-					gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-				}
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
 				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-loading-cover", -1);				
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 			else{
 				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 		}
 	}
@@ -1327,7 +1362,9 @@ static void playlist_player_update_image(MpdObj *mi)
 	if(mpd_check_connected(connection)/* && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		meta_data_get_path_callback(song, META_ARTIST_ART/*META_ALBUM_ART*/, playlist_player_update_image_callback, NULL);
+		meta_data_get_path_callback(song, META_ALBUM_ART, playlist_player_update_image_callback, NULL);
+		meta_data_get_path_callback(song, META_ARTIST_ART, playlist_player_update_artist_image_callback, NULL);
+		
 	}
 	else{
 		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){

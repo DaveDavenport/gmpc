@@ -209,7 +209,7 @@ void pl3_current_playlist_browser_init()
 	GtkTreeViewColumn *column = NULL;
 	GtkTreeViewColumn *columns[PL_COLUMN_TOTAL];
 
-	GValue value = {-1,};
+	GValue value = {0,};
 	/* set up the tree */
 	pl3_cp_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(playlist));
 	renderer = gtk_cell_renderer_pixbuf_new ();
@@ -217,7 +217,8 @@ void pl3_current_playlist_browser_init()
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PLAYLIST_LIST_COL_ICON_ID,NULL);
-	memset(&value, 0, sizeof(value));
+/*	memset(&value, 0, sizeof(value));*/
+
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
 	g_value_set_float(&value, 0.0);
