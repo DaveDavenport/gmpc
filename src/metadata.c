@@ -155,12 +155,23 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 			if(strlen(*path) == 0)
 			{
 				g_free(*path);
+
 				*path = NULL;
 				return META_DATA_UNAVAILABLE;	
 			}
 			/* return that data is availible */
+			if(!g_file_test(*path, G_FILE_TEST_EXISTS))
+			{
+				temp = g_strdup_printf("album:%s", song->album);
+				cfg_del_single_value(cover_index, song->artist, temp);
+				g_free(temp);
+				g_free(*path);
+				*path = NULL;
+				return META_DATA_FETCHING;	
+			}
 			return META_DATA_AVAILABLE;
 		}
+
 		/* else default to fetching */
 	}
 	else if(type == META_ALBUM_TXT)
@@ -230,7 +241,6 @@ void meta_data_retrieve_thread()
 		 * Get command from queue
 		 */
 		data = g_async_queue_pop(meta_commands);	
-		printf("Meta Retrieval Thread: [%u] Got command\n",data->id);
 		/* 
 		 * Set default return values
 		 * TODO: Is this needed, because the cache will "init" them.
@@ -305,8 +315,6 @@ gboolean meta_data_handle_results()
 	for(data = g_async_queue_try_pop(meta_results);data;
 			data = g_async_queue_try_pop(meta_results))
 	{	
-		printf("Meta Data: [%u] Handling results\n",data->id);
-		printf("Had: %s\n", data->result_path);
 		data->callback(data->song, data->result,data->result_path, data->data);
 		if(data->result_path)g_free(data->result_path);
 		mpd_freeSong(data->song);
@@ -386,6 +394,9 @@ void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCall
 	 */
 
 	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	/**
+	 * Not needed, but can be usefull for debugging
+	 */
 	mtd->id = g_random_int();
 	mtd->song = mpd_songDup(song);
 	mtd->callback = callback;

@@ -1274,7 +1274,7 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
 	if( current  == NULL) return;
-	printf("Callback artist image: %s %i\n",path, ret);	
+	debug_printf(DEBUG_INFO,"Callback artist image: %s %i\n",path, ret);	
 	if(song->file && current->file)
 	{
 		if(!strcmp(song->file, current->file))
@@ -1326,7 +1326,7 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
 	if( current  == NULL) return;
-	printf("Callback %s %i\n",path, ret);	
+	debug_printf(DEBUG_INFO,"Callback %s %i\n",path, ret);	
 	if(song->file && current->file)
 	{
 		if(!strcmp(song->file, current->file))
