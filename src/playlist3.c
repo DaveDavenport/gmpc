@@ -1327,7 +1327,7 @@ static void playlist_player_update_image(MpdObj *mi)
 	if(mpd_check_connected(connection)/* && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		meta_data_get_path_callback(song, META_ALBUM_ART, playlist_player_update_image_callback, NULL);
+		meta_data_get_path_callback(song, META_ARTIST_ART/*META_ALBUM_ART*/, playlist_player_update_image_callback, NULL);
 	}
 	else{
 		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){

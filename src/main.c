@@ -262,6 +262,92 @@ int main (int argc, char **argv)
 	tac("Setting up user directories");
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	tic();
+	/* OPEN CONFIG FILE */
+	if(!config_path)
+	{
+		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
+	}
+	else{
+		url = config_path;
+	}
+	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
+	config = cfg_open(url);
+
+
+	/* test if config open  */
+	if(config == NULL)
+	{
+		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
+		show_error_message("Failed to load the configuration system", TRUE);
+		abort();
+	}
+
+	g_free(url);
+	tac("Opening config");
+
+	
+	/* initialize the cover art */
+	tic();
+	cover_art_init();
+	tac("Initialising cover art system");
+
+	tic();
+	/* Create connection object */
+	connection = mpd_new_default();
+	if(connection == NULL)
+	{
+		debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
+		return 1;
+	}
+
+
+
 	tic();
 	/** Add the internall plugins 
 	*/
@@ -307,44 +393,11 @@ int main (int argc, char **argv)
 	g_free(url);
 	tac("Loading user plugins");
 
-	tic();
-	/* OPEN CONFIG FILE */
-	if(!config_path)
-	{
-		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
-	}
-	else{
-		url = config_path;
-	}
-	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
-	config = cfg_open(url);
 
 
-	/* test if config open  */
-	if(config == NULL)
-	{
-		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
-		show_error_message("Failed to load the configuration system", TRUE);
-		abort();
-	}
 
-	g_free(url);
-	tac("Opening config");
 
-	
-	/* initialize the cover art */
-	tic();
-	cover_art_init();
-	tac("Initialising cover art system");
 
-	tic();
-	/* Create connection object */
-	connection = mpd_new_default();
-	if(connection == NULL)
-	{
-		debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
-		return 1;
-	}
 
 	/* New Signal */
 	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
