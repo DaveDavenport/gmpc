@@ -1314,14 +1314,6 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 }
 
 
-
-
-
-
-
-
-
-
 static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);

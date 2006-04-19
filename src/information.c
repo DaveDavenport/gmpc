@@ -11,7 +11,7 @@ void info_selected(GtkWidget *container);
 void info_unselected(GtkWidget *container);
 void info_changed(GtkWidget *tree, GtkTreeIter *iter);
 
-GtkWidget *moz = NULL;
+GtkWidget *info_text_view = NULL;
 GtkWidget *info_vbox = NULL;
 
 void info_construct(GtkWidget *container);
@@ -122,18 +122,18 @@ void add_default_tags(GtkTextBuffer *buffer)
 
 	tag = gtk_text_buffer_create_tag(buffer, "title", 
 			"size-points", (gdouble)24.0,
-			"paragraph-background-gdk", &(moz->style->bg[GTK_STATE_SELECTED]),
-			"foreground-gdk", &(moz->style->fg[GTK_STATE_SELECTED]),
+			"paragraph-background-gdk", &(info_text_view->style->bg[GTK_STATE_SELECTED]),
+			"foreground-gdk", &(info_text_view->style->fg[GTK_STATE_SELECTED]),
 			NULL);
 
 	tag = gtk_text_buffer_create_tag(buffer, "artist", 
 			"size-points", (gdouble)14.0,
-			"paragraph-background-gdk",&(moz->style->bg[GTK_STATE_SELECTED]),
-			"foreground-gdk",&(moz->style->fg[GTK_STATE_SELECTED]),
+			"paragraph-background-gdk",&(info_text_view->style->bg[GTK_STATE_SELECTED]),
+			"foreground-gdk",&(info_text_view->style->fg[GTK_STATE_SELECTED]),
 			NULL);                            	
 	tag = gtk_text_buffer_create_tag(buffer, "bar", 
 			"size-points", (gdouble)3.0,
-			"paragraph-background-gdk",&(moz->style->fg[GTK_STATE_NORMAL]),
+			"paragraph-background-gdk",&(info_text_view->style->fg[GTK_STATE_NORMAL]),
 			NULL);                            	
 	tag = gtk_text_buffer_create_tag(buffer, "album-value", 
 			"rise", 26*PANGO_SCALE,
@@ -164,7 +164,7 @@ void info_show_song(mpd_Song *song)
 	MpdData *data = NULL;
 	GtkTextIter iter, start, stop;
 	gchar *string = NULL;
-	GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(moz));
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(info_text_view));
 	gtk_text_buffer_get_start_iter(buffer, &start);
 	gtk_text_buffer_get_end_iter(buffer, &stop);
 	gtk_text_buffer_delete(buffer,&start,&stop);
@@ -364,7 +364,7 @@ void info_show_song(mpd_Song *song)
 					}
 					if(!pb)
 					{
-						pb = gtk_widget_render_icon(moz, "media-no-cover" , -1, NULL);
+						pb = gtk_widget_render_icon(info_text_view, "media-no-cover" , -1, NULL);
 					}
 					if(pb)
 					{
@@ -616,10 +616,10 @@ static void info_init()
 	/* Mozilla Browser widget */
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-	moz = gtk_text_view_new();
-	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(moz), GTK_WRAP_WORD);
+	info_text_view = gtk_text_view_new();
+	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(info_text_view), GTK_WRAP_WORD);
 	gtk_container_set_border_width(GTK_CONTAINER(sw), 6);
-	gtk_container_add(GTK_CONTAINER(sw), moz);
+	gtk_container_add(GTK_CONTAINER(sw), info_text_view);
 	gtk_box_pack_start_defaults(GTK_BOX(info_vbox), sw);
 	/* Update button */
 	hbox = gtk_hbox_new(FALSE, 6);
@@ -634,11 +634,11 @@ static void info_init()
 	label = gtk_label_new("");
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
 
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(moz), FALSE);
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(info_text_view), FALSE);
 
 	/* Create some default "tags" */
 	buffer = gtk_text_buffer_new(NULL);
-	gtk_text_view_set_buffer(GTK_TEXT_VIEW(moz),buffer);
+	gtk_text_view_set_buffer(GTK_TEXT_VIEW(info_text_view),buffer);
 	if(buffer == NULL) printf("help\n");
 	/* Add a default set of tags. Think of bold, and some default layout stuff
 	 * These are persistent of program existance
@@ -660,13 +660,13 @@ static void info_init()
 
 
 
-	g_signal_connect (moz, "key-press-event", 
+	g_signal_connect (info_text_view, "key-press-event", 
 			G_CALLBACK (key_press_event), NULL);
-	g_signal_connect (moz, "event-after", 
+	g_signal_connect (info_text_view, "event-after", 
 			G_CALLBACK (event_after), NULL);
-	g_signal_connect (moz, "motion-notify-event", 
+	g_signal_connect (info_text_view, "motion-notify-event", 
 			G_CALLBACK (motion_notify_event), NULL);
-	g_signal_connect (moz, "visibility-notify-event", 
+	g_signal_connect (info_text_view, "visibility-notify-event", 
 			G_CALLBACK (visibility_notify_event), NULL);
 
 
@@ -724,7 +724,7 @@ void info_selected(GtkWidget *container)
 
 void info_unselected(GtkWidget *container)
 {
-	gtk_widget_hide(moz);
+	gtk_widget_hide(info_text_view);
 	gtk_container_remove(GTK_CONTAINER(container),info_vbox);
 }
 
