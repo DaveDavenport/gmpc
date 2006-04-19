@@ -429,7 +429,7 @@ void meta_data_add_plugin(gmpcPlugin *plug)
 		changed=0;
 		for(i=0; i< (meta_num_plugins-1);i++)
 		{
-			if(meta_plugins[i]->metadata->get_priority() < meta_plugins[i+1]->metadata->get_priority())
+			if(meta_plugins[i]->metadata->get_priority() > meta_plugins[i+1]->metadata->get_priority())
 			{
 				gmpcPlugin *temp = meta_plugins[i];
 				changed=1;

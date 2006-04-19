@@ -1273,7 +1273,7 @@ void playlist_player_set_song(MpdObj *mi)
 static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	if( current  == NULL) return;
+	if( current  == NULL || pl3_xml == NULL) return;
 	debug_printf(DEBUG_INFO,"Callback artist image: %s %i\n",path, ret);	
 	if(song->file && current->file)
 	{
@@ -1325,7 +1325,7 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	if( current  == NULL) return;
+	if( current  == NULL || pl3_xml == NULL) return;
 	debug_printf(DEBUG_INFO,"Callback %s %i\n",path, ret);	
 	if(song->file && current->file)
 	{
