@@ -49,3 +49,31 @@ gchar * format_time(unsigned long seconds)
 	g_string_free(str, FALSE);
 	return ret;
 }
+
+
+void draw_pixbuf_border(GdkPixbuf *pb)
+{
+	int x,y,width,height;
+	int pixel;
+	int n_channels = gdk_pixbuf_get_n_channels(pb);
+	int rowstride = gdk_pixbuf_get_rowstride(pb);	
+	guchar *pixels;
+	width = gdk_pixbuf_get_width (pb);
+	height = gdk_pixbuf_get_height (pb);
+	pixels = gdk_pixbuf_get_pixels(pb);
+
+	for(y=0;y<height;y++)
+	{
+		for(x=0;x<width;x++)
+		{
+			if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
+			{
+				for(pixel=0; pixel < n_channels;pixel++)
+				{
+					pixels[x*n_channels+y*rowstride+pixel] = 0;
+				}
+			}
+		}
+	}
+}
+

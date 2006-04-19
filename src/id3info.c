@@ -121,10 +121,10 @@ void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
-void id3_cover_art_fetched(mpd_Song *song)
+void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkImage *image )
 {
 	mpd_Song *current = NULL;
-	if(songs == NULL) return;
+	if(songs == NULL || song == NULL) return;
 	if(songs->data== NULL) return;
 	current = songs->data;
 	if(current->artist && current->album)
@@ -132,7 +132,22 @@ void id3_cover_art_fetched(mpd_Song *song)
 		if(!strcmp(current->artist,song->artist) &&
 				!strcmp(current->album, song->album))
 		{
-			set_text(songs);	
+			GdkPixbuf *pb = NULL;
+			if(ret == META_DATA_AVAILABLE)
+			{
+				pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
+			}
+			else if(ret == META_DATA_FETCHING)
+			{
+				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
+			}
+			else
+			{
+				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
+			}
+			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
+			g_object_unref(pb);
+/*			set_text(songs);	*/
 		}
 	}
 }
@@ -304,31 +319,11 @@ void set_text (GList * node)
 	{
 		gtk_widget_set_sensitive (glade_xml_get_widget(xml_id3_window, "button_next"), TRUE);
 	}
-	if(song){
-		gchar *path= NULL;
-		int ret = 0;
-		ret = cover_art_fetch_image_path(song, &path);
-		if(ret == COVER_ART_OK_LOCAL)
-		{
-			GdkPixbuf *pb = NULL;
-			pb = gdk_pixbuf_new_from_file_at_size(path,300,300,NULL);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),pb);
-			gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_event"));
-			g_object_unref(pb);
-		}
-		else{
-			gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
-			//gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
-			gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),
-					"media-no-cover", -1);
-		}
-		if(path) g_free(path);
-		if(ret == COVER_ART_NOT_FETCHED)
-		{
-			cover_art_fetch_image(song,
-					(CoverArtCallback)id3_cover_art_fetched,NULL);
-		}
+	gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
 
+	if(song){
+		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
+		meta_data_get_path_callback(song, META_ALBUM_ART, id3_cover_art_fetched, image);
 	}
 }
 

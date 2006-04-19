@@ -14,7 +14,7 @@
 void destroy_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
-void tray_cover_art_fetched(mpd_Song *song);
+void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path);
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 void tray_icon_pref_construct(GtkWidget *container);
@@ -420,7 +420,9 @@ void tray_icon_song_change()
 	if(cover_pb == NULL && mpd_check_connected(connection)){
 		gchar *path= NULL;
 		int ret = 0; 
-		ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
+
+		meta_data_get_path_callback(mpd_playlist_get_current_song(connection), META_ALBUM_ART, tray_cover_art_fetched, NULL);
+		/*ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
 		if(ret == COVER_ART_OK_LOCAL)
 		{
 			cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
@@ -432,6 +434,8 @@ void tray_icon_song_change()
 					(CoverArtCallback)tray_cover_art_fetched,NULL);
 		}
 		if(path)g_free(path);
+		*/
+		
 	}
 }
 
@@ -666,7 +670,7 @@ int create_tray_icon()
 
 	return FALSE;
 }
-void tray_cover_art_fetched(mpd_Song *song)
+void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
 	if(current && current->artist && current->album)
@@ -674,16 +678,21 @@ void tray_cover_art_fetched(mpd_Song *song)
 		if(!strcmp(current->artist,song->artist) &&
 				!strcmp(current->album, song->album))
 		{
-			if(tip && !cover_pb)
+			if(tip)
 			{
-				gchar *path= NULL;
-				int ret = 0; 
-				ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
-				if(ret == COVER_ART_OK_LOCAL)
-				{
+				if(cover_pb) g_object_unref(cover_pb);
+				cover_pb = NULL;
+				if(ret == META_DATA_AVAILABLE)
+				{	
 					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
 				}
-				if(path)g_free(path);
+				else if (ret == META_DATA_FETCHING){
+					cover_pb = gtk_widget_render_icon(tip, "media-loading-cover",-1,NULL);
+				}
+				else
+				{
+					cover_pb = gtk_widget_render_icon(tip, "media-no-cover",-1,NULL);
+				}
 
 			}
 		}

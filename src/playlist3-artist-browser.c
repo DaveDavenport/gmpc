@@ -205,7 +205,7 @@ void pl3_artist_browser_add()
 	}
 }
 
-void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *ref)
+void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult ret, char *coverpath,GtkTreeRowReference *ref)
 {
 	if(song == NULL || ref == NULL) return;
 	else
@@ -217,23 +217,33 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, GtkTreeRowReference *r
 
 			if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_ab_store), &iter, path))
 			{
-				char *coverpath = NULL;
-				int ret = 0;
-				ret = cover_art_fetch_image_path(song, &coverpath); 
-				if(ret == COVER_ART_OK_LOCAL)
+				if(ret == META_DATA_AVAILABLE)
 				{
 					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",64);
 					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
+					draw_pixbuf_border(pb);	
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
 					if(pb)g_object_unref(pb);
-
+					gtk_tree_row_reference_free(ref);
 				}
-				if(coverpath)g_free(coverpath);
+				else if(ret == META_DATA_FETCHING)
+				{
+					GdkPixbuf *pb= gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree), "media-loading-cover", -1, NULL);
+					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
+					if(pb)g_object_unref(pb);
+				}
+				else
+				{
+					GdkPixbuf *pb = gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree), "media-no-cover", -1, NULL);
+					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
+					if(pb)g_object_unref(pb);
+					gtk_tree_row_reference_free(ref);
+				}
 			}
 			gtk_tree_path_free(path);
 		}
 	}
-	gtk_tree_row_reference_free(ref);
+
 }
 
 
@@ -247,7 +257,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 	long unsigned time =0;
 
 	if(pl3_ab_tree == NULL || pl3_ab_store == NULL) return 0;
-	
+
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &artist, 1,&string, -1);
 	if (!mpd_check_connected(connection))
 		return 0;
@@ -300,16 +310,19 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			char *coverpath = NULL;
 			int ret = 0;
 			GdkPixbuf *pb = NULL;
-			ret = cover_art_fetch_image_path_aa(artist,data->tag, &coverpath);
-			if(ret == COVER_ART_OK_LOCAL)
-			{
-				int size = cfg_get_single_value_as_int_with_default(config, "cover-art","browser-size", 64);
-				pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
-			}	
-			else
-			{
-				pb = gtk_widget_render_icon(pl3_ab_tree, "media-album", GTK_ICON_SIZE_MENU,NULL);
-			}
+			/*			ret = cover_art_fetch_image_path_aa(artist,data->tag, &coverpath);
+						if(ret == COVER_ART_OK_LOCAL)
+						{
+						int size = cfg_get_single_value_as_int_with_default(config, "cover-art","browser-size", 64);
+						pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
+						}	
+						else
+						{
+						*/
+			pb = gtk_widget_render_icon(pl3_ab_tree, "media-album", GTK_ICON_SIZE_MENU,NULL);
+			/*
+			   }
+			   */
 			gtk_list_store_append (pl3_ab_store, &iter);
 			gtk_list_store_set (pl3_ab_store,&iter,
 					PL3_AB_ARTIST, artist,
@@ -319,12 +332,18 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					PL3_AB_ICON,pb,
 					-1);
 
-			if(ret == COVER_ART_NOT_FETCHED)
+			if(1)//ret == COVER_ART_NOT_FETCHED)
 			{
 				GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
 				GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
-				cover_art_fetch_image_aa(artist,data->tag,
-						(CoverArtCallback)pl3_artist_browser_cover_art_fetched,rowref);
+				mpd_Song *song = mpd_newSong();
+				song->artist = g_strdup(artist);
+				song->album = g_strdup(data->tag);
+				/*				cover_art_fetch_image_aa(artist,data->tag,
+								(CoverArtCallback)pl3_artist_browser_cover_art_fetched,rowref);
+								*/
+				meta_data_get_path_callback(song, META_ALBUM_ART, pl3_artist_browser_cover_art_fetched, rowref);
+				mpd_freeSong(song);	
 				gtk_tree_path_free(path);
 			}
 			if(pb)g_object_unref(pb);

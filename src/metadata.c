@@ -41,6 +41,9 @@ typedef struct {
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
 {
 	if(!song) return;
+	/**
+	 * Save the path for the album art
+	 */
 	if(type == META_ALBUM_ART)
 	{
 		if(song->artist && song->album)
@@ -72,7 +75,54 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 			}                                                                        		
 			g_free(temp);
 		}
-
+	}
+	else if (type == META_ARTIST_ART)
+	{
+		if(song->artist)
+		{
+			char *temp = g_strdup("image");                   		
+			if(result == META_DATA_AVAILABLE)                                                   		
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
+			}
+			else
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,"");
+			}                                                                        		
+			g_free(temp);
+		}
+	}
+	else if (type == META_ARTIST_TXT)
+	{
+		if(song->artist)
+		{
+			char *temp = g_strdup("biography");                   		
+			if(result == META_DATA_AVAILABLE)                                                   		
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
+			}
+			else
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,"");
+			}                                                                        		
+			g_free(temp);
+		}
+	}
+	else if (type == META_SONG_TXT)
+	{
+		if(song->artist && song->title)
+		{
+			char *temp = g_strdup_printf("biography:%s", song->title);                   		
+			if(result == META_DATA_AVAILABLE)                                                   		
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
+			}
+			else
+			{
+				cfg_set_single_value_as_string(cover_index, song->artist, temp,"");
+			}                                                                        		
+			g_free(temp);
+		}
 	}
 }
 
