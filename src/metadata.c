@@ -426,14 +426,9 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	g_return_if_fail(tsong != NULL);
 
 	/**
-	 * Make a copy
-	 */
-	song = mpd_songDup(tsong);
-
-	/**
 	 * Check cache for result.
 	 */
-	ret = meta_data_get_from_cache(song, type, &path);
+	ret = meta_data_get_from_cache(tsong, type, &path);
 
 	/**
 	 * If the data is know. (and doesn't need fectching) 
@@ -442,12 +437,18 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	if(ret != META_DATA_FETCHING)
 	{
 		/* Call the callback function */
-		callback(song, ret, path,data);
+		callback(tsong, ret, path,data);
 		/* clean up path if exists */
 		if(path) g_free(path);
 		/* return */
+
 		return;
 	}
+
+	/**
+	 * Make a copy
+	 */
+	song = mpd_songDup(tsong);
 
 	/**
 	 * Check if the song is complete, (has file) so we can actually use it with all plugins
