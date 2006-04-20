@@ -409,9 +409,10 @@ void meta_data_init()
 /**
  * Function called by the "client" 
  */
-void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data)
+void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCallback callback, gpointer data)
 {
 	MetaDataResult ret;
+	mpd_Song *song =NULL;
 	char *path = NULL;
 
 	/**
@@ -423,6 +424,11 @@ void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCall
 	 * If there is no song, then the same.
 	 */
 	g_return_if_fail(song != NULL);
+
+	/**
+	 * Make a copy
+	 */
+	song = mpd_songDup(tsong);
 
 	/**
 	 * Check cache for result.
@@ -507,6 +513,7 @@ void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCall
 
 
 	callback(song, META_DATA_FETCHING,NULL, data);
+	mpd_freeSong(song);
 	/*	if(path)g_free(path);*/
 }
 
