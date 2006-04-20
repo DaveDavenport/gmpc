@@ -443,7 +443,47 @@ void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCall
 		return;
 	}
 
-
+	/**
+	 * Check if the song is complete, (has file) so we can actually use it with all plugins
+	 * If not, f.e. only artist, or only album, get a song from mpd
+	 * so plugins based on path can work with it.
+	 */
+	if(song->file == NULL)
+	{
+		/* Only mpd 0.12 supports this */
+		if(mpd_server_check_version(connection, 0,12,0))
+		{
+			MpdData *data  = NULL;
+			/** We need new libmpd data here.
+			 * The we don't need the check
+			 */
+			if(song->artist && song->album)
+			{
+				data= mpd_database_find_adv(connection, 
+						MPD_TAG_ITEM_ARTIST,
+						song->artist,
+						MPD_TAG_ITEM_ALBUM,
+						song->album,
+						-1);
+			}
+			else if(song->artist)
+			{
+				data= mpd_database_find_adv(connection, 
+						MPD_TAG_ITEM_ARTIST,
+						song->artist,
+						-1);
+			}
+			if(data)
+			{
+				if(data->type == MPD_DATA_TYPE_SONG)
+				{
+					song->file = g_strdup(data->song->file);
+				}
+				
+				mpd_data_free(data);
+			}
+		}
+	}
 	/**
 	 * If no result, start a thread and start fetching the data from there
 	 */
