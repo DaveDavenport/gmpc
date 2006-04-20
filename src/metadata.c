@@ -423,7 +423,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	/**
 	 * If there is no song, then the same.
 	 */
-	g_return_if_fail(song != NULL);
+	g_return_if_fail(tsong != NULL);
 
 	/**
 	 * Make a copy
