@@ -121,8 +121,9 @@ void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
-void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkImage *image )
+void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
 {
+	GtkImage *image = data;
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
 	if(songs->data== NULL) return;

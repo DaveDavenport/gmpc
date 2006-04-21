@@ -24,6 +24,7 @@ GdkCursor *regular_cursor = NULL;
 
 GList *tag_list = NULL;
 static mpd_Song *current_song = NULL;
+
 extern GladeXML *pl3_xml;
 
 gmpcPrefPlugin info_gpp = {
@@ -76,16 +77,6 @@ void info_changed(GtkWidget *tree, GtkTreeIter *iter){
 
 }
 
-static gchar * info_get_cover_image_url(mpd_Song *song)
-{
-	gchar *path = NULL;
-	int retv  = 0;
-	retv = cover_art_fetch_image_path(song, &path);
-	if(retv == COVER_ART_OK_LOCAL) return path;
-	if(path) g_free(path);
-	return NULL;
-}
-
 static void pl3_pixbuf_border(GdkPixbuf *pb)
 {
 	int x,y,width,height;
@@ -111,8 +102,9 @@ static void pl3_pixbuf_border(GdkPixbuf *pb)
 		}
 	}
 }
-void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextMark *mark)
+void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
+	GtkTextMark *mark = data;
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
@@ -143,8 +135,9 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTex
 	}
 }
 
-void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextMark *mark)
+void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
+ 	GtkTextMark *mark= data;
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
@@ -196,9 +189,10 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 	}
 }
 
-void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextMark *mark)
+void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextIter iter,start,stop;
+	GtkTextMark *mark = data;
+	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	if(!current_song && strcmp(current_song->file, song->file)) return;
@@ -220,9 +214,10 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	}
 }
 
-void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextMark *mark)
+void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextIter iter,start,stop;
+	GtkTextMark *mark = data;
+	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	if(!current_song && strcmp(current_song->file, song->file)) return;
@@ -521,9 +516,7 @@ void info_show_song(mpd_Song *song)
 				char *falbum = data->tag;
 				if(strcmp(song->album,falbum)) 
 				{
-					char *path = NULL;
 					mpd_Song *qsong = mpd_newSong();
-					GdkPixbuf *pb = NULL;
 					albums++;
 					if(albums == 1)
 					{

@@ -466,7 +466,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 			 */
 			if(song->artist && song->album)
 			{
-				data= mpd_database_find_adv(connection, 
+				data= mpd_database_find_adv(connection,TRUE, 
 						MPD_TAG_ITEM_ARTIST,
 						song->artist,
 						MPD_TAG_ITEM_ALBUM,
@@ -475,7 +475,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 			}
 			else if(song->artist)
 			{
-				data= mpd_database_find_adv(connection, 
+				data= mpd_database_find_adv(connection, TRUE,
 						MPD_TAG_ITEM_ARTIST,
 						song->artist,
 						-1);

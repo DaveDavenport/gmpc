@@ -15,7 +15,7 @@ typedef enum {
 	META_DATA_FETCHING
 } MetaDataResult;
 
-typedef gboolean (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
+typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 void meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);
 
 void meta_data_init();

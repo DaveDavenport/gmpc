@@ -14,7 +14,7 @@
 void destroy_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
-void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path);
+void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data);
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 void tray_icon_pref_construct(GtkWidget *container);
@@ -418,9 +418,6 @@ void tray_icon_song_change()
 		cover_pb = NULL;
 	}
 	if(cover_pb == NULL && mpd_check_connected(connection)){
-		gchar *path= NULL;
-		int ret = 0; 
-
 		meta_data_get_path_callback(mpd_playlist_get_current_song(connection), META_ALBUM_ART, tray_cover_art_fetched, NULL);
 		/*ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
 		if(ret == COVER_ART_OK_LOCAL)
@@ -670,7 +667,7 @@ int create_tray_icon()
 
 	return FALSE;
 }
-void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path)
+void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
 	if(current && current->artist && current->album)
