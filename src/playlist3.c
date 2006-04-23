@@ -1678,6 +1678,13 @@ void about_window()
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
 	g_free(path);
+#ifdef REVISION
+	path = g_strdup_printf("%s\nRevision: %s", VERSION, REVISION);
+	gtk_about_dialog_set_version(dialog,path); 
+	g_free(path);
+#else
+	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), VERSION);
+#endif
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 	g_object_unref(diagxml);

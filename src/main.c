@@ -456,6 +456,8 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
 	tac("Initialise mmkeys");
 #endif
+
+
 	/*
 	 * run the main loop
 	 */
@@ -593,6 +595,7 @@ void init_stock_icons ()
 	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "gmpc", set);
+	gtk_window_set_default_icon(pb);
 	g_object_unref (G_OBJECT (pb));
 
 
