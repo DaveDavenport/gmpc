@@ -318,9 +318,6 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 	return;
 }
 
-
-
-
 /* TODO: put this in an idle loop? or is this fast enough? */
 /* it seems to be fast enough, for 65k items I see no slowdown */
 void playlist_list_clear(CustomList * list,GtkTreeView *tree)
@@ -766,7 +763,7 @@ playlist_list_iter_next(GtkTreeModel * tree_model, GtkTreeIter * iter)
 
 	row = GPOINTER_TO_INT(iter->user_data);
 	row++;
-	
+
 	/* Is row still a valid list row? */
 	if (row >= PLAYLIST_LIST(tree_model)->num_rows)
 		return FALSE;

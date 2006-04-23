@@ -313,7 +313,18 @@ void pl3_current_playlist_browser_init()
 			gtk_tree_view_column_set_fixed_width(columns[pos], (size>0)?size:200);	
 		}
 	}
-
+	/**
+	 * Very dirty hack, to stop the last column from growing to far
+	 */
+	for(position=PL_COLUMN_TOTAL-1; position>=0;position--)
+	{
+		sprintf(smallstring, "%i", position);
+		if(cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
+		{
+			gtk_tree_view_column_set_fixed_width(columns[position],1);			
+			position = -1;
+		}
+	}
 
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 	g_signal_connect(G_OBJECT(pl3_cp_tree),"columns-changed", G_CALLBACK(pl3_current_playlist_column_changed), NULL);
