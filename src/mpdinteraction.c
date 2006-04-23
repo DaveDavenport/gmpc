@@ -157,19 +157,24 @@ void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data)
 /* returns FALSE when everything went ok */
 int next_song()
 {
-	mpd_player_next(connection);
+	if(mpd_server_check_command_allowed(connection, "next") == MPD_SERVER_COMMAND_ALLOWED)
+	{
+		mpd_player_next(connection);
+	}
 	return FALSE;
 }
 
 int prev_song()
 {
+	if(mpd_server_check_command_allowed(connection, "previous") == MPD_SERVER_COMMAND_ALLOWED)
 	mpd_player_prev(connection);
 	return FALSE;
 }
 
 int stop_song()
 {
-	mpd_player_stop(connection);
+	if(mpd_server_check_command_allowed(connection, "stop") == MPD_SERVER_COMMAND_ALLOWED)
+		mpd_player_stop(connection);
 	return FALSE;
 }
 
@@ -178,11 +183,13 @@ int play_song()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP)
 	{
-		mpd_player_play(connection);
+		if(mpd_server_check_command_allowed(connection, "play") == MPD_SERVER_COMMAND_ALLOWED)
+			mpd_player_play(connection);
 	}
 	else if (state == MPD_PLAYER_PAUSE || state == MPD_PLAYER_PLAY)
 	{
-		mpd_player_pause(connection);
+		if(mpd_server_check_command_allowed(connection, "pause") == MPD_SERVER_COMMAND_ALLOWED)
+			mpd_player_pause(connection);
 	}
 	return FALSE;
 }
@@ -202,7 +209,8 @@ void repeat_pl(GtkToggleButton *tb)
 /* TODO: Changed return Values, check for possible errors */
 int seek_ps(int n)
 {
-	mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection)+n);
+	if(mpd_server_check_command_allowed(connection, "seek") == MPD_SERVER_COMMAND_ALLOWED)
+		mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection)+n);
 	return FALSE;
 }
 

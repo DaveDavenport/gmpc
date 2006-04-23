@@ -546,41 +546,43 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		else if (!strcmp(string,"stop")) {
 			stop_song();
 		}
+		cfg_free_string(string);
 	}
 	else if(event->button == 3)
 	{
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();
 
-
-		item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
-
-
-		item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
-
-		item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
+		if(mpd_server_check_command_allowed(connection, "play"))
+		{
+			item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
 
 
-		item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
-		item = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+			item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
 
+			item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
+
+
+			item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
+			item = gtk_separator_menu_item_new();
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+		}
 		item = gtk_image_menu_item_new_with_mnemonic(_("Pla_ylist"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock("gtk-justify-fill", GTK_ICON_SIZE_MENU));
@@ -615,19 +617,21 @@ int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 	{
 		if(event->direction == GDK_SCROLL_UP)
 		{
-			mpd_status_set_volume(connection,mpd_status_get_volume(connection)+5);
+			if(mpd_server_check_command_allowed(connection, "volume") == MPD_SERVER_COMMAND_ALLOWED)
+				mpd_status_set_volume(connection,mpd_status_get_volume(connection)+5);
 		}
 		else if (event->direction == GDK_SCROLL_DOWN)
 		{
-			mpd_status_set_volume(connection,mpd_status_get_volume(connection)-5);
+			if(mpd_server_check_command_allowed(connection, "volume") == MPD_SERVER_COMMAND_ALLOWED)
+				mpd_status_set_volume(connection,mpd_status_get_volume(connection)-5);
 		}
 		else if(event->direction == GDK_SCROLL_LEFT)
 		{
-			mpd_player_prev(connection);
+			prev_song();
 		}
 		else if (event->direction == GDK_SCROLL_RIGHT)
 		{
-			mpd_player_next(connection);
+			next_song();
 		}
 	}
 
