@@ -278,9 +278,6 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 			return META_DATA_AVAILABLE;
 		}
 
-
-
-
 	}
 
 	return META_DATA_FETCHING;	
@@ -399,13 +396,6 @@ void meta_data_init()
 	cover_index = cfg_open(url);
 	g_free(url);
 
-
-
-
-
-
-
-	
 	/**
 	 * The command queue
 	 */

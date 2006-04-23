@@ -1572,7 +1572,12 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
 						(elapsedTime/(float)totalTime)*100.0);
 			}
-			if(elapsedTime/60 >99 || totalTime/60 > 99)
+			if(totalTime == 0)
+			{
+				string = g_strdup("");
+
+			}
+			else if(elapsedTime/60 >99 || totalTime/60 > 99)
 			{
 				string = g_strdup_printf("%02i:%02i - %02i:%02i",
 						(elapsedTime/3600),
