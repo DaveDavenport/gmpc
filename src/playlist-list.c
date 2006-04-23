@@ -249,9 +249,15 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		/* For unpatched mpd I should directly move the mpd_Song
 		*/
 		/* this might be worth puttin in a background process */
-
-		for(data = mpd_playlist_get_changes(mi, cl->playlist_id);
-				data != NULL;
+		if(mpd_server_check_version(mi,0,12,0) &&
+			       	mpd_server_check_command_allowed(mi,"plchangesposid") == MPD_SERVER_COMMAND_ALLOWED)
+		{
+			data = mpd_playlist_get_changes_posid(mi, cl->playlist_id);
+		}
+		else{
+			data = mpd_playlist_get_changes(mi, cl->playlist_id);
+		}
+		for(;data != NULL;
 				data = mpd_data_get_next(data))
 		{
 			GtkTreePath *path = NULL;
@@ -268,7 +274,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 				cl->playlist[i] = NULL;		
 			}
 			/* if where on a "unpatched" mpd we can directly add the song to the list */
-			if(data->song->file[0] != 'x' && data->song->file[1] != '\0')
+			if(data->song->file != NULL)
 			{
 				cl->playlist[i] = data->song;	
 				data->song = NULL;
