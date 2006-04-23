@@ -1,6 +1,5 @@
 bin_PROGRAMS=gmpc
 gmpc_SOURCES=\
-	cover-art.c\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -18,7 +17,6 @@ gmpc_SOURCES=\
 	playlist3-find-browser.c\
 	playlist-list.c\
 	mm-keys.c\
-	qthread.c\
 	config1.c\
 	cover-art-manager.c\
 	bacon-volume.c\
@@ -59,10 +57,8 @@ CFLAGS = @CFLAGS@\
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
-		cover-art.h	\
 		config1.h	\
-		metadata.h\
-		qthread.h
+		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 
 EXTRA_DIST = 	playlist3.h\

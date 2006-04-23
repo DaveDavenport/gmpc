@@ -3,7 +3,6 @@
 #include <glade/glade.h>
 #include <gdk/gdkkeysyms.h>
 #include "plugin.h"
-#include "cover-art.h"
 
 GtkWidget *info_pref_vbox = NULL;
 void info_add(GtkWidget *cat_tree);

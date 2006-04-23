@@ -163,7 +163,7 @@ void id3_cover_art_clicked()
 	{
 		if(cover_art_edit_cover(song->artist, song->album))
 		{
-			GdkPixbuf *pb = NULL;
+/*			GdkPixbuf *pb = NULL;
 			gchar *path = NULL;
 			int ret = cover_art_fetch_image_path(song, &path);
 			if(ret == COVER_ART_OK_LOCAL){
@@ -179,6 +179,7 @@ void id3_cover_art_clicked()
 				//gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
 			}			
 			if(path) g_free(path);
+			*/
 		}                                                                                                    		
 
 

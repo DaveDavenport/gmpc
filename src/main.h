@@ -30,8 +30,6 @@
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
-#include "cover-art.h"
-#include "qthread.h"
 
 extern GtkTreeModel *playlist;
 

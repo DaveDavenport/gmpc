@@ -217,7 +217,15 @@ int main (int argc, char **argv)
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	tic();
-	qthread_init();
+	if (!g_thread_supported ())
+	{
+		g_thread_init (NULL);
+	}
+	else
+	{
+		show_error_message(_("GMPC requires threading support.\nquiting.."),TRUE);
+		abort();
+	}
 	tac("Initialise threading");
 	
 
@@ -333,10 +341,11 @@ int main (int argc, char **argv)
 
 	
 	/* initialize the cover art */
+	/*
 	tic();
 	cover_art_init();
 	tac("Initialising cover art system");
-
+*/
 	tic();
 	/* Create connection object */
 	connection = mpd_new_default();

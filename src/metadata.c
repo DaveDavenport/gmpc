@@ -1,11 +1,12 @@
 #include <string.h>
+#include <glib.h>
+#include <glib/gstdio.h>
+
 #include "main.h"
 
 #include "metadata.h"
-#include "cover-art.h"
 
-extern config_obj *cover_index;
-
+config_obj *cover_index= NULL;
 int meta_num_plugins=0;
 gmpcPlugin **meta_plugins = NULL;
 
@@ -387,6 +388,24 @@ gboolean meta_data_handle_results()
 
 void meta_data_init()
 {
+	gchar *url = g_strdup_printf("%s/.covers/", g_get_home_dir());
+	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
+		if(g_mkdir(url, 0700)<0){
+			g_error("Cannot make %s\n", url);
+		}
+	}
+	g_free(url);
+	url = g_strdup_printf("%s/.covers/covers.db", g_get_home_dir());
+	cover_index = cfg_open(url);
+	g_free(url);
+
+
+
+
+
+
+
+	
 	/**
 	 * The command queue
 	 */
@@ -462,7 +481,11 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 		{
 			MpdData *data  = NULL;
 			/** We need new libmpd data here.
-			 * The we don't need the check
+			 * The we don't need the check what type of search
+			 */
+			/**
+			 * this should be done faster, it can now cause extra slowdown
+			 * because of the mpd roundtrips
 			 */
 			if(song->artist && song->album)
 			{
