@@ -27,7 +27,9 @@ gmpc_SOURCES=\
 BUILT_SOURCES= revision.h
 
 revision.h: .svn
-	svn info | grep "Last Changed Rev" | awk -F': ' '{print "static char *revision = \""$$2"\";"}' > revision.h
+	echo "static char *revision = \""\
+	`svn info | grep "Last Changed Rev" | awk -F': ' '{print $$2}'`\
+	"\"; "> revision.h
 
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
