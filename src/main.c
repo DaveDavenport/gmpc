@@ -41,7 +41,7 @@ struct timeval tv_old = {0,0};
 #include "playlist3-tag-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
-
+#include "revision.h"
 
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
@@ -176,7 +176,7 @@ int main (int argc, char **argv)
 			{
 				printf("Gnome Music Player Client\n");
 				printf("Version: %s\n", VERSION);
-				printf("Revision: %s\n",REVISION);
+				printf("Revision: %s\n",revision);
 				exit(0);
 			}
 			else if (!strncasecmp(argv[i], "--config=", 9))

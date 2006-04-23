@@ -24,6 +24,11 @@ gmpc_SOURCES=\
 	information.c\
 	metadata.c\
 	TreeSearchWidget.c
+BUILT_SOURCES= revision.h
+
+revision.h: .svn
+	svn info | grep "Last Changed Rev" | awk -F': ' '{print "static char *revision = \""$$2"\";"}' > revision.h
+
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \

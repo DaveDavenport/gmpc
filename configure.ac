@@ -116,22 +116,7 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's local
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 
-dnl get svn revision
-SVN=`which svn`
-case "x$SVN" in
-        x|xno)
-                REVISION="unknown rev"
-                ;;
-        *)
-                REVISION=r`$SVN info | grep "Last Changed Rev" | awk -F': ' '{print $2}'`
-                ;;
-esac
-AC_DEFINE_UNQUOTED([REVISION], "$REVISION", [subversion revision number])
-AC_SUBST([REVISION])
 
-
-
-echo "Svn revision: "$REVISION
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
 case $host in
