@@ -768,9 +768,14 @@ void password_dialog(int failed)
 			}
 			break;
 		default:
-		/*	cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
-			mpd_disconnect(connection);
-		*/	break;
+			if(mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
+			{
+				show_error_message(_("GMPC has insuffient permissions on the mpd server."),
+						FALSE);
+				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
+				mpd_disconnect(connection);
+			}
+			break;
 
 
 	}
@@ -779,6 +784,10 @@ void password_dialog(int failed)
 	xml_password_window = NULL;
 }
 
+void send_password()
+{
+	password_dialog(FALSE);
+}
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);

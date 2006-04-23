@@ -47,7 +47,7 @@ cb_smc_die(SmcConn smc_conn, SmPointer client_data)
 {
 	debug_printf(DEBUG_INFO,"gmpc die\n");
 	SmcCloseConnection(smc_conn, 0, NULL);
-	gtk_main_quit();
+	main_quit();
 }
 
 	static void

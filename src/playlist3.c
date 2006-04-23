@@ -899,7 +899,7 @@ void create_playlist3 ()
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
-	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
+	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,NULL);
 	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 	/* Restore values from config */
@@ -1442,7 +1442,8 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 {
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), !connect);
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
-	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM,NULL);
+	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), connect);
+	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,NULL);
 	/* update the image */
 	playlist_player_update_image(connection);
 
@@ -1610,6 +1611,23 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		bacon_volume_button_set_value(BACON_VOLUME_BUTTON(volume_slider),mpd_status_get_volume(connection));
 
+	}
+	if(what&MPD_CST_PERMISSION)
+	{
+		/* Check for control */
+		if(mpd_server_check_command_allowed(connection,"play") == MPD_SERVER_COMMAND_ALLOWED &&
+				mpd_check_connected(connection))
+		{
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"),TRUE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_control"),TRUE);
+
+		}
+		else
+		{
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"),FALSE);
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_control"),FALSE);
+
+		}
 	}
 }
 

@@ -12,7 +12,6 @@
   <property name="default_height">400</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">gmpc.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -52,7 +51,7 @@
 		      <signal name="activate" handler="preferences_window_connect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image341">
+			<widget class="GtkImage" id="image389">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-connect</property>
 			  <property name="icon_size">1</property>
@@ -74,9 +73,31 @@
 		      <signal name="activate" handler="preferences_window_disconnect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image342">
+			<widget class="GtkImage" id="image390">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-disconnect</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="menuitem_sendpassword">
+		      <property name="visible">True</property>
+		      <property name="sensitive">False</property>
+		      <property name="label" translatable="yes">_Send Password</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="send_password" last_modification_time="Sun, 23 Apr 2006 19:24:22 GMT"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image391">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-dialog-authentication</property>
 			  <property name="icon_size">1</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
@@ -122,13 +143,13 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkMenuItem" id="menuitem2">
+	    <widget class="GtkMenuItem" id="menuitem_control">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">_Control</property>
 	      <property name="use_underline">True</property>
 
 	      <child>
-		<widget class="GtkMenu" id="menuitem2_menu">
+		<widget class="GtkMenu" id="menuitem_control_menu">
 
 		  <child>
 		    <widget class="GtkImageMenuItem" id="menu_play">
@@ -139,7 +160,7 @@
 		      <accelerator key="x" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image343">
+			<widget class="GtkImage" id="image392">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -161,7 +182,7 @@
 		      <accelerator key="v" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image344">
+			<widget class="GtkImage" id="image393">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -189,7 +210,7 @@
 		      <accelerator key="b" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image345">
+			<widget class="GtkImage" id="image394">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -211,7 +232,7 @@
 		      <accelerator key="z" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image346">
+			<widget class="GtkImage" id="image395">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -274,7 +295,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image347">
+			<widget class="GtkImage" id="image396">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>
@@ -454,8 +475,9 @@
 		      </child>
 
 		      <child>
-			<widget class="GtkAlignment" id="alignment1">
+			<widget class="GtkAlignment" id="pl3_button_control_box">
 			  <property name="visible">True</property>
+			  <property name="sensitive">False</property>
 			  <property name="xalign">0.5</property>
 			  <property name="yalign">0.5</property>
 			  <property name="xscale">0</property>
@@ -853,7 +875,6 @@
   <property name="modal">False</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">gmpc.png</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
