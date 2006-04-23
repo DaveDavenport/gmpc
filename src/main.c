@@ -472,6 +472,7 @@ int main (int argc, char **argv)
 
 void main_quit()
 {
+	g_source_remove(update_timeout);
 	pl3_current_playlist_destroy();
 	/* so it saves the playlist pos */
 	mpd_signal_connect_connection_changed(connection, NULL, NULL);
@@ -767,9 +768,9 @@ void password_dialog(int failed)
 			}
 			break;
 		default:
-			cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
+		/*	cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
 			mpd_disconnect(connection);
-			break;
+		*/	break;
 
 
 	}

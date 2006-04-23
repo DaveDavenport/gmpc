@@ -1662,7 +1662,10 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 {
 	int volume = bacon_volume_button_get_value(vol_but);
-	mpd_status_set_volume(connection, volume);
+	if(mpd_status_get_volume(connection) != volume)
+	{
+		mpd_status_set_volume(connection, volume);
+	}
 }
 
 void id3_info()
@@ -1689,7 +1692,7 @@ void about_window()
 		path = g_strdup_printf("%s\n", VERSION);
 	}
 	
-	gtk_about_dialog_set_version(dialog,path); 
+	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
 	g_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
