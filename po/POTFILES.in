@@ -9,7 +9,6 @@ src/edit_markup.c
 src/eggtrayicon.c
 src/main.c
 src/mpdinteraction.c
-src/player.c
 src/playlist3.c
 src/preferences.c
 src/tray-icon.c
