@@ -321,7 +321,7 @@ void pl3_current_playlist_browser_init()
 		sprintf(smallstring, "%i", position);
 		if(cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 		{
-			gtk_tree_view_column_set_fixed_width(columns[position],1);			
+			gtk_tree_view_column_set_fixed_width(columns[position],50);			
 			position = -1;
 		}
 	}
