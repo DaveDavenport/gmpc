@@ -601,14 +601,13 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 			GtkWidget *frame = NULL;
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
 			info_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
+			gtk_widget_set_name(info_tooltip, "gtk-tooltips");
 			gtk_window_set_resizable(GTK_WINDOW(info_tooltip), FALSE);
 			frame = gtk_frame_new(NULL);	
 			gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
 			gtk_container_add(GTK_CONTAINER(info_tooltip), frame);
 			info_label = gtk_label_new(url);
 			gtk_container_add(GTK_CONTAINER(frame), info_label);
-
-
 		}
 		else
 		{
@@ -624,7 +623,17 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 	}
 	if(info_label && url)
 	{
-		gtk_label_set_text(GTK_LABEL(info_label), url);
+		gchar *string = NULL;
+		if(strncmp(url, "album:",6) == 0)
+		{
+			string = g_markup_printf_escaped("Play album: '%s'", &url[6]);
+		}
+		else
+		{
+			string = g_markup_escape_text(url,-1);
+		}
+		gtk_label_set_markup(GTK_LABEL(info_label), string);
+		g_free(string);
 	}
 
 	if (tags) 
