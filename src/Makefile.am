@@ -24,9 +24,9 @@ gmpc_SOURCES=\
 	information.c\
 	metadata.c\
 	TreeSearchWidget.c
-BUILT_SOURCES= revision.h
+BUILT_SOURCES= revisiont.h
 
-revision.h:
+revisiont.h:
 	echo "static char *revision = \""\
 	`svn info | grep "Last Changed Rev" | awk -F': ' '{print $$2}'`\
 	"\"; "> revision.h
