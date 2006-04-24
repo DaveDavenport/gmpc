@@ -7,7 +7,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gmpc.pc
 
 EXTRA_DIST = 		\
-	gmpc.desktop 	\
+	gmpc.desktop.in 	\
 	gmpc.pc.in
 
 
