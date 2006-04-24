@@ -26,6 +26,12 @@ static mpd_Song *current_song = NULL;
 
 extern GladeXML *pl3_xml;
 
+
+GtkWidget *info_tooltip = NULL;
+GtkWidget *info_label = NULL;
+
+
+
 gmpcPrefPlugin info_gpp = {
 	info_construct,
 	info_destroy
@@ -564,6 +570,7 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 	GSList *tags = NULL, *tagp = NULL;
 	GtkTextBuffer *buffer;
 	GtkTextIter iter;
+	char *url = NULL;
 	gboolean hovering = FALSE;
 
 	buffer = gtk_text_view_get_buffer (text_view);
@@ -580,6 +587,7 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 		if (name/*page != 0*/) 
 		{
 			hovering = TRUE;
+			url = name;
 			break;
 		}
 	}
@@ -590,10 +598,33 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 
 		if (hovering_over_link)
 		{
+			GtkWidget *frame = NULL;
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
+			info_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
+			gtk_window_set_resizable(GTK_WINDOW(info_tooltip), FALSE);
+			frame = gtk_frame_new(NULL);	
+			gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
+			gtk_container_add(GTK_CONTAINER(info_tooltip), frame);
+			info_label = gtk_label_new(url);
+			gtk_container_add(GTK_CONTAINER(frame), info_label);
+
+
 		}
 		else
+		{
+			
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), regular_cursor);
+			if(info_tooltip)
+			{
+				gtk_widget_destroy(info_tooltip);
+				info_tooltip = NULL;
+				info_label = NULL;
+			}
+		}
+	}
+	if(info_label && url)
+	{
+		gtk_label_set_text(GTK_LABEL(info_label), url);
 	}
 
 	if (tags) 
@@ -615,6 +646,11 @@ motion_notify_event (GtkWidget      *text_view,
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y);
 
 	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
+	if(info_tooltip)
+	{
+		gtk_window_move(GTK_WINDOW(info_tooltip), (event->x_root)+15,(event->y_root)+15);
+		gtk_widget_show_all(info_tooltip);
+	}
 	return FALSE;
 }
 
