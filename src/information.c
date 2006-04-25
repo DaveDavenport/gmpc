@@ -130,7 +130,7 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song && strcmp(current_song->file, song->file)) return;
+	if(!current_song)return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -163,7 +163,7 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song && strcmp(current_song->file, song->file)) return;
+	if(!current_song)return; 
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -217,7 +217,7 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song && strcmp(current_song->file, song->file)) return;
+	if(!current_song) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -242,7 +242,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song && strcmp(current_song->file, song->file)) return;
+	if(!current_song) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
