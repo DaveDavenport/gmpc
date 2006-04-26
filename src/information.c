@@ -26,7 +26,7 @@ static mpd_Song *current_song = NULL;
 static guint32 current_id = 0;
 
 extern GladeXML *pl3_xml;
-void info_status_changed(MpdObj *mi, ChangedStatusType what);
+void info_status_changed(MpdObj *mi, ChangedStatusType what,gpointer data);
 
 /*
 GtkWidget *info_tooltip = NULL;
@@ -83,7 +83,7 @@ void info_changed(GtkWidget *tree, GtkTreeIter *iter){
 	
 
 }
-void info_status_changed(MpdObj *mi, ChangedStatusType what)
+void info_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
 {
 	/**
 	 * Todo Make this optional
@@ -131,13 +131,12 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextIter iter,start,stop;
 	guint32 id;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
-	id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
+	id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	/* check if where checking for the correct song */
 	if(!current_song || id != current_id)return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
-	printf("doing %s\n",path);
 	if(ret == META_DATA_AVAILABLE)
 	{	
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,164,164,NULL);
@@ -167,7 +166,6 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
-	g_printf("%i %i %p\n", id, current_id,g_object_get_data(G_OBJECT(mark), "infoid"));
 	if( current_song == NULL|| id!=current_id)return; 
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -221,7 +219,7 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	if(!current_song|| id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -247,7 +245,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	if(!current_song || id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -911,7 +909,6 @@ void info_add(GtkWidget *cat_tree)
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	GtkTreeIter iter;
 	if(!cfg_get_single_value_as_int_with_default(config, "information", "enable", TRUE)) return;
-	printf("adding plugin_wp: %i '%s'\n", info_plugin.id, info_plugin.name);
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter,
 			PL3_CAT_TYPE, info_plugin.id,
