@@ -23,6 +23,7 @@ GdkCursor *regular_cursor = NULL;
 
 GList *tag_list = NULL;
 static mpd_Song *current_song = NULL;
+static guint32 current_id = 0;
 
 extern GladeXML *pl3_xml;
 void info_status_changed(MpdObj *mi, ChangedStatusType what);
@@ -128,9 +129,11 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 {
 	GtkTextMark *mark = data;
 	GtkTextIter iter,start,stop;
+	guint32 id;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
+	id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
 	/* check if where checking for the correct song */
-	if(!current_song)return;
+	if(!current_song || id != current_id)return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -163,11 +166,12 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song)return; 
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	g_printf("%i %i %p\n", id, current_id,g_object_get_data(G_OBJECT(mark), "infoid"));
+	if( current_song == NULL|| id!=current_id)return; 
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
-	printf("doing %s\n",path);
 	if(ret == META_DATA_AVAILABLE)
 	{	
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
@@ -217,7 +221,8 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song) return;
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
+	if(!current_song|| id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -242,7 +247,8 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	if(!current_song) return;
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(mark, "infoid"));
+	if(!current_song || id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
@@ -324,6 +330,9 @@ void info_show_song(mpd_Song *song)
 		mpd_freeSong(current_song);
 	}
 	current_song = mpd_songDup(song);
+	current_id = g_random_int();
+
+	
 	/* delete old tags */
 	table = gtk_text_buffer_get_tag_table (buffer);
 	if(tag_list)
@@ -384,6 +393,7 @@ void info_show_song(mpd_Song *song)
 	   }
 	   */
 	mark = gtk_text_buffer_create_mark(buffer, "album-art",&iter, TRUE);
+	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, mark);
 	gtk_text_buffer_get_end_iter(buffer, &iter);
 	gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
@@ -475,6 +485,7 @@ void info_show_song(mpd_Song *song)
 		   */
 
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
+		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, mark);
 
 		gtk_text_buffer_get_end_iter(buffer, &iter);
@@ -491,11 +502,13 @@ void info_show_song(mpd_Song *song)
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, ":\n", -1,"item-value",NULL);                           	
 
 		mark = gtk_text_buffer_create_mark(buffer, "artist-art",&iter, TRUE);
+		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 		meta_data_get_path_callback(song, META_ARTIST_ART, info_cover_art_fetched, mark);
 		gtk_text_buffer_get_end_iter(buffer, &iter);
 		/*		gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);*/
 
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
+		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 		meta_data_get_path_callback(song, META_ARTIST_TXT, info_cover_txt_fetched, mark);
 		gtk_text_buffer_get_end_iter(buffer, &iter);
 
@@ -548,6 +561,7 @@ void info_show_song(mpd_Song *song)
 					qsong->artist = g_strdup(song->artist);
 					qsong->album = g_strdup(falbum);
 					mark = gtk_text_buffer_create_mark(buffer,NULL,&iter, TRUE);
+					g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 					meta_data_get_path_callback(qsong, META_ALBUM_ART, info_cover_album_mini_art_fetched, mark);
 					gtk_text_buffer_get_end_iter(buffer, &iter);
 					mpd_freeSong(qsong);
