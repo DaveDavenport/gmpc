@@ -370,26 +370,7 @@ void info_show_song(mpd_Song *song)
 	}
 	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1, "bar", NULL);
 	gtk_text_buffer_insert(buffer, &iter, "\n", -1);
-	/*	string = info_get_cover_image_url(song);*/
-	/*
-	   if(string)
-	   {
-	   GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(string,164,164,NULL);
-	   if(pb)
-	   {
-	   pl3_pixbuf_border(pb);
 
-	   gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
-	   gtk_text_buffer_get_end_iter(buffer, &start);
-	   gtk_text_iter_backward_char(&start);
-	   gtk_text_buffer_get_end_iter(buffer, &stop);
-	   gtk_text_buffer_apply_tag_by_name(buffer, "item-value", &start, &stop);
-	   gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
-	   g_object_unref(pb);
-	   }
-	   g_free(string);
-	   }
-	   */
 	mark = gtk_text_buffer_create_mark(buffer, "album-art",&iter, TRUE);
 	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, mark);
@@ -397,19 +378,6 @@ void info_show_song(mpd_Song *song)
 	gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
 
 	/** ARTIST **/
-	/*
-	   if(song->artist)
-	   {
-	// Set tag for link 
-	tag = gtk_text_buffer_create_tag(buffer, "artist-url", NULL);
-	tag_list = g_list_append(tag_list, tag);
-	g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("artist:"), g_free);
-
-	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Artist: ", -1,"item","bold",NULL);
-	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->artist,-1,"item-value","link","artist-url",NULL);
-	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
-	}
-	*/
 	if(song->album)
 	{
 		/* Set tag for link */
@@ -463,25 +431,7 @@ void info_show_song(mpd_Song *song)
 
 	if(song->artist && song->album)
 	{
-		/*
-		   char *path = g_strdup_printf("%s/.covers/%s-%s.albuminfo",
-		   g_get_home_dir(),song->artist,song->album);
-		   if(g_file_test(path, G_FILE_TEST_EXISTS))
-		   {
-		   char *content;
-		   gsize length;
-		   if(g_file_get_contents(path,&content,&length, NULL))
-		   {
-		   gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album Info:\n", -1,"item","bold",NULL);
-		   gtk_text_buffer_insert_with_tags_by_name(buffer, &iter,content, length,"item",NULL);
-		   gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
-
-		   g_free(content);
-		   }
-		   }
-		   g_free(path);                                                                                           	
-		   */
-
+	
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
 		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, mark);
@@ -627,44 +577,15 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 
 		if (hovering_over_link)
 		{
-			/*			GtkWidget *frame = NULL;
-			*/			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
-			/*			info_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
-						gtk_widget_set_name(info_tooltip, "gtk-tooltips");
-						gtk_window_set_resizable(GTK_WINDOW(info_tooltip), FALSE);
-						frame = gtk_frame_new(NULL);	
-						gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
-						gtk_container_add(GTK_CONTAINER(info_tooltip), frame);
-						info_label = gtk_label_new(url);
-						gtk_container_add(GTK_CONTAINER(frame), info_label);
-						*/		}
+						gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
+			}
 		else
 		{
 
 			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), regular_cursor);
-			/*			if(info_tooltip)
-						{
-						gtk_widget_destroy(info_tooltip);
-						info_tooltip = NULL;
-						info_label = NULL;
-						}
-						*/		}
+		}
 	}
-	/*	if(info_label && url)
-		{
-		gchar *string = NULL;
-		if(strncmp(url, "album:",6) == 0)
-		{
-		string = g_markup_printf_escaped("Play album: '%s'", &url[6]);
-		}
-		else
-		{
-		string = g_markup_escape_text(url,-1);
-		}
-		gtk_label_set_markup(GTK_LABEL(info_label), string);
-		g_free(string);
-		}
-		*/
+
 	if (tags) 
 		g_slist_free (tags);
 }
@@ -684,12 +605,7 @@ motion_notify_event (GtkWidget      *text_view,
 	set_cursor_if_appropriate (GTK_TEXT_VIEW (text_view), x, y);
 
 	gdk_window_get_pointer (text_view->window, NULL, NULL, NULL);
-	/*	if(info_tooltip)
-		{
-		gtk_window_move(GTK_WINDOW(info_tooltip), (event->x_root)+15,(event->y_root)+15);
-		gtk_widget_show_all(info_tooltip);
-		}
-		*/	return FALSE;
+	return FALSE;
 }
 
 /* Also update the cursor image if the window becomes visible
@@ -907,12 +823,12 @@ void info_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
-	GtkTreeIter iter;
+	GtkTreeIter iter,child;
 	if(!cfg_get_single_value_as_int_with_default(config, "information", "enable", TRUE)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter,
 			PL3_CAT_TYPE, info_plugin.id,
-			PL3_CAT_TITLE, "Song Information",
+			PL3_CAT_TITLE, "Information",
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-info",
 			PL3_CAT_PROC, TRUE,
@@ -929,6 +845,34 @@ void info_add(GtkWidget *cat_tree)
 		tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
 		gtk_tree_path_free(path);
 	}
+
+	/**
+	 * Window with information about the song.
+	 */
+	gtk_tree_store_append(pl3_tree, &child,&iter);
+	gtk_tree_store_set(pl3_tree, &child,
+			PL3_CAT_TYPE, info_plugin.id,
+			PL3_CAT_TITLE, "Song",
+			PL3_CAT_INT_ID, "/Song",
+			PL3_CAT_ICON_ID, "gtk-edit",
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
+	gtk_tree_store_append(pl3_tree, &child,&iter);
+	gtk_tree_store_set(pl3_tree, &child,
+			PL3_CAT_TYPE, info_plugin.id,
+			PL3_CAT_TITLE, "Album",
+			PL3_CAT_INT_ID, "/Album",
+			PL3_CAT_ICON_ID, "media-album",
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
+	gtk_tree_store_append(pl3_tree, &child,&iter);
+	gtk_tree_store_set(pl3_tree, &child,
+			PL3_CAT_TYPE, info_plugin.id,
+			PL3_CAT_TITLE, "Artist",
+			PL3_CAT_INT_ID, "/Artist",                  	
+			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);		
 
 
 }
