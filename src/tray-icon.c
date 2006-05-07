@@ -666,11 +666,13 @@ void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoin
 				draw_pixbuf_border(cover_pb);
 			}
 			else if (ret == META_DATA_FETCHING){
-				cover_pb = gtk_widget_render_icon(tip, "media-loading-cover",-1,NULL);
+				if(tray_icon)
+				cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-loading-cover",-1,NULL);
 			}
 			else
 			{
-				cover_pb = gtk_widget_render_icon(tip, "media-no-cover",-1,NULL);
+				if(tray_icon)
+				cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-no-cover",-1,NULL);
 			}
 		}
 	}

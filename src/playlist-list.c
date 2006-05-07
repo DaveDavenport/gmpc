@@ -279,7 +279,6 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			i = data->song->pos;
 			if(i >= cl->num_rows)
 			{
-				printf("%i - %i\n", i, cl->num_rows);
 				g_assert(i >= cl->num_rows);
 			}
 			if((cl->playlist[i]))

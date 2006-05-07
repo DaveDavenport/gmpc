@@ -92,7 +92,6 @@ void info_changed(GtkWidget *tree, GtkTreeIter *iter){
 	char *item = NULL;
 	gtk_tree_model_get(GTK_TREE_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tree))), iter, 
 			PL3_CAT_INT_ID, &item, -1); 
-	printf("Changed: %s\n", item);
 	if(!strcmp(item, "/Song"))
 	{
 		info_show_current_song();	
@@ -157,7 +156,6 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		}
 		else
 		{
-			printf("Failed to open %s\n", path);
 		}
 	}
 }
@@ -190,7 +188,6 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 		}
 		else
 		{
-			printf("Failed to open %s\n", path);
 		}
 	}
 	else if(ret == META_DATA_UNAVAILABLE){
@@ -1009,7 +1006,6 @@ static void info_init()
 	/* Create some default "tags" */
 	buffer = gtk_text_buffer_new(NULL);
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(info_text_view),buffer);
-	if(buffer == NULL) printf("help\n");
 	/* Add a default set of tags. Think of bold, and some default layout stuff
 	 * These are persistent of program existance
 	 */
