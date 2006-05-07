@@ -392,6 +392,8 @@ void pl3_cat_sel_changed()
 					}while(gtk_tree_path_up(path) && gtk_tree_path_get_depth(path) > 1);
 
 				}
+				if(text)g_free(text);
+				if(icon)g_free(icon);
 			}while(gtk_tree_model_iter_next(model, &test2));
 			gtk_tree_path_free(path);	
 		}

@@ -739,13 +739,15 @@ void pl3_current_playlist_browser_unselected()
 
 void pl3_current_playlist_browser_playlist_changed()
 {
-
-	gchar *string = format_time(playlist_list_get_playtime(PLAYLIST_LIST(playlist)));
-	gchar *mesg = g_strdup_printf("%i Items, %s", PLAYLIST_LIST(playlist)->num_rows, string); 
-	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, "");	
-	g_free(string);
-	g_free(mesg);
-
+	if(pl3_cat_get_selected_browser() == PL3_CURRENT_PLAYLIST)
+	{
+		gchar *string = format_time(playlist_list_get_playtime(PLAYLIST_LIST(playlist)));
+		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
+				(PLAYLIST_LIST(playlist)->loaded == PLAYLIST_LIST(playlist)->num_rows)? "":"(Loading..)"); 
+		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
+		g_free(string);
+		g_free(mesg);
+	}
 }
 
 

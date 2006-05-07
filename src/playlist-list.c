@@ -155,6 +155,12 @@ int playlist_list_lazy_fill(CustomList *cl)
 	if(cl->playlist[cl->pd.total_length] == NULL)
 	{
 		cl->playlist[cl->pd.total_length] = mpd_playlist_get_song_from_pos(cl->pd.mi,cl->pd.total_length);
+		cl->loaded++;
+		if(cl->playlist[cl->pd.total_length]->time > 0)
+		{
+			cl->playtime += cl->playlist[cl->pd.total_length]->time;
+		}
+		pl3_current_playlist_browser_playlist_changed();
 	}
 	cl->pd.total_length++;
 	return TRUE;
@@ -222,7 +228,15 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 				gtk_tree_model_row_deleted(GTK_TREE_MODEL(cl),path);
 				gtk_tree_path_free(path);
 				cl->num_rows--;
-				if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
+				if((cl->playlist[i]))
+				{
+					cl->loaded--;
+					if(cl->playlist[i]->time >0)
+					{
+						cl->playtime -= cl->playlist[i]->time;
+					}
+					mpd_freeSong((cl->playlist[i]));
+				}
 				/* To be sure */
 				cl->playlist[i] = NULL;
 			}
@@ -270,13 +284,24 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			}
 			if((cl->playlist[i]))
 			{
+				cl->loaded--;
+				if(cl->playlist[i]->time >0)
+				{
+					cl->playtime -= cl->playlist[i]->time;
+				}
 				mpd_freeSong((cl->playlist[i]));
 				cl->playlist[i] = NULL;		
 			}
 			/* if where on a "unpatched" mpd we can directly add the song to the list */
 			if(data->song->file != NULL)
 			{
+				cl->loaded++;
 				cl->playlist[i] = data->song;	
+				if(cl->playlist[i]->time >0)
+				{
+					cl->playtime += cl->playlist[i]->time;
+				}
+				pl3_current_playlist_browser_playlist_changed();
 				data->song = NULL;
 			}
 			/* to be sure */
@@ -310,7 +335,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		printf("Playlist sync error %i %i\n", cl->num_rows, new_length);
 		return;
 	}
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-fill", TRUE))
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-load-playlist", FALSE))
 	{
 		cl->pd.total_length = 0;	
 		cl->pd.timeout = g_idle_add_full(G_PRIORITY_LOW, (GSourceFunc)playlist_list_lazy_fill, cl, NULL);
@@ -339,7 +364,12 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 		gtk_tree_path_append_index(path, i);
 		gtk_tree_model_row_deleted(GTK_TREE_MODEL(list), path);
 		gtk_tree_path_free(path);
-		if((list->playlist[i]))mpd_freeSong((list->playlist[i]));
+		if((list->playlist[i]))
+		{
+			list->loaded--;
+			mpd_freeSong((list->playlist[i]));
+		}
+		
 	}	
 	if(list->num_rows != 0) printf("Error removing data\n");
 	/* free the array of pointers */
@@ -349,6 +379,7 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	list->playlist_id = -1;
 	list->num_rows = 0;
 	list->playtime = 0;
+	list->loaded = 0;
 	list->current_song_pos = -1;
 
 	if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(list));
@@ -480,6 +511,7 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->pd.timeout = 0;
 
 	playlist_list->playtime = 0;
+	playlist_list->loaded = 0;
 	/* default markup */
 	playlist_list->markup = g_strdup("[%title%[ - %artist%]]|%shortfile%");
 
@@ -501,7 +533,12 @@ static void playlist_list_finalize(GObject * object)
 	debug_printf(DEBUG_INFO, "Finalize playlist-backend\n");
 	for(i=0; i < cl->num_rows;i++)
 	{
-		if((cl->playlist[i]))mpd_freeSong((cl->playlist[i]));
+
+		if((cl->playlist[i]))
+		{
+			cl->loaded--;	
+			mpd_freeSong((cl->playlist[i]));
+		}
 	}
 	if(cl->playlist)g_free(cl->playlist);
 
@@ -647,7 +684,12 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data));
 
 		PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)] = song;
-
+		PLAYLIST_LIST(tree_model)->loaded++;
+		if(PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time >0)
+		{
+			PLAYLIST_LIST(tree_model)->playtime += PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time;
+		}                                             		
+		pl3_current_playlist_browser_playlist_changed();
 	}	
 
 

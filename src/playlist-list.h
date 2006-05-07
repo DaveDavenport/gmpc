@@ -74,6 +74,7 @@ struct _CustomList
 	char 			*markup;
 	gint            n_columns;
 	guint 			playtime;
+	guint			loaded;
 
 	GType           column_types[PLAYLIST_LIST_N_COLUMNS];
 

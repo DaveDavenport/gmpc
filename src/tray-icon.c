@@ -151,9 +151,10 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		
 		height = gdk_pixbuf_get_height(cover_pb)+BORDER_WIDTH;
 		/* draw image outline */
-		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
+/*		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
 				BORDER_WIDTH-1,BORDER_WIDTH-1,
 				width-2*BORDER_WIDTH+1,height-BORDER_WIDTH+1);
+				*/
 		/* add a right border to the image */
 		width+=BORDER_WIDTH;
 		/* draw image */
@@ -163,30 +164,9 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 				-1,-1,
 				GDK_RGB_DITHER_NONE,0,0);	
 	}
-	else{
-		GdkPixbuf *pb = NULL;
-		if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && 
-					mpd_player_get_state(connection) != MPD_STATUS_STATE_UNKNOWN){
-			
-			pb = gtk_widget_render_icon(widget, "media-no-cover",-1/*GTK_ICON_SIZE_DND*/,NULL);
-		}
-		else{
-			pb = gtk_widget_render_icon(widget, "gmpc",GTK_ICON_SIZE_DND,NULL);
-		}
-		width = gdk_pixbuf_get_width(pb)+BORDER_WIDTH*2;
-		/* draw rectangle, width of image + 2x border */
-		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
-		
-		height = gdk_pixbuf_get_height(pb)+BORDER_WIDTH;
-		/* add a right border to the image */
-		width+=BORDER_WIDTH;
-		/* draw image */
-		gdk_draw_pixbuf(widget->window, NULL, pb, 
-				0,0,
-				BORDER_WIDTH,BORDER_WIDTH,
-				-1,-1,
-				GDK_RGB_DITHER_NONE,0,0);	
-		if(pb) g_object_unref(pb);
+	else {
+		width = BORDER_WIDTH;
+		height = BORDER_WIDTH;
 	}
 
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
@@ -219,7 +199,6 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 			height = lheight+BORDER_WIDTH;
 		}
 	}
-
 	if(widget->allocation.width != width+BORDER_WIDTH || widget->allocation.height != height + BORDER_WIDTH)
 	{
 		int x_tv,y_tv;
@@ -679,22 +658,19 @@ void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoin
 		if(!strcmp(current->artist,song->artist) &&
 				!strcmp(current->album, song->album))
 		{
-			if(tip)
+			if(cover_pb) g_object_unref(cover_pb);
+			cover_pb = NULL;
+			if(ret == META_DATA_AVAILABLE)
+			{	
+				cover_pb = gdk_pixbuf_new_from_file_at_size(path, 80,80, NULL);
+				draw_pixbuf_border(cover_pb);
+			}
+			else if (ret == META_DATA_FETCHING){
+				cover_pb = gtk_widget_render_icon(tip, "media-loading-cover",-1,NULL);
+			}
+			else
 			{
-				if(cover_pb) g_object_unref(cover_pb);
-				cover_pb = NULL;
-				if(ret == META_DATA_AVAILABLE)
-				{	
-					cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
-				}
-				else if (ret == META_DATA_FETCHING){
-					cover_pb = gtk_widget_render_icon(tip, "media-loading-cover",-1,NULL);
-				}
-				else
-				{
-					cover_pb = gtk_widget_render_icon(tip, "media-no-cover",-1,NULL);
-				}
-
+				cover_pb = gtk_widget_render_icon(tip, "media-no-cover",-1,NULL);
 			}
 		}
 	}

@@ -300,6 +300,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					PL3_AB_ICON,pb,
 					-1);
 			if(pb)g_object_unref(pb);
+			/* To Damn Slow 
 			if(strlen(data->tag))//ret == COVER_ART_NOT_FETCHED)
 			{
 				GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
@@ -307,14 +308,11 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 				mpd_Song *song = mpd_newSong();
 				song->artist = g_strdup(data->tag);
 				song->album = NULL; 
-				/*				cover_art_fetch_image_aa(artist,data->tag,
-								(CoverArtCallback)pl3_artist_browser_cover_art_fetched,rowref);
-								*/
 				meta_data_get_path_callback(song, META_ARTIST_ART, pl3_artist_browser_cover_art_fetched, rowref);
 				mpd_freeSong(song);	
 				gtk_tree_path_free(path);
 			}
-
+*/
 
 
 			data = mpd_data_get_next(data);

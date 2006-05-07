@@ -67,7 +67,7 @@ void cfg_del_single_value(config_obj *cfg, char *class, char *key);
 /* done */
 conf_mult_obj *cfg_get_class_list(config_obj *data);
 /* done */ 
-conf_mult_obj *cfg_get_key_list(config_obj *data,char *key);
+conf_mult_obj *cfg_get_key_list(config_obj *data,char *class);
 
 /* multiple */
 /* done */

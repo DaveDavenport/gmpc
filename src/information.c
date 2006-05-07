@@ -3,12 +3,21 @@
 #include <glade/glade.h>
 #include <gdk/gdkkeysyms.h>
 #include "plugin.h"
+#include "misc.h"
 
 GtkWidget *info_pref_vbox = NULL;
 void info_add(GtkWidget *cat_tree);
 void info_selected(GtkWidget *container);
 void info_unselected(GtkWidget *container);
 void info_changed(GtkWidget *tree, GtkTreeIter *iter);
+
+
+void show_artist_info(mpd_Song *song);
+void show_album_info(mpd_Song *song);
+
+
+void info_clear_display();
+
 
 GtkWidget *info_text_view = NULL;
 GtkWidget *info_vbox = NULL;
@@ -80,8 +89,28 @@ static void info_show_current_song() {
 }
 
 void info_changed(GtkWidget *tree, GtkTreeIter *iter){
-	
+	char *item = NULL;
+	gtk_tree_model_get(GTK_TREE_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tree))), iter, 
+			PL3_CAT_INT_ID, &item, -1); 
+	printf("Changed: %s\n", item);
+	if(!strcmp(item, "/Song"))
+	{
+		info_show_current_song();	
+	}
+	else if(!strcmp(item, "/Artist"))
+	{
+		show_artist_info(mpd_playlist_get_current_song(connection));
+	}
+	else if (!strcmp(item, "/Album"))
+	{
+		show_album_info(mpd_playlist_get_current_song(connection));
+	}
+	else{
+		info_clear_display();
+	}
 
+	
+	g_free(item);
 }
 void info_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
 {
@@ -92,39 +121,13 @@ void info_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
 	{
 		if(info_text_view)
 		{
-			info_show_current_song();
+//			info_show_current_song();
 		}
 	}
 
 }
 
 
-
-static void pl3_pixbuf_border(GdkPixbuf *pb)
-{
-	int x,y,width,height;
-	int pixel;
-	int n_channels = gdk_pixbuf_get_n_channels(pb);
-	int rowstride = gdk_pixbuf_get_rowstride(pb);	
-	guchar *pixels;
-	width = gdk_pixbuf_get_width (pb);
-	height = gdk_pixbuf_get_height (pb);
-	pixels = gdk_pixbuf_get_pixels(pb);
-
-	for(y=0;y<height;y++)
-	{
-		for(x=0;x<width;x++)
-		{
-			if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
-			{
-				for(pixel=0; pixel < n_channels;pixel++)
-				{
-					pixels[x*n_channels+y*rowstride+pixel] = 0;
-				}
-			}
-		}
-	}
-}
 void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
 	GtkTextMark *mark = data;
@@ -142,7 +145,7 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,164,164,NULL);
 		if(pb)
 		{
-			pl3_pixbuf_border(pb);
+			draw_pixbuf_border(pb);
 
 			gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
 			gtk_text_buffer_get_iter_at_mark(buffer, &stop, mark);
@@ -175,7 +178,7 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
 		if(pb)
 		{
-			pl3_pixbuf_border(pb);
+			draw_pixbuf_border(pb);
 
 			gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
 			gtk_text_buffer_get_iter_at_mark(buffer, &stop, mark);
@@ -190,18 +193,6 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 			printf("Failed to open %s\n", path);
 		}
 	}
-	/*
-	   else if(ret == META_DATA_FETCHING)
-	   {
-	   GdkPixbuf *pb = gtk_widget_render_icon(GTK_WIDGET(info_text_view), "media-loading-cover", -1, NULL);
-	   gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
-	   gtk_text_buffer_get_iter_at_mark(buffer, &stop, mark);
-	   gtk_text_iter_forward_char(&stop);
-	   gtk_text_buffer_get_iter_at_mark(buffer, &start, mark);                		
-	   gtk_text_buffer_apply_tag_by_name(buffer, "item-value", &start, &stop);
-
-	   }
-	   */
 	else if(ret == META_DATA_UNAVAILABLE){
 		GdkPixbuf *pb = gtk_widget_render_icon(GTK_WIDGET(info_text_view), "media-no-cover", -1, NULL);
 		gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
@@ -239,6 +230,49 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	}
 }
 
+
+void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
+{
+	GtkTextMark *mark = data;
+	GtkTextIter iter;
+	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
+	/* check if where checking for the correct song */
+	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	if(!current_song|| id != current_id) return;
+	if(gtk_text_mark_get_deleted(mark)) return;
+	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
+
+
+	if(ret == META_DATA_AVAILABLE)
+	{
+		gsize size = 0;	
+		gchar *content = NULL;
+		if(g_file_get_contents(path, &content, &size, NULL))
+		{
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Lyric:\n", -1,"item","bold",NULL);
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, content, size, "item", NULL);
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n\n", -1,"item-value",NULL);
+			g_free(content);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
 	GtkTextMark *mark = data;
@@ -257,6 +291,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		gchar *content = NULL;
 		if(g_file_get_contents(path, &content, &size, NULL))
 		{
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, content, size, "item", NULL);
 			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n\n", -1,"item-value",NULL);
 			g_free(content);
@@ -309,14 +344,13 @@ void add_default_tags(GtkTextBuffer *buffer)
 
 	tag= gtk_text_buffer_create_tag(buffer, "link", "underline", TRUE,NULL);
 }
-void info_show_song(mpd_Song *song)
+
+
+void info_clear_display()
 {
-	GtkTextMark *mark= NULL;
-	GtkTextTag *tag = NULL;
 	GtkTextTagTable *table = NULL;
-	MpdData *data = NULL;
-	GtkTextIter iter, start, stop;
-	gchar *string = NULL;
+	GtkTextIter start, stop;
+	/* Delete text */
 	GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(info_text_view));
 	gtk_text_buffer_get_start_iter(buffer, &start);
 	gtk_text_buffer_get_end_iter(buffer, &stop);
@@ -326,10 +360,8 @@ void info_show_song(mpd_Song *song)
 	if(current_song)
 	{
 		mpd_freeSong(current_song);
+		current_song = NULL;
 	}
-	current_song = mpd_songDup(song);
-	current_id = g_random_int();
-
 	
 	/* delete old tags */
 	table = gtk_text_buffer_get_tag_table (buffer);
@@ -337,13 +369,28 @@ void info_show_song(mpd_Song *song)
 	{
 		GList *titer = NULL;
 
-		for(titer = tag_list; titer; titer = g_list_next(titer))
+		for(titer = tag_list; titer; titer = g_list_next(titer))        	
 		{
 			gtk_text_tag_table_remove(table, GTK_TEXT_TAG(titer->data));
 		}
 		g_list_free(tag_list);
-		tag_list = NULL;
+		tag_list = NULL;                                                	
 	}
+}
+
+
+
+void info_show_song(mpd_Song *song)
+{
+	GtkTextMark *mark= NULL;
+	GtkTextTag *tag = NULL;
+	GtkTextIter iter;
+	gchar *string = NULL;
+	GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(info_text_view));
+	info_clear_display();
+	current_song = mpd_songDup(song);
+	current_id = g_random_int();     	
+
 	/* if song not valid stop then...  We want nice message here */
 	if(song->title == NULL || song->artist == NULL) return;
 	gtk_text_buffer_get_start_iter(buffer, &iter);
@@ -428,19 +475,18 @@ void info_show_song(mpd_Song *song)
 		g_free(string);
 	}
 
-
 	if(song->artist && song->album)
 	{
 	
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
 		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, mark);
+		meta_data_get_path_callback(song, META_SONG_TXT, info_cover_lyric_txt_fetched, mark);
 
 		gtk_text_buffer_get_end_iter(buffer, &iter);
 	}
+/*	
 	if(song->artist)
 	{
-		/* Set tag for link */
 		tag = gtk_text_buffer_create_tag(buffer, "artist-url", NULL);
 		tag_list = g_list_append(tag_list, tag);
 		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("artist:"), g_free);
@@ -453,7 +499,6 @@ void info_show_song(mpd_Song *song)
 		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
 		meta_data_get_path_callback(song, META_ARTIST_ART, info_cover_art_fetched, mark);
 		gtk_text_buffer_get_end_iter(buffer, &iter);
-		/*		gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);*/
 
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
 		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
@@ -462,7 +507,6 @@ void info_show_song(mpd_Song *song)
 
 
 	}
-
 	if(song->artist && song->album && mpd_server_check_version(connection, 0,12,0))
 	{
 		data = mpd_database_find_adv(connection,TRUE, 
@@ -488,6 +532,7 @@ void info_show_song(mpd_Song *song)
 		}
 
 	}	
+	
 	if(song->artist && song->album )
 	{
 		data = mpd_database_get_albums(connection, song->artist);
@@ -515,7 +560,6 @@ void info_show_song(mpd_Song *song)
 					mpd_freeSong(qsong);
 
 					gtk_text_buffer_get_end_iter(buffer, &iter);
-					/* Set tag for link */
 					tag = gtk_text_buffer_create_tag(buffer,NULL, NULL);
 					tag_list = g_list_append(tag_list, tag);
 					g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", falbum), g_free);
@@ -537,8 +581,191 @@ void info_show_song(mpd_Song *song)
 		}
 
 	}	
+*/
 }
 
+
+void show_album_info(mpd_Song *song)
+{
+	gchar 			*string = NULL;
+	GtkTextIter 		iter;
+	GtkTextTag 		*tag = NULL;
+	GtkTextMark 		*mark = NULL;
+	GtkTextBuffer 		*buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(info_text_view));
+	info_clear_display();
+	current_song = mpd_songDup(song);
+	current_id = g_random_int();     	
+
+	if(song->artist == NULL || song->album == NULL) return;
+
+	gtk_text_buffer_get_start_iter(buffer, &iter);
+	string = g_strdup_printf(" %s - %s\n", song->artist, song->album);
+	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"title","bold",NULL);
+	g_free(string);                                                                  	
+	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1, "bar", NULL);
+	gtk_text_buffer_insert(buffer, &iter, "\n", -1);
+
+	mark = gtk_text_buffer_create_mark(buffer, "album-art",&iter, TRUE);
+	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
+	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, mark);
+	gtk_text_buffer_get_end_iter(buffer, &iter);                                                    	
+	gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
+	/** ARTIST **/
+	if(song->album)
+	{
+		/* Set tag for link */
+		tag = gtk_text_buffer_create_tag(buffer, "album-url", NULL);
+		tag_list = g_list_append(tag_list, tag);
+		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", song->album), g_free);
+
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->album, -1,"item-value","link","album-url",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+	}
+	if(song->genre)
+	{
+		/* Set tag for link */
+		tag = gtk_text_buffer_create_tag(buffer, "genre-url", NULL);
+		tag_list = g_list_append(tag_list, tag);
+		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("genre:"), g_free);
+
+
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->genre, -1,"item-value","genre-url","link",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+	}
+	if(song->date)
+	{
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Date: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->date, -1,"item-value",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+	}
+	if(song->artist && song->album)
+	{
+
+		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
+		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
+		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, mark);
+
+		gtk_text_buffer_get_end_iter(buffer, &iter);
+	}
+	if(song->artist && song->album && mpd_server_check_version(connection, 0,12,0))
+	{
+		MpdData *data = mpd_database_find_adv(connection,TRUE, 
+				MPD_TAG_ITEM_ARTIST, song->artist,
+				MPD_TAG_ITEM_ALBUM, song->album, 
+				-1);
+		if(data)
+		{
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\nAlbum Tracklist:\n", -1,"item","bold",NULL);
+			for(;data != NULL; data = mpd_data_get_next(data))
+			{
+				mpd_Song *song = data->song;
+				if(song->track) {
+					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->track, -1,"item-value",NULL);
+					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, ": ", -1,"item-value",NULL);
+				}
+				if(song->title)
+				{
+					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->title, -1,"item-value",NULL);
+				}
+				gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);               	
+			}
+		}
+
+	}	
+
+
+
+
+
+
+}
+void show_artist_info(mpd_Song *song)
+{
+	gchar 			*string = NULL;
+	GtkTextIter 		iter;
+	GtkTextTagTable 	*table = NULL;
+	GtkTextTag 		*tag = NULL;
+	GtkTextMark 		*mark = NULL;
+	GtkTextBuffer 		*buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(info_text_view));
+
+	info_clear_display();
+	current_song = mpd_songDup(song);
+	current_id = g_random_int();     	
+
+	if(song->artist == NULL)
+	{
+		return;
+	}
+	gtk_text_buffer_get_start_iter(buffer, &iter);
+	string = g_strdup_printf(" %s\n", song->artist);
+	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"title","bold",NULL);
+	g_free(string);                                                                  	
+	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1, "bar", NULL);
+	gtk_text_buffer_insert(buffer, &iter, "\n", -1);
+
+	/* Set tag for link */
+	mark = gtk_text_buffer_create_mark(buffer, "artist-art",&iter, TRUE);
+	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
+	meta_data_get_path_callback(song, META_ARTIST_ART, info_cover_art_fetched, mark);
+	gtk_text_buffer_get_end_iter(buffer, &iter);
+	/*		gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);*/
+
+	mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
+	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
+	meta_data_get_path_callback(song, META_ARTIST_TXT, info_cover_txt_fetched, mark);
+	gtk_text_buffer_get_end_iter(buffer, &iter);
+
+	if(song->artist && song->album )
+	{
+		MpdData *data = mpd_database_get_albums(connection, song->artist);
+		if(data)
+		{
+			int albums = 0;
+			for(;data != NULL; data = mpd_data_get_next(data))
+			{
+				char *falbum = data->tag;
+				mpd_Song *qsong = mpd_newSong();
+				albums++;
+				if(albums == 1)
+				{
+					string =  g_strdup_printf("\n\nAlbums by %s:\n", song->artist);
+					gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"item","bold",NULL);
+					g_free(string);
+				}
+
+				qsong->artist = g_strdup(song->artist);
+				qsong->album = g_strdup(falbum);
+				mark = gtk_text_buffer_create_mark(buffer,NULL,&iter, TRUE);
+				g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
+				meta_data_get_path_callback(qsong, META_ALBUM_ART, info_cover_album_mini_art_fetched, mark);
+				gtk_text_buffer_get_end_iter(buffer, &iter);
+				mpd_freeSong(qsong);
+
+				gtk_text_buffer_get_end_iter(buffer, &iter);
+				/* Set tag for link */
+				tag = gtk_text_buffer_create_tag(buffer,NULL, NULL);
+				tag_list = g_list_append(tag_list, tag);
+				g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", falbum), g_free);
+
+
+				gtk_text_buffer_insert_with_tags(buffer, &iter, "  ", -1,
+						gtk_text_tag_table_lookup(table,"album-value"),
+						tag,
+						NULL);
+				gtk_text_buffer_insert_with_tags(buffer, &iter, falbum, -1,                                                 	
+						gtk_text_tag_table_lookup(table,"album-value"),
+						gtk_text_tag_table_lookup(table,"link"),
+						tag,
+						NULL);
+				gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"album-value",NULL);
+
+			}
+		}
+
+	}	
+}
 
 /* Looks at all tags covering the position (x, y) in the text view, 
  * and if one of them is a link, change the cursor to the "hands" cursor
@@ -577,8 +804,8 @@ static void set_cursor_if_appropriate (GtkTextView *text_view,	gint x,gint y)
 
 		if (hovering_over_link)
 		{
-						gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
-			}
+			gdk_window_set_cursor (gtk_text_view_get_window (text_view, GTK_TEXT_WINDOW_TEXT), hand_cursor);
+		}
 		else
 		{
 
@@ -768,8 +995,8 @@ static void info_init()
 	hbox = gtk_hbox_new(FALSE, 6);
 	tmp = gtk_alignment_new(0,0.5,0,1);
 	button = gtk_button_new_with_mnemonic("_Load current song");
-	g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(info_show_current_song),NULL);
-	gtk_container_add(GTK_CONTAINER(tmp), button);
+	//	g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(info_show_current_song),NULL);
+	//	gtk_container_add(GTK_CONTAINER(tmp), button);
 	gtk_box_pack_start(GTK_BOX(info_vbox), hbox, FALSE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(hbox), tmp, FALSE, TRUE, 0);
 
