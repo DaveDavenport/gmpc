@@ -88,6 +88,7 @@ inline void tic()
 	gettimeofday(&tv_old, NULL);
 #endif
 }
+
 inline void tac(char *name)
 {
 #ifdef DEBUG
@@ -160,6 +161,7 @@ int main (int argc, char **argv)
 #endif
 	gchar *url = NULL;
 	tic();
+
 	/* debug stuff */
 	debug_level = DEBUG_ERROR;
 	if(argc > 1)
@@ -217,6 +219,8 @@ int main (int argc, char **argv)
 	/* initialize threading */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	tic();
+	
+
 	if (!g_thread_supported ())
 	{
 		g_thread_init (NULL);
@@ -227,7 +231,8 @@ int main (int argc, char **argv)
 		abort();
 	}
 	tac("Initialise threading");
-	
+
+		
 
 	tic();
 	meta_data_init();

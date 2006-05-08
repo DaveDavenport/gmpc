@@ -1057,6 +1057,7 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 							mpd_misc_get_tag_by_name(tk_format[1])+1);
 					if(tk_format[2] != NULL)
 					{
+						printf("test: %s %i\n",tk_format[2], mpd_misc_get_tag_by_name(tk_format[2])+1);
 						gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3")),
 								mpd_misc_get_tag_by_name(tk_format[2])+1);		
 					}

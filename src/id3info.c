@@ -250,6 +250,25 @@ void set_text (GList * node)
 	{
 		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "genre_label")), "");
 	}
+	if (song->disc != NULL)
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "disc_label")), song->disc);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "disc_label")), "");
+	}
+
+	if (song->comment != NULL)
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "comment_label")), song->comment);
+	}
+	else                                                                                                   	
+	{
+		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "comment_label")), "");
+	}                                                                                                      	
+
+	
 	if (song->composer != NULL)
 	{
 		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), song->composer);

@@ -144,7 +144,7 @@ void pl3_initialize_tree()
 		}
 	}
 
-
+	
 
 	gtk_tree_selection_select_path(sel, path);
 	gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")),
