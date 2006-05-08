@@ -110,6 +110,7 @@ void pl3_find_browser_init()
 	GtkTreeViewColumn *column = NULL;
 	GtkWidget  *pl3_findb_sw = NULL;
 	GtkWidget *hbox = NULL, *findbut = NULL;
+	GtkEntryCompletion *compl = NULL;
 	
 	GValue value;
 	pl3_findb_store = gtk_list_store_new (PL3_FINDB_ROWS, 
@@ -167,7 +168,17 @@ void pl3_find_browser_init()
 	pl3_findb_pb = gtk_progress_bar_new();
 	gtk_box_pack_start(GTK_BOX(pl3_findb_vbox), pl3_findb_sw, TRUE, TRUE,0);
 	gtk_box_pack_start(GTK_BOX(pl3_findb_vbox), hbox, FALSE, TRUE,0);
-	pl3_findb_entry = gtk_entry_new();
+
+	
+	pl3_findb_entry = gtk_combo_box_entry_new();
+	gtk_combo_box_set_model(GTK_COMBO_BOX(pl3_findb_entry), 
+			GTK_TREE_MODEL(gtk_list_store_new(1, G_TYPE_STRING)));
+	gtk_combo_box_entry_set_text_column(GTK_COMBO_BOX_ENTRY(pl3_findb_entry), 0);
+	compl = gtk_entry_completion_new();
+	gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(compl), gtk_combo_box_get_model(GTK_COMBO_BOX(pl3_findb_entry)));
+	gtk_entry_completion_set_text_column(GTK_ENTRY_COMPLETION(compl), 0);
+	
+	gtk_entry_set_completion(GTK_ENTRY(GTK_BIN(pl3_findb_entry)->child), GTK_ENTRY_COMPLETION(compl));
 
 	pl3_findb_combo_store = gtk_list_store_new(2,GTK_TYPE_INT, GTK_TYPE_STRING);
 	pl3_findb_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(pl3_findb_combo_store));
@@ -186,7 +197,7 @@ void pl3_find_browser_init()
 
 	pl3_find_fill_combo();
 
-	g_signal_connect(G_OBJECT(pl3_findb_entry), "activate", pl3_find_browser_search, NULL);
+	g_signal_connect(G_OBJECT(GTK_BIN(pl3_findb_entry)->child), "activate", pl3_find_browser_search, NULL);
 	g_signal_connect(G_OBJECT(findbut), "clicked", pl3_find_browser_search, NULL);
 
 	gtk_widget_show_all(pl3_findb_vbox);
@@ -243,10 +254,35 @@ unsigned long pl3_find_browser_view_browser()
 	   gint num_field=0;
 	   GtkTreeIter child;
 	   GtkTreeIter cc_iter;
-
+	   GtkTreeIter combo_iter;
+	   
 	   MpdData *data = NULL;
-	   name = (gchar *)gtk_entry_get_text(GTK_ENTRY(pl3_findb_entry));
+	   name = (gchar *)gtk_combo_box_get_active_text(GTK_COMBO_BOX(pl3_findb_entry));
 	   gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_findb_combo), &cc_iter);
+	   if(*name)
+	   {
+		   int skip = 0;
+		   GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(pl3_findb_entry));
+		   if(gtk_tree_model_get_iter_first(model, &combo_iter))
+		   {
+			   do{
+				   char *oldname = NULL;
+				   gtk_tree_model_get(model, &combo_iter, 0,&oldname,-1);
+				   if(!strcmp(name, oldname))
+				   {
+					   skip=1;
+				   }
+			   }while(gtk_tree_model_iter_next(model, &combo_iter) && !skip);
+		   } 
+		   if(!skip)
+		   {
+			   gtk_list_store_insert(GTK_LIST_STORE(model), &combo_iter,0);
+			   gtk_list_store_set(GTK_LIST_STORE(model),
+					   &combo_iter,
+					   0,name,
+					   -1);
+		   }
+	   }
 
 	   gtk_tree_model_get(GTK_TREE_MODEL(pl3_findb_combo_store),&cc_iter , 0, &num_field, -1);
 	   if(name == NULL || !strlen(name))
@@ -275,10 +311,10 @@ unsigned long pl3_find_browser_view_browser()
 		   int step = total_songs/50;
 		   filter_test = mpd_misc_tokenize(name);
 		   /*
-		   if(filter_test == NULL)
-		   {
-		   }
-		   */
+		      if(filter_test == NULL)
+		      {
+		      }
+		      */
 		   if(PLAYLIST_LIST(playlist)->loaded != total_songs)
 		   {
 			   gtk_widget_hide(pl3_findb_entry);
@@ -286,7 +322,7 @@ unsigned long pl3_find_browser_view_browser()
 			   gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),FALSE);
 		   }
 		   else{
-				total_songs = 0;
+			   total_songs = 0;
 		   }
 
 		   if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist), &iter) && filter_test != NULL)
