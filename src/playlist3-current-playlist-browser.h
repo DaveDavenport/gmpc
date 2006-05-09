@@ -12,4 +12,7 @@ void pl3_current_playlist_browser_unselected();
 
 int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTreeView *tree, GdkEventButton *event);
 void pl3_current_playlist_destroy();
+
+void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+
 #endif

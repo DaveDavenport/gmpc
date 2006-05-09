@@ -64,8 +64,6 @@ enum{
 	TIME_FORMAT_PERCENTAGE
 };
 
-extern guint update_timeout;
-int update_interface();
 
 /* mpdinteraction.c*/
 int update_mpd_status();

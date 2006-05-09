@@ -1,4 +1,7 @@
 /*
+ *
+ *
+ *
  *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
@@ -977,45 +980,6 @@ gboolean toggle_playlist3(GtkToggleButton *tb)
 	return TRUE;
 }
 
-void pl3_highlight_song_change ()
-{
-	GtkTreeIter iter;
-	gchar *temp;
-	/* check if there is a connection */
-	if (!mpd_check_connected (connection))
-	{
-		return;
-	}
-
-	/* check if we need to highlight a song */
-	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
-	{
-		temp = g_strdup_printf ("%i", mpd_player_get_current_song_pos(connection));
-		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (playlist), &iter, temp))
-		{
-			gint pos;
-			gtk_tree_model_get (GTK_TREE_MODEL (playlist), &iter, PLAYLIST_LIST_COL_SONG_POS,
-					&pos, -1);
-			/* check if we have the right song, if not, print an error */
-			if (pos != mpd_player_get_current_song_pos(connection))
-			{
-				debug_printf(DEBUG_ERROR,"Error %i "\
-						" %i should be the same\n",
-						pos,
-						mpd_player_get_current_song_pos(connection));
-			}
-
-			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) &&
-					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
-			{
-				pl3_current_playlist_browser_scroll_to_current_song();
-			}
-		}
-		g_free (temp);
-		/* set highlighted position */
-	}
-}
-
 void pl3_playlist_changed()
 {
 	int type = 0;
@@ -1487,6 +1451,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	char buffer[1024];
 	GtkWidget *image = NULL;
+
 	if(!pl3_xml)return;
 	if(what&MPD_CST_STATE)
 	{
@@ -1631,6 +1596,16 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 		}
 	}
+	if(what&MPD_CST_DATABASE)
+	{
+		pl3_database_changed();
+	}
+	if(what&MPD_CST_UPDATING)
+	{
+		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
+	}
+
+	
 }
 
 

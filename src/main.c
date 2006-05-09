@@ -17,44 +17,64 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gtk/gtk.h>
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 #include <strings.h>
+
+/** Gtk/glib glade stuff */
+#include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <glade/glade.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
+
+/** auto*'s config file */
 #include <config.h>
+
+/** session support */
 #include "sm.h"
+/* header files */
 #include "plugin.h"
 #include "main.h"
-#include "misc.h"
+
+/* as internall plugin */
+#include "playlist3-tag-browser.h"
+#include "playlist3-artist-browser.h"
+#include "playlist3-current-playlist-browser.h"
+
+/**
+ * Get revision
+ */
+#include "revision.h"
+
+#ifdef ENABLE_MMKEYS
+#include "mm-keys.h"
+#endif
+
+
 #ifdef DEBUG
 /* Testing */
 #include <sys/time.h>
 
 struct timeval tv_old = {0,0};
 #endif
-/* as internall plugin */
-#include "playlist3-tag-browser.h"
-#include "playlist3-artist-browser.h"
-#include "playlist3-current-playlist-browser.h"
-#include "revision.h"
 
-#ifdef ENABLE_MMKEYS
-#include "mm-keys.h"
-#endif
-extern GladeXML *pl3_xml;
-extern GtkWidget *pl3_cp_tree;
-void init_playlist_store ();
+/**
+ * Define some local functions
+ */
+
+/** Creating the backend */
+static void init_playlist_store ();
+/** handle connection changed */
 void connection_changed(MpdObj *mi, int connect, gpointer data);
+/** Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
-extern int debug_level;
+/** Error callback */
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
-gmpcPlugin **plugins = NULL;
-int num_plugins = 0;
+
+/** init stock icons */
+void init_stock_icons ();
+
 
 /*
  * the xml fle pointer to the player window
@@ -62,13 +82,13 @@ int num_plugins = 0;
 
 GladeXML *xml_error_window = NULL;
 GladeXML *xml_password_window = NULL;
-int update_interface ();
+static int autoconnect_callback ();
 
 /*
- * the ID of the update timeout
+ * the ID of the autoconnect timeout
  */
-guint update_timeout = 0;
-void init_stock_icons ();
+guint autoconnect_timeout = 0;
+
 /*
  * The Config object
  */
@@ -78,30 +98,11 @@ config_obj *config = NULL;
  */
 MpdObj *connection = NULL;
 
-
-inline void tic()
-{
-#ifdef DEBUG
-	if(tv_old.tv_sec){
-		abort();
-	}
-	gettimeofday(&tv_old, NULL);
-#endif
-}
-
-inline void tac(char *name)
-{
-#ifdef DEBUG
-	struct timeval tv = tv_old;
-	if(!tv_old.tv_sec){
-		abort();            	
-	}
-	gettimeofday(&tv_old, NULL);
-	printf("%40s: %llu usec\n", name,(guint64)(tv_old.tv_usec-tv.tv_usec));
-	tv_old.tv_sec = 0;
-#endif
-}
-
+/**
+ * Get's the full path to an image,
+ * While this is compile time on linux, windows
+ * needs to determine it run-time.
+ */
 char *gmpc_get_full_image_path(char *filename)
 {
 	gchar *path;
@@ -126,6 +127,11 @@ char *gmpc_get_full_image_path(char *filename)
 	return path;
 }
 
+/** 
+ * Get the full path to the glade files.
+ * While this is compile time on linux, windows 
+ * needs to determine it run-time
+ */
 char *gmpc_get_full_glade_path(char *filename)
 {
 	gchar *path;
@@ -150,8 +156,9 @@ char *gmpc_get_full_glade_path(char *filename)
 	return path;
 }
 
-
-
+/**
+ * The program :D
+ */
 int main (int argc, char **argv)
 {
 	int i;
@@ -159,21 +166,44 @@ int main (int argc, char **argv)
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
 #endif
-	gchar *url = NULL;
-	tic();
 
-	/* debug stuff */
-	debug_level = DEBUG_ERROR;
+	/**
+	 * A string used severall times to create a path
+	 */
+	gchar *url = NULL;
+	/** 
+	 * Debug level,  DEBUG_ERROR is the default. (only show error messages
+	 * FOR RELEASE THIS SHOULD_BE CHANGED TO DEBUG_NO_OUTPUT
+	 */
+	int db_level = DEBUG_ERROR;
+	/* *
+	 * Set the debug level
+	 */
+	debug_set_level(db_level);
+
+	/**
+	 * Parse Command line options
+	 */
 	if(argc > 1)
 	{
 		int i;
 		for(i = 1; i< argc; i++)
 		{
+			/**
+			 * Set debug level, options are 
+			 * 0 = No debug
+			 * 1 = Error messages
+			 * 2 = Error + Warning messages
+			 * 3 = All messages
+			 */
 			if(!strncasecmp(argv[i], "--debug-level=", 14))
 			{
-				debug_level = atoi(&argv[i][14]);
-				debug_level = (debug_level < 0)? -1:((debug_level > DEBUG_INFO)? DEBUG_INFO:debug_level);
+				db_level = atoi(&argv[i][14]);
+				debug_set_level(db_level);
 			}
+			/**
+			 * Print out version + svn revision
+			 */
 			else if (!strncasecmp(argv[i], "--version", 9))
 			{
 				printf("Gnome Music Player Client\n");
@@ -181,86 +211,118 @@ int main (int argc, char **argv)
 				printf("Revision: %s\n",revision);
 				exit(0);
 			}
+			/**
+			 * Allow the user to pick another config file 
+			 */
 			else if (!strncasecmp(argv[i], "--config=", 9))
 			{
 				config_path = g_strdup(&argv[i][9]);
-
+			}
+			/**
+			 * Print out help message
+			 */
+			else if (!strncasecmp(argv[i], "--help",6))
+			{
+				printf("Gnome Music Player Client\n");
+				printf("Options:\n");
+				printf("\t--help:\t\t\tThis help message.\n");
+				printf("\t--debug-level=<level>\tMake gmpc print out debug information.\n");
+				printf("\t\t\t\tLevel:\n");
+				printf("\t\t\t\t\t0: No Output\n");
+				printf("\t\t\t\t\t1: Error Messages\n");
+				printf("\t\t\t\t\t2: Error + Warning Messages\n");
+				printf("\t\t\t\t\t3: All messages\n");
+				printf("\t--version:\t\tPrint version and svn revision\n");
+				printf("\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n");
+				exit(0);
 			}
 		}
 
 	}
-	tac("Parsing options");
+	
 
-
-
+	/**
+	 * Setup NLS
+	 */
 #ifdef ENABLE_NLS
-	tic();
 	debug_printf(DEBUG_INFO, "Setting NLS");
 	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-	tac("setting NLS");
+	
 #endif
 
 	/*
 	 * initialize gtk
 	 */
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
-	tic();
 	gtk_init (&argc, &argv);
-	tac("Gtk Init");
-
+	
+	/**
+	 * Setup session support
+	 */
 #ifdef ENABLE_SM
-	tic();
 	smc_connect(argc, argv);
-	tac("Sm Connection");
+	
 #endif	
 
-	/* initialize threading */
+	/**
+	 *  initialize threading 
+	 */
 	debug_printf(DEBUG_INFO,"Initializing threading");
-	tic();
-	
-
+	/** Check if threading is supported. */	
 	if (!g_thread_supported ())
 	{
+		/** initialize it */
 		g_thread_init (NULL);
 	}
 	else
 	{
+		/** No Threading availible, show a nice gtk error message and quit */
 		show_error_message(_("GMPC requires threading support.\nquiting.."),TRUE);
 		abort();
 	}
-	tac("Initialise threading");
-
-		
-
-	tic();
+	
+	/**
+	 * Initialize the new metadata subsystem.
+	 * (Will spawn a new thread, so have to be after the init threading 
+	 */
 	meta_data_init();
-	tac("Init metadata");
-	/*
+	
+	/**
 	 * stock icons
 	 */
 	debug_printf(DEBUG_INFO, "Loading stock icons");
-	tic();
 	init_stock_icons ();
-	tac("Loading stock icons");
+	
 
 
-	tic();
-	/* Check for and create dir if availible */
+	/**
+	 * Create needed directories for mpd.
+	 */	
+
+	/** create path */
 	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
 	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
+
+	/**
+	 * Check if ~/.gmpc/ exists 
+	 * If not try to create it.
+	 */
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
 		debug_printf(DEBUG_INFO, "Trying to create %s",url);
-		if(mkdir(url,0700) < 0)
+		if(g_mkdir(url,0700) < 0)
 		{
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
 			show_error_message("Failed to create ~/.gmpc/.", TRUE);
 			abort();
 		}
 	}
-	else if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	/**
+	 * if it exists, check if it's a directory 
+	 */
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
 		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
 		debug_printf(DEBUG_ERROR, "Quitting.\n");
@@ -271,57 +333,17 @@ int main (int argc, char **argv)
 	{
 		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
 	}
+	/* Free the path */
 	g_free(url);
-	tac("Setting up user directories");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-	
-	
-	
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	tic();
-	/* OPEN CONFIG FILE */
+	/**
+	 * Open the config file
+	 */	
+	/** 
+	 * Check if the user has forced a different config file location.
+	 * else set to ~/.gmpc/gmpc.cfg
+	 */
 	if(!config_path)
 	{
 		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
@@ -329,42 +351,54 @@ int main (int argc, char **argv)
 	else{
 		url = config_path;
 	}
+	/**
+	 * Open it 
+	 */
 	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
-
-	/* test if config open  */
+	/** test if config opened correct  */
 	if(config == NULL)
 	{
+		/**
+		 * Show gtk error message and quit 
+		 */
 		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
-		show_error_message("Failed to load the configuration system", TRUE);
+		show_error_message(_("Failed to load the configuration system"), TRUE);
 		abort();
 	}
-
+	/**
+	 * cleanup 
+	 */
 	g_free(url);
-	tac("Opening config");
+	
+
 
 	
-	/* initialize the cover art */
-	/*
-	tic();
-	cover_art_init();
-	tac("Initialising cover art system");
-*/
-	tic();
-	/* Create connection object */
+	/**
+	 * Create connection object 
+	 */
 	connection = mpd_new_default();
 	if(connection == NULL)
 	{
+		/**
+		 * if failed, print error message
+		 */
 		debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
-		return 1;
+		show_error_message(_("Failed to setup libmpd"), TRUE);
+		abort();
 	}
 
+	/**
+	 * Connect signals to the connection object
+	 */
+	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
+	mpd_signal_connect_error(connection, error_callback, NULL);
+	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
 
-
-	tic();
-	/** Add the internall plugins 
-	*/
+	/** 
+	 * Add the internall plugins 
+	 */
 	/* this shows the connection preferences */
 	plugin_add(&connection_plug,0);
 	/* this the server preferences */
@@ -379,46 +413,36 @@ int main (int argc, char **argv)
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
 #endif
-	plugin_add(&cover_art_plug,0);
-	/* the about windows :D*/
-/*	plugin_add(&about_plug,0);
- */
-	tac("Adding internall plugins");
 
-	tic();
-	/* load dynamic plugins */
+	/** Setup cover art manager, removed for now. it needs a rewrite
+	 */
+	/*
+		plugin_add(&cover_art_plug,0);
+	*/
+	
+
+	
+	/**
+	 *  load dynamic plugins 
+	 */
+	/** Load the global installed plugins */
 	url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
 	plugin_load_dir(url);
 	g_free(url);
-	tac("Loading global plugins");
-
 	/* user space dynamic plugins */
-	/* plugins */
-	tic();
 	url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
+	/**
+	 * if dir exists, try to load the plugins.
+	 */
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
 		plugin_load_dir(url);
 	}
-	else
-	{
-		mkdir(url, 0777);
-	}
 	g_free(url);
-	tac("Loading user plugins");
+	
 
-
-
-
-
-
-
-	/* New Signal */
-	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
-	mpd_signal_connect_error(connection, error_callback, NULL);
-	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
-	tac("Creating mpd connection object");
-	tic();
+	
+	
 	/* time todo some initialisation of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
 	{
@@ -427,16 +451,20 @@ int main (int argc, char **argv)
 			plugins[i]->init();
 		}
 	}
-	tac("Initializing plugins");
+	
 
-	/* create the store for the playlist */
-	tic();
+	/**
+	 * Create the backend store for the current playlist
+	 */
 	init_playlist_store ();
-	tac("Playlist store");
-	tic();
-	debug_printf(DEBUG_INFO, "Create playlist\n");
+	
+
+	/**
+	 * Create the main window
+	 */	
+	debug_printf(DEBUG_INFO, "Create main window\n");
 	create_playlist3();
-	tac("Creating playlist");
+	
 
 	/*
 	 * create timeouts 
@@ -445,21 +473,32 @@ int main (int argc, char **argv)
 	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config,
 				"connection","mpd-update-speed",500),
 			(GSourceFunc)update_mpd_status, NULL);
-	update_timeout = gtk_timeout_add (5000,(GSourceFunc)update_interface, NULL);
-
-	gtk_init_add((GSourceFunc)update_interface, NULL);
+	/**
+	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
+	 * if you are still connected, and reconnects you if not.
+	 */
+	autoconnect_timeout = gtk_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+	/** 
+	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
+	 */
+	gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
 
 #ifdef ENABLE_MMKEYS
-	/*
-	 * Keys
+	/**
+	 * Setup Multimedia Keys
 	 */
-	tic();
+	/**
+	 * Create mmkeys object
+	 */
 	keys = mmkeys_new();
+	/**
+	 * Connect the wanted key's
+	 */
 	g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
-	tac("Initialise mmkeys");
+	
 #endif
 
 
@@ -467,29 +506,65 @@ int main (int argc, char **argv)
 	 * run the main loop
 	 */
 	gtk_main ();
-	/* cleaning up. */
+	
+	/**
+	 *  cleaning up. 
+	 */
+	/** 
+	 * Destroy the connection object 
+	 */
 	mpd_free(connection);
+	/**
+	 * Close the config file
+	 */
 	cfg_close(config);
+	/**
+	 * remove (probly allready done) 
+	 * the playlist object
+	 */
 	g_object_unref(playlist);
 	return 0;
 }
 
-
+/**
+ * Function to quiet the program
+ */
 void main_quit()
 {
-	g_source_remove(update_timeout);
+	debug_printf(DEBUG_INFO, "Quiting gmpc....");
+	/**
+	 * Remove the autoconnect timeout,
+	 */
+	g_source_remove(autoconnect_timeout);
+	/**
+	 * destroy the current playlist..
+	 */
 	pl3_current_playlist_destroy();
-	/* so it saves the playlist pos */
+	/**
+	 * TODO: destroy plugins and the rest too
+	 */
+
+
+	/** 
+	 * Call the connection changed.
+	 * so it saves the playlist pos 
+	 */
 	mpd_signal_connect_connection_changed(connection, NULL, NULL);
+
+	/**
+	 * Disconnect when connected
+	 */
 	if(mpd_check_connected(connection))
 	{
 		mpd_disconnect(connection);
 	}
-
+	/**
+	 * Exit main loop 
+	 */
 	gtk_main_quit();
 }
 
-int update_interface ()
+static int autoconnect_callback ()
 {
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
@@ -665,56 +740,41 @@ void init_stock_icons ()
 	gtk_icon_factory_add_default (factory);
 }
 
+/**
+ * Create the "Current" playlist backend.
+ * This needs to be created from the start so it keeps in sync.
+ */
 
-void init_playlist_store ()
+static void init_playlist_store ()
 {
-
+	/**
+	 * Create the (custom) playlist widget 
+	 */
 	playlist = (GtkTreeModel *)playlist_list_new();
 
+	/**
+	 * restore the markup
+	 */
 	playlist_list_set_markup((CustomList *)playlist,cfg_get_single_value_as_string_with_default(config,
 				"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
-
-
 }
 
 
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
-	if(what&MPD_CST_SONGPOS)
-	{
-		playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), mpd_player_get_current_song_pos(mi));
-	}
-	if(what&MPD_CST_SONGID)
-	{
-		pl3_highlight_song_change();
-	}
-	if(what&MPD_CST_DATABASE)
-	{
-		pl3_database_changed();
-	}
-	if(what&MPD_CST_UPDATING)
-	{
-		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
-	}
-	if(what&MPD_CST_STATE)
-	{
-		if(mpd_player_get_state(mi) == MPD_STATUS_STATE_STOP){
-			playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), -1);
-		}
-		else if (mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY) {
-			playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), mpd_player_get_current_song_pos(mi));
-		}
-	}
-	if(what&MPD_CST_PLAYLIST)
-	{
-		playlist_list_data_update(PLAYLIST_LIST(playlist),mi,GTK_TREE_VIEW(pl3_cp_tree));
-	}
-
-	/* make the player handle signals */
-	//player_mpd_state_changed(mi,what,userdata);
+	/**
+	 * Propegate the signal to the current playlist. 
+	 * Needed to update playlist-list
+	 */
+	pl3_current_playlist_status_changed(mi,what,userdata);
+	/**
+	 * Propagete to the id3 window, so it can update time
+	 */
 	id3_status_update();
-
+	/**
+	 * Make the plugins recieve the signals 
+	 */
 	for(i=0; i< num_plugins; i++)
 	{
 		if(plugins[i]->mpd_status_changed!= NULL)
@@ -857,8 +917,6 @@ void connect_callback(MpdObj *mi)
 		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
 				GINT_TO_POINTER(autocon));
 	}
-	gtk_timeout_remove (update_timeout);
-	update_timeout = gtk_timeout_add (400,(GSourceFunc)update_interface, NULL);
 }
 
 

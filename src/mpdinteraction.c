@@ -81,12 +81,10 @@ int update_mpd_status()
 
 void disconnect_callback(MpdObj *mi)
 {
-	gtk_timeout_remove(update_timeout);
 
 	/* disconnect playlist */
 	pl3_disconnect();
 
-	update_timeout =  gtk_timeout_add(5000, (GSourceFunc)update_interface, NULL);
 	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
 	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
 	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
@@ -537,11 +535,9 @@ void preferences_window_connect(GtkWidget *but)
 {
 	debug_printf(DEBUG_INFO,"*DEBUG** connect\n");
 	if(!mpd_check_connected(connection))
-		if(!connect_to_mpd())
-		{
-			/*	gtk_timeout_remove(update_timeout);
-				update_timeout =  gtk_timeout_add(400, (GSourceFunc)update_interface, NULL);
-				*/		}
+	if(!connect_to_mpd())
+	{
+	}
 }
 
 void preferences_window_disconnect(GtkWidget *but)

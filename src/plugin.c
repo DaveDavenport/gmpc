@@ -4,6 +4,13 @@
 #include "main.h"
 #include "metadata.h"
 
+
+gmpcPlugin **plugins = NULL;
+int num_plugins = 0;
+
+
+
+
 int plugin_get_pos(int id)
 {
 	return id&(PLUGIN_ID_MARK-1);
