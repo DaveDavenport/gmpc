@@ -137,6 +137,10 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	guint32 id;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	/** Don't do anything when still fetching */
+	if(ret == META_DATA_FETCHING) return;
+
+
 	/* check if where checking for the correct song */
 	if(!current_song || id != current_id)return;
 	if(gtk_text_mark_get_deleted(mark)) return;
@@ -170,6 +174,10 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	/** Don't do anything when still fetching */
+	if(ret == META_DATA_FETCHING) return;
+
+
 	if( current_song == NULL|| id!=current_id)return; 
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -211,6 +219,10 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	/** Don't do anything when still fetching */
+	if(ret == META_DATA_FETCHING) return;
+
+
 	if(!current_song|| id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -238,6 +250,11 @@ void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+	/** Don't do anything when still fetching */
+	if(ret == META_DATA_FETCHING) return;
+
+
+
 	if(!current_song|| id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
@@ -258,21 +275,6 @@ void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
 	GtkTextMark *mark = data;
@@ -280,6 +282,12 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
 	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
+
+	/** Don't do anything when still fetching */
+	if(ret == META_DATA_FETCHING) return;
+ 
+
+
 	if(!current_song || id != current_id) return;
 	if(gtk_text_mark_get_deleted(mark)) return;
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
