@@ -564,6 +564,11 @@ void main_quit()
 	gtk_main_quit();
 }
 
+/**
+ * Callback that get's called every 5 seconds, 
+ * and trieds to autoconnect
+ * (when enabled)
+ */
 static int autoconnect_callback ()
 {
 	/* check if there is an connection.*/
@@ -572,12 +577,14 @@ static int autoconnect_callback ()
 		if (cfg_get_single_value_as_int_with_default(config,
 					"connection",
 					"autoconnect",
-					0))
+					FALSE))
 		{
 			connect_to_mpd ();
 		}
 	}
-	/* now start updating the rest */
+	/**
+	 * keep the timeout running
+	 */
 	return TRUE;
 }
 
@@ -759,7 +766,10 @@ static void init_playlist_store ()
 				"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
 }
 
-
+/**
+ * Handle status changed callback from the libmpd object
+ * This mostly involves propegating the signal
+ */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
@@ -784,6 +794,11 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	}
 }
 
+
+/*******************************
+ * Error handling 
+ * TODO: Needs to be redone/rethought
+ */
 void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 {
 
@@ -919,15 +934,26 @@ void connect_callback(MpdObj *mi)
 	}
 }
 
-
+/**
+ * handle a connection changed 
+ */
 void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
-	/* send password, first thing we do */
-	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
+	/**
+	 * send password, first thing we do, if connected 
+	 */
+	if(connect)
 	{
-		mpd_send_password(connection);
-	}                                                                              	
+		if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
+		{
+			mpd_send_password(connection);
+		}
+	}	
+
+	/**
+	 * propegate signals
+	 */
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	playlist_connection_changed(mi, connect);
 #ifdef ENABLE_TRAYICON
@@ -941,9 +967,17 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 			plugins[i]->mpd_connection_changed(mi,connect,NULL);
 		}
 	}
+	/**
+	 * force an update of status
+	 */
 	mpd_status_update(mi);
 }
 
+
+/**
+ * Shows an error message.
+ * When block enabled, it will run in it's own mainloop.
+ */
 void show_error_message(gchar *string, int block)
 {
 	GtkWidget *dialog = NULL;

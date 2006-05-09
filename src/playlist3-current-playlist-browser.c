@@ -741,9 +741,12 @@ void pl3_current_playlist_browser_playlist_changed()
 {
 	if(pl3_cat_get_selected_browser() == PL3_CURRENT_PLAYLIST)
 	{
-		gchar *string = format_time(playlist_list_get_playtime(PLAYLIST_LIST(playlist)));
+		uint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
+			(PLAYLIST_LIST(playlist)->num_rows/((gdouble)PLAYLIST_LIST(playlist)->loaded));
+		
+		gchar *string = format_time(playtime);
 		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
-				(PLAYLIST_LIST(playlist)->loaded == PLAYLIST_LIST(playlist)->num_rows)? "":"(Loading..)"); 
+				(PLAYLIST_LIST(playlist)->loaded == PLAYLIST_LIST(playlist)->num_rows)? "":_("(Estimation)")); 
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
 		g_free(string);
 		g_free(mesg);

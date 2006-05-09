@@ -27,11 +27,8 @@
 #include <glade/glade.h>
 #include <config.h>
 #include "bacon-volume.h"
-#include "plugin.h"
 #include "main.h"
 #include "misc.h"
-#include "config1.h"
-#include "metadata.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
 #include "playlist3-find-browser.h"
@@ -45,7 +42,7 @@ void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
 
-int old_type = -1;
+static int old_type = -1;
 
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;

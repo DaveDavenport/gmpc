@@ -1,9 +1,15 @@
 #ifndef __MISC_H__
 #define __MISC_H__
-/*
-char * shorter_string(const char *long_string);
-char *remove_extention_and_basepath(const char *filename);
-*/
+/**
+ * format time into 
+ * Total time: %i days %i hours %i minutes
+ */
+
 gchar * format_time(unsigned long seconds);
+
+/**
+ * this draws a 1 pixel border around a pixbuf.
+ * It doesn't work for all color depths (I think)
+ */
 void draw_pixbuf_border(GdkPixbuf *pb);
 #endif
