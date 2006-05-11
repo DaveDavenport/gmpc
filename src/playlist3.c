@@ -51,7 +51,6 @@ void playlist_zoom_out();
 
 int pl3_zoom = PLAYLIST_NO_ZOOM;
 
-void id3_info();
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
@@ -1466,37 +1465,64 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();
 	}
-
 }
+/**
+ * Update the window to status changes in mpd
+ */
 void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	char buffer[1024];
 	GtkWidget *image = NULL;
-
+	/**
+	 * if the window isn't there yet, return
+	 */
 	if(!pl3_xml)return;
+
+	/**
+	 * Player state changed
+	 */
 	if(what&MPD_CST_STATE)
 	{
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_PLAYER_PLAY:
+				/**
+				 * Update the image in the menu
+				 */
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
-				gtk_image_set_from_stock(GTK_IMAGE(
-							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
+				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-pause",GTK_ICON_SIZE_BUTTON);
-				playlist_player_set_song(mi);
-				playlist_player_update_image(mi);
 
+				/**
+				 * Update song indicator in window 
+				 */	
+				playlist_player_set_song(mi);
+				/**
+				 * Update the image.
+				 * Needed from moving from stop->play
+				 */
+				playlist_player_update_image(mi);
+			
+				/**
+				 * Update window title
+				 */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%]]|%shortfile%", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 
 				break;
 			case MPD_PLAYER_PAUSE:
+				/** Update menu and button images */
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);                     				
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
+
+
+				/**
+				 * Set paused in Window string 
+				 */
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Paused</span>");
@@ -1531,8 +1557,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
 		}
-
 	}
+	/**
+	 * Handle song change or Playlist change
+	 * Anything that can change metadta
+	 */
 	if(what&MPD_CST_SONGID || what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
 		if(mpd_player_get_state(mi) == MPD_PLAYER_PLAY)
@@ -1547,6 +1576,9 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE,NULL);
 	}
+	/**
+	 * set repeat buttons in menu correct
+	 */
 	if(what&MPD_CST_REPEAT)
 	{
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
@@ -1636,6 +1668,9 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}
 	if(what&MPD_CST_DATABASE)
 	{
+		/**
+		 * TODO: Move to plugin signal for pl3_file
+		 */
 		pl3_file_browser_reupdate();
 	}
 	if(what&MPD_CST_UPDATING)
@@ -1686,10 +1721,10 @@ int pl3_progress_seek_stop()
 
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
 {
-	/*	if(event->type == GDK_2BUTTON_PRESS)
-		{
-		*/		id3_info();	
-	/*	}*/
+	int state = mpd_player_get_state(connection);
+	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
+	if(!mpd_check_connected(connection)) return;
+	call_id3_window(mpd_player_get_current_song_id(connection));
 }
 
 void playlist_player_volume_changed(BaconVolumeButton *vol_but)
@@ -1701,13 +1736,6 @@ void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 	}
 }
 
-void id3_info()
-{
-	int state = mpd_player_get_state(connection);
-	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
-	if(!mpd_check_connected(connection)) return;
-	call_id3_window(mpd_player_get_current_song_id(connection));
-}
 
 void about_window()
 {

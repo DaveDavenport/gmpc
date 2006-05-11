@@ -148,10 +148,10 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		width = gdk_pixbuf_get_width(cover_pb)+BORDER_WIDTH*2;
 		/* draw rectangle, width of image + 2x border */
 		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
-		
+
 		height = gdk_pixbuf_get_height(cover_pb)+BORDER_WIDTH;
 		/* draw image outline */
-/*		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
+		/*		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
 				BORDER_WIDTH-1,BORDER_WIDTH-1,
 				width-2*BORDER_WIDTH+1,height-BORDER_WIDTH+1);
 				*/
@@ -399,19 +399,19 @@ void tray_icon_song_change()
 	if(cover_pb == NULL && mpd_check_connected(connection)){
 		meta_data_get_path_callback(mpd_playlist_get_current_song(connection), META_ALBUM_ART, tray_cover_art_fetched, NULL);
 		/*ret = cover_art_fetch_image_path(mpd_playlist_get_current_song(connection), &path);
-		if(ret == COVER_ART_OK_LOCAL)
-		{
-			cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
-		}
-		else if (ret == COVER_ART_NOT_FETCHED)
-		{
+		  if(ret == COVER_ART_OK_LOCAL)
+		  {
+		  cover_pb = gdk_pixbuf_new_from_file_at_size(path, 64,64, NULL);
+		  }
+		  else if (ret == COVER_ART_NOT_FETCHED)
+		  {
 
-			cover_art_fetch_image(mpd_playlist_get_current_song(connection),
-					(CoverArtCallback)tray_cover_art_fetched,NULL);
-		}
-		if(path)g_free(path);
-		*/
-		
+		  cover_art_fetch_image(mpd_playlist_get_current_song(connection),
+		  (CoverArtCallback)tray_cover_art_fetched,NULL);
+		  }
+		  if(path)g_free(path);
+		  */
+
 	}
 }
 
@@ -424,7 +424,7 @@ void tray_icon_connection_changed(MpdObj *mi, int connect)
 	else{
 		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-disconnected", -1);
 		if(cover_pb) {
-		   	g_object_unref(cover_pb);
+			g_object_unref(cover_pb);
 			cover_pb = NULL;
 		}
 	}
@@ -532,35 +532,46 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();
 
-		if(mpd_server_check_command_allowed(connection, "play"))
+		if(mpd_check_connected(connection))
 		{
-			item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
+			if(mpd_server_check_command_allowed(connection, "play"))
+			{
+				item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
+
+
+				item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
+
+				item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
+
+
+				item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
+				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+						gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
+				item = gtk_separator_menu_item_new();
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+			}
+		}
+		else
+		{
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CONNECT, NULL);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
-
-
-			item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
-
-			item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
-
-
-			item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(connect_to_mpd), NULL);
 			item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);			
 		}
 		item = gtk_image_menu_item_new_with_mnemonic(_("Pla_ylist"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
@@ -667,12 +678,12 @@ void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoin
 			}
 			else if (ret == META_DATA_FETCHING){
 				if(tray_icon)
-				cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-loading-cover",-1,NULL);
+					cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-loading-cover",-1,NULL);
 			}
 			else
 			{
 				if(tray_icon)
-				cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-no-cover",-1,NULL);
+					cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-no-cover",-1,NULL);
 			}
 		}
 	}
