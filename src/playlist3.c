@@ -631,19 +631,19 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	}
 
 	/* default gmpc/xmms/winamp key's*/
-	else if (event->keyval == GDK_z )
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_z )
 	{
 		prev_song();
 	}
-	else if (event->keyval == GDK_x || event->keyval == GDK_c)
+	else if (event->state&GDK_CONTROL_MASK && (event->keyval == GDK_x || event->keyval == GDK_c))
 	{
 		play_song();
 	}
-	else if (event->keyval == GDK_v)
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_v)
 	{
 		stop_song();
 	}
-	else if (event->keyval == GDK_b)
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_b)
 	{
 		next_song();
 	}
