@@ -77,6 +77,8 @@ GladeXML *playlist_pref_xml = NULL;
 
 GtkWidget *volume_slider = NULL;
 
+int crumb_depth = -1;
+
 
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
@@ -95,6 +97,11 @@ gmpcPlugin playlist_plug = {
 	NULL,
 	&playlist_gpp
 };
+
+
+
+
+
 
 /* Get the type of the selected row..
  * -1 means no row selected
@@ -170,6 +177,9 @@ void pl3_disconnect()
 {
 	if(pl3_xml != NULL)
 	{
+		/**
+		 * TODO: Make them use the plugin system to get there needed signals 
+		 */
 		pl3_file_browser_disconnect();
 		pl3_artist_browser_disconnect();
 		pl3_find_browser_disconnect();
@@ -179,17 +189,12 @@ void pl3_disconnect()
 void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
 {
 	gint type = pl3_cat_get_selected_browser();
-	if(!mpd_check_connected(connection))
-	{
-		return;
-	}
-	/* nothing valid, so return */
-	if(type == -1)
+	if(!mpd_check_connected(connection) || type == -1)
 	{
 		return;
 	}
 
-	else if(type == PL3_CURRENT_PLAYLIST)
+	if(type == PL3_CURRENT_PLAYLIST)
 	{
 
 		pl3_current_playlist_browser_scroll_to_current_song();
@@ -247,13 +252,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	}
 }
 
-gboolean pl3_cat_combo_row_foreach(GtkTreeModel *store, GtkTreePath *path, GtkTreeIter *iter,gpointer data)
-{
-	GtkTreePath *oldpath;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs), iter, 2, &oldpath, -1);
-	gtk_tree_path_free(oldpath);
-	return FALSE;
-}
+
 void pl3_cat_combo_changed(GtkComboBox *box)
 {
 	GtkTreeIter iter;
@@ -277,48 +276,121 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 		}
 	}
 }
-void pl3_cat_clear_crumb()
+
+void pl3_cat_bread_crumb_up()
 {
-	GtkTreePath *path = NULL;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter,parent;
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+
+	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+	{
+		if(gtk_tree_model_iter_parent(model, &parent, &iter))
+		{
+			gtk_tree_selection_select_iter(selec, &parent);
+		}
+
+	}
+}
+
+/**
+ * Iter function to free all path's stored in the list store 
+ */
+gboolean pl3_cat_combo_row_foreach(GtkTreeModel *store, GtkTreePath *path, GtkTreeIter *iter,gpointer data)
+{
+	GtkTreePath *oldpath;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs), iter, 2, &oldpath, -1);
+	gtk_tree_path_free(oldpath);
+	return FALSE;
+}
+
+/**
+ * Special function that first free's all path's in the list store
+ * use this instead of gtk_list_Store_clear
+ */
+void pl3_cat_rebuild_crumb()
+{
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeIter iter;
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter test2;
 	/* clean up the old paths before clearing it.. */
 	gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
 	/* clear the list */
 	gtk_list_store_clear(pl3_crumbs);
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
-
-		/* Get the first iter, and get the path to "cicle" over */
-	
-		path = gtk_tree_model_get_path(model, &iter);
-	}
-	gtk_tree_model_get_iter_first(model, &test2);
-	do 
-	{
-		GtkTreeIter crumb;
+		gint type;
+		gtk_tree_model_get(model, &iter, 0, &type, -1);
+		GtkTreeIter parent,crumb;
+		gchar *ori_text = NULL;
 		GtkTreePath *addpath = NULL;
-		gchar *text, *icon;          				
-		/* Add the "Base Class" */
-		gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
-		gtk_list_store_append(pl3_crumbs, &crumb);
-		addpath = gtk_tree_model_get_path(model, &test2);
-		gtk_list_store_set(pl3_crumbs, &crumb,
-				0, text,                                           				
-				1,icon,
-				2,addpath,
-				3,20,
-				-1);
-		if(path && !gtk_tree_path_compare(path, addpath)){
-			gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), &crumb); 
-		}	
+		int index = 0, select = -1;
 
-	}while(gtk_tree_model_iter_next(model, &test2));
-	if(path)gtk_tree_path_free(path);	
+
+
+
+
+
+
+
+
+
+
+		gtk_tree_model_get(model, &iter, 1, &ori_text, -1);
+
+		/** Get the first iter of this level */ 
+		addpath = gtk_tree_model_get_path(model, &iter);
+		while(gtk_tree_path_prev(addpath) && index < 15) index++;
+		index = 0;
+		gtk_tree_model_get_iter(model, &parent, addpath);
+		gtk_tree_path_free(addpath);
+		addpath = NULL;
+		/** Start filling the breadcrumb */
+		do
+		{
+			char *text, *icon;
+			gtk_tree_model_get(model, &parent, 1, &text, 3, &icon, -1);
+
+			gtk_list_store_append(pl3_crumbs, &crumb);
+			addpath = gtk_tree_model_get_path(model, &parent);
+			gtk_list_store_set(pl3_crumbs, &crumb,
+					0, text,                                           				
+					1,icon,
+					2,addpath,
+					-1);
+			if(!strcmp(text, ori_text))
+			{
+				select = index;	
+			}
+			g_free(text);
+			g_free(icon);
+			index++;
+
+		}while(gtk_tree_model_iter_next(model,&parent) && index < 30);
+		g_free(ori_text);
+
+		gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), GTK_TREE_MODEL(pl3_crumbs)); 
+		if(select >= 0)
+		{
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), select);
+		}
+
+		crumb_depth = gtk_tree_store_iter_depth(GTK_TREE_STORE(model), &iter);
+		/**
+		 * Set the buttons in the right state
+		 */
+		if(crumb_depth == 0) {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "bread_crumb_up"), FALSE);
+		} else {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "bread_crumb_up"), TRUE);
+		}
+	}
+
 }
 
+/**
+ * Function to handle a change in category.
+ */
 void pl3_cat_sel_changed()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -331,87 +403,20 @@ void pl3_cat_sel_changed()
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
-		int checked = 0;
-		GtkTreePath *path;
-		GtkTreeIter temp;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 
-		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_crumbs), &temp)){
-			GtkTreePath *path, *old_path;
-			path = gtk_tree_model_get_path(model, &iter);
-
-			do{
-				gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs),&temp, 2, &old_path, -1);
-				if(!gtk_tree_path_compare(path, old_path)){
-					checked = 1;
-					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
-							&temp);                                                                               					
-				}	
-			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_crumbs), &temp));
-			gtk_tree_path_free(path);
+		if(crumb_depth != gtk_tree_store_iter_depth(GTK_TREE_STORE(model), &iter)){
+			/** detach model */
+			gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), NULL); 
+			/**
+			 * Rebuild the breadcrumb
+			 */
+			pl3_cat_rebuild_crumb();
 		}
 
-		if(!checked)
-		{
-			GtkTreeIter test2;
-			/* clean up the old paths before clearing it.. */
-			gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
-			/* clear the list */
-			gtk_list_store_clear(pl3_crumbs);
-
-			/* Get the first iter, and get the path to "cicle" over */
-			gtk_tree_model_get_iter_first(model, &test2);
-			path = gtk_tree_model_get_path(model, &iter);
-			do 
-			{
-				GtkTreeIter crumb, temp_iter;
-				GtkTreePath *addpath = NULL;
-				gchar *text, *icon;          				
-				/* Add the "Base Class" */
-				gtk_tree_model_get(model, &test2, 1, &text, 3, &icon, -1);
-				gtk_list_store_append(pl3_crumbs, &crumb);
-				addpath = gtk_tree_model_get_path(model, &test2);
-				gtk_list_store_set(pl3_crumbs, &crumb,
-						0, text,                                           				
-						1,icon,
-						2,addpath,
-						3,20,
-						-1);
-				if(!gtk_tree_path_compare(path, addpath)){
-					gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), &crumb); 
-				}	
-
-				/* if Needed Add Childs */
-				if(gtk_tree_store_is_ancestor(GTK_TREE_STORE(model),&test2, &iter))
-				{
-					GtkTreeIter *parent = NULL;
-					do {	
-						gtk_tree_model_get_iter(model, &temp_iter, path);
-						gtk_tree_model_get(model, &temp_iter, 1, &text, 3, &icon, -1);
-
-						gtk_list_store_insert_before(pl3_crumbs, &crumb, parent);
-						gtk_list_store_set(pl3_crumbs, &crumb,
-								0, text,
-								1,icon,
-								2,gtk_tree_path_copy(path),
-								3,20+(gtk_tree_path_get_depth(path))*10,
-								-1);
-						if(!checked){
-							gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
-
-									&crumb);
-							checked = 1;
-						}
-						parent = &crumb;
-					}while(gtk_tree_path_up(path) && gtk_tree_path_get_depth(path) > 1);
-
-				}
-				if(text)g_free(text);
-				if(icon)g_free(icon);
-			}while(gtk_tree_model_iter_next(model, &test2));
-			gtk_tree_path_free(path);	
-		}
-
+		/**
+		 * Start switching side view (if type changed )
+		 */
 		if(old_type != type )
 		{
 			if(old_type == PL3_CURRENT_PLAYLIST)
@@ -813,7 +818,6 @@ void create_playlist3 ()
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
 	GtkTreeIter iter;
-	GValue value; 
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 
@@ -883,11 +887,11 @@ void create_playlist3 ()
 	 * Bread Crumb system.
 	 * TODO: Needs some fixing, to keep in sync
 	 */
-	pl3_crumbs = gtk_list_store_new(4, 
+	pl3_crumbs = gtk_list_store_new(3, 
 			G_TYPE_STRING, /* text */
 			G_TYPE_STRING, /* stock id */
-			G_TYPE_POINTER, /* Tree Path */
-			G_TYPE_INT);
+			G_TYPE_POINTER /* Tree Path */
+			);
 
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 			GTK_TREE_MODEL(pl3_crumbs));
@@ -895,12 +899,7 @@ void create_playlist3 ()
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,FALSE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
 			"stock-id", 1);                                                                                          	
-	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"width", 3);                        
-	memset(&value, 0, sizeof(value));
-	g_value_init(&value,G_TYPE_FLOAT);
-	g_value_set_float(&value, 1.0);
-	g_object_set_property(G_OBJECT(renderer), "xalign", &value);
+
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,TRUE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
@@ -1248,7 +1247,7 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 					pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
 					if(pb) draw_pixbuf_border(pb);
 					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
-//					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+					//					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 					g_object_unref(pb);
 				}
 				else{
@@ -1257,10 +1256,10 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
-//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+				//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 			else{
-//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+				//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 		}
 	}
@@ -1285,16 +1284,16 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 				pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
 				if(pb) draw_pixbuf_border(pb);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+				//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				g_object_unref(pb);
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
-//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+				//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-loading-cover", -1);				
 			}
 			else{
-//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+				//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
 			}
 		}
@@ -1312,11 +1311,11 @@ static void playlist_player_update_image(MpdObj *mi)
 
 	}
 	else{
-/*		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
-		}
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-		*/
+		/*		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){
+				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+				}
+				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+				*/
 	}
 }
 static void playlist_player_clear_image()
@@ -1353,11 +1352,11 @@ void playlist_menu_left_bar_changed(GtkCheckMenuItem *menu)
 	int active = gtk_check_menu_item_get_active(menu);
 	if(active) {
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "bread_crumb"));
 	}
 	else {
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "bread_crumb"));
 	}
 	cfg_set_single_value_as_int(config, "playlist", "playlist-only-mode", active);
 
@@ -1392,12 +1391,12 @@ void playlist_zoom_level_changed()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
-	
+
 
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
 	gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),	pl3_wsize.width, pl3_wsize.height);
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
-	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "bread_crumb"));
 
 
 	/* Now start hiding */
@@ -1425,8 +1424,8 @@ void playlist_zoom_level_changed()
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		case PLAYLIST_SMALL:
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
-			gtk_widget_show(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
-			
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "bread_crumb"));
+
 			gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		default:
 			break;
@@ -1473,7 +1472,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	/* update the image */
 	playlist_player_update_image(connection);
 
-	pl3_cat_clear_crumb();;
+	pl3_cat_rebuild_crumb();;
 
 	if(connect){
 		gchar *string = NULL;
@@ -1588,16 +1587,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
 					mpd_player_get_repeat(connection));
 		}
-		if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat2"))))
-		{
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat2")),
-					mpd_player_get_repeat(connection));
-		}
-
-
-
-
-		
 	}
 	if(what&MPD_CST_RANDOM)
 	{
@@ -1607,12 +1596,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{                                                                                                                       		
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
 					mpd_player_get_random(connection));
-		}                                                                                                                       		
-		if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random2"))))
-		{                                                                                                                       		
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random2")),
-					mpd_player_get_random(connection));
-		}                                                                                                                       		    		
+		}
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
 	{
