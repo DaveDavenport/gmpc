@@ -498,6 +498,9 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_COMPOSER] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_DATE] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH] = G_TYPE_INT;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_DISC] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_COMMENT] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_POS] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ID] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_ICON_ID] = G_TYPE_STRING;
@@ -762,6 +765,20 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		case PLAYLIST_LIST_COL_SONG_LENGTH:
 			g_value_set_int(value, song->time);
 			break;
+		case PLAYLIST_LIST_COL_SONG_LENGTH_FORMAT:
+			{
+				gchar *data = g_strdup_printf("%02i:%02i",
+						song->time/60, song->time%60);
+				g_value_set_string(value, data);
+				g_free(data);
+			}
+			break;                             			
+		case PLAYLIST_LIST_COL_SONG_DISC:
+			g_value_set_string(value, song->disc);
+			break;
+		case PLAYLIST_LIST_COL_SONG_COMMENT:
+			g_value_set_string(value, song->comment);
+			break;                                			
 		case PLAYLIST_LIST_COL_SONG_POS:
 			g_value_set_int(value, song->pos);
 			break;

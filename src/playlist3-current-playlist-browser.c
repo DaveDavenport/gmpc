@@ -300,6 +300,62 @@ void pl3_current_playlist_browser_init()
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_COMPOSER));
 	columns[PL_COLUMN_COMPOSER] = column;
 
+
+	/**
+	 * Track length column
+	 */
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Length"), PLAYLIST_LIST_COL_SONG_LENGTH_FORMAT,-1);
+	sprintf(smallstring,"%i", PL_COLUMN_LENGTH);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	{                                                                                                         	
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_LENGTH));
+	columns[PL_COLUMN_LENGTH] = column;
+
+	/**
+	 * Disc column
+	 */
+
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Disc"), PLAYLIST_LIST_COL_SONG_DISC,-1);
+	sprintf(smallstring,"%i", PL_COLUMN_DISC);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	{                                                                                                         	
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_DISC));
+	columns[PL_COLUMN_DISC] = column;
+
+	/**
+	 * Comment Column
+	 */
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Comment"), PLAYLIST_LIST_COL_SONG_COMMENT,-1);
+	sprintf(smallstring,"%i", PL_COLUMN_COMMENT);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	{                                                                                                         	
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_COMMENT));
+	columns[PL_COLUMN_COMMENT] = column;
+	
+	/**
+	 * Songpos Column
+	 */
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Pos"), PLAYLIST_LIST_COL_SONG_POS,-1);
+	sprintf(smallstring,"%i", PL_COLUMN_SONGPOS);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	{                                                                                                         	
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_SONGPOS));
+	columns[PL_COLUMN_SONGPOS] = column;                                                                            	
+
+
+
+
+	
+
+	
 	for(position=0; position<PL_COLUMN_TOTAL;position++)
 	{
 		sprintf(smallstring, "%i", position);
