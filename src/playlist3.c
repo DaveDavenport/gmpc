@@ -548,16 +548,27 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
  */
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
-	if(event->keyval == GDK_plus && event->state&GDK_CONTROL_MASK)
+	/**
+	 * Handle Zoom In Key
+	 * (Ctrl-+)
+	 */
+	if((event->keyval == GDK_plus && event->state&GDK_CONTROL_MASK) || event->keyval == GDK_KP_Add)
 	{
 		playlist_zoom_in();
 		return TRUE;
 	}
-	if(event->keyval == GDK_minus && event->state&GDK_CONTROL_MASK)
+	/**
+	 * Handle Zoom Out Key
+	 * (Ctrl--)
+	 */
+	if((event->keyval == GDK_minus && event->state&GDK_CONTROL_MASK) || event->keyval == GDK_KP_Subtract) 	
 	{
 		playlist_zoom_out();
 		return TRUE;
 	}                                                          	
+	/**
+	 * Fullscreen 
+	 */
 	if(event->keyval == GDK_F12)
 	{
 		GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
@@ -569,18 +580,20 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		else{
 			gtk_window_fullscreen(GTK_WINDOW(win));
 		}
-
 	}
-	if(event->keyval == GDK_f && event->state != GDK_CONTROL_MASK)
-	{
-		/* disabled because of problems with gtk 2.6 */
-		return FALSE;
-	}
-	else if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
+	/**
+	 * Close the window on ctrl-w
+	 * or Ctrl Q
+	 */
+	if ((event->keyval == GDK_w || event->keyval == GDK_q)&& event->state == GDK_CONTROL_MASK)
 	{
 		pl3_close();
+		return TRUE;
 	}
 
+	/**
+	 * Following key's are only valid when connected
+	 */
 	if(!mpd_check_connected(connection))
 	{
 		return FALSE;
@@ -614,7 +627,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
 		gtk_tree_path_free(path);
 	}
-	else if (event->keyval == GDK_F4 || event->keyval == GDK_j)
+	else if (event->keyval == GDK_F4 ||(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j))
 	{
 		if(event->keyval == GDK_j)
 		{
@@ -661,8 +674,11 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	return TRUE;
 }
 
-
-
+/**
+ * Let plugins handle the key-press on the Category tree
+ * TODO: Make the plugins capable of stopping the single.
+ * So catch return value.
+ */
 int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	/* call default */
@@ -687,9 +703,16 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 			}
 		}
 	}
+	/**
+	 * Now return to the default handler
+	 */
 	return pl3_window_key_press_event(mw,event);
 }
-
+/**
+ * Trigger Playlist search
+ * This switches to the search window set focus on entry and set searh on playlist.
+ * TODO: Move to search plugin?
+ */
 void pl3_playlist_search()
 {
 	if(!mpd_check_connected(connection))
