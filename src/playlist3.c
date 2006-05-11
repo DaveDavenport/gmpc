@@ -34,6 +34,23 @@
 #include "playlist3-current-playlist-browser.h"
 #include "revision.h"
 
+
+
+
+enum {
+	PLAYLIST_NO_ZOOM,
+	PLAYLIST_SMALL,
+	PLAYLIST_MINI,
+	PLAYLIST_TINY,
+	PLAYLIST_ZOOM_LEVELS
+}PlaylistZoom;
+
+void playlist_zoom_level_changed();
+void playlist_zoom_in();
+void playlist_zoom_out();
+
+int pl3_zoom = PLAYLIST_NO_ZOOM;
+
 void id3_info();
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
@@ -526,6 +543,16 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
  */
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
+	if(event->keyval == GDK_plus && event->state&GDK_CONTROL_MASK)
+	{
+		playlist_zoom_in();
+		return TRUE;
+	}
+	if(event->keyval == GDK_minus && event->state&GDK_CONTROL_MASK)
+	{
+		playlist_zoom_out();
+		return TRUE;
+	}                                                          	
 	if(event->keyval == GDK_F12)
 	{
 		GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
@@ -700,7 +727,7 @@ void pl3_push_rsb_message(gchar *string)
 
 int pl3_close()
 {
-	if(pl3_xml != NULL && !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode"))))
+	if(pl3_xml != NULL && pl3_zoom >= PLAYLIST_SMALL/*&& !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
@@ -1221,19 +1248,19 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 					pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
 					if(pb) draw_pixbuf_border(pb);
 					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
-					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+//					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 					g_object_unref(pb);
 				}
 				else{
-					gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+					//gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 				}
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 			else{
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 			}
 		}
 	}
@@ -1258,16 +1285,16 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 				pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
 				if(pb) draw_pixbuf_border(pb);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				g_object_unref(pb);
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
-				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-loading-cover", -1);				
 			}
 			else{
-				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+//				gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
 			}
 		}
@@ -1282,13 +1309,14 @@ static void playlist_player_update_image(MpdObj *mi)
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		meta_data_get_path_callback(song, META_ALBUM_ART, playlist_player_update_image_callback, NULL);
 		meta_data_get_path_callback(song, META_ARTIST_ART, playlist_player_update_artist_image_callback, NULL);
-		
+
 	}
 	else{
-		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){
+/*		if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))){
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 		}
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+		*/
 	}
 }
 static void playlist_player_clear_image()
@@ -1334,6 +1362,79 @@ void playlist_menu_left_bar_changed(GtkCheckMenuItem *menu)
 	cfg_set_single_value_as_int(config, "playlist", "playlist-only-mode", active);
 
 }
+
+void playlist_zoom_in()
+{
+	if((pl3_zoom+1) >= PLAYLIST_ZOOM_LEVELS) return;
+	pl3_zoom++;
+	playlist_zoom_level_changed();
+}
+void playlist_zoom_out()
+{
+	if(pl3_zoom <= PLAYLIST_NO_ZOOM) return;
+	pl3_zoom--;
+	playlist_zoom_level_changed();
+}
+
+void playlist_zoom_level_changed()
+{
+	/* Show full view */
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+	/** Menu Bar */
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
+	/** BUTTON BOX */
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "control_bar"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
+
+	
+
+	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
+	gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),	pl3_wsize.width, pl3_wsize.height);
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
+
+
+	/* Now start hiding */
+	switch(pl3_zoom)
+	{
+		case PLAYLIST_NO_ZOOM:
+
+			break;
+		case PLAYLIST_TINY:
+			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "control_bar"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menubar1"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));			
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
+			break;
+		case PLAYLIST_MINI:
+			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));     			
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
+		case PLAYLIST_SMALL:
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
+			gtk_widget_show(glade_xml_get_widget(pl3_xml, "cb_cat_selector"));
+			
+			gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		default:
+			break;
+
+
+	}
+}
+
 
 void playlist_menu_mini_mode_changed(GtkCheckMenuItem *menu)
 {
@@ -1482,11 +1583,36 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 				mpd_player_get_repeat(connection));
+		if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat"))))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
+					mpd_player_get_repeat(connection));
+		}
+		if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat2"))))
+		{
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat2")),
+					mpd_player_get_repeat(connection));
+		}
+
+
+
+
+		
 	}
 	if(what&MPD_CST_RANDOM)
 	{
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
 				mpd_player_get_random(connection));
+		if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random"))))
+		{                                                                                                                       		
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
+					mpd_player_get_random(connection));
+		}                                                                                                                       		
+		if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random2"))))
+		{                                                                                                                       		
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random2")),
+					mpd_player_get_random(connection));
+		}                                                                                                                       		    		
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
 	{
@@ -1564,7 +1690,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
 	}
 
-	
+
 }
 
 
@@ -1636,7 +1762,7 @@ void about_window()
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
 	g_free(path);
-	
+
 	if(strlen(revision))
 	{
 		path = g_strdup_printf("%s\nRevision: %s", VERSION, revision);
@@ -1645,7 +1771,7 @@ void about_window()
 	{
 		path = g_strdup_printf("%s\n", VERSION);
 	}
-	
+
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
 	g_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
