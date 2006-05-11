@@ -727,7 +727,7 @@ void pl3_push_rsb_message(gchar *string)
 
 int pl3_close()
 {
-	if(pl3_xml != NULL && pl3_zoom >= PLAYLIST_SMALL/*&& !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
+	if(pl3_xml != NULL && pl3_zoom <= PLAYLIST_SMALL/*&& !gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "mini_mode")))*/)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
