@@ -1415,18 +1415,14 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), connect);
 
-	/*
-	 * make the playlist update itself
-	 */	
-	playlist_status_changed(connection, 
-			MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,
-			NULL);
-
 	/* update the image */
 	playlist_player_update_image(connection);
+	/**
+	 * Make sure the crumb system is in sync again
+	 */
+	pl3_cat_rebuild_crumb();
 
-	pl3_cat_rebuild_crumb();;
-
+	/** Set back to the current borwser, and update window title */
 	if(connect){
 		gchar *string = NULL;
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
@@ -1453,6 +1449,19 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);		
 		g_free(string);                                                                    	
 	}
+
+	/*
+	 * make the playlist update itself
+	 */	
+	playlist_status_changed(connection, 
+			MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,
+			NULL);
+
+
+
+	/* if enabled scroll to current song
+	 * TEST: Doesnt work?
+	 */
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();
