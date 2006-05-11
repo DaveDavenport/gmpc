@@ -342,7 +342,11 @@ unsigned long pl3_find_browser_view_browser()
 						loop = FALSE;
 						for(i=0;filter_test[i]!= NULL && !loop;i++)
 						{
+							
 							loop = TRUE;
+							/**
+							 * TODO check using a look, not with hardcoded fields
+							 */
 							/* Artist */
 							if(song->artist && regexec(filter_test[i], song->artist,0, NULL, 0) == 0) {
 								loop =  FALSE;
@@ -373,10 +377,14 @@ unsigned long pl3_find_browser_view_browser()
 							}                                        
 							if(song->date && regexec(filter_test[i], song->date,0, NULL, 0) == 0) {
 								loop =  FALSE;
-							}                       
+							}                     
+							if(song->disc && regexec(filter_test[i], song->disc,0, NULL, 0) == 0) {
+								loop =  FALSE;
+							}
+							if(song->comment && regexec(filter_test[i], song->comment,0, NULL, 0) == 0) {
+								loop =  FALSE;
+							}
 						}	
-
-
 					}
 					if(!loop)
 					{
