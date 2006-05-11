@@ -375,6 +375,7 @@
 
       <child>
 	<widget class="GtkVBox" id="vbox_playlist_player">
+	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">0</property>
 

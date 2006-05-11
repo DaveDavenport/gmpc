@@ -1,7 +1,4 @@
 /*
- *
- *
- *
  *Copyright (C) 2004-2006 Qball Cow <Qball@qballcow.nl>
  *
  * This program is free software; you can redistribute it and/or
@@ -889,13 +886,7 @@ void create_playlist3 ()
 	pl3_initialize_tree();
 
 
-	/* show/hide the player.. */
-       	/* TODO: Do we want to  hide this with the new layout? 
-	*/	
-	if(cfg_get_single_value_as_int_with_default(config, "playlist","player", TRUE))
-	{
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
-	}
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 
 	/* Add volume slider. */
 	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
@@ -1011,31 +1002,6 @@ GtkTreeView *playlist3_get_category_tree_view()
 /****************************************************************************************
  *  PREFERENCES										*
  ****************************************************************************************/
-void playlist3_player_enable_tb(GtkToggleButton *but)
-{
-	int bool1  = gtk_toggle_button_get_active(but);
-	cfg_set_single_value_as_int(config, "playlist","player", bool1);
-	if(pl3_xml)
-	{
-		if(bool1)
-		{
-			gtk_widget_show(
-					glade_xml_get_widget(
-						pl3_xml,
-						"vbox_playlist_player"));
-
-		}
-		else
-		{
-			gtk_widget_hide(
-					glade_xml_get_widget(
-						pl3_xml,
-						"vbox_playlist_player"));
-
-		}
-	}
-}
-
 
 void cur_song_center_enable_tb(GtkToggleButton *but)
 {
@@ -1117,10 +1083,6 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));
-		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_playlist_player")),
-				cfg_get_single_value_as_int_with_default(config,"playlist", "player", TRUE));
-
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);
