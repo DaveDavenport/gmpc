@@ -343,9 +343,10 @@ void cam_cover_art_fetched(mpd_Song *song,GladeXML *cae_xml)
 
 	}
 	else{
+		/*
 		char *coverpath = NULL;
 		int ret = 0;
-/*		ret = cover_art_fetch_image_path(song, &coverpath); 
+		ret = cover_art_fetch_image_path(song, &coverpath); 
 		if(ret == COVER_ART_OK_LOCAL)
 		{
 			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath, 250,250,NULL);
@@ -366,11 +367,12 @@ void cam_cover_art_fetched(mpd_Song *song,GladeXML *cae_xml)
 
 void cover_art_query_providers(GtkWidget *button)
 {
+	/*
 	GladeXML *cae_xml = glade_get_widget_tree(button);
 	gchar *path = NULL;
 	const gchar *artist = 	gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_artist")));
 	const gchar *album = 		gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(cae_xml, "entry_album")));
-/*	int result = cover_art_fetch_image_path_aa_no_cache((char *)artist, (char *)album, &path);
+	int result = cover_art_fetch_image_path_aa_no_cache((char *)artist, (char *)album, &path);
 	if(result == COVER_ART_OK_LOCAL)
 	{
 		if(path){

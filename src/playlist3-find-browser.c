@@ -390,12 +390,11 @@ unsigned long pl3_find_browser_view_browser()
 					{
 						GtkTreeIter piter;
 						int id = 0, ttime = 0;;
-						//				       char *icon = NULL;
 						char *temp = NULL;
 						gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter,
 								PLAYLIST_LIST_COL_SONG_ID, &id,
 								PLAYLIST_LIST_COL_MARKUP, &temp,
-								/*SONG_STOCK_ID, &icon,*/ -1);
+								-1);
 						gtk_list_store_append(pl3_findb_store, &piter);
 						gtk_list_store_set(pl3_findb_store, &piter,
 								PL3_FINDB_PATH, "", 
@@ -404,7 +403,6 @@ unsigned long pl3_find_browser_view_browser()
 								PL3_FINDB_TITLE, temp,
 								PL3_FINDB_ICON, "media-audiofile",
 								-1); 	
-						//g_free(icon);
 						g_free(temp);                      		
 						time+=ttime;
 					}

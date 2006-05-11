@@ -54,6 +54,7 @@ int pl3_zoom = PLAYLIST_NO_ZOOM;
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
+void pl3_option_menu_activate(GtkMenuItem *item);
 
 static int old_type = -1;
 
@@ -325,16 +326,6 @@ void pl3_cat_rebuild_crumb()
 		GtkTreePath *addpath = NULL;
 		int index = 0, select = -1;
 
-
-
-
-
-
-
-
-
-
-
 		gtk_tree_model_get(model, &iter, 1, &ori_text, -1);
 
 		/** Get the first iter of this level */ 
@@ -404,14 +395,14 @@ void pl3_cat_sel_changed()
 		gint type;
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 
-		if(crumb_depth != gtk_tree_store_iter_depth(GTK_TREE_STORE(model), &iter)){
+	//	if(crumb_depth != gtk_tree_store_iter_depth(GTK_TREE_STORE(model), &iter)){
 			/** detach model */
 			gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), NULL); 
 			/**
 			 * Rebuild the breadcrumb
 			 */
 			pl3_cat_rebuild_crumb();
-		}
+	//	}
 
 		/**
 		 * Start switching side view (if type changed )
@@ -473,6 +464,12 @@ void pl3_cat_sel_changed()
 
 		old_type = type;
 	}
+
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+
+
+	
 }
 
 
@@ -488,6 +485,48 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 		return FALSE; 
 	}
 	return TRUE;
+
+}
+
+void pl3_option_menu_activate(GtkMenuItem *item)
+{
+	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
+	int i;
+	gint type  = pl3_cat_get_selected_browser();
+	int menu_items = 0;
+	GdkEventButton *event = NULL;
+	GtkWidget *menu = NULL;
+	if(!mpd_check_connected(connection) || type == -1) return;
+
+
+	menu = gtk_menu_new();
+	/* if it's the current playlist */
+	menu_items	+= pl3_current_playlist_browser_cat_menu_popup(menu, type,tree,event);
+	menu_items	+= pl3_file_browser_cat_popup(menu,type,tree,event);
+	menu_items	+= pl3_artist_browser_cat_popup(menu, type,tree, event);
+
+	for(i=0; i< num_plugins;i++)
+	{
+		if(plugins[i]->browser != NULL)
+		{
+			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
+			{
+				menu_items += plugins[i]->browser->cat_right_mouse_menu(
+						menu,
+						type,
+						GTK_WIDGET(tree),
+						event);
+			}
+		}
+	}
+	if(menu_items)
+	{
+		gtk_widget_show_all(menu);
+		gtk_menu_item_set_submenu(item, menu);
+	}
+	else{
+		gtk_widget_destroy(menu);
+	}
 
 }
 int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
@@ -999,6 +1038,18 @@ void create_playlist3 ()
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
 
+
+	/***
+	 * Menu item
+	 * TESTING
+	 */
+/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml, "menu_option")), "activate", G_CALLBACK(pl3_option_menu_activate),
+			NULL);
+*/
+
+
+	
+
 	/* restore the window's position and size, if the user wants this.*/
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
 	{
@@ -1465,6 +1516,12 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();
 	}
+	/**
+	 * Also need updating
+	 */
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	
 }
 /**
  * Update the window to status changes in mpd
