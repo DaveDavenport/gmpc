@@ -14,5 +14,5 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTr
 void pl3_current_playlist_destroy();
 
 void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
-
+int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 #endif

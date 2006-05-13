@@ -11,5 +11,5 @@ void pl3_artist_browser_category_key_press(GdkEventKey *event);
 
 void pl3_artist_browser_dbase_updated();
 void pl3_artist_browser_disconnect();
-
+int pl3_artist_browser_add_go_menu(GtkWidget *menu);
 #endif

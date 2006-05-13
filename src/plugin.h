@@ -68,6 +68,9 @@ typedef struct {
 	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
 	void (*cat_key_press)(GtkWidget *tree, GdkEventKey *event, int selected_type);
 	/* not yet implemented */
+
+	/****** GO MENU ********/
+	int  (*add_go_menu)(GtkWidget *menu); 
 } gmpcPlBrowserPlugin;
 
 typedef struct {

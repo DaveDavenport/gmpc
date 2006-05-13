@@ -49,6 +49,7 @@ enum{
 	PL3_AB_ICON,
 	PL3_AB_ROWS
 };
+extern GladeXML *pl3_xml;
 
 
 /* internal */
@@ -970,4 +971,36 @@ void pl3_artist_browser_disconnect()
 		}
 		if(pl3_ab_store) gtk_list_store_clear(pl3_ab_store);
 	}
+}
+
+
+
+void pl3_artist_browser_activate()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			glade_xml_get_widget (pl3_xml, "cat_tree"));
+
+	/**
+	 * Fix this to be nnot static
+	 */	
+	GtkTreePath *path = gtk_tree_path_new_from_string("2"); 
+	if(path)
+	{
+		gtk_tree_selection_select_path(selec, path);
+	}
+}
+
+
+int pl3_artist_browser_add_go_menu(GtkWidget *menu)
+{
+	GtkWidget *item = NULL;
+
+	item = gtk_image_menu_item_new_with_label(_("Artist Browser"));
+	gtk_image_menu_item_set_image(item, 
+			gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(pl3_artist_browser_activate), NULL);
+
+	return 1;
 }

@@ -2,6 +2,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <gdk/gdkkeysyms.h>
+#include "main.h"
 #include "plugin.h"
 #include "misc.h"
 
@@ -40,6 +41,7 @@ static guint32 current_id = 0;
 extern GladeXML *pl3_xml;
 void info_status_changed(MpdObj *mi, ChangedStatusType what,gpointer data);
 
+int info_add_go_menu(GtkWidget *menu);
 /*
 GtkWidget *info_tooltip = NULL;
 GtkWidget *info_label = NULL;
@@ -59,7 +61,8 @@ gmpcPlBrowserPlugin info_gbp = {
 	info_changed,
 	NULL,
 	NULL,
-	NULL
+	NULL,
+	info_add_go_menu
 };
 
 int plugin_api_version = PLUGIN_API_VERSION;
@@ -1131,3 +1134,33 @@ void info_construct(GtkWidget *container)
 
 	gtk_widget_show_all(container);
 }
+
+ void info_browser_activate()
+ {
+ 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+ 			glade_xml_get_widget (pl3_xml, "cat_tree"));
+ 
+ 	/**
+ 	 * Fix this to be nnot static
+ 	 */	
+ 	GtkTreePath *path = gtk_tree_path_new_from_string("4"); 
+ 	if(path)
+ 	{
+ 		gtk_tree_selection_select_path(selec, path);
+ 	}
+ }
+ 
+ 
+ int info_add_go_menu(GtkWidget *menu)
+ {
+ 	GtkWidget *item = NULL;
+ 
+ 	item = gtk_image_menu_item_new_with_label(_("Information"));
+ 	gtk_image_menu_item_set_image(item, 
+ 			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
+ 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+ 	g_signal_connect(G_OBJECT(item), "activate", 
+ 			G_CALLBACK(info_browser_activate), NULL);
+
+ 	return 1;
+ }

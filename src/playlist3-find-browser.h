@@ -13,4 +13,7 @@ void pl3_find_browser_search_playlist();
 
 
 void pl3_find_browser_disconnect();
+
+
+int pl3_find_browser_add_go_menu(GtkWidget *menu);
 #endif

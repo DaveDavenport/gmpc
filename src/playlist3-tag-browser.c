@@ -30,6 +30,7 @@ void tag_pref_destroy(GtkWidget *container);
 
 GtkTreeRowReference *pl3_tag_tree_ref = NULL;
 
+int pl3_custom_tag_add_go_menu(GtkWidget *menu);
 
 GladeXML *tag_pref_xml = NULL;
 gmpcPrefPlugin tag_gpp = {
@@ -45,7 +46,8 @@ gmpcPlBrowserPlugin tag_gbp = {
 	pl3_custom_tag_browser_category_selection_changed,
 	pl3_custom_tag_browser_fill_tree,
 	pl3_custom_tag_browser_right_mouse_menu,
-	NULL
+	NULL,
+	pl3_custom_tag_add_go_menu
 };
 
 gmpcPlugin tag_plug = {
@@ -235,17 +237,17 @@ void pl3_custom_tag_browser_add()
 				-1);
 		pl3_custom_tag_browser_list_add(&iter);
 
-	if(pl3_tag_tree_ref)
-	{
-		gtk_tree_row_reference_free(pl3_tag_tree_ref);
-		pl3_tag_tree_ref = NULL;
-	}
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
-	if(path)
-	{
-		pl3_tag_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
-		gtk_tree_path_free(path);
-	}
+		if(pl3_tag_tree_ref)
+		{
+			gtk_tree_row_reference_free(pl3_tag_tree_ref);
+			pl3_tag_tree_ref = NULL;
+		}
+		path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+		if(path)
+		{
+			pl3_tag_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
+			gtk_tree_path_free(path);
+		}
 
 	}
 
@@ -279,8 +281,8 @@ void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 	int depth = 0;
 	int len=0;
 	GtkTreeIter child,child2;
-	
-	
+
+
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
 	{
@@ -423,7 +425,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
-	
+
 
 	if (!mpd_check_connected(connection))
 	{
@@ -672,7 +674,7 @@ void pl3_custom_tag_browser_add_folder()
 	{
 		return;
 	}
-	
+
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
@@ -710,8 +712,8 @@ void pl3_custom_tag_browser_add_folder()
 			gtk_tree_path_free(path);	
 			if(second_tag) g_free(second_tag);
 			if(first_tag) g_free(first_tag);
-		if(format) g_free(format);
-			
+			if(format) g_free(format);
+
 			return;
 		}
 
@@ -1069,7 +1071,7 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 		g_free(format);
 		g_free(title);
 
-		
+
 	}
 	else
 	{
@@ -1226,7 +1228,7 @@ void tag_connection(MpdObj *mi, int connect, gpointer data)
 			GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_tag_tree_ref);
 			if(path){
 				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path)) {
-				gtk_tree_store_remove(pl3_tree, &iter);
+					gtk_tree_store_remove(pl3_tree, &iter);
 				}
 				gtk_tree_path_free(path);
 			}
@@ -1234,5 +1236,40 @@ void tag_connection(MpdObj *mi, int connect, gpointer data)
 			pl3_tag_tree_ref = NULL;
 		}
 	}
+	pl3_update_go_menu();
 }
+
+
+void pl3_custom_tag_browser_activate()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			glade_xml_get_widget (pl3_xml, "cat_tree"));
+	
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_tag_tree_ref);
+	if(path)
+	{
+		gtk_tree_selection_select_path(selec, path);
+	}
+}
+
+
+int pl3_custom_tag_add_go_menu(GtkWidget *menu)
+{
+	if(mpd_server_check_version(connection, 0,12,0))
+	{
+		GtkWidget *item = NULL;
+
+		item = gtk_image_menu_item_new_with_label(_("Custom Tag"));
+		gtk_image_menu_item_set_image(item, 
+				gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", 
+				G_CALLBACK(pl3_custom_tag_browser_activate), NULL);
+		return 1;
+	}
+	return 0;
+}
+
+
+
 

@@ -80,6 +80,33 @@ GtkWidget *volume_slider = NULL;
 int crumb_depth = -1;
 
 
+
+
+
+/***************************
+ *Change to header file	   *
+ ***************************/
+
+void pl3_plugin_changed_interface();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
 	playlist_pref_destroy
@@ -1521,6 +1548,13 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	 */
 	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
 	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+
+
+	/**
+	 * update interface
+	 * items that are caused by the plugin.
+	 */
+	pl3_plugin_changed_interface();
 	
 }
 /**
@@ -1816,3 +1850,88 @@ void about_window()
 	gtk_widget_destroy(dialog);
 	g_object_unref(diagxml);
 }
+
+
+/****************************************************
+ * Interface stuff
+ */
+void pl3_update_go_menu()
+{
+	int i=0;
+	int items = 0;
+	GtkWidget *menu = NULL;
+	/***
+	 * Remove any old menu
+	 */
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")));
+
+	/**
+	 * Create a new menu
+	 */
+
+	menu = gtk_menu_new();
+
+	if(mpd_check_connected(connection))
+	{
+
+
+		/******
+		 * The not yet plugin
+		 */
+
+		items += pl3_current_playlist_browser_add_go_menu(menu);
+		items += pl3_file_browser_add_go_menu(menu);
+		items += pl3_artist_browser_add_go_menu(menu);
+		items += pl3_find_browser_add_go_menu(menu);
+
+
+
+
+		/**
+		 * The iteration
+		 */
+
+		for(i=0; i< num_plugins;i++)
+		{
+			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) 
+			{                                                   
+				if(plugins[i]->browser && plugins[i]->browser->add_go_menu)
+				{
+					items += plugins[i]->browser->add_go_menu(menu);
+				}                                                                           	
+			}
+		}
+
+	}
+
+	/**
+	 * Attach menu
+	 */
+	if(items)
+	{
+		gtk_widget_show_all(menu);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")),
+				menu);
+	}
+	else
+	{
+		gtk_widget_destroy(menu);
+	}
+}
+
+/**
+ * This function should be called by a plugin when something in the interface changed.
+ */
+void pl3_plugin_changed_interface()
+{
+	printf("Update interface\n");
+
+
+
+
+	/**
+	 * Call this at the end, to update the menu
+	 */
+	//	pl3_update_go_menu();
+}
+

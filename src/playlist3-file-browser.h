@@ -15,4 +15,7 @@ void pl3_file_browser_reupdate();
 
 void pl3_file_browser_disconnect();
 
+int pl3_file_browser_add_go_menu(GtkWidget *menu);
+
+
 #endif
