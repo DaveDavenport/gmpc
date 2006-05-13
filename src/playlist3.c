@@ -297,7 +297,15 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 				{
 					gtk_tree_view_expand_to_path(tree, path);
 					gtk_tree_selection_select_iter(selec, &cat_iter);
-					gtk_tree_view_scroll_to_cell(tree, path, NULL,TRUE, 0.5, 0);
+					/**
+					 * Hopefully a fix
+					 */
+					if(pl3_zoom == PLAYLIST_NO_ZOOM)
+					{
+						gtk_tree_view_scroll_to_cell(tree, path, 
+							NULL,TRUE, 
+							0.5, 0);
+					}
 				}
 			}
 		}
