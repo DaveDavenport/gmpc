@@ -1269,7 +1269,3 @@ int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 	}
 	return 0;
 }
-
-
-
-

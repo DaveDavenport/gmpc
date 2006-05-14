@@ -91,22 +91,6 @@ void pl3_plugin_changed_interface();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
 	playlist_pref_destroy
@@ -1876,53 +1860,38 @@ void pl3_update_go_menu()
 	/**
 	 * Create a new menu
 	 */
-
 	menu = gtk_menu_new();
 
-	if(mpd_check_connected(connection))
-	{
-
-
+	if(mpd_check_connected(connection)) {
 		/******
 		 * The not yet plugin
 		 */
-
 		items += pl3_current_playlist_browser_add_go_menu(menu);
 		items += pl3_file_browser_add_go_menu(menu);
 		items += pl3_artist_browser_add_go_menu(menu);
 		items += pl3_find_browser_add_go_menu(menu);
 
-
-
-
 		/**
 		 * The iteration
 		 */
 
-		for(i=0; i< num_plugins;i++)
-		{
-			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) 
-			{                                                   
-				if(plugins[i]->browser && plugins[i]->browser->add_go_menu)
-				{
+		for(i=0; i< num_plugins;i++) {
+			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
+				if(plugins[i]->browser && plugins[i]->browser->add_go_menu) {
 					items += plugins[i]->browser->add_go_menu(menu);
 				}                                                                           	
 			}
 		}
-
 	}
 
 	/**
 	 * Attach menu
 	 */
-	if(items)
-	{
+	if(items) {
 		gtk_widget_show_all(menu);
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")),
 				menu);
-	}
-	else
-	{
+	} else {
 		gtk_widget_destroy(menu);
 	}
 }
