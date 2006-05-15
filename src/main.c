@@ -38,6 +38,8 @@
 #include "main.h"
 
 /* as internall plugin */
+#include "playlist3-file-browser.h"
+#include "playlist3-find-browser.h"
 #include "playlist3-tag-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
@@ -399,6 +401,14 @@ int main (int argc, char **argv)
 	/** 
 	 * Add the internall plugins 
 	 */
+	/** current playlist */
+	plugin_add(&current_playlist_plug, 0);
+	/** file browser */
+	plugin_add(&file_browser_plug, 0);
+	/** Artist browser */
+	plugin_add(&artist_browser_plug, 0);
+	/** File Browser */
+	plugin_add(&find_browser_plug, 0);
 	/* this shows the connection preferences */
 	plugin_add(&connection_plug,0);
 	/* this the server preferences */

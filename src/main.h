@@ -42,11 +42,16 @@ extern int num_plugins;
 
 
 /* the plugins :D */
+extern gmpcPlugin current_playlist_plug;
+
+extern gmpcPlugin find_browser_plug;
+extern gmpcPlugin artist_browser_plug;
 extern gmpcPlugin connection_plug;
 /*
 extern gmpcPlugin about_plug;
 */
 extern gmpcPlugin playlist_plug;
+
 extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin info_plugin;
 

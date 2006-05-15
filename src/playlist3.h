@@ -75,4 +75,6 @@ enum PlaylistColums {
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
 };
+
+void pl3_update_go_menu();
 #endif

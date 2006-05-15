@@ -83,8 +83,6 @@ void disconnect_callback(MpdObj *mi)
 {
 
 	/* disconnect playlist */
-	pl3_disconnect();
-
 	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
 	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
 	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");

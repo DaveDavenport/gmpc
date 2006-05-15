@@ -29,7 +29,7 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
-#include "playlist3-current-playlist-browser.h"
+#include "playlist3-artist-browser.h"
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
@@ -39,7 +39,7 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 void pl3_artist_browser_add_selected();
 void pl3_artist_browser_replace_selected();
 int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
-
+void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 enum{
 	PL3_AB_ARTIST,
 	PL3_AB_ALBUM,
@@ -50,6 +50,47 @@ enum{
 	PL3_AB_ROWS
 };
 extern GladeXML *pl3_xml;
+
+/**
+ * Plugin structure
+ */
+gmpcPlBrowserPlugin artist_browser_gbp = {
+	pl3_artist_browser_add,
+	pl3_artist_browser_selected,
+	pl3_artist_browser_unselected,
+	pl3_artist_browser_category_selection_changed,
+	pl3_artist_browser_fill_tree,
+	pl3_artist_browser_cat_popup,
+	pl3_artist_browser_category_key_press,
+	pl3_artist_browser_add_go_menu
+};
+
+gmpcPlugin artist_browser_plug = {
+	"File Browser",
+	{1,1,1},
+	GMPC_PLUGIN_PL_BROWSER,
+	0,
+	NULL,			/* path*/
+	NULL,			/* init */
+	&artist_browser_gbp,		/* Browser */
+	NULL,			/* status changed */
+	pl3_artist_browser_connection_changed, 		/* connection changed */
+	NULL,		/* Preferences */
+	NULL,			/*cover art */
+	NULL			/* MetaData */
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* internal */
@@ -185,7 +226,7 @@ void pl3_artist_browser_add()
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_ARTIST,
+			PL3_CAT_TYPE, artist_browser_plug.id,
 			PL3_CAT_TITLE, "Browse Artists",        	
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
@@ -468,7 +509,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
+void pl3_artist_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
 {
 	char *artist, *alb_artist;
 	int depth =0;
@@ -500,7 +541,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		{
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_ARTIST,
+					0, artist_browser_plug.id,
 					1, data->tag, /* the field */
 					2, data->tag, /* the artist name, if(1 and 2 together its an artist field) */
 					3, "media-artist",
@@ -523,7 +564,7 @@ void pl3_artist_browser_fill_tree(GtkTreeIter *iter)
 		while(data != NULL){
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_ARTIST,
+					0, artist_browser_plug.id,
 					1, data->tag,
 					2, artist,
 					3, "media-album", 
@@ -929,7 +970,7 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 
 int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkEventButton *event)
 {
-	if(type == PL3_BROWSE_ARTIST)
+	if(type == artist_browser_plug.id)
 	{
 		/* here we have:  Add. Replace*/
 		GtkWidget *item;
@@ -1004,3 +1045,12 @@ int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 
 	return 1;
 }
+
+void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
+{
+	if(!connect)
+	{
+		pl3_artist_browser_disconnect();
+	}
+}
+

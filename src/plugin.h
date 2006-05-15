@@ -64,7 +64,7 @@ typedef struct {
 	void (*selected)(GtkWidget *container);
 	void (*unselected)(GtkWidget *container);
 	void (*cat_selection_changed)(GtkWidget *tree, GtkTreeIter *iter);
-	void (*fill_tree)(GtkTreeView *tree,GtkTreeIter *iter);
+	void (*fill_tree)(GtkWidget *tree,GtkTreeIter *iter);
 	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
 	void (*cat_key_press)(GtkWidget *tree, GdkEventKey *event, int selected_type);
 	/* not yet implemented */

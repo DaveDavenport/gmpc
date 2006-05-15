@@ -39,7 +39,7 @@ int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 void pl3_find_browser_add_selected();
 void pl3_find_browser_replace_selected();
 void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
-
+void pl3_find_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 extern GladeXML *pl3_xml;
 
 enum{
@@ -54,6 +54,46 @@ enum{
 
 #define PL3_FINDB_CB_ALL 88
 #define	PL3_FINDB_CB_PLAYLIST 99
+/**
+ * Plugin structure
+ */
+gmpcPlBrowserPlugin find_browser_gbp = {
+	pl3_find_browser_add,
+	pl3_find_browser_selected,
+	pl3_find_browser_unselected,
+	pl3_find_browser_category_selection_changed,
+	NULL,
+	NULL,
+	NULL,
+	pl3_find_browser_add_go_menu
+};
+
+gmpcPlugin find_browser_plug = {
+	"File Browser",
+	{1,1,1},
+	GMPC_PLUGIN_PL_BROWSER,
+	0,
+	NULL,			/* path*/
+	NULL,			/* init */
+	&find_browser_gbp,		/* Browser */
+	NULL,			/* status changed */
+	pl3_find_browser_connection_changed, 		/* connection changed */
+	NULL,		/* Preferences */
+	NULL,			/*cover art */
+	NULL			/* MetaData */
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 extern GladeXML *pl3_xml;
 
@@ -230,7 +270,7 @@ void pl3_find_browser_add()
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_FIND,
+			PL3_CAT_TYPE, find_browser_plug.id,
 			PL3_CAT_TITLE, "Search",
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "gtk-find",
@@ -775,3 +815,12 @@ void pl3_find_browser_disconnect()
 
  	return 1;
  }
+
+void pl3_find_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
+{
+	if(!connect)
+	{
+		pl3_find_browser_disconnect();
+	}
+}
+

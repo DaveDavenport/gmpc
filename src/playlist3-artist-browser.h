@@ -2,7 +2,7 @@
 #define __PLAYLIST_ARTIST_BROWSER_H__
 
 void pl3_artist_browser_add();
-void pl3_artist_browser_fill_tree(GtkTreeIter *iter);
+void pl3_artist_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter);
 void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter);
 void pl3_artist_browser_selected(GtkWidget *container);
 void pl3_artist_browser_unselected(GtkWidget *container);

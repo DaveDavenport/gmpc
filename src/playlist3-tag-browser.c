@@ -12,7 +12,7 @@
 #include "playlist3-tag-browser.h"
 void pref_id3b_fill();
 
-void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree,GtkTreeIter *iter);
+void pl3_custom_tag_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
 void pl3_tag_browser_selected(GtkWidget *container);
 void pl3_tag_browser_unselected(GtkWidget *container);
 void pl3_custom_tag_browser_add();
@@ -61,7 +61,8 @@ gmpcPlugin tag_plug = {
 	NULL,			/* status changed */
 	&tag_connection,	/* connection */
 	&tag_gpp,		/* Preferences */
-	NULL			/*cover art */
+	NULL,			/*cover art */
+	NULL			/* MetaData */
 };
 
 void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
@@ -272,7 +273,7 @@ void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *fo
 }
 
 
-void pl3_custom_tag_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
+void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 {
 	char *first_tag, *second_tag;
 	char *format;
@@ -1260,7 +1261,7 @@ int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 		GtkWidget *item = NULL;
 
 		item = gtk_image_menu_item_new_with_label(_("Custom Tag"));
-		gtk_image_menu_item_set_image(item, 
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 				gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", 

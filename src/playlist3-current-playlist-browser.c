@@ -33,6 +33,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+
 static GtkTargetEntry drag_types[] =
 {
    { "pm_data", GTK_TARGET_SAME_APP, 100},
@@ -51,6 +52,33 @@ void pl2_save_playlist ();
 void pl3_current_playlist_browser_shuffle_playlist();
 void pl3_current_playlist_browser_clear_playlist();
 void pl3_current_playlist_browser_add_to_clipboard(int cut);
+
+
+gmpcPlBrowserPlugin current_playlist_gbp = {
+	pl3_current_playlist_browser_add,
+	pl3_current_playlist_browser_selected,
+	pl3_current_playlist_browser_unselected,
+	NULL,
+	NULL,
+	pl3_current_playlist_browser_cat_menu_popup,
+	NULL,
+	pl3_current_playlist_browser_add_go_menu
+};
+
+gmpcPlugin current_playlist_plug = {
+	"Current Playlist Browser",
+	{1,1,1},
+	GMPC_PLUGIN_PL_BROWSER,
+	0,
+	NULL,			/* path*/
+	NULL,			/* init */
+	&current_playlist_gbp,		/* Browser */
+	NULL,			/* status changed */
+	NULL, 		/* connection changed */
+	NULL,		/* Preferences */
+	NULL,			/*cover art */
+	NULL			/* MetaData */
+};
 
 
 /* external objects */
@@ -461,7 +489,7 @@ void pl3_current_playlist_browser_add()
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_CURRENT_PLAYLIST,
+			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
 			PL3_CAT_TITLE, "Current Playlist",
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-playlist",
@@ -774,7 +802,7 @@ void pl3_current_playlist_browser_selected()
 	{
 		pl3_current_playlist_browser_init();
 	}
-
+	printf("Adding current playlist\n");
 	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
 	gtk_widget_show(pl3_cp_vbox);
 	pl3_current_playlist_browser_playlist_changed();

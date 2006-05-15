@@ -34,6 +34,18 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+void pl3_file_browser_add();
+void pl3_file_browser_unselected();
+void pl3_file_browser_selected();
+void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter);
+void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
+int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
+void pl3_file_browser_cat_key_press(GdkEventKey *event);
+/* testing */
+void pl3_file_browser_reupdate();
+
+int pl3_file_browser_add_go_menu(GtkWidget *menu);
+
 void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_file_browser_add_selected();
@@ -45,8 +57,38 @@ void pl3_file_browser_update_folder();
 void pl3_file_browser_add_folder();
 void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
-
+void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
+void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 guint pl3_fb_filling_source = 0;
+/**
+ * Plugin structure
+ */
+gmpcPlBrowserPlugin file_browser_gbp = {
+	pl3_file_browser_add,
+	pl3_file_browser_selected,
+	pl3_file_browser_unselected,
+	pl3_file_browser_cat_sel_changed,
+	pl3_file_browser_fill_tree,
+	pl3_file_browser_cat_popup,
+	pl3_file_browser_cat_key_press,
+	pl3_file_browser_add_go_menu
+};
+
+gmpcPlugin file_browser_plug = {
+	"File Browser",
+	{1,1,1},
+	GMPC_PLUGIN_PL_BROWSER,
+	0,
+	NULL,			/* path*/
+	NULL,			/* init */
+	&file_browser_gbp,		/* Browser */
+	pl3_file_browser_status_changed,			/* status changed */
+	pl3_file_browser_connection_changed, 		/* connection changed */
+	NULL,		/* Preferences */
+	NULL,			/*cover art */
+	NULL			/* MetaData */
+};
+
 
 enum{
 	PL3_FB_PATH,
@@ -228,7 +270,7 @@ void pl3_file_browser_add()
 	GtkTreePath *path;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
-			PL3_CAT_TYPE, PL3_BROWSE_FILE,
+			PL3_CAT_TYPE, file_browser_plug.id,
 			PL3_CAT_TITLE, "Browse Filesystem",
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
@@ -305,7 +347,7 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 						g_path_get_basename (data->directory);
 					gtk_tree_store_append (pl3_tree, &child, parent);
 					gtk_tree_store_set (pl3_tree, &child,
-							0, PL3_BROWSE_FILE,
+							0, file_browser_plug.id,
 							1, basename,
 							2, data->directory,
 							3, "gtk-open",
@@ -345,7 +387,7 @@ void pl3_file_browser_reupdate()
 
 			}
 			/* update right view */
-			if(pl3_cat_get_selected_browser() == PL3_BROWSE_FILE)
+			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
 			{
 				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 						glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -508,7 +550,7 @@ long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-void pl3_file_browser_fill_tree(GtkTreeIter *iter)
+void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 {
 	char *path;
 	int support_playlist = (mpd_server_check_command_allowed(connection, "listPlaylistInfo") == MPD_SERVER_COMMAND_ALLOWED);
@@ -526,7 +568,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 				g_path_get_basename (data->directory);
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_FILE,
+					0, file_browser_plug.id,
 					1, basename,
 					2, data->directory,
 					3, "gtk-open",
@@ -542,7 +584,7 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 			gchar *basename = g_path_get_basename(data->playlist);
 			gtk_tree_store_append (pl3_tree, &child, iter);
 			gtk_tree_store_set (pl3_tree, &child,
-					0, PL3_BROWSE_FILE,
+					0, file_browser_plug.id,
 					1, basename,
 					2, data->playlist,
 					3, "media-playlist",
@@ -562,9 +604,9 @@ void pl3_file_browser_fill_tree(GtkTreeIter *iter)
 
 
 
-int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkEventButton *event)
+int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event)
 {
-	if(type == PL3_BROWSE_FILE)
+	if(type == file_browser_plug.id)
 	{
 		/* here we have:  Add. Replace, (update?)*/
 		GtkWidget *item;
@@ -633,7 +675,7 @@ int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 
 
 
-void pl3_file_browser_cat_sel_changed(GtkTreeView *tree,GtkTreeIter *iter)
+void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;
@@ -1046,3 +1088,20 @@ int pl3_file_browser_add_go_menu(GtkWidget *menu)
 			G_CALLBACK(pl3_file_browser_activate), NULL);
 	return 1;
 }
+
+void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
+{
+	if(!connect)
+	{
+		pl3_file_browser_disconnect();
+	}
+}
+
+void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_DATABASE)
+	{
+		pl3_file_browser_reupdate();
+	}
+}	
+
