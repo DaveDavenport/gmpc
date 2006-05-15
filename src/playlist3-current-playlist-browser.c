@@ -33,6 +33,23 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+void pl3_current_playlist_browser_scroll_to_current_song();
+void pl3_current_playlist_browser_add();
+
+void pl3_current_playlist_browser_playlist_popup(GtkTreeView *tree, GdkEventButton *event);
+
+void pl3_current_playlist_browser_playlist_changed();
+void pl3_current_playlist_browser_selected();
+void pl3_current_playlist_browser_unselected();
+
+int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
+
+
+void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
+
+
+
 
 static GtkTargetEntry drag_types[] =
 {
@@ -73,7 +90,7 @@ gmpcPlugin current_playlist_plug = {
 	NULL,			/* path*/
 	NULL,			/* init */
 	&current_playlist_gbp,		/* Browser */
-	NULL,			/* status changed */
+	pl3_current_playlist_status_changed,			/* status changed */
 	NULL, 		/* connection changed */
 	NULL,		/* Preferences */
 	NULL,			/*cover art */
@@ -838,7 +855,7 @@ void pl3_current_playlist_browser_playlist_changed()
 }
 
 
-int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkTreeView *tree, GdkEventButton *event)
+int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
 	/* here we have:  Save, Clear*/
 	GtkWidget *item;
@@ -1044,7 +1061,7 @@ int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu)
 	GtkWidget *item = NULL;
 
 	item = gtk_image_menu_item_new_with_label(_("Current Playlist"));
-	gtk_image_menu_item_set_image(item, 
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_stock("media-playlist", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 

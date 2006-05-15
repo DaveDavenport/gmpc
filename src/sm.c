@@ -30,6 +30,7 @@
 #include <X11/Xmd.h>
 #include <X11/SM/SMlib.h>
 #include <libmpd/debug_printf.h>
+#include "main.h"
 
 static gchar 	*client_id;
 static gchar	*session_id = NULL;

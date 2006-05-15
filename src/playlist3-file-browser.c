@@ -40,7 +40,7 @@ void pl3_file_browser_selected();
 void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter);
 void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
 int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
-void pl3_file_browser_cat_key_press(GdkEventKey *event);
+void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type);
 /* testing */
 void pl3_file_browser_reupdate();
 
@@ -635,7 +635,7 @@ int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEve
 	return 0;
 }
 
-void pl3_file_browser_cat_key_press(GdkEventKey *event)
+void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type)
 {
 	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
@@ -1081,7 +1081,7 @@ int pl3_file_browser_add_go_menu(GtkWidget *menu)
 	GtkWidget *item = NULL;
 
 	item = gtk_image_menu_item_new_with_label(_("File Browser"));
-	gtk_image_menu_item_set_image(item, 
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 

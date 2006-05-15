@@ -1443,14 +1443,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 			NULL);
 
 
-
-	/* if enabled scroll to current song
-	 * TEST: Doesnt work?
-	 */
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
-	{
-		pl3_current_playlist_browser_scroll_to_current_song();
-	}
 	/**
 	 * Also need updating
 	 */

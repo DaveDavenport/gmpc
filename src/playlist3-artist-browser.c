@@ -33,6 +33,19 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+void pl3_artist_browser_add();
+void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter);
+void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
+void pl3_artist_browser_selected(GtkWidget *container);
+void pl3_artist_browser_unselected(GtkWidget *container);
+int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
+void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type);
+
+void pl3_artist_browser_dbase_updated();
+void pl3_artist_browser_disconnect();
+int pl3_artist_browser_add_go_menu(GtkWidget *menu);
+
+
 void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_artist_browser_show_info();
 void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
@@ -509,7 +522,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-void pl3_artist_browser_fill_tree(GtkTreeView *tree, GtkTreeIter *iter)
+void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 {
 	char *artist, *alb_artist;
 	int depth =0;
@@ -657,7 +670,7 @@ void pl3_artist_browser_replace_folder()
 	mpd_player_play(connection);
 }
 
-void pl3_artist_browser_category_key_press(GdkEventKey *event)
+void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type)
 {
 	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert )
 	{
@@ -780,7 +793,7 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 }
 
-void pl3_artist_browser_category_selection_changed(GtkTreeView *tree,GtkTreeIter *iter)
+void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;
@@ -968,7 +981,7 @@ int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	return TRUE;
 }
 
-int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkTreeView *tree, GdkEventButton *event)
+int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event)
 {
 	if(type == artist_browser_plug.id)
 	{
@@ -1037,7 +1050,7 @@ int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 	GtkWidget *item = NULL;
 
 	item = gtk_image_menu_item_new_with_label(_("Artist Browser"));
-	gtk_image_menu_item_set_image(item, 
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 

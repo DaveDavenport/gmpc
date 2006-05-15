@@ -5,7 +5,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist-list.h"
 #include "main.h"
-
+#include "playlist3-current-playlist-browser.h"
 #include <glade/glade.h>
 
 /* boring declarations of local functions */

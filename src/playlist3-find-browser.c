@@ -30,7 +30,21 @@
 #include "playlist3.h"
 #include "playlist3-find-browser.h"
 #include "config1.h"
+void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter);
+void pl3_find_browser_selected(GtkWidget *container);
+void pl3_find_browser_unselected(GtkWidget *container);
+void pl3_find_browser_playlist_changed();
 
+
+
+void pl3_find_browser_add();
+
+
+
+void pl3_find_browser_disconnect();
+
+
+int pl3_find_browser_add_go_menu(GtkWidget *menu);
 void pl3_find_browser_search();
 void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 void pl3_find_browser_show_info();
@@ -609,7 +623,7 @@ void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	g_free(song_id);
 }
 
-void pl3_find_browser_category_selection_changed(GtkTreeView *tree, GtkTreeIter *iter)
+void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
 	long unsigned time = 0;
 	gchar *string;	
@@ -797,7 +811,7 @@ void pl3_find_browser_disconnect()
  	GtkWidget *item = NULL;
  
  	item = gtk_image_menu_item_new_with_label(_("Find"));
- 	gtk_image_menu_item_set_image(item, 
+ 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
  			gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
  	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
  	g_signal_connect(G_OBJECT(item), "activate", 
@@ -807,7 +821,7 @@ void pl3_find_browser_disconnect()
 	 */
  
  	item = gtk_image_menu_item_new_with_label(_("Find in playlist"));
- 	gtk_image_menu_item_set_image(item, 
+ 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
  			gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
  	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
  	g_signal_connect(G_OBJECT(item), "activate", 

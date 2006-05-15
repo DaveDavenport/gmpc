@@ -1007,7 +1007,7 @@ void info_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
-	GtkTreeIter iter,child;
+	GtkTreeIter iter;
 	if(!cfg_get_single_value_as_int_with_default(config, "information", "enable", TRUE)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter,
@@ -1156,7 +1156,7 @@ void info_construct(GtkWidget *container)
  	GtkWidget *item = NULL;
  
  	item = gtk_image_menu_item_new_with_label(_("Information"));
- 	gtk_image_menu_item_set_image(item, 
+ 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
  			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
  	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
  	g_signal_connect(G_OBJECT(item), "activate", 

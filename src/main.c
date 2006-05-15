@@ -550,10 +550,6 @@ void main_quit()
 	 * destroy the current playlist..
 	 */
 	pl3_current_playlist_destroy();
-	/**
-	 * TODO: destroy plugins and the rest too
-	 */
-
 
 	/** 
 	 * Call the connection changed.
@@ -783,11 +779,6 @@ static void init_playlist_store ()
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	int i;
-	/**
-	 * Propegate the signal to the current playlist. 
-	 * Needed to update playlist-list
-	 */
-	pl3_current_playlist_status_changed(mi,what,userdata);
 	/**
 	 * Propagete to the id3 window, so it can update time
 	 */
