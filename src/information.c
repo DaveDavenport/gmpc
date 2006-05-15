@@ -1063,9 +1063,7 @@ void info_add(GtkWidget *cat_tree)
 
 void info_selected(GtkWidget *container)
 {
-
-	if(info_vbox== NULL)
-	{
+	if(info_vbox== NULL) {
 		info_init();
 	}
 
