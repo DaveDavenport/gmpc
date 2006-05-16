@@ -430,10 +430,15 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	g_assert(callback != NULL);
 
 	/**
-	 * If there is no song, then the same.
+	 * If there is no song
+	 * return;
 	 */
-	g_return_if_fail(tsong != NULL);
-
+/*	g_return_if_fail(tsong != NULL); */
+	if(tsong != NULL)
+	{
+		return;	
+	}
+	
 	/**
 	 * Check cache for result.
 	 */
