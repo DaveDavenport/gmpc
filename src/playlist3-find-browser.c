@@ -54,6 +54,7 @@ void pl3_find_browser_add_selected();
 void pl3_find_browser_replace_selected();
 void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 void pl3_find_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
+int pl3_find_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 extern GladeXML *pl3_xml;
 
 enum{
@@ -79,7 +80,8 @@ gmpcPlBrowserPlugin find_browser_gbp = {
 	NULL,
 	NULL,
 	NULL,
-	pl3_find_browser_add_go_menu
+	pl3_find_browser_add_go_menu,
+	pl3_find_browser_key_press_event
 };
 
 gmpcPlugin find_browser_plug = {
@@ -469,6 +471,7 @@ unsigned long pl3_find_browser_view_browser()
 				gtk_widget_show(pl3_findb_entry);
 				gtk_widget_hide(pl3_findb_pb);   		   
 				gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),TRUE);
+				gtk_widget_grab_focus(pl3_findb_entry);
 			}
 		}
 
@@ -805,7 +808,41 @@ void pl3_find_browser_disconnect()
  	}
  }
  
- 
+/**
+ * Trigger Playlist search
+ * This switches to the search window set focus on entry and set searh on playlist.
+ * TODO: Move to search plugin?
+ */
+void pl3_playlist_search()
+{
+	if(!mpd_check_connected(connection))
+	{
+		return;
+	}
+
+	if(pl3_xml)
+	{
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		GtkTreePath *path = gtk_tree_path_new_from_string("3");
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+		gtk_tree_selection_select_path(sel, path);
+		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
+		gtk_tree_path_free(path);
+		pl3_find_browser_search_playlist();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
  int pl3_find_browser_add_go_menu(GtkWidget *menu)
  {
  	GtkWidget *item = NULL;
@@ -837,4 +874,18 @@ void pl3_find_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
 		pl3_find_browser_disconnect();
 	}
 }
+int pl3_find_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	if (event->keyval == GDK_F4)
+	{
+		pl3_find_browser_activate();
+		return TRUE;
+	}                                           	
+	else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
+	{
+			pl3_playlist_search();
+			return TRUE;
+	}
 
+	return FALSE;
+}

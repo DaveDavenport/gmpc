@@ -40,7 +40,7 @@ static guint32 current_id = 0;
 
 extern GladeXML *pl3_xml;
 void info_status_changed(MpdObj *mi, ChangedStatusType what,gpointer data);
-
+int info_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 int info_add_go_menu(GtkWidget *menu);
 /*
 GtkWidget *info_tooltip = NULL;
@@ -62,7 +62,8 @@ gmpcPlBrowserPlugin info_gbp = {
 	NULL,
 	NULL,
 	NULL,
-	info_add_go_menu
+	info_add_go_menu,
+	info_key_press_event
 };
 
 int plugin_api_version = PLUGIN_API_VERSION;
@@ -1162,3 +1163,34 @@ void info_construct(GtkWidget *container)
 
  	return 1;
  }
+
+int info_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	if (event->keyval == GDK_F5)
+	{
+		info_browser_activate();
+		if(event->state&GDK_CONTROL_MASK)
+		{
+			info_show_current_song();	
+		}
+		return TRUE;
+	}                                       
+	/** if they key isn't for me, stop parsing */	
+	if(type != info_plugin.id) return FALSE;
+	if (event->keyval == GDK_1)
+	{
+		info_show_current_song();
+		return TRUE;
+	}
+	if (event->keyval == GDK_2)
+	{
+		info_show_current_album();
+		return TRUE;               	
+	}
+	if (event->keyval == GDK_3)
+	{
+		info_show_current_artist();
+		return TRUE;               	
+	}
+	return FALSE;
+}

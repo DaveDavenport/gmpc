@@ -38,7 +38,6 @@ void pl3_current_playlist_browser_add();
 
 void pl3_current_playlist_browser_playlist_popup(GtkTreeView *tree, GdkEventButton *event);
 
-void pl3_current_playlist_browser_playlist_changed();
 void pl3_current_playlist_browser_selected();
 void pl3_current_playlist_browser_unselected();
 
@@ -69,7 +68,7 @@ void pl2_save_playlist ();
 void pl3_current_playlist_browser_shuffle_playlist();
 void pl3_current_playlist_browser_clear_playlist();
 void pl3_current_playlist_browser_add_to_clipboard(int cut);
-
+int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
 	pl3_current_playlist_browser_add,
@@ -79,7 +78,8 @@ gmpcPlBrowserPlugin current_playlist_gbp = {
 	NULL,
 	pl3_current_playlist_browser_cat_menu_popup,
 	NULL,
-	pl3_current_playlist_browser_add_go_menu
+	pl3_current_playlist_browser_add_go_menu,
+	pl3_current_playlist_key_press_event
 };
 
 gmpcPlugin current_playlist_plug = {
@@ -829,7 +829,7 @@ void pl3_current_playlist_browser_unselected()
 
 void pl3_current_playlist_browser_playlist_changed()
 {
-	if(pl3_cat_get_selected_browser() == PL3_CURRENT_PLAYLIST)
+	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{
 		uint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
 			(PLAYLIST_LIST(playlist)->num_rows/((gdouble)PLAYLIST_LIST(playlist)->loaded));
@@ -995,8 +995,7 @@ void pl3_current_playlist_highlight_song_change ()
 						mpd_player_get_current_song_pos(connection));
 			}
 
-			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) &&
-					pl3_xml != NULL && PL3_CURRENT_PLAYLIST == pl3_cat_get_selected_browser())
+			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) && pl3_cp_tree) 
 			{
 				pl3_current_playlist_browser_scroll_to_current_song();
 			}
@@ -1056,5 +1055,18 @@ int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu)
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_current_playlist_browser_activate), NULL);
 	return 1;
+}
+
+
+int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	/** Global keybinding */
+	if (event->keyval == GDK_F1)
+	{
+		pl3_current_playlist_browser_activate();
+		return TRUE;
+	}
+
+	return FALSE;
 }
 

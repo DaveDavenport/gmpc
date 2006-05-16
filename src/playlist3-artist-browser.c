@@ -53,6 +53,10 @@ void pl3_artist_browser_add_selected();
 void pl3_artist_browser_replace_selected();
 int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
+int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+
+
+
 enum{
 	PL3_AB_ARTIST,
 	PL3_AB_ALBUM,
@@ -75,7 +79,8 @@ gmpcPlBrowserPlugin artist_browser_gbp = {
 	pl3_artist_browser_fill_tree,
 	pl3_artist_browser_cat_popup,
 	pl3_artist_browser_category_key_press,
-	pl3_artist_browser_add_go_menu
+	pl3_artist_browser_add_go_menu,
+	pl3_artist_browser_key_press_event
 };
 
 gmpcPlugin artist_browser_plug = {
@@ -1066,4 +1071,13 @@ void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer dat
 		pl3_artist_browser_disconnect();
 	}
 }
+int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	if (event->keyval == GDK_F3)
+	{
+		pl3_artist_browser_activate();
+		return TRUE;
+	}                                           	
 
+	return FALSE;
+}

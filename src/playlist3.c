@@ -137,14 +137,11 @@ void pl3_initialize_tree()
 
 	GtkTreePath *path = gtk_tree_path_new_from_string("0");
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-	if((old_type&PLUGIN_ID_MARK || old_type&PLUGIN_ID_INTERNALL) != 0)
+	if(old_type >= 0)
 	{
-		if(old_type >= 0)
-		{
-			GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
-			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
-			old_type = -1;
-		}
+		GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
+		plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+		old_type = -1;
 	}
 
 	gtk_tree_store_clear(pl3_tree);
@@ -159,7 +156,7 @@ void pl3_initialize_tree()
 			}
 		}
 	}
-	
+
 
 	gtk_tree_selection_select_path(sel, path);
 	gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")),
@@ -175,24 +172,13 @@ void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn
 		return;
 	}
 
-/*
- * FIXME: Make this work again
- *
- * 	if(type == PL3_CURRENT_PLAYLIST)
+	if(gtk_tree_view_row_expanded(tree,tp))
 	{
-
-//		pl3_current_playlist_browser_scroll_to_current_song();
+		gtk_tree_view_collapse_row(tree,tp);
 	}
 	else
-*/	{
-		if(gtk_tree_view_row_expanded(tree,tp))
-		{
-			gtk_tree_view_collapse_row(tree,tp);
-		}
-		else
-		{
-			gtk_tree_view_expand_row(tree,tp,FALSE);
-		}
+	{
+		gtk_tree_view_expand_row(tree,tp,FALSE);
 	}
 }
 
@@ -210,14 +196,11 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 	}
 	if(!read)
 	{
-		if(type&PLUGIN_ID_MARK || type&PLUGIN_ID_INTERNALL)
+		if(plugins[plugin_get_pos(type)]->browser != NULL)
 		{
-			if(plugins[plugin_get_pos(type)]->browser != NULL)
+			if(plugins[plugin_get_pos(type)]->browser->cat_row_expanded != NULL)
 			{
-				if(plugins[plugin_get_pos(type)]->browser->fill_tree != NULL)
-				{
-					plugins[plugin_get_pos(type)]->browser->fill_tree(GTK_WIDGET(tree), iter);
-				}
+				plugins[plugin_get_pos(type)]->browser->cat_row_expanded(GTK_WIDGET(tree), iter);
 			}
 		}
 	}
@@ -253,8 +236,8 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 					if(pl3_zoom == PLAYLIST_NO_ZOOM)
 					{
 						gtk_tree_view_scroll_to_cell(tree, path, 
-							NULL,TRUE, 
-							0.5, 0);
+								NULL,TRUE, 
+								0.5, 0);
 					}
 				}
 			}
@@ -316,7 +299,7 @@ void pl3_cat_rebuild_crumb()
 		gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), NULL); 
 
 
-		
+
 		gtk_tree_model_get(model, &iter, 1, &ori_text, -1);
 
 		/** Get the first iter of this level */ 
@@ -396,20 +379,18 @@ void pl3_cat_sel_changed()
 		 */
 		if(old_type != type )
 		{
-			if ((old_type&PLUGIN_ID_MARK || old_type&PLUGIN_ID_INTERNALL) && old_type > 0)
+			if(old_type != -1)
 			{
 				plugins[plugin_get_pos(old_type)]->browser->unselected(container);
-				old_type = -1;
 			}
+			old_type = -1;
 		}
 		pl3_push_rsb_message("");
-		if(type&PLUGIN_ID_MARK || type&PLUGIN_ID_INTERNALL)
+		printf("sel\n");
+		if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
+		if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
 		{
-			if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
-			if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
-			{
-				plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
-			}
+			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
 
 		old_type = type;
@@ -419,7 +400,7 @@ void pl3_cat_sel_changed()
 	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
 
 
-	
+
 }
 
 
@@ -528,6 +509,8 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
  */
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
+	int i=0;
+	gint type = pl3_cat_get_selected_browser();
 	/**
 	 * Handle Zoom In Key
 	 * (Ctrl-+)
@@ -578,58 +561,17 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		return FALSE;
 	}
-	/* on F1 move to current playlist */
-	if (event->keyval == GDK_F1)
-	{
-		GtkTreePath *path = gtk_tree_path_new_from_string("0");
-		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
 
-		gtk_tree_selection_select_path(sel, path);
-		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-		gtk_tree_path_free(path);                                                                             		
-
-	}
-	else if (event->keyval == GDK_F2)
-	{
-		GtkTreePath *path = gtk_tree_path_new_from_string("1");
-		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-
-		gtk_tree_selection_select_path(sel, path);
-		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-		gtk_tree_path_free(path);
-	}
-	else if (event->keyval == GDK_F3)
-	{
-		GtkTreePath *path = gtk_tree_path_new_from_string("2");
-		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-
-		gtk_tree_selection_select_path(sel, path);
-		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-		gtk_tree_path_free(path);
-	}
-	else if (event->keyval == GDK_F4 ||(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j))
-	{
-		if(event->keyval == GDK_j)
-		{
-			pl3_playlist_search();
-		}
-		else
-		{
-			GtkTreePath *path = gtk_tree_path_new_from_string("3");
-			GtkTreeSelection *sel = gtk_tree_view_get_selection(
-					GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-			gtk_tree_selection_select_path(sel, path);
-			gtk_tree_view_set_cursor(
-					GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")),
-					path,
-					NULL,
-					FALSE);
-			gtk_tree_path_free(path);
+	for(i=0; i< num_plugins;i++) {
+		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
+			if(plugins[i]->browser && plugins[i]->browser->key_press_event) {
+				if((plugins[i]->browser->key_press_event(mw, event, type))) return TRUE;
+			}                                                                           	
 		}
 	}
 
 	/* default gmpc/xmms/winamp key's*/
-	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_z )
+	if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_z )
 	{
 		prev_song();
 	}
@@ -681,29 +623,6 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	return pl3_window_key_press_event(mw,event);
 }
 
-/**
- * Trigger Playlist search
- * This switches to the search window set focus on entry and set searh on playlist.
- * TODO: Move to search plugin?
- */
-void pl3_playlist_search()
-{
-	if(!mpd_check_connected(connection))
-	{
-		return;
-	}
-
-	if(pl3_xml)
-	{
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-		GtkTreePath *path = gtk_tree_path_new_from_string("3");
-		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-		gtk_tree_selection_select_path(sel, path);
-		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-		gtk_tree_path_free(path);
-		pl3_find_browser_search_playlist();
-	}
-}
 /**
  * Remove message from the status bar 
  * Used internally by timeout
@@ -768,12 +687,12 @@ int pl3_hide()
 	if(pl3_xml != NULL && !pl3_hidden )
 	{
 		/** Save position 
-		 */
+		*/
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
 		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
 		/* save size, only when in SMALL or no zoom mode
-		 */	
+		*/	
 		if(pl3_zoom <= PLAYLIST_SMALL)
 		{
 			gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
@@ -978,12 +897,12 @@ void create_playlist3 ()
 	 * Menu item
 	 * TESTING
 	 */
-/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml, "menu_option")), "activate", G_CALLBACK(pl3_option_menu_activate),
-			NULL);
-*/
+	/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml, "menu_option")), "activate", G_CALLBACK(pl3_option_menu_activate),
+		NULL);
+		*/
 
 
-	
+
 
 	/* restore the window's position and size, if the user wants this.*/
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
@@ -1144,7 +1063,7 @@ void playlist_player_set_song(MpdObj *mi)
 		cfg_free_string(mark);
 
 		g_string_append(string,buffer);
-		
+
 		/**
 		 * Do some escaping, so pango likes it.
 		 * This involves removing &
@@ -1356,7 +1275,6 @@ void playlist_zoom_level_changed()
 	switch(pl3_zoom)
 	{
 		case PLAYLIST_NO_ZOOM:
-
 			break;
 		case PLAYLIST_TINY:
 			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
@@ -1382,8 +1300,6 @@ void playlist_zoom_level_changed()
 			gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		default:
 			break;
-
-
 	}
 	/** Save zoom level
 	*/
@@ -1416,9 +1332,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		GtkTreeIter iter;
 		if(gtk_tree_model_get_iter_first(model, &iter)){
 			gtk_tree_selection_select_iter(selec, &iter);
-
 		}
-
 		string = g_strdup_printf("%s - %s %s",
 				_("GMPC"), 
 				_("Connected to"),
@@ -1455,7 +1369,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	 * items that are caused by the plugin.
 	 */
 	pl3_plugin_changed_interface();
-	
+
 }
 /**
  * Update the window to status changes in mpd
@@ -1494,7 +1408,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				 * Needed from moving from stop->play
 				 */
 				playlist_player_update_image(mi);
-			
+
 				/**
 				 * Update window title
 				 */
@@ -1534,7 +1448,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
 				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 
-				
+
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
@@ -1648,13 +1562,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"),TRUE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_control"),TRUE);
-
 		}
 		else
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"),FALSE);
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_control"),FALSE);
-
 		}
 	}
 
@@ -1662,8 +1574,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
 	}
-
-
 }
 
 
@@ -1758,18 +1668,13 @@ void pl3_update_go_menu()
 	 * Remove any old menu
 	 */
 	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")));
-
 	/**
 	 * Create a new menu
 	 */
 	menu = gtk_menu_new();
 
-	if(mpd_check_connected(connection)) {
-
-		/**
-		 * The iteration
-		 */
-
+	if(mpd_check_connected(connection)) 
+	{
 		for(i=0; i< num_plugins;i++) {
 			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
 				if(plugins[i]->browser && plugins[i]->browser->add_go_menu) {
@@ -1796,11 +1701,8 @@ void pl3_update_go_menu()
  */
 void pl3_plugin_changed_interface()
 {
-
-
 	/**
 	 * Call this at the end, to update the menu
 	 */
 	pl3_update_go_menu();
 }
-

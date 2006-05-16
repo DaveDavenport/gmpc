@@ -59,6 +59,9 @@ void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
 void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
+int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+
+
 guint pl3_fb_filling_source = 0;
 /**
  * Plugin structure
@@ -71,7 +74,8 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 	pl3_file_browser_fill_tree,
 	pl3_file_browser_cat_popup,
 	pl3_file_browser_cat_key_press,
-	pl3_file_browser_add_go_menu
+	pl3_file_browser_add_go_menu,
+	pl3_file_browser_key_press_event
 };
 
 gmpcPlugin file_browser_plug = {
@@ -1104,4 +1108,13 @@ void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *da
 		pl3_file_browser_reupdate();
 	}
 }	
+int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	if (event->keyval == GDK_F2)
+	{
+		pl3_file_browser_activate();
+		return TRUE;
+	}                                           	
 
+	return FALSE;
+}

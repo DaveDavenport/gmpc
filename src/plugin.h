@@ -18,7 +18,7 @@ typedef enum {
 	GMPC_PLUGIN_PL_BROWSER	= 2,
 	GMPC_PLUGIN_NO_GUI		= 4,
 	GMPC_INTERNALL			= 8,
-	GMPC_PLUGIN_COVER_ART	= 16,
+	GMPC_DEPRECATED			= 16,
 	GMPC_PLUGIN_META_DATA	= 32
 } PluginType;
 
@@ -35,13 +35,13 @@ typedef enum {
 /* the gtk_tree_store row's */
 enum
 {
-	PL3_CAT_TYPE,
-	PL3_CAT_TITLE,
-	PL3_CAT_INT_ID,
-	PL3_CAT_ICON_ID,
+	PL3_CAT_TYPE, /** Plugin id */
+	PL3_CAT_TITLE, /** title that is showed */
+	PL3_CAT_INT_ID, /* id */
+	PL3_CAT_ICON_ID, /* icon id */
 	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
-	PL3_CAT_ICON_SIZE,
-	PL3_CAT_BROWSE_FORMAT,
+	PL3_CAT_ICON_SIZE, /** icon size */
+	PL3_CAT_BROWSE_FORMAT, /** string, added for tag browser */
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
@@ -60,17 +60,30 @@ typedef struct {
 /** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser
  */
 typedef struct {
+	/**
+	 * Adding to the left side tree */
 	void (*add)(GtkWidget *cat_tree);
+	/**
+	 * If selected,  you need to fill the right screen */
 	void (*selected)(GtkWidget *container);
+	/** 
+	 * if unselected, you need to remove youself from the container
+	 */
 	void (*unselected)(GtkWidget *container);
+	/**
+	 * if selection changed, but still the same plugin 
+	 */
 	void (*cat_selection_changed)(GtkWidget *tree, GtkTreeIter *iter);
-	void (*fill_tree)(GtkWidget *tree,GtkTreeIter *iter);
-	int (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
+	/**
+	 * if the user expands the tree.
+	 */
+	void (*cat_row_expanded)(GtkWidget *tree,GtkTreeIter *iter);
+	int  (*cat_right_mouse_menu)(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
 	void (*cat_key_press)(GtkWidget *tree, GdkEventKey *event, int selected_type);
-	/* not yet implemented */
-
 	/****** GO MENU ********/
 	int  (*add_go_menu)(GtkWidget *menu); 
+	/****** Key presses (in the whole window) **/
+	int  (*key_press_event)(GtkWidget *mw, GdkEventKey *event, int type);
 } gmpcPlBrowserPlugin;
 
 typedef struct {
@@ -106,9 +119,9 @@ typedef struct {
 	ConnectionChangedCallback mpd_connection_changed;
 	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
-	/* Cover art plugin */
-	gmpcCoverArtPlugin	*coverart;
-
+	/* Dummy  (from deprecated cover art) */
+	void 				*dummy;
+	/** Meta data */
 	gmpcMetaDataPlugin *metadata;
 	
 } gmpcPlugin;

@@ -257,7 +257,7 @@ void plugin_stats_construct(GtkWidget *container)
 			{
 				if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
 				else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
-				else if (plugins[i]->plugin_type == GMPC_PLUGIN_COVER_ART)cover_prov++; 
+				else if (plugins[i]->plugin_type == GMPC_PLUGIN_META_DATA)cover_prov++; 
 			}
 		}
 		path = g_strdup_printf("%i", plug_brow+plug_misc+cover_prov);

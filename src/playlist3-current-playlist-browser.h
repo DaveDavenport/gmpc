@@ -4,20 +4,8 @@
  * Do we want to move this in the plugin system aswell
  */
 void pl3_current_playlist_destroy();
+
 void pl3_current_playlist_browser_playlist_changed();
-
 extern gmpcPlugin current_playlist_plug;
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif
