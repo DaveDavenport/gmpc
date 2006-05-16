@@ -761,17 +761,6 @@ int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEven
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_enable_columns), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-
-
-
-
-
-
-
-
-		
-
-
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
 		return TRUE;
@@ -859,7 +848,7 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWi
 {
 	/* here we have:  Save, Clear*/
 	GtkWidget *item;
-	if(type != PL3_CURRENT_PLAYLIST) return 0;
+	if(type != current_playlist_plug.id) return 0;
 	/* add the save widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
