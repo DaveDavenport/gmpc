@@ -421,7 +421,8 @@ void meta_data_init()
 void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCallback callback, gpointer data)
 {
 	MetaDataResult ret;
-	mpd_Song *song =NULL;
+	meta_thread_data *mtd = NULL;
+		mpd_Song *song =NULL;
 	char *path = NULL;
 
 	/**
@@ -434,7 +435,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * return;
 	 */
 /*	g_return_if_fail(tsong != NULL); */
-	if(tsong != NULL)
+	if(tsong == NULL)
 	{
 		return;	
 	}
@@ -513,8 +514,9 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * If no result, start a thread and start fetching the data from there
 	 */
 
-	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	mtd = g_malloc0(sizeof(*mtd));
 	/**
+	 * unique id 
 	 * Not needed, but can be usefull for debugging
 	 */
 	mtd->id = g_random_int();
@@ -522,7 +524,9 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	mtd->callback = callback;
 	mtd->data = data;
 	mtd->type = type;
+	/** push it to the other thread */
 	g_async_queue_push(meta_commands, mtd);
+	/** clean reference to pointer, it's now to the other thread */
 	mtd = NULL;
 
 	/**
@@ -530,10 +534,10 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * background fetch
 	 */
 
-
+	/**
+	 * Tell the calling part we are fetching */
 	callback(song, META_DATA_FETCHING,NULL, data);
 	mpd_freeSong(song);
-	/*	if(path)g_free(path);*/
 }
 
 
