@@ -808,18 +808,11 @@ void pl3_current_playlist_browser_selected()
 	{
 		pl3_current_playlist_browser_init();
 	}
-	printf("Adding current playlist\n");
 	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
 	gtk_widget_show(pl3_cp_vbox);
 	pl3_current_playlist_browser_playlist_changed();
 
 	gtk_widget_grab_focus(pl3_cp_tree);
-	/*
-	   if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
-	   {
-	   pl3_current_playlist_browser_scroll_to_current_song();
-	   }
-	   */
 }
 void pl3_current_playlist_browser_unselected()
 {
@@ -1023,6 +1016,7 @@ void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, voi
 		}
 		else if (mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY) {
 			playlist_list_set_current_song_pos(PLAYLIST_LIST(playlist), mpd_player_get_current_song_pos(mi));
+			pl3_current_playlist_browser_scroll_to_current_song();
 		}
 	}
 }

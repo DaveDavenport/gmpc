@@ -386,7 +386,6 @@ void pl3_cat_sel_changed()
 			old_type = -1;
 		}
 		pl3_push_rsb_message("");
-		printf("sel\n");
 		if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
 		if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
 		{
