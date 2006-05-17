@@ -108,6 +108,7 @@ gmpcPlugin playlist_plug = {
  */
 int  pl3_cat_get_selected_browser()
 {
+	/*
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			glade_xml_get_widget (pl3_xml, "cat_tree"));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -124,6 +125,8 @@ int  pl3_cat_get_selected_browser()
 		return type;
 	}
 	return -1;
+	*/
+	return old_type;
 }
 
 
@@ -395,11 +398,8 @@ void pl3_cat_sel_changed()
 		old_type = type;
 	}
 
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+
 	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
-
-
-
 }
 
 
@@ -420,12 +420,15 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 void pl3_option_menu_activate(GtkMenuItem *item)
 {
-	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
+	GtkWidget *tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	int i;
 	gint type  = pl3_cat_get_selected_browser();
 	int menu_items = 0;
 	GdkEventButton *event = NULL;
 	GtkWidget *menu = NULL;
+
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	
 	if(!mpd_check_connected(connection) || type == -1) return;
 
 
@@ -437,11 +440,7 @@ void pl3_option_menu_activate(GtkMenuItem *item)
 		{
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
-				menu_items += plugins[i]->browser->cat_right_mouse_menu(
-						menu,
-						type,
-						GTK_WIDGET(tree),
-						event);
+				menu_items += plugins[i]->browser->cat_right_mouse_menu(menu,type,tree,event);
 			}
 		}
 	}
@@ -461,17 +460,12 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	gint type  = pl3_cat_get_selected_browser();
 	int menu_items = 0;
 	GtkWidget *menu = NULL;
-	if(type == -1 || !mpd_check_connected(connection))
+	if(type == -1 || !mpd_check_connected(connection) || event->button != 3)
 	{
 		/* no selections, or no usefull one.. so propagate the signal */
 		return FALSE;
 	}
 
-	if(event->button != 3)
-	{
-		/* if its not the right mouse button propagate the signal */
-		return FALSE;
-	}
 	menu = gtk_menu_new();
 
 	for(i=0; i< num_plugins;i++)
@@ -480,16 +474,11 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 		{
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
-				menu_items += plugins[i]->browser->cat_right_mouse_menu(
-						menu,
-						type,
-						GTK_WIDGET(tree),
-						event);
+				menu_items += plugins[i]->browser->cat_right_mouse_menu(menu,type,GTK_WIDGET(tree),event);
 			}
 		}
 	}
 
-	/* plugins */
 	if(menu_items)
 	{
 		gtk_widget_show_all(menu);
@@ -561,9 +550,12 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		return FALSE;
 	}
 
-	for(i=0; i< num_plugins;i++) {
-		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
-			if(plugins[i]->browser && plugins[i]->browser->key_press_event) {
+	for(i=0; i< num_plugins;i++) 
+	{
+		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) 
+		{
+			if(plugins[i]->browser && plugins[i]->browser->key_press_event) 
+			{
 				if((plugins[i]->browser->key_press_event(mw, event, type))) return TRUE;
 			}                                                                           	
 		}
@@ -1359,7 +1351,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	/**
 	 * Also need updating
 	 */
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
 	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
 
 

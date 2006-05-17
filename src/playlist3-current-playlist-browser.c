@@ -625,7 +625,7 @@ void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, Gt
 	gint pos, new_pos;
 	gchar *str = NULL;         	
 	gint type = pl3_cat_get_selected_browser();
-	if(type != PL3_CURRENT_PLAYLIST) return;
+	if(type != current_playlist_plug.id) return;
 	str = gtk_tree_path_to_string(path);
 
 	gtk_tree_model_get(model, iter,PLAYLIST_LIST_COL_SONG_POS, &pos, -1);
