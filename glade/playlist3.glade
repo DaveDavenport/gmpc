@@ -1363,6 +1363,7 @@
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
+		  <signal name="clicked" handler="stop_song" last_modification_time="Wed, 17 May 2006 09:58:51 GMT"/>
 
 		  <child>
 		    <widget class="GtkImage" id="image471">

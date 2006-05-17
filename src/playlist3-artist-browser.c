@@ -380,7 +380,9 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 		data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
-			char *coverpath = NULL;
+			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
+			GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
+			mpd_Song *song = NULL; 
 
 			pb = gtk_widget_render_icon(pl3_ab_tree, "media-no-cover",-1/* GTK_ICON_SIZE_MENU*/,NULL);
 			gtk_list_store_append (pl3_ab_store, &iter);
@@ -391,20 +393,19 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					PL3_AB_TITLE, data->tag,
 					PL3_AB_ICON,pb,
 					-1);
-
-			if(1)//ret == COVER_ART_NOT_FETCHED)
-			{
-				GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
-				GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
-				mpd_Song *song = mpd_newSong();
-				song->artist = g_strdup(artist);
-				song->album = g_strdup(data->tag);
-				meta_data_get_path_callback(song, META_ALBUM_ART, pl3_artist_browser_cover_art_fetched, rowref);
-				mpd_freeSong(song);	
-				gtk_tree_path_free(path);
-			}
 			if(pb)g_object_unref(pb);
-			if(coverpath) g_free(coverpath);
+
+			/**
+			 * create song and request metadata 
+			 */
+			song = mpd_newSong();                                                                     			
+			song->artist = g_strdup(artist);
+			song->album = g_strdup(data->tag);
+			meta_data_get_path_callback(song, META_ALBUM_ART, pl3_artist_browser_cover_art_fetched, rowref);
+			mpd_freeSong(song);	
+			gtk_tree_path_free(path);
+
+			
 			data = mpd_data_get_next(data);
 		}
 
@@ -415,8 +416,7 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		{
 			if(data->type == MPD_DATA_TYPE_SONG)
 			{
-				if (data->song->album == NULL
-						|| strlen (data->song->album) == 0)
+				if (data->song->album == NULL || strlen (data->song->album) == 0)
 				{
 					gchar buffer[1024];
 					GdkPixbuf *pb = gtk_widget_render_icon(pl3_ab_tree, "media-audiofile", GTK_ICON_SIZE_MENU,NULL);
@@ -772,7 +772,7 @@ void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 		GtkTreeIter iter,parent;
-                                                                                           		
+
 		if(gtk_tree_selection_get_selected(selec,&model, &iter))
 		{
 			gtk_tree_model_iter_parent(model, &parent, &iter);
