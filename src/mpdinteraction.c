@@ -21,6 +21,8 @@ gmpcPrefPlugin server_gpp = {
 };
 void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
 void ServerStatusChangedCallback (MpdObj *mi, ChangedStatusType what, void *userdata);
+
+
 gmpcPlugin server_plug = {
 	"Server Settings",
 	{1,1,1},
@@ -35,10 +37,10 @@ gmpcPlugin server_plug = {
 };
 enum
 {
-        ENABLED_COL,
+	ENABLED_COL,
 	NAME_COL,
-        ID_COL,
-        N_COLUMNS
+	ID_COL,
+	N_COLUMNS
 };
 
 /* Connection settings plugin */

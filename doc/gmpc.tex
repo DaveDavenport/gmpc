@@ -1,0 +1,81 @@
+\documentclass{article}
+\begin{document}
+\title{Gnome Music Player client\\Manual}
+\author{Martijn Koedam (Qball@qballcow.nl)}
+\date{17-05-2006}
+\maketitle
+
+\section{Introduction}
+\section{Keybindings}
+The following keybindings are availible in gmpc. The exact working of the keybindings can differ depending on the state (connected/disconnected) and the permissions.
+\subsection{Main Program}
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline
+Ctrl-Q&Quit Program\\
+Ctrl-W&Close window\\
+Ctrl-+&Zoom interface in\\
+Ctrl--&Zoom interface out\\
+Ctrl-F12&Toggle Fullscreen (not availible in all zoom levels)\\
+\end{tabular}
+
+\subsection{Player Commands}
+These keybindings require gmpc to be connected to mpd, and have \textit{control} permission.\\
+
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline
+Ctrl-Z&Previous Song\\
+Ctrl-X \& Ctrl-C&Play/Pause Song\\
+Ctrl-V&Stop playing\\
+Ctrl-B&Next Song\\
+\end{tabular}
+
+\subsection{Current Playlist}
+
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline 
+F1&Switch to Current Playlist (global)\\
+Ctrl-F&Search Playlist\\
+i&Show id3 info of the selected song(s)\\
+\end{tabular}
+
+\subsection{File Browser}
+
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline 
+F2&Switch to File Browser\\
+Ctrl-F&Search Current list\\
+i&Show id3 info of the selected song(s)\\
+Insert&Insert the selected song(s)/directory(s)/playlist(s)\\
+Ctrl-Insert&Clear playlist and insert selected song(s)/directory(s)/playlist(s)\\
+\end{tabular}
+
+\subsection{Artist Browser}
+
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline 
+F3&Switch to Artist Browser\\
+Ctrl-F&Search Current list\\
+i&Show id3 info of the selected song(s)\\
+Insert&Insert the selected song(s)/artist(s)/albums(s)\\
+Ctrl-Insert&Clear playlist and insert selected song(s)/artist(s)/albums(s)\\
+\end{tabular}
+
+\subsection{Search}
+
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline 
+F4&Switch to Search(global)\\
+Ctrl-J&Switch to Search in playlist-search mode (global)\\
+f&Put keybord focus on the search entry\\
+i&Show id3 info of the selected song(s)\\
+Insert&Insert the selected song(s)\\                     
+Ctrl-Insert&Clear playlist and insert selected song(s)\\
+\end{tabular}
+
+\end{document}
