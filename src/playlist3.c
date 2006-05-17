@@ -1222,13 +1222,13 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 /***
  * Zooming functions
  */
-void playlist_zoom_in()
+void playlist_zoom_out()
 {
 	if((pl3_zoom+1) >= PLAYLIST_ZOOM_LEVELS) return;
 	pl3_zoom++;
 	playlist_zoom_level_changed();
 }
-void playlist_zoom_out()
+void playlist_zoom_in()
 {
 	if(pl3_zoom <= PLAYLIST_NO_ZOOM) return;
 	pl3_zoom--;
