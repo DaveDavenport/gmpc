@@ -864,14 +864,6 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
-	/* restore playlist only mode */
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "playlist-only-mode", FALSE))
-	{
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_playlist_only")),
-				1);
-	}                                                                                                           	
-
-
 	if(mpd_status_db_is_updating(connection))
 	{
 		pl3_updating_changed(connection, 1);
