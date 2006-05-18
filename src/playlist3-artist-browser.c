@@ -380,8 +380,8 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 		data = mpd_database_get_albums(connection,artist);
 		while(data != NULL){
-			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
-			GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
+			GtkTreePath *path = NULL;
+			GtkTreeRowReference* rowref = NULL;
 			mpd_Song *song = NULL; 
 
 			pb = gtk_widget_render_icon(pl3_ab_tree, "media-no-cover",-1/* GTK_ICON_SIZE_MENU*/,NULL);
@@ -398,6 +398,8 @@ long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			/**
 			 * create song and request metadata 
 			 */
+			path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
+			rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
 			song = mpd_newSong();                                                                     			
 			song->artist = g_strdup(artist);
 			song->album = g_strdup(data->tag);
