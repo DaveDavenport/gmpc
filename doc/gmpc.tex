@@ -2,12 +2,11 @@
 \begin{document}
 \title{Gnome Music Player client\\Manual}
 \author{Martijn Koedam (Qball@qballcow.nl)}
-\date{17-05-2006}
 \maketitle
 
 \section{Introduction}
 \section{Keybindings}
-The following keybindings are availible in gmpc. The exact working of the keybindings can differ depending on the state (connected/disconnected) and the permissions.
+The following keybindings are available in gmpc. The exact working of the keybindings can differ depending on the state (connected/disconnected) and the permissions.
 \subsection{Main Program}
 \begin{tabular}{r|l}
 Keybinding&Command\\
@@ -16,7 +15,7 @@ Ctrl-Q&Quit Program\\
 Ctrl-W&Close window\\
 Ctrl-+&Zoom interface in\\
 Ctrl--&Zoom interface out\\
-Ctrl-F12&Toggle Fullscreen (not availible in all zoom levels)\\
+Ctrl-F12&Toggle Full-screen (not available in all zoom levels)\\
 \end{tabular}
 
 \subsection{Player Commands}
@@ -29,6 +28,8 @@ Ctrl-Z&Previous Song\\
 Ctrl-X \& Ctrl-C&Play/Pause Song\\
 Ctrl-V&Stop playing\\
 Ctrl-B&Next Song\\
+Ctrl-R&Toggle Repeat state\\
+Ctrl-S&Toggle Random state\\
 \end{tabular}
 
 \subsection{Current Playlist}
@@ -72,10 +73,99 @@ Keybinding&Command\\
 \hline 
 F4&Switch to Search(global)\\
 Ctrl-J&Switch to Search in playlist-search mode (global)\\
-f&Put keybord focus on the search entry\\
+f&Put keyboard focus on the search entry\\
 i&Show id3 info of the selected song(s)\\
 Insert&Insert the selected song(s)\\                     
 Ctrl-Insert&Clear playlist and insert selected song(s)\\
 \end{tabular}
 
+
+\subsection{Information}
+\begin{tabular}{r|l}
+Keybinding&Command\\
+\hline 
+F5&Switch to the Information window (global)\\
+Ctrl-F5&Switch to the Information and show the current song info\\
+1&Show current song info\\
+2&Show current album info\\
+3&Show current artist info\\
+\end{tabular}
+
+\section{Plugins}
+The functionality of gmpc can be extended by the use of plugins. Plugins are loaded by gmpc on startup and can be installed globally or in user-space.\\
+Every plugin can have it's own configuration page in the preferences menu.\\
+There are 3 types of plugins.\\
+
+\subsection {Browser Extensions}
+This type of plugin can add a "browser" window to the main view. This is not limited to f.e. treeviews, but can be any widget that can be placed inside a \textit{GtkContainer}. An example of a browser plugin would be the wikipedia plugin. It embeds browser view in the right pane, and shows wikipedia results for the currently playing artist.
+\subsection {No Gui plugins}
+This type of plugin, does not add anything to the gui of gmpc. But it can receive signals from mpd on state change. An example of a no-gui plugin would be a last.fm plugin or the xosd-plugin.\\
+\subsection {Metadata Provider plugin}
+These plugins are used by gmpc to fetch meta-data about a song/album/artist. At the moment the following types of metadata are queried by gmpc:\\
+Album art, Album info, Artist Art, Artist info, Song lyric.\\ A plugin can be a provider for one or more metadata types.\\
+\\
+\section {Libmpd}
+To keep the code of gmpc manageable I've abstracted then handling of the connection to mpd, state checking, etc. and created a library for this: libmpd. Libmpd is signal based and tries to make the interaction with mpd as hassle free as possible. It is developed for gmpc, but can and is also used in other programs. Libmpd doesn't have any weird dependencies and is known to work on linux, mac osX and windows.\\
+If you are or going to develop a program using libmpd, feel free to contact me with questions, suggestions or bugs.\\
+\\
+
+\section {Portability}
+Gmpc/libmpd has successfully been run on windows and on mac osX. \\
+Windows snapshots can be found here: http://musicpd.org/~jat/gmpc/\\
+gmpc 0.13 should compile fine, with a small patch, on macosX using gtk from fink/darwinports. The patch allows gmpc to compile against a lower gtk version. (0.13.0 needs gtk+2.8, while only 2.6 is availible on fink when this document was written).\\
+As far as I know there haven't been an attempt at trying to run gmpc on macosX against the osX port of gtk, but it should work fine.\\
+
+\section{FAQ}
+Q: Gmpc keeps showing an error "connection timeout" and disconnects\\
+A: The default timeout of gmpc is pretty low, 1 second, if mpd has to wait f.e. on the hard-disk to spinup, the connection to mpd is likely to timeout. A simple solution is to increase the timeout to f.e. 10 seconds.\\
+\\
+Q: Autoconnect keeps turning off\\
+A: When an error occurs gmpc wil disable autoconnect, it does this so it won't wind up in a deadlock trying to reconnect. If you click "reconnect" in the error window the state of autoconnect should be restored.\\
+\\
+Q: I've installed a Metadata provider plugin, but I still don't see any cover art.\\
+A: Gmpc caches the result the plugins give, it also caches if it can't find the metadata. So if you install a new plugin, but the metadata is searched before (and not found) gmpc remembers this, and doesn't try to re-query this. You can easily clear the cache by going in the preferences menu->meta data and clicking the button "Clear metadata cache".\\
+\\
+Q: I want feature XYZ in gmpc.\\
+Q: Why doesn't it do ABC?\\
+A: Before requesting a feature for gmpc you should first check if this feature is possible with the functionality of mpd. To give a good example: a "offline" playlist editor. I would like to implement this, but mpd does not support it. So there is no way for me to implement this and after the 221th request I probably don't even feel like it anymore.\\
+\\
+Q: Why can't I move/copy songs to another playlist?\\
+A: See previous question.\\
+\\
+Q: Some of the features you say you have, don't work. F.e. the tag-browser doesn't show up.\\
+A: Gmpc heavily depends on functionality found in mpd v0.12 that isn't released yet. If connected to a stable version of mpd (v0.11.5) it will disable parts that wont work. I strongly advice everybody to use an svn snapshot (most distributions provide one in one way or the other).\\
+\\
+Q: It sucks.\\
+A: Thanks, how can I make it suck less?\\
+\\
+Q: Fileshare, Download music, etc ,etc\\
+A: MPD is a music player, nothing more, nothing less.\\
+\\
+Q: \emph{Gnome} Music Player Client, Does it need gnome dependencies?\\
+A: No, since version 0.12 gnome dependencies are optional. With the come of plugin support in 0.13, gmpc does not depend on gnome anymore. But some plugins do.\\
+\\
+Q: I have a question about libmpd, gmpc or about a plugin.\\
+A: The best way to get help is to join our irc channel: \#mpd on freenode.org.\\
+\\
+Q: Great Software, How can I thank you?\\
+A: Sending me an e-mail, telling how great it is, is always appreciated.\\
+
+
+\section{Reporting bugs}
+Before reporting bugs, make sure the bug isn't caused by a plugin. If it is caused by a plugin, report the bug against that plugin.\\
+If you report a bug try to include as much (debug) information as possible. The following information can be usefull (depending on the type of bug):\\
+1. Platform (linux/windows/macosX/etc)\\
+2. Architect (x86/x86\_64/ppc/etc)\\
+3. Distribution\\
+4. Gtk version\\
+5. Libmpd version\\
+6. Gmpc version, if it's a snapshot from svn include the revision number. (see gmpc --version)\\
+7. Installed plugins (and plugin version).\\
+8. Steps to reproduce.\\
+9. Backtrace when possible.\\
+10. E-mail adres. (Needed so I can ask for additional information)\\
+11. If possible it can help to track the location of the bug when the report includes the debug information gmpc spits out before the crash when running it with --debug-level=3.\\
+\\
+Also feature request are welcome.\\
+Gmpc bugtracker can be found here: http://musicpd.org/mantis/\\
 \end{document}
