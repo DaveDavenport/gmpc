@@ -1500,12 +1500,12 @@
 		  <property name="can_focus">True</property>
 		  <property name="relief">GTK_RELIEF_NORMAL</property>
 		  <property name="focus_on_click">True</property>
-		  <signal name="clicked" handler="playlist_zoom_out" last_modification_time="Thu, 11 May 2006 05:02:26 GMT"/>
+		  <signal name="clicked" handler="playlist_zoom_in" last_modification_time="Fri, 19 May 2006 13:53:41 GMT"/>
 
 		  <child>
 		    <widget class="GtkImage" id="image486">
 		      <property name="visible">True</property>
-		      <property name="stock">gtk-zoom-out</property>
+		      <property name="stock">gtk-zoom-in</property>
 		      <property name="icon_size">4</property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
