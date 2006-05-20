@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <gtk/gtktreednd.h>
 #include <libmpd/debug_printf.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpd-internal.h>
@@ -384,6 +385,67 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(list));
 
 }
+gboolean playlist_list_drag_source_row_draggable(GtkTreeDragSource   *drag_source, GtkTreePath *path)
+{
+	return TRUE;
+}
+gboolean playlist_list_drag_source_drag_data_get
+                                            (GtkTreeDragSource *drag_source,
+                                             GtkTreePath *path,
+                                             GtkSelectionData *selection_data)
+{
+	return FALSE;
+}
+/**
+ * Fake a delete, we don't delete anything
+ */
+gboolean playlist_list_drag_source_drag_data_delete(GtkTreeDragSource *drag_source,GtkTreePath *path)
+{
+	return TRUE;
+}
+void playlist_list_drag_source_init(GtkTreeDragSourceIface *iface)
+{
+	iface->row_draggable = playlist_list_drag_source_row_draggable;
+	iface->drag_data_get = playlist_list_drag_source_drag_data_get;
+	iface->drag_data_delete = playlist_list_drag_source_drag_data_delete;
+}
+
+gboolean playlist_list_drag_dest_row_drop_possible(GtkTreeDragDest *drag_dest,
+                                       GtkTreePath       *dest,
+                                       GtkSelectionData  *selection_data)
+{
+	return TRUE;
+}
+gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag_dest,
+                                             GtkTreePath *dest,
+                                             GtkSelectionData *selection_data)
+{
+	GtkTreePath *path=NULL;
+	GtkTreeModel *model=NULL;
+	gint *ind = NULL, *ind2 = NULL;
+	if(dest == NULL || !gtk_tree_get_row_drag_data(selection_data, &model, &path))
+	{
+		return FALSE;
+	}
+	
+	ind = gtk_tree_path_get_indices(dest);
+	ind2 = gtk_tree_path_get_indices(path);
+	if(ind && ind2)
+	{
+		int original = ind2[0];
+		int destination = ind[0];
+		if(destination >0 && ind[1] != '\0') destination--;
+		if(destination > original) destination--;
+		mpd_playlist_move_pos(connection, original,destination);
+	}
+	gtk_tree_path_free(path);
+	return TRUE;
+}
+void playlist_list_drag_dest_init(GtkTreeDragDestIface *iface)
+{
+	iface->row_drop_possible = playlist_list_drag_dest_row_drop_possible;
+	iface->drag_data_received= playlist_list_drag_dest_drag_data_received;
+}
 
 GType playlist_list_get_type(void)
 {
@@ -409,8 +471,12 @@ GType playlist_list_get_type(void)
 
 		playlist_list_type =
 			g_type_register_static(G_TYPE_OBJECT, "CustomList",
-					&playlist_list_info, (GTypeFlags) 0);
-	}
+		&playlist_list_info, (GTypeFlags) 0);
+
+
+
+		
+			}
 
 	/* Here we register our GtkTreeModel interface with the type system */
 	if (1) {
@@ -423,6 +489,22 @@ GType playlist_list_get_type(void)
 		g_type_add_interface_static(playlist_list_type,
 				GTK_TYPE_TREE_MODEL,
 				&tree_model_info);
+		static const GInterfaceInfo tree_drag_source_info =
+		{
+			(GInterfaceInitFunc) playlist_list_drag_source_init,
+			NULL,
+			NULL
+		};
+		static const GInterfaceInfo tree_drag_dest_info =
+		{
+			(GInterfaceInitFunc) playlist_list_drag_dest_init,
+			NULL,
+			NULL
+		};
+
+			g_type_add_interface_static (playlist_list_type, GTK_TYPE_TREE_DRAG_SOURCE, &tree_drag_source_info);
+		g_type_add_interface_static (playlist_list_type, GTK_TYPE_TREE_DRAG_DEST, &tree_drag_dest_info);
+	
 	}
 
 	return playlist_list_type;

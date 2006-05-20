@@ -47,14 +47,6 @@ int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWi
 void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 
-
-
-
-static GtkTargetEntry drag_types[] =
-{
-   { "pm_data", GTK_TARGET_SAME_APP, 100},
-};
-
 GtkTreeModel *playlist = NULL;
 
 
@@ -114,67 +106,6 @@ int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventB
 	{
 		return FALSE;                                                                                           	
 	}
-	return TRUE;
-}
-
-int pl3_cp_dnd(GtkTreeView *tree,GdkDragContext *drag_context,gint x,gint y,guint time)
-{
-	GtkTreePath *path=NULL;
-	GtkTreeViewDropPosition pos = 0;
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
-	gtk_tree_view_get_dest_row_at_pos(GTK_TREE_VIEW(tree),x,y, &path, &pos);
-	int position = -1;
-
-	if(path != NULL)
-	{
-		gchar *str = gtk_tree_path_to_string(path);
-		position = atoi(str);
-		if(pos == GTK_TREE_VIEW_DROP_AFTER)
-		{
-		}
-		else if(pos == GTK_TREE_VIEW_DROP_BEFORE)
-		{
-
-		}
-		g_free(str);
-	}
-	else
-	{
-	}
-	if (gtk_tree_selection_count_selected_rows (selection) > 0 && position >=0)
-	{
-		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(playlist);
-		/* start a command list */
-		/* grab the selected songs */
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
-		/* grab the last song that is selected */
-		llist = g_list_first (list);
-		/* remove every selected song one by one */
-		int test=0;
-		do{
-			GtkTreeIter iter;
-			int value;
-			int dest = position;
-			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_SONG_POS, &value, -1);
-			if(position < value && pos ==  GTK_TREE_VIEW_DROP_AFTER) dest++;
-			mpd_playlist_move_pos(connection, value-test,dest);			
-			if(position > value) test++;
-			if(position < value)position++;
-			
-		} while ((llist = g_list_next (llist)));
-
-		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
-		g_list_free (list);
-		gtk_drag_finish(drag_context, TRUE, FALSE, time);
-	}
-	else
-	{
-		gtk_drag_finish(drag_context, FALSE, FALSE, time);
-	}
-	gtk_tree_selection_unselect_all(selection);
 	return TRUE;
 }
 
@@ -465,13 +396,7 @@ void pl3_current_playlist_browser_init()
 	gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), pl3_cp_sw, TRUE, TRUE,0);
 	gtk_widget_show_all(pl3_cp_sw);
 
-/*	gtk_drag_source_set(GTK_WIDGET(pl3_cp_tree), GDK_BUTTON1_MASK, drag_types, 1, GDK_ACTION_COPY);*/
-	gtk_tree_view_enable_model_drag_source (GTK_TREE_VIEW(pl3_cp_tree),GDK_BUTTON1_MASK, drag_types, 1, GDK_ACTION_COPY);
-//	gtk_tree_view_enable_model_drag_dest (GTK_TREE_VIEW(pl3_cp_tree), drag_types, 1, GDK_ACTION_COPY);
-	/*	gtk_drag_source_set_icon_name(pl3_cp_tree, "gtk-dnd");*/
 	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(pl3_cp_tree),TRUE);
-
-//	g_signal_connect(G_OBJECT(pl3_cp_tree), "drag-drop", G_CALLBACK(pl3_cp_dnd), NULL);
 
 
 	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(pl3_cp_tree), PLAYLIST_LIST_COL_MARKUP);
