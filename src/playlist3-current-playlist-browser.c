@@ -755,7 +755,7 @@ void pl3_current_playlist_browser_playlist_changed()
 {
 	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{
-		uint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
+		guint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
 			(PLAYLIST_LIST(playlist)->num_rows/((gdouble)PLAYLIST_LIST(playlist)->loaded));
 		
 		gchar *string = format_time(playtime);
