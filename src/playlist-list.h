@@ -83,6 +83,7 @@ struct _CustomList
 
 	gint            stamp;       /* Random integer to check whether an iter belongs to our model */
 	pass_data		pd;
+	gint			total_time_changed;
 };
 
 
