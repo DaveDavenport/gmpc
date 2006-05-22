@@ -66,7 +66,7 @@ gmpcPlBrowserPlugin current_playlist_gbp = {
 	pl3_current_playlist_browser_add,
 	pl3_current_playlist_browser_selected,
 	pl3_current_playlist_browser_unselected,
-	NULL,
+	pl3_current_playlist_browser_playlist_changed,
 	NULL,
 	pl3_current_playlist_browser_cat_menu_popup,
 	NULL,
@@ -404,6 +404,11 @@ void pl3_current_playlist_browser_init()
 
 
 	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(tree_search), FALSE, TRUE, 0);	
+	
+	/**
+	 * Set total time changed signal 
+	 */
+	g_signal_connect(G_OBJECT(playlist), "total-time-changed", G_CALLBACK(pl3_current_playlist_browser_playlist_changed), NULL);
 	/* set initial state */
 	g_object_ref(G_OBJECT(pl3_cp_vbox));
 }
@@ -756,11 +761,11 @@ void pl3_current_playlist_browser_playlist_changed()
 	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{
 		guint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
-			(PLAYLIST_LIST(playlist)->num_rows/((gdouble)PLAYLIST_LIST(playlist)->loaded));
+			(1/playlist_list_get_loaded(PLAYLIST_LIST(playlist)));
 		
 		gchar *string = format_time(playtime);
 		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
-				(PLAYLIST_LIST(playlist)->loaded == PLAYLIST_LIST(playlist)->num_rows)? "":_("(Estimation)")); 
+				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1)? "":_("(Estimation)")); 
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
 		g_free(string);
 		g_free(mesg);

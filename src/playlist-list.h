@@ -106,4 +106,6 @@ void playlist_list_set_markup(CustomList *cl, gchar *markup);
 void playlist_list_clear(CustomList *list,GtkTreeView *tree);
 void playlist_list_data_update(CustomList *cl ,MpdObj *mi,GtkTreeView *tree);
 guint playlist_list_get_playtime(CustomList *cl);
+gdouble playlist_list_get_loaded(CustomList *cl);
+
 #endif /* _playlist_list_h_included_ */

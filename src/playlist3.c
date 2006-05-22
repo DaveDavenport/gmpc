@@ -389,13 +389,21 @@ void pl3_cat_sel_changed()
 			old_type = -1;
 		}
 		pl3_push_rsb_message("");
+		/** if type changed give a selected signal */
 		if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
+		/**
+		 * update old value, so get_selected_category is correct before calling selection_changed
+		 */
+		old_type = type;
+		/**
+		 * now give a selection changed signal 
+		 */
 		if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
 		{
 			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
 
-		old_type = type;
+
 	}
 
 
@@ -1468,6 +1476,12 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	 */
 	if(what&MPD_CST_REPEAT)
 	{
+		if(mpd_check_connected(connection))
+		{
+		char *string = g_strdup_printf("Repeat: %s", (mpd_player_get_repeat(connection))? _("On"):_("Off"));
+		pl3_push_statusbar_message(string);
+		g_free(string);
+
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 				mpd_player_get_repeat(connection));
 		if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat"))))
@@ -1475,15 +1489,24 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
 					mpd_player_get_repeat(connection));
 		}
+		}
+		
 	}
 	if(what&MPD_CST_RANDOM)
 	{
+		if(mpd_check_connected(connection))
+		{
+		char *string = g_strdup_printf("Random: %s", (mpd_player_get_random(connection))? _("On"):_("Off"));
+		pl3_push_statusbar_message(string);
+		g_free(string);
+
 		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
 				mpd_player_get_random(connection));
 		if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random"))))
 		{                                                                                                                       		
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
 					mpd_player_get_random(connection));
+		}
 		}
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)

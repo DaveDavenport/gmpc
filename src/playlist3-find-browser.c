@@ -368,7 +368,7 @@ unsigned long pl3_find_browser_view_browser()
 			   {
 			   }
 			   */
-			if(PLAYLIST_LIST(playlist)->loaded != total_songs)
+			if(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) < 1)
 			{
 				gtk_widget_hide(pl3_findb_entry);
 				gtk_widget_show(pl3_findb_pb);
@@ -379,6 +379,7 @@ unsigned long pl3_find_browser_view_browser()
 			}
 
 			if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist), &iter) && filter_test != NULL)
+			{
 				do
 				{
 					int loop = TRUE;
@@ -465,6 +466,7 @@ unsigned long pl3_find_browser_view_browser()
 
 				}
 				while(gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist), &iter));
+			}
 			mpd_misc_tokens_free(filter_test);
 			if(total_songs)
 			{

@@ -6,8 +6,6 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist-list.h"
 #include "main.h"
-#include "playlist3-current-playlist-browser.h"
-#include <glade/glade.h>
 
 /* boring declarations of local functions */
 
@@ -57,6 +55,11 @@ static gboolean playlist_list_iter_parent(GtkTreeModel * tree_model,
 		GtkTreeIter * iter,
 		GtkTreeIter * child);
 
+enum {
+	TOTAL_TIME_CHANGED,
+	LAST_SIGNAL
+};
+static gint playlist_list_signals[LAST_SIGNAL] = {0};
 /* GObject stuff - nothing to worry about */
 static GObjectClass *parent_class = NULL;
 
@@ -127,6 +130,14 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 		gtk_tree_path_free(path);
 	}
 }
+gdouble playlist_list_get_loaded(CustomList *cl)
+{
+	if(cl)
+	{
+		return cl->loaded/(gdouble)cl->num_rows;
+	}
+	return 0.0;
+}
 
 guint playlist_list_get_playtime(CustomList * cl)
 {
@@ -161,7 +172,7 @@ int playlist_list_lazy_fill(CustomList *cl)
 		{
 			cl->playtime += cl->playlist[cl->pd.total_length]->time;
 		}
-		pl3_current_playlist_browser_playlist_changed();
+		g_signal_emit(cl, playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
 	}
 	cl->pd.total_length++;
 	return TRUE;
@@ -301,7 +312,8 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 				{
 					cl->playtime += cl->playlist[i]->time;
 				}
-				pl3_current_playlist_browser_playlist_changed();
+				/*pl3_current_playlist_browser_playlist_changed();*/
+				g_signal_emit(cl, playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
 				data->song = NULL;
 			}
 			/* to be sure */
@@ -524,6 +536,14 @@ static void playlist_list_class_init(CustomListClass * klass)
 
 	parent_class = (GObjectClass *) g_type_class_peek_parent(klass);
 	object_class = (GObjectClass *) klass;
+
+	playlist_list_signals[TOTAL_TIME_CHANGED] = g_signal_new ("total-time-changed",
+			G_TYPE_FROM_CLASS(object_class),
+		G_SIGNAL_RUN_FIRST,
+		0,
+		NULL, NULL,
+		g_cclosure_marshal_VOID__VOID,
+		G_TYPE_NONE, 0,0);
 
 	object_class->finalize = playlist_list_finalize;
 }
@@ -773,7 +793,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		{
 			PLAYLIST_LIST(tree_model)->playtime += PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time;
 		}                                             		
-		pl3_current_playlist_browser_playlist_changed();
+		g_signal_emit(PLAYLIST_LIST(tree_model), playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
 	}	
 
 
