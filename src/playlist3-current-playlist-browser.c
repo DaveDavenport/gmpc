@@ -350,23 +350,22 @@ void pl3_current_playlist_browser_init()
 		}
 	}
 	/**
-	 * Very dirty hack, to stop the last column from growing to far
+	 * Less dirty hack, to stop the last column from growing to far
 	 */
-	for(position=PL_COLUMN_TOTAL-1; position>=0;position--)
 	{
-		sprintf(smallstring, "%i", position);
-		if(cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
+		for(position=PL_COLUMN_TOTAL-1; position>=0;position--)
 		{
-			gtk_tree_view_column_set_fixed_width(columns[position],50);			
-			position = -1;
+			GtkTreeViewColumn *col = gtk_tree_view_get_column(GTK_TREE_VIEW(pl3_cp_tree), position);
+			if(col && gtk_tree_view_column_get_visible(col))
+			{
+				gtk_tree_view_column_set_fixed_width(col,50);			
+				position = -1;
+			}
 		}
 	}
 
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 	g_signal_connect(G_OBJECT(pl3_cp_tree),"columns-changed", G_CALLBACK(pl3_current_playlist_column_changed), NULL);
-
-	/* insert the column in the tree */
-
 
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_cp_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree)), GTK_SELECTION_MULTIPLE);
@@ -404,7 +403,7 @@ void pl3_current_playlist_browser_init()
 
 
 	gtk_box_pack_end(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(tree_search), FALSE, TRUE, 0);	
-	
+
 	/**
 	 * Set total time changed signal 
 	 */
@@ -494,8 +493,7 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 					GTK_DIALOG_MODAL,
 					GTK_MESSAGE_WARNING,
 					GTK_BUTTONS_NONE,
-					_
-					("Are you sure you want to clear the playlist?"));
+					_("Are you sure you want to clear the playlist?"));
 		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
 				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
 				GTK_RESPONSE_OK, NULL);
@@ -517,7 +515,6 @@ void pl3_current_playlist_browser_delete_selected_songs ()
 }
 void pl3_current_playlist_browser_clipboard_add_foreach(char *path, gpointer data)
 {
-	//int pos = GPOINTER_TO_INT(data);
 	mpd_playlist_add(connection,path);
 	g_free(path);
 }
@@ -553,29 +550,6 @@ void pl3_current_playlist_browser_crop_selected_songs()
 	gtk_tree_selection_unselect_all(selection);
 
 	mpd_status_queue_update(connection);
-}
-
-/* should this be here? */
-void pl3_current_playlist_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter)
-{
-	gint pos, new_pos;
-	gchar *str = NULL;         	
-	gint type = pl3_cat_get_selected_browser();
-	if(type != current_playlist_plug.id) return;
-	str = gtk_tree_path_to_string(path);
-
-	gtk_tree_model_get(model, iter,PLAYLIST_LIST_COL_SONG_POS, &pos, -1);
-	new_pos = atoi(str);
-	if(new_pos > pos ) new_pos --;
-	/* if there wasn't a move action we don't do anything, because this signal is trigged on every row change */
-	if(new_pos == pos)
-	{
-		g_free(str);
-		return;
-	}
-
-	mpd_playlist_move_pos(connection, pos, new_pos);
-	g_free(str);
 }
 
 void pl3_current_playlist_header_toggle(GtkCheckButton *cb)
@@ -642,7 +616,7 @@ void pl3_current_playlist_enable_columns()
 			gtk_tree_view_get_headers_visible(GTK_TREE_VIEW(pl3_cp_tree)));
 	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(pl3_current_playlist_header_toggle), NULL);
-	
+
 	g_list_free(cols);
 	gtk_widget_show_all(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
@@ -762,7 +736,7 @@ void pl3_current_playlist_browser_playlist_changed()
 	{
 		guint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
 			(1/playlist_list_get_loaded(PLAYLIST_LIST(playlist)));
-		
+
 		gchar *string = format_time(playtime);
 		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
 				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1)? "":_("(Estimation)")); 
@@ -813,6 +787,13 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
 	{
 		treesearch_start(tree_search);
+		return TRUE;
+	}
+	else if((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z))
+	{
+		treesearch_start(tree_search);
+		gtk_entry_set_text(TREESEARCH(tree_search)->entry, (const gchar *)gdk_keyval_name(event->keyval));
+		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(tree_search)->entry),1);
 		return TRUE;
 	}
 	return pl3_window_key_press_event(GTK_WIDGET(tree),event);

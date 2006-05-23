@@ -824,7 +824,6 @@ void create_playlist3 ()
 
 	/**
 	 * Bread Crumb system.
-	 * TODO: Needs some fixing, to keep in sync
 	 */
 	pl3_crumbs = gtk_list_store_new(3, 
 			G_TYPE_STRING, /* text */
@@ -1478,17 +1477,17 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		if(mpd_check_connected(connection))
 		{
-		char *string = g_strdup_printf("Repeat: %s", (mpd_player_get_repeat(connection))? _("On"):_("Off"));
-		pl3_push_statusbar_message(string);
-		g_free(string);
+			char *string = g_strdup_printf("Repeat: %s", (mpd_player_get_repeat(connection))? _("On"):_("Off"));
+			pl3_push_statusbar_message(string);
+			g_free(string);
 
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
-				mpd_player_get_repeat(connection));
-		if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat"))))
-		{
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 					mpd_player_get_repeat(connection));
-		}
+			if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat"))))
+			{
+				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
+						mpd_player_get_repeat(connection));
+			}
 		}
 		
 	}
@@ -1496,17 +1495,17 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		if(mpd_check_connected(connection))
 		{
-		char *string = g_strdup_printf("Random: %s", (mpd_player_get_random(connection))? _("On"):_("Off"));
-		pl3_push_statusbar_message(string);
-		g_free(string);
+			char *string = g_strdup_printf("Random: %s", (mpd_player_get_random(connection))? _("On"):_("Off"));
+			pl3_push_statusbar_message(string);
+			g_free(string);
 
-		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
-				mpd_player_get_random(connection));
-		if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random"))))
-		{                                                                                                                       		
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
 					mpd_player_get_random(connection));
-		}
+			if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random"))))
+			{                                                                                                                       		
+				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
+						mpd_player_get_random(connection));
+			}
 		}
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
