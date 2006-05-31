@@ -52,6 +52,8 @@ GType   mmkeys_get_type (void);
 
 MmKeys *mmkeys_new      (void);
 
+void grab_key(int key, int keycode);
+
 #endif /* __MM_KEYS_H */
 
 

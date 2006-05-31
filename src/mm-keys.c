@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include "mm-keys.h"
+#include "main.h"
 
 static void mmkeys_class_init (MmKeysClass *klass);
 static void mmkeys_init       (MmKeys      *object);
@@ -42,8 +43,16 @@ enum {
 	LAST_SIGNAL
 };
 
+char *keynames[LAST_SIGNAL] = {
+	"PlayPause",/** MM_PLAYPAUSE */
+	"Next", 	/** MM_NEXT*/
+	"Previous", /** MM_PREV */
+	"Stop" 		/** MM_STOP */
+};
+
 static GObjectClass *parent_class;
 static guint signals[LAST_SIGNAL];
+static int keycodes[LAST_SIGNAL];
 
 static GType type = 0;
 
@@ -62,8 +71,7 @@ GType mmkeys_get_type (void)
 			(GInstanceInitFunc) mmkeys_init,
 		};
 
-		type = g_type_register_static (G_TYPE_OBJECT, "MmKeys",
-				&info, 0);
+		type = g_type_register_static (G_TYPE_OBJECT, "MmKeys",&info, 0);
 	}
 
 	return type;
@@ -117,33 +125,46 @@ static void mmkeys_finalize (GObject *object)
 	parent_class->finalize (G_OBJECT(object));
 }
 
-#define N_KEYCODES 5
-
 static void mmkeys_init (MmKeys *object)
 {
-	int keycodes[N_KEYCODES];
 	GdkDisplay *display;
 	GdkScreen *screen;
 	GdkWindow *root;
 	guint i, j;
+	int keycode = 0;
 
 	display = gdk_display_get_default ();
 
-	keycodes[0] = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPrev);
-	keycodes[1] = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioNext);
-	keycodes[2] = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay);
-	keycodes[3] = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPause);
-	keycodes[4] = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop);
+	/** Play Pause */
+	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay);
+	keycodes[MM_PLAYPAUSE] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PLAYPAUSE], keycode);
+	/**
+	 * Previous
+	 */
+	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPrev);
+	keycodes[MM_PREV] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PREV], keycode);
+	/**
+	 * Next 
+	 */
+	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioNext);
+	keycodes[MM_NEXT] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_NEXT], keycode);
+	/**
+	 * Stop
+	 */
+	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop);
+	keycodes[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_STOP], keycode);
 
 	for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 		screen = gdk_display_get_screen (display, i);
-
 		if (screen != NULL) {
 			root = gdk_screen_get_root_window (screen);
 
-			for (j = 0; j < N_KEYCODES; j++) {
+			for (j = 0; j < LAST_SIGNAL;j++) {
 				if (keycodes[j] > 0)
+				{
+					printf("grab: %i\n", keycodes[j]);
 					grab_mmkey (keycodes[j], root);
+				}
 			}
 
 			gdk_window_add_filter (root, filter_mmkeys, object);
@@ -155,6 +176,7 @@ MmKeys * mmkeys_new (void)
 {
 	return MMKEYS (g_object_new (TYPE_MMKEYS, NULL));
 }
+
 
 static void grab_mmkey (int key_code, GdkWindow *root)
 {
@@ -201,6 +223,7 @@ static void grab_mmkey (int key_code, GdkWindow *root)
 
 static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpointer data)
 {
+	int i;
 	XEvent *xev;
 	XKeyEvent *key;
 
@@ -210,7 +233,16 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 	}
 
 	key = (XKeyEvent *) xevent;
-
+	printf("%i\n", key->keycode);
+	for(i=0; i < LAST_SIGNAL;i++)
+	{
+		if(keycodes[i] == key->keycode)
+		{
+			g_signal_emit (data, signals[i], 0, 0);
+			return GDK_FILTER_REMOVE;
+		}
+	}
+	/*
 	if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay) == key->keycode) {
 		g_signal_emit (data, signals[MM_PLAYPAUSE], 0, 0);
 		return GDK_FILTER_REMOVE;
@@ -227,8 +259,120 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 		g_signal_emit (data, signals[MM_STOP], 0, 0);
 		return GDK_FILTER_REMOVE;
 	} else {
+	*/
 		return GDK_FILTER_CONTINUE;
+	/*}*/
+}
+
+
+static void ungrab_mmkey (int key_code, GdkWindow *root)
+{
+	gdk_error_trap_push ();
+
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			0,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod2Mask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod5Mask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			LockMask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod2Mask | Mod5Mask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod2Mask | LockMask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod5Mask | LockMask,
+			GDK_WINDOW_XID (root));
+	XUngrabKey (GDK_DISPLAY (), key_code,
+			Mod2Mask | Mod5Mask | LockMask,
+			GDK_WINDOW_XID (root));
+
+	gdk_flush ();
+	if (gdk_error_trap_pop ()) {
+		fprintf (stderr, "Error grabbing key %d, %p\n", key_code, root);
 	}
 }
+
+
+
+void grab_key(int key, int keycode)
+{
+	GdkDisplay *display;
+	GdkScreen *screen;
+	GdkWindow *root;
+	guint i;
+	display = gdk_display_get_default ();
+
+	/* remove old key */
+	if(keycodes[key] > 0)
+	{
+		for (i = 0; i < gdk_display_get_n_screens (display); i++) {
+			screen = gdk_display_get_screen (display, i);
+			if (screen != NULL) {
+				root = gdk_screen_get_root_window (screen);
+				ungrab_mmkey (keycodes[key], root);
+			}
+		}
+	}
+	keycodes[key] = 0;
+	if(keycode >0)
+	{
+		keycodes[key] = keycode;
+		cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
+		for (i = 0; i < gdk_display_get_n_screens (display); i++) {
+			screen = gdk_display_get_screen (display, i);
+			if (screen != NULL) {
+				root = gdk_screen_get_root_window (screen);
+				grab_mmkey (keycodes[key], root);
+			}
+		}
+	}
+}
+
+/*****
+ * Multimedia key plugin for config panel 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #endif
