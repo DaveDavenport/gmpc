@@ -438,6 +438,24 @@ gmpcPlugin mmkeys_plug = {
 	NULL,
 	&mmkeys_gpp
 };
+
+static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_string, gpointer data)
+{
+  GtkTreeModel *model = (GtkTreeModel *)data;
+  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+  GtkTreeIter iter;
+  int key;
+
+  gtk_tree_model_get_iter (model, &iter, path);
+
+  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+		      2, 0,
+		      -1);
+  gtk_tree_path_free (path);
+  gtk_tree_model_get(model, &iter, 1, &key, -1);
+  grab_key(key, 0);
+}
+
 static void
 accel_edited_callback (GtkCellRendererText *cell,
                        const char          *path_string,
@@ -454,6 +472,10 @@ accel_edited_callback (GtkCellRendererText *cell,
   gtk_tree_model_get_iter (model, &iter, path);
 
   g_print ("%u %d %u\n", keyval, mask, hardware_keycode);
+  if(hardware_keycode == 22)
+  {
+	  hardware_keycode = 0;
+  }	                            
   
   gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 		      2, hardware_keycode,
@@ -461,6 +483,7 @@ accel_edited_callback (GtkCellRendererText *cell,
   gtk_tree_path_free (path);
   gtk_tree_model_get(model, &iter, 1, &key, -1);
   grab_key(key, hardware_keycode);
+
 }
 
 
@@ -512,6 +535,11 @@ void mmkeys_pref_construct(GtkWidget *container)
 				"accel_edited",
 				G_CALLBACK (accel_edited_callback),
 				store);                            		
+
+		g_signal_connect (G_OBJECT (rend),
+				"accel_cleared",
+				G_CALLBACK (accel_cleared_callback),
+				store);                            				
 		gtk_tree_view_column_pack_start (column, rend,
 				TRUE);
 		gtk_tree_view_column_set_attributes (column, rend,
