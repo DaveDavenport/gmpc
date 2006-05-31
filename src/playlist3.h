@@ -34,4 +34,5 @@ enum PlaylistColums {
 };
 
 void pl3_update_go_menu();
+void pl3_show_window();
 #endif

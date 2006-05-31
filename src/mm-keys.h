@@ -24,6 +24,7 @@
 #include <gdk/gdkx.h>
 #include <stdio.h>
 #include <gtk/gtktogglebutton.h>
+#include "main.h"
 
 #ifndef __MM_KEYS_H
 #define __MM_KEYS_H
@@ -53,7 +54,7 @@ GType   mmkeys_get_type (void);
 MmKeys *mmkeys_new      (void);
 
 void grab_key(int key, int keycode);
-
+gmpcPlugin mmkeys_plug;
 #endif /* __MM_KEYS_H */
 
 

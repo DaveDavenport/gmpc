@@ -6,10 +6,16 @@ int next_song();
 int prev_song();
 void random_pl();
 void repeat_pl();
+int random_toggle();
+int repeat_toggle();
 
 int  seek_ns(int n);
 int  seek_ps(int n);
 int connect_to_mpd();
+int song_fastforward();
+int song_fastbackward();
+void volume_up();
+void volume_down();
 
 extern gmpcPlugin server_plug;
 

@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include "mm-keys.h"
-#include "main.h"
+#include "eggcellrendererkeys.h"
 
 static void mmkeys_class_init (MmKeysClass *klass);
 static void mmkeys_init       (MmKeys      *object);
@@ -40,6 +40,13 @@ enum {
 	MM_NEXT,
 	MM_PREV,
 	MM_STOP,
+	MM_FASTFORWARD,
+	MM_FASTBACKWARD,
+	MM_REPEAT,
+	MM_RANDOM,
+	MM_RAISE,
+	MM_VOLUME_UP,
+	MM_VOLUME_DOWN,
 	LAST_SIGNAL
 };
 
@@ -47,8 +54,15 @@ char *keynames[LAST_SIGNAL] = {
 	"PlayPause",/** MM_PLAYPAUSE */
 	"Next", 	/** MM_NEXT*/
 	"Previous", /** MM_PREV */
-	"Stop" 		/** MM_STOP */
-};
+	"Stop",		/** MM_STOP */
+	"Fast Forward", /** MM_FASTFORWARD */
+	"Fast Backward", /** MM_FASTBACKWARD */
+	"Repeat", /** MM_REPEAT */
+	"Random", /** MM_RANDOM */
+	"Raise window", /** MM_RAISE */
+	"Volume Up", /** MM_VOLUME_UP */
+	"Volume Down" /** MM_VOLUME_DOWN */
+};	
 
 static GObjectClass *parent_class;
 static guint signals[LAST_SIGNAL];
@@ -118,6 +132,63 @@ static void mmkeys_class_init (MmKeysClass *klass)
 				NULL, NULL,
 				g_cclosure_marshal_VOID__INT,
 				G_TYPE_NONE, 1, G_TYPE_INT);
+	signals[MM_FASTFORWARD] = 
+		g_signal_new ("mm_fastforward",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,
+				G_TYPE_NONE, 1, G_TYPE_INT);
+	signals[MM_FASTBACKWARD]= 
+		g_signal_new ("mm_fastbackward",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,
+				G_TYPE_NONE, 1, G_TYPE_INT);
+	signals[MM_REPEAT]= 
+		g_signal_new ("mm_repeat",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,
+				G_TYPE_NONE, 1, G_TYPE_INT);
+	signals[MM_RANDOM]= 
+		g_signal_new ("mm_random",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+	signals[MM_RAISE]= 
+		g_signal_new ("mm_raise",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+	signals[MM_VOLUME_UP] = 
+		g_signal_new ("mm_volume_up",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+
+	signals[MM_VOLUME_DOWN] = 
+		g_signal_new ("mm_volume_down",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
 }
 
 static void mmkeys_finalize (GObject *object)
@@ -134,6 +205,7 @@ static void mmkeys_init (MmKeys *object)
 	int keycode = 0;
 
 	display = gdk_display_get_default ();
+
 
 	/** Play Pause */
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay);
@@ -154,6 +226,13 @@ static void mmkeys_init (MmKeys *object)
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop);
 	keycodes[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_STOP], keycode);
 
+	for(i=0;i<LAST_SIGNAL;i++)
+	{
+		keycodes[i] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[i], 0);
+	}
+
+
+	
 	for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 		screen = gdk_display_get_screen (display, i);
 		if (screen != NULL) {
@@ -162,7 +241,6 @@ static void mmkeys_init (MmKeys *object)
 			for (j = 0; j < LAST_SIGNAL;j++) {
 				if (keycodes[j] > 0)
 				{
-					printf("grab: %i\n", keycodes[j]);
 					grab_mmkey (keycodes[j], root);
 				}
 			}
@@ -233,12 +311,12 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 	}
 
 	key = (XKeyEvent *) xevent;
-	printf("%i\n", key->keycode);
 	for(i=0; i < LAST_SIGNAL;i++)
 	{
 		if(keycodes[i] == key->keycode)
 		{
 			g_signal_emit (data, signals[i], 0, 0);
+			debug_printf(DEBUG_INFO, "%s pressed", keynames[i]);
 			return GDK_FILTER_REMOVE;
 		}
 	}
@@ -339,6 +417,51 @@ void grab_key(int key, int keycode)
 /*****
  * Multimedia key plugin for config panel 
  */
+void mmkeys_pref_destroy(GtkWidget *container);
+void mmkeys_pref_construct(GtkWidget *container);
+GladeXML *mmkeys_pref_xml = NULL;
+
+gmpcPrefPlugin mmkeys_gpp = {
+	mmkeys_pref_construct,
+	mmkeys_pref_destroy
+};
+
+gmpcPlugin mmkeys_plug = {
+	"Multimedia Keys",
+	{1,1,1},
+	GMPC_INTERNALL,
+	0,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	&mmkeys_gpp
+};
+static void
+accel_edited_callback (GtkCellRendererText *cell,
+                       const char          *path_string,
+                       guint                keyval,
+                       GdkModifierType      mask,
+                       guint                hardware_keycode,
+                       gpointer             data)
+{
+  GtkTreeModel *model = (GtkTreeModel *)data;
+  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+  GtkTreeIter iter;
+  int key;
+
+  gtk_tree_model_get_iter (model, &iter, path);
+
+  g_print ("%u %d %u\n", keyval, mask, hardware_keycode);
+  
+  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+		      2, hardware_keycode,
+		      -1);
+  gtk_tree_path_free (path);
+  gtk_tree_model_get(model, &iter, 1, &key, -1);
+  grab_key(key, hardware_keycode);
+}
 
 
 
@@ -347,31 +470,65 @@ void grab_key(int key, int keycode)
 
 
 
+void mmkeys_pref_destroy(GtkWidget *container)
+{
+	if(mmkeys_pref_xml)
+	{
+		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
+		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		g_object_unref(mmkeys_pref_xml);
+		mmkeys_pref_xml = NULL;
+	}
+}
 
+void mmkeys_pref_construct(GtkWidget *container)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	mmkeys_pref_xml = glade_xml_new(path, "mmkeys-vbox",NULL);
+	g_free(path);
+	if(mmkeys_pref_xml)
+	{
+		int i=0;
+		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
+		GtkTreeViewColumn *column = NULL;
+		GtkListStore *store = gtk_list_store_new(3, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT);
+		GtkCellRenderer *rend =gtk_cell_renderer_text_new();
 
+		gtk_tree_view_set_model(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
 
+		column = gtk_tree_view_column_new();
+		gtk_tree_view_column_pack_start(column, rend, TRUE);
+		gtk_tree_view_column_add_attribute(column, rend, "text", 0);
+		gtk_tree_view_column_set_title(column, "Name");
+		gtk_tree_view_append_column(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
+		rend =  egg_cell_renderer_keys_new ();
+		column = gtk_tree_view_column_new ();
 
+/*		g_object_set (G_OBJECT (rend), "accel_mode", EGG_CELL_RENDERER_KEYS_MODE_X);*/
+		g_object_set (G_OBJECT (rend), "editable", TRUE, NULL);
+				
+		g_signal_connect (G_OBJECT (rend),
+				"accel_edited",
+				G_CALLBACK (accel_edited_callback),
+				store);                            		
+		gtk_tree_view_column_pack_start (column, rend,
+				TRUE);
+		gtk_tree_view_column_set_attributes (column, rend,
+				"keycode", 2,
+				NULL);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
+		gtk_container_add(GTK_CONTAINER(container),vbox);
+		for(i=0;i< LAST_SIGNAL;i++)
+		{
+			GtkTreeIter iter;
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0,keynames[i],1,i, 2, keycodes[i],-1);
+		}
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 

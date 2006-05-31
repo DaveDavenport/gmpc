@@ -748,7 +748,19 @@ void pl3_show_and_position_window()
 	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 
 }
-
+void pl3_show_window()
+{
+	if(!pl3_xml) return;
+	if(!pl3_hidden)
+	{
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+	}
+	else
+	{
+		create_playlist3();
+	}
+}
 void create_playlist3 ()
 {
 	GtkCellRenderer *renderer;

@@ -419,6 +419,9 @@ int main (int argc, char **argv)
 	plugin_add(&info_plugin,0);            	
 	/* this shows the markup stuff */
 	plugin_add(&tag_plug,0);
+#ifdef ENABLE_MMKEYS
+	plugin_add(&mmkeys_plug,0);
+#endif
 #ifdef ENABLE_TRAYICON
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
@@ -508,7 +511,15 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
-	
+	g_signal_connect(G_OBJECT(keys), "mm_fastforward", G_CALLBACK(song_fastforward), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_repeat", G_CALLBACK(repeat_toggle), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_random", G_CALLBACK(random_toggle), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(pl3_show_window), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
+
+
 #endif
 
 

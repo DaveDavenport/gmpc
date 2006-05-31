@@ -209,7 +209,30 @@ int seek_ns(int n)
 	return seek_ps(-n);
 }
 
-
+int song_fastforward()
+{
+	seek_ps(1);
+}
+int song_fastbackward()
+{
+	seek_ps(-1);
+}
+int repeat_toggle()
+{
+	mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
+}
+int random_toggle()
+{
+	mpd_player_set_random(connection, !mpd_player_get_random(connection));
+}
+void volume_up()
+{
+	mpd_status_set_volume(connection, mpd_status_get_volume(connection)+5);
+}
+void volume_down()
+{
+	mpd_status_set_volume(connection, mpd_status_get_volume(connection)-5);
+}
 /*****************************************************************
  * Preferences
  */
