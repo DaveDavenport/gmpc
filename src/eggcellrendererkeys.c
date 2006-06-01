@@ -428,7 +428,6 @@ grab_key_callback (GtkWidget    *widget,
   if (accel_keyval == GDK_ISO_Left_Tab) 
     accel_keyval = GDK_Tab;
 
-
   
   /* Put shift back if it changed the case of the key, not otherwise.
    */

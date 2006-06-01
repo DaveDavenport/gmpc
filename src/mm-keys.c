@@ -403,8 +403,7 @@ void grab_key(int key, int keycode)
 	if(keycode >0)
 	{
 		keycodes[key] = keycode;
-		cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
-		for (i = 0; i < gdk_display_get_n_screens (display); i++) {
+				for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 			screen = gdk_display_get_screen (display, i);
 			if (screen != NULL) {
 				root = gdk_screen_get_root_window (screen);
@@ -412,6 +411,7 @@ void grab_key(int key, int keycode)
 			}
 		}
 	}
+	cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
 }
 
 /*****
@@ -449,8 +449,10 @@ static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_s
   gtk_tree_model_get_iter (model, &iter, path);
 
   gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-		      2, 0,
-		      -1);
+		  1,0,
+		  2, 0,
+		  3,0,
+		  -1);
   gtk_tree_path_free (path);
   gtk_tree_model_get(model, &iter, 1, &key, -1);
   grab_key(key, 0);
@@ -479,6 +481,7 @@ accel_edited_callback (GtkCellRendererText *cell,
   
   gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 		      2, hardware_keycode,
+			  3, keyval,
 		      -1);
   gtk_tree_path_free (path);
   gtk_tree_model_get(model, &iter, 1, &key, -1);
@@ -514,7 +517,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 		int i=0;
 		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
 		GtkTreeViewColumn *column = NULL;
-		GtkListStore *store = gtk_list_store_new(3, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT);
+		GtkListStore *store = gtk_list_store_new(4, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT,G_TYPE_UINT);
 		GtkCellRenderer *rend =gtk_cell_renderer_text_new();
 
 		gtk_tree_view_set_model(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
@@ -522,13 +525,14 @@ void mmkeys_pref_construct(GtkWidget *container)
 		column = gtk_tree_view_column_new();
 		gtk_tree_view_column_pack_start(column, rend, TRUE);
 		gtk_tree_view_column_add_attribute(column, rend, "text", 0);
-		gtk_tree_view_column_set_title(column, "Name");
+		gtk_tree_view_column_set_title(column, _("Action"));
 		gtk_tree_view_append_column(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
 		rend =  egg_cell_renderer_keys_new ();
 		column = gtk_tree_view_column_new ();
 
 /*		g_object_set (G_OBJECT (rend), "accel_mode", EGG_CELL_RENDERER_KEYS_MODE_X);*/
+		egg_cell_renderer_keys_set_accel_mode(EGG_CELL_RENDERER_KEYS(rend), EGG_CELL_RENDERER_KEYS_MODE_GTK);
 		g_object_set (G_OBJECT (rend), "editable", TRUE, NULL);
 				
 		g_signal_connect (G_OBJECT (rend),
@@ -542,8 +546,10 @@ void mmkeys_pref_construct(GtkWidget *container)
 				store);                            				
 		gtk_tree_view_column_pack_start (column, rend,
 				TRUE);
+		gtk_tree_view_column_set_title(column, _("Shortcut"));
 		gtk_tree_view_column_set_attributes (column, rend,
 				"keycode", 2,
+				"accel_key",3,
 				NULL);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
