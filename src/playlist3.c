@@ -1063,7 +1063,6 @@ void playlist_player_set_song(MpdObj *mi)
 		 */
 		mpd_song_markup(buffer, 1024,mark,song);
 		cfg_free_string(mark);
-
 		g_string_append(string,buffer);
 
 		/**
