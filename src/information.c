@@ -25,6 +25,9 @@ void info_clear_display();
 
 GtkWidget *info_text_view = NULL;
 GtkWidget *info_vbox = NULL;
+GtkWidget *info_pimage = NULL;
+GdkPixbuf *info_spinner_pixbuf = NULL;
+int spin_offset = 0;
 
 void info_construct(GtkWidget *container);
 void info_destroy(GtkWidget *container);
@@ -37,6 +40,12 @@ GdkCursor *regular_cursor = NULL;
 GList *tag_list = NULL;
 static mpd_Song *current_song = NULL;
 static guint32 current_id = 0;
+static guint32 info_fetching = 0;
+
+typedef struct {
+	GtkTextMark *mark;
+	guint32 id;
+}info_pass_data ;
 
 extern GladeXML *pl3_xml;
 void info_status_changed(MpdObj *mi, ChangedStatusType what,gpointer data);
@@ -109,7 +118,19 @@ static void info_show_current_album() {
 }
 
 
+void info_fetching_changed()
+{
+	printf("%i\n",info_fetching);
+	if(info_fetching)
+	{
+		gtk_widget_show(info_pimage);
 
+	}
+	else
+	{
+		gtk_widget_hide(info_pimage);
+	}
+}
 
 
 
@@ -136,18 +157,27 @@ void info_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
 
 void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextMark *mark = data;
+	info_pass_data	*ipd = data;
+	GtkTextMark *mark = ipd->mark;
 	GtkTextIter iter,start,stop;
-	guint32 id;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
-	id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	/** Don't do anything when still fetching */
 	if(ret == META_DATA_FETCHING) return;
+	info_fetching--;
+	info_fetching_changed();
 
 
 	/* check if where checking for the correct song */
-	if(!current_song || id != current_id)return;
-	if(gtk_text_mark_get_deleted(mark)) return;
+	if(!current_song || ipd->id != current_id)
+	{
+		g_free(ipd);	
+		return;
+	}
+	if(gtk_text_mark_get_deleted(mark))
+	{
+		g_free(ipd);	   
+		return;
+	}
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
 	if(ret == META_DATA_AVAILABLE)
@@ -169,21 +199,34 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		{
 		}
 	}
+	g_free(ipd);	
 }
 
 void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextMark *mark= data;
+	info_pass_data	*ipd = data;
+	GtkTextMark *mark= ipd->mark;
 	GtkTextIter iter,start,stop;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	/** Don't do anything when still fetching */
 	if(ret == META_DATA_FETCHING) return;
+	info_fetching--;
+	info_fetching_changed();
 
 
-	if( current_song == NULL|| id!=current_id)return; 
-	if(gtk_text_mark_get_deleted(mark)) return;
+
+
+	if( current_song == NULL|| ipd->id!=current_id)
+	{
+		g_free(ipd);	
+		return; 
+	}
+	if(gtk_text_mark_get_deleted(mark))
+	{
+		g_free(ipd);
+		return;
+	}
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
 	if(ret == META_DATA_AVAILABLE)
@@ -214,21 +257,31 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 		gtk_text_buffer_apply_tag_by_name(buffer, "item-value", &start, &stop);
 		g_object_unref(pb);
 	}
+	g_free(ipd);
 }
 
 void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextMark *mark = data;
+	info_pass_data *ipd = data;
+	GtkTextMark *mark = ipd->mark;
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	/** Don't do anything when still fetching */
 	if(ret == META_DATA_FETCHING) return;
+	info_fetching--;
+	info_fetching_changed();
 
 
-	if(!current_song|| id != current_id) return;
-	if(gtk_text_mark_get_deleted(mark)) return;
+	if(!current_song|| ipd->id != current_id){
+		g_free(ipd);
+	 	return;  
+	}
+	if(gtk_text_mark_get_deleted(mark))
+	{
+		g_free(ipd);
+		return;
+	}
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
 
@@ -244,23 +297,35 @@ void info_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 			g_free(content);
 		}
 	}
+	g_free(ipd);
 }
 
 
 void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextMark *mark = data;
+	info_pass_data *ipd = data;
+	GtkTextMark *mark = ipd->mark;
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 	/** Don't do anything when still fetching */
-	if(ret == META_DATA_FETCHING) return;
+	if(ret == META_DATA_FETCHING)
+	{
+		return;
+	}
+	info_fetching--;
+	info_fetching_changed();
 
-
-
-	if(!current_song|| id != current_id) return;
-	if(gtk_text_mark_get_deleted(mark)) return;
+	if(!current_song|| ipd->id != current_id)
+	{
+		g_free(ipd);
+		return;
+	}
+	if(gtk_text_mark_get_deleted(mark))
+	{
+		g_free(ipd);
+		return;
+	}
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
 
@@ -276,24 +341,34 @@ void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 			g_free(content);
 		}
 	}
+	g_free(ipd);
 }
 
 
 void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
-	GtkTextMark *mark = data;
+	info_pass_data *ipd = data;
+	GtkTextMark *mark = ipd->mark;
 	GtkTextIter iter;
 	GtkTextBuffer *buffer = gtk_text_mark_get_buffer(mark);
 	/* check if where checking for the correct song */
-	guint32 id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(mark), "infoid"));
 
 	/** Don't do anything when still fetching */
 	if(ret == META_DATA_FETCHING) return;
- 
+	info_fetching--;
+ 	info_fetching_changed();
 
 
-	if(!current_song || id != current_id) return;
-	if(gtk_text_mark_get_deleted(mark)) return;
+	if(!current_song || ipd->id != current_id)
+	{
+		g_free(ipd);
+		return;
+	}
+	if(gtk_text_mark_get_deleted(mark))
+	{
+		g_free(ipd);
+		return;
+	}
 	gtk_text_buffer_get_iter_at_mark(buffer, &iter, mark);
 
 
@@ -309,6 +384,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 			g_free(content);
 		}
 	}
+	g_free(ipd);
 }
 
 void add_default_tags(GtkTextBuffer *buffer)
@@ -397,6 +473,7 @@ void info_clear_display()
 
 void info_show_song(mpd_Song *song)
 {
+	info_pass_data * ipd = NULL;
 	GtkTextMark *mark= NULL;
 	GtkTextTag *tag = NULL;
 	GtkTextIter iter;
@@ -433,9 +510,16 @@ void info_show_song(mpd_Song *song)
 	gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1, "bar", NULL);
 	gtk_text_buffer_insert(buffer, &iter, "\n", -1);
 
+
 	mark = gtk_text_buffer_create_mark(buffer, "album-art",&iter, TRUE);
-	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, mark);
+	ipd = g_malloc0(sizeof(*ipd));
+	ipd->mark = mark;
+	ipd->id = current_id;
+	info_fetching++;
+	info_fetching_changed();	
+	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, ipd);
+	
+	
 	gtk_text_buffer_get_end_iter(buffer, &iter);
 	gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
 
@@ -494,9 +578,13 @@ void info_show_song(mpd_Song *song)
 	{
 	
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
-		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-		meta_data_get_path_callback(song, META_SONG_TXT, info_cover_lyric_txt_fetched, mark);
-
+		ipd = g_malloc0(sizeof(*ipd));
+		ipd->mark = mark;
+		ipd->id = current_id;         		
+		
+		info_fetching++;
+		info_fetching_changed();
+		meta_data_get_path_callback(song, META_SONG_TXT, info_cover_lyric_txt_fetched, ipd);
 		gtk_text_buffer_get_end_iter(buffer, &iter);
 	}
 }
@@ -504,6 +592,7 @@ void info_show_song(mpd_Song *song)
 
 void show_album_info(mpd_Song *song)
 {
+	info_pass_data *ipd = NULL;
 	gchar 			*string = NULL;
 	GtkTextIter 		iter;
 	GtkTextTag 		*tag = NULL;
@@ -523,8 +612,14 @@ void show_album_info(mpd_Song *song)
 	gtk_text_buffer_insert(buffer, &iter, "\n", -1);
 
 	mark = gtk_text_buffer_create_mark(buffer, "album-art",&iter, TRUE);
-	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, mark);
+	ipd = g_malloc0(sizeof(*ipd));
+	ipd->mark = mark;
+	ipd->id = current_id;
+	
+	
+	info_fetching++;
+	info_fetching_changed();
+	meta_data_get_path_callback(song, META_ALBUM_ART, info_cover_art_fetched, ipd);
 	gtk_text_buffer_get_end_iter(buffer, &iter);                                                    	
 	gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);
 	/** ARTIST **/
@@ -561,9 +656,14 @@ void show_album_info(mpd_Song *song)
 	{
 
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
-		g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, mark);
+		ipd = g_malloc0(sizeof(*ipd));
+		ipd->mark = mark;
+		ipd->id = current_id;
 
+		
+		info_fetching++;
+		info_fetching_changed();
+		meta_data_get_path_callback(song, META_ALBUM_TXT, info_cover_album_txt_fetched, ipd);
 		gtk_text_buffer_get_end_iter(buffer, &iter);
 	}
 	if(song->artist && song->album && mpd_server_check_version(connection, 0,12,0))
@@ -600,6 +700,7 @@ void show_album_info(mpd_Song *song)
 }
 void show_artist_info(mpd_Song *song)
 {
+	info_pass_data 	*ipd = NULL;
 	gchar 			*string = NULL;
 	GtkTextIter 		iter;
 	GtkTextTagTable 	*table = NULL;
@@ -630,14 +731,25 @@ void show_artist_info(mpd_Song *song)
 
 	/* Set tag for link */
 	mark = gtk_text_buffer_create_mark(buffer, "artist-art",&iter, TRUE);
-	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-	meta_data_get_path_callback(song, META_ARTIST_ART, info_cover_art_fetched, mark);
+	ipd = g_malloc0(sizeof(*ipd));
+	ipd->mark = mark;
+	ipd->id = current_id;
+	
+	
+	info_fetching++;
+	info_fetching_changed();
+	meta_data_get_path_callback(song, META_ARTIST_ART, info_cover_art_fetched, ipd);
 	gtk_text_buffer_get_end_iter(buffer, &iter);
 	/*		gtk_text_buffer_insert(buffer, &iter, "\n\n", -1);*/
 
 	mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
-	g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-	meta_data_get_path_callback(song, META_ARTIST_TXT, info_cover_txt_fetched, mark);
+	ipd = g_malloc0(sizeof(*ipd));
+	ipd->mark = mark;
+	ipd->id = current_id;         	
+	
+	info_fetching++;
+	info_fetching_changed();
+	meta_data_get_path_callback(song, META_ARTIST_TXT, info_cover_txt_fetched, ipd);
 	gtk_text_buffer_get_end_iter(buffer, &iter);
 
 	if(song->artist && song->album )
@@ -661,8 +773,14 @@ void show_artist_info(mpd_Song *song)
 				qsong->artist = g_strdup(song->artist);
 				qsong->album = g_strdup(falbum);
 				mark = gtk_text_buffer_create_mark(buffer,NULL,&iter, TRUE);
-				g_object_set_data(G_OBJECT(mark), "infoid", GINT_TO_POINTER(current_id));
-				meta_data_get_path_callback(qsong, META_ALBUM_ART, info_cover_album_mini_art_fetched, mark);
+				ipd = g_malloc0(sizeof(*ipd));
+				ipd->mark = mark;
+				ipd->id = current_id;
+
+
+				info_fetching++;
+				info_fetching_changed();
+				meta_data_get_path_callback(qsong, META_ALBUM_ART, info_cover_album_mini_art_fetched, ipd);
 				gtk_text_buffer_get_end_iter(buffer, &iter);
 				mpd_freeSong(qsong);
 
@@ -897,7 +1015,17 @@ static gboolean event_after (GtkWidget *text_view,
 	follow_if_link (text_view, &iter);
 	return FALSE;
 }
-
+int info_set_spinner()
+{
+	int row = spin_offset/5;
+	int column = spin_offset%5;
+	GdkPixbuf *frame = gdk_pixbuf_new_subpixbuf(info_spinner_pixbuf, column*36, row*36,36,36);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(info_pimage), frame);
+	g_object_unref(frame);                                                   	
+	spin_offset++;
+	if(spin_offset >= 35) spin_offset = 0;
+	return TRUE;
+}
 
 static void info_init()
 {
@@ -918,39 +1046,39 @@ static void info_init()
 	hbox = gtk_hbox_new(FALSE, 6);
 	gtk_box_pack_start(GTK_BOX(info_vbox), hbox, FALSE, TRUE, 0);
 	/**
- 	 * Song button
- 	 */
+	 * Song button
+	 */
 	tmp = gtk_alignment_new(0,0.5,0,1);
 	button = gtk_button_new_with_mnemonic("_Song");
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_BUTTON));
-	
+
 	g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(info_show_current_song),NULL);
 	gtk_container_add(GTK_CONTAINER(tmp), button);
-	
+
 	gtk_box_pack_start(GTK_BOX(hbox), tmp, FALSE, TRUE, 0);
 
 	/**
- 	 * Album button
- 	 */
+	 * Album button
+	 */
 	tmp = gtk_alignment_new(0,0.5,0,1);
 	button = gtk_button_new_with_mnemonic("_Album");
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock("media-album", GTK_ICON_SIZE_BUTTON));
-	
+
 	g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(info_show_current_album),NULL);
 	gtk_container_add(GTK_CONTAINER(tmp), button);
-	
+
 	gtk_box_pack_start(GTK_BOX(hbox), tmp, FALSE, TRUE, 0);
 
 	/**
- 	 * Artist button
- 	 */
+	 * Artist button
+	 */
 	tmp = gtk_alignment_new(0,0.5,0,1);
 	button = gtk_button_new_with_mnemonic("_Artist");
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_BUTTON));
-	
+
 	g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(info_show_current_artist),NULL);
 	gtk_container_add(GTK_CONTAINER(tmp), button);
-	
+
 	gtk_box_pack_start(GTK_BOX(hbox), tmp, FALSE, TRUE, 0);
 
 
@@ -965,6 +1093,17 @@ static void info_init()
 
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(info_text_view), FALSE);
 
+	/**
+	 * TODO: make this spinner 
+	 */
+	char *file = gmpc_get_full_image_path("spinner.png");
+	info_spinner_pixbuf = gdk_pixbuf_new_from_file(file, NULL);
+	info_pimage = gtk_image_new();
+	g_timeout_add(2000/35, info_set_spinner, NULL);
+	//tk_image_set_from_pixbuf(info_pimage, pba);
+	gtk_box_pack_end(GTK_BOX(hbox), info_pimage, FALSE, TRUE, 0);
+	g_free(file);
+
 	/* Create some default "tags" */
 	buffer = gtk_text_buffer_new(NULL);
 	gtk_text_view_set_buffer(GTK_TEXT_VIEW(info_text_view),buffer);
@@ -976,6 +1115,7 @@ static void info_init()
 
 
 	gtk_widget_show_all(info_vbox);
+	gtk_widget_hide(info_pimage);
 	g_object_ref(G_OBJECT(info_vbox));
 
 
@@ -1034,31 +1174,31 @@ void info_add(GtkWidget *cat_tree)
 	/**
 	 * Window with information about the song.
 	 *
-	gtk_tree_store_append(pl3_tree, &child,&iter);
-	gtk_tree_store_set(pl3_tree, &child,
-			PL3_CAT_TYPE, info_plugin.id,
-			PL3_CAT_TITLE, "Song",
-			PL3_CAT_INT_ID, "/Song",
-			PL3_CAT_ICON_ID, "gtk-edit",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
-	gtk_tree_store_append(pl3_tree, &child,&iter);
-	gtk_tree_store_set(pl3_tree, &child,
-			PL3_CAT_TYPE, info_plugin.id,
-			PL3_CAT_TITLE, "Album",
-			PL3_CAT_INT_ID, "/Album",
-			PL3_CAT_ICON_ID, "media-album",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
-	gtk_tree_store_append(pl3_tree, &child,&iter);
-	gtk_tree_store_set(pl3_tree, &child,
-			PL3_CAT_TYPE, info_plugin.id,
-			PL3_CAT_TITLE, "Artist",
-			PL3_CAT_INT_ID, "/Artist",                  	
-			PL3_CAT_ICON_ID, "media-artist",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);		
-	*/
+	 gtk_tree_store_append(pl3_tree, &child,&iter);
+	 gtk_tree_store_set(pl3_tree, &child,
+	 PL3_CAT_TYPE, info_plugin.id,
+	 PL3_CAT_TITLE, "Song",
+	 PL3_CAT_INT_ID, "/Song",
+	 PL3_CAT_ICON_ID, "gtk-edit",
+	 PL3_CAT_PROC, TRUE,
+	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
+	 gtk_tree_store_append(pl3_tree, &child,&iter);
+	 gtk_tree_store_set(pl3_tree, &child,
+	 PL3_CAT_TYPE, info_plugin.id,
+	 PL3_CAT_TITLE, "Album",
+	 PL3_CAT_INT_ID, "/Album",
+	 PL3_CAT_ICON_ID, "media-album",
+	 PL3_CAT_PROC, TRUE,
+	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
+	 gtk_tree_store_append(pl3_tree, &child,&iter);
+	 gtk_tree_store_set(pl3_tree, &child,
+	 PL3_CAT_TYPE, info_plugin.id,
+	 PL3_CAT_TITLE, "Artist",
+	 PL3_CAT_INT_ID, "/Artist",                  	
+	 PL3_CAT_ICON_ID, "media-artist",
+	 PL3_CAT_PROC, TRUE,
+	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);		
+	 */
 
 }
 
@@ -1070,6 +1210,7 @@ void info_selected(GtkWidget *container)
 
 	gtk_container_add(GTK_CONTAINER(container), info_vbox);
 	gtk_widget_show_all(info_vbox);
+	gtk_widget_hide(info_pimage);
 	while (gtk_events_pending ())
 		gtk_main_iteration ();
 
@@ -1134,35 +1275,35 @@ void info_construct(GtkWidget *container)
 	gtk_widget_show_all(container);
 }
 
- void info_browser_activate()
- {
- 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
- 			glade_xml_get_widget (pl3_xml, "cat_tree"));
- 
- 	/**
- 	 * Fix this to be nnot static
- 	 */	
- 	GtkTreePath *path = gtk_tree_path_new_from_string("4"); 
- 	if(path)
- 	{
- 		gtk_tree_selection_select_path(selec, path);
- 	}
- }
- 
- 
- int info_add_go_menu(GtkWidget *menu)
- {
- 	GtkWidget *item = NULL;
- 
- 	item = gtk_image_menu_item_new_with_label(_("Information"));
- 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
- 			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
- 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
- 	g_signal_connect(G_OBJECT(item), "activate", 
- 			G_CALLBACK(info_browser_activate), NULL);
+void info_browser_activate()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			glade_xml_get_widget (pl3_xml, "cat_tree"));
 
- 	return 1;
- }
+	/**
+	 * Fix this to be nnot static
+	 */	
+	GtkTreePath *path = gtk_tree_path_new_from_string("4"); 
+	if(path)
+	{
+		gtk_tree_selection_select_path(selec, path);
+	}
+}
+
+
+int info_add_go_menu(GtkWidget *menu)
+{
+	GtkWidget *item = NULL;
+
+	item = gtk_image_menu_item_new_with_label(_("Information"));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(info_browser_activate), NULL);
+
+	return 1;
+}
 
 int info_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
