@@ -1706,7 +1706,9 @@ void pl3_update_go_menu()
 		gtk_widget_show_all(menu);
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")),
 				menu);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_go"), TRUE);
 	} else {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_go"), FALSE);
 		gtk_widget_destroy(menu);
 	}
 }

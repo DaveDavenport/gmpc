@@ -389,6 +389,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 
 void add_default_tags(GtkTextBuffer *buffer)
 {
+	PangoTabArray *pta = pango_tab_array_new_with_positions(2, TRUE,PANGO_TAB_LEFT, 40,PANGO_TAB_LEFT, 40); 
 	GtkTextTag *tag;
 	tag = gtk_text_buffer_create_tag(buffer, "bold", 
 			"weight", PANGO_WEIGHT_BOLD,
@@ -418,6 +419,8 @@ void add_default_tags(GtkTextBuffer *buffer)
 	tag = gtk_text_buffer_create_tag(buffer, "item", 
 			"size-points", (gdouble)10.0,			
 			"left-margin", 6,
+			"tabs", pta,
+			"tabs-set", TRUE,
 			NULL);               
 	tag = gtk_text_buffer_create_tag(buffer, "item-value", 
 			"size-points", (gdouble)10.0,			
@@ -431,6 +434,7 @@ void add_default_tags(GtkTextBuffer *buffer)
 			NULL);              
 
 	tag= gtk_text_buffer_create_tag(buffer, "link", "underline", TRUE,NULL);
+
 }
 
 
@@ -531,7 +535,7 @@ void info_show_song(mpd_Song *song)
 		tag_list = g_list_append(tag_list, tag);
 		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", song->album), g_free);
 
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->album, -1,"item-value","link","album-url",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
@@ -543,38 +547,54 @@ void info_show_song(mpd_Song *song)
 		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("genre:"), g_free);
 
 
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->genre, -1,"item-value","genre-url","link",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->date)
 	{
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Date: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Date:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->date, -1,"item-value",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->composer)
 	{
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Composer: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Composer:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->composer, -1,"item-value",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->track)
 	{
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Track: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Track:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->track, -1,"item-value",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->time)
 	{
 		string = g_strdup_printf("%02i:%02i", (song->time)/60, (song->time)%60);
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Length: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Length:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"item-value",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 		g_free(string);
 	}
+	if(song->file)
+	{
+		string = g_path_get_basename(song->file);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Filename:\t", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"item-value",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
+		g_free(string);
+		/**
+		 * Directory name
+		 */
+		string = g_path_get_dirname(song->file);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Dirname:\t", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, string, -1,"item-value",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);         		
+		g_free(string);                                                                              		
+	}	
 
-	if(song->artist && song->album)
+	if(song->artist && song->title)
 	{
 	
 		mark = gtk_text_buffer_create_mark(buffer, "artist-txt",&iter, TRUE);
