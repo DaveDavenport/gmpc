@@ -335,7 +335,7 @@ void info_cover_lyric_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 		gchar *content = NULL;
 		if(g_file_get_contents(path, &content, &size, NULL))
 		{
-			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Lyric:\n", -1,"item","bold",NULL);
+			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Lyrics:\n", -1,"item","bold",NULL);
 			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, content, size, "item", NULL);
 			gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n\n", -1,"item-value",NULL);
 			g_free(content);
