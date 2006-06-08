@@ -389,7 +389,7 @@ void info_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 
 void add_default_tags(GtkTextBuffer *buffer)
 {
-	PangoTabArray *pta = pango_tab_array_new_with_positions(2, TRUE,PANGO_TAB_LEFT, 40,PANGO_TAB_LEFT, 40); 
+	PangoTabArray *pta = pango_tab_array_new_with_positions(1, TRUE,PANGO_TAB_LEFT, 80); 
 	GtkTextTag *tag;
 	tag = gtk_text_buffer_create_tag(buffer, "bold", 
 			"weight", PANGO_WEIGHT_BOLD,
