@@ -8,7 +8,10 @@
 gmpcPlugin **plugins = NULL;
 int num_plugins = 0;
 
-
+gmpcPlugin * plugin_get_from_id(int id)
+{
+	return plugins[plugin_get_pos(id)];
+}
 
 
 int plugin_get_pos(int id)

@@ -126,6 +126,8 @@ typedef struct {
 	
 } gmpcPlugin;
 
+/** plugin functions */
+gmpcPlugin * plugin_get_from_id(int id);
 
 /* Playlist 3 helper functions */
 gboolean playlist3_get_active();
