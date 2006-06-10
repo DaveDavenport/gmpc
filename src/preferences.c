@@ -244,39 +244,59 @@ void about_pref_construct(GtkWidget *container)
 void plugin_stats_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	plugin_stat_xml = glade_xml_new(path, "plugin_stat_tb",NULL);
+	plugin_stat_xml = glade_xml_new(path, "plugin_stats_vbox",NULL);
 	g_free(path);
 	if(plugin_stat_xml)
 	{
-		int plug_brow = 0, plug_misc =0,i=0;
-		int cover_prov = 0;
-		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
+		GtkWidget *tree = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_tree");
+		GtkListStore *store = NULL;
+		GtkTreeIter iter;
+		GtkCellRenderer *renderer = NULL;
+		int i=0;
+		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_vbox");
+
+
+		/**
+		 * new 
+		 */
+		store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store));
+		
+		renderer = gtk_cell_renderer_text_new();
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Name"), renderer, "text", 0,NULL);
+		renderer = gtk_cell_renderer_text_new();
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Function"), renderer, "text", 1,NULL);
 		for(i=0;i<num_plugins;i++)
 		{
 			if(plugins[i]->id&PLUGIN_ID_MARK)
 			{
-				if(plugins[i]->plugin_type == GMPC_PLUGIN_PL_BROWSER) plug_brow++;
-				else if (plugins[i]->plugin_type == GMPC_PLUGIN_NO_GUI) plug_misc++;
-				else if (plugins[i]->plugin_type == GMPC_PLUGIN_META_DATA)cover_prov++; 
+				gtk_list_store_append(store, &iter);
+				gtk_list_store_set(store, &iter, 0, plugins[i]->name, -1);
+				switch(plugins[i]->plugin_type)
+				{
+					case GMPC_PLUGIN_DUMMY:
+						gtk_list_store_set(store, &iter, 1, _("Dummy"),-1);
+						break;
+					case GMPC_PLUGIN_PL_BROWSER:
+						gtk_list_store_set(store, &iter, 1, _("Browser Extention"),-1);
+						break;
+					case GMPC_PLUGIN_META_DATA:
+						gtk_list_store_set(store, &iter, 1, _("Metadata Provider"),-1);
+						break;
+
+
+					case GMPC_PLUGIN_NO_GUI:
+						gtk_list_store_set(store, &iter, 1, _("Misc."),-1);
+						break;                                                         					
+
+					default:
+						gtk_list_store_set(store, &iter, 1, _("Unkown"),-1);
+						break;
+
+				}
 			}
+
 		}
-		path = g_strdup_printf("%i", plug_brow+plug_misc+cover_prov);
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_plug_label")),path);
-		g_free(path);
-
-		path = g_strdup_printf("%i", plug_brow);
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_brow_label")),path);
-		g_free(path);
-
-		path = g_strdup_printf("%i", plug_misc);
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "num_misc_label")),path);
-		g_free(path);
-
-		path = g_strdup_printf("%i", cover_prov);
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(plugin_stat_xml, "cover_prov_label")),path);
-		g_free(path);
-
-		
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 	}
 
@@ -285,8 +305,10 @@ void plugin_stats_destroy(GtkWidget *container)
 {
 	if(plugin_stat_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stat_tb");
+		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_vbox");
+		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(plugin_stat_xml, "plugin_stats_tree")));
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		if(model)g_object_unref(model);
 		g_object_unref(plugin_stat_xml);
 		plugin_stat_xml = NULL;
 	}
