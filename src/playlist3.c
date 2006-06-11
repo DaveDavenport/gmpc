@@ -1158,6 +1158,7 @@ static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDat
 static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
 {
 	mpd_Song *current = mpd_playlist_get_current_song(connection);
+	debug_printf(DEBUG_INFO,"Called with state: %i and with path: %s", ret, path);
 	if( current  == NULL || pl3_xml == NULL) return;
 	/**
 	 * FIXME: Is this check needed? 
