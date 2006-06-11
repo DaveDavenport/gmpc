@@ -12,7 +12,7 @@
 GladeXML *tray_pref_xml = NULL;
 #ifdef ENABLE_TRAYICON
 #include "eggtrayicon.h"
-
+#endif
 #define BORDER_WIDTH 6
 void destroy_tray_icon();
 void tray_icon_song_change();
@@ -30,8 +30,11 @@ void tray_init();
 
 
 extern GladeXML *pl3_xml;
-
+#ifdef ENABLE_TRAYICON
 EggTrayIcon *tray_icon = NULL;
+#else
+GtkWidget *tray_icon = NULL;
+#endif
 GladeXML *tray_xml = NULL;
 GtkWidget *logo = NULL;
 GtkTooltips *tps = NULL;
@@ -44,7 +47,15 @@ guint tray_timeout = -1;
 guint popup_timeout = -1;
 
 GdkPixbuf *cover_pb = NULL;
+void tray_icon_pref_construct(GtkWidget *container);
+void tray_icon_pref_destroy(GtkWidget *container);
 
+/* plugin structure */
+
+gmpcPrefPlugin tray_gpp = {
+	tray_icon_pref_construct,
+	tray_icon_pref_destroy
+};
 
 gmpcPlugin tray_icon_plug = {
 	"Notification",
@@ -56,7 +67,8 @@ gmpcPlugin tray_icon_plug = {
 	NULL,
 	&TrayStatusChanged,
 	NULL,
-	NULL,
+	&tray_gpp,	/* preferences */
+	NULL
 };
 
 
@@ -201,6 +213,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		int x=0,y=0;
 		GdkRectangle msize;
 		GtkWidget *tv = (GtkWidget *)tray_icon;
+		
 		GdkScreen *screen;
 		int monitor = 0;
 		if(tv != NULL)
@@ -375,6 +388,7 @@ void tray_icon_song_change()
 					(GSourceFunc)(tray_leave_cb),
 					NULL);
 		}
+
 		if(tip == NULL)
 		{
 			tray_motion_cb((GtkWidget*)tray_icon,NULL,GINT_TO_POINTER(0));
@@ -439,18 +453,17 @@ void tray_icon_state_change()
 		}
 	}
 	else if(state == MPD_PLAYER_PLAY){
+
 		if(tray_icon)	gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-play", -1);
 		tray_icon_song_change();
 	}
 	else if(state == MPD_PLAYER_PAUSE){
 		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-pause", -1);
 	}
-
 	if(tray_icon)
 	{
 		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 	}
-
 }
 
 /* if the item was destroyed and the user still wants an icon recreate it */
@@ -496,6 +509,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
+
 		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 		if(pl3_hidden)
 		{
@@ -595,6 +609,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 3, event->time);
 	}
 	return FALSE;
+
 }
 
 int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
@@ -627,6 +642,7 @@ int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 
 int create_tray_icon()
 {
+#ifdef ENABLE_TRAYICON		
 	GtkWidget *event;
 	if(tray_icon != NULL)
 	{
@@ -654,7 +670,7 @@ int create_tray_icon()
 	/* make sure the icon gets updated propperly */
 	tray_icon_connection_changed(connection, mpd_check_connected(connection));
 	tray_icon_state_change();
-
+#endif
 	return FALSE;
 }
 void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data)
@@ -696,42 +712,13 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 		tray_icon_song_change();
 	}
 }
-#endif
-
-void tray_icon_pref_construct(GtkWidget *container);
-void tray_icon_pref_destroy(GtkWidget *container);
-
-/* plugin structure */
-
-gmpcPrefPlugin tray_gpp = {
-	tray_icon_pref_construct,
-	tray_icon_pref_destroy
-};
-
-
-
-
-gmpcPlugin notify_icon_plug = {
-	"Notification",
-	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL,		/* path */
-	NULL,	 	/*initialize function */
-	NULL,		/* browser */
-	NULL,		 /*status chagned */
-	NULL,		/* connection changed */
-	&tray_gpp,	/* preferences */
-	NULL 		/* metadata */
-};
-
+//#endif
 
 /* PREFERENCES */
 
 
 void tray_enable_toggled(GtkToggleButton *but)
 {
-#ifdef	ENABLE_TRAYICON
 	debug_printf(DEBUG_INFO,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
 	cfg_set_single_value_as_int(config, "tray-icon", "enable", (int)gtk_toggle_button_get_active(but));
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
@@ -742,7 +729,6 @@ void tray_enable_toggled(GtkToggleButton *but)
 	{
 		destroy_tray_icon();
 	}
-#endif
 }
 
 /* this sets all the settings in the notification area preferences correct */

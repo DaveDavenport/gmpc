@@ -37,7 +37,6 @@ extern gmpcPlugin **plugins;
 /* num of plugins */
 extern int num_plugins;
 
-extern gmpcPlugin notify_icon_plug; 
 /* the plugins :D */
 
 
@@ -52,9 +51,7 @@ extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin info_plugin;
 
-#ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon_plug;
-#endif
 
 /** main.c **/
 extern GladeXML *xml_main_window;

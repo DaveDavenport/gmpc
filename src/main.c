@@ -422,11 +422,8 @@ int main (int argc, char **argv)
 #ifdef ENABLE_MMKEYS
 	plugin_add(&mmkeys_plug,0);
 #endif
-#ifdef ENABLE_TRAYICON
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
-#endif
-	plugin_add(&notify_icon_plug, 0);
 
 	/** Setup cover art manager, removed for now. it needs a rewrite
 	 */
