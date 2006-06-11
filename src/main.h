@@ -37,7 +37,7 @@ extern gmpcPlugin **plugins;
 /* num of plugins */
 extern int num_plugins;
 
-
+extern gmpcPlugin notify_icon_plug; 
 /* the plugins :D */
 
 

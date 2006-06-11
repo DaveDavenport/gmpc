@@ -1,14 +1,17 @@
 #include <config.h>
-#ifdef ENABLE_TRAYICON
+
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
 #include "playlist3.h"
-#include "eggtrayicon.h"
+
 #include "main.h"
 #include "misc.h"
 #include "config1.h"
 
+GladeXML *tray_pref_xml = NULL;
+#ifdef ENABLE_TRAYICON
+#include "eggtrayicon.h"
 
 #define BORDER_WIDTH 6
 void destroy_tray_icon();
@@ -17,13 +20,13 @@ void tray_icon_state_change();
 void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data);
 void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
 void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
-void tray_icon_pref_construct(GtkWidget *container);
-void tray_icon_pref_destroy(GtkWidget *container);
+
+
 /* do tray */
 int create_tray_icon();
 void tray_init();
 
-GladeXML *tray_pref_xml = NULL;
+
 
 
 extern GladeXML *pl3_xml;
@@ -43,13 +46,6 @@ guint popup_timeout = -1;
 GdkPixbuf *cover_pb = NULL;
 
 
-/* plugin structure */
-
-gmpcPrefPlugin tray_gpp = {
-	tray_icon_pref_construct,
-	tray_icon_pref_destroy
-};
-
 gmpcPlugin tray_icon_plug = {
 	"Notification",
 	{1,1,1},
@@ -60,7 +56,7 @@ gmpcPlugin tray_icon_plug = {
 	NULL,
 	&TrayStatusChanged,
 	NULL,
-	&tray_gpp
+	NULL,
 };
 
 
@@ -700,11 +696,42 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 		tray_icon_song_change();
 	}
 }
+#endif
+
+void tray_icon_pref_construct(GtkWidget *container);
+void tray_icon_pref_destroy(GtkWidget *container);
+
+/* plugin structure */
+
+gmpcPrefPlugin tray_gpp = {
+	tray_icon_pref_construct,
+	tray_icon_pref_destroy
+};
+
+
+
+
+gmpcPlugin notify_icon_plug = {
+	"Notification",
+	{1,1,1},
+	GMPC_INTERNALL,
+	0,
+	NULL,		/* path */
+	NULL,	 	/*initialize function */
+	NULL,		/* browser */
+	NULL,		 /*status chagned */
+	NULL,		/* connection changed */
+	&tray_gpp,	/* preferences */
+	NULL 		/* metadata */
+};
+
+
 /* PREFERENCES */
 
 
 void tray_enable_toggled(GtkToggleButton *but)
 {
+#ifdef	ENABLE_TRAYICON
 	debug_printf(DEBUG_INFO,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
 	cfg_set_single_value_as_int(config, "tray-icon", "enable", (int)gtk_toggle_button_get_active(but));
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
@@ -715,6 +742,7 @@ void tray_enable_toggled(GtkToggleButton *but)
 	{
 		destroy_tray_icon();
 	}
+#endif
 }
 
 /* this sets all the settings in the notification area preferences correct */
@@ -774,7 +802,10 @@ void tray_icon_pref_construct(GtkWidget *container)
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		tray_update_settings();
 		update_popup_settings();
+#ifndef ENABLE_TRAYICON
+		gtk_widget_hide(glade_xml_get_widget(tray_pref_xml, "frame16"));
+#endif				
 		glade_xml_signal_autoconnect(tray_pref_xml);
 	}
 }
-#endif
+
