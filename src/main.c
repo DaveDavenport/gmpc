@@ -662,7 +662,7 @@ void init_stock_icons ()
 	gtk_icon_factory_add (factory, "stock_shuffle", set);
 	g_object_unref (G_OBJECT (pb));
 	/*
-	 * add playerrepeat
+	 * add player-repeat
 	 */
 	path = gmpc_get_full_image_path("player-repeat.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);

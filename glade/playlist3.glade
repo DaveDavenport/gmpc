@@ -1402,10 +1402,9 @@
 		  <signal name="toggled" handler="repeat_pl" last_modification_time="Thu, 11 May 2006 04:37:48 GMT"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image472">
+		    <widget class="GtkImage" id="but_image_repeat">
 		      <property name="visible">True</property>
-		      <property name="icon_size">4</property>
-		      <property name="icon_name">stock_repeat</property>
+		      <property name="icon_name"></property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>
@@ -1431,10 +1430,9 @@
 		  <signal name="toggled" handler="random_pl" last_modification_time="Thu, 11 May 2006 04:37:33 GMT"/>
 
 		  <child>
-		    <widget class="GtkImage" id="image473">
+		    <widget class="GtkImage" id="but_image_random">
 		      <property name="visible">True</property>
-		      <property name="icon_size">4</property>
-		      <property name="icon_name">stock_shuffle</property>
+		      <property name="icon_name"></property>
 		      <property name="xalign">0.5</property>
 		      <property name="yalign">0.5</property>
 		      <property name="xpad">0</property>

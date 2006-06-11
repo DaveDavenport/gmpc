@@ -895,6 +895,8 @@ void create_playlist3 ()
 	}
 
 
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "but_image_random")), "stock_shuffle", GTK_ICON_SIZE_BUTTON);
+	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "but_image_repeat")), "stock_repeat", GTK_ICON_SIZE_BUTTON);
 	/***
 	 * Menu item
 	 * TESTING
