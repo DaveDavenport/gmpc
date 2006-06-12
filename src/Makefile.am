@@ -51,7 +51,8 @@ LIBS = \
 	@sm_LIBS@
 
 LDFLAGS = \
-	@EXTRA_LDFLAGS@
+	@EXTRA_LDFLAGS@\
+	@LDFLAGS@
 
 CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
