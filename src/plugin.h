@@ -98,7 +98,7 @@ typedef struct {
 } gmpcMetaDataPlugin;
 
 /* Unique number */
-#define PLUGIN_API_VERSION 13
+#define PLUGIN_API_VERSION 14
 
 /* sturcture */
 typedef struct {
@@ -119,11 +119,13 @@ typedef struct {
 	ConnectionChangedCallback mpd_connection_changed;
 	/* structure to let the plugin intergrate it's preferences */
 	gmpcPrefPlugin		*pref;
-	/* Dummy  (from deprecated cover art) */
-	void 				*dummy;
 	/** Meta data */
 	gmpcMetaDataPlugin *metadata;
-	
+
+	/** Plugin control functions
+	 */
+	int	 	(*get_enabled)();
+	void	(*set_enabled)(int enable);
 } gmpcPlugin;
 
 /** plugin functions */

@@ -100,7 +100,10 @@ gmpcPlugin playlist_plug = {
 	NULL,
 	&playlist_status_changed,
 	NULL,
-	&playlist_gpp
+	&playlist_gpp,
+	NULL,
+	NULL,
+	NULL
 };
 
 /* Get the type of the selected row..

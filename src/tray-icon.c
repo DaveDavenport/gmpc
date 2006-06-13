@@ -68,6 +68,8 @@ gmpcPlugin tray_icon_plug = {
 	&TrayStatusChanged,
 	NULL,
 	&tray_gpp,	/* preferences */
+	NULL,
+	NULL,
 	NULL
 };
 
@@ -652,12 +654,17 @@ int create_tray_icon()
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
 	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);//gtk_event_box_new();
-	gtk_container_add(GTK_CONTAINER(tray_icon), event);
+
 	gtk_container_add(GTK_CONTAINER(event), logo);
+	gtk_container_add(GTK_CONTAINER(tray_icon), event);
 	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
+	gtk_widget_add_events (GTK_WIDGET (tray_icon),
+			       GDK_BUTTON_PRESS_MASK);
+	
+	
 	g_signal_connect(G_OBJECT(event), "enter-notify-event", 
 			G_CALLBACK(tray_motion_cb), GINT_TO_POINTER(1));
 	g_signal_connect(G_OBJECT(event), "leave-notify-event",

@@ -89,8 +89,9 @@ gmpcPlugin file_browser_plug = {
 	pl3_file_browser_status_changed,			/* status changed */
 	pl3_file_browser_connection_changed, 		/* connection changed */
 	NULL,		/* Preferences */
-	NULL,			/*cover art */
-	NULL			/* MetaData */
+	NULL,			/* MetaData */
+	NULL,
+	NULL
 };
 
 

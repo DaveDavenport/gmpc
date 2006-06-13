@@ -436,7 +436,10 @@ gmpcPlugin mmkeys_plug = {
 	NULL,
 	NULL,
 	NULL,
-	&mmkeys_gpp
+	&mmkeys_gpp,
+	NULL,
+	NULL,
+	NULL
 };
 
 static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_string, gpointer data)

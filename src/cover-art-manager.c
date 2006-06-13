@@ -36,7 +36,10 @@ gmpcPlugin cover_art_plug = {
 	NULL,
 	NULL,	
 	NULL,	
-	&cover_art_gpp
+	&cover_art_gpp,
+	NULL,
+	NULL,
+	NULL
 };
 
 int cover_art_manager_key_release(GtkWidget *tree, GdkEventKey *event, GtkWidget *tree_search)

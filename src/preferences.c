@@ -168,7 +168,7 @@ void create_preferences_window()
 		}
 	}
 	/* plugins */
-	if(plugs)
+/*	if(plugs) */
 	{
 		GtkTreeIter iter;
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
@@ -240,7 +240,26 @@ void about_pref_construct(GtkWidget *container)
 	}
 }
 */
+void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkListStore *store)
+{
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
+	{
+		int toggled;
+		gmpcPlugin *plug = NULL;
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &toggled, 3, &plug, -1);
+		printf("plug: %s\n", plug->name);
+		if(plug->set_enabled != NULL)
+		{
+			printf("setting plug on: %s\n", plug->name);
+			plug->set_enabled(!toggled);
+			gtk_list_store_set(store, &iter, 0,plug->get_enabled(),-1);
+		}
 
+
+	}
+
+}
 void plugin_stats_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
@@ -259,38 +278,45 @@ void plugin_stats_construct(GtkWidget *container)
 		/**
 		 * new 
 		 */
-		store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+		store = gtk_list_store_new(4,G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING,G_TYPE_POINTER);
 		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store));
-		
+		renderer = gtk_cell_renderer_toggle_new();
+		g_object_set_data(G_OBJECT(renderer), "editable", GINT_TO_POINTER(1));
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Enabled"), renderer, "active", 0,NULL);	
+		g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(pref_plugin_enabled), store);
 		renderer = gtk_cell_renderer_text_new();
-		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Name"), renderer, "text", 0,NULL);
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Name"), renderer, "text", 1,NULL);
 		renderer = gtk_cell_renderer_text_new();
-		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Function"), renderer, "text", 1,NULL);
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Function"), renderer, "text", 2,NULL);
 		for(i=0;i<num_plugins;i++)
 		{
 			if(plugins[i]->id&PLUGIN_ID_MARK)
 			{
 				gtk_list_store_append(store, &iter);
-				gtk_list_store_set(store, &iter, 0, plugins[i]->name, -1);
+				gtk_list_store_set(store, &iter, 0,TRUE,1, plugins[i]->name,3,(plugins[i]), -1);
+				if(plugins[i]->get_enabled != NULL)
+				{
+					gtk_list_store_set(store, &iter, 0,plugins[i]->get_enabled(),-1);
+				}
 				switch(plugins[i]->plugin_type)
 				{
 					case GMPC_PLUGIN_DUMMY:
-						gtk_list_store_set(store, &iter, 1, _("Dummy"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Dummy"),-1);
 						break;
 					case GMPC_PLUGIN_PL_BROWSER:
-						gtk_list_store_set(store, &iter, 1, _("Browser Extention"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Browser Extention"),-1);
 						break;
 					case GMPC_PLUGIN_META_DATA:
-						gtk_list_store_set(store, &iter, 1, _("Metadata Provider"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Metadata Provider"),-1);
 						break;
 
 
 					case GMPC_PLUGIN_NO_GUI:
-						gtk_list_store_set(store, &iter, 1, _("Misc."),-1);
+						gtk_list_store_set(store, &iter, 2, _("Misc."),-1);
 						break;                                                         					
 
 					default:
-						gtk_list_store_set(store, &iter, 1, _("Unkown"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Unkown"),-1);
 						break;
 
 				}

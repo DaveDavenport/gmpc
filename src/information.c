@@ -88,6 +88,8 @@ gmpcPlugin info_plugin = {
 	info_status_changed,
 	NULL,
 	&info_gpp,
+	NULL,
+	NULL,
 	NULL
 };
 

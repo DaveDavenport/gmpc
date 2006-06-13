@@ -95,8 +95,9 @@ gmpcPlugin find_browser_plug = {
 	NULL,			/* status changed */
 	pl3_find_browser_connection_changed, 		/* connection changed */
 	NULL,		/* Preferences */
-	NULL,			/*cover art */
-	NULL			/* MetaData */
+	NULL,			/* MetaData */
+	NULL,
+	NULL
 };
 
 

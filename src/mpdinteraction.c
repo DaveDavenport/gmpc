@@ -24,16 +24,19 @@ void ServerStatusChangedCallback (MpdObj *mi, ChangedStatusType what, void *user
 
 
 gmpcPlugin server_plug = {
-	"Server Settings",
-	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL,
-	NULL,
-	NULL,
-	&ServerStatusChangedCallback,
-	&ServerConnectionChangedCallback,
-	&server_gpp
+	"Server Settings", 	/** name */
+	{1,1,1},			/** Version */
+	GMPC_INTERNALL,		/** Plugin Type */
+	0,					/** Internal Id */
+	NULL,				/** path to plugin */
+	NULL,				/** init */
+	NULL,				/** browser ext */
+	&ServerStatusChangedCallback,	/** status changed */
+	&ServerConnectionChangedCallback,	/** connection changed */
+	&server_gpp,			/** preferences */
+	NULL,				/** Metadata */
+	NULL,				/** get enabled */
+	NULL				/** set enabled */
 };
 enum
 {
@@ -62,7 +65,10 @@ gmpcPlugin connection_plug = {
 	NULL,
 	NULL,
 	NULL,
-	&connection_gpp
+	&connection_gpp,
+	NULL,
+	NULL,
+	NULL
 };
 
 
@@ -209,19 +215,19 @@ int seek_ns(int n)
 	return seek_ps(-n);
 }
 
-int song_fastforward()
+void song_fastforward()
 {
 	seek_ps(1);
 }
-int song_fastbackward()
+void song_fastbackward()
 {
 	seek_ps(-1);
 }
-int repeat_toggle()
+void repeat_toggle()
 {
 	mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 }
-int random_toggle()
+void random_toggle()
 {
 	mpd_player_set_random(connection, !mpd_player_get_random(connection));
 }

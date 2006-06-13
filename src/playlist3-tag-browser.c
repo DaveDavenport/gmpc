@@ -61,8 +61,9 @@ gmpcPlugin tag_plug = {
 	NULL,			/* status changed */
 	&tag_connection,	/* connection */
 	&tag_gpp,		/* Preferences */
-	NULL,			/*cover art */
-	NULL			/* MetaData */
+	NULL,			/* MetaData */
+	NULL,
+	NULL
 };
 
 void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);

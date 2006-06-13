@@ -94,8 +94,9 @@ gmpcPlugin artist_browser_plug = {
 	NULL,			/* status changed */
 	pl3_artist_browser_connection_changed, 		/* connection changed */
 	NULL,		/* Preferences */
-	NULL,			/*cover art */
-	NULL			/* MetaData */
+	NULL,			/* MetaData */
+	NULL,			/* Get enable */
+	NULL			/* Set Enable */
 };
 
 /* internal */

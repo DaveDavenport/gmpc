@@ -85,8 +85,9 @@ gmpcPlugin current_playlist_plug = {
 	pl3_current_playlist_status_changed,			/* status changed */
 	NULL, 		/* connection changed */
 	NULL,		/* Preferences */
-	NULL,			/*cover art */
-	NULL			/* MetaData */
+	NULL,			/* MetaData */
+	NULL,
+	NULL
 };
 
 
@@ -792,7 +793,7 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	else if((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z))
 	{
 		treesearch_start(tree_search);
-		gtk_entry_set_text(TREESEARCH(tree_search)->entry, (const gchar *)gdk_keyval_name(event->keyval));
+		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(tree_search)->entry), (const gchar *)gdk_keyval_name(event->keyval));
 		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(tree_search)->entry),1);
 		return TRUE;
 	}
