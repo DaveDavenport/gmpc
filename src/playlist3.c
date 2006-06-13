@@ -54,7 +54,7 @@ int pl3_zoom = PLAYLIST_NO_ZOOM;
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
 static void playlist_player_update_image(MpdObj *mi);
-void pl3_option_menu_activate(GtkMenuItem *item);
+void pl3_option_menu_activate();
 
 static int old_type = -1;
 
@@ -410,7 +410,7 @@ void pl3_cat_sel_changed()
 	}
 
 
-	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	pl3_option_menu_activate();
 }
 
 
@@ -429,7 +429,7 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 }
 
-void pl3_option_menu_activate(GtkMenuItem *item)
+void pl3_option_menu_activate()
 {
 	GtkWidget *tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	int i;
@@ -458,7 +458,7 @@ void pl3_option_menu_activate(GtkMenuItem *item)
 	if(menu_items)
 	{
 		gtk_widget_show_all(menu);
-		gtk_menu_item_set_submenu(item, menu);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
 	}
 	else{
 		gtk_widget_destroy(menu);

@@ -122,7 +122,6 @@ static void info_show_current_album() {
 
 void info_fetching_changed()
 {
-	printf("%i\n",info_fetching);
 	if(info_fetching)
 	{
 		gtk_widget_show(info_pimage);

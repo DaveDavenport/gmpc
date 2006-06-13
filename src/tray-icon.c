@@ -655,9 +655,12 @@ int create_tray_icon()
 	event = gtk_event_box_new();
 	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);//gtk_event_box_new();
 
+
+
+	gtk_widget_show(event);
+	gtk_widget_show(logo);
 	gtk_container_add(GTK_CONTAINER(event), logo);
 	gtk_container_add(GTK_CONTAINER(tray_icon), event);
-	gtk_widget_show_all(GTK_WIDGET(tray_icon));
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
@@ -671,7 +674,7 @@ int create_tray_icon()
 			G_CALLBACK(tray_leave_cb), NULL);
 	g_signal_connect(G_OBJECT(event), "scroll-event", G_CALLBACK(scroll_event), NULL);
 	/* show all */
-	gtk_widget_show_all(GTK_WIDGET(tray_icon));
+	gtk_widget_show(GTK_WIDGET(tray_icon));
 	if(tps == NULL)	tps = gtk_tooltips_new();
 
 	/* make sure the icon gets updated propperly */
