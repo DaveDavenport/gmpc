@@ -413,7 +413,28 @@ void pl3_current_playlist_browser_init()
 	g_object_ref(G_OBJECT(pl3_cp_vbox));
 }
 
-
+void pl3_current_playlist_browser_select_current_song()
+{
+	if(pl3_cp_tree == NULL) return;
+	/* scroll to the playing song */
+	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
+			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
+	{
+		gchar *str = g_strdup_printf("%i", mpd_player_get_current_song_pos(connection));
+		GtkTreePath *path = gtk_tree_path_new_from_string(str);
+		if(path != NULL)
+		{
+/*	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
+					path,
+					NULL,
+					TRUE,0.5,0);
+*/
+			gtk_tree_view_set_cursor(GTK_TREE_VIEW(pl3_cp_tree), path, NULL, FALSE);
+		}
+		gtk_tree_path_free(path);
+		g_free(str);
+	}      
+}
 
 void pl3_current_playlist_browser_scroll_to_current_song()
 {
@@ -783,6 +804,7 @@ int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventK
 	else if (event->keyval == GDK_space)
 	{
 		pl3_current_playlist_browser_scroll_to_current_song();
+		pl3_current_playlist_browser_select_current_song();
 		return TRUE;			
 	}
 	else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)

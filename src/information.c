@@ -651,7 +651,7 @@ void show_album_info(mpd_Song *song)
 		tag_list = g_list_append(tag_list, tag);
 		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup_printf("album:%s", song->album), g_free);
 
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Album:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->album, -1,"item-value","link","album-url",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
@@ -663,13 +663,13 @@ void show_album_info(mpd_Song *song)
 		g_object_set_data_full(G_OBJECT(tag), "url", g_strdup("genre:"), g_free);
 
 
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Genre:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->genre, -1,"item-value","genre-url","link",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
 	if(song->date)
 	{
-		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Date: ", -1,"item","bold",NULL);
+		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "Date:\t", -1,"item","bold",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, song->date, -1,"item-value",NULL);
 		gtk_text_buffer_insert_with_tags_by_name(buffer, &iter, "\n", -1,"item-value",NULL);
 	}
