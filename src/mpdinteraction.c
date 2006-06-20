@@ -89,11 +89,11 @@ int update_mpd_status()
 
 void disconnect_callback(MpdObj *mi)
 {
-
 	/* disconnect playlist */
 	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
 	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
 	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
+
 }
 
 /* the functiont that connects to mpd */
@@ -125,6 +125,8 @@ int connect_to_mpd()
 	/* Set the title */
 	update_mpd_status();
 	mpd_stats_update(connection);
+	/* set that user wants to connect */
+	gmpc_connected = TRUE;
 
 	return FALSE;
 }
@@ -563,6 +565,8 @@ void preferences_window_connect(GtkWidget *but)
 
 void preferences_window_disconnect(GtkWidget *but)
 {
+	/* set that user doesn't want to connect */
+	gmpc_connected = FALSE;
 	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
 	mpd_disconnect(connection);
 }

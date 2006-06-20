@@ -21,7 +21,7 @@ GladeXML *plugin_stat_xml = NULL;
 /* End About */
 GtkListStore *plugin_store = NULL;
 GladeXML *xml_preferences_window = NULL;
-gboolean running = 0, connected = 0;
+gboolean running = 0;
 
 void update_auth_settings();
 void preferences_window_connect(GtkWidget *but);

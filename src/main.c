@@ -61,6 +61,10 @@
 struct timeval tv_old = {0,0};
 #endif
 
+int gmpc_connected = FALSE;
+int gmpc_failed_tries = 0;
+
+
 /**
  * Define some local functions
  */
@@ -475,8 +479,13 @@ int main (int argc, char **argv)
 	 */	
 	debug_printf(DEBUG_INFO, "Create main window\n");
 	create_playlist3();
-	
-
+	/** 
+	 * If autoconnect is enabled, tell gmpc that it's in state it should connect
+	 */	
+	if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
+	{
+		gmpc_connected = TRUE;
+	}
 	/*
 	 * create timeouts 
 	 * get the status every 1/2 second should be enough, but it's configurable.
@@ -589,12 +598,20 @@ static int autoconnect_callback ()
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
 		/* update the popup  */
-		if (cfg_get_single_value_as_int_with_default(config,
+		/*
+		 * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
+		 */
+		if (gmpc_failed_tries <  3 && gmpc_connected && cfg_get_single_value_as_int_with_default(config,
 					"connection",
 					"autoconnect",
 					FALSE))
 		{
+			/** updated failed time, i9f it doesn't fail it will be set to 0
+			 * later 
+			 */
+			gmpc_failed_tries++;
 			connect_to_mpd ();
+			
 		}
 	}
 	/**
@@ -817,7 +834,7 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 	xml_error_window = NULL;
 	if(response == GTK_RESPONSE_OK)
 	{
-		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
+//		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
 		connect_to_mpd();
 	}
 }
@@ -862,7 +879,7 @@ void password_dialog(int failed)
 			{
 				show_error_message(_("GMPC has insuffient permissions on the mpd server."),
 						FALSE);
-				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
+//				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
 				mpd_disconnect(connection);
 			}
 			break;
@@ -886,7 +903,7 @@ void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 	{
 		/* no response? then we just ignore it when autoconnecting. */
 		if(error_id == 15 && autoconnect) return;
-		cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
+		//cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
 		if (xml_error_window == NULL)
 		{
 			gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
@@ -942,6 +959,7 @@ void connect_callback(MpdObj *mi)
 		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
 				GINT_TO_POINTER(autocon));
 	}
+
 }
 
 /**
@@ -955,10 +973,14 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 	 */
 	if(connect)
 	{
+		/* set failed to 0 */
+		gmpc_failed_tries = 0;		
 		if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 		{
 			mpd_send_password(connection);
 		}
+
+
 	}	
 
 	/**

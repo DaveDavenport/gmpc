@@ -28,6 +28,8 @@
 #include "playlist-list.h"
 #include "mpdinteraction.h"
 
+extern int gmpc_connected;
+
 extern GtkTreeModel *playlist;
 
 /* the config object */
