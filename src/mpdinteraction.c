@@ -571,12 +571,6 @@ void preferences_window_disconnect(GtkWidget *but)
 	mpd_disconnect(connection);
 }
 
-
-
-
-
-
-
 /* this sets all the settings in the authentification area preferences correct */
 void update_auth_settings()
 {

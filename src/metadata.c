@@ -113,7 +113,7 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 	{
 		if(song->artist && song->title)
 		{
-			char *temp = g_strdup_printf("biography:%s", song->title);                   		
+			char *temp = g_strdup_printf("lyrics:%s", song->title);                   		
 			if(result == META_DATA_AVAILABLE)                                                   		
 			{
 				cfg_set_single_value_as_string(cover_index, song->artist, temp,path);
@@ -279,7 +279,39 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 		}
 
 	}
-
+	if(type == META_SONG_TXT)
+	{
+		gchar *temp = NULL;
+		if(!song->artist || !song->title)
+		{
+			return META_DATA_UNAVAILABLE;	
+		}
+		temp = g_strdup_printf("lyrics:%s", song->title);
+		*path = cfg_get_single_value_as_string(cover_index,song->artist,  temp);
+		g_free(temp);
+		if(*path)
+		{
+			/* if path length is NULL, then data unavailible */
+			if(strlen(*path) == 0)
+			{
+				g_free(*path);                                                  		
+				*path = NULL;
+				return META_DATA_UNAVAILABLE;	
+			}
+			/* return that data is availible */
+			if(!g_file_test(*path, G_FILE_TEST_EXISTS))
+			{
+				temp = g_strdup_printf("lyrics:%s",song->title);
+				cfg_del_single_value(cover_index, song->artist, temp);
+				g_free(temp);
+				g_free(*path);
+				*path = NULL;
+				return META_DATA_FETCHING;	
+			}
+			/* return that data is availible */
+			return META_DATA_AVAILABLE;
+		}	
+	}
 	return META_DATA_FETCHING;	
 }
 

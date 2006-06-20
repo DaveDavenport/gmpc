@@ -1191,36 +1191,6 @@ void info_add(GtkWidget *cat_tree)
 		tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
 		gtk_tree_path_free(path);
 	}
-
-	/**
-	 * Window with information about the song.
-	 *
-	 gtk_tree_store_append(pl3_tree, &child,&iter);
-	 gtk_tree_store_set(pl3_tree, &child,
-	 PL3_CAT_TYPE, info_plugin.id,
-	 PL3_CAT_TITLE, "Song",
-	 PL3_CAT_INT_ID, "/Song",
-	 PL3_CAT_ICON_ID, "gtk-edit",
-	 PL3_CAT_PROC, TRUE,
-	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
-	 gtk_tree_store_append(pl3_tree, &child,&iter);
-	 gtk_tree_store_set(pl3_tree, &child,
-	 PL3_CAT_TYPE, info_plugin.id,
-	 PL3_CAT_TITLE, "Album",
-	 PL3_CAT_INT_ID, "/Album",
-	 PL3_CAT_ICON_ID, "media-album",
-	 PL3_CAT_PROC, TRUE,
-	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);	
-	 gtk_tree_store_append(pl3_tree, &child,&iter);
-	 gtk_tree_store_set(pl3_tree, &child,
-	 PL3_CAT_TYPE, info_plugin.id,
-	 PL3_CAT_TITLE, "Artist",
-	 PL3_CAT_INT_ID, "/Artist",                  	
-	 PL3_CAT_ICON_ID, "media-artist",
-	 PL3_CAT_PROC, TRUE,
-	 PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);		
-	 */
-
 }
 
 void info_selected(GtkWidget *container)
