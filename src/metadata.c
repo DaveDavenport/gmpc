@@ -340,7 +340,14 @@ void meta_data_retrieve_thread()
 		 * we start processing it, the result may allready been retrieved
 		 * TODO: Make an option to _force_ it to recheck (aka bypass cache 
 		 */
-		data->result = meta_data_get_from_cache(data->song,data->type, &(data->result_path));
+		if(data->type&META_QUERY_NO_CACHE)
+		{
+			data->result = META_DATA_FETCHING;
+		}
+		else
+		{
+			data->result = meta_data_get_from_cache(data->song,data->type&META_QUERY_DATA_TYPES, &(data->result_path));
+		}
 		/**
 		 * Handle cache result.
 		 * If the cache returns it doesn't have anything (that it needs fetching)
@@ -367,7 +374,7 @@ void meta_data_retrieve_thread()
 				/* *
 				 * Get image function is only allowed to return META_DATA_AVAILABLE or META_DATA_UNAVAILABLE
 				 */
-				data->result = meta_plugins[i]->metadata->get_image(data->song, data->type, &path);
+				data->result = meta_plugins[i]->metadata->get_image(data->song, data->type&META_QUERY_DATA_TYPES, &path);
 				data->result_path = path;
 			}
 
@@ -375,7 +382,7 @@ void meta_data_retrieve_thread()
 		/** 
 		 * update cache 
 		 */
-		meta_data_set_cache(data->song, data->type, data->result, data->result_path);
+		meta_data_set_cache(data->song, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
 
 		/**
 		 * Push the result back
@@ -475,7 +482,14 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	/**
 	 * Check cache for result.
 	 */
-	ret = meta_data_get_from_cache(tsong, type, &path);
+	if(type&META_QUERY_NO_CACHE)
+	{
+		ret = META_DATA_FETCHING;
+	}
+	else
+	{
+		ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, &path);
+	}
 
 	/**
 	 * If the data is know. (and doesn't need fectching) 

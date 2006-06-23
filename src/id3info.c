@@ -146,6 +146,7 @@ void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoint
 			{
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
 			}
+			draw_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
 			g_object_unref(pb);
 /*			set_text(songs);	*/
@@ -340,13 +341,26 @@ void set_text (GList * node)
 	{
 		gtk_widget_set_sensitive (glade_xml_get_widget(xml_id3_window, "button_next"), TRUE);
 	}
-	gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
+	//gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
 
 	if(song){
 		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
 		meta_data_get_path_callback(song, META_ALBUM_ART, id3_cover_art_fetched, image);
+		image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
+		meta_data_get_path_callback(song, META_ARTIST_ART, id3_cover_art_fetched, image); 		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void id3_next_song ()
 {
@@ -407,5 +421,142 @@ void call_id3_window (int song)
 			set_text (songs);
 		}
 		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(xml_id3_window, "id3_info_window")));
+	}
+}
+
+
+void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
+{
+	GtkImage *image = data;
+	mpd_Song *current = NULL;
+	if(songs == NULL || song == NULL) return;
+	if(songs->data== NULL) return;
+	current = songs->data;
+	if(current->artist && current->album)
+	{
+		if(!strcmp(current->artist,song->artist) &&
+				!strcmp(current->album, song->album))
+		{
+			GdkPixbuf *pb = NULL;
+			if(ret == META_DATA_AVAILABLE)
+			{
+				pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
+			}
+			else if(ret == META_DATA_FETCHING)
+			{
+				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
+			}
+			else
+			{
+				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
+			}
+			draw_pixbuf_border(pb);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
+			g_object_unref(pb);
+/*			set_text(songs);	*/
+			if(ret != META_DATA_FETCHING)
+			{
+				GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
+
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void id3_info_clear_album_image()
+{
+	GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
+	meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_UNAVAILABLE, NULL);
+	gtk_image_set_from_stock(GTK_IMAGE(image), "media-no-cover", -1);	
+	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
+}
+
+void id3_album_image_file_selector(GtkFileChooser *chooser)
+{
+	printf("called\n");
+	gchar *path = gtk_file_chooser_get_filename(chooser);
+	if(path)
+	{
+		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
+		GdkPixbuf *pb = NULL;
+		pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
+		if(pb)
+		{
+			draw_pixbuf_border(pb);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
+			g_object_unref(pb);
+			meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_AVAILABLE, path);
+			GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
+		}
+		g_free(path);
+	}
+}
+void id3_reget_album_art()
+{
+	if(songs)
+	{
+		if(songs->data)
+		{
+			GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
+			meta_data_get_path_callback(songs->data, META_ALBUM_ART|META_QUERY_NO_CACHE, id3_edit_cover_art_fetched, image);
+		}
+	}
+}
+
+void id3_info_clear_artist_image()
+{
+	GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
+	meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_UNAVAILABLE, NULL);
+	gtk_image_set_from_stock(GTK_IMAGE(image), "media-no-cover", -1);	
+	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
+}
+
+void id3_artist_image_file_selector(GtkFileChooser *chooser)
+{
+	printf("called\n");
+	gchar *path = gtk_file_chooser_get_filename(chooser);
+	if(path)
+	{
+		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
+		GdkPixbuf *pb = NULL;
+		pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
+		if(pb)
+		{
+			draw_pixbuf_border(pb);
+			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
+			g_object_unref(pb);
+			meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_AVAILABLE, path);
+			GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
+		}
+		g_free(path);
+	}
+}
+void id3_reget_artist_art()
+{
+	if(songs)
+	{
+		if(songs->data)
+		{
+			GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
+			meta_data_get_path_callback(songs->data, META_ARTIST_ART|META_QUERY_NO_CACHE, id3_edit_cover_art_fetched, image);
+		}
 	}
 }
