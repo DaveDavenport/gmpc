@@ -61,9 +61,15 @@ void draw_pixbuf_border(GdkPixbuf *pb)
 {
 	int x,y,width,height;
 	int pixel;
-	int n_channels = gdk_pixbuf_get_n_channels(pb);
-	int rowstride = gdk_pixbuf_get_rowstride(pb);	
+	int n_channels = 0;
+	int rowstride = 0;
 	guchar *pixels;
+	if(!pb){
+		return;
+	}
+	
+	rowstride = gdk_pixbuf_get_rowstride(pb);	
+	n_channels = gdk_pixbuf_get_n_channels(pb);
 	width = gdk_pixbuf_get_width (pb);
 	height = gdk_pixbuf_get_height (pb);
 	pixels = gdk_pixbuf_get_pixels(pb);
