@@ -142,8 +142,7 @@ void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoint
 			{
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
 			}
-			else
-			{
+			if(!pb){
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
 			}
 			draw_pixbuf_border(pb);
@@ -446,7 +445,7 @@ void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, g
 			{
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
 			}
-			else
+			if(!pb)
 			{
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
 			}
@@ -462,24 +461,6 @@ void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, g
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void id3_info_clear_album_image()
 {

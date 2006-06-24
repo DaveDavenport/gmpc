@@ -1174,9 +1174,12 @@ static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult
 			{
 				GdkPixbuf *pb = NULL;
 				pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
-				if(pb) draw_pixbuf_border(pb);
-				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-				g_object_unref(pb);
+				if(pb)
+				{
+					draw_pixbuf_border(pb);
+					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
+					g_object_unref(pb);
+				}
 			}
 			else if (ret == META_DATA_FETCHING)
 			{
