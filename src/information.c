@@ -1040,11 +1040,11 @@ int info_set_spinner()
 {
 	int row = spin_offset/5;
 	int column = spin_offset%5;
-	GdkPixbuf *frame = gdk_pixbuf_new_subpixbuf(info_spinner_pixbuf, column*36, row*36,36,36);
+	GdkPixbuf *frame = gdk_pixbuf_new_subpixbuf(info_spinner_pixbuf, column*22, row*22,22,22);
 	gtk_image_set_from_pixbuf(GTK_IMAGE(info_pimage), frame);
 	g_object_unref(frame);                                                   	
 	spin_offset++;
-	if(spin_offset >= 35) spin_offset = 0;
+	if(spin_offset >= 30) spin_offset = 10;
 	return TRUE;
 }
 
