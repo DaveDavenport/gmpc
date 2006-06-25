@@ -447,7 +447,8 @@ gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag_dest,
 		int original = ind2[0];
 		int destination = ind[0];
 		if(destination >0 && ind[1] != '\0') destination--;
-		if(destination > original) destination--;
+//		if(destination > original) destination--;
+		if(destination < original) destination++; /* place AFTER */
 		mpd_playlist_move_pos(connection, original,destination);
 	}
 	gtk_tree_path_free(path);
