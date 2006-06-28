@@ -473,7 +473,10 @@ int main (int argc, char **argv)
 	 */
 	init_playlist_store ();
 	
-
+	/**
+	 * Ask user about added/removed provider plugins 
+	 */
+	meta_data_check_plugin_changed();
 	/**
 	 * Create the main window
 	 */	

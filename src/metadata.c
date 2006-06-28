@@ -611,3 +611,42 @@ void meta_data_add_plugin(gmpcPlugin *plug)
 	}while(changed);
 }
 
+void meta_data_check_plugin_changed()
+{
+	conf_mult_obj *class = NULL;
+	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
+	if(old_amount < meta_num_plugins)
+	{
+		GtkDialog *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+				_("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+		gtk_widget_show_all(GTK_WIDGET(dialog));
+		while(gtk_events_pending()) gtk_main_iteration();
+		class = cfg_get_class_list(cover_index);
+		if(class)
+		{
+			while(class){
+				conf_mult_obj *keys = cfg_get_key_list(cover_index,class->key);
+				while(keys)
+				{
+					if(keys->value == NULL || keys->value[0] == '\0' )
+					{
+						cfg_del_single_value(cover_index, class->key, keys->key);
+					}
+					if(keys->next) keys = keys->next;
+					else{
+						cfg_free_multiple(keys);
+						keys = NULL;
+					}
+				}
+				if(class->next) class = class->next;
+				else {
+					cfg_free_multiple(class);
+					class = NULL;
+				}
+			}
+		}
+	}
+	cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
+}
+
