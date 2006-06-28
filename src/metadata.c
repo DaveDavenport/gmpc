@@ -647,6 +647,9 @@ void meta_data_check_plugin_changed()
 			}
 		}
 	}
-	cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
+	if(old_amount != meta_num_plugins)
+	{
+		cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
+	}
 }
 
