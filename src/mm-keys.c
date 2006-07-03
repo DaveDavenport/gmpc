@@ -403,7 +403,7 @@ void grab_key(int key, int keycode)
 	if(keycode >0)
 	{
 		keycodes[key] = keycode;
-				for (i = 0; i < gdk_display_get_n_screens (display); i++) {
+		for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 			screen = gdk_display_get_screen (display, i);
 			if (screen != NULL) {
 				root = gdk_screen_get_root_window (screen);
@@ -444,51 +444,51 @@ gmpcPlugin mmkeys_plug = {
 
 static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_string, gpointer data)
 {
-  GtkTreeModel *model = (GtkTreeModel *)data;
-  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
-  GtkTreeIter iter;
-  int key;
+	GtkTreeModel *model = (GtkTreeModel *)data;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	GtkTreeIter iter;
+	int key;
 
-  gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_model_get_iter (model, &iter, path);
 
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-		  1,0,
-		  2, 0,
-		  3,0,
-		  -1);
-  gtk_tree_path_free (path);
-  gtk_tree_model_get(model, &iter, 1, &key, -1);
-  grab_key(key, 0);
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			2, 0,
+			3,0,
+			-1);
+	gtk_tree_path_free (path);
+	gtk_tree_model_get(model, &iter, 1, &key, -1);
+	grab_key(key, 0);
+	cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
 }
 
-static void
+	static void
 accel_edited_callback (GtkCellRendererText *cell,
-                       const char          *path_string,
-                       guint                keyval,
-                       GdkModifierType      mask,
-                       guint                hardware_keycode,
-                       gpointer             data)
+		const char          *path_string,
+		guint                keyval,
+		GdkModifierType      mask,
+		guint                hardware_keycode,
+		gpointer             data)
 {
-  GtkTreeModel *model = (GtkTreeModel *)data;
-  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
-  GtkTreeIter iter;
-  int key;
+	GtkTreeModel *model = (GtkTreeModel *)data;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+	GtkTreeIter iter;
+	int key;
 
-  gtk_tree_model_get_iter (model, &iter, path);
+	gtk_tree_model_get_iter (model, &iter, path);
 
-  g_print ("%u %d %u\n", keyval, mask, hardware_keycode);
-  if(hardware_keycode == 22)
-  {
-	  hardware_keycode = 0;
-  }	                            
-  
-  gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-		      2, hardware_keycode,
-			  3, keyval,
-		      -1);
-  gtk_tree_path_free (path);
-  gtk_tree_model_get(model, &iter, 1, &key, -1);
-  grab_key(key, hardware_keycode);
+	g_print ("%u %d %u\n", keyval, mask, hardware_keycode);
+	if(hardware_keycode == 22)
+	{
+		hardware_keycode = 0;
+	}	                            
+
+	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+			2, hardware_keycode,
+			3, keyval,
+			-1);
+	gtk_tree_path_free (path);
+	gtk_tree_model_get(model, &iter, 1, &key, -1);
+	grab_key(key, hardware_keycode);
 
 }
 
@@ -534,10 +534,10 @@ void mmkeys_pref_construct(GtkWidget *container)
 		rend =  egg_cell_renderer_keys_new ();
 		column = gtk_tree_view_column_new ();
 
-/*		g_object_set (G_OBJECT (rend), "accel_mode", EGG_CELL_RENDERER_KEYS_MODE_X);*/
+		/*		g_object_set (G_OBJECT (rend), "accel_mode", EGG_CELL_RENDERER_KEYS_MODE_X);*/
 		egg_cell_renderer_keys_set_accel_mode(EGG_CELL_RENDERER_KEYS(rend), EGG_CELL_RENDERER_KEYS_MODE_GTK);
 		g_object_set (G_OBJECT (rend), "editable", TRUE, NULL);
-				
+
 		g_signal_connect (G_OBJECT (rend),
 				"accel_edited",
 				G_CALLBACK (accel_edited_callback),
