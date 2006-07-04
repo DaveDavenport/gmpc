@@ -653,6 +653,7 @@ int create_tray_icon()
 	/* set up tray icon */
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
+	gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), FALSE);
 	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);//gtk_event_box_new();
 
 
