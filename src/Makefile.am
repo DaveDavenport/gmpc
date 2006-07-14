@@ -39,7 +39,7 @@ INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"
 
-LIBS = \
+LIBS= \
 	@glib_LIBS@ @LIBS@ \
 	@libmpd_LIBS@ \
 	@gobject_LIBS@\
@@ -50,11 +50,11 @@ LIBS = \
 	@gthread_LIBS@\
 	@sm_LIBS@
 
-LDFLAGS = \
+AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
 	@LDFLAGS@
 
-CFLAGS = @CFLAGS@\
+AM_CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
 	@libmpd_CFLAGS@ \
 	@gobject_CFLAGS@\
