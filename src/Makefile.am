@@ -25,6 +25,7 @@ gmpc_SOURCES=\
 	metadata.c\
 	eggcellrendererkeys.c\
 	eggaccelerators.c\
+	bacon-message-connection.c\
 	TreeSearchWidget.c
 BUILT_SOURCES= revisiont.h
 
@@ -89,4 +90,5 @@ EXTRA_DIST = 	playlist3.h\
 		metadata.h\
 		eggcellrendererkeys.h\
 		eggaccelerators.h\
+		bacon-message-connection.h\
 		TreeSearchWidget.h

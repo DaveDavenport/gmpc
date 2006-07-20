@@ -53,6 +53,16 @@
 #include "mm-keys.h"
 #endif
 
+/**
+ * blub
+ */
+#ifndef WIN32
+#include "bacon-message-connection.h"
+static BaconMessageConnection *bacon_connection = NULL;
+#endif
+
+
+
 
 #ifdef DEBUG
 /* Testing */
@@ -263,7 +273,22 @@ int main (int argc, char **argv)
 	 */
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
-	
+#ifndef WIN32
+	/**
+	 * bacon here we come 
+	 */
+	bacon_connection = bacon_message_connection_new("gmpc");
+	if(bacon_connection != NULL)
+	{
+		if (!bacon_message_connection_get_is_server (bacon_connection)) 
+		{
+			debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+			exit(0);
+		}
+	}
+
+
+#endif		
 	/**
 	 * Setup session support
 	 */
@@ -541,6 +566,9 @@ int main (int argc, char **argv)
 	/**
 	 *  cleaning up. 
 	 */
+#ifndef WIN32
+	bacon_message_connection_free (bacon_connection);
+#endif	
 	/** 
 	 * Destroy the connection object 
 	 */
