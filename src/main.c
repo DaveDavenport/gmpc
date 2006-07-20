@@ -171,6 +171,12 @@ char *gmpc_get_full_glade_path(char *filename)
 #endif
 	return path;
 }
+#ifndef WIN32
+static void bacon_on_message_received(const char *message, gpointer data)
+{
+	pl3_show_window();
+}
+#endif
 
 /**
  * The program :D
@@ -283,8 +289,16 @@ int main (int argc, char **argv)
 		if (!bacon_message_connection_get_is_server (bacon_connection)) 
 		{
 			debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+			bacon_message_connection_send(bacon_connection, "PRESENT");
 			exit(0);
 		}
+		bacon_message_connection_set_callback (bacon_connection,
+				bacon_on_message_received,
+				NULL);
+
+
+
+		
 	}
 
 
