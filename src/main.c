@@ -1072,4 +1072,5 @@ void show_error_message(gchar *string, int block)
 	{
 		gtk_widget_show(dialog);
 	}
+
 }
