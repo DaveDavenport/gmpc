@@ -260,6 +260,7 @@ int main (int argc, char **argv)
 				printf("\t\t\t\t\t3: All messages\n");
 				printf("\t--version:\t\tPrint version and svn revision\n");
 				printf("\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n");
+				printf("\t--start-hidden\t\tStart mpd in a hidden state\n");
 				exit(0);
 			}
 		}
@@ -299,10 +300,6 @@ int main (int argc, char **argv)
 		bacon_message_connection_set_callback (bacon_connection,
 				bacon_on_message_received,
 				NULL);
-
-
-
-		
 	}
 
 
