@@ -41,7 +41,6 @@ enum {
 	PLAYLIST_NO_ZOOM,
 	PLAYLIST_SMALL,
 	PLAYLIST_MINI,
-	PLAYLIST_TINY,
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
 
@@ -898,8 +897,6 @@ void create_playlist3 ()
 	}
 
 
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "but_image_random")), "stock_shuffle", GTK_ICON_SIZE_BUTTON);
-	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "but_image_repeat")), "stock_repeat", GTK_ICON_SIZE_BUTTON);
 	/***
 	 * Menu item
 	 * TESTING
@@ -1269,7 +1266,6 @@ void playlist_zoom_level_changed()
 	/** Menu Bar */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
 	/** BUTTON BOX */
-	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "control_bar"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
@@ -1285,16 +1281,6 @@ void playlist_zoom_level_changed()
 	switch(pl3_zoom)
 	{
 		case PLAYLIST_NO_ZOOM:
-			break;
-		case PLAYLIST_TINY:
-			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
-			gtk_widget_show(glade_xml_get_widget(pl3_xml, "control_bar"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menubar1"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_cover_image"));			
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
 			break;
 		case PLAYLIST_MINI:
 			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
@@ -1503,11 +1489,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 					mpd_player_get_repeat(connection));
-			if(mpd_player_get_repeat(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat"))))
-			{
-				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_repeat")),
-						mpd_player_get_repeat(connection));
-			}
 		}
 		
 	}
@@ -1521,11 +1502,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
 					mpd_player_get_random(connection));
-			if(mpd_player_get_random(connection) != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random"))))
-			{                                                                                                                       		
-				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(pl3_xml, "tb_random")),
-						mpd_player_get_random(connection));
-			}
 		}
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
