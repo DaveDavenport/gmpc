@@ -109,24 +109,6 @@ gmpcPlugin playlist_plug = {
  */
 int  pl3_cat_get_selected_browser()
 {
-	/*
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-			glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter;
-
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		gint type;
-		gtk_tree_model_get(model, &iter, 0, &type, -1);
-		if(type < 0)
-		{
-			return -1;
-		}
-		return type;
-	}
-	return -1;
-	*/
 	return old_type;
 }
 

@@ -316,7 +316,7 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 			if(ppath && data)
 			{
 				MpdData *list = mpd_data_get_first(data);
-				do{
+				while(list){
 					if(list->type ==  MPD_DATA_TYPE_DIRECTORY)
 					{
 						if(!strcmp(ppath, list->directory)){
@@ -324,7 +324,8 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 						       	found = TRUE;
 						}
 					}
-				}while(!mpd_data_is_last(list) && (list = mpd_data_get_next(list)));
+					list = mpd_data_get_next_real(list, FALSE);
+				}//while(!mpd_data_is_last(list) && (list = mpd_data_get_next(list)));
 			}
 			if(!found)
 			{
@@ -333,6 +334,7 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 			}
 			else
 			{
+				printf("path %s\n", ppath);
 
 				pl3_file_browser_reupdate_folder(&iter,ppath);
 				valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter);
