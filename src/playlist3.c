@@ -220,6 +220,7 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeModel *model =  gtk_tree_view_get_model((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 	if(gtk_combo_box_get_active_iter(box, &iter)) 
 	{
 		GtkTreeIter cat_iter;
@@ -227,6 +228,18 @@ void pl3_cat_combo_changed(GtkComboBox *box)
 		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &path, -1);
 		if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
 		{
+			GtkTreeIter piter;
+			if(gtk_tree_selection_get_selected(selec,&model, &piter))
+			{
+				GtkTreePath *ppath = gtk_tree_model_get_path(model, &piter);
+				if(ppath && gtk_tree_path_is_descendant(ppath, path))
+				{
+					gtk_tree_path_free(ppath);
+					return;
+
+				}
+				gtk_tree_path_free(ppath);
+			}	
 			if(gtk_tree_path_get_depth(path)>0)
 			{
 				GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
