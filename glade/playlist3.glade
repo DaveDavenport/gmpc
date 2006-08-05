@@ -628,7 +628,7 @@
 		      <signal name="activate" handler="preferences_window_connect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image618">
+			<widget class="GtkImage" id="image645">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-connect</property>
 			  <property name="icon_size">1</property>
@@ -650,7 +650,7 @@
 		      <signal name="activate" handler="preferences_window_disconnect" last_modification_time="Thu, 30 Mar 2006 09:59:26 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image619">
+			<widget class="GtkImage" id="image646">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-disconnect</property>
 			  <property name="icon_size">1</property>
@@ -672,7 +672,7 @@
 		      <signal name="activate" handler="send_password" last_modification_time="Sun, 23 Apr 2006 19:24:22 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image620">
+			<widget class="GtkImage" id="image647">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-authentication</property>
 			  <property name="icon_size">1</property>
@@ -737,7 +737,7 @@
 		      <accelerator key="x" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image621">
+			<widget class="GtkImage" id="image648">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -759,7 +759,7 @@
 		      <accelerator key="v" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image622">
+			<widget class="GtkImage" id="image649">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -787,7 +787,7 @@
 		      <accelerator key="b" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image623">
+			<widget class="GtkImage" id="image650">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -809,7 +809,7 @@
 		      <accelerator key="z" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image624">
+			<widget class="GtkImage" id="image651">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -866,12 +866,12 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="zoom_in2">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Zoom _In</property>
+		      <property name="label" translatable="yes">_Expand Interface</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="playlist_zoom_in" last_modification_time="Thu, 11 May 2006 03:41:59 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image625">
+			<widget class="GtkImage" id="image652">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-zoom-in</property>
 			  <property name="icon_size">1</property>
@@ -887,12 +887,12 @@
 		  <child>
 		    <widget class="GtkImageMenuItem" id="zoom_out2">
 		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">Zoom _Out</property>
+		      <property name="label" translatable="yes">_Collapse Interface</property>
 		      <property name="use_underline">True</property>
 		      <signal name="activate" handler="playlist_zoom_out" last_modification_time="Thu, 11 May 2006 03:41:59 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image626">
+			<widget class="GtkImage" id="image653">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-zoom-out</property>
 			  <property name="icon_size">1</property>
@@ -914,7 +914,7 @@
 		      <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image627">
+			<widget class="GtkImage" id="image654">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-info</property>
 			  <property name="icon_size">1</property>
