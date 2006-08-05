@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
+#include "main.h"
 #include "misc.h"
 /**
  * format time into 
@@ -38,15 +39,16 @@ gchar * format_time(unsigned long seconds)
 	str = g_string_new(" Total time: ");
 	if(days != 0)
 	{
-		g_string_append_printf(str, "%i days ", days);
+		
+		g_string_append_printf(str, "%i %s ", days, (days == 1)?_("day"):_("days"));
 	}	
 	if(houres != 0)
 	{
-		g_string_append_printf(str, "%i hours ", houres);
+		g_string_append_printf(str, "%i %s ", houres, (houres == 1)?_("hour"):_("hours"));
 	}
 	if(minutes != 0)
 	{
-		g_string_append_printf(str, "%i minutes ", minutes);
+		g_string_append_printf(str, "%i %s", minutes,(minutes==1)?_("minute"):_("minutes"));
 	}
 	ret = str->str;
 	g_string_free(str, FALSE);
