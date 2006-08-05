@@ -160,11 +160,7 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		gdk_draw_rectangle(widget->window, widget->style->mid_gc[GTK_STATE_NORMAL], TRUE, 1,1,width-2, height-2);
 
 		height = gdk_pixbuf_get_height(cover_pb)+BORDER_WIDTH;
-		/* draw image outline */
-		/*		gdk_draw_rectangle(widget->window, widget->style->black_gc, FALSE, 
-				BORDER_WIDTH-1,BORDER_WIDTH-1,
-				width-2*BORDER_WIDTH+1,height-BORDER_WIDTH+1);
-				*/
+
 		/* add a right border to the image */
 		width+=BORDER_WIDTH;
 		/* draw image */
@@ -178,10 +174,11 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 		width = BORDER_WIDTH;
 		height = BORDER_WIDTH;
 	}
-
+/*
 	gtk_paint_layout (style, widget->window, GTK_STATE_NORMAL, TRUE,
 			NULL, widget, "tooltip", width, BORDER_WIDTH, tray_layout_tooltip);
-
+*/
+	gdk_draw_layout(widget->window, widget->style->black_gc,width, BORDER_WIDTH, tray_layout_tooltip);
 
 	width  += lwidth;
 
@@ -193,14 +190,14 @@ int tray_paint_tip(GtkWidget *widget, GdkEventExpose *event,gpointer n)
 			height = lheight+BORDER_WIDTH+8;
 		}
 
-		gdk_draw_rectangle(widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+		gdk_draw_rectangle(widget->window, widget->style->black_gc,
 				FALSE,width-lwidth,lheight+BORDER_WIDTH, lwidth ,8);                              		
 		width2 = (mpd_status_get_elapsed_song_time(connection)/(float)mpd_status_get_total_song_time(connection))*lwidth;
 		gdk_draw_rectangle(widget->window,
-				widget->style->mid_gc[GTK_STATE_NORMAL],
+				widget->style->black_gc,
 				TRUE,width-lwidth,lheight+BORDER_WIDTH, width2 ,8);
 		gdk_draw_rectangle(widget->window, 
-				widget->style->fg_gc[GTK_STATE_NORMAL],
+				widget->style->black_gc,
 				FALSE,width-lwidth,lheight+BORDER_WIDTH, width2 ,8);
 	}
 	else {
@@ -311,6 +308,7 @@ int popup_press_event(GtkWidget *wid, GdkEventKey *event)
 
 gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
+	mpd_Song *song = NULL;
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
 	GtkWidget *eventb;
@@ -359,6 +357,14 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 
 
 	g_free(tooltiptext);
+
+
+/*	if(cover_pb) g_object_unref(cover_pb);
+	cover_pb = gtk_widget_render_icon(GTK_WIDGET(tray_icon), "media-no-cover",-1,NULL);
+
+*/	song = mpd_playlist_get_current_song(connection);
+	if(song)
+		meta_data_get_path_callback(song, META_ALBUM_ART, tray_cover_art_fetched, NULL);
 	return TRUE;
 }
 
