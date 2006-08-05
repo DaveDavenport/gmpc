@@ -59,7 +59,6 @@ static int old_type = -1;
 
 GladeXML *pl3_xml = NULL;
 GtkTreeStore *pl3_tree = NULL;
-GtkListStore *pl3_crumbs = NULL;
 
 
 /* size */
@@ -266,98 +265,6 @@ void pl3_cat_bread_crumb_up()
 }
 
 /**
- * Iter function to free all path's stored in the list store 
- */
-gboolean pl3_cat_combo_row_foreach(GtkTreeModel *store, GtkTreePath *path, GtkTreeIter *iter,gpointer data)
-{
-	GtkTreePath *oldpath;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_crumbs), iter, 2, &oldpath, -1);
-	gtk_tree_path_free(oldpath);
-	return FALSE;
-}
-
-/**
- * Special function that first free's all path's in the list store
- * use this instead of gtk_list_Store_clear
- */
-void pl3_cat_rebuild_crumb()
-{
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeIter iter;
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	/* clean up the old paths before clearing it.. */
-	gtk_tree_model_foreach(GTK_TREE_MODEL(pl3_crumbs), pl3_cat_combo_row_foreach, NULL);
-	/* clear the list */
-	gtk_list_store_clear(pl3_crumbs);
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		gint type;
-		gtk_tree_model_get(model, &iter, 0, &type, -1);
-		GtkTreeIter parent,crumb;
-		gchar *ori_text = NULL;
-		GtkTreePath *addpath = NULL;
-		int index = 0, select = -1;
-		int crumb_depth = -1;
-		/**
-		 * Detach model
-		 */
-		gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), NULL); 
-
-
-
-		gtk_tree_model_get(model, &iter, 1, &ori_text, -1);
-
-		/** Get the first iter of this level */ 
-		addpath = gtk_tree_model_get_path(model, &iter);
-		while(gtk_tree_path_prev(addpath) && index < 15) index++;
-		index = 0;
-		gtk_tree_model_get_iter(model, &parent, addpath);
-		gtk_tree_path_free(addpath);
-		addpath = NULL;
-		/** Start filling the breadcrumb */
-		do
-		{
-			char *text, *icon;
-			gtk_tree_model_get(model, &parent, 1, &text, 3, &icon, -1);
-
-			gtk_list_store_append(pl3_crumbs, &crumb);
-			addpath = gtk_tree_model_get_path(model, &parent);
-			gtk_list_store_set(pl3_crumbs, &crumb,
-					0, text,                                           				
-					1,icon,
-					2,addpath,
-					-1);
-			if(!strcmp(text, ori_text))
-			{
-				select = index;	
-			}
-			g_free(text);
-			g_free(icon);
-			index++;
-
-		}while(gtk_tree_model_iter_next(model,&parent) && index < 30);
-		g_free(ori_text);
-
-		gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), GTK_TREE_MODEL(pl3_crumbs)); 
-		if(select >= 0)
-		{
-			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), select);
-		}
-
-		crumb_depth = gtk_tree_store_iter_depth(GTK_TREE_STORE(model), &iter);
-		/**
-		 * Set the buttons in the right state
-		 */
-		if(crumb_depth == 0) {
-			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "bread_crumb_up"), FALSE);
-		} else {
-			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "bread_crumb_up"), TRUE);
-		}
-	}
-
-}
-
-/**
  * Function to handle a change in category.
  */
 void pl3_cat_sel_changed()
@@ -375,10 +282,17 @@ void pl3_cat_sel_changed()
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 
 		/**
-		 * Rebuild the breadcrumb
+		 * Reposition the breadcrumb
 		 */
-		pl3_cat_rebuild_crumb();
-
+		{
+			int *ind;
+			GtkTreePath *path;
+			path = gtk_tree_model_get_path(model, &iter);
+			ind = gtk_tree_path_get_indices(path);
+			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),
+					ind[0]);
+			gtk_tree_path_free(path);
+		}
 		/**
 		 * Start switching side view (if type changed )
 		 */
@@ -404,11 +318,7 @@ void pl3_cat_sel_changed()
 		{
 			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
-
-
 	}
-
-
 	pl3_option_menu_activate();
 }
 
@@ -763,8 +673,57 @@ void pl3_show_window()
 		create_playlist3();
 	}
 }
+
+/**
+ * Sync the lowest level of the cat_tree with the crumb system
+ */
+void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
+{
+	if(gtk_tree_path_get_depth(path) == 1)
+	{
+		GtkTreeIter citer;
+		char *name, *stock_id;
+		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
+		gtk_list_store_append(GTK_LIST_STORE(model2), &citer);
+		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,-1);
+	}
+}
+
+void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
+{
+	if(gtk_tree_path_get_depth(path) == 1)
+	{
+		GtkTreeIter citer;
+		char *name, *stock_id,*strpath;
+		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
+		strpath = gtk_tree_path_to_string(path);
+		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
+		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,gtk_tree_path_copy(path),-1);
+		g_free(strpath);
+	}
+}
+void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)
+{
+	if(gtk_tree_path_get_depth(path) == 1)
+	{
+		GtkTreeIter citer;
+		GtkTreePath *cpath;
+		char *strpath;
+		strpath = gtk_tree_path_to_string(path);
+		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
+		gtk_tree_model_get(model2, &citer, 2,&cpath, -1);
+		if(cpath)
+			gtk_tree_path_free(cpath);
+		gtk_list_store_remove(GTK_LIST_STORE(model2), &citer);
+		g_free(strpath);
+	}
+
+}
+
 void create_playlist3 ()
 {
+	GtkListStore *pl3_crumbs = NULL;
+
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	GtkTreeSelection *sel;
@@ -859,7 +818,9 @@ void create_playlist3 ()
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
-
+	g_signal_connect(G_OBJECT(pl3_tree), "row-inserted", G_CALLBACK(pl3_tree_row_inserted),pl3_crumbs);
+	g_signal_connect(G_OBJECT(pl3_tree), "row-changed", G_CALLBACK(pl3_tree_row_changed),pl3_crumbs);
+	g_signal_connect(G_OBJECT(pl3_tree), "row-deleted", G_CALLBACK(pl3_tree_row_deleted),pl3_crumbs);
 	/* initialize the category view */ 
 	pl3_initialize_tree();
 
@@ -895,17 +856,6 @@ void create_playlist3 ()
 	{
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
-
-
-	/***
-	 * Menu item
-	 * TESTING
-	 */
-	/*	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml, "menu_option")), "activate", G_CALLBACK(pl3_option_menu_activate),
-		NULL);
-		*/
-
-
 
 
 	/* restore the window's position and size, if the user wants this.*/
@@ -1314,10 +1264,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 
 	/* update the image */
 	playlist_player_update_image(connection);
-	/**
-	 * Make sure the crumb system is in sync again
-	 */
-	pl3_cat_rebuild_crumb();
 
 	/** Set back to the current borwser, and update window title */
 	if(connect){
@@ -1490,7 +1436,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 					mpd_player_get_repeat(connection));
 		}
-		
+
 	}
 	if(what&MPD_CST_RANDOM)
 	{
