@@ -989,7 +989,7 @@ void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton 
 		depth = gtk_tree_path_get_depth(path);
 		
 		gtk_tree_path_free(path);	
-		if(depth > 2)
+		if(depth > 1)
 		{
 			/* here we have:  Add. Replace*/
 			GtkWidget *item;
@@ -1021,6 +1021,158 @@ void pl3_tag_browser_replace_selected()
 	pl3_tag_browser_add_selected();
 	mpd_player_play(connection);	
 
+}
+void pl3_tag_browser_add_folder_to_queue(char *name)
+{
+	char *first_tag, *second_tag, *format;
+	char **tk_format;
+	int i = 0, depth;
+	GtkTreePath *path;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+	GtkTreeIter iter,iter_cat;
+	GtkTreeSelection *selection = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	/* get and check for selected */
+	if(!gtk_tree_selection_get_selected(selection,&model, &iter_cat))
+	{
+		/* Nothin selected? then we don't have todo anything */
+		return;
+	}
+
+	if (!mpd_check_connected(connection))
+	{
+		return;
+	}
+
+
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
+	if(path == NULL)
+	{
+		return;
+	}
+	depth = gtk_tree_path_get_depth(path) -2;
+
+
+	if(depth < 0)
+	{
+		/*lowest level, do nothing */
+		gtk_tree_path_free(path);	
+		return;
+	}                                    	
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter_cat, 2 , &first_tag, 1,&second_tag,PL3_CAT_BROWSE_FORMAT, &format, -1);
+	tk_format = g_strsplit(format, "|",0);
+	if(tk_format ==NULL)
+	{
+		if(second_tag) g_free(second_tag);
+		if(first_tag) g_free(first_tag);
+		if(format) g_free(format);
+		gtk_tree_path_free(path);	
+		return;
+	}
+
+
+	for(i=0;tk_format[i] != NULL;i++)	
+	{
+
+		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
+		{
+
+			g_strfreev(tk_format);
+			gtk_tree_path_free(path);	
+			if(second_tag) g_free(second_tag);
+			if(first_tag) g_free(first_tag);
+			if(format) g_free(format);
+
+			return;
+		}
+
+	}
+	if(depth == 0)
+	{
+		MpdData *data = mpd_database_find_adv(connection,TRUE, 
+				mpd_misc_get_tag_by_name(tk_format[0]), name, 	
+				-1);
+		/* lowest level selected*/
+		if(data != NULL)
+		{
+			while(data != NULL)
+			{
+				mpd_playlist_queue_add(connection,data->song->file);
+				data = mpd_data_get_next(data);
+			}
+		}
+	}
+
+	if(depth == 1)
+	{
+		MpdData *data = mpd_database_find_adv(connection,TRUE, 
+				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, 
+				mpd_misc_get_tag_by_name(tk_format[1]), name, 	
+				-1);
+		/* lowest level selected*/
+		if(data != NULL)
+		{
+			while(data != NULL)
+			{
+				mpd_playlist_queue_add(connection,data->song->file);
+				data = mpd_data_get_next(data);
+			}
+		}
+	}
+	else if(depth == 2)
+	{
+		/* second level */
+		MpdData *data = mpd_database_find_adv(connection,TRUE,
+				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
+				mpd_misc_get_tag_by_name(tk_format[1]), second_tag,
+				mpd_misc_get_tag_by_name(tk_format[2]), name,       
+				-1);
+
+		if(data != NULL)
+		{
+			while(data != NULL)
+			{
+				mpd_playlist_queue_add(connection,data->song->file);
+				data = mpd_data_get_next(data);
+			}
+		}
+
+	}
+	else if (depth == 3)
+	{
+		char *first;
+		/* take the upper one */
+		/* go 2 up */
+		if(gtk_tree_path_up(path) && gtk_tree_path_up(path))
+		{
+			MpdData *data  = NULL;
+			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
+
+			/* artist and album is selected */
+			data = mpd_database_find_adv(connection,TRUE,
+					mpd_misc_get_tag_by_name(tk_format[0]),	first,
+					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
+					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,
+					mpd_misc_get_tag_by_name(tk_format[3]), name,
+					-1);
+
+			if(data != NULL)
+			{
+				while(data != NULL)
+				{
+					mpd_playlist_queue_add(connection,data->song->file);
+					data = mpd_data_get_next(data);
+				}
+			}
+			g_free(first);
+		}
+	}
+	gtk_tree_path_free(path);	
+	g_strfreev(tk_format);
+	if(second_tag) g_free(second_tag);
+	if(first_tag) g_free(first_tag);
+	if(format) g_free(format);
+	return ;
 }
 
 
@@ -1057,6 +1209,7 @@ void pl3_tag_browser_add_selected()
 				/** 
 				 * TODO 
 				 */
+				pl3_tag_browser_add_folder_to_queue(name);
 
 
 
