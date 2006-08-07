@@ -24,7 +24,7 @@
 #include <config.h>
 #include "main.h"
 #include "misc.h"
-
+extern config_obj *cover_index;
 GladeXML *xml_id3_window = NULL;
 GList *songs = NULL;
 void set_text (GList * node);
@@ -32,6 +32,91 @@ void id3_next_song ();
 void id3_last_song ();
 
 
+void id3_save_album_txt()
+{
+	GtkTextIter end, start;
+	gchar *content = NULL;
+	char *temp = NULL, *path = NULL;
+	GtkTextBuffer *buffer = NULL;
+	GtkTextView *tv = NULL;
+	mpd_Song *current;
+	if(songs == NULL || songs->data == NULL) return;
+	current = songs->data;
+	if(current->artist == NULL)
+		return;
+	tv = glade_xml_get_widget(xml_id3_window, "album_tv");
+	buffer = gtk_text_view_get_buffer(tv);
+		
+
+	temp = g_strdup_printf("albumtxt:%s", current->album);
+
+	path = cfg_get_single_value_as_string(cover_index, current->artist, temp);
+	
+	if(path == NULL || strlen(path) == 0)
+	{
+		path = g_strdup_printf("%s/.covers/%s-%s.albuminfo", 
+				g_get_home_dir(),
+				current->artist,
+				current->album);
+		cfg_set_single_value_as_string(cover_index, current->artist, temp,path);
+	}
+	gtk_text_buffer_get_start_iter(buffer, &start);
+	gtk_text_buffer_get_end_iter(buffer, &end);
+	content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
+	g_file_set_contents(path, content, -1, NULL);	
+
+
+
+	g_free(temp);
+	g_free(path);
+	g_free(content);
+
+}
+
+
+
+
+
+
+void id3_save_artist_txt()
+{
+	GtkTextIter end, start;
+	gchar *content = NULL;
+	char *temp = NULL, *path = NULL;
+	GtkTextBuffer *buffer = NULL;
+	GtkTextView *tv = NULL;
+	mpd_Song *current;
+	if(songs == NULL || songs->data == NULL) return;
+	current = songs->data;
+	if(current->artist == NULL)
+		return;
+	tv = glade_xml_get_widget(xml_id3_window, "artist_tv");
+	buffer = gtk_text_view_get_buffer(tv);
+		
+
+	temp = g_strdup_printf("biography");
+
+	path = cfg_get_single_value_as_string(cover_index, current->artist, temp);
+	
+	if(path == NULL || strlen(path) == 0)
+	{
+		path = g_strdup_printf("%s/.covers/%s.artistinfo", 
+				g_get_home_dir(),
+				current->artist);
+		cfg_set_single_value_as_string(cover_index, current->artist, temp,path);
+	}
+	gtk_text_buffer_get_start_iter(buffer, &start);
+	gtk_text_buffer_get_end_iter(buffer, &end);
+	content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
+	g_file_set_contents(path, content, -1, NULL);	
+
+
+
+	g_free(temp);
+	g_free(path);
+	g_free(content);
+
+}
 
 
 void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
@@ -203,39 +288,6 @@ void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoint
 	}
 }
 
-void id3_cover_art_clicked()
-{
-	mpd_Song *song;
-	if(songs == NULL)  return;
-	if(songs->data == NULL) return;
-	song = songs->data;
-	if(song->artist && song->album)
-	{
-		if(cover_art_edit_cover(song->artist, song->album))
-		{
-			/*			GdkPixbuf *pb = NULL;
-						gchar *path = NULL;
-						int ret = cover_art_fetch_image_path(song, &path);
-						if(ret == COVER_ART_OK_LOCAL){
-						pb = gdk_pixbuf_new_from_file_at_size(path,300,300,NULL);                                    		
-						gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),pb);
-						gtk_widget_show(glade_xml_get_widget(xml_id3_window, "cover_event"));
-						g_object_unref(pb);           
-						}
-						else{
-						gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
-						gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image")),
-						"media-no-cover", -1);                                                   				
-			//gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "cover_event"));
-			}			
-			if(path) g_free(path);
-			*/
-		}                                                                                                    		
-
-
-
-	}
-}
 
 
 void set_text (GList * node)
@@ -408,15 +460,6 @@ void set_text (GList * node)
 
 
 
-
-
-
-
-
-
-
-
-
 void id3_next_song ()
 {
 	songs = g_list_next (songs);
@@ -528,7 +571,6 @@ void id3_info_clear_album_image()
 
 void id3_album_image_file_selector(GtkFileChooser *chooser)
 {
-	printf("called\n");
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
 	{
@@ -568,7 +610,6 @@ void id3_info_clear_artist_image()
 
 void id3_artist_image_file_selector(GtkFileChooser *chooser)
 {
-	printf("called\n");
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
 	{
