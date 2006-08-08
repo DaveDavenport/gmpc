@@ -112,15 +112,15 @@ If you are or going to develop a program using libmpd, feel free to contact me w
 \section {Portability}
 Gmpc/libmpd has successfully been run on windows and on mac osX. \\
 Windows snapshots can be found here: \verb+http://musicpd.org/~jat/gmpc/+\\
-gmpc 0.13 should compile fine, with a small patch, on macosX using gtk from fink/darwinports. The patch allows gmpc to compile against a lower gtk version. (0.13.0 needs gtk+2.8, while only 2.6 is availible on fink when this document was written).\\
+gmpc 0.13 should compile fine, with a small patch, on macosX using gtk from fink/darwinports. The patch allows gmpc to compile against a lower gtk version. (0.13.0 needs gtk+2.8, while only 2.6 is available on fink when this document was written).\\
 As far as I know there haven't been an attempt at trying to run gmpc on macosX against the osX port of gtk, but it should work fine.\\
 
 \section{FAQ}
 Q: Gmpc keeps showing an error "connection timeout" and disconnects\\
-A: The default timeout of gmpc is pretty low, 1 second, if mpd has to wait f.e. on the hard-disk to spinup, the connection to mpd is likely to timeout. A simple solution is to increase the timeout to f.e. 10 seconds.\\
+A: The default timeout of gmpc is pretty low, 1 second, if mpd has to wait f.e. on the hard-disk to spin-up, the connection to mpd is likely to timeout. A simple solution is to increase the timeout to f.e. 10 seconds.\\
 \\
 Q: Autoconnect keeps turning off\\
-A: When an error occurs gmpc wil disable autoconnect, it does this so it won't wind up in a deadlock trying to reconnect. If you click "reconnect" in the error window the state of autoconnect should be restored.\\
+A: When an error occurs gmpc will disable autoconnect, it does this so it won't wind up in a deadlock trying to reconnect. If you click "reconnect" in the error window the state of autoconnect should be restored.\\
 \\
 Q: I've installed a Metadata provider plugin, but I still don't see any cover art.\\
 A: Gmpc caches the result the plugins give, it also caches if it can't find the metadata. So if you install a new plugin, but the metadata is searched before (and not found) gmpc remembers this, and doesn't try to re-query this. You can easily clear the cache by going in the preferences menu->meta data and clicking the button "Clear metadata cache".\\
@@ -153,7 +153,7 @@ A: Sending me an e-mail, telling how great it is, is always appreciated.\\
 
 \section{Reporting bugs}
 Before reporting bugs, make sure the bug isn't caused by a plugin. If it is caused by a plugin, report the bug against that plugin.\\
-If you report a bug try to include as much (debug) information as possible. The following information can be usefull (depending on the type of bug):\\
+If you report a bug try to include as much (debug) information as possible. The following information can be useful (depending on the type of bug):\\
 1. Platform (linux/windows/macosX/etc)\\
 2. Architect (x86/x86\_64/ppc/etc)\\
 3. Distribution\\
@@ -163,7 +163,7 @@ If you report a bug try to include as much (debug) information as possible. The 
 7. Installed plugins (and plugin version).\\
 8. Steps to reproduce.\\
 9. Backtrace when possible.\\
-10. E-mail adres. (Needed so I can ask for additional information)\\
+10. E-mail address. (Needed so I can ask for additional information)\\
 11. If possible it can help to track the location of the bug when the report includes the debug information gmpc spits out before the crash when running it with --debug-level=3.\\
 \\
 Also feature request are welcome.\\

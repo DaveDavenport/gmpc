@@ -8,10 +8,10 @@ All this info is read from the id3tags.
 %track%"	-Track. (as defined in the tag, this can be a single value but also a string.)
 "%time%"	-Total song time
 %date%		-The date of the song
-"%file%".  	-Filename (includes path and extention)
-%shortfile% 	-filename withouth path and extention.
+"%file%".  	-Filename (includes path and extension)
+%shortfile% 	-filename without path and extension.
 
-The [] operator  is  used  to  group  output  such  that if no metadata delimeters are found or matched between '[' and ']',  then  none of the  characters between '[' and ']' are output.  
+The [] operator  is  used  to  group  output  such  that if no metadata delimiters are found or matched between '[' and ']',  then  none of the  characters between '[' and ']' are output.  
 '&' and '|' are logical operators for and and or.  '#'  is  used  to  escape characters.   
 Some  useful examples for format are: "%shortfile%" and "[[%name% - ][%artist% - ]%title%]|[%shortfile]"
 
@@ -29,8 +29,8 @@ Example markup for this could be:
 &%album%]|[%artist%
 &%title%]|%shortfile%
 
-The markup editor in version 0.12 allows you to preview youre markup format. 
-The markup's arent instant apply. 
+The markup editor in version 0.12 allows you to preview your markup format. 
+The markup's aren't instant apply. 
 In the playlist songs use the new markup when added later, or the id3 info has changed.
 In the file/artist/search browser the new markup is used when the data in the right pane is changed.
 In the player the new markup is used after song change.

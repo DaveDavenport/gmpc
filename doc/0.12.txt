@@ -10,7 +10,7 @@ The changes for version 0.12 where:
 * Faster:
 	By removing the search function from the playlist window, and therefor not using gtk_tree_model_filter anymore the speed of the playlist is 4-5 faster. (even faster when the markup is limited to a single line).
 	The Treeviews for the artist/file browser are a lazy tree. So only the absolute needed data is transfered from mpd.
-	The songs are removed from the artist/file tree and displayed in a seperate pane.
+	The songs are removed from the artist/file tree and displayed in a separate pane.
 	All these changes are implemented in a single window playlist design.
 	Tested gmpc with up to 2^16 songs in the playlist, while still being responsive.
 
@@ -23,9 +23,9 @@ The changes for version 0.12 where:
 	Custom song formatting.. (see above)
 	Ability to disable/hide the stream browser/stream list.
 	Enable/disable popup + popup location.
-	Enable/disable tray icon. (optionall to hide the player on startup)
+	Enable/disable tray icon. (optionally to hide the player on startup)
 	player window scales with bigger font's so it fit.
-	Tokenized search in playlist and mpd's data with regex support, allowing for very powerfull search expressions.
+	Tokenized search in playlist and mpd's data with regex support, allowing for very powerful search expressions.
 
 * MPD compatibility
 	Offer options for the latest features in mpd.
