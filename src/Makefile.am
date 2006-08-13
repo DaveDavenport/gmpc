@@ -1,3 +1,7 @@
+REVISION=$(shell svn info | grep "Last Changed Rev" | awk -F': ' '{ print $$2}')
+CONF_VERSION=0
+-include Makefile.config
+
 bin_PROGRAMS=gmpc
 gmpc_SOURCES=\
 	main.c\
@@ -42,10 +46,11 @@ gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
 	$(GOB2) $(gmpc_metaimage_SOURCE) 
 
 revisiont.h:
-	echo "static char *revision = \""\
-	`svn info | grep "Last Changed Rev" | awk -F': ' '{print $$2}'`\
-	"\"; "> revision.h
-
+	if test $(REVISION) != $(CONF_VERSION); then\
+		echo "Writing new Makefile.config file";\
+		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;\
+		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
+	fi;
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
