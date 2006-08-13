@@ -279,7 +279,6 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			case 4: /* lower right */
 				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, msize.height-height-y);	
 				break;                                                  				
-
 		}
 		gtk_widget_show_all(tip);
 	}

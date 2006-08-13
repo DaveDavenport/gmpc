@@ -240,7 +240,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 
 
 
-			
+
 			/* return that data is availible */
 			return META_DATA_AVAILABLE;
 		}
@@ -374,8 +374,11 @@ void meta_data_retrieve_thread()
 				/* *
 				 * Get image function is only allowed to return META_DATA_AVAILABLE or META_DATA_UNAVAILABLE
 				 */
-				data->result = meta_plugins[i]->metadata->get_image(data->song, data->type&META_QUERY_DATA_TYPES, &path);
-				data->result_path = path;
+				if(meta_plugins[i]->get_enabled())
+				{
+					data->result = meta_plugins[i]->metadata->get_image(data->song, data->type&META_QUERY_DATA_TYPES, &path);
+					data->result_path = path;
+				}
 			}
 
 		}
@@ -461,7 +464,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 {
 	MetaDataResult ret;
 	meta_thread_data *mtd = NULL;
-		mpd_Song *song =NULL;
+	mpd_Song *song =NULL;
 	char *path = NULL;
 
 	/**
@@ -473,12 +476,12 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * If there is no song
 	 * return;
 	 */
-/*	g_return_if_fail(tsong != NULL); */
+	/*	g_return_if_fail(tsong != NULL); */
 	if(tsong == NULL)
 	{
 		return;	
 	}
-	
+
 	/**
 	 * Check cache for result.
 	 */
@@ -551,7 +554,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 				{
 					song->file = g_strdup(data->song->file);
 				}
-				
+
 				mpd_data_free(data);
 			}
 		}
