@@ -13,7 +13,6 @@ GladeXML *tray_pref_xml = NULL;
 #ifdef ENABLE_TRAYICON
 #include "eggtrayicon.h"
 #endif
-#define BORDER_WIDTH 6
 void destroy_tray_icon();
 void tray_icon_song_change();
 void tray_icon_state_change();
@@ -148,7 +147,7 @@ gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer dat
 
 gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
-	//int from_tray = GPOINTER_TO_INT(n);
+	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
 	//GtkWidget *eventb;
 	if(tip != NULL)
@@ -214,23 +213,75 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	/** Position popup 
 	 * FIXME: Do this propperly following the users settings.
 	 */
+
+
 	{
-		int x_tv, y_tv;
-		int x, y;
+		int x_tv, y_tv, x, y,width,height;
 		GtkRequisition req;
-		gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
-		y = y_tv+GTK_WIDGET(tray_icon)->allocation.height;
-		x = x_tv;
+		GdkRectangle msize;
+		GdkScreen *screen;
+		int monitor = 0;
+		/** get tooltip size */
 		gtk_widget_size_request(tip, &req);	
-		x -= req.width/2;
-		
-		gtk_window_move(GTK_WINDOW(tip), x, y);
+		width = req.width;
+		height = req.height;		
+		/*Get monitor size*/
+		if(tray_icon != NULL)
+		{
+			screen = gtk_widget_get_screen(GTK_WIDGET(tray_icon));
+			monitor = gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(tray_icon)->window);       			
+		}
+		else
+		{
+			screen = gdk_screen_get_default();
+		}
+		gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
+		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
+		/* user defined offsets */
+		y=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
+		x=cfg_get_single_value_as_int_with_default(config, "tray-icon","x-offset",0);						
+		/* calculate position */                                                                                    		
+		switch((from_tray)? 0:cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-location", 0))			
+		{
+			case 0: /* tooltip */
+				if(tray_icon)
+				{
+					gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
+					x = (int)x_tv + GTK_WIDGET(tray_icon)->allocation.width/2 - (width)/2;
+					y = (int)y_tv+(GTK_WIDGET(tray_icon)->allocation.height) +5;	
+					/* check borders left, right*/	
+					if((x+width) > msize.width+msize.x)
+					{	
+						x = msize.x+msize.width-(width);
+					}
+					else if(x < 0)
+					{
+						x= 0;
+					}
+					/* check up down.. if can't place it below, place it above */
+					if( y+height> msize.height+msize.y) 
+					{
+						y = y_tv -5-(height);
+					}
+					/* place the window */
+					gtk_window_move(GTK_WINDOW(tip), x, y);
+					break;
+				}
+			case 1: /* upper left */
+				gtk_window_move(GTK_WINDOW(tip), x,y);
+				break;
+			case 2: /* upper right */
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, y);	
+				break;
+			case 3: /* lower left */
+				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-y);	
+				break;
+			case 4: /* lower right */
+				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, msize.height-height-y);	
+				break;                                                  				
+
+		}
 		gtk_widget_show_all(tip);
-
-
-
-
-
 	}
 	return TRUE;
 }
