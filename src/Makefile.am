@@ -29,16 +29,18 @@ gmpc_SOURCES=\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
 	TreeSearchWidget.c
-BUILT_SOURCES= revisiont.h
+BUILT_SOURCES= revisiont.h\
+	gmpc-connection.c\
+	gmpc-metaimage.c
 
 gmpc_connection_SOURCE=gmpc-connection.gob
 
 gmpc-connection.c: $(gmpc_connection_SOURCE) 
-	$(GOB) $(gmpc_connection_SOURCE) 
+	$(GOB2) $(gmpc_connection_SOURCE) 
 
 gmpc_metaimage_SOURCE=gmpc-metaimage.gob
 gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
-	$(GOB) $(gmpc_metaiamge_SOURCE) 
+	$(GOB2) $(gmpc_metaimage_SOURCE) 
 
 revisiont.h:
 	echo "static char *revision = \""\
