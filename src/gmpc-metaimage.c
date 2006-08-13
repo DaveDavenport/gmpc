@@ -39,14 +39,14 @@ static void ___object_set_property (GObject *object, guint property_id, const GV
 static void ___object_get_property (GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
 static void gmpc_metaimage_class_init (GmpcMetaImageClass * c) G_GNUC_UNUSED;
 static void gmpc_metaimage_init (GmpcMetaImage * self) G_GNUC_UNUSED;
-static void ___6_gmpc_metaimage_finalize (GmpcMetaImage * self) G_GNUC_UNUSED;
-static void gmpc_metaimage_update_cover (GmpcMetaImage * self, MpdObj * mi, ChangedStatusType what, GmpcConnection * gmpcconn) G_GNUC_UNUSED;
+static void ___8_gmpc_metaimage_finalize (GmpcMetaImage * self) G_GNUC_UNUSED;
 static void gmpc_metaimage_meta_callback (mpd_Song * song, MetaDataResult ret, char * path, GmpcMetaImage * self) G_GNUC_UNUSED;
 
 enum {
 	PROP_0,
 	PROP_IMAGE_TYPE,
-	PROP_SIZE
+	PROP_SIZE,
+	PROP_HIDE_ON_NA
 };
 
 /* pointer to the class of our parent */
@@ -57,6 +57,8 @@ static GtkEventBoxClass *parent_class = NULL;
 #define self_set_image_type gmpc_metaimage_set_image_type
 #define self_get_size gmpc_metaimage_get_size
 #define self_set_size gmpc_metaimage_set_size
+#define self_get_hide_on_na gmpc_metaimage_get_hide_on_na
+#define self_set_hide_on_na gmpc_metaimage_set_hide_on_na
 #define self_new gmpc_metaimage_new
 #define self_update_cover gmpc_metaimage_update_cover
 #define self_meta_callback gmpc_metaimage_meta_callback
@@ -112,12 +114,9 @@ ___finalize(GObject *obj_self)
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::finalize"
 	GmpcMetaImage *self G_GNUC_UNUSED = GMPC_METAIMAGE (obj_self);
 	gpointer priv G_GNUC_UNUSED = self->_priv;
-#line 41 "cover-image.gob"
-	___6_gmpc_metaimage_finalize(obj_self);
-#line 118 "gmpc-metaimage.c"
-#line 30 "cover-image.gob"
-	if(self->_priv->image) { gtk_widget_destroy ((gpointer) self->_priv->image); self->_priv->image = NULL; }
-#line 121 "gmpc-metaimage.c"
+#line 48 "cover-image.gob"
+	___8_gmpc_metaimage_finalize(obj_self);
+#line 120 "gmpc-metaimage.c"
 }
 #undef __GOB_FUNCTION__
 
@@ -131,9 +130,9 @@ gmpc_metaimage_class_init (GmpcMetaImageClass * c G_GNUC_UNUSED)
 
 	parent_class = g_type_class_ref (GTK_TYPE_EVENT_BOX);
 
-#line 41 "cover-image.gob"
+#line 48 "cover-image.gob"
 	g_object_class->finalize = ___finalize;
-#line 137 "gmpc-metaimage.c"
+#line 136 "gmpc-metaimage.c"
 	g_object_class->get_property = ___object_get_property;
 	g_object_class->set_property = ___object_set_property;
     {
@@ -161,39 +160,50 @@ gmpc_metaimage_class_init (GmpcMetaImageClass * c G_GNUC_UNUSED)
 	g_object_class_install_property (g_object_class,
 		PROP_SIZE,
 		param_spec);
+	param_spec = g_param_spec_boolean
+		("hide_on_na" /* name */,
+		 _("HideOnNA") /* nick */,
+		 _("Hide the image when not availibe") /* blurb */,
+		 FALSE /* default_value */,
+		 (GParamFlags)(G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (g_object_class,
+		PROP_HIDE_ON_NA,
+		param_spec);
     }
 }
 #undef __GOB_FUNCTION__
-#line 31 "cover-image.gob"
+#line 39 "cover-image.gob"
 static void 
 gmpc_metaimage_init (GmpcMetaImage * self G_GNUC_UNUSED)
-#line 171 "gmpc-metaimage.c"
+#line 179 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::init"
 	self->_priv = G_TYPE_INSTANCE_GET_PRIVATE(self,GMPC_TYPE_METAIMAGE,GmpcMetaImagePrivate);
 #line 11 "cover-image.gob"
-	self->size = 64;
-#line 177 "gmpc-metaimage.c"
-#line 12 "cover-image.gob"
 	self->_priv->status_signal = 0;
-#line 180 "gmpc-metaimage.c"
+#line 185 "gmpc-metaimage.c"
 #line 13 "cover-image.gob"
+	self->size = 64;
+#line 188 "gmpc-metaimage.c"
+#line 14 "cover-image.gob"
 	self->image_type = META_ALBUM_ART;
-#line 183 "gmpc-metaimage.c"
-#line 29 "cover-image.gob"
+#line 191 "gmpc-metaimage.c"
+#line 15 "cover-image.gob"
+	self->hide_on_na = FALSE;
+#line 194 "gmpc-metaimage.c"
+#line 38 "cover-image.gob"
 	self->_priv->image =  gtk_image_new();
-#line 186 "gmpc-metaimage.c"
+#line 197 "gmpc-metaimage.c"
  {
-#line 32 "cover-image.gob"
+#line 40 "cover-image.gob"
 
-		/** Set size */
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
-		self_set_cover_na(self);
 		gtk_widget_show_all(self);
+		self_set_cover_na(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
 				self_update_cover, self);
 	
-#line 197 "gmpc-metaimage.c"
+#line 207 "gmpc-metaimage.c"
  }
 }
 #undef __GOB_FUNCTION__
@@ -212,16 +222,23 @@ ___object_set_property (GObject *object,
 	switch (property_id) {
 	case PROP_IMAGE_TYPE:
 		{
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 self->image_type = g_value_get_int (VAL);
-#line 218 "gmpc-metaimage.c"
+#line 228 "gmpc-metaimage.c"
 		}
 		break;
 	case PROP_SIZE:
 		{
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 self->size = g_value_get_int (VAL);
-#line 225 "gmpc-metaimage.c"
+#line 235 "gmpc-metaimage.c"
+		}
+		break;
+	case PROP_HIDE_ON_NA:
+		{
+#line 31 "cover-image.gob"
+self->hide_on_na = g_value_get_boolean (VAL);
+#line 242 "gmpc-metaimage.c"
 		}
 		break;
 	default:
@@ -250,16 +267,23 @@ ___object_get_property (GObject *object,
 	switch (property_id) {
 	case PROP_IMAGE_TYPE:
 		{
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 g_value_set_int (VAL, self->image_type);
-#line 256 "gmpc-metaimage.c"
+#line 273 "gmpc-metaimage.c"
 		}
 		break;
 	case PROP_SIZE:
 		{
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 g_value_set_int (VAL, self->size);
-#line 263 "gmpc-metaimage.c"
+#line 280 "gmpc-metaimage.c"
+		}
+		break;
+	case PROP_HIDE_ON_NA:
+		{
+#line 31 "cover-image.gob"
+g_value_set_boolean (VAL, self->hide_on_na);
+#line 287 "gmpc-metaimage.c"
 		}
 		break;
 	default:
@@ -275,75 +299,101 @@ g_value_set_int (VAL, self->size);
 #undef __GOB_FUNCTION__
 
 
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 gint 
 gmpc_metaimage_get_image_type (GmpcMetaImage * self)
-#line 282 "gmpc-metaimage.c"
+#line 306 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::get_image_type"
 {
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 		gint val; g_object_get (G_OBJECT (self), "image_type", &val, NULL); return val;
 }}
-#line 289 "gmpc-metaimage.c"
+#line 313 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 void 
 gmpc_metaimage_set_image_type (GmpcMetaImage * self, gint val)
-#line 295 "gmpc-metaimage.c"
+#line 319 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::set_image_type"
 {
-#line 15 "cover-image.gob"
+#line 17 "cover-image.gob"
 		g_object_set (G_OBJECT (self), "image_type", val, NULL);
 }}
-#line 302 "gmpc-metaimage.c"
+#line 326 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 gint 
 gmpc_metaimage_get_size (GmpcMetaImage * self)
-#line 308 "gmpc-metaimage.c"
+#line 332 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::get_size"
 {
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 		gint val; g_object_get (G_OBJECT (self), "size", &val, NULL); return val;
 }}
-#line 315 "gmpc-metaimage.c"
+#line 339 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 void 
 gmpc_metaimage_set_size (GmpcMetaImage * self, gint val)
-#line 321 "gmpc-metaimage.c"
+#line 345 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::set_size"
 {
-#line 22 "cover-image.gob"
+#line 24 "cover-image.gob"
 		g_object_set (G_OBJECT (self), "size", val, NULL);
 }}
-#line 328 "gmpc-metaimage.c"
+#line 352 "gmpc-metaimage.c"
+#undef __GOB_FUNCTION__
+
+#line 31 "cover-image.gob"
+gboolean 
+gmpc_metaimage_get_hide_on_na (GmpcMetaImage * self)
+#line 358 "gmpc-metaimage.c"
+{
+#define __GOB_FUNCTION__ "Gmpc:MetaImage::get_hide_on_na"
+{
+#line 31 "cover-image.gob"
+		gboolean val; g_object_get (G_OBJECT (self), "hide_on_na", &val, NULL); return val;
+}}
+#line 365 "gmpc-metaimage.c"
+#undef __GOB_FUNCTION__
+
+#line 31 "cover-image.gob"
+void 
+gmpc_metaimage_set_hide_on_na (GmpcMetaImage * self, gboolean val)
+#line 371 "gmpc-metaimage.c"
+{
+#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_hide_on_na"
+{
+#line 31 "cover-image.gob"
+		g_object_set (G_OBJECT (self), "hide_on_na", val, NULL);
+}}
+#line 378 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
 
-#line 41 "cover-image.gob"
+#line 48 "cover-image.gob"
 static void 
-___6_gmpc_metaimage_finalize (GmpcMetaImage * self G_GNUC_UNUSED)
-#line 335 "gmpc-metaimage.c"
+___8_gmpc_metaimage_finalize (GmpcMetaImage * self G_GNUC_UNUSED)
+#line 385 "gmpc-metaimage.c"
 #define PARENT_HANDLER(___self) \
 	{ if(G_OBJECT_CLASS(parent_class)->finalize) \
 		(* G_OBJECT_CLASS(parent_class)->finalize)(___self); }
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::finalize"
-#line 41 "cover-image.gob"
+#line 48 "cover-image.gob"
 	g_return_if_fail (self != NULL);
-#line 41 "cover-image.gob"
+#line 48 "cover-image.gob"
 	g_return_if_fail (GMPC_IS_METAIMAGE (self));
-#line 345 "gmpc-metaimage.c"
+#line 395 "gmpc-metaimage.c"
 {
-#line 44 "cover-image.gob"
+#line 51 "cover-image.gob"
 	
 		printf("Finalizing metaimage\n");
 		if(self->_priv->status_signal)
@@ -352,39 +402,39 @@ ___6_gmpc_metaimage_finalize (GmpcMetaImage * self G_GNUC_UNUSED)
 		}
 
 	}}
-#line 356 "gmpc-metaimage.c"
+#line 406 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 #undef PARENT_HANDLER
 
-#line 53 "cover-image.gob"
+#line 60 "cover-image.gob"
 GtkWidget * 
 gmpc_metaimage_new (int type)
-#line 363 "gmpc-metaimage.c"
+#line 413 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::new"
 {
-#line 55 "cover-image.gob"
+#line 62 "cover-image.gob"
 	
 		Self *gmi =  GET_NEW;
 		gmi->image_type = type;
 		return (GtkWidget *)gmi;
 	}}
-#line 373 "gmpc-metaimage.c"
+#line 423 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 61 "cover-image.gob"
-static void 
+#line 68 "cover-image.gob"
+void 
 gmpc_metaimage_update_cover (GmpcMetaImage * self, MpdObj * mi, ChangedStatusType what, GmpcConnection * gmpcconn)
-#line 379 "gmpc-metaimage.c"
+#line 429 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::update_cover"
-#line 61 "cover-image.gob"
+#line 68 "cover-image.gob"
 	g_return_if_fail (self != NULL);
-#line 61 "cover-image.gob"
+#line 68 "cover-image.gob"
 	g_return_if_fail (GMPC_IS_METAIMAGE (self));
-#line 386 "gmpc-metaimage.c"
+#line 436 "gmpc-metaimage.c"
 {
-#line 64 "cover-image.gob"
+#line 71 "cover-image.gob"
 	
 		if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
 		{
@@ -400,92 +450,95 @@ gmpc_metaimage_update_cover (GmpcMetaImage * self, MpdObj * mi, ChangedStatusTyp
 		}
 
 	}}
-#line 404 "gmpc-metaimage.c"
+#line 454 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 79 "cover-image.gob"
+#line 86 "cover-image.gob"
 static void 
 gmpc_metaimage_meta_callback (mpd_Song * song, MetaDataResult ret, char * path, GmpcMetaImage * self)
-#line 410 "gmpc-metaimage.c"
+#line 460 "gmpc-metaimage.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:MetaImage::meta_callback"
 {
-#line 82 "cover-image.gob"
+#line 89 "cover-image.gob"
 	
 		mpd_Song *current = mpd_playlist_get_current_song(connection);
 		if(!current)
 			return;
 		if(!strcmp(song->file, current->file))
 		{
-			if(ret == META_DATA_AVAILABLE)
-			{
+			if(ret == META_DATA_AVAILABLE) {
 				self_set_cover_from_path(self,path); 
-			}
-			else if (ret == META_DATA_FETCHING)
-			{
+			} else if (ret == META_DATA_FETCHING) {
 				self_set_cover_fetching(self);
-			}
-			else
-			{
+			} else {
 				self_set_cover_na(self);
 			}
 		}
 
 	}}
-#line 436 "gmpc-metaimage.c"
+#line 481 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__
 
-#line 105 "cover-image.gob"
+#line 107 "cover-image.gob"
 void 
 gmpc_metaimage_set_cover_na (GmpcMetaImage * self)
-#line 442 "gmpc-metaimage.c"
-{
-#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_na"
-#line 105 "cover-image.gob"
-	g_return_if_fail (self != NULL);
-#line 105 "cover-image.gob"
-	g_return_if_fail (GMPC_IS_METAIMAGE (self));
-#line 449 "gmpc-metaimage.c"
-{
-#line 108 "cover-image.gob"
-	
-		gtk_image_set_from_stock(self->_priv->image, "media-no-cover", -1);
-	}}
-#line 455 "gmpc-metaimage.c"
-#undef __GOB_FUNCTION__
-
-#line 111 "cover-image.gob"
-void 
-gmpc_metaimage_set_cover_fetching (GmpcMetaImage * self)
-#line 461 "gmpc-metaimage.c"
-{
-#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_fetching"
-#line 111 "cover-image.gob"
-	g_return_if_fail (self != NULL);
-#line 111 "cover-image.gob"
-	g_return_if_fail (GMPC_IS_METAIMAGE (self));
-#line 468 "gmpc-metaimage.c"
-{
-#line 114 "cover-image.gob"
-	
-		gtk_image_set_from_stock(self->_priv->image, "media-loading-cover", -1);
-	}}
-#line 474 "gmpc-metaimage.c"
-#undef __GOB_FUNCTION__
-
-#line 117 "cover-image.gob"
-void 
-gmpc_metaimage_set_cover_from_path (GmpcMetaImage * self, gchar * path)
-#line 480 "gmpc-metaimage.c"
-{
-#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_from_path"
-#line 117 "cover-image.gob"
-	g_return_if_fail (self != NULL);
-#line 117 "cover-image.gob"
-	g_return_if_fail (GMPC_IS_METAIMAGE (self));
 #line 487 "gmpc-metaimage.c"
 {
+#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_na"
+#line 107 "cover-image.gob"
+	g_return_if_fail (self != NULL);
+#line 107 "cover-image.gob"
+	g_return_if_fail (GMPC_IS_METAIMAGE (self));
+#line 494 "gmpc-metaimage.c"
+{
+#line 110 "cover-image.gob"
+	
+		if(self->hide_on_na)
+		{		
+			gtk_widget_hide(GTK_WIDGET(self));
+		}
+		gtk_image_set_from_stock(self->_priv->image, "media-no-cover", -1);
+	}}
+#line 504 "gmpc-metaimage.c"
+#undef __GOB_FUNCTION__
+
+#line 117 "cover-image.gob"
+void 
+gmpc_metaimage_set_cover_fetching (GmpcMetaImage * self)
+#line 510 "gmpc-metaimage.c"
+{
+#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_fetching"
+#line 117 "cover-image.gob"
+	g_return_if_fail (self != NULL);
+#line 117 "cover-image.gob"
+	g_return_if_fail (GMPC_IS_METAIMAGE (self));
+#line 517 "gmpc-metaimage.c"
+{
 #line 120 "cover-image.gob"
+	
+		if(self->hide_on_na)
+		{		
+			gtk_widget_hide(GTK_WIDGET(self));
+		}
+		gtk_image_set_from_stock(self->_priv->image, "media-loading-cover", -1);
+	}}
+#line 527 "gmpc-metaimage.c"
+#undef __GOB_FUNCTION__
+
+#line 127 "cover-image.gob"
+void 
+gmpc_metaimage_set_cover_from_path (GmpcMetaImage * self, gchar * path)
+#line 533 "gmpc-metaimage.c"
+{
+#define __GOB_FUNCTION__ "Gmpc:MetaImage::set_cover_from_path"
+#line 127 "cover-image.gob"
+	g_return_if_fail (self != NULL);
+#line 127 "cover-image.gob"
+	g_return_if_fail (GMPC_IS_METAIMAGE (self));
+#line 540 "gmpc-metaimage.c"
+{
+#line 130 "cover-image.gob"
 	
 		GdkPixbuf *pb = NULL;
 		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
@@ -495,6 +548,7 @@ gmpc_metaimage_set_cover_from_path (GmpcMetaImage * self, gchar * path)
 			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
 			g_object_unref(pb);
 		}
+		gtk_widget_show(GTK_WIDGET(self));
 	}}
-#line 500 "gmpc-metaimage.c"
+#line 554 "gmpc-metaimage.c"
 #undef __GOB_FUNCTION__

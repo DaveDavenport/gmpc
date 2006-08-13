@@ -10,9 +10,9 @@ extern "C" {
 #endif /* __cplusplus */
 
 struct _GmpcMetaImagePrivate {
-#line 12 "cover-image.gob"
+#line 11 "cover-image.gob"
 	gulong status_signal;
-#line 29 "cover-image.gob"
+#line 38 "cover-image.gob"
 	GtkWidget * image;
 #line 18 "gmpc-metaimage-private.h"
 };

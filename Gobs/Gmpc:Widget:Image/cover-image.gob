@@ -8,9 +8,11 @@ requires 2.0.0
 
 
 class Gmpc:MetaImage from Gtk:Event:Box{
-	public int size = {64};
 	private gulong status_signal = {0};
+	/** Public */
+	public int size = {64};
 	public int image_type = {META_ALBUM_ART};
+	public gboolean hide_on_na = {FALSE};
 
 	property INT image_type 
 		(nick = _("Image type"),
@@ -25,15 +27,20 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = 64,
 		export,
 		link);
+
+	property BOOLEAN hide_on_na
+		(nick = _("HideOnNA"),
+		blurb = _("Hide the image when not availibe"),
+		default_value = FALSE,
+		export,
+		link);
 	
-	private GtkWidget *image = { gtk_image_new()} 
-		destroywith gtk_widget_destroy;
+	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
 	{
-		/** Set size */
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
-		self_set_cover_na(self);
 		gtk_widget_show_all(self);
+		self_set_cover_na(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
 				self_update_cover, self);
 	}
@@ -58,7 +65,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		return (GtkWidget *)gmi;
 	}
 	
-	private	
+	public	
 	void
 	update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gmpcconn )
 	{
@@ -85,16 +92,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			return;
 		if(!strcmp(song->file, current->file))
 		{
-			if(ret == META_DATA_AVAILABLE)
-			{
+			if(ret == META_DATA_AVAILABLE) {
 				self_set_cover_from_path(self,path); 
-			}
-			else if (ret == META_DATA_FETCHING)
-			{
+			} else if (ret == META_DATA_FETCHING) {
 				self_set_cover_fetching(self);
-			}
-			else
-			{
+			} else {
 				self_set_cover_na(self);
 			}
 		}
@@ -106,12 +108,20 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	set_cover_na(self)
 	{
+		if(self->hide_on_na)
+		{		
+			gtk_widget_hide(GTK_WIDGET(self));
+		}
 		gtk_image_set_from_stock(self->_priv->image, "media-no-cover", -1);
 	}
 	public 
 	void
 	set_cover_fetching(self)
 	{
+		if(self->hide_on_na)
+		{		
+			gtk_widget_hide(GTK_WIDGET(self));
+		}
 		gtk_image_set_from_stock(self->_priv->image, "media-loading-cover", -1);
 	}
 	public 
@@ -126,15 +136,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
 			g_object_unref(pb);
 		}
+		gtk_widget_show(GTK_WIDGET(self));
 	}
-
-
-
-
-
-
-
-
-
-
 }

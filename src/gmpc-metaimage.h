@@ -42,6 +42,7 @@ struct _GmpcMetaImage {
 	/*< public >*/
 	int size;
 	int image_type;
+	gboolean hide_on_na;
 	/*< private >*/
 	GmpcMetaImagePrivate *_priv;
 };
@@ -65,7 +66,14 @@ void 	gmpc_metaimage_set_image_type	(GmpcMetaImage * self,
 gint 	gmpc_metaimage_get_size	(GmpcMetaImage * self);
 void 	gmpc_metaimage_set_size	(GmpcMetaImage * self,
 					gint val);
+gboolean 	gmpc_metaimage_get_hide_on_na	(GmpcMetaImage * self);
+void 	gmpc_metaimage_set_hide_on_na	(GmpcMetaImage * self,
+					gboolean val);
 GtkWidget * 	gmpc_metaimage_new	(int type);
+void 	gmpc_metaimage_update_cover	(GmpcMetaImage * self,
+					MpdObj * mi,
+					ChangedStatusType what,
+					GmpcConnection * gmpcconn);
 void 	gmpc_metaimage_set_cover_na	(GmpcMetaImage * self);
 void 	gmpc_metaimage_set_cover_fetching	(GmpcMetaImage * self);
 void 	gmpc_metaimage_set_cover_from_path	(GmpcMetaImage * self,
@@ -79,11 +87,15 @@ void 	gmpc_metaimage_set_cover_from_path	(GmpcMetaImage * self,
 #define GMPC_METAIMAGE_GET_PROP_IMAGE_TYPE(arg)	"image_type", __extension__ ({gint *z = (arg); z;})
 #define GMPC_METAIMAGE_PROP_SIZE(arg)    	"size", __extension__ ({gint z = (arg); z;})
 #define GMPC_METAIMAGE_GET_PROP_SIZE(arg)	"size", __extension__ ({gint *z = (arg); z;})
+#define GMPC_METAIMAGE_PROP_HIDE_ON_NA(arg)    	"hide_on_na", __extension__ ({gboolean z = (arg); z;})
+#define GMPC_METAIMAGE_GET_PROP_HIDE_ON_NA(arg)	"hide_on_na", __extension__ ({gboolean *z = (arg); z;})
 #else /* __GNUC__ && !__STRICT_ANSI__ */
 #define GMPC_METAIMAGE_PROP_IMAGE_TYPE(arg)    	"image_type",(gint )(arg)
 #define GMPC_METAIMAGE_GET_PROP_IMAGE_TYPE(arg)	"image_type",(gint *)(arg)
 #define GMPC_METAIMAGE_PROP_SIZE(arg)    	"size",(gint )(arg)
 #define GMPC_METAIMAGE_GET_PROP_SIZE(arg)	"size",(gint *)(arg)
+#define GMPC_METAIMAGE_PROP_HIDE_ON_NA(arg)    	"hide_on_na",(gboolean )(arg)
+#define GMPC_METAIMAGE_GET_PROP_HIDE_ON_NA(arg)	"hide_on_na",(gboolean *)(arg)
 #endif /* __GNUC__ && !__STRICT_ANSI__ */
 
 
