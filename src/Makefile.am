@@ -46,7 +46,7 @@ gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
 	$(GOB2) $(gmpc_metaimage_SOURCE) 
 
 revisiont.h:
-	if test $(REVISION) != $(CONF_VERSION); then\
+	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
 		echo "Writing new Makefile.config file";\
 		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
