@@ -60,7 +60,7 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path);
 void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
-
+void pl3_file_browser_disconnect();
 
 guint pl3_fb_filling_source = 0;
 /**
@@ -296,12 +296,12 @@ void pl3_file_browser_add()
 		gtk_tree_path_free(path);
 	}
 }
+/*
 void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 {
 	MpdData *data = mpd_database_get_directory(connection,path);
 	if(data == NULL)
 	{
-		/* clear the tree */
 		gtk_tree_store_remove(pl3_tree, parent);
 	}
 	else
@@ -329,7 +329,6 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 			}
 			if(!found)
 			{
-				/** removes the row, and set iter to the next one */
 				valid = gtk_tree_store_remove(pl3_tree, &iter);
 			}
 			else
@@ -370,8 +369,11 @@ void pl3_file_browser_reupdate_folder(GtkTreeIter *parent, char *path)
 		}
 	}
 }
+*/
 void pl3_file_browser_reupdate()
 {
+	pl3_file_browser_disconnect();
+/*	
 	if(pl3_fb_tree_ref){
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 		if(path)
@@ -393,8 +395,8 @@ void pl3_file_browser_reupdate()
 				pl3_file_browser_reupdate_folder(&parent, "/");
 
 			}
-			/* update right view */
-			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
+*/			/* update right view */
+/*			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
 			{
 				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 						glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -407,6 +409,7 @@ void pl3_file_browser_reupdate()
 			gtk_tree_path_free(path);
 		}
 	}
+	*/
 }
 
 typedef struct {

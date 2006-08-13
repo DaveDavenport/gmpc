@@ -44,21 +44,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		export,
 		link);
 
-
-
-
-
-
-
-	
 	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
 	{
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
-		gtk_widget_show_all(self);
+		gtk_widget_show_all(GTK_WIDGET(self));
 		self_set_cover_na(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
-				self_update_cover, self);
+				G_CALLBACK(self_update_cover), G_OBJECT(self));
 	}
 
 	override (G:Object)
@@ -136,7 +129,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{		
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
-		gtk_image_set_from_stock(self->_priv->image, "media-no-cover", -1);
+		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-no-cover", -1);
 	}
 	public 
 	void
@@ -146,7 +139,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{		
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
-		gtk_image_set_from_stock(self->_priv->image, "media-loading-cover", -1);
+		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-loading-cover", -1);
 	}
 	public 
 	void

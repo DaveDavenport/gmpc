@@ -617,7 +617,7 @@ void meta_data_check_plugin_changed()
 	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
 	if(old_amount < meta_num_plugins)
 	{
-		GtkDialog *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
 				_("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
 		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
 		gtk_widget_show_all(GTK_WIDGET(dialog));

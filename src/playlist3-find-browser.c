@@ -100,18 +100,6 @@ gmpcPlugin find_browser_plug = {
 	NULL
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
 extern GladeXML *pl3_xml;
 
 /* internal */
@@ -835,19 +823,8 @@ void pl3_playlist_search()
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
- int pl3_find_browser_add_go_menu(GtkWidget *menu)
- {
+int pl3_find_browser_add_go_menu(GtkWidget *menu)
+{
  	GtkWidget *item = NULL;
  
  	item = gtk_image_menu_item_new_with_label(_("Find"));
