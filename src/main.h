@@ -114,8 +114,8 @@ int cover_art_edit_cover(gchar *artist, gchar *album);
 
 void tray_icon_connection_changed(MpdObj *mi, int connect);
 
-
-
+/** Handle status changed */
+void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 /**
  * Metadata 

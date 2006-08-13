@@ -44,7 +44,7 @@ void id3_save_album_txt()
 	current = songs->data;
 	if(current->artist == NULL)
 		return;
-	tv = glade_xml_get_widget(xml_id3_window, "album_tv");
+	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
 	buffer = gtk_text_view_get_buffer(tv);
 		
 
@@ -90,7 +90,7 @@ void id3_save_artist_txt()
 	current = songs->data;
 	if(current->artist == NULL)
 		return;
-	tv = glade_xml_get_widget(xml_id3_window, "artist_tv");
+	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
 	buffer = gtk_text_view_get_buffer(tv);
 		
 
@@ -251,6 +251,11 @@ void create_window (int song)
 	{
 		g_error ("Couldnt initialize GUI. Please check installation\n");
 	}
+	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),300);
+	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),META_ARTIST_ART);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),300);                 	
+	
 	glade_xml_signal_autoconnect (xml_id3_window);
 
 	songs = g_list_append (songs, songstr);
@@ -299,6 +304,10 @@ void set_text (GList * node)
 		return;
 	}
 	song = node->data;
+
+	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),song);
+	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),song);
+
 	if (song->artist != NULL)
 	{
 		gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "artist_label")), song->artist);
@@ -445,11 +454,6 @@ void set_text (GList * node)
 	//gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
 
 	if(song){
-		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
-		meta_data_get_path_callback(song, META_ALBUM_ART, id3_cover_art_fetched, image);
-		image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
-		meta_data_get_path_callback(song, META_ARTIST_ART, id3_cover_art_fetched, image); 		
-
 		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)id3_txt_fetched, 
 				glade_xml_get_widget(xml_id3_window, "artist_tv"));
 		meta_data_get_path_callback(song, META_ALBUM_TXT, (MetaDataCallback)id3_txt_fetched, 
@@ -563,9 +567,8 @@ void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, g
 
 void id3_info_clear_album_image()
 {
-	GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
 	meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_UNAVAILABLE, NULL);
-	gtk_image_set_from_stock(GTK_IMAGE(image), "media-no-cover", -1);	
+	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
@@ -574,17 +577,9 @@ void id3_album_image_file_selector(GtkFileChooser *chooser)
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
 	{
-		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
-		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
-		if(pb)
-		{
-			draw_pixbuf_border(pb);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
-			g_object_unref(pb);
-			meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_AVAILABLE, path);
-			GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
-		}
+		meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_AVAILABLE, path);
+		gmpc_metaimage_set_cover_from_path(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),path);	
+		GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 		g_free(path);
 	}
 }
@@ -594,17 +589,22 @@ void id3_reget_album_art()
 	{
 		if(songs->data)
 		{
-			GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "cover_image"));
-			meta_data_get_path_callback(songs->data, META_ALBUM_ART|META_QUERY_NO_CACHE, id3_edit_cover_art_fetched, image);
+
+			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
+					META_ALBUM_ART|META_QUERY_NO_CACHE);
+			gmpc_metaimage_update_cover_from_song(
+								GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
+								songs->data);	
+			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
+			
 		}
 	}
 }
 
 void id3_info_clear_artist_image()
 {
-	GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
 	meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_UNAVAILABLE, NULL);
-	gtk_image_set_from_stock(GTK_IMAGE(image), "media-no-cover", -1);	
+	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
@@ -613,18 +613,10 @@ void id3_artist_image_file_selector(GtkFileChooser *chooser)
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
 	{
-		GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
-		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
-		if(pb)
-		{
-			draw_pixbuf_border(pb);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
-			g_object_unref(pb);
-			meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_AVAILABLE, path);
-			GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
-		}
-		g_free(path);
+
+		gmpc_metaimage_set_cover_from_path(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),path);	
+		meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_AVAILABLE, path);
+		GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);         		
 	}
 }
 void id3_reget_artist_art()
@@ -633,8 +625,14 @@ void id3_reget_artist_art()
 	{
 		if(songs->data)
 		{
-			GtkImage *image = GTK_IMAGE(glade_xml_get_widget(xml_id3_window, "artist_image"));
-			meta_data_get_path_callback(songs->data, META_ARTIST_ART|META_QUERY_NO_CACHE, id3_edit_cover_art_fetched, image);
+			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
+					META_ARTIST_ART|META_QUERY_NO_CACHE);
+			gmpc_metaimage_update_cover_from_song(
+								GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
+								songs->data);	
+			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
+					META_ARTIST_ART);
+			
 		}
 	}
 }

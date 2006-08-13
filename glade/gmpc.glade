@@ -1002,12 +1002,12 @@
 	      <property name="spacing">6</property>
 
 	      <child>
-		<widget class="GtkImage" id="cover_image">
+		<widget class="Custom" id="metaimage_cover_image">
 		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
+		  <property name="creation_function">gmpc_metaimage_new</property>
+		  <property name="int1">0</property>
+		  <property name="int2">0</property>
+		  <property name="last_modification_time">Sun, 13 Aug 2006 19:07:00 GMT</property>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>
@@ -1181,12 +1181,12 @@
 	      <property name="spacing">0</property>
 
 	      <child>
-		<widget class="GtkImage" id="artist_image">
+		<widget class="Custom" id="metaimage_artist_image">
 		  <property name="visible">True</property>
-		  <property name="xalign">0.5</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
+		  <property name="creation_function">gmpc_metaimage_new</property>
+		  <property name="int1">0</property>
+		  <property name="int2">0</property>
+		  <property name="last_modification_time">Sun, 13 Aug 2006 19:41:46 GMT</property>
 		</widget>
 		<packing>
 		  <property name="padding">0</property>

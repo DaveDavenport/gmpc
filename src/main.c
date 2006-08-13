@@ -84,8 +84,8 @@ int gmpc_failed_tries = 0;
 static void init_playlist_store ();
 /** handle connection changed */
 void connection_changed(MpdObj *mi, int connect, gpointer data);
-/** Handle status changed */
-void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
+
+
 /** Error callback */
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 

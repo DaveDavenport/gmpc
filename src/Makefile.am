@@ -34,7 +34,6 @@ BUILT_SOURCES= revisiont.h\
 	gmpc-metaimage.c
 
 gmpc_connection_SOURCE=gmpc-connection.gob
-
 gmpc-connection.c: $(gmpc_connection_SOURCE) 
 	$(GOB2) $(gmpc_connection_SOURCE) 
 

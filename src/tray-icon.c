@@ -148,7 +148,6 @@ gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer dat
 
 gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
-	mpd_Song *song = NULL;
 	//int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
 	//GtkWidget *eventb;
@@ -169,6 +168,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		g_signal_connect(G_OBJECT(tip), "expose-event", G_CALLBACK(tip_expose_event), NULL);
 		
 		alimg = gmpc_metaimage_new(META_ALBUM_ART);
+		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
 		gtk_widget_set_size_request(GTK_WIDGET(alimg), 86,86);
 		gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
@@ -196,7 +196,8 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
 			char*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
 					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), elapsedTime/(gdouble)totalTime);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), 
+					(elapsedTime/(gdouble)totalTime<0)?0:(elapsedTime/(gdouble)totalTime));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
 			g_free(label);
 		}
@@ -560,7 +561,8 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
 			char*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
 					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), elapsedTime/(gdouble)totalTime);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), 
+					(elapsedTime/(gdouble)totalTime<0)?0:(elapsedTime/(gdouble)totalTime));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
 			g_free(label);
 		}

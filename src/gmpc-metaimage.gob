@@ -9,9 +9,12 @@ requires 2.0.0
 
 class Gmpc:MetaImage from Gtk:Event:Box{
 	private gulong status_signal = {0};
+	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
 	/** Public */
+
 	public int size = {64};
 	public int image_type = {META_ALBUM_ART};
+	public MpdObj *connection= {NULL};
 	public gboolean hide_on_na = {FALSE};
 
 	property INT image_type 
@@ -34,6 +37,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = FALSE,
 		export,
 		link);
+	property POINTER connection
+		(nick = _("Connection"),
+		blurb = _("A mpdObj to check on"),
+		default_value = NULL,
+		export,
+		link);
+
+
+
+
+
+
+
 	
 	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
@@ -69,7 +85,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gmpcconn )
 	{
-		if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+		if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
 		{
 			mpd_Song *song = mpd_playlist_get_current_song(mi);
 			if(!song)
@@ -88,6 +104,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	update_cover_from_song(self, mpd_Song *song)
 	{
+		if(self->_priv->song)
+			mpd_freeSong(self->_priv->song);
+		self->_priv->song = mpd_songDup(song);
 		meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
 	}
 
@@ -95,10 +114,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,Gmpc:MetaImage *self)
 	{
-		mpd_Song *current = mpd_playlist_get_current_song(connection);
-		if(!current)
-			return;
-		if(!strcmp(song->file, current->file))
+		if(!strcmp(song->file, self->_priv->song->file))
 		{
 			if(ret == META_DATA_AVAILABLE) {
 				self_set_cover_from_path(self,path); 

@@ -389,7 +389,7 @@ unsigned long pl3_find_browser_view_browser()
 					gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
 
 					songs++;
-					if(total_songs && (songs % step) == 0)
+					if(step && total_songs && (songs % step) == 0)
 					{
 						gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pl3_findb_pb), songs/(gdouble)total_songs);
 						while(gtk_events_pending()) gtk_main_iteration();
