@@ -1,0 +1,30 @@
+requires 2.0.0
+%headertop{
+	#include <stdio.h>
+	#include <libmpd/libmpd.h>
+	#include <libmpd/debug_printf.h>
+%}
+
+
+class Gmpc:Connection from G:Object{
+
+	signal last NONE (POINTER, INT)
+	void
+	connection_changed(self, MpdObj *mi,int connect)
+	{
+		debug_printf(DEBUG_INFO, "Connection Changed fired\n");
+	} 
+	signal last NONE (POINTER, INT)
+	void
+	status_changed(self, MpdObj *mi,ChangedStatusType what)
+	{
+		debug_printf(DEBUG_INFO, "Status Changed fired\n");
+	} 
+
+	public 
+	GObject *
+	new(void)
+	{
+		return (GObject *)GET_NEW;
+	}
+}
