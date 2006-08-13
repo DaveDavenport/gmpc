@@ -71,6 +71,7 @@ static BaconMessageConnection *bacon_connection = NULL;
 struct timeval tv_old = {0,0};
 #endif
 
+GmpcConnection *gmpcconn = NULL;
 int gmpc_connected = FALSE;
 int gmpc_failed_tries = 0;
 
@@ -441,6 +442,10 @@ int main (int argc, char **argv)
 	mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
 	mpd_signal_connect_error(connection, error_callback, NULL);
 	mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
+	/**
+	 * Just some trick to provide glib signals
+	 */
+	gmpcconn = (GmpcConnection *)gmpc_connection_new();
 
 	/** 
 	 * Add the internall plugins 
@@ -869,6 +874,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 			plugins[i]->mpd_status_changed(mi,what,NULL);
 		}
 	}
+	gmpc_connection_status_changed(gmpcconn, mi, what);
 }
 
 
@@ -1049,6 +1055,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data)
 			plugins[i]->mpd_connection_changed(mi,connect,NULL);
 		}
 	}
+	gmpc_connection_connection_changed(gmpcconn, mi, connect);
 	/**
 	 * force an update of status
 	 */

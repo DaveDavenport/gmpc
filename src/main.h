@@ -27,6 +27,13 @@
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
+/**
+ * Some gobjects
+ */
+#include "gmpc-connection.h"
+#include "gmpc-metaimage.h"
+
+extern GmpcConnection *gmpcconn;
 
 extern int gmpc_connected;
 

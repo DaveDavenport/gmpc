@@ -892,7 +892,12 @@ void create_playlist3 ()
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
-
+	/**
+	 * Insert new custom widget
+	 */
+	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), META_ALBUM_ART);
+	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
 
 }
 
@@ -1049,105 +1054,14 @@ void playlist_player_set_song(MpdObj *mi)
 	}
 }
 
-/**
- * Artist art image.
- * This image is the only image that get's hidden en shown
- * TODO: fix this?
- */
-static void playlist_player_update_artist_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
-{
-	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	if( current  == NULL || pl3_xml == NULL) return;
-	debug_printf(DEBUG_INFO,"Callback artist image: %s %i\n",path, ret);	
-	/**
-	 * FIXME: Is this check needed? esp for current?
-	 */
-	if(song->file && current->file)
-	{
-		/**
-		 * Check if the result is for the currently playing song
-		 */
-		if(!strcmp(song->file, current->file))
-		{
-			if(ret == META_DATA_AVAILABLE)
-			{
-				GdkPixbuf *pb = NULL;
-				if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0))
-				{
-					int width = gtk_paned_get_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")));
-					if(width <= 0) width = cfg_get_single_value_as_int(config, "playlist", "pane-pos");
-					if(width <= 0) width = 100;
-					else if(width > 200) width = 200;
-					width-=16;
-					pb = gdk_pixbuf_new_from_file_at_size(path,width,-1,NULL);
-					if(pb) draw_pixbuf_border(pb);
-					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "cover_art_image")),pb);
-					gtk_widget_show(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-					g_object_unref(pb);
-				}
-				else{
-					gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-				}
-			}
-			else
-			{
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
-			}
-		}
-	}
-}
 
-/**
- * Update player cover art image
- */
-static void playlist_player_update_image_callback(mpd_Song *song, MetaDataResult ret, char *path, gpointer data)
-{
-	mpd_Song *current = mpd_playlist_get_current_song(connection);
-	debug_printf(DEBUG_INFO,"Called with state: %i and with path: %s", ret, path);
-	if( current  == NULL || pl3_xml == NULL) return;
-	/**
-	 * FIXME: Is this check needed? 
-	 */
-	if(song->file && current->file)
-	{
-		if(!strcmp(song->file, current->file))
-		{
-			if(ret == META_DATA_AVAILABLE)
-			{
-				GdkPixbuf *pb = NULL;
-				pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
-				if(pb)
-				{
-					draw_pixbuf_border(pb);
-					gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")),pb);
-					g_object_unref(pb);
-				}
-			}
-			else if (ret == META_DATA_FETCHING)
-			{
-				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-loading-cover", -1);
-			}
-			else{
-				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
-			}
-		}
-	}
-}
 /**
  * Update the metadata in the playlist itself..
  * this is cover art and artist image
  */
 static void playlist_player_update_image(MpdObj *mi)
 {
-	if(mpd_check_connected(connection))
-	{
-		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		if(song)
-		{
-			meta_data_get_path_callback(song, META_ALBUM_ART, playlist_player_update_image_callback, NULL);
-			meta_data_get_path_callback(song, META_ARTIST_ART, playlist_player_update_artist_image_callback, NULL);
-		}
-	}
+
 }
 /**
  * Menu Callback functions
@@ -1207,7 +1121,7 @@ void playlist_zoom_level_changed()
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
+//	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 	/** Menu Bar */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
 	/** BUTTON BOX */
@@ -1381,8 +1295,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				 * if not playing/paused remove the cover art image
 				 * and artist art
 				 */
-				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
-				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+//				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
+//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
 
 
 				gtk_image_set_from_stock(GTK_IMAGE(

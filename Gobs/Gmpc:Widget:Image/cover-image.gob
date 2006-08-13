@@ -10,7 +10,15 @@ requires 2.0.0
 class Gmpc:MetaImage from Gtk:Event:Box{
 	public int size = {64};
 	private gulong status_signal = {0};
-	private int type = {META_ALBUM_ART};
+	public int image_type = {META_ALBUM_ART};
+
+	property INT image_type 
+		(nick = _("Image type"),
+		blurb = _("Type of the image, like artist art"),
+		default_value = META_ALBUM_ART,
+		export,
+		link);
+		 
 	property INT size
 		(nick = _("Size"),
 		blurb = _("Size of the image"),
@@ -23,10 +31,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	init (self)
 	{
 		/** Set size */
-		gtk_widget_set_size_request(self, self->size, self->size);
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
 		self_set_cover_na(self);
-		gtk_widget_show(self);
+		gtk_widget_show_all(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
 				self_update_cover, self);
 	}
@@ -47,7 +54,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	GtkWidget * new (int type)
 	{
 		Self *gmi =  GET_NEW;
-		gmi->_priv->type = type;
+		gmi->image_type = type;
 		return (GtkWidget *)gmi;
 	}
 	
@@ -64,7 +71,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			else
 			{
-				meta_data_get_path_callback(song, self->_priv->type, self_meta_callback, self);
+				meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
 			}
 		}
 
@@ -112,7 +119,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	set_cover_from_path(self, gchar *path)
 	{
 		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_size(path,self->size,self->size,NULL);
+		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
 		if(pb)
 		{
 			draw_pixbuf_border(pb);
