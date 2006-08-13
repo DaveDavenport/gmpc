@@ -163,7 +163,7 @@ gmpc_connection_class_init (GmpcConnectionClass * c G_GNUC_UNUSED)
 			G_TYPE_POINTER,
 			G_TYPE_INT);
 	if ___GOB_UNLIKELY(sizeof(MpdObj * ) != sizeof(gpointer ) || sizeof(int ) != sizeof(gint ) || parent_class == NULL /* avoid warning */) {
-		g_error("connection.gob line 11: Type mismatch of \"connection_changed\" signal signature");
+		g_error("gmpc-connection.gob line 11: Type mismatch of \"connection_changed\" signal signature");
 	}
 	object_signals[STATUS_CHANGED_SIGNAL] =
 		g_signal_new ("status_changed",
@@ -176,12 +176,12 @@ gmpc_connection_class_init (GmpcConnectionClass * c G_GNUC_UNUSED)
 			G_TYPE_POINTER,
 			G_TYPE_INT);
 	if ___GOB_UNLIKELY(sizeof(MpdObj * ) != sizeof(gpointer ) || sizeof(ChangedStatusType ) != sizeof(gint ) || parent_class == NULL /* avoid warning */) {
-		g_error("connection.gob line 17: Type mismatch of \"status_changed\" signal signature");
+		g_error("gmpc-connection.gob line 17: Type mismatch of \"status_changed\" signal signature");
 	}
 
-#line 11 "connection.gob"
+#line 11 "gmpc-connection.gob"
 	c->connection_changed = ___real_gmpc_connection_connection_changed;
-#line 17 "connection.gob"
+#line 17 "gmpc-connection.gob"
 	c->status_changed = ___real_gmpc_connection_status_changed;
 #line 187 "gmpc-connection.c"
 }
@@ -189,7 +189,7 @@ gmpc_connection_class_init (GmpcConnectionClass * c G_GNUC_UNUSED)
 
 
 
-#line 11 "connection.gob"
+#line 11 "gmpc-connection.gob"
 void 
 gmpc_connection_connection_changed (GmpcConnection * self, MpdObj * mi, int connect)
 #line 196 "gmpc-connection.c"
@@ -200,9 +200,9 @@ gmpc_connection_connection_changed (GmpcConnection * self, MpdObj * mi, int conn
 memset (&___return_val, 0, sizeof (___return_val));
 memset (&___param_values, 0, sizeof (___param_values));
 
-#line 11 "connection.gob"
+#line 11 "gmpc-connection.gob"
 	g_return_if_fail (self != NULL);
-#line 11 "connection.gob"
+#line 11 "gmpc-connection.gob"
 	g_return_if_fail (GMPC_IS_CONNECTION (self));
 #line 208 "gmpc-connection.c"
 
@@ -227,21 +227,21 @@ memset (&___param_values, 0, sizeof (___param_values));
 	g_value_unset (&___param_values[1]);
 	g_value_unset (&___param_values[2]);
 }
-#line 11 "connection.gob"
+#line 11 "gmpc-connection.gob"
 static void 
 ___real_gmpc_connection_connection_changed (GmpcConnection * self G_GNUC_UNUSED, MpdObj * mi, int connect)
 #line 234 "gmpc-connection.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:Connection::connection_changed"
 {
-#line 14 "connection.gob"
+#line 14 "gmpc-connection.gob"
 	
 		debug_printf(DEBUG_INFO, "Connection Changed fired\n");
 	}}
 #line 242 "gmpc-connection.c"
 #undef __GOB_FUNCTION__
 
-#line 17 "connection.gob"
+#line 17 "gmpc-connection.gob"
 void 
 gmpc_connection_status_changed (GmpcConnection * self, MpdObj * mi, ChangedStatusType what)
 #line 248 "gmpc-connection.c"
@@ -252,9 +252,9 @@ gmpc_connection_status_changed (GmpcConnection * self, MpdObj * mi, ChangedStatu
 memset (&___return_val, 0, sizeof (___return_val));
 memset (&___param_values, 0, sizeof (___param_values));
 
-#line 17 "connection.gob"
+#line 17 "gmpc-connection.gob"
 	g_return_if_fail (self != NULL);
-#line 17 "connection.gob"
+#line 17 "gmpc-connection.gob"
 	g_return_if_fail (GMPC_IS_CONNECTION (self));
 #line 260 "gmpc-connection.c"
 
@@ -279,28 +279,28 @@ memset (&___param_values, 0, sizeof (___param_values));
 	g_value_unset (&___param_values[1]);
 	g_value_unset (&___param_values[2]);
 }
-#line 17 "connection.gob"
+#line 17 "gmpc-connection.gob"
 static void 
 ___real_gmpc_connection_status_changed (GmpcConnection * self G_GNUC_UNUSED, MpdObj * mi, ChangedStatusType what)
 #line 286 "gmpc-connection.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:Connection::status_changed"
 {
-#line 20 "connection.gob"
+#line 20 "gmpc-connection.gob"
 	
 		debug_printf(DEBUG_INFO, "Status Changed fired\n");
 	}}
 #line 294 "gmpc-connection.c"
 #undef __GOB_FUNCTION__
 
-#line 24 "connection.gob"
+#line 24 "gmpc-connection.gob"
 GObject * 
 gmpc_connection_new (void)
 #line 300 "gmpc-connection.c"
 {
 #define __GOB_FUNCTION__ "Gmpc:Connection::new"
 {
-#line 27 "connection.gob"
+#line 27 "gmpc-connection.gob"
 	
 		return (GObject *)GET_NEW;
 	}}

@@ -31,6 +31,11 @@ gmpc_SOURCES=\
 	TreeSearchWidget.c
 BUILT_SOURCES= revisiont.h
 
+gmpc_connection_SOURCE=gmpc-connection.gob
+
+gmpc-connection.c: $(gmpc_connection_SOURCE) 
+	$(GOB) $(gmpc_connection_SOURCE) 
+
 revisiont.h:
 	echo "static char *revision = \""\
 	`svn info | grep "Last Changed Rev" | awk -F': ' '{print $$2}'`\

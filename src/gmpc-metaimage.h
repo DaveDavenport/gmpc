@@ -74,6 +74,8 @@ void 	gmpc_metaimage_update_cover	(GmpcMetaImage * self,
 					MpdObj * mi,
 					ChangedStatusType what,
 					GmpcConnection * gmpcconn);
+void 	gmpc_metaimage_update_cover_from_song	(GmpcMetaImage * self,
+					mpd_Song * song);
 void 	gmpc_metaimage_set_cover_na	(GmpcMetaImage * self);
 void 	gmpc_metaimage_set_cover_fetching	(GmpcMetaImage * self);
 void 	gmpc_metaimage_set_cover_from_path	(GmpcMetaImage * self,
