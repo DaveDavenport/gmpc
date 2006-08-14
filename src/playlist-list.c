@@ -132,7 +132,7 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 }
 gdouble playlist_list_get_loaded(CustomList *cl)
 {
-	if(cl)
+	if(cl && cl->num_rows)
 	{
 		return cl->loaded/(gdouble)cl->num_rows;
 	}
@@ -226,6 +226,9 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		}
 		if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(cl));
 	}
+	/**
+	 * Non Initial Fill
+	 */
 	else
 	{
 		/* Deleting rows */
@@ -281,6 +284,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			data = mpd_playlist_get_changes_posid(mi, cl->playlist_id);
 		}
 		else{
+			/** This is slow */
 			data = mpd_playlist_get_changes(mi, cl->playlist_id);
 		}
 		for(;data != NULL;

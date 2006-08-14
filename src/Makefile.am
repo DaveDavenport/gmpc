@@ -39,11 +39,11 @@ BUILT_SOURCES= revisiont.h\
 
 gmpc_connection_SOURCE=gmpc-connection.gob
 gmpc-connection.c: $(gmpc_connection_SOURCE) 
-	$(GOB2) $(gmpc_connection_SOURCE) 
+	$(GOB2) --no-touch-headers $(gmpc_connection_SOURCE) 
 
 gmpc_metaimage_SOURCE=gmpc-metaimage.gob
 gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
-	$(GOB2) $(gmpc_metaimage_SOURCE) 
+	$(GOB2) --no-touch-headers $(gmpc_metaimage_SOURCE) 
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\

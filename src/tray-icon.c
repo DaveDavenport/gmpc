@@ -193,10 +193,10 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		{
 			int totalTime = mpd_status_get_total_song_time(connection);
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
+			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
 			char*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
 					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), 
-					(elapsedTime/(gdouble)totalTime<0)?0:(elapsedTime/(gdouble)totalTime));
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
 			g_free(label);
 		}
@@ -609,10 +609,10 @@ void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			int totalTime = mpd_status_get_total_song_time(connection);                                 		
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
+			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
 			char*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
 					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), 
-					(elapsedTime/(gdouble)totalTime<0)?0:(elapsedTime/(gdouble)totalTime));
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
 			g_free(label);
 		}
