@@ -10,6 +10,7 @@ requires 2.0.0
 
 class Gmpc:MetaImage from Gtk:Event:Box{
 	private gulong status_signal = {0};
+	private gulong connect_signal = {0};
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
 	/** Public */
 
@@ -53,16 +54,21 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		self_set_cover_na(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
 				G_CALLBACK(self_update_cover), G_OBJECT(self));
+		self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "connection_changed",
+				G_CALLBACK(self_connection_changed), G_OBJECT(self));                            		
 	}
 
 	override (G:Object)
 	void 
 	finalize (self)
 	{
-		{
+		if(self->_priv->status_signal){
 			g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->_priv->status_signal);
 		}
-
+		if(self->_priv->connect_signal){
+			g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->_priv->connect_signal);
+		}
+		
 	}
 		
 	public 
@@ -88,6 +94,16 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_update_cover_from_song(self, song);
 			}
+		}
+
+	}
+	public 
+	void
+	connection_changed(self,MpdObj *mi, int connect, GmpcConnection *gmpconn)
+	{
+		if(!connect)
+		{
+			self_set_cover_na(self);
 		}
 
 	}
