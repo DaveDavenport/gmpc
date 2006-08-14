@@ -115,10 +115,10 @@ void pl3_tag_browser_init()
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
 	pl3_tb_store = gtk_list_store_new (PL3_TB_ROWS, 
-			GTK_TYPE_STRING, /* path to file */
-			GTK_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
-			GTK_TYPE_STRING,	/* title to display */
-			GTK_TYPE_STRING); /* icon type */
+			G_TYPE_STRING, /* path to file */
+			G_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
+			G_TYPE_STRING,	/* title to display */
+			G_TYPE_STRING); /* icon type */
 
 
 

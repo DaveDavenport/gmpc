@@ -161,11 +161,11 @@ void pl3_artist_browser_init()
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
 	pl3_ab_store = gtk_list_store_new (PL3_AB_ROWS, 
-			GTK_TYPE_STRING, /* PL3_AB_ARTIST */
-			GTK_TYPE_STRING, /* PL3_AB_ALBUM  */
-			GTK_TYPE_STRING, /* PL3_AB_FILE */
-			GTK_TYPE_INT,	 /* PL3_AB_TYPE  */
-			GTK_TYPE_STRING, /* PL3_AB_TITLE */
+			G_TYPE_STRING, /* PL3_AB_ARTIST */
+			G_TYPE_STRING, /* PL3_AB_ALBUM  */
+			G_TYPE_STRING, /* PL3_AB_FILE */
+			G_TYPE_INT,	 /* PL3_AB_TYPE  */
+			G_TYPE_STRING, /* PL3_AB_TITLE */
 			GDK_TYPE_PIXBUF); /* icon type */
 
 

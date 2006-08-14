@@ -156,11 +156,11 @@ void pl3_find_browser_init()
 
 	GValue value;
 	pl3_findb_store = gtk_list_store_new (PL3_FINDB_ROWS, 
-			GTK_TYPE_STRING, /* path to file */
-			GTK_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
-			GTK_TYPE_STRING,	/* title to display */
-			GTK_TYPE_STRING,
-			GTK_TYPE_INT); /* icon type */
+			G_TYPE_STRING, /* path to file */
+			G_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
+			G_TYPE_STRING,	/* title to display */
+			G_TYPE_STRING,
+			G_TYPE_INT); /* icon type */
 
 
 
@@ -222,7 +222,7 @@ void pl3_find_browser_init()
 
 	gtk_entry_set_completion(GTK_ENTRY(GTK_BIN(pl3_findb_entry)->child), GTK_ENTRY_COMPLETION(compl));
 
-	pl3_findb_combo_store = gtk_list_store_new(2,GTK_TYPE_INT, GTK_TYPE_STRING);
+	pl3_findb_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
 	pl3_findb_combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(pl3_findb_combo_store));
 
 	renderer = gtk_cell_renderer_text_new();

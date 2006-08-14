@@ -129,7 +129,7 @@ void create_preferences_window()
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
 
-	plugin_store = gtk_list_store_new(2, GTK_TYPE_INT, GTK_TYPE_STRING);
+	plugin_store = gtk_list_store_new(2, G_TYPE_INT, G_TYPE_STRING);
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_set_title(column, _("Plugins:"));
 	renderer = gtk_cell_renderer_text_new ();
