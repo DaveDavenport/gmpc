@@ -4,6 +4,7 @@ requires 2.0.0
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include "main.h"
+#include "misc.h"
 %}
 
 
@@ -97,14 +98,20 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	{
 		if(self->_priv->song)
 			mpd_freeSong(self->_priv->song);
+		if(!song)
+			return;
+		if(self->_priv->status_signal)
 		self->_priv->song = mpd_songDup(song);
 		meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
 	}
 
 	private
 	void
-	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,Gmpc:MetaImage *self)
+	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,gpointer data)
 	{
+		Self *self = data;
+		if(!song || !self->_priv->song)
+			return;
 		if(!strcmp(song->file, self->_priv->song->file))
 		{
 			if(ret == META_DATA_AVAILABLE) {
