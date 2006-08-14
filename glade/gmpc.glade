@@ -182,7 +182,7 @@
 
 <widget class="GtkWindow" id="id3_info_window">
   <property name="visible">True</property>
-  <property name="title" translatable="yes">gmpc - id3 info</property>
+  <property name="title" translatable="yes">gmpc - song info</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>

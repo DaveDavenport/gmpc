@@ -104,7 +104,7 @@ int connect_to_mpd()
 	mpd_set_hostname(connection,string);
 	cfg_free_string(string);
 	mpd_set_port(connection, cfg_get_single_value_as_int_with_default(config,"connection","portnumber", 6600));
-	mpd_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",1.0));
+	mpd_set_connection_timeout(connection, cfg_get_single_value_as_float_with_default(config,"connection","timeout",DEFAULT_TIMEOUT));
 
 	if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
 	{
@@ -610,7 +610,7 @@ void connection_pref_construct(GtkWidget *container)
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin")), 
 			cfg_get_single_value_as_int_with_default(config, "connection","portnumber",6600));
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin")), 
-			(gdouble)cfg_get_single_value_as_float_with_default(config,"connection", "timeout",1.0));
+			(gdouble)cfg_get_single_value_as_float_with_default(config,"connection", "timeout",DEFAULT_TIMEOUT));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(connection_pref_xml, "ck_autocon")), 
 			cfg_get_single_value_as_int_with_default(config,"connection", "autoconnect", 0));
 
