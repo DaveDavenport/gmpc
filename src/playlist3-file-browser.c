@@ -788,8 +788,9 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			{
 				do{
 					char *name = NULL;
-					gtk_tree_model_get(model, &citer, 2, &name, -1);
-					if(strcmp(name, song_path) == 0)
+					char *type= NULL;
+					gtk_tree_model_get(model, &citer, 2, &name, 3, &type,-1);
+					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-open") == 0)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
@@ -797,6 +798,7 @@ void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 						gtk_tree_path_free(path);
 					}
 					g_free(name);
+					g_free(type);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
 
