@@ -60,20 +60,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		export,
 		link);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
 	{
@@ -211,7 +197,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	set_cover_from_path(self, gchar *path)
 	{
 		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*5,self->size-self->draw_shadow*5,TRUE,NULL);
+		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*8,self->size-self->draw_shadow*8,TRUE,NULL);
 		if(pb)
 		{
 			//draw_pixbuf_border(pb);

@@ -25,7 +25,6 @@ gmpc_SOURCES=\
 	cover-art-manager.c\
 	bacon-volume.c\
 	sm.c\
-	information.c\
 	metadata.c\
 	eggcellrendererkeys.c\
 	eggaccelerators.c\
