@@ -186,7 +186,8 @@ void info_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,164,164,NULL);
 		if(pb)
 		{
-			draw_pixbuf_border(pb);
+			screenshot_add_border(&pb);
+//			draw_pixbuf_border(pb);
 
 			gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
 			gtk_text_buffer_get_iter_at_mark(buffer, &stop, mark);
@@ -235,7 +236,8 @@ void info_cover_album_mini_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 		GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(path,64,64,NULL);
 		if(pb)
 		{
-			draw_pixbuf_border(pb);
+			screenshot_add_border(&pb);
+//			draw_pixbuf_border(pb);
 
 			gtk_text_buffer_insert_pixbuf(buffer, &iter, pb);	
 			gtk_text_buffer_get_iter_at_mark(buffer, &stop, mark);

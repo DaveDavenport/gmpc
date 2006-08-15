@@ -519,8 +519,9 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * If not, f.e. only artist, or only album, get a song from mpd
 	 * so plugins based on path can work with it.
 	 */
-	if(song->file == NULL)
-	{
+	/** For speed reason and mpd stressing disabled */
+//	if(song->file == NULL)
+	if(FALSE){
 		/* Only mpd 0.12 supports this */
 		if(mpd_server_check_version(connection, 0,12,0))
 		{

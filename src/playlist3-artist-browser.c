@@ -264,7 +264,8 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult ret, ch
 				{
 					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",64);
 					GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
-					draw_pixbuf_border(pb);	
+					screenshot_add_border(&pb);
+					//draw_pixbuf_border(pb);	
 					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
 					if(pb)g_object_unref(pb);
 					gtk_tree_row_reference_free(ref);

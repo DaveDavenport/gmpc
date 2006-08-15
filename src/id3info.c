@@ -285,7 +285,8 @@ void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoint
 			if(!pb){
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
 			}
-			draw_pixbuf_border(pb);
+			screenshot_add_border(&pb);
+			//draw_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
 			g_object_unref(pb);
 			/*			set_text(songs);	*/
@@ -552,7 +553,8 @@ void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, g
 			{
 				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
 			}
-			draw_pixbuf_border(pb);
+			screenshot_add_border(&pb);
+//			draw_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
 			g_object_unref(pb);
 			/*			set_text(songs);	*/

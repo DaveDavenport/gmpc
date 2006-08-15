@@ -32,7 +32,9 @@ gmpc_SOURCES=\
 	bacon-message-connection.c\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
-	TreeSearchWidget.c
+	TreeSearchWidget.c\
+	playlist3-metadata-browser.c
+
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
 	gmpc-metaimage.c

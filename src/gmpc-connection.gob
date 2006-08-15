@@ -18,7 +18,6 @@ class Gmpc:Connection from G:Object{
 	void
 	status_changed(self, MpdObj *mi,ChangedStatusType what)
 	{
-		debug_printf(DEBUG_INFO, "Status Changed fired\n");
 	} 
 
 	public 

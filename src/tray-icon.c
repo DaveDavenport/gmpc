@@ -82,14 +82,15 @@ void tray_init()
 }
 
 
-/**/
+/*
+ *FIXME: remove g_String
+ */
 gchar *tray_get_tooltip_text()
 {
 	GString *string = g_string_new("");
 
 	gchar result[1024];
 	gchar *retval;
-	int id;
 	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);

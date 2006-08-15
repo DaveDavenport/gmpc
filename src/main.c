@@ -479,7 +479,7 @@ int main (int argc, char **argv)
 	/*
 		plugin_add(&cover_art_plug,0);
 	*/
-	
+	plugin_add(&metab_plugin,0);	
 
 	
 	/**

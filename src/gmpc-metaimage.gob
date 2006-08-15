@@ -18,6 +18,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public int image_type = {META_ALBUM_ART};
 	public MpdObj *connection= {NULL};
 	public gboolean hide_on_na = {FALSE};
+	public gboolean draw_border = {TRUE};
+	public gboolean draw_shadow = {FALSE};
 
 	property INT image_type 
 		(nick = _("Image type"),
@@ -45,10 +47,37 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = NULL,
 		export,
 		link);
+	property BOOLEAN draw_border
+		(nick = _("DrawBorder"),
+		 blurb = _("Draw a border around the image"),
+		 default_value = TRUE,
+		 export,
+		 link);
+	property BOOLEAN draw_shadow
+		(nick = _("DrawShadow"),
+		 blurb = _("Draw a shadow under the image"),
+		 default_value = FALSE,
+		export,
+		link);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
 	{
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
 		gtk_widget_show_all(GTK_WIDGET(self));
 		self_set_cover_na(self);
@@ -128,7 +157,22 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		Self *self = data;
 		if(!song || !self->_priv->song)
 			return;
-		if(!strcmp(song->file, self->_priv->song->file))
+		/**
+		 * Check for fields
+		 */
+		if(song->artist == NULL || self->_priv->song->artist == NULL)
+			return;
+		if(self->image_type&META_ALBUM_ART && (song->album == NULL || self->_priv->song->album == NULL))
+			return;
+		/**
+		 * match song
+		 */
+		if(strcmp(song->artist, self->_priv->song->artist))
+			return;
+		else if(self->image_type&META_ALBUM_ART && 
+				strcmp(song->album, self->_priv->song->album))
+			return;
+		else
 		{
 			if(ret == META_DATA_AVAILABLE) {
 				self_set_cover_from_path(self,path); 
@@ -166,10 +210,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	set_cover_from_path(self, gchar *path)
 	{
 		GdkPixbuf *pb = NULL;
-		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
+		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*5,self->size-self->draw_shadow*5,TRUE,NULL);
 		if(pb)
 		{
-			draw_pixbuf_border(pb);
+			//draw_pixbuf_border(pb);
+			if(self->draw_border)
+				screenshot_add_border(&pb);	
+			if(self->draw_shadow)
+				screenshot_add_shadow(&pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
 			g_object_unref(pb);
 		}

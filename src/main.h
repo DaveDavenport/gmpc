@@ -61,6 +61,7 @@ extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin info_plugin;
 
 extern gmpcPlugin tray_icon_plug;
+extern gmpcPlugin metab_plugin;
 
 /** main.c **/
 extern GladeXML *xml_main_window;
