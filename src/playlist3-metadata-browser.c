@@ -8,21 +8,19 @@ void info2_fill_song_view(char *path);
 void info2_fill_album_view(char *artist, char *album);
 void info2_fill_artist_view(char *artist);
 void info2_fill_view();
-static GtkWidget *resizer_vbox= NULL;
-static GtkWidget *info2_pref_vbox = NULL;
 void info2_add(GtkWidget *cat_tree);
 void info2_selected(GtkWidget *container);
 void info2_unselected(GtkWidget *container);
-void info2_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
-
-static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
-GtkWidget *title_event=NULL;
-
 void info2_construct(GtkWidget *container);
 void info2_destroy(GtkWidget *container);
-
 int info2_get_enabled();
 void info2_set_enabled(int enabled);
+
+
+static GtkWidget *resizer_vbox= NULL;
+static GtkWidget *info2_pref_vbox = NULL;
+static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
+GtkWidget *title_event=NULL;
 
 gmpcPrefPlugin info2_gpp = {
 	info2_construct,
@@ -55,7 +53,7 @@ gmpcPlugin metab_plugin = {
 	NULL, /* parth */
 	NULL, /*init */
 	&info2_gbp,
-	info2_changed, /* status changed */
+	NULL, /* status changed */
 	NULL, /* connection changed */
 	&info2_gpp,
 	NULL, /* cover */
@@ -69,8 +67,8 @@ static GtkTreeRowReference *wiki_ref = NULL;
 void
 remove_container_entries (GtkContainer * widget)
 {
-	GList *children = gtk_container_get_children (widget);
-
+	GList *children, *node; 
+	children = node = gtk_container_get_children (widget);
 	if (children == NULL)
 		return;
 
@@ -81,6 +79,7 @@ remove_container_entries (GtkContainer * widget)
 				      GTK_WIDGET (child));
 	}
 	while (NULL != (children = g_list_next (children)));
+	g_list_free(node);
 }
 
 void
@@ -263,9 +262,6 @@ void info2_cover_lyric_fetched(mpd_Song *song,MetaDataResult ret, char *path,Pas
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_widget_show_all(vbox);
 		g_free(content);
-
-
-
 	}
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
@@ -301,9 +297,6 @@ void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_widget_show_all(vbox);
 		g_free(content);
-
-
-
 	}
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
@@ -322,8 +315,26 @@ void as_song_viewed_clicked(GtkButton *button, gpointer data)
 		info2_fill_song_view(artist);
 	}
 	g_free(artist);
-
 }
+
+
+
+void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
+{
+	GtkWidget *label, *ali;
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), name);
+	ali = gtk_alignment_new(0,0.5,0,0);
+	gtk_container_add(GTK_CONTAINER(ali), label);
+
+	gtk_table_attach(GTK_TABLE(table), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+	label = gtk_label_new(value);
+	ali = gtk_alignment_new(0,0.5,1,0);
+	gtk_container_add(GTK_CONTAINER(ali), label);
+	gtk_table_attach(GTK_TABLE(table), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+}
+
 
 /** 
  * Song View 
@@ -334,8 +345,11 @@ void info2_fill_song_view(char *path)
 	GtkWidget *vbox= NULL;
 	mpd_Song *song = NULL;
 	MpdData *data;
-	GList *list, *node;
+	GtkWidget *button = NULL;
+	GtkWidget *label = NULL;
 	PassData *pd = NULL;
+	char *markup = NULL;
+
 	/** 
 	 * Clear the view
 	 */
@@ -344,16 +358,9 @@ void info2_fill_song_view(char *path)
 	info2_prepare_view();
 
 
-	GtkWidget *button = NULL;
-
-
-	GtkWidget *label = gtk_label_new("");
-	char *markup = NULL;
-
-
 
 	/** Get song
-	 */
+	*/
 	data = mpd_database_find_adv(connection, TRUE, MPD_TAG_ITEM_FILENAME, path, -1);
 	if(!data)
 		return;
@@ -420,7 +427,7 @@ void info2_fill_song_view(char *path)
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
-                 	, song->title);
+			, song->title);
 	gtk_label_set_markup(GTK_LABEL(label),markup);
 	g_free(markup);
 	gtk_container_add(GTK_CONTAINER(ali),label);
@@ -436,8 +443,8 @@ void info2_fill_song_view(char *path)
 	GtkWidget *image = NULL;
 	ali = gtk_alignment_new(0,0.5,1,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	
-	
+
+
 	image = gmpc_metaimage_new(META_ALBUM_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
@@ -447,12 +454,6 @@ void info2_fill_song_view(char *path)
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 
-
-
-
-
-
-	
 	/** pack the table and add to view */
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
@@ -465,17 +466,6 @@ void info2_fill_song_view(char *path)
 	pd->id = current_id;     		
 	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info2_cover_song_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
-
-
-
-
-
-
-
-
-
-
-
 
 	/**
 	 * Play Button 
@@ -500,7 +490,7 @@ void info2_fill_song_view(char *path)
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), button);
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
-	
+
 	table2 = gtk_table_new(2,2,0);
 	gtk_container_set_border_width(GTK_CONTAINER(table2), 8);
 
@@ -510,147 +500,57 @@ void info2_fill_song_view(char *path)
 	gtk_table_attach(GTK_TABLE(table), hbox, 1,2,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 
-
-
-
 	int i =0;
 	if(song->artist)
 	{
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<b>Artist:</b>");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		ali = gtk_alignment_new(0,0.5,1,0);
-		label = gtk_label_new(song->artist);
-		gtk_container_add(GTK_CONTAINER(ali), label);			
-		gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+		info2_add_table_item(table2,"<b>Artist:</b>",song->artist,i);
 		i++;
 	}
 	if(song->album)
 	{
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<b>Album:</b>");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		ali = gtk_alignment_new(0,0.5,1,0);
-		label = gtk_label_new(song->album);
-		gtk_container_add(GTK_CONTAINER(ali), label);			
-		gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+		info2_add_table_item(table2,"<b>Album:</b>",song->album,i);
 		i++;
 	}
 	if(song->genre)
 	{
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<b>Genre:</b>");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-
-		gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		label = gtk_label_new(song->genre);
-		ali = gtk_alignment_new(0,0.5,1,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+		info2_add_table_item(table2,"<b>Genre:</b>",song->genre,i);
 		i++;
 	}
 
 	if(song->date)
 	{
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<b>Date:</b>");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		label = gtk_label_new(song->date);
-		ali = gtk_alignment_new(0,0.5,1,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+		info2_add_table_item(table2,"<b>Date:</b>",song->date,i);
 		i++;
 	}
 
 	if(song->track)
 	{
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<b>Track:</b>");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		label = gtk_label_new(song->track);
-		ali = gtk_alignment_new(0,0.5,1,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-		gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+		info2_add_table_item(table2,"<b>Track:</b>",song->track,i);
 		i++;
 	}
+	if(song->file)
+	{
+		/**
+		 * Dirname
+		 */		
+		char *dirname = g_path_get_dirname(song->file);
+		info2_add_table_item(table2,"<b>Dirname:</b>",dirname,i);
+		i++;
+		g_free(dirname);
+		/**
+		 * Filename
+		 */
+		dirname = g_path_get_basename(song->file);
+		info2_add_table_item(table2,"<b>Filename:</b>",dirname,i);
+		i++;
+		g_free(dirname);
+	}
+
+	
 
 	mpd_freeSong(song);
 	gtk_widget_show_all(info2_vbox);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
@@ -659,8 +559,8 @@ void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	GtkWidget *ali = NULL;
 	if(pd->id != current_id)
 	{                                               	
-			if(ret != META_DATA_FETCHING)g_free(pd);
-			return;
+		if(ret != META_DATA_FETCHING)g_free(pd);
+		return;
 	}                                               	
 	if(ret == META_DATA_AVAILABLE)
 	{
@@ -691,55 +591,6 @@ void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void info2_changed(MpdObj *mi, ChangedStatusType what, void *userdata){
-	if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
-	{
-	//	if(info2_vbox)
-			//info2_fill_view();
-	}
-}
 
 void info2_show_current_artist()
 {
@@ -822,20 +673,20 @@ gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoint
 	cairo_fill(cr);
 
 
-	
+
 	cairo_set_line_width (cr, 1.5);
 	x1=x0+rect_width;
 	y1=y0+rect_height;
 	if (!rect_width || !rect_height)
 		return FALSE;
 	cairo_move_to  (cr, x0, y0 + radius);
-        cairo_curve_to (cr, x0 , y0, x0 , y0, x0 + radius, y0);
-        cairo_line_to (cr, x1 - radius, y0);
-        cairo_curve_to (cr, x1, y0, x1, y0, x1, y0 + radius);
-        cairo_line_to (cr, x1 , y1 - radius);
-        cairo_curve_to (cr, x1, y1, x1, y1, x1 - radius, y1);
-        cairo_line_to (cr, x0 + radius, y1);
-        cairo_curve_to (cr, x0, y1, x0, y1, x0, y1- radius);
+	cairo_curve_to (cr, x0 , y0, x0 , y0, x0 + radius, y0);
+	cairo_line_to (cr, x1 - radius, y0);
+	cairo_curve_to (cr, x1, y0, x1, y0, x1, y0 + radius);
+	cairo_line_to (cr, x1 , y1 - radius);
+	cairo_curve_to (cr, x1, y1, x1, y1, x1 - radius, y1);
+	cairo_line_to (cr, x0 + radius, y1);
+	cairo_curve_to (cr, x0, y1, x0, y1, x0, y1- radius);
 
 	color = &(widget->style->light[GTK_STATE_SELECTED]);
 	cairo_close_path (cr);
@@ -927,97 +778,18 @@ gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	return FALSE;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /***
  * Collection view
  */
-void info2_fill_view_artist_art_fetched2(mpd_Song *song, MetaDataResult ret, char *coverpath,PassData *pd)
-{
-	if(song == NULL || pd == NULL ) return;
-	else if(pd->id != current_id)
-	{                                	
-		if(ret != META_DATA_FETCHING)
-			g_free(pd);
-		return;
-	}                                	
-	else
-	{
-		GtkImage *image = GTK_IMAGE(pd->widget);
-		if(ret == META_DATA_AVAILABLE)
-		{
-			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,60,60,NULL);
-			//draw_pixbuf_border(pb);	
-			screenshot_add_border(&pb);
-			screenshot_add_shadow(&pb);	
-			gtk_image_set_from_pixbuf(image, pb);
-			if(pb) g_object_unref(pb);
-			g_free(pd);
-		}
-		else if(ret == META_DATA_FETCHING)
-		{
-			GdkPixbuf *pb= gtk_widget_render_icon(GTK_WIDGET(image), "media-loading-cover", -1, NULL);
-			gtk_image_set_from_pixbuf(image, pb);
-			if(pb)g_object_unref(pb);
-
-		}
-		else
-		{
-			GdkPixbuf *pb= gtk_widget_render_icon(GTK_WIDGET(image), "media-artist",GTK_ICON_SIZE_DIALOG, NULL);
-			screenshot_add_shadow(&pb);
-			gtk_image_set_from_pixbuf(image, pb);
-			if(pb)g_object_unref(pb);
-
-
-
-			//			gtk_image_set_from_pixbuf(image, NULL);
-		}
-	}
-}
 void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 {
 	regex_t regt;
 	const char *text = NULL;
-	GList *list, *node;
+	GList *list = NULL;
 	/**
 	 * Remove all the remaining widgets in the view
 	 */
-	list = gtk_container_get_children(GTK_CONTAINER(table));
-	if(list)
-	{
-		for(node = g_list_first(list);
-				node;
-				node = g_list_next(node))
-		{
-			gtk_widget_destroy(node->data);	
-		}
-		g_list_free(list);
-	}
+	remove_container_entries(GTK_CONTAINER(table));
 
 	/**
 	 *  new id
@@ -1038,14 +810,13 @@ void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		{
 			if(!regexec(&regt,data->tag, 0,NULL,0))
 			{
-				PassData *pd = NULL;
 				GtkWidget *event = gtk_event_box_new();
 				GtkWidget *label = NULL,*ali = NULL;
 				mpd_Song *song = mpd_newSong();
 				GtkWidget *image = gtk_image_new();
 				GtkWidget *table = gtk_table_new(2,2,FALSE);
 				song->artist = g_strdup(data->tag);
-				
+
 				image = gmpc_metaimage_new(META_ARTIST_ART);
 				gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 64);
 				gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
@@ -1112,15 +883,11 @@ void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 			g_list_free(list);
 		}
 
-
-
-
-
-
 		regfree(&regt);
 	}
 	gtk_widget_show_all(resizer_vbox);
 }
+
 void info2_fill_view()
 {
 	GtkWidget *hbox, *label, *entry, *button,*ali;
@@ -1144,18 +911,6 @@ void info2_fill_view()
 	gtk_widget_show_all(title_vbox);
 
 
-	/**
-	 * Setup the now playing
-	 */
-/*	if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY ||
-			mpd_player_get_state(connection == MPD_PLAYER_PAUSE))
-	{
-		GtkWidget *
-
-	}
-
-
-*/
 	label = gtk_label_new("");
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"xx-large\" weight=\"bold\">Current Song</span>");
@@ -1163,17 +918,12 @@ void info2_fill_view()
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, TRUE, 0);
 
-
-
-
-
-
 	hbox = gtk_hbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 8);         	
 	button = gtk_button_new_with_label("View Artist");
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), button);
-	
+
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_show_current_artist), NULL);
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE, TRUE, 0);
 
@@ -1196,7 +946,7 @@ void info2_fill_view()
 
 
 
-	
+
 
 	label = gtk_label_new("");
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -1204,7 +954,6 @@ void info2_fill_view()
 	gtk_container_add(GTK_CONTAINER(ali), label);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, TRUE, 0);
-	
 
 
 
@@ -1212,7 +961,8 @@ void info2_fill_view()
 
 
 
-	
+
+
 	/**
 	 * Set up the search Row 
 	 */
@@ -1260,7 +1010,7 @@ void info2_fill_artist_view(char *artist)
 	GtkWidget *image = NULL; 
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	
+
 	image = gmpc_metaimage_new(META_ARTIST_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
@@ -1271,7 +1021,7 @@ void info2_fill_artist_view(char *artist)
 
 
 
-	
+
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 	/** pack the table and add to view */
@@ -1331,7 +1081,7 @@ void info2_fill_artist_view(char *artist)
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	gtk_container_add(GTK_CONTAINER(ali), label);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
-	
+
 
 
 	if(song2 && song2->artist)
@@ -1367,7 +1117,7 @@ void info2_fill_artist_view(char *artist)
 		label = gtk_label_new("");
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		gtk_widget_show(label);
-		
+
 		gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
 		g_free(markup);
 		/**
@@ -1382,6 +1132,7 @@ void info2_fill_artist_view(char *artist)
 		for(;data;data = mpd_data_get_next(data))
 		{
 			int tracks = 0;
+			GtkWidget *table2= NULL;
 			if(!data->tag)
 				continue;
 
@@ -1410,85 +1161,38 @@ void info2_fill_artist_view(char *artist)
 			/**
 			 * The meta data printed out in alot of data
 			 */
-			GtkWidget *table2 = gtk_table_new(8,2,FALSE);
+			table2 = gtk_table_new(8,2,FALSE);
 			gtk_table_set_col_spacings(GTK_TABLE(table2),6);
 			i=0;
 			if(song->album)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Album:</b>");
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				label = gtk_label_new(song->album);
-				gtk_container_add(GTK_CONTAINER(ali), label);			
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, "<b>Album:</b>", song->album,i);
 				i++;
 			}
 			if(song->genre)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Genre:</b>");
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(song->genre);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, "<b>Genre:</b>", song->genre,i);
 				i++;
 			}
 
 			if(song->date)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Date:</b>");
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(song->date);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, "<b>Date:</b>", song->date,i);
 				i++;
 			}
 			if(tracks)
 			{
 				char *str = g_strdup_printf("%i", tracks);
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Tracks:</b>");
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(str);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, "<b>Tracks:</b>", str,i);
 				g_free(str);
 				i++;
 			}
 			if(song->file)
 			{
-				char *filename = g_path_get_basename(song->file);
-				label = gtk_label_new("");
-				filename = g_path_get_dirname(song->file);
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Directory:</b>");
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(filename);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+				gchar *dirname = g_path_get_basename(song->file);
+				info2_add_table_item(table2,"<b>Filename:</b>",dirname,i);
 				i++;
+				g_free(dirname);
 			}
 			gtk_table_attach(GTK_TABLE(table), table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
 			/**
@@ -1549,7 +1253,6 @@ void info2_fill_artist_view(char *artist)
 
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),table2,FALSE, TRUE, 0);
 		num_cols = resizer_vbox->allocation.width/(tile_size);
-		printf("%i %i\n", num_cols, g_list_length(list));
 		if(list)
 		{
 			resize_table(GTK_TABLE(table2), num_cols, list);
@@ -1575,7 +1278,7 @@ void info2_fill_album_view(char *artist,char *album)
 	PassData *pd = NULL;
 	GtkWidget *label = gtk_label_new("");
 	char *markup = NULL;
-	
+
 	info2_prepare_view();
 	song2 = mpd_newSong();
 	song2->artist = g_strdup(artist);
@@ -2077,4 +1780,3 @@ int info2_get_enabled()
 {
 	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0);
 }
-
