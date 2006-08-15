@@ -91,3 +91,34 @@ void draw_pixbuf_border(GdkPixbuf *pb)
 	}
 }
 
+void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song2)
+{
+	char *temp = NULL;
+	mpd_Song *song = mpd_songDup(song2);
+	if(song->title)
+	{
+		temp = song->title;
+		song->title = g_markup_escape_text(temp,-1);
+		g_free(temp);
+	}
+	if(song->artist)
+	{
+		temp = song->artist;
+		song->artist= g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}                                                	
+	if(song->album)
+	{
+		temp = song->album;
+		song->album= g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}                                                	
+	if(song->name)
+	{
+		temp = song->name;
+		song->name = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	mpd_song_markup(buffer, size, markup, song);
+	mpd_freeSong(song);
+}

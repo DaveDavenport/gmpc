@@ -6,7 +6,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist-list.h"
 #include "main.h"
-
+#include "misc.h"
 /* boring declarations of local functions */
 
 static void playlist_list_init(CustomList * pkg_tree);
@@ -826,7 +826,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 			{
 				/* we want to go cache this stuff */
 				gchar buffer[1024];
-				mpd_song_markup(buffer, 1024,
+				mpd_song_markup_escaped(buffer, 1024,
 						PLAYLIST_LIST(tree_model)->markup,
 						song);
 				g_value_set_string(value, buffer);

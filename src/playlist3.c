@@ -1019,7 +1019,7 @@ void playlist_player_set_song(MpdObj *mi)
 		/**
 		 * Render song markup 
 		 */
-		mpd_song_markup(buffer, 1024,mark,song);
+		mpd_song_markup_escaped(buffer, 1024,mark,song);
 		cfg_free_string(mark);
 		g_string_append(string,buffer);
 
@@ -1027,6 +1027,7 @@ void playlist_player_set_song(MpdObj *mi)
 		 * Do some escaping, so pango likes it.
 		 * This involves removing &
 		 */
+		/*
 		for(id=0;id < string->len; id++)
 		{
 			if(string->str[id] == '&')
@@ -1035,6 +1036,7 @@ void playlist_player_set_song(MpdObj *mi)
 				id++;
 			}
 		}
+		*/
 		/**
 		 * Set markup
 		 */

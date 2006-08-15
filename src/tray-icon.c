@@ -93,7 +93,7 @@ gchar *tray_get_tooltip_text()
 	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		mpd_song_markup(result, 1024, DEFAULT_TRAY_MARKUP, song);
+		mpd_song_markup_escaped(result, 1024, DEFAULT_TRAY_MARKUP, song);
 		g_string_append(string, result);
 	}
 	else
@@ -101,15 +101,7 @@ gchar *tray_get_tooltip_text()
 		g_string_append(string,"Gnome Music Player Client");
 	}
 
-	/* escape all & signs... needed for pango */
-	for(id=0;id < string->len; id++)
-	{
-		if(string->str[id] == '&')
-		{
-			g_string_insert(string, id+1, "amp;");
-			id++;
-		}
-	}
+
 	/* return a string (that needs to be free'd */
 	retval = string->str;
 	g_string_free(string, FALSE);
@@ -182,7 +174,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		
 		tooltip_label = gtk_label_new("");
 		gtk_widget_modify_text(GTK_WIDGET(tooltip_label),GTK_STATE_NORMAL, &(tip->style->black));
-		gtk_label_set_markup(GTK_LABEL(tooltip_label), tooltiptext);
+		gtk_label_set_markup(GTK_LABEL(tooltip_label),tooltiptext); 
 		gtk_misc_set_alignment(GTK_MISC(tooltip_label), 0,0);
 		gtk_label_set_ellipsize(GTK_LABEL(tooltip_label), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start(GTK_BOX(vbox), tooltip_label,TRUE, TRUE,0);

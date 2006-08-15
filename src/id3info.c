@@ -632,7 +632,6 @@ void id3_reget_artist_art()
 								songs->data);	
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
 					META_ARTIST_ART);
-			
 		}
 	}
 }

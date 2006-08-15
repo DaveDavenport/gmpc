@@ -138,7 +138,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				self_set_cover_na(self);
 			}
 		}
-
 	}
 
 
