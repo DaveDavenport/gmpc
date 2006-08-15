@@ -153,7 +153,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	gtk_widget_set_size_request(tip, 300,90);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 	{
-		GtkWidget *alimg, *hbox, *vbox;
+		GtkWidget *alimg, *hbox, *vbox,*event;
 		
 		hbox = gtk_hbox_new(FALSE, 0);
 		gtk_widget_set_app_paintable(GTK_WIDGET(tip), TRUE);
@@ -162,13 +162,14 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		alimg = gmpc_metaimage_new(META_ALBUM_ART);
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
-		gtk_widget_set_size_request(GTK_WIDGET(alimg), 86,86);
 		gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
 
-		gtk_widget_modify_bg(GTK_WIDGET(alimg),GTK_STATE_NORMAL, &(tip->style->bg[GTK_STATE_SELECTED]));
-
+		event = gtk_event_box_new();
+		gtk_widget_modify_bg(GTK_WIDGET(event),GTK_STATE_NORMAL, &(tip->style->bg[GTK_STATE_SELECTED]));
+		gtk_widget_set_size_request(event, 86,86);
+		gtk_container_add(GTK_CONTAINER(event), alimg);
 		gtk_container_add(GTK_CONTAINER(tip), hbox);
-		gtk_box_pack_start(GTK_BOX(hbox), alimg,FALSE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox), event,FALSE, TRUE,0);
 
 		vbox = gtk_vbox_new(FALSE,0);
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 3);

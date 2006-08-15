@@ -141,6 +141,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	update_cover_from_song(self, mpd_Song *song)
 	{
+		self_set_cover_na(self);
 		if(self->_priv->song)
 			mpd_freeSong(self->_priv->song);
 		if(!song)
