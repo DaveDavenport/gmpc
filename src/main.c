@@ -540,14 +540,14 @@ int main (int argc, char **argv)
 	 * create timeouts 
 	 * get the status every 1/2 second should be enough, but it's configurable.
 	 */
-	gtk_timeout_add (cfg_get_single_value_as_int_with_default(config,
+	g_timeout_add (cfg_get_single_value_as_int_with_default(config,
 				"connection","mpd-update-speed",500),
 			(GSourceFunc)update_mpd_status, NULL);
 	/**
 	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
 	 * if you are still connected, and reconnects you if not.
 	 */
-	autoconnect_timeout = gtk_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+	autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
 	/** 
 	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
 	 */
