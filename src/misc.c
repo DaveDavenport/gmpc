@@ -113,12 +113,49 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 		song->album= g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}                                                	
+	if(song->track)
+	{
+		temp = song->track;
+		song->track = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
 	if(song->name)
 	{
 		temp = song->name;
 		song->name = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
+	if(song->date)
+	{
+		temp = song->date;
+		song->date = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	if(song->genre)
+	{
+		temp = song->genre;
+		song->genre= g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	if(song->composer)
+	{
+		temp = song->composer;
+		song->composer = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	if(song->disc)
+	{
+		temp = song->disc;
+		song->disc = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	if(song->comment)
+	{
+		temp = song->comment;
+		song->comment = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}
+	
 	mpd_song_markup(buffer, size, markup, song);
 	mpd_freeSong(song);
 }
