@@ -1182,8 +1182,8 @@ void info2_fill_artist_view(char *artist)
 			}
 			if(song->file)
 			{
-				gchar *dirname = g_path_get_basename(song->file);
-				info2_add_table_item(table2,"<b>Filename:</b>",dirname,i);
+				gchar *dirname = g_path_get_dirname(song->file);
+				info2_add_table_item(table2,"<b>Directory:</b>",dirname,i);
 				i++;
 				g_free(dirname);
 			}
