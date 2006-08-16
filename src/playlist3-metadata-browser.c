@@ -537,13 +537,6 @@ void info2_fill_song_view(char *path)
 		info2_add_table_item(table2,"<b>Dirname:</b>",dirname,i);
 		i++;
 		g_free(dirname);
-		/**
-		 * Filename
-		 */
-		dirname = g_path_get_basename(song->file);
-		info2_add_table_item(table2,"<b>Filename:</b>",dirname,i);
-		i++;
-		g_free(dirname);
 	}
 
 	
