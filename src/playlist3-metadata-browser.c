@@ -385,6 +385,7 @@ void info2_fill_song_view(char *path)
 
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
+
 	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);                        		
 	button = gtk_button_new();
 	label = gtk_label_new("");
@@ -411,13 +412,14 @@ void info2_fill_song_view(char *path)
 
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label),markup);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_viewed_clicked), NULL);
 	gtk_container_add(GTK_CONTAINER(button),label);
 	gtk_widget_show_all(button);
-	gtk_box_pack_start(GTK_BOX(title_vbox), button, FALSE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(title_vbox), button, TRUE, TRUE,0);
 	g_free(markup);
 
 	/** 
@@ -935,25 +937,12 @@ void info2_fill_view()
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, TRUE, 0);
 
-
-
-
-
-
-
 	label = gtk_label_new("");
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"xx-large\" weight=\"bold\">Find</span>");
 	gtk_container_add(GTK_CONTAINER(ali), label);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, TRUE, 0);
-
-
-
-
-
-
-
 
 
 	/**
@@ -1322,9 +1311,10 @@ void info2_fill_album_view(char *artist,char *album)
 
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label),markup);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_widget_show(label);
 
-	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE,0);
 	g_free(markup);
 
 
