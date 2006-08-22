@@ -142,7 +142,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,gpointer data)
 	{
 		Self *self = data;
-		if(!song || !self->_priv->song)
+		if(!song || !self || !self->_priv || !self->_priv->song)
 			return;
 		/**
 		 * Check for fields
