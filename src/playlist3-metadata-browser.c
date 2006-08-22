@@ -3,7 +3,8 @@
 #include <regex.h>
 #include "main.h"
 #include "misc.h"
-
+extern GladeXML *pl3_xml;
+int info2_add_go_menu(GtkWidget *menu);
 void info2_fill_song_view(char *path);
 void info2_fill_album_view(char *artist, char *album);
 void info2_fill_artist_view(char *artist);
@@ -42,7 +43,7 @@ gmpcPlBrowserPlugin info2_gbp = {
 	NULL,		/** row expand */
 	NULL,		/** cat right mouse menu */ 
 	NULL,		/** cat key press */
-	NULL,		/** add go menu */
+	info2_add_go_menu,		/** add go menu */
 	NULL		/** key press event */		
 };
 gmpcPlugin metab_plugin = {
@@ -63,7 +64,7 @@ gmpcPlugin metab_plugin = {
 
 
 /* Playlist window row reference */
-static GtkTreeRowReference *wiki_ref = NULL;
+static GtkTreeRowReference *info2_ref = NULL;
 void
 remove_container_entries (GtkContainer * widget)
 {
@@ -1659,16 +1660,16 @@ void info2_add(GtkWidget *cat_tree)
 			PL3_CAT_ICON_ID, "gtk-info",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	if (wiki_ref)
+	if (info2_ref)
 	{
-		gtk_tree_row_reference_free(wiki_ref);
-		wiki_ref = NULL;
+		gtk_tree_row_reference_free(info2_ref);
+		info2_ref = NULL;
 	}
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter);
 	if (path)
 	{
-		wiki_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(playlist3_get_category_tree_store()), path);
+		info2_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(playlist3_get_category_tree_store()), path);
 		gtk_tree_path_free(path);
 	}
 
@@ -1698,19 +1699,19 @@ void info2_enable_toggle(GtkWidget *wid)
 {
 	int enable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wid));
 	cfg_set_single_value_as_int(config, "info2-plugin", "enable", enable);
-	if (enable && playlist3_get_active() && !wiki_ref)
+	if (enable && playlist3_get_active() && !info2_ref)
 		info2_add(GTK_WIDGET(playlist3_get_category_tree_view()));
-	else if (wiki_ref)
+	else if (info2_ref)
 	{
-		GtkTreePath *path = gtk_tree_row_reference_get_path(wiki_ref);
+		GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
 		if (path){
 			GtkTreeIter iter;
 			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter, path)){
 				gtk_tree_store_remove(playlist3_get_category_tree_store(), &iter);
 			}
 			gtk_tree_path_free(path);
-			gtk_tree_row_reference_free(wiki_ref);
-			wiki_ref = NULL;
+			gtk_tree_row_reference_free(info2_ref);
+			info2_ref = NULL;
 		}
 	}
 }
@@ -1739,22 +1740,22 @@ void info2_set_enabled(int enabled)
 	cfg_set_single_value_as_int(config, "info2-plugin", "enable", enabled);
 	if (enabled)
 	{
-		if(wiki_ref == NULL)
+		if(info2_ref == NULL)
 		{
 			info2_add(GTK_WIDGET(playlist3_get_category_tree_view()));
 		}
 	}
-	else if (wiki_ref)
+	else if (info2_ref)
 	{
-		GtkTreePath *path = gtk_tree_row_reference_get_path(wiki_ref);
+		GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
 		if (path){
 			GtkTreeIter iter;
 			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter, path)){
 				gtk_tree_store_remove(playlist3_get_category_tree_store(), &iter);
 			}
 			gtk_tree_path_free(path);
-			gtk_tree_row_reference_free(wiki_ref);
-			wiki_ref = NULL;
+			gtk_tree_row_reference_free(info2_ref);
+			info2_ref = NULL;
 		}                                                                                                  	
 	}                                                                                                      	
 }
@@ -1762,4 +1763,34 @@ void info2_set_enabled(int enabled)
 int info2_get_enabled()
 {
 	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0);
+}
+
+
+static void info2_activate()
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			glade_xml_get_widget (pl3_xml, "cat_tree"));
+
+	/**
+	 * Fix this to be nnot static
+	 */	
+	GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
+	if(path)
+	{
+		gtk_tree_selection_select_path(selec, path);
+		gtk_tree_path_free(path);
+	}
+}
+
+int info2_add_go_menu(GtkWidget *menu)
+{
+	GtkWidget *item = NULL;
+
+	item = gtk_image_menu_item_new_with_label(_("Metadata Browser"));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(info2_activate), NULL);
+	return 1;
 }
