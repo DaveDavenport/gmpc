@@ -52,7 +52,6 @@ int pl3_zoom = PLAYLIST_NO_ZOOM;
 
 void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_show_and_position_window();
-static void playlist_player_update_image(MpdObj *mi);
 void pl3_option_menu_activate();
 
 static int old_type = -1;
@@ -834,8 +833,6 @@ void create_playlist3 ()
 			cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", 0));
 
 	/* Make sure change is applied */
-	/* update image */
-	playlist_player_update_image(connection);
 
 
 	/* connect signals that are defined in the gui description */
@@ -902,7 +899,10 @@ void create_playlist3 ()
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
 	gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), TRUE);
-	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
+	{
+		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+	}
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
 	
@@ -1065,14 +1065,7 @@ void playlist_player_set_song(MpdObj *mi)
 }
 
 
-/**
- * Update the metadata in the playlist itself..
- * this is cover art and artist image
- */
-static void playlist_player_update_image(MpdObj *mi)
-{
 
-}
 /**
  * Menu Callback functions
  */
@@ -1101,7 +1094,15 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
 	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
-	playlist_player_update_image(connection);
+	if(active)
+	{
+		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+		gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection,MPD_CST_SONGID,gmpcconn);
+	}
+	else{
+		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), NULL);
+		gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
+	}
 }
 
 /***
@@ -1181,8 +1182,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
 	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), connect);
 
-	/* update the image */
-	playlist_player_update_image(connection);
 
 	/** Set back to the current borwser, and update window title */
 	if(connect){
@@ -1263,11 +1262,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				 * Update song indicator in window 
 				 */	
 				playlist_player_set_song(mi);
-				/**
-				 * Update the image.
-				 * Needed from moving from stop->play
-				 */
-				playlist_player_update_image(mi);
 
 				/**
 				 * Update window title
@@ -1333,11 +1327,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			playlist_player_set_song(mi);
 		}
-		if(mpd_player_get_state(mi) != MPD_PLAYER_STOP &&
-				mpd_player_get_state(mi) != MPD_PLAYER_UNKNOWN)
-		{
-			playlist_player_update_image(mi);
-		}
+		
+		
+		
+		
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE,NULL);
 	}
