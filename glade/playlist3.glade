@@ -1324,7 +1324,6 @@
 
 	      <child>
 		<widget class="Custom" id="metaimage_artist_art">
-		  <property name="visible">True</property>
 		  <property name="creation_function">gmpc_metaimage_new</property>
 		  <property name="int1">2</property>
 		  <property name="int2">0</property>
