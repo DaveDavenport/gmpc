@@ -1011,8 +1011,6 @@ void playlist_player_set_song(MpdObj *mi)
 	mpd_Song *song = mpd_playlist_get_current_song(mi);
 	if(song)
 	{
-		int id;
-		GString *string = g_string_new("");
 		char *mark =cfg_get_single_value_as_string_with_default(
 				config,
 				"playlist",
@@ -1023,33 +1021,15 @@ void playlist_player_set_song(MpdObj *mi)
 		 */
 		mpd_song_markup_escaped(buffer, 1024,mark,song);
 		cfg_free_string(mark);
-		g_string_append(string,buffer);
 
-		/**
-		 * Do some escaping, so pango likes it.
-		 * This involves removing &
-		 */
-		/*
-		for(id=0;id < string->len; id++)
-		{
-			if(string->str[id] == '&')
-			{
-				g_string_insert(string, id+1, "amp;");
-				id++;
-			}
-		}
-		*/
+
 		/**
 		 * Set markup
 		 */
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
-				string->str);
+				buffer);
 		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-				string->str);
-		/**
-		 * Free 
-		 */
-		g_string_free(string, TRUE);
+				buffer);
 	}
 	else
 	{

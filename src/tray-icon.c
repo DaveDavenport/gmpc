@@ -87,26 +87,21 @@ void tray_init()
  */
 gchar *tray_get_tooltip_text()
 {
-	GString *string = g_string_new("");
 
 	gchar result[1024];
-	gchar *retval;
 	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		mpd_song_markup_escaped(result, 1024, DEFAULT_TRAY_MARKUP, song);
-		g_string_append(string, result);
 	}
 	else
 	{
-		g_string_append(string,"Gnome Music Player Client");
+		strcpy(result,"Gnome Music Player Client");
 	}
 
 
 	/* return a string (that needs to be free'd */
-	retval = string->str;
-	g_string_free(string, FALSE);
-	return retval;
+	return g_strdup(result);
 }
 
 /* fix it the ugly way */
