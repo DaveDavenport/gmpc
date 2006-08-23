@@ -224,12 +224,14 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 		{
 			screen = gtk_widget_get_screen(GTK_WIDGET(tray_icon));
 			monitor = gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(tray_icon)->window);       			
+			gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
 		}
 		else
 		{
 			screen = gdk_screen_get_default();
+			x_tv = y_tv = 0;
 		}
-		gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
+		
 		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 		/* user defined offsets */
 		y=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
