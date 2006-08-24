@@ -84,7 +84,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		if(self->_priv->meta_id)
 		{
 			meta_data_handle_remove_request(self->_priv->meta_id);
-			printf("finalize: %u\n", self->_priv->meta_id);
 			self->_priv->meta_id =  0;
 		}
 
@@ -151,7 +150,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 		if(self->_priv->meta_id)
 		{
-			printf("Update cover from song remove old: %u %s\n", self->_priv->meta_id,song->artist);
 			meta_data_handle_remove_request(self->_priv->meta_id);
 			self->_priv->meta_id =  0;
 		}

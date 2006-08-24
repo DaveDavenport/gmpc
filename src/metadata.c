@@ -437,7 +437,6 @@ gboolean meta_data_handle_results()
 			{ 
 				test = 1;
 				g_queue_pop_nth(meta_remove, i);	
-				printf("Removed from callback: %u\n", num);
 
 			}
 		}
