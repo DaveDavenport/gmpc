@@ -185,10 +185,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			if(ret == META_DATA_AVAILABLE) {
 				self_set_cover_from_path(self,path); 
+				self->_priv->meta_id = 0;
 			} else if (ret == META_DATA_FETCHING) {
 				self_set_cover_fetching(self);
 			} else {
 				self_set_cover_na(self);
+				self->_priv->meta_id = 0;
 			}
 		}
 	}
