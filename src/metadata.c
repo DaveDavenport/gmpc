@@ -405,7 +405,6 @@ void meta_data_retrieve_thread()
 void meta_data_handle_remove_request(guint id)
 {
 	g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
-	printf("remove id: %u\n", id);
 }
 
 gboolean meta_data_handle_results()
