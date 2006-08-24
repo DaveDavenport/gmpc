@@ -257,6 +257,12 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			if(cl->num_rows != new_length) printf("Failed to purge items from list correctly\n");
 			/* resize array */
 			cl->playlist = g_realloc(cl->playlist,new_length*sizeof(mpd_Song *));
+			/** if 0 length, set NULL */
+			if(new_length == 0)
+			{
+				cl->playlist = NULL;
+			}
+			
 		}
 		if(new_length > cl->num_rows)
 		{
