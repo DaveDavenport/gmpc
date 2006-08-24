@@ -20,6 +20,8 @@ GAsyncQueue *meta_commands = NULL;
  */
 GAsyncQueue *meta_results = NULL;
 
+GQueue *meta_remove = NULL;
+
 /**
  * TODO: Make the config system thread safe 
  */
@@ -33,8 +35,6 @@ typedef struct {
 	/* Resuls  */
 	MetaDataResult result;
 	char *result_path;
-
-
 } meta_thread_data;
 
 
@@ -400,9 +400,27 @@ void meta_data_retrieve_thread()
 }
 
 
+
+
+void meta_data_handle_remove_request(guint id)
+{
+	g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
+	printf("remove id: %u\n", id);
+}
+
 gboolean meta_data_handle_results()
 {
 	meta_thread_data *data = NULL;
+
+
+	if(g_async_queue_length(meta_results) == 0 &&
+		g_async_queue_length(meta_commands) == 0)
+		{
+			while(g_queue_pop_head(meta_remove));
+
+		}
+
+
 
 	/**
 	 *  Check if there are results to handle
@@ -411,7 +429,23 @@ gboolean meta_data_handle_results()
 	for(data = g_async_queue_try_pop(meta_results);data;
 			data = g_async_queue_try_pop(meta_results))
 	{	
-		data->callback(data->song, data->result,data->result_path, data->data);
+		int test = 0, i = 0;
+		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--)
+		{
+			int num = GPOINTER_TO_INT(g_queue_peek_nth(meta_remove,i));
+			if(num == data->id)
+			{ 
+				test = 1;
+				g_queue_pop_nth(meta_remove, i);	
+				printf("Removed from callback: %u\n", num);
+
+			}
+		}
+			
+		if(test == 0&& data->callback)
+		{
+			data->callback(data->song, data->result,data->result_path, data->data);
+		}
 		if(data->result_path)g_free(data->result_path);
 		mpd_freeSong(data->song);
 		g_free(data);
@@ -448,6 +482,11 @@ void meta_data_init()
 	 */
 	meta_results = g_async_queue_new();
 	/**
+ 	*  remove callbacks...
+ 	*  not thread save
+ 	*/
+	meta_remove = g_queue_new();
+	/**
 	 * Create the retrieval thread
 	 */
 	g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, FALSE, NULL);
@@ -461,12 +500,13 @@ void meta_data_init()
 /**
  * Function called by the "client" 
  */
-void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCallback callback, gpointer data)
+guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCallback callback, gpointer data)
 {
 	MetaDataResult ret;
 	meta_thread_data *mtd = NULL;
 	mpd_Song *song =NULL;
 	char *path = NULL;
+	guint id = 0;
 
 	/**
 	 * if there is no callback, it's a programming error.
@@ -480,7 +520,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	/*	g_return_if_fail(tsong != NULL); */
 	if(tsong == NULL)
 	{
-		return;	
+		return 0;	
 	}
 
 	/**
@@ -507,7 +547,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 		if(path) g_free(path);
 		/* return */
 
-		return;
+		return 0;
 	}
 
 	/**
@@ -570,7 +610,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * unique id 
 	 * Not needed, but can be usefull for debugging
 	 */
-	mtd->id = g_random_int();
+	id = mtd->id = g_random_int_range(1,2147483647);
 	mtd->song = mpd_songDup(song);
 	mtd->callback = callback;
 	mtd->data = data;
@@ -589,6 +629,7 @@ void meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCal
 	 * Tell the calling part we are fetching */
 	callback(song, META_DATA_FETCHING,NULL, data);
 	mpd_freeSong(song);
+	return id;
 }
 
 

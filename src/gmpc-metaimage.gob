@@ -11,6 +11,7 @@ requires 2.0.0
 class Gmpc:MetaImage from Gtk:Event:Box{
 	private gulong status_signal = {0};
 	private gulong connect_signal = {0};
+	private guint meta_id = {0};
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
 	/** Public */
 
@@ -71,12 +72,25 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				G_CALLBACK(self_update_cover), G_OBJECT(self));
 		self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "connection_changed",
 				G_CALLBACK(self_connection_changed), G_OBJECT(self));                            		
+
+
+		self->_priv->meta_id =  0;
 	}
 
 	override (G:Object)
 	void 
 	finalize (self)
 	{
+		if(self->_priv->meta_id)
+		{
+			meta_data_handle_remove_request(self->_priv->meta_id);
+			printf("finalize: %u\n", self->_priv->meta_id);
+			self->_priv->meta_id =  0;
+		}
+
+
+
+
 		if(self->_priv->status_signal){
 			g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->_priv->status_signal);
 		}
@@ -134,7 +148,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			return;
 		if(self->_priv->status_signal)
 		self->_priv->song = mpd_songDup(song);
-		meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
+
+		if(self->_priv->meta_id)
+		{
+			printf("Update cover from song remove old: %u %s\n", self->_priv->meta_id,song->artist);
+			meta_data_handle_remove_request(self->_priv->meta_id);
+			self->_priv->meta_id =  0;
+		}
+		self->_priv->meta_id = meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
+			
 	}
 
 	private
