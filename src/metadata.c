@@ -21,6 +21,7 @@ GAsyncQueue *meta_commands = NULL;
 GAsyncQueue *meta_results = NULL;
 
 GQueue *meta_remove = NULL;
+GMutex *meta_processing = NULL;
 
 /**
  * TODO: Make the config system thread safe 
@@ -326,7 +327,9 @@ void meta_data_retrieve_thread()
 		/**
 		 * Get command from queue
 		 */
+		
 		data = g_async_queue_pop(meta_commands);	
+		g_mutex_lock(meta_processing);
 		/* 
 		 * Set default return values
 		 * TODO: Is this needed, because the cache will "init" them.
@@ -396,6 +399,7 @@ void meta_data_retrieve_thread()
 		 * clear our reference to the object
 		 */
 		data = NULL;
+		g_mutex_unlock(meta_processing);
 	}while(1);
 }
 
@@ -411,13 +415,21 @@ gboolean meta_data_handle_results()
 {
 	meta_thread_data *data = NULL;
 
-
+	/**
+	 * Should check is one is being processed  (implemented)
+	 */
 	if(g_async_queue_length(meta_results) == 0 &&
 		g_async_queue_length(meta_commands) == 0)
-		{
+	{
+		/** if the fetching thread is busy, don't do anything,
+		 * if not, then lock it and clear it
+		 */
+		if(g_mutex_trylock(meta_processing)){
+			debug_printf(DEBUG_INFO, "Clearing callback remove list");
 			while(g_queue_pop_head(meta_remove));
-
+			g_mutex_unlock(meta_processing);
 		}
+	}
 
 
 
@@ -436,6 +448,7 @@ gboolean meta_data_handle_results()
 			{ 
 				test = 1;
 				g_queue_pop_nth(meta_remove, i);	
+				debug_printf(DEBUG_INFO, "Removing callback: %u\n", num);
 
 			}
 		}
@@ -484,6 +497,9 @@ void meta_data_init()
  	*  not thread save
  	*/
 	meta_remove = g_queue_new();
+
+
+	meta_processing = g_mutex_new();
 	/**
 	 * Create the retrieval thread
 	 */
