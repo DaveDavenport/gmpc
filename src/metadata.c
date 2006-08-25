@@ -438,23 +438,18 @@ gboolean meta_data_handle_results()
 	 *  do this until the list is clear
 	 */
 	for(data = g_async_queue_try_pop(meta_results);data;
-			data = g_async_queue_try_pop(meta_results))
-	{	
+			data = g_async_queue_try_pop(meta_results)) {	
 		int test = 0, i = 0;
-		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--)
-		{
+		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--) {
 			int num = GPOINTER_TO_INT(g_queue_peek_nth(meta_remove,i));
-			if(num == data->id)
-			{ 
+			if(num == data->id) { 
 				test = 1;
 				g_queue_pop_nth(meta_remove, i);	
 				debug_printf(DEBUG_INFO, "Removing callback: %u\n", num);
-
 			}
 		}
-			
-		if(test == 0&& data->callback)
-		{
+		
+		if(test == 0&& data->callback) {
 			data->callback(data->song, data->result,data->result_path, data->data);
 		}
 		if(data->result_path)g_free(data->result_path);
@@ -470,7 +465,6 @@ gboolean meta_data_handle_results()
 /**
  * Initialize
  */
-
 void meta_data_init()
 {
 	gchar *url = g_strdup_printf("%s/.covers/", g_get_home_dir());
