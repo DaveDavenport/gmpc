@@ -72,10 +72,6 @@ static void id3_save_album_txt()
 }
 
 
-
-
-
-
 static void id3_save_artist_txt()
 {
 	GtkTextIter end, start;

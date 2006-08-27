@@ -22,7 +22,6 @@ gmpc_SOURCES=\
 	playlist-list.c\
 	mm-keys.c\
 	config1.c\
-	cover-art-manager.c\
 	bacon-volume.c\
 	sm.c\
 	metadata.c\
@@ -111,4 +110,5 @@ EXTRA_DIST = 	playlist3.h\
 		bacon-message-connection.h\
 		gmpc-connection.h\
 		gmpc-metaimage.h\
+		id3info.h\
 		TreeSearchWidget.h
