@@ -34,9 +34,9 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
-static void pl3_file_browser_add(void);
-static void pl3_file_browser_unselected(void);
-static void pl3_file_browser_selected(void);
+static void pl3_file_browser_add(GtkWidget *cat_tree);
+static void pl3_file_browser_unselected(GtkWidget *container);
+static void pl3_file_browser_selected(GtkWidget *container);
 static void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter);
 static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
 static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
@@ -268,7 +268,7 @@ static void pl3_file_browser_replace_folder()
 
 
 /* add's the toplevel entry for the file browser, it also add's a fantom child */
-static void pl3_file_browser_add()
+static void pl3_file_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreeIter iter,child;
 	GtkTreePath *path;
@@ -622,20 +622,20 @@ static void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter)
 	g_free(string);
 }
 
-static void pl3_file_browser_selected()
+static void pl3_file_browser_selected(GtkWidget *container)
 {
 	if(pl3_fb_tree == NULL)
 	{
 		pl3_file_browser_init();
 	}
 
-	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_vbox);
+	gtk_container_add(GTK_CONTAINER(container), pl3_fb_vbox);
 	gtk_widget_grab_focus(pl3_fb_tree);
 	gtk_widget_show(pl3_fb_vbox);
 }
-static void pl3_file_browser_unselected()
+static void pl3_file_browser_unselected(GtkWidget *container)
 {
-	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_fb_vbox);
+	gtk_container_remove(GTK_CONTAINER(container), pl3_fb_vbox);
 }
 
 

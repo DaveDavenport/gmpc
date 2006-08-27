@@ -474,11 +474,6 @@ int main (int argc, char **argv)
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
 
-	/** Setup cover art manager, removed for now. it needs a rewrite
-	 */
-	/*
-		plugin_add(&cover_art_plug,0);
-	*/
 	plugin_add(&metab_plugin,0);	
 
 	
