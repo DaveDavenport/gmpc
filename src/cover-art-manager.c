@@ -10,16 +10,17 @@
 #include "TreeSearchWidget.h"
 #include "main.h"
 #include "plugin.h"
+#include "cover-art-manager.h"
 
 GladeXML *cam_pref_xml = NULL;
 extern config_obj *cover_index;
 extern int errno;
 
-void cover_art_manager_close(GtkWidget *widget);
-void cover_art_pref_construct(GtkWidget *container);
-void cover_art_pref_destroy(GtkWidget *container);
-void cover_art_manager_load_tree(GtkTreeStore *cam_ts);
-void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter);
+static void cover_art_manager_close(GtkWidget *widget);
+static void cover_art_pref_construct(GtkWidget *container);
+static void cover_art_pref_destroy(GtkWidget *container);
+static void cover_art_manager_load_tree(GtkTreeStore *cam_ts);
+static void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter);
 
 gmpcPrefPlugin cover_art_gpp = {
 	cover_art_pref_construct,
@@ -42,7 +43,7 @@ gmpcPlugin cover_art_plug = {
 	NULL
 };
 
-int cover_art_manager_key_release(GtkWidget *tree, GdkEventKey *event, GtkWidget *tree_search)
+static int cover_art_manager_key_release(GtkWidget *tree, GdkEventKey *event, GtkWidget *tree_search)
 {
 	if(event->keyval == GDK_f)
 	{
@@ -58,7 +59,7 @@ int cover_art_manager_key_release(GtkWidget *tree, GdkEventKey *event, GtkWidget
 }
 
 
-void cover_art_manager_close(GtkWidget *widget)
+static void cover_art_manager_close(GtkWidget *widget)
 {
 	GladeXML *camxml = glade_get_widget_tree(widget);
 	if(camxml){
@@ -68,7 +69,7 @@ void cover_art_manager_close(GtkWidget *widget)
 
 }
 
-void cover_art_manager_row_activated(GtkTreeView *tree, GtkTreePath *path)
+static void cover_art_manager_row_activated(GtkTreeView *tree, GtkTreePath *path)
 {
 	GtkTreeIter iter;
 	if(gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path))
@@ -112,7 +113,7 @@ void cover_art_manager_row_activated(GtkTreeView *tree, GtkTreePath *path)
 	}
 }
 
-void cover_art_manager_create()
+static void cover_art_manager_create()
 {
 	GtkTreeStore *cam_ts = NULL;
 	GtkTreeViewColumn *column = NULL;
@@ -172,7 +173,7 @@ void cover_art_manager_create()
 
 
 
-void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter)
+static void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter)
 {
 	GtkTreeIter child;
 	GtkTreeStore *cam_ts = (GtkTreeStore *)gtk_tree_view_get_model(tree);
@@ -227,7 +228,7 @@ void cover_art_manager_load_albums(GtkTreeView *tree, GtkTreeIter *iter)
 	g_free(artist);      
 }
 
-void cover_art_manager_load_tree(GtkTreeStore *cam_ts) 
+static void cover_art_manager_load_tree(GtkTreeStore *cam_ts) 
 {
 	if(cover_index){
 		conf_mult_obj *mult = cfg_get_class_list(cover_index);
@@ -263,7 +264,7 @@ void cover_art_manager_load_tree(GtkTreeStore *cam_ts)
 
 
 
-void cover_art_pref_destroy(GtkWidget *container)
+static void cover_art_pref_destroy(GtkWidget *container)
 {
 	if(cam_pref_xml)
 	{
@@ -273,17 +274,17 @@ void cover_art_pref_destroy(GtkWidget *container)
 		cam_pref_xml = NULL;
 	}
 }
-void cover_art_pref_toggle_enable(GtkToggleButton *tog)
+static void cover_art_pref_toggle_enable(GtkToggleButton *tog)
 {
 	cfg_set_single_value_as_int(config, "cover-art", "enable", gtk_toggle_button_get_active(tog));
 }
 
-void cover_art_cover_manager(GtkButton *but)
+static void cover_art_cover_manager(GtkButton *but)
 {
 	cover_art_manager_create();
 }
 
-void cover_art_clear_cache(GtkButton *but)
+static void cover_art_clear_cache(GtkButton *but)
 {
 	if(cover_index){
 		gchar *url = g_strdup_printf("%s/.covers/covers.db", g_get_home_dir());
@@ -303,7 +304,7 @@ void cover_art_clear_cache(GtkButton *but)
 }
 
 
-void cover_art_pref_construct(GtkWidget *container)
+static void cover_art_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	cam_pref_xml = glade_xml_new(path, "cam-vbox",NULL);
@@ -315,12 +316,12 @@ void cover_art_pref_construct(GtkWidget *container)
 	glade_xml_signal_autoconnect(cam_pref_xml);
 }
 
-void cover_art_remove_image(GtkWidget *button){
+static void cover_art_remove_image(GtkWidget *button){
 	GladeXML *cae_xml = glade_get_widget_tree(button);
 	gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")));
 	gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
 }
-void cover_art_edit_path_changed(GtkWidget *filechooser)
+static void cover_art_edit_path_changed(GtkWidget *filechooser)
 {
 	GladeXML *cae_xml = glade_get_widget_tree(filechooser);
 	gchar * path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")));
@@ -337,38 +338,8 @@ void cover_art_edit_path_changed(GtkWidget *filechooser)
 	}
 
 }
-void cam_cover_art_fetched(mpd_Song *song,GladeXML *cae_xml)
-{
-	gtk_widget_set_sensitive(glade_xml_get_widget(cae_xml, "cover-art-edit"), TRUE);
-	if(song == NULL )
-	{
-		gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")),GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
 
-	}
-	else{
-		/*
-		char *coverpath = NULL;
-		int ret = 0;
-		ret = cover_art_fetch_image_path(song, &coverpath); 
-		if(ret == COVER_ART_OK_LOCAL)
-		{
-			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath, 250,250,NULL);
-			if(pb)
-			{
-				gtk_file_chooser_select_filename(GTK_FILE_CHOOSER(glade_xml_get_widget(cae_xml, "filechooser_location")),
-						coverpath);
-				
-				gtk_image_set_from_pixbuf(GTK_IMAGE(glade_xml_get_widget(cae_xml, "cover_image")), pb);
-				g_object_unref(pb);                                                                    		
-			}         
-
-		}
-		if(coverpath)g_free(coverpath);
-		*/
-	}
-}
-
-void cover_art_query_providers(GtkWidget *button)
+static void cover_art_query_providers(GtkWidget *button)
 {
 	/*
 	GladeXML *cae_xml = glade_get_widget_tree(button);
@@ -469,4 +440,3 @@ int cover_art_edit_cover(gchar *artist, gchar *album)
 	g_object_unref(cae_xml);
 	return FALSE;
 }
-

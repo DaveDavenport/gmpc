@@ -33,7 +33,7 @@ void update_display_settings();
 
 int plugin_last;
 
-void pref_plugin_changed()
+static void pref_plugin_changed()
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
 	GtkTreeModel *model = GTK_TREE_MODEL(plugin_store);
@@ -193,10 +193,6 @@ void create_preferences_window()
 	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 }
-void set_display_default_sd()
-{
-	gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(xml_preferences_window, "en_sd")), DEFAULT_PLAYER_MARKUP);
-}
 
 /* destory the preferences window */
 void preferences_window_destroy()
@@ -217,30 +213,8 @@ void preferences_window_destroy()
 	xml_preferences_window = NULL;
 	running = 0;
 }
-/*
-void about_pref_destroy(GtkWidget *container)
-{
-	if(about_pref_xml)
-	{
-		GtkWidget *vbox = glade_xml_get_widget(about_pref_xml, "about-vbox");
-		gtk_container_remove(GTK_CONTAINER(container),vbox);
-		g_object_unref(about_pref_xml);
-		about_pref_xml = NULL;
-	}
-}
-void about_pref_construct(GtkWidget *container)
-{
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	about_pref_xml = glade_xml_new(path, "about-vbox",NULL);
 
-	if(about_pref_xml)
-	{
-		GtkWidget *vbox = glade_xml_get_widget(about_pref_xml, "about-vbox");
-		gtk_container_add(GTK_CONTAINER(container),vbox);
-	}
-}
-*/
-void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkListStore *store)
+static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkListStore *store)
 {
 	GtkTreeIter iter;
 	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))

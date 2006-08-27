@@ -20,6 +20,7 @@ typedef enum {
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path);
-void meta_data_init();
-void meta_data_check_plugin_changed();
+void meta_data_init(void);
+void meta_data_check_plugin_changed(void);
+void meta_data_handle_remove_request(guint id);
 #endif

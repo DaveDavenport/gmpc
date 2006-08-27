@@ -76,8 +76,6 @@ enum{
 /* mpdinteraction.c*/
 int update_mpd_status();
 
-void create_preferences_window();
-
 /* id3info.c*/
 void call_id3_window(int song);
 
@@ -88,7 +86,6 @@ void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);
 
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
-void id3_status_update();
 void call_id3_window_song(mpd_Song *songstr);
 void playlist_changed(MpdObj *mi);
 
@@ -109,7 +106,6 @@ int plugin_get_pos(int id);
 
 
 void show_error_message(gchar *string, int block);
-int cover_art_edit_cover(gchar *artist, gchar *album);
 
 
 void tray_icon_connection_changed(MpdObj *mi, int connect);

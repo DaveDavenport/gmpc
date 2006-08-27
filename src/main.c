@@ -44,6 +44,9 @@
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
 
+#include "id3info.h"
+#include "cover-art-manager.h"
+
 /**
  * Get revision
  */

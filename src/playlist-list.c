@@ -156,7 +156,7 @@ guint playlist_list_get_playtime(CustomList * cl)
  *****************************************************************************/
 
 
-int playlist_list_lazy_fill(CustomList *cl)
+static int playlist_list_lazy_fill(CustomList *cl)
 {
 	if(cl->pd.total_length >= cl->num_rows ||
 			!mpd_check_connected(cl->pd.mi)){
@@ -406,11 +406,11 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(list));
 
 }
-gboolean playlist_list_drag_source_row_draggable(GtkTreeDragSource   *drag_source, GtkTreePath *path)
+static gboolean playlist_list_drag_source_row_draggable(GtkTreeDragSource   *drag_source, GtkTreePath *path)
 {
 	return TRUE;
 }
-gboolean playlist_list_drag_source_drag_data_get
+static gboolean playlist_list_drag_source_drag_data_get
                                             (GtkTreeDragSource *drag_source,
                                              GtkTreePath *path,
                                              GtkSelectionData *selection_data)
@@ -420,24 +420,24 @@ gboolean playlist_list_drag_source_drag_data_get
 /**
  * Fake a delete, we don't delete anything
  */
-gboolean playlist_list_drag_source_drag_data_delete(GtkTreeDragSource *drag_source,GtkTreePath *path)
+static gboolean playlist_list_drag_source_drag_data_delete(GtkTreeDragSource *drag_source,GtkTreePath *path)
 {
 	return TRUE;
 }
-void playlist_list_drag_source_init(GtkTreeDragSourceIface *iface)
+static void playlist_list_drag_source_init(GtkTreeDragSourceIface *iface)
 {
 	iface->row_draggable = playlist_list_drag_source_row_draggable;
 	iface->drag_data_get = playlist_list_drag_source_drag_data_get;
 	iface->drag_data_delete = playlist_list_drag_source_drag_data_delete;
 }
 
-gboolean playlist_list_drag_dest_row_drop_possible(GtkTreeDragDest *drag_dest,
+static gboolean playlist_list_drag_dest_row_drop_possible(GtkTreeDragDest *drag_dest,
                                        GtkTreePath       *dest,
                                        GtkSelectionData  *selection_data)
 {
 	return TRUE;
 }
-gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag_dest,
+static gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag_dest,
                                              GtkTreePath *dest,
                                              GtkSelectionData *selection_data)
 {
@@ -463,7 +463,7 @@ gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag_dest,
 	gtk_tree_path_free(path);
 	return TRUE;
 }
-void playlist_list_drag_dest_init(GtkTreeDragDestIface *iface)
+static void playlist_list_drag_dest_init(GtkTreeDragDestIface *iface)
 {
 	iface->row_drop_possible = playlist_list_drag_dest_row_drop_possible;
 	iface->drag_data_received= playlist_list_drag_dest_drag_data_received;

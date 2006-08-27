@@ -4,19 +4,20 @@
 #include "main.h"
 #include "misc.h"
 extern GladeXML *pl3_xml;
-int info2_add_go_menu(GtkWidget *menu);
-void info2_fill_song_view(char *path);
-void info2_fill_album_view(char *artist, char *album);
-void info2_fill_artist_view(char *artist);
-void info2_fill_view();
-void info2_add(GtkWidget *cat_tree);
-void info2_selected(GtkWidget *container);
-void info2_unselected(GtkWidget *container);
-void info2_construct(GtkWidget *container);
-void info2_destroy(GtkWidget *container);
-int info2_get_enabled();
-void info2_set_enabled(int enabled);
 
+static void info2_construct(GtkWidget *);
+static void info2_destroy(GtkWidget *);
+static void info2_add(GtkWidget *);
+static void info2_selected(GtkWidget *);
+static void info2_unselected(GtkWidget *);
+static int info2_add_go_menu(GtkWidget *);
+static int info2_get_enabled(void);
+static void info2_set_enabled(int);
+static void remove_container_entries(GtkContainer *);
+static void info2_fill_artist_view(char *);
+static void info2_fill_album_view(char *, char *);
+static void info2_fill_song_view(char *);
+static void info2_fill_view(void);
 
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_pref_vbox = NULL;
@@ -65,8 +66,8 @@ gmpcPlugin metab_plugin = {
 
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
-void
-remove_container_entries (GtkContainer * widget)
+
+static void remove_container_entries (GtkContainer * widget)
 {
 	GList *children, *node; 
 	children = node = gtk_container_get_children (widget);
@@ -83,7 +84,7 @@ remove_container_entries (GtkContainer * widget)
 	g_list_free(node);
 }
 
-void
+static void
 resize_table (GtkTable * table, gint columns, GList * launcher_list)
 {
 	remove_container_entries (GTK_CONTAINER (table));
@@ -99,7 +100,7 @@ resize_table (GtkTable * table, gint columns, GList * launcher_list)
 	gtk_table_resize (table, (int) rows, columns);
 }
 
-void
+static void
 relayout_table (GtkTable * table, GList * element_list)
 {
 	gint maxcols = (GTK_TABLE (table))->ncols;
@@ -119,7 +120,7 @@ relayout_table (GtkTable * table, GList * element_list)
 	}
 	while (NULL != (element_list = g_list_next (element_list)));
 }
-void info2_widget_clear_children(GtkWidget *wid)
+static void info2_widget_clear_children(GtkWidget *wid)
 {
 	GList *list, *node;
 	/**
@@ -138,7 +139,7 @@ void info2_widget_clear_children(GtkWidget *wid)
 	}
 }
 
-void info2_prepare_view()
+static void info2_prepare_view()
 {
 	info2_widget_clear_children(resizer_vbox);
 	/**
@@ -146,7 +147,7 @@ void info2_prepare_view()
 	 */
 	current_id = g_random_int();
 }
-void as_album_clicked(GtkButton *button, gpointer data)
+static void as_album_clicked(GtkButton *button, gpointer data)
 {
 	int clear = GPOINTER_TO_INT(data);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
@@ -175,7 +176,7 @@ void as_album_clicked(GtkButton *button, gpointer data)
 
 }
 
-void as_artist_viewed_clicked(GtkButton *button, gpointer data)
+static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
 	info2_fill_artist_view(artist);
@@ -183,7 +184,7 @@ void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 
 }
 
-void as_album_viewed_clicked(GtkButton *button, gpointer data)
+static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
 	char *album = g_strdup(g_object_get_data(G_OBJECT(button), "album"));
@@ -193,7 +194,7 @@ void as_album_viewed_clicked(GtkButton *button, gpointer data)
 }
 
 
-void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
+static void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
 	GtkWidget *vbox= pd->widget;
 	GtkWidget *ali = NULL;
@@ -254,7 +255,7 @@ void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
 
-void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
+static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
 	GtkWidget *vbox= pd->widget;
 	GtkWidget *ali = NULL;
@@ -320,7 +321,7 @@ void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 
 
 
-void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
+static void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
 	GtkWidget *vbox= pd->widget;
 	GtkWidget *ali = NULL;
@@ -383,7 +384,7 @@ void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
 
-void as_song_viewed_clicked(GtkButton *button, gpointer data)
+static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
 	if(artist == NULL) {
@@ -394,7 +395,7 @@ void as_song_viewed_clicked(GtkButton *button, gpointer data)
 	g_free(artist);
 }
 
-void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
+static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
 	GtkWidget *label, *ali;
 	label = gtk_label_new("");
@@ -414,7 +415,7 @@ void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
 /** 
  * Song View 
  */
-void info2_fill_song_view(char *path) 
+static void info2_fill_song_view(char *path) 
 {
 	GtkWidget *ali = NULL;
 	GtkWidget *vbox= NULL;
@@ -621,7 +622,7 @@ void info2_fill_song_view(char *path)
 
 
 
-void info2_show_current_artist()
+static void info2_show_current_artist()
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song && song->artist)
@@ -631,7 +632,7 @@ void info2_show_current_artist()
 }
 
 
-void info2_show_current_album()
+static void info2_show_current_album()
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song && song->artist && song->album)
@@ -640,14 +641,14 @@ void info2_show_current_album()
 	}
 }
 
-void info2_show_current_song()
+static void info2_show_current_song()
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
 		info2_fill_song_view(song->file);	
 }
 
-void as_song_clicked(GtkButton *button, gpointer data)
+static void as_song_clicked(GtkButton *button, gpointer data)
 {
 	int clear = GPOINTER_TO_INT(data);
 	char *artist = g_object_get_data(G_OBJECT(button), "file");
@@ -663,7 +664,7 @@ void as_song_clicked(GtkButton *button, gpointer data)
 }
 
 
-void as_artist_clicked(GtkButton *button, gpointer data)
+static void as_artist_clicked(GtkButton *button, gpointer data)
 {
 	int clear = GPOINTER_TO_INT(data);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
@@ -687,7 +688,7 @@ void as_artist_clicked(GtkButton *button, gpointer data)
 }
 
 
-gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	GdkColor *color = NULL;
 	cairo_pattern_t *pat;
@@ -731,7 +732,7 @@ gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoint
 	cairo_destroy(cr);
 	return FALSE;
 }
-gboolean info2_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gboolean info2_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
@@ -759,7 +760,7 @@ gboolean info2_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpo
 	return FALSE;
 }
 
-gboolean info2_footer_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gboolean info2_footer_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
@@ -785,7 +786,7 @@ gboolean info2_footer_expose_event(GtkWidget *widget, GdkEventExpose *event, gpo
 	return FALSE;
 }
 
-gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 
@@ -808,7 +809,7 @@ gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 /***
  * Collection view
  */
-void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
+static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 {
 	regex_t regt;
 	const char *text = NULL;
@@ -915,7 +916,7 @@ void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 	gtk_widget_show_all(resizer_vbox);
 }
 
-void info2_fill_view()
+static void info2_fill_view()
 {
 	GtkWidget *hbox, *label, *entry, *button,*ali;
 	GtkWidget *artist_table = NULL;
@@ -1006,7 +1007,7 @@ void info2_fill_view()
  * ARTIST VIEW
  */
 
-void info2_fill_artist_view(char *artist)
+static void info2_fill_artist_view(char *artist)
 {
 	GtkWidget *ali = NULL;
 	mpd_Song *song2 = NULL;
@@ -1284,7 +1285,7 @@ void info2_fill_artist_view(char *artist)
 /*****
  * View Album
  */
-void info2_fill_album_view(char *artist,char *album)
+static void info2_fill_album_view(char *artist,char *album)
 {
 	GtkWidget *button = NULL;
 	GtkWidget *ali = NULL;
@@ -1589,7 +1590,7 @@ void info2_fill_album_view(char *artist,char *album)
 
 
 
-void info2_init()
+static void info2_init()
 {
 	GtkWidget *sw = NULL,*vp = NULL;;
 	GtkWidget *ali,*event;
@@ -1677,7 +1678,7 @@ void info2_init()
 	//	gtk_widget_size_allocate(info2_vbox, &alloc);	
 }
 
-void info2_add(GtkWidget *cat_tree)
+static void info2_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
@@ -1706,7 +1707,7 @@ void info2_add(GtkWidget *cat_tree)
 
 }
 
-void info2_selected(GtkWidget *container)
+static void info2_selected(GtkWidget *container)
 {
 
 	if(info2_vbox== NULL)
@@ -1721,12 +1722,12 @@ void info2_selected(GtkWidget *container)
 
 }
 
-void info2_unselected(GtkWidget *container)
+static void info2_unselected(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container),info2_vbox);
 }
 
-void info2_enable_toggle(GtkWidget *wid)
+static void info2_enable_toggle(GtkWidget *wid)
 {
 	int enable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wid));
 	cfg_set_single_value_as_int(config, "info2-plugin", "enable", enable);
@@ -1747,12 +1748,12 @@ void info2_enable_toggle(GtkWidget *wid)
 	}
 }
 
-void info2_destroy(GtkWidget *container)
+static void info2_destroy(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container), info2_pref_vbox);
 }
 
-void info2_construct(GtkWidget *container)
+static void info2_construct(GtkWidget *container)
 {
 	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable Metadata Browser");
 	info2_pref_vbox = gtk_vbox_new(FALSE,6);
@@ -1766,7 +1767,7 @@ void info2_construct(GtkWidget *container)
 	gtk_widget_show_all(container);
 }
 
-void info2_set_enabled(int enabled)
+static void info2_set_enabled(int enabled)
 {
 	cfg_set_single_value_as_int(config, "info2-plugin", "enable", enabled);
 	if (enabled)
@@ -1791,7 +1792,7 @@ void info2_set_enabled(int enabled)
 	}                                                                                                      	
 }
 
-int info2_get_enabled()
+static int info2_get_enabled()
 {
 	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0);
 }
@@ -1813,7 +1814,7 @@ static void info2_activate()
 	}
 }
 
-int info2_add_go_menu(GtkWidget *menu)
+static int info2_add_go_menu(GtkWidget *menu)
 {
 	GtkWidget *item = NULL;
 

@@ -134,7 +134,7 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
  */
 
 
-MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
+static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
 {
 	if(!song)
 	{
@@ -317,7 +317,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 	return META_DATA_FETCHING;	
 }
 
-void meta_data_retrieve_thread()
+static void meta_data_retrieve_thread()
 {
 	meta_thread_data *data = NULL;
 	/**
@@ -411,7 +411,7 @@ void meta_data_handle_remove_request(guint id)
 	g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
 }
 
-gboolean meta_data_handle_results()
+static gboolean meta_data_handle_results()
 {
 	meta_thread_data *data = NULL;
 

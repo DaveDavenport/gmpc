@@ -27,12 +27,10 @@
 extern config_obj *cover_index;
 GladeXML *xml_id3_window = NULL;
 GList *songs = NULL;
-void set_text (GList * node);
-void id3_next_song ();
-void id3_last_song ();
+static void set_text (GList * node);
+void id3_status_update();
 
-
-void id3_save_album_txt()
+static void id3_save_album_txt()
 {
 	GtkTextIter end, start;
 	gchar *content = NULL;
@@ -78,7 +76,7 @@ void id3_save_album_txt()
 
 
 
-void id3_save_artist_txt()
+static void id3_save_artist_txt()
 {
 	GtkTextIter end, start;
 	gchar *content = NULL;
@@ -119,7 +117,7 @@ void id3_save_artist_txt()
 }
 
 
-void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
+static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
 {
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
@@ -168,7 +166,7 @@ void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *
 
 
 
-void remove_id3_window ()
+static void remove_id3_window ()
 {
 	GtkWidget *window =
 		glade_xml_get_widget (xml_id3_window, "id3_info_window");
@@ -234,7 +232,7 @@ void id3_status_update()
 
 }
 
-void create_window (int song)
+static void create_window (int song)
 {
 	char *path;
 	mpd_Song *songstr = mpd_playlist_get_song(connection, song);
@@ -261,7 +259,7 @@ void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
-void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
+static void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
 {
 	GtkImage *image = data;
 	mpd_Song *current = NULL;
@@ -296,7 +294,7 @@ void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpoint
 
 
 
-void set_text (GList * node)
+static void set_text (GList * node)
 {
 	mpd_Song *song;
 	if (node == NULL)
@@ -465,13 +463,13 @@ void set_text (GList * node)
 
 
 
-void id3_next_song ()
+static void id3_next_song ()
 {
 	songs = g_list_next (songs);
 	set_text (songs);
 }
 
-void id3_last_song ()
+static void id3_last_song ()
 {
 	songs = g_list_previous (songs);
 	set_text (songs);
@@ -507,6 +505,7 @@ void call_id3_window_song(mpd_Song *songstr)
 
 
 }
+
 void call_id3_window (int song)
 {
 	if (xml_id3_window == NULL)
@@ -528,7 +527,7 @@ void call_id3_window (int song)
 }
 
 
-void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
+static void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
 {
 	GtkImage *image = data;
 	mpd_Song *current = NULL;
@@ -567,14 +566,14 @@ void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, g
 	}
 }
 
-void id3_info_clear_album_image()
+static void id3_info_clear_album_image()
 {
 	meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_UNAVAILABLE, NULL);
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
-void id3_album_image_file_selector(GtkFileChooser *chooser)
+static void id3_album_image_file_selector(GtkFileChooser *chooser)
 {
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
@@ -585,7 +584,7 @@ void id3_album_image_file_selector(GtkFileChooser *chooser)
 		g_free(path);
 	}
 }
-void id3_reget_album_art()
+static void id3_reget_album_art()
 {
 	if(songs)
 	{
@@ -603,14 +602,14 @@ void id3_reget_album_art()
 	}
 }
 
-void id3_info_clear_artist_image()
+static void id3_info_clear_artist_image()
 {
 	meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_UNAVAILABLE, NULL);
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
-void id3_artist_image_file_selector(GtkFileChooser *chooser)
+static void id3_artist_image_file_selector(GtkFileChooser *chooser)
 {
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
@@ -621,7 +620,7 @@ void id3_artist_image_file_selector(GtkFileChooser *chooser)
 		GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);         		
 	}
 }
-void id3_reget_artist_art()
+static void id3_reget_artist_art()
 {
 	if(songs)
 	{
