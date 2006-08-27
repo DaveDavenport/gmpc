@@ -5,7 +5,7 @@
  */
 void pl3_current_playlist_destroy(void);
 
-void pl3_current_playlist_browser_playlist_changed(void);
+
 extern gmpcPlugin current_playlist_plug;
 
 #endif

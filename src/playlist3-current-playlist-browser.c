@@ -33,12 +33,12 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
-
+static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTreeIter *iter);
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
-static void pl3_current_playlist_browser_add(void);
+static void pl3_current_playlist_browser_add(GtkWidget *cat_tree);
 
-static void pl3_current_playlist_browser_selected(void);
-static void pl3_current_playlist_browser_unselected(void);
+static void pl3_current_playlist_browser_selected(GtkWidget *container);
+static void pl3_current_playlist_browser_unselected(GtkWidget *container);
 
 static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 
@@ -455,7 +455,7 @@ static void pl3_current_playlist_browser_scroll_to_current_song()
 }
 
 /* add's the toplevel entry for the current playlist view */
-void pl3_current_playlist_browser_add()
+void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -726,25 +726,25 @@ static void pl3_current_playlist_browser_show_info()
 	}
 }
 
-static void pl3_current_playlist_browser_selected()
+static void pl3_current_playlist_browser_selected(GtkWidget *container)
 {
 	if(pl3_cp_vbox == NULL)
 	{
 		pl3_current_playlist_browser_init();
 	}
-	gtk_container_add(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
+	gtk_container_add(GTK_CONTAINER(container), pl3_cp_vbox);
 	gtk_widget_show(pl3_cp_vbox);
-	pl3_current_playlist_browser_playlist_changed();
+	pl3_current_playlist_browser_playlist_changed(NULL, NULL);
 
 	gtk_widget_grab_focus(pl3_cp_tree);
 }
-static void pl3_current_playlist_browser_unselected()
+static void pl3_current_playlist_browser_unselected(GtkWidget *container)
 {
-	gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "browser_container")), pl3_cp_vbox);
+	gtk_container_remove(GTK_CONTAINER(container), pl3_cp_vbox);
 }
 
 
-void pl3_current_playlist_browser_playlist_changed()
+void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
 	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{
