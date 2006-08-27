@@ -30,7 +30,7 @@ GList *songs = NULL;
 static void set_text (GList * node);
 void id3_status_update();
 
-static void id3_save_album_txt()
+void id3_save_album_txt()
 {
 	GtkTextIter end, start;
 	gchar *content = NULL;
@@ -72,7 +72,7 @@ static void id3_save_album_txt()
 }
 
 
-static void id3_save_artist_txt()
+void id3_save_artist_txt()
 {
 	GtkTextIter end, start;
 	gchar *content = NULL;
@@ -113,7 +113,7 @@ static void id3_save_artist_txt()
 }
 
 
-static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
+void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
 {
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
@@ -162,7 +162,7 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTex
 
 
 
-static void remove_id3_window ()
+void remove_id3_window ()
 {
 	GtkWidget *window =
 		glade_xml_get_widget (xml_id3_window, "id3_info_window");
@@ -255,6 +255,7 @@ static void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
+/*
 static void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
 {
 	GtkImage *image = data;
@@ -283,11 +284,10 @@ static void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path,
 			//draw_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
 			g_object_unref(pb);
-			/*			set_text(songs);	*/
 		}
 	}
 }
-
+*/
 
 
 static void set_text (GList * node)
@@ -459,13 +459,13 @@ static void set_text (GList * node)
 
 
 
-static void id3_next_song ()
+void id3_next_song ()
 {
 	songs = g_list_next (songs);
 	set_text (songs);
 }
 
-static void id3_last_song ()
+void id3_last_song ()
 {
 	songs = g_list_previous (songs);
 	set_text (songs);
@@ -522,7 +522,7 @@ void call_id3_window (int song)
 	}
 }
 
-
+/*
 static void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
 {
 	GtkImage *image = data;
@@ -552,7 +552,6 @@ static void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 //			draw_pixbuf_border(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
 			g_object_unref(pb);
-			/*			set_text(songs);	*/
 			if(ret != META_DATA_FETCHING)
 			{
 				GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
@@ -561,15 +560,15 @@ static void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *
 		}
 	}
 }
-
-static void id3_info_clear_album_image()
+*/
+void id3_info_clear_album_image()
 {
 	meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_UNAVAILABLE, NULL);
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
-static void id3_album_image_file_selector(GtkFileChooser *chooser)
+void id3_album_image_file_selector(GtkFileChooser *chooser)
 {
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
@@ -580,7 +579,7 @@ static void id3_album_image_file_selector(GtkFileChooser *chooser)
 		g_free(path);
 	}
 }
-static void id3_reget_album_art()
+void id3_reget_album_art()
 {
 	if(songs)
 	{
@@ -598,14 +597,14 @@ static void id3_reget_album_art()
 	}
 }
 
-static void id3_info_clear_artist_image()
+void id3_info_clear_artist_image()
 {
 	meta_data_set_cache(songs->data, META_ARTIST_ART, META_DATA_UNAVAILABLE, NULL);
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")));	
 	GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
 }
 
-static void id3_artist_image_file_selector(GtkFileChooser *chooser)
+void id3_artist_image_file_selector(GtkFileChooser *chooser)
 {
 	gchar *path = gtk_file_chooser_get_filename(chooser);
 	if(path)
@@ -616,7 +615,7 @@ static void id3_artist_image_file_selector(GtkFileChooser *chooser)
 		GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);         		
 	}
 }
-static void id3_reget_artist_art()
+void id3_reget_artist_art()
 {
 	if(songs)
 	{
