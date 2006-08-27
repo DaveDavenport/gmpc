@@ -1,7 +1,6 @@
 # files added by intltool-prepare
 [encoding: UTF-8]
 data/gmpc.desktop.in
-glade/add-browser.glade
 glade/gmpc.glade
 glade/open-location.glade
 glade/playlist3.glade
@@ -12,7 +11,6 @@ src/edit_markup.c
 src/eggtrayicon.back.c
 src/eggtrayicon.c
 src/id3info.c
-src/information.c
 src/main.c
 src/metadata.c
 src/misc.c
@@ -25,9 +23,13 @@ src/playlist3-file-browser.c
 src/playlist3-find-browser.c
 src/playlist3-tag-browser.c
 src/playlist-list.c
-src/playlist-player.c
 src/plugin.c
 src/preferences.c
 src/sm.c
 src/tray-icon.c
 src/TreeSearchWidget.c
+src/eggcellrendererkeys.c
+src/gmpc-metaimage.c
+src/gmpc-metaimage.gob
+src/playlist3-metadata-browser.c
+

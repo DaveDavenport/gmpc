@@ -386,18 +386,13 @@ void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
-	if(artist == NULL)
-	{
+	if(artist == NULL) {
 		printf("CRAP NO PATH\n");
-	}
-	else
-	{
+	} else {
 		info2_fill_song_view(artist);
 	}
 	g_free(artist);
 }
-
-
 
 void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
@@ -612,16 +607,12 @@ void info2_fill_song_view(char *path)
 	}
 	if(song->file)
 	{
-		/**
-		 * Dirname
-		 */		
+		/*** Dirname */		
 		char *dirname = g_path_get_dirname(song->file);
 		info2_add_table_item(table2,"<b>Dirname:</b>",dirname,i);
 		i++;
 		g_free(dirname);
 	}
-
-	
 
 	mpd_freeSong(song);
 	gtk_widget_show_all(info2_vbox);
@@ -806,11 +797,9 @@ gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
 	if(event->area.x<6)
 	{
-
 		cairo_move_to(cr, 1,event->area.y);
 		cairo_line_to(cr, 1,event->area.y+event->area.height);
 		cairo_stroke(cr);
-
 	}
 	cairo_destroy(cr);
 	return FALSE;
