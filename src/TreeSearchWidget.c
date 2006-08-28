@@ -13,10 +13,7 @@ enum {
 	LAST_SIGNAL
 };
 
-
-
 static gint treesearch_signals[LAST_SIGNAL] = { 0 };
-
 
 GType treesearch_get_type (void)
 {

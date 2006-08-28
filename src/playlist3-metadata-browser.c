@@ -582,36 +582,36 @@ static void info2_fill_song_view(char *path)
 	int i =0;
 	if(song->artist)
 	{
-		info2_add_table_item(table2,"<b>Artist:</b>",song->artist,i);
+		info2_add_table_item(table2,_("<b>Artist:</b>"),song->artist,i);
 		i++;
 	}
 	if(song->album)
 	{
-		info2_add_table_item(table2,"<b>Album:</b>",song->album,i);
+		info2_add_table_item(table2,_("<b>Album:</b>"),song->album,i);
 		i++;
 	}
 	if(song->genre)
 	{
-		info2_add_table_item(table2,"<b>Genre:</b>",song->genre,i);
+		info2_add_table_item(table2,_("<b>Genre:</b>"),song->genre,i);
 		i++;
 	}
 
 	if(song->date)
 	{
-		info2_add_table_item(table2,"<b>Date:</b>",song->date,i);
+		info2_add_table_item(table2,_("<b>Date:</b>"),song->date,i);
 		i++;
 	}
 
 	if(song->track)
 	{
-		info2_add_table_item(table2,"<b>Track:</b>",song->track,i);
+		info2_add_table_item(table2,_("<b>Track:</b>"),song->track,i);
 		i++;
 	}
 	if(song->file)
 	{
 		/*** Dirname */		
 		char *dirname = g_path_get_dirname(song->file);
-		info2_add_table_item(table2,"<b>Dirname:</b>",dirname,i);
+		info2_add_table_item(table2,_("<b>Dirname:</b>"),dirname,i);
 		i++;
 		g_free(dirname);
 	}
@@ -1184,31 +1184,31 @@ static void info2_fill_artist_view(char *artist)
 			i=0;
 			if(song->album)
 			{
-				info2_add_table_item(table2, "<b>Album:</b>", song->album,i);
+				info2_add_table_item(table2,_("<b>Album:</b>"), song->album,i);
 				i++;
 			}
 			if(song->genre)
 			{
-				info2_add_table_item(table2, "<b>Genre:</b>", song->genre,i);
+				info2_add_table_item(table2, _("<b>Genre:</b>"), song->genre,i);
 				i++;
 			}
 
 			if(song->date)
 			{
-				info2_add_table_item(table2, "<b>Date:</b>", song->date,i);
+				info2_add_table_item(table2, _("<b>Date:</b>"), song->date,i);
 				i++;
 			}
 			if(tracks)
 			{
 				char *str = g_strdup_printf("%i", tracks);
-				info2_add_table_item(table2, "<b>Tracks:</b>", str,i);
+				info2_add_table_item(table2, _("<b>Tracks:</b>"), str,i);
 				g_free(str);
 				i++;
 			}
 			if(song->file)
 			{
 				gchar *dirname = g_path_get_dirname(song->file);
-				info2_add_table_item(table2,"<b>Directory:</b>",dirname,i);
+				info2_add_table_item(table2,_("<b>Directory:</b>"),dirname,i);
 				i++;
 				g_free(dirname);
 			}
@@ -1458,7 +1458,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			if(song->album)
 			{
 				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Album:</b>");
+				gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
 				ali = gtk_alignment_new(0,0.5,0,0);
 				gtk_container_add(GTK_CONTAINER(ali), label);
 				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1472,7 +1472,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			if(song->genre)
 			{
 				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Genre:</b>");
+				gtk_label_set_markup(GTK_LABEL(label), _("<b>Genre:</b>"));
 				ali = gtk_alignment_new(0,0.5,0,0);
 				gtk_container_add(GTK_CONTAINER(ali), label);
 
@@ -1488,7 +1488,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			if(song->date)
 			{
 				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Date:</b>");
+				gtk_label_set_markup(GTK_LABEL(label), _("<b>Date:</b>"));
 				ali = gtk_alignment_new(0,0.5,0,0);
 				gtk_container_add(GTK_CONTAINER(ali), label);
 				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1503,7 +1503,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			{
 				char *str = g_strdup_printf("%i", tracks);
 				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Tracks:</b>");
+				gtk_label_set_markup(GTK_LABEL(label), _("<b>Tracks:</b>"));
 				ali = gtk_alignment_new(0,0.5,0,0);
 				gtk_container_add(GTK_CONTAINER(ali), label);
 				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1522,7 +1522,7 @@ static void info2_fill_album_view(char *artist,char *album)
 				label = gtk_label_new("");
 				filename = g_path_get_dirname(song->file);
 				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), "<b>Directory:</b>");
+				gtk_label_set_markup(GTK_LABEL(label), _("<b>Directory:</b>"));
 				ali = gtk_alignment_new(0,0.5,0,0);
 				gtk_container_add(GTK_CONTAINER(ali), label);
 				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1573,11 +1573,6 @@ static void info2_fill_album_view(char *artist,char *album)
 			gtk_table_attach(GTK_TABLE(table2), button, 3,4,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-
-
-
-
-
 
 			i++;
 		}
@@ -1690,7 +1685,7 @@ static void info2_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
-			PL3_CAT_TITLE, "Meta Browser",
+			PL3_CAT_TITLE, _("Metadata Browser"),
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-info",
 			PL3_CAT_PROC, TRUE,

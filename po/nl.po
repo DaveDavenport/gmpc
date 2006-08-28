@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-29 00:58+0200\n"
+"POT-Creation-Date: 2006-08-29 01:08+0200\n"
 "PO-Revision-Date: 2006-08-28 23:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,11 +34,13 @@ msgstr ""
 msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
 msgstr "<b><span size=\"x-large\">Er trad een fout op</span></b>"
 
-#: ../glade/gmpc.glade.h:3
+#: ../glade/gmpc.glade.h:3 ../src/playlist3-metadata-browser.c:590
+#: ../src/playlist3-metadata-browser.c:1187
+#: ../src/playlist3-metadata-browser.c:1461
 msgid "<b>Album:</b>"
 msgstr "<b>Album.</b>"
 
-#: ../glade/gmpc.glade.h:4
+#: ../glade/gmpc.glade.h:4 ../src/playlist3-metadata-browser.c:585
 msgid "<b>Artist:</b>"
 msgstr "<b>Artiest.</b>"
 
@@ -58,7 +60,9 @@ msgstr ""
 msgid "<b>Crossfade:</b>"
 msgstr ""
 
-#: ../glade/gmpc.glade.h:9
+#: ../glade/gmpc.glade.h:9 ../src/playlist3-metadata-browser.c:601
+#: ../src/playlist3-metadata-browser.c:1198
+#: ../src/playlist3-metadata-browser.c:1491
 msgid "<b>Date:</b>"
 msgstr "<b>Datum:</b>"
 
@@ -78,7 +82,9 @@ msgstr "<b>Voorbeeld.</b>"
 msgid "<b>Filename:</b>"
 msgstr "<b>Bestandsnaam:</b>"
 
-#: ../glade/gmpc.glade.h:14
+#: ../glade/gmpc.glade.h:14 ../src/playlist3-metadata-browser.c:595
+#: ../src/playlist3-metadata-browser.c:1192
+#: ../src/playlist3-metadata-browser.c:1475
 msgid "<b>Genre:</b>"
 msgstr "<b>Genre,</b>"
 
@@ -135,7 +141,7 @@ msgstr "<b>Statistieken.</b>"
 msgid "<b>Title:</b>"
 msgstr "<b>Titel.</b>"
 
-#: ../glade/gmpc.glade.h:28
+#: ../glade/gmpc.glade.h:28 ../src/playlist3-metadata-browser.c:607
 msgid "<b>Track:</b>"
 msgstr "<b>Track.</b>"
 
@@ -932,7 +938,7 @@ msgid "Song _Information"
 msgstr ""
 
 # find -> search?
-#: ../src/TreeSearchWidget.c:252
+#: ../src/TreeSearchWidget.c:249
 #, fuzzy
 msgid "Find:"
 msgstr "Zoeken"
@@ -1025,6 +1031,24 @@ msgstr ""
 msgid "Draw a shadow under the image"
 msgstr ""
 
-#: ../src/playlist3-metadata-browser.c:1826
+#: ../src/playlist3-metadata-browser.c:614
+#, fuzzy
+msgid "<b>Dirname:</b>"
+msgstr "<b>Bestandsnaam:</b>"
+
+#: ../src/playlist3-metadata-browser.c:1204
+#: ../src/playlist3-metadata-browser.c:1506
+#, fuzzy
+msgid "<b>Tracks:</b>"
+msgstr "<b>Track.</b>"
+
+#: ../src/playlist3-metadata-browser.c:1211
+#: ../src/playlist3-metadata-browser.c:1525
+#, fuzzy
+msgid "<b>Directory:</b>"
+msgstr "<b>Disc:</b>"
+
+#: ../src/playlist3-metadata-browser.c:1688
+#: ../src/playlist3-metadata-browser.c:1821
 msgid "Metadata Browser"
 msgstr "Metadatabrowser"
