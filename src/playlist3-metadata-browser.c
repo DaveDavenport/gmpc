@@ -170,7 +170,8 @@ static void as_album_clicked(GtkButton *button, gpointer data)
 			}
 		}
 		mpd_playlist_queue_commit(connection);
-		mpd_player_play(connection);
+		if(clear)
+			mpd_player_play(connection);
 
 	}
 
@@ -659,7 +660,8 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 
 		mpd_playlist_queue_add(connection, artist);
 		mpd_playlist_queue_commit(connection);
-		mpd_player_play(connection);
+		if(clear)
+			mpd_player_play(connection);
 	}
 }
 
@@ -683,7 +685,8 @@ static void as_artist_clicked(GtkButton *button, gpointer data)
 			}
 		}
 		mpd_playlist_queue_commit(connection);
-		mpd_player_play(connection);
+		if(clear)
+			mpd_player_play(connection);
 	}
 }
 
