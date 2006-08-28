@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-29 00:00+0200\n"
+"POT-Creation-Date: 2006-08-29 00:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -778,6 +778,12 @@ msgstr ""
 msgid "Pos"
 msgstr ""
 
+#. PL3_CURRENT_PLAYLIST,
+#: ../src/playlist3-current-playlist-browser.c:464
+#: ../src/playlist3-current-playlist-browser.c:977
+msgid "Current Playlist"
+msgstr ""
+
 #: ../src/playlist3-current-playlist-browser.c:515
 msgid "Are you sure you want to clear the playlist?"
 msgstr ""
@@ -801,8 +807,8 @@ msgid ""
 "Overwrite?</i>"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:977
-msgid "Current Playlist"
+#: ../src/playlist3-file-browser.c:278
+msgid "Browse Filesystem"
 msgstr ""
 
 #: ../src/playlist3-file-browser.c:936
@@ -898,6 +904,10 @@ msgstr ""
 
 #: ../src/tray-icon.c:480
 msgid "Song _Information"
+msgstr ""
+
+#: ../src/TreeSearchWidget.c:252
+msgid "Find:"
 msgstr ""
 
 #: ../src/eggcellrendererkeys.c:25

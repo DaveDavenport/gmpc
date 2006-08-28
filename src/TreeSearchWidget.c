@@ -2,6 +2,7 @@
 #include <gtk/gtksignal.h>
 #include <gdk/gdkkeysyms.h>
 #include <regex.h>
+#include "main.h"
 #include "TreeSearchWidget.h"
 static void treesearch_class_init          (TreeSearchClass *klass);
 static void treesearch_init                (TreeSearch      *ts);
@@ -248,7 +249,7 @@ static void treesearch_init (TreeSearch *ts)
 	GtkWidget *vbox = NULL;
 	vbox = gtk_hbox_new(FALSE, 6);
 	gtk_container_add(GTK_CONTAINER(ts), vbox);
-	label = gtk_label_new("Find:");
+	label = gtk_label_new(_("Find:"));
 	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
 
 	ts->entry = gtk_entry_new();
