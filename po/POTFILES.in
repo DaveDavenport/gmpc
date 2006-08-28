@@ -6,7 +6,6 @@ glade/open-location.glade
 glade/playlist3.glade
 src/bacon-volume.c
 src/config1.c
-src/cover-art-manager.c
 src/edit_markup.c
 src/eggtrayicon.back.c
 src/eggtrayicon.c
