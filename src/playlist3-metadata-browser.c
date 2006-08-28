@@ -1683,7 +1683,7 @@ static void info2_add(GtkWidget *cat_tree)
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
 	GtkTreeIter iter;
-	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0)) return;
+	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
@@ -1746,6 +1746,7 @@ static void info2_enable_toggle(GtkWidget *wid)
 			info2_ref = NULL;
 		}
 	}
+	pl3_update_go_menu();
 }
 
 static void info2_destroy(GtkWidget *container)
@@ -1759,7 +1760,7 @@ static void info2_construct(GtkWidget *container)
 	info2_pref_vbox = gtk_vbox_new(FALSE,6);
 
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
-			cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0));
+			cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1));
 
 	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(info2_enable_toggle), NULL);
 	gtk_box_pack_start(GTK_BOX(info2_pref_vbox), enable_cg, FALSE, FALSE, 0);
@@ -1790,11 +1791,12 @@ static void info2_set_enabled(int enabled)
 			info2_ref = NULL;
 		}                                                                                                  	
 	}                                                                                                      	
+	pl3_update_go_menu();
 }
 
 static int info2_get_enabled()
 {
-	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 0);
+	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1);
 }
 
 
@@ -1817,7 +1819,7 @@ static void info2_activate()
 static int info2_add_go_menu(GtkWidget *menu)
 {
 	GtkWidget *item = NULL;
-
+	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return 0;
 	item = gtk_image_menu_item_new_with_label(_("Metadata Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
