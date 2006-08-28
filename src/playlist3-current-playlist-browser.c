@@ -461,7 +461,7 @@ void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
-			PL3_CAT_TITLE, "Current Playlist",
+			PL3_CAT_TITLE, _("Current Playlist"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-playlist",
 			PL3_CAT_PROC, TRUE,

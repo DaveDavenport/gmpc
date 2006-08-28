@@ -275,7 +275,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, file_browser_plug.id,
-			PL3_CAT_TITLE, "Browse Filesystem",
+			PL3_CAT_TITLE, _("Browse Filesystem"),
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,
