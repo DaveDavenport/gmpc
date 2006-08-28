@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-27 17:16+0200\n"
+"POT-Creation-Date: 2006-08-28 21:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -612,34 +612,40 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: ../src/id3info.c:137
+#: ../src/id3info.c:131
 msgid "Working...."
 msgstr ""
 
 #. * No Threading availible, show a nice gtk error message and quit
-#: ../src/main.c:329
+#: ../src/main.c:331
 msgid ""
 "GMPC requires threading support.\n"
 "quiting.."
 msgstr ""
 
-#: ../src/main.c:414
+#: ../src/main.c:416
 msgid "Failed to load the configuration system"
 msgstr ""
 
-#: ../src/main.c:435
+#: ../src/main.c:437
 msgid "Failed to setup libmpd"
 msgstr ""
 
-#: ../src/main.c:934
+#: ../src/main.c:931
 msgid "GMPC has insuffient permissions on the mpd server."
 msgstr ""
 
-#: ../src/main.c:996
+#: ../src/main.c:993
 #, c-format
 msgid ""
 "Mpd Returned the following error:\n"
 "<i>\"%s\"</i>"
+msgstr ""
+
+#: ../src/main.c:1063
+msgid ""
+"Gmpc is currently connected to mpd version smaller then 0.12.0.\n"
+"This might work, but is no longer supported."
 msgstr ""
 
 #: ../src/metadata.c:675
@@ -716,94 +722,94 @@ msgid "Off"
 msgstr ""
 
 #. markup column
-#: ../src/playlist3-current-playlist-browser.c:221
+#: ../src/playlist3-current-playlist-browser.c:218
 msgid "Markup"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:230
+#: ../src/playlist3-current-playlist-browser.c:227
 msgid "Artist"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:239
+#: ../src/playlist3-current-playlist-browser.c:236
 msgid "Track"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:248
+#: ../src/playlist3-current-playlist-browser.c:245
 msgid "Title"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:257
+#: ../src/playlist3-current-playlist-browser.c:254
 msgid "Album"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:266
+#: ../src/playlist3-current-playlist-browser.c:263
 msgid "Genre"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:275
+#: ../src/playlist3-current-playlist-browser.c:272
 msgid "Composer"
 msgstr ""
 
 #. *
 #. * Track length column
 #.
-#: ../src/playlist3-current-playlist-browser.c:288
+#: ../src/playlist3-current-playlist-browser.c:285
 msgid "Length"
 msgstr ""
 
 #. *
 #. * Disc column
 #.
-#: ../src/playlist3-current-playlist-browser.c:301
+#: ../src/playlist3-current-playlist-browser.c:298
 msgid "Disc"
 msgstr ""
 
 #. *
 #. * Comment Column
 #.
-#: ../src/playlist3-current-playlist-browser.c:313
+#: ../src/playlist3-current-playlist-browser.c:310
 msgid "Comment"
 msgstr ""
 
 #. *
 #. * Songpos Column
 #.
-#: ../src/playlist3-current-playlist-browser.c:325
+#: ../src/playlist3-current-playlist-browser.c:322
 msgid "Pos"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:518
+#: ../src/playlist3-current-playlist-browser.c:515
 msgid "Are you sure you want to clear the playlist?"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:628
+#: ../src/playlist3-current-playlist-browser.c:620
 msgid "Status Icon"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:636
+#: ../src/playlist3-current-playlist-browser.c:628
 msgid "Show Column Headers"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:764
+#: ../src/playlist3-current-playlist-browser.c:756
 msgid "(Estimation)"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:859
+#: ../src/playlist3-current-playlist-browser.c:851
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
 
-#: ../src/playlist3-current-playlist-browser.c:985
+#: ../src/playlist3-current-playlist-browser.c:977
 msgid "Current Playlist"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:1010
+#: ../src/playlist3-file-browser.c:936
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:1095
+#: ../src/playlist3-file-browser.c:1021
 msgid "File Browser"
 msgstr ""
 
@@ -822,7 +828,7 @@ msgstr ""
 msgid "Tag Browser"
 msgstr ""
 
-#: ../src/playlist3-tag-browser.c:1468 ../src/preferences.c:288
+#: ../src/playlist3-tag-browser.c:1468 ../src/preferences.c:262
 msgid "Name"
 msgstr ""
 
@@ -842,31 +848,31 @@ msgstr ""
 msgid "Plugins:"
 msgstr ""
 
-#: ../src/preferences.c:285
+#: ../src/preferences.c:259
 msgid "Enabled"
 msgstr ""
 
-#: ../src/preferences.c:290
+#: ../src/preferences.c:264
 msgid "Function"
 msgstr ""
 
-#: ../src/preferences.c:304
+#: ../src/preferences.c:278
 msgid "Dummy"
 msgstr ""
 
-#: ../src/preferences.c:307
+#: ../src/preferences.c:281
 msgid "Browser Extention"
 msgstr ""
 
-#: ../src/preferences.c:310
+#: ../src/preferences.c:284
 msgid "Metadata Provider"
 msgstr ""
 
-#: ../src/preferences.c:315
+#: ../src/preferences.c:289
 msgid "Misc."
 msgstr ""
 
-#: ../src/preferences.c:319
+#: ../src/preferences.c:293
 msgid "Unkown"
 msgstr ""
 
@@ -982,6 +988,6 @@ msgstr ""
 msgid "Draw a shadow under the image"
 msgstr ""
 
-#: ../src/playlist3-metadata-browser.c:1820
+#: ../src/playlist3-metadata-browser.c:1826
 msgid "Metadata Browser"
 msgstr ""
