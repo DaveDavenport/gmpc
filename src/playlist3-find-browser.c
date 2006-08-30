@@ -276,7 +276,7 @@ void pl3_find_browser_add()
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, find_browser_plug.id,
-			PL3_CAT_TITLE, "Search",
+			PL3_CAT_TITLE, _("Search"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "gtk-find",
 			PL3_CAT_PROC, TRUE,
@@ -827,7 +827,7 @@ int pl3_find_browser_add_go_menu(GtkWidget *menu)
 {
  	GtkWidget *item = NULL;
  
- 	item = gtk_image_menu_item_new_with_label(_("Find"));
+ 	item = gtk_image_menu_item_new_with_label(_("Search"));
  	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
  			gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
  	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -837,7 +837,7 @@ int pl3_find_browser_add_go_menu(GtkWidget *menu)
 	 * Find menu
 	 */
  
- 	item = gtk_image_menu_item_new_with_label(_("Find in playlist"));
+ 	item = gtk_image_menu_item_new_with_label(_("Search in playlist"));
  	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
  			gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
  	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

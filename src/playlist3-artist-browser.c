@@ -84,7 +84,7 @@ gmpcPlBrowserPlugin artist_browser_gbp = {
 };
 
 gmpcPlugin artist_browser_plug = {
-	"File Browser",
+	"Artist Browser",
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
@@ -228,7 +228,7 @@ void pl3_artist_browser_add()
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, artist_browser_plug.id,
-			PL3_CAT_TITLE, "Browse Artists",        	
+			PL3_CAT_TITLE, _("Browse Artists"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
 			PL3_CAT_PROC, FALSE,

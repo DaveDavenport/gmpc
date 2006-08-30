@@ -1549,7 +1549,7 @@ int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 	{
 		GtkWidget *item = NULL;
 
-		item = gtk_image_menu_item_new_with_label(_("Custom Tag"));
+		item = gtk_image_menu_item_new_with_label(_("Tag Browser"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 				gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-04 14:18+0100\n"
+"POT-Creation-Date: 2006-08-30 15:36+0200\n"
 "PO-Revision-Date: 2006-08-30 14:10-0000\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -22,8 +22,7 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr "Nakładka gnome na demona mpd"
 
 #. set up tray icon
-#: ../data/gmpc.desktop.in.h:2
-#: ../src/tray-icon.c:537
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:537
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -35,15 +34,13 @@ msgstr "/"
 msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
 msgstr "<b><span size=\"x-large\">Napotkano błąd</span></b>"
 
-#: ../glade/gmpc.glade.h:3
-#: ../src/playlist3-metadata-browser.c:590
+#: ../glade/gmpc.glade.h:3 ../src/playlist3-metadata-browser.c:590
 #: ../src/playlist3-metadata-browser.c:1187
 #: ../src/playlist3-metadata-browser.c:1461
 msgid "<b>Album:</b>"
 msgstr "<b>Album:</b>"
 
-#: ../glade/gmpc.glade.h:4
-#: ../src/playlist3-metadata-browser.c:585
+#: ../glade/gmpc.glade.h:4 ../src/playlist3-metadata-browser.c:585
 msgid "<b>Artist:</b>"
 msgstr "<b>Wykonawca:</b>"
 
@@ -63,8 +60,7 @@ msgstr "<b>Kompozytor:</b>"
 msgid "<b>Crossfade:</b>"
 msgstr "<b>Przenikanie:</b>"
 
-#: ../glade/gmpc.glade.h:9
-#: ../src/playlist3-metadata-browser.c:601
+#: ../glade/gmpc.glade.h:9 ../src/playlist3-metadata-browser.c:601
 #: ../src/playlist3-metadata-browser.c:1198
 #: ../src/playlist3-metadata-browser.c:1491
 msgid "<b>Date:</b>"
@@ -86,8 +82,7 @@ msgstr "<b>Przykład:</b>"
 msgid "<b>Filename:</b>"
 msgstr "<b>Nazwa pliku:</b>"
 
-#: ../glade/gmpc.glade.h:14
-#: ../src/playlist3-metadata-browser.c:595
+#: ../glade/gmpc.glade.h:14 ../src/playlist3-metadata-browser.c:595
 #: ../src/playlist3-metadata-browser.c:1192
 #: ../src/playlist3-metadata-browser.c:1475
 msgid "<b>Genre:</b>"
@@ -145,8 +140,7 @@ msgstr "<b>Statystyki:</b>"
 msgid "<b>Title:</b>"
 msgstr "<b>Tytuł:</b>"
 
-#: ../glade/gmpc.glade.h:28
-#: ../src/playlist3-metadata-browser.c:607
+#: ../glade/gmpc.glade.h:28 ../src/playlist3-metadata-browser.c:607
 msgid "<b>Track:</b>"
 msgstr "<b>Numer:</b>"
 
@@ -176,11 +170,17 @@ msgstr "<span size=\"large\"><b>Format reguły:</b></span>"
 
 #: ../glade/gmpc.glade.h:35
 msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
-msgstr "<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym podłączeniu do demona MPD</i></span>"
+msgstr ""
+"<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym podłączeniu "
+"do demona MPD</i></span>"
 
 #: ../glade/gmpc.glade.h:36
-msgid "<span size=\"small\"><i>The configured Tag browsers will only show up with mpd version 0.12 or above.</i></span>"
-msgstr "<span size=\"small\"><i>Skonfigurowana przeglądarka tagów będzie działąć tylko z mpd w wersji 0.12 lub wyższej</i></span>"
+msgid ""
+"<span size=\"small\"><i>The configured Tag browsers will only show up with "
+"mpd version 0.12 or above.</i></span>"
+msgstr ""
+"<span size=\"small\"><i>Skonfigurowana przeglądarka tagów będzie działąć "
+"tylko z mpd w wersji 0.12 lub wyższej</i></span>"
 
 #: ../glade/gmpc.glade.h:37
 msgid ""
@@ -312,12 +312,9 @@ msgstr ""
 msgid "Host:"
 msgstr "Host:"
 
-#: ../glade/gmpc.glade.h:72
-#: ../src/mpdinteraction.c:374
-#: ../src/mpdinteraction.c:376
-#: ../src/mpdinteraction.c:378
-#: ../src/mpdinteraction.c:380
-#: ../src/mpdinteraction.c:382
+#: ../glade/gmpc.glade.h:72 ../src/mpdinteraction.c:374
+#: ../src/mpdinteraction.c:376 ../src/mpdinteraction.c:378
+#: ../src/mpdinteraction.c:380 ../src/mpdinteraction.c:382
 msgid "N/A"
 msgstr "N/D"
 
@@ -389,8 +386,7 @@ msgstr "Autopodłączenie"
 msgid "_Date"
 msgstr "Data"
 
-#: ../glade/gmpc.glade.h:90
-#: ../glade/playlist3.glade.h:22
+#: ../glade/gmpc.glade.h:90 ../glade/playlist3.glade.h:22
 msgid "_Disconnect"
 msgstr "Rozłącz"
 
@@ -456,8 +452,12 @@ msgid "*"
 msgstr "*"
 
 #: ../glade/open-location.glade.h:2
-msgid "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></span>"
-msgstr "<span size=\"x-small\"><i>Wprowadź lokalny lub zdalny strumień lub listę odtwarzania</i></span>"
+msgid ""
+"<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
+"span>"
+msgstr ""
+"<span size=\"x-small\"><i>Wprowadź lokalny lub zdalny strumień lub listę "
+"odtwarzania</i></span>"
 
 #: ../glade/open-location.glade.h:3
 msgid "Add Location"
@@ -475,8 +475,7 @@ msgstr "Możesz upuścić link lub plik bezpośrednio z przeglądarki na tym okn
 msgid "<enter playlist name>"
 msgstr "<wprowadź nazwę listy odtwarzania>"
 
-#: ../glade/playlist3.glade.h:2
-#: ../src/playlist3.c:1040
+#: ../glade/playlist3.glade.h:2 ../src/playlist3.c:1040
 #: ../src/playlist3.c:1043
 msgid "<span size=\"large\" weight=\"bold\">Not Playing</span>"
 msgstr "<span size=\"large\" weight=\"bold\">Nie odtwarza</span>"
@@ -505,8 +504,7 @@ msgstr "Nazwa:"
 msgid "Next"
 msgstr "Następny"
 
-#: ../glade/playlist3.glade.h:9
-#: ../src/playlist3.c:1382
+#: ../glade/playlist3.glade.h:9 ../src/playlist3.c:1382
 msgid "Not Connected"
 msgstr "Niepodłączony"
 
@@ -683,8 +681,12 @@ msgstr ""
 "Może to funkcjonować, ale nie jest już wspierane."
 
 #: ../src/metadata.c:675
-msgid "A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"
-msgstr "Dodano nową wtyczkę metadancyh, gmpc oczyści pamięć podręczną ze wszystkich brakujących metadanych"
+msgid ""
+"A new metadata plugin was added, gmpc will now purge all missing metadata "
+"from the cache"
+msgstr ""
+"Dodano nową wtyczkę metadancyh, gmpc oczyści pamięć podręczną ze wszystkich "
+"brakujących metadanych"
 
 #: ../src/misc.c:44
 msgid "day"
@@ -718,11 +720,15 @@ msgstr "Akcja"
 msgid "Shortcut"
 msgstr "Skrót"
 
-#: ../src/mpdinteraction.c:347
-#: ../src/mpdinteraction.c:358
+#: ../src/mpdinteraction.c:347 ../src/mpdinteraction.c:358
 #, c-format
 msgid "%i day%s %02i hour%s %02i minute%s"
 msgstr "%i dni%s %02i godzin%s %02i minut%s"
+
+#: ../src/playlist3-artist-browser.c:231
+#, fuzzy
+msgid "Browse Artists"
+msgstr "Przeglądaj pliki"
 
 #: ../src/playlist3-artist-browser.c:1058
 msgid "Artist Browser"
@@ -736,9 +742,7 @@ msgstr ""
 "Nie można otworzyć pliku opisu interfejsu!\n"
 "Proszę przeinstalować gmpc"
 
-#: ../src/playlist3.c:1177
-#: ../src/playlist3.c:1186
-#: ../src/playlist3.c:1297
+#: ../src/playlist3.c:1177 ../src/playlist3.c:1186 ../src/playlist3.c:1297
 msgid "GMPC"
 msgstr "GMPC"
 
@@ -750,13 +754,11 @@ msgstr "Podłączony do"
 msgid "Disconnected"
 msgstr "Rozłączony"
 
-#: ../src/playlist3.c:1324
-#: ../src/playlist3.c:1337
+#: ../src/playlist3.c:1324 ../src/playlist3.c:1337
 msgid "On"
 msgstr "Włączone"
 
-#: ../src/playlist3.c:1324
-#: ../src/playlist3.c:1337
+#: ../src/playlist3.c:1324 ../src/playlist3.c:1337
 msgid "Off"
 msgstr "Wyłącz"
 
@@ -860,34 +862,30 @@ msgstr "Jesteś pewny że chcesz wyczyścić zaznaczoną listę odtwarzania?"
 msgid "File Browser"
 msgstr "Przeglądarka plików"
 
-#: ../src/playlist3-find-browser.c:830
-msgid "Find"
-msgstr "Szukaj"
+#: ../src/playlist3-find-browser.c:279 ../src/playlist3-find-browser.c:830
+msgid "Search"
+msgstr ""
 
 #. *
 #. * Find menu
 #.
 #: ../src/playlist3-find-browser.c:840
-msgid "Find in playlist"
+#, fuzzy
+msgid "Search in playlist"
 msgstr "Szukaj w listach odtwarzania"
 
-#: ../src/playlist3-tag-browser.c:184
-#: ../src/playlist3-tag-browser.c:233
+#: ../src/playlist3-tag-browser.c:184 ../src/playlist3-tag-browser.c:233
+#: ../src/playlist3-tag-browser.c:1552
 msgid "Tag Browser"
 msgstr "Przeglądarka znaczników"
 
-#: ../src/playlist3-tag-browser.c:1468
-#: ../src/preferences.c:262
+#: ../src/playlist3-tag-browser.c:1468 ../src/preferences.c:262
 msgid "Name"
 msgstr "Nazwa"
 
 #: ../src/playlist3-tag-browser.c:1473
 msgid "Format"
 msgstr "Format"
-
-#: ../src/playlist3-tag-browser.c:1552
-msgid "Custom Tag"
-msgstr "Własny znacznik"
 
 #: ../src/preferences.c:83
 msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
@@ -957,18 +955,15 @@ msgstr "Szukaj:"
 msgid "New accelerator..."
 msgstr "Nowy skrót..."
 
-#: ../src/eggcellrendererkeys.c:167
-#: ../src/eggcellrendererkeys.c:168
+#: ../src/eggcellrendererkeys.c:167 ../src/eggcellrendererkeys.c:168
 msgid "Accelerator key"
 msgstr "Klawisz skrótu"
 
-#: ../src/eggcellrendererkeys.c:177
-#: ../src/eggcellrendererkeys.c:178
+#: ../src/eggcellrendererkeys.c:177 ../src/eggcellrendererkeys.c:178
 msgid "Accelerator modifiers"
 msgstr "Modyfikatory skrótu"
 
-#: ../src/eggcellrendererkeys.c:186
-#: ../src/eggcellrendererkeys.c:187
+#: ../src/eggcellrendererkeys.c:186 ../src/eggcellrendererkeys.c:187
 msgid "Accelerator keycode"
 msgstr "Kod klawisza skrótu"
 
@@ -985,75 +980,63 @@ msgid "Disabled"
 msgstr "Wyłączone"
 
 #. name
-#: gmpc-metaimage.c:157
-#: ../src/gmpc-metaimage.gob:26
+#: gmpc-metaimage.c:157 ../src/gmpc-metaimage.gob:26
 msgid "Image type"
 msgstr "Rodzaj obrazu"
 
 #. nick
-#: gmpc-metaimage.c:158
-#: ../src/gmpc-metaimage.gob:27
+#: gmpc-metaimage.c:158 ../src/gmpc-metaimage.gob:27
 msgid "Type of the image, like artist art"
 msgstr "Typ obrazu, jak obraz wykonawcy"
 
 #. name
-#: gmpc-metaimage.c:168
-#: ../src/gmpc-metaimage.gob:33
+#: gmpc-metaimage.c:168 ../src/gmpc-metaimage.gob:33
 msgid "Size"
 msgstr "Rozmiar"
 
 #. nick
-#: gmpc-metaimage.c:169
-#: ../src/gmpc-metaimage.gob:34
+#: gmpc-metaimage.c:169 ../src/gmpc-metaimage.gob:34
 msgid "Size of the image"
 msgstr "Wymiary obrazu"
 
 #. name
-#: gmpc-metaimage.c:179
-#: ../src/gmpc-metaimage.gob:40
+#: gmpc-metaimage.c:179 ../src/gmpc-metaimage.gob:40
 #, fuzzy
 msgid "HideOnNA"
 msgstr "HideOnNA"
 
 #. nick
-#: gmpc-metaimage.c:180
-#: ../src/gmpc-metaimage.gob:41
+#: gmpc-metaimage.c:180 ../src/gmpc-metaimage.gob:41
 msgid "Hide the image when not availibe"
 msgstr "Ukryj obraz jeżeli niedostępny"
 
 #. name
-#: gmpc-metaimage.c:188
-#: ../src/gmpc-metaimage.gob:46
+#: gmpc-metaimage.c:188 ../src/gmpc-metaimage.gob:46
 msgid "Connection"
 msgstr "Połączenie"
 
 #. nick
-#: gmpc-metaimage.c:189
-#: ../src/gmpc-metaimage.gob:47
+#: gmpc-metaimage.c:189 ../src/gmpc-metaimage.gob:47
 msgid "A mpdObj to check on"
 msgstr "mpdObj do sprawdzenia"
 
 #. name
-#: gmpc-metaimage.c:196
-#: ../src/gmpc-metaimage.gob:52
+#: gmpc-metaimage.c:196 ../src/gmpc-metaimage.gob:52
 msgid "DrawBorder"
 msgstr "Rysuj obwódkę"
 
 #. nick
-#: gmpc-metaimage.c:197
-#: ../src/gmpc-metaimage.gob:53
+#: gmpc-metaimage.c:197 ../src/gmpc-metaimage.gob:53
 msgid "Draw a border around the image"
 msgstr "Rysuj obwódkę wokół obrazu"
 
 #. name
-#: gmpc-metaimage.c:205
-#: ../src/gmpc-metaimage.gob:58
+#: gmpc-metaimage.c:205 ../src/gmpc-metaimage.gob:58
 msgid "DrawShadow"
 msgstr "Rysuj cień"
 
 #. nick
-#: gmpc-metaimage.c:206
-#: ../src/gmpc-metaimage.gob:59
+#: gmpc-metaimage.c:206 ../src/gmpc-metaimage.gob:59
 msgid "Draw a shadow under the image"
 msgstr "Rysuj cień pod obrazem"
 
@@ -1076,3 +1059,8 @@ msgstr "<b>Katalog:</b>"
 msgid "Metadata Browser"
 msgstr "Przeglądarka metadanych"
 
+#~ msgid "Find"
+#~ msgstr "Szukaj"
+
+#~ msgid "Custom Tag"
+#~ msgstr "Własny znacznik"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-29 12:54+0200\n"
+"POT-Creation-Date: 2006-08-30 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -697,6 +697,10 @@ msgstr ""
 msgid "%i day%s %02i hour%s %02i minute%s"
 msgstr ""
 
+#: ../src/playlist3-artist-browser.c:231
+msgid "Browse Artists"
+msgstr ""
+
 #: ../src/playlist3-artist-browser.c:1058
 msgid "Artist Browser"
 msgstr ""
@@ -825,18 +829,19 @@ msgstr ""
 msgid "File Browser"
 msgstr ""
 
-#: ../src/playlist3-find-browser.c:830
-msgid "Find"
+#: ../src/playlist3-find-browser.c:279 ../src/playlist3-find-browser.c:830
+msgid "Search"
 msgstr ""
 
 #. *
 #. * Find menu
 #.
 #: ../src/playlist3-find-browser.c:840
-msgid "Find in playlist"
+msgid "Search in playlist"
 msgstr ""
 
 #: ../src/playlist3-tag-browser.c:184 ../src/playlist3-tag-browser.c:233
+#: ../src/playlist3-tag-browser.c:1552
 msgid "Tag Browser"
 msgstr ""
 
@@ -846,10 +851,6 @@ msgstr ""
 
 #: ../src/playlist3-tag-browser.c:1473
 msgid "Format"
-msgstr ""
-
-#: ../src/playlist3-tag-browser.c:1552
-msgid "Custom Tag"
 msgstr ""
 
 #: ../src/preferences.c:83

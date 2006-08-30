@@ -1,7 +1,7 @@
 #ifndef __MAIN_H__
 
 #define __MAIN_H__
-
+#include <config.h>
 
 #ifdef ENABLE_NLS
 #include <libintl.h>

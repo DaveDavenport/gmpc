@@ -25,7 +25,6 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <time.h>
-#include <config.h>
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
