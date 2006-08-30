@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-30 15:36+0200\n"
+"POT-Creation-Date: 2006-08-31 01:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -573,40 +573,40 @@ msgid "name:"
 msgstr ""
 
 #. +
-#: ../src/bacon-volume.c:187
+#: ../src/bacon-volume.c:183
 msgid "+"
 msgstr ""
 
 #. -
-#: ../src/bacon-volume.c:203
+#: ../src/bacon-volume.c:199
 msgid "-"
 msgstr ""
 
-#: ../src/edit_markup.c:42
+#: ../src/edit_markup.c:41
 msgid "/path/to/file_name.mp3"
 msgstr ""
 
-#: ../src/edit_markup.c:43
+#: ../src/edit_markup.c:42
 msgid "I'm Artist"
 msgstr ""
 
-#: ../src/edit_markup.c:44
+#: ../src/edit_markup.c:43
 msgid "Sing or Swing you want"
 msgstr ""
 
-#: ../src/edit_markup.c:45
+#: ../src/edit_markup.c:44
 msgid "The kernel jazz"
 msgstr ""
 
-#: ../src/edit_markup.c:46
+#: ../src/edit_markup.c:45
 msgid "01/24"
 msgstr ""
 
-#: ../src/edit_markup.c:47
+#: ../src/edit_markup.c:46
 msgid "2 Feb 2006"
 msgstr ""
 
-#: ../src/edit_markup.c:49
+#: ../src/edit_markup.c:48
 msgid "MPD's Streaming server"
 msgstr ""
 
