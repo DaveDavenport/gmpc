@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-08-31 01:21+0200\n"
+"POT-Creation-Date: 2006-09-01 22:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -294,9 +294,9 @@ msgstr ""
 msgid "Host:"
 msgstr ""
 
-#: ../glade/gmpc.glade.h:72 ../src/mpdinteraction.c:374
-#: ../src/mpdinteraction.c:376 ../src/mpdinteraction.c:378
-#: ../src/mpdinteraction.c:380 ../src/mpdinteraction.c:382
+#: ../glade/gmpc.glade.h:72 ../src/mpdinteraction.c:383
+#: ../src/mpdinteraction.c:385 ../src/mpdinteraction.c:387
+#: ../src/mpdinteraction.c:389 ../src/mpdinteraction.c:391
 msgid "N/A"
 msgstr ""
 
@@ -623,32 +623,32 @@ msgid "Working...."
 msgstr ""
 
 #. * No Threading availible, show a nice gtk error message and quit
-#: ../src/main.c:331
+#: ../src/main.c:333
 msgid ""
 "GMPC requires threading support.\n"
 "quiting.."
 msgstr ""
 
-#: ../src/main.c:416
+#: ../src/main.c:418
 msgid "Failed to load the configuration system"
 msgstr ""
 
-#: ../src/main.c:437
+#: ../src/main.c:439
 msgid "Failed to setup libmpd"
 msgstr ""
 
-#: ../src/main.c:931
+#: ../src/main.c:933
 msgid "GMPC has insuffient permissions on the mpd server."
 msgstr ""
 
-#: ../src/main.c:993
+#: ../src/main.c:995
 #, c-format
 msgid ""
 "Mpd Returned the following error:\n"
 "<i>\"%s\"</i>"
 msgstr ""
 
-#: ../src/main.c:1063
+#: ../src/main.c:1065
 msgid ""
 "Gmpc is currently connected to mpd version smaller then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -692,16 +692,16 @@ msgstr ""
 msgid "Shortcut"
 msgstr ""
 
-#: ../src/mpdinteraction.c:347 ../src/mpdinteraction.c:358
+#: ../src/mpdinteraction.c:356 ../src/mpdinteraction.c:367
 #, c-format
 msgid "%i day%s %02i hour%s %02i minute%s"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:231
+#: ../src/playlist3-artist-browser.c:208
 msgid "Browse Artists"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:1058
+#: ../src/playlist3-artist-browser.c:1035
 msgid "Artist Browser"
 msgstr ""
 
@@ -829,27 +829,27 @@ msgstr ""
 msgid "File Browser"
 msgstr ""
 
-#: ../src/playlist3-find-browser.c:279 ../src/playlist3-find-browser.c:830
+#: ../src/playlist3-find-browser.c:268 ../src/playlist3-find-browser.c:813
 msgid "Search"
 msgstr ""
 
 #. *
 #. * Find menu
 #.
-#: ../src/playlist3-find-browser.c:840
+#: ../src/playlist3-find-browser.c:823
 msgid "Search in playlist"
 msgstr ""
 
-#: ../src/playlist3-tag-browser.c:184 ../src/playlist3-tag-browser.c:233
-#: ../src/playlist3-tag-browser.c:1552
+#: ../src/playlist3-tag-browser.c:189 ../src/playlist3-tag-browser.c:238
+#: ../src/playlist3-tag-browser.c:1557
 msgid "Tag Browser"
 msgstr ""
 
-#: ../src/playlist3-tag-browser.c:1468 ../src/preferences.c:262
+#: ../src/playlist3-tag-browser.c:1473 ../src/preferences.c:262
 msgid "Name"
 msgstr ""
 
-#: ../src/playlist3-tag-browser.c:1473
+#: ../src/playlist3-tag-browser.c:1478
 msgid "Format"
 msgstr ""
 
