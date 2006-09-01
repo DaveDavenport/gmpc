@@ -28,8 +28,8 @@ void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void auth_enable_toggled(GtkToggleButton *but);
 void entry_auth_changed(GtkEntry *entry);
-void set_display_settings();
-void update_display_settings();
+void create_preferences_window(void);
+void preferences_window_destroy(void);
 
 int plugin_last;
 

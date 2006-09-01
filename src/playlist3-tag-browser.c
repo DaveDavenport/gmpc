@@ -15,13 +15,18 @@ void pref_id3b_fill();
 void pl3_custom_tag_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
 void pl3_tag_browser_selected(GtkWidget *container);
 void pl3_tag_browser_unselected(GtkWidget *container);
-void pl3_custom_tag_browser_add();
+static void pl3_custom_tag_browser_add(void);
 int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
 void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
 
-void pl3_custom_tag_browser_reload();
 void tag_connection(MpdObj *mi, int connect,gpointer user);
+
+void pref_id3b_row_remove(void);
+void pref_id3b_row_changed(GtkTreeView *tree);
+void pref_id3b_add_entry(void);
+void pref_id3b_fill(void);
+void pref_id3b_init(void);
 
 /* Connection settings plugin */
 void tag_pref_construct(GtkWidget *container);
@@ -71,12 +76,12 @@ void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
 
 
 void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
-void pl3_custom_tag_browser_add_folder();
-void pl3_custom_tag_browser_replace_folder();
-void pl3_tag_browser_add_selected();
-void pl3_tag_browser_replace_selected();
+static void pl3_custom_tag_browser_add_folder(void);
+static void pl3_custom_tag_browser_replace_folder(void);
+static void pl3_tag_browser_add_selected(void);
+static void pl3_tag_browser_replace_selected(void);
 void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
-void pl3_tag_browser_show_info();
+static void pl3_tag_browser_show_info(void);
 int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 
 extern GladeXML *pl3_xml;
@@ -97,7 +102,7 @@ GtkListStore *pl3_tb_store = NULL;
 GtkWidget *pl3_tb_sw = NULL;
 
 
-int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+static int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
 	if(event->button != 3 ||
@@ -109,7 +114,7 @@ int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 }
 
 
-void pl3_tag_browser_init()
+static void pl3_tag_browser_init()
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
@@ -168,7 +173,7 @@ void pl3_tag_browser_init()
 }
 
 
-void pl3_custom_tag_browser_reload()
+static void pl3_custom_tag_browser_reload()
 {
 	GtkTreeIter iter;
 	if(pl3_tree == NULL )
@@ -218,7 +223,7 @@ void pl3_custom_tag_browser_list_add(GtkTreeIter *iter)
 	}
 
 }
-void pl3_custom_tag_browser_add()
+static void pl3_custom_tag_browser_add()
 {
 	GtkTreePath *path;
 	if(mpd_server_check_version(connection,0,12,0))
@@ -725,7 +730,7 @@ int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidge
 	}
 	return 0;
 }
-void pl3_custom_tag_browser_replace_folder()
+static void pl3_custom_tag_browser_replace_folder()
 {
 	/* clear the playlist */
 	mpd_playlist_clear(connection);
@@ -734,7 +739,7 @@ void pl3_custom_tag_browser_replace_folder()
 	/* play */
 	mpd_player_play(connection);
 }
-void pl3_custom_tag_browser_add_folder()
+static void pl3_custom_tag_browser_add_folder()
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
@@ -1015,14 +1020,14 @@ void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton 
 }
 
 
-void pl3_tag_browser_replace_selected()
+static void pl3_tag_browser_replace_selected()
 {
 	mpd_playlist_clear(connection);
 	pl3_tag_browser_add_selected();
 	mpd_player_play(connection);	
 
 }
-void pl3_tag_browser_add_folder_to_queue(char *name)
+static void pl3_tag_browser_add_folder_to_queue(char *name)
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
@@ -1178,7 +1183,7 @@ void pl3_tag_browser_add_folder_to_queue(char *name)
 
 
 
-void pl3_tag_browser_add_selected()
+static void pl3_tag_browser_add_selected()
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_tb_tree));
@@ -1234,7 +1239,7 @@ void pl3_tag_browser_add_selected()
 	g_list_free (rows);
 }
 
-void pl3_tag_browser_show_info()
+static void pl3_tag_browser_show_info()
 {
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_tb_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_tb_tree));
@@ -1530,7 +1535,7 @@ void tag_connection(MpdObj *mi, int connect, gpointer data)
 }
 
 
-void pl3_custom_tag_browser_activate()
+static void pl3_custom_tag_browser_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			glade_xml_get_widget (pl3_xml, "cat_tree"));

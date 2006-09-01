@@ -3,6 +3,4 @@
 
 extern gmpcPlugin find_browser_plug;
 
-void pl3_find_browser_search_playlist();
-
 #endif

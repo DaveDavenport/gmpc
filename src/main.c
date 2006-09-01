@@ -83,7 +83,7 @@ int gmpc_failed_tries = 0;
  */
 
 /** Creating the backend */
-static void init_playlist_store ();
+static void init_playlist_store(void);
 /** handle connection changed */
 void connection_changed(MpdObj *mi, int connect, gpointer data);
 
@@ -92,7 +92,7 @@ void connection_changed(MpdObj *mi, int connect, gpointer data);
 void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 
 /** init stock icons */
-void init_stock_icons ();
+static void init_stock_icons(void);
 
 
 /*
@@ -101,7 +101,7 @@ void init_stock_icons ();
 
 GladeXML *xml_error_window = NULL;
 GladeXML *xml_password_window = NULL;
-static int autoconnect_callback ();
+static int autoconnect_callback (void);
 
 /*
  * the ID of the autoconnect timeout
@@ -117,6 +117,8 @@ config_obj *config = NULL;
  */
 MpdObj *connection = NULL;
 
+void connect_callback(MpdObj *mi);
+void send_password(void);
 /**
  * Get's the full path to an image,
  * While this is compile time on linux, windows
@@ -643,7 +645,7 @@ void main_quit()
  * and trieds to autoconnect
  * (when enabled)
  */
-static int autoconnect_callback ()
+static int autoconnect_callback(void)
 {
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
@@ -670,7 +672,7 @@ static int autoconnect_callback ()
 	return TRUE;
 }
 
-void init_stock_icons ()
+static void init_stock_icons()
 {
 	GtkIconFactory *factory;
 	GdkPixbuf *pb;
@@ -877,7 +879,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
  * Error handling 
  * TODO: Needs to be redone/rethought
  */
-void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
+static void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 {
 
 	gtk_widget_destroy(window);
@@ -890,7 +892,7 @@ void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 	}
 }
 
-void password_dialog(int failed)
+static void password_dialog(int failed)
 {
 	gchar *path  = NULL;
 	if(xml_password_window) return;

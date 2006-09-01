@@ -4,11 +4,12 @@
 
 #include "main.h"
 #include "config1.h"
+#include "mpdinteraction.h"
 
 extern GtkWidget *pl3_cp_tree;
 
 /* old stuff */
-void preferences_update();
+static void preferences_update(void);
 void connect_callback(MpdObj *mi);
 void disconnect_callback(MpdObj *mi);
 /* Server Settings plugin */
@@ -21,7 +22,15 @@ gmpcPrefPlugin server_gpp = {
 };
 void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
 void ServerStatusChangedCallback (MpdObj *mi, ChangedStatusType what, void *userdata);
+void xfade_enable_toggled(GtkToggleButton *but);
+void xfade_time_changed(GtkSpinButton *but);
+void entry_auth_changed(GtkEntry *entry);
+void auth_enable_toggled(GtkToggleButton *but);
+void update_preferences_information(void);
 
+void preferences_window_autoconnect(GtkToggleButton *tog);
+void preferences_window_connect(GtkWidget *but);
+void preferences_window_disconnect(GtkWidget *but);
 
 gmpcPlugin server_plug = {
 	"Server Settings", 	/** name */
@@ -244,7 +253,7 @@ void volume_down()
 /*****************************************************************
  * Preferences
  */
-void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
+static void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *view)
 {
 	gboolean state;
 	gint id;
@@ -264,7 +273,7 @@ void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTreeView *
 	gtk_tree_path_free(path);
 }
 
-void create_outputs_tree()
+static void create_outputs_tree()
 {
 	GtkListStore *model;
 	GtkCellRenderer *cell;
@@ -295,7 +304,7 @@ void create_outputs_tree()
 	gtk_tree_view_column_set_visible(col, FALSE);
 	gtk_tree_view_append_column(tree, col);
 }
-void update_outputs_settings()
+static void update_outputs_settings()
 {
 	GtkTreeIter iter;
 	GtkListStore *store;
@@ -326,7 +335,7 @@ void update_outputs_settings()
 }
 
 
-void update_server_stats()
+static void update_server_stats()
 {
 	if(server_pref_xml == NULL) return;
 	if(mpd_check_connected(connection))
@@ -413,7 +422,7 @@ void xfade_time_changed(GtkSpinButton *but)
 	}
 	mpd_status_set_crossfade(connection, fade_time);
 }
-void xfade_update()
+static void xfade_update()
 {
 	if(mpd_status_get_crossfade(connection) > 0)
 	{
@@ -506,7 +515,7 @@ void server_pref_construct(GtkWidget *container)
 
 
 
-void preferences_update()
+static void preferences_update()
 {
 	if(connection_pref_xml == NULL) return;
 	update_server_stats();
@@ -572,7 +581,7 @@ void preferences_window_disconnect(GtkWidget *but)
 }
 
 /* this sets all the settings in the authentification area preferences correct */
-void update_auth_settings()
+static void update_auth_settings()
 {
 	char *string = 	cfg_get_single_value_as_string_with_default(config, "connection","password", "");
 	gtk_toggle_button_set_active((GtkToggleButton *)

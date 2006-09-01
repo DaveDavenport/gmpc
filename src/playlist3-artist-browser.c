@@ -33,7 +33,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
-void pl3_artist_browser_add();
+static void pl3_artist_browser_add(void);
 void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter);
 void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
 void pl3_artist_browser_selected(GtkWidget *container);
@@ -41,19 +41,17 @@ void pl3_artist_browser_unselected(GtkWidget *container);
 int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
 void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type);
 
-void pl3_artist_browser_dbase_updated();
-void pl3_artist_browser_disconnect();
+static void pl3_artist_browser_disconnect(void);
 int pl3_artist_browser_add_go_menu(GtkWidget *menu);
 
 
 void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
-void pl3_artist_browser_show_info();
 void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
-void pl3_artist_browser_add_selected();
-void pl3_artist_browser_replace_selected();
+static void pl3_artist_browser_add_selected(void);
+static void pl3_artist_browser_replace_selected(void);
 int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
-int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 
 
 
@@ -110,28 +108,7 @@ GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 
 GtkTreeRowReference *pl3_ab_tree_ref = NULL;
 
-
-void pl3_artist_browser_dbase_updated()
-{
-	if(pl3_ab_tree_ref){
-		GtkTreeIter parent, child;
-		GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_ab_tree_ref);
-		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
-		if(!path) return;
-		if(gtk_tree_model_get_iter(model, &parent, path)){
-			while(gtk_tree_model_iter_children(model, &child,&parent))
-			{
-				gtk_tree_store_remove(GTK_TREE_STORE(model), &child);
-			}
-		}
-		/* add fake, and set not-openend bit */
-		gtk_tree_store_append(pl3_tree, &child, &parent);
-		gtk_tree_store_set(GTK_TREE_STORE(model), &parent, PL3_CAT_PROC,FALSE,-1);
-
-	}
-}
-
-int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+static int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
 	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
@@ -154,7 +131,7 @@ static void pl3_artist_browser_search_activate()
 	}
 }
 
-void pl3_artist_browser_init()
+static void pl3_artist_browser_init()
 {
 	GtkWidget *pl3_ab_sw = NULL;
 	GtkCellRenderer *renderer;
@@ -221,7 +198,7 @@ void pl3_artist_browser_init()
 }
 
 
-void pl3_artist_browser_add()
+static void pl3_artist_browser_add()
 {
 	GtkTreePath *path;
 	GtkTreeIter iter,child;
@@ -248,7 +225,7 @@ void pl3_artist_browser_add()
 	}
 }
 
-void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult ret, char *coverpath,gpointer data)
+static void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult ret, char *coverpath,gpointer data)
 {
 	GtkTreeRowReference *ref = data;
 	if(song == NULL || ref == NULL) return;
@@ -292,7 +269,7 @@ void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult ret, ch
 
 
 
-long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
+static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *artist, *string;
 	GtkTreeIter iter;
@@ -592,7 +569,7 @@ void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 
 
 
-void pl3_artist_browser_add_folder()
+static void pl3_artist_browser_add_folder()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -657,7 +634,7 @@ void pl3_artist_browser_add_folder()
 	}
 }
 
-void pl3_artist_browser_replace_folder()
+static void pl3_artist_browser_replace_folder()
 {
 	mpd_playlist_clear(connection);
 	pl3_artist_browser_add_folder();
@@ -677,7 +654,7 @@ void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, 
 	}
 }
 
-void pl3_artist_browser_show_info()
+static void pl3_artist_browser_show_info()
 {
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_ab_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_ab_tree));
@@ -879,13 +856,13 @@ void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButton *eve
 	return;
 }
 
-void pl3_artist_browser_replace_selected()
+static void pl3_artist_browser_replace_selected()
 {
 	mpd_playlist_clear(connection);
 	pl3_artist_browser_add_selected();
 	mpd_player_play(connection);
 }
-void pl3_artist_browser_add_selected()
+static void pl3_artist_browser_add_selected()
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_ab_tree));
@@ -1035,7 +1012,7 @@ void pl3_artist_browser_disconnect()
 
 
 
-void pl3_artist_browser_activate()
+static void pl3_artist_browser_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			glade_xml_get_widget (pl3_xml, "cat_tree"));

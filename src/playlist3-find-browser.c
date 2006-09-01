@@ -33,25 +33,14 @@
 void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter);
 void pl3_find_browser_selected(GtkWidget *container);
 void pl3_find_browser_unselected(GtkWidget *container);
-void pl3_find_browser_playlist_changed();
 
-
-
-void pl3_find_browser_add();
-
-
-
-void pl3_find_browser_disconnect();
-
+static void pl3_find_browser_add(void);
 
 int pl3_find_browser_add_go_menu(GtkWidget *menu);
-void pl3_find_browser_search();
+static void pl3_find_browser_search(void);
 void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
-void pl3_find_browser_show_info();
-unsigned long pl3_find_browser_view_browser();
 int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
-void pl3_find_browser_add_selected();
-void pl3_find_browser_replace_selected();
+static void pl3_find_browser_add_selected(void);
 void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 void pl3_find_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 int pl3_find_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -111,7 +100,7 @@ GtkWidget 	*pl3_findb_combo	= NULL;
 GtkListStore	*pl3_findb_combo_store 	= NULL;
 GtkWidget	*pl3_findb_pb = NULL;
 
-int pl3_find_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+static int pl3_find_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
 	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
@@ -121,7 +110,7 @@ int pl3_find_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event
 	return TRUE;
 }
 
-void pl3_find_fill_combo()
+static void pl3_find_fill_combo()
 {
 	GtkTreeIter iter;
 	int i=0, max = 3;
@@ -146,7 +135,7 @@ void pl3_find_fill_combo()
 }
 
 
-void pl3_find_browser_init()
+static void pl3_find_browser_init()
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
@@ -270,7 +259,7 @@ void pl3_find_browser_unselected(GtkWidget *container)
  * Find Browser
  */
 /* add's the toplevel entry for the current playlist view */
-void pl3_find_browser_add()
+static void pl3_find_browser_add()
 {
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -283,7 +272,7 @@ void pl3_find_browser_add()
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 }
 
-unsigned long pl3_find_browser_view_browser()
+static unsigned long pl3_find_browser_view_browser()
 {
 	GtkTreeIter iter;
 	char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
@@ -529,7 +518,7 @@ unsigned long pl3_find_browser_view_browser()
 }
 
 
-void pl3_find_browser_search()
+static void pl3_find_browser_search()
 {
 
 	pl3_find_browser_view_browser();
@@ -537,7 +526,7 @@ void pl3_find_browser_search()
 }
 
 
-void pl3_find_browser_show_info()
+static void pl3_find_browser_show_info()
 {
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_findb_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_findb_tree));
@@ -627,6 +616,15 @@ void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *i
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 	g_free(string);
 }
+
+static void pl3_find_browser_replace_selected()
+{
+	mpd_playlist_clear(connection);
+	pl3_find_browser_add_selected();
+	mpd_player_play(connection);	
+
+}
+
 int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
 	if(event->state == GDK_CONTROL_MASK && event->keyval == GDK_Insert)
@@ -652,16 +650,9 @@ int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 	return TRUE;
 }
 
-void pl3_find_browser_replace_selected()
-{
-	mpd_playlist_clear(connection);
-	pl3_find_browser_add_selected();
-	mpd_player_play(connection);	
-
-}
 
 
-void pl3_find_browser_add_selected()
+static void pl3_find_browser_add_selected()
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_findb_tree));
@@ -751,15 +742,7 @@ void pl3_find_browser_button_release_event(GtkWidget *but, GdkEventButton *event
 	return;
 }
 
-void pl3_find_browser_playlist_changed()
-{
-	if(pl3_findb_tree != NULL)
-	{
-		pl3_find_browser_view_browser();
-	}
-}
-
-void pl3_find_browser_search_playlist()
+static void pl3_find_browser_search_playlist(void)
 {
 	if(pl3_findb_tree)
 	{
@@ -778,13 +761,13 @@ void pl3_find_browser_search_playlist()
 	}
 }
 
-void pl3_find_browser_disconnect()
+static void pl3_find_browser_disconnect()
 {
 	if(pl3_findb_store) gtk_list_store_clear(pl3_findb_store);
 }
 
 
- void pl3_find_browser_activate()
+static void pl3_find_browser_activate()
  {
  	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
  			glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -804,7 +787,7 @@ void pl3_find_browser_disconnect()
  * This switches to the search window set focus on entry and set searh on playlist.
  * TODO: Move to search plugin?
  */
-void pl3_playlist_search()
+static void pl3_playlist_search()
 {
 	if(!mpd_check_connected(connection))
 	{

@@ -34,7 +34,7 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 		meta_data_add_plugin(plug);
 	}
 }
-int plugin_load(char *path, const char *file)
+static int plugin_load(char *path, const char *file)
 {
 	GModule *handle;
 	int *api_version;

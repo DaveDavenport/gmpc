@@ -36,7 +36,7 @@ GladeXML *xml_esf  = NULL;
 GtkTextBuffer *buffer= NULL;
 
 
-void esf_render_example(GtkTextBuffer *buffer)
+static void esf_render_example(GtkTextBuffer *buffer)
 {
 	char *filename = _("/path/to/file_name.mp3");
 	char *artist = _("I'm Artist");
@@ -87,14 +87,6 @@ void esf_render_example(GtkTextBuffer *buffer)
 	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_esf, "label_example")), (const char *)result_buffer);
 	mpd_freeSong(song);
 }
-
-void esf_reload()
-{
-	esf_render_example(buffer);
-}
-
-
-
 
 char * edit_song_markup(char *format)
 {

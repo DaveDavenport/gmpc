@@ -31,6 +31,7 @@
 #include <X11/SM/SMlib.h>
 #include <libmpd/debug_printf.h>
 #include "main.h"
+#include "sm.h"
 
 static gchar 	*client_id;
 static gchar	*session_id = NULL;

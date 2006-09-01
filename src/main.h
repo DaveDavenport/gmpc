@@ -72,10 +72,6 @@ enum{
 	TIME_FORMAT_PERCENTAGE
 };
 
-
-/* mpdinteraction.c*/
-int update_mpd_status();
-
 /* id3info.c*/
 void call_id3_window(int song);
 
@@ -89,7 +85,7 @@ gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
 void call_id3_window_song(mpd_Song *songstr);
 void playlist_changed(MpdObj *mi);
 
-void main_quit();
+void main_quit(void);
 
 /*
  * functions to get patch to different files.

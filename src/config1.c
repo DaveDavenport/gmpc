@@ -59,10 +59,10 @@ void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *ke
 void cfg_save(config_obj *cfgo);
 void __int_cfg_remove_node(config_obj *cfg, config_node *node);
 config_node *cfg_add_class(config_obj *cfg, char *class);
-config_node *cfg_new_node();
+static config_node *cfg_new_node(void);
 void cfg_add_child(config_node *parent, config_node *child);
 
-void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
+static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 {
 	char buffer[1024];
 	int len = 0;
@@ -232,7 +232,7 @@ void cfg_close(config_obj *cfgo)
 	g_mutex_free(cfgo->lock);
 	g_free(cfgo);
 }
-config_node *cfg_new_node()
+static config_node *cfg_new_node()
 {
 	config_node *newnode = g_malloc0(sizeof(config_node));
 	newnode->type = TYPE_CATEGORY;
@@ -284,7 +284,7 @@ void cfg_add_child(config_node *parent, config_node *child)
 	}
 }
 
-void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
+static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 {
 	config_node *temp = NULL;
 	if(node == NULL)return;
@@ -351,7 +351,7 @@ void cfg_save(config_obj *cfgo)
 	return;
 }
 
-config_node *cfg_get_class(config_obj *cfg, char *class)
+static config_node *cfg_get_class(config_obj *cfg, char *class)
 {
 	config_node *node = cfg->root;
 	if(node == NULL) return NULL;
@@ -369,7 +369,7 @@ config_node *cfg_get_class(config_obj *cfg, char *class)
 	return NULL;
 }
 
-config_node *cfg_get_single_value(config_obj *cfg, char *class, char *key)
+static config_node *cfg_get_single_value(config_obj *cfg, char *class, char *key)
 {
 	/* take children */
 	config_node *cur = NULL;
@@ -396,7 +396,7 @@ void cfg_free_string(char *string)
 	}
 }
 
-char * __int_cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
+static char * __int_cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key)
 {
 	config_node *cur = cfg_get_single_value(cfg, class,key);
 	if(cur != NULL)
@@ -433,7 +433,7 @@ char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class,
 	return retv;
 }
 
-int __int_cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
+static int __int_cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key)
 {
 	config_node *cur =NULL;
 	int retv = CFG_INT_NOT_DEFINED;
@@ -467,7 +467,7 @@ void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int va
 	g_free(temp);
 	g_mutex_unlock(cfg->lock);
 }
-void __int_cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
+static void __int_cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
 {
 	gchar *	temp = NULL;
 	temp  = g_strdup_printf("%i",value);
@@ -488,7 +488,7 @@ int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char 
 	return retv;
 }
 /* float */
-float __int_cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
+static float __int_cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
 {
 	config_node *cur =NULL;
 	cur = cfg_get_single_value(cfg,class,key);
@@ -631,7 +631,7 @@ void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, cha
 /* multiple values */
 
 
-config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, char* id)
+static config_node *cfg_get_multiple_value(config_obj *cfg, char *class, char *key, char* id)
 {
 	config_node *node = cfg_get_single_value(cfg,class,key);
 	if(node == NULL){
