@@ -8,22 +8,19 @@
 #include "main.h"
 #include "misc.h"
 #include "config1.h"
+#include "tray-icon.h"
 
 GladeXML *tray_pref_xml = NULL;
 #ifdef ENABLE_TRAYICON
 #include "eggtrayicon.h"
 #endif
-void destroy_tray_icon();
-void tray_icon_song_change();
-void tray_icon_state_change();
-void tray_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data);
-void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n);
-void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
-
+static void tray_leave_cb (GtkWidget *, GdkEventCrossing *, gpointer);
+static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
+static void tray_icon_state_change(void);
 
 /* do tray */
-int create_tray_icon();
-void tray_init();
+static int create_tray_icon(void);
+static void tray_init(void);
 
 
 GtkWidget *tooltip_pb = NULL;
@@ -43,10 +40,14 @@ GtkWidget *tip = NULL;
 
 guint popup_timeout = -1;
 
+static void tray_icon_pref_construct(GtkWidget *);
+static void tray_icon_pref_destroy(GtkWidget *);
 
-
-void tray_icon_pref_construct(GtkWidget *container);
-void tray_icon_pref_destroy(GtkWidget *container);
+// Glade definitons, without glade these would be static
+void tray_enable_toggled(GtkToggleButton *);
+void popup_enable_toggled(GtkToggleButton *);
+void popup_timeout_changed(void);
+void popup_position_changed(GtkComboBox *);
 
 /* plugin structure */
 
@@ -72,7 +73,7 @@ gmpcPlugin tray_icon_plug = {
 };
 
 
-void tray_init()
+static void tray_init()
 {
 	/* create a tray icon */
 	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1))
@@ -85,7 +86,7 @@ void tray_init()
 /*
  *FIXME: remove g_String
  */
-gchar *tray_get_tooltip_text()
+static gchar *tray_get_tooltip_text()
 {
 
 	gchar result[1024];
@@ -104,22 +105,7 @@ gchar *tray_get_tooltip_text()
 	return g_strdup(result);
 }
 
-/* fix it the ugly way */
-int tooltip_queue_draw(GtkWidget *widget)
-{
-	gtk_widget_queue_draw(widget);
-	return TRUE;
-}
-
-int popup_press_event(GtkWidget *wid, GdkEventKey *event)
-{
-	tray_leave_cb(wid,NULL,NULL);
-
-
-	return FALSE;
-}
-
-gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+static gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 
@@ -133,7 +119,7 @@ gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer dat
 	return FALSE;
 }
 
-gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
+static gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 {
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
@@ -276,7 +262,7 @@ gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpointer n)
 	return TRUE;
 }
 
-void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
+static void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 {
 	if(popup_timeout != -1) g_source_remove(popup_timeout);
 	popup_timeout = -1;
@@ -292,7 +278,7 @@ void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 }
 
 /* this function updates the trayicon on changes */
-void tray_icon_song_change()
+static void tray_icon_song_change()
 {
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
 			mpd_player_get_state(connection) != MPD_PLAYER_STOP)
@@ -325,7 +311,7 @@ void tray_icon_connection_changed(MpdObj *mi, int connect)
 	}
 }
 
-void tray_icon_state_change()
+static void tray_icon_state_change()
 {
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
@@ -356,7 +342,7 @@ void tray_icon_state_change()
  * get it back
  */
 
-void tray_icon_destroyed()
+static void tray_icon_destroyed()
 {
 	tray_icon = NULL;
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable", 1))
@@ -370,7 +356,7 @@ void tray_icon_destroyed()
 }
 
 /* destroy the tray icon */
-void destroy_tray_icon()
+static void destroy_tray_icon()
 {
 	gtk_widget_destroy(GTK_WIDGET(tray_icon));
 }
@@ -381,7 +367,7 @@ void destroy_tray_icon()
  * button3: menu
  */
 
-void tray_icon_info()
+static void tray_icon_info()
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
@@ -390,7 +376,7 @@ void tray_icon_info()
 	}
 }
 
-int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
+static int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 1 && event->state != (GDK_CONTROL_MASK|GDK_BUTTON1_MASK))
 	{
@@ -497,7 +483,7 @@ int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 
 }
 
-int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
+static int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 {
 	if(event->type == GDK_SCROLL)
 	{
@@ -524,8 +510,7 @@ int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 	return FALSE;
 }
 
-
-int create_tray_icon()
+static int create_tray_icon()
 {
 #ifdef ENABLE_TRAYICON		
 	GtkWidget *event;
@@ -568,7 +553,7 @@ int create_tray_icon()
 	return FALSE;
 }
 
-void   TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
+static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	if(what&MPD_CST_STATE)
 	{
@@ -630,7 +615,7 @@ void tray_enable_toggled(GtkToggleButton *but)
 }
 
 /* this sets all the settings in the notification area preferences correct */
-void tray_update_settings()
+static void tray_update_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(tray_pref_xml, "ck_tray_enable"), 
@@ -654,7 +639,7 @@ void popup_timeout_changed()
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_pref_xml, "popup_timeout"))));
 }
 
-void update_popup_settings()
+static void update_popup_settings()
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(tray_pref_xml, "ck_popup_enable"),
@@ -665,7 +650,7 @@ void update_popup_settings()
 			cfg_get_single_value_as_int_with_default(config, "tray-icon", "popup-timeout", 5));
 }
 
-void tray_icon_pref_destroy(GtkWidget *container)
+static void tray_icon_pref_destroy(GtkWidget *container)
 {
 	if(tray_pref_xml)
 	{
@@ -675,7 +660,7 @@ void tray_icon_pref_destroy(GtkWidget *container)
 		tray_pref_xml = NULL;
 	}
 }
-void tray_icon_pref_construct(GtkWidget *container)
+static void tray_icon_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	tray_pref_xml = glade_xml_new(path, "tray-pref-vbox",NULL);

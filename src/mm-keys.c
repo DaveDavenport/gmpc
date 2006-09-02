@@ -70,7 +70,7 @@ static int keycodes[LAST_SIGNAL];
 
 static GType type = 0;
 
-GType mmkeys_get_type (void)
+static GType mmkeys_get_type (void)
 {
 	if (!type) {
 		static const GTypeInfo info = {

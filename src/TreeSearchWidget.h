@@ -45,7 +45,6 @@ extern "C" {
 
 	GType          treesearch_get_type        (void);
 	GtkWidget*     treesearch_new             (GtkTreeView *view, int search_row);
-	void	       treesearch_clear           (TreeSearch *ts);
 	void 		treesearch_start	(TreeSearch *ts);
 #ifdef __cplusplus
 }

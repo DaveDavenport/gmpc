@@ -10,24 +10,31 @@ extern GtkWidget *pl3_cp_tree;
 
 /* old stuff */
 static void preferences_update(void);
-void connect_callback(MpdObj *mi);
-void disconnect_callback(MpdObj *mi);
+static void disconnect_callback(MpdObj *);
+
 /* Server Settings plugin */
-void server_pref_construct(GtkWidget *container);
-void server_pref_destroy(GtkWidget *container);
+static void server_pref_construct(GtkWidget *);
+static void server_pref_destroy(GtkWidget *);
+
+/* Connection settings plugin */
+static void connection_pref_construct(GtkWidget *container);
+static void connection_pref_destroy(GtkWidget *container);
+
+static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
+static void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
+
 GladeXML *server_pref_xml = NULL;
 gmpcPrefPlugin server_gpp = {
 	server_pref_construct,
 	server_pref_destroy
 };
-void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
-void ServerStatusChangedCallback (MpdObj *mi, ChangedStatusType what, void *userdata);
+
+// Glade prototypes, would be static without glade
 void xfade_enable_toggled(GtkToggleButton *but);
 void xfade_time_changed(GtkSpinButton *but);
 void entry_auth_changed(GtkEntry *entry);
 void auth_enable_toggled(GtkToggleButton *but);
 void update_preferences_information(void);
-
 void preferences_window_autoconnect(GtkToggleButton *tog);
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
@@ -55,9 +62,6 @@ enum
 	N_COLUMNS
 };
 
-/* Connection settings plugin */
-void connection_pref_construct(GtkWidget *container);
-void connection_pref_destroy(GtkWidget *container);
 GladeXML *connection_pref_xml = NULL;
 gmpcPrefPlugin connection_gpp = {
 	connection_pref_construct,
@@ -80,11 +84,6 @@ gmpcPlugin connection_plug = {
 	NULL
 };
 
-
-
-
-
-
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 
 int update_mpd_status()
@@ -96,7 +95,7 @@ int update_mpd_status()
 	return TRUE;
 }
 
-void disconnect_callback(MpdObj *mi)
+static void disconnect_callback(MpdObj *mi)
 {
 	/* disconnect playlist */
 	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
@@ -141,7 +140,7 @@ int connect_to_mpd()
 }
 
 /* DEFAULT FUNCTIONS */
-void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data)
+static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data)
 {
 	if(connected)
 	{
@@ -453,7 +452,7 @@ void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 
 
 
-void server_pref_destroy(GtkWidget *container)
+static void server_pref_destroy(GtkWidget *container)
 {
 	if(server_pref_xml)
 	{
@@ -463,7 +462,7 @@ void server_pref_destroy(GtkWidget *container)
 		server_pref_xml = NULL;
 	}
 }
-void server_pref_construct(GtkWidget *container)
+static void server_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	server_pref_xml = glade_xml_new(path, "server-vbox",NULL);
@@ -596,7 +595,7 @@ static void update_auth_settings()
 
 
 
-void connection_pref_destroy(GtkWidget *container)
+static void connection_pref_destroy(GtkWidget *container)
 {
 	if(connection_pref_xml)
 	{
@@ -606,7 +605,7 @@ void connection_pref_destroy(GtkWidget *container)
 		connection_pref_xml = NULL;
 	}
 }
-void connection_pref_construct(GtkWidget *container)
+static void connection_pref_construct(GtkWidget *container)
 {
 	gchar *string;
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");

@@ -6,16 +6,21 @@
 extern GtkTreeStore *pl3_tree;
 extern GtkListStore *pl3_store;
 
-void create_playlist3 ();
+
+void pl3_update_go_menu(void);
+void pl3_show_window(void);
+void create_playlist3(void);
 void pl3_push_statusbar_message(char *mesg);
 void pl3_push_rsb_message(gchar *string);
-void pl3_cat_sel_changed();
-int pl3_close();
-int pl3_hide();
+void pl3_cat_sel_changed(void);
+int pl3_hide(void);
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event);
-int pl3_cat_get_selected_browser();
+int pl3_cat_get_selected_browser(void);
 void pl3_updating_changed(MpdObj *mi, int updating);
 void playlist_connection_changed(MpdObj *mi, int connect);
+gboolean playlist3_get_active(void);
+GtkTreeStore *playlist3_get_category_tree_store(void);
+GtkTreeView *playlist3_get_category_tree_view(void);
 
 enum PlaylistColums {
 	PL_COLUMN_ICON,
@@ -32,7 +37,4 @@ enum PlaylistColums {
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
 };
-
-void pl3_update_go_menu();
-void pl3_show_window();
 #endif

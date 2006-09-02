@@ -13,8 +13,8 @@
 
 #define PLUGIN_STATS -200
 
-void plugin_stats_construct(GtkWidget *container);
-void plugin_stats_destroy(GtkWidget *container);
+static void plugin_stats_construct(GtkWidget *);
+static void plugin_stats_destroy(GtkWidget *);
 GladeXML *plugin_stat_xml = NULL;
 /* About "plugin" */
 
@@ -23,7 +23,7 @@ GtkListStore *plugin_store = NULL;
 GladeXML *xml_preferences_window = NULL;
 gboolean running = 0;
 
-void update_auth_settings();
+// Glade Prototypes, without glade these would be static
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void auth_enable_toggled(GtkToggleButton *but);
@@ -234,7 +234,7 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 	}
 
 }
-void plugin_stats_construct(GtkWidget *container)
+static void plugin_stats_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	plugin_stat_xml = glade_xml_new(path, "plugin_stats_vbox",NULL);
@@ -301,7 +301,7 @@ void plugin_stats_construct(GtkWidget *container)
 	}
 
 }
-void plugin_stats_destroy(GtkWidget *container)
+static void plugin_stats_destroy(GtkWidget *container)
 {
 	if(plugin_stat_xml)
 	{

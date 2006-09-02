@@ -119,9 +119,15 @@ AC_SUBST(PACKAGE_LIBS)
 
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
+case "$CC" in
+*gcc*)
+	EXTRA_CFLAGS="-Wmissing-prototypes -Wmissing-declarations"
+	;;
+esac
+
 case $host in
   *-*-mingw32* | *-*-windows)
-    EXTRA_CFLAGS="-mno-cygwin -mwindows -mms-bitfields"
+    EXTRA_CFLAGS="$EXTRA_CFLAGS -mno-cygwin -mwindows -mms-bitfields"
     EXTRA_LDFLAGS="-export-all-symbols -mwindows -mms-bitfields" ;;
   *-*-cygwin*)
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;

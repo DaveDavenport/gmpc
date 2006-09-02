@@ -131,9 +131,4 @@ typedef struct {
 /** plugin functions */
 gmpcPlugin * plugin_get_from_id(int id);
 
-/* Playlist 3 helper functions */
-gboolean playlist3_get_active();
-GtkTreeStore *playlist3_get_category_tree_store();
-GtkTreeView *playlist3_get_category_tree_view();
-
 #endif

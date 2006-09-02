@@ -10,32 +10,34 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-tag-browser.h"
-void pref_id3b_fill();
 
-void pl3_custom_tag_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
-void pl3_tag_browser_selected(GtkWidget *container);
-void pl3_tag_browser_unselected(GtkWidget *container);
+static void pref_id3b_fill(void);
+static void pl3_custom_tag_browser_fill_tree(GtkWidget *,GtkTreeIter *);
+static void pl3_tag_browser_selected(GtkWidget *container);
+static void pl3_tag_browser_unselected(GtkWidget *container);
 static void pl3_custom_tag_browser_add(void);
-int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
-long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
-void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
+static int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
+static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
+static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
 
-void tag_connection(MpdObj *mi, int connect,gpointer user);
+static void tag_connection(MpdObj *mi, int connect,gpointer user);
 
+// Glade prototypes, would be static otherwise
 void pref_id3b_row_remove(void);
 void pref_id3b_row_changed(GtkTreeView *tree);
 void pref_id3b_add_entry(void);
-void pref_id3b_fill(void);
-void pref_id3b_init(void);
+
+static void pref_id3b_fill(void);
+static void pref_id3b_init(void);
 
 /* Connection settings plugin */
-void tag_pref_construct(GtkWidget *container);
-void tag_pref_destroy(GtkWidget *container);
+static void tag_pref_construct(GtkWidget *container);
+static void tag_pref_destroy(GtkWidget *container);
 
 
 GtkTreeRowReference *pl3_tag_tree_ref = NULL;
 
-int pl3_custom_tag_add_go_menu(GtkWidget *menu);
+static int pl3_custom_tag_add_go_menu(GtkWidget *menu);
 
 GladeXML *tag_pref_xml = NULL;
 gmpcPrefPlugin tag_gpp = {
@@ -71,18 +73,18 @@ gmpcPlugin tag_plug = {
 	NULL
 };
 
-void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
-void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
+static void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format);
+static void pl3_custom_tag_browser_list_add(GtkTreeIter *iter);
 
 
-void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
+static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 static void pl3_custom_tag_browser_add_folder(void);
 static void pl3_custom_tag_browser_replace_folder(void);
 static void pl3_tag_browser_add_selected(void);
 static void pl3_tag_browser_replace_selected(void);
-void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
+static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
 static void pl3_tag_browser_show_info(void);
-int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
+static int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 
 extern GladeXML *pl3_xml;
 
@@ -204,7 +206,7 @@ static void pl3_custom_tag_browser_reload()
 	}
 }
 
-void pl3_custom_tag_browser_list_add(GtkTreeIter *iter)
+static void pl3_custom_tag_browser_list_add(GtkTreeIter *iter)
 {
 	conf_mult_obj *list;
 	/* get the configured tag browsers */
@@ -261,7 +263,7 @@ static void pl3_custom_tag_browser_add()
 }
 
 
-void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format)
+static void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format)
 {
 	GtkTreeIter iter,child;
 	gtk_tree_store_append(pl3_tree, &iter, piter);
@@ -279,7 +281,7 @@ void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *fo
 }
 
 
-void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
+static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 {
 	char *first_tag, *second_tag;
 	char *format;
@@ -424,7 +426,7 @@ void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	if(format)g_free(format);
 }
 
-long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
+static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
@@ -451,16 +453,6 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
 
-
-/*	if(depth < 0)
-	{
-		gtk_tree_path_free(path);	
-		if(first_tag)g_free(first_tag);
-		if(second_tag)g_free(second_tag);
-		if(format)g_free(format);        		
-		return 0;
-	}                                    	
-*/
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
@@ -680,7 +672,7 @@ long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 }
 
 
-int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
+static int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
 	/* we need an model and a iter */
 	if(type == tag_plug.id)
@@ -874,7 +866,7 @@ static void pl3_custom_tag_browser_add_folder()
 	return ;
 }
 
-void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
+static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
 	GtkTreeIter iter;
 	gchar *song_path;
@@ -939,7 +931,7 @@ void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	g_free(song_path);
 }
 
-void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
+static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
 {
 	long unsigned time= 0;
 	gchar *string;        			
@@ -949,7 +941,7 @@ void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIt
 	pl3_push_rsb_message(string);
 	g_free(string);
 }
-void pl3_tag_browser_selected(GtkWidget *container)
+static void pl3_tag_browser_selected(GtkWidget *container)
 {
 	if(pl3_tb_tree == NULL)
 	{
@@ -960,13 +952,13 @@ void pl3_tag_browser_selected(GtkWidget *container)
 	gtk_widget_grab_focus(pl3_tb_tree);
 	gtk_widget_show_all(pl3_tb_sw);
 }
-void pl3_tag_browser_unselected(GtkWidget *container)
+static void pl3_tag_browser_unselected(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container),pl3_tb_sw);
 }
 
 
-void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
+static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 3)
 	{
@@ -1278,7 +1270,7 @@ static void pl3_tag_browser_show_info()
 	}
 }
 
-int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
+static int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
 	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
@@ -1433,7 +1425,7 @@ void pref_id3b_add_entry()
 
 
 
-void pref_id3b_fill()
+static void pref_id3b_fill()
 {
 	GtkWidget *tree = glade_xml_get_widget(tag_pref_xml,"id3b_tree");
 	conf_mult_obj *list;
@@ -1457,7 +1449,7 @@ void pref_id3b_fill()
 	}
 
 }
-void pref_id3b_init()
+static void pref_id3b_init()
 {
 	GtkCellRenderer *renderer = NULL;
 	GtkListStore *ab_lstore = NULL;
@@ -1484,7 +1476,7 @@ void pref_id3b_init()
 	pref_id3b_fill();
 
 }
-void tag_pref_destroy(GtkWidget *container)
+static void tag_pref_destroy(GtkWidget *container)
 {
 	if(tag_pref_xml)
 	{
@@ -1494,7 +1486,7 @@ void tag_pref_destroy(GtkWidget *container)
 		tag_pref_xml = NULL;
 	}
 }
-void tag_pref_construct(GtkWidget *container)
+static void tag_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	tag_pref_xml = glade_xml_new(path, "tag-vbox",NULL);
@@ -1508,7 +1500,7 @@ void tag_pref_construct(GtkWidget *container)
 	}
 }
 
-void tag_connection(MpdObj *mi, int connect, gpointer data)
+static void tag_connection(MpdObj *mi, int connect, gpointer data)
 {
 	if(!pl3_tree) return;
 	if(connect) {
@@ -1548,7 +1540,7 @@ static void pl3_custom_tag_browser_activate()
 }
 
 
-int pl3_custom_tag_add_go_menu(GtkWidget *menu)
+static int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 {
 	if(mpd_server_check_version(connection, 0,12,0))
 	{

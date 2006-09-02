@@ -33,6 +33,7 @@
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"
 #include "revision.h"
+#include "id3info.h"
 
 
 
@@ -44,15 +45,37 @@ enum {
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
 
-void playlist_zoom_level_changed();
-void playlist_zoom_in();
-void playlist_zoom_out();
+static void playlist_zoom_level_changed(void);
+static void playlist_player_volume_changed(BaconVolumeButton *vol_but);
+void pl3_option_menu_activate(void);
+static void pl3_plugin_changed_interface(void);
 
 int pl3_zoom = PLAYLIST_NO_ZOOM;
 
-void playlist_player_volume_changed(BaconVolumeButton *vol_but);
-void pl3_show_and_position_window();
-void pl3_option_menu_activate();
+// Glade declarations, otherwise these would be static
+void about_window(void);
+void pl3_cat_row_activated(GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *);
+void pl3_cat_row_expanded(GtkTreeView *, GtkTreeIter *, GtkTreePath *);
+void pl3_cat_bread_crumb_up(void);
+int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
+int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
+int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
+int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
+void playlist_zoom_in(void);
+void playlist_zoom_out(void);
+int pl3_cat_key_press_event(GtkWidget *, GdkEventKey *);
+void cur_song_center_enable_tb(GtkToggleButton *);
+void open_to_position_enable_tb(GtkToggleButton *);
+void save_possize_enable_tb(GtkToggleButton *);
+void set_browser_format(void);
+void set_playlist_format(void);
+void playlist_menu_repeat_changed(GtkCheckMenuItem *);
+void playlist_menu_random_changed(GtkCheckMenuItem *);
+void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
+int pl3_progress_seek_start(void);
+int pl3_progress_seek_stop(void);
+void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
+int pl3_close(void);
 
 static int old_type = -1;
 
@@ -65,22 +88,13 @@ GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 static int pl3p_seek = FALSE;
 
-void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 /* Playlist "Plugin" */
-void playlist_pref_construct(GtkWidget *container);
-void playlist_pref_destroy(GtkWidget *container);
+static void playlist_pref_construct(GtkWidget *container);
+static void playlist_pref_destroy(GtkWidget *container);
 GladeXML *playlist_pref_xml = NULL;
 
-
 static GtkWidget *volume_slider = NULL;
-
-/***************************
- *Change to header file	   *
- ***************************/
-
-void pl3_plugin_changed_interface();
-
-
 
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
@@ -115,7 +129,7 @@ int  pl3_cat_get_selected_browser()
 /**************************************************
  * Category Tree
  */
-void pl3_initialize_tree()
+static void pl3_initialize_tree()
 {
 	int i;
 	if(pl3_xml == NULL) return;
@@ -197,7 +211,7 @@ void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *pat
 }
 
 
-void pl3_cat_combo_changed(GtkComboBox *box)
+static void pl3_cat_combo_changed(GtkComboBox *box)
 {
 	GtkTreeIter iter;
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -332,7 +346,7 @@ int pl3_cat_tree_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 
 }
 
-void pl3_option_menu_activate()
+void pl3_option_menu_activate(void)
 {
 	GtkWidget *tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	int i;
@@ -532,7 +546,7 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
  * Remove message from the status bar 
  * Used internally by timeout
  */
-int pl3_pop_statusbar_message(gpointer data)
+static int pl3_pop_statusbar_message(gpointer data)
 {
 	gint id = GPOINTER_TO_INT(data);
 	gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
@@ -637,7 +651,7 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 /* create the playlist view 
  * This is done only once, for the rest its hidden, but still there
  */
-void pl3_show_and_position_window()
+static void pl3_show_and_position_window()
 {
 	if(!pl3_xml) return;
 	if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
@@ -671,7 +685,7 @@ void pl3_show_window()
 /**
  * Sync the lowest level of the cat_tree with the crumb system
  */
-void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
+static void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
 {
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
@@ -683,7 +697,7 @@ void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	}
 }
 
-void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
+static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
 {
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
@@ -696,7 +710,7 @@ void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *i
 		g_free(strpath);
 	}
 }
-void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)
+static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)
 {
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
@@ -1005,7 +1019,7 @@ void playlist_pref_construct(GtkWidget *container)
 }
 
 /* Playlist player */
-void playlist_player_set_song(MpdObj *mi)
+static void playlist_player_set_song(MpdObj *mi)
 {
 	char buffer[1024];
 	mpd_Song *song = mpd_playlist_get_current_song(mi);
@@ -1104,7 +1118,7 @@ void playlist_zoom_in()
 /**
  * FIXME: Needs propper grouping and cleaning up
  */
-void playlist_zoom_level_changed()
+static void playlist_zoom_level_changed()
 {
 	/* Show full view */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
@@ -1200,7 +1214,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	/**
 	 * Also need updating
 	 */
-	pl3_option_menu_activate(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+	pl3_option_menu_activate();
 
 
 	/**
@@ -1460,7 +1474,7 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 	call_id3_window(mpd_player_get_current_song_id(connection));
 }
 
-void playlist_player_volume_changed(BaconVolumeButton *vol_but)
+static void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 {
 	int volume = bacon_volume_button_get_value(vol_but);
 	if(mpd_status_get_volume(connection) != volume)
@@ -1539,7 +1553,7 @@ void pl3_update_go_menu()
 /**
  * This function should be called by a plugin when something in the interface changed.
  */
-void pl3_plugin_changed_interface()
+static void pl3_plugin_changed_interface()
 {
 	/**
 	 * Call this at the end, to update the menu

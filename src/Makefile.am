@@ -19,6 +19,7 @@ gmpc_SOURCES=\
 	playlist3-current-playlist-browser.c\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
+	playlist3-metadata-browser.c\
 	playlist-list.c\
 	mm-keys.c\
 	config1.c\
@@ -30,8 +31,7 @@ gmpc_SOURCES=\
 	bacon-message-connection.c\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
-	TreeSearchWidget.c\
-	playlist3-metadata-browser.c
+	TreeSearchWidget.c
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
@@ -111,4 +111,5 @@ EXTRA_DIST = 	playlist3.h\
 		gmpc-connection.h\
 		gmpc-metaimage.h\
 		id3info.h\
-		TreeSearchWidget.h
+		TreeSearchWidget.h \
+		tray-icon.h

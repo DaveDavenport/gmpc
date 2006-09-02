@@ -17,18 +17,32 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
 #include <gtk/gtk.h>
 #include <string.h>
 #include <glade/glade.h>
 #include <config.h>
 #include "main.h"
 #include "misc.h"
+#include "id3info.h"
+
 extern config_obj *cover_index;
 GladeXML *xml_id3_window = NULL;
 GList *songs = NULL;
 static void set_text (GList * node);
-void id3_status_update();
+
+// Glade declarations, without glade these would be static
+void id3_status_update(void);
+void id3_save_artist_txt(void);
+void id3_save_album_txt(void);
+void remove_id3_window(void);
+void id3_next_song(void);
+void id3_last_song(void);
+void id3_info_clear_album_image(void);
+void id3_album_image_file_selector(GtkFileChooser *);
+void id3_reget_album_art(void);
+void id3_info_clear_artist_image(void);
+void id3_artist_image_file_selector(GtkFileChooser *);
+void id3_reget_artist_art(void);
 
 void id3_save_album_txt()
 {
@@ -113,7 +127,7 @@ void id3_save_artist_txt()
 }
 
 
-void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
+static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
 {
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
@@ -255,40 +269,6 @@ static void create_window (int song)
 	songs = g_list_append (songs, songstr);
 	set_text (songs);
 }
-/*
-static void id3_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
-{
-	GtkImage *image = data;
-	mpd_Song *current = NULL;
-	if(songs == NULL || song == NULL) return;
-	if(songs->data== NULL) return;
-	current = songs->data;
-	if(current->artist && current->album)
-	{
-		if(!strcmp(current->artist,song->artist) &&
-				!strcmp(current->album, song->album))
-		{
-			GdkPixbuf *pb = NULL;
-			if(ret == META_DATA_AVAILABLE)
-			{
-				pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
-			}
-			else if(ret == META_DATA_FETCHING)
-			{
-				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
-			}
-			if(!pb){
-				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
-			}
-			screenshot_add_border(&pb);
-			//draw_pixbuf_border(pb);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
-			g_object_unref(pb);
-		}
-	}
-}
-*/
-
 
 static void set_text (GList * node)
 {
@@ -522,45 +502,6 @@ void call_id3_window (int song)
 	}
 }
 
-/*
-static void id3_edit_cover_art_fetched(mpd_Song *song,MetaDataResult ret, char *path, gpointer data )
-{
-	GtkImage *image = data;
-	mpd_Song *current = NULL;
-	if(songs == NULL || song == NULL) return;
-	if(songs->data== NULL) return;
-	current = songs->data;
-	if(current->artist && current->album)
-	{
-		if(!strcmp(current->artist,song->artist) &&
-				!strcmp(current->album, song->album))
-		{
-			GdkPixbuf *pb = NULL;
-			if(ret == META_DATA_AVAILABLE)
-			{
-				pb = gdk_pixbuf_new_from_file_at_size(path, 300,300, NULL);
-			}
-			else if(ret == META_DATA_FETCHING)
-			{
-				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-loading-cover", -1,NULL);
-			}
-			if(!pb)
-			{
-				pb = gtk_widget_render_icon(GTK_WIDGET(image),"media-no-cover", -1,NULL);
-			}
-			screenshot_add_border(&pb);
-//			draw_pixbuf_border(pb);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);	
-			g_object_unref(pb);
-			if(ret != META_DATA_FETCHING)
-			{
-				GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
-
-			}
-		}
-	}
-}
-*/
 void id3_info_clear_album_image()
 {
 	meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_UNAVAILABLE, NULL);

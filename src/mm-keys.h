@@ -49,8 +49,6 @@ struct _MmKeysClass
 		GObjectClass parent_class;
 };
 
-GType   mmkeys_get_type (void);
-
 MmKeys *mmkeys_new      (void);
 
 void grab_key(int key, int keycode);

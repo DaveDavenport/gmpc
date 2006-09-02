@@ -292,8 +292,5 @@ GtkWidget* treesearch_new (GtkTreeView *view, int search_row)
 	return widget;
 }
 
-void treesearch_clear (TreeSearch *ts)
-{
-}
 
 

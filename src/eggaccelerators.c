@@ -49,7 +49,7 @@ typedef struct
 
 } EggModmap;
 
-const EggModmap* egg_keymap_get_modmap (GdkKeymap *keymap);
+static const EggModmap* egg_keymap_get_modmap (GdkKeymap *keymap);
 
 static inline gboolean
 is_alt (const gchar *string)
@@ -676,7 +676,7 @@ reload_modmap (GdkKeymap *keymap,
 #endif
 }
 
-const EggModmap*
+static const EggModmap*
 egg_keymap_get_modmap (GdkKeymap *keymap)
 {
   EggModmap *modmap;

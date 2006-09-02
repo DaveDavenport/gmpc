@@ -53,14 +53,12 @@ typedef struct _config_obj
 	config_node *root;
 } _config_obj;
 
-void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value);
-
-
-void cfg_save(config_obj *cfgo);
-void __int_cfg_remove_node(config_obj *cfg, config_node *node);
-config_node *cfg_add_class(config_obj *cfg, char *class);
+static void __int_cfg_set_single_value_as_string(config_obj *, char *, char *, char *);
+static void cfg_save(config_obj *);
+static void __int_cfg_remove_node(config_obj *, config_node *);
+static config_node *cfg_add_class(config_obj *, char *);
 static config_node *cfg_new_node(void);
-void cfg_add_child(config_node *parent, config_node *child);
+static void cfg_add_child(config_node *, config_node *);
 
 static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 {
@@ -243,7 +241,7 @@ static config_node *cfg_new_node()
 	newnode->value = NULL;
 	return newnode;
 }
-config_node *cfg_add_class(config_obj *cfg, char *class)
+static config_node *cfg_add_class(config_obj *cfg, char *class)
 {
 	config_node *newnode = cfg_new_node();
 	newnode->type = TYPE_CATEGORY;
@@ -327,7 +325,7 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	}
 }
 
-void cfg_save(config_obj *cfgo)
+static void cfg_save(config_obj *cfgo)
 {
 	if(cfgo == NULL)
 	{
@@ -537,7 +535,7 @@ float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, c
 	return retv;
 }
 
-void __int_cfg_remove_node(config_obj *cfg, config_node *node)
+static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 {
 	if(node->type != TYPE_ITEM)
 	{
@@ -599,7 +597,7 @@ void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 	g_mutex_unlock(cfg->lock);
 }
 
-void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
+static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
 {
 	config_node *newnode = cfg_get_single_value(cfg,class,key);
 	if(newnode == NULL)

@@ -85,15 +85,20 @@ int gmpc_failed_tries = 0;
 /** Creating the backend */
 static void init_playlist_store(void);
 /** handle connection changed */
-void connection_changed(MpdObj *mi, int connect, gpointer data);
+static void connection_changed(MpdObj *mi, int connect, gpointer data);
 
 
 /** Error callback */
-void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
+static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 
 /** init stock icons */
 static void init_stock_icons(void);
 
+/*
+ * functions to get patch to different files.
+ * This is needed to make the windows port work.
+ */
+static char *gmpc_get_full_image_path(char *filename);
 
 /*
  * the xml fle pointer to the player window
@@ -118,13 +123,16 @@ config_obj *config = NULL;
 MpdObj *connection = NULL;
 
 void connect_callback(MpdObj *mi);
+
+// Glade prototypes, these would be static otherwise
 void send_password(void);
+
 /**
  * Get's the full path to an image,
  * While this is compile time on linux, windows
  * needs to determine it run-time.
  */
-char *gmpc_get_full_image_path(char *filename)
+static char *gmpc_get_full_image_path(char *filename)
 {
 	gchar *path;
 #ifdef WIN32
@@ -948,7 +956,7 @@ void send_password()
 {
 	password_dialog(FALSE);
 }
-void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
+static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
 	/* if we are not connected we show a reconnect */
@@ -1018,7 +1026,7 @@ void connect_callback(MpdObj *mi)
 /**
  * handle a connection changed 
  */
-void connection_changed(MpdObj *mi, int connect, gpointer data)
+static void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	int i=0;
 	/**

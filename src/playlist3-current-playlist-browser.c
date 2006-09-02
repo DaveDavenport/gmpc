@@ -455,7 +455,7 @@ static void pl3_current_playlist_browser_scroll_to_current_song()
 }
 
 /* add's the toplevel entry for the current playlist view */
-void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
+static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
@@ -636,7 +636,7 @@ static void pl3_current_playlist_enable_columns()
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 }
-int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
+static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	if(event->button == 3)
 	{
@@ -744,7 +744,7 @@ static void pl3_current_playlist_browser_unselected(GtkWidget *container)
 }
 
 
-void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTreeIter *iter)
+static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
 	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{

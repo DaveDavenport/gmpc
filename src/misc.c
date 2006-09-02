@@ -57,43 +57,6 @@ gchar * format_time(unsigned long seconds)
 }
 
 /**
- * this draws a 1 pixel border around a pixbuf.
- * It doesn't work for all color depths (I think)
- */
-/*
-void draw_pixbuf_border(GdkPixbuf *pb)
-{
-	int x,y,width,height;
-	int pixel;
-	int n_channels = 0;
-	int rowstride = 0;
-	guchar *pixels;
-	if(!pb){
-		return;
-	}
-	
-	rowstride = gdk_pixbuf_get_rowstride(pb);	
-	n_channels = gdk_pixbuf_get_n_channels(pb);
-	width = gdk_pixbuf_get_width (pb);
-	height = gdk_pixbuf_get_height (pb);
-	pixels = gdk_pixbuf_get_pixels(pb);
-
-	for(y=0;y<height;y++)
-	{
-		for(x=0;x<width;x++)
-		{
-			if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
-			{
-				for(pixel=0; pixel < n_channels;pixel++)
-				{
-					pixels[x*n_channels+y*rowstride+pixel] = 0;
-				}
-			}
-		}
-	}
-}
-*/
-/**
  * Wrapper around mpd_song_markup, that escapes the entries for use with pango markup
  * You still need to make sure "markup" is pango-markup proof
  */

@@ -27,6 +27,8 @@
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
+#include "tray-icon.h"
+
 /**
  * Some gobjects
  */
@@ -72,9 +74,6 @@ enum{
 	TIME_FORMAT_PERCENTAGE
 };
 
-/* id3info.c*/
-void call_id3_window(int song);
-
 /* main.h*/
 void main_trigger_update();
 
@@ -91,7 +90,6 @@ void main_quit(void);
  * functions to get patch to different files.
  * This is needed to make the windows port work.
  */
-char *gmpc_get_full_image_path(char *filename);
 char *gmpc_get_full_glade_path(char *filename);
 
 /* plugin */
@@ -99,12 +97,12 @@ void plugin_load_dir(gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin);
 int plugin_get_pos(int id);
 
-
-
 void show_error_message(gchar *string, int block);
 
-
-void tray_icon_connection_changed(MpdObj *mi, int connect);
+/* This is over here because of it's need for xml_error_window, this should probably
+ * be moved to mpdinteraction.c
+ */
+void connect_callback(MpdObj *mi);
 
 /** Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
