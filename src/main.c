@@ -297,34 +297,6 @@ int main (int argc, char **argv)
 	 */
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
-#ifndef WIN32
-	/**
-	 * bacon here we come 
-	 */
-	bacon_connection = bacon_message_connection_new("gmpc");
-	if(bacon_connection != NULL)
-	{
-		if (!bacon_message_connection_get_is_server (bacon_connection)) 
-		{
-			debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
-			bacon_message_connection_send(bacon_connection, "PRESENT");
-			exit(0);
-		}
-		bacon_message_connection_set_callback (bacon_connection,
-				bacon_on_message_received,
-				NULL);
-	}
-
-
-#endif		
-	/**
-	 * Setup session support
-	 */
-#ifdef ENABLE_SM
-	smc_connect(argc, argv);
-	
-#endif	
-
 	/**
 	 *  initialize threading 
 	 */
@@ -341,19 +313,93 @@ int main (int argc, char **argv)
 		show_error_message(_("GMPC requires threading support.\nquiting.."),TRUE);
 		abort();
 	}
-	
+
+	/**
+	 * Open the config file
+	 */	
+	/** 
+	 * Check if the user has forced a different config file location.
+	 * else set to ~/.gmpc/gmpc.cfg
+	 */
+	if(!config_path)
+	{
+		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
+	}
+	else{
+		url = config_path;
+	}
+	/**
+	 * Open it 
+	 */
+	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
+	config = cfg_open(url);
+
+	/** test if config opened correct  */
+	if(config == NULL)
+	{
+		/**
+		 * Show gtk error message and quit 
+		 */
+		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
+		show_error_message(_("Failed to load the configuration system"), TRUE);
+		abort();
+	}
+
+	/**
+	 * cleanup 
+	 */
+	g_free(url);
+
+
+
+
+
+#ifndef WIN32
+
+	if(cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple",FALSE) == FALSE)
+	{
+		/**
+		 * bacon here we come 
+		 */
+		bacon_connection = bacon_message_connection_new("gmpc");
+		if(bacon_connection != NULL)
+		{
+			if (!bacon_message_connection_get_is_server (bacon_connection)) 
+			{
+				debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+				bacon_message_connection_send(bacon_connection, "PRESENT");
+				exit(0);
+			}
+			bacon_message_connection_set_callback (bacon_connection,
+					bacon_on_message_received,
+					NULL);
+		}
+	}
+
+
+#endif		
+	/**
+	 * Setup session support
+	 */
+#ifdef ENABLE_SM
+	smc_connect(argc, argv);
+
+#endif	
+
+
+
 	/**
 	 * Initialize the new metadata subsystem.
 	 * (Will spawn a new thread, so have to be after the init threading 
 	 */
 	meta_data_init();
-	
+
 	/**
 	 * stock icons
 	 */
 	debug_printf(DEBUG_INFO, "Loading stock icons");
 	init_stock_icons ();
-	
+
 
 
 	/**
@@ -394,46 +440,11 @@ int main (int argc, char **argv)
 	}
 	/* Free the path */
 	g_free(url);
-	
-
-	/**
-	 * Open the config file
-	 */	
-	/** 
-	 * Check if the user has forced a different config file location.
-	 * else set to ~/.gmpc/gmpc.cfg
-	 */
-	if(!config_path)
-	{
-		url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
-	}
-	else{
-		url = config_path;
-	}
-	/**
-	 * Open it 
-	 */
-	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
-	config = cfg_open(url);
-
-	/** test if config opened correct  */
-	if(config == NULL)
-	{
-		/**
-		 * Show gtk error message and quit 
-		 */
-		debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
-		show_error_message(_("Failed to load the configuration system"), TRUE);
-		abort();
-	}
-	/**
-	 * cleanup 
-	 */
-	g_free(url);
-	
 
 
-	
+
+
+
 	/**
 	 * Create connection object 
 	 */
@@ -486,7 +497,7 @@ int main (int argc, char **argv)
 
 	plugin_add(&metab_plugin,0);	
 
-	
+
 	/**
 	 *  load dynamic plugins 
 	 */
@@ -504,10 +515,10 @@ int main (int argc, char **argv)
 		plugin_load_dir(url);
 	}
 	g_free(url);
-	
 
-	
-	
+
+
+
 	/* time todo some initialisation of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
 	{
@@ -516,13 +527,13 @@ int main (int argc, char **argv)
 			plugins[i]->init();
 		}
 	}
-	
+
 
 	/**
 	 * Create the backend store for the current playlist
 	 */
 	init_playlist_store ();
-	
+
 	/**
 	 * Ask user about added/removed provider plugins 
 	 */
@@ -591,12 +602,15 @@ int main (int argc, char **argv)
 	 * run the main loop
 	 */
 	gtk_main ();
-	
+
 	/**
 	 *  cleaning up. 
 	 */
 #ifndef WIN32
-	bacon_message_connection_free (bacon_connection);
+	if(bacon_connection)
+	{
+		bacon_message_connection_free (bacon_connection);
+	}
 #endif	
 	/** 
 	 * Destroy the connection object 
@@ -671,7 +685,7 @@ static int autoconnect_callback(void)
 			 */
 			gmpc_failed_tries++;
 			connect_to_mpd ();
-			
+
 		}
 	}
 	/**
@@ -895,7 +909,7 @@ static void error_window_destroy(GtkWidget *window,int response, gpointer autoco
 	xml_error_window = NULL;
 	if(response == GTK_RESPONSE_OK)
 	{
-//		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
+		//		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
 		connect_to_mpd();
 	}
 }
@@ -940,7 +954,7 @@ static void password_dialog(int failed)
 			{
 				show_error_message(_("GMPC has insuffient permissions on the mpd server."),
 						FALSE);
-//				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
+				//				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
 				mpd_disconnect(connection);
 			}
 			break;
