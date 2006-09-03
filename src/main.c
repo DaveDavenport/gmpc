@@ -909,7 +909,6 @@ static void error_window_destroy(GtkWidget *window,int response, gpointer autoco
 	xml_error_window = NULL;
 	if(response == GTK_RESPONSE_OK)
 	{
-		//		cfg_set_single_value_as_int(config, "connection", "autoconnect", GPOINTER_TO_INT(autoconnect));
 		connect_to_mpd();
 	}
 }
@@ -925,12 +924,12 @@ static void password_dialog(int failed)
 	if(failed)
 	{
 		path = g_strdup_printf("Failed to set password on: '%s'\nPlease try again",
-				cfg_get_single_value_as_string(config, "connection", "hostname"));
+				mpd_get_hostname(connection));
 	}
 	else
 	{
 		path = g_strdup_printf("Please enter your password for: '%s'",
-				cfg_get_single_value_as_string(config, "connection", "hostname"));
+				mpd_get_hostname(connection));
 
 	}
 	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
@@ -943,8 +942,7 @@ static void password_dialog(int failed)
 				mpd_set_password(connection, path);
 				if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_password_window, "ck_save_pass"))))
 				{
-					cfg_set_single_value_as_int(config, "connection", "useauth", TRUE);
-					cfg_set_single_value_as_string(config, "connection", "password", path);
+					connection_set_password(path);				
 				}
 				mpd_send_password(connection);
 			}
@@ -954,7 +952,6 @@ static void password_dialog(int failed)
 			{
 				show_error_message(_("GMPC has insuffient permissions on the mpd server."),
 						FALSE);
-				//				cfg_set_single_value_as_int(config, "connection", "autoconnect", FALSE);
 				mpd_disconnect(connection);
 			}
 			break;
@@ -978,7 +975,6 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	{
 		/* no response? then we just ignore it when autoconnecting. */
 		if(error_id == 15 && autoconnect) return;
-		//cfg_set_single_value_as_int(config, "connection", "autoconnect", 0);
 		if (xml_error_window == NULL)
 		{
 			gchar *str = g_strdup_printf("error code %i: %s", error_id, error_msg);
@@ -1050,7 +1046,7 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
 	{
 		/* set failed to 0 */
 		gmpc_failed_tries = 0;		
-		if(cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0))
+		if(connection_use_auth())
 		{
 			mpd_send_password(connection);
 		}

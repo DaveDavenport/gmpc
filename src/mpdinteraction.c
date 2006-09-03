@@ -641,3 +641,29 @@ static void connection_pref_construct(GtkWidget *container)
 	}
 }
 
+
+
+
+
+void connection_set_password(char *password)
+{
+	/**
+	 * if NULL, or length 0, then disable, else set
+	 */ 
+	if(password && password[0] != '\0')
+	{
+		cfg_set_single_value_as_int(config, "connection", "useauth", TRUE);
+		cfg_set_single_value_as_string(config, "connection", "password", password);
+
+	}
+	else
+	{
+		cfg_set_single_value_as_int(config, "connection", "useauth", FALSE);
+	}
+}
+
+int connection_use_auth()
+{
+	return cfg_get_single_value_as_int_with_default(config, "connection", "useauth",0);
+}
+

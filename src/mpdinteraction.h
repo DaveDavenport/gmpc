@@ -20,5 +20,11 @@ void volume_down(void);
 int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;
+/**
+ *
+ */
+void connection_set_password(char *password);
+
+int connection_use_auth();
 
 #endif
