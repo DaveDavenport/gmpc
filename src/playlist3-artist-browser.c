@@ -33,7 +33,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
-static void pl3_artist_browser_add(void);
+static void pl3_artist_browser_add(GtkWidget *cat_tree);
 static void pl3_artist_browser_fill_tree(GtkWidget *, GtkTreeIter *);
 static void pl3_artist_browser_category_selection_changed(GtkWidget *,GtkTreeIter *);
 static void pl3_artist_browser_selected(GtkWidget *);
@@ -195,7 +195,7 @@ static void pl3_artist_browser_init()
 }
 
 
-static void pl3_artist_browser_add()
+static void pl3_artist_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter,child;

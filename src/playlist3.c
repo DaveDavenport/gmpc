@@ -921,6 +921,7 @@ void create_playlist3 ()
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
 	
 	pl3_update_go_menu();	
+	pl3_update_profiles_menu();
 }
 
 /**
@@ -1562,4 +1563,87 @@ static void pl3_plugin_changed_interface()
 	 * Call this at the end, to update the menu
 	 */
 	pl3_update_go_menu();
+}
+static void pl3_profile_selected(GtkRadioMenuItem *radio,gpointer data)
+{
+	if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(radio)))
+	{
+		gchar *uid = g_object_get_data(G_OBJECT(radio), "uid");
+		if(!uid)
+		{
+			printf("no uid found\n");
+			return;
+		}
+		connection_set_current_profile(uid);
+		if(mpd_check_connected(connection))
+		{
+			mpd_disconnect(connection);			
+			connect_to_mpd();
+		}
+	}
+}
+
+void pl3_update_profiles_menu(void)
+{
+	int items = 0;
+	GtkWidget *menu = NULL;
+	gchar *current = connection_get_current_profile();
+	conf_mult_obj *iter, *mult;
+	/***
+	 * Remove any old menu
+	 */
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_profiles")));
+	/**
+	 * Create a new menu
+	 */
+	menu = gtk_menu_new();
+
+	mult = cfg_get_class_list(profiles);
+	if(mult)
+	{
+		GSList *group = NULL;
+		iter = mult;
+		do{
+			/** Get profile name */
+			gchar *value = cfg_get_single_value_as_string_with_default(profiles, iter->key, "name", "Name");
+			GtkWidget *item	= gtk_radio_menu_item_new_with_label(group,value);
+			g_free(value);	
+			/* get new group */
+			group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));	
+			/* add to the menu */
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+			/* check the current profile */
+			if(!strcmp(iter->key, current))
+			{
+				gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
+			}
+
+			/**
+			 * Attach click handler
+			 */
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_profile_selected), NULL);
+
+			/** Attach the uid to the handler */
+			value = g_strdup(iter->key);
+			g_object_set_data_full(G_OBJECT(item), "uid", value, g_free);
+
+			iter = iter->next;
+			items++;
+		}while(iter);
+		cfg_free_multiple(mult);
+	}
+
+	/**
+	 * Attach menu
+	 */
+	if(items) {
+		gtk_widget_show_all(menu);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_profiles")),
+				menu);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_profiles"), TRUE);
+	} else {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_profiles"), FALSE);
+		gtk_widget_destroy(menu);
+	}
 }

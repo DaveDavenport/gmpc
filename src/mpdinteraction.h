@@ -21,10 +21,13 @@ int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;
 /**
- *
+ * Connection stuff 
  */
 void connection_set_password(char *password);
-
-int connection_use_auth();
-
+int connection_use_auth(void);
+char *connection_get_hostname(void);
+int connection_get_port(void);
+char *connection_get_password(void);
+char *connection_get_current_profile(void);
+void connection_set_current_profile(const char *uid);
 #endif

@@ -35,7 +35,7 @@
 static void pl3_find_browser_category_selection_changed(GtkWidget *, GtkTreeIter *);
 static void pl3_find_browser_selected(GtkWidget *);
 static void pl3_find_browser_unselected(GtkWidget *);
-static void pl3_find_browser_add(void);
+static void pl3_find_browser_add(GtkWidget *cat_tree);
 static int pl3_find_browser_add_go_menu(GtkWidget *);
 static void pl3_find_browser_search(void);
 static void pl3_find_browser_row_activated(GtkTreeView *, GtkTreePath *);
@@ -259,7 +259,7 @@ static void pl3_find_browser_unselected(GtkWidget *container)
  * Find Browser
  */
 /* add's the toplevel entry for the current playlist view */
-static void pl3_find_browser_add()
+static void pl3_find_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreeIter iter;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);

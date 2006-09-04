@@ -117,6 +117,8 @@ guint autoconnect_timeout = 0;
  * The Config object
  */
 config_obj *config = NULL;
+config_obj *profiles = NULL;
+
 /*
  * The Connection object
  */
@@ -345,13 +347,32 @@ int main (int argc, char **argv)
 		abort();
 	}
 
+	
+
 	/**
 	 * cleanup 
 	 */
 	g_free(url);
-
-
-
+	/**
+	 * Profile file
+	 */
+	url = cfg_get_single_value_as_string(config, "connection", "profile-file");
+	if(!url)
+	{
+		url = g_strdup_printf("%s/.gmpc/profiles.cfg", g_get_home_dir());
+		cfg_set_single_value_as_string(config, "connection", "profile-file",url);
+	}
+	profiles = cfg_open(url);
+	if(profiles == NULL)
+	{
+		/**
+		 * Show gtk error message and quit 
+		 */
+		debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
+		show_error_message(_("Failed to load the configuration system"), TRUE);
+		abort();
+	}
+	g_free(url);
 
 
 #ifndef WIN32
@@ -620,6 +641,7 @@ int main (int argc, char **argv)
 	 * Close the config file
 	 */
 	cfg_close(config);
+	cfg_close(profiles);
 	/**
 	 * remove (probly allready done) 
 	 * the playlist object

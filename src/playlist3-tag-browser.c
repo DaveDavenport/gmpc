@@ -15,7 +15,7 @@ static void pref_id3b_fill(void);
 static void pl3_custom_tag_browser_fill_tree(GtkWidget *,GtkTreeIter *);
 static void pl3_tag_browser_selected(GtkWidget *container);
 static void pl3_tag_browser_unselected(GtkWidget *container);
-static void pl3_custom_tag_browser_add(void);
+static void pl3_custom_tag_browser_add(GtkWidget *cat_tree);
 static int pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat);
 static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter);
@@ -225,7 +225,7 @@ static void pl3_custom_tag_browser_list_add(GtkTreeIter *iter)
 	}
 
 }
-static void pl3_custom_tag_browser_add()
+static void pl3_custom_tag_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path;
 	if(mpd_server_check_version(connection,0,12,0))
@@ -1506,7 +1506,7 @@ static void tag_connection(MpdObj *mi, int connect, gpointer data)
 	if(connect) {
 		if(!pl3_tag_tree_ref) {
 			/* add tag list */
-			pl3_custom_tag_browser_add();
+			pl3_custom_tag_browser_add(NULL);
 		}
 	}else{
 		GtkTreeIter iter;

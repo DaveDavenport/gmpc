@@ -43,6 +43,8 @@ extern GtkTreeModel *playlist;
 
 /* the config object */
 extern config_obj *config;
+extern config_obj *profiles;
+
 /* the plugin list */
 extern gmpcPlugin **plugins;
 /* num of plugins */

@@ -79,4 +79,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 /* done */ 
 void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id);
 void cfg_free_string(char *string);
+
+
+void cfg_remove_class(config_obj *cfg, char *class);
 #endif

@@ -596,7 +596,20 @@ void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 	}
 	g_mutex_unlock(cfg->lock);
 }
+void cfg_remove_class(config_obj *cfg, char *class)
+{
+	config_node *node = NULL;
+	if(cfg == NULL || class == NULL)
+		return;
 
+	g_mutex_lock(cfg->lock);
+	node = cfg_get_class(cfg, class);
+	if(node)
+	{
+		__int_cfg_remove_node(cfg, node);
+	}
+	g_mutex_unlock(cfg->lock);
+}
 static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
 {
 	config_node *newnode = cfg_get_single_value(cfg,class,key);
