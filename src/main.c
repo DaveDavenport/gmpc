@@ -130,6 +130,12 @@ void connect_callback(MpdObj *mi);
 void send_password(void);
 
 /**
+ * Set paths
+ */
+static void create_gmpc_paths(void);
+
+
+/**
  * Get's the full path to an image,
  * While this is compile time on linux, windows
  * needs to determine it run-time.
@@ -208,15 +214,24 @@ int main (int argc, char **argv)
 	 * A string used severall times to create a path
 	 */
 	gchar *url = NULL;
-	/** 
-	 * Debug level,  DEBUG_ERROR is the default. (only show error messages
-	 * FOR RELEASE THIS SHOULD_BE CHANGED TO DEBUG_NO_OUTPUT
-	 */
-	int db_level = DEBUG_ERROR;
+
 	/* *
 	 * Set the debug level
 	 */
-	debug_set_level(db_level);
+	debug_set_level(DEBUG_ERROR);
+
+
+	/**
+	 * Setup NLS
+	 */
+#ifdef ENABLE_NLS
+	debug_printf(DEBUG_INFO, "Setting NLS");
+	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain (GETTEXT_PACKAGE);
+	
+#endif
+
 
 	/**
 	 * Parse Command line options
@@ -233,67 +248,58 @@ int main (int argc, char **argv)
 			 * 2 = Error + Warning messages
 			 * 3 = All messages
 			 */
-			if(!strncasecmp(argv[i], "--debug-level=", 14))
+			if(!strncasecmp(argv[i], _("--debug-level="),strlen(_("--debug-level="))))
 			{
-				db_level = atoi(&argv[i][14]);
+				int db_level = atoi(&argv[i][strlen(_("--debug-level="))]);
 				debug_set_level(db_level);
 			}
 			/**
 			 * Print out version + svn revision
 			 */
-			else if (!strncasecmp(argv[i], "--version", 9))
+			else if (!strcasecmp(argv[i], _("--version")))
 			{
-				printf("Gnome Music Player Client\n");
-				printf("Version: %s\n", VERSION);
-				printf("Revision: %s\n",revision);
+				printf(("Gnome Music Player Client\n"));
+				printf(_("Version: %s\n"), VERSION);
+				if(revision && revision[0] != '\0')
+				{
+					printf(_("Revision: %s\n"),revision);
+				}
 				exit(0);
 			}
-			else if (!strcasecmp(argv[i],"--start-hidden"))
+			else if (!strcasecmp(argv[i],_("--start-hidden")))
 			{
 				start_hidden = TRUE;
 			}
 			/**
 			 * Allow the user to pick another config file 
 			 */
-			else if (!strncasecmp(argv[i], "--config=", 9))
+			else if (!strncasecmp(argv[i], _("--config="), strlen(_("--config="))))
 			{
-				config_path = g_strdup(&argv[i][9]);
+				config_path = g_strdup(&argv[i][strlen(_("--config="))]);
 			}
 			/**
 			 * Print out help message
 			 */
-			else if (!strncasecmp(argv[i], "--help",6))
+			else if (!strncasecmp(argv[i], _("--help"),strlen(_("--help"))))
 			{
-				printf("Gnome Music Player Client\n");
-				printf("Options:\n");
-				printf("\t--help:\t\t\tThis help message.\n");
-				printf("\t--debug-level=<level>\tMake gmpc print out debug information.\n");
-				printf("\t\t\t\tLevel:\n");
-				printf("\t\t\t\t\t0: No Output\n");
-				printf("\t\t\t\t\t1: Error Messages\n");
-				printf("\t\t\t\t\t2: Error + Warning Messages\n");
-				printf("\t\t\t\t\t3: All messages\n");
-				printf("\t--version:\t\tPrint version and svn revision\n");
-				printf("\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n");
-				printf("\t--start-hidden\t\tStart mpd in a hidden state\n");
+				printf(_("Gnome Music Player Client\n"\
+					"Options:\n"\
+					"\t--help:\t\t\tThis help message.\n"\
+				"\t--debug-level=<level>\tMake gmpc print out debug information.\n"\
+				"\t\t\t\tLevel:\n"\
+				"\t\t\t\t\t0: No Output\n"\
+				"\t\t\t\t\t1: Error Messages\n"\
+				"\t\t\t\t\t2: Error + Warning Messages\n"\
+				"\t\t\t\t\t3: All messages\n"\
+				"\t--version:\t\tPrint version and svn revision\n"\
+				"\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
+				"\t--start-hidden\t\tStart mpd in a hidden state\n"));
 				exit(0);
 			}
 		}
 
 	}
 	
-
-	/**
-	 * Setup NLS
-	 */
-#ifdef ENABLE_NLS
-	debug_printf(DEBUG_INFO, "Setting NLS");
-	bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain (GETTEXT_PACKAGE);
-	
-#endif
-
 	/*
 	 * initialize gtk
 	 */
@@ -315,6 +321,8 @@ int main (int argc, char **argv)
 		show_error_message(_("GMPC requires threading support.\nquiting.."),TRUE);
 		abort();
 	}
+
+	create_gmpc_paths();
 
 	/**
 	 * Open the config file
@@ -346,9 +354,6 @@ int main (int argc, char **argv)
 		show_error_message(_("Failed to load the configuration system"), TRUE);
 		abort();
 	}
-
-	
-
 	/**
 	 * cleanup 
 	 */
@@ -421,51 +426,6 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Loading stock icons");
 	init_stock_icons ();
 
-
-
-	/**
-	 * Create needed directories for mpd.
-	 */	
-
-	/** create path */
-	url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
-	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
-
-	/**
-	 * Check if ~/.gmpc/ exists 
-	 * If not try to create it.
-	 */
-	if(!g_file_test(url, G_FILE_TEST_EXISTS))
-	{
-		debug_printf(DEBUG_INFO, "Trying to create %s",url);
-		if(g_mkdir(url,0700) < 0)
-		{
-			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
-			show_error_message("Failed to create ~/.gmpc/.", TRUE);
-			abort();
-		}
-	}
-	/**
-	 * if it exists, check if it's a directory 
-	 */
-	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
-	{
-		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
-		debug_printf(DEBUG_ERROR, "Quitting.\n");
-		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
-		abort();
-	}
-	else
-	{
-		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
-	}
-	/* Free the path */
-	g_free(url);
-
-
-
-
-
 	/**
 	 * Create connection object 
 	 */
@@ -515,9 +475,8 @@ int main (int argc, char **argv)
 #endif
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
-
+	/* Meta data browser */
 	plugin_add(&metab_plugin,0);	
-
 
 	/**
 	 *  load dynamic plugins 
@@ -536,8 +495,6 @@ int main (int argc, char **argv)
 		plugin_load_dir(url);
 	}
 	g_free(url);
-
-
 
 
 	/* time todo some initialisation of plugins */
@@ -1131,5 +1088,50 @@ void show_error_message(gchar *string, int block)
 	{
 		gtk_widget_show(dialog);
 	}
+
+}
+
+
+static void create_gmpc_paths(void)
+{
+	/**
+	 * Create needed directories for mpd.
+	 */	
+
+	/** create path */
+	gchar *url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
+	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
+
+	/**
+	 * Check if ~/.gmpc/ exists 
+	 * If not try to create it.
+	 */
+	if(!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
+		debug_printf(DEBUG_INFO, "Trying to create %s",url);
+		if(g_mkdir(url,0700) < 0)
+		{
+			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
+			show_error_message("Failed to create ~/.gmpc/.", TRUE);
+			abort();
+		}
+	}
+	/**
+	 * if it exists, check if it's a directory 
+	 */
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
+		debug_printf(DEBUG_ERROR, "Quitting.\n");
+		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
+		abort();
+	}
+	else
+	{
+		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
+	}
+	/* Free the path */
+	g_free(url);
+
 
 }

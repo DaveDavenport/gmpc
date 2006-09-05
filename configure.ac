@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [0.13.2],qball@qballcow.nl)
+AM_INIT_AUTOMAKE([gmpc], [0.13.4],qball@qballcow.nl)
 
 # Checks for programs.
 
