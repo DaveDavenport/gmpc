@@ -42,7 +42,6 @@ void update_preferences_name(void);
 void update_preferences_hostname(void);
 void update_preferences_portnumber(void);
 void update_preferences_information(void);
-void update_preferences_set_default(void);
 void connection_profiles_changed(GtkComboBox *combo, gpointer data);
 void connection_add_profile(void);
 void connection_remove_profile(void);
@@ -697,27 +696,6 @@ static void connection_pref_destroy(GtkWidget *container)
 		connection_pref_xml = NULL;
 	}
 }
-void update_preferences_set_default(void)
-{
-
-	GtkComboBox *combo = (GtkComboBox *) glade_xml_get_widget(connection_pref_xml, "cb_profiles");
-	GtkTreeIter iter;
-	GtkTreeModel *store = gtk_combo_box_get_model(combo);
-	if(gtk_combo_box_get_active_iter(combo,&iter))
-	{
-		char *value= NULL, *uid = NULL;
-		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "default_profile_butt"), FALSE);
-		cfg_set_single_value_as_string(config, "connection", "defaultprofile",uid);
-
-		g_free(value);
-		g_free(uid);
-	}
-
-
-
-
-}
 
 void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 {
@@ -731,13 +709,21 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 		 * Set name
 		 */
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry")), value);
-
+		/**
+		 * Set hostname
+		 */
 		string = cfg_get_single_value_as_string_with_default(profiles,uid,"hostname","localhost");
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry")), string);
 		cfg_free_string(string);
+		/**
+		 * Set port number 
+		 */
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin")), 
 				cfg_get_single_value_as_int_with_default(profiles,uid,"portnumber",6600));
 
+		/**
+		 * Set password check, and entry
+		 */
 		string = cfg_get_single_value_as_string_with_default(profiles, uid,"password", "");
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(connection_pref_xml, "ck_auth"), 
@@ -746,23 +732,10 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 				cfg_get_single_value_as_int_with_default(profiles, uid, "useauth", 0));
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth")),string);
 		cfg_free_string(string);
-		g_free(value);
 
-
-		//cfg_set_single_value_as_string(config, "connection", "currentprofile", uid);
-		/** Set default profile button */
-		value = cfg_get_single_value_as_string(config, "connection", "defaultprofile");
-		if(value  && !strcmp(value, uid))
-		{
-			gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "default_profile_butt"), FALSE);
-		}
-		else
-		{
-			gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "default_profile_butt"), TRUE);
-		}
-
-
-
+		/**
+		 * Only enable the rmeove button when there is more then 1 profile
+		 */
 		if(gtk_tree_model_iter_n_children(GTK_TREE_MODEL(store),NULL) >1)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "remove_butt"), TRUE);
@@ -806,6 +779,7 @@ void connection_remove_profile(void)
 		g_free(value);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),0);
 		pl3_update_profiles_menu();
+		connection_set_current_profile(NULL);
 	}
 }
 
@@ -891,8 +865,15 @@ static void connection_pref_construct(GtkWidget *container)
 void connection_set_current_profile(const char *uid)
 {
 	if(current)
+	{
 		g_free(current);
-	current = g_strdup(uid);
+		current = NULL;
+	}
+	if(uid)
+	{
+		current = g_strdup(uid);
+		cfg_set_single_value_as_string(config, "connection", "currentprofile",(char *)uid);
+	}
 }
 char *connection_get_current_profile()
 {
@@ -902,13 +883,18 @@ char *connection_get_current_profile()
 	 */
 	if(!current)
 	{
-		current = cfg_get_single_value_as_string_with_default(config, "connection", "defaultprofile", "Default");
+		current = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
 		value = cfg_get_single_value_as_string(profiles, current, "name");
+		/* if the default doesn't exists, start looking for the first profile */
 		if(!value)
 		{
 			conf_mult_obj *mult = cfg_get_class_list(profiles);
 			if(mult){
 				current = g_strdup(mult->key);
+				/**
+				 * update saved value
+				 */
+				cfg_set_single_value_as_string(config, "connection", "currentprofile",current);
 			}
 			cfg_free_multiple(mult);
 		}
