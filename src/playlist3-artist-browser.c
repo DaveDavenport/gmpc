@@ -866,7 +866,8 @@ static void pl3_artist_browser_add_selected()
 	GtkTreeModel *model = GTK_TREE_MODEL (pl3_ab_store);
 	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
 	int songs=0;
-	gchar *message;
+	int artists = 0;
+	int albums = 0;
 	if(rows != NULL)
 	{
 		gchar *artist,*album,*file;
@@ -895,10 +896,10 @@ static void pl3_artist_browser_add_selected()
 					if(data->type == MPD_DATA_TYPE_SONG)
 					{
 						mpd_playlist_queue_add(connection, data->song->file);
-						songs++;
 					}
 					data = mpd_data_get_next(data);
 				}
+				artists++;
 			}
 			else if (type&PL3_ENTRY_ALBUM)
 			{
@@ -910,12 +911,13 @@ static void pl3_artist_browser_add_selected()
 					{
 						if (!g_utf8_collate (data->song->artist, artist))
 						{
-							songs++;
+
 							mpd_playlist_queue_add(connection,data->song->file);
 						}
 					}
 					data = mpd_data_get_next(data);
 				}
+				albums++;
 			}
 			if(artist)g_free(artist);
 			if(album)g_free(album);
@@ -925,11 +927,23 @@ static void pl3_artist_browser_add_selected()
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
-	if(songs != 0)
+	if(songs != 0 || artists || albums)
 	{
-		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
-		pl3_push_statusbar_message(message);
-		g_free(message);
+		GString *str = g_string_new("Added: ");
+		if(songs)
+		{
+			g_string_append_printf(str, "%i %s", songs, (songs > 1)?_("songs"):_("song"));
+		}		
+		if(artists)
+		{
+			g_string_append_printf(str, "%i %s", artists, (artists > 1)?_("artists"):_("artist"));
+		}		
+		if(albums)
+		{
+			g_string_append_printf(str, "%i %s", albums, (albums > 1)?_("albums"):_("album"));
+		}		
+		pl3_push_statusbar_message(str->str);
+		g_string_free(str, TRUE);
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
