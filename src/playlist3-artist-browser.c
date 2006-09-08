@@ -859,6 +859,7 @@ static void pl3_artist_browser_replace_selected()
 	pl3_artist_browser_add_selected();
 	mpd_player_play(connection);
 }
+
 static void pl3_artist_browser_add_selected()
 {
 	GtkTreeIter iter;

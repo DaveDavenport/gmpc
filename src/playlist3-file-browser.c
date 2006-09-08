@@ -299,43 +299,56 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 static void pl3_file_browser_reupdate()
 {
 	pl3_file_browser_disconnect();
-/*	
+	
 	if(pl3_fb_tree_ref){
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 		if(path)
 		{
 			GtkTreeIter parent;
-			MpdData *data = mpd_database_get_directory(connection, "/");
-			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
-			if(data == NULL)
+			if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path))
 			{
-				GtkTreeIter iter;
-				int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, &parent);
-				debug_printf(DEBUG_INFO,"clearing complete tree\n");
-				while(valid){
-					valid = gtk_tree_store_remove(pl3_tree,&iter);
-				}
-			}
-			else
-			{
-				pl3_file_browser_reupdate_folder(&parent, "/");
+				long unsigned time= 0;
+				gchar *string;
 
+				time = pl3_file_browser_view_folder(&parent);
+				string = format_time(time);
+				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+				g_free(string);
 			}
-*/			/* update right view */
-/*			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
-			{
-				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-						glade_xml_get_widget (pl3_xml, "cat_tree"));
-				GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-
-				gtk_tree_selection_get_selected(selec,&model, &parent);
-			}
-			pl3_file_browser_view_folder(&parent);
-			mpd_data_free(data);
 			gtk_tree_path_free(path);
 		}
 	}
-	*/
+	/*
+	   gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
+	   if(data == NULL)
+	   {
+	   GtkTreeIter iter;
+	   int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, &parent);
+	   debug_printf(DEBUG_INFO,"clearing complete tree\n");
+	   while(valid){
+	   valid = gtk_tree_store_remove(pl3_tree,&iter);
+	   }
+	   }
+	   else
+	   {
+	   pl3_file_browser_reupdate_folder(&parent, "/");
+
+	   }
+	   */			/* update right view */
+	/*			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
+				{
+				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+				glade_xml_get_widget (pl3_xml, "cat_tree"));
+				GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+
+				gtk_tree_selection_get_selected(selec,&model, &parent);
+				}
+				pl3_file_browser_view_folder(&parent);
+				mpd_data_free(data);
+				gtk_tree_path_free(path);
+				}
+				}
+				*/
 }
 
 typedef struct {
@@ -364,68 +377,68 @@ static int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
 	GtkTreeIter iter;
 	MpdData *data = pd->data;
 	if (data != NULL)
- 	{
- 		if (data->type == MPD_DATA_TYPE_DIRECTORY)
- 		{
- 			gchar *basename = g_path_get_basename(data->directory);
- 			gtk_list_store_append (pl3_fb_store, &iter);
- 			gtk_list_store_set (pl3_fb_store, &iter,
- 					PL3_FB_PATH, data->directory,
- 					PL3_FB_TYPE, PL3_ENTRY_DIRECTORY,
- 					PL3_FB_TITLE, basename,
- 					PL3_FB_ICON, "gtk-open",
- 					-1);
- 			g_free(basename);
- 			(pd->sub_folder)++;
- 		}
- 		else if (data->type == MPD_DATA_TYPE_SONG)
- 		{
- 			gchar buffer[1024];
- 			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
- 			mpd_song_markup(buffer, 1024, markdata,data->song);
- 			cfg_free_string(markdata);
- 			if(data->song->time != MPD_SONG_NO_TIME)
- 			{
- 				pd->time += data->song->time;
- 			}
- 
- 			gtk_list_store_append (pl3_fb_store, &iter);
- 			gtk_list_store_set (pl3_fb_store, &iter,
- 					PL3_FB_PATH, data->song->file,
- 					PL3_FB_TYPE, PL3_ENTRY_SONG,
- 					PL3_FB_TITLE, buffer,
- 					PL3_FB_ICON, "media-audiofile",
- 					-1);
- 
- 		}
- 
- 		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
- 		{
- 			gchar *basename = g_path_get_basename (data->playlist);
- 			gtk_list_store_append (pl3_fb_store, &iter);
- 			gtk_list_store_set (pl3_fb_store, &iter,
- 					PL3_FB_PATH, data->playlist,
- 					PL3_FB_TYPE, PL3_ENTRY_PLAYLIST,
- 					PL3_FB_TITLE, basename,
- 					PL3_FB_ICON, "media-playlist",
- 					-1);
- 			g_free (basename);
- 			if(pd->support_playlist) (pd->sub_folder)++;
- 		}
- 		pd->data = mpd_data_get_next(data);
+	{
+		if (data->type == MPD_DATA_TYPE_DIRECTORY)
+		{
+			gchar *basename = g_path_get_basename(data->directory);
+			gtk_list_store_append (pl3_fb_store, &iter);
+			gtk_list_store_set (pl3_fb_store, &iter,
+					PL3_FB_PATH, data->directory,
+					PL3_FB_TYPE, PL3_ENTRY_DIRECTORY,
+					PL3_FB_TITLE, basename,
+					PL3_FB_ICON, "gtk-open",
+					-1);
+			g_free(basename);
+			(pd->sub_folder)++;
+		}
+		else if (data->type == MPD_DATA_TYPE_SONG)
+		{
+			gchar buffer[1024];
+			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
+			mpd_song_markup(buffer, 1024, markdata,data->song);
+			cfg_free_string(markdata);
+			if(data->song->time != MPD_SONG_NO_TIME)
+			{
+				pd->time += data->song->time;
+			}
+
+			gtk_list_store_append (pl3_fb_store, &iter);
+			gtk_list_store_set (pl3_fb_store, &iter,
+					PL3_FB_PATH, data->song->file,
+					PL3_FB_TYPE, PL3_ENTRY_SONG,
+					PL3_FB_TITLE, buffer,
+					PL3_FB_ICON, "media-audiofile",
+					-1);
+
+		}
+
+		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
+		{
+			gchar *basename = g_path_get_basename (data->playlist);
+			gtk_list_store_append (pl3_fb_store, &iter);
+			gtk_list_store_set (pl3_fb_store, &iter,
+					PL3_FB_PATH, data->playlist,
+					PL3_FB_TYPE, PL3_ENTRY_PLAYLIST,
+					PL3_FB_TITLE, basename,
+					PL3_FB_ICON, "media-playlist",
+					-1);
+			g_free (basename);
+			if(pd->support_playlist) (pd->sub_folder)++;
+		}
+		pd->data = mpd_data_get_next(data);
 		return TRUE;
- 	}
- 	/* remove the fantom child if there are no subfolders anyway. */
+	}
+	/* remove the fantom child if there are no subfolders anyway. */
 	/* TODO: Fix this:
 	 * It seems the iter isn't valid at this point anymore.
- 	if(!(pd->sub_folder))
- 	{
- 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, pd->iter_cat))
- 		{
- 			gtk_tree_store_remove(pl3_tree, &iter);
- 		}
- 	}
-	*/
+	 if(!(pd->sub_folder))
+	 {
+	 if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, pd->iter_cat))
+	 {
+	 gtk_tree_store_remove(pl3_tree, &iter);
+	 }
+	 }
+	 */
 	return FALSE;
 } 
 
