@@ -49,8 +49,9 @@ static void pl3_artist_browser_replace_selected(void);
 static int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 static void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+static void pl3_artist_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 
-
+static void pl3_artist_browser_reupdate(void);
 
 enum{
 	PL3_AB_ARTIST,
@@ -86,7 +87,7 @@ gmpcPlugin artist_browser_plug = {
 	NULL,			/* path*/
 	NULL,			/* init */
 	&artist_browser_gbp,		/* Browser */
-	NULL,			/* status changed */
+	pl3_artist_browser_status_changed,			/* status changed */
 	pl3_artist_browser_connection_changed, 		/* connection changed */
 	NULL,		/* Preferences */
 	NULL,			/* MetaData */
@@ -1071,3 +1072,36 @@ static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event,
 
 	return FALSE;
 }
+static void pl3_artist_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_DATABASE)
+	{
+		pl3_artist_browser_reupdate();
+	}
+}	
+
+static void pl3_artist_browser_reupdate(void)
+{
+	pl3_artist_browser_disconnect();
+	
+	if(pl3_ab_tree_ref && pl3_cat_get_selected_browser() == artist_browser_plug.id){
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
+		if(path)
+		{
+			GtkTreeIter parent;
+			if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path))
+			{
+				long unsigned time= 0;
+				gchar *string;
+
+				time = pl3_artist_browser_view_folder(&parent);
+				string = format_time(time);
+				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+				g_free(string);
+			}
+			gtk_tree_path_free(path);
+		}
+	}
+}
+
+

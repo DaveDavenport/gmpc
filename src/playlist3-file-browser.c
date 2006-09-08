@@ -300,7 +300,7 @@ static void pl3_file_browser_reupdate()
 {
 	pl3_file_browser_disconnect();
 	
-	if(pl3_fb_tree_ref){
+	if(pl3_fb_tree_ref && pl3_cat_get_selected_browser() == file_browser_plug.id){
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 		if(path)
 		{
@@ -318,37 +318,6 @@ static void pl3_file_browser_reupdate()
 			gtk_tree_path_free(path);
 		}
 	}
-	/*
-	   gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &parent, path);
-	   if(data == NULL)
-	   {
-	   GtkTreeIter iter;
-	   int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, &parent);
-	   debug_printf(DEBUG_INFO,"clearing complete tree\n");
-	   while(valid){
-	   valid = gtk_tree_store_remove(pl3_tree,&iter);
-	   }
-	   }
-	   else
-	   {
-	   pl3_file_browser_reupdate_folder(&parent, "/");
-
-	   }
-	   */			/* update right view */
-	/*			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
-				{
-				GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-				glade_xml_get_widget (pl3_xml, "cat_tree"));
-				GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-
-				gtk_tree_selection_get_selected(selec,&model, &parent);
-				}
-				pl3_file_browser_view_folder(&parent);
-				mpd_data_free(data);
-				gtk_tree_path_free(path);
-				}
-				}
-				*/
 }
 
 typedef struct {
