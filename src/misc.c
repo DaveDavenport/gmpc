@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include <math.h>
+#include <config.h>
 #include "main.h"
 #include "misc.h"
 /**
