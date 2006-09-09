@@ -633,11 +633,14 @@ void update_preferences_portnumber(void)
 }
 void update_preferences_information(void)
 {
+	cfg_set_single_value_as_float(config,"connection", "timeout",
+			(float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin"))));
+
 	/* update timeout live */
 	if(mpd_check_connected(connection))
 	{
 		mpd_set_connection_timeout(connection, 
-				gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin"))));
+				(float)gtk_spin_button_get_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin"))));
 	}
 }
 
