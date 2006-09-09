@@ -29,7 +29,7 @@ gmpcPrefPlugin server_gpp = {
 	server_pref_destroy
 };
 
-// Glade prototypes, would be static without glade
+/* Glade prototypes, would be static without glade */
 void xfade_enable_toggled(GtkToggleButton *but);
 void xfade_time_changed(GtkSpinButton *but);
 void entry_auth_changed(GtkEntry *entry);
@@ -840,7 +840,6 @@ static void connection_pref_construct(GtkWidget *container)
 	connection_profiles_changed(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),NULL);
 
 
-	//	update_auth_settings();
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "timeout_spin")), 
 			(gdouble)cfg_get_single_value_as_float_with_default(config,"connection", "timeout",DEFAULT_TIMEOUT));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(connection_pref_xml, "ck_autocon")), 

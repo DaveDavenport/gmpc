@@ -270,7 +270,7 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 		gsize size;
 		char *content = NULL;
 		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;//gtk_label_new("");
+		GtkWidget *label = NULL;
 		remove_container_entries(GTK_CONTAINER(vbox));
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 		expander = gtk_expander_new("<b>Song Lyrics:</b>");	
@@ -336,7 +336,7 @@ static void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, ch
 		gsize size;
 		char *content = NULL;
 		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;//gtk_label_new("");
+		GtkWidget *label = NULL;
 		remove_container_entries(GTK_CONTAINER(vbox));
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 		expander = gtk_expander_new("<b>Artist Info:</b>");	
@@ -1604,9 +1604,7 @@ static void info2_init()
 
 	title_event = gtk_event_box_new();
 	title_vbox = gtk_hbox_new(FALSE,6);
-	//	gtk_label_set_ellipsize(GTK_LABEL(title_label), PANGO_ELLIPSIZE_END);
 	ali = gtk_alignment_new(0,0.5,1,1);
-	//	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,0,20);
 	gtk_container_set_border_width(GTK_CONTAINER(ali),8);
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
@@ -1672,8 +1670,6 @@ static void info2_init()
 	info2_fill_view();
 	while(gtk_events_pending())
 		gtk_main_iteration();
-	//	GtkAllocation alloc;
-	//	gtk_widget_size_allocate(info2_vbox, &alloc);	
 }
 
 static void info2_add(GtkWidget *cat_tree)

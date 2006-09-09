@@ -140,7 +140,6 @@ static GtkTreeViewColumn * pl3_current_playlist_add_column(GtkWidget *tree, char
 	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
 
 
-//	gtk_tree_view_insert_column (GTK_TREE_VIEW (tree), column,position);                                         	  		
 	gtk_tree_view_column_set_reorderable(column, TRUE);
 	return column;
 }
@@ -204,7 +203,6 @@ static void pl3_current_playlist_browser_init()
 	gtk_tree_view_column_set_fixed_width(column, 20);
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);	
 
-	//	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_cp_tree), column);                                         	  
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_ICON));
 	columns[PL_COLUMN_ICON] = column;
 	sprintf(smallstring,"%i", PL_COLUMN_ICON);

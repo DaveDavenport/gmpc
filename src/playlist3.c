@@ -52,7 +52,7 @@ static void pl3_plugin_changed_interface(void);
 
 int pl3_zoom = PLAYLIST_NO_ZOOM;
 
-// Glade declarations, otherwise these would be static
+/* Glade declarations, otherwise these would be static */
 void about_window(void);
 void pl3_cat_row_activated(GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *);
 void pl3_cat_row_expanded(GtkTreeView *, GtkTreeIter *, GtkTreePath *);
@@ -1127,7 +1127,6 @@ static void playlist_zoom_level_changed()
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
-//	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_cover_image"));
 	/** Menu Bar */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
 	/** BUTTON BOX */
@@ -1292,13 +1291,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				break;
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
-				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);                     								
-				/**
-				 * if not playing/paused remove the cover art image
-				 * and artist art
-				 */
-//				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_cover_image")), "media-no-cover", -1);
-//				gtk_widget_hide(glade_xml_get_widget(pl3_xml, "cover_art_image"));
+				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
 
 
 				gtk_image_set_from_stock(GTK_IMAGE(

@@ -23,7 +23,7 @@ GtkListStore *plugin_store = NULL;
 GladeXML *xml_preferences_window = NULL;
 gboolean running = 0;
 
-// Glade Prototypes, without glade these would be static
+/* Glade Prototypes, without glade these would be static */
 void preferences_window_connect(GtkWidget *but);
 void preferences_window_disconnect(GtkWidget *but);
 void auth_enable_toggled(GtkToggleButton *but);

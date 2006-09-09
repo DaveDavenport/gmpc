@@ -569,7 +569,7 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 	 * so plugins based on path can work with it.
 	 */
 	/** For speed reason and mpd stressing disabled */
-//	if(song->file == NULL)
+/*	if(song->file == NULL)*/
 	if(FALSE){
 		/* Only mpd 0.12 supports this */
 		if(mpd_server_check_version(connection, 0,12,0))

@@ -22,7 +22,7 @@ static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,Gt
 
 static void tag_connection(MpdObj *mi, int connect,gpointer user);
 
-// Glade prototypes, would be static otherwise
+/* Glade prototypes, would be static otherwise*/
 void pref_id3b_row_remove(void);
 void pref_id3b_row_changed(GtkTreeView *tree);
 void pref_id3b_add_entry(void);

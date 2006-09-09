@@ -424,7 +424,7 @@ cb_dock_press (GtkWidget      * widget,
 	       GdkEventButton * event,
 	       gpointer         data)
 {
-  //GtkWidget *ewidget = gtk_get_event_widget ((GdkEvent *) event);
+  
   BaconVolumeButton *button = BACON_VOLUME_BUTTON (data);
 
   if (/*ewidget == button->dock &&*/ event->type == GDK_BUTTON_PRESS) {

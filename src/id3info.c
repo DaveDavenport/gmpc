@@ -30,7 +30,7 @@ GladeXML *xml_id3_window = NULL;
 GList *songs = NULL;
 static void set_text (GList * node);
 
-// Glade declarations, without glade these would be static
+/* Glade declarations, without glade these would be static*/
 void id3_status_update(void);
 void id3_save_artist_txt(void);
 void id3_save_album_txt(void);
@@ -426,7 +426,6 @@ static void set_text (GList * node)
 	{
 		gtk_widget_set_sensitive (glade_xml_get_widget(xml_id3_window, "button_next"), TRUE);
 	}
-	//gtk_widget_show_all(glade_xml_get_widget(xml_id3_window, "cover_event"));
 
 	if(song){
 		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)id3_txt_fetched, 

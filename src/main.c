@@ -126,7 +126,7 @@ MpdObj *connection = NULL;
 
 void connect_callback(MpdObj *mi);
 
-// Glade prototypes, these would be static otherwise
+/* Glade prototypes, these would be static otherwise */
 void send_password(void);
 
 /**

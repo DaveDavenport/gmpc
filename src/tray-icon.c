@@ -43,7 +43,7 @@ guint popup_timeout = -1;
 static void tray_icon_pref_construct(GtkWidget *);
 static void tray_icon_pref_destroy(GtkWidget *);
 
-// Glade definitons, without glade these would be static
+/* Glade definitons, without glade these would be static */
 void tray_enable_toggled(GtkToggleButton *);
 void popup_enable_toggled(GtkToggleButton *);
 void popup_timeout_changed(void);
@@ -123,7 +123,6 @@ static gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpoi
 {
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
-	//GtkWidget *eventb;
 	if(tip != NULL)
 	{
 		tray_leave_cb(NULL, NULL, 0);
@@ -522,7 +521,7 @@ static int create_tray_icon()
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
 	gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), FALSE);
-	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);//gtk_event_box_new();
+	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);
 
 
 
@@ -595,7 +594,6 @@ static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata
 
 	}
 }
-//#endif
 
 /* PREFERENCES */
 
