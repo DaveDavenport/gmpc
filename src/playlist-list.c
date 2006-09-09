@@ -448,7 +448,14 @@ static gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag
 	{
 		return FALSE;
 	}
-	
+	/**
+	 * Dragging is only possible with more then 1 song
+	 */
+	if(PLAYLIST_LIST(model)->num_rows < 2)
+	{
+		gtk_tree_path_free(path);
+		return FALSE;
+	}
 	ind = gtk_tree_path_get_indices(dest);
 	ind2 = gtk_tree_path_get_indices(path);
 	if(ind && ind2)
@@ -456,8 +463,8 @@ static gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag
 		int original = ind2[0];
 		int destination = ind[0];
 		if(destination >0 && ind[1] != '\0') destination--;
-//		if(destination > original) destination--;
-		if(destination < original) destination++; /* place AFTER */
+		if(destination > original) destination--;
+
 		mpd_playlist_move_pos(connection, original,destination);
 	}
 	gtk_tree_path_free(path);
