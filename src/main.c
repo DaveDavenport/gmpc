@@ -1054,12 +1054,13 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
 	mpd_status_update(mi);
 
 
-	if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE))
+	if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
+		mpd_check_connected(connection))
 	{
 		if(!mpd_server_check_version(connection, 0,12,0)) {
 			GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
-					_("Gmpc is currently connected to mpd version smaller then 0.12.0.\nThis might work, but is no longer supported."));
+					_("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
 			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
 			gtk_widget_show(GTK_WIDGET(dialog));
 		}
