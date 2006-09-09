@@ -2380,7 +2380,7 @@
 		      <property name="snap_to_ticks">True</property>
 		      <property name="wrap">True</property>
 		      <property name="adjustment">5 1 60 1 10 10</property>
-		      <signal name="changed" handler="popup_timeout_changed" last_modification_time="Sat, 13 Mar 2004 16:12:50 GMT"/>
+		      <signal name="value_changed" handler="popup_timeout_changed" last_modification_time="Sat, 09 Sep 2006 21:19:44 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -3560,7 +3560,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
 	  <property name="snap_to_ticks">False</property>
 	  <property name="wrap">False</property>
 	  <property name="adjustment">1.04999995232 0.0500000007451 60 0.0500000007451 10 10</property>
-	  <signal name="changed" handler="update_preferences_information" last_modification_time="Sun, 18 Jan 2004 21:20:41 GMT"/>
+	  <signal name="value_changed" handler="update_preferences_information" last_modification_time="Sat, 09 Sep 2006 21:19:52 GMT"/>
 	</widget>
 	<packing>
 	  <property name="left_attach">1</property>
