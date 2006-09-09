@@ -578,7 +578,6 @@ void auth_enable_toggled(GtkToggleButton *but)
 				cfg_get_single_value_as_int_with_default(profiles, uid,"useauth",0));	
 		g_free(uid);
 		g_free(value);
-		printf("blub\n");
 	}
 }
 
