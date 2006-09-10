@@ -33,7 +33,7 @@ typedef enum {
 #define PL3_ENTRY_SONG 1
 
 /* the gtk_tree_store row's */
-enum
+typedef enum
 {
 	PL3_CAT_TYPE, /** Plugin id */
 	PL3_CAT_TITLE, /** title that is showed */
