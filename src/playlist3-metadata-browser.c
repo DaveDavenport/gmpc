@@ -265,8 +265,7 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 			if(ret != META_DATA_FETCHING)g_free(pd);
 			return;
 	}                                               	
-	if(ret == META_DATA_AVAILABLE)
-	{
+	if(ret == META_DATA_AVAILABLE) {
 		gsize size;
 		char *content = NULL;
 		GtkWidget *expander = NULL;
@@ -287,9 +286,7 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_widget_show_all(vbox);
 		g_free(content);
-	}
-	else if(ret == META_DATA_UNAVAILABLE)
-	{
+	} else if(ret == META_DATA_UNAVAILABLE) {
 		GtkWidget *label = NULL,*ali = NULL;
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
@@ -299,9 +296,7 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 		gtk_container_add(GTK_CONTAINER(ali), label);
 		gtk_container_add(GTK_CONTAINER(vbox), ali);
 		gtk_widget_show_all(vbox);
-	}
-	else if(ret == META_DATA_FETCHING)
-	{
+	} else if(ret == META_DATA_FETCHING) {
 		GtkWidget *label = NULL,*ali = NULL;
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
@@ -312,11 +307,6 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 		gtk_container_add(GTK_CONTAINER(vbox), ali);
 		gtk_widget_show_all(vbox);
 	}
-
-
-
-
-
 	if(ret != META_DATA_FETCHING)g_free(pd);
 }
 
@@ -431,7 +421,7 @@ static void info2_fill_song_view(char *path)
 	 * Clear the view
 	 */
 
-	info2_widget_clear_children(title_vbox);
+
 	info2_prepare_view();
 
 
@@ -444,6 +434,10 @@ static void info2_fill_song_view(char *path)
 	song = mpd_songDup(data->song);
 	mpd_data_free(data);
 
+	/**
+	 * Clear header
+	 */
+	info2_widget_clear_children(title_vbox);
 
 	/**
 	 * Collection 
