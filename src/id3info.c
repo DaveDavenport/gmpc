@@ -127,12 +127,32 @@ void id3_save_artist_txt()
 }
 
 
-static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTextView *view)
+static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
+	int type = GPOINTER_TO_INT(data)&META_QUERY_DATA_TYPES;
+	GtkWidget *view, *container,*fs;
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
 	if(songs->data== NULL) return;
 	current = songs->data;
+	switch(type)
+	{
+		case META_ARTIST_TXT:
+			view = glade_xml_get_widget(xml_id3_window, "artist_tv");
+			container = glade_xml_get_widget(xml_id3_window, "artist_container");
+			fs = glade_xml_get_widget(xml_id3_window, "artist_filechooser");
+			break;
+		case META_ALBUM_TXT:
+			view = glade_xml_get_widget(xml_id3_window, "album_tv");
+			container = glade_xml_get_widget(xml_id3_window, "album_container");
+			fs = glade_xml_get_widget(xml_id3_window, "album_filechooser");
+			break;
+		default:
+			view = glade_xml_get_widget(xml_id3_window, "lyric_tv");
+			container = glade_xml_get_widget(xml_id3_window, "lyric_container");
+			fs = glade_xml_get_widget(xml_id3_window, "lyric_filechooser");
+			break;
+	}
 	if(current->file)
 	{
 		if(!strcmp(current->file,song->file))
@@ -141,11 +161,10 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTex
 			{
 
 
-				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(view)),
+				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),
 						_("Working...."), -1);
-				gtk_widget_set_sensitive(GTK_WIDGET(view), FALSE);
-
-
+				gtk_widget_set_sensitive(GTK_WIDGET(container), FALSE);
+				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
 			}
 			else if(ret == META_DATA_AVAILABLE)
 			{
@@ -153,25 +172,47 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,GtkTex
 				char *content = NULL;
 
 				g_file_get_contents(path, &content, &size,NULL);
-				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(view)),
+				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),
 						content, size);
 				g_free(content);
 
-				gtk_widget_set_sensitive(GTK_WIDGET(view), TRUE);
-
+				gtk_widget_set_sensitive(GTK_WIDGET(container), TRUE);
+				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs), path);
 			}
 			else if(ret == META_DATA_UNAVAILABLE)
 			{
-				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(view)),
+				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),
 						"", -1);
-				gtk_widget_set_sensitive(GTK_WIDGET(view), TRUE);
-
+				gtk_widget_set_sensitive(GTK_WIDGET(container), TRUE);
+				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
 			}
 		}
 	}
 }
 
+void id3_save_song_lyric()
+{
+	GtkWidget *fs_win = glade_xml_get_widget(xml_id3_window, "lyric_filechooser");
+	char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_win));
+	GtkWidget *fs_dialog = gtk_file_chooser_dialog_new(_("Save Lyric"), 
+				NULL,GTK_FILE_CHOOSER_ACTION_SAVE, 
+				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
 
+	if(filename)
+	{
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_dialog),filename);
+		g_free(filename);
+	}
+
+	switch(gtk_dialog_run(GTK_DIALOG(fs_dialog)))
+	{
+		case GTK_RESPONSE_OK:
+		default:
+			break;
+	}
+	gtk_widget_destroy(fs_dialog);
+}
 
 
 
@@ -429,10 +470,11 @@ static void set_text (GList * node)
 
 	if(song){
 		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)id3_txt_fetched, 
-				glade_xml_get_widget(xml_id3_window, "artist_tv"));
+				GINT_TO_POINTER(META_ARTIST_TXT));
 		meta_data_get_path_callback(song, META_ALBUM_TXT, (MetaDataCallback)id3_txt_fetched, 
-				glade_xml_get_widget(xml_id3_window, "album_tv"));
-		
+				GINT_TO_POINTER(META_ALBUM_TXT));
+		meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)id3_txt_fetched, 
+				GINT_TO_POINTER(META_SONG_TXT));
 	}
 }
 
@@ -519,6 +561,21 @@ void id3_album_image_file_selector(GtkFileChooser *chooser)
 		g_free(path);
 	}
 }
+/**
+ * Reget lyric
+ */
+void id3_reget_lyric_txt()
+{
+	if(songs)
+	{
+		if(songs->data)
+		{
+			meta_data_get_path_callback(songs->data, META_SONG_TXT|META_QUERY_NO_CACHE, (MetaDataCallback)id3_txt_fetched, 
+					GINT_TO_POINTER(META_SONG_TXT|META_QUERY_NO_CACHE));
+		}
+	}
+}
+
 void id3_reget_album_art()
 {
 	if(songs)
