@@ -590,11 +590,23 @@ int pl3_close()
 		cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
 					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
 	}
+
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "hide-on-close", FALSE))
+	{
+		if(tray_availible())
+		{
+			pl3_toggle_hidden();
+			return TRUE;
+		}
+		gtk_window_iconify(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+		return TRUE;
+
+	}
 	/**
 	 * Quit the program
 	 */
 	main_quit();
-	return 1;
+	return TRUE;
 }
 /**
  * Hide the playlist.
