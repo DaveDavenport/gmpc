@@ -75,7 +75,7 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
 int pl3_progress_seek_start(void);
 int pl3_progress_seek_stop(void);
 void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
-int pl3_close(void);
+gboolean pl3_close(void);
 
 static int old_type = -1;
 
@@ -575,7 +575,7 @@ void pl3_push_rsb_message(gchar *string)
 /**
  * Close the playlist and save position/size 
  */
-int pl3_close()
+gboolean pl3_close()
 {
 	/* only save when window is PLAYLIST_SMALL or NO ZOOM */
 	if(pl3_xml != NULL && pl3_zoom <= PLAYLIST_SMALL)
