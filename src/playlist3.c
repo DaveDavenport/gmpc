@@ -687,7 +687,7 @@ void pl3_toggle_hidden()
 	{
 		create_playlist3();
 	}
-	else
+	else if(tray_availible())
 	{
 		pl3_hide();
 	}

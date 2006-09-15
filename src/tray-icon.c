@@ -49,6 +49,7 @@ void popup_enable_toggled(GtkToggleButton *);
 void popup_timeout_changed(void);
 void popup_position_changed(GtkComboBox *);
 
+static int tray_embedded = FALSE;
 /* plugin structure */
 
 gmpcPrefPlugin tray_gpp = {
@@ -72,7 +73,10 @@ gmpcPlugin tray_icon_plug = {
 	NULL
 };
 
-
+int tray_availible()
+{
+	return tray_embedded;
+}
 static void tray_init()
 {
 	/* create a tray icon */
@@ -352,6 +356,8 @@ static void tray_icon_destroyed()
 	{
 		create_playlist3();
 	}
+	printf("destroyed\n");
+	tray_embedded = FALSE;
 }
 
 /* destroy the tray icon */
@@ -502,7 +508,11 @@ static int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 
 	return FALSE;
 }
-
+static void tray_icon_embedded()
+{
+	tray_embedded = TRUE;
+	printf("embedded\n");
+}
 static int create_tray_icon()
 {
 #ifdef ENABLE_TRAYICON		
@@ -526,6 +536,7 @@ static int create_tray_icon()
 	g_signal_connect(G_OBJECT(event), "button-release-event", G_CALLBACK(tray_mouse_menu), NULL);
 	g_signal_connect(G_OBJECT(tray_icon), "destroy", G_CALLBACK(tray_icon_destroyed), NULL);
 
+	g_signal_connect(G_OBJECT(tray_icon), "embedded", G_CALLBACK(tray_icon_embedded), NULL);
 	gtk_widget_add_events (GTK_WIDGET (tray_icon),
 			GDK_BUTTON_PRESS_MASK);
 
@@ -650,6 +661,8 @@ static void tray_icon_pref_destroy(GtkWidget *container)
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(tray_pref_xml);
 		tray_pref_xml = NULL;
+		
+
 	}
 }
 static void tray_icon_pref_construct(GtkWidget *container)
