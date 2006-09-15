@@ -130,7 +130,7 @@ static gboolean tray_motion_cb (GtkWidget *event, GdkEventCrossing *event1, gpoi
 	tooltiptext = tray_get_tooltip_text();
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_container_set_border_width(GTK_CONTAINER(tip), 1);
-	gtk_widget_set_size_request(tip, 300,90);
+	gtk_widget_set_size_request(tip, 300,-1);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 	{
 		GtkWidget *alimg, *hbox, *vbox,*event;
