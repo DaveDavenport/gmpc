@@ -29,7 +29,7 @@ static void mmkeys_class_init (MmKeysClass *klass);
 static void mmkeys_init       (MmKeys      *object);
 static void mmkeys_finalize   (GObject     *object);
 
-static void grab_mmkey (int key_code, GdkWindow *root);
+static void grab_mmkey (int key_code, unsigned int mask, GdkWindow *root);
 
 static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent,
 		GdkEvent *event,
@@ -67,6 +67,7 @@ char *keynames[LAST_SIGNAL] = {
 static GObjectClass *parent_class;
 static guint signals[LAST_SIGNAL];
 static int keycodes[LAST_SIGNAL];
+static unsigned int masks[LAST_SIGNAL];
 
 static GType type = 0;
 
@@ -210,25 +211,30 @@ static void mmkeys_init (MmKeys *object)
 	/** Play Pause */
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay);
 	keycodes[MM_PLAYPAUSE] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PLAYPAUSE], keycode);
+	masks[MM_PLAYPAUSE] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_PLAYPAUSE], 0);
 	/**
 	 * Previous
 	 */
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPrev);
 	keycodes[MM_PREV] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PREV], keycode);
+	masks[MM_PREV] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_PREV], 0);
 	/**
 	 * Next 
 	 */
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioNext);
 	keycodes[MM_NEXT] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_NEXT], keycode);
+	masks[MM_NEXT] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_NEXT], 0);
 	/**
 	 * Stop
 	 */
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop);
 	keycodes[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_STOP], keycode);
+	masks[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_STOP], 0);
 
 	for(i=0;i<LAST_SIGNAL;i++)
 	{
 		keycodes[i] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[i], 0);
+		masks[i] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[i], 0);
 	}
 
 
@@ -241,7 +247,7 @@ static void mmkeys_init (MmKeys *object)
 			for (j = 0; j < LAST_SIGNAL;j++) {
 				if (keycodes[j] > 0)
 				{
-					grab_mmkey (keycodes[j], root);
+					grab_mmkey (keycodes[j], masks[j], root);
 				}
 			}
 
@@ -256,40 +262,40 @@ MmKeys * mmkeys_new (void)
 }
 
 
-static void grab_mmkey (int key_code, GdkWindow *root)
+static void grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
 {
 	gdk_error_trap_push ();
 
 	XGrabKey (GDK_DISPLAY (), key_code,
-			0,
+			mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask,
+			Mod2Mask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod5Mask,
+			Mod5Mask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			LockMask,
+			LockMask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | Mod5Mask,
+			Mod2Mask | Mod5Mask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | LockMask,
+			Mod2Mask | LockMask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod5Mask | LockMask,
+			Mod5Mask | LockMask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 	XGrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | Mod5Mask | LockMask,
+			Mod2Mask | Mod5Mask | LockMask | mask,
 			GDK_WINDOW_XID (root), True,
 			GrabModeAsync, GrabModeAsync);
 
@@ -304,6 +310,7 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 	int i;
 	XEvent *xev;
 	XKeyEvent *key;
+	unsigned int keystate;
 
 	xev = (XEvent *) xevent;
 	if (xev->type != KeyPress) {
@@ -311,9 +318,10 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 	}
 
 	key = (XKeyEvent *) xevent;
+	keystate = key->state & ~(Mod2Mask | Mod5Mask | LockMask);
 	for(i=0; i < LAST_SIGNAL;i++)
 	{
-		if(keycodes[i] == key->keycode)
+		if(keycodes[i] == key->keycode && masks[i] == keystate )
 		{
 			g_signal_emit (data, signals[i], 0, 0);
 			debug_printf(DEBUG_INFO, "%s pressed", keynames[i]);
@@ -343,33 +351,33 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 }
 
 
-static void ungrab_mmkey (int key_code, GdkWindow *root)
+static void ungrab_mmkey (int key_code, int mask, GdkWindow *root)
 {
 	gdk_error_trap_push ();
 
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			0,
+			mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask,
+			Mod2Mask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod5Mask,
+			Mod5Mask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			LockMask,
+			LockMask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | Mod5Mask,
+			Mod2Mask | Mod5Mask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | LockMask,
+			Mod2Mask | LockMask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod5Mask | LockMask,
+			Mod5Mask | LockMask | mask,
 			GDK_WINDOW_XID (root));
 	XUngrabKey (GDK_DISPLAY (), key_code,
-			Mod2Mask | Mod5Mask | LockMask,
+			Mod2Mask | Mod5Mask | LockMask | mask,
 			GDK_WINDOW_XID (root));
 
 	gdk_flush ();
@@ -380,7 +388,7 @@ static void ungrab_mmkey (int key_code, GdkWindow *root)
 
 
 
-void grab_key(int key, int keycode)
+void grab_key(int key, int keycode, unsigned int mask)
 {
 	GdkDisplay *display;
 	GdkScreen *screen;
@@ -395,23 +403,27 @@ void grab_key(int key, int keycode)
 			screen = gdk_display_get_screen (display, i);
 			if (screen != NULL) {
 				root = gdk_screen_get_root_window (screen);
-				ungrab_mmkey (keycodes[key], root);
+				ungrab_mmkey (keycodes[key], masks[key], root);
 			}
 		}
 	}
 	keycodes[key] = 0;
+	masks[key] = 0;
 	if(keycode >0)
 	{
 		keycodes[key] = keycode;
+		masks[key] = mask;
+
 		for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 			screen = gdk_display_get_screen (display, i);
 			if (screen != NULL) {
 				root = gdk_screen_get_root_window (screen);
-				grab_mmkey (keycodes[key], root);
+				grab_mmkey (keycodes[key], masks[key], root);
 			}
 		}
 	}
 	cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
+	cfg_set_single_value_as_int(config,"Keymasks", keynames[key], masks[key]); 
 }
 
 /*****
@@ -454,11 +466,13 @@ static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_s
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			2, 0,
 			3,0,
+			4,0,
 			-1);
 	gtk_tree_path_free (path);
 	gtk_tree_model_get(model, &iter, 1, &key, -1);
-	grab_key(key, 0);
+	grab_key(key, 0, 0);
 	cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
+	cfg_set_single_value_as_int(config,"Keymasks", keynames[key], masks[key]); 
 }
 
 	static void
@@ -476,7 +490,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 
 	gtk_tree_model_get_iter (model, &iter, path);
 
-	g_print ("%u %d %u\n", keyval, mask, hardware_keycode);
+	debug_printf(DEBUG_INFO, "EggCellRenderKeys grabbed %d %u (%s)", mask, hardware_keycode, egg_virtual_accelerator_name(keyval,hardware_keycode,mask) );
 	if(hardware_keycode == 22)
 	{
 		hardware_keycode = 0;
@@ -484,11 +498,12 @@ accel_edited_callback (GtkCellRendererText *cell,
 
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			2, hardware_keycode,
-			3, keyval,
+			3, mask,
+			4, keyval,
 			-1);
 	gtk_tree_path_free (path);
 	gtk_tree_model_get(model, &iter, 1, &key, -1);
-	grab_key(key, hardware_keycode);
+	grab_key(key, hardware_keycode, mask);
 
 }
 
@@ -520,7 +535,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 		int i=0;
 		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
 		GtkTreeViewColumn *column = NULL;
-		GtkListStore *store = gtk_list_store_new(4, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT,G_TYPE_UINT);
+		GtkListStore *store = gtk_list_store_new(5, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT,G_TYPE_UINT,G_TYPE_UINT);
 		GtkCellRenderer *rend =gtk_cell_renderer_text_new();
 
 		gtk_tree_view_set_model(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
@@ -552,7 +567,8 @@ void mmkeys_pref_construct(GtkWidget *container)
 		gtk_tree_view_column_set_title(column, _("Shortcut"));
 		gtk_tree_view_column_set_attributes (column, rend,
 				"keycode", 2,
-				"accel_key",3,
+				"accel_mask", 3,
+				"accel_key",4,
 				NULL);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
@@ -561,7 +577,13 @@ void mmkeys_pref_construct(GtkWidget *container)
 		{
 			GtkTreeIter iter;
 			gtk_list_store_append(store, &iter);
-			gtk_list_store_set(store, &iter, 0,keynames[i],1,i, 2, keycodes[i],-1);
+			gtk_list_store_set(store, &iter,
+				0, keynames[i],
+				1, i,
+				2, keycodes[i],
+				3, masks[i],
+				4, XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0), 
+				-1);
 		}
 	}
 
