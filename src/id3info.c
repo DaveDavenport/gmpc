@@ -43,6 +43,8 @@ void id3_reget_album_art(void);
 void id3_info_clear_artist_image(void);
 void id3_artist_image_file_selector(GtkFileChooser *);
 void id3_reget_artist_art(void);
+void id3_save_song_lyric(void);
+void id3_reget_lyric_txt(void);
 
 void id3_save_album_txt()
 {
