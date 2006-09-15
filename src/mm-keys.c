@@ -45,6 +45,8 @@ enum {
 	MM_REPEAT,
 	MM_RANDOM,
 	MM_RAISE,
+	MM_HIDE,
+	MM_TOGGLE_HIDDEN,
 	MM_VOLUME_UP,
 	MM_VOLUME_DOWN,
 	LAST_SIGNAL
@@ -60,6 +62,8 @@ char *keynames[LAST_SIGNAL] = {
 	"Repeat", /** MM_REPEAT */
 	"Random", /** MM_RANDOM */
 	"Raise window", /** MM_RAISE */
+	"Hide window", /** MM_HIDE */
+	"Toggle window", /** MM_TOGGLE_HIDDEN */
 	"Volume Up", /** MM_VOLUME_UP */
 	"Volume Down" /** MM_VOLUME_DOWN */
 };	
@@ -167,6 +171,22 @@ static void mmkeys_class_init (MmKeysClass *klass)
 				G_TYPE_NONE, 1, G_TYPE_INT); 	
 	signals[MM_RAISE]= 
 		g_signal_new ("mm_raise",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+	signals[MM_HIDE]= 
+		g_signal_new ("mm_hide",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+	signals[MM_TOGGLE_HIDDEN]= 
+		g_signal_new ("mm_toggle_hidden",
 				G_TYPE_FROM_CLASS (klass),
 				G_SIGNAL_RUN_LAST,
 				0,

@@ -681,6 +681,17 @@ void pl3_show_window()
 		create_playlist3();
 	}
 }
+void pl3_toggle_hidden()
+{
+	if(pl3_hidden)
+	{
+		create_playlist3();
+	}
+	else
+	{
+		pl3_hide();
+	}
+}
 
 /**
  * Sync the lowest level of the cat_tree with the crumb system

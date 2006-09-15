@@ -9,6 +9,7 @@ extern GtkListStore *pl3_store;
 
 void pl3_update_go_menu(void);
 void pl3_show_window(void);
+void pl3_toggle_hidden(void);
 void create_playlist3(void);
 void pl3_push_statusbar_message(char *mesg);
 void pl3_push_rsb_message(gchar *string);

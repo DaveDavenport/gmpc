@@ -381,13 +381,7 @@ static int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 	{
 
 		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
-		if(pl3_hidden)
-		{
-			create_playlist3();
-		}
-		else{
-			pl3_hide();
-		}
+		pl3_toggle_hidden();
 		gtk_widget_queue_draw(GTK_WIDGET(tray_icon));
 	}
 	else if (event->button == 2 || (event->button == 1 && event->state == (GDK_CONTROL_MASK|GDK_BUTTON1_MASK)))
