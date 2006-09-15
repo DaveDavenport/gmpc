@@ -45,6 +45,8 @@ void id3_artist_image_file_selector(GtkFileChooser *);
 void id3_reget_artist_art(void);
 void id3_save_song_lyric(void);
 void id3_reget_lyric_txt(void);
+void id3_reget_artist_txt(void);
+void id3_reget_album_txt(void);
 
 void id3_save_album_txt()
 {
@@ -574,6 +576,28 @@ void id3_reget_lyric_txt()
 		{
 			meta_data_get_path_callback(songs->data, META_SONG_TXT|META_QUERY_NO_CACHE, (MetaDataCallback)id3_txt_fetched, 
 					GINT_TO_POINTER(META_SONG_TXT|META_QUERY_NO_CACHE));
+		}
+	}
+}
+void id3_reget_artist_txt()
+{
+	if(songs)
+	{
+		if(songs->data)
+		{
+			meta_data_get_path_callback(songs->data, META_ARTIST_TXT|META_QUERY_NO_CACHE, (MetaDataCallback)id3_txt_fetched, 
+					GINT_TO_POINTER(META_ARTIST_TXT|META_QUERY_NO_CACHE));
+		}
+	}
+}
+void id3_reget_album_txt()
+{
+	if(songs)
+	{
+		if(songs->data)
+		{
+			meta_data_get_path_callback(songs->data, META_ALBUM_TXT|META_QUERY_NO_CACHE, (MetaDataCallback)id3_txt_fetched, 
+					GINT_TO_POINTER(META_ALBUM_TXT|META_QUERY_NO_CACHE));
 		}
 	}
 }
