@@ -614,7 +614,8 @@ gboolean pl3_close()
  */
 int pl3_hide()
 {
-	if (cfg_get_single_value_as_int_with_default(config, "tray-icon", "enable",1) == 0) return 1;
+	if(!tray_availible())
+		return 1;
 	if(pl3_xml != NULL && !pl3_hidden )
 	{
 		/** Save position 
@@ -699,7 +700,7 @@ void pl3_toggle_hidden()
 	{
 		create_playlist3();
 	}
-	else if(tray_availible())
+	else
 	{
 		pl3_hide();
 	}
