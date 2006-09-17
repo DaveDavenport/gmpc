@@ -31,6 +31,7 @@ gmpc_SOURCES=\
 	bacon-message-connection.c\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
+	gmpc_easy_download.c\
 	TreeSearchWidget.c
 
 BUILT_SOURCES= revisiont.h\
@@ -86,6 +87,7 @@ AM_CFLAGS = @CFLAGS@\
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
+		gmpc_easy_download.h\
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 

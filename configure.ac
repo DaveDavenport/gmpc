@@ -136,6 +136,22 @@ AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
 GOB2_CHECK(2.0.0)
 
+
+# libcurl settings
+AC_PATH_PROG(CURL_CONFIG,curl-config)
+AC_ARG_WITH(curl,
+            AC_HELP_STRING([--with-curl=PATH], [where libcurl is installed]),
+            [CURL_CONFIG="${with_curl}/bin/curl-config"])
+if test -f "${CURL_CONFIG}"; then
+    LDFLAGS="`${CURL_CONFIG} --libs` $LDFLAGS"
+    CPPFLAGS="`${CURL_CONFIG} --cflags` $CPPFLAGS"
+else
+    AC_MSG_WARN([curl-config not found, guessing at libcurl build settings])
+fi
+AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
+AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
+
+
 AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in data/gmpc.pc)
 echo ""
 echo ""
