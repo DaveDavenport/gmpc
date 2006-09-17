@@ -22,8 +22,9 @@ static void info2_fill_view(void);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_pref_vbox = NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
-GtkWidget *title_event=NULL;
+static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
+static GtkWidget *entry_completion = NULL;
 
 gmpcPrefPlugin info2_gpp = {
 	info2_construct,
@@ -815,6 +816,8 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 	regex_t regt;
 	const char *text = NULL;
 	GList *list = NULL;
+	GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
+	GtkTreeIter iter;
 	/**
 	 * Remove all the remaining widgets in the view
 	 */
@@ -833,6 +836,10 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		int num_cols = 2;
 		int tile_size = 310;
 		MpdData *data = NULL;
+		/**
+		 * 		update completion
+		 */
+		gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
 		data = mpd_database_get_artists(connection);
 		num_cols = (int)(resizer_vbox->allocation.width)/(tile_size);
 		for(;data;data = mpd_data_get_next(data))
@@ -989,6 +996,15 @@ static void info2_fill_view()
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
 	/* The Entry */
 	entry = gtk_entry_new();
+	if(!entry_completion)
+	{
+		GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
+		entry_completion = gtk_entry_completion_new();
+		gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(entry_completion), GTK_TREE_MODEL(store));
+		gtk_entry_completion_set_text_column(GTK_ENTRY_COMPLETION(entry_completion), 0);
+		gtk_entry_completion_set_inline_completion(GTK_ENTRY_COMPLETION(entry_completion), TRUE);
+	}
+	gtk_entry_set_completion(GTK_ENTRY(entry), GTK_ENTRY_COMPLETION(entry_completion));
 	gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
 	/* button */
 	/*	button = gtk_button_new_from_stock(GTK_STOCK_FIND);
