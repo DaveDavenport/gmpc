@@ -37,7 +37,8 @@
 
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
-	{ "_NETSCAPE_URL", 0, 1}
+	{ "_NETSCAPE_URL", 0, 1},
+	{ "text/uri-list", 0, 2}
 };
 
 
@@ -971,8 +972,8 @@ void create_playlist3 ()
 	 */
 	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "pl3_win"),
 		GTK_DEST_DEFAULT_ALL,
-		target_table, 2,
-		GDK_ACTION_COPY);
+		target_table, 3,
+		GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
