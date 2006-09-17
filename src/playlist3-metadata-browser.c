@@ -700,7 +700,6 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	cairo_fill(cr);
 
 
-
 	cairo_set_line_width (cr, 1.5);
 	x1=x0+rect_width;
 	y1=y0+rect_height;
@@ -718,7 +717,7 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	color = &(widget->style->light[GTK_STATE_SELECTED]);
 	cairo_close_path (cr);
 	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
-	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0 , color->green/65535.0, color->blue/65535.0, 1);
+	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/(3*65535.0)+0.6 , color->green/(3*65535.0)+0.6, color->blue/(3*65535.0)+0.6, 1);
 	cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
 	cairo_set_source (cr, pat);
 
@@ -844,7 +843,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 
 				image = gmpc_metaimage_new(META_ARTIST_ART);
 				gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 64);
-				gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
+//				gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 				gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 				gtk_container_set_border_width(GTK_CONTAINER(table), 4);
@@ -861,7 +860,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,1,5,5);
 				gtk_container_add(GTK_CONTAINER(ali), event);
 				list = g_list_append(list, ali);				
-				gtk_widget_set_size_request(event, tile_size,80);
+				gtk_widget_set_size_request(event, tile_size,75);
 
 				/**
 				 * Play Button 
@@ -1164,7 +1163,7 @@ static void info2_fill_artist_view(char *artist)
 			gtk_table_set_col_spacings(GTK_TABLE(table),6);
 			image = gmpc_metaimage_new(META_ALBUM_ART);
 			gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 120);
-			gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
+//			gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 			gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 			gtk_container_set_border_width(GTK_CONTAINER(table), 8);
