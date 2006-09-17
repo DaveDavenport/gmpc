@@ -833,13 +833,23 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 	text = gtk_entry_get_text(entry);
 	if(strlen(text) && !regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB))
 	{
+		int skip = 0;
 		int num_cols = 2;
 		int tile_size = 310;
 		MpdData *data = NULL;
 		/**
 		 * 		update completion
 		 */
-		gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
+		if(gtk_tree_model_get_iter_first(model, &iter))
+		{	
+			do{
+				char *oldname = NULL;
+				gtk_tree_model_get(model, &iter, 0,&oldname,-1);
+				if(!strcmp(text, oldname))  skip=TRUE;
+			}while(gtk_tree_model_iter_next(model, &iter));
+		}
+		if(!skip)
+			gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
 		data = mpd_database_get_artists(connection);
 		num_cols = (int)(resizer_vbox->allocation.width)/(tile_size);
 		for(;data;data = mpd_data_get_next(data))
@@ -996,15 +1006,7 @@ static void info2_fill_view()
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
 	/* The Entry */
 	entry = gtk_entry_new();
-	if(!entry_completion)
-	{
-		GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
-		entry_completion = gtk_entry_completion_new();
-		gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(entry_completion), GTK_TREE_MODEL(store));
-		gtk_entry_completion_set_text_column(GTK_ENTRY_COMPLETION(entry_completion), 0);
-		gtk_entry_completion_set_inline_completion(GTK_ENTRY_COMPLETION(entry_completion), TRUE);
-	}
-	gtk_entry_set_completion(GTK_ENTRY(entry), GTK_ENTRY_COMPLETION(entry_completion));
+
 	gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
 	/* button */
 	/*	button = gtk_button_new_from_stock(GTK_STOCK_FIND);
@@ -1016,6 +1018,33 @@ static void info2_fill_view()
 	gtk_table_set_col_spacings(GTK_TABLE(artist_table), 0);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), artist_table, FALSE, TRUE, 0);	
 	g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(info2_fill_view_entry_activate), artist_table);
+	/**
+	 * Entry completion
+	 */
+
+	if(!entry_completion)
+	{
+		GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
+		entry_completion = gtk_entry_completion_new();
+		gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(entry_completion), GTK_TREE_MODEL(store));
+		gtk_entry_completion_set_text_column(GTK_ENTRY_COMPLETION(entry_completion), 0);
+		gtk_entry_completion_set_inline_completion(GTK_ENTRY_COMPLETION(entry_completion), TRUE);
+	}
+	else{
+		GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
+		GtkTreeIter iter;
+		if(gtk_tree_model_get_iter_first(model, &iter))
+		{
+			gchar *text= NULL;
+			gtk_tree_model_get(model, &iter,0, &text, -1);
+			if(text){
+				gtk_entry_set_text(GTK_ENTRY(entry), text);
+				gtk_widget_activate(GTK_WIDGET(entry));
+			}
+		}
+	}
+	gtk_entry_set_completion(GTK_ENTRY(entry), GTK_ENTRY_COMPLETION(entry_completion));
+
 	gtk_widget_show_all(resizer_vbox);
 }
 
