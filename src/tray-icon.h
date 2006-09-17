@@ -3,6 +3,6 @@
 
 void tray_icon_connection_changed(MpdObj *mi, int connect);
 
-int tray_availible();
+int tray_availible(void);
 
 #endif
