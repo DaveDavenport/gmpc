@@ -32,6 +32,7 @@ gmpc_SOURCES=\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
 	gmpc_easy_download.c\
+	url_fetcher.c\
 	TreeSearchWidget.c
 
 BUILT_SOURCES= revisiont.h\

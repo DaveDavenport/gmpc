@@ -65,7 +65,7 @@ extern gmpcPlugin cover_art_plug;
 
 extern gmpcPlugin tray_icon_plug;
 extern gmpcPlugin metab_plugin;
-
+extern gmpcPlugin url_plugin; 
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;

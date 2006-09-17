@@ -70,7 +70,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* cleanup */
 	curl_easy_cleanup(curl);
 	curl_multi_cleanup(curlm);
-
+	printf("downloaded: %i\n", dld->size);
 	if(success) return 1;
 	if(dld->data) g_free(dld->data);
 	return 0;

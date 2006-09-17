@@ -473,6 +473,7 @@ int main (int argc, char **argv)
 #ifdef ENABLE_MMKEYS
 	plugin_add(&mmkeys_plug,0);
 #endif
+	plugin_add(&url_plugin,0);
 	/* the tray icon */
 	plugin_add(&tray_icon_plug,0);
 	/* Meta data browser */
