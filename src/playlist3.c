@@ -768,7 +768,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		
 	
 	gtk_drag_finish(context, TRUE, FALSE, time);
-	url_start_real(url[0]);
+	url_start_real(g_strstrip(url[0]));
 	g_strfreev(url);
 }
 
