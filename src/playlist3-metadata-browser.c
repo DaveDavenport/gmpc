@@ -23,6 +23,7 @@ static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_pref_vbox = NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 GtkWidget *title_event=NULL;
+static GtkWidget *scrolled_window = NULL;
 
 gmpcPrefPlugin info2_gpp = {
 	info2_construct,
@@ -141,10 +142,14 @@ static void info2_widget_clear_children(GtkWidget *wid)
 
 static void info2_prepare_view()
 {
+	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
 	info2_widget_clear_children(resizer_vbox);
+	gtk_adjustment_set_value(h, 0.0);
+	
 	/**
 	 *  new id
 	 */
+	
 	current_id = g_random_int();
 }
 static void as_album_clicked(GtkButton *button, gpointer data)
@@ -1583,7 +1588,7 @@ static void info2_fill_album_view(char *artist,char *album)
 
 static void info2_init()
 {
-	GtkWidget *sw = NULL,*vp = NULL;;
+	GtkWidget *vp = NULL;;
 	GtkWidget *ali,*event;
 	/**
 	 * main widget used to pack the browser
@@ -1618,29 +1623,29 @@ static void info2_init()
 	/**
 	 * The scrolled window to pack the resizer
 	 */
-	sw = gtk_scrolled_window_new (NULL, NULL);
-	vp = gtk_viewport_new(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(sw)),
-			gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(sw)));
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	vp = gtk_viewport_new(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(scrolled_window)),
+			gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window)));
 
 	gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 			GTK_POLICY_AUTOMATIC,
 			GTK_POLICY_ALWAYS);
 
-	gtk_box_pack_start_defaults(GTK_BOX(info2_vbox), sw);
+	gtk_box_pack_start_defaults(GTK_BOX(info2_vbox), scrolled_window);
 	gtk_container_add(GTK_CONTAINER(vp), resizer_vbox);
-	gtk_container_add(GTK_CONTAINER(sw), vp);
+	gtk_container_add(GTK_CONTAINER(scrolled_window), vp);
 	/**
 	 * setup the scrolled window
 	 */ 
 	GtkAdjustment *adjustment =
 		gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW
-				(sw));
+				(scrolled_window));
 	g_object_set (adjustment, "step-increment", (double) 20, NULL);
 
 	gtk_container_set_focus_vadjustment (GTK_CONTAINER (resizer_vbox),
 			gtk_scrolled_window_get_vadjustment
-			(GTK_SCROLLED_WINDOW (sw)));
+			(GTK_SCROLLED_WINDOW (scrolled_window)));
 	event = gtk_event_box_new();
 	ali = gtk_alignment_new(0,0.5,1,1);
 	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,0,20);	
