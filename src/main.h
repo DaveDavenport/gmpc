@@ -114,4 +114,8 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
  */
 
 void meta_data_add_plugin(gmpcPlugin *plug);
+/**
+ * TODO move this 
+ */
+void url_start_real(const gchar *url);
 #endif

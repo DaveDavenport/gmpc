@@ -11,7 +11,7 @@ int url_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventBut
 
 static int url_get_enabled(void);
 static void url_set_enabled(int enabled);
-static void url_start_real(const gchar *url);
+
 /** in gmpc */
 void pl3_option_menu_activate(); 
 void pl3_push_statusbar_message(char *mesg);	
@@ -158,7 +158,7 @@ static void url_start()
 	url_start_real(NULL);
 }
 
-static void url_start_real(const gchar *url)
+void url_start_real(const gchar *url)
 {
 	/**
 	 * Setup the Dialog
@@ -198,7 +198,8 @@ static void url_start_real(const gchar *url)
 	entry = gtk_entry_new();
 	gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, TRUE, 0);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(url_entry_changed), add_button);
-
+	if(url)
+		gtk_entry_set_text(GTK_ENTRY(entry), url);
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), progress, FALSE, TRUE, 0);
 

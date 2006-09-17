@@ -62,7 +62,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 		if(dld->callback)
 			dld->callback(dld->callback_data);
 		while ((msg = curl_multi_info_read(curlm, &msgs_left))) {	
-			if (msg->msg == CURLMSG_DONE && !msg->data.result) {
+			if (msg->msg == CURLMSG_DONE && (!msg->data.result|| msg->data.result == 23)) {
 				success = TRUE;
 			}
 		}

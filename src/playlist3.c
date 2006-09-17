@@ -35,7 +35,10 @@
 #include "revision.h"
 #include "id3info.h"
 
-
+static GtkTargetEntry target_table[] = {
+        { "x-url/http", 0, 0 },
+	{ "_NETSCAPE_URL", 0, 1}
+};
 
 
 enum {
@@ -751,6 +754,22 @@ static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTree
 	}
 
 }
+static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
+                            GdkDragContext     *context,
+                            gint                x,
+                            gint                y,
+                            GtkSelectionData   *data,
+                            guint               info,
+                            guint               time)
+{
+	gchar *url = g_strdup(data->data);
+	printf("%i %s\n",info,data->data);
+		
+	
+	gtk_drag_finish(context, TRUE, FALSE, time);
+	url_start_real(url);
+	g_free(url);
+}
 
 void create_playlist3 ()
 {
@@ -946,6 +965,19 @@ void create_playlist3 ()
 	
 	pl3_update_go_menu();	
 	pl3_update_profiles_menu();
+
+	/**
+	 * Set as drag destination
+	 */
+	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "pl3_win"),
+		GTK_DEST_DEFAULT_ALL,
+		target_table, 2,
+		GDK_ACTION_COPY);
+	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
+			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
+			NULL);
+
+
 }
 
 /**
