@@ -762,13 +762,13 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
                             guint               info,
                             guint               time)
 {
-	gchar *url = g_strdup(data->data);
+	gchar **url = g_strsplit(data->data,"\n", -1);
 	printf("%i %s\n",info,data->data);
 		
 	
 	gtk_drag_finish(context, TRUE, FALSE, time);
-	url_start_real(url);
-	g_free(url);
+	url_start_real(url[0]);
+	g_strfreev(url);
 }
 
 void create_playlist3 ()
