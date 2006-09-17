@@ -886,10 +886,17 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 			break;
 		case PLAYLIST_LIST_COL_SONG_LENGTH_FORMAT:
 			{
-				gchar *data = g_strdup_printf("%02i:%02i",
+				if(song->time >= 0)
+				{
+					gchar *data = g_strdup_printf("%02i:%02i",
 						song->time/60, song->time%60);
-				g_value_set_string(value, data);
-				g_free(data);
+					g_value_set_string(value, data);
+					g_free(data);
+				}
+				else
+				{
+					g_value_set_string(value, "n/a");
+				}
 			}
 			break;                             			
 		case PLAYLIST_LIST_COL_SONG_DISC:
