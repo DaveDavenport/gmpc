@@ -14,9 +14,9 @@ static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_down
 	{
 		dld->size = 0;
 	}
-	dld->data = g_realloc(dld->data,(gulong)(size*nmemb+dld->size));
+	dld->data = g_realloc(dld->data,(gulong)(size*nmemb+dld->size)+1);
 
-	memset(&(dld->data)[dld->size], '\0', (size*nmemb));
+	memset(&(dld->data)[dld->size], '\0', (size*nmemb)+1);
 	memcpy(&(dld->data)[dld->size], buffer, size*nmemb);
 
 	dld->size += size*nmemb;
