@@ -152,6 +152,17 @@ static void url_progress_callback(GtkProgressBar *pb)
 	while(gtk_events_pending())
 		gtk_main_iteration();
 }
+static int url_check_binary(char *data, int size)
+{
+	int i=0;
+	int binary = FALSE;
+	for(i=0;i < size;i++) {
+		if((unsigned int)data[i] > 127) binary = TRUE;
+	}
+	if(binary)
+		printf("Binary data found\n");
+	return binary;
+}
 
 static void url_start()
 {
@@ -212,13 +223,19 @@ void url_start_real(const gchar *url)
 
 				const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 				/*  In any case, don't download more then 2 kbyte */
-				gmpc_easy_download_struct dld = {NULL, 0, 2048,(ProgressCallback)url_progress_callback, progress};
+				gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
 				gtk_widget_show(progress);
 				gtk_widget_set_sensitive(dialog, FALSE);
 				if(gmpc_easy_download(text, &dld))
 				{
+					if(url_check_binary(dld.data, dld.size))
+					{
+						printf("Adding url: %s\n", text);
+						mpd_playlist_add(connection, (char *)text);
+						pl3_push_statusbar_message(_("Added 1 stream"));
+					}	
 					/** pls file: */
-					if(!strncasecmp(dld.data, "[playlist]",10))
+					else if(!strncasecmp(dld.data, "[playlist]",10))
 					{
 						printf("Detected a PLS\n");
 						url_parse_pls_file(dld.data, dld.size);
