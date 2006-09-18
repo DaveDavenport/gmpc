@@ -224,6 +224,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			printf("Nasty sync error on initial fill\n");
 		}
 		if(tree)gtk_tree_view_set_model(tree, GTK_TREE_MODEL(cl));
+
 	}
 	/**
 	 * Non Initial Fill
@@ -351,6 +352,10 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		}
 	}
 	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+	/**
+	 * Signal that something changed
+	 */
+	g_signal_emit(cl, playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
 
 	if(cl->num_rows != new_length){
 		printf("Playlist sync error %i %i\n", cl->num_rows, new_length);

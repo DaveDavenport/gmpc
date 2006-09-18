@@ -751,7 +751,8 @@ static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTr
 
 		gchar *string = format_time(playtime);
 		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
-				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1)? "":_("(Estimation)")); 
+				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1 ||
+					playlist_list_get_loaded(PLAYLIST_LIST(playlist)) <= 0.0)? "":_("(Estimation)")); 
 		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
 		g_free(string);
 		g_free(mesg);
