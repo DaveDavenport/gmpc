@@ -212,15 +212,45 @@ void id3_save_song_lyric()
 	switch(gtk_dialog_run(GTK_DIALOG(fs_dialog)))
 	{
 		case GTK_RESPONSE_OK:
+			filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
+			/**
+			 * Implement saving and setting db 
+			 */
+			if(songs && songs->data)
+				{
+					char *content =NULL; 
+					GtkTextIter end, start;
+					GtkTextBuffer *buffer = NULL;
+					GtkTextView *tv = NULL;
+					mpd_Song *sg = songs->data;
+					/** Get the text view */
+					tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "lyric_tv");
+					buffer = gtk_text_view_get_buffer(tv);
+					/* get start and end */
+					gtk_text_buffer_get_start_iter(buffer, &start);
+					gtk_text_buffer_get_end_iter(buffer, &end);
+					/** get content */
+					content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
+					if(g_file_set_contents(filename, content, -1,NULL))
+					{
+							if(sg->artist && sg->title)
+                    		{
+								char *temp = g_strdup_printf("lyrics:%s", sg->title);                   			
+								cfg_set_single_value_as_string(cover_index, sg->artist, temp,filename);
+								g_free(temp);
+							}
+							gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_win), filename);
+					}
+
+					/* free content */
+					g_free(content);
+				}
+				g_free(filename);
 		default:
 			break;
 	}
 	gtk_widget_destroy(fs_dialog);
 }
-
-
-
-
 void remove_id3_window ()
 {
 	GtkWidget *window =

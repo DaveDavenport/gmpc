@@ -21,6 +21,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean hide_on_na = {FALSE};
 	public gboolean draw_border = {TRUE};
 	public gboolean draw_shadow = {FALSE};
+	public gboolean squared = {TRUE};
 
 	property INT image_type 
 		(nick = _("Image type"),
@@ -60,12 +61,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		 default_value = FALSE,
 		export,
 		link);
+	property BOOLEAN squared
+		(nick = "Squared",
+			blurb = "Keep the widget squared",
+			default_value = TRUE,
+			export,
+			link);
 
 	private GtkWidget *image = { gtk_image_new()} ;
 	init (self)
 	{
 		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
+		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 		gtk_widget_show_all(GTK_WIDGET(self));
 		self_set_cover_na(self);
 		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
@@ -203,6 +211,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
 		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-no-cover", -1);
+		if(self->squared)
+			gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 	}
 	public 
 	void
@@ -213,6 +223,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
 		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-loading-cover", -1);
+		if(self->squared)
+			gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 	}
 	public 
 	void
@@ -222,15 +234,33 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*18-2,self->size-self->draw_shadow*18-2,TRUE,NULL);
 		if(pb)
 		{
-			//draw_pixbuf_border(pb);
+			int width = 0; 
+			int height = 0;
+
 			if(self->draw_border)
 				screenshot_add_border(&pb);	
 			if(self->draw_shadow)
 				screenshot_add_shadow(&pb);
+			/** 
+			 * Need to get pixbuf height/width before adding to image
+			 * if added to image, somehow the returned values don't match anymore
+			 */
+			width = gdk_pixbuf_get_width(pb);			
+			height = gdk_pixbuf_get_height(pb);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
+			/**
+			 * Set sizing, also set size on non-squared, so the widget resizes propperly
+			 */
+			if(self->squared)
+			{
+				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+			}
+			else
+			{
+				gtk_widget_set_size_request(GTK_WIDGET(self), width+2, height+2);
+			}
 			g_object_unref(pb);
 		}
-		gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 		gtk_widget_show(GTK_WIDGET(self));
 	}
 }

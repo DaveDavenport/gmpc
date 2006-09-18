@@ -86,7 +86,7 @@ static void url_parse_pls_file(const char *data, int size)
 	}
 	if(songs)
 	{
-		char *string = g_strdup_printf("Added %i stream%c", songs, (songs > 1)? 's':' ');
+		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
 		pl3_push_statusbar_message(string);
 		g_free(string);
 	}
@@ -115,7 +115,7 @@ static void url_parse_extm3u_file(const char *data, int size)
 	}
 	if(songs)
 	{
-		char *string = g_strdup_printf("Added %i stream%c", songs, (songs > 1)? 's':' ');
+		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
 		pl3_push_statusbar_message(string);
 		g_free(string);
 	}
@@ -241,7 +241,7 @@ void url_start_real(const gchar *url)
 						printf("Adding url: %s\n", text);
 						mpd_playlist_add(connection, (char *)text);
 
-						pl3_push_statusbar_message("Added 1 stream");
+						pl3_push_statusbar_message(_("Added 1 stream"));
 					}
 					gmpc_easy_download_clean(&dld);
 				}
