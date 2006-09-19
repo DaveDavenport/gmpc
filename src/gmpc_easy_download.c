@@ -4,7 +4,7 @@
 #include <glib.h>
 #include <curl/curl.h>
 #include "gmpc_easy_download.h"
-#define CURL_TIMEOUT 5
+#define CURL_TIMEOUT 5 
 
 static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_download_struct *dld)
 {
@@ -51,7 +51,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* set callback function */
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	/* set timeout */
-	curl_easy_setopt(curl, CURLOPT_TIMEOUT, CURL_TIMEOUT);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
 
 	curlm = curl_multi_init();
 
@@ -62,8 +62,19 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 		if(dld->callback)
 			dld->callback(dld->callback_data);
 		while ((msg = curl_multi_info_read(curlm, &msgs_left))) {	
-			if (msg->msg == CURLMSG_DONE && (!msg->data.result|| msg->data.result == 23)) {
-				success = TRUE;
+			if (msg->msg == CURLMSG_DONE)
+			{
+				if( (!msg->data.result|| msg->data.result == 23)) {
+					success = TRUE;
+				}
+				else
+				{
+					printf("Error: %i %s\n",msg->data.result, curl_multi_strerror(msg->data.result));
+				}
+			}
+			else if (msg->msg == CURLINFO_CONTENT_LENGTH_DOWNLOAD)
+			{
+				printf("total size: %lf\n", msg->data.whatever);
 			}
 		}
 	}while(running);
@@ -73,6 +84,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	printf("downloaded: %i\n", dld->size);
 	if(success) return 1;
 	if(dld->data) g_free(dld->data);
+	dld->data = NULL;
 	return 0;
 }
 
