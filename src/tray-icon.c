@@ -11,9 +11,15 @@
 #include "tray-icon.h"
 
 GladeXML *tray_pref_xml = NULL;
+
 #ifdef ENABLE_TRAYICON
 #include "eggtrayicon.h"
 #endif
+
+
+#define TOOLTIP_WIDTH 300
+
+
 static void tray_leave_cb (GtkWidget *, GdkEventCrossing *, gpointer);
 static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata);
 static void tray_icon_state_change(void);
@@ -140,7 +146,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	event2 = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_leave_cb), NULL);
 	gtk_container_set_border_width(GTK_CONTAINER(tip), 1);
-	gtk_widget_set_size_request(tip, 300,-1);
+	gtk_widget_set_size_request(tip, TOOLTIP_WIDTH,-1);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 	{
 		GtkWidget *alimg, *hbox, *vbox,*event;
@@ -217,9 +223,8 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		 * propperly
 		 * workaround
 		 */
-		width =300;//req.width;
+		width =TOOLTIP_WIDTH;//req.width;
 		height = req.height;		
-		printf("width: %i, height: %i'\n", width, height);
 		/*Get monitor size*/
 		if(tray_icon != NULL)
 		{
