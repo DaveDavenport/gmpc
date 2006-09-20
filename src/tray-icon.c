@@ -211,9 +211,15 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		GdkScreen *screen;
 		int monitor = 0;
 		/** get tooltip size */
-		gtk_widget_size_request(tip, &req);	
-		width = req.width;
+		gtk_widget_size_request(event2, &req);	
+		/**
+		 * Set widget width to 300, somehow this isn't propegated 
+		 * propperly
+		 * workaround
+		 */
+		width =300;//req.width;
 		height = req.height;		
+		printf("width: %i, height: %i'\n", width, height);
 		/*Get monitor size*/
 		if(tray_icon != NULL)
 		{
