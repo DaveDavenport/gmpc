@@ -574,6 +574,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_notify_popup), NULL );
 
 
 #endif

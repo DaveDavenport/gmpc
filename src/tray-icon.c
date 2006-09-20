@@ -280,11 +280,9 @@ static void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 	tip = NULL;
 }
 
-/* this function updates the trayicon on changes */
-static void tray_icon_song_change()
+void tray_notify_popup()
 {
-	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1) &&
-			mpd_player_get_state(connection) != MPD_PLAYER_STOP)
+	if(mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		tray_leave_cb(NULL, NULL, NULL);	
 		tray_motion_cb((GtkWidget*)tray_icon,NULL,GINT_TO_POINTER(0));
@@ -301,6 +299,13 @@ static void tray_icon_song_change()
 		}
 
 	}
+}
+
+/* this function updates the trayicon on changes */
+static void tray_icon_song_change()
+{
+	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1))
+		tray_notify_popup();
 }
 
 void tray_icon_connection_changed(MpdObj *mi, int connect)
