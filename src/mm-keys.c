@@ -29,11 +29,25 @@ static void mmkeys_class_init (MmKeysClass *klass);
 static void mmkeys_init       (MmKeys      *object);
 static void mmkeys_finalize   (GObject     *object);
 
-static void grab_mmkey (int key_code, unsigned int mask, GdkWindow *root);
+static int grab_mmkey (int key_code, unsigned int mask, GdkWindow *root);
 
 static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent,
 		GdkEvent *event,
 		gpointer data);
+
+#define FG_DEFAULT	None
+#define FG_ERROR	"red"
+
+/* Members of the treestore */
+enum {
+	MM_STORE_KEYNAME = 0,
+	MM_STORE_INDEX,
+	MM_STORE_KEYCODE,
+	MM_STORE_MASK,
+	MM_STORE_KEYVAL,
+	MM_STORE_FOREGROUND,
+	MM_STORE_COUNT,
+};
 
 enum {
 	MM_PLAYPAUSE,
@@ -53,25 +67,26 @@ enum {
 };
 
 char *keynames[LAST_SIGNAL] = {
-	"PlayPause",/** MM_PLAYPAUSE */
+	"PlayPause",	/** MM_PLAYPAUSE */
 	"Next", 	/** MM_NEXT*/
-	"Previous", /** MM_PREV */
+	"Previous",	/** MM_PREV */
 	"Stop",		/** MM_STOP */
 	"Fast Forward", /** MM_FASTFORWARD */
-	"Fast Backward", /** MM_FASTBACKWARD */
-	"Repeat", /** MM_REPEAT */
-	"Random", /** MM_RANDOM */
-	"Raise window", /** MM_RAISE */
-	"Hide window", /** MM_HIDE */
-	"Toggle window", /** MM_TOGGLE_HIDDEN */
-	"Volume Up", /** MM_VOLUME_UP */
-	"Volume Down" /** MM_VOLUME_DOWN */
+	"Fast Backward",/** MM_FASTBACKWARD */
+	"Repeat",	/** MM_REPEAT */
+	"Random",	/** MM_RANDOM */
+	"Raise window",	/** MM_RAISE */
+	"Hide window",	/** MM_HIDE */
+	"Toggle window",/** MM_TOGGLE_HIDDEN */
+	"Volume Up",	/** MM_VOLUME_UP */
+	"Volume Down"	/** MM_VOLUME_DOWN */
 };	
 
 static GObjectClass *parent_class;
 static guint signals[LAST_SIGNAL];
 static int keycodes[LAST_SIGNAL];
 static unsigned int masks[LAST_SIGNAL];
+static int keyerror[LAST_SIGNAL];
 
 static GType type = 0;
 
@@ -224,6 +239,8 @@ static void mmkeys_init (MmKeys *object)
 	GdkWindow *root;
 	guint i, j;
 	int keycode = 0;
+	int anyKeybindsFailed = FALSE;
+	int anyDuplicatesFound = FALSE;
 
 	display = gdk_display_get_default ();
 
@@ -255,10 +272,24 @@ static void mmkeys_init (MmKeys *object)
 	{
 		keycodes[i] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[i], 0);
 		masks[i] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[i], 0);
+		keyerror[i] = FALSE;
+		/* Detect duplicates */
+		for(j=0;j<i;j++)
+		{
+			if (keycodes[i] != 0 &&
+				keycodes[i] == keycodes[j] &&
+				masks[i] == masks[j])
+			{
+				anyDuplicatesFound = TRUE;
+				keycodes[i] = 0;
+				masks[i] = 0;
+				keyerror[i] = TRUE;
+				cfg_set_single_value_as_int(config, "Keybindings", keynames[i], 0);
+				cfg_set_single_value_as_int(config, "Keymasks", keynames[i], 0);
+			}
+		}
 	}
 
-
-	
 	for (i = 0; i < gdk_display_get_n_screens (display); i++) {
 		screen = gdk_display_get_screen (display, i);
 		if (screen != NULL) {
@@ -266,13 +297,45 @@ static void mmkeys_init (MmKeys *object)
 
 			for (j = 0; j < LAST_SIGNAL;j++) {
 				if (keycodes[j] > 0)
-				{
-					grab_mmkey (keycodes[j], masks[j], root);
-				}
+					if( !grab_mmkey (keycodes[j], masks[j], root) )
+					{
+						keyerror[j] = TRUE;
+						anyKeybindsFailed = TRUE;
+					}
 			}
 
 			gdk_window_add_filter (root, filter_mmkeys, object);
 		}
+	}
+
+	if (anyKeybindsFailed)
+	{
+		GString *message = g_string_new (_("<b>Could not grab the following multimedia keys:</b>\n\n"));
+		for (i=0;i<LAST_SIGNAL;i++)
+		{
+			if (keyerror[i] && keycodes[i] != 0)
+			{
+				gchar *rawkeysym = egg_virtual_accelerator_name (
+					XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0),
+					keycodes[i], masks[i]);
+				gchar *keysym = g_markup_escape_text(rawkeysym, -1);
+				g_free (rawkeysym);
+				g_string_append_printf( message,
+					"\t%s: %s\n",
+					keynames[i], keysym );
+				g_free (keysym);
+			}
+		}
+		g_string_append( message,
+			_("\nEnsure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc." ));
+		show_error_message (message->str, TRUE);
+		g_string_free (message, TRUE);
+	}
+
+	if (anyDuplicatesFound)
+	{
+		show_error_message(_("<b>Duplicate mapping(s) detected</b>\n\n"
+				"Some duplicate multimedia key mappings were detected, and disabled.  Please revisit the preferences and ensure your settings are now correct."), TRUE );
 	}
 }
 
@@ -282,7 +345,7 @@ MmKeys * mmkeys_new (void)
 }
 
 
-static void grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
+static int grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
 {
 	gdk_error_trap_push ();
 
@@ -321,8 +384,10 @@ static void grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
 
 	gdk_flush ();
 	if (gdk_error_trap_pop ()) {
-		fprintf (stderr, "Error grabbing key %d, %p\n", key_code, root);
+		debug_printf (DEBUG_INFO, "Error grabbing key %d+%d, %p\n", key_code, mask, root);
+		return FALSE;
 	}
+	return TRUE;
 }
 
 static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpointer data)
@@ -402,7 +467,7 @@ static void ungrab_mmkey (int key_code, int mask, GdkWindow *root)
 
 	gdk_flush ();
 	if (gdk_error_trap_pop ()) {
-		fprintf (stderr, "Error grabbing key %d, %p\n", key_code, root);
+		debug_printf (DEBUG_INFO, "Error ungrabbing key %d+%d, %p\n", key_code, mask, root);
 	}
 }
 
@@ -429,6 +494,7 @@ void grab_key(int key, int keycode, unsigned int mask)
 	}
 	keycodes[key] = 0;
 	masks[key] = 0;
+	keyerror[key] = FALSE;
 	if(keycode >0)
 	{
 		keycodes[key] = keycode;
@@ -438,7 +504,11 @@ void grab_key(int key, int keycode, unsigned int mask)
 			screen = gdk_display_get_screen (display, i);
 			if (screen != NULL) {
 				root = gdk_screen_get_root_window (screen);
-				grab_mmkey (keycodes[key], masks[key], root);
+				if (!grab_mmkey (keycodes[key], masks[key], root))
+				{
+					/* Grab failed */
+					keyerror[key] = TRUE;
+				}
 			}
 		}
 	}
@@ -484,15 +554,14 @@ static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_s
 	gtk_tree_model_get_iter (model, &iter, path);
 
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			2, 0,
-			3,0,
-			4,0,
+			MM_STORE_KEYCODE,	0,
+			MM_STORE_MASK,		0,
+			MM_STORE_KEYVAL,	0, 
+			MM_STORE_FOREGROUND,	FG_DEFAULT,
 			-1);
 	gtk_tree_path_free (path);
 	gtk_tree_model_get(model, &iter, 1, &key, -1);
 	grab_key(key, 0, 0);
-	cfg_set_single_value_as_int(config,"Keybindings", keynames[key], keycodes[key]); 
-	cfg_set_single_value_as_int(config,"Keymasks", keynames[key], masks[key]); 
 }
 
 	static void
@@ -507,24 +576,68 @@ accel_edited_callback (GtkCellRendererText *cell,
 	GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
 	GtkTreeIter iter;
 	int key;
+	int i;
 
 	gtk_tree_model_get_iter (model, &iter, path);
 
-	debug_printf(DEBUG_INFO, "EggCellRenderKeys grabbed %d %u (%s)", mask, hardware_keycode, egg_virtual_accelerator_name(keyval,hardware_keycode,mask) );
+	debug_printf(DEBUG_INFO, "EggCellRenderKeys grabbed %d %u", mask, hardware_keycode );
 	if(hardware_keycode == 22)
 	{
 		hardware_keycode = 0;
 	}	                            
 
+	gtk_tree_model_get(model, &iter, 1, &key, -1);
+
+	/* Check for duplicates */
+	for (i=0;i<LAST_SIGNAL;i++) {
+		if (i == key)
+			continue;
+		if (hardware_keycode != 0 &&
+			keycodes[i] == hardware_keycode &&
+			masks[i] == mask)
+		{
+			gchar *rawkeysym = egg_virtual_accelerator_name (
+				XKeycodeToKeysym(GDK_DISPLAY(), hardware_keycode, 0),
+				hardware_keycode, mask);
+			gchar *keysym = g_markup_escape_text(rawkeysym, -1);
+			g_free (rawkeysym);
+			gchar *message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
+					"%s is already mapped to %s"),
+					keysym, keynames[i] );
+			g_free (keysym);
+			show_error_message (message, TRUE);
+			g_free (message);
+			
+			/* Clear the duplicate entry */
+			accel_cleared_callback(cell, path_string, data);
+			return;
+		}
+	}
+
+	grab_key(key, hardware_keycode, mask);
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
-			2, hardware_keycode,
-			3, mask,
-			4, keyval,
+			MM_STORE_KEYCODE,	hardware_keycode,
+			MM_STORE_MASK,		mask,
+			MM_STORE_KEYVAL,	keyval, 
+			MM_STORE_FOREGROUND,	keyerror[key] ? FG_ERROR : FG_DEFAULT,
 			-1);
 	gtk_tree_path_free (path);
-	gtk_tree_model_get(model, &iter, 1, &key, -1);
-	grab_key(key, hardware_keycode, mask);
-
+	if( keyerror[key] )
+	{
+		gchar *rawkeysym = egg_virtual_accelerator_name (
+			XKeycodeToKeysym(GDK_DISPLAY(), keycodes[key], 0),
+			keycodes[key], masks[key]);
+		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
+		g_free (rawkeysym);
+		gchar *message = g_strdup_printf(
+			_("<b>Could not grab multimedia key:</b>\n\n"
+			"\t%s: %s\n\n"
+			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),
+			keynames[key], keysym );
+		g_free (keysym);
+		show_error_message (message, TRUE);
+		g_free (message);
+	}
 }
 
 
@@ -555,14 +668,21 @@ void mmkeys_pref_construct(GtkWidget *container)
 		int i=0;
 		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
 		GtkTreeViewColumn *column = NULL;
-		GtkListStore *store = gtk_list_store_new(5, G_TYPE_STRING,G_TYPE_INT, G_TYPE_UINT,G_TYPE_UINT,G_TYPE_UINT);
+		GtkListStore *store = gtk_list_store_new(MM_STORE_COUNT,
+			G_TYPE_STRING,	/* MM_STORE_KEYNAME	*/
+			G_TYPE_INT,	/* MM_STORE_INDEX	*/
+			G_TYPE_UINT,	/* MM_STORE_KEYCODE	*/
+			G_TYPE_UINT,	/* MM_STORE_MASK	*/
+			G_TYPE_UINT,	/* MM_STORE_KEYVAL	*/
+			G_TYPE_STRING	/* MM_STORE_FOREGROUND	*/
+			);
 		GtkCellRenderer *rend =gtk_cell_renderer_text_new();
-
 		gtk_tree_view_set_model(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
 
 		column = gtk_tree_view_column_new();
 		gtk_tree_view_column_pack_start(column, rend, TRUE);
-		gtk_tree_view_column_add_attribute(column, rend, "text", 0);
+		gtk_tree_view_column_add_attribute(column, rend,
+			"text", MM_STORE_KEYNAME);
 		gtk_tree_view_column_set_title(column, _("Action"));
 		gtk_tree_view_append_column(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
@@ -586,9 +706,10 @@ void mmkeys_pref_construct(GtkWidget *container)
 				TRUE);
 		gtk_tree_view_column_set_title(column, _("Shortcut"));
 		gtk_tree_view_column_set_attributes (column, rend,
-				"keycode", 2,
-				"accel_mask", 3,
-				"accel_key",4,
+				"keycode",	MM_STORE_KEYCODE,
+				"accel_mask",	MM_STORE_MASK,
+				"accel_key",	MM_STORE_KEYVAL,
+				"foreground",	MM_STORE_FOREGROUND,
 				NULL);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
@@ -598,11 +719,12 @@ void mmkeys_pref_construct(GtkWidget *container)
 			GtkTreeIter iter;
 			gtk_list_store_append(store, &iter);
 			gtk_list_store_set(store, &iter,
-				0, keynames[i],
-				1, i,
-				2, keycodes[i],
-				3, masks[i],
-				4, XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0), 
+				MM_STORE_KEYNAME,	keynames[i],
+				MM_STORE_INDEX,		i,
+				MM_STORE_KEYCODE,	keycodes[i],
+				MM_STORE_MASK,		masks[i],
+				MM_STORE_KEYVAL,	XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0), 
+				MM_STORE_FOREGROUND,	keyerror[i] ? FG_ERROR : FG_DEFAULT,
 				-1);
 		}
 	}

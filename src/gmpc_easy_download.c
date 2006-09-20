@@ -35,6 +35,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	CURL *curl = NULL;
 	CURLM *curlm = NULL;
 	CURLMsg *msg = NULL;
+	double total_size = 0;
 	/*int res;*/
 	if(!dld) return 0;
 	/**
@@ -60,7 +61,13 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 		curl_multi_perform(curlm, &running);
 		g_usleep(100000);
 		if(dld->callback)
-			dld->callback(dld->callback_data);
+		{
+			if(!(total_size > 0 ))
+			{
+				curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &total_size); 
+			}
+			dld->callback(dld->size, (int)total_size, dld->callback_data);
+		}
 		while ((msg = curl_multi_info_read(curlm, &msgs_left))) {	
 			if (msg->msg == CURLMSG_DONE)
 			{
@@ -72,16 +79,12 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 					printf("Error: %i %s\n",msg->data.result, curl_multi_strerror(msg->data.result));
 				}
 			}
-			else if (msg->msg == CURLINFO_CONTENT_LENGTH_DOWNLOAD)
-			{
-				printf("total size: %lf\n", msg->data.whatever);
-			}
 		}
 	}while(running);
 	/* cleanup */
 	curl_easy_cleanup(curl);
 	curl_multi_cleanup(curlm);
-	printf("downloaded: %i\n", dld->size);
+	printf("Downloaded: %i\n", dld->size);
 	if(success) return 1;
 	if(dld->data) g_free(dld->data);
 	dld->data = NULL;

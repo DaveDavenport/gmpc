@@ -1,4 +1,4 @@
-typedef void (*ProgressCallback)(gpointer data);
+typedef void (*ProgressCallback)(int downloaded, int total, gpointer data);
 
 typedef struct _gmpc_easy_download_struct{
 	char *data;
