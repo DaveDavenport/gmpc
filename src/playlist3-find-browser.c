@@ -56,7 +56,7 @@ enum{
 };
 
 
-#define PL3_FINDB_CB_ALL 88
+//#define PL3_FINDB_CB_ALL 88
 #define	PL3_FINDB_CB_PLAYLIST 99
 /**
  * Plugin structure
@@ -126,8 +126,8 @@ static void pl3_find_fill_combo()
 		gtk_list_store_set(pl3_findb_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
 	}
 
-	gtk_list_store_append(pl3_findb_combo_store, &iter);
-	gtk_list_store_set(pl3_findb_combo_store, &iter, 1, "All (slow)", 0,PL3_FINDB_CB_ALL,-1);	
+//	gtk_list_store_append(pl3_findb_combo_store, &iter);
+//	gtk_list_store_set(pl3_findb_combo_store, &iter, 1, "All (slow)", 0,PL3_FINDB_CB_ALL,-1);	
 	gtk_list_store_append(pl3_findb_combo_store, &iter);
 	gtk_list_store_set(pl3_findb_combo_store, &iter, 1, "Playlist", 0,PL3_FINDB_CB_PLAYLIST, -1);
 
@@ -331,9 +331,11 @@ static unsigned long pl3_find_browser_view_browser()
 				data = mpd_database_find(connection, num_field, name, FALSE);
 			}
 		}
+/*
 		else if(num_field == PL3_FINDB_CB_ALL){
-			data = mpd_database_token_find(connection, name);
+			data = mpd_database_find(connection,MPD_TAG_ITEM_ANY, name,FALSE); //mpd_database_token_find(connection, name);
 		}
+*/
 		else if (num_field == PL3_FINDB_CB_PLAYLIST)
 		{
 			regex_t **filter_test = NULL;
