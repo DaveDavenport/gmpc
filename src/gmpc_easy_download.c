@@ -82,6 +82,10 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 			}
 		}
 	}while(running);
+	/**
+	 * remove handler
+	 */
+	curl_multi_remove_handle(curlm, curl);
 	/* cleanup */
 	curl_easy_cleanup(curl);
 	curl_multi_cleanup(curlm);
