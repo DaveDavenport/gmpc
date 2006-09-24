@@ -39,6 +39,8 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	double total_size = 0;
 	/*int res;*/
 	if(!dld) return 0;
+	if(url == NULL) return 0;
+	if(url[0] == '\0') return 0;
 	/**
 	 * Make sure it's clean
 	 */
@@ -77,7 +79,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 				}
 				else
 				{
-					debug_printf(DEBUG_ERROR,"Error: %i %s\n",msg->data.result, curl_multi_strerror(msg->data.result));
+					debug_printf(DEBUG_ERROR,"Error: %i '%s' url: %s",msg->data.result, curl_easy_strerror(msg->data.result),url);
 				}
 			}
 		}
