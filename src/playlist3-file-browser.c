@@ -335,7 +335,6 @@ static void pl3_fb_lazy_fill_destroy(pl3_fb_lf_pb *pb)
 	{
 		mpd_data_free(pb->data);
 	}
-	printf("Destroy\n");
 	g_free(pb);
 	pb = NULL;
 	/* remove the context id, so we don't try to remove it another time. */
@@ -396,8 +395,9 @@ static int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
 			if(pd->support_playlist) (pd->sub_folder)++;
 		}
 		pd->data = mpd_data_get_next(data);
-		if(pd->data == NULL)
+		if(pd->data == NULL) {
 			return FALSE;
+		}
 		return TRUE;
 	}
 	/* remove the fantom child if there are no subfolders anyway. */
@@ -996,6 +996,7 @@ static void pl3_file_browser_activate()
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);
+		gtk_tree_path_free(path);
 	}
 }
 

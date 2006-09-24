@@ -1036,6 +1036,7 @@ static void pl3_artist_browser_activate()
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);
+		gtk_tree_path_free(path);
 	}
 }
 
