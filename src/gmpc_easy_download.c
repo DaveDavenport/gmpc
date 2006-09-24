@@ -3,6 +3,7 @@
 #include <string.h>
 #include <glib.h>
 #include <curl/curl.h>
+#include <libmpd/debug_printf.h>
 #include "gmpc_easy_download.h"
 #define CURL_TIMEOUT 5 
 
@@ -76,7 +77,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 				}
 				else
 				{
-					printf("Error: %i %s\n",msg->data.result, curl_multi_strerror(msg->data.result));
+					debug_printf(DEBUG_ERROR,"Error: %i %s\n",msg->data.result, curl_multi_strerror(msg->data.result));
 				}
 			}
 		}
@@ -84,7 +85,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* cleanup */
 	curl_easy_cleanup(curl);
 	curl_multi_cleanup(curlm);
-	printf("Downloaded: %i\n", dld->size);
+	debug_printf(DEBUG_INFO,"Downloaded: %i\n", dld->size);
 	if(success) return 1;
 	if(dld->data) g_free(dld->data);
 	dld->data = NULL;
