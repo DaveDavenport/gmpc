@@ -79,7 +79,10 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 				}
 				else
 				{
-					debug_printf(DEBUG_ERROR,"Error: %i '%s' url: %s",msg->data.result, curl_easy_strerror(msg->data.result),url);
+					debug_printf(DEBUG_ERROR,"Error: %i '%s' url: %s",
+						msg->data.result,
+						curl_easy_strerror(msg->data.result),
+						url);
 				}
 			}
 		}

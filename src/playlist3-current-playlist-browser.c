@@ -803,7 +803,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 		treesearch_start(tree_search);
 		return TRUE;
 	}
-	else if((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z))
+	else if((event->state&GDK_CONTROL_MASK) == 0 &&((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z)))
 	{
 		treesearch_start(tree_search);
 		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(tree_search)->entry), (const gchar *)gdk_keyval_name(event->keyval));
