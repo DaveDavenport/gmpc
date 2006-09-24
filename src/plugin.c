@@ -88,7 +88,7 @@ static int plugin_load(char *path, const char *file)
 	}
 	if(plug == NULL)
 	{
-		debug_printf(DEBUG_WARNING, "plugin load: unkown type of plugin.\n");
+		debug_printf(DEBUG_WARNING, "plugin load: unknown type of plugin.\n");
 		g_module_close(handle);
 		return 1;
 	}
