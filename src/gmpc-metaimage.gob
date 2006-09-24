@@ -119,7 +119,27 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gmpcconn )
 	{
-		if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+		if(self->connection && what&(MPD_CST_STATE))
+		{
+			int state = mpd_player_get_state(mi);
+			if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
+			{
+				self_set_cover_na(self);
+			}
+			else{
+				mpd_Song *song = mpd_playlist_get_current_song(mi);
+				if(song)
+				{
+					self_update_cover_from_song(self, song);
+				}
+				else
+				{
+					self_set_cover_na(self);
+				}
+			}
+			
+		}
+		else if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
 		{
 			mpd_Song *song = mpd_playlist_get_current_song(mi);
 			if(!song)
