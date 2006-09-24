@@ -736,6 +736,8 @@ static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,gtk_tree_path_copy(path),-1);
 		g_free(strpath);
+		if(name) g_free(name);
+		if(stock_id) g_free(stock_id);
 	}
 }
 static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)

@@ -843,6 +843,7 @@ static void init_stock_icons()
 
 static void init_playlist_store ()
 {
+	gchar *markup = cfg_get_single_value_as_string_with_default(config,"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
 	/**
 	 * Create the (custom) playlist widget 
 	 */
@@ -851,8 +852,8 @@ static void init_playlist_store ()
 	/**
 	 * restore the markup
 	 */
-	playlist_list_set_markup((CustomList *)playlist,cfg_get_single_value_as_string_with_default(config,
-				"playlist","markup", DEFAULT_PLAYLIST_MARKUP));
+	playlist_list_set_markup((CustomList *)playlist,markup);
+	g_free(markup);
 }
 
 /**
