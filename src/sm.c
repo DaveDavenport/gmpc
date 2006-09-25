@@ -74,7 +74,7 @@ cb_ice_connection_messages(IceConn ice_connection, gint source,
 void smc_connect(gint argc, gchar **argv)
 {
 	SmProp			userid, program, restart, restart_style, clone, pid,
-					*props[6];
+					*props[5];
 	SmPropValue		userid_val, pid_val, restart_style_val;
 	CARD8			restartstyle;
 	SmcCallbacks	*callbacks;

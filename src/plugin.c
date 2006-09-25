@@ -40,12 +40,14 @@ static int plugin_load(char *path, const char *file)
 	int *api_version;
 	gmpcPlugin *plug = NULL;
 	gchar *string = NULL;
-	gchar *full_path = g_strdup_printf("%s/%s", path, file);
-	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
+	gchar *full_path = NULL;
 	if(path == NULL)
 	{
 		return 1;
 	}
+	full_path = g_strdup_printf("%s/%s", path, file);
+	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
+
 	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
 	g_free(full_path);
 	if (!handle) {
