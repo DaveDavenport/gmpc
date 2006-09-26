@@ -233,6 +233,7 @@ static void pl3_file_browser_add_folder()
 		}
 		mpd_playlist_queue_commit(connection);
 		g_free(path);
+		g_free(icon);
 	}
 }
 
