@@ -65,62 +65,52 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 {
 	char *temp = NULL;
 	mpd_Song *song = mpd_songDup(song2);
-	if(song->title)
-	{
+	if(song->title) {
 		temp = song->title;
 		song->title = g_markup_escape_text(temp,-1);
 		g_free(temp);
 	}
-	if(song->artist)
-	{
+	if(song->artist) {
 		temp = song->artist;
 		song->artist= g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}                                                	
-	if(song->album)
-	{
+	if(song->album) {
 		temp = song->album;
 		song->album= g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}                                                	
-	if(song->track)
-	{
+	if(song->track)	{
 		temp = song->track;
 		song->track = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->name)
-	{
+	if(song->name) {
 		temp = song->name;
 		song->name = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->date)
-	{
+	if(song->date) {
 		temp = song->date;
 		song->date = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->genre)
-	{
+	if(song->genre) {
 		temp = song->genre;
 		song->genre= g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->composer)
-	{
+	if(song->composer) {
 		temp = song->composer;
 		song->composer = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->disc)
-	{
+	if(song->disc) {
 		temp = song->disc;
 		song->disc = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	if(song->comment)
-	{
+	if(song->comment) {
 		temp = song->comment;
 		song->comment = g_markup_escape_text(temp, -1);
 		g_free(temp);
@@ -130,6 +120,9 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 	mpd_freeSong(song);
 }
 
+/**
+ * Code copied from gnome-screenshot
+ */
 #define BLUR_RADIUS    5
 #define SHADOW_OFFSET  (BLUR_RADIUS * 4 / 5)
 #define SHADOW_OPACITY 0.7
