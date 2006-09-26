@@ -1676,7 +1676,7 @@ static void info2_init()
 
 	gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-			GTK_POLICY_AUTOMATIC,
+			GTK_POLICY_NEVER,
 			GTK_POLICY_ALWAYS);
 
 	gtk_box_pack_start_defaults(GTK_BOX(info2_vbox), scrolled_window);
