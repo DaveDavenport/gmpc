@@ -24,7 +24,7 @@ static GtkWidget *info2_pref_vbox = NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
-static GtkWidget *entry_completion = NULL;
+static GtkEntryCompletion *entry_completion = NULL;
 
 gmpcPrefPlugin info2_gpp = {
 	info2_construct,

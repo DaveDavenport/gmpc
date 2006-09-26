@@ -767,7 +767,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
                             guint               info,
                             guint               time)
 {
-	gchar **url = g_strsplit(data->data,"\n", -1);
+	gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
 	printf("%i %s\n",info,data->data);
 		
 	

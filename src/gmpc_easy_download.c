@@ -48,6 +48,9 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* initialize curl */
 	curl = curl_easy_init();
 	if(!curl) return 0;
+	curlm = curl_multi_init();
+	if(!curlm) return 0;
+
 	/* set uri */
 	curl_easy_setopt(curl, CURLOPT_URL, url);
 	/* set callback data */
@@ -57,8 +60,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* set timeout */
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
 
-	curlm = curl_multi_init();
-
+	
 	curl_multi_add_handle(curlm, curl);
 	do{
 		curl_multi_perform(curlm, &running);
