@@ -38,7 +38,7 @@ gchar * format_time(unsigned long seconds)
 	{
 		return g_strdup("");
 	}
-	str = g_string_new(" Total time: ");
+	str = g_string_new(_(" Total time: "));
 	if(days != 0)
 	{
 		
