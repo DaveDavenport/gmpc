@@ -280,8 +280,7 @@ static void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTre
 
 	if(gtk_tree_model_get_iter(model, &iter, path))
 	{
-		gtk_tree_model_get(model, &iter, ENABLED_COL, &state, -1);
-		gtk_tree_model_get(model, &iter, ID_COL, &id, -1);
+		gtk_tree_model_get(model, &iter, ENABLED_COL, &state, ID_COL, &id,-1);
 		state = !state;
 		mpd_server_set_output_device(connection, id, state);
 
