@@ -369,24 +369,26 @@ static void update_server_stats()
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")), 
 				temp);
 		g_free(temp);
-		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"),
+
+		temp = g_strdup_printf(_("%i %s %02i %s %02i %s"), 
 				mpd_stats_get_uptime(connection)/86400,
-				((mpd_stats_get_uptime(connection)/86400) != 1)? "s":"",
+				((mpd_stats_get_uptime(connection)/86400) != 1)? _("days"):_("day"),
 				(mpd_stats_get_uptime(connection)%86400)/3600,
-				((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? "s":"",
+				((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? _("hours"):_("hour"),
 				(mpd_stats_get_uptime(connection)%3600)/60,
-				((mpd_stats_get_uptime(connection)%3600)/60 != 1)? "s":""
+				((mpd_stats_get_uptime(connection)%3600)/60 != 1)? _("minutes"):_("minute")
 				);
+
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")),
 				temp);
 		g_free(temp);
-		temp = g_strdup_printf(_("%i day%s %02i hour%s %02i minute%s"), 
+		temp = g_strdup_printf(_("%i %s %02i %s %02i %s"), 
 				mpd_stats_get_playtime(connection)/86400,
-				((mpd_stats_get_playtime(connection)/86400) != 1)? "s":"",
+				((mpd_stats_get_playtime(connection)/86400) != 1)? _("days"):_("day"),
 				(mpd_stats_get_playtime(connection)%86400)/3600,
-				((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? "s":"",
+				((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? _("hours"):_("hour"),
 				(mpd_stats_get_playtime(connection)%3600)/60,
-				((mpd_stats_get_playtime(connection)%3600)/60 != 1)? "s":""
+				((mpd_stats_get_playtime(connection)%3600)/60 != 1)? _("minutes"):_("minute")
 				);
 
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")), 
