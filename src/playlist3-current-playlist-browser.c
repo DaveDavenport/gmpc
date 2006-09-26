@@ -54,7 +54,7 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
 static int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
 static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event);
 static void pl3_current_playlist_browser_show_info(void);
-static void pl2_save_playlist(void);
+static void pl3_current_playlist_save_playlist(void);
 static void pl3_current_playlist_browser_shuffle_playlist(void);
 static void pl3_current_playlist_browser_clear_playlist(void);
 static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -769,7 +769,7 @@ static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	/* TODO: Write own fun ction */
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl2_save_playlist), NULL);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_save_playlist), NULL);
 
 	/* add the clear widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR,NULL);
@@ -814,7 +814,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 }
 
 /* create a dialog that allows the user to save the current playlist */
-static void pl2_save_playlist ()
+static void pl3_current_playlist_save_playlist ()
 {
 	gchar *str;
 	GladeXML *xml = NULL;
