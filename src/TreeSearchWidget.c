@@ -291,6 +291,3 @@ GtkWidget* treesearch_new (GtkTreeView *view, int search_row)
 	treesearch_set_search_row(TREESEARCH(widget),search_row);
 	return widget;
 }
-
-
-

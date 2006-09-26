@@ -23,9 +23,6 @@ GAsyncQueue *meta_results = NULL;
 GQueue *meta_remove = NULL;
 GMutex *meta_processing = NULL;
 
-/**
- * TODO: Make the config system thread safe 
- */
 typedef struct {
 	guint id;
 	/* Data */
@@ -332,7 +329,7 @@ static void meta_data_retrieve_thread()
 		g_mutex_lock(meta_processing);
 		/* 
 		 * Set default return values
-		 * TODO: Is this needed, because the cache will "init" them.
+		 * Just to be sure, init them.
 		 */
 
 		data->result = META_DATA_UNAVAILABLE;
@@ -342,7 +339,6 @@ static void meta_data_retrieve_thread()
 		 * Check cache *again*
 		 * because between the time this command was commited, and the time 
 		 * we start processing it, the result may allready been retrieved
-		 * TODO: Make an option to _force_ it to recheck (aka bypass cache 
 		 */
 		if(data->type&META_QUERY_NO_CACHE)
 		{

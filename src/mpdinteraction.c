@@ -230,7 +230,6 @@ void repeat_pl(GtkToggleButton *tb)
 		mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 }
 
-/* TODO: Changed return Values, check for possible errors */
 int seek_ps(int n)
 {
 	if(mpd_server_check_command_allowed(connection, "seek") == MPD_SERVER_COMMAND_ALLOWED)
