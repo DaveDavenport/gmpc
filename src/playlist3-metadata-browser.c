@@ -846,7 +846,8 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				char *oldname = NULL;
 				gtk_tree_model_get(model, &iter, 0,&oldname,-1);
 				if(!strcmp(text, oldname))  skip=TRUE;
-			}while(gtk_tree_model_iter_next(model, &iter));
+				g_free(oldname);
+			}while(gtk_tree_model_iter_next(model, &iter) && skip);
 		}
 		if(!skip)
 			gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
@@ -1040,6 +1041,7 @@ static void info2_fill_view()
 			if(text){
 				gtk_entry_set_text(GTK_ENTRY(entry), text);
 				gtk_widget_activate(GTK_WIDGET(entry));
+				g_free(text);
 			}
 		}
 	}
