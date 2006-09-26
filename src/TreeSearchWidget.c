@@ -153,6 +153,7 @@ static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
 
 	}
 }
+
 static void treesearch_entry_changed(GtkEntry *entry, TreeSearch *ts)
 {
 	GtkTreeIter iter;
@@ -285,7 +286,7 @@ GtkWidget* treesearch_new (GtkTreeView *view, int search_row)
 		g_warning("search_row >= 0 failed\n");
 		return NULL;
 	}
-	widget = GTK_WIDGET ( gtk_type_new (treesearch_get_type ()));
+	widget = GTK_WIDGET ( g_object_new (treesearch_get_type (),NULL));
 	treesearch_set_treeview(TREESEARCH(widget), view);
 	treesearch_set_search_row(TREESEARCH(widget),search_row);
 	return widget;
