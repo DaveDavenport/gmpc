@@ -303,6 +303,7 @@ static unsigned long pl3_find_browser_view_browser()
 					{
 						skip=1;
 					}
+					g_free(oldname);
 				}while(gtk_tree_model_iter_next(model, &combo_iter) && !skip);
 			} 
 			if(!skip)
