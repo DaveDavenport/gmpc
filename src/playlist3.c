@@ -722,6 +722,8 @@ static void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTre
 		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
 		gtk_list_store_append(GTK_LIST_STORE(model2), &citer);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,-1);
+		if(name)g_free(name);
+		if(stock_id)g_free(stock_id);
 	}
 }
 
