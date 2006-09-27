@@ -417,7 +417,6 @@ static void info2_fill_song_view(char *path)
 	GtkWidget *ali = NULL;
 	GtkWidget *vbox= NULL;
 	mpd_Song *song = NULL;
-	MpdData *data;
 	GtkWidget *button = NULL;
 	GtkWidget *label = NULL;
 	PassData *pd = NULL;
@@ -433,12 +432,15 @@ static void info2_fill_song_view(char *path)
 
 
 	/** Get song
-	*/
 	data = mpd_database_find_adv(connection, TRUE, MPD_TAG_ITEM_FILENAME, path, -1);
 	if(!data)
 		return;
 	song = mpd_songDup(data->song);
 	mpd_data_free(data);
+	*/
+	song = mpd_database_get_fileinfo(connection, path);
+	if(!song)
+		return;
 
 	/**
 	 * Clear header
@@ -1194,17 +1196,26 @@ static void info2_fill_artist_view(char *artist)
 		MpdData *data = mpd_database_get_albums(connection, song2->artist);
 		for(;data;data = mpd_data_get_next(data))
 		{
+			MpdData *data2 = NULL;
+			mpd_Song *song  = NULL;
 			int tracks = 0;
 			GtkWidget *table2= NULL;
 			if(!data->tag)
 				continue;
-
+/*
 			MpdData *data2 = mpd_database_find_adv(connection, TRUE, 
 					MPD_TAG_ITEM_ARTIST,song2->artist
 					,MPD_TAG_ITEM_ALBUM, data->tag,-1);
 			mpd_Song *song = data2->song;
+			*/
+			mpd_database_search_start(connection, TRUE);
+			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, data->tag);
+			data2 = mpd_database_search_commit(connection);
+			
 			if(!data2)
 				continue;
+			song = data2->song;
 			for(data2 = mpd_data_get_first(data2);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) tracks++;
 			tracks++;
 			/** 
@@ -1485,6 +1496,7 @@ static void info2_fill_album_view(char *artist,char *album)
 
 	if(song2 && song2->artist)
 	{
+		MpdData *data = NULL;
 		int i=0;
 		int tracks = 0;
 
@@ -1492,7 +1504,11 @@ static void info2_fill_album_view(char *artist,char *album)
 		 * Image
 		 */
 		i = 1;
-		MpdData *data = mpd_database_find_adv(connection,TRUE, MPD_TAG_ITEM_ARTIST,song2->artist,MPD_TAG_ITEM_ALBUM, song2->album,-1);
+//		MpdData *data = mpd_database_find_adv(connection,TRUE, MPD_TAG_ITEM_ARTIST,song2->artist,MPD_TAG_ITEM_ALBUM, song2->album,-1);
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,song2->album);
+		data = mpd_database_search_commit(connection);
 		if(data)
 		{
 			MpdData *data2;

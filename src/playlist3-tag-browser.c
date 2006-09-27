@@ -539,9 +539,13 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 
 
-
+/*
 		data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
+				*/
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		data = mpd_database_search_commit(connection);
 		/* lowest level selected*/
 		while(data != NULL)
 		{
@@ -589,9 +593,15 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 
 		/* second level */
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), second_tag);
+		data = mpd_database_search_commit(connection);
+/*		
 		data = mpd_database_find_adv(connection,TRUE,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
+				*/
 		while (data != NULL)
 		{
 			gchar buffer[1024];
@@ -630,10 +640,16 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
-			data = mpd_database_find_adv(connection,TRUE,
+/*			data = mpd_database_find_adv(connection,TRUE,
 					mpd_misc_get_tag_by_name(tk_format[0]),	first,
 					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
 					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
+					*/
+			mpd_database_search_start(connection, TRUE);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), first_tag);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[2]), second_tag);
+			data = mpd_database_search_commit(connection);                                                    			
 			while (data != NULL)
 			{
 				gchar buffer[1024];
@@ -733,6 +749,7 @@ static void pl3_custom_tag_browser_replace_folder()
 }
 static void pl3_custom_tag_browser_add_folder()
 {
+	MpdData *data = NULL;
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
 	int i = 0, depth;
@@ -798,8 +815,17 @@ static void pl3_custom_tag_browser_add_folder()
 
 	if(depth == 1)
 	{
-		MpdData *data = mpd_database_find_adv(connection,TRUE, 
+		/*MpdData *data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, -1);
+				*/
+
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		data = mpd_database_search_commit(connection);
+
+
+
+
 		/* lowest level selected*/
 		if(data != NULL)
 		{
@@ -814,9 +840,18 @@ static void pl3_custom_tag_browser_add_folder()
 	else if(depth == 2)
 	{
 		/* second level */
-		MpdData *data = mpd_database_find_adv(connection,TRUE,
+/*		MpdData *data = mpd_database_find_adv(connection,TRUE,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[1]), second_tag, -1);
+*/
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), second_tag);
+		data = mpd_database_search_commit(connection);
+
+
+
+		
 
 		if(data != NULL)
 		{
@@ -841,11 +876,17 @@ static void pl3_custom_tag_browser_add_folder()
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
 			/* artist and album is selected */
+			/*
 			data = mpd_database_find_adv(connection,TRUE,
 					mpd_misc_get_tag_by_name(tk_format[0]),	first,
 					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
 					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,-1);
-
+			*/
+			mpd_database_search_start(connection, TRUE);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), first_tag);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[2]), second_tag);
+			data = mpd_database_search_commit(connection);
 			if(data != NULL)
 			{
 				while(data != NULL)
@@ -1021,6 +1062,7 @@ static void pl3_tag_browser_replace_selected()
 }
 static void pl3_tag_browser_add_folder_to_queue(char *name)
 {
+	MpdData *data = NULL;
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
 	int i = 0, depth;
@@ -1085,9 +1127,15 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 	}
 	if(depth == 0)
 	{
-		MpdData *data = mpd_database_find_adv(connection,TRUE, 
+/*		MpdData *data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), name, 	
 				-1);
+*/		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), name);
+		data = mpd_database_search_commit(connection);
+
+
+		
 		/* lowest level selected*/
 		if(data != NULL)
 		{
@@ -1101,10 +1149,21 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 
 	if(depth == 1)
 	{
+		/*
 		MpdData *data = mpd_database_find_adv(connection,TRUE, 
 				mpd_misc_get_tag_by_name(tk_format[0]), first_tag, 
 				mpd_misc_get_tag_by_name(tk_format[1]), name, 	
 				-1);
+				*/
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), name);
+		data = mpd_database_search_commit(connection);
+
+
+
+		
+
 		/* lowest level selected*/
 		if(data != NULL)
 		{
@@ -1118,12 +1177,24 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 	else if(depth == 2)
 	{
 		/* second level */
+		/*
 		MpdData *data = mpd_database_find_adv(connection,TRUE,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[1]), second_tag,
 				mpd_misc_get_tag_by_name(tk_format[2]), name,       
 				-1);
+*/
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), second_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[2]), name);
+		data = mpd_database_search_commit(connection); 
 
+
+
+
+
+		
 		if(data != NULL)
 		{
 			while(data != NULL)
@@ -1141,18 +1212,28 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 		/* go 2 up */
 		if(gtk_tree_path_up(path) && gtk_tree_path_up(path))
 		{
-			MpdData *data  = NULL;
 			gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
 			gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &iter, 1, &first, -1);
 
-			/* artist and album is selected */
+			/* artist and album is selected 
 			data = mpd_database_find_adv(connection,TRUE,
 					mpd_misc_get_tag_by_name(tk_format[0]),	first,
 					mpd_misc_get_tag_by_name(tk_format[1]), first_tag,
 					mpd_misc_get_tag_by_name(tk_format[2]), second_tag,
 					mpd_misc_get_tag_by_name(tk_format[3]), name,
 					-1);
+					*/
+			mpd_database_search_start(connection, TRUE);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), first_tag);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[2]), second_tag);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[3]), name);
+			data = mpd_database_search_commit(connection);                    
 
+
+
+
+			
 			if(data != NULL)
 			{
 				while(data != NULL)
@@ -1247,11 +1328,15 @@ static void pl3_tag_browser_show_info()
 		list = g_list_last (list);
 		do
 		{
+			mpd_Song *song; 
 			GtkTreeIter iter;
 			char *path;
-			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (GTK_TREE_MODEL(pl3_tb_store), &iter, PL3_TB_PATH, &path, -1);
+			song = mpd_database_get_fileinfo(connection, path);
+			if(song)
+				call_id3_window_song(song);                              			
+			/*
 			data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 			while(data != NULL)
 			{
@@ -1261,6 +1346,7 @@ static void pl3_tag_browser_show_info()
 				}
 				data = mpd_data_get_next(data);
 			}
+			*/
 			g_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));

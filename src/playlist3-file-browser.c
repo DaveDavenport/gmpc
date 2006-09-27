@@ -645,17 +645,24 @@ static void pl3_file_browser_show_info()
 			GtkTreeIter iter;
 			char *path;
 			int type;
-			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (GTK_TREE_MODEL(pl3_fb_store), &iter,PL3_FB_TYPE,&type, PL3_FB_PATH, &path, -1);
 			if(type == PL3_ENTRY_SONG)
 			{
-				data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				mpd_Song *song = mpd_database_get_fileinfo(connection, path);
+				if(song)
+					call_id3_window_song(song); 
+
+
+				
+				/*data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
 					call_id3_window_song(mpd_songDup(data->song));
 					data = mpd_data_get_next(data);
 				}
+				*/
+
 			}
 			g_free(path);
 		}

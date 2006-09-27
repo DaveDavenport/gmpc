@@ -566,18 +566,20 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 	 */
 	/** For speed reason and mpd stressing disabled */
 /*	if(song->file == NULL)*/
+	/*
 	if(FALSE){
-		/* Only mpd 0.12 supports this */
-		if(mpd_server_check_version(connection, 0,12,0))
+	*/	/* Only mpd 0.12 supports this */
+	/*	if(mpd_server_check_version(connection, 0,12,0))
 		{
 			MpdData *data  = NULL;
-			/** We need new libmpd data here.
+	*/		/** We need new libmpd data here.
 			 * The we don't need the check what type of search
 			 */
 			/**
 			 * this should be done faster, it can now cause extra slowdown
 			 * because of the mpd roundtrips
 			 */
+			/*
 			if(song->artist && song->album)
 			{
 				data= mpd_database_find_adv(connection,TRUE, 
@@ -603,8 +605,10 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 
 				mpd_data_free(data);
 			}
+
 		}
 	}
+*/
 	/**
 	 * If no result, start a thread and start fetching the data from there
 	 */

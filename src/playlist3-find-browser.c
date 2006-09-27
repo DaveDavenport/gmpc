@@ -325,7 +325,9 @@ static unsigned long pl3_find_browser_view_browser()
 		{
 			if(mpd_server_check_version(connection,0,12,0))
 			{
-				data = mpd_database_find_adv(connection,FALSE, num_field, name, -1);
+				mpd_database_search_start(connection, FALSE);
+				mpd_database_search_add_constraint(connection, num_field, name);
+				data = mpd_database_search_commit(connection);
 			}
 			else
 			{
@@ -549,7 +551,6 @@ static void pl3_find_browser_show_info()
 
 			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_findb_tree));
 			int type,id;
-			MpdData *data;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (model, &iter, PL3_FINDB_TYPE, &type,-1);
 			if(type == PL3_CUR_PLAYLIST)
@@ -559,14 +560,21 @@ static void pl3_find_browser_show_info()
 			}
 			else
 			{
+				mpd_Song *song =NULL;
 				char *path;
 				gtk_tree_model_get(model,&iter,PL3_FINDB_PATH, &path,-1);
-				data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
+				/*data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
 				while(data != NULL)
 				{
 					call_id3_window_song(mpd_songDup(data->song));
 					data = mpd_data_get_next(data);
 				}
+				*/
+				song = mpd_database_get_fileinfo(connection, path);
+				if(song)
+					call_id3_window_song(song); 
+
+				
 				g_free(path);
 			}
 		}
