@@ -331,8 +331,9 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	/* the things we do when on level 0 */
 	if(depth == 0)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
-
+		MpdData *data = NULL;//mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[0]));
+		data = mpd_database_search_commit(connection);
 		while(data != NULL)
 		{	
 			gtk_tree_store_append (pl3_tree, &child, iter);
@@ -360,8 +361,13 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	/* if where inside a artist */
 	else if(depth == 1)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),
-				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );
+		MpdData *data = NULL;/*mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[1]),
+				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,-1 );*/
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[1]));
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);
+		data = mpd_database_search_commit(connection);
+
+		
 		if(data == NULL)
 		{
 		}
@@ -389,11 +395,17 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	}
 	else if(depth == 2 && len >= 2)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,
+		MpdData *data = NULL;/*mpd_database_get_unique_tags(connection,
 				mpd_misc_get_tag_by_name(tk_format[2]),
 				mpd_misc_get_tag_by_name(tk_format[1]),first_tag,
 				mpd_misc_get_tag_by_name(tk_format[0]),second_tag,
-				-1);
+				-1);*/
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[2]));
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),second_tag);
+		data = mpd_database_search_commit(connection);
+
+		
 		if(data == NULL)
 		{
 			debug_printf(DEBUG_WARNING, "pl3_custom_tag_browser_fill_tree: no sub data %s %s %s %s %s\n",
@@ -504,8 +516,9 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	if(depth == 0)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
-
+		MpdData *data = NULL;//mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[0]));
+		data = mpd_database_search_commit(connection);
 		while(data != NULL)
 		{	
 
@@ -521,10 +534,15 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	if(depth == 1)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,
+		MpdData *data = NULL;/*mpd_database_get_unique_tags(connection,
 				mpd_misc_get_tag_by_name(tk_format[1]),
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
 				-1);
+				*/
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[1]));
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);		
+		data = mpd_database_search_commit(connection);
+		
 		while(data != NULL){
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
@@ -573,11 +591,17 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	else if(depth == 2)
 	{
-		MpdData *data = mpd_database_get_unique_tags(connection,
+		MpdData *data = NULL;/*mpd_database_get_unique_tags(connection,
 				mpd_misc_get_tag_by_name(tk_format[2]),
 				mpd_misc_get_tag_by_name(tk_format[1]),second_tag,
 				mpd_misc_get_tag_by_name(tk_format[0]),first_tag,
-				-1);
+				-1)*/;
+		
+		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[2]));
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),first_tag);
+		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),second_tag);
+		data = mpd_database_search_commit(connection);                                                    		
+
 		while(data != NULL){
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
