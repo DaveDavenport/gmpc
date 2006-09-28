@@ -222,7 +222,7 @@ static void pl3_file_browser_add_folder()
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path,3, &icon, -1);
 	
 	
-		message = g_strdup_printf("Added folder '%s' recursively", path);
+		message = g_strdup_printf(_("Added folder '%s' recursively"), path);
 		pl3_push_statusbar_message(message);
 		g_free(message);
 		if(strcmp("media-playlist", icon)) {                                 		
@@ -539,14 +539,14 @@ static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree,
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_folder), NULL);
 
 		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
+		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_folder), NULL);
 
 		/* add the update widget */
-		item = gtk_image_menu_item_new_with_label("Update");
+		item = gtk_image_menu_item_new_with_label(_("Update"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -652,17 +652,6 @@ static void pl3_file_browser_show_info()
 				mpd_Song *song = mpd_database_get_fileinfo(connection, path);
 				if(song)
 					call_id3_window_song(song); 
-
-
-				
-				/*data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-				while(data != NULL)
-				{
-					call_id3_window_song(mpd_songDup(data->song));
-					data = mpd_data_get_next(data);
-				}
-				*/
-
 			}
 			g_free(path);
 		}
@@ -689,7 +678,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	if(r_type&PL3_ENTRY_PLAYLIST)
 	{
-		pl3_push_statusbar_message("Loaded playlist");
+		pl3_push_statusbar_message(_("Loaded playlist"));
 		mpd_playlist_queue_load(connection, song_path);
 	}
 	else if (r_type&PL3_ENTRY_DIRECTORY)
@@ -745,7 +734,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	else
 	{
-		pl3_push_statusbar_message("Added a song");
+		pl3_push_statusbar_message(_("Added a song"));
 		mpd_playlist_queue_add(connection, song_path);
 	}
 	
@@ -808,7 +797,7 @@ static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton
 			}
 			else if(row_type == PL3_ENTRY_DIRECTORY)
 			{
-				item = gtk_image_menu_item_new_with_label("Update");
+				item = gtk_image_menu_item_new_with_label(_("Update"));
 				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 						gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -822,7 +811,7 @@ static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton
 			if(row_type != PL3_ENTRY_DIR_UP)
 			{
 				/* replace the replace widget */
-				item = gtk_image_menu_item_new_with_label("Replace");
+				item = gtk_image_menu_item_new_with_label(_("Replace"));
 				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 						gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 				gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
@@ -842,7 +831,7 @@ static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton
 	{
 
 		/* replace the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
+		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
@@ -878,6 +867,8 @@ static void pl3_file_browser_add_selected()
 	GtkTreeModel *model = GTK_TREE_MODEL (pl3_fb_store);
 	GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
 	int songs=0;
+	int dirs = 0;
+	int pl = 0;
 	gchar *message;
 	if(rows != NULL)
 	{
@@ -894,22 +885,30 @@ static void pl3_file_browser_add_selected()
 			{
 				/* add them to the add list */
 				mpd_playlist_queue_add(connection, name);
+				if(type&PL3_ENTRY_DIRECTORY) dirs++;
+				if(type&PL3_ENTRY_SONG) songs++;
 			}
 			else if (type == PL3_ENTRY_PLAYLIST)
 			{
 				mpd_playlist_queue_load(connection, name);
+				pl++;
 			}
-			songs++;
 			g_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
-	if(songs != 0)
+	if((songs+dirs+pl) != 0)
 	{
-		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
-		pl3_push_statusbar_message(message);
-		g_free(message);
+		GString *string= g_string_new(_("Added"));
+		if(songs)
+			g_string_append_printf(string, " %i %s%c", songs, (songs >1)? _("songs"):_("songs"), (dirs+pl >0)?',':' ');
+		if(dirs)
+			g_string_append_printf(string, " %i %s%c", dirs, (dirs>1)?_("directories"):_("directory"), (pl>0)?',':' ');
+		if(pl)
+			g_string_append_printf(string, " %i %s", pl, (pl>1)?_("playlists"):_("playlist"));
+		pl3_push_statusbar_message(string->str);
+		g_string_free(string, TRUE);
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
