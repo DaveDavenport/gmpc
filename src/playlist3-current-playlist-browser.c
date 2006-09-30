@@ -746,16 +746,21 @@ static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTr
 {
 	if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
 	{
-		guint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
-			(1/playlist_list_get_loaded(PLAYLIST_LIST(playlist)));
-
-		gchar *string = format_time(playtime);
-		gchar *mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
+		if(mpd_playlist_get_playlist_length(connection))
+		{
+			guint playtime = playlist_list_get_playtime(PLAYLIST_LIST(playlist))*
+				(1/playlist_list_get_loaded(PLAYLIST_LIST(playlist)));
+			gchar *string = format_time(playtime);
+			gchar *mesg = NULL;
+			mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
 				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1 ||
 					playlist_list_get_loaded(PLAYLIST_LIST(playlist)) <= 0.0)? "":_("(Estimation)")); 
-		gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, mesg);	
-		g_free(string);
-		g_free(mesg);
+			pl3_push_rsb_message(mesg);
+			g_free(string);
+			g_free(mesg);
+		} else {
+			pl3_push_rsb_message("");
+		}
 	}
 }
 
