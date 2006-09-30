@@ -129,6 +129,19 @@ static gboolean tip_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	return FALSE;
 }
 
+static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event, gpointer data)
+{
+	if(event->button == 3)
+	{
+		mpd_player_next(connection);
+	}
+	else
+	{
+		tray_leave_cb(NULL, NULL,0);
+	}
+
+	return TRUE;
+}
 static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpointer n)
 {
 	GtkWidget  *event2;
@@ -144,7 +157,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	 * Catch button clicks
 	 */
 	event2 = gtk_event_box_new();
-	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_leave_cb), NULL);
+	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_mouse_press_event), NULL);
 	gtk_container_set_border_width(GTK_CONTAINER(tip), 1);
 	gtk_widget_set_size_request(tip, TOOLTIP_WIDTH,-1);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
