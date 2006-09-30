@@ -519,6 +519,15 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		MpdData *data = NULL;//mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
 		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[0]));
 		data = mpd_database_search_commit(connection);
+		/** Add up entry */
+		gtk_list_store_append (pl3_tb_store, &iter);
+		gtk_list_store_set (pl3_tb_store,&iter,
+				PL3_TB_TITLE, "..",
+				PL3_TB_PATH, NULL,
+				PL3_TB_TYPE, PL3_ENTRY_DIR_UP,
+				PL3_TB_ICON,"gtk-go-up",
+				-1);
+
 		while(data != NULL)
 		{	
 
@@ -542,7 +551,15 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[1]));
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);		
 		data = mpd_database_search_commit(connection);
-		
+		/** Add up entry */
+		gtk_list_store_append (pl3_tb_store, &iter);
+		gtk_list_store_set (pl3_tb_store,&iter,
+				PL3_TB_TITLE, "..",
+				PL3_TB_PATH, NULL,
+				PL3_TB_TYPE, PL3_ENTRY_DIR_UP,
+				PL3_TB_ICON,"gtk-go-up",
+				-1);
+
 		while(data != NULL){
 			gtk_list_store_append (pl3_tb_store, &iter);
 			gtk_list_store_set (pl3_tb_store, &iter,
@@ -601,6 +618,14 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),first_tag);
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),second_tag);
 		data = mpd_database_search_commit(connection);                                                    		
+		/** Add up entry */
+		gtk_list_store_append (pl3_tb_store, &iter);
+		gtk_list_store_set (pl3_tb_store,&iter,
+				PL3_TB_TITLE, "..",
+				PL3_TB_PATH, NULL,
+				PL3_TB_TYPE, PL3_ENTRY_DIR_UP,
+				PL3_TB_ICON,"gtk-go-up",
+				-1);
 
 		while(data != NULL){
 			gtk_list_store_append (pl3_tb_store, &iter);
@@ -674,6 +699,15 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]), first_tag);
 			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[2]), second_tag);
 			data = mpd_database_search_commit(connection);                                                    			
+			/** Add up entry */
+			gtk_list_store_append (pl3_tb_store, &iter);
+			gtk_list_store_set (pl3_tb_store,&iter,
+					PL3_TB_TITLE, "..",
+					PL3_TB_PATH, NULL,
+					PL3_TB_TYPE, PL3_ENTRY_DIR_UP,
+					PL3_TB_ICON,"gtk-go-up",
+					-1);
+
 			while (data != NULL)
 			{
 				gchar buffer[1024];
@@ -948,7 +982,7 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 		return;
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_path, PL3_TB_TYPE,&type, -1);
 
-	if(song_path == NULL) return;
+//	if(song_path == NULL) return;
 	if(type == PL3_ENTRY_SONG)
 	{
 		pl3_push_statusbar_message("Added a song");
@@ -990,6 +1024,19 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 					g_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
+		}
+	}
+	else if (type == PL3_ENTRY_DIR_UP)
+	{
+		GtkTreeView *pl3_cat_tree = playlist3_get_category_tree_view();
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+		GtkTreeIter iter,parent;
+
+		if(gtk_tree_selection_get_selected(selec,&model, &iter))
+		{
+			gtk_tree_model_iter_parent(model, &parent, &iter);
+			gtk_tree_selection_select_iter(selec, &parent);
 		}
 	}
 	/* free memory */
