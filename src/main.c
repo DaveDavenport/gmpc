@@ -310,17 +310,9 @@ int main (int argc, char **argv)
 	 */
 	debug_printf(DEBUG_INFO,"Initializing threading");
 	/** Check if threading is supported. */	
-	if (!g_thread_supported ())
-	{
-		/** initialize it */
-		g_thread_init (NULL);
-	}
-	else
-	{
-		/** No Threading availible, show a nice gtk error message and quit */
-		show_error_message(_("GMPC requires threading support.\nquiting.."),TRUE);
-		abort();
-	}
+	/** initialize it */
+	if(!g_thread_supported())g_thread_init (NULL);
+
 
 	create_gmpc_paths();
 
