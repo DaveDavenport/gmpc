@@ -3,10 +3,10 @@ Keybindings for gmpc
 
 Global:
 	#Winamp/Xmms bindings
-	* ctrl-Z		- Previous 
-	* ctrl-X/C 		- Play/Pause
-	* ctrl-V 		- Stop
-	* ctrl-B 		- Next
+	* ctrl-Left		- Previous 
+	* ctrl-Up		- Play/Pause
+	* ctrl-Stop 		- Stop
+	* ctrl-Next 		- Next
 	* ctrl-J		- Search in playlist
 	
 Player:
