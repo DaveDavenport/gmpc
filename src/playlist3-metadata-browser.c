@@ -1635,6 +1635,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
 
+			g_free(markup);
 			i++;
 		}
 		ali = gtk_alignment_new(0,0.5,0,0);
