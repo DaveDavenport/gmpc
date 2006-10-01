@@ -732,7 +732,7 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	cairo_fill_preserve (cr);
 	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
 	cairo_stroke (cr);
-
+	cairo_pattern_destroy(pat);
 	cairo_destroy(cr);
 	return FALSE;
 }
