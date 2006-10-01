@@ -10,18 +10,18 @@ Global:
 	* ctrl-J		- Search in playlist
 	
 Player:
-	* P 		- Playlist
 	* I		- Information current song	
-	* (Ctrl) R	- Repeat
-	* (Ctrl) S	- Shuffle/Random
-	* Up		- Volume Up
-	* Down		- Volume Down
+	* Ctrl- R	- Repeat
+	* Ctrl- S	- Shuffle/Random
+	* Ctrl-Up		- Volume Up
+	* Ctrl-Down		- Volume Down
 	* Left		- Skip -5 sec.
 	* Right 	- Skip +5 sec.
 	* Ctrl-Q	- Quit program.
 
 
 Playlist:
+	* Ctrl-Delete	- Clear playlist
 	* Esc		- Close window
 	* F1		- View Current playlist.
 	* F2		- View File Browser
@@ -29,7 +29,7 @@ Playlist:
 	* F4		- View Search Window
 	# Search screen
 	* Alt-s		- Move focus to search entry.
-	* Alt-f		- Search 
+	* Ctrl-f		- Search 
 	
 	# Search (not playlist search), Artist and Browse.
 	* Insert	- Add selected songs.

@@ -510,6 +510,10 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	{
 		next_song();
 	}
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_Delete)
+	{
+		mpd_playlist_clear(connection);
+	}
 	else
 	{
 		return FALSE;
