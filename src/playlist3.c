@@ -1079,6 +1079,7 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
+	g_free(path);
 }
 
 /* Playlist player */
