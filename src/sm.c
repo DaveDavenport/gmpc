@@ -127,7 +127,7 @@ void smc_connect(gint argc, gchar **argv)
 	pid.type = SmARRAY8;
 	pid.num_vals = 1;
 	pid.vals = &pid_val;
-	debug_printf(DEBUG_INFO,pid_str, "%i", getpid());
+	sprintf(pid_str, "%i", getpid());
 	pid_val.value = (SmPointer) pid_str;
 	pid_val.length = strlen(pid_str);
 
