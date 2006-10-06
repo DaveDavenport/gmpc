@@ -1242,10 +1242,15 @@ static void playlist_zoom_level_changed()
 void playlist_connection_changed(MpdObj *mi, int connect)
 {
 	/* Set menu items */
-	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), !connect);
-	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), connect);
-	gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), connect);
-
+	if(connect) {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
+	} else {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"),FALSE);
+	}
 
 	/** Set back to the current borwser, and update window title */
 	if(connect){
