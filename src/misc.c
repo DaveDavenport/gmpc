@@ -301,7 +301,7 @@ screenshot_add_shadow (GdkPixbuf **src)
   g_object_unref (*src);
   *src = dest;
 }
-
+/*
 void
 screenshot_add_border (GdkPixbuf **src)
 {
@@ -325,4 +325,38 @@ screenshot_add_border (GdkPixbuf **src)
 			GDK_INTERP_NEAREST, 255);
   g_object_unref (*src);
   *src = dest;
+}
+*/
+
+void screenshot_add_border (GdkPixbuf **src)
+{
+	GdkPixbuf *pb = *src;
+        int x,y,width,height;
+        int pixel;
+        int n_channels = 0;
+        int rowstride = 0;
+        guchar *pixels;
+        if(!pb){
+                return;
+        }
+        
+        rowstride = gdk_pixbuf_get_rowstride(pb);	
+        n_channels = gdk_pixbuf_get_n_channels(pb);
+        width = gdk_pixbuf_get_width (pb);
+        height = gdk_pixbuf_get_height (pb);
+        pixels = gdk_pixbuf_get_pixels(pb);
+
+        for(y=0;y<height;y++)
+        {
+                for(x=0;x<width;x++)
+                {
+                        if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
+                        {
+                                for(pixel=0; pixel < n_channels;pixel++)
+                                {
+                                        pixels[x*n_channels+y*rowstride+pixel] = 0;
+                                }
+                        }
+                }
+        }
 }
