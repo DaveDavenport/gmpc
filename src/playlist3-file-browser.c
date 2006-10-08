@@ -34,6 +34,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+static void pl3_file_browser_activate();
 static void pl3_file_browser_add(GtkWidget *cat_tree);
 static void pl3_file_browser_unselected(GtkWidget *container);
 static void pl3_file_browser_selected(GtkWidget *container);
@@ -302,6 +303,7 @@ static void pl3_file_browser_reupdate()
 	pl3_file_browser_disconnect();
 	
 	if(pl3_fb_tree_ref && pl3_cat_get_selected_browser() == file_browser_plug.id){
+/*
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 		if(path)
 		{
@@ -318,6 +320,8 @@ static void pl3_file_browser_reupdate()
 			}
 			gtk_tree_path_free(path);
 		}
+*/
+		pl3_file_browser_activate();
 	}
 }
 
@@ -869,7 +873,7 @@ static void pl3_file_browser_add_selected()
 	int songs=0;
 	int dirs = 0;
 	int pl = 0;
-	gchar *message;
+	/*gchar *message;*/
 	if(rows != NULL)
 	{
 		gchar *name;
