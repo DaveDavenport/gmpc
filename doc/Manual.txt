@@ -1,0 +1,47 @@
+GMPC v0.14.0 Manual
+===================
+Qball Cow <qball@qballcow.nl>
+v0.1, October 2006
+
+Quick Starters Guide
+---------------------
+
+If you start gmpc for the first time you see the following default window:
+
+.The Main Window, Disconnected
+image::images/gmpc-mainwindow.png["The Main Window, disconnected"]
+
+To connect to mpd, you first need to enter the location of mpd. You can do this in the preferences window.
+(Music->Preferences)
+
+.The Preferences dialog, Connection
+image::images/gmpc-preferences-connection.png["The Preferences dialog, Connection"]
+
+Enter the correct information and click *Connect* and close the preferences window.
+
+.The Main Window, connected
+image::images/gmpc-mainwindow-connected.png["The Main Window, connected"]
+
+If you haven't used anyother client with mpd yet, you won't see any music in the playlist. 
+You need to add music from MPD's database to the playlist. In gmpc you can do this in different ways, for example using the File browser.
+
+.The File Browser
+image::images/gmpc-filebrowser.png["The File Browser"]
+
+The file browser acts like any other file browser. You can browse through the music in the way it's stored on the filesystem.
+
+[NOTE]
+If you don't see any folders of music here, it's possible MPD's database haven't been updated yet. You can do this by right-clicking on the "Browse Filesystem" and select update. If this doesn't work (it might take some time), please look at MPD's link:http://mpd.wikia.com[Wiki]
+
+To add a folder, or music-file right click and select add (or press insert-key to add the selected items).
+You will see a message in the status bar.
+
+.The File Browser, adding a folder
+image::images/gmpc-filebrowser-add.png["The File Browser, adding a folder"]
+
+You can now press "Play" to enjoy your music.
+
+.Gmpc Playing
+image::images/gmpc-mainwindow-playing.png["Gmpc Playing"]
+
+TIP: To get cover art in gmpc, you need to install provider plugins
