@@ -231,6 +231,7 @@ static void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, cha
 		gtk_container_add(GTK_CONTAINER(expander), ali);		
 		g_file_get_contents(path, &content, &size,NULL);
 		gtk_label_set_text(GTK_LABEL(label), content);
+		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
 		g_free(content);
 	}
@@ -290,6 +291,7 @@ static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char
 		gtk_container_add(GTK_CONTAINER(expander), ali);		
 		g_file_get_contents(path, &content, &size,NULL);
 		gtk_label_set_text(GTK_LABEL(label), content);
+		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
 		g_free(content);
 	} else if(ret == META_DATA_UNAVAILABLE) {
@@ -347,11 +349,9 @@ static void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, ch
 		gtk_container_add(GTK_CONTAINER(expander), ali);		
 		g_file_get_contents(path, &content, &size,NULL);
 		gtk_label_set_text(GTK_LABEL(label), content);
+		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
 		g_free(content);
-
-
-
 	}
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
@@ -403,6 +403,7 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
 	gtk_table_attach(GTK_TABLE(table), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
 	ali = gtk_alignment_new(0,0.5,1,0);
+	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	gtk_container_add(GTK_CONTAINER(ali), label);
 	gtk_table_attach(GTK_TABLE(table), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
