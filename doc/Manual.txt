@@ -23,7 +23,7 @@ Enter the correct information and click *Connect* and close the preferences wind
 image::images/gmpc-mainwindow-connected.png["The Main Window, connected"]
 
 If you haven't used anyother client with mpd yet, you won't see any music in the playlist. 
-You need to add music from MPD's database to the playlist. In gmpc you can do this in different ways, for example using the File browser.
+You need to add music from MPD's database to the playlist. In gmpc you can do this in different ways, for example using the File brohttp://qballcow.nl/Guide/Manual.htmlwser.
 
 .The File Browser
 image::images/gmpc-filebrowser.png["The File Browser"]
