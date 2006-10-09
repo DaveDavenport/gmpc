@@ -396,7 +396,6 @@ static void tray_icon_destroyed()
 	{
 		create_playlist3();
 	}
-	printf("destroyed\n");
 	tray_embedded = FALSE;
 }
 
@@ -551,7 +550,6 @@ static int scroll_event(GtkWidget *eventb, GdkEventScroll *event)
 static void tray_icon_embedded()
 {
 	tray_embedded = TRUE;
-	printf("embedded\n");
 }
 static int create_tray_icon()
 {
