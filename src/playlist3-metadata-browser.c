@@ -17,6 +17,8 @@ static void info2_fill_album_view(char *, char *);
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
 
+static void as_song_clicked(GtkButton *button, gpointer data);
+
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
@@ -431,9 +433,8 @@ static void info2_fill_song_view(char *path)
 	 */
 	hbox = gtk_hbox_new(FALSE,6);
 	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
-	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
+	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), button);
@@ -442,9 +443,8 @@ static void info2_fill_song_view(char *path)
 	 * Add Button 
 	 */
 	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
-	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
-	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_album_clicked),GINT_TO_POINTER(0));
+	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
+	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_song_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), button);
