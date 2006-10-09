@@ -5,8 +5,6 @@
 #include "misc.h"
 extern GladeXML *pl3_xml;
 
-static void info2_construct(GtkWidget *);
-static void info2_destroy(GtkWidget *);
 static void info2_add(GtkWidget *);
 static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
@@ -20,18 +18,13 @@ static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
 
 static GtkWidget *resizer_vbox= NULL;
-static GtkWidget *info2_pref_vbox = NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
 static GtkEntryCompletion *entry_completion = NULL;
 
-gmpcPrefPlugin info2_gpp = {
-	info2_construct,
-	info2_destroy
-};
-
 static int current_id = 0;
+
 typedef struct {
 	GtkWidget *widget;
 	gint id;
@@ -60,7 +53,7 @@ gmpcPlugin metab_plugin = {
 	&info2_gbp,
 	NULL, /* status changed */
 	NULL, /* connection changed */
-	&info2_gpp,
+	NULL,//
 	NULL, /* cover */
 	info2_get_enabled,
 	info2_set_enabled
@@ -1677,47 +1670,6 @@ static void info2_selected(GtkWidget *container)
 static void info2_unselected(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container),info2_vbox);
-}
-
-static void info2_enable_toggle(GtkWidget *wid)
-{
-	int enable = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wid));
-	cfg_set_single_value_as_int(config, "info2-plugin", "enable", enable);
-	if (enable && playlist3_get_active() && !info2_ref)
-		info2_add(GTK_WIDGET(playlist3_get_category_tree_view()));
-	else if (info2_ref)
-	{
-		GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
-		if (path){
-			GtkTreeIter iter;
-			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter, path)){
-				gtk_tree_store_remove(playlist3_get_category_tree_store(), &iter);
-			}
-			gtk_tree_path_free(path);
-			gtk_tree_row_reference_free(info2_ref);
-			info2_ref = NULL;
-		}
-	}
-	pl3_update_go_menu();
-}
-
-static void info2_destroy(GtkWidget *container)
-{
-	gtk_container_remove(GTK_CONTAINER(container), info2_pref_vbox);
-}
-
-static void info2_construct(GtkWidget *container)
-{
-	GtkWidget *enable_cg = gtk_check_button_new_with_mnemonic("_Enable Metadata Browser");
-	info2_pref_vbox = gtk_vbox_new(FALSE,6);
-
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(enable_cg), 	
-			cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1));
-
-	g_signal_connect(G_OBJECT(enable_cg), "toggled", G_CALLBACK(info2_enable_toggle), NULL);
-	gtk_box_pack_start(GTK_BOX(info2_pref_vbox), enable_cg, FALSE, FALSE, 0);
-	gtk_container_add(GTK_CONTAINER(container), info2_pref_vbox);
-	gtk_widget_show_all(container);
 }
 
 static void info2_set_enabled(int enabled)
