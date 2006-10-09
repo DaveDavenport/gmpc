@@ -315,15 +315,6 @@ static void info2_fill_song_view(char *path)
 
 	info2_prepare_view();
 
-
-
-	/** Get song
-	data = mpd_database_find_adv(connection, TRUE, MPD_TAG_ITEM_FILENAME, path, -1);
-	if(!data)
-		return;
-	song = mpd_songDup(data->song);
-	mpd_data_free(data);
-	*/
 	song = mpd_database_get_fileinfo(connection, path);
 	if(!song)
 		return;
@@ -469,35 +460,27 @@ static void info2_fill_song_view(char *path)
 
 
 	int i =0;
-	if(song->artist)
-	{
+	if(song->artist) {
 		info2_add_table_item(table2,_("<b>Artist:</b>"),song->artist,i);
 		i++;
 	}
-	if(song->album)
-	{
+	if(song->album) {
 		info2_add_table_item(table2,_("<b>Album:</b>"),song->album,i);
 		i++;
 	}
-	if(song->genre)
-	{
+	if(song->genre) {
 		info2_add_table_item(table2,_("<b>Genre:</b>"),song->genre,i);
 		i++;
 	}
-
-	if(song->date)
-	{
+	if(song->date) {
 		info2_add_table_item(table2,_("<b>Date:</b>"),song->date,i);
 		i++;
 	}
-
-	if(song->track)
-	{
+	if(song->track) {
 		info2_add_table_item(table2,_("<b>Track:</b>"),song->track,i);
 		i++;
 	}
-	if(song->file)
-	{
+	if(song->file) {
 		/*** Dirname */		
 		char *dirname = g_path_get_dirname(song->file);
 		info2_add_table_item(table2,_("<b>Dirname:</b>"),dirname,i);
@@ -899,9 +882,7 @@ static void info2_fill_view()
 
 	gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
 	/* button */
-	/*	button = gtk_button_new_from_stock(GTK_STOCK_FIND);
-		gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, TRUE, 0);
-		*/	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, TRUE, 0);	
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, TRUE, 0);	
 
 	artist_table = gtk_table_new(1,1, TRUE);
 	gtk_table_set_row_spacings(GTK_TABLE(artist_table), 0);
@@ -953,7 +934,6 @@ static void info2_fill_artist_view(char *artist)
 	song2 = mpd_newSong();
 	song2->artist = g_strdup(artist);
 
-
 	/**
 	 * Set artist image
 	 */
@@ -968,19 +948,11 @@ static void info2_fill_artist_view(char *artist)
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song2);
 
-
-
-
-
-
-
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 	/** pack the table and add to view */
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
-
-
 
 	GtkWidget *vbox = gtk_vbox_new(FALSE, 6);
 	pd = g_malloc0(sizeof(*pd));
@@ -989,10 +961,6 @@ static void info2_fill_artist_view(char *artist)
 	pd->name = g_strdup(_("artist"));
 	meta_data_get_path_callback(song2, META_ARTIST_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
-
-
-
-
 
 	/**
 	 * Play Button 
@@ -1090,12 +1058,7 @@ static void info2_fill_artist_view(char *artist)
 			GtkWidget *table2= NULL;
 			if(!data->tag)
 				continue;
-/*
-			MpdData *data2 = mpd_database_find_adv(connection, TRUE, 
-					MPD_TAG_ITEM_ARTIST,song2->artist
-					,MPD_TAG_ITEM_ALBUM, data->tag,-1);
-			mpd_Song *song = data2->song;
-			*/
+
 			mpd_database_search_start(connection, TRUE);
 			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
 			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, data->tag);
@@ -1114,7 +1077,6 @@ static void info2_fill_artist_view(char *artist)
 			gtk_table_set_col_spacings(GTK_TABLE(table),6);
 			image = gmpc_metaimage_new(META_ALBUM_ART);
 			gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 120);
-//			gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 			gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 			gtk_container_set_border_width(GTK_CONTAINER(table), 8);
@@ -1386,14 +1348,9 @@ static void info2_fill_album_view(char *artist,char *album)
 	if(song2 && song2->artist)
 	{
 		MpdData *data = NULL;
-		int i=0;
+		int i=1;
 		int tracks = 0;
 
-		/**
-		 * Image
-		 */
-		i = 1;
-//		MpdData *data = mpd_database_find_adv(connection,TRUE, MPD_TAG_ITEM_ARTIST,song2->artist,MPD_TAG_ITEM_ALBUM, song2->album,-1);
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,song2->album);
@@ -1405,33 +1362,27 @@ static void info2_fill_album_view(char *artist,char *album)
 			for(data2 = mpd_data_get_first(data);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) tracks++;
 			tracks++;
 
-			if(song->album)
-			{
+			if(song->album)	{
 				info2_add_table_item(table2, _("<b>Album:</b>"), song->album, i);
 				i++;
 
 			}
-			if(song->genre)
-			{
+			if(song->genre)	{
 				info2_add_table_item(table2, _("<b>Genre:</b>"), song->genre, i);
 				i++;
 			}
 
-			if(song->date)
-			{
+			if(song->date) {
 				info2_add_table_item(table2, _("<b>Date:</b>"), song->date, i);
 				i++;
 			}
-			if(tracks)
-			{
+			if(tracks) {
 				char *str = g_strdup_printf("%i", tracks);
 				info2_add_table_item(table2, _("<b>Tracks:</b>"), str, i);
 				g_free(str);
 				i++;
 			}
-
-			if(song->file)
-			{
+			if(song->file) {
 				char *filename = g_path_get_dirname(song->file);
 				info2_add_table_item(table2, _("<b>Directory:</b>"), filename, i);
 				g_free(filename);
