@@ -1407,87 +1407,37 @@ static void info2_fill_album_view(char *artist,char *album)
 
 			if(song->album)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				label = gtk_label_new(song->album);
-				gtk_container_add(GTK_CONTAINER(ali), label);			
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, _("<b>Album:</b>"), song->album, i);
 				i++;
+
 			}
 			if(song->genre)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), _("<b>Genre:</b>"));
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(song->genre);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, _("<b>Genre:</b>"), song->genre, i);
 				i++;
 			}
 
 			if(song->date)
 			{
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), _("<b>Date:</b>"));
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(song->date);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, _("<b>Date:</b>"), song->date, i);
 				i++;
 			}
 			if(tracks)
 			{
 				char *str = g_strdup_printf("%i", tracks);
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), _("<b>Tracks:</b>"));
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(str);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
+				info2_add_table_item(table2, _("<b>Tracks:</b>"), str, i);
 				g_free(str);
 				i++;
 			}
 
 			if(song->file)
 			{
-				char *filename = g_path_get_basename(song->file);
-				label = gtk_label_new("");
-				filename = g_path_get_dirname(song->file);
-				label = gtk_label_new("");
-				gtk_label_set_markup(GTK_LABEL(label), _("<b>Directory:</b>"));
-				ali = gtk_alignment_new(0,0.5,0,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				label = gtk_label_new(filename);
-				ali = gtk_alignment_new(0,0.5,1,0);
-				gtk_container_add(GTK_CONTAINER(ali), label);
-				gtk_table_attach(GTK_TABLE(table2), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-				gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+				char *filename = g_path_get_dirname(song->file);
+				info2_add_table_item(table2, _("<b>Directory:</b>"), filename, i);
+				g_free(filename);
 				i++;
 			}
 		}
-
-
-
-
 
 		table2 = gtk_table_new(4, tracks,0);
 		/**
@@ -1637,26 +1587,21 @@ static void info2_add(GtkWidget *cat_tree)
 			PL3_CAT_ICON_ID, "gtk-info",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	if (info2_ref)
-	{
+	if (info2_ref) {
 		gtk_tree_row_reference_free(info2_ref);
 		info2_ref = NULL;
 	}
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter);
-	if (path)
-	{
+	if (path) {
 		info2_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(playlist3_get_category_tree_store()), path);
 		gtk_tree_path_free(path);
 	}
-
 }
 
 static void info2_selected(GtkWidget *container)
 {
-
-	if(info2_vbox== NULL)
-	{
+	if(info2_vbox== NULL) {
 		info2_init();
 	}
 
