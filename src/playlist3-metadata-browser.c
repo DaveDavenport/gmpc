@@ -35,6 +35,7 @@ static int current_id = 0;
 typedef struct {
 	GtkWidget *widget;
 	gint id;
+	gchar *name;
 }PassData;
 
 /* Needed plugin_wp stuff */
@@ -201,7 +202,7 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 }
 
 
-static void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
+static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
 	GtkWidget *vbox= pd->widget;
 	GtkWidget *ali = NULL;
@@ -216,10 +217,11 @@ static void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, cha
 		char *content = NULL;
 		GtkWidget *expander = NULL;
 		GtkWidget *label = NULL;
+		gchar *labstr= g_strdup_printf(_("<b>%s info:</b>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-		expander = gtk_expander_new("<b>Album Info:</b>");	
+		expander = gtk_expander_new(labstr);	
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
 
@@ -234,151 +236,41 @@ static void info2_cover_album_txt_fetched(mpd_Song *song,MetaDataResult ret, cha
 		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
 		g_free(content);
+		g_free(labstr);
 	}
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
 		GtkWidget *label = NULL,*ali = NULL;
+		gchar *labstr= g_strdup_printf(_("<i>No %s info found</i>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>No Album Info found</i>");
+		gtk_label_set_markup(GTK_LABEL(label), labstr);
 		gtk_container_add(GTK_CONTAINER(ali), label);
 		gtk_container_add(GTK_CONTAINER(vbox), ali);
 		gtk_widget_show_all(vbox);
+		g_free(labstr);
 	}
 	else if(ret == META_DATA_FETCHING)
 	{
 		GtkWidget *label = NULL,*ali = NULL;
+		gchar *labstr= g_strdup_printf(_("<i>Fetching %s info</i>"),pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>Fetching Album Info</i>");
+		gtk_label_set_markup(GTK_LABEL(label),labstr); 
 		gtk_container_add(GTK_CONTAINER(ali), label);
 		gtk_container_add(GTK_CONTAINER(vbox), ali);
 		gtk_widget_show_all(vbox);
+		g_free(labstr);
 	}
 
-	if(ret != META_DATA_FETCHING)g_free(pd);
-}
-
-static void info2_cover_song_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
-{
-	GtkWidget *vbox= pd->widget;
-	GtkWidget *ali = NULL;
-	if(pd->id != current_id)
-	{                                               	
-			if(ret != META_DATA_FETCHING)g_free(pd);
-			return;
-	}                                               	
-	if(ret == META_DATA_AVAILABLE) {
-		gsize size;
-		char *content = NULL;
-		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-		expander = gtk_expander_new("<b>Song Lyrics:</b>");	
-		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
-		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-
-		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(expander), ali);		
-		g_file_get_contents(path, &content, &size,NULL);
-		gtk_label_set_text(GTK_LABEL(label), content);
-		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-		gtk_widget_show_all(vbox);
-		g_free(content);
-	} else if(ret == META_DATA_UNAVAILABLE) {
-		GtkWidget *label = NULL,*ali = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>No Lyric found</i>");
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
-		gtk_widget_show_all(vbox);
-	} else if(ret == META_DATA_FETCHING) {
-		GtkWidget *label = NULL,*ali = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>Fetching Lyric</i>");
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
-		gtk_widget_show_all(vbox);
+	if(ret != META_DATA_FETCHING){
+		if(pd->name) g_free(pd->name);
+		g_free(pd);
 	}
-	if(ret != META_DATA_FETCHING)g_free(pd);
-}
-
-
-
-static void info2_cover_artist_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
-{
-	GtkWidget *vbox= pd->widget;
-	GtkWidget *ali = NULL;
-	if(pd->id != current_id)
-	{                                               	
-		if(ret != META_DATA_FETCHING)g_free(pd);
-		return;
-	}                                               	
-	if(ret == META_DATA_AVAILABLE)
-	{
-		gsize size;
-		char *content = NULL;
-		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-		expander = gtk_expander_new("<b>Artist Info:</b>");	
-		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
-		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-
-		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(expander), ali);		
-		g_file_get_contents(path, &content, &size,NULL);
-		gtk_label_set_text(GTK_LABEL(label), content);
-		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-		gtk_widget_show_all(vbox);
-		g_free(content);
-	}
-	else if(ret == META_DATA_UNAVAILABLE)
-	{
-		GtkWidget *label = NULL,*ali = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>No Artist Info found</i>");
-		gtk_container_add(GTK_CONTAINER(ali), label); 
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
-		gtk_widget_show_all(vbox);
-	}
-	else if(ret == META_DATA_FETCHING)
-	{
-		GtkWidget *label = NULL,*ali = NULL;
-		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<i>Fetching Artist Info</i>");
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
-		gtk_widget_show_all(vbox);
-	}
-
-	if(ret != META_DATA_FETCHING)g_free(pd);
 }
 
 static void as_song_viewed_clicked(GtkButton *button, gpointer data)
@@ -546,7 +438,8 @@ static void info2_fill_song_view(char *path)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info2_cover_song_txt_fetched, pd);
+	pd->name = g_strdup(_("song"));
+	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 	/**
@@ -1100,7 +993,8 @@ static void info2_fill_artist_view(char *artist)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	meta_data_get_path_callback(song2, META_ARTIST_TXT, (MetaDataCallback)info2_cover_artist_txt_fetched, pd);
+	pd->name = g_strdup(_("artist"));
+	meta_data_get_path_callback(song2, META_ARTIST_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 
@@ -1441,7 +1335,8 @@ static void info2_fill_album_view(char *artist,char *album)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	meta_data_get_path_callback(song2, META_ALBUM_TXT, (MetaDataCallback)info2_cover_album_txt_fetched, pd);
+	pd->name = g_strdup(_("album"));
+	meta_data_get_path_callback(song2, META_ALBUM_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 
