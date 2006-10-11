@@ -792,7 +792,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 		pl3_current_playlist_browser_delete_selected_songs ();
 		return TRUE;                                          		
 	}
-	else if(event->keyval == GDK_i)
+	else if(event->keyval == GDK_i && event->state&GDK_CONTROL_MASK)
 	{
 		pl3_current_playlist_browser_show_info();
 		return TRUE;
