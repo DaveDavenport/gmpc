@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-09 21:04+0200\n"
+"POT-Creation-Date: 2006-10-11 23:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
 #. set up tray icon
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:565
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:563
 msgid "Gnome Music Player Client"
 msgstr ""
 
@@ -1077,27 +1077,27 @@ msgstr ""
 msgid "Unkown"
 msgstr ""
 
-#: ../src/tray-icon.c:459
+#: ../src/tray-icon.c:458
 msgid "Pl_ay/Pause"
 msgstr ""
 
-#: ../src/tray-icon.c:466
+#: ../src/tray-icon.c:465
 msgid "_Stop"
 msgstr ""
 
-#: ../src/tray-icon.c:472
+#: ../src/tray-icon.c:471
 msgid "_Next"
 msgstr ""
 
-#: ../src/tray-icon.c:479
+#: ../src/tray-icon.c:478
 msgid "_Previous"
 msgstr ""
 
-#: ../src/tray-icon.c:496
+#: ../src/tray-icon.c:495
 msgid "Pla_ylist"
 msgstr ""
 
-#: ../src/tray-icon.c:505
+#: ../src/tray-icon.c:504
 msgid "Song _Information"
 msgstr ""
 

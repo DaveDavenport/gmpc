@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-09 21:04+0200\n"
-"PO-Revision-Date: 2006-10-09 20:09-0000\n"
+"POT-Creation-Date: 2006-10-11 23:05+0200\n"
+"PO-Revision-Date: 2006-10-11 21:59-0000\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr "Nakładka gnome na demona mpd"
 
 #. set up tray icon
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:565
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:563
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -125,7 +125,7 @@ msgstr "<b>Powiadomienia</b>"
 
 #: ../glade/gmpc.glade.h:24
 msgid "<b>Song Markup</b>"
-msgstr "<b>Schemat dla piosenek</b>"
+msgstr "<b>Schemat dla utworów</b>"
 
 #: ../glade/gmpc.glade.h:25
 msgid "<b>Sort by:</b>"
@@ -241,7 +241,7 @@ msgstr "Centruj odtwarzaną piosenkę"
 
 #: ../glade/gmpc.glade.h:53
 msgid "Clear cover art cache"
-msgstr "Wyczyść pamięć cache okładek"
+msgstr "Wyczyść pamięć podręczną okładek"
 
 #: ../glade/gmpc.glade.h:54
 msgid "Conn_ect"
@@ -265,7 +265,7 @@ msgstr "Edytuj okładkę"
 
 #: ../glade/gmpc.glade.h:59
 msgid "Edit Song Formatting"
-msgstr "Edytuj formatowanie piosenek"
+msgstr "Edytuj formatowanie utworów"
 
 #: ../glade/gmpc.glade.h:60
 msgid "Edit _Browser Markup"
@@ -302,10 +302,10 @@ msgid ""
 "These plugins fetch the cover image and stores them locally.\n"
 "You can download provider plugins: http://cms.qballcow.nl/"
 msgstr ""
-"Gmpc nie posiada mechanizmu do pobierania okładek.\n"
-"Korzysta on z dodatkowych wtyczek dostarczających,\n"
-"ściągających i zapisujących obrazy okładek na lokalnym dysku\n"
-"Możesz je ściągnąć ze strony: http://cms.qballcow.nl/"
+"GMPC nie posiada mechanizmu do pobierania okładek.\n"
+"Wykorzystuje dodatkowe wtyczki dostarczające,\n"
+"ściągające i zapisujące obrazy okładek na lokalnym dysku\n"
+"Możesz je pobrać ze strony: http://cms.qballcow.nl/"
 
 #: ../glade/gmpc.glade.h:71
 msgid "Host:"
@@ -403,7 +403,7 @@ msgstr "Edytuj schemat listy odtwarzania"
 
 #: ../glade/gmpc.glade.h:94
 msgid "_Id3 Info"
-msgstr "informacje id3"
+msgstr "Informacje id3"
 
 #: ../glade/gmpc.glade.h:95
 msgid "_Lyric"
@@ -439,15 +439,15 @@ msgstr "czas przenikania (s):"
 
 #: ../glade/gmpc.glade.h:103
 msgid "gmpc"
-msgstr "gmpc"
+msgstr "GMPC"
 
 #: ../glade/gmpc.glade.h:104
 msgid "gmpc - Configuration"
-msgstr "gmpc - konfiguracja"
+msgstr "GMPC - konfiguracja"
 
 #: ../glade/gmpc.glade.h:105
 msgid "gmpc - song info"
-msgstr "gmpc - informacje o utworze"
+msgstr "GMPC - informacje o utworze"
 
 #: ../glade/gmpc.glade.h:106
 msgid "localhost"
@@ -597,7 +597,7 @@ msgstr "_Widok"
 
 #: ../glade/playlist3.glade.h:31
 msgid "gmpc - Playlist Manager"
-msgstr "gmpc - menadżer list odtwarzania"
+msgstr "GMPC - menadżer list odtwarzania"
 
 #: ../glade/playlist3.glade.h:32
 msgid "name:"
@@ -760,7 +760,7 @@ msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
 msgstr ""
-"Gmpc jest podłączony do serwera mpd w wersji niższej niż 0.12.0\n"
+"GMPC jest podłączony do serwera mpd w wersji niższej niż 0.12.0\n"
 "Może funkcjonować, ale nie jest już wspierane."
 
 #: ../src/metadata.c:675
@@ -1138,27 +1138,27 @@ msgstr "Inne."
 msgid "Unkown"
 msgstr "Nieznany"
 
-#: ../src/tray-icon.c:459
+#: ../src/tray-icon.c:458
 msgid "Pl_ay/Pause"
 msgstr "Odtarzaj/Pauzuj"
 
-#: ../src/tray-icon.c:466
+#: ../src/tray-icon.c:465
 msgid "_Stop"
 msgstr "Zatrzymaj"
 
-#: ../src/tray-icon.c:472
+#: ../src/tray-icon.c:471
 msgid "_Next"
 msgstr "Następny"
 
-#: ../src/tray-icon.c:479
+#: ../src/tray-icon.c:478
 msgid "_Previous"
 msgstr "Poprzedni"
 
-#: ../src/tray-icon.c:496
+#: ../src/tray-icon.c:495
 msgid "Pla_ylist"
 msgstr "Lista odtwarzania"
 
-#: ../src/tray-icon.c:505
+#: ../src/tray-icon.c:504
 msgid "Song _Information"
 msgstr "Informacje o utworze"
 
@@ -1255,19 +1255,19 @@ msgid "Draw a shadow under the image"
 msgstr "Rysuj cień pod obrazem"
 
 #: ../src/playlist3-metadata-browser.c:215
-#, fuzzy, c-format
+#, c-format
 msgid "<b>%s info:</b>"
-msgstr "<b>Płyta:</b>"
+msgstr "<b>Informacje o %s:</b>"
 
 #: ../src/playlist3-metadata-browser.c:239
 #, c-format
 msgid "<i>No %s info found</i>"
-msgstr ""
+msgstr "<i>Nie znaleziono informacji o %s</i>"
 
 #: ../src/playlist3-metadata-browser.c:253
 #, c-format
 msgid "<i>Fetching %s info</i>"
-msgstr ""
+msgstr "<i>Pobieranie informacji o %s</i>"
 
 #: ../src/playlist3-metadata-browser.c:486
 msgid "<b>Dirname:</b>"
