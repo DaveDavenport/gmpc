@@ -52,21 +52,51 @@ TIP: To get cover art in gmpc, you need to install provider plugins
 Main Window
 -----------
 
-.Keybindings:
+The main window consist of everything beside the browser. It features the player controls, and the posibility to switch from one browser to the other.
+
+.Main window 
+image::images/gmpc-mainwindow-playing.png["Gmpc Playing"]
+
+Keybindings
+~~~~~~~~~~~
+
+.Keybindings Player:
 [frame="all",grid="all"]
 `--------------`-----------------
 Key combination	Command
 ------------------------------
-Ctrl-Right	Skip to next song
-Ctrl-Left	Skipt to previous song
-Ctrl-Up		Play/Pause
-Ctrl-Down	Stop
-Ctrl-s		Random on/off
-Ctrl-r		Repeat on/off
+Ctrl - Right	Skip to next song
+Ctrl - Left	Skipt to previous song
+Ctrl - Up	Play/Pause
+Ctrl - Down	Stop
+Ctrl - s	Random on/off
+Ctrl - r	Repeat on/off
+----------------------------
+
+
+.Keybindings Interface:
+[frame="all",grid="all"]
+`--------------`-----------------
+Key combination	Command
+------------------------------
+Ctrl- '+'	<<X22,Expand interface>>
+Ctrl- -		<<X22,Collapse interface>>
+Keypad +	<<X22,Expand interface>>
+Keypad - 	<<X22,Collapse interface>>
 F1		Go to <<X30,'the current playlist'>>
 F2		Go to <<X40, 'the File browser'>>
 F3		Go to <<X50, 'the Artist browser'>>
 ------------------------------
+
+[[X22]]
+Interface Expanding/Collapsing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The main window has 3 posible sizes:
+
+1. *Full size* Everything is possible
+2. *Small mode* Hides the Left treeview, and replaces it by a Selection box.
+3. *Tiny mode* Only shows the player elements.
 
 
 [[X30]]
