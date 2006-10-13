@@ -107,7 +107,8 @@ static gchar *tray_get_tooltip_text()
 	}
 	else
 	{
-		strcpy(result,"Gnome Music Player Client");
+		strcpy(result,_("<b>Gnome Music Player Client</b>"));
+/*		strcpy(result,"<b><span size='xx-large'>G</span><span size='x-large'>M</span><span size='large'>P</span><span >C</span></b>");*/
 	}
 
 
@@ -145,11 +146,14 @@ static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event,
 static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpointer n)
 {
 	GtkWidget  *event2;
+	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	int from_tray = GPOINTER_TO_INT(n);
 	char *tooltiptext = NULL;
 	if(tip != NULL)
 	{
+		/** TODO: reuse all tooltip? */
 		tray_leave_cb(NULL, NULL, 0);
+	 
 	}
 	tooltiptext = tray_get_tooltip_text();
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
@@ -163,6 +167,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
 	{
 		GtkWidget *alimg, *hbox, *vbox,*event;
+		int state;
 		
 		hbox = gtk_hbox_new(FALSE, 0);
 		gtk_widget_set_app_paintable(GTK_WIDGET(tip), TRUE);
@@ -171,17 +176,31 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		alimg = gmpc_metaimage_new(META_ALBUM_ART);
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
-		gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
+		state = mpd_player_get_state(connection);
+		if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)		
+		{
+			gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
+		}
+		else 
+		{
+			gchar *path = gmpc_get_full_image_path("gmpc.png"); 
+			gmpc_metaimage_set_cover_from_path(GMPC_METAIMAGE(alimg), path);
+			g_free(path);
+		}
+		gtk_widget_show(alimg);
 
 		event = gtk_event_box_new();
-		gtk_widget_modify_bg(GTK_WIDGET(event),GTK_STATE_NORMAL, &(tip->style->bg[GTK_STATE_SELECTED]));
+
+		gtk_widget_modify_bg(GTK_WIDGET(event),GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
 		gtk_widget_set_size_request(event, 86,86);
 		gtk_container_add(GTK_CONTAINER(event), alimg);
+		gtk_widget_show_all(event);	
 
 		/**
 		 * Add tip to event
 		 */
 		gtk_container_add(GTK_CONTAINER(tip), event2);
+		gtk_widget_show(event2);
 		gtk_container_add(GTK_CONTAINER(event2), hbox);
 		gtk_box_pack_start(GTK_BOX(hbox), event,FALSE, TRUE,0);
 
@@ -194,11 +213,11 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		gtk_misc_set_alignment(GTK_MISC(tooltip_label), 0,0);
 		gtk_label_set_ellipsize(GTK_LABEL(tooltip_label), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start(GTK_BOX(vbox), tooltip_label,TRUE, TRUE,0);
-
+		gtk_widget_show(tooltip_label);
 
 
 		tooltip_pb = gtk_progress_bar_new();
-		{
+		if(mpd_check_connected(connection)){
 			int totalTime = mpd_status_get_total_song_time(connection);
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
 			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
@@ -207,19 +226,19 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
 			g_free(label);
+			gtk_widget_show(tooltip_pb);
 		}
 
 		gtk_box_pack_start(GTK_BOX(vbox), tooltip_pb,FALSE, TRUE,0);	
 		gtk_box_pack_start(GTK_BOX(hbox), vbox,TRUE, TRUE,0);
-	
+		gtk_widget_show(vbox);	
 	
 		
-		gtk_widget_show_all(hbox);
+		gtk_widget_show(hbox);
 	}
 
 	g_free(tooltiptext);
 	/** Position popup 
-	 * FIXME: Do this propperly following the users settings.
 	 */
 
 
@@ -295,7 +314,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, msize.height-height-y);	
 				break;                                                  				
 		}
-		gtk_widget_show_all(tip);
+		gtk_widget_show(tip);
 	}
 	return TRUE;
 }

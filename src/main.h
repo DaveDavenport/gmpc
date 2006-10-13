@@ -118,4 +118,11 @@ void meta_data_add_plugin(gmpcPlugin *plug);
  * TODO move this 
  */
 void url_start_real(const gchar *url);
+
+/*
+ * functions to get patch to different files.
+ * This is needed to make the windows port work.
+ */
+char *gmpc_get_full_image_path(char *filename);
+
 #endif

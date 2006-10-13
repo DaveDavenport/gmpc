@@ -94,11 +94,11 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 /** init stock icons */
 static void init_stock_icons(void);
 
-/*
- * functions to get patch to different files.
- * This is needed to make the windows port work.
- */
-static char *gmpc_get_full_image_path(char *filename);
+
+
+
+
+
 
 /*
  * the xml fle pointer to the player window
@@ -140,7 +140,7 @@ static void create_gmpc_paths(void);
  * While this is compile time on linux, windows
  * needs to determine it run-time.
  */
-static char *gmpc_get_full_image_path(char *filename)
+char *gmpc_get_full_image_path(char *filename)
 {
 	gchar *path;
 #ifdef WIN32
