@@ -246,15 +246,21 @@ static void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult 
 				}
 				else if(ret == META_DATA_FETCHING)
 				{
-					GdkPixbuf *pb= gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree), "media-loading-cover", -1, NULL);
-					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
+					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",64);
+					GdkPixbuf *pb2, *pb= gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree), "media-loading-cover",-1, NULL);
+					pb2 = gdk_pixbuf_scale_simple(pb,size, size,GDK_INTERP_BILINEAR);
+					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb2, -1);
 					if(pb)g_object_unref(pb);
+					if(pb2)g_object_unref(pb2);
 				}
 				else
 				{
-					GdkPixbuf *pb = gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree),"media-no-cover", -1, NULL);
-					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb, -1);
+					int size = cfg_get_single_value_as_int_with_default(config, "cover-art", "browser-size",64);
+					GdkPixbuf *pb2,*pb = gtk_widget_render_icon(GTK_WIDGET(pl3_ab_tree),"media-no-cover", -1, NULL);
+					pb2 = gdk_pixbuf_scale_simple(pb,size, size,GDK_INTERP_BILINEAR);
+					gtk_list_store_set(pl3_ab_store,&iter, PL3_AB_ICON, pb2, -1);
 					if(pb)g_object_unref(pb);
+					if(pb2)g_object_unref(pb2);
 					gtk_tree_row_reference_free(ref);
 				}
 			}
