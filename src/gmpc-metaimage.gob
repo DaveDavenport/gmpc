@@ -22,7 +22,24 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean draw_border = {TRUE};
 	public gboolean draw_shadow = {FALSE};
 	public gboolean squared = {TRUE};
+	public gchar *no_cover_icon = {g_strdup("media-no-cover")} destroywith g_free;
+	public gchar *loading_cover_icon = {g_strdup("media-loading-cover")} destroywith g_free;
 
+	property STRING loading_cover_icon
+		(nick = _("Loading Cover Icon"),
+		blurb = _("Stock icon to use when loading a cover"),
+		default_value = "media-loading-cover",
+		export,
+		link);
+
+
+
+	property STRING no_cover_icon
+		(nick = _("No Cover Icon"),
+		blurb = _("Stock icon to use when no cover is present"),
+		default_value = "media-no-cover",
+		export,
+		link);
 	property INT image_type 
 		(nick = _("Image type"),
 		blurb = _("Type of the image, like artist art"),
@@ -226,25 +243,35 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	set_cover_na(self)
 	{
+		GdkPixbuf *pb,*pb2; 
 		if(self->hide_on_na)
 		{		
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
-		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-no-cover", -1);
+		pb = gtk_widget_render_icon(GTK_WIDGET(self), self->no_cover_icon, -1, NULL);
+		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
 		if(self->squared)
 			gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+		g_object_unref(pb);
+		g_object_unref(pb2);
 	}
 	public 
 	void
 	set_cover_fetching(self)
 	{
+		GdkPixbuf *pb,*pb2; 
 		if(self->hide_on_na)
 		{		
 			gtk_widget_hide(GTK_WIDGET(self));
 		}
-		gtk_image_set_from_stock(GTK_IMAGE(self->_priv->image), "media-loading-cover", -1);
+		pb = gtk_widget_render_icon(GTK_WIDGET(self), self->loading_cover_icon, -1, NULL);
+		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
+		gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
 		if(self->squared)
 			gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+		g_object_unref(pb);
+		g_object_unref(pb2);
 	}
 	public 
 	void

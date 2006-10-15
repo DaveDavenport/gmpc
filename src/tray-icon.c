@@ -176,6 +176,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		alimg = gmpc_metaimage_new(META_ALBUM_ART);
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
+		gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(alimg),"gmpc"); 
 		state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)		
 		{
@@ -183,9 +184,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		}
 		else 
 		{
-			gchar *path = gmpc_get_full_image_path("gmpc.png"); 
-			gmpc_metaimage_set_cover_from_path(GMPC_METAIMAGE(alimg), path);
-			g_free(path);
+			gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(alimg));
 		}
 		gtk_widget_show(alimg);
 

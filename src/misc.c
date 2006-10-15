@@ -180,27 +180,6 @@ create_blur_filter (int radius)
   
 }
 
-static ConvFilter *
-create_outline_filter (int radius)
-{
-  ConvFilter *filter;
-  int x, y;
-  
-  filter = g_new0 (ConvFilter, 1);
-  filter->size = radius * 2 + 1;
-  filter->data = g_new (double, filter->size * filter->size);
-
-  for (y = 0; y < filter->size; y++)
-  {
-    for (x = 0 ; x < filter->size; x++) 
-    {
-      filter->data [y * filter->size + x] = (dist (x, y, radius, radius) < radius + 0.2) ?
-	      1.0 : 0.0;
-    }
-  }
-
-  return filter;
-}
 
 static GdkPixbuf *
 create_effect (GdkPixbuf *src, ConvFilter const *filter, int radius, int offset, double opacity)
