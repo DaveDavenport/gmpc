@@ -108,7 +108,7 @@ static gchar *tray_get_tooltip_text()
 	else
 	{
 		strcpy(result,_("<b>Gnome Music Player Client</b>"));
-/*		strcpy(result,"<b><span size='xx-large'>G</span><span size='x-large'>M</span><span size='large'>P</span><span >C</span></b>");*/
+		/*		strcpy(result,"<b><span size='xx-large'>G</span><span size='x-large'>M</span><span size='large'>P</span><span >C</span></b>");*/
 	}
 
 
@@ -143,8 +143,45 @@ static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event,
 
 	return TRUE;
 }
+
+
+static gboolean popup_enter_notify(GtkWidget *event2, GdkEventCrossing *event, GtkWidget *box)
+{
+	gtk_widget_hide(tooltip_pb);
+	gtk_widget_show_all(box);       	
+	if(popup_timeout != -1)
+	{
+		g_source_remove(popup_timeout);
+	}                                      	
+	return FALSE;
+}
+static gboolean popup_leave_notify(GtkWidget *event2, GdkEventCrossing *event, GtkWidget *box)
+{
+	/** TODO: Is there a better way todo this? */
+	if(event->detail != 2)
+	{
+		gtk_widget_show(tooltip_pb);
+		gtk_widget_hide(box);
+		if(popup_timeout != -1)
+		{
+			g_source_remove(popup_timeout);
+		}
+		popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000,
+				(GSourceFunc)(tray_leave_cb),
+				NULL);
+
+
+
+
+
+
+	}
+	return FALSE;
+}
+
 static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpointer n)
 {
+	GtkWidget *hbox2 = NULL;
 	GtkWidget  *event2;
 	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	int from_tray = GPOINTER_TO_INT(n);
@@ -153,7 +190,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	{
 		/** TODO: reuse all tooltip? */
 		tray_leave_cb(NULL, NULL, 0);
-	 
+
 	}
 	tooltiptext = tray_get_tooltip_text();
 	tip = gtk_window_new(GTK_WINDOW_POPUP);
@@ -168,11 +205,11 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	{
 		GtkWidget *alimg, *hbox, *vbox,*event;
 		int state;
-		
+
 		hbox = gtk_hbox_new(FALSE, 0);
 		gtk_widget_set_app_paintable(GTK_WIDGET(tip), TRUE);
 		g_signal_connect(G_OBJECT(tip), "expose-event", G_CALLBACK(tip_expose_event), NULL);
-		
+
 		alimg = gmpc_metaimage_new(META_ALBUM_ART);
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
@@ -205,7 +242,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 
 		vbox = gtk_vbox_new(FALSE,0);
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 3);
-		
+
 		tooltip_label = gtk_label_new("");
 		gtk_widget_modify_text(GTK_WIDGET(tooltip_label),GTK_STATE_NORMAL, &(tip->style->black));
 		gtk_label_set_markup(GTK_LABEL(tooltip_label),tooltiptext); 
@@ -228,17 +265,50 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 			gtk_widget_show(tooltip_pb);
 		}
 
+
 		gtk_box_pack_start(GTK_BOX(vbox), tooltip_pb,FALSE, TRUE,0);	
+		hbox2 = gtk_hbox_new(TRUE, 0);
+		{
+			GtkWidget *button = NULL;
+			/** Previous */
+			button = gtk_button_new();
+			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PREVIOUS, GTK_ICON_SIZE_BUTTON));
+			g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(prev_song), NULL);
+			gtk_box_pack_start(GTK_BOX(hbox2), button, TRUE, TRUE,0);
+
+			/* Stop */
+			button = gtk_button_new();	
+			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP, GTK_ICON_SIZE_BUTTON));
+			g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(stop_song), NULL);
+			gtk_box_pack_start(GTK_BOX(hbox2), button, TRUE, TRUE,0);
+			/* Play */	
+			button = gtk_button_new();	
+			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+			g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(play_song), NULL);
+			gtk_box_pack_start(GTK_BOX(hbox2), button, TRUE, TRUE,0);
+			/* Next */
+			button = gtk_button_new();	
+			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT, GTK_ICON_SIZE_BUTTON));
+			g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(next_song), NULL);
+			gtk_box_pack_start(GTK_BOX(hbox2), button, TRUE, TRUE,0);
+
+
+		}
+		gtk_box_pack_start(GTK_BOX(vbox), hbox2,FALSE, TRUE,0);		
 		gtk_box_pack_start(GTK_BOX(hbox), vbox,TRUE, TRUE,0);
 		gtk_widget_show(vbox);	
-	
-		
+
+
 		gtk_widget_show(hbox);
 	}
 
 	g_free(tooltiptext);
 	/** Position popup 
-	 */
+	*/
 
 
 	{
@@ -268,7 +338,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 			screen = gdk_screen_get_default();
 			x_tv = y_tv = 0;
 		}
-		
+
 		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
 		/* user defined offsets */
 		y=cfg_get_single_value_as_int_with_default(config, "tray-icon","y-offset",0);
@@ -315,6 +385,9 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		}
 		gtk_widget_show(tip);
 	}
+	g_signal_connect(G_OBJECT(event2), "enter-notify-event", G_CALLBACK(popup_enter_notify),hbox2);
+	g_signal_connect(G_OBJECT(event2), "leave-notify-event", G_CALLBACK(popup_leave_notify),hbox2);
+
 	return TRUE;
 }
 
@@ -335,7 +408,7 @@ static void tray_leave_cb (GtkWidget *w, GdkEventCrossing *e, gpointer n)
 
 void tray_notify_popup()
 {
-	if(mpd_player_get_state(connection) != MPD_PLAYER_STOP)
+	if(mpd_check_connected(connection) && mpd_player_get_state(connection) != MPD_PLAYER_STOP)
 	{
 		tray_leave_cb(NULL, NULL, NULL);	
 		tray_motion_cb((GtkWidget*)tray_icon,NULL,GINT_TO_POINTER(0));
@@ -358,7 +431,12 @@ void tray_notify_popup()
 static void tray_icon_song_change()
 {
 	if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "do-popup", 1))
-		tray_notify_popup();
+	{
+		if(!tip)
+		{
+			tray_notify_popup();
+		}
+	}
 }
 
 void tray_icon_connection_changed(MpdObj *mi, int connect)
@@ -378,6 +456,7 @@ static void tray_icon_state_change()
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
 		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", -1);
+		tray_leave_cb(NULL, NULL,0);
 		/*if(cover_pb)
 		  {
 		  g_object_unref(cover_pb);
@@ -598,9 +677,9 @@ static int create_tray_icon()
 
 
 	g_signal_connect(G_OBJECT(event), "enter-notify-event", 
-			G_CALLBACK(tray_motion_cb), GINT_TO_POINTER(1));
-	g_signal_connect(G_OBJECT(event), "leave-notify-event",
-			G_CALLBACK(tray_leave_cb), NULL);
+			G_CALLBACK(/*tray_motion_cb*/tray_notify_popup), GINT_TO_POINTER(1));
+	//	g_signal_connect(G_OBJECT(event), "leave-notify-event",
+	//			G_CALLBACK(tray_leave_cb), NULL);
 	g_signal_connect(G_OBJECT(event), "scroll-event", G_CALLBACK(scroll_event), NULL);
 	/* show all */
 	gtk_widget_show(GTK_WIDGET(tray_icon));
@@ -717,7 +796,7 @@ static void tray_icon_pref_destroy(GtkWidget *container)
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(tray_pref_xml);
 		tray_pref_xml = NULL;
-		
+
 
 	}
 }
