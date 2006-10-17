@@ -101,7 +101,6 @@ GtkListStore *pl3_ab_store = NULL;
 GtkWidget *pl3_ab_vbox = NULL;
 GtkWidget *pl3_ab_tree_search = NULL;
 
-GtkWidget *pl3_cat_tree = NULL; /* the left pane tree */
 
 
 GtkTreeRowReference *pl3_ab_tree_ref = NULL;
@@ -571,7 +570,7 @@ void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 
 static void pl3_artist_browser_add_folder()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(playlist3_get_category_tree_view());
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
@@ -643,6 +642,7 @@ static void pl3_artist_browser_replace_folder()
 
 static void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type)
 {
+	if(selected_type != artist_browser_plug.id) return; 
 	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert )
 	{
 		pl3_artist_browser_replace_folder();
@@ -721,7 +721,7 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			-1);
 	if (r_type&(PL3_ENTRY_ARTIST|PL3_ENTRY_ALBUM))
 	{
-		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)playlist3_get_category_tree_view());
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 		GtkTreeIter iter;
 
@@ -729,7 +729,7 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		{
 			GtkTreeIter citer;
 			GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
-			gtk_tree_view_expand_row(GTK_TREE_VIEW(pl3_cat_tree), path, FALSE);
+			gtk_tree_view_expand_row(GTK_TREE_VIEW(playlist3_get_category_tree_view()), path, FALSE);
 			gtk_tree_path_free(path);
 			if(gtk_tree_model_iter_children(model, &citer, &iter))
 			{
@@ -740,7 +740,7 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
-						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cat_tree),
+						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(playlist3_get_category_tree_view()),
 								path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
 						g_free(name);
@@ -753,7 +753,7 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	else if(r_type&PL3_ENTRY_DIR_UP)
 	{
-		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)pl3_cat_tree);
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)playlist3_get_category_tree_view());
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 		GtkTreeIter iter,parent;
 
@@ -788,8 +788,6 @@ static void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTre
 	string = format_time(time);
 	pl3_push_rsb_message(string);
 	g_free(string);
-	/* store the tree */
-	pl3_cat_tree= GTK_WIDGET(tree);
 }
 
 static void pl3_artist_browser_selected(GtkWidget *container)

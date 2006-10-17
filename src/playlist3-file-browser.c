@@ -208,7 +208,7 @@ static void pl3_file_browser_init()
 
 static void pl3_file_browser_add_folder()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(playlist3_get_category_tree_view());
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 
@@ -564,6 +564,7 @@ static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree,
 
 static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type)
 {
+	if(selected_type != file_browser_plug.id) return; 
 	if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
 	{
 		pl3_file_browser_replace_folder();
