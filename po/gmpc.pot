@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-10-11 23:05+0200\n"
+"POT-Creation-Date: 2006-10-18 22:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
 #. set up tray icon
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:563
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:660
 msgid "Gnome Music Player Client"
 msgstr ""
 
@@ -467,8 +467,8 @@ msgstr ""
 msgid "<enter playlist name>"
 msgstr ""
 
-#: ../glade/playlist3.glade.h:2 ../src/playlist3.c:1122
-#: ../src/playlist3.c:1125
+#: ../glade/playlist3.glade.h:2 ../src/playlist3.c:1124
+#: ../src/playlist3.c:1127
 msgid "<span size=\"large\" weight=\"bold\">Not Playing</span>"
 msgstr ""
 
@@ -492,7 +492,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../glade/playlist3.glade.h:9 ../src/playlist3.c:1465
+#: ../glade/playlist3.glade.h:9 ../src/playlist3.c:1467
 msgid "Not Connected"
 msgstr ""
 
@@ -813,38 +813,38 @@ msgstr ""
 msgid "%i %s %02i %s %02i %s"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:206
+#: ../src/playlist3-artist-browser.c:205
 msgid "Browse Artists"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:936 ../src/playlist3-file-browser.c:909
+#: ../src/playlist3-artist-browser.c:940 ../src/playlist3-file-browser.c:910
 msgid "songs"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:936
+#: ../src/playlist3-artist-browser.c:940
 #: ../src/playlist3-metadata-browser.c:427
 msgid "song"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:940
+#: ../src/playlist3-artist-browser.c:944
 msgid "artists"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:940
+#: ../src/playlist3-artist-browser.c:944
 #: ../src/playlist3-metadata-browser.c:961
 msgid "artist"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:944
+#: ../src/playlist3-artist-browser.c:948
 msgid "albums"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:944
+#: ../src/playlist3-artist-browser.c:948
 #: ../src/playlist3-metadata-browser.c:1293
 msgid "album"
 msgstr ""
 
-#: ../src/playlist3-artist-browser.c:1048
+#: ../src/playlist3-artist-browser.c:1052
 msgid "Artist Browser"
 msgstr ""
 
@@ -854,23 +854,23 @@ msgid ""
 "Please reinstall gmpc"
 msgstr ""
 
-#: ../src/playlist3.c:1266 ../src/playlist3.c:1275 ../src/playlist3.c:1380
+#: ../src/playlist3.c:1268 ../src/playlist3.c:1277 ../src/playlist3.c:1382
 msgid "GMPC"
 msgstr ""
 
-#: ../src/playlist3.c:1267
+#: ../src/playlist3.c:1269
 msgid "Connected to"
 msgstr ""
 
-#: ../src/playlist3.c:1276
+#: ../src/playlist3.c:1278
 msgid "Disconnected"
 msgstr ""
 
-#: ../src/playlist3.c:1407 ../src/playlist3.c:1420
+#: ../src/playlist3.c:1409 ../src/playlist3.c:1422
 msgid "On"
 msgstr ""
 
-#: ../src/playlist3.c:1407 ../src/playlist3.c:1420
+#: ../src/playlist3.c:1409 ../src/playlist3.c:1422
 msgid "Off"
 msgstr ""
 
@@ -971,49 +971,49 @@ msgstr ""
 
 #. add the replace widget
 #. replace the replace widget
-#: ../src/playlist3-file-browser.c:546 ../src/playlist3-file-browser.c:818
-#: ../src/playlist3-file-browser.c:838
+#: ../src/playlist3-file-browser.c:546 ../src/playlist3-file-browser.c:819
+#: ../src/playlist3-file-browser.c:839
 msgid "Replace"
 msgstr ""
 
 #. add the update widget
-#: ../src/playlist3-file-browser.c:553 ../src/playlist3-file-browser.c:804
+#: ../src/playlist3-file-browser.c:553 ../src/playlist3-file-browser.c:805
 msgid "Update"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:685
+#: ../src/playlist3-file-browser.c:686
 msgid "Loaded playlist"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:741
+#: ../src/playlist3-file-browser.c:742
 msgid "Added a song"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:907
+#: ../src/playlist3-file-browser.c:908
 msgid "Added"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:911
+#: ../src/playlist3-file-browser.c:912
 msgid "directories"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:911
+#: ../src/playlist3-file-browser.c:912
 msgid "directory"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:913
+#: ../src/playlist3-file-browser.c:914
 msgid "playlists"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:913
+#: ../src/playlist3-file-browser.c:914
 msgid "playlist"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:933
+#: ../src/playlist3-file-browser.c:934
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr ""
 
-#: ../src/playlist3-file-browser.c:1019
+#: ../src/playlist3-file-browser.c:1020
 msgid "File Browser"
 msgstr ""
 
@@ -1077,27 +1077,31 @@ msgstr ""
 msgid "Unkown"
 msgstr ""
 
-#: ../src/tray-icon.c:458
+#: ../src/tray-icon.c:110
+msgid "<b>Gnome Music Player Client</b>"
+msgstr ""
+
+#: ../src/tray-icon.c:555
 msgid "Pl_ay/Pause"
 msgstr ""
 
-#: ../src/tray-icon.c:465
+#: ../src/tray-icon.c:562
 msgid "_Stop"
 msgstr ""
 
-#: ../src/tray-icon.c:471
+#: ../src/tray-icon.c:568
 msgid "_Next"
 msgstr ""
 
-#: ../src/tray-icon.c:478
+#: ../src/tray-icon.c:575
 msgid "_Previous"
 msgstr ""
 
-#: ../src/tray-icon.c:495
+#: ../src/tray-icon.c:592
 msgid "Pla_ylist"
 msgstr ""
 
-#: ../src/tray-icon.c:504
+#: ../src/tray-icon.c:601
 msgid "Song _Information"
 msgstr ""
 
@@ -1134,62 +1138,82 @@ msgid "Disabled"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:160 ../src/gmpc-metaimage.gob:27
+#: gmpc-metaimage.c:172 ../src/gmpc-metaimage.gob:29
+msgid "Loading Cover Icon"
+msgstr ""
+
+#. nick
+#: gmpc-metaimage.c:173 ../src/gmpc-metaimage.gob:30
+msgid "Stock icon to use when loading a cover"
+msgstr ""
+
+#. name
+#: gmpc-metaimage.c:181 ../src/gmpc-metaimage.gob:38
+msgid "No Cover Icon"
+msgstr ""
+
+#. nick
+#: gmpc-metaimage.c:182 ../src/gmpc-metaimage.gob:39
+msgid "Stock icon to use when no cover is present"
+msgstr ""
+
+#. name
+#: gmpc-metaimage.c:190 ../src/gmpc-metaimage.gob:44
 msgid "Image type"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:161 ../src/gmpc-metaimage.gob:28
+#: gmpc-metaimage.c:191 ../src/gmpc-metaimage.gob:45
 msgid "Type of the image, like artist art"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:171 ../src/gmpc-metaimage.gob:34
+#: gmpc-metaimage.c:201 ../src/gmpc-metaimage.gob:51
 msgid "Size"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:172 ../src/gmpc-metaimage.gob:35
+#: gmpc-metaimage.c:202 ../src/gmpc-metaimage.gob:52
 msgid "Size of the image"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:182 ../src/gmpc-metaimage.gob:41
+#: gmpc-metaimage.c:212 ../src/gmpc-metaimage.gob:58
 msgid "HideOnNA"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:183 ../src/gmpc-metaimage.gob:42
+#: gmpc-metaimage.c:213 ../src/gmpc-metaimage.gob:59
 msgid "Hide the image when not availibe"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:191 ../src/gmpc-metaimage.gob:47
+#: gmpc-metaimage.c:221 ../src/gmpc-metaimage.gob:64
 msgid "Connection"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:192 ../src/gmpc-metaimage.gob:48
+#: gmpc-metaimage.c:222 ../src/gmpc-metaimage.gob:65
 msgid "A mpdObj to check on"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:199 ../src/gmpc-metaimage.gob:53
+#: gmpc-metaimage.c:229 ../src/gmpc-metaimage.gob:70
 msgid "DrawBorder"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:200 ../src/gmpc-metaimage.gob:54
+#: gmpc-metaimage.c:230 ../src/gmpc-metaimage.gob:71
 msgid "Draw a border around the image"
 msgstr ""
 
 #. name
-#: gmpc-metaimage.c:208 ../src/gmpc-metaimage.gob:59
+#: gmpc-metaimage.c:238 ../src/gmpc-metaimage.gob:76
 msgid "DrawShadow"
 msgstr ""
 
 #. nick
-#: gmpc-metaimage.c:209 ../src/gmpc-metaimage.gob:60
+#: gmpc-metaimage.c:239 ../src/gmpc-metaimage.gob:77
 msgid "Draw a shadow under the image"
 msgstr ""
 
