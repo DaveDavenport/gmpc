@@ -134,7 +134,16 @@ static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event,
 {
 	if(event->button == 3)
 	{
-		mpd_player_next(connection);
+		//mpd_player_next(connection);
+		printf("show entry\n");
+		gtk_widget_show_all(GTK_WIDGET(data));
+		if(popup_timeout != -1)
+		{
+			g_source_remove(popup_timeout);
+		}
+		popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000,
+				(GSourceFunc)(tray_leave_cb),
+				NULL);
 	}
 	else
 	{
@@ -143,42 +152,6 @@ static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event,
 
 	return TRUE;
 }
-
-
-static gboolean popup_enter_notify(GtkWidget *event2, GdkEventCrossing *event, GtkWidget *box)
-{
-	gtk_widget_hide(tooltip_pb);
-	gtk_widget_show_all(box);       	
-	if(popup_timeout != -1)
-	{
-		g_source_remove(popup_timeout);
-	}                                      	
-	return FALSE;
-}
-static gboolean popup_leave_notify(GtkWidget *event2, GdkEventCrossing *event, GtkWidget *box)
-{
-	/** TODO: Is there a better way todo this? */
-	if(event->detail != 2)
-	{
-		gtk_widget_show(tooltip_pb);
-		gtk_widget_hide(box);
-		if(popup_timeout != -1)
-		{
-			g_source_remove(popup_timeout);
-		}
-		popup_timeout = g_timeout_add(cfg_get_single_value_as_int_with_default(config, "tray-icon","popup-timeout",5)*1000,
-				(GSourceFunc)(tray_leave_cb),
-				NULL);
-
-
-
-
-
-
-	}
-	return FALSE;
-}
-
 static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpointer n)
 {
 	GtkWidget *hbox2 = NULL;
@@ -198,7 +171,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 	 * Catch button clicks
 	 */
 	event2 = gtk_event_box_new();
-	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_mouse_press_event), NULL);
+
 	gtk_container_set_border_width(GTK_CONTAINER(tip), 1);
 	gtk_widget_set_size_request(tip, TOOLTIP_WIDTH,-1);
 	gtk_window_set_title(GTK_WINDOW(tip), "gmpc tray tooltip");
@@ -385,9 +358,9 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		}
 		gtk_widget_show(tip);
 	}
-	g_signal_connect(G_OBJECT(event2), "enter-notify-event", G_CALLBACK(popup_enter_notify),hbox2);
-	g_signal_connect(G_OBJECT(event2), "leave-notify-event", G_CALLBACK(popup_leave_notify),hbox2);
-
+	//	g_signal_connect(G_OBJECT(event2), "enter-notify-event", G_CALLBACK(popup_enter_notify),hbox2);
+	//	g_signal_connect(G_OBJECT(event2), "leave-notify-event", G_CALLBACK(popup_leave_notify),hbox2);
+	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_mouse_press_event), hbox2);
 	return TRUE;
 }
 
