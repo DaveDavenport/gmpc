@@ -212,7 +212,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		char *content = NULL;
 		GtkWidget *expander = NULL;
 		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<b>%s info:</b>"), pd->name);
+		gchar *labstr= g_strdup_printf(_("<b>%s:</b>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
@@ -236,7 +236,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
 		GtkWidget *label = NULL,*ali = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>No %s info found</i>"), pd->name);
+		gchar *labstr= g_strdup_printf(_("<i>No %s found</i>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
@@ -250,7 +250,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	else if(ret == META_DATA_FETCHING)
 	{
 		GtkWidget *label = NULL,*ali = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>Fetching %s info</i>"),pd->name);
+		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 		ali = gtk_alignment_new(0,0.5,0,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
@@ -424,7 +424,7 @@ static void info2_fill_song_view(char *path)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	pd->name = g_strdup(_("song"));
+	pd->name = g_strdup(_("lyric"));
 	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
@@ -958,7 +958,7 @@ static void info2_fill_artist_view(char *artist)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	pd->name = g_strdup(_("artist"));
+	pd->name = g_strdup(_("artist info"));
 	meta_data_get_path_callback(song2, META_ARTIST_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
@@ -1290,7 +1290,7 @@ static void info2_fill_album_view(char *artist,char *album)
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
-	pd->name = g_strdup(_("album"));
+	pd->name = g_strdup(_("album info"));
 	meta_data_get_path_callback(song2, META_ALBUM_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
