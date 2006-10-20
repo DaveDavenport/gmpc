@@ -106,7 +106,7 @@ gmpcPrefPlugin playlist_gpp = {
 };
 
 gmpcPlugin playlist_plug = {
-	"Playlist",
+	"Interface",
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
@@ -468,12 +468,16 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	 * Close the window on ctrl-w
 	 * or Ctrl Q
 	 */
-	if ((event->keyval == GDK_w || event->keyval == GDK_q)&& event->state == GDK_CONTROL_MASK)
+	if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
 	{
-		pl3_close();
+		main_quit();
 		return TRUE;
 	}
-
+	if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
+	{
+		pl3_close();
+		return TRUE;                                           	
+	}
 	/**
 	 * Following key's are only valid when connected
 	 */
@@ -493,20 +497,20 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		}
 	}
 
-	/* default gmpc/xmms/winamp key's*/
-	if (event->state&GDK_CONTROL_MASK && event->keyval == /*GDK_z */GDK_Left)
+	/* default gmpc key's*/
+	if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Left) || event->keyval == GDK_KP_4)
 	{
 		prev_song();
 	}
-	else if (event->state&GDK_CONTROL_MASK && /*(event->keyval == GDK_x || event->keyval == GDK_c)*/event->keyval == GDK_Up)
+	else if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Up) ||event->keyval == GDK_KP_8)
 	{
 		play_song();
 	}
-	else if (event->state&GDK_CONTROL_MASK && event->keyval ==GDK_Down/* GDK_v*/)
+	else if ((event->state&GDK_CONTROL_MASK && event->keyval ==GDK_Down) || event->keyval == GDK_KP_5)
 	{
 		stop_song();
 	}
-	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_Right)
+	else if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Right) || event->keyval == GDK_KP_6)
 	{
 		next_song();
 	}
@@ -1013,7 +1017,11 @@ GtkTreeView *playlist3_get_category_tree_view()
 /****************************************************************************************
  *  PREFERENCES										*
  ****************************************************************************************/
-
+void hide_on_close_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "playlist","hide-on-close", bool1);
+}
 void cur_song_center_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
@@ -1081,7 +1089,9 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));
-
+		gtk_toggle_button_set_active(
+				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_hide_on_close")),      		
+				cfg_get_single_value_as_int_with_default(config,"playlist", "hide-on-close", 0));
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
