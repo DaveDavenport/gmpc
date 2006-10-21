@@ -127,6 +127,7 @@ Gmpc can be further configured by directy edited the config file. If you edit th
 There configuration file is stored in '~/.gmpc/' and is called 'gmpc.cfg'.
 
 The following extra changes can be made:
+
 1. *playlist::background-load-playlist*: Gmpc's playlist works using a lazy loading model.  It only loads the song info of the visible songs, this increases startup speed, and saves alot of (startup) bandwidth. But it does make searching the playlist slow the first time.  With this option gmpc starts filling in the missing data of the playlist in the background. (This can slow gmpc down when connected to mpd using a very slow connection) 
 2. *playlist::player_markup*: This allows you to change the way gmpc displays the song information in the player part of the window. Editing this markup you should keep in mind that the processed result is a valid pango markup. (see pango documentation).
 3. *Default::allow-multiple*: Gmpc normally only allows one instant per user to be running, with this option you can turn that extra check off.  (This option only works when gmpc is compiled with session support).
