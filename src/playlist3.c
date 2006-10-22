@@ -331,6 +331,14 @@ void pl3_cat_sel_changed()
 			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
 	}
+	else
+	{
+		if(old_type != -1)
+		{
+			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+		}
+		old_type = -1;
+	}
 	pl3_option_menu_activate();
 }
 
@@ -360,7 +368,7 @@ void pl3_option_menu_activate(void)
 	GtkWidget *menu = NULL;
 
 	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
-	
+
 	if(!mpd_check_connected(connection) || type == -1) return;
 
 
@@ -768,17 +776,17 @@ static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTree
 
 }
 static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
-                            GdkDragContext     *context,
-                            gint                x,
-                            gint                y,
-                            GtkSelectionData   *data,
-                            guint               info,
-                            guint               time)
+		GdkDragContext     *context,
+		gint                x,
+		gint                y,
+		GtkSelectionData   *data,
+		guint               info,
+		guint               time)
 {
 	gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
 	printf("%i %s\n",info,data->data);
-		
-	
+
+
 	gtk_drag_finish(context, TRUE, FALSE, time);
 	url_start_real(g_strstrip(url[0]));
 	g_strfreev(url);
@@ -976,9 +984,9 @@ void create_playlist3 ()
 	}
 	gmpc_metaimage_set_squared(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
-	
+
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
-	
+
 	pl3_update_go_menu();	
 	pl3_update_profiles_menu();
 
@@ -986,9 +994,9 @@ void create_playlist3 ()
 	 * Set as drag destination
 	 */
 	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "pl3_win"),
-		GTK_DEST_DEFAULT_ALL,
-		target_table, 3,
-		GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+			GTK_DEST_DEFAULT_ALL,
+			target_table, 3,
+			GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
@@ -1402,10 +1410,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			playlist_player_set_song(mi);
 		}
-		
-		
-		
-		
+
+
+
+
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE,NULL);
 	}
