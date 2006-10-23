@@ -90,6 +90,9 @@ Keypad - 	<<X22,Collapse interface>>
 F1		Go to <<X30,'the current playlist'>>
 F2		Go to <<X40, 'the File browser'>>
 F3		Go to <<X50, 'the Artist browser'>>
+F4		Go to the search browser
+F5		Go to the meta browser
+Ctrl- F5	Go to the meta browser, current song view.
 ------------------------------
 
 [[X22]]
