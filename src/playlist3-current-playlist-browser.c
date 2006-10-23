@@ -33,6 +33,8 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
+#include "eggcolumnchooserdialog.h"
+
 static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTreeIter *iter);
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
 static void pl3_current_playlist_browser_add(GtkWidget *cat_tree);
@@ -564,75 +566,11 @@ static void pl3_current_playlist_browser_crop_selected_songs()
 	mpd_status_queue_update(connection);
 }
 
-static void pl3_current_playlist_header_toggle(GtkCheckButton *cb)
-{
-	int active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb));
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_cp_tree),
-			active);
-	cfg_set_single_value_as_int(config, "current-playlist", "header", active);
-
-
-}
-static void pl3_current_playlist_checkbox_selected(GtkCheckButton *cb)
-{
-	int active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cb));
-	GtkTreeViewColumn *column = GTK_TREE_VIEW_COLUMN(g_object_get_data(G_OBJECT(cb), "column"));
-	int colid = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "colid"));
-	gchar  *string = g_strdup_printf("%i", colid);
-	gtk_tree_view_column_set_visible(column, active);
-	cfg_set_single_value_as_int(config, "current-playlist-column-enable",string, active);	
-	g_free(string);
-}
-
 static void pl3_current_playlist_enable_columns()
 {
-	GtkWidget *dialog = NULL;
-	GList *cols, *iter;
-	GtkWidget *vbox;
-	GtkWidget *label;
-	dialog = gtk_dialog_new_with_buttons("Select Columns", 
-			NULL,
-			GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_STOCK_CLOSE,
-			GTK_RESPONSE_OK,
-			NULL);
-
-	vbox = gtk_vbox_new(FALSE,6);
-	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
-
-	label = gtk_label_new("Enable/Disable columns");
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
-	gtk_container_set_border_width(GTK_CONTAINER(dialog), 3);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 9);
-
-
-	cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
-	for(iter = cols; iter; iter = g_list_next(iter))
-	{
-		GtkWidget *but = NULL;
-		int colid = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(iter->data), "colid"));
-		if(colid != PL_COLUMN_ICON)
-		{
-			but = gtk_check_button_new_with_label(gtk_tree_view_column_get_title(GTK_TREE_VIEW_COLUMN(iter->data)));		
-		}else{
-			but  = gtk_check_button_new_with_label(_("Status Icon"));			
-		}
-		g_object_set_data(G_OBJECT(but), "column", iter->data);
-		gtk_box_pack_start(GTK_BOX(vbox), but, FALSE, TRUE,0);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(but), gtk_tree_view_column_get_visible(GTK_TREE_VIEW_COLUMN(iter->data)));
-		g_signal_connect(G_OBJECT(but), "toggled", G_CALLBACK(pl3_current_playlist_checkbox_selected), NULL);
-
-	}
-	label = gtk_check_button_new_with_label(_("Show Column Headers"));
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),
-			gtk_tree_view_get_headers_visible(GTK_TREE_VIEW(pl3_cp_tree)));
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
-	g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(pl3_current_playlist_header_toggle), NULL);
-
-	g_list_free(cols);
+	GtkWidget *dialog = egg_column_chooser_dialog_new(GTK_TREE_VIEW(pl3_cp_tree));
 	gtk_widget_show_all(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);
 }
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {

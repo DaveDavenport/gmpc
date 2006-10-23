@@ -79,6 +79,7 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
 int pl3_progress_seek_start(void);
 int pl3_progress_seek_stop(void);
 void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
+void hide_on_close_enable_tb(GtkToggleButton *but);
 gboolean pl3_close(void);
 
 static int old_type = -1;

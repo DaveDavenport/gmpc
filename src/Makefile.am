@@ -33,6 +33,8 @@ gmpc_SOURCES=\
 	gmpc-metaimage.c\
 	gmpc_easy_download.c\
 	url_fetcher.c\
+	eggcolumnchooserdialog.c\
+	eggcolumnmodel.c\
 	TreeSearchWidget.c
 
 BUILT_SOURCES= revisiont.h\
@@ -115,4 +117,6 @@ EXTRA_DIST = 	playlist3.h\
 		gmpc-metaimage.h\
 		id3info.h\
 		TreeSearchWidget.h \
+		eggcolumnchooserdialog.h\
+		eggcolumnmodel.h\
 		tray-icon.h

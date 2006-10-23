@@ -46,7 +46,7 @@ static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, 
 static void pl3_file_browser_reupdate(void);
 
 static int pl3_file_browser_add_go_menu(GtkWidget *menu);
-
+static void pl3_file_browser_activate(void);
 static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 static void pl3_file_browser_add_selected(void);
@@ -996,10 +996,10 @@ static void pl3_file_browser_disconnect()
 }
 
 
-static void pl3_file_browser_activate()
+static void pl3_file_browser_activate(void)
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-			glade_xml_get_widget (pl3_xml, "cat_tree"));
+			playlist3_get_category_tree_view());
 
 	/**
 	 * Fix this to be nnot static

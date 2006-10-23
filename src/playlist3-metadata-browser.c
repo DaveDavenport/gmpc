@@ -153,7 +153,6 @@ static void info2_widget_clear_children(GtkWidget *wid)
 static void info2_prepare_view()
 {
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
-	printf("%i\n", info2_type);
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
 	
@@ -834,7 +833,7 @@ static void info2_fill_view()
 	GtkWidget *artist_table = NULL;
 
 
-	info2_type == INFO2_TYPE_NONE;
+	info2_type = INFO2_TYPE_NONE;
 	info2_prepare_view();
 	/** Nothing is selected so we are in the basic view
 	*/
