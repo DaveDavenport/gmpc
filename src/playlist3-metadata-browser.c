@@ -4,6 +4,18 @@
 #include <regex.h>
 #include "main.h"
 #include "misc.h"
+
+enum {
+	INFO2_TYPE_NONE,
+	INFO2_TYPE_CURRENT_SONG,
+	INFO2_TYPE_CURRENT_ARTIST,
+	INFO2_TYPE_CURRENT_ALBUM
+
+}info2_types;
+
+static int info2_type = INFO2_TYPE_NONE;
+
+
 extern GladeXML *pl3_xml;
 
 static void info2_add(GtkWidget *);
@@ -141,6 +153,7 @@ static void info2_widget_clear_children(GtkWidget *wid)
 static void info2_prepare_view()
 {
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
+	printf("%i\n", info2_type);
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
 	
@@ -186,6 +199,7 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 	info2_fill_artist_view(artist);
 	g_free(artist);
 
+	info2_type = INFO2_TYPE_NONE;
 }
 
 static void as_album_viewed_clicked(GtkButton *button, gpointer data)
@@ -195,6 +209,7 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 	info2_fill_album_view(artist,album);
 	g_free(artist);
 	g_free(album);
+	info2_type = INFO2_TYPE_NONE;
 }
 
 
@@ -502,6 +517,7 @@ static void info2_show_current_artist()
 	if(song && song->artist)
 	{
 		info2_fill_artist_view(song->artist);	
+		info2_type = INFO2_TYPE_CURRENT_ARTIST;
 	}
 }
 
@@ -512,6 +528,7 @@ static void info2_show_current_album()
 	if(song && song->artist && song->album)
 	{
 		info2_fill_album_view(song->artist,song->album);	
+		info2_type = INFO2_TYPE_CURRENT_ALBUM;
 	}
 }
 
@@ -519,7 +536,10 @@ static void info2_show_current_song()
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
+	{
 		info2_fill_song_view(song->file);	
+		info2_type = INFO2_TYPE_CURRENT_SONG;
+	}
 }
 
 static void as_song_clicked(GtkButton *button, gpointer data)
@@ -812,6 +832,9 @@ static void info2_fill_view()
 {
 	GtkWidget *hbox, *label, *entry, *button,*ali;
 	GtkWidget *artist_table = NULL;
+
+
+	info2_type == INFO2_TYPE_NONE;
 	info2_prepare_view();
 	/** Nothing is selected so we are in the basic view
 	*/
@@ -1439,7 +1462,17 @@ static void info2_fill_album_view(char *artist,char *album)
 	gtk_widget_show_all(info2_vbox);
 }
 
+static void info2_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedStatusType what, gpointer data)
+{
+	if(what&(MPD_CST_SONGID))
+	{
+		if(info2_type == INFO2_TYPE_CURRENT_SONG)
+		{
+			info2_show_current_song();
 
+		}
+	}
+}
 
 static void info2_init()
 {
@@ -1451,6 +1484,8 @@ static void info2_init()
 	info2_vbox = gtk_vbox_new(FALSE, 0);
 
 
+
+	g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(info2_update_status_changed), NULL);
 	/**
 	 * Header 
 	 */
