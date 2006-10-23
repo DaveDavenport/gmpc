@@ -1,3 +1,4 @@
+#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
@@ -16,7 +17,7 @@ static void info2_fill_artist_view(char *);
 static void info2_fill_album_view(char *, char *);
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
-
+static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
 
 static GtkWidget *resizer_vbox= NULL;
@@ -43,7 +44,7 @@ gmpcPlBrowserPlugin info2_gbp = {
 	NULL,		/** cat right mouse menu */ 
 	NULL,		/** cat key press */
 	info2_add_go_menu,		/** add go menu */
-	NULL		/** key press event */		
+	info2_key_press_event	/** key press event */		
 };
 gmpcPlugin metab_plugin = {
 	"Metadata Browser",
@@ -1520,8 +1521,6 @@ static void info2_init()
 
 	g_object_ref(G_OBJECT(info2_vbox));
 	info2_fill_view();
-	while(gtk_events_pending())
-		gtk_main_iteration();
 }
 
 static void info2_add(GtkWidget *cat_tree)
@@ -1558,9 +1557,6 @@ static void info2_selected(GtkWidget *container)
 
 	gtk_container_add(GTK_CONTAINER(container), info2_vbox);
 	gtk_widget_show_all(info2_vbox);
-	while (gtk_events_pending ())
-		gtk_main_iteration ();
-
 }
 
 static void info2_unselected(GtkWidget *container)
@@ -1603,7 +1599,7 @@ static int info2_get_enabled()
 static void info2_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-			glade_xml_get_widget (pl3_xml, "cat_tree"));
+			playlist3_get_category_tree_view());	
 
 	/**
 	 * Fix this to be nnot static
@@ -1627,4 +1623,23 @@ static int info2_add_go_menu(GtkWidget *menu)
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(info2_activate), NULL);
 	return 1;
+}
+
+static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+{
+	/** Global keybinding */
+	if(event->keyval == GDK_F5 && event->state&GDK_CONTROL_MASK)
+	{
+		info2_activate();
+		info2_show_current_song();
+		return TRUE;
+	}
+	else if (event->keyval == GDK_F5)
+	{
+		info2_activate();
+		info2_fill_view();
+		return TRUE;
+	}
+
+	return FALSE;
 }
