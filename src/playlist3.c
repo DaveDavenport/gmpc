@@ -1002,7 +1002,10 @@ void create_playlist3 ()
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
 
-
+	/**
+	 *
+	 */
+	playlist_connection_changed(connection, FALSE);
 }
 
 /**
@@ -1264,13 +1267,22 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 {
 	/* Set menu items */
 	if(connect) {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_control"), TRUE);
+
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), FALSE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), TRUE);
+		pl3_push_rsb_message(_("Connected"));	
 	} else {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_control"), FALSE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), FALSE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"),FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
+		pl3_push_rsb_message(_("Not Connected"));
 	}
 
 	/** Set back to the current borwser, and update window title */
