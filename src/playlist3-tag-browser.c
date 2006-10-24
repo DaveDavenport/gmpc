@@ -1437,7 +1437,7 @@ static int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *even
 	{
 		pl3_tag_browser_add_selected();
 	}
-	else if(event->keyval == GDK_i)
+	else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK)
 	{
 		pl3_tag_browser_show_info();
 	}
