@@ -59,6 +59,8 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	/* set timeout */
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+	/* set NO SIGNAL */
+	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
 
 	
 	curl_multi_add_handle(curlm, curl);

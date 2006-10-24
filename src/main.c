@@ -611,6 +611,8 @@ int main (int argc, char **argv)
 	 * the playlist object
 	 */
 	g_object_unref(playlist);
+
+	curl_global_cleanup();
 	return 0;
 }
 
