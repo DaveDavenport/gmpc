@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <strings.h>
 
+#include <curl/curl.h>
+
 /** Gtk/glib glade stuff */
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
@@ -312,7 +314,16 @@ int main (int argc, char **argv)
 	/** Check if threading is supported. */	
 	/** initialize it */
 	if(!g_thread_supported())g_thread_init (NULL);
+	debug_printf(DEBUG_INFO, "Initialize curl_global_init");
+	{
+		CURLcode result;
+		if((result = curl_global_init(CURL_GLOBAL_ALL)))
+		{
+			debug_printf(DEBUG_ERROR, "cURL Global init failed: %d\n", result);
+			exit(1);
+		}	
 
+	}	
 
 	create_gmpc_paths();
 
