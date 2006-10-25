@@ -496,9 +496,9 @@ void meta_data_init()
 	g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, FALSE, NULL);
 	/**
 	 * Set a timer on checking the results
-	 * for now every 50 ms?
+	 * for now every 250 ms?
 	 */
-	g_timeout_add(50,(GSourceFunc)meta_data_handle_results, NULL);
+	g_timeout_add(250,(GSourceFunc)meta_data_handle_results, NULL);
 
 }
 /**
