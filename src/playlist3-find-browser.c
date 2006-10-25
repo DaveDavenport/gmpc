@@ -646,6 +646,10 @@ static int pl3_find_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *eve
 	{
 		pl3_find_browser_add_selected();		
 	}
+	else if (event->keyval == GDK_s && event->state&GDK_MOD1_MASK)
+	{
+		gtk_widget_grab_focus(pl3_findb_entry);
+	}
 	else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK)
 	{
 		pl3_find_browser_show_info();
