@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include <libmpd/debug_printf.h>
 #include "gmpc_easy_download.h"
-#define CURL_TIMEOUT 5 
+#define CURL_TIMEOUT 10 
 
 static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_download_struct *dld)
 {
@@ -59,6 +59,8 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	/* set timeout */
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+	/* set redirect */
+	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION ,1);
 	/* set NO SIGNAL */
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
 
