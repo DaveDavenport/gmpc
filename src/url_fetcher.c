@@ -232,7 +232,7 @@ void url_start_real(const gchar *url)
 				gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
 				gtk_widget_show(progress);
 				gtk_widget_set_sensitive(dialog, FALSE);
-				if(gmpc_easy_download(text, &dld))
+				if(gmpc_easy_download(text, &dld) && dld.size)
 				{
 					if(url_check_binary(dld.data, dld.size))
 					{
