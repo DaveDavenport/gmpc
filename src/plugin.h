@@ -88,7 +88,7 @@ typedef struct {
 
 typedef struct {
 	int (*get_priority)();
-	int (*get_image)(mpd_Song *song, int type, char **path);
+	int (*get_image)(mpd_Song *song, MetaDataType type, char **path);
 } gmpcMetaDataPlugin;
 
 /* Unique number */

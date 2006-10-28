@@ -1,6 +1,5 @@
 #ifndef __METADATA_H__
 #define __METADATA_H__
-#include "plugin.h"
 typedef enum {
 	META_ALBUM_ART = 1, 	/* Album Cover art 	*/
 	META_ARTIST_ART = 2, 	/* Artist  image 	*/
