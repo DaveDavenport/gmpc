@@ -20,8 +20,8 @@ int pl3_cat_get_selected_browser(void);
 void pl3_updating_changed(MpdObj *mi, int updating);
 void playlist_connection_changed(MpdObj *mi, int connect);
 gboolean playlist3_get_active(void);
-GtkTreeStore *playlist3_get_category_tree_store(void);
-GtkTreeView *playlist3_get_category_tree_view(void);
+
+
 
 enum PlaylistColums {
 	PL_COLUMN_ICON,
