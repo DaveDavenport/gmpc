@@ -660,7 +660,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		if(!skip)
 			gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
 		data = mpd_database_get_artists(connection);
-		num_cols = (int)(resizer_vbox->allocation.width)/(tile_size);
+		num_cols = (int)(resizer_vbox->allocation.width-20)/(tile_size+6);
 		for(;data;data = mpd_data_get_next(data))
 		{
 			if(!regexec(&regt,data->tag, 0,NULL,0))
@@ -1115,7 +1115,7 @@ static void info2_fill_artist_view(char *artist)
 		}
 
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),table2,FALSE, TRUE, 0);
-		num_cols = resizer_vbox->allocation.width/(tile_size);
+		num_cols = (resizer_vbox->allocation.width-20)/(tile_size+6);
 		if(list)
 		{
 			resize_table(GTK_TABLE(table2), num_cols, list);
@@ -1390,11 +1390,11 @@ static void info2_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedS
 }
 static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
 }
 static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->light[GTK_STATE_SELECTED]));
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->light[GTK_STATE_SELECTED]));
 }
 
 
@@ -1429,7 +1429,6 @@ static void info2_init()
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
 
-	gtk_widget_modify_bg(title_event, GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->light[GTK_STATE_SELECTED]));
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
 
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
@@ -1447,7 +1446,6 @@ static void info2_init()
 	vp = gtk_viewport_new(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(scrolled_window)),
 			gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window)));
 
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
 	/* hack to change bg color with theme change */
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_bg_style_changed), vp);
 
