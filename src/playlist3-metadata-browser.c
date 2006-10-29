@@ -585,38 +585,28 @@ static void as_artist_clicked(GtkButton *button, gpointer data)
 
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
+
 	GdkColor *color = NULL;
 	cairo_pattern_t *pat;
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
-	double x0 = 2,y0= 1.5,rect_width  = width-7, rect_height = height-2,  radius = 15;
-	double x1,y1;
-
+	
 	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
 	cairo_rectangle(cr,0,0,width,height);
 	cairo_fill(cr);
 
 
 	cairo_set_line_width (cr, 1.5);
-	x1=x0+rect_width;
-	y1=y0+rect_height;
-	if (!rect_width || !rect_height)
-		return FALSE;
-	cairo_move_to  (cr, x0, y0 + radius);
-	cairo_curve_to (cr, x0 , y0, x0 , y0, x0 + radius, y0);
-	cairo_line_to (cr, x1 - radius, y0);
-	cairo_curve_to (cr, x1, y0, x1, y0, x1, y0 + radius);
-	cairo_line_to (cr, x1 , y1 - radius);
-	cairo_curve_to (cr, x1, y1, x1, y1, x1 - radius, y1);
-	cairo_line_to (cr, x0 + radius, y1);
-	cairo_curve_to (cr, x0, y1, x0, y1, x0, y1- radius);
 
-	color = &(widget->style->light[GTK_STATE_SELECTED]);
+	cairo_rectangle(cr, 0,0,width,height);
+	
 	cairo_close_path (cr);
 	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
-	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/(3*65535.0)+0.6 , color->green/(3*65535.0)+0.6, color->blue/(3*65535.0)+0.6, 1);
-	cairo_pattern_add_color_stop_rgba (pat, 0, 1, 1, 1, 1);
+	color = &(widget->style->base[GTK_STATE_SELECTED]);
+	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+	color = &(widget->style->base[GTK_STATE_NORMAL]);
+	cairo_pattern_add_color_stop_rgba (pat, 0, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
 	cairo_set_source (cr, pat);
 
 	cairo_fill_preserve (cr);
@@ -626,96 +616,6 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	cairo_destroy(cr);
 	return FALSE;
 }
-/*
-static gboolean info2_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
-	int width = widget->allocation.width;
-	int height = widget->allocation.height;
-	double x0 = 1,y0= 1.5,rect_width  = width-3.0, rect_height = height-2,  radius = 15;
-	double x1,y1;
-	cairo_set_line_width (cr, 2);
-	x1=x0+rect_width;
-	y1=y0+rect_height;
-	if (!rect_width || !rect_height)
-		return FALSE;
-	cairo_move_to  (cr, x0, y0 + radius);
-	cairo_curve_to (cr, x0 , y0, x0 , y0, x0 + radius, y0);
-	cairo_line_to (cr, x1 - radius, y0);
-	cairo_curve_to (cr, x1, y0, x1, y0, x1, y0 + radius);
-	cairo_line_to (cr, x1 , y1);
-	cairo_line_to (cr, x0 , y1);
-	cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->light[GTK_STATE_SELECTED]));
-	cairo_fill_preserve (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
-	cairo_stroke (cr);
-
-	cairo_destroy(cr);
-	return FALSE;
-}
-
-static gboolean info2_footer_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
-	int width = widget->allocation.width;
-	int height = widget->allocation.height;
-	double x0 = 1, y0 = 0,rect_width = width-3.0, rect_height = height-5,radius = 15;
-	double x1,y1;
-	cairo_set_line_width (cr, 2);
-	x1=x0+rect_width;
-	y1=y0+rect_height;
-	if (!rect_width || !rect_height)
-		return FALSE ;
-	cairo_move_to  (cr, x1, y0);
-	cairo_line_to (cr, x1 , y1 - radius);
-	cairo_curve_to (cr, x1, y1, x1, y1, x1 - radius, y1);
-	cairo_line_to (cr, x0 + radius, y1);
-	cairo_curve_to (cr, x0, y1, x0, y1, x0, y1- radius);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
-	cairo_fill_preserve (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
-	cairo_stroke (cr);
-
-	cairo_destroy(cr);
-	return FALSE;
-}
-*/
-static gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
-
-	cairo_set_line_width (cr, 2);
-
-	cairo_rectangle(cr, event->area.x,event->area.y,event->area.width, event->area.height);	
-	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
-	cairo_fill(cr);
-/*	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
-	if(event->area.x<6)
-	{
-		cairo_move_to(cr, 1,event->area.y);
-		cairo_line_to(cr, 1,event->area.y+event->area.height);
-		cairo_stroke(cr);
-	}
-*/
-	gtk_paint_shadow(widget->style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_ETCHED_IN,&(event->area), widget, "scrolled_window",
-			widget->allocation.x ,
-			widget->allocation.y,
-			widget->allocation.width,
-			widget->allocation.height); 
-
-
-
-
-
-
-
-
-
-	cairo_destroy(cr);
-	return FALSE;
-}
-
 /***
  * Collection view
  */
@@ -1505,17 +1405,20 @@ static void info2_init()
 	/**
 	 * main widget used to pack the browser
 	 */
-	info2_vbox = gtk_event_box_new();
+	info2_vbox = gtk_frame_new(NULL);
+	
+	
+	gtk_widget_set_name(info2_vbox, "gtk_scrolled_window");
+	gtk_frame_set_shadow_type(GTK_FRAME(info2_vbox), GTK_SHADOW_ETCHED_IN);
 	vbox = gtk_vbox_new(FALSE, 0);
-	gtk_widget_set_app_paintable(GTK_WIDGET(info2_vbox), TRUE);
-	g_signal_connect(G_OBJECT(info2_vbox), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
-
 
 	gtk_container_add(GTK_CONTAINER(info2_vbox), vbox);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox),2);
 
 	g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(info2_update_status_changed), NULL);
-	/**
+	/* hack */
+/*	gtk_widget_modify_bg(info2_vbox,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
+	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), info2_vbox);
+*/	/**
 	 * Header 
 	 */
 
@@ -1526,8 +1429,6 @@ static void info2_init()
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
 
-//	gtk_widget_set_app_paintable(GTK_WIDGET(title_event), TRUE);
-//	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
 	gtk_widget_modify_bg(title_event, GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->light[GTK_STATE_SELECTED]));
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
 
@@ -1539,10 +1440,6 @@ static void info2_init()
 	 * The resizer's vbox
 	 */
 	resizer_vbox = gtk_vbox_new(FALSE, 6);
-//	gtk_widget_modify_bg(resizer_vbox,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
-//	gtk_widget_set_app_paintable(GTK_WIDGET(resizer_vbox), TRUE);
-//	g_signal_connect(G_OBJECT(resizer_vbox), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
-
 	/**
 	 * The scrolled window to pack the resizer
 	 */
