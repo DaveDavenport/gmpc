@@ -626,6 +626,7 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	cairo_destroy(cr);
 	return FALSE;
 }
+/*
 static gboolean info2_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
@@ -679,7 +680,7 @@ static gboolean info2_footer_expose_event(GtkWidget *widget, GdkEventExpose *eve
 	cairo_destroy(cr);
 	return FALSE;
 }
-
+*/
 static gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
@@ -689,13 +690,28 @@ static gboolean info2_body_expose_event(GtkWidget *widget, GdkEventExpose *event
 	cairo_rectangle(cr, event->area.x,event->area.y,event->area.width, event->area.height);	
 	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
 	cairo_fill(cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
+/*	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
 	if(event->area.x<6)
 	{
 		cairo_move_to(cr, 1,event->area.y);
 		cairo_line_to(cr, 1,event->area.y+event->area.height);
 		cairo_stroke(cr);
 	}
+*/
+	gtk_paint_shadow(widget->style, widget->window, GTK_STATE_NORMAL, GTK_SHADOW_ETCHED_IN,&(event->area), widget, "scrolled_window",
+			widget->allocation.x ,
+			widget->allocation.y,
+			widget->allocation.width,
+			widget->allocation.height); 
+
+
+
+
+
+
+
+
+
 	cairo_destroy(cr);
 	return FALSE;
 }
@@ -1472,17 +1488,31 @@ static void info2_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedS
 		}
 	}
 }
+static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
+{
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
+}
+static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
+{
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->light[GTK_STATE_SELECTED]));
+}
+
 
 static void info2_init()
 {
 	GtkWidget *vp = NULL;;
-	GtkWidget *ali,*event;
+	GtkWidget *ali/*,*event*/,*vbox;
 	/**
 	 * main widget used to pack the browser
 	 */
-	info2_vbox = gtk_vbox_new(FALSE, 0);
+	info2_vbox = gtk_event_box_new();
+	vbox = gtk_vbox_new(FALSE, 0);
+	gtk_widget_set_app_paintable(GTK_WIDGET(info2_vbox), TRUE);
+	g_signal_connect(G_OBJECT(info2_vbox), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
 
 
+	gtk_container_add(GTK_CONTAINER(info2_vbox), vbox);
+	gtk_container_set_border_width(GTK_CONTAINER(vbox),2);
 
 	g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(info2_update_status_changed), NULL);
 	/**
@@ -1496,18 +1526,22 @@ static void info2_init()
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
 
-	gtk_widget_set_app_paintable(GTK_WIDGET(title_event), TRUE);
-	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(info2_header_expose_event), NULL);
-	gtk_box_pack_start(GTK_BOX(info2_vbox), title_event, FALSE, TRUE,0);
+//	gtk_widget_set_app_paintable(GTK_WIDGET(title_event), TRUE);
+//	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
+	gtk_widget_modify_bg(title_event, GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->light[GTK_STATE_SELECTED]));
+	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
+
+	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
+
+	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, TRUE,0);
 
 	/**
 	 * The resizer's vbox
 	 */
 	resizer_vbox = gtk_vbox_new(FALSE, 6);
-
-
-	gtk_widget_set_app_paintable(GTK_WIDGET(resizer_vbox), TRUE);
-	g_signal_connect(G_OBJECT(resizer_vbox), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
+//	gtk_widget_modify_bg(resizer_vbox,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
+//	gtk_widget_set_app_paintable(GTK_WIDGET(resizer_vbox), TRUE);
+//	g_signal_connect(G_OBJECT(resizer_vbox), "expose-event", G_CALLBACK(info2_body_expose_event), NULL);
 
 	/**
 	 * The scrolled window to pack the resizer
@@ -1516,14 +1550,20 @@ static void info2_init()
 	vp = gtk_viewport_new(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(scrolled_window)),
 			gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window)));
 
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(playlist3_get_category_tree_view())->style->base[GTK_STATE_NORMAL]));
+	/* hack to change bg color with theme change */
+	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_bg_style_changed), vp);
+
 	gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 			GTK_POLICY_NEVER,
-			GTK_POLICY_ALWAYS);
+			GTK_POLICY_AUTOMATIC);
 
-	gtk_box_pack_start_defaults(GTK_BOX(info2_vbox), scrolled_window);
+
+
 	gtk_container_add(GTK_CONTAINER(vp), resizer_vbox);
 	gtk_container_add(GTK_CONTAINER(scrolled_window), vp);
+	gtk_box_pack_start_defaults(GTK_BOX(vbox), scrolled_window);
 	/**
 	 * setup the scrolled window
 	 */ 
@@ -1535,19 +1575,19 @@ static void info2_init()
 	gtk_container_set_focus_vadjustment (GTK_CONTAINER (resizer_vbox),
 			gtk_scrolled_window_get_vadjustment
 			(GTK_SCROLLED_WINDOW (scrolled_window)));
-	event = gtk_event_box_new();
+/*	event = gtk_event_box_new();
 	ali = gtk_alignment_new(0,0.5,1,1);
 	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,0,20);	
 	gtk_container_add(GTK_CONTAINER(event), ali);	
 	gtk_box_pack_start(GTK_BOX(info2_vbox),event, FALSE, TRUE,0);	
 	gtk_widget_set_size_request(event,-1,20);
-	/*	button = gtk_button_new_with_label("Collection");
+*/	/*	button = gtk_button_new_with_label("Collection");
 		gtk_container_add(GTK_CONTAINER(ali), button);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
 		*/
-	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
+/*	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
 	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_footer_expose_event), NULL);
-
+*/
 
 
 
