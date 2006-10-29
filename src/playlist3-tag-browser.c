@@ -36,7 +36,7 @@ static void tag_pref_destroy(GtkWidget *container);
 
 
 GtkTreeRowReference *pl3_tag_tree_ref = NULL;
-
+GtkListStore *ab_lstore = NULL;
 static int pl3_custom_tag_add_go_menu(GtkWidget *menu);
 
 GladeXML *tag_pref_xml = NULL;
@@ -744,8 +744,10 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 	return time;
 }
-
-
+static void pl3_tag_browser_edit_pref(void)
+{
+	preferences_show_pref_window(tag_plug.id);
+}
 static int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
 	/* we need an model and a iter */
@@ -785,12 +787,25 @@ static int  pl3_custom_tag_browser_right_mouse_menu(GtkWidget *menu, int type, G
 
 
 			/* add the replace widget */
-			item = gtk_image_menu_item_new_with_label("Replace");
+			item = gtk_image_menu_item_new_with_label(_("Replace"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_custom_tag_browser_replace_folder), NULL);
 
+			return 1;
+		}
+		else if(depth == 1)
+		{
+			/* here we have:  Add. Replace*/
+			GtkWidget *item;
+			/* add the add widget */
+			/* add the replace widget */
+			item = gtk_image_menu_item_new_with_label(_("Configure tag browsers"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_MENU));                   	
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_edit_pref), NULL);		
 			return 1;
 		}
 	}
@@ -1070,6 +1085,9 @@ static void pl3_tag_browser_unselected(GtkWidget *container)
 }
 
 
+
+
+
 static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -1096,7 +1114,6 @@ static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEvent
 			return;
 		}
 		depth = gtk_tree_path_get_depth(path);
-		
 		gtk_tree_path_free(path);	
 		if(depth > 1)
 		{
@@ -1359,13 +1376,6 @@ static void pl3_tag_browser_add_selected()
 				 * TODO 
 				 */
 				pl3_tag_browser_add_folder_to_queue(name);
-
-
-
-
-
-
-
 			}
 			g_free(name);
 		}while((node = g_list_next(node)) != NULL);
@@ -1407,17 +1417,7 @@ static void pl3_tag_browser_show_info()
 			song = mpd_database_get_fileinfo(connection, path);
 			if(song)
 				call_id3_window_song(song);                              			
-			/*
-			data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-			while(data != NULL)
-			{
-				if(data->type == MPD_DATA_TYPE_SONG)
-				{
-					call_id3_window_song(mpd_songDup(data->song));
-				}
-				data = mpd_data_get_next(data);
-			}
-			*/
+
 			g_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
@@ -1581,7 +1581,6 @@ void pref_id3b_add_entry()
 }
 
 
-
 static void pref_id3b_fill()
 {
 	GtkWidget *tree = glade_xml_get_widget(tag_pref_xml,"id3b_tree");
@@ -1609,11 +1608,12 @@ static void pref_id3b_fill()
 static void pref_id3b_init()
 {
 	GtkCellRenderer *renderer = NULL;
-	GtkListStore *ab_lstore = NULL;
+	
 	GtkWidget *tree = glade_xml_get_widget(tag_pref_xml,"id3b_tree");
 
 	/* create model to store the data in */
-	ab_lstore = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+	if(ab_lstore == NULL)
+		ab_lstore = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
 	/* add model to tree */
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(ab_lstore)); 
 

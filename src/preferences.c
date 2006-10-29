@@ -210,6 +210,8 @@ void preferences_window_destroy()
 	}
 	gtk_widget_destroy(dialog);
 	g_object_unref(xml_preferences_window);
+	g_object_unref(plugin_store);
+	plugin_store = NULL;
 	xml_preferences_window = NULL;
 	running = 0;
 }
@@ -312,4 +314,30 @@ static void plugin_stats_destroy(GtkWidget *container)
 		g_object_unref(plugin_stat_xml);
 		plugin_stat_xml = NULL;
 	}
+}
+
+
+void preferences_show_pref_window(int plugin_id)
+{
+	GtkTreeIter iter;
+	if(xml_preferences_window == NULL)
+		create_preferences_window();
+	if(plugin_store)
+	{
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plugin_store), &iter))
+		{
+			do{	
+				int pos;
+				gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &pos, -1); 
+				if(pos == plugin_get_pos(plugin_id))
+				{
+					GtkTreeSelection *select = gtk_tree_view_get_selection(
+							GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
+					gtk_tree_selection_select_iter(select, &iter);
+					return;
+				}
+			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(plugin_store),  &iter));
+		}
+	}	
+
 }

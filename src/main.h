@@ -125,4 +125,5 @@ void url_start_real(const gchar *url);
  */
 char *gmpc_get_full_image_path(char *filename);
 
+void preferences_show_pref_window(int plugin_id);
 #endif
