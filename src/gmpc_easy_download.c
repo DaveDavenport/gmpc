@@ -73,7 +73,6 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 		int port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
 		if(value)
 		{
-			printf("Setting proxy: %s:%i\n", value,port);
 			curl_easy_setopt(curl, CURLOPT_PROXY, value);
 			curl_easy_setopt(curl, CURLOPT_PROXYPORT, port);
 			cfg_free_string(value);
