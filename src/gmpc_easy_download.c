@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 #include <libmpd/debug_printf.h>
 #include "gmpc_easy_download.h"
+#include "main.h"
 #define CURL_TIMEOUT 10 
 
 static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_download_struct *dld)
@@ -30,6 +31,7 @@ static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_down
 
 int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 {
+	int timeout = 0;
 	int running = 0;
 	int msgs_left = 0;
 	int success = FALSE;
@@ -58,12 +60,28 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* set callback function */
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	/* set timeout */
-	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, CURL_TIMEOUT);
+	timeout = cfg_get_single_value_as_int_with_default(config, "Network Settings", "Connection Timeout", CURL_TIMEOUT);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout);
 	/* set redirect */
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION ,1);
 	/* set NO SIGNAL */
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
 
+	if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
+	{
+		char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+		int port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+		if(value)
+		{
+			printf("Setting proxy: %s:%i\n", value,port);
+			curl_easy_setopt(curl, CURLOPT_PROXY, value);
+			curl_easy_setopt(curl, CURLOPT_PROXYPORT, port);
+			cfg_free_string(value);
+		}
+		else{
+			debug_printf(DEBUG_ERROR ,"Proxy enabled, but no proxy defined");
+		}
+	}
 	
 	curl_multi_add_handle(curlm, curl);
 	do{
