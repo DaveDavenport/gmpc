@@ -68,7 +68,7 @@ gmpcPlugin metab_plugin = {
 	&info2_gbp,
 	NULL, /* status changed */
 	NULL, /* connection changed */
-	NULL,//
+	NULL,
 	NULL, /* cover */
 	info2_get_enabled,
 	info2_set_enabled
@@ -674,7 +674,6 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 
 				image = gmpc_metaimage_new(META_ARTIST_ART);
 				gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 64);
-//				gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 				gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 				gtk_container_set_border_width(GTK_CONTAINER(table), 4);
