@@ -367,8 +367,10 @@ GtkWidget *info2_create_artist_button(mpd_Song *song)
 
 	/** Label */
 	label = gtk_label_new(song->artist);
+	gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);	
 	gtk_table_attach(GTK_TABLE(table), label, 1,2,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,6,0);	
+
 
 	/** Button box */
 	label = gtk_hbox_new(FALSE,6);
