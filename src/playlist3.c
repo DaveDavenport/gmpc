@@ -979,9 +979,11 @@ void create_playlist3 ()
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
 	gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), TRUE);
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
+	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
 	{
-		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+//		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+		gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
 	}
 	gmpc_metaimage_set_squared(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
@@ -1180,7 +1182,7 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
 	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
-	if(active)
+/*	if(active)
 	{
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
 		gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection,MPD_CST_SONGID,gmpcconn);
@@ -1189,6 +1191,8 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), NULL);
 		gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
 	}
+*/
+	gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), active);
 }
 
 /***

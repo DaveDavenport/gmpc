@@ -24,6 +24,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean squared = {TRUE};
 	public gchar *no_cover_icon = {g_strdup("media-no-cover")} destroywith g_free;
 	public gchar *loading_cover_icon = {g_strdup("media-loading-cover")} destroywith g_free;
+	/**
+	 * I want fully set/get control,so I don't use property stuff,
+	 * is there a way around this?
+	 */
+	public gboolean is_visible = {TRUE};
 
 	property STRING loading_cover_icon
 		(nick = _("Loading Cover Icon"),
@@ -136,14 +141,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gmpcconn )
 	{
-		if(self->connection && what&(MPD_CST_STATE))
+		if(self->connection && what&(MPD_CST_STATE) && self->is_visible)
 		{
 			int state = mpd_player_get_state(mi);
 			if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 			{
 				self_set_cover_na(self);
 			}
-			else{
+			else {
 				mpd_Song *song = mpd_playlist_get_current_song(mi);
 				if(song)
 				{
@@ -156,7 +161,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			
 		}
-		else if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+		else if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS) && self->is_visible)
 		{
 			mpd_Song *song = mpd_playlist_get_current_song(mi);
 			if(!song)
@@ -308,6 +313,33 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			g_object_unref(pb);
 		}
-		gtk_widget_show(GTK_WIDGET(self));
+		if(self->is_visible)
+		{
+			gtk_widget_show(GTK_WIDGET(self));
+		}
+	}
+
+	public 
+	void
+	set_is_visible(self, gboolean is_visible)
+	{
+		self->is_visible = is_visible;
+		if(self->is_visible)
+		{
+			if(self->connection)
+			{
+				self_update_cover(self,self->connection, MPD_CST_STATE, NULL);
+			}
+			
+		} 
+		else
+		{
+			gtk_widget_hide(GTK_WIDGET(self));
+		}
+	}
+	public
+	gboolean get_is_visible(self)
+	{
+		return self->is_visible;
 	}
 }
