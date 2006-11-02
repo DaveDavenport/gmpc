@@ -206,7 +206,7 @@ static void bacon_on_message_received(const char *message, gpointer data)
  */
 int main (int argc, char **argv)
 {
-	int i,start_hidden = 0;;
+	int i;
 	char *config_path = NULL;
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
@@ -268,10 +268,6 @@ int main (int argc, char **argv)
 				}
 				exit(0);
 			}
-			else if (!strcasecmp(argv[i],_("--start-hidden")))
-			{
-				start_hidden = TRUE;
-			}
 			/**
 			 * Allow the user to pick another config file 
 			 */
@@ -295,7 +291,7 @@ int main (int argc, char **argv)
 				"\t\t\t\t\t3: All messages\n"\
 				"\t--version:\t\tPrint version and svn revision\n"\
 				"\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
-				"\t--start-hidden\t\tStart mpd in a hidden state\n"));
+				));
 				exit(0);
 			}
 		}
@@ -531,10 +527,6 @@ int main (int argc, char **argv)
 	if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
 	{
 		gmpc_connected = TRUE;
-	}
-	if(start_hidden)
-	{
-		pl3_hide();
 	}
 	/*
 	 * create timeouts 

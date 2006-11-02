@@ -636,7 +636,10 @@ gboolean pl3_close()
 int pl3_hide()
 {
 	if(!tray_availible())
+	{
+		printf("No tray availible\n");
 		return 1;
+	}
 	if(pl3_xml != NULL && !pl3_hidden )
 	{
 		/** Save position 
