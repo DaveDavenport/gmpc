@@ -371,7 +371,6 @@ GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);	
 	gtk_table_attach(GTK_TABLE(table), label, 1,2,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,6,0);	
 
-
 	/** Button box */
 	label = gtk_hbox_new(FALSE,6);
 	gtk_table_attach(GTK_TABLE(table), label, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
@@ -646,32 +645,6 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 
@@ -807,11 +780,10 @@ static void info2_fill_view()
 
 
 	label = gtk_label_new("");
-	ali = gtk_alignment_new(0,0.5,0,0);
+	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+	gtk_misc_set_padding(GTK_MISC(label), 6,6);
 	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"xx-large\" weight=\"bold\">Current Song</span>");
-	gtk_container_add(GTK_CONTAINER(ali), label);
-	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, TRUE, 0);
 
 	hbox = gtk_hbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 8);         	
