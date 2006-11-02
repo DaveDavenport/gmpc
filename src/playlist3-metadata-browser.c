@@ -250,29 +250,25 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	}
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
-		GtkWidget *label = NULL,*ali = NULL;
+		GtkWidget *label = NULL;
 		gchar *labstr= g_strdup_printf(_("<i>No %s found</i>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
 		label = gtk_label_new("");
+		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 		gtk_label_set_markup(GTK_LABEL(label), labstr);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
+		gtk_container_add(GTK_CONTAINER(vbox), label);
 		gtk_widget_show_all(vbox);
 		g_free(labstr);
 	}
 	else if(ret == META_DATA_FETCHING)
 	{
-		GtkWidget *label = NULL,*ali = NULL;
+		GtkWidget *label = NULL;
 		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
-		ali = gtk_alignment_new(0,0.5,0,0);
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
 		label = gtk_label_new("");
+		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 		gtk_label_set_markup(GTK_LABEL(label),labstr); 
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(vbox), ali);
+		gtk_container_add(GTK_CONTAINER(vbox),label);
 		gtk_widget_show_all(vbox);
 		g_free(labstr);
 	}
@@ -778,7 +774,7 @@ static void info2_fill_view()
 	gtk_box_pack_start(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
 	gtk_widget_show_all(title_vbox);
 
-
+/*
 	label = gtk_label_new("");
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label), 6,6);
@@ -816,7 +812,7 @@ static void info2_fill_view()
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, TRUE, 0);
 
-
+*/
 	/**
 	 * Set up the search Row 
 	 */
@@ -1491,7 +1487,7 @@ static void info2_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
-	GtkTreeIter iter;
+	GtkTreeIter iter,citer;
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
@@ -1501,6 +1497,17 @@ static void info2_add(GtkWidget *cat_tree)
 			PL3_CAT_ICON_ID, "gtk-info",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+/*
+	gtk_tree_store_append(pl3_tree, &citer,&iter);
+	gtk_tree_store_set(pl3_tree, &citer, 
+			PL3_CAT_TYPE, metab_plugin.id,
+			PL3_CAT_TITLE, _("Song Information"),
+			PL3_CAT_INT_ID, "/CurSong",
+			PL3_CAT_ICON_ID, "gtk-info",
+			PL3_CAT_PROC, TRUE,
+			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+*/
+
 	if (info2_ref) {
 		gtk_tree_row_reference_free(info2_ref);
 		info2_ref = NULL;
