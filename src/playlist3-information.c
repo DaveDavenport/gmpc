@@ -203,7 +203,7 @@ static void info3_fill_view()
 	GtkWidget *label = NULL;
 	PassData *pd = NULL;
 	char *markup = NULL;
-
+	int state = mpd_player_get_state(connection);
 	/** 
 	 * Clear the view
 	 */
@@ -212,8 +212,20 @@ static void info3_fill_view()
 	info3_prepare_view();
 
 	song = mpd_playlist_get_current_song(connection);
-	if(!song)
+	if(song == NULL || state == MPD_PLAYER_STOP)
+	{
+		vbox = gtk_event_box_new();
+		label = gtk_label_new("");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_label_set_markup(GTK_LABEL(label), "<span size=\"xx-large\">Not Playing</span>");
+
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(vbox), FALSE);
+		gtk_container_add(GTK_CONTAINER(vbox), label);
+		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox, FALSE, FALSE,0);
+		gtk_widget_show_all(resizer_vbox);
 		return;
+	}
 
 	/** 
 	 * Title Label
@@ -298,12 +310,15 @@ static void info3_fill_view()
 		g_free(dirname);
 	}
 
-	mpd_freeSong(song);
 	gtk_widget_show_all(info3_vbox);
 }
 
 static void info3_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedStatusType what, gpointer data)
 {
+	if(what&(MPD_CST_SONGPOS|MPD_CST_SONGID) || what&MPD_CST_STATE)
+	{
+		info3_fill_view();
+	}
 }
 static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
