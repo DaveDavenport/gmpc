@@ -517,14 +517,7 @@ static int info3_add_go_menu(GtkWidget *menu)
 
 static int info3_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-	/** Global keybinding */
-/*	if(event->keyval == GDK_F5 && event->state&GDK_CONTROL_MASK)
-	{
-		info3_activate();
-		info3_show_current_song();
-		return TRUE;
-	}
-	else */if (event->keyval == GDK_F5)
+	if (event->keyval == GDK_F6)
 	{
 		info3_activate();
 		info3_fill_view();

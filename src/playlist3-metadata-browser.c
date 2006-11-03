@@ -33,6 +33,7 @@ static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+static GtkWidget *info2_create_artist_button(mpd_Song *song);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
@@ -336,13 +337,11 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
  * Create an artist "button"
  */
 
-GtkWidget *info2_create_artist_button(mpd_Song *song)
+static GtkWidget *info2_create_artist_button(mpd_Song *song)
 {
 	GtkWidget *label,*button,*event;
 	GtkWidget *table;
 	GtkWidget *metaimage;
-	GtkWidget *eventbox;
-
 	/* Button bg drawing code */
 	event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
@@ -591,8 +590,8 @@ static void info2_fill_song_view(char *path)
 
 
 
-
-static void info2_show_current_artist()
+/*
+static void info2_show_current_artist(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song && song->artist)
@@ -612,8 +611,8 @@ static void info2_show_current_album()
 		info2_type = INFO2_TYPE_CURRENT_ALBUM;
 	}
 }
-
-static void info2_show_current_song()
+*/
+static void info2_show_current_song(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
@@ -749,7 +748,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 
 static void info2_fill_view()
 {
-	GtkWidget *hbox, *label, *entry, *button,*ali;
+	GtkWidget *hbox, *label, *entry, *button;
 	GtkWidget *artist_table = NULL;
 
 
@@ -1487,7 +1486,7 @@ static void info2_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
-	GtkTreeIter iter,citer;
+	GtkTreeIter iter;
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
