@@ -5,17 +5,6 @@
 #include "main.h"
 #include "misc.h"
 
-enum {
-	INFO3_TYPE_NONE,
-	INFO3_TYPE_CURRENT_SONG,
-	INFO3_TYPE_CURRENT_ARTIST,
-	INFO3_TYPE_CURRENT_ALBUM
-
-}info3_types;
-
-static int info3_type = INFO3_TYPE_NONE;
-
-
 extern GladeXML *pl3_xml;
 
 static void info3_add(GtkWidget *);
@@ -26,17 +15,12 @@ static int info3_add_go_menu(GtkWidget *);
 static int info3_get_enabled(void);
 static void info3_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-static void info3_fill_artist_view(char *);
-static void info3_fill_album_view(char *, char *);
 static void info3_fill_view(void);
 static int info3_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
-static void as_song_clicked(GtkButton *button, gpointer data);
-static gboolean info3_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info3_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
-static GtkEntryCompletion *entry_completion = NULL;
 
 static int current_id = 0;
 
@@ -92,42 +76,6 @@ static void remove_container_entries (GtkContainer * widget)
 	g_list_free(node);
 }
 
-static void
-resize_table (GtkTable * table, gint columns, GList * launcher_list)
-{
-	remove_container_entries (GTK_CONTAINER (table));
-	if(!columns)
-		return;
-	float rows =
-		((float) g_list_length (launcher_list)) / (float) columns;
-	float remainder = rows - ((int) rows);
-
-	if (remainder != 0.0)
-		rows += 1;
-
-	gtk_table_resize (table, (int) rows, columns);
-}
-
-static void
-relayout_table (GtkTable * table, GList * element_list)
-{
-	gint maxcols = (GTK_TABLE (table))->ncols;
-	gint row = 0, col = 0;
-
-	do {
-		GtkWidget *element = GTK_WIDGET (element_list->data);
-
-		gtk_table_attach (table, element, col, col + 1, row, row + 1,
-				  GTK_SHRINK | GTK_FILL,
-				  GTK_SHRINK | GTK_FILL, 0, 0);
-		col++;
-		if (col == maxcols) {
-			col = 0;
-			row++;
-		}
-	}
-	while (NULL != (element_list = g_list_next (element_list)));
-}
 static void info3_widget_clear_children(GtkWidget *wid)
 {
 	GList *list, *node;
@@ -159,43 +107,6 @@ static void info3_prepare_view()
 	
 	current_id = g_random_int();
 }
-static void as_album_clicked(GtkButton *button, gpointer data)
-{
-	int clear = GPOINTER_TO_INT(data);
-	char *artist = g_object_get_data(G_OBJECT(button), "artist");
-	char *album =  g_object_get_data(G_OBJECT(button), "album");
-	if(artist)
-	{
-		MpdData *data = NULL;
-		if(clear)
-			mpd_playlist_clear(connection);
-
-		for(data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE)
-				;data;data = mpd_data_get_next(data))
-		{
-			if(data->type == MPD_DATA_TYPE_SONG)
-			{
-				if(data->song->album && !strcmp(data->song->album,album))
-				{
-					mpd_playlist_queue_add(connection, data->song->file);
-				}
-			}
-		}
-		mpd_playlist_queue_commit(connection);
-		if(clear)
-			mpd_player_play(connection);
-	}
-}
-
-static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
-{
-	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
-	info3_fill_artist_view(artist);
-	g_free(artist);
-
-	info3_type = INFO3_TYPE_NONE;
-}
-
 
 static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
@@ -263,31 +174,6 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		g_free(pd);
 	}
 }
-static void as_artist_clicked(GtkButton *button, gpointer data)
-{
-	int clear = GPOINTER_TO_INT(data);
-	char *artist = g_object_get_data(G_OBJECT(button), "artist");
-	if(artist)
-	{
-		MpdData *data = NULL;
-		if(clear)
-			mpd_playlist_clear(connection);
-
-		for(data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE)
-				;data;data = mpd_data_get_next(data))
-		{
-			if(data->type == MPD_DATA_TYPE_SONG)
-			{
-				mpd_playlist_queue_add(connection, data->song->file);
-			}
-		}
-		mpd_playlist_queue_commit(connection);
-		if(clear)
-			mpd_player_play(connection);
-	}
-}
-
-
 static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
 	GtkWidget *label, *ali;
@@ -314,7 +200,6 @@ static void info3_fill_view()
 	GtkWidget *ali = NULL;
 	GtkWidget *vbox= NULL;
 	mpd_Song *song = NULL;
-	GtkWidget *button = NULL;
 	GtkWidget *label = NULL;
 	PassData *pd = NULL;
 	char *markup = NULL;
@@ -348,7 +233,6 @@ static void info3_fill_view()
 	/**
 	 * Set album image
 	 */
-	GtkWidget *hbox = NULL;
 	GtkWidget *table2,*table = gtk_table_new(2,2,FALSE);
 	GtkWidget *image = NULL;
 	ali = gtk_alignment_new(0,0.5,1,0);
@@ -418,90 +302,8 @@ static void info3_fill_view()
 	gtk_widget_show_all(info3_vbox);
 }
 
-
-
-
-static void info3_show_current_artist()
-{
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(song && song->artist)
-	{
-		info3_fill_artist_view(song->artist);	
-		info3_type = INFO3_TYPE_CURRENT_ARTIST;
-	}
-}
-
-
-static void info3_show_current_album()
-{
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(song && song->artist && song->album)
-	{
-		info3_fill_album_view(song->artist,song->album);	
-		info3_type = INFO3_TYPE_CURRENT_ALBUM;
-	}
-}
-
-static void as_song_clicked(GtkButton *button, gpointer data)
-{
-	int clear = GPOINTER_TO_INT(data);
-	char *artist = g_object_get_data(G_OBJECT(button), "file");
-	if(artist)
-	{
-		if(clear)
-			mpd_playlist_clear(connection);
-
-		mpd_playlist_queue_add(connection, artist);
-		mpd_playlist_queue_commit(connection);
-		if(clear)
-			mpd_player_play(connection);
-	}
-}
-
-static gboolean info3_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-
-	GdkColor *color = NULL;
-	cairo_pattern_t *pat;
-	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
-	int width = widget->allocation.width;
-	int height = widget->allocation.height;
-	
-	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
-	cairo_rectangle(cr,0,0,width,height);
-	cairo_fill(cr);
-
-
-	cairo_set_line_width (cr, 1.5);
-
-	cairo_rectangle(cr, 0,0,width,height);
-	
-	cairo_close_path (cr);
-	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
-	color = &(widget->style->base[GTK_STATE_SELECTED]);
-	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
-	color = &(widget->style->base[GTK_STATE_NORMAL]);
-	cairo_pattern_add_color_stop_rgba (pat, 0, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
-	cairo_set_source (cr, pat);
-
-	cairo_fill_preserve (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
-	cairo_stroke (cr);
-	cairo_pattern_destroy(pat);
-	cairo_destroy(cr);
-	return FALSE;
-}
-
 static void info3_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedStatusType what, gpointer data)
 {
-	if(what&(MPD_CST_SONGID))
-	{
-		if(info3_type == INFO3_TYPE_CURRENT_SONG)
-		{
-			//info3_show_current_song();
-
-		}
-	}
 }
 static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
@@ -600,7 +402,7 @@ static void info3_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
-	GtkTreeIter iter,citer;
+	GtkTreeIter iter;
 	if(!cfg_get_single_value_as_int_with_default(config, "info3-plugin", "enable", 1)) return;
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
