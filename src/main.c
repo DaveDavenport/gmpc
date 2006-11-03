@@ -477,6 +477,8 @@ int main (int argc, char **argv)
 	plugin_add(&tray_icon_plug,0);
 	/* Meta data browser */
 	plugin_add(&metab_plugin,0);	
+	/* Info3 data browser */
+	plugin_add(&info3_plugin,0);	
 
 	/**
 	 *  load dynamic plugins 

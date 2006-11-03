@@ -64,6 +64,7 @@ extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
 
 extern gmpcPlugin tray_icon_plug;
+extern gmpcPlugin info3_plugin;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin url_plugin; 
 /** main.c **/

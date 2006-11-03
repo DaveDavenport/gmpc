@@ -20,6 +20,7 @@ gmpc_SOURCES=\
 	playlist3-artist-browser.c\
 	playlist3-find-browser.c\
 	playlist3-metadata-browser.c\
+	playlist3-information.c\
 	playlist-list.c\
 	mm-keys.c\
 	config1.c\
