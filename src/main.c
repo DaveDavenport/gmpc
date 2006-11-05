@@ -96,12 +96,6 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 /** init stock icons */
 static void init_stock_icons(void);
 
-
-
-
-
-
-
 /*
  * the xml fle pointer to the player window
  */
@@ -1137,6 +1131,4 @@ static void create_gmpc_paths(void)
 	}
 	/* Free the path */
 	g_free(url);
-
-
 }

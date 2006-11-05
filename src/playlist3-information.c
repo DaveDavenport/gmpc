@@ -126,7 +126,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gchar *labstr= g_strdup_printf(_("<b>%s:</b>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+
 		expander = gtk_expander_new(labstr);	
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
@@ -144,7 +144,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_widget_show_all(vbox);
 		g_free(content);
 	}
-	else if(ret == META_DATA_UNAVAILABLE)
+/*	else if(ret == META_DATA_UNAVAILABLE)
 	{
 		GtkWidget *label = NULL;
 		gchar *labstr= g_strdup_printf(_("<i>No %s found</i>"), pd->name);
@@ -156,7 +156,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_widget_show_all(vbox);
 		g_free(labstr);
 	}
-	else if(ret == META_DATA_FETCHING)
+*/	else if(ret == META_DATA_FETCHING)
 	{
 		GtkWidget *label = NULL;
 		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
@@ -230,16 +230,18 @@ static void info3_fill_view()
 	/** 
 	 * Title Label
 	 */
-	label = gtk_label_new("");
-	ali = gtk_alignment_new(0,0.5,0,0);
-	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
-			, song->title);
-	gtk_label_set_markup(GTK_LABEL(label),markup);
-	g_free(markup);
-	gtk_container_add(GTK_CONTAINER(ali),label);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
-
+	if(song->artist)
+	{
+		label = gtk_label_new("");
+		ali = gtk_alignment_new(0,0.5,0,0);
+		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
+		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
+				, song->title);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
+		gtk_container_add(GTK_CONTAINER(ali),label);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
+	}
 
 
 	/**
@@ -250,7 +252,7 @@ static void info3_fill_view()
 	ali = gtk_alignment_new(0,0.5,1,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
-
+	
 	image = gmpc_metaimage_new(META_ALBUM_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
@@ -267,6 +269,7 @@ static void info3_fill_view()
 
 
 	vbox = gtk_vbox_new(FALSE, 6);
+	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
@@ -274,6 +277,9 @@ static void info3_fill_view()
 	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info3_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
+	/*
+	 * Make a table for the album info
+	 */
 	table2 = gtk_table_new(2,2,0);
 	gtk_container_set_border_width(GTK_CONTAINER(table2), 8);
 
@@ -309,7 +315,88 @@ static void info3_fill_view()
 		i++;
 		g_free(dirname);
 	}
+	
+	if(song->artist)
+	{
+		int i=0,items = 0;
+		MpdData *data = NULL;
+		GString *string = NULL;
+		/** Artist label */
+		label = gtk_label_new("");
+		ali = gtk_alignment_new(0,0.5,0,0);
+		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
+		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>",song->artist);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
+		gtk_container_add(GTK_CONTAINER(ali),label);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
+		/**
+		 * Blomb 
+		 */
+//		ali = gtk_alignment_new(0,0.5,0,0);
+		table = gtk_hbox_new(FALSE,6);
+//		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,8,0);
+		gtk_container_set_border_width(GTK_CONTAINER(table),8);
+
+		image = gmpc_metaimage_new(META_ARTIST_ART);
+		gmpc_metaimage_set_squared(GMPC_METAIMAGE(image),FALSE);
+		gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(image), TRUE);
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
+		gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
+		gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
+
+		gtk_box_pack_start(GTK_BOX(table), image, FALSE,FALSE,0);
+//		gtk_container_add(GTK_CONTAINER(ali), image);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE,FALSE,0);
+	
+		table2 = gtk_table_new(2,3,0);
+		/** Genres */
+		mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
+		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
+		string = g_string_new("");
+		items = 0;
+		for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+		{
+			g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+			items++;
+		}
+		if(string->len >0)
+		{
+			info3_add_table_item(table2,(items>1)?_("<b>Genres: </b>"):_("<b>Genre: </b>"), string->str, i);
+			i++;
+		}
+		g_string_free(string, TRUE);
+		/* Dates */
+		mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
+		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
+		string = g_string_new("");
+		items= 0;
+		for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+		{
+			g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+			items++;
+		}
+		if(string->len >0)
+		{
+			info3_add_table_item(table2, (items >1)?_("<b>Dates: </b>"):_("<b>Date: </b>"), string->str, i);
+			i++;
+		}
+		g_string_free(string, TRUE);
+
+		gtk_box_pack_start(GTK_BOX(table), table2,TRUE,TRUE,0);
+
+		vbox = gtk_vbox_new(FALSE, 6);
+		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+		pd = g_malloc0(sizeof(*pd));
+		pd->widget = vbox;
+		pd->id = current_id;     		
+		pd->name = g_strdup(_("Artist Info"));
+		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)info3_cover_txt_fetched, pd);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
+
+
+	}
 	gtk_widget_show_all(info3_vbox);
 }
 
@@ -340,8 +427,8 @@ static void info3_init()
 	 * main widget used to pack the browser
 	 */
 	info3_vbox = gtk_frame_new(NULL);
-	
-	
+
+
 	gtk_widget_set_name(info3_vbox, "gtk_scrolled_window");
 	gtk_frame_set_shadow_type(GTK_FRAME(info3_vbox), GTK_SHADOW_ETCHED_IN);
 	vbox = gtk_vbox_new(FALSE, 0);
@@ -450,7 +537,7 @@ static void info3_changed(GtkWidget *tree, GtkTreeIter *iter)
 	}
 	else
 	{
-	//	info3_fill_view();
+		//	info3_fill_view();
 	}	
 }
 

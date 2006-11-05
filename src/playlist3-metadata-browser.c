@@ -869,7 +869,10 @@ static void info2_fill_view()
 
 static void info2_fill_artist_view(char *artist)
 {
-	GtkWidget *ali = NULL;
+	int i=0,items=0;
+	GString *string = NULL;
+	MpdData *data = NULL;
+	GtkWidget *ali = NULL, *table2 = NULL;
 	mpd_Song *song2 = NULL;
 	PassData *pd = NULL;
 	info2_prepare_view();
@@ -882,8 +885,7 @@ static void info2_fill_artist_view(char *artist)
 	GtkWidget *hbox = NULL;
 	GtkWidget *table = gtk_table_new(2,2,FALSE);
 	GtkWidget *image = NULL; 
-	ali = gtk_alignment_new(0,0.5,0,0);
-	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
+	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
 
 	image = gmpc_metaimage_new(META_ARTIST_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
@@ -893,8 +895,7 @@ static void info2_fill_artist_view(char *artist)
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 	/** pack the table and add to view */
-	gtk_container_add(GTK_CONTAINER(ali), table);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE, TRUE,0);
 
 	GtkWidget *vbox = gtk_vbox_new(FALSE, 6);
 	pd = g_malloc0(sizeof(*pd));
@@ -926,10 +927,42 @@ static void info2_fill_artist_view(char *artist)
 	gtk_container_add(GTK_CONTAINER(ali), button);
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
 
-
-
-
-
+	/** Song info */
+	table2 = gtk_table_new(2,2,0);
+	i=0;
+	/* Genre field */
+	mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+	string = g_string_new("");
+	items = 0;
+	for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+	{
+		g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+		items++;
+	}
+	if(string->len >0)
+	{
+		info2_add_table_item(table2,(items>1)?_("<b>Genres: </b>"):_("<b>Genre: </b>"), string->str, i);
+		i++;
+	}
+	g_string_free(string, TRUE);
+	/* Dates */
+	mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+	string = g_string_new("");
+	items= 0;
+	for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+	{
+		g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+		items++;
+	}
+	if(string->len >0)
+	{
+		info2_add_table_item(table2, (items >1)?_("<b>Dates: </b>"):_("<b>Date: </b>"), string->str, i);
+		i++;
+	}
+	g_string_free(string, TRUE);
+	gtk_table_attach(GTK_TABLE(table),table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_EXPAND|GTK_FILL,0,0);
 	gtk_table_attach(GTK_TABLE(table), hbox, 1,2,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 

@@ -105,6 +105,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 
 		self->_priv->meta_id =  0;
+		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 	}
 
 	override (G:Object)
@@ -252,6 +253,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		if(self->hide_on_na)
 		{		
 			gtk_widget_hide(GTK_WIDGET(self));
+			return;
 		}
 		pb = gtk_widget_render_icon(GTK_WIDGET(self), self->no_cover_icon, -1, NULL);
 		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
