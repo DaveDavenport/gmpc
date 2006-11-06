@@ -9,7 +9,6 @@ extern GladeXML *pl3_xml;
 
 static void info3_add(GtkWidget *);
 static void info3_selected(GtkWidget *);
-static void info3_changed(GtkWidget *tree, GtkTreeIter *iter);
 static void info3_unselected(GtkWidget *);
 static int info3_add_go_menu(GtkWidget *);
 static int info3_get_enabled(void);
@@ -35,7 +34,7 @@ gmpcPlBrowserPlugin info3_gbp = {
 	info3_add,		/** add */
 	info3_selected,		/** selected */
 	info3_unselected,	/** unselected */
-	info3_changed,		/** changed */
+	NULL,			/** changed */
 	NULL,			/** row expand */
 	NULL,			/** cat right mouse menu */ 
 	NULL,			/** cat key press */
@@ -144,19 +143,11 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_widget_show_all(vbox);
 		g_free(content);
 	}
-/*	else if(ret == META_DATA_UNAVAILABLE)
+	else if(ret == META_DATA_UNAVAILABLE)
 	{
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>No %s found</i>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
-		label = gtk_label_new("");
-		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-		gtk_label_set_markup(GTK_LABEL(label), labstr);
-		gtk_container_add(GTK_CONTAINER(vbox), label);
-		gtk_widget_show_all(vbox);
-		g_free(labstr);
 	}
-*/	else if(ret == META_DATA_FETCHING)
+	else if(ret == META_DATA_FETCHING)
 	{
 		GtkWidget *label = NULL;
 		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
@@ -197,13 +188,16 @@ static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i
  */
 static void info3_fill_view() 
 {
-	GtkWidget *ali = NULL;
-	GtkWidget *vbox= NULL;
-	mpd_Song *song = NULL;
-	GtkWidget *label = NULL;
-	PassData *pd = NULL;
-	char *markup = NULL;
-	int state = mpd_player_get_state(connection);
+	GtkWidget *table2 	= NULL;
+	GtkWidget *table 	= NULL;
+	GtkWidget *image	= NULL;
+	GtkWidget *ali 		= NULL;	
+	GtkWidget *vbox		= NULL;
+	mpd_Song *song 		= NULL;
+	GtkWidget *label 	= NULL;
+	PassData *pd 		= NULL;
+	char *markup 		= NULL;
+	int state 		= mpd_player_get_state(connection);
 	/** 
 	 * Clear the view
 	 */
@@ -247,8 +241,7 @@ static void info3_fill_view()
 	/**
 	 * Set album image
 	 */
-	GtkWidget *table2,*table = gtk_table_new(2,2,FALSE);
-	GtkWidget *image = NULL;
+	table= gtk_table_new(2,2,FALSE);
 	ali = gtk_alignment_new(0,0.5,1,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
@@ -266,8 +259,9 @@ static void info3_fill_view()
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
-
-
+	/**
+	 * The lyric display
+	 */
 	vbox = gtk_vbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 	pd = g_malloc0(sizeof(*pd));
@@ -394,8 +388,6 @@ static void info3_fill_view()
 		pd->name = g_strdup(_("Artist Info"));
 		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)info3_cover_txt_fetched, pd);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
-
-
 	}
 	gtk_widget_show_all(info3_vbox);
 }
@@ -443,6 +435,7 @@ static void info3_init()
 	title_event = gtk_event_box_new();
 	title_vbox = gtk_hbox_new(FALSE,6);
 	ali = gtk_alignment_new(0,0.5,1,1);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 6,6,0,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali),8);
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
@@ -451,7 +444,7 @@ static void info3_init()
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
 	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, TRUE,0);
 	ali = gtk_label_new("");
-	str = g_strdup_printf("<span size='x-large' weight='bold'>%s</span>", _("Song Information"));
+	str = g_strdup_printf("<span size='xx-large' weight='bold'>%s</span>", _("Song Information"));
 	gtk_label_set_markup(GTK_LABEL(ali),str);
 	g_free(str);
 	gtk_box_pack_start(GTK_BOX(title_vbox), ali,FALSE,TRUE,0);	
@@ -527,19 +520,6 @@ static void info3_add(GtkWidget *cat_tree)
 		gtk_tree_path_free(path);
 	}
 }
-static void info3_changed(GtkWidget *tree, GtkTreeIter *iter)
-{
-	char *id = NULL;
-	gtk_tree_model_get(gtk_tree_view_get_model(GTK_TREE_VIEW(tree)), iter,PL3_CAT_INT_ID, &id, -1);
-	if(!strcmp(id, "/CurSong"))
-	{
-		//info3_show_current_song();
-	}
-	else
-	{
-		//	info3_fill_view();
-	}	
-}
 
 static void info3_selected(GtkWidget *container)
 {
@@ -548,7 +528,6 @@ static void info3_selected(GtkWidget *container)
 	}
 	gtk_container_add(GTK_CONTAINER(container), info3_vbox);
 	gtk_widget_show_all(info3_vbox);
-
 }
 
 static void info3_unselected(GtkWidget *container)
@@ -592,9 +571,8 @@ static void info3_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			playlist3_get_category_tree_view());	
-
 	/**
-	 * Fix this to be nnot static
+	 * Fix this to be not static
 	 */	
 	GtkTreePath *path = gtk_tree_row_reference_get_path(info3_ref);
 	if(path)

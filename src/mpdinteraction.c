@@ -349,68 +349,6 @@ static void update_outputs_settings()
 	}
 }
 
-
-static void update_server_stats()
-{
-	if(server_pref_xml == NULL) return;
-	if(mpd_check_connected(connection))
-	{
-		gchar *temp;
-		temp = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")), 
-				temp);
-		g_free(temp);
-		temp = g_strdup_printf("%i", mpd_stats_get_total_artists(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")), 
-				temp);
-		g_free(temp);
-		temp = g_strdup_printf("%i", mpd_stats_get_total_albums(connection));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")), 
-				temp);
-		g_free(temp);
-
-		temp = g_strdup_printf(_("%i %s %02i %s %02i %s"), 
-				mpd_stats_get_uptime(connection)/86400,
-				((mpd_stats_get_uptime(connection)/86400) != 1)? _("days"):_("day"),
-				(mpd_stats_get_uptime(connection)%86400)/3600,
-				((mpd_stats_get_uptime(connection)%86400)/3600 != 1)? _("hours"):_("hour"),
-				(mpd_stats_get_uptime(connection)%3600)/60,
-				((mpd_stats_get_uptime(connection)%3600)/60 != 1)? _("minutes"):_("minute")
-				);
-
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")),
-				temp);
-		g_free(temp);
-		temp = g_strdup_printf(_("%i %s %02i %s %02i %s"), 
-				mpd_stats_get_playtime(connection)/86400,
-				((mpd_stats_get_playtime(connection)/86400) != 1)? _("days"):_("day"),
-				(mpd_stats_get_playtime(connection)%86400)/3600,
-				((mpd_stats_get_playtime(connection)%86400)/3600 != 1)? _("hours"):_("hour"),
-				(mpd_stats_get_playtime(connection)%3600)/60,
-				((mpd_stats_get_playtime(connection)%3600)/60 != 1)? _("minutes"):_("minute")
-				);
-
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")), 
-				temp);
-		g_free(temp);
-	}
-	else
-	{
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_songs")),
-				_("N/A"));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_artists")),
-				_("N/A"));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_albums")),
-				_("N/A"));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_uptime")),
-				_("N/A"));
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(server_pref_xml, "ss_label_playtime")),
-				_("N/A"));
-	}
-
-
-
-}
 void xfade_enable_toggled(GtkToggleButton *but)
 {
 
@@ -491,7 +429,6 @@ static void server_pref_construct(GtkWidget *container)
 		GtkWidget *vbox = glade_xml_get_widget(server_pref_xml, "server-vbox");
 		create_outputs_tree();
 		update_outputs_settings();
-		update_server_stats();
 		if(!mpd_check_connected(connection))
 		{
 			gtk_widget_set_sensitive(vbox,FALSE);
@@ -536,7 +473,6 @@ static void server_pref_construct(GtkWidget *container)
 static void preferences_update()
 {
 	if(connection_pref_xml == NULL) return;
-	update_server_stats();
 	if(!mpd_check_connected(connection))
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_con"), TRUE);

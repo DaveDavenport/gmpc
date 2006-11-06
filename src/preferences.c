@@ -224,10 +224,8 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 		int toggled;
 		gmpcPlugin *plug = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &toggled, 3, &plug, -1);
-		printf("plug: %s\n", plug->name);
 		if(plug->set_enabled != NULL)
 		{
-			printf("setting plug on: %s\n", plug->name);
 			plug->set_enabled(!toggled);
 			gtk_list_store_set(store, &iter, 0,plug->get_enabled(),-1);
 		}

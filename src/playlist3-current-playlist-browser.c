@@ -417,8 +417,7 @@ static void pl3_current_playlist_browser_select_current_song()
 	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
 			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
 	{
-		gchar *str = g_strdup_printf("%i", mpd_player_get_current_song_pos(connection));
-		GtkTreePath *path = gtk_tree_path_new_from_string(str);
+		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection));
 		if(path != NULL)
 		{
 /*	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
@@ -429,7 +428,6 @@ static void pl3_current_playlist_browser_select_current_song()
 			gtk_tree_view_set_cursor(GTK_TREE_VIEW(pl3_cp_tree), path, NULL, FALSE);
 		}
 		gtk_tree_path_free(path);
-		g_free(str);
 	}      
 }
 
@@ -440,17 +438,16 @@ static void pl3_current_playlist_browser_scroll_to_current_song()
 	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
 			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
 	{
-		gchar *str = g_strdup_printf("%i", mpd_player_get_current_song_pos(connection));
-		GtkTreePath *path = gtk_tree_path_new_from_string(str);
+		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection));
 		if(path != NULL)
 		{
 			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
 					path,
 					NULL,
 					TRUE,0.5,0);
+			gtk_tree_path_free(path);
 		}
-		gtk_tree_path_free(path);
-		g_free(str);
+	
 	}      
 }
 
@@ -711,7 +708,6 @@ static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type
 	/* add the save widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE,NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	/* TODO: Write own fun ction */
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_save_playlist), NULL);
 
 	/* add the clear widget */
@@ -836,10 +832,9 @@ static void pl3_current_playlist_browser_shuffle_playlist()
 
 static void pl3_current_playlist_highlight_song_change ()
 {
-	GtkTreeIter iter;
+/*	GtkTreeIter iter;
 	gchar *temp;
-	/* check if there is a connection */
-	if (!mpd_check_connected (connection))
+*/	if (!mpd_check_connected (connection))
 	{
 		return;
 	}
@@ -847,28 +842,29 @@ static void pl3_current_playlist_highlight_song_change ()
 	/* check if we need to highlight a song */
 	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
 	{
+/*
 		temp = g_strdup_printf ("%i", mpd_player_get_current_song_pos(connection));
 		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (playlist), &iter, temp))
 		{
 			gint pos;
 			gtk_tree_model_get (GTK_TREE_MODEL (playlist), &iter, PLAYLIST_LIST_COL_SONG_POS,
 					&pos, -1);
-			/* check if we have the right song, if not, print an error */
-			if (pos != mpd_player_get_current_song_pos(connection))
+*/			/* check if we have the right song, if not, print an error */
+/*			if (pos != mpd_player_get_current_song_pos(connection))
 			{
 				debug_printf(DEBUG_ERROR,"Error %i "\
 						" %i should be the same\n",
 						pos,
 						mpd_player_get_current_song_pos(connection));
 			}
-
+*/
 			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) && pl3_cp_tree) 
 			{
 				pl3_current_playlist_browser_scroll_to_current_song();
 			}
-		}
+/*		}
 		g_free (temp);
-	}
+*/	}
 }
 
 
@@ -904,7 +900,7 @@ static void pl3_current_playlist_browser_activate()
 	/**
 	 * Fix this to be nnot static
 	 */	
-	GtkTreePath *path = gtk_tree_path_new_from_string("0"); 
+	GtkTreePath *path = gtk_tree_path_new_from_indices(0,-1);
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);
