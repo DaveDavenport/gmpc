@@ -417,7 +417,7 @@ static void pl3_current_playlist_browser_select_current_song()
 	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
 			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
 	{
-		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection));
+		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection),-1);
 		if(path != NULL)
 		{
 /*	gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
@@ -438,7 +438,7 @@ static void pl3_current_playlist_browser_scroll_to_current_song()
 	if(mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection)  > 0&&
 			gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)))
 	{
-		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection));
+		GtkTreePath *path = gtk_tree_path_new_from_indices(mpd_player_get_current_song_pos(connection),-1);
 		if(path != NULL)
 		{
 			gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
