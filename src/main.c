@@ -301,9 +301,9 @@ int main (int argc, char **argv)
 	 *  initialize threading 
 	 */
 	debug_printf(DEBUG_INFO,"Initializing threading");
-	/** Check if threading is supported. */	
-	/** initialize it */
-	if(!g_thread_supported())g_thread_init (NULL);
+
+
+	/** Init before threads are active.. */
 	debug_printf(DEBUG_INFO, "Initialize curl_global_init");
 	{
 		CURLcode result;
@@ -314,6 +314,12 @@ int main (int argc, char **argv)
 		}	
 
 	}	
+
+
+
+	/** Check if threading is supported. */	
+	/** initialize it */
+	if(!g_thread_supported())g_thread_init (NULL);
 
 	create_gmpc_paths();
 
