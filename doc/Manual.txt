@@ -92,7 +92,7 @@ F2		Go to <<X40, 'the File browser'>>
 F3		Go to <<X50, 'the Artist browser'>>
 F4		Go to the search browser
 F5		Go to the meta browser
-Ctrl- F5	Go to the meta browser, current song view.
+F6		Go to the Information view
 ------------------------------
 
 [[X22]]
@@ -101,7 +101,7 @@ Interface Expanding/Collapsing
 
 The main window has 3 posible sizes:
 
-1. *Full size* Everything is possible
+1. *Full size* Everything is visible. 
 2. *Small mode* Hides the Left treeview, and replaces it by a Selection box.
 3. *Tiny mode* Only shows the player elements.
 
