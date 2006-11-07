@@ -304,12 +304,10 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		{
 			screen = gtk_widget_get_screen(GTK_WIDGET(tray_icon));
 			monitor = gdk_screen_get_monitor_at_window(screen, GTK_WIDGET(tray_icon)->window);       			
-			gdk_window_get_origin(GTK_WIDGET(tray_icon)->window, &x_tv, &y_tv);
 		}
 		else
 		{
 			screen = gdk_screen_get_default();
-			x_tv = y_tv = 0;
 		}
 
 		gdk_screen_get_monitor_geometry(screen, monitor, &msize);
@@ -344,16 +342,24 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 					break;
 				}
 			case 1: /* upper left */
-				gtk_window_move(GTK_WINDOW(tip), x,y);
+				gtk_window_move(GTK_WINDOW(tip),
+					msize.x+x,
+					msize.y+y);
 				break;
 			case 2: /* upper right */
-				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, y);	
+				gtk_window_move(GTK_WINDOW(tip),
+					msize.x+msize.width-width-x,
+					msize.y+ y);	
 				break;
 			case 3: /* lower left */
-				gtk_window_move(GTK_WINDOW(tip), x, msize.height-height-y);	
+				gtk_window_move(GTK_WINDOW(tip), 
+					msize.x+x, 
+					msize.y+msize.height-height-y);	
 				break;
 			case 4: /* lower right */
-				gtk_window_move(GTK_WINDOW(tip),msize.width-width-x, msize.height-height-y);	
+				gtk_window_move(GTK_WINDOW(tip),
+					msize.x+msize.width-width-x,
+					msize.y+ msize.height-height-y);	
 				break;                                                  				
 		}
 		gtk_widget_show(tip);
