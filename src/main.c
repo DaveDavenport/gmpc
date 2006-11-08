@@ -307,7 +307,11 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Initialize curl_global_init");
 	{
 		CURLcode result;
-		if((result = curl_global_init(CURL_GLOBAL_ALL)))
+		/**
+		 * Only init the CURL_GLOBAL_WIN32 (should only do something on win32 anyway
+		 * Because I don't want to load the ssl part.. (that costs me 0.5mb extra memory)
+		 */
+		if((result = curl_global_init(CURL_GLOBAL_WIN32)))
 		{
 			debug_printf(DEBUG_ERROR, "cURL Global init failed: %d\n", result);
 			exit(1);
@@ -740,16 +744,6 @@ static void init_stock_icons()
 	g_free(path);
 	set = gtk_icon_set_new_from_pixbuf (pb);
 	gtk_icon_factory_add (factory, "stock_repeat", set);
-	g_object_unref (G_OBJECT (pb));
-
-	/*
-	 * add icecast
-	 */
-	path = gmpc_get_full_image_path("icecast.png");
-	pb = gdk_pixbuf_new_from_file (path,NULL);
-	g_free(path);
-	set = gtk_icon_set_new_from_pixbuf (pb);
-	gtk_icon_factory_add (factory, "icecast", set);
 	g_object_unref (G_OBJECT (pb));
 
 	/*
