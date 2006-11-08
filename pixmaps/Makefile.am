@@ -15,10 +15,8 @@ appicon_DATA =	media-audiofile.png\
 	media-album.png\
 	media-playlist.png\
 	player-repeat.png\
-	broken.png\
 	player-shuffle.png\
 	stock_volume.png\
-	gmpc-loading-cover.png\
-	icecast.png
+	gmpc-loading-cover.png
 
 EXTRA_DIST = $(appicon_DATA)

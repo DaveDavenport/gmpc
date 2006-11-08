@@ -30,7 +30,7 @@ AC_SUBST(GTK_REQUIRED)
 # Split this out, because pkgconfig macro doesn't return nicely what is missing
 
 # glib
-PKG_CHECK_MODULES([glib], glib-2.0 >= 2.4)
+PKG_CHECK_MODULES([glib], glib-2.0 >= 2.10)
 AC_SUBST(glib_LIBS)
 AC_SUBST(glib_CFLAGS)
 

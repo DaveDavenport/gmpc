@@ -232,7 +232,7 @@ void cfg_close(config_obj *cfgo)
 }
 static config_node *cfg_new_node()
 {
-	config_node *newnode = g_malloc0(sizeof(config_node));
+	config_node *newnode = g_slice_new(config_node);
 	newnode->type = TYPE_CATEGORY;
 	newnode->name = NULL; 
 	newnode->next = NULL;
@@ -582,7 +582,7 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 	}	
 	if(node->name) g_free(node->name);
 	if(node->value) g_free(node->value);
-	g_free(node);
+	g_slice_free(config_node,node);
 }
 void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 {
@@ -727,7 +727,7 @@ conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *k
 		/* get first */
 		while(cur->prev != NULL) cur = cur->prev;
 		do {
-			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
+			conf_mult_obj *temp= g_slice_new0(conf_mult_obj);
 			temp->value = g_strdup(cur->value);
 			temp->key = g_strdup(cur->name);
 			temp->next = list;
@@ -754,12 +754,12 @@ void cfg_free_multiple(conf_mult_obj *data)
 		if(list->key)	g_free(list->key);  		
 		if(list->next != NULL)
 		{
-			if(list->prev)g_free(list->prev);
+			if(list->prev)g_slice_free(conf_mult_obj,list->prev);
 			list = list->next;
 		}
 		else{
-			g_free(list->prev);
-			g_free(list);
+			g_slice_free(conf_mult_obj,list->prev);
+			g_slice_free(conf_mult_obj,list);
 			list = NULL;
 		}
 	}
@@ -777,7 +777,7 @@ conf_mult_obj *cfg_get_class_list(config_obj *data)
 	do {
 		if(root->type == TYPE_CATEGORY)
 		{
-			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
+			conf_mult_obj *temp= g_slice_new0(conf_mult_obj);
 			temp->value = NULL;
 			temp->key = g_strdup(root->name);
 			temp->next = list;
@@ -809,7 +809,7 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
 	do {
 		if(root->type == TYPE_ITEM)
 		{
-			conf_mult_obj *temp= g_malloc0(sizeof(conf_mult_obj));
+			conf_mult_obj *temp= g_slice_new0(conf_mult_obj);
 			temp->value = g_strdup(root->value);
 			temp->key = g_strdup(root->name);
 			temp->next = list;
