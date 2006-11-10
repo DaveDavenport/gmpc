@@ -304,7 +304,16 @@ void pl3_cat_sel_changed()
 			ind = gtk_tree_path_get_indices(path);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),
 					ind[0]);
+			/**
+			 * Set up button only active when you can go up 
+			 */
+			if(gtk_tree_path_get_depth(path)>1) {
+				gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml,"bread_crumb_up"), TRUE);
+			} else {
+				gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml,"bread_crumb_up"), FALSE);
+			}
 			gtk_tree_path_free(path);
+
 		}
 		/**
 		 * Start switching side view (if type changed )
