@@ -230,6 +230,18 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		else if(self->image_type&META_ALBUM_ART && 
 				strcmp(song->album, self->_priv->song->album))
 			return;
+		/**
+		 * If mpd is stopped before the result is back, set the cover to na, and ignore the result
+		 */
+		else if(self->connection && mpd_player_get_state(self->connection) == MPD_PLAYER_STOP)
+		{
+			self_set_cover_na(self);
+			if(ret != META_DATA_FETCHING)
+			{
+				self->_priv->meta_id = 0;
+			}
+
+		}
 		else
 		{
 			if(ret == META_DATA_AVAILABLE) {
