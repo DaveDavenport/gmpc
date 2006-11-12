@@ -603,12 +603,25 @@ static void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 		default:
 			{
 				int playlist_length = mpd_playlist_get_playlist_length(connection);
-				pl3_push_statusbar_message("Added a song");
-				mpd_playlist_add(connection, song_id);
-				/* if there was no song in the playlist, play it */
+				pl3_push_statusbar_message(_("Added a song"));
+		/*		mpd_playlist_add(connection, song_id);
+
 				if(playlist_length == 0)
 				{
 					mpd_player_play(connection);
+				}
+*/
+				if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+					int songid = mpd_playlist_add_get_id(connection, song_id);
+					if(songid >= 0) {
+						mpd_player_play_id(connection, songid);
+					}
+				} else{
+					mpd_playlist_add(connection, song_id);
+					if(playlist_length == 0)
+					{
+						mpd_player_play(connection);
+					}
 				}
 			}
 			break;

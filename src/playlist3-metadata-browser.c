@@ -573,16 +573,26 @@ static void info2_fill_song_view(char *path)
 static void as_song_clicked(GtkButton *button, gpointer data)
 {
 	int clear = GPOINTER_TO_INT(data);
-	char *artist = g_object_get_data(G_OBJECT(button), "file");
-	if(artist)
+	char *file = g_object_get_data(G_OBJECT(button), "file");
+	if(file)
 	{
 		if(clear)
 			mpd_playlist_clear(connection);
 
-		mpd_playlist_queue_add(connection, artist);
-		mpd_playlist_queue_commit(connection);
-		if(clear)
-			mpd_player_play(connection);
+		//mpd_playlist_queue_add(connection, artist);
+		//mpd_playlist_queue_commit(connection);
+		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+			int songid = mpd_playlist_add_get_id(connection, file);
+			if(songid >= 0) {
+				mpd_player_play_id(connection, songid);
+			}
+		} else{
+			mpd_playlist_add(connection, file);
+			if(clear)
+			{
+				mpd_player_play(connection);
+			}
+		}
 	}
 }
 

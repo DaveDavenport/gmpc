@@ -1000,12 +1000,18 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 //	if(song_path == NULL) return;
 	if(type == PL3_ENTRY_SONG)
 	{
-		pl3_push_statusbar_message("Added a song");
-		mpd_playlist_add(connection, song_path);
-		/* if there was no song in the playlist, play it */
-		if(playlist_length == 0)
-		{
-			mpd_player_play(connection);
+		pl3_push_statusbar_message(_("Added a song"));
+		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+			int songid = mpd_playlist_add_get_id(connection, song_path);
+			if(songid >= 0) {
+				mpd_player_play_id(connection, songid);
+			}
+		} else{
+			mpd_playlist_add(connection, song_path);
+			if(playlist_length == 0)
+			{
+				mpd_player_play(connection);
+			}
 		}
 	}
 	else if (type == PL3_ENTRY_ALBUM)

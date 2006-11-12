@@ -765,18 +765,26 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	else
 	{
-		pl3_push_statusbar_message("Added a song");
-		mpd_playlist_queue_add(connection, file);
+		pl3_push_statusbar_message(_("Added a song"));
+		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+			int songid = mpd_playlist_add_get_id(connection, file);
+			if(songid >= 0) {
+				mpd_player_play_id(connection, songid);
+			}
+		} else{
+			mpd_playlist_add(connection, file);
+			if(playlist_length == 0)
+			{
+				mpd_player_play(connection);
+			}
+		}
 	}
 
-	mpd_playlist_queue_commit(connection);
+
 	if(file)g_free(file);
 	if(artist) g_free(artist);
 	if(album) g_free(album);
-	if(playlist_length == 0)
-	{
-		mpd_player_play(connection);
-	}
+
 }
 
 static void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
