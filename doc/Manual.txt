@@ -101,13 +101,24 @@ Interface Expanding/Collapsing
 
 The main window has 3 posible sizes:
 
-1. *Full mode* Everything is visible. 
+Full mode 
+^^^^^^^^^
+Everything is visible. 
+
 .Full mode 
 image::images/gmpc-full-size.png["Full mode"]
-2. *Small mode* Hides the Left treeview, and replaces it by a Selection box.
+
+Small mode
+^^^^^^^^^^
+Hides the Left treeview, and replaces it by a Selection box.
+
 .Small mode 
 image::images/gmpc-small-size.png["Small mode"]
-3. *Tiny mode* Only shows the player elements.
+
+Tiny mode 
+^^^^^^^^^
+Only shows the player elements.
+
 .Tiny mode 
 image::images/gmpc-tiny-size.png["Tiny mode"]
 
