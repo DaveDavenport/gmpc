@@ -216,7 +216,6 @@ int main (int argc, char **argv)
 	 */
 	debug_set_level(DEBUG_ERROR);
 
-
 	/**
 	 * Setup NLS
 	 */
@@ -297,6 +296,17 @@ int main (int argc, char **argv)
 	 */
 	debug_printf(DEBUG_INFO, "Initializing gtk ");
 	gtk_init (&argc, &argv);
+	/** 
+	 * Check libmpd version runtime
+	 */
+	if(strcmp(libmpd_version, LIBMPD_VERSION))
+	{
+		debug_printf(DEBUG_ERROR, "Trying to run gmpc compiled against libmpd version '%s' with version '%s'", 
+			LIBMPD_VERSION, libmpd_version);	
+
+		show_error_message(_("Trying to run gmpc with a wrong libmpd version."), TRUE);
+		exit(1);
+	}
 	/**
 	 *  initialize threading 
 	 */
