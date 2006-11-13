@@ -743,11 +743,13 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 		return TRUE;
 	}
 	else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
-		((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z)))
-
+			((event->keyval >= GDK_space && event->keyval <= GDK_z)))
 	{
+		char data[2];
+		data[0] = (char)gdk_keyval_to_unicode(event->keyval);
+		data[1] = '\0';
 		treesearch_start(TREESEARCH(tree_search));
-		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(tree_search)->entry), (const gchar *)gdk_keyval_name(event->keyval));
+		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(tree_search)->entry),data);
 		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(tree_search)->entry),1);
 		return TRUE;
 	}

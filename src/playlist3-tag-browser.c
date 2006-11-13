@@ -3,7 +3,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glade/glade.h>
-
+#include "TreeSearchWidget.h"
 #include "plugin.h"
 
 #include "main.h"
@@ -38,6 +38,7 @@ static void tag_pref_destroy(GtkWidget *container);
 GtkTreeRowReference *pl3_tag_tree_ref = NULL;
 GtkListStore *ab_lstore = NULL;
 static int pl3_custom_tag_add_go_menu(GtkWidget *menu);
+static GtkWidget *pl3_tag_tree_search = NULL;
 
 GladeXML *tag_pref_xml = NULL;
 gmpcPrefPlugin tag_gpp = {
@@ -116,8 +117,39 @@ static int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton 
 }
 
 
+
+static void pl3_tag_browser_search_activate()
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tb_store);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
+	{
+		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
+		pl3_custom_tag_browser_row_activated(GTK_TREE_VIEW(pl3_tb_tree),(GtkTreePath *)list->data);	
+		/* free list */
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 static void pl3_tag_browser_init()
 {
+	GtkWidget *vbox = NULL;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column = NULL;
 	GValue value;
@@ -135,6 +167,7 @@ static void pl3_tag_browser_init()
 	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PL3_TB_ICON,NULL);
+
 	memset(&value, 0, sizeof(value));
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
@@ -153,7 +186,7 @@ static void pl3_tag_browser_init()
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_tb_tree), FALSE);
 	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_tb_tree), TRUE);
 	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree)), GTK_SELECTION_MULTIPLE);
-
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_tb_tree), -1);
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",
 			G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
@@ -165,10 +198,17 @@ static void pl3_tag_browser_init()
 			G_CALLBACK(pl3_tag_browser_playlist_key_press), NULL);
 
 	/* set up the scrolled window */
-	pl3_tb_sw = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_tb_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_tb_sw), GTK_SHADOW_ETCHED_IN);
-	gtk_container_add(GTK_CONTAINER(pl3_tb_sw), pl3_tb_tree);
+	pl3_tb_sw = gtk_vbox_new(FALSE,6);
+	vbox = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(vbox), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(vbox), GTK_SHADOW_ETCHED_IN);
+	gtk_container_add(GTK_CONTAINER(vbox), pl3_tb_tree);
+	gtk_box_pack_start(GTK_BOX(pl3_tb_sw), vbox, TRUE, TRUE,0);
+
+	pl3_tag_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_tb_tree), PL3_TB_TITLE);
+	g_signal_connect(G_OBJECT(pl3_tag_tree_search),"result-activate", G_CALLBACK(pl3_tag_browser_search_activate), NULL);
+	gtk_box_pack_end(GTK_BOX(pl3_tb_sw), pl3_tag_tree_search, FALSE, TRUE,0);
+
 
 	/* set initial state */
 	g_object_ref(G_OBJECT(pl3_tb_sw));
@@ -1443,9 +1483,24 @@ static int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *even
 	{
 		pl3_tag_browser_add_selected();
 	}
+	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f)
+	{
+		treesearch_start(TREESEARCH(pl3_tag_tree_search));
+	}
 	else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK)
 	{
 		pl3_tag_browser_show_info();
+	}
+	else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
+			((event->keyval >= GDK_space && event->keyval <= GDK_z)))
+	{
+		char data[2];
+		data[0] = (char)gdk_keyval_to_unicode(event->keyval);
+		data[1] = '\0';
+		treesearch_start(TREESEARCH(pl3_tag_tree_search));
+		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(pl3_tag_tree_search)->entry),data);
+		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(pl3_tag_tree_search)->entry),1);
+		return TRUE;
 	}
 	else
 	{

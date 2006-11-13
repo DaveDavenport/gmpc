@@ -266,6 +266,7 @@ static void treesearch_init (TreeSearch *ts)
 
 
 	gtk_widget_show_all(vbox);
+	gtk_widget_set_no_show_all(GTK_WIDGET(ts), TRUE);
 }
 static void treesearch_set_treeview(TreeSearch *ts, GtkTreeView *view)
 {
