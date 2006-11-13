@@ -981,6 +981,15 @@ static int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *e
 	{
 		pl3_artist_browser_show_info();
 	}
+	else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
+			((event->keyval >= GDK_a && event->keyval <= GDK_z) || (event->keyval >= GDK_A && event->keyval <= GDK_Z)))
+
+	{
+		treesearch_start(pl3_ab_tree_search);
+		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(pl3_ab_tree_search)->entry), (const gchar *)gdk_keyval_name(event->keyval));
+		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(pl3_ab_tree_search)->entry),1);
+		return TRUE;
+	}
 	else
 	{
 		return pl3_window_key_press_event(tree,event);
