@@ -678,3 +678,8 @@ void meta_data_check_plugin_changed()
 	}
 }
 
+void meta_data_destroy()
+{
+	cfg_close(cover_index);
+}
+

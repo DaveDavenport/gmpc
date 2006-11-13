@@ -22,4 +22,5 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 void meta_data_init(void);
 void meta_data_check_plugin_changed(void);
 void meta_data_handle_remove_request(guint id);
+void meta_data_destroy();
 #endif

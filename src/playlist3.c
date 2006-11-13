@@ -55,6 +55,7 @@ void pl3_option_menu_activate(void);
 static void pl3_plugin_changed_interface(void);
 
 int pl3_zoom = PLAYLIST_NO_ZOOM;
+int pl3_old_zoom = PLAYLIST_NO_ZOOM;
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -608,17 +609,26 @@ void pl3_push_rsb_message(gchar *string)
 gboolean pl3_close()
 {
 	/* only save when window is PLAYLIST_SMALL or NO ZOOM */
-	if(pl3_xml != NULL && pl3_zoom <= PLAYLIST_SMALL)
+	if(pl3_xml != NULL)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
 		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
 
 		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
 		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
-		cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
-		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
-		cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
+
+
+		if(pl3_zoom <= PLAYLIST_SMALL)
+		{
+			debug_printf(DEBUG_INFO,"pl3_close: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
+			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
+			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
+		}
+		if(pl3_zoom < PLAYLIST_SMALL)
+		{
+			cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
 					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
+		}
 	}
 
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "hide-on-close", FALSE))
@@ -661,6 +671,7 @@ int pl3_hide()
 		if(pl3_zoom <= PLAYLIST_SMALL)
 		{
 			gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+			debug_printf(DEBUG_INFO,"pl3_hide: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
@@ -797,7 +808,6 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		guint               time)
 {
 	gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
-	printf("%i %s\n",info,data->data);
 
 
 	gtk_drag_finish(context, TRUE, FALSE, time);
@@ -972,7 +982,7 @@ void create_playlist3 ()
 		/**
 		 * restore zoom level
 		 */
-		pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
+		pl3_old_zoom = pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
 		playlist_zoom_level_changed();
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
@@ -1213,12 +1223,14 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 void playlist_zoom_out()
 {
 	if((pl3_zoom+1) >= PLAYLIST_ZOOM_LEVELS) return;
+	pl3_old_zoom = pl3_zoom;
 	pl3_zoom++;
 	playlist_zoom_level_changed();
 }
 void playlist_zoom_in()
 {
 	if(pl3_zoom <= PLAYLIST_NO_ZOOM) return;
+	pl3_old_zoom = pl3_zoom;
 	pl3_zoom--;
 	playlist_zoom_level_changed();
 }
@@ -1228,6 +1240,14 @@ void playlist_zoom_in()
  */
 static void playlist_zoom_level_changed()
 {
+	if(pl3_old_zoom <= PLAYLIST_SMALL)
+	{
+		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+		cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
+		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
+		debug_printf(DEBUG_INFO,"save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
+	} 
+
 	/* Show full view */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
@@ -1243,8 +1263,9 @@ static void playlist_zoom_level_changed()
 
 
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
-	if(pl3_wsize.width > 0 && pl3_wsize.height >0)
+	if(pl3_wsize.width > 0 && pl3_wsize.height >0 && pl3_old_zoom == PLAYLIST_MINI)
 	{
+		debug_printf(DEBUG_INFO,"restore size\n");
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),	pl3_wsize.width, pl3_wsize.height);
 	}
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
@@ -1643,8 +1664,7 @@ void pl3_update_go_menu()
 	 */
 	menu = gtk_menu_new();
 
-	if(mpd_check_connected(connection)) 
-	{
+	if(mpd_check_connected(connection)) {
 		for(i=0; i< num_plugins;i++) {
 			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
 				if(plugins[i]->browser && plugins[i]->browser->add_go_menu) {

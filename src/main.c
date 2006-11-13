@@ -605,6 +605,10 @@ int main (int argc, char **argv)
 	cfg_close(config);
 	cfg_close(profiles);
 	/**
+	 * Clear metadata struct
+	 */
+	meta_data_destroy();
+	/**
 	 * remove (probly allready done) 
 	 * the playlist object
 	 */
@@ -620,6 +624,10 @@ int main (int argc, char **argv)
 void main_quit()
 {
 	debug_printf(DEBUG_INFO, "Quiting gmpc....");
+	/**
+	 * close playlist and store size
+	 */
+	pl3_hide();
 	/**
 	 * Remove the autoconnect timeout,
 	 */

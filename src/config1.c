@@ -32,17 +32,23 @@ typedef enum _ConfigNodeType  {
 	TYPE_ITEM,
 	TYPE_ITEM_MULTIPLE
 } ConfigNodeType;
-
+/**
+ * A config node
+ * 24byte large
+ */
 typedef struct _config_node {
 	struct _config_node *next;
 	struct _config_node *prev;
 	struct _config_node *parent;
 	gchar *name;
 	ConfigNodeType type;
-	/* union this? */
-	struct _config_node *children; /* TYPE_CATEGORY */
-	gchar *value;/* TYPE_ITEM* */
-
+	/* Save some extra memory by using a union
+	 *  It is actually effective because we build a resonable large tree using this
+	 */
+	union{
+		struct _config_node *children; 	/* TYPE_CATEGORY */
+		gchar *value;			/* TYPE_ITEM* */
+	};
 } config_node;
 
 
@@ -51,6 +57,7 @@ typedef struct _config_obj
 	gchar *url;
 	GMutex *lock;
 	config_node *root;
+	int total_size;
 } _config_obj;
 
 static void __int_cfg_set_single_value_as_string(config_obj *, char *, char *, char *);
@@ -104,6 +111,8 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 				child->children = NULL;
 				cfg_add_child(cur, child);
 				multiple = child;
+				cfgo->total_size+= len+sizeof(config_node);
+
 			}
 			if(len==0)
 			{
@@ -133,6 +142,8 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 				new = cfg_new_node();
 				new->type = TYPE_ITEM;
 				new->name = g_strndup(buffer, len);	
+				cfgo->total_size+= len+sizeof(config_node);
+			/*	printf("node size: %i\n", sizeof(config_node));*/
 				/* Get value */
 				len = 0;
 				/* skip spaces */
@@ -167,6 +178,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 					c = fgetc(fp);
 				}while((c != '\n' || quote) && c != EOF && quote >= 0 && len < 1024);
 				new->value = g_strndup(buffer, len);
+				cfgo->total_size+= len;
 				if(multiple){
 					cfg_add_child(multiple,new);
 				}else{
@@ -199,6 +211,7 @@ config_obj *cfg_open(gchar *url)
 	g_mutex_lock(cfgo->lock);
 	cfgo->url = g_strdup(url);
 	cfgo->root = NULL;
+	cfgo->total_size = sizeof(config_obj)+sizeof(&cfgo->lock)+strlen(cfgo->url);
 
 	if(g_file_test(cfgo->url, G_FILE_TEST_EXISTS))
 	{
@@ -209,6 +222,7 @@ config_obj *cfg_open(gchar *url)
 			fclose(fp);
 		}
 	}
+	printf("Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
 	g_mutex_unlock(cfgo->lock);
 	return cfgo;
 }
@@ -220,14 +234,18 @@ void cfg_close(config_obj *cfgo)
 	{
 		return;
 	}
+	printf("Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
 	g_mutex_lock(cfgo->lock);
 	if(cfgo->url != NULL)
 	{
+		cfgo->total_size-=strlen(cfgo->url);
 		g_free(cfgo->url);
 	}
 	while(cfgo->root)__int_cfg_remove_node(cfgo,cfgo->root);
 	g_mutex_unlock(cfgo->lock);
+	cfgo->total_size-= sizeof(&cfgo->lock)+sizeof(config_obj);
 	g_mutex_free(cfgo->lock);
+	printf("Memory remaining: %i\n", cfgo->total_size);
 	g_free(cfgo);
 }
 static config_node *cfg_new_node()
@@ -248,6 +266,7 @@ static config_node *cfg_add_class(config_obj *cfg, char *class)
 	newnode->name = g_strdup(class);
 	newnode->value = NULL;
 	newnode->children  = NULL;
+	cfg->total_size += sizeof(config_node)+strlen(class);
 	if(cfg->root == NULL)
 	{
 		cfg->root = newnode;		
@@ -580,8 +599,15 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 			cfg->root = NULL;
 		}
 	}	
-	if(node->name) g_free(node->name);
-	if(node->value) g_free(node->value);
+	cfg->total_size-= sizeof(config_node);
+	if(node->name){
+		cfg->total_size-=strlen(node->name);
+		 g_free(node->name);
+	}
+	if(node->value) {
+		cfg->total_size-=strlen(node->value);
+		g_free(node->value);
+	}
 	g_slice_free(config_node,node);
 }
 void cfg_del_single_value(config_obj *cfg, char *class, char *key)
@@ -623,12 +649,17 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 		}
 		newnode = cfg_new_node();
 		newnode->name = g_strdup(key);
+		cfg->total_size+=sizeof(config_node)+strlen(key);
 		cfg_add_child(node,newnode);
 
 	}	
 	newnode->type = TYPE_ITEM;
-	if(newnode->value) g_free(newnode->value);
+	if(newnode->value){
+		cfg->total_size-= strlen(newnode->value);
+		g_free(newnode->value);
+	}
 	newnode->value = g_strdup(value);	
+	cfg->total_size += strlen(value);
 	cfg_save(cfg);
 }
 
@@ -687,8 +718,13 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	cur = cfg_get_multiple_value(cfg, class,key,id);
 	if(cur != NULL)
 	{
-		if(cur->value) g_free(cur->value);
+		if(cur->value){
+			cfg->total_size -= strlen(cur->value);
+			g_free(cur->value);
+		}
+
 		cur->value = g_strdup(value);
+		cfg->total_size += strlen(cur->value);
 	}
 	else {
 		config_node *node = cfg_get_single_value(cfg,class,key);
@@ -702,6 +738,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 			cur->name = g_strdup(key);
 			cur->type = TYPE_ITEM_MULTIPLE;
 			cfg_add_child(node,cur);
+			cfg->total_size+=sizeof(config_node)+strlen(key);
 			node = cur;
 		}
 		if(node->type != TYPE_ITEM_MULTIPLE) return;
@@ -709,6 +746,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 		cur->type = TYPE_ITEM;
 		cur->name = g_strdup(id);
 		cur->value = g_strdup(value);
+		cfg->total_size+=sizeof(config_node)+strlen(id)+strlen(value);;
 		cfg_add_child(node,cur);
 		cfg_save(cfg);
 	}
