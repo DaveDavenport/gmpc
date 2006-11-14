@@ -1141,7 +1141,7 @@ static void playlist_player_set_song(MpdObj *mi)
 	mpd_Song *song = mpd_playlist_get_current_song(mi);
 	if(song)
 	{
-		char *mark =cfg_get_single_value_as_string_with_default(
+		char *node = NULL,*mark =cfg_get_single_value_as_string_with_default(
 				config,
 				"playlist",
 				"player_markup",
@@ -1151,8 +1151,16 @@ static void playlist_player_set_song(MpdObj *mi)
 		 */
 		mpd_song_markup_escaped(buffer, 1024,mark,song);
 		cfg_free_string(mark);
-
-
+		/**
+		 * hack to fix coloring
+		 */
+		node = &buffer[0];
+		while((node = strstr(node, "#RRGGBB")) != NULL)
+		{
+			GdkColor *color = &(glade_xml_get_widget(pl3_xml, "pl3_win")->style->text_aa[GTK_STATE_NORMAL]);
+			sprintf(&node[1],"%02x%02x%02x",color->red>>8, color->green>>8, color->blue>>8); 
+			node[7] = '"';
+		}
 		/**
 		 * Set markup
 		 */
