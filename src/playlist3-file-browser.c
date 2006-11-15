@@ -321,7 +321,15 @@ static void pl3_file_browser_reupdate()
 			gtk_tree_path_free(path);
 		}
 */
-		pl3_file_browser_activate();
+		GtkTreeIter iter;
+		GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_fb_tree_ref);
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
+		if(gtk_tree_model_get_iter(model, &iter, path))
+		{
+			pl3_file_browser_view_folder(&iter);
+		}
+		gtk_tree_path_free(path);
+/*		pl3_file_browser_activate();*/
 	}
 }
 
@@ -405,17 +413,6 @@ static int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
 		}
 		return TRUE;
 	}
-	/* remove the fantom child if there are no subfolders anyway. */
-	/* TODO: Fix this:
-	 * It seems the iter isn't valid at this point anymore.
-	 if(!(pd->sub_folder))
-	 {
-	 if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &iter, pd->iter_cat))
-	 {
-	 gtk_tree_store_remove(pl3_tree, &iter);
-	 }
-	 }
-	 */
 	return FALSE;
 } 
 
