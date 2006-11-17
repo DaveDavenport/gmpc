@@ -5254,7 +5254,7 @@ Public License instead of this License.
 </property>
   <property name="wrap_license">False</property>
   <property name="website">http://cms.qballcow.nl/</property>
-  <property name="authors">Qball Cow &lt;Qball@qballcow.nl&gt;</property>
+  <property name="authors">Qball Cow &lt;qball@sarine.nl&gt;</property>
   <property name="documenters"></property>
   <property name="artists">Chromakode</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
