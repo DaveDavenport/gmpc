@@ -5,6 +5,7 @@ AM_INIT_AUTOMAKE([gmpc], [0.13.4],qball@qballcow.nl)
 
 # Checks for programs.
 
+AC_PREREQ(2.59)
 AC_PROG_INTLTOOL(gmpc,[0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
