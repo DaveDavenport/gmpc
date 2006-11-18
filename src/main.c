@@ -679,7 +679,7 @@ static int autoconnect_callback(void)
 		/*
 		 * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
 		 */
-		if (gmpc_failed_tries <  3 && gmpc_connected && cfg_get_single_value_as_int_with_default(config,
+		if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) && gmpc_connected && cfg_get_single_value_as_int_with_default(config,
 					"connection",
 					"autoconnect",
 					FALSE))
