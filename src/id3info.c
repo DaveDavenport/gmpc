@@ -47,7 +47,24 @@ void id3_save_song_lyric(void);
 void id3_reget_lyric_txt(void);
 void id3_reget_artist_txt(void);
 void id3_reget_album_txt(void);
+static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox);
+/***
+ *
+ */
+static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox)
+{
+	gtk_widget_set_sensitive(vbox, TRUE);
+	/** would be spammage */
+	/*GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);         		*/
+}
 
+
+
+
+
+/****
+ *
+ */
 void id3_save_album_txt()
 {
 	GtkTextIter end, start;
@@ -335,10 +352,16 @@ static void create_window (int song)
 		g_error ("Couldnt initialize GUI. Please check installation\n");
 	}
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")), "image_changed",
+		G_CALLBACK(art_set_from_path), 
+		glade_xml_get_widget(xml_id3_window, "album_vbox"));
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),300);
+
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),META_ARTIST_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),300);                 	
-	
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")), "image_changed",
+			G_CALLBACK(art_set_from_path), 
+			glade_xml_get_widget(xml_id3_window, "artist_vbox"));                                                    	
 	glade_xml_signal_autoconnect (xml_id3_window);
 
 	songs = g_list_append (songs, songstr);
@@ -354,9 +377,11 @@ static void set_text (GList * node)
 		return;
 	}
 	song = node->data;
-
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "album_vbox"), FALSE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),song);
+	gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "artist_vbox"), FALSE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),song);
+	
 
 	if (song->artist != NULL)
 	{
@@ -539,6 +564,20 @@ void call_id3_window_song(mpd_Song *songstr)
 		char *path = gmpc_get_full_glade_path("gmpc.glade");
 		xml_id3_window = glade_xml_new (path, "id3_info_window", NULL);
 		g_free(path);
+		gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
+		g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")), "image_changed",
+				G_CALLBACK(art_set_from_path), 
+				glade_xml_get_widget(xml_id3_window, "album_vbox"));
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),300);
+
+		gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),META_ARTIST_ART);
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),300);                 	
+		g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")), "image_changed",
+				G_CALLBACK(art_set_from_path), 
+				glade_xml_get_widget(xml_id3_window, "artist_vbox"));                                                    	
+
+
+
 
 		/* check for errors and axit when there is no gui file */
 		if (xml_id3_window == NULL)
@@ -645,6 +684,7 @@ void id3_reget_album_art()
 								GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
 								songs->data);	
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "album_vbox"), FALSE);
 			
 		}
 	}
@@ -681,6 +721,7 @@ void id3_reget_artist_art()
 								songs->data);	
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
 					META_ARTIST_ART);
+			gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "artist_vbox"), FALSE);
 		}
 	}
 }
