@@ -102,7 +102,7 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
  */
 
 
-static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
+MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path)
 {
 	if(!song)
 	{
