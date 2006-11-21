@@ -346,6 +346,8 @@ static unsigned long pl3_find_browser_view_browser()
 			int total_songs = mpd_playlist_get_playlist_length(connection);
 			int step = total_songs/50;
 			filter_test = mpd_misc_tokenize(name);
+			if(total_songs == 0)
+				return 0;
 			/*
 			   if(filter_test == NULL)
 			   {
