@@ -171,11 +171,13 @@ static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), name);
 	ali = gtk_alignment_new(0,0.5,0,0);
+
 	gtk_container_add(GTK_CONTAINER(ali), label);
 
 	gtk_table_attach(GTK_TABLE(table), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
 	ali = gtk_alignment_new(0,0.5,1,0);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	gtk_container_add(GTK_CONTAINER(ali), label);
 	gtk_table_attach(GTK_TABLE(table), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -224,13 +226,14 @@ static void info3_fill_view()
 	/** 
 	 * Title Label
 	 */
-	if(song->artist)
+	if(song->title)
 	{
 		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,0,0);
+		ali = gtk_alignment_new(0,0.5,1,0);
 		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
 				, song->title);
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		g_free(markup);
 		gtk_container_add(GTK_CONTAINER(ali),label);
@@ -317,10 +320,11 @@ static void info3_fill_view()
 		GString *string = NULL;
 		/** Artist label */
 		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,0,0);
+		ali = gtk_alignment_new(0,0.5,1,0);
 		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>",song->artist);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		g_free(markup);
 		gtk_container_add(GTK_CONTAINER(ali),label);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
@@ -394,7 +398,7 @@ static void info3_fill_view()
 
 static void info3_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedStatusType what, gpointer data)
 {
-	if(what&(MPD_CST_SONGPOS|MPD_CST_SONGID) || what&MPD_CST_STATE)
+	if(what&(MPD_CST_SONGPOS|MPD_CST_SONGID|MPD_CST_PLAYLIST|MPD_CST_STATE))
 	{
 		info3_fill_view();
 	}
