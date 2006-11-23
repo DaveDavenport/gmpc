@@ -29,7 +29,7 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 	plugins[num_plugins-1] = plug;
 	plugins[num_plugins] = NULL;
 	
-	if(plug->plugin_type == GMPC_PLUGIN_META_DATA)
+	if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
 	{
 		meta_data_add_plugin(plug);
 	}
