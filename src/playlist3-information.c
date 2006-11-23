@@ -400,6 +400,8 @@ static void info3_update_status_changed(GmpcConnection *gc, MpdObj *mi, ChangedS
 {
 	if(what&(MPD_CST_SONGPOS|MPD_CST_SONGID|MPD_CST_PLAYLIST|MPD_CST_STATE))
 	{
+		if(MPD_CST_STATE && mpd_player_get_state(mi) == MPD_STATUS_STATE_PAUSE)
+			return;
 		info3_fill_view();
 	}
 }
