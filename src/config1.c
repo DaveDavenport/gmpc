@@ -63,6 +63,8 @@ typedef struct _config_obj
 static void __int_cfg_set_single_value_as_string(config_obj *, char *, char *, char *);
 static void cfg_save(config_obj *);
 static void __int_cfg_remove_node(config_obj *, config_node *);
+
+static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node);
 static config_node *cfg_add_class(config_obj *, char *);
 static config_node *cfg_new_node(void);
 static void cfg_add_child(config_node *, config_node *);
@@ -861,3 +863,45 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
 	return list;
 }
 
+static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
+{
+	config_node *root = NULL;
+	if(!cfg || !cfg->root)
+		return;
+	if(node == NULL)
+		root = cfg->root;
+	else
+		root = node;
+	if(!root)return;
+	while(root)
+	{
+		if(root->type == TYPE_CATEGORY)
+		{
+			if(root->children)
+				__int_cfg_do_special_cleanup(cfg, root->children);		
+		}	
+		else if(root->type == TYPE_ITEM)
+		{
+			if(root->value == NULL || root->value[0] == '\0')
+			{
+				config_node *node = root;
+				root = node->prev;
+				if(!root)
+					root = node->next;
+				__int_cfg_remove_node(cfg, node);
+				if(!root) return;
+			}
+		}
+		root = root->next;
+	}
+}
+void cfg_do_special_cleanup(config_obj *cfg)
+{
+	if(!cfg || !cfg->root)
+		return;
+
+	g_mutex_lock(cfg->lock);
+	__int_cfg_do_special_cleanup(cfg, NULL);
+	cfg_save(cfg);
+	g_mutex_unlock(cfg->lock);
+}

@@ -638,7 +638,7 @@ void meta_data_add_plugin(gmpcPlugin *plug)
 
 void meta_data_check_plugin_changed()
 {
-	conf_mult_obj *class = NULL;
+	//conf_mult_obj *class = NULL, *node = NULL;
 	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
 	if(old_amount < meta_num_plugins)
 	{
@@ -647,7 +647,8 @@ void meta_data_check_plugin_changed()
 		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
 		gtk_widget_show_all(GTK_WIDGET(dialog));
 		while(gtk_events_pending()) gtk_main_iteration();
-		class = cfg_get_class_list(cover_index);
+	/*	class = cfg_get_class_list(cover_index);
+
 		if(class)
 		{
 			while(class){
@@ -671,6 +672,8 @@ void meta_data_check_plugin_changed()
 				}
 			}
 		}
+*/
+		cfg_do_special_cleanup(cover_index);
 	}
 	if(old_amount != meta_num_plugins)
 	{
