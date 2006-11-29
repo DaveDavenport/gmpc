@@ -1,3 +1,16 @@
+29-11-2006 Qball <Qball@qballcow.nl
+	* Changelog: Start using it again. (yeah I know; about time).
+	* src/config1.c: Change printf's to debug_printf's (and include
+	libmpd/debug_printf.h to make this posible.
+	* src/playlist3-metadata.c: Use Replace instead of "play", to make it
+	more consistent with the rest of gmpc.
+	* src/metadata.[c|h]: Add (void) to the void meta_data_destroy()
+	function argument defenition.
+
+
+
+
+
 19-12-2005 Qball <Qball@qballcow.nl>
 	* Changed configure script to check for gtk/glib seperately,
 	this to "fix" the annoyance of pkg_check_modules not reporting what

@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #endif
 #include "config1.h"
-
+#include <libmpd/debug_printf.h>
 typedef enum _ConfigNodeType  {
 	TYPE_CATEGORY,
 	TYPE_ITEM,
@@ -224,7 +224,7 @@ config_obj *cfg_open(gchar *url)
 			fclose(fp);
 		}
 	}
-	printf("Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
+	debug_printf(DEBUG_INFO,"Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
 	g_mutex_unlock(cfgo->lock);
 	return cfgo;
 }
@@ -236,7 +236,7 @@ void cfg_close(config_obj *cfgo)
 	{
 		return;
 	}
-	printf("Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
+	debug_printf(DEBUG_INFO,"Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
 	g_mutex_lock(cfgo->lock);
 	if(cfgo->url != NULL)
 	{
@@ -247,7 +247,7 @@ void cfg_close(config_obj *cfgo)
 	g_mutex_unlock(cfgo->lock);
 	cfgo->total_size-= sizeof(&cfgo->lock)+sizeof(config_obj);
 	g_mutex_free(cfgo->lock);
-	printf("Memory remaining: %i\n", cfgo->total_size);
+	debug_printf(DEBUG_INFO,"Memory remaining: %i\n", cfgo->total_size);
 	g_free(cfgo);
 }
 static config_node *cfg_new_node()

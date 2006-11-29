@@ -348,7 +348,8 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	label = gtk_hbox_new(FALSE,6);
 	gtk_table_attach(GTK_TABLE(table), label, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
 	/* Play button */
-	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
+	button = gtk_button_new_with_label(_("Replace"));
+	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_clicked), GINT_TO_POINTER(1));
@@ -509,7 +510,8 @@ static void info2_fill_song_view(char *path)
 	 * Play Button 
 	 */
 	hbox = gtk_hbox_new(FALSE,6);
-	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
+	button = gtk_button_new_with_label(_("Replace"));
+	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
@@ -830,7 +832,8 @@ static void info2_fill_artist_view(char *artist)
 	 * Play Button 
 	 */
 	hbox = gtk_hbox_new(FALSE,6);
-	GtkWidget *button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
+	GtkWidget *button = gtk_button_new_with_label(_("Replace"));
+	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
@@ -1017,7 +1020,8 @@ static void info2_fill_artist_view(char *artist)
 			 * Play Button 
 			 */
 			GtkWidget *hbox = gtk_hbox_new(FALSE,6);
-			GtkWidget *button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
+			GtkWidget *button = gtk_button_new_with_label(_("Replace"));
+			gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 			g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 			g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
@@ -1186,7 +1190,8 @@ static void info2_fill_album_view(char *artist,char *album)
 	 * Play Button 
 	 */
 	hbox = gtk_hbox_new(FALSE,6);
-	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
+	button = gtk_button_new_with_label(_("Replace"));
+	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(album), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
@@ -1305,7 +1310,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 			button = gtk_button_new();
 			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_BUTTON));
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(1));
 			gtk_table_attach(GTK_TABLE(table2), button, 1,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);

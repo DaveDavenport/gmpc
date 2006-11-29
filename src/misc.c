@@ -19,10 +19,15 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
-#include <math.h>
+
+
 #include <config.h>
 #include "main.h"
 #include "misc.h"
+#ifndef __USE_BSD
+#define __USE_BSD
+#endif
+#include <math.h>
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
