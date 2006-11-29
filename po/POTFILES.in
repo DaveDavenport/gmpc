@@ -2,7 +2,6 @@
 [encoding: UTF-8]
 data/gmpc.desktop.in
 glade/gmpc.glade
-glade/open-location.glade
 glade/playlist3.glade
 src/bacon-volume.c
 src/config1.c
