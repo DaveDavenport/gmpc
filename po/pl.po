@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-29 21:57+0100\n"
-"PO-Revision-Date: 2006-11-28 22:09+0100\n"
+"POT-Creation-Date: 2006-12-02 13:05+0100\n"
+"PO-Revision-Date: 2006-11-30 00:48+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Country: Poland\n"
+"X-Poedit-Bookmarks: 133,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
@@ -629,7 +630,7 @@ msgstr ""
 
 #: ../src/main.c:307
 msgid "Trying to run gmpc with a wrong libmpd version."
-msgstr ""
+msgstr "Próbujesz uruchomić gmpc z niewłaściwą wersją libmpd"
 
 #: ../src/main.c:367 ../src/main.c:390
 msgid "Failed to load the configuration system"
@@ -1199,31 +1200,27 @@ msgstr "słowa piosenki"
 
 #: ../src/playlist3-metadata-browser.c:565
 msgid "<b>Dirname:</b>"
-msgstr "<b>Nazwa katlogu:</b>"
+msgstr "<b>Nazwa katalogu:</b>"
 
 #: ../src/playlist3-metadata-browser.c:827
 msgid "artist info"
 msgstr "informacje o wykonawcy"
 
 #: ../src/playlist3-metadata-browser.c:870
-#, fuzzy
 msgid "<b>Genres: </b>"
-msgstr "<b>Gatunek:</b>"
+msgstr "<b>Gatunki:</b>"
 
 #: ../src/playlist3-metadata-browser.c:870
-#, fuzzy
 msgid "<b>Genre: </b>"
 msgstr "<b>Gatunek:</b>"
 
 #: ../src/playlist3-metadata-browser.c:886
-#, fuzzy
 msgid "<b>Dates: </b>"
-msgstr "<b>Data:</b>"
+msgstr "<b>Roczniki: </b>"
 
 #: ../src/playlist3-metadata-browser.c:886
-#, fuzzy
 msgid "<b>Date: </b>"
-msgstr "<b>Data:</b>"
+msgstr "<bRocznik:</b>"
 
 #: ../src/playlist3-metadata-browser.c:1007
 #: ../src/playlist3-metadata-browser.c:1284
@@ -1243,91 +1240,3 @@ msgstr "informacje o albumie"
 #: ../src/playlist3-metadata-browser.c:1523
 msgid "Metadata Browser"
 msgstr "Przeglądarka metadanych"
-
-#~ msgid "<b>Location:</b>"
-#~ msgstr "<b>Położenie:</b>"
-
-#~ msgid "<b>Statistics:</b>"
-#~ msgstr "<b>Statystyki:</b>"
-
-#~ msgid "<i>Albums:</i>"
-#~ msgstr "<i>Albumy:</i>"
-
-#~ msgid "<i>Artists:</i>"
-#~ msgstr "<i>Wykonawcy:</i>"
-
-#~ msgid "<i>Playtime:</i>"
-#~ msgstr "<i>Czas odtwarzania:</i>"
-
-#~ msgid "<i>Songs:</i>"
-#~ msgstr "<i>Piosenki:</i>"
-
-#~ msgid "<i>Uptime:</i>"
-#~ msgstr "<i>Czas pracy:</i>"
-
-#~ msgid "<span size=\"x-large\" weight=\"bold\">Cover Art Manager</span>"
-#~ msgstr "<span size=\"x-large\" weight=\"bold\">Menadżer okładek</span>"
-
-#~ msgid "Clear cover art cache"
-#~ msgstr "Wyczyść pamięć podręczną okładek"
-
-#~ msgid "Cover Art Manager"
-#~ msgstr "Menadżer okładek"
-
-#~ msgid "Cover Art Viewer"
-#~ msgstr "Przeglądarka okładek"
-
-#~ msgid "Edit Cover Art"
-#~ msgstr "Edytuj okładkę"
-
-#~ msgid "Enable Covert Art"
-#~ msgstr "Włącz okładki"
-
-#~ msgid ""
-#~ "Gmpc doesn't fetch the cover art itself.\n"
-#~ "To fetch covers it uses providers plugins.\n"
-#~ "These plugins fetch the cover image and stores them locally.\n"
-#~ "You can download provider plugins: http://cms.qballcow.nl/"
-#~ msgstr ""
-#~ "GMPC nie posiada mechanizmu do pobierania okładek.\n"
-#~ "Wykorzystuje dodatkowe wtyczki dostarczające,\n"
-#~ "ściągające i zapisujące obrazy okładek na lokalnym dysku\n"
-#~ "Możesz je pobrać ze strony: http://cms.qballcow.nl/"
-
-#~ msgid "Query Providers"
-#~ msgstr "Odpytaj dostawców"
-
-#~ msgid "Remove Image"
-#~ msgstr "Usuń obraz"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
-#~ msgstr ""
-#~ "<span size=\"x-small\"><i>Wprowadź lokalny lub zdalny strumień lub listę "
-#~ "odtwarzania</i></span>"
-
-#~ msgid "Add Location"
-#~ msgstr "Dodaj lokację"
-
-#~ msgid "Stream:"
-#~ msgstr "Strumień:"
-
-#~ msgid "You can drop a link or file directly from a browser on this window."
-#~ msgstr ""
-#~ "Możesz upuścić link lub plik bezpośrednio z przeglądarki na tym oknie."
-
-#~ msgid "Add Online Stream list"
-#~ msgstr "Dodaj listę strumieni sieciowych"
-
-#~ msgid "Add Stream"
-#~ msgstr "Dodaj strumień"
-
-#~ msgid "Url:"
-#~ msgstr "Url:"
-
-#~ msgid "%i %s %02i %s %02i %s"
-#~ msgstr "%i %s %02i %s %02i %s"
