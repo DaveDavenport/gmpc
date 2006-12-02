@@ -1,3 +1,8 @@
+02-12-2006 Qball <Qball@sarine.nl>
+	* glade/*.glade: Replace cms.qballcow.nl sarine.nl
+	* glade/*.glade: Replace qballcow.nl with sarine.nl
+	* po/pl.po:	Update polish translation
+
 29-11-2006 Qball <Qball@qballcow.nl
 	* Changelog: Start using it again. (yeah I know; about time).
 	* src/config1.c: Change printf's to debug_printf's (and include
