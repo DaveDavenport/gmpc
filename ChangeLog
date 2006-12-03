@@ -1,3 +1,6 @@
+03-12-2006  Qball <Qball@sarine.nl>
+	* src/main.c:	Add a --clean-cover-db option.
+
 02-12-2006 Qball <Qball@sarine.nl>
 	* glade/*.glade: Replace cms.qballcow.nl sarine.nl
 	* glade/*.glade: Replace qballcow.nl with sarine.nl

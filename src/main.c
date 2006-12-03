@@ -201,6 +201,7 @@ static void bacon_on_message_received(const char *message, gpointer data)
 int main (int argc, char **argv)
 {
 	int i;
+	int clean_config = FALSE;
 	char *config_path = NULL;
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
@@ -268,6 +269,10 @@ int main (int argc, char **argv)
 			{
 				config_path = g_strdup(&argv[i][strlen(_("--config="))]);
 			}
+			else if (!strncasecmp(argv[i], _("--clean-cover-db"), strlen(_("--clean-cover-db"))))
+			{
+				clean_config = TRUE;
+			}
 			/**
 			 * Print out help message
 			 */
@@ -284,6 +289,7 @@ int main (int argc, char **argv)
 				"\t\t\t\t\t3: All messages\n"\
 				"\t--version:\t\tPrint version and svn revision\n"\
 				"\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
+				"\t--clean-cover-db\tCleanup the cover file.\n"
 				));
 				exit(0);
 			}
@@ -336,6 +342,18 @@ int main (int argc, char **argv)
 	if(!g_thread_supported())g_thread_init (NULL);
 
 	create_gmpc_paths();
+
+	/* do the clean config stuff */
+	if(clean_config)
+	{
+		meta_data_init();
+		printf("Cleaning up cover file..\n");
+		meta_data_cleanup();
+		printf("Done..\n");
+		meta_data_destroy();
+		return 1;
+	}
+
 
 	/**
 	 * Open the config file
