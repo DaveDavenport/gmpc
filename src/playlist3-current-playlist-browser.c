@@ -687,9 +687,9 @@ static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTr
 				(1/playlist_list_get_loaded(PLAYLIST_LIST(playlist)));
 			gchar *string = format_time(playtime);
 			gchar *mesg = NULL;
-			mesg = g_strdup_printf("%i Items, %s %s", PLAYLIST_LIST(playlist)->num_rows, string,
-				(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) >= 1 ||
-					playlist_list_get_loaded(PLAYLIST_LIST(playlist)) <= 0.0)? "":_("(Estimation)")); 
+			gdouble loaded =playlist_list_get_loaded(PLAYLIST_LIST(playlist));
+			mesg = g_strdup_printf("%i Items%c %s %s", PLAYLIST_LIST(playlist)->num_rows,(string[0])?',':' ', string,
+				(string[0] == 0 || loaded >= 1 || loaded <= 0.0)? "":_("(Estimation)")); 
 			pl3_push_rsb_message(mesg);
 			g_free(string);
 			g_free(mesg);
