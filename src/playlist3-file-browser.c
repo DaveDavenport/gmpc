@@ -42,6 +42,7 @@ static void pl3_file_browser_cat_sel_changed(GtkWidget *tree,GtkTreeIter *iter);
 static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter);
 static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree, GdkEventButton *event);
 static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type);
+static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem *bt);
 /* testing */
 static void pl3_file_browser_reupdate(void);
 
@@ -546,13 +547,33 @@ static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree,
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_folder), NULL);
 
-		/* add the update widget */
-		item = gtk_image_menu_item_new_with_label(_("Update"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_update_folder), NULL);	
-
+		{
+			GtkTreeView *tree = playlist3_get_category_tree_view();
+			GtkTreeModel *model = (GtkTreeModel *) playlist3_get_category_tree_store();
+			GtkTreeSelection *selection  = gtk_tree_view_get_selection(tree);
+			GtkTreeIter iter;
+			if(gtk_tree_selection_get_selected(selection, &model, &iter))
+			{
+				char *icon = NULL;
+				gtk_tree_model_get(model, &iter,3, &icon, -1);
+				if(!strcmp("media-playlist", icon))
+				{
+					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist_from_right), NULL);
+				}
+				else
+				{
+					/* add the update widget */
+					item = gtk_image_menu_item_new_with_label(_("Update"));
+					gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+							gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_update_folder), NULL);	
+				}
+				g_free(icon);
+			}
+		}
 		/* show everything and popup */
 		return 1;
 	}
@@ -592,7 +613,7 @@ static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *eve
 		pl3_file_browser_show_info();
 	}
 	else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
-		((event->keyval >= GDK_space && event->keyval <= GDK_z)))
+			((event->keyval >= GDK_space && event->keyval <= GDK_z)))
 	{
 		char data[2];
 		data[0] = (char)gdk_keyval_to_unicode(event->keyval);
@@ -763,7 +784,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			}
 		}
 	}
-	
+
 	g_free(song_path);
 }
 
@@ -934,6 +955,59 @@ static void pl3_file_browser_add_selected()
 	g_list_free (rows);
 }
 
+static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem *bt)
+{
+	GtkTreeView *tree = playlist3_get_category_tree_view();
+	GtkTreeModel *model = (GtkTreeModel *) playlist3_get_category_tree_store();
+	GtkTreeSelection *selection  = gtk_tree_view_get_selection(tree);
+	GtkTreeIter iter;
+	char *path= NULL;
+	/* create a warning message dialog */
+	GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW
+			(glade_xml_get_widget
+			 (pl3_xml, "pl3_win")),
+			GTK_DIALOG_MODAL,
+			GTK_MESSAGE_WARNING,
+			GTK_BUTTONS_NONE,
+			_("Are you sure you want to clear the selected playlist?"));
+
+	gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_NO,
+			GTK_RESPONSE_CANCEL, GTK_STOCK_YES,
+			GTK_RESPONSE_OK, NULL);
+	gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+			GTK_RESPONSE_CANCEL);
+
+
+	if(gtk_tree_selection_get_selected(selection, &model, &iter))
+	{
+		char *icon = NULL;
+		gtk_tree_model_get(model, &iter,3, &icon,2, &path, -1);
+		if(path && strcmp("media-playlist", icon)) {
+			if(path)
+				g_free(path);
+			path = NULL;
+		}
+		g_free(icon);
+	}
+
+	printf("path: %s\n", path);
+
+	if(path == NULL){
+		gtk_widget_destroy(dialog);
+		return;
+	}	
+
+	switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			mpd_database_delete_playlist(connection, path);
+			/*pl3_cat_sel_changed();*/
+			pl3_file_browser_reupdate();
+	}
+	gtk_widget_destroy (GTK_WIDGET (dialog));
+	g_free(path);
+}
+
 static void pl3_file_browser_delete_playlist(GtkMenuItem *bt)
 {
 	char *path= NULL;
@@ -980,7 +1054,8 @@ static void pl3_file_browser_delete_playlist(GtkMenuItem *bt)
 	{
 		case GTK_RESPONSE_OK:
 			mpd_database_delete_playlist(connection, path);
-			pl3_cat_sel_changed();
+			pl3_file_browser_reupdate();
+/*			pl3_cat_sel_changed();*/
 
 	}
 	gtk_widget_destroy (GTK_WIDGET (dialog));
