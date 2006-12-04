@@ -801,6 +801,7 @@ static void pl3_current_playlist_save_playlist ()
 								run = FALSE;
 								mpd_database_delete_playlist(connection, str);
 								mpd_database_save_playlist(connection,str);
+								GmpcStatusChangedCallback(connection, MPD_CST_DATABASE, NULL);
 								break;
 							default:
 								run = TRUE;
@@ -810,6 +811,10 @@ static void pl3_current_playlist_save_playlist ()
 						gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
 
 						g_free(errormsg);
+					}
+					else 
+					{
+						GmpcStatusChangedCallback(connection, MPD_CST_DATABASE, NULL);
 					}
 				}
 				break;
