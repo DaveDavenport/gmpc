@@ -1,3 +1,6 @@
+05-12-2006 Qball <Qball@Sarine.nl>
+	* src/*: Cleanup of old comments, mostly c++ style comments
+
 03-12-2006  Qball <Qball@sarine.nl>
 	* src/main.c:	Add a --clean-cover-db option.
 
