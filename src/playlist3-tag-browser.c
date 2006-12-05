@@ -371,7 +371,7 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	/* the things we do when on level 0 */
 	if(depth == 0)
 	{
-		MpdData *data = NULL;//mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
+		MpdData *data = NULL;
 		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[0]));
 		data = mpd_database_search_commit(connection);
 		while(data != NULL)
@@ -556,7 +556,7 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	if(depth == 0)
 	{
-		MpdData *data = NULL;//mpd_database_get_unique_tags(connection,mpd_misc_get_tag_by_name(tk_format[0]),-1);
+		MpdData *data = NULL;
 		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[0]));
 		data = mpd_database_search_commit(connection);
 		/** Add up entry */
@@ -1037,7 +1037,6 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 		return;
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_TB_PATH,&song_path, PL3_TB_TYPE,&type, -1);
 
-//	if(song_path == NULL) return;
 	if(type == PL3_ENTRY_SONG)
 	{
 		pl3_push_statusbar_message(_("Added a song"));

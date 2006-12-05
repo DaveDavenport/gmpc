@@ -683,16 +683,7 @@ static void pl3_artist_browser_show_info()
 				mpd_Song *song = mpd_database_get_fileinfo(connection, path);
 				if(song)
 					call_id3_window_song(song);
-					//data = mpd_database_find_adv(connection,TRUE,MPD_TAG_ITEM_FILENAME,path,-1);
-/*				while(data != NULL)
-				{
-					if(data->type == MPD_DATA_TYPE_SONG)
-					{
-						call_id3_window_song(mpd_songDup(data->song));
-					}
-					data = mpd_data_get_next(data);
-				}
-				*/
+
 			}
 			if(path)g_free(path);
 		}

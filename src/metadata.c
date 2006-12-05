@@ -635,10 +635,12 @@ void meta_data_add_plugin(gmpcPlugin *plug)
 		}
 	}while(changed);
 }
-void meta_data_cleanup()
+
+void meta_data_cleanup(void)
 {
 	cfg_do_special_cleanup(cover_index);
 }
+
 void meta_data_check_plugin_changed()
 {
 	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
@@ -648,7 +650,6 @@ void meta_data_check_plugin_changed()
 				_("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
 		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
 		gtk_widget_show_all(GTK_WIDGET(dialog));
-	//	while(gtk_events_pending()) gtk_main_iteration();
 		meta_data_cleanup();
 	}
 	if(old_amount != meta_num_plugins)

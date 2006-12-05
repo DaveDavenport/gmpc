@@ -332,9 +332,7 @@ static void info3_fill_view()
 		/**
 		 * Blomb 
 		 */
-//		ali = gtk_alignment_new(0,0.5,0,0);
 		table = gtk_hbox_new(FALSE,6);
-//		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,8,0);
 		gtk_container_set_border_width(GTK_CONTAINER(table),8);
 
 		image = gmpc_metaimage_new(META_ARTIST_ART);
@@ -345,7 +343,6 @@ static void info3_fill_view()
 		gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 		gtk_box_pack_start(GTK_BOX(table), image, FALSE,FALSE,0);
-//		gtk_container_add(GTK_CONTAINER(ali), image);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE,FALSE,0);
 	
 		table2 = gtk_table_new(2,3,0);

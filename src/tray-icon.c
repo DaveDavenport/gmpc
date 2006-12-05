@@ -134,8 +134,6 @@ static gboolean tray_mouse_press_event(GtkWidget *eventb, GdkEventButton *event,
 {
 	if(event->button == 3)
 	{
-		//mpd_player_next(connection);
-		printf("show entry\n");
 		gtk_widget_show_all(GTK_WIDGET(data));
 		if(popup_timeout != -1)
 		{
@@ -297,7 +295,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		 * propperly
 		 * workaround
 		 */
-		width =TOOLTIP_WIDTH;//req.width;
+		width =TOOLTIP_WIDTH;
 		height = req.height;		
 		/*Get monitor size*/
 		if(tray_icon != NULL)
@@ -364,8 +362,6 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		}
 		gtk_widget_show(tip);
 	}
-	//	g_signal_connect(G_OBJECT(event2), "enter-notify-event", G_CALLBACK(popup_enter_notify),hbox2);
-	//	g_signal_connect(G_OBJECT(event2), "leave-notify-event", G_CALLBACK(popup_leave_notify),hbox2);
 	g_signal_connect(G_OBJECT(event2), "button-press-event", G_CALLBACK(tray_mouse_press_event), hbox2);
 	return TRUE;
 }
@@ -657,8 +653,6 @@ static int create_tray_icon()
 
 	g_signal_connect(G_OBJECT(event), "enter-notify-event", 
 			G_CALLBACK(/*tray_motion_cb*/tray_notify_popup), GINT_TO_POINTER(1));
-	//	g_signal_connect(G_OBJECT(event), "leave-notify-event",
-	//			G_CALLBACK(tray_leave_cb), NULL);
 	g_signal_connect(G_OBJECT(event), "scroll-event", G_CALLBACK(scroll_event), NULL);
 	/* show all */
 	gtk_widget_show(GTK_WIDGET(tray_icon));

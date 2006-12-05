@@ -24,5 +24,7 @@ void meta_data_check_plugin_changed(void);
 void meta_data_handle_remove_request(guint id);
 void meta_data_destroy(void);
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path);
-void meta_data_cleanup();
+
+void meta_data_cleanup(void);
+
 #endif

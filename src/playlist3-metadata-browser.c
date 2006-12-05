@@ -581,8 +581,6 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 		if(clear)
 			mpd_playlist_clear(connection);
 
-		//mpd_playlist_queue_add(connection, artist);
-		//mpd_playlist_queue_commit(connection);
 		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
 			int songid = mpd_playlist_add_get_id(connection, file);
 			if(songid >= 0) {
