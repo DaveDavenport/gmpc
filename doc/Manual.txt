@@ -1,7 +1,9 @@
 GMPC v0.14.0 Manual
 ===================
 Qball Cow <qball@qballcow.nl>
-v0.1, October 2006
+v0.2, December 2006
+
+
 
 {index}
 
@@ -30,7 +32,7 @@ You need to add music from mpd's database to the playlist. In gmpc you can do th
 .The File Browser
 image::images/gmpc-filebrowser.png["The File Browser"]
 
-The file browser acts like any other file browser. You can browse through the music in the way it's stored on the filesystem.
+The file browser acts like any other file browser. You can browse through the music in the way it's stored on the file-system.
 
 [NOTE]
 If you don't see any folders of music here, it's possible mpd's database haven't been updated yet. You can do this by right-clicking on the "Browse Filesystem" and select update. If this doesn't work (it might take some time), please look at mpd's link:http://mpd.wikia.com[Wiki]
@@ -85,11 +87,11 @@ The structure can vary depending on the state gmpc is in, but it basically looks
 +
   * Send Password
 +
-	If you are connected to a mpd that has limited permissions, you can use this command to authentificate to get extra permissions. 
+	If you are connected to a mpd that has limited permissions, you can use this command to authenticate to get extra permissions. 
 +
   * Profiles
 +
-	Shows in a sub-menu a list of availible profiles. 
+	Shows in a sub-menu a list of available profiles. 
 +
   * Preferences
 +
@@ -160,7 +162,7 @@ NOTE: To get cover art in the player you need to install the correct plugins tha
 
 image::images/mainwindow-browser.png["Browser"]
 
-In the left treeview you can browse through the browser and the different browsers. Depending on what browser selected the right pane will show the content. This can be a list view, f.e. the current playlist but it can also embed firefox to show you a wikipedia page (the wikipedia plugin does this). 
+In the left tree-view you can browse through the browser and the different browsers. Depending on what browser selected the right pane will show the content. This can be a list view, f.e. the current playlist but it can also embed firefox to show you a wikipedia page (the wikipedia plugin does this). 
 
 4. Status Bar
 ^^^^^^^^^^^^^
@@ -214,7 +216,7 @@ F6		Go to the Information view
 Interface Expanding/Collapsing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The main window has 3 posible sizes:
+The main window has 3 possible sizes:
 
 Full mode 
 ^^^^^^^^^
@@ -266,13 +268,13 @@ There configuration file is stored in '~/.gmpc/' and is called 'gmpc.cfg'.
 
 The following extra changes can be made:
 
-1. *playlist::background-load-playlist*: Gmpc's playlist works using a lazy loading model.  It only loads the song info of the visible songs, this increases startup speed, and saves alot of (startup) bandwidth. But it does make searching the playlist slow the first time.  With this option gmpc starts filling in the missing data of the playlist in the background. (This can slow gmpc down when connected to mpd using a very slow connection) 
+1. *playlist::background-load-playlist*: Gmpc's playlist works using a lazy loading model.  It only loads the song info of the visible songs, this increases startup speed, and saves allot of (startup) bandwidth. But it does make searching the playlist slow the first time.  With this option gmpc starts filling in the missing data of the playlist in the background. (This can slow gmpc down when connected to mpd using a very slow connection) 
 2. *playlist::player_markup*: This allows you to change the way gmpc displays the song information in the player part of the window. Editing this markup you should keep in mind that the processed result is a valid pango markup. (see pango documentation).
 3. *Default::allow-multiple*: Gmpc normally only allows one instant per user to be running, with this option you can turn that extra check off.  (This option only works when gmpc is compiled with session support).
 4. *connection::mpd-update-speed*: Change the speed gmpc poll's mpd for status/state changes. The value denotes the time between checks in ms. 
-5. *connection::profile-file*: Gmpc stores the created profiles in a seperate config file, with this option you can change the location of this file.
+5. *connection::profile-file*: Gmpc stores the created profiles in a separate config file, with this option you can change the location of this file.
 6. *tray-icon::y/x-offset*: Change the x/y offset the tooltip makes relative to the corner it's placed at.
-7. *tray-icon::middle-mouse-action*: Change the behauviour middle mouse clicking on the tray icon. Valid values are: pause,play,next,prev,stop 
+7. *tray-icon::middle-mouse-action*: Change the behavior middle mouse clicking on the tray icon. Valid values are: pause,play,next,prev,stop 
 8. *cover-art::browser-size*: Change the size of cover images in the browsers. At the moment this has only effect on the artist browser.
 
 [[X110]]

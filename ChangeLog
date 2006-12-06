@@ -18,10 +18,6 @@
 	* src/metadata.[c|h]: Add (void) to the void meta_data_destroy()
 	function argument defenition.
 
-
-
-
-
 19-12-2005 Qball <Qball@qballcow.nl>
 	* Changed configure script to check for gtk/glib seperately,
 	this to "fix" the annoyance of pkg_check_modules not reporting what
