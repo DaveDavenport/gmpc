@@ -195,9 +195,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
 }
 #endif
 
-/**
- * The program :D
- */
 int main (int argc, char **argv)
 {
 	int i;

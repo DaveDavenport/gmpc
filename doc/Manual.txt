@@ -51,11 +51,126 @@ TIP: To get cover art in gmpc, you need to install provider plugins
 [[X20]]
 Main Window
 -----------
+Interface
+~~~~~~~~~~~
 
 The main window consist of everything beside the browser. It features the player controls, and the posibility to switch from one browser to the other.
 
 .Main window 
 image::images/gmpc-mainwindow-playing.png["Gmpc Playing"]
+
+The main window can be devided into 4 parts:
+
+1. Menu Bar
+2. Player
+3. Browser
+4. Status bar
+
+1. Menu Bar
+^^^^^^^^^^^
+
+image::images/mainwindow-menubar.png["Menu Bar"]
+
+The menubar provides quick access to most functionality in gmpc.
+The structure can vary depending on the state gmpc is in, but it basically looks as follow:
+
+- Music
+  * Connect
++
+	Connect to the currently selected profile.
++
+  * Disconnect
++
+	If connected, disconnect
++
+  * Send Password
++
+	If you are connected to a mpd that has limited permissions, you can use this command to authentificate to get extra permissions. 
++
+  * Profiles
++
+	Shows in a sub-menu a list of availible profiles. 
++
+  * Preferences
++
+	Opens the preferences window
++
+  * Quit
+- Control
+  * Play/Pause
++
+	Start playing, or if pause a playing song.
++
+  * Stop
++
+	Stop playback
++
+  * Next
++
+	Skip to the next song
++
+  * Previous
++
+	Go back to the previous song, 
++
+  * Repeat
++
+	Enable/Disable repeat mode
++
+  * Random
++
+	Enable/Disable random order playback
++
+- View
+  * <<X22, Expand Interface>>
+  * <<X22, Collapse Interface>>
+  * Show current song information #make link
++
+	Calls the Song information window for the currently playing song
++
+  * Show artist image
++
+	Gmpc can show, if available, a image of the artist in the lower left corner.
+	This lets you turn that image on/off
++
+- Option
++
+	The option menu shows the available options that the current selected browser provides, it is equal to the context menu of the left treeview.
++
+- Go
++
+	The go menu provides a easy way to access the different browsers.
++
+- Help
+  * About
+
+2. Player 
+^^^^^^^^^
+
+image::images/mainwindow-player.png["Player"]
+
+The player gives you quick access to the default player controls. (Need a nice story here)
+
+TIP: You can quickly jump to a position in the song by middle clicking on that position in the progress slider.
+
+NOTE: To get cover art in the player you need to install the correct plugins that provides them to gmpc.
+
+3. Browser
+^^^^^^^^^^
+
+image::images/mainwindow-browser.png["Browser"]
+
+In the left treeview you can browse through the browser and the different browsers. Depending on what browser selected the right pane will show the content. This can be a list view, f.e. the current playlist but it can also embed firefox to show you a wikipedia page (the wikipedia plugin does this). 
+
+4. Status Bar
+^^^^^^^^^^^^^
+
+image::images/mainwindow-statusbar.png["Status Bar"]
+
+The status bar consists of 2 parts. On the left you see short term information messages, like 'Added 5 songs'. 
+On the right you see information about the current browser, for example in the Current Playlist you see the total time of the playing list.
+
+NOTE: Plugins/browsers are allowed to add widgets to the status bar, so does the file-browser show a small icon in the status bar when mpd is updating it's database.
 
 Keybindings
 ~~~~~~~~~~~
@@ -137,7 +252,7 @@ Artist Browser
 --------------
 Keybindings:
 
-[[60]]
+[[X60]]
 Search Browser
 --------------
 Keybindings:
@@ -164,4 +279,5 @@ The following extra changes can be made:
 FAQ
 ---
 
+A collection of frequently asked questions.
  
