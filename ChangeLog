@@ -1,3 +1,8 @@
+06-12-2006 Qball <qball@sarine.nl>
+	* doc/*: removal of old obsoltete doc's
+	* doc/Manual.txt: updates
+	* doc/images/:	added document images
+
 05-12-2006 Qball <Qball@Sarine.nl>
 	* src/*: Cleanup of old comments, mostly c++ style comments
 
