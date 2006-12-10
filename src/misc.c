@@ -120,7 +120,11 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 		song->comment = g_markup_escape_text(temp, -1);
 		g_free(temp);
 	}
-	
+	if(song->file) {
+		temp = song->file;
+		song->file = g_markup_escape_text(temp, -1);
+		g_free(temp);
+	}                                                      	
 	mpd_song_markup(buffer, size, markup, song);
 	mpd_freeSong(song);
 }
