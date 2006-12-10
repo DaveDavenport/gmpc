@@ -1,5 +1,6 @@
 10-12-2006 Qball <Qball@sarine.nl>
 	* src/misc.c: Escape song->file aswell.
+	* src/edit_markup.c: Re-add esf_reload
 
 06-12-2006 Qball <qball@sarine.nl>
 	* doc/*: removal of old obsoltete doc's
