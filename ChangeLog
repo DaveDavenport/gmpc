@@ -1,3 +1,8 @@
+12-12-2006 Qball <Qball@sarine.nl>
+	* pixmaps/spinner.png: 		Removed
+	* pixmaps/media-artist.svg: 	Removed
+	* pixmaps/media-album.svg: 	Removed
+
 10-12-2006 Qball <Qball@sarine.nl>
 	* src/misc.c: Escape song->file aswell.
 	* src/edit_markup.c: Re-add esf_reload

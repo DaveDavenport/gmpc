@@ -3,7 +3,6 @@ gmpcicon_DATA = gmpc.png
 
 appicondir = $(datadir)/gmpc/
 appicon_DATA =	media-audiofile.png\
-	spinner.png\
 	media-stream.png\
 	media-artist.png\
 	gmpc-tray.png\
