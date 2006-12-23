@@ -1,3 +1,7 @@
+23-12-2006 Qball <Qball@sarine.nl>
+	* src/misc.c:	Optimize mpd_song_markup_escape so it does less
+	useless alloc's/free's
+
 12-12-2006 Qball <Qball@sarine.nl>
 	* pixmaps/spinner.png: 		Removed
 	* pixmaps/media-artist.svg: 	Removed

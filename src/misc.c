@@ -68,63 +68,44 @@ gchar * format_time(unsigned long seconds)
  */
 void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song2)
 {
-	char *temp = NULL;
-	mpd_Song *song = mpd_songDup(song2);
-	if(song->title) {
-		temp = song->title;
-		song->title = g_markup_escape_text(temp,-1);
-		g_free(temp);
+	mpd_Song *song = mpd_newSong();
+	if(song2->title) {
+		song->title = g_markup_escape_text(song2->title,-1);
 	}
-	if(song->artist) {
-		temp = song->artist;
-		song->artist= g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->artist) {
+		song->artist= g_markup_escape_text(song2->artist, -1);
 	}                                                	
-	if(song->album) {
-		temp = song->album;
-		song->album= g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->album) {
+		song->album= g_markup_escape_text(song2->album, -1);
 	}                                                	
-	if(song->track)	{
-		temp = song->track;
-		song->track = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->track)	{
+		song->track = g_markup_escape_text(song2->track, -1);
 	}
-	if(song->name) {
-		temp = song->name;
-		song->name = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->name) {
+		song->name = g_markup_escape_text(song2->name, -1);
 	}
-	if(song->date) {
-		temp = song->date;
-		song->date = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->date) {
+		song->date = g_markup_escape_text(song2->date, -1);
 	}
-	if(song->genre) {
-		temp = song->genre;
-		song->genre= g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->genre) {
+		song->genre= g_markup_escape_text(song2->genre, -1);
 	}
-	if(song->composer) {
-		temp = song->composer;
-		song->composer = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->composer) {
+		song->composer = g_markup_escape_text(song2->composer, -1);
 	}
-	if(song->disc) {
-		temp = song->disc;
-		song->disc = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->disc) {
+		song->disc = g_markup_escape_text(song2->disc, -1);
 	}
-	if(song->comment) {
-		temp = song->comment;
-		song->comment = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->comment) {
+		song->comment = g_markup_escape_text(song2->comment, -1);
 	}
-	if(song->file) {
-		temp = song->file;
-		song->file = g_markup_escape_text(temp, -1);
-		g_free(temp);
+	if(song2->file) {
+		song->file = g_markup_escape_text(song2->file, -1);
 	}                                                      	
+	song->id = song2->id;
+	song->pos = song2->pos;
+	song->time = song2->time;
+
 	mpd_song_markup(buffer, size, markup, song);
 	mpd_freeSong(song);
 }
