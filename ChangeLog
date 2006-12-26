@@ -1,3 +1,6 @@
+26-12-2006 Qball <qball@qballcow.nl>
+	* src/playlist3-file-browser.c:	Fix reupdate again
+
 23-12-2006 Qball <Qball@sarine.nl>
 	* src/misc.c:	Optimize mpd_song_markup_escape so it does less
 	useless alloc's/free's

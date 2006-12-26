@@ -323,11 +323,14 @@ static void pl3_file_browser_reupdate()
 		}
 */
 		GtkTreeIter iter;
+		
 		GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_fb_tree_ref);
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 		if(gtk_tree_model_get_iter(model, &iter, path))
 		{
-			pl3_file_browser_view_folder(&iter);
+			GtkTreeSelection *sel= gtk_tree_view_get_selection(playlist3_get_category_tree_view());
+			gtk_tree_selection_select_iter(sel, &iter);
+/*			pl3_file_browser_view_folder(&iter);*/
 		}
 		gtk_tree_path_free(path);
 /*		pl3_file_browser_activate();*/
