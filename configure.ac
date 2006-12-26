@@ -56,9 +56,9 @@ AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
 # libxml
-PKG_CHECK_MODULES([libxml], libxml-2.0)
-AC_SUBST(libxml_LIBS)
-AC_SUBST(libxml_CFLAGS)
+#PKG_CHECK_MODULES([libxml], libxml-2.0)
+#AC_SUBST(libxml_LIBS)
+#AC_SUBST(libxml_CFLAGS)
 
 # libglade
 PKG_CHECK_MODULES([libglade], libglade-2.0)

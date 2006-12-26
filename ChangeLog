@@ -1,4 +1,7 @@
 26-12-2006 Qball <qball@qballcow.nl>
+	* configure.ac:	Remove libxml dep
+	* src/Makefile.am: remove libxml dep
+	* src/playlist3-information.c: Change icon to gtk-dialog-info
 	* src/playlist3-file-browser.c:	Fix reupdate again
 
 23-12-2006 Qball <Qball@sarine.nl>

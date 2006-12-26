@@ -66,12 +66,12 @@ LIBS= \
 	@glib_LIBS@ @LIBS@ \
 	@libmpd_LIBS@ \
 	@gobject_LIBS@\
-	@libxml_LIBS@ \
 	@gtk_LIBS@\
 	@gmodule_LIBS@\
 	@libglade_LIBS@\
 	@gthread_LIBS@\
 	@sm_LIBS@
+
 
 AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
@@ -81,7 +81,6 @@ AM_CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
 	@libmpd_CFLAGS@ \
 	@gobject_CFLAGS@\
-	@libxml_CFLAGS@ \
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
