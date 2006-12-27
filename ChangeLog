@@ -1,3 +1,10 @@
+27-12-2006 Qball <qball@qballcow.nl>
+	* glade/gmpc.glade: 	Add Clear buttons	
+	* src/id3info.c:	Add support functions for the clear button	
+	* glade/gmpc.glade:	Remove filechooser buttons
+	* src/id3info.c:	Remove use of filechooser buttons.
+	* src/id3info.c:	Copy lyric save to artist/album.
+
 26-12-2006 Qball <qball@qballcow.nl>
 	* configure.ac:	Remove libxml dep
 	* src/Makefile.am: remove libxml dep

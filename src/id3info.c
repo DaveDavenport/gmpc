@@ -47,6 +47,9 @@ void id3_save_song_lyric(void);
 void id3_reget_lyric_txt(void);
 void id3_reget_artist_txt(void);
 void id3_reget_album_txt(void);
+void id3_del_album_txt(void);
+void id3_del_artist_txt(void);
+void id3_del_song_lyric(void);
 static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox);
 /***
  *
@@ -61,97 +64,176 @@ static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox)
 
 
 
+void id3_del_album_txt(void)
+{
+	if(songs == NULL || songs->data == NULL)
+		return;
+	mpd_Song *sg = songs->data;
+	gchar *temp = g_strdup_printf("albumtxt:%s", sg->album);
+	cfg_set_single_value_as_string(cover_index, sg->artist,temp,"");
+	g_free(temp);
 
+	GtkTextBuffer *buffer = NULL;
+	GtkTextView *tv = NULL;
+	/** Get the text view */
+	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
+	buffer = gtk_text_view_get_buffer(tv);
+	gtk_text_buffer_set_text(buffer, "", -1);
+}
 /****
  *
  */
 void id3_save_album_txt()
 {
-	GtkTextIter end, start;
-	gchar *content = NULL;
-	char *temp = NULL, *path = NULL;
+	/**
+	 * Safety check
+	 */
+	if(songs == NULL || songs->data == NULL)
+		return;
+
+
+	GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
+	GtkWidget *fs_dialog = gtk_file_chooser_dialog_new(_("Save Album Text"), 
+			GTK_WINDOW(parent),GTK_FILE_CHOOSER_ACTION_SAVE, 
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
+	gchar *filename = NULL;
+	mpd_Song *sg = songs->data;
+	gchar *temp = g_strdup_printf("albumtxt:%s", sg->album);
+
+
+	filename = cfg_get_single_value_as_string(cover_index, sg->artist,temp);
+
+	if(filename)
+	{
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_dialog),filename);
+		cfg_free_string(filename);
+	}
+
+	switch(gtk_dialog_run(GTK_DIALOG(fs_dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			{
+				gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
+				/**
+				 * Implement saving and setting db 
+				 */
+				if(songs && songs->data)
+				{
+					char *content =NULL; 
+					GtkTextIter end, start;
+					GtkTextBuffer *buffer = NULL;
+					GtkTextView *tv = NULL;
+					/** Get the text view */
+					tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
+					buffer = gtk_text_view_get_buffer(tv);
+					/* get start and end */
+					gtk_text_buffer_get_start_iter(buffer, &start);
+					gtk_text_buffer_get_end_iter(buffer, &end);
+					/** get content */
+					content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
+					if(g_file_set_contents(filename, content, -1,NULL))
+					{
+						if(sg->artist )
+						{
+							cfg_set_single_value_as_string(cover_index, sg->artist,temp,filename);
+						}
+						//gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_win), filename);
+					}
+
+					/* free content */
+					g_free(content);
+				}
+				g_free(filename);
+			}
+		default:
+			break;
+	}
+	gtk_widget_destroy(fs_dialog);	
+	g_free(temp);
+}
+void id3_del_artist_txt(void)
+{
+	if(songs == NULL || songs->data == NULL)
+		return;
+	mpd_Song *sg = songs->data;
+	cfg_set_single_value_as_string(cover_index, sg->artist,"biography","");
 	GtkTextBuffer *buffer = NULL;
 	GtkTextView *tv = NULL;
-	mpd_Song *current;
-	if(songs == NULL || songs->data == NULL) return;
-	current = songs->data;
-	if(current->artist == NULL)
-		return;
-	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
+	/** Get the text view */
+	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
 	buffer = gtk_text_view_get_buffer(tv);
-		
-
-	temp = g_strdup_printf("albumtxt:%s", current->album);
-
-	path = cfg_get_single_value_as_string(cover_index, current->artist, temp);
-	
-	if(path == NULL || strlen(path) == 0)
-	{
-		path = g_strdup_printf("%s/.covers/%s-%s.albuminfo", 
-				g_get_home_dir(),
-				current->artist,
-				current->album);
-		cfg_set_single_value_as_string(cover_index, current->artist, temp,path);
-	}
-	gtk_text_buffer_get_start_iter(buffer, &start);
-	gtk_text_buffer_get_end_iter(buffer, &end);
-	content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
-	g_file_set_contents(path, content, -1, NULL);	
-
-
-
-	g_free(temp);
-	g_free(path);
-	g_free(content);
-
+	gtk_text_buffer_set_text(buffer, "",-1);
 }
-
 
 void id3_save_artist_txt()
 {
-	GtkTextIter end, start;
-	gchar *content = NULL;
-	char *temp = NULL, *path = NULL;
-	GtkTextBuffer *buffer = NULL;
-	GtkTextView *tv = NULL;
-	mpd_Song *current;
-	if(songs == NULL || songs->data == NULL) return;
-	current = songs->data;
-	if(current->artist == NULL)
+	/**
+	 * Safety check
+	 */
+	if(songs == NULL || songs->data == NULL)
 		return;
-	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
-	buffer = gtk_text_view_get_buffer(tv);
-		
 
-	temp = g_strdup_printf("biography");
+	GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
+	GtkWidget *fs_dialog = gtk_file_chooser_dialog_new(_("Save Artist Text"), 
+			GTK_WINDOW(parent),GTK_FILE_CHOOSER_ACTION_SAVE, 
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
+	gchar *filename = NULL;
+	mpd_Song *sg = songs->data;
+	filename = cfg_get_single_value_as_string(cover_index, sg->artist,"biography");
 
-	path = cfg_get_single_value_as_string(cover_index, current->artist, temp);
-	
-	if(path == NULL || strlen(path) == 0)
+	if(filename)
 	{
-		path = g_strdup_printf("%s/.covers/%s.artistinfo", 
-				g_get_home_dir(),
-				current->artist);
-		cfg_set_single_value_as_string(cover_index, current->artist, temp,path);
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_dialog),filename);
+		cfg_free_string(filename);
 	}
-	gtk_text_buffer_get_start_iter(buffer, &start);
-	gtk_text_buffer_get_end_iter(buffer, &end);
-	content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
-	g_file_set_contents(path, content, -1, NULL);	
+	switch(gtk_dialog_run(GTK_DIALOG(fs_dialog)))
+	{
+		case GTK_RESPONSE_OK:
+			{
+				gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
+				/**
+				 * Implement saving and setting db 
+				 */
+				if(songs && songs->data)
+				{
+					char *content =NULL; 
+					GtkTextIter end, start;
+					GtkTextBuffer *buffer = NULL;
+					GtkTextView *tv = NULL;
+					/** Get the text view */
+					tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
+					buffer = gtk_text_view_get_buffer(tv);
+					/* get start and end */
+					gtk_text_buffer_get_start_iter(buffer, &start);
+					gtk_text_buffer_get_end_iter(buffer, &end);
+					/** get content */
+					content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
+					if(g_file_set_contents(filename, content, -1,NULL))
+					{
+						if(sg->artist )
+						{
+							cfg_set_single_value_as_string(cover_index, sg->artist, "biography",filename);
+						}
+					}
 
-
-
-	g_free(temp);
-	g_free(path);
-	g_free(content);
-
+					/* free content */
+					g_free(content);
+				}
+				g_free(filename);
+			}
+		default:
+			break;
+	}
+	gtk_widget_destroy(fs_dialog);
 }
 
 
 static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpointer data)
 {
 	int type = GPOINTER_TO_INT(data)&META_QUERY_DATA_TYPES;
-	GtkWidget *view, *container,*fs;
+	GtkWidget *view, *container;
 	mpd_Song *current = NULL;
 	if(songs == NULL || song == NULL) return;
 	if(songs->data== NULL) return;
@@ -161,17 +243,17 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 		case META_ARTIST_TXT:
 			view = glade_xml_get_widget(xml_id3_window, "artist_tv");
 			container = glade_xml_get_widget(xml_id3_window, "artist_container");
-			fs = glade_xml_get_widget(xml_id3_window, "artist_filechooser");
+			//			fs = glade_xml_get_widget(xml_id3_window, "artist_filechooser");
 			break;
 		case META_ALBUM_TXT:
 			view = glade_xml_get_widget(xml_id3_window, "album_tv");
 			container = glade_xml_get_widget(xml_id3_window, "album_container");
-			fs = glade_xml_get_widget(xml_id3_window, "album_filechooser");
+			//			fs = glade_xml_get_widget(xml_id3_window, "album_filechooser");
 			break;
 		default:
 			view = glade_xml_get_widget(xml_id3_window, "lyric_tv");
 			container = glade_xml_get_widget(xml_id3_window, "lyric_container");
-			fs = glade_xml_get_widget(xml_id3_window, "lyric_filechooser");
+			//			fs = glade_xml_get_widget(xml_id3_window, "lyric_filechooser");
 			break;
 	}
 	if(current->file)
@@ -185,7 +267,7 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),
 						_("Working...."), -1);
 				gtk_widget_set_sensitive(GTK_WIDGET(container), FALSE);
-				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
+				//				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
 			}
 			else if(ret == META_DATA_AVAILABLE)
 			{
@@ -198,42 +280,64 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 				g_free(content);
 
 				gtk_widget_set_sensitive(GTK_WIDGET(container), TRUE);
-				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs), path);
+				//				gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs), path);
 			}
 			else if(ret == META_DATA_UNAVAILABLE)
 			{
 				gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),
 						"", -1);
 				gtk_widget_set_sensitive(GTK_WIDGET(container), TRUE);
-				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
+				//				gtk_file_chooser_unselect_all(GTK_FILE_CHOOSER(fs));
 			}
 		}
 	}
 }
-
+void id3_del_song_lyric(void)
+{
+	if(songs == NULL || songs->data == NULL)
+		return;
+	mpd_Song *sg = songs->data;
+	char *temp = g_strdup_printf("lyrics:%s", sg->title);    
+	cfg_set_single_value_as_string(cover_index, sg->artist,temp,"");
+	g_free(temp);
+	GtkTextBuffer *buffer = NULL;
+	GtkTextView *tv = NULL;
+	/** Get the text view */
+	tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "lyric_tv");
+	buffer = gtk_text_view_get_buffer(tv);
+	gtk_text_buffer_set_text(buffer, "",-1);
+}
 void id3_save_song_lyric()
 {
-	GtkWidget *fs_win = glade_xml_get_widget(xml_id3_window, "lyric_filechooser");
-	char *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_win));
-	GtkWidget *fs_dialog = gtk_file_chooser_dialog_new(_("Save Lyric"), 
-				NULL,GTK_FILE_CHOOSER_ACTION_SAVE, 
-				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
+	/**
+	 * Safety check
+	 */
+	if(songs == NULL || songs->data == NULL)
+		return;
 
+	GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
+	GtkWidget *fs_dialog = gtk_file_chooser_dialog_new(_("Save Lyric"), 
+			GTK_WINDOW(parent),GTK_FILE_CHOOSER_ACTION_SAVE, 
+			GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
+	mpd_Song *sg = songs->data;
+	char *temp = g_strdup_printf("lyrics:%s", sg->title);    
+	gchar *filename = cfg_get_single_value_as_string(cover_index, sg->artist,temp);
 	if(filename)
 	{
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_dialog),filename);
-		g_free(filename);
+		cfg_free_string(filename);
 	}
 
 	switch(gtk_dialog_run(GTK_DIALOG(fs_dialog)))
 	{
 		case GTK_RESPONSE_OK:
-			filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
-			/**
-			 * Implement saving and setting db 
-			 */
-			if(songs && songs->data)
+			{
+				gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
+				/**
+				 * Implement saving and setting db 
+				 */
+				if(songs && songs->data)
 				{
 					char *content =NULL; 
 					GtkTextIter end, start;
@@ -250,23 +354,22 @@ void id3_save_song_lyric()
 					content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
 					if(g_file_set_contents(filename, content, -1,NULL))
 					{
-							if(sg->artist && sg->title)
-                    		{
-								char *temp = g_strdup_printf("lyrics:%s", sg->title);                   			
-								cfg_set_single_value_as_string(cover_index, sg->artist, temp,filename);
-								g_free(temp);
-							}
-							gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fs_win), filename);
+						if(sg->artist && sg->title)
+						{
+							cfg_set_single_value_as_string(cover_index, sg->artist, temp,filename);
+						}
 					}
 
 					/* free content */
 					g_free(content);
 				}
 				g_free(filename);
+			}
 		default:
 			break;
 	}
 	gtk_widget_destroy(fs_dialog);
+	g_free(temp);
 }
 void remove_id3_window ()
 {
@@ -353,8 +456,8 @@ static void create_window (int song)
 	}
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")), "image_changed",
-		G_CALLBACK(art_set_from_path), 
-		glade_xml_get_widget(xml_id3_window, "album_vbox"));
+			G_CALLBACK(art_set_from_path), 
+			glade_xml_get_widget(xml_id3_window, "album_vbox"));
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),300);
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),META_ARTIST_ART);
@@ -381,7 +484,7 @@ static void set_text (GList * node)
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),song);
 	gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "artist_vbox"), FALSE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),song);
-	
+
 
 	if (song->artist != NULL)
 	{
@@ -681,11 +784,11 @@ void id3_reget_album_art()
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
 					META_ALBUM_ART|META_QUERY_NO_CACHE);
 			gmpc_metaimage_update_cover_from_song(
-								GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
-								songs->data);	
+					GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),
+					songs->data);	
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "album_vbox"), FALSE);
-			
+
 		}
 	}
 }
@@ -717,8 +820,8 @@ void id3_reget_artist_art()
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
 					META_ARTIST_ART|META_QUERY_NO_CACHE);
 			gmpc_metaimage_update_cover_from_song(
-								GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
-								songs->data);	
+					GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
+					songs->data);	
 			gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_artist_image")),
 					META_ARTIST_ART);
 			gtk_widget_set_sensitive(glade_xml_get_widget(xml_id3_window, "artist_vbox"), FALSE);

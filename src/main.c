@@ -65,9 +65,6 @@
 static BaconMessageConnection *bacon_connection = NULL;
 #endif
 
-
-
-
 #ifdef DEBUG
 /* Testing */
 #include <sys/time.h>
@@ -224,8 +221,6 @@ int main (int argc, char **argv)
 	textdomain (GETTEXT_PACKAGE);
 	
 #endif
-
-
 	/**
 	 * Parse Command line options
 	 */
@@ -331,9 +326,6 @@ int main (int argc, char **argv)
 		}	
 
 	}	
-
-
-
 	/** Check if threading is supported. */	
 	/** initialize it */
 	if(!g_thread_supported())g_thread_init (NULL);
@@ -350,7 +342,6 @@ int main (int argc, char **argv)
 		meta_data_destroy();
 		return 1;
 	}
-
 
 	/**
 	 * Open the config file
@@ -437,11 +428,7 @@ int main (int argc, char **argv)
 	 */
 #ifdef ENABLE_SM
 	smc_connect(argc, argv);
-
 #endif	
-
-
-
 	/**
 	 * Initialize the new metadata subsystem.
 	 * (Will spawn a new thread, so have to be after the init threading 
@@ -536,7 +523,6 @@ int main (int argc, char **argv)
 			plugins[i]->init();
 		}
 	}
-
 
 	/**
 	 * Create the backend store for the current playlist
