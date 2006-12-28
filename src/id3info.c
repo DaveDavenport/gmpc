@@ -467,30 +467,42 @@ static void set_text (GList * node)
     if (song->artist != NULL)
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "artist_label")), song->artist);
+        gtk_widget_show(glade_xml_get_widget(xml_id3_window, "artist_vbox"));
+        gtk_widget_show(glade_xml_get_widget(xml_id3_window, "artist_container"));
     }
     else
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "artist_label")), "");
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "artist_vbox"));
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "artist_container"));
     }
     if (song->title != NULL)
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "title_label")), song->title);
+        gtk_widget_show(glade_xml_get_widget(xml_id3_window, "lyric_container"));
     }
     else
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "title_label")), "");
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "lyric_container"));
     }
     if (song->album != NULL)
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "album_label")), song->album);
+        gtk_widget_show(glade_xml_get_widget(xml_id3_window, "album_vbox"));
+        gtk_widget_show(glade_xml_get_widget(xml_id3_window, "album_container"));
     }
     else if (song->name != NULL)
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "album_label")), song->name);
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "album_vbox"));
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "album_container"));
     }
     else
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "album_label")), "");
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "album_vbox"));
+        gtk_widget_hide(glade_xml_get_widget(xml_id3_window, "album_container"));
     }
     if (song->date != NULL)
     {

@@ -1,4 +1,5 @@
 28-12-2006 Qball <qball@qballcow.nl>
+    * src/id3info.c:	Hide notebook tabs when not valid.
     * src/id3info.c:	Cleanup the code, re-indent add extra checks etc.
 
 27-12-2006 Qball <qball@qballcow.nl>
