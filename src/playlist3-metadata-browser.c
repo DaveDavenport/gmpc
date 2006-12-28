@@ -183,7 +183,7 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
 	info2_fill_artist_view(artist);
-	g_free(artist);
+	q_free(artist);
 }
 
 static void as_album_viewed_clicked(GtkButton *button, gpointer data)
@@ -191,8 +191,8 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
 	char *album = g_strdup(g_object_get_data(G_OBJECT(button), "album"));
 	info2_fill_album_view(artist,album);
-	g_free(artist);
-	g_free(album);
+	q_free(artist);
+	q_free(album);
 }
 
 
@@ -202,7 +202,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	GtkWidget *ali = NULL;
 	if(pd->id != current_id)
 	{
-			if(ret != META_DATA_FETCHING)g_free(pd);
+			if(ret != META_DATA_FETCHING)q_free(pd);
 			return;
 	}
 	if(ret == META_DATA_AVAILABLE)
@@ -217,7 +217,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		expander = gtk_expander_new(labstr);	
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-		g_free(labstr);
+		q_free(labstr);
 
 		label = gtk_label_new("");
 		ali = gtk_alignment_new(0,0.5,0,0);
@@ -229,7 +229,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
-		g_free(content);
+		q_free(content);
 	}
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
@@ -241,7 +241,7 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_label_set_markup(GTK_LABEL(label), labstr);
 		gtk_container_add(GTK_CONTAINER(vbox), label);
 		gtk_widget_show_all(vbox);
-		g_free(labstr);
+		q_free(labstr);
 	}
 	else if(ret == META_DATA_FETCHING)
 	{
@@ -253,12 +253,12 @@ static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_label_set_markup(GTK_LABEL(label),labstr); 
 		gtk_container_add(GTK_CONTAINER(vbox),label);
 		gtk_widget_show_all(vbox);
-		g_free(labstr);
+		q_free(labstr);
 	}
 
 	if(ret != META_DATA_FETCHING){
-		if(pd->name) g_free(pd->name);
-		g_free(pd);
+		if(pd->name) q_free(pd->name);
+		q_free(pd);
 	}
 }
 
@@ -270,7 +270,7 @@ static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 	} else {
 		info2_fill_song_view(artist);
 	}
-	g_free(artist);
+	q_free(artist);
 }
 static void as_artist_clicked(GtkButton *button, gpointer data)
 {
@@ -434,7 +434,7 @@ static void info2_fill_song_view(char *path)
 	gtk_widget_show_all(button);
 
 	gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
-	g_free(markup);
+	q_free(markup);
 	/**
 	 * album
 	 */		
@@ -455,7 +455,7 @@ static void info2_fill_song_view(char *path)
 	gtk_container_add(GTK_CONTAINER(button),label);
 	gtk_widget_show_all(button);
 	gtk_box_pack_start(GTK_BOX(title_vbox), button, TRUE, TRUE,0);
-	g_free(markup);
+	q_free(markup);
 
 	/** 
 	 * Title Label
@@ -466,7 +466,7 @@ static void info2_fill_song_view(char *path)
 	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
 			, song->title);
 	gtk_label_set_markup(GTK_LABEL(label),markup);
-	g_free(markup);
+	q_free(markup);
 	gtk_container_add(GTK_CONTAINER(ali),label);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
@@ -564,7 +564,7 @@ static void info2_fill_song_view(char *path)
 		char *dirname = g_path_get_dirname(song->file);
 		info2_add_table_item(table2,_("<b>Dirname:</b>"),dirname,i);
 		i++;
-		g_free(dirname);
+		q_free(dirname);
 	}
 
 	mpd_freeSong(song);
@@ -667,7 +667,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				char *oldname = NULL;
 				gtk_tree_model_get(model, &iter, 0,&oldname,-1);
 				if(!strcmp(text, oldname))  skip=TRUE;
-				g_free(oldname);
+				q_free(oldname);
 			}while(gtk_tree_model_iter_next(model, &iter) && skip);
 		}
 		if(!skip)
@@ -771,7 +771,7 @@ static void info2_fill_view()
 			if(text){
 				gtk_entry_set_text(GTK_ENTRY(entry), text);
 				gtk_widget_activate(GTK_WIDGET(entry));
-				g_free(text);
+				q_free(text);
 			}
 		}
 	}
@@ -935,7 +935,7 @@ static void info2_fill_artist_view(char *artist)
 		gtk_widget_show(label);
 
 		gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
-		g_free(markup);
+		q_free(markup);
 		/**
 		 * set a table
 		 */
@@ -1003,7 +1003,7 @@ static void info2_fill_artist_view(char *artist)
 			{
 				char *str = g_strdup_printf("%i", tracks);
 				info2_add_table_item(table2, _("<b>Tracks:</b>"), str,i);
-				g_free(str);
+				q_free(str);
 				i++;
 			}
 			if(song->file)
@@ -1011,7 +1011,7 @@ static void info2_fill_artist_view(char *artist)
 				gchar *dirname = g_path_get_dirname(song->file);
 				info2_add_table_item(table2,_("<b>Directory:</b>"),dirname,i);
 				i++;
-				g_free(dirname);
+				q_free(dirname);
 			}
 			gtk_table_attach(GTK_TABLE(table), table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
 			/**
@@ -1137,7 +1137,7 @@ static void info2_fill_album_view(char *artist,char *album)
 	gtk_widget_show_all(button);
 
 	gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
-	g_free(markup);
+	q_free(markup);
 	/**
 	 * album
 	 */		
@@ -1151,7 +1151,7 @@ static void info2_fill_album_view(char *artist,char *album)
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_widget_show(label);
 	gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE,0);
-	g_free(markup);
+	q_free(markup);
 
 	/**
 	 * Set album image
@@ -1280,13 +1280,13 @@ static void info2_fill_album_view(char *artist,char *album)
 			if(tracks) {
 				char *str = g_strdup_printf("%i", tracks);
 				info2_add_table_item(table2, _("<b>Tracks:</b>"), str, i);
-				g_free(str);
+				q_free(str);
 				i++;
 			}
 			if(song->file) {
 				char *filename = g_path_get_dirname(song->file);
 				info2_add_table_item(table2, _("<b>Directory:</b>"), filename, i);
-				g_free(filename);
+				q_free(filename);
 				i++;
 			}
 		}
@@ -1325,7 +1325,7 @@ static void info2_fill_album_view(char *artist,char *album)
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
 
-			g_free(markup);
+			q_free(markup);
 			i++;
 		}
 		ali = gtk_alignment_new(0,0.5,0,0);

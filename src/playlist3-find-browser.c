@@ -299,7 +299,7 @@ static unsigned long pl3_find_browser_view_browser()
 					{
 						skip=1;
 					}
-					g_free(oldname);
+					q_free(oldname);
 				}while(gtk_tree_model_iter_next(model, &combo_iter) && !skip);
 			} 
 			if(!skip)
@@ -431,7 +431,7 @@ static unsigned long pl3_find_browser_view_browser()
 								PL3_FINDB_TITLE, temp,
 								PL3_FINDB_ICON, "media-audiofile",
 								-1); 	
-						g_free(temp);                      		
+						q_free(temp);                      		
 						time+=ttime;
 					}
 
@@ -498,7 +498,7 @@ static unsigned long pl3_find_browser_view_browser()
 						PL3_FINDB_TYPE, PL3_ENTRY_ALBUM,
 						PL3_FINDB_ICON, "media-album",
 						-1);
-				g_free(buffer);
+				q_free(buffer);
 			}
 
 			data =  mpd_data_get_next(data);
@@ -563,7 +563,7 @@ static void pl3_find_browser_show_info()
 					call_id3_window_song(song); 
 
 				
-				g_free(path);
+				q_free(path);
 			}
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
@@ -615,7 +615,7 @@ static void pl3_find_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			break;
 	}
 
-	g_free(song_id);
+	q_free(song_id);
 }
 
 static void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
@@ -626,7 +626,7 @@ static void pl3_find_browser_category_selection_changed(GtkWidget *tree, GtkTree
 	time = pl3_find_browser_view_browser();
 	string = format_time(time);
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-	g_free(string);
+	q_free(string);
 }
 
 static void pl3_find_browser_replace_selected()
@@ -692,7 +692,7 @@ static void pl3_find_browser_add_selected()
 				mpd_playlist_queue_add(connection, name);
 			}
 			songs++;
-			g_free(name);
+			q_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
@@ -701,7 +701,7 @@ static void pl3_find_browser_add_selected()
 	{
 		gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		pl3_push_statusbar_message(message);
-		g_free(message);
+		q_free(message);
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);

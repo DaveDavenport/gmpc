@@ -72,7 +72,7 @@ static void pref_plugin_changed()
 				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
 				plugin_last = id;
 				gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),buf);
-				g_free(buf);
+				q_free(buf);
 				return;
 			}
 		}
@@ -118,7 +118,7 @@ void create_preferences_window()
 	plugin_last = -1;
 	string = gmpc_get_full_glade_path("gmpc.glade");
 	xml_preferences_window = glade_xml_new(string, "preferences_window", NULL);
-	g_free(string);
+	q_free(string);
 	/* check for errors and axit when there is no gui file */
 	if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 
@@ -238,7 +238,7 @@ static void plugin_stats_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	plugin_stat_xml = glade_xml_new(path, "plugin_stats_vbox",NULL);
-	g_free(path);
+	q_free(path);
 	if(plugin_stat_xml)
 	{
 		GtkWidget *tree = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_tree");

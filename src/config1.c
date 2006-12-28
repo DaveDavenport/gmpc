@@ -412,7 +412,7 @@ static config_node *cfg_get_single_value(config_obj *cfg, char *class, char *key
 {
 	if(string != NULL)
 	{
-		g_free(string);
+		q_free(string);
 	}
 }
 */

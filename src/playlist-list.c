@@ -110,7 +110,7 @@ void playlist_list_set_markup(CustomList * cl, gchar * markup)
 	if (!markup)
 		return;
 	if (cl->markup)
-		g_free(cl->markup);
+		q_free(cl->markup);
 	cl->markup = g_strdup(markup);
 
 	/* start sending signals */
@@ -399,7 +399,7 @@ void playlist_list_clear(CustomList * list,GtkTreeView *tree)
 	}	
 	if(list->num_rows != 0) printf("Error removing data\n");
 	/* free the array of pointers */
-	g_free(list->playlist);
+	q_free(list->playlist);
 	list->playlist = NULL;
 
 	list->playlist_id = -1;
@@ -666,7 +666,7 @@ static void playlist_list_finalize(GObject * object)
 			mpd_freeSong((cl->playlist[i]));
 		}
 	}
-	if(cl->playlist)g_free(cl->playlist);
+	if(cl->playlist)q_free(cl->playlist);
 
 
 
@@ -865,7 +865,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 			if(song->title == NULL) {
 				gchar *path = g_path_get_basename(song->file);
 				g_value_set_string(value, path);
-				g_free(path);
+				q_free(path);
 
 			}else{
 				g_value_set_string(value, song->title);
@@ -896,7 +896,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 					gchar *data = g_strdup_printf("%02i:%02i",
 						song->time/60, song->time%60);
 					g_value_set_string(value, data);
-					g_free(data);
+					q_free(data);
 				}
 				else
 				{

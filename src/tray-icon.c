@@ -232,7 +232,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 					totalTime/60,totalTime%60);
 			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
-			g_free(label);
+			q_free(label);
 			gtk_widget_show(tooltip_pb);
 		}
 
@@ -277,7 +277,7 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		gtk_widget_show(hbox);
 	}
 
-	g_free(tooltiptext);
+	q_free(tooltiptext);
 	/** Position popup 
 	*/
 
@@ -681,7 +681,7 @@ static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata
 		{
 			char *tooltiptext = tray_get_tooltip_text();
 			gtk_label_set_markup(GTK_LABEL(tooltip_label), tooltiptext);
-			g_free(tooltiptext);
+			q_free(tooltiptext);
 			if(popup_timeout != -1)
 			{
 				g_source_remove(popup_timeout);
@@ -702,7 +702,7 @@ static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata
 					totalTime/60,totalTime%60);
 			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tooltip_pb), label);
-			g_free(label);
+			q_free(label);
 		}
 
 	}

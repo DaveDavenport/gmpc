@@ -241,7 +241,7 @@ static void pl3_custom_tag_browser_reload()
 				pl3_custom_tag_browser_list_add(&iter);
 				return;
 			}
-			g_free(title);
+			q_free(title);
 		}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter));
 	}
 }
@@ -352,18 +352,18 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		if(first_tag)g_free(first_tag);
-		if(second_tag)g_free(second_tag);
-		if(format)g_free(format);
+		if(first_tag)q_free(first_tag);
+		if(second_tag)q_free(second_tag);
+		if(format)q_free(format);
 		return;
 	}
 	for(len=0;tk_format[len] != NULL;len++)	
 	{
 		if(mpd_misc_get_tag_by_name(tk_format[len])== -1)
 		{
-			if(first_tag)g_free(first_tag);
-			if(second_tag)g_free(second_tag);
-			if(format)g_free(format);        			
+			if(first_tag)q_free(first_tag);
+			if(second_tag)q_free(second_tag);
+			if(format)q_free(format);        			
 			g_strfreev(tk_format);
 			return;
 		}
@@ -473,9 +473,9 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 		}                                                                                       		
 	}
 	g_strfreev(tk_format);
-	if(first_tag)g_free(first_tag);
-	if(second_tag)g_free(second_tag);
-	if(format)g_free(format);
+	if(first_tag)q_free(first_tag);
+	if(second_tag)q_free(second_tag);
+	if(format)q_free(format);
 }
 
 static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
@@ -496,9 +496,9 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter_cat);
 	if(path == NULL)
 	{
-		if(first_tag)g_free(first_tag);
-		if(second_tag)g_free(second_tag);
-		if(format)g_free(format);
+		if(first_tag)q_free(first_tag);
+		if(second_tag)q_free(second_tag);
+		if(format)q_free(format);
 
 
 		return 0;
@@ -509,9 +509,9 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	if(tk_format ==NULL)
 	{
 		gtk_tree_path_free(path);	
-		if(first_tag)g_free(first_tag);
-		if(second_tag)g_free(second_tag);
-		if(format)g_free(format);
+		if(first_tag)q_free(first_tag);
+		if(second_tag)q_free(second_tag);
+		if(format)q_free(format);
 
 		return 0;
 	}
@@ -773,14 +773,14 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 
 				data = mpd_data_get_next(data);
 			}
-			g_free(first);
+			q_free(first);
 		}
 	}
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
-	if(first_tag)g_free(first_tag);
-	if(second_tag)g_free(second_tag);
-	if(format)g_free(format);
+	if(first_tag)q_free(first_tag);
+	if(second_tag)q_free(second_tag);
+	if(format)q_free(format);
 
 	return time;
 }
@@ -901,9 +901,9 @@ static void pl3_custom_tag_browser_add_folder()
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		if(second_tag) g_free(second_tag);
-		if(first_tag) g_free(first_tag);
-		if(format) g_free(format);
+		if(second_tag) q_free(second_tag);
+		if(first_tag) q_free(first_tag);
+		if(format) q_free(format);
 		gtk_tree_path_free(path);	
 		return;
 	}
@@ -917,9 +917,9 @@ static void pl3_custom_tag_browser_add_folder()
 
 			g_strfreev(tk_format);
 			gtk_tree_path_free(path);	
-			if(second_tag) g_free(second_tag);
-			if(first_tag) g_free(first_tag);
-			if(format) g_free(format);
+			if(second_tag) q_free(second_tag);
+			if(first_tag) q_free(first_tag);
+			if(format) q_free(format);
 
 			return;
 		}
@@ -1009,14 +1009,14 @@ static void pl3_custom_tag_browser_add_folder()
 				}
 				mpd_playlist_queue_commit(connection);
 			}
-			g_free(first);
+			q_free(first);
 		}
 	}
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
-	if(second_tag) g_free(second_tag);
-	if(first_tag) g_free(first_tag);
-	if(format) g_free(format);
+	if(second_tag) q_free(second_tag);
+	if(first_tag) q_free(first_tag);
+	if(format) q_free(format);
 	return ;
 }
 
@@ -1078,10 +1078,10 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(tree),
 								path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
-						g_free(name);
+						q_free(name);
 						break;
 					}
-					g_free(name);
+					q_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
 		}
@@ -1100,7 +1100,7 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 		}
 	}
 	/* free memory */
-	g_free(song_path);
+	q_free(song_path);
 }
 
 static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,GtkTreeIter *iter)
@@ -1111,7 +1111,7 @@ static void pl3_custom_tag_browser_category_selection_changed(GtkWidget *tree,Gt
 	time = pl3_custom_tag_browser_view_folder(iter);
 	string = format_time(time);
 	pl3_push_rsb_message(string);
-	g_free(string);
+	q_free(string);
 }
 static void pl3_tag_browser_selected(GtkWidget *container)
 {
@@ -1234,9 +1234,9 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 	tk_format = g_strsplit(format, "|",0);
 	if(tk_format ==NULL)
 	{
-		if(second_tag) g_free(second_tag);
-		if(first_tag) g_free(first_tag);
-		if(format) g_free(format);
+		if(second_tag) q_free(second_tag);
+		if(first_tag) q_free(first_tag);
+		if(format) q_free(format);
 		gtk_tree_path_free(path);	
 		return;
 	}
@@ -1250,9 +1250,9 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 
 			g_strfreev(tk_format);
 			gtk_tree_path_free(path);	
-			if(second_tag) g_free(second_tag);
-			if(first_tag) g_free(first_tag);
-			if(format) g_free(format);
+			if(second_tag) q_free(second_tag);
+			if(first_tag) q_free(first_tag);
+			if(format) q_free(format);
 
 			return;
 		}
@@ -1375,14 +1375,14 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 					data = mpd_data_get_next(data);
 				}
 			}
-			g_free(first);
+			q_free(first);
 		}
 	}
 	gtk_tree_path_free(path);	
 	g_strfreev(tk_format);
-	if(second_tag) g_free(second_tag);
-	if(first_tag) g_free(first_tag);
-	if(format) g_free(format);
+	if(second_tag) q_free(second_tag);
+	if(first_tag) q_free(first_tag);
+	if(format) q_free(format);
 	return ;
 }
 
@@ -1422,7 +1422,7 @@ static void pl3_tag_browser_add_selected()
 				 */
 				pl3_tag_browser_add_folder_to_queue(name);
 			}
-			g_free(name);
+			q_free(name);
 		}while((node = g_list_next(node)) != NULL);
 	}
 	/* if there are items in the add list add them to the playlist */
@@ -1431,7 +1431,7 @@ static void pl3_tag_browser_add_selected()
 	{
 		message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
 		pl3_push_statusbar_message(message);
-		g_free(message);                                       	
+		q_free(message);                                       	
 	}
 
 	g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
@@ -1463,7 +1463,7 @@ static void pl3_tag_browser_show_info()
 			if(song)
 				call_id3_window_song(song);                              			
 
-			g_free(path);
+			q_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
@@ -1524,7 +1524,7 @@ void pref_id3b_row_remove()
 		cfg_del_multiple_value(config, "playlist", "advbrows",title);
 		pref_id3b_fill();
 		pl3_custom_tag_browser_reload();
-		g_free(title);
+		q_free(title);
 	}
 
 }
@@ -1544,8 +1544,8 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 		if(tk_format ==NULL)
 		{
 			debug_printf(DEBUG_INFO,"pref_id3b_row_changed: failed to split\n");
-			g_free(format);
-			g_free(title);
+			q_free(format);
+			q_free(title);
 			return;
 		}
 		else
@@ -1572,8 +1572,8 @@ void pref_id3b_row_changed(GtkTreeView *tree)
 			g_strfreev(tk_format);
 
 		}
-		g_free(format);
-		g_free(title);
+		q_free(format);
+		q_free(title);
 
 
 	}
@@ -1598,7 +1598,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb1")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
-			g_free(string);
+			q_free(string);
 		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb2"))))
@@ -1610,7 +1610,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb2")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
-			g_free(string);
+			q_free(string);
 		}
 	}
 	if(gtk_combo_box_get_active(GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3"))))
@@ -1622,7 +1622,7 @@ void pref_id3b_add_entry()
 			gtk_tree_model_get(GTK_TREE_MODEL(gtk_combo_box_get_model(
 							GTK_COMBO_BOX(glade_xml_get_widget(tag_pref_xml, "id3b_cb3")))),&iter, 0,&string, -1);
 			g_string_append_printf(format, "%s|",string);
-			g_free(string);
+			q_free(string);
 		}
 	}
 	if(format->len)
@@ -1707,7 +1707,7 @@ static void tag_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	tag_pref_xml = glade_xml_new(path, "tag-vbox",NULL);
-	g_free(path);
+	q_free(path);
 	if(tag_pref_xml)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(tag_pref_xml, "tag-vbox");

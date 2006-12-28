@@ -1,4 +1,6 @@
 28-12-2006 Qball <qball@qballcow.nl>
+    * src/*.c:		Replace g_free with a macro that sets the pointer to
+    NULL again
     * src/cofnig1.c:	Use cfg_free_string for clearing strings
     * src/config1.h:	Remove the /*done*/ comments.
     * src/config1.c:	Remove cfg_free_string

@@ -422,7 +422,7 @@ static void server_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	server_pref_xml = glade_xml_new(path, "server-vbox",NULL);
-	g_free(path);
+	q_free(path);
 
 	if(server_pref_xml)
 	{
@@ -495,8 +495,8 @@ void entry_auth_changed(GtkEntry *entry)
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		cfg_set_single_value_as_string(profiles, uid,"password",
 			(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth"))));
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 	}
 }
 
@@ -512,8 +512,8 @@ void auth_enable_toggled(GtkToggleButton *but)
 		cfg_set_single_value_as_int(profiles, uid, "useauth",gtk_toggle_button_get_active(but));
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "entry_auth"), 
 				cfg_get_single_value_as_int_with_default(profiles, uid,"useauth",0));	
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 	}
 }
 
@@ -528,8 +528,8 @@ void update_preferences_name(void)
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		cfg_set_single_value_as_string(profiles,uid,"name", 
 				(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry"))));
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 		value = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry")));
 		gtk_list_store_set(GTK_LIST_STORE(store), &iter, 1, value, -1);
 		pl3_update_profiles_menu();
@@ -547,8 +547,8 @@ void update_preferences_hostname(void)
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		cfg_set_single_value_as_string(profiles,uid,"hostname", 
 				(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry"))));
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 	}
 }
 void update_preferences_portnumber(void)
@@ -563,8 +563,8 @@ void update_preferences_portnumber(void)
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		cfg_set_single_value_as_int(profiles, uid, "portnumber",
 				gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin"))));
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 	}
 }
 void update_preferences_information(void)
@@ -603,7 +603,7 @@ void preferences_window_connect(GtkWidget *but)
 				{
 					if(!connect_to_mpd());
 				}
-				g_free(uid);
+				q_free(uid);
 				pl3_update_profiles_menu();
 			}
 		}
@@ -682,8 +682,8 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 		{
 			gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "remove_butt"), FALSE);
 		}
-		g_free(value);
-		g_free(uid);
+		q_free(value);
+		q_free(uid);
 	}
 
 }
@@ -697,7 +697,7 @@ void connection_add_profile(void)
 	gtk_list_store_append(GTK_LIST_STORE(store), &iter);
 	gtk_list_store_set(GTK_LIST_STORE(store), &iter, 0, value, 1, "Name", -1);
 	cfg_set_single_value_as_string(profiles,value,"name","Name");	
-	g_free(value);
+	q_free(value);
 	gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),&iter);
 	pl3_update_profiles_menu();
 }
@@ -713,8 +713,8 @@ void connection_remove_profile(void)
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		cfg_remove_class(profiles,uid);
 		gtk_list_store_remove(GTK_LIST_STORE(store), &iter);
-		g_free(uid);
-		g_free(value);
+		q_free(uid);
+		q_free(value);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),0);
 		pl3_update_profiles_menu();
 		connection_set_current_profile(NULL);
@@ -729,7 +729,7 @@ static void connection_pref_construct(GtkWidget *container)
 	GtkListStore *store = NULL;
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	connection_pref_xml = glade_xml_new(path, "connection-vbox",NULL);
-	g_free(path);
+	q_free(path);
 
 
 	/**
@@ -757,7 +757,7 @@ static void connection_pref_construct(GtkWidget *container)
 			{	
 				gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),i);
 			}
-			g_free(value);
+			q_free(value);
 			iter = iter->next;
 			i++;
 		}while(iter);
@@ -768,7 +768,7 @@ static void connection_pref_construct(GtkWidget *container)
 		gchar *value = cfg_get_single_value_as_string_with_default(profiles, "Default", "name", "Default");
 		gtk_list_store_append(store, &piter);
 		gtk_list_store_set(store, &piter, 0,"Default", 1,value,-1);
-		g_free(value);
+		q_free(value);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),0);
 	}
 
@@ -803,7 +803,7 @@ void connection_set_current_profile(const char *uid)
 {
 	if(current)
 	{
-		g_free(current);
+		q_free(current);
 		current = NULL;
 	}
 	if(uid)
@@ -836,7 +836,7 @@ char *connection_get_current_profile()
 			cfg_free_multiple(mult);
 		}
 		else {
-			g_free(value);
+			q_free(value);
 		}
 
 	}
@@ -859,7 +859,7 @@ void connection_set_password(char *password)
 	{
 		cfg_set_single_value_as_int(profiles, profile, "useauth", FALSE);
 	}
-	g_free(profile);
+	q_free(profile);
 }
 
 int connection_use_auth()

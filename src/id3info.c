@@ -67,7 +67,7 @@ void id3_del_album_txt(void)
     mpd_Song *sg = songs->data;
     gchar *temp = g_strdup_printf("albumtxt:%s", sg->album);
     cfg_set_single_value_as_string(cover_index, sg->artist,temp,"");
-    g_free(temp);
+    q_free(temp);
 
     GtkTextBuffer *buffer = NULL;
     GtkTextView *tv = NULL;
@@ -129,15 +129,15 @@ void id3_save_album_txt()
                         }
 
                         /* free content */
-                        g_free(content);
+                        q_free(content);
                     }
-                    g_free(filename);
+                    q_free(filename);
                 }
             default:
                 break;
         }
         gtk_widget_destroy(fs_dialog);	
-        g_free(temp);
+        q_free(temp);
     }
 }
 
@@ -204,9 +204,9 @@ void id3_save_artist_txt()
                         }
 
                         /* free content */
-                        g_free(content);
+                        q_free(content);
                     }
-                    g_free(filename);
+                    q_free(filename);
                 }
             default:
                 break;
@@ -255,7 +255,7 @@ static void id3_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,gpoint
 
                 g_file_get_contents(path, &content, &size,NULL);
                 gtk_text_buffer_set_text(GTK_TEXT_BUFFER(gtk_text_view_get_buffer(GTK_TEXT_VIEW(view))),content, size);
-                g_free(content);
+                q_free(content);
 
                 gtk_widget_set_sensitive(GTK_WIDGET(container), TRUE);
             }
@@ -274,7 +274,7 @@ void id3_del_song_lyric(void)
         mpd_Song *sg = songs->data;
         char *temp = g_strdup_printf("lyrics:%s", sg->title);    
         cfg_set_single_value_as_string(cover_index, sg->artist,temp,"");
-        g_free(temp);
+        q_free(temp);
         GtkTextBuffer *buffer = NULL;
         GtkTextView *tv = NULL;
         /** Get the text view */
@@ -334,15 +334,15 @@ void id3_save_song_lyric()
                         }
 
                         /* free content */
-                        g_free(content);
+                        q_free(content);
                     }
-                    g_free(filename);
+                    q_free(filename);
                 }
             default:
                 break;
         }
         gtk_widget_destroy(fs_dialog);
-        g_free(temp);
+        q_free(temp);
     }
 }
 
@@ -380,7 +380,7 @@ void id3_status_update()
     {
         char *temp = g_strdup_printf("%i kbps", mpd_status_get_bitrate(connection));
         gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
-        g_free(temp);
+        q_free(temp);
 
     }
     else
@@ -426,7 +426,7 @@ static void create_window (int song)
     }
     path = gmpc_get_full_glade_path("gmpc.glade");	
     xml_id3_window = glade_xml_new (path,"id3_info_window", NULL);
-    g_free(path);
+    q_free(path);
     /* check for errors and axit when there is no gui file */
     if (xml_id3_window == NULL)
     {
@@ -581,7 +581,7 @@ static void set_text (GList * node)
     {
         char *temp = g_strdup_printf("%i kbps", mpd_status_get_bitrate(connection));
         gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_id3_window,"bitrate_label")),temp);
-        g_free(temp);
+        q_free(temp);
 
     }
     else
@@ -654,7 +654,7 @@ void call_id3_window_song(mpd_Song *songstr)
     {
         char *path = gmpc_get_full_glade_path("gmpc.glade");
         xml_id3_window = glade_xml_new (path, "id3_info_window", NULL);
-        g_free(path);
+        q_free(path);
         gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),META_ALBUM_ART);
         g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")), "image_changed",
                 G_CALLBACK(art_set_from_path), 
@@ -718,7 +718,7 @@ void id3_album_image_file_selector(GtkFileChooser *chooser)
         meta_data_set_cache(songs->data, META_ALBUM_ART, META_DATA_AVAILABLE, path);
         gmpc_metaimage_set_cover_from_path(GMPC_METAIMAGE(glade_xml_get_widget(xml_id3_window, "metaimage_cover_image")),path);	
         GmpcStatusChangedCallback(connection, MPD_CST_SONGID, 	NULL);
-        g_free(path);
+        q_free(path);
     }
 }
 /**

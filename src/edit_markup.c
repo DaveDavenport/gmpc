@@ -99,7 +99,7 @@ char * edit_song_markup(char *format)
 	GtkWidget *dialog;
 	char *path = gmpc_get_full_glade_path("gmpc.glade");
 	xml_esf= glade_xml_new(path, "esf_dialog",NULL);
-	g_free(path);
+	q_free(path);
 	dialog = glade_xml_get_widget(xml_esf, "esf_dialog");
 	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(glade_xml_get_widget(xml_esf, "textview_markup")));
 	glade_xml_signal_autoconnect (xml_esf);
@@ -108,7 +108,7 @@ char * edit_song_markup(char *format)
 	{
 		gtk_text_buffer_set_text(buffer, format, -1);
 	}
-	g_free(str_format);
+	q_free(str_format);
 
 	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 	{

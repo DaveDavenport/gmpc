@@ -49,20 +49,20 @@ static int plugin_load(char *path, const char *file)
 	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
 
 	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
-	g_free(full_path);
+	q_free(full_path);
 	if (!handle) {
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s\n", g_module_error());
 		show_error_message(message, FALSE);
-		g_free(message);
+		q_free(message);
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin_api_version", (gpointer)&api_version)){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
 		show_error_message(message,FALSE);
-		g_free(string);
-		g_free(message);
+		q_free(string);
+		q_free(message);
 		g_module_close(handle);
 		return 1;
 	}
@@ -73,8 +73,8 @@ static int plugin_load(char *path, const char *file)
 		debug_printf(DEBUG_ERROR, "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
 			       file, *api_version, PLUGIN_API_VERSION);
 		show_error_message(message,FALSE);
-		g_free(string);
-		g_free(message);
+		q_free(string);
+		q_free(message);
 		g_module_close(handle);
 		return 1;
 	}
@@ -83,8 +83,8 @@ static int plugin_load(char *path, const char *file)
 		gchar *message = g_strdup_printf("Failed to load plugin:\n<i>%s</i>", g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
 		show_error_message(message,FALSE);
-		g_free(string);
-		g_free(message);
+		q_free(string);
+		q_free(message);
 		g_module_close(handle);
 		return 1;
 	}
@@ -117,7 +117,7 @@ void plugin_load_dir(gchar *path)
 
 				}
 			}
-			g_free(full_path);
+			q_free(full_path);
 		}
 		g_dir_close(dir);
 	}

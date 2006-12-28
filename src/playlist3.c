@@ -762,8 +762,8 @@ static void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTre
 		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
 		gtk_list_store_append(GTK_LIST_STORE(model2), &citer);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,-1);
-		if(name)g_free(name);
-		if(stock_id)g_free(stock_id);
+		if(name)q_free(name);
+		if(stock_id)q_free(stock_id);
 	}
 }
 
@@ -777,9 +777,9 @@ static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		strpath = gtk_tree_path_to_string(path);
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,gtk_tree_path_copy(path),-1);
-		g_free(strpath);
-		if(name) g_free(name);
-		if(stock_id) g_free(stock_id);
+		q_free(strpath);
+		if(name) q_free(name);
+		if(stock_id) q_free(stock_id);
 	}
 }
 static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)
@@ -795,7 +795,7 @@ static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		if(cpath)
 			gtk_tree_path_free(cpath);
 		gtk_list_store_remove(GTK_LIST_STORE(model2), &citer);
-		g_free(strpath);
+		q_free(strpath);
 	}
 
 }
@@ -841,7 +841,7 @@ void create_playlist3 ()
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);
-	g_free(path);
+	q_free(path);
 	/*
 	 * Check if the file is loaded, if not then show an error message and abort the program
 	 */
@@ -1081,7 +1081,7 @@ void set_browser_format()
 	{
 		cfg_set_single_value_as_string(config, "playlist","browser_markup",format);
 	}
-	g_free(format);
+	q_free(format);
 }
 
 void set_playlist_format()
@@ -1094,7 +1094,7 @@ void set_playlist_format()
 		cfg_set_single_value_as_string(config, "playlist","markup",format);
 		playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
 	}
-	g_free(format);
+	q_free(format);
 }
 
 void playlist_pref_destroy(GtkWidget *container)
@@ -1130,7 +1130,7 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
-	g_free(path);
+	q_free(path);
 }
 
 /* Playlist player */
@@ -1334,7 +1334,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 				_("Connected to"),
 				mpd_get_hostname(mi));
 		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);
-		g_free(string);
+		q_free(string);
 	}
 	else{
 		gchar *string = NULL;
@@ -1342,7 +1342,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 				_("GMPC"), 
 				_("Disconnected"));
 		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);		
-		g_free(string);                                                                    	
+		q_free(string);                                                                    	
 	}
 
 	/*
@@ -1473,7 +1473,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			char *string = g_strdup_printf("Repeat: %s", (mpd_player_get_repeat(connection))? _("On"):_("Off"));
 			pl3_push_statusbar_message(string);
-			g_free(string);
+			q_free(string);
 
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_repeat")),
 					mpd_player_get_repeat(connection));
@@ -1486,7 +1486,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			char *string = g_strdup_printf("Random: %s", (mpd_player_get_random(connection))? _("On"):_("Off"));
 			pl3_push_statusbar_message(string);
-			g_free(string);
+			q_free(string);
 
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_random")),
 					mpd_player_get_random(connection));
@@ -1535,7 +1535,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
 				string);
-		g_free(string);
+		q_free(string);
 	}
 	if(what&MPD_CST_VOLUME)
 	{
@@ -1625,7 +1625,7 @@ void about_window()
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
-	g_free(path);
+	q_free(path);
 
 	if(strlen(revision))
 	{
@@ -1637,7 +1637,7 @@ void about_window()
 	}
 
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
-	g_free(path);
+	q_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 	g_object_unref(diagxml);
@@ -1738,7 +1738,7 @@ void pl3_update_profiles_menu(void)
 			/** Get profile name */
 			gchar *value = cfg_get_single_value_as_string_with_default(profiles, iter->key, "name", "Name");
 			GtkWidget *item	= gtk_radio_menu_item_new_with_label(group,value);
-			g_free(value);	
+			q_free(value);	
 			/* get new group */
 			group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));	
 			/* add to the menu */

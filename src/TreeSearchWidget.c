@@ -88,7 +88,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 		gtk_tree_model_get(model, iter,ts->search_row, &title, -1); 
 		if(title && !regexec(&regt, title, 0,NULL,0))
 		{
-			g_free(title);
+			q_free(title);
 			regfree(&regt);
 			return TRUE;
 		}
@@ -99,12 +99,12 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 			{
 				*iter = child;
 				regfree(&regt);
-				g_free(title);
+				q_free(title);
 				return TRUE;
 			}
 
 		}
-		g_free(title);
+		q_free(title);
 	} while(gtk_tree_model_iter_next(model,  iter));
 	regfree(&regt);
 	return FALSE;

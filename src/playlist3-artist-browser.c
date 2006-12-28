@@ -299,8 +299,8 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 	if(artist == NULL || string == NULL)
 	{
-		if(artist) g_free(artist);
-		if(string) g_free(string);
+		if(artist) q_free(artist);
+		if(string) q_free(string);
 		return 0;
 	}
 	if(depth == 0)
@@ -485,8 +485,8 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		cfg_free_string(markdata);
 
 	}
-	g_free(artist);
-	g_free(string);
+	q_free(artist);
+	q_free(string);
 
 	return time;
 }
@@ -562,8 +562,8 @@ void pl3_artist_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 			gtk_tree_store_remove(pl3_tree, &child); 
 		}
 	}
-	g_free(artist);
-	g_free(alb_artist);
+	q_free(artist);
+	q_free(alb_artist);
 }
 
 
@@ -584,8 +584,8 @@ static void pl3_artist_browser_add_folder()
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &artist, PL3_CAT_TITLE,&title, -1);
 		if(!artist || !title)
 		{
-			if(artist)g_free(artist);
-			if(title)g_free(title);
+			if(artist)q_free(artist);
+			if(title)q_free(title);
 			return;
 		}
 		if(strlen(artist) && !g_utf8_collate(artist,title))
@@ -602,7 +602,7 @@ static void pl3_artist_browser_add_folder()
 				data = mpd_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
-			g_free(message);
+			q_free(message);
 
 		}
 		else
@@ -623,13 +623,13 @@ static void pl3_artist_browser_add_folder()
 				data = mpd_data_get_next(data);
 			}
 			pl3_push_statusbar_message(message);
-			g_free(message);
+			q_free(message);
 
 		}
 		/* if there are items in the add list add them to the playlist */
 		mpd_playlist_queue_commit(connection);
-		if(artist)g_free(artist);
-		if(title)g_free(title);
+		if(artist)q_free(artist);
+		if(title)q_free(title);
 	}
 }
 
@@ -685,7 +685,7 @@ static void pl3_artist_browser_show_info()
 					call_id3_window_song(song);
 
 			}
-			if(path)g_free(path);
+			if(path)q_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 		/* free list */
@@ -734,10 +734,10 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 						gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(playlist3_get_category_tree_view()),
 								path,NULL,TRUE,0.5,0);
 						gtk_tree_path_free(path);
-						g_free(name);
+						q_free(name);
 						break;
 					}
-					g_free(name);
+					q_free(name);
 				}while(gtk_tree_model_iter_next(model, &citer));
 			}
 		}
@@ -772,9 +772,9 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 
 
-	if(file)g_free(file);
-	if(artist) g_free(artist);
-	if(album) g_free(album);
+	if(file)q_free(file);
+	if(artist) q_free(artist);
+	if(album) q_free(album);
 
 }
 
@@ -786,7 +786,7 @@ static void pl3_artist_browser_category_selection_changed(GtkWidget *tree,GtkTre
 	time = pl3_artist_browser_view_folder(iter);
 	string = format_time(time);
 	pl3_push_rsb_message(string);
-	g_free(string);
+	q_free(string);
 }
 
 static void pl3_artist_browser_selected(GtkWidget *container)
@@ -923,9 +923,9 @@ static void pl3_artist_browser_add_selected()
 				}
 				albums++;
 			}
-			if(artist)g_free(artist);
-			if(album)g_free(album);
-			if(file)g_free(file);
+			if(artist)q_free(artist);
+			if(album)q_free(album);
+			if(file)q_free(file);
 
 		}while((node = g_list_next(node)) != NULL);
 	}
@@ -1111,7 +1111,7 @@ static void pl3_artist_browser_reupdate(void)
 				time = pl3_artist_browser_view_folder(&parent);
 				string = format_time(time);
 				gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-				g_free(string);
+				q_free(string);
 			}
 			gtk_tree_path_free(path);
 		}

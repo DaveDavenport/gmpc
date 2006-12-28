@@ -88,7 +88,7 @@ static void url_parse_pls_file(const char *data, int size)
 	{
 		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
 		pl3_push_statusbar_message(string);
-		g_free(string);
+		q_free(string);
 	}
 }
 /***
@@ -117,7 +117,7 @@ static void url_parse_extm3u_file(const char *data, int size)
 	{
 		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
 		pl3_push_statusbar_message(string);
-		g_free(string);
+		q_free(string);
 	}
 }
 
@@ -281,7 +281,7 @@ void url_start_real(const gchar *url)
 					dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
 						GTK_MESSAGE_INFO,GTK_BUTTONS_CLOSE,
 						_("Failed to contact url: '%s'"), url);
-					g_free(url);
+					q_free(url);
 					/* run it */
 					gtk_dialog_run(GTK_DIALOG(dialog));
 

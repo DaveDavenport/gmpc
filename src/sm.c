@@ -103,7 +103,7 @@ void smc_connect(gint argc, gchar **argv)
 			callbacks,
 			session_id, &client_id,
 			sizeof(error_string), error_string);
-	g_free(callbacks);
+	q_free(callbacks);
 	if (!smc_connection)
 		return;
 
@@ -173,7 +173,7 @@ void smc_connect(gint argc, gchar **argv)
 	props[4] = &pid;
 	SmcSetProperties(smc_connection, 5, props);
 
-	g_free(restart.vals);
+	q_free(restart.vals);
 
 	ice_connection = SmcGetIceConnection(smc_connection);
 	gdk_input_add(IceConnectionNumber(ice_connection), GDK_INPUT_READ,

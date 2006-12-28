@@ -113,7 +113,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 	GtkWidget *ali = NULL;
 	if(pd->id != current_id)
 	{
-			if(ret != META_DATA_FETCHING)g_free(pd);
+			if(ret != META_DATA_FETCHING)q_free(pd);
 			return;
 	}
 	if(ret == META_DATA_AVAILABLE)
@@ -129,7 +129,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		expander = gtk_expander_new(labstr);	
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-		g_free(labstr);
+		q_free(labstr);
 
 		label = gtk_label_new("");
 		ali = gtk_alignment_new(0,0.5,0,0);
@@ -141,7 +141,7 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		gtk_widget_show_all(vbox);
-		g_free(content);
+		q_free(content);
 	}
 	else if(ret == META_DATA_UNAVAILABLE)
 	{
@@ -157,12 +157,12 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_label_set_markup(GTK_LABEL(label),labstr); 
 		gtk_container_add(GTK_CONTAINER(vbox),label);
 		gtk_widget_show_all(vbox);
-		g_free(labstr);
+		q_free(labstr);
 	}
 
 	if(ret != META_DATA_FETCHING){
-		if(pd->name) g_free(pd->name);
-		g_free(pd);
+		if(pd->name) q_free(pd->name);
+		q_free(pd);
 	}
 }
 static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i)
@@ -235,7 +235,7 @@ static void info3_fill_view()
 				, song->title);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
-		g_free(markup);
+		q_free(markup);
 		gtk_container_add(GTK_CONTAINER(ali),label);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 	}
@@ -310,7 +310,7 @@ static void info3_fill_view()
 		char *dirname = g_path_get_dirname(song->file);
 		info3_add_table_item(table2,_("<b>Dirname:</b>"),dirname,i);
 		i++;
-		g_free(dirname);
+		q_free(dirname);
 	}
 	
 	if(song->artist)
@@ -325,7 +325,7 @@ static void info3_fill_view()
 		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>",song->artist);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-		g_free(markup);
+		q_free(markup);
 		gtk_container_add(GTK_CONTAINER(ali),label);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
@@ -449,7 +449,7 @@ static void info3_init()
 	ali = gtk_label_new("");
 	str = g_strdup_printf("<span size='xx-large' weight='bold'>%s</span>", _("Song Information"));
 	gtk_label_set_markup(GTK_LABEL(ali),str);
-	g_free(str);
+	q_free(str);
 	gtk_box_pack_start(GTK_BOX(title_vbox), ali,FALSE,TRUE,0);	
 
 	/**

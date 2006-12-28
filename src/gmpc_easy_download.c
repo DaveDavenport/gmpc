@@ -119,14 +119,14 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_multi_cleanup(curlm);
 	debug_printf(DEBUG_INFO,"Downloaded: %i\n", dld->size);
 	if(success) return 1;
-	if(dld->data) g_free(dld->data);
+	if(dld->data) q_free(dld->data);
 	dld->data = NULL;
 	return 0;
 }
 
 void gmpc_easy_download_clean(gmpc_easy_download_struct *dld)
 {
-	if(dld->data)g_free(dld->data);
+	if(dld->data)q_free(dld->data);
 	dld->data = NULL;
 	dld->size = 0;
 }

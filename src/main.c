@@ -148,7 +148,7 @@ char *gmpc_get_full_image_path(char *filename)
      * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
      */
 #if GLIB_CHECK_VERSION(2,8,4)
-    g_free(packagedir);
+    q_free(packagedir);
 #endif
 
 #else
@@ -177,7 +177,7 @@ char *gmpc_get_full_glade_path(char *filename)
      * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
      */
 #if GLIB_CHECK_VERSION(2,8,4)
-    g_free(packagedir);
+    q_free(packagedir);
 #endif
 
 #else
@@ -376,7 +376,7 @@ int main (int argc, char **argv)
     /**
      * cleanup 
      */
-    g_free(url);
+    q_free(url);
     /**
      * Profile file
      */
@@ -396,7 +396,7 @@ int main (int argc, char **argv)
         show_error_message(_("Failed to load the configuration system"), TRUE);
         abort();
     }
-    g_free(url);
+    q_free(url);
 
 
 #ifndef WIN32
@@ -502,7 +502,7 @@ int main (int argc, char **argv)
     /** Load the global installed plugins */
     url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
     plugin_load_dir(url);
-    g_free(url);
+    q_free(url);
     /* user space dynamic plugins */
     url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
     /**
@@ -512,7 +512,7 @@ int main (int argc, char **argv)
     {
         plugin_load_dir(url);
     }
-    g_free(url);
+    q_free(url);
 
 
     /* time todo some initialisation of plugins */
@@ -710,7 +710,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("media-audiofile.png");
     pb = gdk_pixbuf_new_from_file (path ,NULL);
-    g_free(path);
+    q_free(path);
 
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "media-audiofile", set);
@@ -720,7 +720,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("media-stream.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
 
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "media-stream", set);
@@ -730,7 +730,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("media-artist.png");
     pb = gdk_pixbuf_new_from_file (path,NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "media-artist", set);
     g_object_unref (G_OBJECT (pb));
@@ -739,7 +739,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("media-album.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "media-album", set);
     g_object_unref (G_OBJECT (pb));
@@ -749,7 +749,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("player-shuffle.png");
     pb = gdk_pixbuf_new_from_file (path,NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "stock_shuffle", set);
     g_object_unref (G_OBJECT (pb));
@@ -758,7 +758,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("player-repeat.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "stock_repeat", set);
     g_object_unref (G_OBJECT (pb));
@@ -768,7 +768,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("media-playlist.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "media-playlist", set);
     g_object_unref (G_OBJECT (pb));
@@ -779,7 +779,7 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("gmpc.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "gmpc", set);
     gtk_window_set_default_icon(pb);
@@ -790,21 +790,21 @@ static void init_stock_icons()
      */
     path = gmpc_get_full_image_path("gmpc-tray.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "gmpc-tray", set);
     g_object_unref (G_OBJECT (pb));
 
     path = gmpc_get_full_image_path("gmpc-tray-play.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "gmpc-tray-play", set);
     g_object_unref (G_OBJECT (pb));
 
     path = gmpc_get_full_image_path("gmpc-tray-pause.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "gmpc-tray-pause", set);
     g_object_unref (G_OBJECT (pb));
@@ -812,14 +812,14 @@ static void init_stock_icons()
 
     path = gmpc_get_full_image_path("gmpc-tray-disconnected.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);
     gtk_icon_factory_add (factory, "gmpc-tray-disconnected", set);
     g_object_unref (G_OBJECT (pb));
 
     path = gmpc_get_full_image_path("gmpc-no-cover.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);              	
     gtk_icon_factory_add (factory, "media-no-cover", set);
     g_object_unref (G_OBJECT (pb));
@@ -827,14 +827,14 @@ static void init_stock_icons()
 
     path = gmpc_get_full_image_path("gmpc-loading-cover.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);              	
     gtk_icon_factory_add (factory, "media-loading-cover", set);  	
     g_object_unref (G_OBJECT (pb));
 
     path = gmpc_get_full_image_path("stock_volume.png");
     pb = gdk_pixbuf_new_from_file (path, NULL);
-    g_free(path);
+    q_free(path);
     set = gtk_icon_set_new_from_pixbuf (pb);              	
     gtk_icon_factory_add (factory, "gmpc-volume", set);
     g_object_unref (G_OBJECT (pb));
@@ -861,7 +861,7 @@ static void init_playlist_store ()
      * restore the markup
      */
     playlist_list_set_markup((CustomList *)playlist,markup);
-    g_free(markup);
+    q_free(markup);
 }
 
 /**
@@ -910,7 +910,7 @@ static void password_dialog(int failed)
     if(xml_password_window) return;
     path = gmpc_get_full_glade_path("gmpc.glade");
     xml_password_window = glade_xml_new(path, "password-dialog",NULL);
-    g_free(path);
+    q_free(path);
     if(!xml_password_window) return;
     if(failed)
     {
@@ -921,7 +921,7 @@ static void password_dialog(int failed)
         path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
     }
     gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
-    g_free(path);
+    q_free(path);
     switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
     {
         case GTK_RESPONSE_OK:
@@ -965,18 +965,18 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
             gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
             gchar *path = gmpc_get_full_glade_path("gmpc.glade");
             xml_error_window = glade_xml_new(path,"error_dialog",NULL);
-            g_free(path);
+            q_free(path);
             GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
             gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
             gtk_widget_show_all(dialog);
             g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
-            g_free(str);
+            q_free(str);
         }
         else
         {
             gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
             gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
-            g_free(str);
+            q_free(str);
         }
     }
     else
@@ -1138,5 +1138,5 @@ static void create_gmpc_paths(void)
         debug_printf(DEBUG_INFO, "%s exist and is directory",url);
     }
     /* Free the path */
-    g_free(url);
+    q_free(url);
 }

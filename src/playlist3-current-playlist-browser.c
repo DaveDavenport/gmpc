@@ -157,7 +157,7 @@ static void pl3_current_playlist_column_changed(GtkTreeView *tree)
 		char *string = g_strdup_printf("%i", position);
 		cfg_set_single_value_as_int(config, "current-playlist-column-pos", string, colid);
 		position++;
-		g_free(string);
+		q_free(string);
 	}
 	g_list_free(cols);
 }
@@ -174,7 +174,7 @@ void pl3_current_playlist_destroy()
 			gchar *string = g_strdup_printf("%i", colid);
 			int width = gtk_tree_view_column_get_width(GTK_TREE_VIEW_COLUMN(iter->data));
 			cfg_set_single_value_as_int(config, "current-playlist-column-width", string,width);
-			g_free(string);
+			q_free(string);
 		}
 		g_list_free(cols);
 	}
@@ -691,8 +691,8 @@ static void pl3_current_playlist_browser_playlist_changed(GtkWidget *tree, GtkTr
 			mesg = g_strdup_printf("%i Items%c %s %s", PLAYLIST_LIST(playlist)->num_rows,(string[0])?',':' ', string,
 				(string[0] == 0 || loaded >= 1 || loaded <= 0.0)? "":_("(Estimation)")); 
 			pl3_push_rsb_message(mesg);
-			g_free(string);
-			g_free(mesg);
+			q_free(string);
+			q_free(mesg);
 		} else {
 			pl3_push_rsb_message("");
 		}
@@ -770,7 +770,7 @@ static void pl3_current_playlist_save_playlist ()
 	/* create the interface */
 	str = gmpc_get_full_glade_path("playlist3.glade");
 	xml = glade_xml_new (str, "save_pl", NULL);
-	g_free(str);
+	q_free(str);
 
 	/* run the interface */
 	do
@@ -810,7 +810,7 @@ static void pl3_current_playlist_save_playlist ()
 						gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
 						gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
 
-						g_free(errormsg);
+						q_free(errormsg);
 					}
 					else 
 					{

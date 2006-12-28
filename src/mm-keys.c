@@ -672,7 +672,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	mmkeys_pref_xml = glade_xml_new(path, "mmkeys-vbox",NULL);
-	g_free(path);
+	q_free(path);
 	if(mmkeys_pref_xml)
 	{
 		int i=0;
