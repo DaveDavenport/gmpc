@@ -329,11 +329,11 @@ static void mmkeys_init (MmKeys *object)
 					XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0),
 					keycodes[i], masks[i]);
 				gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-				g_free (rawkeysym);
+				q_free (rawkeysym);
 				g_string_append_printf( message,
 					"\t%s: %s\n",
 					keynames[i], keysym );
-				g_free (keysym);
+				q_free (keysym);
 			}
 		}
 		g_string_append( message,
@@ -610,13 +610,13 @@ accel_edited_callback (GtkCellRendererText *cell,
 				XKeycodeToKeysym(GDK_DISPLAY(), hardware_keycode, 0),
 				hardware_keycode, mask);
 			gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-			g_free (rawkeysym);
+			q_free (rawkeysym);
 			gchar *message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
 					"%s is already mapped to %s"),
 					keysym, keynames[i] );
-			g_free (keysym);
+			q_free (keysym);
 			show_error_message (message, TRUE);
-			g_free (message);
+			q_free (message);
 			
 			/* Clear the duplicate entry */
 			accel_cleared_callback(cell, path_string, data);
@@ -638,15 +638,15 @@ accel_edited_callback (GtkCellRendererText *cell,
 			XKeycodeToKeysym(GDK_DISPLAY(), keycodes[key], 0),
 			keycodes[key], masks[key]);
 		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-		g_free (rawkeysym);
+		q_free (rawkeysym);
 		gchar *message = g_strdup_printf(
 			_("<b>Could not grab multimedia key:</b>\n\n"
 			"\t%s: %s\n\n"
 			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),
 			keynames[key], keysym );
-		g_free (keysym);
+		q_free (keysym);
 		show_error_message (message, TRUE);
-		g_free (message);
+		q_free (message);
 	}
 }
 

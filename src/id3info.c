@@ -406,7 +406,7 @@ void id3_status_update()
         gtk_label_set_text (GTK_LABEL
                 (glade_xml_get_widget
                  (xml_id3_window, "length_label")), buf1);
-        g_free (buf1);
+        q_free (buf1);
     }
     else
     {
@@ -560,7 +560,7 @@ static void set_text (GList * node)
     {
         gchar *buf1 = g_path_get_basename (song->file);
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "filename_label")), buf1);
-        g_free (buf1);
+        q_free (buf1);
     }
     else
     {
@@ -570,7 +570,7 @@ static void set_text (GList * node)
     {
         gchar *buf1 = g_path_get_dirname (song->file);
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "path_label")), buf1);
-        g_free (buf1);
+        q_free (buf1);
     }
     else
     {
@@ -595,7 +595,7 @@ static void set_text (GList * node)
         gint sec = song->time - min * 60;
         gchar *buf1 = g_strdup_printf ("%02i:%02i", min, sec);
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "length_label")), buf1);
-        g_free (buf1);
+        q_free (buf1);
     }
     else
     {

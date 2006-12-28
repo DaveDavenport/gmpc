@@ -576,7 +576,7 @@ bacon_volume_scale_value_changed (GtkRange * range)
   /* update label */
   s = g_strdup_printf ("%d", lrintf (val));
   gtk_button_set_label (GTK_BUTTON (button), s);
-  g_free (s);
+  q_free (s);
 #else
   const char *s;
   GdkPixbuf *buf=NULL;

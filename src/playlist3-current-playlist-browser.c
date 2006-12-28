@@ -872,7 +872,7 @@ static void pl3_current_playlist_highlight_song_change ()
 				pl3_current_playlist_browser_scroll_to_current_song();
 			}
 /*		}
-		g_free (temp);
+		q_free (temp);
 */	}
 }
 

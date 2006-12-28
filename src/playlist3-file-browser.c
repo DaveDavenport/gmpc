@@ -408,7 +408,7 @@ static int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
 					PL3_FB_TITLE, basename,
 					PL3_FB_ICON, "media-playlist",
 					-1);
-			g_free (basename);
+			q_free (basename);
 			if(pd->support_playlist) (pd->sub_folder)++;
 		}
 		pd->data = mpd_data_get_next(data);
@@ -505,7 +505,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 					-1);
 			gtk_tree_store_append(pl3_tree, &child2, &child);
 
-			g_free (basename);
+			q_free (basename);
 		}
 		else if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
 		{
