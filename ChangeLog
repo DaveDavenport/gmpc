@@ -1,4 +1,6 @@
 28-12-2006 Qball <qball@qballcow.nl>
+    * src/main.c:	Make the error dialog handle multiple errors in one
+    window
     * src/*.c:		Replace g_free with a macro that sets the pointer to
     NULL again
     * src/cofnig1.c:	Use cfg_free_string for clearing strings

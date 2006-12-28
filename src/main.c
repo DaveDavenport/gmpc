@@ -80,6 +80,11 @@ int gmpc_failed_tries = 0;
 /**
  * Define some local functions
  */
+/**
+ * Error dialog 
+ */
+static GtkWidget *error_dialog = NULL;
+static GtkListStore *error_list_store = NULL;
 
 /** Creating the backend */
 static void init_playlist_store(void);
@@ -1078,22 +1083,81 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
  * Shows an error message.
  * When block enabled, it will run in it's own mainloop.
  */
+static void error_message_destroy(void)
+{
+    gtk_widget_destroy(error_dialog);
+    error_dialog = NULL;
+    gtk_list_store_clear(error_list_store); 
+}
 void show_error_message(gchar *string, int block)
 {
-    GtkWidget *dialog = NULL;
-    dialog = gtk_message_dialog_new_with_markup(NULL,
-            GTK_DIALOG_DESTROY_WITH_PARENT,
-            GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_CLOSE,
-            string);
-    g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+    GtkTreeIter iter;
+    GtkWidget *label = NULL;
+    if(!error_dialog)
+    {    
+        GtkWidget *hbox = NULL, *image;
+        GtkWidget *vbox = NULL,*sw = NULL, *tree = NULL;
+        GtkCellRenderer *renderer;
+        /* create dialog */
+        error_dialog = gtk_dialog_new_with_buttons(
+                _("Error occured during operation"),
+                NULL,
+                GTK_DIALOG_DESTROY_WITH_PARENT,
+                GTK_STOCK_CLOSE,
+                GTK_RESPONSE_OK,
+                NULL);
+        /** create list store */
+        if(!error_list_store)
+        {
+            error_list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+            /* don't want this destroyed */
+            g_object_ref(error_list_store);
+        }
+        hbox = gtk_hbox_new(FALSE,6);
+        gtk_container_add(GTK_CONTAINER(GTK_DIALOG(error_dialog)->vbox), hbox);       
+        gtk_container_set_border_width(GTK_CONTAINER(hbox),9);
+
+        /* Error image */
+        image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
+        gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, TRUE, 0);
+
+        vbox = gtk_vbox_new(FALSE,6); 
+        gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
+
+        /* Create label */
+        label = gtk_label_new(_("The following error(s) occured:"));
+        gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+        gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
+        /** Create tree view */
+        /* sw*/
+        sw = gtk_scrolled_window_new(NULL,NULL);
+        gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+        /* tree */
+        tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(error_list_store));
+        gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
+        gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
+        /* add tree to sw */
+        gtk_container_add(GTK_CONTAINER(sw), tree); 
+        /** add cell renderers */
+        renderer = gtk_cell_renderer_text_new();
+        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, _("Error Message"), renderer, "text", 0, NULL);
+
+
+        /** add sw to vbox */
+        gtk_box_pack_start(GTK_BOX(vbox), sw, TRUE, TRUE, 0);
+    }
+    gtk_list_store_append(error_list_store, &iter);
+    gtk_list_store_set(error_list_store, &iter, 0, string,-1);
+    g_signal_connect(G_OBJECT(error_dialog), "response", G_CALLBACK(error_message_destroy), NULL);
+    gtk_widget_show_all(error_dialog);
     if(block)
     {
-        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_dialog_run(GTK_DIALOG(error_dialog));
     }
     else
     {
-        gtk_widget_show(dialog);
+        gtk_widget_show(error_dialog);
     }
 
 }
