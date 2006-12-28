@@ -241,7 +241,7 @@ void cfg_close(config_obj *cfgo)
 	if(cfgo->url != NULL)
 	{
 		cfgo->total_size-=strlen(cfgo->url);
-		g_free(cfgo->url);
+		cfg_free_string(cfgo->url);
 	}
 	while(cfgo->root)__int_cfg_remove_node(cfgo,cfgo->root);
 	g_mutex_unlock(cfgo->lock);
@@ -249,6 +249,7 @@ void cfg_close(config_obj *cfgo)
 	g_mutex_free(cfgo->lock);
 	debug_printf(DEBUG_INFO,"Memory remaining: %i\n", cfgo->total_size);
 	g_free(cfgo);
+        cfgo = NULL;
 }
 static config_node *cfg_new_node()
 {
@@ -483,7 +484,7 @@ void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int va
 	g_mutex_lock(cfg->lock);
 	temp  = g_strdup_printf("%i",value);
 	__int_cfg_set_single_value_as_string(cfg,class,key,temp);
-	g_free(temp);
+	cfg_free_string(temp);
 	g_mutex_unlock(cfg->lock);
 }
 static void __int_cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value)
@@ -491,7 +492,7 @@ static void __int_cfg_set_single_value_as_int(config_obj *cfg, char *class, char
 	gchar *	temp = NULL;
 	temp  = g_strdup_printf("%i",value);
 	__int_cfg_set_single_value_as_string(cfg,class,key,temp);
-	g_free(temp);
+	cfg_free_string(temp);
 }
 int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def)
 {
@@ -536,7 +537,7 @@ void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, floa
 	g_mutex_lock(cfg->lock);
 	value1 = g_strdup_printf("%f", value);
 	__int_cfg_set_single_value_as_string(cfg,class,key,value1);
-	g_free(value1);
+	cfg_free_string(value1);
 	g_mutex_unlock(cfg->lock);
 }
 float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def)
@@ -548,7 +549,7 @@ float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, c
 	{
 		char * value1 = g_strdup_printf("%f", def);
 		__int_cfg_set_single_value_as_string(cfg,class,key,value1);
-		g_free(value1);
+		cfg_free_string(value1);
 		retv = __int_cfg_get_single_value_as_float(cfg,class,key);		
 	}
 	g_mutex_unlock(cfg->lock);
@@ -604,11 +605,11 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 	cfg->total_size-= sizeof(config_node);
 	if(node->name){
 		cfg->total_size-=strlen(node->name);
-		 g_free(node->name);
+		 cfg_free_string(node->name);
 	}
 	if(node->value) {
 		cfg->total_size-=strlen(node->value);
-		g_free(node->value);
+		cfg_free_string(node->value);
 	}
 	g_slice_free(config_node,node);
 }
@@ -658,7 +659,7 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 	newnode->type = TYPE_ITEM;
 	if(newnode->value){
 		cfg->total_size-= strlen(newnode->value);
-		g_free(newnode->value);
+		cfg_free_string(newnode->value);
 	}
 	newnode->value = g_strdup(value);	
 	cfg->total_size += strlen(value);
@@ -722,7 +723,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	{
 		if(cur->value){
 			cfg->total_size -= strlen(cur->value);
-			g_free(cur->value);
+			cfg_free_string(cur->value);
 		}
 
 		cur->value = g_strdup(value);
@@ -790,8 +791,8 @@ void cfg_free_multiple(conf_mult_obj *data)
 	}
 	while(list != NULL)
 	{
-		if(list->value)	g_free(list->value);
-		if(list->key)	g_free(list->key);  		
+		if(list->value)	cfg_free_string(list->value);
+		if(list->key)	cfg_free_string(list->key);  		
 		if(list->next != NULL)
 		{
 			if(list->prev)g_slice_free(conf_mult_obj,list->prev);

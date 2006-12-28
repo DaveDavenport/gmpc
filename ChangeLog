@@ -1,7 +1,8 @@
 28-12-2006 Qball <qball@qballcow.nl>
-    * src/config.h:	Remove the /*done*/ comments.
-    * src/config.c:	Remove cfg_free_string
-    * src/config.h:	Define a macro cfg_free_string as g_free(a);a=NULL;
+    * src/cofnig1.c:	Use cfg_free_string for clearing strings
+    * src/config1.h:	Remove the /*done*/ comments.
+    * src/config1.c:	Remove cfg_free_string
+    * src/config1.h:	Define a macro cfg_free_string as g_free(a);a=NULL;
     * src/main.c:	Change indent, some cleanups + marking of strings
     * src/id3info.c:	Hide notebook tabs when not valid.
     * src/id3info.c:	Cleanup the code, re-indent add extra checks etc.
