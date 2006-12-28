@@ -1,4 +1,5 @@
 28-12-2006 Qball <qball@qballcow.nl>
+    * src/config.h:	Remove the /*done*/ comments.
     * src/config.c:	Remove cfg_free_string
     * src/config.h:	Define a macro cfg_free_string as g_free(a);a=NULL;
     * src/main.c:	Change indent, some cleanups + marking of strings
