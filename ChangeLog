@@ -1,56 +1,57 @@
 28-12-2006 Qball <qball@qballcow.nl>
+    * src/main.c:	Change indent, some cleanups + marking of strings
     * src/id3info.c:	Hide notebook tabs when not valid.
     * src/id3info.c:	Cleanup the code, re-indent add extra checks etc.
 
 27-12-2006 Qball <qball@qballcow.nl>
-	* glade/gmpc.glade: 	Add Clear buttons	
-	* src/id3info.c:	Add support functions for the clear button	
-	* glade/gmpc.glade:	Remove filechooser buttons
-	* src/id3info.c:	Remove use of filechooser buttons.
-	* src/id3info.c:	Copy lyric save to artist/album.
+    * glade/gmpc.glade: 	Add Clear buttons	
+    * src/id3info.c:	Add support functions for the clear button	
+    * glade/gmpc.glade:	Remove filechooser buttons
+    * src/id3info.c:	Remove use of filechooser buttons.
+    * src/id3info.c:	Copy lyric save to artist/album.
 
 26-12-2006 Qball <qball@qballcow.nl>
-	* configure.ac:	Remove libxml dep
-	* src/Makefile.am: remove libxml dep
-	* src/playlist3-information.c: Change icon to gtk-dialog-info
-	* src/playlist3-file-browser.c:	Fix reupdate again
+    * configure.ac:	Remove libxml dep
+    * src/Makefile.am: remove libxml dep
+    * src/playlist3-information.c: Change icon to gtk-dialog-info
+    * src/playlist3-file-browser.c:	Fix reupdate again
 
 23-12-2006 Qball <Qball@sarine.nl>
-	* src/misc.c:	Optimize mpd_song_markup_escape so it does less
+    * src/misc.c:	Optimize mpd_song_markup_escape so it does less
 	useless alloc's/free's
 
 12-12-2006 Qball <Qball@sarine.nl>
-	* pixmaps/spinner.png: 		Removed
-	* pixmaps/media-artist.svg: 	Removed
-	* pixmaps/media-album.svg: 	Removed
+    * pixmaps/spinner.png: 		Removed
+    * pixmaps/media-artist.svg: 	Removed
+    * pixmaps/media-album.svg: 		Removed
 
 10-12-2006 Qball <Qball@sarine.nl>
-	* src/misc.c: Escape song->file aswell.
-	* src/edit_markup.c: Re-add esf_reload
+    * src/misc.c: Escape song->file aswell.
+    * src/edit_markup.c: Re-add esf_reload
 
 06-12-2006 Qball <qball@sarine.nl>
-	* doc/*: removal of old obsoltete doc's
-	* doc/Manual.txt: updates
-	* doc/images/:	added document images
+    * doc/*: removal of old obsoltete doc's
+    * doc/Manual.txt: updates
+    * doc/images/:	added document images
 
 05-12-2006 Qball <Qball@Sarine.nl>
-	* src/*: Cleanup of old comments, mostly c++ style comments
+    * src/*: Cleanup of old comments, mostly c++ style comments
 
 03-12-2006  Qball <Qball@sarine.nl>
-	* src/main.c:	Add a --clean-cover-db option.
+    * src/main.c:	Add a --clean-cover-db option.
 
 02-12-2006 Qball <Qball@sarine.nl>
-	* glade/*.glade: Replace cms.qballcow.nl sarine.nl
-	* glade/*.glade: Replace qballcow.nl with sarine.nl
-	* po/pl.po:	Update polish translation
+    * glade/*.glade: Replace cms.qballcow.nl sarine.nl
+    * glade/*.glade: Replace qballcow.nl with sarine.nl
+    * po/pl.po:	Update polish translation
 
 29-11-2006 Qball <Qball@qballcow.nl
-	* Changelog: Start using it again. (yeah I know; about time).
-	* src/config1.c: Change printf's to debug_printf's (and include
+    * Changelog: Start using it again. (yeah I know; about time).
+    * src/config1.c: Change printf's to debug_printf's (and include
 	libmpd/debug_printf.h to make this posible.
-	* src/playlist3-metadata.c: Use Replace instead of "play", to make it
+    * src/playlist3-metadata.c: Use Replace instead of "play", to make it
 	more consistent with the rest of gmpc.
-	* src/metadata.[c|h]: Add (void) to the void meta_data_destroy()
+    * src/metadata.[c|h]: Add (void) to the void meta_data_destroy()
 	function argument defenition.
 
 19-12-2005 Qball <Qball@qballcow.nl>
