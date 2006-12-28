@@ -84,4 +84,6 @@ void cfg_free_string(char *string);
 void cfg_remove_class(config_obj *cfg, char *class);
 
 void cfg_do_special_cleanup(config_obj *cfg);
+
+#define cfg_free_string(a)  g_free(a);a=NULL;
 #endif
