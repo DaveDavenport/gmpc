@@ -1,3 +1,6 @@
+29-12-2006 Qball <Qball@qballcow.nl>
+    * src/playlis3-find2-browser.*: Added a improved database search
+
 28-12-2006 Qball <qball@qballcow.nl>
     * src/main.c:	Make the error dialog handle multiple errors in one
     window
