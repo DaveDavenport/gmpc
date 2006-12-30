@@ -55,6 +55,7 @@ gmpcPlugin server_plug = {
 	0,					/** Internal Id */
 	NULL,				/** path to plugin */
 	NULL,				/** init */
+        NULL,                           /** Destroy */
 	NULL,				/** browser ext */
 	&ServerStatusChangedCallback,	/** status changed */
 	&ServerConnectionChangedCallback,	/** connection changed */
@@ -78,19 +79,20 @@ gmpcPrefPlugin connection_gpp = {
 };
 
 gmpcPlugin connection_plug = {
-	"Connection",
-	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL, /* init function */
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	&connection_gpp,
-	NULL,
-	NULL,
-	NULL
+	"Connection",           /* name */
+	{1,1,1},                /* version */
+	GMPC_INTERNALL,         /* type */
+	0,                      /* id */
+        NULL,                   /* path */
+	NULL,                   /* init function */
+	NULL,                   /* destroy function */
+	NULL,                   /* browser */
+	NULL,                   /* status changed */
+	NULL,                   /* connection changed */
+	&connection_gpp,        /* preferences */
+	NULL,                   /* metadata */
+	NULL,                   /* get_enabled */
+	NULL                    /* set_enabled */
 };
 
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */

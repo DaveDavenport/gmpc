@@ -70,6 +70,7 @@ gmpcPlugin tray_icon_plug = {
 	0,
 	NULL,		/* path */
 	&tray_init, 	/*initialize function */
+        NULL,
 	NULL,
 	&TrayStatusChanged,
 	NULL,

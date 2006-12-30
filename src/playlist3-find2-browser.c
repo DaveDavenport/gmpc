@@ -77,15 +77,16 @@ gmpcPlugin find2_browser_plug = {
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL,			/* path*/
-	NULL,			/* init */
-	&find2_browser_gbp,		/* Browser */
-	NULL,			/* status changed */
-	pl3_find2_browser_connection_changed, 		/* connection changed */
-	NULL,		/* Preferences */
-	NULL,			/* MetaData */
-	NULL,
-	NULL
+	NULL,			                /* path*/
+	NULL,			                /* init */
+        NULL,                                   /* Destroy */
+	&find2_browser_gbp,		        /* Browser */
+	NULL,			                /* status changed */
+	pl3_find2_browser_connection_changed, 	/* connection changed */
+	NULL,		                        /* Preferences */
+	NULL,			                /* MetaData */
+	NULL,                                   /* get_enabled */
+	NULL                                    /* set_enabled */
 };
 
 

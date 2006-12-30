@@ -78,15 +78,16 @@ gmpcPlugin current_playlist_plug = {
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL,			/* path*/
-	NULL,			/* init */
-	&current_playlist_gbp,		/* Browser */
-	pl3_current_playlist_status_changed,			/* status changed */
-	NULL, 		/* connection changed */
-	NULL,		/* Preferences */
-	NULL,			/* MetaData */
-	NULL,
-	NULL
+	NULL,			                /* path*/
+	NULL,			                /* init */
+        NULL,                                   /* Destroy */
+	&current_playlist_gbp,		        /* Browser */
+	pl3_current_playlist_status_changed,	/* status changed */
+	NULL, 		                        /* connection changed */
+	NULL,		                        /* Preferences */
+	NULL,			                /* MetaData */
+	NULL,                                   /* get_enabled */
+	NULL                                    /* set_enabled */
 };
 
 

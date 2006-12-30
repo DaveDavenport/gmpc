@@ -110,17 +110,18 @@ gmpcPrefPlugin playlist_gpp = {
 gmpcPlugin playlist_plug = {
 	"Interface",
 	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL, /* initialize */
-	NULL,
-	NULL,
-	&playlist_status_changed,
-	NULL,
-	&playlist_gpp,
-	NULL,
-	NULL,
-	NULL
+	GMPC_INTERNALL,                 /* type */
+	0,                              /*id*/
+        NULL,                           /* path */
+	NULL,                           /* initialize */
+        NULL,                           /* destroy */
+	NULL,                           /* browser */
+	&playlist_status_changed,       /* status changed */
+	NULL,                           /* connection changed */
+	&playlist_gpp,                  /* preference */
+	NULL,                           /* metadata */
+	NULL,                           /* set enable */
+	NULL                            /* get enable */
 };
 
 /* Get the type of the selected row..

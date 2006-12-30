@@ -92,7 +92,7 @@ typedef struct {
 } gmpcMetaDataPlugin;
 
 /* Unique number */
-#define PLUGIN_API_VERSION 14
+#define PLUGIN_API_VERSION 15
 
 /* sturcture */
 typedef struct {
@@ -105,6 +105,7 @@ typedef struct {
 	char			*path;	/* Do not fill in, done by gmpc */
 	/* function gets called on startup */
 	void			(*init)(void);
+        void                    (*destroy)(void);
 	/* Browser Plugins */
 	gmpcPlBrowserPlugin	*browser;
 	/* plugin with one signal for changes on Mpd */

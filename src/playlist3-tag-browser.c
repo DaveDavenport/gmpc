@@ -65,6 +65,7 @@ gmpcPlugin tag_plug = {
 	0,
 	NULL,			/* name*/
 	NULL,			/* init */
+        NULL,                   /* destroy */
 	&tag_gbp,		/* Browser */
 	NULL,			/* status changed */
 	&tag_connection,	/* connection */

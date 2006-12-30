@@ -628,6 +628,15 @@ int main (int argc, char **argv)
      * Clear metadata struct
      */
     meta_data_destroy();
+
+    /* time todo some initialisation of plugins */
+    for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+    {
+        if(plugins[i]->destroy)
+        {
+            plugins[i]->destroy();
+        }
+    }
     /**
      * remove (probly allready done) 
      * the playlist object

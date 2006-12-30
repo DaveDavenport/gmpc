@@ -1,8 +1,10 @@
 30-12-2006 Qball <qball@qballcow.nl>
-    * src/main.c: Change loading order
-    * src/*.c:	Renumber Function keybindings
-    * src/playlist3-find3-browser.*: Added a playlist search.
-    * src/playlist3-find2-browser.c: Use gtk_tree_row_reference to select
+    * src/*:				Update for api
+    * src/plugin.h: 			Change plugin api
+    * src/main.c: 			Change loading order
+    * src/*.c:				Renumber Function keybindings
+    * src/playlist3-find3-browser.*: 	Added a playlist search.
+    * src/playlist3-find2-browser.c: 	Use gtk_tree_row_reference to select
     browser.
     * src/playlist3-find2-browser.c: Cleaned up. Added max search criterias and
     default search on open.

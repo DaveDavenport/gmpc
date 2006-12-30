@@ -53,13 +53,14 @@ gmpcPlugin metab_plugin = {
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL, /* parth */
-	NULL, /*init */
-	&info2_gbp,
-	NULL, /* status changed */
-	NULL, /* connection changed */
-	NULL,
-	NULL, /* cover */
+	NULL,                   /* parth */
+	NULL,                   /* init */
+        NULL,                   /* Destroy */
+	&info2_gbp,             /* Browser */
+	NULL,                   /* status changed */
+	NULL,                   /* connection changed */
+	NULL,                   /* Preferences */
+	NULL,                   /* cover */
 	info2_get_enabled,
 	info2_set_enabled
 };

@@ -36,6 +36,7 @@ gmpcPlugin url_plugin = {
 	0,  	/* plugin id */
 	NULL,   /* path to plugin */
 	NULL,   /* initialization */
+        NULL,   /* Destroy */
 	&url_gpb, /* browser intergration */
 	NULL,	/* status changed */
 	NULL,	/* connection changed */

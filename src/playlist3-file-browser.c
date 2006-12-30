@@ -83,15 +83,16 @@ gmpcPlugin file_browser_plug = {
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL,			/* path*/
-	NULL,			/* init */
-	&file_browser_gbp,		/* Browser */
-	pl3_file_browser_status_changed,			/* status changed */
-	pl3_file_browser_connection_changed, 		/* connection changed */
-	NULL,		/* Preferences */
-	NULL,			/* MetaData */
-	NULL,
-	NULL
+	NULL,			                /* path*/
+	NULL,			                /* init */
+        NULL,                                   /* destroy */
+	&file_browser_gbp,		        /* Browser */
+	pl3_file_browser_status_changed,        /* status changed */
+	pl3_file_browser_connection_changed, 	/* connection changed */
+	NULL,		                        /* Preferences */
+	NULL,			                /* MetaData */
+	NULL,                                   /* get enable */
+	NULL                                    /* set enable */
 };
 
 

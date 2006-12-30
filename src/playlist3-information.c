@@ -46,8 +46,9 @@ gmpcPlugin info3_plugin = {
 	{0,0,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
-	NULL, /* parth */
+	NULL, /* path */
 	NULL, /*init */
+        NULL, /* Destroy */
 	&info3_gbp,
 	NULL, /* status changed */
 	NULL, /* connection changed */

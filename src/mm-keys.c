@@ -538,20 +538,22 @@ gmpcPrefPlugin mmkeys_gpp = {
 	mmkeys_pref_destroy
 };
 
-gmpcPlugin mmkeys_plug = {
+gmpcPlugin mmkeys_plug = 
+ {
 	"Multimedia Keys",
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	&mmkeys_gpp,
-	NULL,
-	NULL,
-	NULL
+	NULL,           /* path */
+	NULL,           /* init */
+	NULL,           /* Destroy */
+	NULL,           /* browser ext */
+	NULL,           /* status changed */
+        NULL,           /* connection changed */
+	&mmkeys_gpp,    /* preferences */
+	NULL,           /* metadata */
+	NULL,           /* get_enable*/
+	NULL            /* set enable */
 };
 
 static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_string, gpointer data)
