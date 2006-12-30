@@ -1046,7 +1046,7 @@ static void pl3_artist_browser_activate()
 	/**
 	 * Fix this to be nnot static
 	 */	
-	GtkTreePath *path = gtk_tree_path_new_from_string("2"); 
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref); 
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);
@@ -1078,7 +1078,7 @@ static void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpoin
 }
 static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-	if (event->keyval == GDK_F3)
+	if (event->keyval == GDK_F4)
 	{
 		pl3_artist_browser_activate();
 		return TRUE;

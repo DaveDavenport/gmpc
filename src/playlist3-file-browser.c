@@ -34,7 +34,6 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 
-static void pl3_file_browser_activate();
 static void pl3_file_browser_add(GtkWidget *cat_tree);
 static void pl3_file_browser_unselected(GtkWidget *container);
 static void pl3_file_browser_selected(GtkWidget *container);
@@ -1096,7 +1095,7 @@ static void pl3_file_browser_activate(void)
 	/**
 	 * Fix this to be nnot static
 	 */	
-	GtkTreePath *path = gtk_tree_path_new_from_string("1"); 
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref); 
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);
@@ -1135,7 +1134,7 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 }	
 static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-	if (event->keyval == GDK_F2)
+	if (event->keyval == GDK_F3)
 	{
 		pl3_file_browser_activate();
 		return TRUE;

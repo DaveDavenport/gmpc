@@ -73,7 +73,7 @@ gmpcPlBrowserPlugin find2_browser_gbp = {
 };
 
 gmpcPlugin find2_browser_plug = {
-	"File Browser",
+	"Database Search Browser",
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
@@ -389,7 +389,11 @@ static unsigned long pl3_find2_browser_view_browser()
         }
     }
     if(!found)
+    {
+        cfg_free_string(markdata); 
         return 0;
+    }
+
     data = mpd_database_search_commit(connection);
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
     while (data != NULL)
@@ -455,7 +459,13 @@ static unsigned long pl3_find2_browser_view_browser()
 
 static void pl3_find2_browser_search()
 {
-    pl3_find2_browser_view_browser();
+    long unsigned time = 0;
+    gchar *string;	
+    gtk_list_store_clear(pl3_find2_store);
+    time = pl3_find2_browser_view_browser();
+    string = format_time(time);
+    gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
+    q_free(string);
     return;	
 }
 
@@ -477,28 +487,15 @@ static void pl3_find2_browser_show_info()
         do
         {
             GtkTreeIter iter;
-
+            mpd_Song *song =NULL;
+            char *path;
             GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
-            int type,id;
             gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-            gtk_tree_model_get (model, &iter, PL3_FIND2_TYPE, &type,-1);
-            if(type == PL3_CUR_PLAYLIST)
-            {
-                gtk_tree_model_get(model,&iter,PL3_FIND2_PID, &id,-1);
-                call_id3_window (id);
-            }
-            else
-            {
-                mpd_Song *song =NULL;
-                char *path;
-                gtk_tree_model_get(model,&iter,PL3_FIND2_PATH, &path,-1);
-                song = mpd_database_get_fileinfo(connection, path);
-                if(song)
-                    call_id3_window_song(song); 
-
-
-                q_free(path);
-            }
+            gtk_tree_model_get(model,&iter,PL3_FIND2_PATH, &path,-1);
+            song = mpd_database_get_fileinfo(connection, path);
+            if(song)
+                call_id3_window_song(song); 
+            q_free(path);
         }
         while ((list = g_list_previous (list)) && mpd_check_connected(connection));
         /* free list */
@@ -512,41 +509,23 @@ static void pl3_find2_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
     GtkTreeIter iter;
     gchar *song_id;
     gint r_type;
-    int id=-1;
     gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
     gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND2_PATH,&song_id, PL3_FIND2_TYPE, &r_type, -1);
-    switch(r_type)
     {
-        case PL3_CUR_PLAYLIST:
-
-            gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND2_PID,&id, -1);
-            mpd_player_play_id(connection, id);
-            break;
-        default:
-            {
-                int playlist_length = mpd_playlist_get_playlist_length(connection);
-                pl3_push_statusbar_message(_("Added a song"));
-                /*		mpd_playlist_add(connection, song_id);
-
-                                if(playlist_length == 0)
-                                {
-                                mpd_player_play(connection);
-                                }
-                                */
-                if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
-                    int songid = mpd_playlist_add_get_id(connection, song_id);
-                    if(songid >= 0) {
-                        mpd_player_play_id(connection, songid);
-                    }
-                } else{
-                    mpd_playlist_add(connection, song_id);
-                    if(playlist_length == 0)
-                    {
-                        mpd_player_play(connection);
-                    }
-                }
+        int playlist_length = mpd_playlist_get_playlist_length(connection);
+        pl3_push_statusbar_message(_("Added a song"));
+        if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+            int songid = mpd_playlist_add_get_id(connection, song_id);
+            if(songid >= 0) {
+                mpd_player_play_id(connection, songid);
             }
-            break;
+        } else{
+            mpd_playlist_add(connection, song_id);
+            if(playlist_length == 0)
+            {
+                mpd_player_play(connection);
+            }
+        }
     }
 
     q_free(song_id);
@@ -700,7 +679,7 @@ static void pl3_playlist_search()
 
     if(pl3_xml)
     {
-	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find2_ref);
+        GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find2_ref);
         GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
         gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
         gtk_tree_selection_select_path(sel, path);
@@ -733,7 +712,7 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
 
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-    if (event->keyval == GDK_F4)
+    if (event->keyval == GDK_F5)
     {
         pl3_find2_browser_activate();
         return TRUE;

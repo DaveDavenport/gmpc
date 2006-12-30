@@ -1530,7 +1530,7 @@ static int info2_add_go_menu(GtkWidget *menu)
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
 	/** Global keybinding */
-	if (event->keyval == GDK_F5)
+	if (event->keyval == GDK_F7)
 	{
 		info2_activate();
 		info2_fill_view();
