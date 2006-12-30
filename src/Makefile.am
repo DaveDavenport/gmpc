@@ -18,8 +18,8 @@ gmpc_SOURCES=\
 	playlist3-file-browser.c\
 	playlist3-current-playlist-browser.c\
 	playlist3-artist-browser.c\
-	playlist3-find-browser.c\
 	playlist3-find2-browser.c\
+	playlist3-find3-browser.c\
 	playlist3-metadata-browser.c\
 	playlist3-information.c\
 	playlist-list.c\
@@ -106,8 +106,8 @@ EXTRA_DIST = 	playlist3.h\
 		playlist3-file-browser.h\
 		playlist3-current-playlist-browser.h\
 		playlist3-artist-browser.h\
-		playlist3-find-browser.h\
 		playlist3-find2-browser.h\
+		playlist3-find3-browser.h\
 		playlist-list.h\
 		bacon-volume.h\
 		sm.h\
