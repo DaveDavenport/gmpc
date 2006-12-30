@@ -1,4 +1,6 @@
 30-12-2006 Qball <qball@qballcow.nl>
+    * src/playlist3-find2-browser.c: Use gtk_tree_row_reference to select
+    browser.
     * src/playlist3-find2-browser.c: Cleaned up. Added max search criterias and
     default search on open.
     * src/plugin.c: Removed Markup from error messages.

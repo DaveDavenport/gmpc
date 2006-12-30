@@ -97,6 +97,8 @@ typedef struct {
 
 
 
+/* Playlist window row reference */
+static GtkTreeRowReference *pl3_find2_ref = NULL;
 
 
 extern GladeXML *pl3_xml;
@@ -331,6 +333,7 @@ static void pl3_find2_browser_unselected(GtkWidget *container)
 /* add's the toplevel entry for the current playlist view */
 static void pl3_find2_browser_add(GtkWidget *cat_tree)
 {
+    GtkTreePath *path = NULL;
     GtkTreeIter iter;
     gtk_tree_store_append(pl3_tree, &iter, NULL);
     gtk_tree_store_set(pl3_tree, &iter, 
@@ -340,6 +343,17 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
             PL3_CAT_ICON_ID, "gtk-find",
             PL3_CAT_PROC, TRUE,
             PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+
+    if (pl3_find2_ref) {
+        gtk_tree_row_reference_free(pl3_find2_ref);
+        pl3_find2_ref = NULL;
+    }
+
+    path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter);
+    if (path) {
+        pl3_find2_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(playlist3_get_category_tree_store()), path);
+        gtk_tree_path_free(path);
+    }
 }
 
 static unsigned long pl3_find2_browser_view_browser()
@@ -664,10 +678,7 @@ static void pl3_find2_browser_activate()
     GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
             glade_xml_get_widget (pl3_xml, "cat_tree"));
 
-    /**
-     * Fix this to be nnot static
-     */	
-    GtkTreePath *path = gtk_tree_path_new_from_string("3"); 
+    GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find2_ref);
     if(path)
     {
         gtk_tree_selection_select_path(selec, path);
@@ -689,9 +700,9 @@ static void pl3_playlist_search()
 
     if(pl3_xml)
     {
-        gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-        GtkTreePath *path = gtk_tree_path_new_from_string("3");
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find2_ref);
         GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+        gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
         gtk_tree_selection_select_path(sel, path);
         gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
         gtk_tree_path_free(path);
