@@ -666,29 +666,6 @@ static void pl3_find2_browser_activate()
     }
 }
 
-/**
- * Trigger Playlist search
- * This switches to the search window set focus on entry and set searh on playlist.
- * TODO: Move to search plugin?
- */
-static void pl3_playlist_search()
-{
-    if(!mpd_check_connected(connection))
-    {
-        return;
-    }
-
-    if(pl3_xml)
-    {
-        GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find2_ref);
-        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-        gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-        gtk_tree_selection_select_path(sel, path);
-        gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-        gtk_tree_path_free(path);
-    }
-}
-
 static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
 {
     GtkWidget *item = NULL;
@@ -718,11 +695,6 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
         pl3_find2_browser_activate();
         return TRUE;
     }                                           	
-    else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
-    {
-        pl3_playlist_search();
-        return TRUE;
-    }
 
     return FALSE;
 }

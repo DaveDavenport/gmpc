@@ -133,10 +133,7 @@ static void pl3_find3_fill_combo()
     int i=0, max = 3;
     gtk_list_store_clear(pl3_find3_combo_store);
 
-    if(mpd_server_check_version(connection,0,12,0))
-    {
-        max = MPD_TAG_NUM_OF_ITEM_TYPES;
-    }
+    max = MPD_TAG_NUM_OF_ITEM_TYPES;
     for(i=0;i< max;i++)
     {
         gtk_list_store_append(pl3_find3_combo_store, &iter);
@@ -710,7 +707,23 @@ static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
     }                                           	
     else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
     {
+        GList *node;
         pl3_playlist_search();
+        crit3_struct *cs;
+        while(criterias3 && g_list_length(criterias3) > 1)
+        {
+            cs = criterias3->data;
+            criterias3 = g_list_remove(criterias3, cs);
+            gtk_widget_destroy(cs->hbox);
+            q_free(cs);
+        }
+        if(!criterias3)
+        {
+            pl3_find3_browser_add_crit();
+        } 
+        cs = criterias3->data;
+        gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), MPD_TAG_ITEM_ANY); 
+        gtk_widget_grab_focus(cs->entry);
         return TRUE;
     }
     return FALSE;
