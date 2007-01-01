@@ -204,12 +204,15 @@ Ctrl- '+'	<<X22,Expand interface>>
 Ctrl- -		<<X22,Collapse interface>>
 Keypad +	<<X22,Expand interface>>
 Keypad - 	<<X22,Collapse interface>>
-F1		Go to <<X30,'the current playlist'>>
-F2		Go to <<X40, 'the File browser'>>
-F3		Go to <<X50, 'the Artist browser'>>
-F4		Go to <<X60, 'the search browser'>>
-F5		Go to the meta browser
+F1		Go to <<X30, 'the current playlist'>>
+F2              Go To <<X35, 'the playlist search browser'>>
+Ctrl- j         Goes to <<X35, 'the playlist search browser'>> and allows you to directly type in a search.
+F3		Go to <<X40, 'the File browser'>>
+F4		Go to <<X50, 'the Artist browser'>>
+F5		Go to <<X60, 'the database search browser'>>
 F6		Go to the Information view
+F7		Go to the meta browser
+
 ------------------------------
 
 [[X22]]
@@ -242,22 +245,100 @@ image::images/gmpc-tiny-size.png["Tiny mode"]
 [[X30]]
 Current Playlist
 ----------------
+
+image::images/gmpc-mainwindow-playing.png["Gmpc showing the 'current playlist' browser"]
+
+Moving songs around
+~~~~~~~~~~~~~~~~~~~
+You can drag and drop songs in the playlist by selecting them and 'dragging' them to the new location. At the moment this is only posssible for one song at the time, due to limitations in gtk.
+
+
+Column Selector
+~~~~~~~~~~~~~~~
+From the right mouse menu on the current playlist you can open the column selector.
+
+image::images/current-playlist-column.png["Column Selector"]
+
+The column selector lets you enable,disable and move columns around. 
+
+TIP: You can also move columns directly in the browser by dragging them around.
+
+Context Menu
+~~~~~~~~~~~~
+
+When right clicking on gmpc, you get a small context menu with the following options:
+
+[frame="all",grid="all"]
+`---------------`------------------------
+ Action		 Result
+--------------------------------------
+Remove		Removes the selected songs
+Crop		Removes all, but the selected songs
+Clear		Clears the playlist
+Shuffle		Shuffles the order of the playlist
+Information	Shows the song information of the selected songs
+Column		Opens the column selector
+-------------------------------------
+
+Option Menu
+~~~~~~~~~~~
+
+You can get to the option menu by right clicking on the 'browser selector' or selecting 'option' from the menu bar.
+
+[frame="all",grid="all"]
+`---------------`------------------------
+ Action		 Result
+--------------------------------------
+Save		Saves the current playlist
+Clear		Clears the playlist
+Add Url		Opens the add url window, that allows you to add a stream to the playlist
+-------------------------------------
+
+NOTE: Plugins are allowed to add entries to the option menu.
+
+Keybindings
+~~~~~~~~~~~
+The keybindings will only work when the input focus is on the current playlist browser.
+
+.Keybindings Current Playlist:
+[frame="all",grid="all"]
+`---------------`----------------------------------------
+Key combination	Command
+---------------------------------------------------------
+Del     	Delete the currently selected songs 
+Enter		Play the first selected song
+Alt - i		Show song info about the selected songs
+Space		Show and select the current song
+Any character	Start a search as  you type.
+---------------------------------------------------------
+
+TIP: If you don't want to view metadata in columns, you can return to the 'old' behauviour by selecting 'Markup' in the column-selector. Then you can change this markup in the preferences window.
+
+[[X35]]
+Playlist Search Browser 
+-----------------------
+
 Keybindings:
+
 
 [[X40]]
 File Browser
 ------------
+
 Keybindings:
+
 
 [[X50]]
 Artist Browser
 --------------
 Keybindings:
 
+
 [[X60]]
-Search Browser
---------------
+Database Search Browser
+-----------------------
 Keybindings:
+
 
 [[X100]]
 Advanced features
