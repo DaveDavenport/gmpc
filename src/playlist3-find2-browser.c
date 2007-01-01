@@ -270,6 +270,7 @@ static void pl3_find2_browser_init()
     gtk_box_pack_end(GTK_BOX(pl3_find2_vbox), pl3_find2_sw, TRUE, TRUE,0);
 
     /* pom */
+	GtkWidget *frame = gtk_frame_new(NULL);
     GtkWidget *event = gtk_event_box_new();
     GtkWidget *vbox = gtk_vbox_new(FALSE,6);
     GtkWidget *label = gtk_label_new("");
@@ -300,7 +301,9 @@ static void pl3_find2_browser_init()
 
     /* add it */
     gtk_container_add(GTK_CONTAINER(event), vbox);
-    gtk_box_pack_start(GTK_BOX(pl3_find2_vbox), event, FALSE, TRUE,0);
+	gtk_container_add(GTK_CONTAINER(frame), event);
+    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_ETCHED_IN);
+    gtk_box_pack_start(GTK_BOX(pl3_find2_vbox), frame, FALSE, TRUE,0);
 
     gtk_widget_show_all(pl3_find2_vbox);
     g_object_ref(G_OBJECT(pl3_find2_vbox));
