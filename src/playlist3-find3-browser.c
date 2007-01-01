@@ -457,10 +457,9 @@ static unsigned long pl3_find3_browser_view_browser()
                             if(song->composer&& (cs->tag_type == MPD_TAG_ITEM_COMPOSER|| cs->tag_type == MPD_TAG_ITEM_ANY)){
                                 if(regexec(&(cs->preq),song->composer,0,NULL,0) == 0)loop = FALSE; 
                             }
-                            /*                            if(song->performer&& (cs->tag_type == MPD_TAG_ITEM_PERFORMER||cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                                          if(regexec(&(cs->preq),song->performer,0,NULL,0) == 0)loop = FALSE; 
-                                                          }
-                                                          */                  
+							if(song->performer&& (cs->tag_type == MPD_TAG_ITEM_PERFORMER||cs->tag_type == MPD_TAG_ITEM_ANY)){
+								if(regexec(&(cs->preq),song->performer,0,NULL,0) == 0)loop = FALSE; 
+							}
                             if(song->comment&& (cs->tag_type == MPD_TAG_ITEM_COMMENT||cs->tag_type == MPD_TAG_ITEM_ANY)){
                                 if(regexec(&(cs->preq),song->comment,0,NULL,0) == 0)loop = FALSE; 
                             }                                                                        
@@ -710,7 +709,6 @@ static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
     }                                           	
     else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
     {
-        GList *node;
         pl3_playlist_search();
         crit3_struct *cs;
         while(criterias3 && g_list_length(criterias3) > 1)
