@@ -28,7 +28,6 @@
 #include "misc.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
-#include "playlist3-find-browser.h"
 #include "playlist3-file-browser.h"
 #include "playlist3-artist-browser.h"
 #include "playlist3-current-playlist-browser.h"

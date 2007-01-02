@@ -28,7 +28,7 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
-#include "playlist3-find-browser.h"
+#include "playlist3-find3-browser.h"
 #include "config1.h"
 #include "id3info.h"
 
