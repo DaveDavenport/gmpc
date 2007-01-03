@@ -1,4 +1,4 @@
-REVISION=$(shell svn info | grep "Last Changed Rev" | awk -F': ' '{ print $$2}')
+REVISION=""
 CONF_VERSION=0
 -include Makefile.config
 
@@ -39,17 +39,8 @@ gmpc_SOURCES=\
 	eggcolumnmodel.c\
 	TreeSearchWidget.c
 
-BUILT_SOURCES= revisiont.h\
-	gmpc-connection.c\
-	gmpc-metaimage.c
+BUILT_SOURCES= revisiont.h
 
-gmpc_connection_SOURCE=gmpc-connection.gob
-gmpc-connection.c: $(gmpc_connection_SOURCE) 
-	$(GOB2) --no-touch-headers $(gmpc_connection_SOURCE) 
-
-gmpc_metaimage_SOURCE=gmpc-metaimage.gob
-gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
-	$(GOB2) --no-touch-headers $(gmpc_metaimage_SOURCE) 
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
