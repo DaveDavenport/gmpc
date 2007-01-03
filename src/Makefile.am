@@ -121,4 +121,5 @@ EXTRA_DIST = 	playlist3.h\
 		TreeSearchWidget.h \
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\
+		revision.h\
 		tray-icon.h
