@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign 1.6
 
-SUBDIRS = src pixmaps glade data po
+SUBDIRS = src pixmaps glade data po doc
 
 EXTRA_DIST=	intltool-extract.in\
 		intltool-update.in\
