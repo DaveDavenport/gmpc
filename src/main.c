@@ -857,7 +857,12 @@ static void init_stock_icons()
     gtk_icon_factory_add (factory, "gmpc-volume", set);
     g_object_unref (G_OBJECT (pb));
 
-
+	path = gmpc_get_full_image_path("gmpc-add-url.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+    q_free(path);
+    set = gtk_icon_set_new_from_pixbuf (pb);              	
+    gtk_icon_factory_add (factory, "gmpc-add-url", set);
+    g_object_unref (G_OBJECT (pb));
 
     gtk_icon_factory_add_default (factory);
 }

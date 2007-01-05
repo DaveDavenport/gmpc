@@ -1,4 +1,7 @@
- 01-02-2006 Qball <Qball@sarine.nl>
+ 05-01-2007 Qball <Qball@sarine.nl>
+ 	* src/pixmaps: gmpc-add-url.png added
+
+ 02-01-2007 Qball <Qball@sarine.nl>
  	* configure.ac: fix a macro
 	* src/playlist3-find[2|3]-browser.c:	adding border around blue bar.
 	* configure.ac:	Bump to libmpd 0.12.11

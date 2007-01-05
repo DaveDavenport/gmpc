@@ -16,6 +16,7 @@ appicon_DATA =	media-audiofile.png\
 	player-repeat.png\
 	player-shuffle.png\
 	stock_volume.png\
+	gmpc-add-url.png\
 	gmpc-loading-cover.png
 
 EXTRA_DIST = $(appicon_DATA)
