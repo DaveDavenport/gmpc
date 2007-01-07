@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2004-2007 Qball Cow <qball@sarine.nl>
  * Borrowed from Lee Willis <lee@leewillis.co.uk> that
  * Borrowed heavily from code by Jan Arne Petersen <jpetersen@uni-bonn.de>
  *

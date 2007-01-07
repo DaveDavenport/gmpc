@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2004-2007 Qball Cow <qball@sarine.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -151,7 +151,7 @@ char *gmpc_get_full_image_path(char *filename)
 
     /* From a certain version of GTK+ this g_free will be needed, but for now it will free
      * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
+     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
      */
 #if GLIB_CHECK_VERSION(2,8,4)
     q_free(packagedir);
@@ -180,7 +180,7 @@ char *gmpc_get_full_glade_path(char *filename)
 
     /* From a certain version of GTK+ this g_free will be needed, but for now it will free
      * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2005), so it will probably be in glib 2.6.7 and/or 2.8.4
+     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
      */
 #if GLIB_CHECK_VERSION(2,8,4)
     q_free(packagedir);

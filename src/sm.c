@@ -1,5 +1,5 @@
 /* 
- *  Copyright (C) 1999-2006 Qball Cow
+ *  Copyright (C) 1999-2007 Qball Cow
  *
  *  Code copied from gkrellm by <Bill Wilson    billw@gkrellm.net>
  *  Modified by Qball Cow <qball@qballcow.nl>
