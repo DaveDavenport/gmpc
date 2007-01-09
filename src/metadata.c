@@ -327,7 +327,22 @@ static void meta_data_retrieve_thread()
 		if(data->result == META_DATA_FETCHING)
 		{
 			char *path = NULL;
+			char *old = NULL;
 			int i = 0;
+			
+
+			if(data->song->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
+			{
+				gchar **str = g_strsplit(data->song->artist, ",", 2);
+				old = data->song->artist;
+				if(str[1]) {
+					data->song->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
+				}else{
+					data->song->artist = g_strdup(old);
+				}					
+				g_strfreev(str);
+				debug_printf(DEBUG_INFO, "string converted to: '%s'", data->song->artist);
+			}
 			/* 
 			 * Set default return values
 			 * Need to be reset, because of cache fetch
@@ -350,6 +365,11 @@ static void meta_data_retrieve_thread()
 					data->result = meta_plugins[i]->metadata->get_image(data->song, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
+			}
+			if(old)
+			{
+				g_free(data->song->artist);
+				data->song->artist = old;
 			}
 
 		}

@@ -1,3 +1,6 @@
+09-01-2007 Qball <Qball@sarine.nl>
+	* src/metadata.c: Add an option to rename 'Jones, Norah' to 'Norah Jones'
+
  05-01-2007 Qball <Qball@sarine.nl>
  	* src/pixmaps: gmpc-add-url.png added
 
