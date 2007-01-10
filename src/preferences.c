@@ -187,10 +187,10 @@ void create_preferences_window()
 	}
 
 	label = glade_xml_get_widget(xml_preferences_window, "plugin_label_box");
-	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->bg[GTK_STATE_SELECTED]);
-	label = glade_xml_get_widget(xml_preferences_window, "plugin_label");
+	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->light[GTK_STATE_SELECTED]);
+/*	label = glade_xml_get_widget(xml_preferences_window, "plugin_label");
 	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &dialog->style->fg[GTK_STATE_SELECTED]);
-	glade_xml_signal_autoconnect(xml_preferences_window);	
+*/	glade_xml_signal_autoconnect(xml_preferences_window);	
 
 }
 

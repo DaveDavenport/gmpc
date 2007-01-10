@@ -1,3 +1,6 @@
+10-01-2007 Qball <Qball@Sarine.nl>
+	* src/preferences.c:	Changed the background to a lighter color
+
 09-01-2007 Qball <Qball@sarine.nl>
 	* src/metadata.c: Add an option to rename 'Jones, Norah' to 'Norah Jones'
 
