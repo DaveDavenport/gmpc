@@ -10,7 +10,7 @@ config_obj *cover_index= NULL;
 int meta_num_plugins=0;
 gmpcPlugin **meta_plugins = NULL;
 
-
+GThread *meta_thread = NULL;
 /**
  * This is queue is used to send commands to the retrieval queue
  */
@@ -297,6 +297,11 @@ static void meta_data_retrieve_thread()
 		 */
 		
 		data = g_async_queue_pop(meta_commands);	
+		/* check if quit signal */
+		if(data->id == 0)
+		{
+			return;
+		}
 		g_mutex_lock(meta_processing);
 		/* 
 		 * Set default return values
@@ -484,7 +489,7 @@ void meta_data_init()
 	/**
 	 * Create the retrieval thread
 	 */
-	g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, FALSE, NULL);
+	meta_thread = g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, TRUE, NULL);
 	/**
 	 * Set a timer on checking the results
 	 * for now every 250 ms?
@@ -680,6 +685,21 @@ void meta_data_check_plugin_changed()
 
 void meta_data_destroy(void)
 {
+	meta_thread_data *mtd = NULL;
 	cfg_close(cover_index);
+	if(meta_thread)
+	{
+		debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
+		/* Create the quiet signal, this is just an empty request with id 0 */
+		mtd = g_malloc0(sizeof(*mtd));
+		mtd->id = 0;
+		/* push the request to the thread */
+		g_async_queue_push(meta_commands, mtd);
+		/* wait for the thread to finish */
+		g_thread_join(meta_thread);
+		/* cleanup */
+		g_free(mtd);
+		debug_printf(DEBUG_INFO,"Done..");
+	}
 }
 

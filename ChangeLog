@@ -1,3 +1,6 @@
+25-01-2007 Qball <Qball@sarine.nl>
+	* src/metadata.h:	Make gmpc wait for the meta_thread to finish.
+
 10-01-2007 Qball <Qball@Sarine.nl>
 	* src/preferences.c:	Changed the background to a lighter color
 
