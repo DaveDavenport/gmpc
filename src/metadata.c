@@ -686,20 +686,30 @@ void meta_data_check_plugin_changed()
 void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
-	cfg_close(cover_index);
+
 	if(meta_thread)
 	{
 		debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
+		/* remove old stuff */
+		g_async_queue_lock(meta_commands);
+		while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
+		{
+			mpd_freeSong(mtd->song);
+                        q_free(mtd);
+		}
 		/* Create the quiet signal, this is just an empty request with id 0 */
+		
 		mtd = g_malloc0(sizeof(*mtd));
 		mtd->id = 0;
 		/* push the request to the thread */
-		g_async_queue_push(meta_commands, mtd);
+		g_async_queue_push_unlocked(meta_commands, mtd);
+		g_async_queue_unlock(meta_commands);
 		/* wait for the thread to finish */
 		g_thread_join(meta_thread);
 		/* cleanup */
 		g_free(mtd);
 		debug_printf(DEBUG_INFO,"Done..");
 	}
+	cfg_close(cover_index);
 }
 
