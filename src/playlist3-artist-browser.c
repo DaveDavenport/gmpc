@@ -995,6 +995,20 @@ static int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tre
 {
 	if(type == artist_browser_plug.id)
 	{
+		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreePath *path = NULL;
+		GtkTreeModel *model = NULL;
+		GtkTreeIter iter;
+		/* check if the right item */
+		if(!gtk_tree_selection_get_selected(selec, &model, &iter))
+			return 0;
+		path = gtk_tree_model_get_path(model, &iter);
+		if(gtk_tree_path_get_depth(path) == 1){
+			gtk_tree_path_free(path);
+			return 0;
+		}
+		gtk_tree_path_free(path);
+
 		/* here we have:  Add. Replace*/
 		GtkWidget *item;
 		/* add the add widget */
