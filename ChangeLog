@@ -1,3 +1,5 @@
+26-01-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3-file-browser.c: hopefully fix stupid bug again.
 25-01-2007 Qball <Qball@sarine.nl>
 	* src/metadata.h:	Make gmpc wait for the meta_thread to finish.
 

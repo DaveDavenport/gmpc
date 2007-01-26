@@ -330,8 +330,12 @@ static void pl3_file_browser_reupdate()
 		{
 			GtkTreeSelection *sel= gtk_tree_view_get_selection(playlist3_get_category_tree_view());
 			gtk_tree_selection_select_iter(sel, &iter);
-/*			pl3_file_browser_view_folder(&iter);*/
-		}
+
+/*			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
+			{
+*/				pl3_file_browser_view_folder(&iter);
+/*			}
+*/		}
 		gtk_tree_path_free(path);
 /*		pl3_file_browser_activate();*/
 	}
