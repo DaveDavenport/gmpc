@@ -620,6 +620,7 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_GENRE] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_NAME] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_COMPOSER] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_PERFORMER]= G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_DATE] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
@@ -882,6 +883,9 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 			break;
 		case PLAYLIST_LIST_COL_SONG_COMPOSER:
 			g_value_set_string(value, song->composer);
+			break;
+		case PLAYLIST_LIST_COL_SONG_PERFORMER:
+			g_value_set_string(value, song->performer);
 			break;
 		case PLAYLIST_LIST_COL_SONG_DATE:
 			g_value_set_string(value, song->date);

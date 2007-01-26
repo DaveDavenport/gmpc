@@ -269,7 +269,7 @@ static void pl3_current_playlist_browser_init()
 	}
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_GENRE));
 	columns[PL_COLUMN_GENRE] = column;
-
+	/* Composer column */
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Composer"), PLAYLIST_LIST_COL_SONG_COMPOSER,-1);
 	sprintf(smallstring,"%i", PL_COLUMN_COMPOSER);
 	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
@@ -278,7 +278,15 @@ static void pl3_current_playlist_browser_init()
 	}                                                                                                     	
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_COMPOSER));
 	columns[PL_COLUMN_COMPOSER] = column;
-
+	/* Performer Column */
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Performer"), PLAYLIST_LIST_COL_SONG_PERFORMER,-1);
+	sprintf(smallstring,"%i", PL_COLUMN_PERFORMER);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
+	{
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}                                                                                                     	
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_PERFORMER));
+	columns[PL_COLUMN_PERFORMER] = column;
 
 	/**
 	 * Track length column

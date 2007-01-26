@@ -548,6 +548,14 @@ static void set_text (GList * node)
     }                                                                                                      	
 
 
+    if (song->performer != NULL)
+    {
+        gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "performer_label")), song->performer);
+    }
+    else
+    {
+        gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "performer_label")), "");
+    }
     if (song->composer != NULL)
     {
         gtk_label_set_text (GTK_LABEL(glade_xml_get_widget(xml_id3_window, "composer_label")), song->composer);
