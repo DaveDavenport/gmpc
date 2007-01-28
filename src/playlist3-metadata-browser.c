@@ -560,6 +560,15 @@ static void info2_fill_song_view(char *path)
 		info2_add_table_item(table2,_("<b>Track:</b>"),song->track,i);
 		i++;
 	}
+	if(song->composer) {
+		info2_add_table_item(table2,_("<b>Composer:</b>"),song->composer,i);
+		i++;
+	}
+	if(song->performer) {
+		info2_add_table_item(table2,_("<b>Performer:</b>"),song->performer,i);
+		i++;
+	}
+
 	if(song->file) {
 		/*** Dirname */		
 		char *dirname = g_path_get_dirname(song->file);
