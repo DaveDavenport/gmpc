@@ -1,7 +1,7 @@
 26-01-2007 Qball <Qball@Sarine.nl>
-	* src/id3info.c:				Add some performer code.
-	* src/playlist-list.c:			Adding performer support.
-	* src/playlist3-file-browser.c: hopefully fix stupid bug again.
+    * src/id3info.c:				Add some performer code.
+    * src/playlist-list.c:			Adding performer support.
+    * src/playlist3-file-browser.c: hopefully fix stupid bug again.
 	
 25-01-2007 Qball <Qball@sarine.nl>
 	* src/metadata.h:	Make gmpc wait for the meta_thread to finish.
