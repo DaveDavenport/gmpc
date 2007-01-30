@@ -809,14 +809,22 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 
 	if(song == NULL) {
 		song = mpd_playlist_get_song_from_pos(connection,GPOINTER_TO_INT(iter->user_data));
-
-		PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)] = song;
-		PLAYLIST_LIST(tree_model)->loaded++;
-		if(PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time >0)
+		if(song)
 		{
-			PLAYLIST_LIST(tree_model)->playtime += PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time;
-		}                                             		
-		g_signal_emit(PLAYLIST_LIST(tree_model), playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
+			PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)] = song;
+			PLAYLIST_LIST(tree_model)->loaded++;
+			if(PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time >0)
+			{
+				PLAYLIST_LIST(tree_model)->playtime += PLAYLIST_LIST(tree_model)->playlist[GPOINTER_TO_INT(iter->user_data)]->time;
+			}                                             		
+			g_signal_emit(PLAYLIST_LIST(tree_model), playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
+		}
+		else
+		{
+			/* we have a problem here. */
+			debug_printf(DEBUG_ERROR, "It seems the song we requested doesn't exists anymore.");
+			return;
+		}
 	}	
 
 
