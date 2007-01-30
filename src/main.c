@@ -1013,7 +1013,7 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
             password_dialog(FALSE);
         }
         else {
-
+/*
             GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
                     GTK_DIALOG_MODAL,
                     GTK_MESSAGE_ERROR,
@@ -1023,6 +1023,11 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 
             g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
             gtk_widget_show_all(dialog);
+*/
+			
+            gchar *str = g_strdup_printf(_("The following error occured: %i:'%s'"), error_id, error_msg);
+			show_error_message(str, FALSE);
+			q_free(str);
         }
     }
 }

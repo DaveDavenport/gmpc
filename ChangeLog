@@ -1,3 +1,7 @@
+31-01-2007 Qball <Qball@Sarine.nl>
+	* src/playlist-list.c:	Don't crash if you can't fetch the song.
+	* src/main.c:	Stop error message spammage
+
 26-01-2007 Qball <Qball@Sarine.nl>
     * src/id3info.c:				Add some performer code.
     * src/playlist-list.c:			Adding performer support.
