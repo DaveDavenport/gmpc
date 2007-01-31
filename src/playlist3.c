@@ -776,7 +776,9 @@ static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
 		strpath = gtk_tree_path_to_string(path);
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
-		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,gtk_tree_path_copy(path),-1);
+		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 
+			0,name,
+			1,stock_id,2,gtk_tree_path_copy(path),-1);
 		q_free(strpath);
 		if(name) q_free(name);
 		if(stock_id) q_free(stock_id);
