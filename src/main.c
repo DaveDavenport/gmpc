@@ -215,7 +215,13 @@ int main (int argc, char **argv)
     /* *
      * Set the debug level
      */
-    debug_set_level(DEBUG_ERROR);
+	if(revision && revision[0] != '\0') {
+		/* We run a svn version, so we want more default debug output */
+		debug_set_level(DEBUG_ERROR);
+	} else {
+		/* Ok, release version... no debug */
+		debug_set_level(0);
+	}
 
     /**
      * Setup NLS
