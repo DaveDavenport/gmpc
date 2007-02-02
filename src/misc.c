@@ -270,32 +270,6 @@ screenshot_add_shadow (GdkPixbuf **src)
   g_object_unref (*src);
   *src = dest;
 }
-/*
-void
-screenshot_add_border (GdkPixbuf **src)
-{
-  GdkPixbuf *dest;
-  static ConvFilter *filter = NULL;
-  
-  if (!filter)
-    filter = create_outline_filter (OUTLINE_RADIUS);
-  
-  dest = create_effect (*src, filter, 
-			OUTLINE_RADIUS, OUTLINE_OFFSET, OUTLINE_OPACITY);
-
-  if (dest == NULL)
-	  return;
-
-  gdk_pixbuf_composite (*src, dest,
-			OUTLINE_RADIUS, OUTLINE_RADIUS,
-			gdk_pixbuf_get_width (*src),
-			gdk_pixbuf_get_height (*src),
-			OUTLINE_RADIUS, OUTLINE_RADIUS, 1.0, 1.0,
-			GDK_INTERP_NEAREST, 255);
-  g_object_unref (*src);
-  *src = dest;
-}
-*/
 
 void screenshot_add_border (GdkPixbuf **src)
 {

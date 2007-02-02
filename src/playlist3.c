@@ -80,11 +80,15 @@ int pl3_progress_seek_start(void);
 int pl3_progress_seek_stop(void);
 void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
 void hide_on_close_enable_tb(GtkToggleButton *but);
+void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
 
+/* Old category browser style */
 static int old_type = -1;
 
+/* interface description */
 GladeXML *pl3_xml = NULL;
+/* category treeview-store */
 GtkTreeStore *pl3_tree = NULL;
 
 
@@ -446,6 +450,18 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 /**********************************************************
  * MISC
  */
+void pl3_window_fullscreen(void)
+{
+	GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
+	GdkWindowState state = gdk_window_get_state(win->window);	
+	if(state&GDK_WINDOW_STATE_FULLSCREEN)
+	{
+		gtk_window_unfullscreen(GTK_WINDOW(win));
+	}
+	else{
+		gtk_window_fullscreen(GTK_WINDOW(win));
+	}
+}
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	int i=0;
@@ -473,15 +489,8 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 	 */
 	if(event->keyval == GDK_F12)
 	{
-		GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
-		GdkWindowState state = gdk_window_get_state(win->window);	
-		if(state&GDK_WINDOW_STATE_FULLSCREEN)
-		{
-			gtk_window_unfullscreen(GTK_WINDOW(win));
-		}
-		else{
-			gtk_window_fullscreen(GTK_WINDOW(win));
-		}
+		pl3_window_fullscreen();
+		return TRUE;
 	}
 	/**
 	 * Close the window on ctrl-w
@@ -627,7 +636,7 @@ gboolean pl3_close()
 		if(pl3_zoom < PLAYLIST_SMALL)
 		{
 			cfg_set_single_value_as_int(config, "playlist", "pane-pos", gtk_paned_get_position(
-					GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
+						GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1"))));
 		}
 	}
 
@@ -777,8 +786,8 @@ static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		strpath = gtk_tree_path_to_string(path);
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 
-			0,name,
-			1,stock_id,2,gtk_tree_path_copy(path),-1);
+				0,name,
+				1,stock_id,2,gtk_tree_path_copy(path),-1);
 		q_free(strpath);
 		if(name) q_free(name);
 		if(stock_id) q_free(stock_id);
@@ -1203,16 +1212,16 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
 	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
-/*	if(active)
-	{
+	/*	if(active)
+		{
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
 		gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection,MPD_CST_SONGID,gmpcconn);
-	}
-	else{
+		}
+		else{
 		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), NULL);
 		gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
-	}
-*/
+		}
+		*/
 	gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), active);
 }
 

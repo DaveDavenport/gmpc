@@ -150,7 +150,7 @@ static void pl3_find3_browser_remove_crit(GtkWidget *button,crit3_struct *cs)
 {
     criterias3 = g_list_remove(criterias3, cs);
     gtk_widget_destroy(cs->hbox);
-    g_free(cs);
+    q_free(cs);
     if(!criterias3)
     {
         gtk_widget_set_sensitive(pl3_find3_findbut, FALSE);

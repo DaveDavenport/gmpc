@@ -1,3 +1,7 @@
+01-02-2007 Qball <Qball@Sarine.nl.
+	* src/playlist3.c:	Make pl3_window_fullscreen function.
+	* glade/playlist3.glade:	Add fullscreen menu entry.
+
 31-01-2007 Qball <Qball@Sarine.nl>
 	* src/main.c:	A non-svn version by default no longer displays debug
 	information.
