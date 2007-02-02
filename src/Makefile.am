@@ -92,6 +92,7 @@ gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
 		gmpc_easy_download.h\
+		TreeSearchWidget.h \
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 
@@ -119,7 +120,6 @@ EXTRA_DIST = 	playlist3.h\
 		gmpc-metaimage.h\
 		gmpc-metaimage-private.h\
 		id3info.h\
-		TreeSearchWidget.h \
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\
 		revision.h\

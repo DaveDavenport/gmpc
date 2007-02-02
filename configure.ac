@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [0.13.4],qball@qballcow.nl)
+AM_INIT_AUTOMAKE([gmpc], [0.13.5],qball@qballcow.nl)
 
 # Checks for programs.
 
@@ -10,9 +10,9 @@ AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
 
-AC_ARG_ENABLE(sm,[  --disable-sm            Disable Session Support.],,enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
-AC_ARG_ENABLE(trayicon,[  --disable-trayicon      Disable tray icon support.],,enable_trayicon=yes)
+AC_ARG_ENABLE(sm,	[  --disable-sm            Disable Session Support.],,enable_sm=yes)
+AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
+AC_ARG_ENABLE(trayicon,	[  --disable-trayicon      Disable tray icon support.],,enable_trayicon=yes)
 
 # Checks for libraries.
 
@@ -54,11 +54,6 @@ AC_SUBST(gmodule_CFLAGS)
 PKG_CHECK_MODULES([libmpd], libmpd >= 0.12.11)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
-
-# libxml
-#PKG_CHECK_MODULES([libxml], libxml-2.0)
-#AC_SUBST(libxml_LIBS)
-#AC_SUBST(libxml_CFLAGS)
 
 # libglade
 PKG_CHECK_MODULES([libglade], libglade-2.0)
@@ -168,7 +163,9 @@ else
 	echo "Tray icon support is:			disabled"
 fi
 if test x${enable_sm} = xyes; then
-	echo "Session Manager support is:      	enabled"
+	echo "Session Manager support is:		enabled"
 else
-	echo "Session Manager support is:	   	disabled"
+	echo "Session Manager support is:		disabled"
 fi
+
+echo "Now type make to build"
