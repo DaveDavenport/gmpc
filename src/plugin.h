@@ -92,7 +92,8 @@ typedef struct {
 } gmpcMetaDataPlugin;
 
 /* Unique number */
-#define PLUGIN_API_VERSION 15
+/* 16 == 0.14 release */
+#define PLUGIN_API_VERSION 16
 
 /* sturcture */
 typedef struct {

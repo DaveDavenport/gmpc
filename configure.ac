@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [0.13.5],qball@qballcow.nl)
+AM_INIT_AUTOMAKE([gmpc], [0.13.99],qball@qballcow.nl)
 
 # Checks for programs.
 
@@ -51,7 +51,7 @@ AC_SUBST(gmodule_LIBS)
 AC_SUBST(gmodule_CFLAGS)
 
 # libmpd
-PKG_CHECK_MODULES([libmpd], libmpd >= 0.12.11)
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.12.99)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
