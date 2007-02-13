@@ -18,7 +18,7 @@ Gmpc
 10. Rethink keybindings, is a mess now.
 11. Try to finish help/manual.
 12. Get some artwork redone.
-13. more....
+13. Fix profiles.
 
 Plugins
 -------
