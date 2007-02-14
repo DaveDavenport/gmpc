@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-02-14 22:27+0100\n"
+"POT-Creation-Date: 2007-02-14 23:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -647,7 +647,7 @@ msgid "Please enter your password for: '%s'"
 msgstr ""
 
 #: ../src/main.c:970
-msgid "GMPC has insuffient permissions on the mpd server."
+msgid "GMPC has insufficient permissions on the mpd server."
 msgstr ""
 
 #: ../src/main.c:994 ../src/main.c:1006
