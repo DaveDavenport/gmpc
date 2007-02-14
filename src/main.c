@@ -967,7 +967,7 @@ static void password_dialog(int failed)
         default:
             if(mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
             {
-                show_error_message(_("GMPC has insuffient permissions on the mpd server."),FALSE);
+                show_error_message(_("GMPC has insufficient permissions on the mpd server."),FALSE);
                 mpd_disconnect(connection);
             }
             break;
