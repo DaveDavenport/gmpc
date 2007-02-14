@@ -249,7 +249,7 @@ void cfg_close(config_obj *cfgo)
 	g_mutex_free(cfgo->lock);
 	debug_printf(DEBUG_INFO,"Memory remaining: %i\n", cfgo->total_size);
 	g_free(cfgo);
-        cfgo = NULL;
+	cfgo = NULL;
 }
 static config_node *cfg_new_node()
 {
@@ -637,6 +637,7 @@ void cfg_remove_class(config_obj *cfg, char *class)
 	{
 		__int_cfg_remove_node(cfg, node);
 	}
+	cfg_save(cfg);
 	g_mutex_unlock(cfg->lock);
 }
 static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
