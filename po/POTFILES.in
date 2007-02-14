@@ -18,7 +18,6 @@ src/playlist3-artist-browser.c
 src/playlist3.c
 src/playlist3-current-playlist-browser.c
 src/playlist3-file-browser.c
-src/playlist3-find-browser.c
 src/playlist3-tag-browser.c
 src/playlist-list.c
 src/plugin.c
@@ -30,4 +29,8 @@ src/eggcellrendererkeys.c
 src/gmpc-metaimage.c
 src/gmpc-metaimage.gob
 src/playlist3-metadata-browser.c
+src/playlist3-find2-browser.c
+src/playlist3-find3-browser.c
+src/playlist3-information.c
+src/url_fetcher.c
 
