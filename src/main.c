@@ -626,6 +626,14 @@ int main (int argc, char **argv)
      */
     meta_data_destroy();
 
+	/* time todo some destruction of plugins */
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+	{
+		if(plugins[i]->destroy)
+		{
+			plugins[i]->destroy();
+		}
+	}
 	/**
 	 * Close the config file
 	 */
@@ -636,20 +644,12 @@ int main (int argc, char **argv)
      */
     mpd_free(connection);
 
-	/* time todo some initialisation of plugins */
-	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
-	{
-		if(plugins[i]->destroy)
-		{
-			plugins[i]->destroy();
-		}
-	}
 	/**
 	 * remove (probly allready done) 
 	 * the playlist object
 	 */
 	g_object_unref(playlist);
-
+	/* cleanup curl */
 	curl_global_cleanup();
 	return 0;
 }
