@@ -131,7 +131,10 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
 		q_free(labstr);
-
+		if(cfg_get_single_value_as_int_with_default(config, "Song Information", "auto-expand-lyric", FALSE))
+		{
+			gtk_expander_set_expanded(GTK_EXPANDER(expander), TRUE);
+		}
 		label = gtk_label_new("");
 		ali = gtk_alignment_new(0,0.5,0,0);
 		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
@@ -263,6 +266,29 @@ static void info3_fill_view()
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
+
+	if(song->comment)
+	{
+		vbox = gtk_vbox_new(FALSE, 6);
+		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+		label = gtk_label_new("");
+		markup =  g_markup_printf_escaped ("<b>%s</b>"
+				, _("Comment"));
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		q_free(markup);
+		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE,0);
+		label = gtk_label_new(song->comment);
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+		q_free(markup);
+		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE,0);
+
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
+	}	
+
+
 	/**
 	 * The lyric display
 	 */
@@ -322,7 +348,6 @@ static void info3_fill_view()
 		i++;
 		q_free(dirname);
 	}
-	
 	if(song->artist)
 	{
 		int i=0,items = 0;
