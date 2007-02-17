@@ -1,3 +1,7 @@
+17-02-2007 Qball <Qball@Sarine.nl>
+	* src/main.c:	Change order, so config isn't destroyed before f.e. meta
+	data thread uses it.
+
 01-02-2007 Qball <Qball@Sarine.nl.
 	* src/playlist3.c:	Make pl3_window_fullscreen function.
 	* glade/playlist3.glade:	Add fullscreen menu entry.

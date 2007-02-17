@@ -467,7 +467,7 @@ static gboolean playlist_list_drag_dest_drag_data_received(GtkTreeDragDest *drag
 	{
 		int original = ind2[0];
 		int destination = ind[0];
-//		if(destination >0 && ind[1] != '\0') destination--;
+/*		if(destination >0 && ind[1] != '\0') destination--; */
 		if(destination > original) destination--;
 
 		mpd_playlist_move_pos(connection, original,destination);

@@ -621,36 +621,37 @@ int main (int argc, char **argv)
         bacon_message_connection_free (bacon_connection);
     }
 #endif	
-    /** 
-     * Destroy the connection object 
-     */
-    mpd_free(connection);
-    /**
-     * Close the config file
-     */
-    cfg_close(config);
-    cfg_close(profiles);
     /**
      * Clear metadata struct
      */
     meta_data_destroy();
 
-    /* time todo some initialisation of plugins */
-    for(i=0; i< num_plugins && plugins[i] != NULL;i++)
-    {
-        if(plugins[i]->destroy)
-        {
-            plugins[i]->destroy();
-        }
-    }
-    /**
-     * remove (probly allready done) 
-     * the playlist object
+	/**
+	 * Close the config file
+	 */
+	cfg_close(config);
+	cfg_close(profiles);
+    /** 
+     * Destroy the connection object 
      */
-    g_object_unref(playlist);
+    mpd_free(connection);
 
-    curl_global_cleanup();
-    return 0;
+	/* time todo some initialisation of plugins */
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+	{
+		if(plugins[i]->destroy)
+		{
+			plugins[i]->destroy();
+		}
+	}
+	/**
+	 * remove (probly allready done) 
+	 * the playlist object
+	 */
+	g_object_unref(playlist);
+
+	curl_global_cleanup();
+	return 0;
 }
 
 /**
@@ -658,37 +659,37 @@ int main (int argc, char **argv)
  */
 void main_quit()
 {
-    debug_printf(DEBUG_INFO, "Quiting gmpc....");
-    /**
-     * close playlist and store size
-     */
-    pl3_hide();
-    /**
-     * Remove the autoconnect timeout,
-     */
-    g_source_remove(autoconnect_timeout);
-    /**
-     * destroy the current playlist..
-     */
-    pl3_current_playlist_destroy();
+	debug_printf(DEBUG_INFO, "Quiting gmpc....");
+	/**
+	 * close playlist and store size
+	 */
+	pl3_hide();
+	/**
+	 * Remove the autoconnect timeout,
+	 */
+	g_source_remove(autoconnect_timeout);
+	/**
+	 * destroy the current playlist..
+	 */
+	pl3_current_playlist_destroy();
 
-    /** 
-     * Call the connection changed.
-     * so it saves the playlist pos 
-     */
-    mpd_signal_connect_connection_changed(connection, NULL, NULL);
+	/** 
+	 * Call the connection changed.
+	 * so it saves the playlist pos 
+	 */
+	mpd_signal_connect_connection_changed(connection, NULL, NULL);
 
-    /**
-     * Disconnect when connected
-     */
-    if(mpd_check_connected(connection))
-    {
-        mpd_disconnect(connection);
-    }
-    /**
-     * Exit main loop 
-     */
-    gtk_main_quit();
+	/**
+	 * Disconnect when connected
+	 */
+	if(mpd_check_connected(connection))
+	{
+		mpd_disconnect(connection);
+	}
+	/**
+	 * Exit main loop 
+	 */
+	gtk_main_quit();
 }
 
 /**
@@ -698,179 +699,179 @@ void main_quit()
  */
 static int autoconnect_callback(void)
 {
-    /* check if there is an connection.*/
-    if (!mpd_check_connected(connection)){
-        /* update the popup  */
-        /*
-         * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
-         */
-        if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) 
-            && gmpc_connected && cfg_get_single_value_as_int_with_default(config,"connection","autoconnect",FALSE))
-        {
-            /** updated failed time, if it doesn't fail it will be set to 0
-             * later 
-             */
-            gmpc_failed_tries++;
-            connect_to_mpd ();
+	/* check if there is an connection.*/
+	if (!mpd_check_connected(connection)){
+		/* update the popup  */
+		/*
+		 * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
+		 */
+		if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) 
+				&& gmpc_connected && cfg_get_single_value_as_int_with_default(config,"connection","autoconnect",FALSE))
+		{
+			/** updated failed time, if it doesn't fail it will be set to 0
+			 * later 
+			 */
+			gmpc_failed_tries++;
+			connect_to_mpd ();
 
-        }
-    }
-    /**
-     * keep the timeout running
-     */
-    return TRUE;
+		}
+	}
+	/**
+	 * keep the timeout running
+	 */
+	return TRUE;
 }
 
 static void init_stock_icons()
 {
-    GtkIconFactory *factory;
-    GdkPixbuf *pb;
-    GtkIconSet *set;
-    char *path;
-    factory = gtk_icon_factory_new ();
+	GtkIconFactory *factory;
+	GdkPixbuf *pb;
+	GtkIconSet *set;
+	char *path;
+	factory = gtk_icon_factory_new ();
 
-    /*
-     * add media-audiofile
-     */
-    path = gmpc_get_full_image_path("media-audiofile.png");
-    pb = gdk_pixbuf_new_from_file (path ,NULL);
-    q_free(path);
+	/*
+	 * add media-audiofile
+	 */
+	path = gmpc_get_full_image_path("media-audiofile.png");
+	pb = gdk_pixbuf_new_from_file (path ,NULL);
+	q_free(path);
 
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "media-audiofile", set);
-    g_object_unref (G_OBJECT (pb));
-    /*
-     * add media-stream
-     */
-    path = gmpc_get_full_image_path("media-stream.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "media-audiofile", set);
+	g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media-stream
+	 */
+	path = gmpc_get_full_image_path("media-stream.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
 
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "media-stream", set);
-    g_object_unref (G_OBJECT (pb));
-    /*
-     * add media-artist
-     */
-    path = gmpc_get_full_image_path("media-artist.png");
-    pb = gdk_pixbuf_new_from_file (path,NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "media-artist", set);
-    g_object_unref (G_OBJECT (pb));
-    /*
-     * add media-album
-     */
-    path = gmpc_get_full_image_path("media-album.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "media-album", set);
-    g_object_unref (G_OBJECT (pb));
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "media-stream", set);
+	g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media-artist
+	 */
+	path = gmpc_get_full_image_path("media-artist.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "media-artist", set);
+	g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media-album
+	 */
+	path = gmpc_get_full_image_path("media-album.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "media-album", set);
+	g_object_unref (G_OBJECT (pb));
 
-    /*
-     * add player-shuffle
-     */
-    path = gmpc_get_full_image_path("player-shuffle.png");
-    pb = gdk_pixbuf_new_from_file (path,NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "stock_shuffle", set);
-    g_object_unref (G_OBJECT (pb));
-    /*
-     * add player-repeat
-     */
-    path = gmpc_get_full_image_path("player-repeat.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "stock_repeat", set);
-    g_object_unref (G_OBJECT (pb));
+	/*
+	 * add player-shuffle
+	 */
+	path = gmpc_get_full_image_path("player-shuffle.png");
+	pb = gdk_pixbuf_new_from_file (path,NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "stock_shuffle", set);
+	g_object_unref (G_OBJECT (pb));
+	/*
+	 * add player-repeat
+	 */
+	path = gmpc_get_full_image_path("player-repeat.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "stock_repeat", set);
+	g_object_unref (G_OBJECT (pb));
 
-    /*
-     * add media playlist
-     */
-    path = gmpc_get_full_image_path("media-playlist.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "media-playlist", set);
-    g_object_unref (G_OBJECT (pb));
-
-
-    /*
-     * add media playlist
-     */
-    path = gmpc_get_full_image_path("gmpc.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "gmpc", set);
-    gtk_window_set_default_icon(pb);
-    g_object_unref (G_OBJECT (pb));
-
-    /*
-     * add media playlist
-     */
-    path = gmpc_get_full_image_path("gmpc-tray.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "gmpc-tray", set);
-    g_object_unref (G_OBJECT (pb));
-
-    path = gmpc_get_full_image_path("gmpc-tray-play.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "gmpc-tray-play", set);
-    g_object_unref (G_OBJECT (pb));
-
-    path = gmpc_get_full_image_path("gmpc-tray-pause.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "gmpc-tray-pause", set);
-    g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media playlist
+	 */
+	path = gmpc_get_full_image_path("media-playlist.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "media-playlist", set);
+	g_object_unref (G_OBJECT (pb));
 
 
-    path = gmpc_get_full_image_path("gmpc-tray-disconnected.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);
-    gtk_icon_factory_add (factory, "gmpc-tray-disconnected", set);
-    g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media playlist
+	 */
+	path = gmpc_get_full_image_path("gmpc.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc", set);
+	gtk_window_set_default_icon(pb);
+	g_object_unref (G_OBJECT (pb));
 
-    path = gmpc_get_full_image_path("gmpc-no-cover.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);              	
-    gtk_icon_factory_add (factory, "media-no-cover", set);
-    g_object_unref (G_OBJECT (pb));
+	/*
+	 * add media playlist
+	 */
+	path = gmpc_get_full_image_path("gmpc-tray.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc-tray", set);
+	g_object_unref (G_OBJECT (pb));
+
+	path = gmpc_get_full_image_path("gmpc-tray-play.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc-tray-play", set);
+	g_object_unref (G_OBJECT (pb));
+
+	path = gmpc_get_full_image_path("gmpc-tray-pause.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc-tray-pause", set);
+	g_object_unref (G_OBJECT (pb));
 
 
-    path = gmpc_get_full_image_path("gmpc-loading-cover.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);              	
-    gtk_icon_factory_add (factory, "media-loading-cover", set);  	
-    g_object_unref (G_OBJECT (pb));
+	path = gmpc_get_full_image_path("gmpc-tray-disconnected.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);
+	gtk_icon_factory_add (factory, "gmpc-tray-disconnected", set);
+	g_object_unref (G_OBJECT (pb));
 
-    path = gmpc_get_full_image_path("stock_volume.png");
-    pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);              	
-    gtk_icon_factory_add (factory, "gmpc-volume", set);
-    g_object_unref (G_OBJECT (pb));
+	path = gmpc_get_full_image_path("gmpc-no-cover.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);              	
+	gtk_icon_factory_add (factory, "media-no-cover", set);
+	g_object_unref (G_OBJECT (pb));
+
+
+	path = gmpc_get_full_image_path("gmpc-loading-cover.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);              	
+	gtk_icon_factory_add (factory, "media-loading-cover", set);  	
+	g_object_unref (G_OBJECT (pb));
+
+	path = gmpc_get_full_image_path("stock_volume.png");
+	pb = gdk_pixbuf_new_from_file (path, NULL);
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);              	
+	gtk_icon_factory_add (factory, "gmpc-volume", set);
+	g_object_unref (G_OBJECT (pb));
 
 	path = gmpc_get_full_image_path("gmpc-add-url.png");
 	pb = gdk_pixbuf_new_from_file (path, NULL);
-    q_free(path);
-    set = gtk_icon_set_new_from_pixbuf (pb);              	
-    gtk_icon_factory_add (factory, "gmpc-add-url", set);
-    g_object_unref (G_OBJECT (pb));
+	q_free(path);
+	set = gtk_icon_set_new_from_pixbuf (pb);              	
+	gtk_icon_factory_add (factory, "gmpc-add-url", set);
+	g_object_unref (G_OBJECT (pb));
 
-    gtk_icon_factory_add_default (factory);
+	gtk_icon_factory_add_default (factory);
 }
 
 /**
@@ -880,17 +881,17 @@ static void init_stock_icons()
 
 static void init_playlist_store ()
 {
-    gchar *markup = cfg_get_single_value_as_string_with_default(config,"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
-    /**
-     * Create the (custom) playlist widget 
-     */
-    playlist = (GtkTreeModel *)playlist_list_new();
+	gchar *markup = cfg_get_single_value_as_string_with_default(config,"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
+	/**
+	 * Create the (custom) playlist widget 
+	 */
+	playlist = (GtkTreeModel *)playlist_list_new();
 
-    /**
-     * restore the markup
-     */
-    playlist_list_set_markup((CustomList *)playlist,markup);
-    q_free(markup);
+	/**
+	 * restore the markup
+	 */
+	playlist_list_set_markup((CustomList *)playlist,markup);
+	q_free(markup);
 }
 
 /**
@@ -899,22 +900,22 @@ static void init_playlist_store ()
  */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-    int i;
-    /**
-     * Propagete to the id3 window, so it can update time
-     */
-    id3_status_update();
-    /**
-     * Make the plugins recieve the signals 
-     */
-    for(i=0; i< num_plugins; i++)
-    {
-        if(plugins[i]->mpd_status_changed!= NULL)
-        {
-            plugins[i]->mpd_status_changed(mi,what,NULL);
-        }
-    }
-    gmpc_connection_status_changed(gmpcconn, mi, what);
+	int i;
+	/**
+	 * Propagete to the id3 window, so it can update time
+	 */
+	id3_status_update();
+	/**
+	 * Make the plugins recieve the signals 
+	 */
+	for(i=0; i< num_plugins; i++)
+	{
+		if(plugins[i]->mpd_status_changed!= NULL)
+		{
+			plugins[i]->mpd_status_changed(mi,what,NULL);
+		}
+	}
+	gmpc_connection_status_changed(gmpcconn, mi, what);
 }
 
 
@@ -924,124 +925,124 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
  */
 static void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
 {
-    gtk_widget_destroy(window);
-    g_object_unref(xml_error_window);
-    xml_error_window = NULL;
-    if(response == GTK_RESPONSE_OK)
-    {
-        connect_to_mpd();
-    }
+	gtk_widget_destroy(window);
+	g_object_unref(xml_error_window);
+	xml_error_window = NULL;
+	if(response == GTK_RESPONSE_OK)
+	{
+		connect_to_mpd();
+	}
 }
 
 static void password_dialog(int failed)
 {
-    gchar *path  = NULL;
-    if(xml_password_window) return;
-    path = gmpc_get_full_glade_path("gmpc.glade");
-    xml_password_window = glade_xml_new(path, "password-dialog",NULL);
-    q_free(path);
-    if(!xml_password_window) return;
-    if(failed)
-    {
-        path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),mpd_get_hostname(connection));
-    }
-    else
-    {
-        path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
-    }
-    gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
-    q_free(path);
-    switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
-    {
-        case GTK_RESPONSE_OK:
-            {
-                path = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_password_window, "pass_entry")));
-                mpd_set_password(connection, path);
-                if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_password_window, "ck_save_pass"))))
-                {
-                    connection_set_password(path);				
-                }
-                mpd_send_password(connection);
-            }
-            break;
-        default:
-            if(mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
-            {
-                show_error_message(_("GMPC has insufficient permissions on the mpd server."),FALSE);
-                mpd_disconnect(connection);
-            }
-            break;
-    }
-    gtk_widget_destroy(glade_xml_get_widget(xml_password_window, "password-dialog"));
-    g_object_unref(xml_password_window);
-    xml_password_window = NULL;
+	gchar *path  = NULL;
+	if(xml_password_window) return;
+	path = gmpc_get_full_glade_path("gmpc.glade");
+	xml_password_window = glade_xml_new(path, "password-dialog",NULL);
+	q_free(path);
+	if(!xml_password_window) return;
+	if(failed)
+	{
+		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),mpd_get_hostname(connection));
+	}
+	else
+	{
+		path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
+	}
+	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
+	q_free(path);
+	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
+	{
+		case GTK_RESPONSE_OK:
+			{
+				path = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(xml_password_window, "pass_entry")));
+				mpd_set_password(connection, path);
+				if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_password_window, "ck_save_pass"))))
+				{
+					connection_set_password(path);				
+				}
+				mpd_send_password(connection);
+			}
+			break;
+		default:
+			if(mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
+			{
+				show_error_message(_("GMPC has insufficient permissions on the mpd server."),FALSE);
+				mpd_disconnect(connection);
+			}
+			break;
+	}
+	gtk_widget_destroy(glade_xml_get_widget(xml_password_window, "password-dialog"));
+	g_object_unref(xml_password_window);
+	xml_password_window = NULL;
 }
 
 void send_password()
 {
-    password_dialog(FALSE);
+	password_dialog(FALSE);
 }
 static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
-    int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
-    /* if we are not connected we show a reconnect */
-    if(!mpd_check_connected(mi))
-    {
-        /* no response? then we just ignore it when autoconnecting. */
-        if(error_id == 15 && autoconnect) return;
-        if (xml_error_window == NULL)
-        {
-            gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
-            gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-            xml_error_window = glade_xml_new(path,"error_dialog",NULL);
-            q_free(path);
-            GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
-            gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
-            gtk_widget_show_all(dialog);
-            g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
-            q_free(str);
-        }
-        else
-        {
-            gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
-            gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
-            q_free(str);
-        }
-    }
-    else
-    {
+	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
+	/* if we are not connected we show a reconnect */
+	if(!mpd_check_connected(mi))
+	{
+		/* no response? then we just ignore it when autoconnecting. */
+		if(error_id == 15 && autoconnect) return;
+		if (xml_error_window == NULL)
+		{
+			gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
+			gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+			xml_error_window = glade_xml_new(path,"error_dialog",NULL);
+			q_free(path);
+			GtkWidget *dialog = glade_xml_get_widget(xml_error_window, "error_dialog");
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
+			gtk_widget_show_all(dialog);
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(error_window_destroy), GINT_TO_POINTER(autoconnect));
+			q_free(str);
+		}
+		else
+		{
+			gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
+			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
+			q_free(str);
+		}
+	}
+	else
+	{
 		if(error_id == MPD_ACK_ERROR_NO_EXIST)
 		{
 			/* quick hack so a small playlist out of sync is handled nicer */
 			return;
 		}
-        else if(error_id == MPD_ACK_ERROR_PASSWORD)
-        {
-            password_dialog(TRUE);
-        }
-        else if (error_id == MPD_ACK_ERROR_PERMISSION)
-        {
-            password_dialog(FALSE);
-        }
-        else {
-		gchar *str = g_strdup_printf(_("The following error occured: %i:'%s'"), error_id, error_msg);
-		show_error_message(str, FALSE);
-		q_free(str);
+		else if(error_id == MPD_ACK_ERROR_PASSWORD)
+		{
+			password_dialog(TRUE);
+		}
+		else if (error_id == MPD_ACK_ERROR_PERMISSION)
+		{
+			password_dialog(FALSE);
+		}
+		else {
+			gchar *str = g_strdup_printf(_("The following error occured: %i:'%s'"), error_id, error_msg);
+			show_error_message(str, FALSE);
+			q_free(str);
+		}
 	}
-    }
 }
 
 void connect_callback(MpdObj *mi)
 {
-    if(xml_error_window != NULL)
-    {
-        int autocon = cfg_get_single_value_as_int_with_default(config,
-                "connection",
-                "autoconnect",
-                DEFAULT_AUTOCONNECT);
-        error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
-                GINT_TO_POINTER(autocon));
-    }
+	if(xml_error_window != NULL)
+	{
+		int autocon = cfg_get_single_value_as_int_with_default(config,
+				"connection",
+				"autoconnect",
+				DEFAULT_AUTOCONNECT);
+		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
+				GINT_TO_POINTER(autocon));
+	}
 
 }
 
@@ -1050,54 +1051,54 @@ void connect_callback(MpdObj *mi)
  */
 static void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-    int i=0;
-    /**
-     * send password, first thing we do, if connected 
-     */
-    if(connect)
-    {
-        /* set failed to 0 */
-        gmpc_failed_tries = 0;		
-        if(connection_use_auth())
-        {
-            mpd_send_password(connection);
-        }
-    }	
+	int i=0;
+	/**
+	 * send password, first thing we do, if connected 
+	 */
+	if(connect)
+	{
+		/* set failed to 0 */
+		gmpc_failed_tries = 0;		
+		if(connection_use_auth())
+		{
+			mpd_send_password(connection);
+		}
+	}	
 
-    /**
-     * propegate signals
-     */
-    debug_printf(DEBUG_INFO, "Connection changed\n");
-    playlist_connection_changed(mi, connect);
+	/**
+	 * propegate signals
+	 */
+	debug_printf(DEBUG_INFO, "Connection changed\n");
+	playlist_connection_changed(mi, connect);
 #ifdef ENABLE_TRAYICON
-    tray_icon_connection_changed(mi, connect);
+	tray_icon_connection_changed(mi, connect);
 #endif
-    for(i=0; i< num_plugins; i++)
-    {
-        debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
-        if(plugins[i]->mpd_connection_changed!= NULL)
-        {
-            plugins[i]->mpd_connection_changed(mi,connect,NULL);
-        }
-    }
-    gmpc_connection_connection_changed(gmpcconn, mi, connect);
-    /**
-     * force an update of status
-     */
-    mpd_status_update(mi);
+	for(i=0; i< num_plugins; i++)
+	{
+		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
+		if(plugins[i]->mpd_connection_changed!= NULL)
+		{
+			plugins[i]->mpd_connection_changed(mi,connect,NULL);
+		}
+	}
+	gmpc_connection_connection_changed(gmpcconn, mi, connect);
+	/**
+	 * force an update of status
+	 */
+	mpd_status_update(mi);
 
 
-    if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
-            mpd_check_connected(connection))
-    {
-        if(!mpd_server_check_version(connection, 0,12,0)) {
-            GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-                    GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
-                    _("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
-            g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-            gtk_widget_show(GTK_WIDGET(dialog));
-        }
-    }
+	if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
+			mpd_check_connected(connection))
+	{
+		if(!mpd_server_check_version(connection, 0,12,0)) {
+			GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
+					GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
+					_("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+			gtk_widget_show(GTK_WIDGET(dialog));
+		}
+	}
 }
 
 
@@ -1107,122 +1108,122 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
  */
 static void error_message_destroy(void)
 {
-    gtk_widget_destroy(error_dialog);
-    error_dialog = NULL;
-    gtk_list_store_clear(error_list_store); 
+	gtk_widget_destroy(error_dialog);
+	error_dialog = NULL;
+	gtk_list_store_clear(error_list_store); 
 }
 void show_error_message(gchar *string, int block)
 {
-    GtkTreeIter iter;
-    GtkWidget *label = NULL;
-    if(!error_dialog)
-    {    
-        GtkWidget *hbox = NULL, *image;
-        GtkWidget *vbox = NULL,*sw = NULL, *tree = NULL;
-        GtkCellRenderer *renderer;
-        /* create dialog */
-        error_dialog = gtk_dialog_new_with_buttons(
-                _("Error occured during operation"),
-                NULL,
-                GTK_DIALOG_DESTROY_WITH_PARENT,
-                GTK_STOCK_CLOSE,
-                GTK_RESPONSE_OK,
-                NULL);
-        /** create list store */
-        if(!error_list_store)
-        {
-            error_list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
-            /* don't want this destroyed */
-            g_object_ref(error_list_store);
-        }
-        hbox = gtk_hbox_new(FALSE,6);
-        gtk_container_add(GTK_CONTAINER(GTK_DIALOG(error_dialog)->vbox), hbox);       
-        gtk_container_set_border_width(GTK_CONTAINER(hbox),9);
+	GtkTreeIter iter;
+	GtkWidget *label = NULL;
+	if(!error_dialog)
+	{    
+		GtkWidget *hbox = NULL, *image;
+		GtkWidget *vbox = NULL,*sw = NULL, *tree = NULL;
+		GtkCellRenderer *renderer;
+		/* create dialog */
+		error_dialog = gtk_dialog_new_with_buttons(
+				_("Error occured during operation"),
+				NULL,
+				GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_STOCK_CLOSE,
+				GTK_RESPONSE_OK,
+				NULL);
+		/** create list store */
+		if(!error_list_store)
+		{
+			error_list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+			/* don't want this destroyed */
+			g_object_ref(error_list_store);
+		}
+		hbox = gtk_hbox_new(FALSE,6);
+		gtk_container_add(GTK_CONTAINER(GTK_DIALOG(error_dialog)->vbox), hbox);       
+		gtk_container_set_border_width(GTK_CONTAINER(hbox),9);
 
-        /* Error image */
-        image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
-        gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, TRUE, 0);
+		/* Error image */
+		image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
+		gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, TRUE, 0);
 
-        vbox = gtk_vbox_new(FALSE,6); 
-        gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
+		vbox = gtk_vbox_new(FALSE,6); 
+		gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
 
-        /* Create label */
-        label = gtk_label_new(_("The following error(s) occured:"));
-        gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-        gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
-        /** Create tree view */
-        /* sw*/
-        sw = gtk_scrolled_window_new(NULL,NULL);
-        gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
-        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
-        /* tree */
-        tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(error_list_store));
-        gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
-        gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
-        /* add tree to sw */
-        gtk_container_add(GTK_CONTAINER(sw), tree); 
-        /** add cell renderers */
-        renderer = gtk_cell_renderer_text_new();
-        gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, _("Error Message"), renderer, "text", 0, NULL);
+		/* Create label */
+		label = gtk_label_new(_("The following error(s) occured:"));
+		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
+		/** Create tree view */
+		/* sw*/
+		sw = gtk_scrolled_window_new(NULL,NULL);
+		gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+		/* tree */
+		tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(error_list_store));
+		gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
+		gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
+		/* add tree to sw */
+		gtk_container_add(GTK_CONTAINER(sw), tree); 
+		/** add cell renderers */
+		renderer = gtk_cell_renderer_text_new();
+		gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, _("Error Message"), renderer, "text", 0, NULL);
 
 
-        /** add sw to vbox */
-        gtk_box_pack_start(GTK_BOX(vbox), sw, TRUE, TRUE, 0);
-    }
-    gtk_list_store_append(error_list_store, &iter);
-    gtk_list_store_set(error_list_store, &iter, 0, string,-1);
-    g_signal_connect(G_OBJECT(error_dialog), "response", G_CALLBACK(error_message_destroy), NULL);
-    gtk_widget_show_all(error_dialog);
-    if(block)
-    {
-        gtk_dialog_run(GTK_DIALOG(error_dialog));
-    }
-    else
-    {
-        gtk_widget_show(error_dialog);
-    }
+		/** add sw to vbox */
+		gtk_box_pack_start(GTK_BOX(vbox), sw, TRUE, TRUE, 0);
+	}
+	gtk_list_store_append(error_list_store, &iter);
+	gtk_list_store_set(error_list_store, &iter, 0, string,-1);
+	g_signal_connect(G_OBJECT(error_dialog), "response", G_CALLBACK(error_message_destroy), NULL);
+	gtk_widget_show_all(error_dialog);
+	if(block)
+	{
+		gtk_dialog_run(GTK_DIALOG(error_dialog));
+	}
+	else
+	{
+		gtk_widget_show(error_dialog);
+	}
 
 }
 
 
 static void create_gmpc_paths(void)
 {
-    /**
-     * Create needed directories for mpd.
-     */	
+	/**
+	 * Create needed directories for mpd.
+	 */	
 
-    /** create path */
-    gchar *url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
-    debug_printf(DEBUG_INFO, "Checking for %s existence",url);
+	/** create path */
+	gchar *url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
+	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
 
-    /**
-     * Check if ~/.gmpc/ exists 
-     * If not try to create it.
-     */
-    if(!g_file_test(url, G_FILE_TEST_EXISTS))
-    {
-        debug_printf(DEBUG_INFO, "Trying to create %s",url);
-        if(g_mkdir(url,0700) < 0)
-        {
-            debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
-            show_error_message("Failed to create ~/.gmpc/.", TRUE);
-            abort();
-        }
-    }
-    /**
-     * if it exists, check if it's a directory 
-     */
-    if (!g_file_test(url, G_FILE_TEST_IS_DIR))
-    {
-        debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
-        debug_printf(DEBUG_ERROR, "Quitting.\n");
-        show_error_message("~/.gmpc/ isn't a directory.", TRUE);
-        abort();
-    }
-    else
-    {
-        debug_printf(DEBUG_INFO, "%s exist and is directory",url);
-    }
-    /* Free the path */
-    q_free(url);
+	/**
+	 * Check if ~/.gmpc/ exists 
+	 * If not try to create it.
+	 */
+	if(!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
+		debug_printf(DEBUG_INFO, "Trying to create %s",url);
+		if(g_mkdir(url,0700) < 0)
+		{
+			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
+			show_error_message("Failed to create ~/.gmpc/.", TRUE);
+			abort();
+		}
+	}
+	/**
+	 * if it exists, check if it's a directory 
+	 */
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
+		debug_printf(DEBUG_ERROR, "Quitting.\n");
+		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
+		abort();
+	}
+	else
+	{
+		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
+	}
+	/* Free the path */
+	q_free(url);
 }
