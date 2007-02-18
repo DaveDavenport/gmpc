@@ -324,6 +324,18 @@ static void pl3_current_playlist_browser_init()
 	}
 	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_COMMENT));
 	columns[PL_COLUMN_COMMENT] = column;
+
+	/**
+	 * Date Column
+	 */
+	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Date"), PLAYLIST_LIST_COL_SONG_DATE, -1);
+	sprintf(smallstring,"%i", PL_COLUMN_DATE);
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	{                                                                                                         	
+		gtk_tree_view_column_set_visible(column, FALSE);	
+	}
+	g_object_set_data(G_OBJECT(column), "colid", GINT_TO_POINTER(PL_COLUMN_DATE));
+	columns[PL_COLUMN_DATE] = column;
 	
 	/**
 	 * Songpos Column
