@@ -217,6 +217,16 @@ egg_column_model_iter_nth_child (GtkTreeModel *tree_model,
 
 }
 
+/**
+ * Gtk complains withouth this function, so add a dummy one.
+ */
+static gboolean
+egg_column_model_iter_children(GtkTreeModel * tree_model,
+		GtkTreeIter * iter, GtkTreeIter * parent)
+{
+	return FALSE;
+}
+
 static void
 egg_column_model_tree_model_init (GtkTreeModelIface *iface)
 {
@@ -229,6 +239,7 @@ egg_column_model_tree_model_init (GtkTreeModelIface *iface)
   iface->iter_next = egg_column_model_iter_next;
   iface->iter_nth_child = egg_column_model_iter_nth_child;
   iface->iter_n_children = egg_column_model_iter_n_children;
+  iface->iter_children = egg_column_model_iter_children;
 }
 
 static gboolean

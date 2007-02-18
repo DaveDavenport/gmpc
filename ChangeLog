@@ -1,3 +1,9 @@
+18-02-2007 Qball <Qball@Sarine.nl>
+	* configure.ac:	Bump version to 0.14.1
+	* src/eggcolumnmodel.c:	Add mising iter_children function to model
+	interface.
+
+
 17-02-2007 Qball <Qball@Sarine.nl>
 	* src/main.c:	Change order, so config isn't destroyed before f.e. meta
 	data thread uses it.
