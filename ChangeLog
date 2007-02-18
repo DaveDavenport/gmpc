@@ -1,4 +1,6 @@
 18-02-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3-information.c:	Hopefully fix alignment issues
+	* src/playlist3-metadata.c:	Hopefully fix alignment issues
 	* configure.ac:	Bump version to 0.14.1
 	* src/eggcolumnmodel.c:	Add mising iter_children function to model
 	interface.

@@ -111,7 +111,7 @@ static void info3_prepare_view()
 static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
 {
 	GtkWidget *vbox= pd->widget;
-	GtkWidget *ali = NULL;
+	/*GtkWidget *ali = NULL;*/
 	if(pd->id != current_id)
 	{
 			if(ret != META_DATA_FETCHING)q_free(pd);
@@ -136,11 +136,13 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 			gtk_expander_set_expanded(GTK_EXPANDER(expander), TRUE);
 		}
 		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,0,0);
+/*		ali = gtk_alignment_new(0,0.5,0,0);*/
 		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
-		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-		gtk_container_add(GTK_CONTAINER(expander), ali);		
+/*		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);*/
+/*		gtk_container_add(GTK_CONTAINER(ali), label);*/
+		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+		gtk_misc_set_padding(GTK_MISC(label),6,6);
+		gtk_container_add(GTK_CONTAINER(expander), label);		
 		g_file_get_contents(path, &content, &size,NULL);
 		gtk_label_set_text(GTK_LABEL(label), content);
 		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
@@ -171,20 +173,22 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 }
 static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
-	GtkWidget *label, *ali;
+	GtkWidget *label/*, *ali*/;
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), name);
-	ali = gtk_alignment_new(0,0.5,0,0);
+	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+/*	ali = gtk_alignment_new(0,0.5,0,0);
 
 	gtk_container_add(GTK_CONTAINER(ali), label);
-
-	gtk_table_attach(GTK_TABLE(table), ali,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+*/
+	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
-	ali = gtk_alignment_new(0,0.5,1,0);
+	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+	/*ali = gtk_alignment_new(0,0.5,1,0);*/
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-	gtk_container_add(GTK_CONTAINER(ali), label);
-	gtk_table_attach(GTK_TABLE(table), ali,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+	/*gtk_container_add(GTK_CONTAINER(ali), label);*/
+	gtk_table_attach(GTK_TABLE(table), label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 }
 
@@ -233,15 +237,17 @@ static void info3_fill_view()
 	if(song->title)
 	{
 		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,1,0);
-		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
+/*		ali = gtk_alignment_new(0,0.5,1,0);
+		gtk_container_set_border_width(GTK_CONTAINER(label), 8);
+*/		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
 				, song->title);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		q_free(markup);
-		gtk_container_add(GTK_CONTAINER(ali),label);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_misc_set_padding(GTK_MISC(label),8,8);
+/*		gtk_container_add(GTK_CONTAINER(ali),label);*/
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
 	}
 
 
@@ -355,14 +361,16 @@ static void info3_fill_view()
 		GString *string = NULL;
 		/** Artist label */
 		label = gtk_label_new("");
-		ali = gtk_alignment_new(0,0.5,1,0);
+	/*	ali = gtk_alignment_new(0,0.5,1,0);
 		gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>",song->artist);
+	*/	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>",song->artist);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		q_free(markup);
-		gtk_container_add(GTK_CONTAINER(ali),label);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_misc_set_padding(GTK_MISC(label),8,8);
+/*		gtk_container_add(GTK_CONTAINER(ali),label);*/
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),label,FALSE, FALSE,0);
 
 		/**
 		 * Blomb 
