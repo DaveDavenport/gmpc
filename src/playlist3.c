@@ -333,7 +333,10 @@ void pl3_cat_sel_changed()
 		}
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
-		if(old_type != type)plugins[plugin_get_pos(type)]->browser->selected(container);
+		if(old_type != type &&   plugins[plugin_get_pos(type)]->browser->selected);
+    { 
+      plugins[plugin_get_pos(type)]->browser->selected(container);
+    }
 		/**
 		 * update old value, so get_selected_category is correct before calling selection_changed
 		 */
@@ -348,7 +351,7 @@ void pl3_cat_sel_changed()
 	}
 	else
 	{
-		if(old_type != -1)
+		if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected)
 		{
 			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 		}
@@ -402,11 +405,13 @@ void pl3_option_menu_activate(void)
 	if(menu_items)
 	{
 		gtk_widget_show_all(menu);
-		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
+    gtk_widget_set_sensitive(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
 	}
 	else{
 		gtk_widget_destroy(menu);
-	}
+    gtk_widget_set_sensitive(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
+  }
 
 }
 int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)

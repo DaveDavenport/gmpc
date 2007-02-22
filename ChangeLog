@@ -1,3 +1,8 @@
+22-02-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3.c:	Make option menu insensitive when it has no children.
+	* src/playlist3.c:	Check if the browser has a ->(un)selected  function.
+	* src/playlist3-artist-browser.c: Make an option to show artist images
+
 
 18-02-2007 Qball <Qball@Sarine.nl>
 	* src/Makefile.build:				Remove useless include.

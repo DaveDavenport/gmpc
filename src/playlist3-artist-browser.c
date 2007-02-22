@@ -321,19 +321,21 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 					PL3_AB_ICON,pb,
 					-1);
 			if(pb)g_object_unref(pb);
-			/* To Damn Slow 
-			if(strlen(data->tag))
-			{
-				GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
-				GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
-				mpd_Song *song = mpd_newSong();
-				song->artist = g_strdup(data->tag);
-				song->album = NULL; 
-				meta_data_get_path_callback(song, META_ARTIST_ART, pl3_artist_browser_cover_art_fetched, rowref);
-				mpd_freeSong(song);	
-				gtk_tree_path_free(path);
-			}
-			*/
+			/* To Damn Slow */
+      if(cfg_get_single_value_as_int_with_default(config, "artist-browser", "artist-image", FALSE))
+      {
+        if(strlen(data->tag))
+        {
+          GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_ab_store), &iter);
+          GtkTreeRowReference* rowref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_ab_store),path);		
+          mpd_Song *song = mpd_newSong();
+          song->artist = g_strdup(data->tag);
+          song->album = NULL; 
+          meta_data_get_path_callback(song, META_ARTIST_ART, pl3_artist_browser_cover_art_fetched, rowref);
+          mpd_freeSong(song);	
+          gtk_tree_path_free(path);
+        }
+      }
 			data = mpd_data_get_next(data);
 		}
 		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_ab_tree), GTK_TREE_MODEL(pl3_ab_store));
