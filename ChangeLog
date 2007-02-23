@@ -1,3 +1,6 @@
+23-02-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3.c:	Remove trailing ;
+
 22-02-2007 Qball <Qball@Sarine.nl>
 	* src/playlist3.c:	Make option menu insensitive when it has no children.
 	* src/playlist3.c:	Check if the browser has a ->(un)selected  function.

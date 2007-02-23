@@ -325,7 +325,7 @@ void pl3_cat_sel_changed()
 		 */
 		if(old_type != type )
 		{
-			if(old_type != -1)
+			if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected != NULL)
 			{
 				plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 			}
@@ -333,10 +333,11 @@ void pl3_cat_sel_changed()
 		}
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
-		if(old_type != type &&   plugins[plugin_get_pos(type)]->browser->selected);
-    { 
-      plugins[plugin_get_pos(type)]->browser->selected(container);
-    }
+		if((old_type != type) && (plugins[plugin_get_pos(type)]->browser->selected != NULL))
+		{ 
+			printf("%i %i\n", old_type, type);
+			plugins[plugin_get_pos(type)]->browser->selected(container);
+		}
 		/**
 		 * update old value, so get_selected_category is correct before calling selection_changed
 		 */
