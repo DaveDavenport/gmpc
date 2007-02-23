@@ -335,7 +335,6 @@ void pl3_cat_sel_changed()
 		/** if type changed give a selected signal */
 		if((old_type != type) && (plugins[plugin_get_pos(type)]->browser->selected != NULL))
 		{ 
-			printf("%i %i\n", old_type, type);
 			plugins[plugin_get_pos(type)]->browser->selected(container);
 		}
 		/**
@@ -671,7 +670,6 @@ int pl3_hide()
 {
 	if(!tray_availible())
 	{
-		printf("No tray availible\n");
 		return 1;
 	}
 	if(pl3_xml != NULL && !pl3_hidden )
@@ -1719,7 +1717,6 @@ static void pl3_profile_selected(GtkRadioMenuItem *radio,gpointer data)
 		gchar *uid = g_object_get_data(G_OBJECT(radio), "uid");
 		if(!uid)
 		{
-			printf("no uid found\n");
 			return;
 		}
 		connection_set_current_profile(uid);
