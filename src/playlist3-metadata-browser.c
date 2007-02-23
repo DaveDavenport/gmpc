@@ -678,6 +678,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		int num_cols = 2;
 		int tile_size = 310;
 		MpdData *data = NULL;
+		mpd_Song *song;
 		/**
 		 * 		update completion
 		 */
@@ -697,9 +698,10 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 	
 		data = mpd_database_get_artists(connection);
 		num_cols = (int)(resizer_vbox->allocation.width-20)/(tile_size+6);
+		song = mpd_newSong();
 		for(;data;data = mpd_data_get_next(data))
 		{
-			mpd_Song *song = mpd_newSong();
+		
 			if(!regexec(&regt,data->tag, 0,NULL,0))
 			{
 				GtkWidget *button;
@@ -711,8 +713,9 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				/* cleanup pointer*/
 				song->artist = NULL;	
 			}
-			mpd_freeSong(song);
+
 		}
+		mpd_freeSong(song);
 		if(list)
 		{
 			resize_table(GTK_TABLE(table), num_cols, list);
