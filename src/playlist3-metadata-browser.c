@@ -711,6 +711,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				/* cleanup pointer*/
 				song->artist = NULL;	
 			}
+			mpd_freeSong(song);
 		}
 		if(list)
 		{

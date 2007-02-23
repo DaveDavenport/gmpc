@@ -1,4 +1,5 @@
 23-02-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3-metadata-browser.c: Fix memory leak
 	* src/playlist3.c:	Remove trailing ;
 
 22-02-2007 Qball <Qball@Sarine.nl>
