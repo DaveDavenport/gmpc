@@ -1,0 +1,173 @@
+requires 2.0.0
+
+%ht{
+#include <gtk/gtk.h>
+
+
+%}
+
+%h{
+	enum
+	{
+		MPDDATA_MODEL_COL_MPDSONG = 0, 			/* get the mpd_Song */
+		MPDDATA_MODEL_COL_MARKUP, 				/* a string that has markup */
+		MPDDATA_MODEL_COL_PLAYING,				/* Shows if this song is the current song */
+		MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT,	/* Shows if this song is the current song */
+		MPDDATA_MODEL_COL_SONG_FILE,			/* internal field of mpd_Song ->file */
+		MPDDATA_MODEL_COL_SONG_ARTIST,			/* artist name */
+		MPDDATA_MODEL_COL_SONG_ALBUM,			/* album name */
+		MPDDATA_MODEL_COL_SONG_TITLE,			/* song title */
+		MPDDATA_MODEL_COL_SONG_TITLEFILE,		/* song title */
+		MPDDATA_MODEL_COL_SONG_GENRE,			/* song genre */
+		MPDDATA_MODEL_COL_SONG_TRACK,			/* song track */
+		MPDDATA_MODEL_COL_SONG_NAME,			/* stream name */
+		MPDDATA_MODEL_COL_SONG_COMPOSER,		/* composer name */
+		MPDDATA_MODEL_COL_SONG_PERFORMER,		/* performer */
+		MPDDATA_MODEL_COL_SONG_DATE,			/* date */
+		MPDDATA_MODEL_COL_SONG_LENGTH,			/* length */
+		MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT,	/* length formatted */
+		MPDDATA_MODEL_COL_SONG_DISC,			/* disc */
+		MPDDATA_MODEL_COL_SONG_COMMENT,			/* comment */
+		MPDDATA_MODEL_COL_SONG_POS,				/* position */
+		MPDDATA_MODEL_COL_SONG_ID,				/* col id */
+		MPDDATA_MODEL_COL_ICON_ID,				/* icon id */
+		MPDDATA_MODEL_N_COLUMNS,
+	} ;
+%}
+
+ class Gmpc:MpdData:Model from G:Object
+          (interface Gtk:Tree:Model)
+{
+	private gint stamp 		= {g_random_int()};
+	private	GType types[MPDDATA_MODEL_N_COLUMNS]; 
+	private GList *data 	= NULL;
+
+	init(self)
+	{
+		self->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
+		self->types[MPDDATA_MODEL_COL_MARKUP] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_PLAYING] = G_TYPE_BOOLEAN;
+		self->types[MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
+		self->types[MPDDATA_MODEL_COL_SONG_FILE] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_ARTIST] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_ALBUM] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_TITLE] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_TITLEFILE] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_TRACK] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_GENRE] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_NAME] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_COMPOSER] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
+		self->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
+		self->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
+		self->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
+		self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
+	}
+	class_init(klass);
+
+	public
+	GtkTreeModel *new (void)
+	{
+		return (GtkTreeModel *)GET_NEW;
+	}
+
+	/* function implemented for the Gtk:Tree:Model interface */
+	interface Gtk:Tree:Model
+	private GtkTreeModelFlags
+	get_flags (Gtk:Tree:Model *self (check null type))
+	{
+		/* Here would be the implementation */
+		return (GtkTreeModelFlags)0;
+	}
+
+	/**
+	 * Unused, not known in the model directly? 
+	 */
+	interface Gtk:Tree:Model	
+	public
+	gint get_n_columns(Gtk:Tree:Model *model)
+	{
+		return MPDDATA_MODEL_N_COLUMNS;
+	}
+
+	interface Gtk:Tree:Model
+	private gboolean
+	get_iter(Gtk:Tree:Model *self (check null type),
+		Gtk:Tree:Iter *iter (check null),
+		Gtk:Tree:Path *path (check null))
+	{
+		Self *list = GMPC_MPDDATA_MODEL(self);
+		gint *indices, n,depth;
+		indices = gtk_tree_path_get_indices(path);
+		depth = gtk_tree_path_get_depth(path);
+
+		/* No Children */
+		g_assert(depth == 1); 
+
+		n = indices[0];		/* the n-th top level row */
+		if (n >= g_list_length(list->_priv->data) || n < 0)
+			return FALSE; 
+
+		iter->stamp = self->_priv->stamp;
+		iter->user_data = g_list_nth(self->_priv->data,n);
+		return TRUE;
+	}
+
+	interface Gtk:Tree:Model
+	private gboolean
+	iter_next(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
+	{
+		Self *list = GMPC_MPDDATA_MODEL(self);
+		iter->user_data = g_list_next(iter->user_data);
+		if(iter->user_data == NULL)
+			return FALSE;
+		return TRUE;
+	}
+	interface Gtk:Tree:Model
+	private gboolean
+	iter_has_child(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter)
+	{
+		Self *list = GMPC_MPDDATA_MODEL(self);
+		if(iter)
+			return 0;
+		return g_list_length(list->_priv->data);
+	}
+
+	interface Gtk:Tree:Model
+	private void
+	get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0), GValue *value (check null))
+	{
+	}
+
+	interface Gtk:Tree:Model
+	private	gboolean
+	iter_nth_child(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), GtkTreeIter *parent, gint n (check >=0)) 
+	{
+		if (n >= g_list_length(list->_priv->data) || n < 0)
+			return FALSE; 
+
+
+		iter->stamp = self->_priv->stamp;
+		iter->user_data = g_list_nth(self->_priv->data,n);
+		return TRUE;
+	}
+	
+	interface Gtk:Tree:Model
+	private GtkTreePath *
+	get_path(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
+	{
+	}
+	
+	interface Gtk:Tree:Model
+	private GType
+	get_column_type(Gtk:Tree:Model *model(check null type), gint index (check >= 0))
+	{
+		Self *self = GMPC_MPDDATA_BACKEND(model);
+		return self->_priv->types[index];
+	} 
+}
+
