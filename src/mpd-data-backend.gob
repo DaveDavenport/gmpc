@@ -2,7 +2,7 @@ requires 2.0.0
 
 %ht{
 #include <gtk/gtk.h>
-
+#include <libmpd/libmpd.h>
 
 %}
 
@@ -44,28 +44,28 @@ requires 2.0.0
 
 	init(self)
 	{
-		self->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
-		self->types[MPDDATA_MODEL_COL_MARKUP] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_PLAYING] = G_TYPE_BOOLEAN;
-		self->types[MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
-		self->types[MPDDATA_MODEL_COL_SONG_FILE] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_ARTIST] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_ALBUM] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_TITLE] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_TITLEFILE] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_TRACK] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_GENRE] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_NAME] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_COMPOSER] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
-		self->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
-		self->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
-		self->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
-		self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
+		self->_priv->types[MPDDATA_MODEL_COL_MARKUP] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_PLAYING] = G_TYPE_BOOLEAN;
+		self->_priv->types[MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_FILE] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_ARTIST] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_ALBUM] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_TITLE] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_TITLEFILE] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_TRACK] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_GENRE] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_NAME] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_COMPOSER] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
+		self->_priv->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
+		self->_priv->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
 	}
 	class_init(klass);
 
@@ -114,6 +114,7 @@ requires 2.0.0
 
 		iter->stamp = self->_priv->stamp;
 		iter->user_data = g_list_nth(self->_priv->data,n);
+    iter->user_data2 = GINT_TO_POINTER(n);
 		return TRUE;
 	}
 
@@ -141,6 +142,133 @@ requires 2.0.0
 	private void
 	get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0), GValue *value (check null))
 	{
+		Self *list = GMPC_MPDDATA_MODEL(self);
+    GList *ilist = iter->user_data;
+    mpd_Song *song = ilist->data;
+
+    g_value_init(value, list->_priv->types[column]);
+	switch (column) {
+		case MPDDATA_MODEL_COL_MPDSONG:
+			g_value_set_pointer(value, song);
+			break;
+		case MPDDATA_MODEL_COL_PLAYING:
+			if (song->pos ==
+					MPDDATA_MODEL(tree_model)->current_song_pos) {
+				g_value_set_boolean(value, TRUE);
+			} else {
+				g_value_set_boolean(value, FALSE);
+			}
+			break;
+		case MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT:
+			if (song->pos ==
+					MPDDATA_MODEL(tree_model)->current_song_pos) {
+				g_value_set_int(value, PANGO_WEIGHT_ULTRABOLD);
+			} else {
+				g_value_set_int(value, PANGO_WEIGHT_NORMAL);
+			}
+			break;
+		case MPDDATA_MODEL_COL_MARKUP:
+			{
+				/* we want to go cache this stuff */
+		/*		gchar buffer[1024];
+				mpd_song_markup(buffer, 1024,
+						MPDDATA_MODEL(tree_model)->markup,
+						song);
+				g_value_set_string(value, buffer);
+			*/	break;
+			}
+		case MPDDATA_MODEL_COL_SONG_FILE:
+			g_value_set_string(value, song->file);
+			break;
+		case MPDDATA_MODEL_COL_SONG_ARTIST:
+			g_value_set_string(value, song->artist);
+			break;
+		case MPDDATA_MODEL_COL_SONG_ALBUM:
+			g_value_set_string(value, song->album);
+			break;
+		case MPDDATA_MODEL_COL_SONG_TITLE:
+			g_value_set_string(value, song->title);
+			break;
+		case MPDDATA_MODEL_COL_SONG_TITLEFILE:
+			if(song->title == NULL) {
+				gchar *path = g_path_get_basename(song->file);
+				g_value_set_string(value, path);
+				q_free(path);
+
+			}else{
+				g_value_set_string(value, song->title);
+			}
+			break;                                       			
+		case MPDDATA_MODEL_COL_SONG_GENRE:
+			g_value_set_string(value, song->genre);
+			break;
+		case MPDDATA_MODEL_COL_SONG_TRACK:
+			g_value_set_string(value, song->track);
+			break;
+		case MPDDATA_MODEL_COL_SONG_NAME:
+			g_value_set_string(value, song->name);
+			break;
+		case MPDDATA_MODEL_COL_SONG_COMPOSER:
+			g_value_set_string(value, song->composer);
+			break;
+		case MPDDATA_MODEL_COL_SONG_PERFORMER:
+			g_value_set_string(value, song->performer);
+			break;
+		case MPDDATA_MODEL_COL_SONG_DATE:
+			g_value_set_string(value, song->date);
+			break;
+		case MPDDATA_MODEL_COL_SONG_LENGTH:
+			g_value_set_int(value, song->time);
+			break;
+		case MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT:
+			{
+				if(song->time >= 0)
+				{
+					gchar *data = g_strdup_printf("%02i:%02i",
+						song->time/60, song->time%60);
+					g_value_set_string(value, data);
+					q_free(data);
+				}
+				else
+				{
+					g_value_set_string(value, "n/a");
+				}
+			}
+			break;                             			
+		case MPDDATA_MODEL_COL_SONG_DISC:
+			g_value_set_string(value, song->disc);
+			break;
+		case MPDDATA_MODEL_COL_SONG_COMMENT:
+			g_value_set_string(value, song->comment);
+			break;                                			
+		case MPDDATA_MODEL_COL_SONG_POS:
+			g_value_set_int(value, song->pos);
+			break;
+		case MPDDATA_MODEL_COL_SONG_ID:
+			g_value_set_int(value, song->id);
+			break;
+
+		case MPDDATA_MODEL_COL_ICON_ID:
+			if (strstr(song->file, "://")) {
+				g_value_set_string(value, "media-stream");
+			} else {
+				g_value_set_string(value, "media-audiofile");
+			}
+			break;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 
 	interface Gtk:Tree:Model
@@ -153,6 +281,7 @@ requires 2.0.0
 
 		iter->stamp = self->_priv->stamp;
 		iter->user_data = g_list_nth(self->_priv->data,n);
+    iter->user_data2 = GPOINTER_TO_INT(iter->user_data2)+1;
 		return TRUE;
 	}
 	
@@ -160,7 +289,11 @@ requires 2.0.0
 	private GtkTreePath *
 	get_path(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
 	{
-	}
+    GtkTreePath *path = NULL;
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data2));
+    return path;
+  }
 	
 	interface Gtk:Tree:Model
 	private GType
@@ -169,5 +302,12 @@ requires 2.0.0
 		Self *self = GMPC_MPDDATA_BACKEND(model);
 		return self->_priv->types[index];
 	} 
+
+  public 
+  void set_mpd_data(Self *self (check null type), MpdData *data)
+  {
+
+
+  }
 }
 
