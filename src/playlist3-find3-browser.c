@@ -521,7 +521,7 @@ static unsigned long pl3_find3_browser_view_browser()
 		int time=0;
 		GList *node = NULL;
 		int found = 0;
-		printf("Server side playlist search\n");
+		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
 		gtk_list_store_clear(pl3_find3_store);
 		if(criterias3 == NULL)
 			return 0;
@@ -567,6 +567,8 @@ static unsigned long pl3_find3_browser_view_browser()
 			}
 			cfg_free_string(markdata);
 		}
+
+		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store));
 		return time;
 	}
 	else
