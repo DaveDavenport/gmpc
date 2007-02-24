@@ -14,14 +14,14 @@ gmpc_SOURCES=\
 	misc.c\
 	playlist3.c\
 	edit_markup.c\
-	playlist3-tag-browser.c\
-	playlist3-file-browser.c\
-	playlist3-current-playlist-browser.c\
-	playlist3-artist-browser.c\
-	playlist3-find2-browser.c\
-	playlist3-find3-browser.c\
-	playlist3-metadata-browser.c\
-	playlist3-information.c\
+	browsers/playlist3-tag-browser.c\
+	browsers/playlist3-file-browser.c\
+	browsers/playlist3-current-playlist-browser.c\
+	browsers/playlist3-artist-browser.c\
+	browsers/playlist3-find2-browser.c\
+	browsers/playlist3-find3-browser.c\
+	browsers/playlist3-metadata-browser.c\
+	browsers/playlist3-information.c\
 	playlist-list.c\
 	mm-keys.c\
 	config1.c\
@@ -103,12 +103,12 @@ EXTRA_DIST = 	playlist3.h\
 		eggtrayicon.h\
 		mpdinteraction.h\
 		config-defaults.h\
-		playlist3-tag-browser.h\
-		playlist3-file-browser.h\
-		playlist3-current-playlist-browser.h\
-		playlist3-artist-browser.h\
-		playlist3-find2-browser.h\
-		playlist3-find3-browser.h\
+		browsers/playlist3-tag-browser.h\
+		browsers/playlist3-file-browser.h\
+		browsers/playlist3-current-playlist-browser.h\
+		browsers/playlist3-artist-browser.h\
+		browsers/playlist3-find2-browser.h\
+		browsers/playlist3-find3-browser.h\
 		playlist-list.h\
 		bacon-volume.h\
 		sm.h\

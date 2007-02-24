@@ -40,12 +40,12 @@
 #include "main.h"
 
 /* as internall plugin */
-#include "playlist3-file-browser.h"
-#include "playlist3-find2-browser.h"
-#include "playlist3-find3-browser.h"
-#include "playlist3-tag-browser.h"
-#include "playlist3-artist-browser.h"
-#include "playlist3-current-playlist-browser.h"
+#include "browsers/playlist3-file-browser.h"
+#include "browsers/playlist3-find2-browser.h"
+#include "browsers/playlist3-find3-browser.h"
+#include "browsers/playlist3-tag-browser.h"
+#include "browsers/playlist3-artist-browser.h"
+#include "browsers/playlist3-current-playlist-browser.h"
 
 #include "id3info.h"
 

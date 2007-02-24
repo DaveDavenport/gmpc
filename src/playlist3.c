@@ -28,9 +28,9 @@
 #include "misc.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
-#include "playlist3-file-browser.h"
-#include "playlist3-artist-browser.h"
-#include "playlist3-current-playlist-browser.h"
+#include "browsers/playlist3-file-browser.h"
+#include "browsers/playlist3-artist-browser.h"
+#include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
 #include "id3info.h"
 
@@ -406,11 +406,11 @@ void pl3_option_menu_activate(void)
 	{
 		gtk_widget_show_all(menu);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
-    gtk_widget_set_sensitive(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
+    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
 	}
 	else{
 		gtk_widget_destroy(menu);
-    gtk_widget_set_sensitive(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
   }
 
 }
