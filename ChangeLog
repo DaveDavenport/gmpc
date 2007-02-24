@@ -1,4 +1,5 @@
 24-02-2007 Qball <Qball@Sarine.nl>
+	* src/playlist3-find3-browser: Don't add songs, play them.
 	* src/playlist3-find3-browser: Add support for server side search
 	* configure.ac:	Depend on libmpd 0.13.1
 

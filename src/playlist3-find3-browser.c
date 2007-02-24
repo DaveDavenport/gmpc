@@ -625,34 +625,8 @@ static void pl3_find3_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	gint r_type;
 	int id=-1;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND3_PATH,&song_id, PL3_FIND3_TYPE, &r_type, -1);
-	switch(r_type)
-	{
-		case PL3_CUR_PLAYLIST:
-
-			gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND3_PID,&id, -1);
-			mpd_player_play_id(connection, id);
-			break;
-		default:
-			{
-				int playlist_length = mpd_playlist_get_playlist_length(connection);
-				pl3_push_statusbar_message(_("Added a song"));
-				if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
-					int songid = mpd_playlist_add_get_id(connection, song_id);
-					if(songid >= 0) {
-						mpd_player_play_id(connection, songid);
-					}
-				} else{
-					mpd_playlist_add(connection, song_id);
-					if(playlist_length == 0)
-					{
-						mpd_player_play(connection);
-					}
-				}
-			}
-			break;
-	}
-	q_free(song_id);
+	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND3_PID,&id, -1);
+	mpd_player_play_id(connection, id);
 }
 
 static void pl3_find3_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
