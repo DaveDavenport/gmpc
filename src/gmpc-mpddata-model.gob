@@ -209,6 +209,27 @@ requires 2.0.0
 			}
 
 		}
+		else if(data->type == MPD_DATA_TYPE_PLAYLIST)
+		{
+			switch(column)
+			{
+				case MPDDATA_MODEL_COL_ICON_ID:
+					g_value_set_string(value, "media-playlist");
+					break;
+				case MPDDATA_MODEL_COL_MARKUP:
+					{
+						gchar *basename = g_path_get_basename(data->playlist);
+						g_value_set_string(value, basename);
+						g_free(basename);
+						break;
+					}
+				case MPDDATA_MODEL_COL_PATH:
+					g_value_set_string(value, data->playlist);
+					break;                                         		
+				default:
+					break;
+			}
+		}
 		else if(data->type == MPD_DATA_TYPE_SONG)
 		{
 			mpd_Song *song = data->song;
@@ -315,88 +336,88 @@ requires 2.0.0
 	}
 
 	interface Gtk:Tree:Model
-	private	gboolean
-	iter_nth_child(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), GtkTreeIter *parent, gint n (check >=0)) 
-	{
-		Self *self = GMPC_MPDDATA_MODEL(model);
-		int i;
-		MpdData *data = NULL;
-		if (n >= self->_priv->num_rows || n < 0)
-			return FALSE; 
-
-		data = (MpdData *)self->_priv->data;
-		for(i=0; i < (n);i++)
+		private	gboolean
+		iter_nth_child(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), GtkTreeIter *parent, gint n (check >=0)) 
 		{
-			data = mpd_data_get_next_real(data, FALSE);
+			Self *self = GMPC_MPDDATA_MODEL(model);
+			int i;
+			MpdData *data = NULL;
+			if (n >= self->_priv->num_rows || n < 0)
+				return FALSE; 
+
+			data = (MpdData *)self->_priv->data;
+			for(i=0; i < (n);i++)
+			{
+				data = mpd_data_get_next_real(data, FALSE);
+			}
+
+
+			iter->stamp = self->_priv->stamp;
+			iter->user_data = data; 
+			iter->user_data2 = GINT_TO_POINTER(n);
+			return TRUE;
 		}
 
-
-		iter->stamp = self->_priv->stamp;
-		iter->user_data = data; 
-		iter->user_data2 = GINT_TO_POINTER(n);
-		return TRUE;
-	}
-	
 	interface Gtk:Tree:Model
-	private GtkTreePath *
-	get_path(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
-	{
-		GtkTreePath *path = NULL;
-		path = gtk_tree_path_new();
-		gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data2));
-		return path;
-	}
-	
-	interface Gtk:Tree:Model
-	private GType
-	get_column_type(Gtk:Tree:Model *model(check null type), gint index (check >= 0))
-	{
-		Self *self = GMPC_MPDDATA_MODEL(model);
-		return self->_priv->types[index];
-	} 
-	public 
-	void set_mpd_data(self, MpdData *data2)
-	{
-		GtkTreeIter iter;
-		GtkTreePath *path = NULL;
-		int i =0;		
-		/* loop and remove */
-		for(i= self->_priv->num_rows; i>0;i--)
+		private GtkTreePath *
+		get_path(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
 		{
+			GtkTreePath *path = NULL;
 			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path, i-1);
-			/* propegate change */
-			gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
-			gtk_tree_path_free(path);
-			self->_priv->num_rows--;
+			gtk_tree_path_append_index(path, GPOINTER_TO_INT(iter->user_data2));
+			return path;
 		}
-		if(self->_priv->data)
-			mpd_data_free(self->_priv->data);
-		self->_priv->data = NULL;
-		if(self->_priv->num_rows != 0)
-		{
-			printf("ERROR not every row cleared\n");
-		}
-		i=0;
 
-		self->_priv->data = data2;
-		for(;data2; data2 = mpd_data_get_next_real(data2,FALSE))
+	interface Gtk:Tree:Model
+		private GType
+		get_column_type(Gtk:Tree:Model *model(check null type), gint index (check >= 0))
 		{
+			Self *self = GMPC_MPDDATA_MODEL(model);
+			return self->_priv->types[index];
+		} 
+	public 
+		void set_mpd_data(self, MpdData *data2)
+		{
+			GtkTreeIter iter;
+			GtkTreePath *path = NULL;
+			int i =0;		
+			/* loop and remove */
+			for(i= self->_priv->num_rows; i>0;i--)
 			{
 				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, i);
-				iter.stamp = self->_priv->stamp;
-				iter.user_data = data2;
-				iter.user_data2 =  GINT_TO_POINTER(i);
-				iter.user_data3 = NULL;
-		
+				gtk_tree_path_append_index(path, i-1);
 				/* propegate change */
-				gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+				gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
 				gtk_tree_path_free(path);
-				i++;
-				self->_priv->num_rows++;
+				self->_priv->num_rows--;
+			}
+			if(self->_priv->data)
+				mpd_data_free(self->_priv->data);
+			self->_priv->data = NULL;
+			if(self->_priv->num_rows != 0)
+			{
+				printf("ERROR not every row cleared\n");
+			}
+			i=0;
+
+			self->_priv->data = data2;
+			for(;data2; data2 = mpd_data_get_next_real(data2,FALSE))
+			{
+				{
+					path = gtk_tree_path_new();
+					gtk_tree_path_append_index(path, i);
+					iter.stamp = self->_priv->stamp;
+					iter.user_data = data2;
+					iter.user_data2 =  GINT_TO_POINTER(i);
+					iter.user_data3 = NULL;
+
+					/* propegate change */
+					gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+					gtk_tree_path_free(path);
+					i++;
+					self->_priv->num_rows++;
+				}
 			}
 		}
-	}
 }
 
