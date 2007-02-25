@@ -247,9 +247,7 @@ requires 2.0.0
 					{
 						/* we want to go cache this stuff */
 						gchar buffer[1024];
-						mpd_song_markup(buffer, 1024,
-								GMPC_MPDDATA_MODEL(model)->markup,
-								song);
+						mpd_song_markup(buffer, 1024, GMPC_MPDDATA_MODEL(model)->markup, song);
 						g_value_set_string(value, buffer);
 						break;
 					}
@@ -270,8 +268,7 @@ requires 2.0.0
 						gchar *path = g_path_get_basename(song->file);
 						g_value_set_string(value, path);
 						g_free(path);
-
-					}else{
+					} else {
 						g_value_set_string(value, song->title);
 					}
 					break;                                       			
@@ -298,15 +295,12 @@ requires 2.0.0
 					break;
 				case MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT:
 					{
-						if(song->time >= 0)
-						{
+						if(song->time >= 0) {
 							gchar *data = g_strdup_printf("%02i:%02i",
 									song->time/60, song->time%60);
 							g_value_set_string(value, data);
 							g_free(data);
-						}
-						else
-						{
+						} else {
 							g_value_set_string(value, "n/a");
 						}
 					}
@@ -350,7 +344,6 @@ requires 2.0.0
 			{
 				data = mpd_data_get_next_real(data, FALSE);
 			}
-
 
 			iter->stamp = self->_priv->stamp;
 			iter->user_data = data; 
