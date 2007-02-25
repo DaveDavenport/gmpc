@@ -289,7 +289,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TYPE, file_browser_plug.id,
 			PL3_CAT_TITLE, _("Browse Filesystem"),
 			PL3_CAT_INT_ID, "/",
-			PL3_CAT_ICON_ID, "gtk-open",
+			PL3_CAT_ICON_ID, "gtk-directory",
 			PL3_CAT_PROC, FALSE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/* add fantom child for lazy tree */
@@ -350,99 +350,11 @@ static void pl3_file_browser_reupdate()
 	}
 }
 
-typedef struct {
-	MpdData *data;
-	int sub_folder;
-	int time;
-	int support_playlist;
-	GtkTreeIter *iter_cat;
-}pl3_fb_lf_pb;
-
-static void pl3_fb_lazy_fill_destroy(pl3_fb_lf_pb *pb)
-{
-	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
-	if(pb->data)
-	{
-		mpd_data_free(pb->data);
-	}
-	q_free(pb);
-	pb = NULL;
-	/* remove the context id, so we don't try to remove it another time. */
-	pl3_fb_filling_source = 0;
-}
-
-static int pl3_fb_lazy_fill ( pl3_fb_lf_pb *pd)
-{
-/*	GtkTreeIter iter;
-	MpdData *data = pd->data;
-	if (data != NULL)
-	{
-		if (data->type == MPD_DATA_TYPE_DIRECTORY)
-		{
-			gchar *basename = g_path_get_basename(data->directory);
-			gtk_list_store_append (pl3_fb_store, &iter);
-			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->directory,
-					PL3_FB_TYPE, PL3_ENTRY_DIRECTORY,
-					PL3_FB_TITLE, basename,
-					PL3_FB_ICON, "gtk-open",
-					-1);
-			q_free(basename);
-			(pd->sub_folder)++;
-		}
-		else if (data->type == MPD_DATA_TYPE_SONG)
-		{
-			gchar buffer[1024];
-			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			mpd_song_markup(buffer, 1024, markdata,data->song);
-			cfg_free_string(markdata);
-			if(data->song->time != MPD_SONG_NO_TIME)
-			{
-				pd->time += data->song->time;
-			}
-
-			gtk_list_store_append (pl3_fb_store, &iter);
-			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->song->file,
-					PL3_FB_TYPE, PL3_ENTRY_SONG,
-					PL3_FB_TITLE, buffer,
-					PL3_FB_ICON, "media-audiofile",
-					-1);
-
-		}
-
-		else if (data->type == MPD_DATA_TYPE_PLAYLIST)
-		{
-			gchar *basename = g_path_get_basename (data->playlist);
-			gtk_list_store_append (pl3_fb_store, &iter);
-			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH, data->playlist,
-					PL3_FB_TYPE, PL3_ENTRY_PLAYLIST,
-					PL3_FB_TITLE, basename,
-					PL3_FB_ICON, "media-playlist",
-					-1);
-			q_free (basename);
-			if(pd->support_playlist) (pd->sub_folder)++;
-		}
-		pd->data = mpd_data_get_next(data);
-		if(pd->data == NULL) {
-			return FALSE;
-		}
-		return TRUE;
-	}
-*/
-	return FALSE;
-} 
-
-
 static long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 {
-	pl3_fb_lf_pb *pb = NULL;
-		MpdData* data =NULL;
+	MpdData* data =NULL;
 	char *path = NULL, *icon = NULL;
-	GtkTreeIter iter;
 	long  unsigned time=0;
-	int support_playlist = (mpd_server_check_command_allowed(connection, "listplaylistinfo") == MPD_SERVER_COMMAND_ALLOWED);
 
 /*	if(pl3_fb_store == NULL) return 0;
 */	gtk_list_store_clear(pl3_fb_store);
@@ -454,41 +366,15 @@ static long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter_cat, 2 , &path,3,&icon, -1);
 	if(strcmp("media-playlist",icon))
 	{
-/*		debug_printf(DEBUG_INFO,"View Folder\n");
-		if(strcmp(path,"/"))
-		{
-			gtk_list_store_append (pl3_fb_store, &iter);
-			gtk_list_store_set (pl3_fb_store, &iter,
-					PL3_FB_PATH,path, 
-					PL3_FB_TYPE, PL3_ENTRY_DIR_UP,
-					PL3_FB_TITLE, "..",
-					PL3_FB_ICON, "gtk-open",
-					-1);
-		}
-
-*/
 		data = mpd_database_get_directory(connection, path);
 	}
 	else{
 		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
-	gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, data);
+	time = gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, data);
 	q_free(path);
 	q_free(icon);
-/*	pb = g_malloc0(sizeof(*pb));
-	pb->data= data;
-	pb->sub_folder = 0;
-	pb->time = 0;
-	pb->support_playlist = support_playlist;
-	pb->iter_cat = iter_cat;
-
-	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), NULL);
-	if(pl3_fb_filling_source){
-		g_source_remove(pl3_fb_filling_source);
-	}
-	pl3_fb_filling_source = g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,(GSourceFunc)pl3_fb_lazy_fill,pb, (GDestroyNotify)pl3_fb_lazy_fill_destroy);
-*/
 	return time;
 }
 
@@ -514,7 +400,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 					0, file_browser_plug.id,
 					1, basename,
 					2, data->directory,
-					3, "gtk-open",
+					3, "gtk-directory",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
 					-1);
@@ -753,7 +639,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					char *name = NULL;
 					char *type= NULL;
 					gtk_tree_model_get(model, &citer, 2, &name, 3, &type,-1);
-					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-open") == 0)
+					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-directory") == 0)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
@@ -1126,7 +1012,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 
 	item = gtk_image_menu_item_new_with_label(_("File Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-			gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
+			gtk_image_new_from_stock("gtk-directory", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_file_browser_activate), NULL);

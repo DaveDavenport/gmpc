@@ -376,8 +376,9 @@ requires 2.0.0
 			return self->_priv->types[index];
 		} 
 	public 
-		void set_mpd_data(self, MpdData *data2)
+		long unsigned set_mpd_data(self, MpdData *data2)
 		{
+			long unsigned retval = 0;
 			GtkTreeIter iter;
 			GtkTreePath *path = NULL;
 			int i =0;		
@@ -416,8 +417,13 @@ requires 2.0.0
 					gtk_tree_path_free(path);
 					i++;
 					self->_priv->num_rows++;
+					if(data2->type == MPD_DATA_TYPE_SONG)
+					{
+						retval+= data2->song->time;
+					}
 				}
 			}
+			return retval;
 		}
 }
 
