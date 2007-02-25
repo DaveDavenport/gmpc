@@ -12,36 +12,17 @@ DIE=
 AM_VERSIONGREP="sed -e s/.*[^0-9\.]\([0-9]\.[0-9]\).*/\1/"
 AC_VERSIONGREP="sed -e s/.*[^0-9\.]\([0-9]\.[0-9][0-9]\).*/\1/"
 VERSIONMKINT="sed -e s/[^0-9]//"
-case `uname` in
-FreeBSD)
-    AM_VERSIONS='1.4 1.5 1.9'
-    AC_VERSIONS='2.53 2.59'
-;;
-#OpenBSD)
-     #Needs works
-#    AM_VERSIONS='1.4 1.8 1.9'
-#    AC_VERSIONS='2.13 2.52 2.57 2.59'
-#;;
-*)
- # Use * here not to limit systems we do not have a case for.
- # wrappers should pick these up without the need of our help.
- #AM_VERSIONS='1.4 1.5 1.6 1.7 1.8 1.9 1.10'
- #AC_VERSIONS='2.13 2.58 2.59 2.60'
- AM_VERSIONS=''
- AC_VERSIONS=''
-;;
-esac
 if test -n "$AM_FORCE_VERSION"
 then
 	AM_VERSIONS="$AM_FORCE_VERSION"
 else
-    $AM_VERSIONS
+	AM_VERSIONS='1.6 1.7 1.8 1.9'
 fi
 if test -n "$AC_FORCE_VERSION"
 then
 	AC_VERSIONS="$AC_FORCE_VERSION"
 else
-	$AC_VERSIONS
+	AC_VERSIONS='2.58 2.59'
 fi
 
 versioned_bins ()
@@ -142,7 +123,7 @@ fi
 
 echo "Generating configuration files for $package, please wait...."
 
-ACLOCAL_FLAGS="$ACLOCAL_FLAGS"
+ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I $PWD/m4"
 
 # /usr/share/aclocal is most likely included by default, already...
 ac_local_paths='
@@ -162,21 +143,21 @@ for i in $ac_local_paths; do
 done
 
 echo "  $ACLOCAL $ACLOCAL_FLAGS"
-$ACLOCAL $ACLOCAL_FLAGS
+$ACLOCAL $ACLOCAL_FLAGS || exit 1
 
 echo "  $AUTOHEADER"
-$AUTOHEADER
+$AUTOHEADER || exit 1
 
 echo "  $LIBTOOLIZE --automake"
-$LIBTOOLIZE --automake
+$LIBTOOLIZE --automake || exit 1
 
 echo "  $AUTOMAKE --add-missing $AUTOMAKE_FLAGS"
-$AUTOMAKE --add-missing $AUTOMAKE_FLAGS
+$AUTOMAKE --add-missing $AUTOMAKE_FLAGS || exit 1
 
 echo "  $AUTOCONF"
-$AUTOCONF
+$AUTOCONF || exit 1
 
 cd "$olddir"
 if test x$NOCONFIGURE = x; then
-	"$srcdir"/configure "$@" && echo
+	"$srcdir"/configure "$@" || exit 1
 fi
