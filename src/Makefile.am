@@ -33,6 +33,7 @@ gmpc_SOURCES=\
 	bacon-message-connection.c\
 	gmpc-connection.c\
 	gmpc-metaimage.c\
+	gmpc-mpddata-model.c\
 	gmpc_easy_download.c\
 	url_fetcher.c\
 	eggcolumnchooserdialog.c\
@@ -41,6 +42,7 @@ gmpc_SOURCES=\
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
+	gmpc-mpddata-model.c\
 	gmpc-metaimage.c
 
 gmpc_connection_SOURCE=gmpc-connection.gob
@@ -50,6 +52,9 @@ gmpc-connection.c: $(gmpc_connection_SOURCE)
 gmpc_metaimage_SOURCE=gmpc-metaimage.gob
 gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
 	$(GOB2) --no-touch-headers $(gmpc_metaimage_SOURCE) 
+gmpc_mpddata_model_SOURCE=gmpc-mpddata-model.gob
+gmpc-mpddata-model.c: $(gmpc_mpddata_model_SOURCE)
+	$(GOB2) --no-touch-headers $(gmpc_mpddata_model_SOURCE) 
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
@@ -119,6 +124,8 @@ EXTRA_DIST = 	playlist3.h\
 		gmpc-connection.h\
 		gmpc-metaimage.h\
 		gmpc-metaimage-private.h\
+		gmpc-mpddata-model.h\
+		gmpc-mpddata-model-private.h\
 		id3info.h\
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\
