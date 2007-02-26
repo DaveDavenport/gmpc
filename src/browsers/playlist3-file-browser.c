@@ -342,6 +342,10 @@ static long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
+	if(!strcmp(path, "/"))
+		gmpc_mpddata_model_set_has_up(pl3_fb_store2, FALSE);	
+	else
+		gmpc_mpddata_model_set_has_up(pl3_fb_store2, TRUE);	
 	time = gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, data);
 	q_free(path);
 	q_free(icon);
@@ -562,7 +566,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH,&song_path, MPDDATA_MODEL_ROW_TYPE, &r_type, -1);
-	if(song_path == NULL)
+	if(song_path == NULL && r_type != -1)
 	{
 		return;
 	}
@@ -604,7 +608,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
 		}
 	}
-/*	else if (r_type&PL3_ENTRY_DIR_UP)
+	else if (r_type == -1)
 	{
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
@@ -623,7 +627,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 			}
 		}
 	}
-*/	else
+	else
 	{
 		pl3_push_statusbar_message(_("Added a song"));
 		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
@@ -930,7 +934,10 @@ static void pl3_file_browser_disconnect()
 		}
 	}
 	if(pl3_fb_store2)
+	{
+		gmpc_mpddata_model_set_has_up(pl3_fb_store2, FALSE);	
 		gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, NULL);	
+	}
 }
 
 

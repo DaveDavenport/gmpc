@@ -48,7 +48,18 @@ requires 2.0.0
 	private	GType types[MPDDATA_MODEL_N_COLUMNS]; 
 	private MpdData *data 	= NULL;
 	private gint num_rows = 0;
+
+	public gboolean has_up	 = FALSE;
 	public gchar *markup	 = {cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER)};
+
+	property BOOLEAN has_up
+		(nick = _("Has Up"),
+		blurb = _("Show an 'up row"),
+		default_value = FALSE,
+		export,
+		link);
+
+
 	init(self)
 	{
 		self->_priv->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
@@ -80,7 +91,7 @@ requires 2.0.0
 	public
 	Gmpc:MpdData:Model *new (void)
 	{
-		return (GtkTreeModel *)GET_NEW;
+		return GET_NEW;
 	}
 
 	/* function implemented for the Gtk:Tree:Model interface */
@@ -122,10 +133,19 @@ requires 2.0.0
 			return FALSE; 
 
 		data = (MpdData*)self->_priv->data;
-		for(i=0; i < (n);i++)
+		i=0;
+		if(self->has_up)
+		{
+			i=1;
+		}
+		for(; i < (n);i++)
 		{
 			data = mpd_data_get_next_real(data,FALSE);
 		}
+		if(self->has_up && n == 0)
+			data = NULL;
+
+
 		iter->stamp = self->_priv->stamp;
 		iter->user_data = data; 
 		iter->user_data2 = GINT_TO_POINTER(n);
@@ -134,14 +154,24 @@ requires 2.0.0
 
 	interface Gtk:Tree:Model
 	private gboolean
-	iter_next(Gtk:Tree:Model *self (check null type), GtkTreeIter *iter (check null))
+	iter_next(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null))
 	{
+		Self *self = GMPC_MPDDATA_MODEL(model);
 		MpdData *data = iter->user_data;
+		int n = GPOINTER_TO_INT(iter->user_data2) ;
+		if(data == NULL &&  n == 0 && self->has_up == TRUE)
+		{
+			iter->user_data = (MpdData *)self->_priv->data; 
+			iter->user_data2 = GINT_TO_POINTER(1);
+			if(iter->user_data == NULL)
+				return FALSE;
+			return TRUE;
+		}
 		if(mpd_data_get_next_real(data,FALSE) == NULL)
 			return FALSE;
 
 		iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
-		iter->user_data2 = GINT_TO_POINTER(GPOINTER_TO_INT(iter->user_data2)+1);
+		iter->user_data2 = GINT_TO_POINTER(n+1);
 
 		return TRUE;
 	}
@@ -175,10 +205,35 @@ requires 2.0.0
 	{
 		Self *self = GMPC_MPDDATA_MODEL(model);
 		MpdData_real *data = iter->user_data;	
+		int n = GPOINTER_TO_INT(iter->user_data2);
 		
 		/* set value to the correct type */
 		g_value_init(value, self->_priv->types[column]);
 
+		/* handle row up */
+		if(data == NULL && n == 0)
+		{
+			switch(column)
+			{
+				case MPDDATA_MODEL_COL_ICON_ID:
+					g_value_set_string(value, GTK_STOCK_GO_UP);
+					break;
+				case MPDDATA_MODEL_ROW_TYPE:
+					/**
+					 * Make define 
+					 */
+					g_value_set_int(value, -1);
+					break;
+				case MPDDATA_MODEL_COL_MARKUP:
+					{
+						g_value_set_string(value,"..");
+						break;
+					}
+				default:
+					break;
+			}
+			return;
+		}
 		/* handle row type, this is independent of the row type */
 		if(column == MPDDATA_MODEL_ROW_TYPE)
 		{
@@ -336,14 +391,22 @@ requires 2.0.0
 			Self *self = GMPC_MPDDATA_MODEL(model);
 			int i;
 			MpdData *data = NULL;
+			if(parent)
+				return FALSE;
 			if (n >= self->_priv->num_rows || n < 0)
 				return FALSE; 
 
 			data = (MpdData *)self->_priv->data;
-			for(i=0; i < (n);i++)
+			i=0;
+			if(self->has_up)
+				i=1;
+			for(; i < (n);i++)
 			{
 				data = mpd_data_get_next_real(data, FALSE);
 			}
+
+			if(self->has_up && n == 0)
+				data = NULL;
 
 			iter->stamp = self->_priv->stamp;
 			iter->user_data = data; 
@@ -395,6 +458,22 @@ requires 2.0.0
 			i=0;
 
 			self->_priv->data = data2;
+			if(self->has_up)
+			{
+				path = gtk_tree_path_new();
+				gtk_tree_path_append_index(path, i);
+				iter.stamp = self->_priv->stamp;
+				iter.user_data = NULL; 
+				iter.user_data2 =  GINT_TO_POINTER(i);
+				iter.user_data3 = NULL;
+
+				/* propegate change */
+				gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+				gtk_tree_path_free(path);
+				i++;
+				self->_priv->num_rows++;
+			}
+
 			for(;data2; data2 = mpd_data_get_next_real(data2,FALSE))
 			{
 				{
