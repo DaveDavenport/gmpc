@@ -35,9 +35,8 @@
 
 #include "gmpc-mpddata-model.h"
 
-
+static void pl3_find3_browser_destroy(void);
 static void pl3_find3_browser_delete_selected_songs (void);
-static void pl3_find3_browser_crop_selected_songs(void);
 static void pl3_find3_browser_category_selection_changed(GtkWidget *, GtkTreeIter *);
 static void pl3_find3_browser_selected(GtkWidget *);
 static void pl3_find3_browser_unselected(GtkWidget *);
@@ -51,17 +50,7 @@ static void pl3_find3_browser_connection_changed(MpdObj *mi, int connect, gpoint
 static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 extern GladeXML *pl3_xml;
 
-enum{
-    PL3_FIND3_PATH,
-    PL3_FIND3_TYPE,
-    PL3_FIND3_TITLE,
-    PL3_FIND3_ICON,
-    PL3_FIND3_PID,
-    PL3_FIND3_ROWS
-};
 
-
-#define	PL3_FIND3_CB_PLAYLIST 99
 /**
  * Plugin structure
  */
@@ -84,7 +73,7 @@ gmpcPlugin find3_browser_plug = {
     0,
     NULL,		                	/* path*/
     NULL,			                /* init */
-    NULL,                                       /* Destroy */
+    pl3_find3_browser_destroy,                                       /* Destroy */
     &find3_browser_gbp,	        	        /* Browser */
     NULL,		        	        /* status changed */
     pl3_find3_browser_connection_changed, 	/* connection changed */
@@ -536,7 +525,6 @@ static unsigned long pl3_find3_browser_view_browser()
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
 	{
-		char *markdata = NULL; 
 		int time=0;
 		GList *node = NULL;
 		int found = 0;
@@ -553,8 +541,8 @@ static unsigned long pl3_find3_browser_view_browser()
 			cs->tag_type = -1;
 			if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
 			{
-                int num_field;
-				if(!found)
+        int num_field;
+        if(!found)
 					mpd_playlist_search_start(connection, FALSE);
 				found = TRUE;
                 gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
@@ -641,8 +629,6 @@ static void pl3_find3_browser_show_info()
 static void pl3_find3_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 {
 	GtkTreeIter iter;
-	gchar *song_id;
-	gint r_type;
 	int id=-1;
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter,MPDDATA_MODEL_COL_SONG_ID,&id, -1);
@@ -856,5 +842,21 @@ static void pl3_find3_browser_delete_selected_songs (void)
 	gtk_tree_selection_unselect_all(selection);
 
 	mpd_status_queue_update(connection);
+}
+
+static void pl3_find3_browser_destroy(void)
+{
+  if(pl3_find3_vbox)
+  {
+    gtk_widget_destroy(pl3_find3_vbox);
+  }
+  if(pl3_find3_store2)
+  {
+    g_object_unref(pl3_find3_store2);
+  }
+  if(pl3_find3_ref)
+  {
+    gtk_tree_row_reference_free(pl3_find3_ref);
+  }
 }
 

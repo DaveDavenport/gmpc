@@ -35,7 +35,7 @@
 #include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
 
-
+static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget *cat_tree);
 static void pl3_file_browser_unselected(GtkWidget *container);
 static void pl3_file_browser_selected(GtkWidget *container);
@@ -87,7 +87,7 @@ gmpcPlugin file_browser_plug = {
 	0,
 	NULL,			                /* path*/
 	NULL,			                /* init */
-        NULL,                                   /* destroy */
+  pl3_file_browser_destroy,                                   /* destroy */
 	&file_browser_gbp,		        /* Browser */
 	pl3_file_browser_status_changed,        /* status changed */
 	pl3_file_browser_connection_changed, 	/* connection changed */
@@ -97,14 +97,6 @@ gmpcPlugin file_browser_plug = {
 	NULL                                    /* set enable */
 };
 
-
-enum{
-	PL3_FB_PATH,
-	PL3_FB_TYPE,
-	PL3_FB_TITLE,
-	PL3_FB_ICON,
-	PL3_FB_ROWS
-};
 
 extern GladeXML *pl3_xml;
 
@@ -202,7 +194,7 @@ static void pl3_file_browser_init()
 
 	gtk_box_pack_start(GTK_BOX(pl3_fb_vbox), pl3_fb_sw, TRUE, TRUE,0);
 	gtk_widget_show_all(pl3_fb_sw);	
-	pl3_fb_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_fb_tree), PL3_FB_TITLE);
+	pl3_fb_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_MARKUP);
 	gtk_box_pack_end(GTK_BOX(pl3_fb_vbox), pl3_fb_tree_search, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(pl3_fb_tree_search),"result-activate", G_CALLBACK(pl3_file_browser_search_activate), NULL);
 
@@ -989,3 +981,20 @@ static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, i
 	}                                           	
 	return FALSE;
 }
+
+static void pl3_file_browser_destroy(void)
+{
+  if(pl3_fb_vbox)
+  {
+    gtk_widget_destroy(pl3_fb_vbox);
+  }
+  if(pl3_fb_store2)
+  {
+    g_object_unref(pl3_fb_store2);
+  }
+  if(pl3_fb_tree_ref)
+  {
+    gtk_tree_row_reference_free(pl3_fb_tree_ref);
+  }                                   
+}
+

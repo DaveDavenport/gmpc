@@ -112,6 +112,24 @@ requires 2.0.0
 		return (GtkTreeModelFlags)0;
 	}
 
+
+  interface Gtk:Tree:Model
+  public
+  gboolean iter_children(Gtk:Tree:Model *model, GtkTreeIter *iter, GtkTreeIter *parent)
+  {
+    Self *self  = GMPC_MPDDATA_MODEL(model);
+    if(parent)
+      return FALSE;
+    if(self->_priv->num_rows == 0)
+      return FALSE;
+    /* Set iter to first item in list */
+    iter->stamp = self->_priv->stamp; 
+    iter->user_data = self->_priv->data;
+    iter->user_data2 =  GINT_TO_POINTER(0);
+    iter->user_data3 = NULL;	/* unused */
+
+    return TRUE;
+  }
 	/**
 	 * Unused, not known in the model directly? 
 	 */
