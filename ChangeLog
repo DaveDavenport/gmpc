@@ -1,4 +1,5 @@
 26-02-2007 Qball <Qball@Sarine.nl>
+	* src/borwsers/playlsit3-find3-browser: Make use of the mpd-data backend
 	* src/gmpc-mpddata-model.gob:	Add support for an up row.
 	* src/browsers/playlist3-file-brwoser: Use the up_row support 
 	* src/browsers/playlist3-file-brwoser: only update when model available

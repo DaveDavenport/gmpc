@@ -94,7 +94,16 @@ requires 2.0.0
 		return GET_NEW;
 	}
 
-	/* function implemented for the Gtk:Tree:Model interface */
+	override (G:Object)
+	void 
+	finalize (G:Object *obj)
+	{
+		Self *self = GMPC_MPDDATA_MODEL(obj); 
+		if(self->_priv->data)
+			mpd_data_free(self->_priv->data);
+		printf("free'ing tree\n");
+	}
+		/* function implemented for the Gtk:Tree:Model interface */
 	interface Gtk:Tree:Model
 	private GtkTreeModelFlags
 	get_flags (Gtk:Tree:Model *self (check null type))
