@@ -432,70 +432,62 @@ requires 2.0.0
 			return self->_priv->types[index];
 		} 
 	public 
-		long unsigned set_mpd_data(self, MpdData *data2)
-		{
-			long unsigned retval = 0;
-			GtkTreeIter iter;
-			GtkTreePath *path = NULL;
-			int i =0;		
-			/* loop and remove */
-			for(i= self->_priv->num_rows; i>0;i--)
-			{
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, i-1);
-				/* propegate change */
-				gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
-				gtk_tree_path_free(path);
-				self->_priv->num_rows--;
-			}
-			if(self->_priv->data)
-				mpd_data_free(self->_priv->data);
-			self->_priv->data = NULL;
-			if(self->_priv->num_rows != 0)
-			{
-				printf("ERROR not every row cleared\n");
-			}
-			i=0;
+	long unsigned set_mpd_data(self, MpdData *data2)
+	{
+		long unsigned retval = 0;
+		GtkTreeIter iter;
+		GtkTreePath *path = NULL;
 
-			self->_priv->data = data2;
-			if(self->has_up)
-			{
-				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, i);
-				iter.stamp = self->_priv->stamp;
-				iter.user_data = NULL; 
-				iter.user_data2 =  GINT_TO_POINTER(i);
-				iter.user_data3 = NULL;
-
-				/* propegate change */
-				gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-				gtk_tree_path_free(path);
-				i++;
-				self->_priv->num_rows++;
-			}
-
-			for(;data2; data2 = mpd_data_get_next_real(data2,FALSE))
-			{
-				{
-					path = gtk_tree_path_new();
-					gtk_tree_path_append_index(path, i);
-					iter.stamp = self->_priv->stamp;
-					iter.user_data = data2;
-					iter.user_data2 =  GINT_TO_POINTER(i);
-					iter.user_data3 = NULL;
-
-					/* propegate change */
-					gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-					gtk_tree_path_free(path);
-					i++;
-					self->_priv->num_rows++;
-					if(data2->type == MPD_DATA_TYPE_SONG)
-					{
-						retval+= data2->song->time;
-					}
-				}
-			}
-			return retval;
+		/* loop and remove */
+		while(self->_priv->num_rows){
+			path = gtk_tree_path_new();
+			gtk_tree_path_append_index(path, self->_priv->num_rows-1);
+			/* propegate change */
+			gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+			gtk_tree_path_free(path);
+			self->_priv->num_rows--;
 		}
+		/**
+		 * Free if there is a list and set it to NULL 
+		 */
+		if(self->_priv->data)
+			mpd_data_free(self->_priv->data);
+		self->_priv->data = NULL;
+
+		if(self->_priv->num_rows != 0)
+			printf("ERROR not every row cleared\n");
+
+		self->_priv->data = data2;
+		if(self->has_up) {
+			path = gtk_tree_path_new();
+			gtk_tree_path_append_index(path, self->_priv->num_rows);
+			iter.stamp = self->_priv->stamp;
+			iter.user_data = NULL; 
+			iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+
+			/* propegate change */
+			gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+			gtk_tree_path_free(path);
+			self->_priv->num_rows++;
+		}
+
+		for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
+			path = gtk_tree_path_new();
+			gtk_tree_path_append_index(path,self->_priv->num_rows);
+			iter.stamp = self->_priv->stamp;
+			iter.user_data = data2;
+			iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+
+			/* propegate change */
+			gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+			gtk_tree_path_free(path);
+			self->_priv->num_rows++;
+			if(data2->type == MPD_DATA_TYPE_SONG)
+			{
+				retval+= data2->song->time;
+			}
+		}
+		return retval;
+	}
 }
 
