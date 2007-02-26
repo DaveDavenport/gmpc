@@ -64,7 +64,6 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_file_browser_disconnect(void);
 
-guint pl3_fb_filling_source = 0;
 /**
  * Plugin structure
  */
@@ -103,7 +102,6 @@ extern GladeXML *pl3_xml;
 GtkTreeRowReference *pl3_fb_tree_ref = NULL;
 /* internal */
 GtkWidget *pl3_fb_tree = NULL;
-//GtkListStore *pl3_fb_store = NULL;
 GtkWidget *pl3_fb_vbox = NULL;
 GtkWidget *pl3_fb_tree_search = NULL;
 GmpcMpdDataModel *pl3_fb_store2 = NULL;
@@ -153,9 +151,7 @@ static void pl3_file_browser_init()
 
 	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", 
-		/*PL3_FB_ICON,NULL);*/
-		MPDDATA_MODEL_COL_ICON_ID,NULL);
+	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", MPDDATA_MODEL_COL_ICON_ID,NULL);
 	memset(&value, 0, sizeof(value));
 	/* set value for ALL */
 	g_value_init(&value, G_TYPE_FLOAT);
@@ -164,9 +160,7 @@ static void pl3_file_browser_init()
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,renderer,"text",
-		/* PL3_FB_TITLE, NULL);*/
-		MPDDATA_MODEL_COL_MARKUP, NULL); 
+	gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL); 
 
 
 
@@ -334,6 +328,7 @@ static long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
+  /* Check, and set the up arrow in the model */
 	if(!strcmp(path, "/"))
 		gmpc_mpddata_model_set_has_up(pl3_fb_store2, FALSE);	
 	else
@@ -695,7 +690,7 @@ static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 			g_list_free (list);
 			q_free(path);
-/*			if(row_type != PL3_ENTRY_DIR_UP)*/
+			if(row_type != -1)
 			{
 				/* replace the replace widget */
 				item = gtk_image_menu_item_new_with_label(_("Replace"));
