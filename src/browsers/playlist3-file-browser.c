@@ -929,7 +929,8 @@ static void pl3_file_browser_disconnect()
 			gtk_tree_store_append(pl3_tree, &child, &iter);
 		}
 	}
-	gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, NULL);	
+	if(pl3_fb_store2)
+		gmpc_mpddata_model_set_mpd_data(pl3_fb_store2, NULL);	
 }
 
 

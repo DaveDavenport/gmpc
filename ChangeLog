@@ -1,3 +1,6 @@
+26-02-2007 Qball <Qball@Sarine.nl>
+	* src/browsers/playlist3-file-brwoser: only update when model available
+
 25-02-2007 Qball <Qball@sarine.nl>
 	* src/gmpc-mpddata-backend.gob:	Add custom backend for showing mpd-data's
 	* src/browsers/playlist-file-browser: make use of custom backend.
