@@ -463,13 +463,13 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
                     }
                 }
                 if(!loop)
-                {
-					mpd_Song *song = NULL;
-					gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-					data = mpd_new_data_struct_append(data);
-					data->type = MPD_DATA_TYPE_SONG;
-					data->song = mpd_songDup(song);  
-                }
+		{
+			mpd_Song *song = NULL;
+			gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
+			data = mpd_new_data_struct_append(data);
+			data->type = MPD_DATA_TYPE_SONG;
+			data->song = mpd_songDup(song);  
+		}
             } while(gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist), &iter));
 			gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
             /* remove the progress bar */

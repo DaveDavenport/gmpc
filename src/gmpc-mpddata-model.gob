@@ -490,7 +490,8 @@ requires 2.0.0
 			long unsigned retval = 0;
 			GtkTreeIter iter;
 			GtkTreePath *path = NULL;
-
+			
+			data2 = mpd_data_get_first(data2);
 			/* loop and remove */
 			while(self->_priv->num_rows){
 				path = gtk_tree_path_new();

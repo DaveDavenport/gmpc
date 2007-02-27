@@ -512,6 +512,7 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 				data2->type = MPD_DATA_TYPE_TAG;
 				data2->tag = g_strdup(data->key);
 				data2->tag_type = MPD_TAG_ITEM_ARTIST;
+
 				data = data->next;
 			}while(data != NULL);
 			cfg_free_multiple(list);
