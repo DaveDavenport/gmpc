@@ -14,6 +14,7 @@
 #include "gmpc-mpddata-model.h"
 
 static void pref_id3b_fill(void);
+static void pl3_tag_browser_destroy(void);
 static void pl3_custom_tag_browser_fill_tree(GtkWidget *,GtkTreeIter *);
 static void pl3_tag_browser_selected(GtkWidget *container);
 static void pl3_tag_browser_unselected(GtkWidget *container);
@@ -70,7 +71,7 @@ gmpcPlugin tag_plug = {
 	0,
 	NULL,			/* name*/
 	NULL,			/* init */
-        NULL,                   /* destroy */
+        pl3_tag_browser_destroy,                   /* destroy */
 	&tag_gbp,		/* Browser */
 	NULL,			/* status changed */
 	&tag_connection,	/* connection */
@@ -1532,4 +1533,20 @@ static int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 		return 1;
 	}
 	return 0;
+}
+
+static void pl3_tag_browser_destroy(void)
+{
+  if(pl3_tb_sw)
+  {
+    gtk_widget_destroy(pl3_tb_sw);
+  }
+  if(pl3_tag_store2)
+  {
+    g_object_unref(pl3_tag_store2);
+  }
+  if(pl3_tag_tree_ref)
+  {
+    gtk_tree_row_reference_free(pl3_tag_tree_ref);
+  }                                   
 }
