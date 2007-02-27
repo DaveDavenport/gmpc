@@ -32,7 +32,9 @@
 #include "config1.h"
 #include "id3info.h"
 
-static void pl3_find2_browser_category_selection_changed(GtkWidget *, GtkTreeIter *);
+#include "gmpc-mpddata-model.h"
+
+static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);
 static void pl3_find2_browser_unselected(GtkWidget *);
 static void pl3_find2_browser_add(GtkWidget *cat_tree);
@@ -46,17 +48,6 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 extern GladeXML *pl3_xml;
 
-enum{
-	PL3_FIND2_PATH,
-	PL3_FIND2_TYPE,
-	PL3_FIND2_TITLE,
-	PL3_FIND2_ICON,
-	PL3_FIND2_PID,
-	PL3_FIND2_ROWS
-};
-
-
-#define	PL3_FIND2_CB_PLAYLIST 99
 /**
  * Plugin structure
  */
@@ -64,7 +55,7 @@ gmpcPlBrowserPlugin find2_browser_gbp = {
 	pl3_find2_browser_add,
 	pl3_find2_browser_selected,
 	pl3_find2_browser_unselected,
-	pl3_find2_browser_category_selection_changed,
+	NULL,//pl3_find2_browser_category_selection_changed,
 	NULL,
 	NULL,
 	NULL,
@@ -79,7 +70,7 @@ gmpcPlugin find2_browser_plug = {
 	0,
 	NULL,			                /* path*/
 	NULL,			                /* init */
-        NULL,                                   /* Destroy */
+    pl3_find2_browser_destroy,                                   /* Destroy */
 	&find2_browser_gbp,		        /* Browser */
 	NULL,			                /* status changed */
 	pl3_find2_browser_connection_changed, 	/* connection changed */
@@ -106,7 +97,7 @@ extern GladeXML *pl3_xml;
 
 /* internal */
 GtkWidget 	*pl3_find2_tree 	= NULL;
-GtkListStore 	*pl3_find2_store 	= NULL;
+GmpcMpdDataModel *pl3_find2_store2 = NULL;
 GtkWidget 	*pl3_find2_vbox 	= NULL;
 GtkWidget	*pl3_find2_findbut     = NULL;
 GtkWidget       *pl3_find2_critaddbut   = NULL;
@@ -141,11 +132,6 @@ static void pl3_find2_fill_combo()
 		gtk_list_store_append(pl3_find2_combo_store, &iter);
 		gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
 	}
-/*	gtk_list_store_append(pl3_find2_combo_store, &iter);
-	gtk_list_store_set(pl3_find2_combo_store, &iter, 1, "Playlist", 0,PL3_FIND2_CB_PLAYLIST, -1);
-
-	gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_combo), 0);
-*/
 }
 
 static void pl3_find2_browser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
@@ -214,12 +200,14 @@ static void pl3_find2_browser_init()
     GtkWidget *hbox = NULL;
 
     GValue value = {0,};
-    pl3_find2_store = gtk_list_store_new (PL3_FIND2_ROWS, 
-            G_TYPE_STRING, /* path to file */
-            G_TYPE_INT,	/* type, FILE/PLAYLIST/FOLDER  */
-            G_TYPE_STRING,	/* title to display */
+/*    pl3_find2_store = gtk_list_store_new (PL3_FIND2_ROWS, 
             G_TYPE_STRING,
-            G_TYPE_INT); /* icon type */
+            G_TYPE_INT,	
+            G_TYPE_STRING,
+            G_TYPE_STRING,
+            G_TYPE_INT);
+*/
+	pl3_find2_store2 = gmpc_mpddata_model_new();
 
 
     pl3_find2_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
@@ -231,7 +219,7 @@ static void pl3_find2_browser_init()
     column = gtk_tree_view_column_new ();
     gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
     gtk_tree_view_column_pack_start (column, renderer, FALSE);
-    gtk_tree_view_column_set_attributes (column,renderer,"stock-id", PL3_FIND2_ICON,NULL);
+    gtk_tree_view_column_set_attributes (column,renderer,"stock-id",MPDDATA_MODEL_COL_ICON_ID,NULL);
 
 
     /* set value for ALL */
@@ -241,11 +229,11 @@ static void pl3_find2_browser_init()
 
     renderer = gtk_cell_renderer_text_new ();
     gtk_tree_view_column_pack_start (column, renderer, TRUE);
-    gtk_tree_view_column_set_attributes (column,renderer,"text", PL3_FIND2_TITLE, NULL);
+    gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL);
 
 
     /* set up the tree */
-    pl3_find2_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_find2_store));
+    pl3_find2_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_find2_store2));
     /* insert the column in the tree */
     gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_find2_tree), column);                                         	
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_find2_tree), FALSE);
@@ -362,17 +350,15 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
 
 static unsigned long pl3_find2_browser_view_browser()
 {
-    char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
     int time=0;
     GList *node = NULL;
     int found = 0;
-    GtkTreeIter child;
 
     MpdData *data = NULL;
-    gtk_list_store_clear(pl3_find2_store);
+
+    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
     if(criterias == NULL)
     {
-        cfg_free_string(markdata); 
         return 0;
     }
     for(node= g_list_first(criterias); node; node = g_list_next(node))
@@ -393,70 +379,11 @@ static unsigned long pl3_find2_browser_view_browser()
         }
     }
     if(!found)
-    {
-        cfg_free_string(markdata); 
         return 0;
-    }
 
     data = mpd_database_search_commit(connection);
-    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
-    while (data != NULL)
-    {
-        gchar buffer[1024];
-        if(data->type == MPD_DATA_TYPE_SONG)
-        { 
-            if(data->song->time != MPD_SONG_NO_TIME)
-            {
-                time += data->song->time;
-            }
-
-            mpd_song_markup(buffer, 1024, markdata,
-                    data->song);
-
-            /* add as child of the above created parent folder */
-            gtk_list_store_append (pl3_find2_store, &child);
-            gtk_list_store_set (pl3_find2_store, &child,
-                    PL3_FIND2_PATH, data->song->file,
-                    PL3_FIND2_TITLE, buffer,
-                    PL3_FIND2_TYPE, PL3_ENTRY_SONG, 
-                    PL3_FIND2_ICON, "media-audiofile", 
-                    -1);
-        }
-        else if (data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
-        {
-            gtk_list_store_prepend (pl3_find2_store, &child);
-            gtk_list_store_set (pl3_find2_store, &child,
-                    PL3_FIND2_PATH, data->tag,
-                    PL3_FIND2_TITLE, data->tag,
-                    PL3_FIND2_TYPE, PL3_ENTRY_ARTIST, 
-                    PL3_FIND2_ICON, "media-artist", 			  
-                    -1);
-        }
-        else if (data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM)
-        {
-            char *buffer = NULL;
-            if(data->tag)
-            {
-                buffer = g_strdup_printf("%s - %s", data->tag, data->tag);
-            }
-            else
-            {
-                buffer = g_strdup(data->tag);
-            }
-            gtk_list_store_prepend (pl3_find2_store, &child);
-            gtk_list_store_set (pl3_find2_store, &child,
-                    PL3_FIND2_PATH, data->tag,
-                    PL3_FIND2_TITLE, buffer,
-                    PL3_FIND2_TYPE, PL3_ENTRY_ALBUM,
-                    PL3_FIND2_ICON, "media-album",
-                    -1);
-            q_free(buffer);
-        }
-
-        data =  mpd_data_get_next(data);
-    }
-    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store));
-    cfg_free_string(markdata); 
+	gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
     return time;
 }
 
@@ -465,7 +392,6 @@ static void pl3_find2_browser_search()
 {
     long unsigned time = 0;
     gchar *string;	
-    gtk_list_store_clear(pl3_find2_store);
     time = pl3_find2_browser_view_browser();
     string = format_time(time);
     gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
@@ -495,7 +421,7 @@ static void pl3_find2_browser_show_info()
             char *path;
             GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
             gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-            gtk_tree_model_get(model,&iter,PL3_FIND2_PATH, &path,-1);
+            gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_PATH, &path,-1);
             song = mpd_database_get_fileinfo(connection, path);
             if(song)
                 call_id3_window_song(song); 
@@ -514,7 +440,7 @@ static void pl3_find2_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
     gchar *song_id;
     gint r_type;
     gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-    gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, PL3_FIND2_PATH,&song_id, PL3_FIND2_TYPE, &r_type, -1);
+    gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter,MPDDATA_MODEL_COL_PATH,&song_id,MPDDATA_MODEL_ROW_TYPE, &r_type, -1);
     {
         int playlist_length = mpd_playlist_get_playlist_length(connection);
         pl3_push_statusbar_message(_("Added a song"));
@@ -533,17 +459,6 @@ static void pl3_find2_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
     }
 
     q_free(song_id);
-}
-
-static void pl3_find2_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
-{
-    long unsigned time = 0;
-    gchar *string;	
-    gtk_list_store_clear(pl3_find2_store);
-    time = pl3_find2_browser_view_browser();
-    string = format_time(time);
-    gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-    q_free(string);
 }
 
 static void pl3_find2_browser_replace_selected()
@@ -581,7 +496,7 @@ static void pl3_find2_browser_add_selected()
 {
     GtkTreeIter iter;
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find2_tree));
-    GtkTreeModel *model = GTK_TREE_MODEL (pl3_find2_store);
+    GtkTreeModel *model = GTK_TREE_MODEL (pl3_find2_store2);
     GList *rows = gtk_tree_selection_get_selected_rows (selection, &model);
     int songs=0;
     if(rows != NULL)
@@ -593,7 +508,7 @@ static void pl3_find2_browser_add_selected()
         {
             GtkTreePath *path = node->data;
             gtk_tree_model_get_iter (model, &iter, path);
-            gtk_tree_model_get (model, &iter, PL3_FIND2_PATH,&name, PL3_FIND2_TYPE, &type, -1);	  
+            gtk_tree_model_get (model, &iter,MPDDATA_MODEL_COL_PATH,&name,MPDDATA_MODEL_ROW_TYPE, &type, -1);	  
             /* does this bitmask thingy works ok? I think it hsould */
             if(type&(PL3_ENTRY_SONG))
             {
@@ -652,7 +567,6 @@ static void pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButto
 
 static void pl3_find2_browser_disconnect()
 {
-    if(pl3_find2_store) gtk_list_store_clear(pl3_find2_store);
 }
 
 
@@ -701,3 +615,20 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 
     return FALSE;
 }
+
+static void pl3_find2_browser_destroy(void)
+{
+  if(pl3_find2_vbox)
+  {
+    gtk_widget_destroy(pl3_find2_vbox);
+  }
+  if(pl3_find2_store2)
+  {
+    g_object_unref(pl3_find2_store2);
+  }
+  if(pl3_find2_ref)
+  {
+    gtk_tree_row_reference_free(pl3_find2_ref);
+  }
+}
+

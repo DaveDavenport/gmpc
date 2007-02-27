@@ -73,14 +73,14 @@ gmpcPlugin find3_browser_plug = {
     0,
     NULL,		                	/* path*/
     NULL,			                /* init */
-    pl3_find3_browser_destroy,                                       /* Destroy */
-    &find3_browser_gbp,	        	        /* Browser */
+    pl3_find3_browser_destroy,      /* Destroy */
+    &find3_browser_gbp,	        	/* Browser */
     NULL,		        	        /* status changed */
     pl3_find3_browser_connection_changed, 	/* connection changed */
-    NULL,		                        /* Preferences */
+    NULL,		                    /* Preferences */
     NULL,			                /* MetaData */
-    NULL,                                       /* get_enable */
-    NULL                                        /* set_enable */
+    NULL,                           /* get_enable */
+    NULL                            /* set_enable */
 };
 
 
@@ -204,13 +204,7 @@ static void pl3_find3_browser_init()
     GtkWidget *hbox = NULL;
 
     GValue value = {0,};
-/*    pl3_find3_store = gtk_list_store_new (PL3_FIND3_ROWS, 
-            G_TYPE_STRING, 
-            G_TYPE_INT,
-            G_TYPE_STRING,
-            G_TYPE_STRING,
-            G_TYPE_INT); 
-*/
+
 	pl3_find3_store2 = gmpc_mpddata_model_new();
 
 
@@ -361,12 +355,10 @@ static void pl3_find3_browser_add(GtkWidget *cat_tree)
 static unsigned long pl3_find3_browser_view_browser_old_style()
 {
 	MpdData *data = NULL;
-    char *markdata = NULL; 
     int time=0;
     GList *node = NULL;
     int found = 0;
 
-/*    gtk_list_store_clear(pl3_find3_store);*/
     if(criterias3 == NULL)
         return 0;
     /** check rules, see if there is a usefull one, if so compile a regex */
@@ -392,7 +384,6 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
     if(!found)
         return 0;
     /* get markup */
-    markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
     /** Fill now */
     {
@@ -476,25 +467,6 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
                 {
 					mpd_Song *song = NULL;
 					gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-            /*        GtkTreeIter piter;
-                    int id = 0, ttime = 0;;
-                    char *temp = NULL;
-                    gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter,
-                            PLAYLIST_LIST_COL_SONG_ID, &id,
-                            PLAYLIST_LIST_COL_MARKUP, &temp,
-                            -1);
-                    gtk_list_store_append(pl3_find3_store, &piter);
-                    gtk_list_store_set(pl3_find3_store, &piter,
-                            PL3_FIND3_PATH, "", 
-                            PL3_FIND3_TYPE, PL3_CUR_PLAYLIST,
-                            PL3_FIND3_PID, id,
-                            PL3_FIND3_TITLE, temp,
-                            PL3_FIND3_ICON, "media-audiofile",
-                            -1); 	
-                    q_free(temp);                      		
-
-                    time+=ttime;
-*/
 					data = mpd_new_data_struct_append(data);
 					data->type = MPD_DATA_TYPE_SONG;
 					data->song = mpd_songDup(song);  
@@ -517,7 +489,6 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
     }
     /* set model again */
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
-    cfg_free_string(markdata); 
     return time;
 }
 static unsigned long pl3_find3_browser_view_browser()
@@ -529,7 +500,6 @@ static unsigned long pl3_find3_browser_view_browser()
 		GList *node = NULL;
 		int found = 0;
 		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
-/*		gtk_list_store_clear(pl3_find3_store);*/
 		if(criterias3 == NULL)
 			return 0;
 		/** check rules, see if there is a usefull one, if so compile a regex */
@@ -551,30 +521,6 @@ static unsigned long pl3_find3_browser_view_browser()
 		}
 		if(!found) return 0;	
 		MpdData *data = mpd_playlist_search_commit(connection);
-/*		if(data)
-		{
-			GtkTreeIter iter;
-			char *markdata = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-			while(data) {
-				gchar buffer[1024];
-				mpd_song_markup(buffer, 1024, markdata,data->song);
-				if(data->song->time != MPD_SONG_NO_TIME)
-				{
-					time += data->song->time;
-				}
-				gtk_list_store_append (pl3_find3_store, &iter);
-				gtk_list_store_set (pl3_find3_store, &iter,
-						PL3_FIND3_PATH, data->song->file,
-						PL3_FIND3_TYPE, PL3_ENTRY_SONG,
-						PL3_FIND3_PID, data->song->id,
-						PL3_FIND3_TITLE, buffer,
-						PL3_FIND3_ICON, "media-audiofile",
-						-1);
-				data = mpd_data_get_next(data);
-			}
-			cfg_free_string(markdata);
-		}
-*/
 		time = gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
 		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
 		return time;
