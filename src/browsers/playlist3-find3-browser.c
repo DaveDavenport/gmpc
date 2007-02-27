@@ -102,7 +102,6 @@ extern GladeXML *pl3_xml;
 
 /* internal */
 GtkWidget 	*pl3_find3_tree 	= NULL;
-//GtkListStore 	*pl3_find3_store 	= NULL;
 GmpcMpdDataModel *pl3_find3_store2 = NULL;
 
 GtkWidget 	*pl3_find3_vbox 	= NULL;
