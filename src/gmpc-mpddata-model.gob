@@ -36,6 +36,7 @@ requires 2.0.0
 		MPDDATA_MODEL_COL_SONG_POS,				/* position */
 		MPDDATA_MODEL_COL_SONG_ID,				/* col id */
 		MPDDATA_MODEL_COL_ICON_ID,				/* icon id */
+		MPDDATA_MODEL_TAG_TYPE,				/* tag type */
 		MPDDATA_MODEL_ROW_TYPE,					/* type of the row */
 		MPDDATA_MODEL_N_COLUMNS
 	} ;
@@ -84,6 +85,7 @@ requires 2.0.0
 		self->_priv->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
 		self->_priv->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
 		self->_priv->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
+		self->_priv->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
 		self->_priv->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
 	}
 	class_init(klass);
@@ -266,11 +268,34 @@ requires 2.0.0
 		{
 			g_value_set_int(value, data->type);
 			return;
-		}
-
-
-		if(data->type == MPD_DATA_TYPE_DIRECTORY)
-		{
+		} 
+		if (data->type == MPD_DATA_TYPE_TAG) {
+			switch(column)
+			{
+				case MPDDATA_MODEL_COL_ICON_ID:
+					switch(data->tag_type) 
+					{
+						case MPD_TAG_ITEM_ALBUM:
+							g_value_set_string(value, "media-album");
+						default:
+							g_value_set_string(value, "media-artist");
+					}
+					break;
+				case MPDDATA_MODEL_COL_MARKUP:
+					{
+						g_value_set_string(value, data->tag);
+						break;
+					}
+				case MPDDATA_MODEL_COL_PATH:
+					g_value_set_string(value, data->tag);
+					break;                                         		
+				case MPDDATA_MODEL_TAG_TYPE:
+					g_value_set_int(value, data->tag_type);
+					break;                                         		
+				default:
+					break;
+			}
+		} else if(data->type == MPD_DATA_TYPE_DIRECTORY) {
 			switch(column)
 			{
 				case MPDDATA_MODEL_COL_ICON_ID:
@@ -459,62 +484,62 @@ requires 2.0.0
 			return self->_priv->types[index];
 		} 
 	public 
-	long unsigned set_mpd_data(self, MpdData *data2)
-	{
-		long unsigned retval = 0;
-		GtkTreeIter iter;
-		GtkTreePath *path = NULL;
+		long unsigned set_mpd_data(self, MpdData *data2)
+		{
+			long unsigned retval = 0;
+			GtkTreeIter iter;
+			GtkTreePath *path = NULL;
 
-		/* loop and remove */
-		while(self->_priv->num_rows){
-			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path, self->_priv->num_rows-1);
-			/* propegate change */
-			gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
-			gtk_tree_path_free(path);
-			self->_priv->num_rows--;
-		}
-		/**
-		 * Free if there is a list and set it to NULL 
-		 */
-		if(self->_priv->data)
-			mpd_data_free(self->_priv->data);
-		self->_priv->data = NULL;
-
-		if(self->_priv->num_rows != 0)
-			printf("ERROR not every row cleared\n");
-
-		self->_priv->data = data2;
-		if(self->has_up) {
-			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path, self->_priv->num_rows);
-			iter.stamp = self->_priv->stamp;
-			iter.user_data = NULL; 
-			iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
-
-			/* propegate change */
-			gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-			gtk_tree_path_free(path);
-			self->_priv->num_rows++;
-		}
-
-		for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
-			path = gtk_tree_path_new();
-			gtk_tree_path_append_index(path,self->_priv->num_rows);
-			iter.stamp = self->_priv->stamp;
-			iter.user_data = data2;
-			iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
-
-			/* propegate change */
-			gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-			gtk_tree_path_free(path);
-			self->_priv->num_rows++;
-			if(data2->type == MPD_DATA_TYPE_SONG)
-			{
-				retval+= data2->song->time;
+			/* loop and remove */
+			while(self->_priv->num_rows){
+				path = gtk_tree_path_new();
+				gtk_tree_path_append_index(path, self->_priv->num_rows-1);
+				/* propegate change */
+				gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+				gtk_tree_path_free(path);
+				self->_priv->num_rows--;
 			}
+			/**
+			 * Free if there is a list and set it to NULL 
+			 */
+			if(self->_priv->data)
+				mpd_data_free(self->_priv->data);
+			self->_priv->data = NULL;
+
+			if(self->_priv->num_rows != 0)
+				printf("ERROR not every row cleared\n");
+
+			self->_priv->data = data2;
+			if(self->has_up) {
+				path = gtk_tree_path_new();
+				gtk_tree_path_append_index(path, self->_priv->num_rows);
+				iter.stamp = self->_priv->stamp;
+				iter.user_data = NULL; 
+				iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+
+				/* propegate change */
+				gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+				gtk_tree_path_free(path);
+				self->_priv->num_rows++;
+			}
+
+			for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
+				path = gtk_tree_path_new();
+				gtk_tree_path_append_index(path,self->_priv->num_rows);
+				iter.stamp = self->_priv->stamp;
+				iter.user_data = data2;
+				iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+
+				/* propegate change */
+				gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+				gtk_tree_path_free(path);
+				self->_priv->num_rows++;
+				if(data2->type == MPD_DATA_TYPE_SONG)
+				{
+					retval+= data2->song->time;
+				}
+			}
+			return retval;
 		}
-		return retval;
-	}
 }
 
