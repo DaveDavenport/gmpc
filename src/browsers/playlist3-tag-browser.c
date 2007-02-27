@@ -500,18 +500,23 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 	if(depth == -1)
 	{
+		MpdData *data2 = NULL;
 		conf_mult_obj *list;
 		list = cfg_get_multiple_as_string(config, "playlist", "advbrows");
 		if(list != NULL)
 		{
 			conf_mult_obj *data = list;
 			do{
+				data2 = mpd_new_data_struct_append(data2);
+				data2->type = MPD_DATA_TYPE_TAG;
+				data2->tag = g_strdup(data->key);
+				data2->tag_type = MPD_TAG_ITEM_ARTIST;
 				data = data->next;
 			}while(data != NULL);
 			cfg_free_multiple(list);
 		}
 		gmpc_mpddata_model_set_has_up(pl3_tag_store2, FALSE);
-		gmpc_mpddata_model_set_mpd_data(pl3_tag_store2, NULL);
+		gmpc_mpddata_model_set_mpd_data(pl3_tag_store2, data2);
 	}
 	if(depth == 0)
 	{
