@@ -1,3 +1,11 @@
+28-02-2007 Qball <Qball@Sarine.nl>
+	* src/gmpc-mpddata-treeview.gob:	A custom GtkTreeView implementation
+	that does columns. suited for an mpd_data list.
+	* src/browser/playlist3-file-browser: use the Gmpc:Metadata:Treeview.
+	* src/browsers/playlist3-find[2|3]-browser: use the
+	Gmpc:Metadata:Treeview.
+	* src/browsers/playlist3-tag-browser:	use the Gmpc:Metadata:Treeview
+
 26-02-2007 Qball <Qball@Sarine.nl>
 	* src/borwsers/playlsit3-find3-browser: Make use of the mpd-data backend
 	* src/gmpc-mpddata-model.gob:	Add support for an up row.

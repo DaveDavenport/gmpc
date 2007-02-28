@@ -23,9 +23,7 @@
 #include <string.h>
 #include <glade/glade.h>
 
-
 #include "plugin.h"
-
 
 #include "main.h"
 #include "misc.h"
