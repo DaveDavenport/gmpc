@@ -12,6 +12,7 @@
 #include "playlist3-tag-browser.h"
 
 #include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-treeview.h"
 
 static void pref_id3b_fill(void);
 static void pl3_tag_browser_destroy(void);
@@ -90,7 +91,7 @@ static void pl3_custom_tag_browser_add_folder(void);
 static void pl3_custom_tag_browser_replace_folder(void);
 static void pl3_tag_browser_add_selected(void);
 static void pl3_tag_browser_replace_selected(void);
-static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
+static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event);
 static void pl3_tag_browser_show_info(void);
 static int pl3_tag_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event);
 
@@ -131,37 +132,13 @@ static void pl3_tag_browser_search_activate()
 static void pl3_tag_browser_init()
 {
 	GtkWidget *vbox = NULL;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column = NULL;
-	GValue value;
 
 	pl3_tag_store2 = gmpc_mpddata_model_new();
 
-	renderer = gtk_cell_renderer_pixbuf_new ();
-
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", MPDDATA_MODEL_COL_ICON_ID, NULL);
-
-	memset(&value, 0, sizeof(value));
-	/* set value for ALL */
-	g_value_init(&value, G_TYPE_FLOAT);
-	g_value_set_float(&value, 0.0);
-	g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL);
-
 	/* set up the tree */
-	pl3_tb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_tag_store2));/*pl3_tb_store));*/
+	pl3_tb_tree = gmpc_mpddata_treeview_new("tag-brow");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_tag_store2));/*pl3_tb_store));*/
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_tb_tree), GTK_TREE_MODEL(pl3_tag_store2));
 	/* insert the column in the tree */
-	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_tb_tree), column);
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_tb_tree), FALSE);
-	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_tb_tree), TRUE);
-	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree)), GTK_SELECTION_MULTIPLE);
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_tb_tree), -1);
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",
 			G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
@@ -926,7 +903,7 @@ static void pl3_tag_browser_unselected(GtkWidget *container)
 
 
 
-static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
+static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 3)
 	{
@@ -942,14 +919,14 @@ static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEvent
 		if(!gtk_tree_selection_get_selected(selection,&model, &iter))
 		{
 			/* Nothin selected? then we don't have todo anything */
-			return;
+			return FALSE;
 		}
 		/* now we want to know what level we are, and what we need to show */
 		path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
 		if(path == NULL)
 		{
 			debug_printf(DEBUG_INFO,"Failed to get path\n");
-			return;
+			return  FALSE;
 		}
 		depth = gtk_tree_path_get_depth(path);
 		gtk_tree_path_free(path);	
@@ -973,9 +950,10 @@ static void pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEvent
 
 			gtk_widget_show_all(GTK_WIDGET(menu));
 			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-
+			return TRUE;
 		}
 	}
+	return FALSE;
 }
 
 

@@ -5,11 +5,13 @@ requires 2.0.0
 #include "main.h"
 #include "config.h"
 #include "gmpc-mpddata-model.h"
-
+#include "eggcolumnchooserdialog.h"
 %}
-
 %h{
 #define NUM_COLS 17
+%}
+
+%{
 static gchar *col_names[NUM_COLS] = {
 	"Markup",
 	"Artist",
@@ -51,9 +53,9 @@ static gint  col_enabled[NUM_COLS] = {
 };
 static gint  col_position[NUM_COLS] = {
 	16,//"Markup",
-	1, //"Artist",
+	3, //"Artist",
 	2,//"Album",
-	3,//"Title",
+	1,//"Title",
 	4,//"File",
 	5,//"Genre",
 	6,//"Track",
@@ -93,7 +95,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		{ 
 			int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
 			col = self_add_column(self,_(col_names[i]),i+MPDDATA_MODEL_COL_MARKUP,conf_pos);
-			g_object_set_data(col, "id",GINT_TO_POINTER(i));	
+			g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
 			pos++;
 		}
 		q_free(conf_opt);
@@ -101,7 +103,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
 		for(i = 0;i< NUM_COLS;i++)
 		{ 
-			int id = GPOINTER_TO_INT(g_object_get_data(self->_priv->columns[i], "id"));
+			int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(self->_priv->columns[i]), "id"));
 			int col_size= cfg_get_single_value_as_int_with_default(config, conf_size,col_names[id], 200); 
 			int col_show= cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[id], col_enabled[id]); 
 			gtk_tree_view_column_set_visible(self->_priv->columns[i],col_show);
@@ -116,6 +118,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 		q_free(conf_opt);
 		q_free(conf_size);
+
+		/* */
+		gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(self)), GTK_SELECTION_MULTIPLE);
+		gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(self), TRUE);
+		gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(self), TRUE);
 	}
 
 	/**
@@ -146,7 +153,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		for(iter = cols; iter; iter = g_list_next(iter))
 		{
 			GtkTreeViewColumn *column = iter->data;
-			int id = GPOINTER_TO_INT(g_object_get_data(column, "id"));
+			int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
 			cfg_set_single_value_as_int(config, conf_pos, col_names[id], i);
 			cfg_set_single_value_as_int(config, conf_show, col_names[id], gtk_tree_view_column_get_visible(column));
 			/* only save width on > 0 columns */
@@ -159,10 +166,12 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		q_free(conf_size);
 		g_list_free(cols);
 	}
+
 	override (G:Object)
 	void 
-	dispose (self)
+	dispose (G:Object *obj)
 	{
+		Self *self = GMPC_MPDDATA_TREEVIEW(obj);
 		self_save_column_setup(self);
 		printf("%s-treeview: Dispose\n", self->_priv->name);
 
@@ -182,10 +191,17 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			g_value_init(&value, G_TYPE_FLOAT);
 			g_value_set_float(&value, 0.0);
 			g_object_set_property(G_OBJECT(renderer), "xalign", &value); 
-			column = gtk_tree_view_column_new_with_attributes (columnname, renderer,
-					"stock-id", valuerow,NULL);
 
-			gtk_tree_view_column_set_fixed_width(column, 50);
+	/*		column = gtk_tree_view_column_new_with_attributes ("", renderer,
+					"stock-id", valuerow,NULL);
+*/
+			column = gtk_tree_view_column_new ();
+			gtk_tree_view_column_pack_start (column, renderer, TRUE);
+			gtk_tree_view_column_set_attributes (column,renderer,"stock-id", MPDDATA_MODEL_COL_ICON_ID,NULL);
+
+
+			gtk_tree_view_column_set_resizable(column, TRUE);
+			gtk_tree_view_column_set_fixed_width(column, 20);
 		}
 		else{
 			renderer = gtk_cell_renderer_text_new();

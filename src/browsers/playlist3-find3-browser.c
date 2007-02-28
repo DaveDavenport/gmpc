@@ -200,12 +200,8 @@ static void pl3_find3_browser_add_crit()
 
 static void pl3_find3_browser_init()
 {
-    GtkCellRenderer *renderer;
-    GtkTreeViewColumn *column = NULL;
     GtkWidget  *pl3_find3_sw = NULL;
     GtkWidget *hbox = NULL;
-
-    GValue value = {0,};
 
 	pl3_find3_store2 = gmpc_mpddata_model_new();
 
@@ -214,33 +210,10 @@ static void pl3_find3_browser_init()
     /** Fill the view */
     pl3_find3_fill_combo();
 
-    /* Column */
-/*    renderer = gtk_cell_renderer_pixbuf_new ();
-    column = gtk_tree_view_column_new ();
-    gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
-    gtk_tree_view_column_pack_start (column, renderer, FALSE);
-    gtk_tree_view_column_set_attributes (column,renderer,"stock-id",MPDDATA_MODEL_COL_ICON_ID, NULL);
-*/
-
-    /* set value for ALL */
-/*    g_value_init(&value, G_TYPE_FLOAT);
-    g_value_set_float(&value, 0.0);
-    g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
-
-    renderer = gtk_cell_renderer_text_new ();
-    gtk_tree_view_column_pack_start (column, renderer, TRUE);
-    gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL);
-*/
-
     /* set up the tree */
-    pl3_find3_tree= gmpc_mpddata_treeview_new("find3-browser");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_find3_store2));
+    pl3_find3_tree= gmpc_mpddata_treeview_new("find3-browser");
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
-    /* insert the column in the tree */
- /*   gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_find3_tree), column);                                         	
-    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_find3_tree), FALSE);
-    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_find3_tree), TRUE);
-    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find3_tree)), GTK_SELECTION_MULTIPLE);
-*/
+
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find3_tree), "row-activated",G_CALLBACK(pl3_find3_browser_row_activated), NULL); 
     g_signal_connect(G_OBJECT(pl3_find3_tree), "button-press-event", G_CALLBACK(pl3_find3_browser_button_press_event), NULL);

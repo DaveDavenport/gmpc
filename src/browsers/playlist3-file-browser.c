@@ -34,6 +34,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-treeview.h"
 
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget *cat_tree);
@@ -49,7 +50,7 @@ static void pl3_file_browser_reupdate(void);
 
 static int pl3_file_browser_add_go_menu(GtkWidget *menu);
 static void pl3_file_browser_activate(void);
-static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
+static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 static void pl3_file_browser_add_selected(void);
 static void pl3_file_browser_replace_selected(void);
@@ -134,43 +135,12 @@ static void pl3_file_browser_search_activate()
 static void pl3_file_browser_init()
 {
 	GtkWidget *pl3_fb_sw = NULL;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column = NULL;
-	GValue value;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
 
 	/* set up the tree */
-	pl3_fb_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store2));
-
-	renderer = gtk_cell_renderer_pixbuf_new ();
-
-	column = gtk_tree_view_column_new ();
-	gtk_tree_view_column_set_fixed_width(column, 300);
-	gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_FIXED);
-
-	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column,renderer,"stock-id", MPDDATA_MODEL_COL_ICON_ID,NULL);
-	memset(&value, 0, sizeof(value));
-	/* set value for ALL */
-	g_value_init(&value, G_TYPE_FLOAT);
-	g_value_set_float(&value, 0.0);
-	g_object_set_property(G_OBJECT(renderer), "yalign", &value);
-
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL); 
-
-
-
-
-	/* insert the column in the tree */
-	gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_fb_tree), column);
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
-	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_fb_tree), TRUE);
-	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree)), GTK_SELECTION_MULTIPLE);
-	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_fb_tree), FALSE);
+	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store2));
+	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
 
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
@@ -634,14 +604,14 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	q_free(song_path);
 }
 
-static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
+static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
 
 	int has_item = 0;
 	GtkWidget *item;
 	GtkWidget *menu = NULL;
 	GtkTreeSelection *sel = NULL;
-	if(event->button != 3) return;
+	if(event->button != 3) return FALSE;
 	menu = gtk_menu_new();
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
 	/* don't show it when where listing custom streams... 
@@ -726,11 +696,12 @@ static void pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton
 	{
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		return TRUE;
 	}
 	else{
 		gtk_widget_destroy(menu);
 	}
-	return;
+	return FALSE;
 }
 static void pl3_file_browser_replace_selected()
 {
