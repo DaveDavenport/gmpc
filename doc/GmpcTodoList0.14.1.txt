@@ -6,7 +6,6 @@ v0.1, Feb. 2007
 Gmpc
 -----
 
-1. Create a reusable tree-model for MpdData list. So this can be reused in search/etc. (for columns etc) 
 2. Make non-crit. errors/warnings gedit style. (aka in the same window) *low priority*
 3. Add a profile selector to the connection error dialog.
 4. Add avahi support to profile system. (lack)

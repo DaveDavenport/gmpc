@@ -192,13 +192,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			g_value_set_float(&value, 0.0);
 			g_object_set_property(G_OBJECT(renderer), "xalign", &value); 
 
-	/*		column = gtk_tree_view_column_new_with_attributes ("", renderer,
-					"stock-id", valuerow,NULL);
-*/
 			column = gtk_tree_view_column_new ();
 			gtk_tree_view_column_pack_start (column, renderer, TRUE);
 			gtk_tree_view_column_set_attributes (column,renderer,"stock-id", MPDDATA_MODEL_COL_ICON_ID,NULL);
-
 
 			gtk_tree_view_column_set_resizable(column, TRUE);
 			gtk_tree_view_column_set_fixed_width(column, 20);

@@ -1030,8 +1030,6 @@ static int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tre
 	return 0;
 }
 
-
-
 static void pl3_artist_browser_disconnect()
 {
 	if(pl3_ab_tree_ref) {
@@ -1053,8 +1051,6 @@ static void pl3_artist_browser_disconnect()
 	}
 }
 
-
-
 static void pl3_artist_browser_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
@@ -1070,7 +1066,6 @@ static void pl3_artist_browser_activate()
 		gtk_tree_path_free(path);
 	}
 }
-
 
 static int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 {

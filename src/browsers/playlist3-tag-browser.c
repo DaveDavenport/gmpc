@@ -113,8 +113,6 @@ static int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton 
 	return TRUE;
 }
 
-
-
 static void pl3_tag_browser_search_activate()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tag_store2);
@@ -136,7 +134,7 @@ static void pl3_tag_browser_init()
 	pl3_tag_store2 = gmpc_mpddata_model_new();
 
 	/* set up the tree */
-	pl3_tb_tree = gmpc_mpddata_treeview_new("tag-brow");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_tag_store2));/*pl3_tb_store));*/
+	pl3_tb_tree = gmpc_mpddata_treeview_new("tag-brow");
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_tb_tree), GTK_TREE_MODEL(pl3_tag_store2));
 	/* insert the column in the tree */
 	/* setup signals */
@@ -165,7 +163,6 @@ static void pl3_tag_browser_init()
 	/* set initial state */
 	g_object_ref(G_OBJECT(pl3_tb_sw));
 }
-
 
 static void pl3_custom_tag_browser_reload()
 {
@@ -223,8 +220,6 @@ static void pl3_custom_tag_browser_add(GtkWidget *cat_tree)
 	if(mpd_server_check_version(connection,0,12,0))
 	{
 		GtkTreeIter iter;
-
-
 		/* add the root node to tag-browser */
 		gtk_tree_store_append(pl3_tree, &iter, NULL);
 		gtk_tree_store_set(pl3_tree, &iter,
@@ -254,7 +249,6 @@ static void pl3_custom_tag_browser_add(GtkWidget *cat_tree)
 
 }
 
-
 static void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, char *format)
 {
 	GtkTreeIter iter,child;
@@ -272,7 +266,6 @@ static void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, c
 	gtk_tree_store_append(pl3_tree, &child, &iter);
 }
 
-
 static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 {
 	char *first_tag, *second_tag;
@@ -282,7 +275,6 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 	int depth = 0;
 	int len=0;
 	GtkTreeIter child,child2;
-
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), iter);
 	if(path == NULL)
@@ -671,15 +663,12 @@ static void pl3_custom_tag_browser_add_folder()
 	{
 		return;
 	}
-
-
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
 	{
 		return;
 	}
 	depth = gtk_tree_path_get_depth(path) -2;
-
 
 	if(depth <= 0)
 	{
@@ -698,10 +687,8 @@ static void pl3_custom_tag_browser_add_folder()
 		return;
 	}
 
-
 	for(i=0;tk_format[i] != NULL;i++)	
 	{
-
 		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
 		{
 
@@ -899,10 +886,6 @@ static void pl3_tag_browser_unselected(GtkWidget *container)
 	gtk_container_remove(GTK_CONTAINER(container),pl3_tb_sw);
 }
 
-
-
-
-
 static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -985,7 +968,6 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 	{
 		return;
 	}
-
 
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter_cat);
 	if(path == NULL)
@@ -1099,10 +1081,6 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[3]), name);
 			data = mpd_database_search_commit(connection);                    
 
-
-
-
-			
 			if(data != NULL)
 			{
 				while(data != NULL)
@@ -1121,9 +1099,6 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 	if(format) q_free(format);
 	return ;
 }
-
-
-
 
 static void pl3_tag_browser_add_selected()
 {
