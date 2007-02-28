@@ -33,6 +33,7 @@
 #include "id3info.h"
 
 #include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-treeview.h"
 
 static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);
@@ -43,7 +44,7 @@ static void pl3_find2_browser_search(void);
 static void pl3_find2_browser_row_activated(GtkTreeView *, GtkTreePath *);
 static int pl3_find2_browser_playlist_key_press(GtkWidget *, GdkEventKey *);
 static void pl3_find2_browser_add_selected(void);
-static void pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
+static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 extern GladeXML *pl3_xml;
@@ -215,31 +216,31 @@ static void pl3_find2_browser_init()
     pl3_find2_fill_combo();
 
     /* Column */
-    renderer = gtk_cell_renderer_pixbuf_new ();
+ /*   renderer = gtk_cell_renderer_pixbuf_new ();
     column = gtk_tree_view_column_new ();
     gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
     gtk_tree_view_column_pack_start (column, renderer, FALSE);
     gtk_tree_view_column_set_attributes (column,renderer,"stock-id",MPDDATA_MODEL_COL_ICON_ID,NULL);
 
-
+*/
     /* set value for ALL */
-    g_value_init(&value, G_TYPE_FLOAT);
+  /*  g_value_init(&value, G_TYPE_FLOAT);
     g_value_set_float(&value, 0.0);
     g_object_set_property(G_OBJECT(renderer), "yalign", &value); 
 
     renderer = gtk_cell_renderer_text_new ();
     gtk_tree_view_column_pack_start (column, renderer, TRUE);
     gtk_tree_view_column_set_attributes (column,renderer,"text", MPDDATA_MODEL_COL_MARKUP, NULL);
-
+*/
 
     /* set up the tree */
-    pl3_find2_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_find2_store2));
+    pl3_find2_tree= gmpc_mpddata_treeview_new("find2-browser");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_find2_store2));
     /* insert the column in the tree */
-    gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_find2_tree), column);                                         	
+/*    gtk_tree_view_append_column (GTK_TREE_VIEW (pl3_find2_tree), column);                                         	
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(pl3_find2_tree), FALSE);
     gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(pl3_find2_tree), TRUE);
     gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree)), GTK_SELECTION_MULTIPLE);
-
+*/
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find2_tree), "row-activated",G_CALLBACK(pl3_find2_browser_row_activated), NULL); 
     g_signal_connect(G_OBJECT(pl3_find2_tree), "button-press-event", G_CALLBACK(pl3_find2_browser_button_press_event), NULL);
@@ -533,9 +534,9 @@ static void pl3_find2_browser_add_selected()
 }
 
 
-static void pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
+static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
-    if(event->button != 3) return;
+    if(event->button != 3) return FALSE;
     else if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree))) > 0)
     {
         GtkWidget *item;
@@ -561,8 +562,9 @@ static void pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButto
         }
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		return TRUE;
     }
-    return;
+    return FALSE;
 }
 
 static void pl3_find2_browser_disconnect()
