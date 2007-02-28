@@ -120,6 +120,7 @@ static void pl3_tag_browser_search_activate()
 	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
 	{
 		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
+		printf("test\n");
 		pl3_custom_tag_browser_row_activated(GTK_TREE_VIEW(pl3_tb_tree),(GtkTreePath *)list->data);	
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
@@ -376,9 +377,10 @@ static void pl3_custom_tag_browser_fill_tree(GtkWidget *tree, GtkTreeIter *iter)
 			gtk_tree_store_remove(pl3_tree, &child); 
 		}
 	}
-	else if(depth == 2 && len >= 2)
+	else if(depth == 2 && len > 2)
 	{
 		MpdData *data = NULL;
+
 		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[2]));
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),first_tag);
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),second_tag);
@@ -421,7 +423,7 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
-	int i = 0, depth;
+	int i = 0, depth, len =0;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
@@ -456,10 +458,9 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	}
 
 
-	for(i=0;tk_format[i] != NULL;i++)	
+	for(len=0;tk_format[len] != NULL;len++)	
 	{
-
-		if(mpd_misc_get_tag_by_name(tk_format[i])== -1)
+		if(mpd_misc_get_tag_by_name(tk_format[len])== -1)
 		{
 
 			g_strfreev(tk_format);
@@ -501,10 +502,12 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	if(depth == 1)
 	{
 		MpdData *data = NULL, *data2 = NULL;
-
-		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[1]));
-		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);		
-		data = mpd_database_search_commit(connection);
+		if(len > 1)
+		{
+			mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[1]));
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);		
+			data = mpd_database_search_commit(connection);
+		}
 
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
@@ -519,10 +522,13 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 	else if(depth == 2)
 	{
 		MpdData *data = NULL, *data2 = NULL;
-		mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[2]));
-		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);
-		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),second_tag);
-		data = mpd_database_search_commit(connection);                                                    		
+		if(len > 2)
+		{
+			mpd_database_search_field_start(connection, mpd_misc_get_tag_by_name(tk_format[2]));
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]),first_tag);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[1]),second_tag);
+			data = mpd_database_search_commit(connection);                                                    		
+		}
 		/* second level */
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), first_tag);
