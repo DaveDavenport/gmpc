@@ -133,7 +133,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	popup_event(self)
 	{
 		self->_priv->popup_timer_id = 0;
-		if(self->_priv->image_url)
+		if(self->_priv->image_url && self->size < 250 )
 		{
 			self->_priv->popup_win = gtk_window_new(GTK_WINDOW_POPUP);
 			GtkWidget *image = gtk_image_new();
@@ -357,6 +357,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				q_free(self->_priv->image_url);
 				self->_priv->image_url = NULL;
 			}
+			self_popup_destroy(self);
 			if(self->hide_on_na)
 			{		
 				gtk_widget_hide(GTK_WIDGET(self));
@@ -381,6 +382,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				q_free(self->_priv->image_url);
 				self->_priv->image_url = NULL;
 			}
+			self_popup_destroy(self);
 			if(self->hide_on_na)
 			{		
 				gtk_widget_hide(GTK_WIDGET(self));
@@ -413,6 +415,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				q_free(self->_priv->image_url);
 				self->_priv->image_url = NULL;
 			}
+			self_popup_destroy(self);
 
 			if(pb)
 			{
