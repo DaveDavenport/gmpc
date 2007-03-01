@@ -372,7 +372,15 @@ requires 2.0.0
 					g_value_set_string(value, song->album);
 					break;
 				case MPDDATA_MODEL_COL_SONG_TITLE:
-					g_value_set_string(value, song->title);
+					/* If there is a song available use that, else use the filename */
+					if(song->title) {
+						g_value_set_string(value, song->title);
+					} else {
+						/* Use the markup stuff, this makes sure it gets processed equaly */
+						gchar buffer[1024];
+						mpd_song_markup(buffer, 1024, "%shortfile%", song);
+						g_value_set_string(value, buffer);
+					}
 					break;
 				case MPDDATA_MODEL_COL_SONG_TITLEFILE:
 					if(song->title == NULL) {
