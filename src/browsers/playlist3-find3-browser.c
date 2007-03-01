@@ -51,6 +51,7 @@ static int pl3_find3_browser_playlist_key_press(GtkWidget *, GdkEventKey *);
 static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find3_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 extern GladeXML *pl3_xml;
 
 
@@ -78,7 +79,7 @@ gmpcPlugin find3_browser_plug = {
     NULL,			                /* init */
     pl3_find3_browser_destroy,      /* Destroy */
     &find3_browser_gbp,	        	/* Browser */
-    NULL,		        	        /* status changed */
+    pl3_find3_browser_status_changed,		/* status changed */
     pl3_find3_browser_connection_changed, 	/* connection changed */
     NULL,		                    /* Preferences */
     NULL,			                /* MetaData */
@@ -154,7 +155,7 @@ static void pl3_find3_browser_remove_crit(GtkWidget *button,crit3_struct *cs)
     {
         gtk_widget_set_sensitive(pl3_find3_findbut, FALSE);
     }
-    pl3_find3_browser_search();
+/*    pl3_find3_browser_search(); */
     gtk_widget_set_sensitive(pl3_find3_critaddbut, TRUE);
 }
 static void pl3_find3_browser_add_crit()
@@ -509,6 +510,10 @@ static unsigned long pl3_find3_browser_view_browser()
 static void pl3_find3_browser_search()
 {
 	long unsigned time = 0;
+	/* if it's not yet created, do nothing */
+	if(pl3_find3_vbox == NULL)
+		return;
+
 	gchar *string;	
 /*	gtk_list_store_clear(pl3_find3_store);*/
 	time = pl3_find3_browser_view_browser();
@@ -782,4 +787,11 @@ static void pl3_find3_browser_destroy(void)
     gtk_tree_row_reference_free(pl3_find3_ref);
   }
 }
+static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_PLAYLIST)
+	{
+		pl3_find3_browser_search(); 
+	}
+}	
 

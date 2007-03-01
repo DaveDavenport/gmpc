@@ -47,6 +47,7 @@ static void pl3_find2_browser_add_selected(void);
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 extern GladeXML *pl3_xml;
 
 /**
@@ -73,7 +74,7 @@ gmpcPlugin find2_browser_plug = {
 	NULL,			                /* init */
     pl3_find2_browser_destroy,                                   /* Destroy */
 	&find2_browser_gbp,		        /* Browser */
-	NULL,			                /* status changed */
+	pl3_find2_browser_status_changed,			                /* status changed */
 	pl3_find2_browser_connection_changed, 	/* connection changed */
 	NULL,		                        /* Preferences */
 	NULL,			                /* MetaData */
@@ -361,6 +362,8 @@ static void pl3_find2_browser_search()
 {
     long unsigned time = 0;
     gchar *string;	
+    if(pl3_find2_vbox == NULL)
+	return;
     time = pl3_find2_browser_view_browser();
     string = format_time(time);
     gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
@@ -601,4 +604,10 @@ static void pl3_find2_browser_destroy(void)
     gtk_tree_row_reference_free(pl3_find2_ref);
   }
 }
-
+static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_DATABASE)
+	{
+		pl3_find2_browser_search(); 
+	}
+}	
