@@ -16,7 +16,7 @@ void song_fastforward(void);
 void song_fastbackward(void);
 void volume_up(void);
 void volume_down(void);
-
+void play_path(const gchar *path);
 int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;

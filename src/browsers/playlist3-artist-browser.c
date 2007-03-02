@@ -759,19 +759,7 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	}
 	else
 	{
-		pl3_push_statusbar_message(_("Added a song"));
-		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
-			int songid = mpd_playlist_add_get_id(connection, file);
-			if(songid >= 0) {
-				mpd_player_play_id(connection, songid);
-			}
-		} else{
-			mpd_playlist_add(connection, file);
-			if(playlist_length == 0)
-			{
-				mpd_player_play(connection);
-			}
-		}
+		play_path(file);
 	}
 
 

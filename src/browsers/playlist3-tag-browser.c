@@ -801,19 +801,7 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 
 	if(type == MPD_DATA_TYPE_SONG)
 	{
-		pl3_push_statusbar_message(_("Added a song"));
-		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
-			int songid = mpd_playlist_add_get_id(connection, song_path);
-			if(songid >= 0) {
-				mpd_player_play_id(connection, songid);
-			}
-		} else{
-			mpd_playlist_add(connection, song_path);
-			if(playlist_length == 0)
-			{
-				mpd_player_play(connection);
-			}
-		}
+		play_path(song_path);
 	}
 	else if (type == MPD_DATA_TYPE_TAG)
 	{

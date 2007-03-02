@@ -397,6 +397,36 @@ static void xfade_update()
 }
 
 
+void play_path(const gchar *path)
+{
+	if(path)
+	{
+		if(mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
+		{
+			MpdData *data = NULL;
+			mpd_playlist_search_start(connection,TRUE);
+			mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_FILENAME,path);
+			data = mpd_playlist_search_commit(connection);
+			if(data)
+			{
+				mpd_player_play_id(connection, data->song->id);
+				mpd_data_free(data);
+				return;
+			}
+		}
+		if(mpd_server_check_command_allowed(connection, "addid") == MPD_SERVER_COMMAND_ALLOWED){
+			int songid = mpd_playlist_add_get_id(connection, path);
+			if(songid >= 0) {
+				mpd_player_play_id(connection, songid);
+			}
+		}
+	}
+}
+
+
+
+
+
 void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	if(!server_pref_xml)return;
@@ -405,8 +435,6 @@ void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 		xfade_update();
 	}
 }
-
-
 
 
 
