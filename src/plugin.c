@@ -37,7 +37,7 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 static int plugin_load(char *path, const char *file)
 {
 	GModule *handle;
-	int *api_version;
+	int *api_version=0;
 	gmpcPlugin *plug = NULL;
 	gchar *string = NULL;
 	gchar *full_path = NULL;

@@ -676,6 +676,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 	{
 		int skip = 0;
 		int num_cols = 2;
+		int songs = 0;
 		int tile_size = 310;
 		MpdData *data = NULL;
 		mpd_Song *song;
@@ -702,7 +703,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		for(;data;data = mpd_data_get_next(data))
 		{
 		
-			if(!regexec(&regt,data->tag, 0,NULL,0))
+			if(songs < 50 && !regexec(&regt,data->tag, 0,NULL,0))
 			{
 				GtkWidget *button;
 				song->artist = data->tag;
@@ -712,8 +713,26 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				list = g_list_append(list, button);				
 				/* cleanup pointer*/
 				song->artist = NULL;	
+				songs++;
 			}
 
+		}
+		/* if there is an "overflow" show a message */
+		if(songs >= 50)
+		{
+			GtkWidget *box = gtk_hbox_new(FALSE, 6);
+			GtkWidget *temp = gtk_image_new_from_stock(GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG);
+			gtk_box_pack_start(GTK_BOX(box), temp, FALSE, TRUE, 0);
+			temp = gtk_label_new(_("More then 50 results found, please refine your search query"));
+			gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
+			gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
+			num_cols = 1;
+			info2_create_artist_button(song);
+			
+			g_list_foreach(list, gtk_widget_destroy, NULL);
+			g_list_free(list);
+			list = NULL;
+			list = g_list_append(list, box);
 		}
 		mpd_freeSong(song);
 		if(list)
