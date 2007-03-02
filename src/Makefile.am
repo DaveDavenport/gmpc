@@ -39,7 +39,8 @@ gmpc_SOURCES=\
 	url_fetcher.c\
 	eggcolumnchooserdialog.c\
 	eggcolumnmodel.c\
-	TreeSearchWidget.c
+	TreeSearchWidget.c\
+	qlib/qasyncqueue.c
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
@@ -139,4 +140,5 @@ EXTRA_DIST = 	playlist3.h\
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\
 		revision.h\
-		tray-icon.h
+		tray-icon.h\
+		qlib/qasyncqueue.h
