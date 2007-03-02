@@ -1612,10 +1612,11 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 		albums++;
 	}
 	if(albums > 1)
-		cols = (int)(0.5+(double)sqrt((double)albums));
+		cols = (int)round(0.4999+(double)sqrt((double)albums));
 	else cols = 1;
-	rows = (int)(0.5+albums/(float)cols); 
+	rows = (int)round(0.4999+(float)albums/(float)cols); 
 	if(rows == 0) rows = 1;
+	printf("albums: %i rows, cols: %i %i\n", albums,rows, cols);
 	gtk_table_resize(table, rows, cols);
 	gtk_table_set_row_spacings(GTK_TABLE(table),6);
 	gtk_table_set_col_spacings(GTK_TABLE(table),6);
