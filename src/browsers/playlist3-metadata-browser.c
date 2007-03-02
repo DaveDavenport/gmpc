@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
+#include <math.h>
 #include "main.h"
 #include "misc.h"
 
 extern GladeXML *pl3_xml;
 
+static void info2_play_code(char *ar);
 static void info2_add(GtkWidget *);
 static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
@@ -27,6 +29,14 @@ static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
 static GtkEntryCompletion *entry_completion = NULL;
+
+
+/**
+ * playing 
+ */
+
+void metab_play_show_albums(GtkTable *table, gchar *artist);
+void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table);
 
 static int current_id = 0;
 
@@ -717,7 +727,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 			num_cols = 1;
 			info2_create_artist_button(song);
 			
-			g_list_foreach(list, gtk_widget_destroy, NULL);
+			g_list_foreach(list, (GFunc)gtk_widget_destroy, NULL);
 			g_list_free(list);
 			list = NULL;
 			list = g_list_append(list, box);
@@ -1581,6 +1591,137 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 		info2_fill_view();
 		return TRUE;
 	}
+	if(event->keyval == GDK_Escape && event-> state&GDK_CONTROL_MASK)
+	{
+		info2_activate();
+		info2_play_code("");
+		return TRUE;
+	}
 
 	return FALSE;
 }
+void metab_play_show_albums(GtkTable *table, gchar *artist)
+{
+	int albums=0, cols,rows;
+	int r,c;
+	remove_container_entries(GTK_CONTAINER(table));
+	MpdData *data2,*data = mpd_database_get_albums(connection, artist);
+	if(data) albums=1;
+	for(data2=data;data && !mpd_data_is_last(data2);data2 = mpd_data_get_next(data2))
+	{
+		albums++;
+	}
+	if(albums > 1)
+		cols = (int)(0.5+(double)sqrt((double)albums));
+	else cols = 1;
+	rows = (int)(0.5+albums/(float)cols); 
+	if(rows == 0) rows = 1;
+	gtk_table_resize(table, rows, cols);
+	gtk_table_set_row_spacings(GTK_TABLE(table),6);
+	gtk_table_set_col_spacings(GTK_TABLE(table),6);
+	r=c=0;
+	mpd_Song *song = mpd_newSong();;
+	for(;data;data = mpd_data_get_next(data))
+	{
+		GtkWidget *metaimage;
+
+		song->artist= artist;
+		song->album = data->tag;
+		metaimage = gmpc_metaimage_new(META_ALBUM_ART);
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage), (600-cols*6)/(MAX(rows,cols)));
+		gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(metaimage),song);
+		gtk_table_attach_defaults(GTK_TABLE(table), metaimage, r%cols,(r%cols+1),r/cols, r/cols+1);
+		r++;
+	}
+	song->artist = NULL;
+	song->album = NULL;
+	mpd_freeSong(song);
+	gtk_widget_show_all(GTK_WIDGET(table));
+
+
+}
+void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table)
+{
+	GtkTreeView *tree =  gtk_tree_selection_get_tree_view(sel);
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+	GtkTreeIter iter;
+	if(gtk_tree_selection_get_selected(sel, &model, &iter))
+	{
+		gchar *name;
+		gtk_tree_model_get(model, &iter, 0, &name, -1);
+		metab_play_show_albums(table,name);
+		q_free(name);
+		GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+		gtk_tree_view_scroll_to_cell(tree, path, NULL, TRUE, 0.5,0);
+		gtk_tree_path_free(path);
+	}
+
+}
+
+static void info2_play_code(char *ar)
+{
+
+	GValue value= {0,};
+	GtkWidget *table = NULL;
+	gchar *artist = NULL;
+	info2_prepare_view();
+	info2_widget_clear_children(title_vbox);
+
+	GtkWidget *box = gtk_hbox_new(FALSE, 6);
+
+	/* Artists */
+	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
+	GtkWidget *tree = gtk_tree_view_new();
+	GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store)); 
+	gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(tree));
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
+
+	GtkCellRenderer *renderer= gtk_cell_renderer_text_new();
+
+/*	g_value_init(&value, G_TYPE_BOOLEAN);
+	g_value_set_boolean(&value,TRUE);
+	g_object_set_property(G_OBJECT(renderer),"ellipsize-set", &value); 
+
+	g_value_reset(&value);
+
+	g_value_init(&value, G_TYPE_INT);
+	g_value_set_int(&value,PANGO_ELLIPSIZE_END);
+	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value); 
+*/
+	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1,"", renderer,"text",0, NULL);  
+
+
+
+	MpdData *data = mpd_database_get_artists(connection);
+
+	for(;data;data = mpd_data_get_next(data))
+	{
+		if(data->tag)
+		{
+			GtkTreeIter iter;
+			gtk_list_store_append(store, &iter);
+			gtk_list_store_set(store, &iter, 0, data->tag,-1);
+		}
+	}
+
+	table = gtk_table_new(1,1,TRUE);
+
+	gtk_box_pack_start(GTK_BOX(box), sw,FALSE,TRUE, 0); 
+	gtk_widget_set_size_request(sw, 200, -1);
+
+	GtkWidget *ali = gtk_alignment_new(0.5,0.5,0,0);
+	gtk_container_add(GTK_CONTAINER(ali), table);
+	gtk_box_pack_start(GTK_BOX(box),ali,FALSE,TRUE, 0); 
+
+	ali = gtk_alignment_new(0,0,0,0);
+	gtk_container_add(GTK_CONTAINER(ali), box);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali,TRUE,TRUE,0);
+	gtk_widget_set_size_request(GTK_WIDGET(box), 800,600);
+	gtk_widget_show_all(resizer_vbox);
+	g_free(artist);
+
+	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree))), "changed", G_CALLBACK(metab_play_sel_changed), table);	
+}
+
