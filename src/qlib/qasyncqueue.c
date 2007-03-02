@@ -23,6 +23,9 @@
 /*
  * MT safe
  */
+/* Modified by qball
+ * Renamed gasync->qasync to stop name colision
+ */
 
 #include <glib.h>
 #include "qlib/qasyncqueue.h"
@@ -636,4 +639,41 @@ _q_async_queue_get_mutex (QAsyncQueue* queue)
   return queue->mutex;
 }
 
+
+
+
+
+/**
+ * q_async_queue_remove_data_unlocked:
+ * @queue: a #QAsyncQueue.
+ * 
+ * Pops data from the @queue. 
+ *
+ * Return value: data from the queue.
+ **/
+gpointer
+q_async_queue_remove_data_unlocked (QAsyncQueue* queue, GCompareFunc func, gpointer data)
+{
+	gint length;
+	GList *list = NULL;
+  gpointer retval= NULL;
+
+  g_return_val_if_fail (queue, NULL);
+  g_return_val_if_fail (g_atomic_int_get (&queue->ref_count) > 0, NULL);
+
+	/* get the first */
+	list = g_queue_peek_nth_link(queue->queue, 0);
+	for(length = g_queue_get_length(queue->queue);list;length++)
+	{
+		/* if we find it, then pop it off and return it... */
+		if(!func(list->data, data))
+		{
+			retval = list->data;
+			g_queue_delete_link(queue->queue, list);
+			return retval;
+		}
+		list = list->next;
+	}
+  return NULL;
+}
 #define __Q_ASYNCQUEUE_C__

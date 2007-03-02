@@ -114,5 +114,18 @@ GMutex*      _q_async_queue_get_mutex           (QAsyncQueue      *queue);
 
 G_END_DECLS
 
+
+/**
+ * q_async_queue_remove_data_unlocked:
+ * @queue: a #QAsyncQueue.
+ * 
+ * Pops data from the @queue. 
+ *
+ * Return value: data from the queue.
+ **/
+gpointer
+q_async_queue_remove_data_unlocked (QAsyncQueue* queue, GCompareFunc func, gpointer data);
+
+
 #endif /* __Q_ASYNCQUEUE_H__ */
 

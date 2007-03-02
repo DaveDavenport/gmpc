@@ -1,10 +1,12 @@
 #include <string.h>
 #include <glib.h>
 #include <glib/gstdio.h>
-
+#include "qlib/qasyncqueue.h"
 #include "main.h"
 
 #include "metadata.h"
+
+
 
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
@@ -14,11 +16,11 @@ GThread *meta_thread = NULL;
 /**
  * This is queue is used to send commands to the retrieval queue
  */
-GAsyncQueue *meta_commands = NULL;
+QAsyncQueue *meta_commands = NULL;
 /**
  * This queue is used to send replies back.
  */
-GAsyncQueue *meta_results = NULL;
+QAsyncQueue *meta_results = NULL;
 
 GQueue *meta_remove = NULL;
 GMutex *meta_processing = NULL;
@@ -35,7 +37,7 @@ typedef struct {
 	char *result_path;
 } meta_thread_data;
 
-
+gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
 
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
 {
@@ -296,7 +298,7 @@ static void meta_data_retrieve_thread()
 		 * Get command from queue
 		 */
 		
-		data = g_async_queue_pop(meta_commands);	
+		data = q_async_queue_pop(meta_commands);	
 		/* check if quit signal */
 		if(data->id == 0)
 		{
@@ -386,7 +388,7 @@ static void meta_data_retrieve_thread()
 		/**
 		 * Push the result back
 		 */	
-		g_async_queue_push(meta_results, data);		
+		q_async_queue_push(meta_results, data);		
 		/**
 		 * clear our reference to the object
 		 */
@@ -396,11 +398,38 @@ static void meta_data_retrieve_thread()
 }
 
 
-
+gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2)
+{
+	if(data && data->id == GPOINTER_TO_INT(data2))
+	{
+		return 0;
+	}
+	return 1;
+}
 
 void meta_data_handle_remove_request(guint id)
 {
-	g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
+	meta_thread_data *data = NULL;
+	gboolean found = FALSE;
+	
+	if(!meta_commands)	
+		return;
+
+	q_async_queue_lock(meta_commands);
+	if((data = q_async_queue_remove_data_unlocked(meta_commands, (GCompareFunc)meta_data_handler_data_match, GINT_TO_POINTER(id))))
+	{
+		printf("Removing: %i\n", data->id);
+		if(data->result_path)q_free(data->result_path);
+		mpd_freeSong(data->song);
+		q_free(data);
+		found = TRUE;
+	}
+	q_async_queue_unlock(meta_commands);
+	/* if not found, it _could_ be that it's being processed now by the other thread, 
+	 * if that's the case push it in the queue that is checked on executing the callback.
+	 */
+	if(!found)
+		g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
 }
 
 static gboolean meta_data_handle_results()
@@ -410,8 +439,8 @@ static gboolean meta_data_handle_results()
 	/**
 	 * Should check is one is being processed  (implemented)
 	 */
-	if(g_async_queue_length(meta_results) == 0 &&
-		g_async_queue_length(meta_commands) == 0)
+	if(q_async_queue_length(meta_results) == 0 &&
+		q_async_queue_length(meta_commands) == 0)
 	{
 		/** if the fetching thread is busy, don't do anything,
 		 * if not, then lock it and clear it
@@ -429,8 +458,8 @@ static gboolean meta_data_handle_results()
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
-	for(data = g_async_queue_try_pop(meta_results);data;
-			data = g_async_queue_try_pop(meta_results)) {	
+	for(data = q_async_queue_try_pop(meta_results);data;
+			data = q_async_queue_try_pop(meta_results)) {	
 		int test = 0, i = 0;
 		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--) {
 			int num = GPOINTER_TO_INT(g_queue_peek_nth(meta_remove,i));
@@ -473,11 +502,11 @@ void meta_data_init()
 	/**
 	 * The command queue
 	 */
-	meta_commands = g_async_queue_new();
+	meta_commands = q_async_queue_new();
 	/**
 	 * the result queue
 	 */
-	meta_results = g_async_queue_new();
+	meta_results = q_async_queue_new();
 	/**
  	*  remove callbacks...
  	*  not thread save
@@ -620,7 +649,7 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 	mtd->data = data;
 	mtd->type = type;
 	/** push it to the other thread */
-	g_async_queue_push(meta_commands, mtd);
+	q_async_queue_push(meta_commands, mtd);
 	/** clean reference to pointer, it's now to the other thread */
 	mtd = NULL;
 
@@ -691,8 +720,8 @@ void meta_data_destroy(void)
 	{
 		debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
 		/* remove old stuff */
-		g_async_queue_lock(meta_commands);
-		while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
+		q_async_queue_lock(meta_commands);
+		while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
 		{
 			mpd_freeSong(mtd->song);
                         q_free(mtd);
@@ -702,8 +731,8 @@ void meta_data_destroy(void)
 		mtd = g_malloc0(sizeof(*mtd));
 		mtd->id = 0;
 		/* push the request to the thread */
-		g_async_queue_push_unlocked(meta_commands, mtd);
-		g_async_queue_unlock(meta_commands);
+		q_async_queue_push_unlocked(meta_commands, mtd);
+		q_async_queue_unlock(meta_commands);
 		/* wait for the thread to finish */
 		g_thread_join(meta_thread);
 		/* cleanup */
