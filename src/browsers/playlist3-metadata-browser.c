@@ -23,6 +23,7 @@ static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+
 static GtkWidget *info2_create_artist_button(mpd_Song *song);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
@@ -38,6 +39,7 @@ static GtkEntryCompletion *entry_completion = NULL;
 void metab_play_show_albums(GtkTable *table, gchar *artist);
 void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table);
 int do_playing = FALSE;
+GtkWidget *play_label = NULL;
 
 static int current_id = 0;
 
@@ -635,10 +637,13 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	
 	cairo_close_path (cr);
 	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
+
 	color = &(widget->style->base[GTK_STATE_SELECTED]);
 	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+
 	color = &(widget->style->base[GTK_STATE_NORMAL]);
 	cairo_pattern_add_color_stop_rgba (pat, 0, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+
 	cairo_set_source (cr, pat);
 
 	cairo_fill_preserve (cr);
@@ -1624,7 +1629,7 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 	gtk_table_set_col_spacings(GTK_TABLE(table),6);
 	r=c=0;
 	mpd_Song *song = mpd_newSong();;
-	width = MIN(resizer_vbox->allocation.width-250, resizer_vbox->allocation.height);
+	width = MIN(resizer_vbox->allocation.width-250, resizer_vbox->allocation.height-play_label->allocation.height-16);
 	printf("%i width\n", width);
 	for(;data;data = mpd_data_get_next(data))
 	{
@@ -1655,22 +1660,60 @@ void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table)
 		gchar *name;
 		GtkWidget *label = NULL;
 		gtk_tree_model_get(model, &iter, 0, &name, -1);
-		metab_play_show_albums(table,name);
 
 		/* Update title vbox */
-		info2_widget_clear_children(title_vbox);
-		label = gtk_label_new("");
-		gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>", name);
-		gtk_label_set_markup(GTK_LABEL(label), markup);
+	//	info2_widget_clear_children(title_vbox);
+	//	label = gtk_label_new("");
+		gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='bold' style='italic'>%s</span>", name);
+		gtk_label_set_markup(GTK_LABEL(play_label), markup);
 		g_free(markup);
-		gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE, 0);
-		gtk_widget_show_all(title_vbox);
+	//	gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE, 0);
+	//	gtk_widget_show_all(title_vbox);
 
+
+		metab_play_show_albums(table,name);
 		q_free(name);
 		GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 		gtk_tree_view_scroll_to_cell(tree, path, NULL, TRUE, 0.5,0);
 		gtk_tree_path_free(path);
 	}
+
+}
+gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+	GdkColor *color = NULL;
+	cairo_pattern_t *pat;
+	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
+	int width = widget->allocation.width;
+	int height = widget->allocation.height;
+	
+	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
+	cairo_rectangle(cr,0,0,width,height);
+	cairo_fill(cr);
+
+
+	cairo_set_line_width (cr, 1.5);
+
+	cairo_rectangle(cr, 0,0,width,height);
+	
+	cairo_close_path (cr);
+	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
+	color = &(widget->style->base[GTK_STATE_SELECTED]);
+	cairo_pattern_add_color_stop_rgba (pat, 0, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+	color = &(widget->style->base[GTK_STATE_NORMAL]);
+	cairo_pattern_add_color_stop_rgba (pat, .5, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
+	cairo_set_source (cr, pat);
+
+	cairo_fill_preserve (cr);
+	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
+	cairo_stroke (cr);
+	cairo_pattern_destroy(pat);
+	cairo_destroy(cr);
+	return FALSE;
+
+
+
 
 }
 
@@ -1717,17 +1760,51 @@ static void info2_play_code(char *ar)
 	gtk_widget_set_size_request(sw, 200, -1);
 
 	GtkWidget *ali = gtk_alignment_new(1,0.5,0,0);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,0,6);
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(box),ali,TRUE,TRUE, 0); 
 
 	ali = gtk_alignment_new(0,0,1,1);
 	gtk_container_add(GTK_CONTAINER(ali), box);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali,TRUE,TRUE,0);
+
 //	gtk_widget_set_size_request(GTK_WIDGET(box), -1,600);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	gtk_widget_show_all(resizer_vbox);
+
+
 	g_free(artist);
+	gtk_widget_set_app_paintable(resizer_vbox, TRUE);
+
+	gtk_widget_hide(title_event);
+	/* more hacking */
+	g_object_ref(title_vbox);
+	gtk_container_remove(gtk_widget_get_parent(title_vbox), title_vbox);
+
+	GtkWidget *label = gtk_label_new("");
+	gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='heavy'>Browse</span>");
+	gtk_label_set_markup(GTK_LABEL(label), markup);
+	g_free(markup);
+	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE, 0);
+
+
+	play_label = gtk_label_new("");
+	gtk_misc_set_alignment(GTK_MISC(play_label), 1,0.5);
+	gtk_box_pack_start(GTK_BOX(title_vbox), play_label, TRUE, TRUE, 0);
+
+
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), title_vbox, FALSE, TRUE, 0);
+	gtk_widget_show_all(title_vbox);
+
+
+
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali,TRUE,TRUE,0);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+	gtk_container_set_border_width(GTK_CONTAINER(title_vbox), 6);
+	gtk_widget_show_all(resizer_vbox);
+
+
+
 
 	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree))), "changed", G_CALLBACK(metab_play_sel_changed), table);	
+	g_signal_connect(G_OBJECT(resizer_vbox), "expose-event", G_CALLBACK(metab_play_expose_event), NULL);
 }
 
