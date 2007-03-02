@@ -35,11 +35,16 @@ static GtkEntryCompletion *entry_completion = NULL;
 /**
  * playing 
  */
-
+#include <libmpd/libmpd-internal.h>
+gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+static void play_fill_vbox(GtkWidget *vbox,GtkWidget *table);
 void metab_play_show_albums(GtkTable *table, gchar *artist);
 void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table);
+void play_button_press_event(GtkWidget *button);
 int do_playing = FALSE;
-GtkWidget *play_label = NULL;
+GtkWidget *play_label = NULL, *button_vbox = NULL, *play_table;
+MpdData *play_data= NULL;
+MpdData *play_cur_data= NULL;
 
 static int current_id = 0;
 
@@ -1600,9 +1605,31 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 	if(event->keyval == GDK_Escape && event-> state&GDK_CONTROL_MASK)
 	{
 		info2_activate();
-		info2_play_code("");
+		if(!do_playing)
+			info2_play_code("");
 		do_playing = TRUE;
 		return TRUE;
+	}
+	if(do_playing)
+	{
+		if(event->keyval == GDK_Up)
+		{
+			if(((MpdData_real *)play_cur_data)->prev)
+			{
+				play_cur_data = (MpdData *)((MpdData_real *)play_cur_data)->prev;
+				play_fill_vbox(button_vbox, play_table);
+			}
+			return TRUE;
+		}
+		if(event->keyval == GDK_Down)
+		{
+			if(((MpdData_real *)play_cur_data)->next)
+			{
+				play_cur_data = (MpdData *)((MpdData_real *)play_cur_data)->next;
+				play_fill_vbox(button_vbox, play_table);
+			}
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -1630,6 +1657,7 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 	r=c=0;
 	mpd_Song *song = mpd_newSong();;
 	width = MIN(resizer_vbox->allocation.width-250, resizer_vbox->allocation.height-play_label->allocation.height-16);
+	width = MAX(64, width);
 	printf("%i width\n", width);
 	for(;data;data = mpd_data_get_next(data))
 	{
@@ -1650,35 +1678,7 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 
 
 }
-void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table)
-{
-	GtkTreeView *tree =  gtk_tree_selection_get_tree_view(sel);
-	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-	GtkTreeIter iter;
-	if(gtk_tree_selection_get_selected(sel, &model, &iter))
-	{
-		gchar *name;
-		GtkWidget *label = NULL;
-		gtk_tree_model_get(model, &iter, 0, &name, -1);
 
-		/* Update title vbox */
-	//	info2_widget_clear_children(title_vbox);
-	//	label = gtk_label_new("");
-		gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='bold' style='italic'>%s</span>", name);
-		gtk_label_set_markup(GTK_LABEL(play_label), markup);
-		g_free(markup);
-	//	gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE, 0);
-	//	gtk_widget_show_all(title_vbox);
-
-
-		metab_play_show_albums(table,name);
-		q_free(name);
-		GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
-		gtk_tree_view_scroll_to_cell(tree, path, NULL, TRUE, 0.5,0);
-		gtk_tree_path_free(path);
-	}
-
-}
 gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 	GdkColor *color = NULL;
@@ -1686,7 +1686,7 @@ gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
-	
+
 	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
 	cairo_rectangle(cr,0,0,width,height);
 	cairo_fill(cr);
@@ -1695,7 +1695,7 @@ gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	cairo_set_line_width (cr, 1.5);
 
 	cairo_rectangle(cr, 0,0,width,height);
-	
+
 	cairo_close_path (cr);
 	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
 	color = &(widget->style->base[GTK_STATE_SELECTED]);
@@ -1711,12 +1711,43 @@ gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
 	cairo_pattern_destroy(pat);
 	cairo_destroy(cr);
 	return FALSE;
-
-
-
-
 }
+void play_button_press_event(GtkWidget *button)
+{
+	play_cur_data = g_object_get_data(G_OBJECT(button), "artist");
+	play_fill_vbox(button_vbox, play_table);
+}
+static void play_fill_vbox(GtkWidget *vbox,GtkWidget *table)
+{
+	MpdData *temp = NULL;
+	int i = 0;
+	info2_widget_clear_children(vbox);
+	temp = play_cur_data;
+	for(i=0;i<3 && ((MpdData_real *)temp)->prev;i++)
+		temp = (MpdData *)((MpdData_real *)temp)->prev;
+	i=0;
+	for(;temp && i < 7; temp = mpd_data_get_next_real(temp, FALSE))
+	{
+		GtkWidget *button = gtk_button_new_with_label(temp->tag);
+		if(temp != play_cur_data)
+		{
+			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+		}
+		gtk_box_pack_start(GTK_BOX(vbox), button,TRUE,TRUE,0);
+		g_object_set_data(G_OBJECT(button), "artist",temp);
+		g_signal_connect(G_OBJECT(button),"clicked", G_CALLBACK(play_button_press_event), NULL);
+		i++;
+	}
+	gtk_widget_show_all(vbox);
+	gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='bold' style='italic'>%s</span>",play_cur_data->tag);
+	gtk_label_set_markup(GTK_LABEL(play_label), markup);
+	g_free(markup);
 
+
+
+
+	metab_play_show_albums(GTK_TABLE(table), play_cur_data->tag);
+}
 static void info2_play_code(char *ar)
 {
 	GtkWidget *table = NULL;
@@ -1726,40 +1757,20 @@ static void info2_play_code(char *ar)
 
 	GtkWidget *box = gtk_hbox_new(FALSE, 6);
 
-	/* Artists */
-	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
-	GtkWidget *tree = gtk_tree_view_new();
-	GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
-	gtk_scrolled_window_set_placement(GTK_SCROLLED_WINDOW(sw), GTK_CORNER_BOTTOM_RIGHT);
-	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store)); 
-	gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(tree));
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
 
-	GtkCellRenderer *renderer= gtk_cell_renderer_text_new();
+	button_vbox = gtk_vbox_new(TRUE,6);
+	play_data = mpd_database_get_artists(connection);
+	play_cur_data = play_data;
 
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1,"", renderer,"text",0, NULL);  
+	GtkWidget *ali = gtk_alignment_new(0,0.5,0,0);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,6,0);
+	gtk_container_add(GTK_CONTAINER(ali), button_vbox);
+	gtk_box_pack_start(GTK_BOX(box), ali,FALSE,TRUE, 0); 
+	gtk_widget_set_size_request(button_vbox, 200, -1);
 
 
-
-	MpdData *data = mpd_database_get_artists(connection);
-
-	for(;data;data = mpd_data_get_next(data))
-	{
-		if(data->tag)
-		{
-			GtkTreeIter iter;
-			gtk_list_store_append(store, &iter);
-			gtk_list_store_set(store, &iter, 0, data->tag,-1);
-		}
-	}
-
-	table = gtk_table_new(1,1,TRUE);
-
-	gtk_box_pack_start(GTK_BOX(box), sw,FALSE,TRUE, 0); 
-	gtk_widget_set_size_request(sw, 200, -1);
-
-	GtkWidget *ali = gtk_alignment_new(1,0.5,0,0);
+	play_table = table = gtk_table_new(1,1,TRUE);
+	ali = gtk_alignment_new(1,0.5,0,0);
 	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,0,6);
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(box),ali,TRUE,TRUE, 0); 
@@ -1767,16 +1778,13 @@ static void info2_play_code(char *ar)
 	ali = gtk_alignment_new(0,0,1,1);
 	gtk_container_add(GTK_CONTAINER(ali), box);
 
-//	gtk_widget_set_size_request(GTK_WIDGET(box), -1,600);
-
-
 	g_free(artist);
 	gtk_widget_set_app_paintable(resizer_vbox, TRUE);
 
 	gtk_widget_hide(title_event);
 	/* more hacking */
 	g_object_ref(title_vbox);
-	gtk_container_remove(gtk_widget_get_parent(title_vbox), title_vbox);
+	gtk_container_remove(GTK_CONTAINER(gtk_widget_get_parent(title_vbox)), title_vbox);
 
 	GtkWidget *label = gtk_label_new("");
 	gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='heavy'>Browse</span>");
@@ -1787,6 +1795,7 @@ static void info2_play_code(char *ar)
 
 
 	play_label = gtk_label_new("");
+	gtk_label_set_justify(GTK_LABEL(play_label), GTK_JUSTIFY_RIGHT);
 	gtk_misc_set_alignment(GTK_MISC(play_label), 1,0.5);
 	gtk_box_pack_start(GTK_BOX(title_vbox), play_label, TRUE, TRUE, 0);
 
@@ -1804,7 +1813,7 @@ static void info2_play_code(char *ar)
 
 
 
-	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree))), "changed", G_CALLBACK(metab_play_sel_changed), table);	
 	g_signal_connect(G_OBJECT(resizer_vbox), "expose-event", G_CALLBACK(metab_play_expose_event), NULL);
+	play_fill_vbox(button_vbox, table);
 }
 
