@@ -37,6 +37,7 @@ static GtkEntryCompletion *entry_completion = NULL;
 
 void metab_play_show_albums(GtkTable *table, gchar *artist);
 void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table);
+int do_playing = FALSE;
 
 static int current_id = 0;
 
@@ -1595,6 +1596,7 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 	{
 		info2_activate();
 		info2_play_code("");
+		do_playing = TRUE;
 		return TRUE;
 	}
 
@@ -1602,7 +1604,7 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 }
 void metab_play_show_albums(GtkTable *table, gchar *artist)
 {
-	int albums=0, cols,rows;
+	int albums=0, cols,rows,width;
 	int r,c;
 	remove_container_entries(GTK_CONTAINER(table));
 	MpdData *data2,*data = mpd_database_get_albums(connection, artist);
@@ -1622,6 +1624,8 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 	gtk_table_set_col_spacings(GTK_TABLE(table),6);
 	r=c=0;
 	mpd_Song *song = mpd_newSong();;
+	width = MIN(resizer_vbox->allocation.width-250, resizer_vbox->allocation.height);
+	printf("%i width\n", width);
 	for(;data;data = mpd_data_get_next(data))
 	{
 		GtkWidget *metaimage;
@@ -1629,7 +1633,7 @@ void metab_play_show_albums(GtkTable *table, gchar *artist)
 		song->artist= artist;
 		song->album = data->tag;
 		metaimage = gmpc_metaimage_new(META_ALBUM_ART);
-		gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage), (600-cols*6)/(MAX(rows,cols)));
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage), (width-cols*6)/(MAX(rows,cols)));
 		gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(metaimage),song);
 		gtk_table_attach_defaults(GTK_TABLE(table), metaimage, r%cols,(r%cols+1),r/cols, r/cols+1);
 		r++;
@@ -1649,8 +1653,19 @@ void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table)
 	if(gtk_tree_selection_get_selected(sel, &model, &iter))
 	{
 		gchar *name;
+		GtkWidget *label = NULL;
 		gtk_tree_model_get(model, &iter, 0, &name, -1);
 		metab_play_show_albums(table,name);
+
+		/* Update title vbox */
+		info2_widget_clear_children(title_vbox);
+		label = gtk_label_new("");
+		gchar *markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>", name);
+		gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
+		gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE, 0);
+		gtk_widget_show_all(title_vbox);
+
 		q_free(name);
 		GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 		gtk_tree_view_scroll_to_cell(tree, path, NULL, TRUE, 0.5,0);
@@ -1661,8 +1676,6 @@ void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table)
 
 static void info2_play_code(char *ar)
 {
-
-	GValue value= {0,};
 	GtkWidget *table = NULL;
 	gchar *artist = NULL;
 	info2_prepare_view();
@@ -1675,22 +1688,13 @@ static void info2_play_code(char *ar)
 	GtkWidget *tree = gtk_tree_view_new();
 	GtkListStore *store = gtk_list_store_new(1, G_TYPE_STRING);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+	gtk_scrolled_window_set_placement(GTK_SCROLLED_WINDOW(sw), GTK_CORNER_BOTTOM_RIGHT);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store)); 
 	gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(tree));
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tree), FALSE);
 
 	GtkCellRenderer *renderer= gtk_cell_renderer_text_new();
 
-/*	g_value_init(&value, G_TYPE_BOOLEAN);
-	g_value_set_boolean(&value,TRUE);
-	g_object_set_property(G_OBJECT(renderer),"ellipsize-set", &value); 
-
-	g_value_reset(&value);
-
-	g_value_init(&value, G_TYPE_INT);
-	g_value_set_int(&value,PANGO_ELLIPSIZE_END);
-	g_object_set_property(G_OBJECT(renderer), "ellipsize", &value); 
-*/
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1,"", renderer,"text",0, NULL);  
 
 
@@ -1712,14 +1716,15 @@ static void info2_play_code(char *ar)
 	gtk_box_pack_start(GTK_BOX(box), sw,FALSE,TRUE, 0); 
 	gtk_widget_set_size_request(sw, 200, -1);
 
-	GtkWidget *ali = gtk_alignment_new(0.5,0.5,0,0);
+	GtkWidget *ali = gtk_alignment_new(1,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), table);
-	gtk_box_pack_start(GTK_BOX(box),ali,FALSE,TRUE, 0); 
+	gtk_box_pack_start(GTK_BOX(box),ali,TRUE,TRUE, 0); 
 
-	ali = gtk_alignment_new(0,0,0,0);
+	ali = gtk_alignment_new(0,0,1,1);
 	gtk_container_add(GTK_CONTAINER(ali), box);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali,TRUE,TRUE,0);
-	gtk_widget_set_size_request(GTK_WIDGET(box), 800,600);
+//	gtk_widget_set_size_request(GTK_WIDGET(box), -1,600);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 	gtk_widget_show_all(resizer_vbox);
 	g_free(artist);
 
