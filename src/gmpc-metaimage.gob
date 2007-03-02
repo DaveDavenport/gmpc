@@ -13,10 +13,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	private gulong status_signal = {0};
 	private gulong connect_signal = {0};
 	private guint meta_id = {0};
-	private guint popup_timer_id = {0};
+
 	private gchar *image_url = {NULL};
-	private GtkWidget *popup_win = {NULL};
+
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
+
+	private GtkWidget *popup_win = {NULL};
+	private guint popup_timer_id = {0};
+	private int popup_w = {0};
+	private int popup_h = {0};
 	/** Public */
 
 	public int size = {64};
@@ -140,11 +145,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		monitor = gdk_screen_get_monitor_at_point(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),x+xm,y+ym);
 		gdk_screen_get_monitor_geometry(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),monitor, &rect);
 		/* if it falls of the monitor, reposition */
-		if((rect.y +y+ym+250+MOUSE_DISTANCE) > (rect.height+rect.y))	{
-			y-= 250+2*MOUSE_DISTANCE;
+		if((rect.y +y+ym+self->_priv->popup_h+MOUSE_DISTANCE) > (rect.height+rect.y))	{
+			y-= self->_priv->popup_h+2*MOUSE_DISTANCE;
 		}
-		if((x+xm+250+MOUSE_DISTANCE) > (rect.width+rect.x)) {
-			x-= 250+2*MOUSE_DISTANCE;
+		if((x+xm+self->_priv->popup_w+MOUSE_DISTANCE) > (rect.width+rect.x)) {
+			x-= self->_priv->popup_w+2*MOUSE_DISTANCE;
 		}
 		gtk_window_move(GTK_WINDOW(self->_priv->popup_win),x+xm+MOUSE_DISTANCE,y+ym+MOUSE_DISTANCE);
 
@@ -161,6 +166,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			self->_priv->popup_win = gtk_window_new(GTK_WINDOW_POPUP);
 			GtkWidget *image = gtk_image_new();
 			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
+			self->_priv->popup_h = gdk_pixbuf_get_height(pb);
+			self->_priv->popup_w = gdk_pixbuf_get_width(pb);
 			if(self->draw_border)
 				screenshot_add_border(&pb);	
 			gtk_container_add(GTK_CONTAINER(self->_priv->popup_win), image);
