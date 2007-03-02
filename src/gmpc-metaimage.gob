@@ -128,6 +128,29 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		}
 	}
 
+	private
+	void
+	popup_position(self)
+	{
+		int x,y,xm,ym;
+		GdkRectangle rect;
+		int monitor;
+		gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &x,&y);
+		gdk_window_get_pointer(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &xm,&ym,NULL);
+		monitor = gdk_screen_get_monitor_at_point(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),x+xm,y+ym);
+		gdk_screen_get_monitor_geometry(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),monitor, &rect);
+		/* if it falls of the monitor, reposition */
+		if((rect.y +y+ym+250+MOUSE_DISTANCE) > (rect.height+rect.y))	{
+			y-= 250+2*MOUSE_DISTANCE;
+		}
+		if((x+xm+250+MOUSE_DISTANCE) > (rect.width+rect.x)) {
+			x-= 250+2*MOUSE_DISTANCE;
+		}
+		gtk_window_move(GTK_WINDOW(self->_priv->popup_win),x+xm+MOUSE_DISTANCE,y+ym+MOUSE_DISTANCE);
+
+
+
+	}
 	private 
 	gboolean
 	popup_event(self)
@@ -143,13 +166,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			gtk_container_add(GTK_CONTAINER(self->_priv->popup_win), image);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
 			/* position the thing */
-			{
-				int x,y,xm,ym;
-				gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &x,&y);
-				gdk_window_get_pointer(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &xm,&ym,NULL);
-				gtk_window_move(GTK_WINDOW(self->_priv->popup_win),x+xm+MOUSE_DISTANCE,y+ym+MOUSE_DISTANCE);
-
-			}
+			self_popup_position(self);
 			gtk_widget_show_all(self->_priv->popup_win);
 			g_object_unref(pb);
 		}
@@ -162,10 +179,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	{
 		if(self->_priv->popup_win)
 		{
-			int x,y,xm,ym;
-			gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &x,&y);
-			gdk_window_get_pointer(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &xm,&ym,NULL);
-			gtk_window_move(GTK_WINDOW(self->_priv->popup_win),x+xm+MOUSE_DISTANCE,y+ym+MOUSE_DISTANCE);
+			self_popup_position(self);
 		}
 
 		return TRUE;
