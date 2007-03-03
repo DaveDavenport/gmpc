@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
-#include <math.h>
+/*#include <math.h>*/
 #include "main.h"
 #include "misc.h"
 
 extern GladeXML *pl3_xml;
 
-static void info2_play_code(char *ar);
+
 static void info2_add(GtkWidget *);
 static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
@@ -35,7 +35,9 @@ static GtkEntryCompletion *entry_completion = NULL;
 /**
  * playing 
  */
+/*
 #include <libmpd/libmpd-internal.h>
+static void info2_play_code(char *ar);
 gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
 static void play_fill_vbox(GtkWidget *vbox,GtkWidget *table);
 void metab_play_show_albums(GtkTable *table, gchar *artist);
@@ -45,7 +47,7 @@ int do_playing = FALSE;
 GtkWidget *play_label = NULL, *button_vbox = NULL, *play_table;
 MpdData *play_data= NULL;
 MpdData *play_cur_data= NULL;
-
+*/
 static int current_id = 0;
 
 typedef struct {
@@ -1602,7 +1604,7 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 		info2_fill_view();
 		return TRUE;
 	}
-	if(event->keyval == GDK_Escape && event-> state&GDK_CONTROL_MASK)
+/*	if(event->keyval == GDK_Escape && event-> state&GDK_CONTROL_MASK)
 	{
 		info2_activate();
 		if(!do_playing)
@@ -1631,9 +1633,10 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 			return TRUE;
 		}
 	}
-
+*/
 	return FALSE;
 }
+/*
 void metab_play_show_albums(GtkTable *table, gchar *artist)
 {
 	int albums=0, cols,rows,width;
@@ -1689,12 +1692,7 @@ gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
     int width = widget->allocation.width;
     int height = widget->allocation.height;
 
-    /*	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
-        cairo_rectangle(cr,0,0,width,height);
-        cairo_fill(cr);
-        */
-
-    cairo_set_line_width (cr, 1.5);
+       cairo_set_line_width (cr, 1.5);
 
     cairo_rectangle(cr, 0,0,width,height);
 
@@ -1707,10 +1705,7 @@ gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoin
     cairo_pattern_add_color_stop_rgba (pat, .5, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
     cairo_set_source (cr, pat);
 
-    cairo_fill/*_preserve */(cr);
-    /*gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
-      cairo_stroke (cr);
-      */
+    cairo_fill(cr);
     cairo_pattern_destroy(pat);
     cairo_destroy(cr);
   }
@@ -1802,7 +1797,7 @@ static void info2_play_code(char *ar)
 	gtk_widget_set_app_paintable(resizer_vbox, TRUE);
 
 	gtk_widget_hide(title_event);
-	/* more hacking */
+
 	g_object_ref(title_vbox);
 	gtk_container_remove(GTK_CONTAINER(gtk_widget_get_parent(title_vbox)), title_vbox);
 
@@ -1843,4 +1838,4 @@ static void info2_play_code(char *ar)
 	gtk_widget_show_all(resizer_vbox);
 	play_fill_vbox(button_vbox, table);
 }
-
+*/
