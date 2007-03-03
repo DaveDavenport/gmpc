@@ -14,30 +14,30 @@ requires 2.0.0
 %h{
 	enum
 	{
-		MPDDATA_MODEL_COL_MPDSONG = 0, 			/* get the mpd_Song */
-		MPDDATA_MODEL_COL_PLAYING,				/* Shows if this song is the current song */
+		MPDDATA_MODEL_COL_MPDSONG = 0, 		      /* get the mpd_Song */
+		MPDDATA_MODEL_COL_PLAYING,				      /* Shows if this song is the current song */
 		MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT,	/* Shows if this song is the current song */
-		MPDDATA_MODEL_COL_PATH,					/* Path to song/file/directory */ 
-		MPDDATA_MODEL_COL_MARKUP, 				/* a string that has markup */
-		MPDDATA_MODEL_COL_SONG_ARTIST,			/* artist name */
-		MPDDATA_MODEL_COL_SONG_ALBUM,			/* album name */
-		MPDDATA_MODEL_COL_SONG_TITLE,			/* song title */
-		MPDDATA_MODEL_COL_SONG_TITLEFILE,		/* song title */
-		MPDDATA_MODEL_COL_SONG_GENRE,			/* song genre */
-		MPDDATA_MODEL_COL_SONG_TRACK,			/* song track */
-		MPDDATA_MODEL_COL_SONG_NAME,			/* stream name */
-		MPDDATA_MODEL_COL_SONG_COMPOSER,		/* composer name */
-		MPDDATA_MODEL_COL_SONG_PERFORMER,		/* performer */
-		MPDDATA_MODEL_COL_SONG_DATE,			/* date */
-		MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT,	/* length formatted */
-		MPDDATA_MODEL_COL_SONG_DISC,			/* disc */
-		MPDDATA_MODEL_COL_SONG_COMMENT,			/* comment */
-		MPDDATA_MODEL_COL_SONG_POS,				/* position */
-		MPDDATA_MODEL_COL_SONG_ID,				/* col id */
-		MPDDATA_MODEL_COL_ICON_ID,				/* icon id */
-		MPDDATA_MODEL_COL_SONG_LENGTH,			/* length */
-		MPDDATA_MODEL_TAG_TYPE,				/* tag type */
-		MPDDATA_MODEL_ROW_TYPE,					/* type of the row */
+		MPDDATA_MODEL_COL_PATH,					        /* Path to song/file/directory */ 
+		MPDDATA_MODEL_COL_MARKUP, 				      /* a string that has markup */
+		MPDDATA_MODEL_COL_SONG_ARTIST,			    /* artist name */
+		MPDDATA_MODEL_COL_SONG_ALBUM,			      /* album name */
+		MPDDATA_MODEL_COL_SONG_TITLE,			      /* song title */
+		MPDDATA_MODEL_COL_SONG_TITLEFILE,		    /* song title */
+		MPDDATA_MODEL_COL_SONG_GENRE,			      /* song genre */
+		MPDDATA_MODEL_COL_SONG_TRACK,			      /* song track */
+		MPDDATA_MODEL_COL_SONG_NAME,			      /* stream name */
+		MPDDATA_MODEL_COL_SONG_COMPOSER,		    /* composer name */
+		MPDDATA_MODEL_COL_SONG_PERFORMER,		    /* performer */
+		MPDDATA_MODEL_COL_SONG_DATE,			      /* date */
+		MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT,	  /* length formatted */
+		MPDDATA_MODEL_COL_SONG_DISC,			      /* disc */
+		MPDDATA_MODEL_COL_SONG_COMMENT,			    /* comment */
+		MPDDATA_MODEL_COL_SONG_POS,				      /* position */
+		MPDDATA_MODEL_COL_SONG_ID,				      /* col id */
+		MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
+		MPDDATA_MODEL_COL_SONG_LENGTH,			    /* length */
+		MPDDATA_MODEL_TAG_TYPE,				          /* tag type */
+		MPDDATA_MODEL_ROW_TYPE,					        /* type of the row */
 		MPDDATA_MODEL_N_COLUMNS
 	} ;
 %}

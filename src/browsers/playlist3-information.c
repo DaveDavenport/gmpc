@@ -271,7 +271,7 @@ static void info3_fill_view()
 
 
 	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 200);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
@@ -284,7 +284,7 @@ static void info3_fill_view()
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
 
-	if(song->comment)
+/*	if(song->comment)
 	{
 		vbox = gtk_vbox_new(FALSE, 6);
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
@@ -304,7 +304,7 @@ static void info3_fill_view()
 
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 	}	
-
+*/
 
 	/**
 	 * The lyric display
@@ -320,7 +320,7 @@ static void info3_fill_view()
 
 
 	/* some sort of list */
-	if(mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED && song->album && song->artist)
+	if(/*mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED &&*/ song->album && song->artist)
 	{
 		MpdData *data = NULL;
 
@@ -336,10 +336,11 @@ static void info3_fill_view()
 			label = gtk_label_new("");
 			gtk_label_set_markup(GTK_LABEL(label), _("<b>Album tracks:</b>"));
 			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-			gtk_expander_set_label_widget(GTK_EXPANDER(exp), label);
-			gtk_container_add(GTK_CONTAINER(exp), vbox);
-			gtk_container_set_border_width(GTK_CONTAINER(exp), 6);
-			gtk_container_set_border_width(GTK_CONTAINER(vbox), 12);
+      gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);	
+      //			gtk_expander_set_label_widget(GTK_EXPANDER(exp), label);
+	//		gtk_container_add(GTK_CONTAINER(exp), vbox);
+//			gtk_container_set_border_width(GTK_CONTAINER(exp), 6);
+			gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 			for(;data;data = mpd_data_get_next(data))
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
@@ -347,7 +348,7 @@ static void info3_fill_view()
 					i++;
 					gchar *markup = g_strdup_printf("%i. %s",i, data->song->title);
 					button = gtk_button_new();
-					gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_MENU));
+			//		gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_MENU));
 					gtk_button_set_label(GTK_BUTTON(button), markup);
 					gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 					g_object_set_data_full(G_OBJECT(button), "path",g_strdup(data->song->file), g_free);
@@ -360,7 +361,7 @@ static void info3_fill_view()
 					q_free(markup);
 				}
 			}
-			gtk_box_pack_start(GTK_BOX(resizer_vbox), exp, FALSE, FALSE,0);
+			gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox, FALSE, FALSE,0);
 		}
 	}
 	/*
@@ -410,6 +411,12 @@ static void info3_fill_view()
 		i++;
 		q_free(dirname);
 	}
+	if(song->comment) {
+		info3_add_table_item(table2,_("<b>Comment:</b>"),song->comment,i);
+		i++;
+	}
+
+
 	if(song->artist)
 	{
 		int i=0,items = 0;
