@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-02-14 23:58+0100\n"
-"PO-Revision-Date: 2006-11-03 16:47+0100\n"
+"PO-Revision-Date: 2007-03-03 18:20+0100\n"
 "Last-Translator: Johám-Luís Miguéns Vila <galiza.ceive@gmail.com>\n"
 "Language-Team: Galician\n"
 "MIME-Version: 1.0\n"
@@ -119,9 +119,8 @@ msgstr "<b>Rota:</b>"
 
 #: ../glade/gmpc.glade.h:22 ../src/playlist3-metadata-browser.c:568
 #: ../src/playlist3-information.c:314
-#, fuzzy
 msgid "<b>Performer:</b>"
-msgstr "<b>Estilo:</b>"
+msgstr "<b>Executante:</b>"
 
 #: ../glade/gmpc.glade.h:23
 msgid "<b>Playlist:</b>"
@@ -558,14 +557,12 @@ msgid "The orientation of the tray."
 msgstr "A orientaçom da icona de notificaçom."
 
 #: ../src/id3info.c:88
-#, fuzzy
 msgid "Save Album Text"
-msgstr "Texto do á_lbum"
+msgstr "Guardar texto do álbum"
 
 #: ../src/id3info.c:167
-#, fuzzy
 msgid "Save Artist Text"
-msgstr "Texto do ar_tista"
+msgstr "Guardar texto do artista"
 
 #: ../src/id3info.c:248
 msgid "Working...."
@@ -612,7 +609,7 @@ msgstr "--config="
 
 #: ../src/main.c:276
 msgid "--clean-cover-db"
-msgstr ""
+msgstr "--clean-cover-db"
 
 #. *
 #. * Print out help message
@@ -622,7 +619,7 @@ msgid "--help"
 msgstr "--help"
 
 #: ../src/main.c:285
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -647,12 +644,12 @@ msgstr ""
 "\t\t\t\t\t2: Mensagens de erro e advertência\n"
 "\t\t\t\t\t3: Todas as mensagens\n"
 "\t--version:\t\tMostrar a versom e a revisom SVN\n"
-"\t--config=<ficheiro>\t\tEstabelecer o ficheiro de configuraçom, por defeito "
-"~/.gmpc/gmpc.cfg\n"
+"\t--config=<ficheiro>\t\tEstabelecer o ficheiro de configuraçom, por defeito ~/.gmpc/gmpc.cfg\n"
+"        --clean-cover-db                Eliminar o ficheiro de portada.\n"
 
 #: ../src/main.c:317
 msgid "Trying to run gmpc with a wrong libmpd version."
-msgstr ""
+msgstr "Estás a tentar executar o gmpc com a versom incorrecta de libmpd."
 
 #: ../src/main.c:385 ../src/main.c:408
 msgid "Failed to load the configuration system"
@@ -668,26 +665,27 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"Nom se puido estabelecer a palavra-chave em: '%s'\n"
+"Por favor, tenta-o de novo."
 
 #: ../src/main.c:950
-#, fuzzy, c-format
+#, c-format
 msgid "Please enter your password for: '%s'"
-msgstr "Introduz a tua palavra-chave para: '<hostname>'"
+msgstr "Introduz a palavra-chave para: '%s'"
 
 #: ../src/main.c:970
-#, fuzzy
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
 #: ../src/main.c:994 ../src/main.c:1006
 #, c-format
 msgid "error code %i: %s"
-msgstr ""
+msgstr "código de erro %i: %s"
 
 #: ../src/main.c:1027
 #, c-format
 msgid "The following error occured: %i:'%s'"
-msgstr ""
+msgstr "Ocorreu o seguinte erro: %i:'%s'"
 
 #: ../src/main.c:1096
 msgid ""
@@ -699,15 +697,14 @@ msgstr ""
 
 #: ../src/main.c:1125
 msgid "Error occured during operation"
-msgstr ""
+msgstr "Ocorreu um erro durante a operaçom"
 
 #. Create label
 #: ../src/main.c:1150
 msgid "The following error(s) occured:"
-msgstr ""
+msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
 
 #: ../src/main.c:1166
-#, fuzzy
 msgid "Error Message"
 msgstr "Mensagem de erro"
 
@@ -917,7 +914,7 @@ msgstr "Compositor"
 #. Performer Column
 #: ../src/playlist3-current-playlist-browser.c:282
 msgid "Performer"
-msgstr ""
+msgstr "Executante"
 
 #. *
 #. * Track length column
@@ -1254,24 +1251,20 @@ msgid "artist info"
 msgstr "informaçom do artista"
 
 #: ../src/playlist3-metadata-browser.c:878 ../src/playlist3-information.c:371
-#, fuzzy
 msgid "<b>Genres: </b>"
-msgstr "<b>Estilo:</b>"
+msgstr "<b>Estilos:</b>"
 
 #: ../src/playlist3-metadata-browser.c:878 ../src/playlist3-information.c:371
-#, fuzzy
 msgid "<b>Genre: </b>"
 msgstr "<b>Estilo:</b>"
 
 #: ../src/playlist3-metadata-browser.c:894 ../src/playlist3-information.c:387
-#, fuzzy
 msgid "<b>Dates: </b>"
-msgstr "<b>Data:</b>"
+msgstr "<b>Datas: </b>"
 
 #: ../src/playlist3-metadata-browser.c:894 ../src/playlist3-information.c:387
-#, fuzzy
 msgid "<b>Date: </b>"
-msgstr "<b>Data:</b>"
+msgstr "<b>Data: </b>"
 
 #: ../src/playlist3-metadata-browser.c:1015
 #: ../src/playlist3-metadata-browser.c:1292
@@ -1293,70 +1286,62 @@ msgid "Metadata Browser"
 msgstr "Navegador de metadatos"
 
 #: ../src/playlist3-find2-browser.c:288
-#, fuzzy
 msgid "<span size='xx-large' weight='bold'>Database Search</span>"
-msgstr "<span size=\"x-large\" weight=\"bold\">Gestor das portadas</span>"
+msgstr "<span size='xx-large' weight='bold'>Procurar na biblioteca</span>"
 
 #: ../src/playlist3-find2-browser.c:345 ../src/playlist3-find2-browser.c:676
 msgid "Database Search"
-msgstr ""
+msgstr "Procura na base de dados"
 
 #: ../src/playlist3-find3-browser.c:280
-#, fuzzy
 msgid "<span size='xx-large' weight='bold'>Playlist Search</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Sem reproduçom</span>"
+msgstr "<span size='xx-large' weight='bold'>Procurar na lista</span>"
 
 #: ../src/playlist3-find3-browser.c:344 ../src/playlist3-find3-browser.c:686
-#, fuzzy
 msgid "Playlist Search"
-msgstr "L_ista"
+msgstr "Procurar na lista"
 
 #: ../src/playlist3-information.c:399
-#, fuzzy
 msgid "Artist Info"
-msgstr "informaçom do artista"
+msgstr "Informaçom do artista"
 
 #: ../src/playlist3-information.c:460 ../src/playlist3-information.c:518
 #: ../src/playlist3-information.c:602
-#, fuzzy
 msgid "Song Information"
-msgstr "_Informaçom da cançom"
+msgstr "Informaçom da cançom"
 
 #: ../src/url_fetcher.c:90 ../src/url_fetcher.c:119
-#, fuzzy, c-format
+#, c-format
 msgid "Added %i %s"
-msgstr "Umha cançom engadida"
+msgstr "Engadida %i %s"
 
 #: ../src/url_fetcher.c:90 ../src/url_fetcher.c:119
-#, fuzzy
 msgid "streams"
-msgstr "Stream"
+msgstr "streams"
 
 #: ../src/url_fetcher.c:90 ../src/url_fetcher.c:119
-#, fuzzy
 msgid "stream"
-msgstr "Stream"
+msgstr "stream"
 
 #. *
 #. * Setup the label
 #.
 #: ../src/url_fetcher.c:209
 msgid "Enter an url"
-msgstr ""
+msgstr "Introduzir umha URL"
 
 #: ../src/url_fetcher.c:242 ../src/url_fetcher.c:268
-#, fuzzy
 msgid "Added 1 stream"
-msgstr "Engdir stream"
+msgstr "1 stream engadido"
 
 #: ../src/url_fetcher.c:284
 #, c-format
 msgid "Failed to contact url: '%s'"
-msgstr ""
+msgstr "Nom se puido ligar à URL: '%s'"
 
 #: ../src/url_fetcher.c:309
 msgid "Add URL"
-msgstr ""
+msgstr "Engadir URL"
 
 #~ msgid ""
 #~ "Mpd Returned the following error:\n"
