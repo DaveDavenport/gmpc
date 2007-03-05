@@ -48,21 +48,28 @@ BUILT_SOURCES= revisiont.h\
 	gmpc-mpddata-treeview.c\
 	gmpc-metaimage.c
 
-gmpc_connection_SOURCE=gmpc-connection.gob
-gmpc-connection.c: $(gmpc_connection_SOURCE) 
-	$(GOB2) --no-touch-headers $(gmpc_connection_SOURCE) 
+#gmpc_connection_SOURCE=gmpc-connection.gob
+#gmpc-connection.c: $(gmpc_connection_SOURCE) 
+#	$(GOB2) --no-touch-headers $(gmpc_connection_SOURCE) 
 
-gmpc_metaimage_SOURCE=gmpc-metaimage.gob
-gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
-	$(GOB2) --no-touch-headers $(gmpc_metaimage_SOURCE) 
+#gmpc_metaimage_SOURCE=gmpc-metaimage.gob
+#gmpc-metaimage.c: $(gmpc_metaimage_SOURCE)
+#	$(GOB2) --no-touch-headers $(gmpc_metaimage_SOURCE) 
 
-gmpc_mpddata_model_SOURCE=gmpc-mpddata-model.gob
-gmpc-mpddata-model.c: $(gmpc_mpddata_model_SOURCE)
-	$(GOB2) --no-touch-headers $(gmpc_mpddata_model_SOURCE) 
+#gmpc_mpddata_model_SOURCE=gmpc-mpddata-model.gob
+#gmpc-mpddata-model.c: $(gmpc_mpddata_model_SOURCE)
+#	$(GOB2) --no-touch-headers $(gmpc_mpddata_model_SOURCE) 
 
-gmpc_mpddata_treeview_SOURCE=gmpc-mpddata-treeview.gob
-gmpc-mpddata-treeview.c: $(gmpc_mpddata_treeview_SOURCE)
-	$(GOB2) --no-touch-headers $(gmpc_mpddata_treeview_SOURCE) 
+#gmpc_mpddata_treeview_SOURCE=gmpc-mpddata-treeview.gob
+#gmpc-mpddata-treeview.c: $(gmpc_mpddata_treeview_SOURCE)
+#	$(GOB2) --no-touch-headers $(gmpc_mpddata_treeview_SOURCE) 
+
+%.c %.h %-private.h: %.gob
+	@GOB2@ $<
+
+
+
+
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
