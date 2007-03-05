@@ -17,7 +17,7 @@ static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
 static void info2_fill_artist_view(char *);
-static void info2_fill_album_view(char *, char *);
+void info2_fill_album_view(char *, char *);
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -1148,7 +1148,7 @@ static void info2_fill_artist_view(char *artist)
 /*****
  * View Album
  */
-static void info2_fill_album_view(char *artist,char *album)
+void info2_fill_album_view(char *artist,char *album)
 {
 	GtkWidget *button = NULL;
 	GtkWidget *ali = NULL;
@@ -1566,7 +1566,7 @@ static int info2_get_enabled()
 }
 
 
-static void info2_activate()
+void info2_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			playlist3_get_category_tree_view());	

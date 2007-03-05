@@ -54,7 +54,9 @@ static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 extern GladeXML *pl3_xml;
 
+static void pl3_find3_combo_box_changed(GtkComboBox *cb, gpointer data);
 
+int pl3_find3_last_entry = MPD_TAG_ITEM_ANY;
 /**
  * Plugin structure
  */
@@ -158,6 +160,12 @@ static void pl3_find3_browser_remove_crit(GtkWidget *button,crit3_struct *cs)
 /*    pl3_find3_browser_search(); */
     gtk_widget_set_sensitive(pl3_find3_critaddbut, TRUE);
 }
+
+static void pl3_find3_combo_box_changed(GtkComboBox *cb, gpointer data)
+{
+  pl3_find3_last_entry= gtk_combo_box_get_active(cb);
+}
+
 static void pl3_find3_browser_add_crit()
 {
     crit3_struct *cs = g_malloc0(sizeof(*cs));
@@ -170,8 +178,9 @@ static void pl3_find3_browser_add_crit()
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(cs->combo), renderer, TRUE);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(cs->combo), renderer, "text", 1, NULL);
     gtk_combo_box_set_model(GTK_COMBO_BOX(cs->combo), GTK_TREE_MODEL(pl3_find3_combo_store));
-    gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), 0);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), pl3_find3_last_entry);
     gtk_box_pack_start(GTK_BOX(cs->hbox), cs->combo, FALSE, TRUE, 0);
+    g_signal_connect(G_OBJECT(cs->combo), "changed", G_CALLBACK(pl3_find3_combo_box_changed), NULL);
 
     cs->entry = gtk_entry_new();
     g_signal_connect(G_OBJECT(cs->entry), "activate",G_CALLBACK(pl3_find3_browser_search), NULL);

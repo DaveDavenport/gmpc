@@ -6,6 +6,12 @@
 #include "main.h"
 #include "misc.h"
 
+/**
+ * TODO; Move to header file 
+ */
+void info2_activate();
+
+
 extern GladeXML *pl3_xml;
 
 static void info3_add(GtkWidget *);
@@ -23,6 +29,7 @@ static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
 
 static void pl3_info_browser_song_play(GtkButton *but, gpointer data);
+static void info3_show_album(GtkWidget *button, gpointer data);
 static int current_id = 0;
 
 typedef struct {
@@ -521,6 +528,11 @@ static void info3_fill_view()
 				hbox = gtk_hbox_new(FALSE, 6);	
 				song2->artist = song->artist;
 				song2->album = data->tag;
+
+        g_object_set_data_full(G_OBJECT(button), "artist", g_strdup(song->artist), g_free);
+        g_object_set_data_full(G_OBJECT(button), "album", g_strdup(data->tag), g_free);
+        g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info3_show_album), NULL);
+
 				image = gmpc_metaimage_new(META_ALBUM_ART);                       		
 				gmpc_metaimage_set_squared(GMPC_METAIMAGE(image),TRUE);
 				gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 64);
@@ -777,3 +789,15 @@ static int info3_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 
 	return FALSE;
 }
+
+static void info3_show_album(GtkWidget *button, gpointer data)
+{
+  char *artist = g_object_get_data(G_OBJECT(button), "artist");
+  char *album = g_object_get_data(G_OBJECT(button), "album");
+  if(artist  && album)
+  {
+		info2_activate();
+    info2_fill_album_view(artist, album);
+  }
+}
+
