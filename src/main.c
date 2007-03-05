@@ -66,13 +66,6 @@
 static BaconMessageConnection *bacon_connection = NULL;
 #endif
 
-#ifdef DEBUG
-/* Testing */
-#include <sys/time.h>
-
-struct timeval tv_old = {0,0};
-#endif
-
 GmpcConnection *gmpcconn = NULL;
 int gmpc_connected = FALSE;
 int gmpc_failed_tries = 0;
