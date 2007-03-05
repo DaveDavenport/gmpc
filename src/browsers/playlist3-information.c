@@ -9,8 +9,6 @@
 /**
  * TODO; Move to header file 
  */
-void info2_activate();
-
 
 extern GladeXML *pl3_xml;
 
@@ -27,7 +25,7 @@ static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info3_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
-
+static void info3_show_artist(GtkWidget *button, gpointer data);
 static void pl3_info_browser_song_play(GtkButton *but, gpointer data);
 static void info3_show_album(GtkWidget *button, gpointer data);
 static int current_id = 0;
@@ -423,6 +421,7 @@ static void info3_fill_view()
 
 	if(song->artist)
 	{
+    GtkWidget *button = NULL;
 		int i=0,items = 0;
 		MpdData *data = NULL;
 		GString *string = NULL;
@@ -443,16 +442,21 @@ static void info3_fill_view()
 		 * Blomb 
 		 */
 		table = gtk_hbox_new(FALSE,6);
-		gtk_container_set_border_width(GTK_CONTAINER(table),8);
+//		gtk_container_set_border_width(GTK_CONTAINER(table),8);
 
+    button = gtk_button_new();
+    g_object_set_data_full(G_OBJECT(button), "artist", g_strdup(song->artist), g_free);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info3_show_artist),NULL);
+    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 		image = gmpc_metaimage_new(META_ARTIST_ART);
 		gmpc_metaimage_set_squared(GMPC_METAIMAGE(image),FALSE);
-		gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(image), TRUE);
+//		gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(image), TRUE);
 		gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 		gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 		gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
-		gtk_box_pack_start(GTK_BOX(table), image, FALSE,FALSE,0);
+    gtk_container_add(GTK_CONTAINER(button), image);
+		gtk_box_pack_start(GTK_BOX(table),button/* image*/, FALSE,FALSE,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE,FALSE,0);
 
 		table2 = gtk_table_new(2,3,0);
@@ -800,4 +804,12 @@ static void info3_show_album(GtkWidget *button, gpointer data)
     info2_fill_album_view(artist, album);
   }
 }
-
+static void info3_show_artist(GtkWidget *button, gpointer data)
+{
+  char *artist = g_object_get_data(G_OBJECT(button), "artist");
+  if(artist)
+  {
+		info2_activate();
+    info2_fill_artist_view(artist);
+  }
+}

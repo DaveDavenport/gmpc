@@ -16,7 +16,7 @@ static int info2_add_go_menu(GtkWidget *);
 static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-static void info2_fill_artist_view(char *);
+void info2_fill_artist_view(char *);
 void info2_fill_album_view(char *, char *);
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
@@ -840,7 +840,7 @@ static void info2_fill_view()
  * ARTIST VIEW
  */
 
-static void info2_fill_artist_view(char *artist)
+void info2_fill_artist_view(char *artist)
 {
 	GtkWidget *vbox = NULL;
 	int i=0,items=0;
