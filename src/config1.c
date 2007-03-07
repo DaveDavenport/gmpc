@@ -349,6 +349,7 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 
 static void cfg_save(config_obj *cfgo)
 {
+	printf("Saving config file %s\n",cfgo->url);
 	if(cfgo == NULL)
 	{
 		return;
@@ -657,6 +658,12 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 		cfg_add_child(node,newnode);
 
 	}	
+	else if(!memcmp(newnode->value, value,strlen(newnode->value)))
+	{
+		/* Check if the content is the same, if it is, do nothing */
+		printf("Not saving config\n");	
+		return;
+	}
 	newnode->type = TYPE_ITEM;
 	if(newnode->value){
 		cfg->total_size-= strlen(newnode->value);
@@ -722,6 +729,11 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	cur = cfg_get_multiple_value(cfg, class,key,id);
 	if(cur != NULL)
 	{
+		if(!memcmp(cur->value, value, strlen(cur->value)))
+		{
+			printf("do not save config\n");
+			return;
+		}
 		if(cur->value){
 			cfg->total_size -= strlen(cur->value);
 			cfg_free_string(cur->value);
@@ -729,6 +741,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 
 		cur->value = g_strdup(value);
 		cfg->total_size += strlen(cur->value);
+		cfg_save(cfg);
 	}
 	else {
 		config_node *node = cfg_get_single_value(cfg,class,key);
