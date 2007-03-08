@@ -6,8 +6,6 @@
 
 #include "metadata.h"
 
-
-
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
 gmpcPlugin **meta_plugins = NULL;

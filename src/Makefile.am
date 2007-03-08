@@ -35,6 +35,7 @@ gmpc_SOURCES=\
 	gmpc-metaimage.c\
 	gmpc-mpddata-model.c\
 	gmpc-mpddata-treeview.c\
+	gmpc-clicklabel.c\
 	gmpc_easy_download.c\
 	url_fetcher.c\
 	eggcolumnchooserdialog.c\
@@ -46,6 +47,7 @@ BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
 	gmpc-mpddata-model.c\
 	gmpc-mpddata-treeview.c\
+	gmpc-clicklabel.c\
 	gmpc-metaimage.c
 
 #gmpc_connection_SOURCE=gmpc-connection.gob
@@ -143,6 +145,8 @@ EXTRA_DIST = 	playlist3.h\
 		gmpc-mpddata-model-private.h\
 		gmpc-mpddata-treeview.h\
 		gmpc-mpddata-treeview-private.h\
+		gmpc-clicklabel.h\
+		gmpc-clicklabel-private.h\
 		id3info.h\
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\

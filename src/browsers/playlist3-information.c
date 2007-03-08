@@ -5,6 +5,7 @@
 #include <math.h>
 #include "main.h"
 #include "misc.h"
+#include "gmpc-clicklabel.h"
 
 /**
  * TODO; Move to header file 
@@ -354,7 +355,7 @@ static void info3_fill_view()
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, FALSE,0);
 	
 
-	vbox = gtk_vbox_new(FALSE, 0);
+	vbox = gtk_vbox_new(FALSE, 6);
 	/* some sort of list */
 	if(song->album && song->artist)
 	{
@@ -370,7 +371,7 @@ static void info3_fill_view()
 			label = gtk_label_new("");
 			gtk_label_set_markup(GTK_LABEL(label), _("<b>Album tracks:</b>"));
 			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,6);	
+			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);	
 //			gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 			for(;data;data = mpd_data_get_next(data))
 			{
@@ -378,21 +379,21 @@ static void info3_fill_view()
 				{
 					i++;
 					gchar *markup = g_strdup_printf("%i. %s",i, data->song->title);
-					button = gtk_button_new();
-					label = gtk_label_new(markup);
-					gtk_container_add(GTK_CONTAINER(button), label);
-					gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+					//button = gtk_hbox_new(FALSE,6);//gtk_button_new();
+					label = gmpc_clicklabel_new(markup);/*gtk_label_new(markup);*/
+					//gtk_container_add(GTK_CONTAINER(button), label);
+//					gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 					//		gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_MENU));
 					//gtk_button_set_label(GTK_BUTTON(button), markup);
-					gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-					g_object_set_data_full(G_OBJECT(button), "path",g_strdup(data->song->file), g_free);
-					label = gtk_alignment_new(0,0.5,0,0);
-					gtk_container_add(GTK_CONTAINER(label), button);
+				//	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+					g_object_set_data_full(G_OBJECT(label), "path",g_strdup(data->song->file), g_free);
+//					label = gtk_alignment_new(0,0.5,0,0);
+//					gtk_container_add(GTK_CONTAINER(label), button);
 					gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);	
 
 
-					gtk_widget_set_size_request(GTK_WIDGET(button), 200,-1);
-					g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pl3_info_browser_song_play), NULL);
+					gtk_widget_set_size_request(GTK_WIDGET(label /*button*/), 200,-1);
+					g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(pl3_info_browser_song_play), NULL);
 
 					q_free(markup);
 				}

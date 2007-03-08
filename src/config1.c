@@ -357,10 +357,6 @@ static void cfg_save(config_obj *cfgo)
 	{
 		FILE *fp = fopen(cfgo->url, "w");
 		if(!fp) return;
-		fprintf(fp, "# The GMPC Config file\n"\
-				"# Lines starting with '#' '/' and ';' are coments, and ignored\n"\
-				"# Also empty lines are ignored.\n"\
-				"# User comments will get lost\n");
 		cfg_save_category(cfgo,cfgo->root, fp);	
 		fclose(fp);
 #ifndef WIN32
