@@ -349,7 +349,6 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 
 static void cfg_save(config_obj *cfgo)
 {
-	printf("Saving config file %s\n",cfgo->url);
 	if(cfgo == NULL)
 	{
 		return;
@@ -661,7 +660,6 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 	else if(!memcmp(newnode->value, value,strlen(newnode->value)))
 	{
 		/* Check if the content is the same, if it is, do nothing */
-		printf("Not saving config\n");	
 		return;
 	}
 	newnode->type = TYPE_ITEM;
@@ -731,7 +729,6 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	{
 		if(!memcmp(cur->value, value, strlen(cur->value)))
 		{
-			printf("do not save config\n");
 			return;
 		}
 		if(cur->value){
