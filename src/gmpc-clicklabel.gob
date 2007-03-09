@@ -27,7 +27,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 		gchar *markup = g_markup_printf_escaped("<b>%s</b>", self->_priv->text);
 		gtk_label_set_markup(self->_priv->label,markup);
 		g_free(markup);
-		gdk_window_set_cursor(GTK_WIDGET(self)->window, gdk_cursor_new(GDK_HAND1));
+		gdk_window_set_cursor(GTK_WIDGET(self)->window, gdk_cursor_new(GDK_HAND2));
 		return TRUE;
 	}
 	private
