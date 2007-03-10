@@ -395,7 +395,6 @@ static void info3_fill_view()
 	 * The lyric display
 	 */
 	vbox = gtk_vbox_new(FALSE, 6);
-//	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
