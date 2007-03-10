@@ -77,9 +77,6 @@ static void pl3_info_browser_song_play(GtkButton *but, gpointer data)
 	play_path(path);
 }
 
-
-
-
 static void remove_container_entries (GtkContainer * widget)
 {
 	GList *children, *node; 
@@ -122,7 +119,6 @@ static void info3_prepare_view()
 	/**
 	 *  new id
 	 */
-
 	current_id = g_random_int();
 }
 
@@ -144,12 +140,6 @@ static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *pat
 		gchar *labstr= g_strdup_printf(_("<b>%s:</b>"), pd->name);
 		remove_container_entries(GTK_CONTAINER(vbox));
 
-
-/*		label =gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), labstr);
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);
-*/
 		expander = gtk_expander_new(labstr);	
 		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
 		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
@@ -240,37 +230,47 @@ static void info3_fill_view()
 
 
 	info3_prepare_view();
+	/* remove the title */
+	remove_container_entries(GTK_CONTAINER(title_vbox));
 
 	song = mpd_playlist_get_current_song(connection);
 	if(song == NULL || state == MPD_PLAYER_STOP)
 	{
-		vbox = gtk_event_box_new();
+		/* Set label */
 		label = gtk_label_new("");
+		markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>", _("Song Information"),_("Not Playing"));
+		gtk_label_set_markup(GTK_LABEL(label),markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_label_set_markup(GTK_LABEL(label), "<span size=\"xx-large\">Not Playing</span>");
+		q_free(markup);
+		gtk_box_pack_start(GTK_BOX(title_vbox), label,FALSE,TRUE,0);	
 
-		gtk_event_box_set_visible_window(GTK_EVENT_BOX(vbox), FALSE);
-		gtk_container_add(GTK_CONTAINER(vbox), label);
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox, FALSE, FALSE,0);
-		gtk_widget_show_all(resizer_vbox);
+		gtk_widget_show_all(title_vbox);
+
 		return;
 	}
 
 	/** 
 	 * Title Label
 	 */
-	if(song->title)
-	{
-		label = gtk_label_new("");
-		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>", song->title);
-		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-		gtk_label_set_markup(GTK_LABEL(label),markup);
-		q_free(markup);
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_misc_set_padding(GTK_MISC(label),8,8);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
+	/* Set label */
+	label = gtk_label_new("");
+	if(song->title) {
+
+		markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>", _("Song Information"),song->title);
+	} else {
+		/* Set label */
+		gchar *filename = g_path_get_basename(song->file);
+		markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>", _("Song Information"),filename);
+		q_free(filename);
 	}
+	gtk_label_set_markup(GTK_LABEL(label),markup);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+	q_free(markup);
+
+	gtk_box_pack_start(GTK_BOX(title_vbox), label,TRUE,TRUE,0);	
+
+	gtk_widget_show_all(title_vbox);
 
 
 	/**
@@ -378,7 +378,7 @@ static void info3_fill_view()
 					g_object_set_data_full(G_OBJECT(label), "path",g_strdup(data->song->file), g_free);
 					gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);	
 
-					gtk_widget_set_size_request(GTK_WIDGET(label /*button*/), 200,-1);
+					gtk_widget_set_size_request(GTK_WIDGET(label /*button*/), 250,-1);
 					g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(pl3_info_browser_song_play), NULL);
 
 					q_free(markup);
@@ -395,7 +395,7 @@ static void info3_fill_view()
 	 * The lyric display
 	 */
 	vbox = gtk_vbox_new(FALSE, 6);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
+//	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
@@ -570,8 +570,6 @@ static void info3_init()
 {
 	GtkWidget *vp = NULL;;
 	GtkWidget *ali/*,*event*/,*vbox;
-	gchar *str = NULL;
-
 	/**
 	 * main widget used to pack the browser
 	 */
@@ -600,11 +598,6 @@ static void info3_init()
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
 	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, TRUE,0);
-	ali = gtk_label_new("");
-	str = g_strdup_printf("<span size='xx-large' weight='bold'>%s</span>", _("Song Information"));
-	gtk_label_set_markup(GTK_LABEL(ali),str);
-	q_free(str);
-	gtk_box_pack_start(GTK_BOX(title_vbox), ali,FALSE,TRUE,0);	
 
 	/**
 	 * The resizer's vbox
