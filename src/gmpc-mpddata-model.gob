@@ -43,6 +43,7 @@ requires 2.0.0
 %}
 
  class Gmpc:MpdData:Model from G:Object
+          (interface  Gtk:Tree:Sortable)
           (interface Gtk:Tree:Model)
 {
 	private gint stamp 		= {g_random_int()};
@@ -50,6 +51,10 @@ requires 2.0.0
 	private MpdData *data 	= NULL;
 	private gint num_rows = 0;
 
+  /* sorting */
+  private GtkSortType sort_order = GTK_SORT_ASCENDING;
+  private int sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
+  private int old_sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
 	public gboolean has_up	 = FALSE;
 	public gchar *markup	 = {cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER)};
 
@@ -103,7 +108,6 @@ requires 2.0.0
 		Self *self = GMPC_MPDDATA_MODEL(obj); 
 		if(self->_priv->data)
 			mpd_data_free(self->_priv->data);
-		printf("free'ing tree\n");
 	}
 		/* function implemented for the Gtk:Tree:Model interface */
 	interface Gtk:Tree:Model
@@ -198,7 +202,6 @@ requires 2.0.0
 		}
 		if(mpd_data_get_next_real(data,FALSE) == NULL)
 			return FALSE;
-
 		iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
 		iter->user_data2 = GINT_TO_POINTER(n+1);
 
@@ -523,7 +526,10 @@ requires 2.0.0
 				printf("ERROR not every row cleared\n");
 
 			self->_priv->data = data2;
-			if(self->has_up) {
+      /* SORT IT */
+      self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
+
+      if(self->has_up) {
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path, self->_priv->num_rows);
 				iter.stamp = self->_priv->stamp;
@@ -552,7 +558,204 @@ requires 2.0.0
 					retval+= data2->song->time;
 				}
 			}
+      //self_sort_model(self);
 			return retval;
 		}
+
+    /* Sorting */
+    interface Gtk:Tree:Sortable
+    private 
+    gboolean get_sort_column_id (Gtk:Tree:Sortable *model ,  gint *sort_column_id, GtkSortType *order)
+    {
+      Self *self = GMPC_MPDDATA_MODEL(model);
+      if(sort_column_id) 
+        *sort_column_id = self->_priv->sort_column;
+      if(order)
+       *order = self->_priv->sort_order;
+      return TRUE;//(self->_priv->sort_column >= 0);
+    }
+
+    interface Gtk:Tree:Sortable
+    private 
+    void set_sort_column_id (Gtk:Tree:Sortable *model ,  gint sort_column_id, GtkSortType order)
+    {
+      Self *self = GMPC_MPDDATA_MODEL(model);
+      int old_col = self->_priv->sort_column, old_ord = self->_priv->sort_order;
+      if(sort_column_id == -1)
+        return;
+      self->_priv->sort_column = sort_column_id;
+      self->_priv->sort_order = order;
+      /* trigger signal */
+      if(old_col != sort_column_id || old_ord != order)
+       gtk_tree_sortable_sort_column_changed(model);
+    }
+
+    interface Gtk:Tree:Sortable
+    private
+    gboolean
+    has_default_sort_func(Gtk:Tree:Sortable *model)
+    {
+      return FALSE;
+    }
+
+    private 
+    void 
+    swap(MpdData_real *a, MpdData_real *b)
+    {
+      MpdData_real temp;
+      if(a==b)return;
+      memcpy(&temp, (a), sizeof(temp));
+
+      temp.next = b->next;
+      temp.prev = b->prev;
+      temp.head = b->head;
+
+      b->next = a->next;
+      b->prev = a->prev;
+      b->head = a->head;
+      memcpy(a, b, sizeof(temp));
+      memcpy(b, &temp, sizeof(temp));
+    }
+
+    private
+    MpdData_real *partition(MpdData_real *a, MpdData_real *b,MpdData_real *j, GCompareDataFunc sort,Self *self)
+    {
+      MpdData_real *si = a;
+      self_swap(j,b);
+      while(  a != b)
+      {
+        if(sort(a,b,self) )
+        {
+          self_swap(si,a);
+          si = si->next;
+        }
+        a = a->next;
+      }
+      self_swap(si,b);
+      return si;
+    }
+
+    private
+    void q_sort_data2(MpdData_real *a, MpdData_real *b, GCompareDataFunc sort,Self*self)
+    {
+      if( a && b && a != b)
+      {
+        MpdData_real *j = self_partition(a,b,a,sort,self);
+        if(a!=j)
+          self_q_sort_data2(a,j->prev,sort,self);
+        if(j!= b)
+          self_q_sort_data2(j->next,b,sort,self);
+      }
+    }
+    private
+    void sort_data(MpdData *data,GCompareDataFunc sort,Self *self) 
+    {
+      MpdData_real *a,*b;
+      a = (MpdData_real *) mpd_data_get_first(data);
+      /* get last b */
+      if(!data)
+        return;
+      for(b=a;b->next;b = b->next);
+      self_q_sort_data2(a,b,sort,self);
+    }
+
+    private 
+      MpdData * 
+      sort_mpddata(self, MpdData *data)
+      {
+        if(self->_priv->sort_column <0)
+          return data;
+        self_sort_data(data, self_sort_func, self);
+        return data;
+      }
+   private 
+     int sort_func(MpdData_real *a, MpdData_real *b,Self *self)
+     {
+       if(a->type != b->type )
+       {
+        int val = a->type - b->type; 
+        return (self->_priv->sort_order)?(val>0):(val<0);
+       }
+       else if(a->type == b->type)
+       {
+         int val=0;
+         GtkTreeIter iter;
+         GValue va = {0,},vb = {0,};
+          /* Get values from tree view, so we don't have to replicate code to sort the right entries */
+         iter.user_data = a;
+         iter.user_data2 = GPOINTER_TO_INT(0);
+         self_get_value(self, &iter, self->_priv->sort_column, &va);
+         iter.user_data = b;
+         self_get_value(self, &iter, self->_priv->sort_column, &vb);
+
+         if(self->_priv->types[self->_priv->sort_column] == GTK_TYPE_INT)
+         {
+           val = g_value_get_int(&va) - g_value_get_int(&vb);
+         }
+         else if (self->_priv->types[self->_priv->sort_column] == GTK_TYPE_STRING)
+         {
+           const char *a = g_value_get_string(&va);
+           const char *b = g_value_get_string(&vb);
+           val = (a != NULL)?((b != NULL)?g_utf8_collate(a,b):1):((a==b)?0:-1);
+         }
+         g_value_unset(&va);
+         g_value_unset(&vb);
+         return (self->_priv->sort_order)?(val>0):(val<0);
+       }
+       return 0;
+     }
+
+    interface Gtk:Tree:Sortable
+      private
+      void 
+      sort_column_changed(Gtk:Tree:Sortable *model)
+      {
+        Self *self = GMPC_MPDDATA_MODEL(model);
+        if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
+          return; 
+        if(self->_priv->sort_column <0)
+          return;
+        /* call the sort function */
+        if(self->_priv->sort_column != self->_priv->old_sort_column)
+        {
+          self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
+          self->_priv->old_sort_column = self->_priv->sort_column;
+        }
+        else 
+        {
+          MpdData_real *a, *b;
+          a = mpd_data_get_first(self->_priv->data);
+          for(b=a;b->next;b = b->next);
+          while(a != b)
+          {
+            self_swap(a,b);
+            a = a->next;
+            if(a==b)break;
+            b= b->prev;
+          }
+        }
+
+        /* tell the view that rows have changed  */    
+        {
+          int i=0;
+          GtkTreePath *path = NULL;
+          GtkTreeIter iter;
+          MpdData *data2 = mpd_data_get_first(self->_priv->data); 
+          if(self->has_up) i = 1;
+          for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) 
+          {
+            path = gtk_tree_path_new();
+            gtk_tree_path_append_index(path,i);
+            iter.stamp = self->_priv->stamp;
+            iter.user_data = data2;
+            iter.user_data2 =  GINT_TO_POINTER(i);
+
+            /* propegate change */
+            gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+            i++;
+          }
+        }
+      }
+
 }
 

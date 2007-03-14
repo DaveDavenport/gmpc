@@ -139,8 +139,8 @@ static void pl3_file_browser_init()
 	/* set up the tree */
 	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store2));
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
-
-	/* setup signals */
+  gtk_tree_sortable_set_sort_column_id(pl3_fb_store2, MPDDATA_MODEL_COL_SONG_ARTIST,GTK_SORT_DESCENDING);
+  /* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-press-event", G_CALLBACK(pl3_file_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event), NULL);
