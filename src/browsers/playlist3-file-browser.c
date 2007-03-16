@@ -137,9 +137,8 @@ static void pl3_file_browser_init()
 	pl3_fb_store2 = gmpc_mpddata_model_new();
 
 	/* set up the tree */
-	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser");//gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_fb_store2));
-	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
-  gtk_tree_sortable_set_sort_column_id(pl3_fb_store2, MPDDATA_MODEL_COL_SONG_ARTIST,GTK_SORT_DESCENDING);
+	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser",TRUE, GTK_TREE_MODEL(pl3_fb_store2));
+
   /* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-press-event", G_CALLBACK(pl3_file_browser_button_press_event), NULL);
@@ -517,7 +516,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	GtkTreeIter iter;
 	gchar *song_path;
 	gint r_type;
-	int playlist_length = mpd_playlist_get_playlist_length(connection);
+	/*int playlist_length = mpd_playlist_get_playlist_length(connection);*/
 
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH,&song_path, MPDDATA_MODEL_ROW_TYPE, &r_type, -1);

@@ -221,8 +221,7 @@ static void pl3_find3_browser_init()
     pl3_find3_fill_combo();
 
     /* set up the tree */
-    pl3_find3_tree= gmpc_mpddata_treeview_new("find3-browser");
-	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
+    pl3_find3_tree= gmpc_mpddata_treeview_new("find3-browser",FALSE,GTK_TREE_MODEL(pl3_find3_store2));
 
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find3_tree), "row-activated",G_CALLBACK(pl3_find3_browser_row_activated), NULL); 

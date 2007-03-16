@@ -135,8 +135,7 @@ static void pl3_tag_browser_init()
 	pl3_tag_store2 = gmpc_mpddata_model_new();
 
 	/* set up the tree */
-	pl3_tb_tree = gmpc_mpddata_treeview_new("tag-brow");
-	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_tb_tree), GTK_TREE_MODEL(pl3_tag_store2));
+	pl3_tb_tree = gmpc_mpddata_treeview_new("tag-brow",TRUE, GTK_TREE_MODEL(pl3_tag_store2));
 	/* insert the column in the tree */
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",
