@@ -35,6 +35,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 
+static void pl3_find2_browser_edit_columns(void);
 static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);
 static void pl3_find2_browser_unselected(GtkWidget *);
@@ -497,7 +498,11 @@ static void pl3_find2_browser_add_selected()
     g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
     g_list_free (rows);
 }
+static void pl3_find2_browser_edit_columns(void)
+{
+  gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree));
 
+}
 
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
@@ -511,7 +516,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
         g_signal_connect(G_OBJECT(item), "activate",
                 G_CALLBACK(pl3_find2_browser_add_selected), NULL);
         /* add the replace widget */
-        item = gtk_image_menu_item_new_with_label("Replace");
+        item = gtk_image_menu_item_new_with_label(_("Replace"));
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                 gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -525,6 +530,13 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
             g_signal_connect(G_OBJECT(item), "activate",
                     G_CALLBACK(pl3_find2_browser_show_info), NULL);
         }
+        item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        g_signal_connect(G_OBJECT(item), "activate",
+                G_CALLBACK(pl3_find2_browser_edit_columns), NULL);
+
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
 		return TRUE;

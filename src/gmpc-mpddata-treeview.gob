@@ -240,16 +240,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
       gtk_tree_view_column_set_sort_indicator(column, TRUE);
     }
 
-
-		g_signal_connect(G_OBJECT(column), "clicked", G_CALLBACK(self_column_chooser_start), self);
-
     return column;
 	}
-	
-	private 
-	void column_chooser_start(GtkTreeViewColumn *column,Gmpc:MpdData:Treeview *self)
-	{
-  }
+  /**
+   * Opens a column editor 
+   */	
   public
   void
   edit_columns(self)

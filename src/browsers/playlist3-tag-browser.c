@@ -14,6 +14,8 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 
+static void pl3_tag_browser_edit_columns(void);
+
 static void pref_id3b_fill(void);
 static void pl3_tag_browser_destroy(void);
 static void pl3_custom_tag_browser_fill_tree(GtkWidget *,GtkTreeIter *);
@@ -879,6 +881,10 @@ static void pl3_tag_browser_unselected(GtkWidget *container)
 	gtk_container_remove(GTK_CONTAINER(container),pl3_tb_sw);
 }
 
+static void pl3_tag_browser_edit_columns(void)
+{
+  gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_tb_tree));
+}
 static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -923,6 +929,14 @@ static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkE
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_replace_selected), NULL);
+
+
+        item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        g_signal_connect(G_OBJECT(item), "activate",
+                G_CALLBACK(pl3_tag_browser_edit_columns), NULL);
 
 			gtk_widget_show_all(GTK_WIDGET(menu));
 			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);

@@ -38,6 +38,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 
+static void pl3_find3_browser_edit_columns(void);
 static void pl3_find3_browser_destroy(void);
 static void pl3_find3_browser_delete_selected_songs (void);
 static void pl3_find3_browser_category_selection_changed(GtkWidget *, GtkTreeIter *);
@@ -593,7 +594,10 @@ static int pl3_find3_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *ev
 	}
 	return TRUE;
 }
-
+static void pl3_find3_browser_edit_columns(void)
+{
+  gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_find3_tree));
+}
 
 static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
@@ -618,29 +622,36 @@ static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventB
 			g_signal_connect(G_OBJECT(item), "activate",
 					G_CALLBACK(pl3_find3_browser_show_info), NULL);
 		}
-		gtk_widget_show_all(menu);
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
-		return TRUE;
-	}
-	return FALSE ;
+    item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+        gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    g_signal_connect(G_OBJECT(item), "activate",
+        G_CALLBACK(pl3_find3_browser_edit_columns), NULL);
+
+    gtk_widget_show_all(menu);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+    return TRUE;
+  }
+  return FALSE ;
 }
 
 static void pl3_find3_browser_disconnect()
 {
-/*	if(pl3_find3_store) gtk_list_store_clear(pl3_find3_store);*/
+  /*	if(pl3_find3_store) gtk_list_store_clear(pl3_find3_store);*/
 }
 
 
 static void pl3_find3_browser_activate()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+  GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
 
-	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
-	if(path)
-	{
-		gtk_tree_selection_select_path(selec, path);
-		gtk_tree_path_free(path);
-	}
+  GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
+  if(path)
+  {
+    gtk_tree_selection_select_path(selec, path);
+    gtk_tree_path_free(path);
+  }
 }
 
 /**
@@ -650,134 +661,134 @@ static void pl3_find3_browser_activate()
  */
 static void pl3_playlist_search()
 {
-	if(!mpd_check_connected(connection))
-	{
-		return;
-	}
+  if(!mpd_check_connected(connection))
+  {
+    return;
+  }
 
-	if(pl3_xml)
-	{
-		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
-		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-		gtk_tree_selection_select_path(sel, path);
-		gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
-		gtk_tree_path_free(path);
-	}
+  if(pl3_xml)
+  {
+    GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+    gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+    gtk_tree_selection_select_path(sel, path);
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")), path, NULL, FALSE);
+    gtk_tree_path_free(path);
+  }
 }
 
 static int pl3_find3_browser_add_go_menu(GtkWidget *menu)
 {
-	GtkWidget *item = NULL;
+  GtkWidget *item = NULL;
 
-	item = gtk_image_menu_item_new_with_label(_("Playlist Search"));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-			gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_activate), NULL);
+  item = gtk_image_menu_item_new_with_label(_("Playlist Search"));
+  gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+      gtk_image_new_from_stock("gtk-find", GTK_ICON_SIZE_MENU));
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+  g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_activate), NULL);
 
-	return 1;
+  return 1;
 }
 
 static void pl3_find3_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-	if(!connect)
-	{
-		pl3_find3_browser_disconnect();
-	}
+  if(!connect)
+  {
+    pl3_find3_browser_disconnect();
+  }
 }
 
 static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-	if (event->keyval == GDK_F2)
-	{
-		pl3_find3_browser_activate();
-		return TRUE;
-	}                                           	
-	else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
-	{
-		pl3_playlist_search();
-		crit3_struct *cs;
-		while(criterias3 && g_list_length(criterias3) > 1)
-		{
-			cs = criterias3->data;
-			criterias3 = g_list_remove(criterias3, cs);
-			gtk_widget_destroy(cs->hbox);
-			q_free(cs);
-		}
-		if(!criterias3)
-		{
-			pl3_find3_browser_add_crit();
-		} 
-		cs = criterias3->data;
-		gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), MPD_TAG_ITEM_ANY); 
-		gtk_widget_grab_focus(cs->entry);
-		return TRUE;
-	}
-	return FALSE;
+  if (event->keyval == GDK_F2)
+  {
+    pl3_find3_browser_activate();
+    return TRUE;
+  }                                           	
+  else if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
+  {
+    pl3_playlist_search();
+    crit3_struct *cs;
+    while(criterias3 && g_list_length(criterias3) > 1)
+    {
+      cs = criterias3->data;
+      criterias3 = g_list_remove(criterias3, cs);
+      gtk_widget_destroy(cs->hbox);
+      q_free(cs);
+    }
+    if(!criterias3)
+    {
+      pl3_find3_browser_add_crit();
+    } 
+    cs = criterias3->data;
+    gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), MPD_TAG_ITEM_ANY); 
+    gtk_widget_grab_focus(cs->entry);
+    return TRUE;
+  }
+  return FALSE;
 }
 
 
 static void pl3_find3_browser_delete_selected_songs (void)
 {
-	/* grab the selection from the tree */
-	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find3_tree));
-	/* check if where connected */
-	/* see if there is a row selected */
-	if (gtk_tree_selection_count_selected_rows (selection) > 0)
-	{
-		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_find3_store2);
-		/* start a command list */
-		/* grab the selected songs */
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
-		/* grab the last song that is selected */
-		llist = g_list_first (list);
-		/* remove every selected song one by one */
-		do{
-			GtkTreeIter iter;
-			int value;
-			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter,MPDDATA_MODEL_COL_SONG_ID, &value, -1);
-			mpd_playlist_queue_delete_id(connection, value);			
-		} while ((llist = g_list_next (llist)));
+  /* grab the selection from the tree */
+  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find3_tree));
+  /* check if where connected */
+  /* see if there is a row selected */
+  if (gtk_tree_selection_count_selected_rows (selection) > 0)
+  {
+    GList *list = NULL, *llist = NULL;
+    GtkTreeModel *model = GTK_TREE_MODEL(pl3_find3_store2);
+    /* start a command list */
+    /* grab the selected songs */
+    list = gtk_tree_selection_get_selected_rows (selection, &model);
+    /* grab the last song that is selected */
+    llist = g_list_first (list);
+    /* remove every selected song one by one */
+    do{
+      GtkTreeIter iter;
+      int value;
+      gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+      gtk_tree_model_get (model, &iter,MPDDATA_MODEL_COL_SONG_ID, &value, -1);
+      mpd_playlist_queue_delete_id(connection, value);			
+    } while ((llist = g_list_next (llist)));
 
-		/* close the list, so it will be executed */
-		mpd_playlist_queue_commit(connection);
-		pl3_find3_browser_view_browser();
-		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free (list);
-	}
-	else
-	{
-		/* create a warning message dialog */
-		GtkWidget *dialog =
-			gtk_message_dialog_new (GTK_WINDOW
-					(glade_xml_get_widget
-					 (pl3_xml, "pl3_win")),
-					GTK_DIALOG_MODAL,
-					GTK_MESSAGE_WARNING,
-					GTK_BUTTONS_NONE,
-					_("Are you sure you want to clear the playlist?"));
-		gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
-				GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
-				GTK_RESPONSE_OK, NULL);
-		gtk_dialog_set_default_response (GTK_DIALOG (dialog),
-				GTK_RESPONSE_CANCEL);
+    /* close the list, so it will be executed */
+    mpd_playlist_queue_commit(connection);
+    pl3_find3_browser_view_browser();
+    /* free list */
+    g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+    g_list_free (list);
+  }
+  else
+  {
+    /* create a warning message dialog */
+    GtkWidget *dialog =
+      gtk_message_dialog_new (GTK_WINDOW
+          (glade_xml_get_widget
+           (pl3_xml, "pl3_win")),
+          GTK_DIALOG_MODAL,
+          GTK_MESSAGE_WARNING,
+          GTK_BUTTONS_NONE,
+          _("Are you sure you want to clear the playlist?"));
+    gtk_dialog_add_buttons (GTK_DIALOG (dialog), GTK_STOCK_CANCEL,
+        GTK_RESPONSE_CANCEL, GTK_STOCK_OK,
+        GTK_RESPONSE_OK, NULL);
+    gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+        GTK_RESPONSE_CANCEL);
 
-		switch (gtk_dialog_run (GTK_DIALOG (dialog)))
-		{
-			case GTK_RESPONSE_OK:
-				/* check if where still connected */
-				mpd_playlist_clear(connection);
-		}
-		gtk_widget_destroy (GTK_WIDGET (dialog));
-	}
-	/* update everything if where still connected */
-	gtk_tree_selection_unselect_all(selection);
+    switch (gtk_dialog_run (GTK_DIALOG (dialog)))
+    {
+      case GTK_RESPONSE_OK:
+        /* check if where still connected */
+        mpd_playlist_clear(connection);
+    }
+    gtk_widget_destroy (GTK_WIDGET (dialog));
+  }
+  /* update everything if where still connected */
+  gtk_tree_selection_unselect_all(selection);
 
-	mpd_status_queue_update(connection);
+  mpd_status_queue_update(connection);
 }
 
 static void pl3_find3_browser_destroy(void)
@@ -797,9 +808,9 @@ static void pl3_find3_browser_destroy(void)
 }
 static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
 {
-	if(what&MPD_CST_PLAYLIST)
-	{
-		pl3_find3_browser_search(); 
-	}
+  if(what&MPD_CST_PLAYLIST)
+  {
+    pl3_find3_browser_search(); 
+  }
 }	
 
