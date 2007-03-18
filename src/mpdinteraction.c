@@ -396,7 +396,9 @@ static void xfade_update()
 
 }
 
-
+/**
+ * Helper functions
+ */
 void play_path(const gchar *path)
 {
 	if(path)
@@ -423,7 +425,78 @@ void play_path(const gchar *path)
 	}
 }
 
+void add_artist(const gchar *artist)
+{
+	MpdData *data = NULL;
+	/* Check artist */
+	g_return_if_fail(artist != NULL);
 
+	mpd_database_search_start(connection,TRUE);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,artist);
+	data = mpd_database_search_commit(connection);
+	if(data)
+	{
+		for(;data;data = mpd_data_get_next(data))
+		{
+			mpd_playlist_queue_add(connection, data->song->file);
+		}
+		mpd_playlist_queue_commit(connection);
+	}
+}
+void add_album(const gchar *artist,const gchar *album)
+{
+	MpdData *data = NULL;
+	/* Check artist */
+	g_return_if_fail(artist != NULL);
+	g_return_if_fail(album != NULL);
+
+	mpd_database_search_start(connection,TRUE);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,artist);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,album);
+	data = mpd_database_search_commit(connection);
+	if(data)
+	{
+		for(;data;data = mpd_data_get_next(data))
+		{
+			mpd_playlist_queue_add(connection, data->song->file);
+		}
+		mpd_playlist_queue_commit(connection);
+	}
+}
+void add_genre(const gchar *genre)
+{
+	MpdData *data = NULL;
+	/* Check artist */
+	g_return_if_fail(genre != NULL);
+
+	mpd_database_search_start(connection,TRUE);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,genre);
+	data = mpd_database_search_commit(connection);
+	if(data)
+	{
+		for(;data;data = mpd_data_get_next(data))
+		{
+			mpd_playlist_queue_add(connection, data->song->file);
+		}
+		mpd_playlist_queue_commit(connection);
+	}
+}
+
+void add_directory(const gchar *path)
+{
+	gchar *dirpath = g_path_get_dirname(path);
+	MpdData *data =  mpd_database_get_directory(connection,dirpath);
+	printf("dir: %s from path: %s\n", dirpath, path);
+	for(;data;data = mpd_data_get_next(data))
+	{
+		if(data->type == MPD_DATA_TYPE_SONG)
+		{
+			mpd_playlist_queue_add(connection, data->song->file);
+		}
+	}
+	mpd_playlist_queue_commit(connection);
+	g_free(dirpath);
+}
 
 
 
@@ -918,4 +991,96 @@ char *connection_get_password()
 	return retv;
 }
 
+/**
+ * Helper menu functions *
+ */
+void submenu_artist_clicked(GtkWidget *item)
+{
+	gchar *artist = g_object_get_data(G_OBJECT(item), "artist");
+	printf("abcd\n");
+	add_artist(artist);	
+}
+void submenu_album_clicked(GtkWidget *item)
+{
+	gchar *artist = g_object_get_data(G_OBJECT(item), "artist");
+	gchar *album = g_object_get_data(G_OBJECT(item), "album");
+	printf("abcd\n");
+	add_album(artist,album);	
+}
+void submenu_genre_clicked(GtkWidget *item)
+{
+	gchar *genre = g_object_get_data(G_OBJECT(item), "genre");
+	printf("abcd\n");
+	add_genre(genre);	
+}
 
+
+void udumdum(void)
+{
+	printf("abcde\n");
+}
+
+
+void submenu_dir_clicked(GtkWidget *item)
+{
+	gchar *dir = g_object_get_data(G_OBJECT(item), "path");
+	printf("abcd\n");
+	add_directory(dir);	
+}
+void submenu_for_song(GtkMenu *menu, mpd_Song *song)
+{
+	GtkWidget *sitem;
+	GtkWidget *item;
+	GtkWidget *smenu;
+	smenu  = gtk_menu_new();
+
+	/* Add */
+	item = gtk_menu_item_new_with_label(_("Add more"));
+	g_signal_connect(G_OBJECT(item), "activate-item", G_CALLBACK(udumdum), NULL);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_widget_show(item);
+
+	if(song->artist ) 
+	{
+		/* Add all from artist */
+		sitem = gtk_image_menu_item_new_with_label(_("All from album"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("media-album", GTK_ICON_SIZE_MENU));
+		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
+		g_object_set_data_full(G_OBJECT(sitem), "album", g_strdup(song->album), g_free);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_album_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+	}
+	if(song->artist && song->album)
+	{
+		/* Add all from album */
+		sitem = gtk_image_menu_item_new_with_label(_("All from artist"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
+		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_artist_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+	}
+	if(song->genre)
+	{
+		/* Add all from genre */
+		sitem = gtk_menu_item_new_with_label(_("All from genre"));
+		g_object_set_data_full(G_OBJECT(sitem), "genre", g_strdup(song->genre), g_free);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_genre_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+	}
+	/* Add all from file */
+	sitem = gtk_image_menu_item_new_with_label(_("All from same directory"));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("gtk-directory",GTK_ICON_SIZE_MENU));
+	g_object_set_data_full(G_OBJECT(sitem), "path", g_strdup(song->file), g_free);
+	g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_dir_clicked), NULL);
+	gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+	gtk_widget_show(sitem);
+	/* Create sub menu */
+	gtk_menu_item_set_submenu(item, smenu);
+//	gtk_widget_show_all(smenu);
+
+}

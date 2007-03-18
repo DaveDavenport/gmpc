@@ -16,7 +16,6 @@ void song_fastforward(void);
 void song_fastbackward(void);
 void volume_up(void);
 void volume_down(void);
-void play_path(const gchar *path);
 int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;
@@ -30,4 +29,19 @@ int connection_get_port(void);
 char *connection_get_password(void);
 char *connection_get_current_profile(void);
 void connection_set_current_profile(const char *uid);
+
+/**
+ * Helper functions
+ */
+
+void play_path(const gchar *path);
+void add_artist(const gchar *artist);
+void add_album(const gchar *artist,const gchar *album);
+void add_genre(const gchar *genre);
+void add_directory(const gchar *path);
+
+/**
+ * Helper menu functions *
+ */
+void submenu_for_song(GtkMenu *menu, mpd_Song *song);
 #endif
