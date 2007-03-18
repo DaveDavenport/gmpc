@@ -424,7 +424,7 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 {
 	char *first_tag, *second_tag, *format;
 	char **tk_format;
-	int i = 0, depth, len =0;
+	int depth, len =0;
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	long unsigned time =0;
@@ -789,9 +789,6 @@ static void pl3_custom_tag_browser_row_activated(GtkTreeView *tree, GtkTreePath 
 	gchar *song_path;
 	int depth =0;
 	int type = 0,tag_type =0;
-	int playlist_length = mpd_playlist_get_playlist_length(connection);
-
-
 
 	/* if we fail to get the path, bail out */
 	depth = gtk_tree_path_get_depth(tp);
