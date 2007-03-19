@@ -43,5 +43,5 @@ void add_directory(const gchar *path);
 /**
  * Helper menu functions *
  */
-void submenu_for_song(GtkMenu *menu, mpd_Song *song);
+void submenu_for_song(GtkWidget *menu, mpd_Song *song);
 #endif

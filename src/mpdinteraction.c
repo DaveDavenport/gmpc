@@ -1027,20 +1027,13 @@ void submenu_dir_clicked(GtkWidget *item)
 	printf("abcd\n");
 	add_directory(dir);	
 }
-void submenu_for_song(GtkMenu *menu, mpd_Song *song)
+void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 {
 	GtkWidget *sitem;
 	GtkWidget *item;
 	GtkWidget *smenu;
 	smenu  = gtk_menu_new();
-
-	/* Add */
-	item = gtk_menu_item_new_with_label(_("Add more"));
-	g_signal_connect(G_OBJECT(item), "activate-item", G_CALLBACK(udumdum), NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_widget_show(item);
-
-	if(song->artist ) 
+	if(song->artist && song->album) 
 	{
 		/* Add all from artist */
 		sitem = gtk_image_menu_item_new_with_label(_("All from album"));
@@ -1052,7 +1045,7 @@ void submenu_for_song(GtkMenu *menu, mpd_Song *song)
 		gtk_widget_show(sitem);
 
 	}
-	if(song->artist && song->album)
+	if(song->artist )
 	{
 		/* Add all from album */
 		sitem = gtk_image_menu_item_new_with_label(_("All from artist"));
@@ -1080,7 +1073,13 @@ void submenu_for_song(GtkMenu *menu, mpd_Song *song)
 	gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
 	gtk_widget_show(sitem);
 	/* Create sub menu */
-	gtk_menu_item_set_submenu(item, smenu);
-//	gtk_widget_show_all(smenu);
+	/* Add */
+	item = gtk_menu_item_new_with_label(_("Add more"));
+	g_signal_connect(G_OBJECT(item), "activate-item", G_CALLBACK(udumdum), NULL);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_widget_show(item);
+	
+	gtk_widget_show(smenu);
 
 }
