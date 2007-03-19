@@ -220,8 +220,8 @@ static void pl3_find2_browser_init()
 
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find2_tree), "row-activated",G_CALLBACK(pl3_find2_browser_row_activated), NULL); 
-    g_signal_connect(G_OBJECT(pl3_find2_tree), "button-press-event", G_CALLBACK(pl3_find2_browser_button_press_event), NULL);
-    g_signal_connect(G_OBJECT(pl3_find2_tree), "button-release-event", G_CALLBACK(pl3_find2_browser_button_release_event), NULL);
+    g_signal_connect(G_OBJECT(pl3_find2_tree), "button-press-event", G_CALLBACK(pl3_find2_browser_button_release_event), NULL);
+//    g_signal_connect(G_OBJECT(pl3_find2_tree), "button-release-event", G_CALLBACK(pl3_find2_browser_button_release_event), NULL);
     g_signal_connect(G_OBJECT(pl3_find2_tree), "key-press-event", G_CALLBACK(pl3_find2_browser_playlist_key_press), NULL);
 
     /* set up the scrolled window */
