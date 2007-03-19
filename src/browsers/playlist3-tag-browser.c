@@ -143,10 +143,10 @@ static void pl3_tag_browser_init()
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "row-activated",
 			G_CALLBACK(pl3_custom_tag_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-press-event",
-			G_CALLBACK(pl3_tag_browser_button_press_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event",
 			G_CALLBACK(pl3_custom_tag_browser_button_release_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event",
+/*	g_signal_connect(G_OBJECT(pl3_tb_tree), "button-release-event",
+			G_CALLBACK(pl3_custom_tag_browser_button_release_event), NULL);
+*/	g_signal_connect(G_OBJECT(pl3_tb_tree), "key-press-event",
 			G_CALLBACK(pl3_tag_browser_playlist_key_press), NULL);
 
 	/* set up the scrolled window */
@@ -918,7 +918,24 @@ static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkE
 			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_add_selected), NULL);		
-
+			if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree))) == 1)	
+			{
+				mpd_Song *song = NULL;
+				GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_tb_tree));
+				GtkTreePath *path;
+				GtkTreeIter iter;
+				GList *list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_tb_tree)),&model);
+				path = list->data;
+				/* free result */
+				g_list_free(list);
+				if(path && gtk_tree_model_get_iter(model, &iter, path)) {
+					gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+					if(song)
+						submenu_for_song(menu, song);
+				}
+				if(path)
+					gtk_tree_path_free(path);
+			}
 
 			/* add the replace widget */
 			item = gtk_image_menu_item_new_with_label("Replace");

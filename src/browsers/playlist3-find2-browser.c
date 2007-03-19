@@ -529,14 +529,13 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
         path = list->data;
         /* free result */
         g_list_free(list);
-        if(path && gtk_tree_model_get_iter(model, &iter, path))
-        {
+        if(path && gtk_tree_model_get_iter(model, &iter, path)) {
           gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-          submenu_for_song(menu, song);
+		  if(song)
+			  submenu_for_song(menu, song);
         }
         if(path)
           gtk_tree_path_free(path);
-
       }
       /* add the replace widget */
       item = gtk_image_menu_item_new_with_label(_("Replace"));

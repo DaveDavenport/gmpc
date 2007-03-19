@@ -611,6 +611,27 @@ static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventB
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_delete_selected_songs), NULL);
+		/* add sub menu */
+		if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find3_tree))) == 1)
+		{
+			mpd_Song *song = NULL;
+			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find3_tree));
+			GtkTreePath *path;
+			GtkTreeIter iter;
+			GList *list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find3_tree)),&model);
+			path = list->data;
+			/* free result */
+			g_list_free(list);
+			if(path && gtk_tree_model_get_iter(model, &iter, path))
+			{
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+				if(song)
+					submenu_for_song(menu, song);
+			}
+			if(path)
+				gtk_tree_path_free(path);
+
+		}
 
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());

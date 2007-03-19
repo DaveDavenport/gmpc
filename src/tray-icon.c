@@ -672,7 +672,7 @@ static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata
 	{
 		tray_icon_state_change();
 	}
-	else if(what&(MPD_CST_SONGID|MPD_CST_PLAYLIST|MPD_CST_SONGPOS))
+	else if(what&(MPD_CST_SONGID/*|MPD_CST_PLAYLIST*/|MPD_CST_SONGPOS))
 	{
 		if(!tip)
 		{

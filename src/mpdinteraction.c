@@ -470,7 +470,7 @@ void add_genre(const gchar *genre)
 	g_return_if_fail(genre != NULL);
 
 	mpd_database_search_start(connection,TRUE);
-	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,genre);
+	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_GENRE,genre);
 	data = mpd_database_search_commit(connection);
 	if(data)
 	{
@@ -1014,13 +1014,6 @@ void submenu_genre_clicked(GtkWidget *item)
 	add_genre(genre);	
 }
 
-
-void udumdum(void)
-{
-	printf("abcde\n");
-}
-
-
 void submenu_dir_clicked(GtkWidget *item)
 {
 	gchar *dir = g_object_get_data(G_OBJECT(item), "path");
@@ -1075,9 +1068,8 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	/* Create sub menu */
 	/* Add */
 	item = gtk_menu_item_new_with_label(_("Add more"));
-	g_signal_connect(G_OBJECT(item), "activate-item", G_CALLBACK(udumdum), NULL);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	gtk_widget_show(item);
 	
 	gtk_widget_show(smenu);
