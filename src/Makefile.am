@@ -46,7 +46,6 @@ gmpc_SOURCES=\
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
-	gmpc-profiles.c\
 	gmpc-mpddata-model.c\
 	gmpc-mpddata-treeview.c\
 	gmpc-clicklabel.c\
