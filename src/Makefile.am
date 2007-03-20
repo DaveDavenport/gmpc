@@ -41,10 +41,12 @@ gmpc_SOURCES=\
 	eggcolumnchooserdialog.c\
 	eggcolumnmodel.c\
 	TreeSearchWidget.c\
-	qlib/qasyncqueue.c
+	qlib/qasyncqueue.c\
+	gmpc-profiles.c
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
+	gmpc-profiles.c\
 	gmpc-mpddata-model.c\
 	gmpc-mpddata-treeview.c\
 	gmpc-clicklabel.c\
@@ -67,7 +69,7 @@ BUILT_SOURCES= revisiont.h\
 #	$(GOB2) --no-touch-headers $(gmpc_mpddata_treeview_SOURCE) 
 
 %.c %.h %-private.h: %.gob
-	@GOB2@ $<
+	@GOB2@ --no-touch-headers $<
 
 
 
