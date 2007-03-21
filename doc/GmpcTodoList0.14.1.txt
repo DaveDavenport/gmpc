@@ -6,18 +6,15 @@ v0.1, Feb. 2007
 Gmpc
 -----
 
-2. Make non-crit. errors/warnings gedit style. (aka in the same window) *low priority*
-3. Add a profile selector to the connection error dialog.
-4. Add avahi support to profile system. (lack)
-5. Improve metadata browser (more genre search, and cleaner code base), and make it possible to "visit" it from other browsers. (f.e. in artist browser allow the user to "view album", and then see that in the metadata browser)
-6. Song information <-> metabrowser linkage.
-7. Improve tag-browser usability, if succeeds make it replace the artist browser.
-8. Implement playlist browser+ offline editing.
-9. Skip to next album keybinding.
-10. Rethink keybindings, is a mess now.
-11. Try to finish help/manual.
-12. Get some artwork redone.
-13. Fix profiles.
+1. Make non-crit. errors/warnings gedit style. (aka in the same window) *low priority*
+2. Add a profile selector to the connection error dialog.
+3. Improve metadata browser (more genre search, and cleaner code base), and make it possible to "visit" it from other browsers. (f.e. in artist browser allow the user to "view album", and then see that in the metadata browser)
+4. Improve tag-browser usability, if succeeds make it replace the artist browser.
+5. Implement playlist browser+ offline editing.
+6. Skip to next album keybinding.
+7. Rethink keybindings, is a mess now.
+8. Try to finish help/manual.
+9. Get some artwork redone.
 
 Plugins
 -------

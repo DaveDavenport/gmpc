@@ -7,7 +7,7 @@ requires 2.0.0
 
 class Gmpc:ClickLabel from Gtk:Event:Box
 {
-	private GtkLabel *label = {NULL};
+	private GtkWidget *label = {NULL};
 	private gchar *text = {NULL} destroywith g_free;
 	private gchar *text_bold = {NULL} destroywith g_free;
 	/* initialize, set signal handlers */
@@ -27,14 +27,14 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	gboolean focus_in_event(self, GdkEventFocus *event, gpointer data)
 	{
 		/* do this more efficient? */
-		gtk_label_set_markup(self->_priv->label,self->_priv->text_bold);
+		gtk_label_set_markup(GTK_LABEL(self->_priv->label),self->_priv->text_bold);
 		gdk_window_set_cursor(GTK_WIDGET(self)->window, gdk_cursor_new(GDK_HAND2));
 		return TRUE;
 	}
 	private
 	gboolean focus_out_event(self, GdkEventFocus *event, gpointer data)
 	{
-		gtk_label_set_markup(self->_priv->label,self->_priv->text);
+		gtk_label_set_markup(GTK_LABEL(self->_priv->label),self->_priv->text);
 		gdk_window_set_cursor(GTK_WIDGET(self)->window,NULL); 
 		return TRUE;
 	}
@@ -62,7 +62,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 		gtk_event_box_set_visible_window(GTK_EVENT_BOX(lb), FALSE);	
 		gtk_container_add(GTK_CONTAINER(lb),lb->_priv->label);
 		gtk_label_set_ellipsize(GTK_LABEL(lb->_priv->label), PANGO_ELLIPSIZE_END);
-		return lb;
+		return (GtkWidget *)lb;
 	}
 
 }

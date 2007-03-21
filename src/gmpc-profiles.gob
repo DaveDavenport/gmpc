@@ -395,6 +395,9 @@ class Gmpc:Profiles from G:Object
     cfg_set_single_value_as_string(self->_priv->profiles, (char *)id, "hostname",prof->hostname);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_HOSTNAME,id);
   }
+	/**
+	 * Set Password
+	 */
   public
   void
   set_password(self,const gchar *id (check null), gchar *value)
@@ -408,10 +411,13 @@ class Gmpc:Profiles from G:Object
       prof->password = g_strdup(value);
     else
       prof->password = g_strdup("");
-    cfg_set_single_value_as_string(self->_priv->profiles, id, "password",prof->password);
+    cfg_set_single_value_as_string(self->_priv->profiles, (char *)id, "password",prof->password);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PASSWORD,id);
   }
 
+	/**
+	 * Set Port
+	 */
   public
   void
   set_port(self, const gchar *id (check null), int value)
@@ -420,10 +426,12 @@ class Gmpc:Profiles from G:Object
     if(!prof)
       return ;                              
     prof->port = value;
-    cfg_set_single_value_as_int(self->_priv->profiles, id, "portnumber",prof->port);
+    cfg_set_single_value_as_int(self->_priv->profiles, (char *)id, "portnumber",prof->port);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PORT,id);
   }
-
+	/**
+	 * Set do auth
+	 */
   public
   void
   set_do_auth(self,const gchar *id (check null), int value)
@@ -432,10 +440,12 @@ class Gmpc:Profiles from G:Object
     if(!prof)
       return ;                              
     prof->do_auth = value;
-    cfg_set_single_value_as_int(self->_priv->profiles, id, "useauth",prof->do_auth);
+    cfg_set_single_value_as_int(self->_priv->profiles,(char *)id, "useauth",prof->do_auth);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_DO_AUTH,id);
   }
-
+	/**
+   * Has profile with id
+   */
 	public
 	gboolean	
 	has_profile(self, const gchar *id (check null))

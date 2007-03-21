@@ -136,4 +136,8 @@ void preferences_show_pref_window(int plugin_id);
  */
 #define q_free(a) g_free(a);a=NULL;
 
+/* help */
+void info2_activate(void);
+void info2_fill_artist_view(char *);
+void info2_fill_album_view(char *, char *);
 #endif

@@ -8,7 +8,6 @@
 
 extern GladeXML *pl3_xml;
 
-
 static void info2_add(GtkWidget *);
 static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
@@ -16,8 +15,8 @@ static int info2_add_go_menu(GtkWidget *);
 static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-void info2_fill_artist_view(char *);
-void info2_fill_album_view(char *, char *);
+
+
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -1566,7 +1565,7 @@ static int info2_get_enabled()
 }
 
 
-void info2_activate()
+void info2_activate(void)
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			playlist3_get_category_tree_view());	

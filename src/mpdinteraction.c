@@ -598,9 +598,6 @@ void entry_auth_changed(GtkEntry *entry)
 	{
 		gchar *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-/*		cfg_set_single_value_as_string(profiles, uid,"password",
-			(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth"))));
-*/
     gmpc_profiles_set_password(gmpc_profiles, uid, (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth"))));
 		q_free(uid);
 		q_free(value);
@@ -617,7 +614,6 @@ void auth_enable_toggled(GtkToggleButton *but)
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-		//cfg_set_single_value_as_int(profiles, uid, "useauth",gtk_toggle_button_get_active(but));
     gmpc_profiles_set_do_auth(gmpc_profiles, uid, gtk_toggle_button_get_active(but));
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "entry_auth"), 
 				gmpc_profiles_get_do_auth(gmpc_profiles, uid));	
@@ -636,14 +632,12 @@ void update_preferences_name(void)
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-		/*cfg_set_single_value_as_string(profiles,uid,"name", */
 		gmpc_profiles_set_name(gmpc_profiles, uid,
 				(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry"))));
 		q_free(uid);
 		q_free(value);
 		value = (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry")));
 		gtk_list_store_set(GTK_LIST_STORE(store), &iter, 1, value, -1);
-//		pl3_update_profiles_menu();
 	}
 }
 
@@ -658,9 +652,8 @@ void update_preferences_hostname(void)
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-/*		cfg_set_single_value_as_string(profiles,uid,"hostname", */
-    gmpc_profiles_set_hostname(gmpc_profiles, uid,
-        (char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry"))));
+		gmpc_profiles_set_hostname(gmpc_profiles, uid,
+				(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry"))));
 		q_free(uid);
 		q_free(value);
 	}
@@ -676,9 +669,8 @@ void update_preferences_portnumber(void)
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-	/*	cfg_set_single_value_as_int(profiles, uid, "portnumber",*/
-    gmpc_profiles_set_port(gmpc_profiles, uid,
-        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin"))));
+		gmpc_profiles_set_port(gmpc_profiles, uid,
+				gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin"))));
 		q_free(uid);
 		q_free(value);
 	}
@@ -720,7 +712,6 @@ void preferences_window_connect(GtkWidget *but)
 					if(!connect_to_mpd());
 				}
 				q_free(uid);
-//				pl3_update_profiles_menu();
 			}
 		}
 	}
@@ -819,10 +810,7 @@ void connection_add_profile(void)
 	gchar *value = gmpc_profiles_create_new_item(gmpc_profiles, NULL); /*g_strdup_printf("%u", g_random_int());*/
 	gtk_list_store_append(GTK_LIST_STORE(store), &iter);
 	gtk_list_store_set(GTK_LIST_STORE(store), &iter, 0, value, 1, "Name", -1);
-/*	cfg_set_single_value_as_string(profiles,value,"name","Name");	*/
-/*	q_free(value);*/
 	gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),&iter);
-//	pl3_update_profiles_menu();
 }
 
 void connection_remove_profile(void)
@@ -834,14 +822,11 @@ void connection_remove_profile(void)
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
-/*		cfg_remove_class(profiles,uid);
- */
     gmpc_profiles_remove_item(gmpc_profiles, uid);
 		gtk_list_store_remove(GTK_LIST_STORE(store), &iter);
 		q_free(uid);
 		q_free(value);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),0);
-//		pl3_update_profiles_menu();
 	}
 }
 

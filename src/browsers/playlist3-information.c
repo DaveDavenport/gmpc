@@ -307,11 +307,30 @@ static void info3_fill_view()
 
 	int i =0;
 	if(song->artist) {
-		info3_add_table_item(table2,_("<b>Artist:</b>"),song->artist,i);
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label), _("<b>Artist:</b>"));
+		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+		gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+		label = gmpc_clicklabel_new(song->artist);
+		g_object_set_data_full(G_OBJECT(label), "artist", g_strdup(song->artist), g_free);
+		g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(info3_show_artist),NULL);
+		gtk_table_attach(GTK_TABLE(table2), label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 		i++;
 	}
 	if(song->album) {
-		info3_add_table_item(table2,_("<b>Album:</b>"),song->album,i);
+		if(song->artist) {
+			label = gtk_label_new("");
+			gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
+			gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+			gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+			label = gmpc_clicklabel_new(song->album);
+			g_object_set_data_full(G_OBJECT(label), "artist", g_strdup(song->artist), g_free);
+			g_object_set_data_full(G_OBJECT(label), "album", g_strdup(song->album), g_free);
+			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(info3_show_album), NULL);
+			gtk_table_attach(GTK_TABLE(table2), label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+		}
+		else
+			info3_add_table_item(table2,_("<b>Album:</b>"),song->album,i);
 		i++;
 	}
 	if(song->genre) {
@@ -720,9 +739,7 @@ static void info3_activate()
 {
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			playlist3_get_category_tree_view());	
-	/**
-	 * Fix this to be not static
-	 */	
+
 	GtkTreePath *path = gtk_tree_row_reference_get_path(info3_ref);
 	if(path)
 	{

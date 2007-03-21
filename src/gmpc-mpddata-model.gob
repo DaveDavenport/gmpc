@@ -665,7 +665,7 @@ requires 2.0.0
       {
         if(self->_priv->sort_column <0)
           return data;
-        self_sort_data(data, self_sort_func, self);
+        self_sort_data(data, (GCompareDataFunc)self_sort_func, self);
         return data;
       }
    private 
@@ -684,15 +684,15 @@ requires 2.0.0
           /* Get values from tree view, so we don't have to replicate code to sort the right entries */
          iter.user_data = a;
          iter.user_data2 = GPOINTER_TO_INT(0);
-         self_get_value(self, &iter, self->_priv->sort_column, &va);
+         self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
          iter.user_data = b;
-         self_get_value(self, &iter, self->_priv->sort_column, &vb);
+         self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
 
-         if(self->_priv->types[self->_priv->sort_column] == GTK_TYPE_INT)
+         if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
          {
            val = g_value_get_int(&va) - g_value_get_int(&vb);
          }
-         else if (self->_priv->types[self->_priv->sort_column] == GTK_TYPE_STRING)
+         else if (self->_priv->types[self->_priv->sort_column] == G_TYPE_STRING)
          {
            const char *a = g_value_get_string(&va);
            const char *b = g_value_get_string(&vb);
@@ -724,7 +724,7 @@ requires 2.0.0
         else 
         {
           MpdData_real *a, *b;
-          a = mpd_data_get_first(self->_priv->data);
+          a = (MpdData_real *)mpd_data_get_first(self->_priv->data);
           for(b=a;b->next;b = b->next);
           while(a != b)
           {
