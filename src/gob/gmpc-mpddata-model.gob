@@ -305,7 +305,7 @@ requires 2.0.0
 			switch(column)
 			{
 				case MPDDATA_MODEL_COL_ICON_ID:
-					g_value_set_string(value, GTK_STOCK_DIRECTORY);
+					g_value_set_string(value, GTK_STOCK_OPEN);
 					break;
 				case MPDDATA_MODEL_COL_SONG_TITLE:
 				case MPDDATA_MODEL_COL_MARKUP:
