@@ -41,11 +41,13 @@ gmpc_SOURCES=\
 	eggcolumnchooserdialog.c\
 	eggcolumnmodel.c\
 	TreeSearchWidget.c\
-	qlib/qasyncqueue.c
+	qlib/qasyncqueue.c\
+	gmpc-profiles.c
 	
 
 BUILT_SOURCES= revisiont.h\
 	gmpc-connection.c\
+	gmpc-profiles.c\
 	gmpc-mpddata-model.c\
 	gmpc-mpddata-treeview.c\
 	gmpc-clicklabel.c\
