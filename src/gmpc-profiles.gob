@@ -37,7 +37,7 @@ class Gmpc:Profiles from G:Object
   private int num_profiles = {0};
 
   /* signal with (self, id) */
-  signal last NONE (INT)
+  signal last NONE (STRING)
   void
   changed(self, char * id)
   {
