@@ -53,6 +53,8 @@ static gboolean playlist_list_iter_nth_child(GtkTreeModel * tree_model,
 static gboolean playlist_list_iter_parent(GtkTreeModel * tree_model,
 		GtkTreeIter * iter,
 		GtkTreeIter * child);
+static void playlist_list_ref_node(GtkTreeModel *model, GtkTreeIter *iter);
+static void playlist_list_unref_node(GtkTreeModel *model, GtkTreeIter *iter);
 
 enum {
 	TOTAL_TIME_CHANGED,
@@ -593,6 +595,8 @@ static void playlist_list_tree_model_init(GtkTreeModelIface * iface)
 	iface->iter_n_children = playlist_list_iter_n_children;
 	iface->iter_nth_child = playlist_list_iter_nth_child;
 	iface->iter_parent = playlist_list_iter_parent;
+  iface->ref_node = playlist_list_ref_node;
+  iface->unref_node = playlist_list_unref_node;
 }
 
 /*****************************************************************************
@@ -1128,4 +1132,29 @@ CustomList *playlist_list_new(void)
 	g_assert(newcustomlist != NULL);
 
 	return newcustomlist;
+}
+
+
+
+/**
+ * Node reffing 
+ */
+
+void playlist_list_ref_node(GtkTreeModel *model, GtkTreeIter *iter)
+{
+  /*printf("ref node: %i\n",GPOINTER_TO_INT(iter->user_data)); 
+*/
+}
+void playlist_list_unref_node(GtkTreeModel *model, GtkTreeIter *iter)
+{
+/*  printf("unref node: %i\n",GPOINTER_TO_INT(iter->user_data)); 
+  if(PLAYLIST_LIST(model)->playlist[GPOINTER_TO_INT(iter->user_data)])
+  {
+    mpd_freeSong(PLAYLIST_LIST(model)->playlist[GPOINTER_TO_INT(iter->user_data)]);
+    PLAYLIST_LIST(model)->playlist[GPOINTER_TO_INT(iter->user_data)] = NULL;
+    PLAYLIST_LIST(model)->loaded--;
+    g_signal_emit(PLAYLIST_LIST(model), playlist_list_signals[TOTAL_TIME_CHANGED],0,0);
+    printf("%i\n", PLAYLIST_LIST(model)->loaded);
+  }
+*/
 }
