@@ -31,30 +31,31 @@ gmpc_SOURCES=\
 	eggcellrendererkeys.c\
 	eggaccelerators.c\
 	bacon-message-connection.c\
-	gmpc-connection.c\
-	gmpc-metaimage.c\
-	gmpc-mpddata-model.c\
-	gmpc-mpddata-treeview.c\
-	gmpc-clicklabel.c\
+	gob/gmpc-connection.c\
+	gob/gmpc-metaimage.c\
+	gob/gmpc-mpddata-model.c\
+	gob/gmpc-mpddata-treeview.c\
+	gob/gmpc-clicklabel.c\
 	gmpc_easy_download.c\
+	gob/gmpc-profiles.c\
 	url_fetcher.c\
 	eggcolumnchooserdialog.c\
 	eggcolumnmodel.c\
 	TreeSearchWidget.c\
-	qlib/qasyncqueue.c\
-	gmpc-profiles.c
+	qlib/qasyncqueue.c
+
 	
 
 BUILT_SOURCES= revisiont.h\
-	gmpc-connection.c\
-	gmpc-profiles.c\
-	gmpc-mpddata-model.c\
-	gmpc-mpddata-treeview.c\
-	gmpc-clicklabel.c\
-	gmpc-metaimage.c
+	gob/gmpc-connection.c\
+	gob/gmpc-profiles.c\
+	gob/gmpc-mpddata-model.c\
+	gob/gmpc-mpddata-treeview.c\
+	gob/gmpc-clicklabel.c\
+	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
-	@GOB2@ --no-touch-headers $<
+	@GOB2@ -o gob/ --no-touch-headers $<
 
 
 
@@ -95,13 +96,14 @@ AM_CFLAGS = @CFLAGS@\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@
+	@sm_CFLAGS@\
+	-Igob/
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
 		gmpc_easy_download.h\
-		gmpc-profiles.h\
+		gob/gmpc-profiles.h\
 		TreeSearchWidget.h \
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
@@ -126,15 +128,17 @@ EXTRA_DIST = 	playlist3.h\
 		eggcellrendererkeys.h\
 		eggaccelerators.h\
 		bacon-message-connection.h\
-		gmpc-connection.h\
-		gmpc-metaimage.h\
-		gmpc-metaimage-private.h\
-		gmpc-mpddata-model.h\
-		gmpc-mpddata-model-private.h\
-		gmpc-mpddata-treeview.h\
-		gmpc-mpddata-treeview-private.h\
-		gmpc-clicklabel.h\
-		gmpc-clicklabel-private.h\
+		gob/gmpc-profiles.h\
+		gob/gmpc-profiles-private.h\
+		gob/gmpc-connection.h\
+		gob/gmpc-metaimage.h\
+		gob/gmpc-metaimage-private.h\
+		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-model-private.h\
+		gob/gmpc-mpddata-treeview.h\
+		gob/gmpc-mpddata-treeview-private.h\
+		gob/gmpc-clicklabel.h\
+		gob/gmpc-clicklabel-private.h\
 		id3info.h\
 		eggcolumnchooserdialog.h\
 		eggcolumnmodel.h\
