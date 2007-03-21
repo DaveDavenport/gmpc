@@ -187,7 +187,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gchar *
-  get_hostname(self, gchar *id (check null))
+  get_hostname(self,const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -199,7 +199,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gchar *                                 
-  get_name(self, gchar *id (check null))
+  get_name(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -211,7 +211,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gchar *                                 
-  get_id(self, gchar *id (check null))
+  get_id(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -223,7 +223,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gchar *                                 
-  get_password(self, gchar *id (check null))
+  get_password(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -236,7 +236,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   int                     
-  get_port(self, gchar *id (check null))
+  get_port(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -249,7 +249,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gboolean 
-  get_do_auth(self, gchar *id (check null))
+  get_do_auth(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -262,7 +262,7 @@ class Gmpc:Profiles from G:Object
    */
   public 
   gchar *
-  create_new_item(self, gchar *id)
+  create_new_item(self, const gchar *id)
   {
     Profile *prof = g_malloc0(sizeof(*prof));
     if(!id)
@@ -291,7 +291,7 @@ class Gmpc:Profiles from G:Object
   }
   public
   void
-  remove_item(self, gchar *id)
+  remove_item(self, const gchar *id)
   {
     int i=0;
     Profile *prof =  self_get_profile(self, id);
@@ -323,7 +323,7 @@ class Gmpc:Profiles from G:Object
 
   public
   void
-  set_current(self, gchar *id(check null))
+  set_current(self, const gchar *id(check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(prof)
@@ -347,7 +347,7 @@ class Gmpc:Profiles from G:Object
    */
   public
   void
-  set_name(self, gchar *id (check null), gchar *value (check null))
+  set_name(self, const gchar *id (check null), const gchar *value (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -362,7 +362,7 @@ class Gmpc:Profiles from G:Object
 
   public
   void
-  set_hostname(self, gchar *id (check null), gchar *value (check null))
+  set_hostname(self, const gchar *id (check null), const gchar *value (check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -376,7 +376,7 @@ class Gmpc:Profiles from G:Object
   }
   public
   void
-  set_password(self, gchar *id (check null), gchar *value)
+  set_password(self,const gchar *id (check null), gchar *value)
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -393,7 +393,7 @@ class Gmpc:Profiles from G:Object
 
   public
   void
-  set_port(self, gchar *id (check null), int value)
+  set_port(self, const gchar *id (check null), int value)
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -405,7 +405,7 @@ class Gmpc:Profiles from G:Object
 
   public
   void
-  set_do_auth(self, gchar *id (check null), int value)
+  set_do_auth(self,const gchar *id (check null), int value)
   {
     Profile *prof = self_get_profile(self, id);
     if(!prof)
@@ -415,6 +415,17 @@ class Gmpc:Profiles from G:Object
     self_changed(self,id);
   }
 
+	public
+	gboolean	
+	has_profile(self, const gchar *id (check null))
+	{
+		Profile *prof = self_get_profile(self, id);
+		if(!prof)
+			return FALSE;
+		else 
+			return TRUE;                                 	
+
+	}
 
 
 }
