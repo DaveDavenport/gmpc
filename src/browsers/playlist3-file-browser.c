@@ -229,7 +229,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TYPE, file_browser_plug.id,
 			PL3_CAT_TITLE, _("Browse Filesystem"),
 			PL3_CAT_INT_ID, "/",
-			PL3_CAT_ICON_ID, "gtk-directory",
+			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/* add fantom child for lazy tree */
@@ -320,7 +320,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 					0, file_browser_plug.id,
 					1, basename,
 					2, data->directory,
-					3, "gtk-directory",
+					3, "gtk-open",
 					4, FALSE,
 					PL3_CAT_ICON_SIZE,1,
 					-1);
@@ -540,7 +540,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 					char *name = NULL;
 					char *type= NULL;
 					gtk_tree_model_get(model, &citer, 2, &name, 3, &type,-1);
-					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-directory") == 0)
+					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-open") == 0)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
 						path = gtk_tree_model_get_path(model, &citer);
@@ -923,7 +923,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 
 	item = gtk_image_menu_item_new_with_label(_("File Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-			gtk_image_new_from_stock("gtk-directory", GTK_ICON_SIZE_MENU));
+			gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_file_browser_activate), NULL);
