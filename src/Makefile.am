@@ -9,7 +9,6 @@ gmpc_SOURCES=\
 	mpdinteraction.c\
 	preferences.c\
 	id3info.c\
-	eggtrayicon.c\
 	tray-icon.c\
 	misc.c\
 	playlist3.c\
@@ -28,8 +27,6 @@ gmpc_SOURCES=\
 	bacon-volume.c\
 	sm.c\
 	metadata.c\
-	eggcellrendererkeys.c\
-	eggaccelerators.c\
 	bacon-message-connection.c\
 	gob/gmpc-connection.c\
 	gob/gmpc-metaimage.c\
@@ -39,8 +36,11 @@ gmpc_SOURCES=\
 	gmpc_easy_download.c\
 	gob/gmpc-profiles.c\
 	url_fetcher.c\
-	eggcolumnchooserdialog.c\
-	eggcolumnmodel.c\
+	egg/eggcolumnchooserdialog.c\
+	egg/eggcolumnmodel.c\
+	egg/eggtrayicon.c\
+	egg/eggcellrendererkeys.c\
+	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c
 
@@ -56,10 +56,6 @@ BUILT_SOURCES= revisiont.h\
 
 %.c %.h %-private.h: %.gob
 	@GOB2@ -o gob/ --no-touch-headers $<
-
-
-
-
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
@@ -97,7 +93,8 @@ AM_CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
-	-Igob/
+	-Igob/ \
+	-Iegg/
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
@@ -112,7 +109,6 @@ EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 	   	mm-keys.h\
 		misc.h\
-		eggtrayicon.h\
 		mpdinteraction.h\
 		config-defaults.h\
 		browsers/playlist3-tag-browser.h\
@@ -125,8 +121,8 @@ EXTRA_DIST = 	playlist3.h\
 		bacon-volume.h\
 		sm.h\
 		metadata.h\
-		eggcellrendererkeys.h\
-		eggaccelerators.h\
+		egg/eggcellrendererkeys.h\
+		egg/eggaccelerators.h\
 		bacon-message-connection.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
@@ -140,8 +136,9 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
 		id3info.h\
-		eggcolumnchooserdialog.h\
-		eggcolumnmodel.h\
+		egg/eggcolumnchooserdialog.h\
+		egg/eggcolumnmodel.h\
+		egg/eggtrayicon.h\
 		revision.h\
 		tray-icon.h\
 		qlib/qasyncqueue.h
