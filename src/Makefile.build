@@ -8,7 +8,6 @@ gmpc_SOURCES=\
 	mpdinteraction.c\
 	preferences.c\
 	id3info.c\
-	eggtrayicon.c\
 	tray-icon.c\
 	misc.c\
 	playlist3.c\
@@ -27,18 +26,22 @@ gmpc_SOURCES=\
 	bacon-volume.c\
 	sm.c\
 	metadata.c\
-	eggcellrendererkeys.c\
-	eggaccelerators.c\
 	bacon-message-connection.c\
-	gmpc-connection.c\
-	gmpc-metaimage.c\
+	gob/gmpc-connection.c\
+	gob/gmpc-metaimage.c\
+	gob/gmpc-mpddata-model.c\
+	gob/gmpc-mpddata-treeview.c\
+	gob/gmpc-clicklabel.c\
 	gmpc_easy_download.c\
+	gob/gmpc-profiles.c\
 	url_fetcher.c\
-	eggcolumnchooserdialog.c\
-	eggcolumnmodel.c\
-	TreeSearchWidget.c
-
-BUILT_SOURCES= revisiont.h
+	egg/eggcolumnchooserdialog.c\
+	egg/eggcolumnmodel.c\
+	egg/eggtrayicon.c\
+	egg/eggcellrendererkeys.c\
+	egg/eggaccelerators.c\
+	TreeSearchWidget.c\
+	qlib/qasyncqueue.c
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
@@ -75,12 +78,15 @@ AM_CFLAGS = @CFLAGS@\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@
+	@sm_CFLAGS@\
+	-Igob/ \
+	-Iegg/
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
 		gmpc_easy_download.h\
+		gob/gmpc-profiles.h\
 		TreeSearchWidget.h \
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
@@ -89,7 +95,6 @@ EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 	   	mm-keys.h\
 		misc.h\
-		eggtrayicon.h\
 		mpdinteraction.h\
 		config-defaults.h\
 		browsers/playlist3-tag-browser.h\
@@ -102,14 +107,24 @@ EXTRA_DIST = 	playlist3.h\
 		bacon-volume.h\
 		sm.h\
 		metadata.h\
-		eggcellrendererkeys.h\
-		eggaccelerators.h\
+		egg/eggcellrendererkeys.h\
+		egg/eggaccelerators.h\
 		bacon-message-connection.h\
-		gmpc-connection.h\
-		gmpc-metaimage.h\
-		gmpc-metaimage-private.h\
+		gob/gmpc-profiles.h\
+		gob/gmpc-profiles-private.h\
+		gob/gmpc-connection.h\
+		gob/gmpc-metaimage.h\
+		gob/gmpc-metaimage-private.h\
+		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-model-private.h\
+		gob/gmpc-mpddata-treeview.h\
+		gob/gmpc-mpddata-treeview-private.h\
+		gob/gmpc-clicklabel.h\
+		gob/gmpc-clicklabel-private.h\
 		id3info.h\
-		eggcolumnchooserdialog.h\
-		eggcolumnmodel.h\
+		egg/eggcolumnchooserdialog.h\
+		egg/eggcolumnmodel.h\
+		egg/eggtrayicon.h\
 		revision.h\
-		tray-icon.h
+		tray-icon.h\
+		qlib/qasyncqueue.h
