@@ -104,17 +104,6 @@ GtkWidget *pl3_tb_tree = NULL;
 GtkWidget *pl3_tb_sw = NULL;
 
 
-static int pl3_tag_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 ||
-		gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
 static void pl3_tag_browser_search_activate()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tag_store2);

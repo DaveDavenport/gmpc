@@ -107,16 +107,6 @@ GtkWidget *pl3_fb_vbox = NULL;
 GtkWidget *pl3_fb_tree_search = NULL;
 GmpcMpdDataModel *pl3_fb_store2 = NULL;
 
-static int pl3_file_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
 static void pl3_file_browser_search_activate()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);

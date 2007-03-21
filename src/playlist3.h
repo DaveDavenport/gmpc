@@ -40,5 +40,4 @@ enum PlaylistColums {
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
 };
-void pl3_update_profiles_menu(void);
 #endif

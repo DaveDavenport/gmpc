@@ -704,7 +704,6 @@ static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	gchar *album = NULL;
 	gchar *file = NULL;
 	gint r_type;
-	int playlist_length = mpd_playlist_get_playlist_length(connection);
 
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, 

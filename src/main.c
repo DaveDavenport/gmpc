@@ -389,24 +389,7 @@ int main (int argc, char **argv)
     q_free(url);
     
     gmpc_profiles = gmpc_profiles_new();
-    /**
-     * Profile file
-     */
-/*    url = cfg_get_single_value_as_string(config, "connection", "profile-file");
-    if(!url)
-    {
-        url = g_strdup_printf("%s/.gmpc/profiles.cfg", g_get_home_dir());
-        cfg_set_single_value_as_string(config, "connection", "profile-file",url);
-    }
-    profiles = cfg_open(url);
-    if(profiles == NULL)
-    {
-        debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
-        show_error_message(_("Failed to load the configuration system"), TRUE);
-        abort();
-    }
-    q_free(url);
-*/
+
 
 #ifndef WIN32
 

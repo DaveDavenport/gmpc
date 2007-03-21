@@ -82,6 +82,9 @@ void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
 void hide_on_close_enable_tb(GtkToggleButton *but);
 void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
+static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
+
+static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
 
 /* Old category browser style */
 static int old_type = -1;
@@ -1027,9 +1030,10 @@ void create_playlist3 ()
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
 
 	pl3_update_go_menu();	
-
-	pl3_update_profiles_menu();
-  g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_update_profiles_menu), NULL);
+	/* make it update itself */
+	pl3_update_profiles_menu(gmpc_profiles,PROFILE_ADDED,-1, NULL);
+	g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_update_profiles_menu), NULL);
+	g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_profiles_changed), NULL);
 
 	/**
 	 * Set as drag destination
@@ -1729,13 +1733,34 @@ static void pl3_profile_selected(GtkRadioMenuItem *radio,gpointer data)
 		}
 	}
 }
+static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int col, const gchar *id)
+{
+	if(changed == PROFILE_ADDED)
+	{
+		gchar *message = g_strdup_printf("%s '%s' %s  ", _("Profile"), gmpc_profiles_get_name(prof,id), _("added"));
+		pl3_push_statusbar_message(message);
+		g_free(message);
+	}
+	else if(changed == PROFILE_COL_CHANGED && col == PROFILE_COL_HOSTNAME)
+	{
+		gchar *message = g_strdup_printf("%s '%s' %s %s", _("Profile"), gmpc_profiles_get_name(prof,id), _("changed hostname to:"), gmpc_profiles_get_hostname(prof,id));
+		pl3_push_statusbar_message(message);
+		g_free(message);
+	}
 
-void pl3_update_profiles_menu(void)
+}
+static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const int col, const gchar *id)
 {
 	int items = 0;
 	GtkWidget *menu = NULL;
 	gchar *current = gmpc_profiles_get_current(gmpc_profiles);
 	GList *iter, *mult;
+	/* check if there is anything changed that is important for us. */
+	if(changed == PROFILE_COL_CHANGED && col != PROFILE_COL_NAME)
+	{
+		q_free(current);
+		return;
+	}
 	/***
 	 * Remove any old menu
 	 */
@@ -1745,14 +1770,14 @@ void pl3_update_profiles_menu(void)
 	 */
 	menu = gtk_menu_new();
 
-  mult = gmpc_profiles_get_profiles_ids(gmpc_profiles); 
-  if(mult)
+	mult = gmpc_profiles_get_profiles_ids(gmpc_profiles); 
+	if(mult)
 	{
 		GSList *group = NULL;
 		iter = mult;
 		do{
 			/** Get profile name */
-      gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
+			gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
 			GtkWidget *item	= gtk_radio_menu_item_new_with_label(group,value);
 			/* get new group */
 			group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));	
@@ -1776,8 +1801,8 @@ void pl3_update_profiles_menu(void)
 
 			items++;
 		}while((iter = g_list_next(iter)));
-    g_list_foreach(mult, (GFunc)g_free, NULL);
-    g_list_free(mult);
+		g_list_foreach(mult, (GFunc)g_free, NULL);
+		g_list_free(mult);
 
 
 	}
@@ -1794,5 +1819,5 @@ void pl3_update_profiles_menu(void)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_profiles"), FALSE);
 		gtk_widget_destroy(menu);
 	}
-  g_free(current);
+	g_free(current);
 }

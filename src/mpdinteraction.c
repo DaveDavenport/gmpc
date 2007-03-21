@@ -50,9 +50,6 @@ void submenu_album_clicked(GtkWidget *item);
 void submenu_genre_clicked(GtkWidget *item);
 void submenu_dir_clicked(GtkWidget *item);
 
-
-static gchar *current = NULL;
-
 gmpcPlugin server_plug = {
 	"Server Settings", 	/** name */
 	{1,1,1},			/** Version */
@@ -841,7 +838,6 @@ void connection_remove_profile(void)
 		q_free(value);
 		gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")),0);
 //		pl3_update_profiles_menu();
-		connection_set_current_profile(NULL);
 	}
 }
 
@@ -925,46 +921,8 @@ static void connection_pref_construct(GtkWidget *container)
 }
 void connection_set_current_profile(const char *uid)
 {
-	if(current)
-	{
-		q_free(current);
-		current = NULL;
-	}
-	if(uid)
-	{
-		current = g_strdup(uid);
-		cfg_set_single_value_as_string(config, "connection", "currentprofile",(char *)uid);
-	}
+	gmpc_profiles_set_current(gmpc_profiles, uid);
 }
-/*
-char *connection_get_current_profile()
-{
-	gchar *value = NULL;
-*/	/**
-	 * Some hack to make it work even if the default value removed 
-	 */
-/*	if(!current)
-	{
-		current = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
-		value = cfg_get_single_value_as_string(profiles, current, "name");
-
-		if(!value)
-		{
-			conf_mult_obj *mult = cfg_get_class_list(profiles);
-			if(mult){
-				current = g_strdup(mult->key);
-				cfg_set_single_value_as_string(config, "connection", "currentprofile",current);
-			}
-			cfg_free_multiple(mult);
-		}
-		else {
-			q_free(value);
-		}
-
-	}
-	return current;
-}
-*/
 void connection_set_password(char *password)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);

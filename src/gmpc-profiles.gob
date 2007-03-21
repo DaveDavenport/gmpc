@@ -11,10 +11,15 @@ requires 2.0.0
 %}
 %h{
   enum {
+	PROFILE_ADDED,
+	PROFILE_REMOVED,
+	PROFILE_COL_CHANGED
+	};
+  enum {
     PROFILE_COL_NAME,
     PROFILE_COL_HOSTNAME,
     PROFILE_COL_PORT,
-    PROFILE_COL_HAS_AUTH,
+    PROFILE_COL_DO_AUTH,
     PROFILE_COL_PASSWORD,
     PROFILE_NUM_COLS
   };
@@ -37,11 +42,18 @@ class Gmpc:Profiles from G:Object
   private int num_profiles = {0};
 
   /* signal with (self, id) */
-  signal last NONE (STRING)
+  signal last NONE (INT, INT,STRING)
   void
-  changed(self, char * id)
+  changed(self,const int changed, const int col, const char * id)
   {
-    printf("Item %s changed\n", id);
+	if(changed == PROFILE_ADDED)
+	    printf("Item %s added\n", id);
+	else if(changed == PROFILE_REMOVED)
+		printf("Item %s removed\n", id);
+	else if(changed == PROFILE_COL_CHANGED)
+	{
+		printf("Item %s changed col: %i\n", id, col);
+	}
   }
 
 
@@ -49,10 +61,10 @@ class Gmpc:Profiles from G:Object
    * New
    */
   public 
-  GObject *
+  GmpcProfiles *
   new(void)
   {
-    return (GObject *)GET_NEW;
+    return (GmpcProfiles *)GET_NEW;
   }
 
 
@@ -158,7 +170,6 @@ class Gmpc:Profiles from G:Object
       prof->password = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "password");
       prof->port = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "portnumber");
       prof->do_auth = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "useauth");
-      printf("added: %s\n", prof->name);
     }
     cfg_free_multiple(mult);
   }
@@ -166,9 +177,9 @@ class Gmpc:Profiles from G:Object
   /**
    * get profile
    */
-  public 
+  private
   Profile *
-  get_profile(self , gchar *id(check null))
+  get_profile(self , const gchar *id(check null))
   {
     int i = 0;
     if(self->_priv->list)
@@ -286,7 +297,7 @@ class Gmpc:Profiles from G:Object
     self->_priv->list[self->_priv->num_profiles] = NULL;
     self->_priv->list[self->_priv->num_profiles-1] = prof;
     /* propagate */
-    self_changed(self, prof->id);
+    self_changed(self,PROFILE_ADDED,-1, prof->id);
     return prof->id;
   }
   public
@@ -305,10 +316,10 @@ class Gmpc:Profiles from G:Object
         self->_priv->list[i] = self->_priv->list[i+1];
       }
       self->_priv->num_profiles--;
-      cfg_remove_class(self->_priv->profiles, id);
+      cfg_remove_class(self->_priv->profiles, (char *)id);
       self_free_profile(prof);
     }
-    self_changed(self, NULL);
+    self_changed(self,PROFILE_REMOVED,-1, id);
   }
 
   /**
@@ -318,16 +329,26 @@ class Gmpc:Profiles from G:Object
   gchar *
   get_current(self)
   {
-		return cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
+		gchar *id = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
+		Profile *prof = self_get_profile(self, id);
+		/* if not available get the first one */
+		if(!prof)
+		{
+			g_free(id);
+			self_set_current(self, self->_priv->list[0]->id);
+			id = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
+		}
+		
+		return id; 
   }
 
-  public
+  signal last NONE (STRING) 
   void
   set_current(self, const gchar *id(check null))
   {
     Profile *prof = self_get_profile(self, id);
     if(prof)
-      cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", id);
+      cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", (char *)id);
   }
   public
   GList *
@@ -356,8 +377,8 @@ class Gmpc:Profiles from G:Object
       g_free(prof->name);
 
     prof->name = g_strdup(value);
-    cfg_set_single_value_as_string(self->_priv->profiles, id, "name",prof->name);
-    self_changed(self,id);
+    cfg_set_single_value_as_string(self->_priv->profiles, (char *)id, "name",prof->name);
+    self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_NAME,id);
   }
 
   public
@@ -367,12 +388,11 @@ class Gmpc:Profiles from G:Object
     Profile *prof = self_get_profile(self, id);
     if(!prof)
       return ;                              
-    printf("set: %s->%s\n", prof->hostname, value);
     if(prof->hostname)
       g_free(prof->hostname);
     prof->hostname = g_strdup(value);
-    cfg_set_single_value_as_string(self->_priv->profiles, id, "hostname",prof->hostname);
-    self_changed(self,id);
+    cfg_set_single_value_as_string(self->_priv->profiles, (char *)id, "hostname",prof->hostname);
+    self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_HOSTNAME,id);
   }
   public
   void
@@ -388,7 +408,7 @@ class Gmpc:Profiles from G:Object
     else
       prof->password = g_strdup("");
     cfg_set_single_value_as_string(self->_priv->profiles, id, "password",prof->password);
-    self_changed(self,id);
+    self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PASSWORD,id);
   }
 
   public
@@ -400,7 +420,7 @@ class Gmpc:Profiles from G:Object
       return ;                              
     prof->port = value;
     cfg_set_single_value_as_int(self->_priv->profiles, id, "portnumber",prof->port);
-    self_changed(self,id);
+    self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PORT,id);
   }
 
   public
@@ -412,7 +432,7 @@ class Gmpc:Profiles from G:Object
       return ;                              
     prof->do_auth = value;
     cfg_set_single_value_as_int(self->_priv->profiles, id, "useauth",prof->do_auth);
-    self_changed(self,id);
+    self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_DO_AUTH,id);
   }
 
 	public

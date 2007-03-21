@@ -112,16 +112,6 @@ GtkWidget	*pl3_find2_pb = NULL;
 GList *criterias = NULL;
 GtkWidget *pl3_find2_crit_vbox = NULL;
 
-static int pl3_find2_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
 static void pl3_find2_fill_combo()
 {
 	GtkTreeIter iter;
