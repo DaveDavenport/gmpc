@@ -1,0 +1,419 @@
+requires 2.0.0
+%ht{
+	#include <stdio.h>
+  #include <stdlib.h>
+	#include <libmpd/libmpd.h>
+	#include <libmpd/debug_printf.h>
+  #include "config1.h"
+  #include "plugin.h"
+%}
+
+%h{
+  enum {
+    PROFILE_COL_NAME,
+    PROFILE_COL_HOSTNAME,
+    PROFILE_COL_PORT,
+    PROFILE_COL_HAS_AUTH,
+    PROFILE_COL_PASSWORD,
+    PROFILE_NUM_COLS
+  };
+
+  typedef struct {
+    gchar     *id;
+    gchar     *name;
+    gchar     *hostname;
+    int       port;
+    gboolean  do_auth;
+    gchar     *password;
+  }Profile;
+
+%}
+
+class Gmpc:Profiles from G:Object
+{
+  private config_obj *profiles = {NULL} destroywith cfg_close; 
+  private Profile **list = {NULL};
+  private int num_profiles = {0};
+
+  /* signal with (self, id) */
+  signal last NONE (INT)
+  void
+  changed(self, char * id)
+  {
+    printf("Item %s changed\n", id);
+  }
+
+
+  /**
+   * New
+   */
+  public 
+  GObject *
+  new(void)
+  {
+    return (GObject *)GET_NEW;
+  }
+
+
+  /** 
+   * init 
+   * */
+  init(self)
+  {
+    /**
+     * Get Profile
+     */
+    gchar *url = cfg_get_single_value_as_string(config, "connection", "profile-file");
+    if(!url)
+    {
+      url = g_strdup_printf("%s/.gmpc/profiles.cfg", g_get_home_dir());
+      cfg_set_single_value_as_string(config, "connection", "profile-file",url);
+    }
+    self->_priv->profiles = cfg_open(url);
+    if(self->_priv->profiles == NULL)
+    {
+      /**
+       * Show gtk error message and quit 
+       */
+      debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
+      abort();
+    }
+    g_free(url);
+    self_load_from_config(self);
+    if(self->_priv->num_profiles == 0)
+    {
+      self_add_default(self);
+      self_load_from_config(self);
+    }
+  }
+  /**
+   * Add default values
+   */
+  private 
+  void
+  add_default(self)
+  {
+    cfg_set_single_value_as_string(config, "connection", "currentprofile", "Default"); 
+    cfg_set_single_value_as_string(self->_priv->profiles, "Default", "hostname", "localhost");
+    cfg_set_single_value_as_string(self->_priv->profiles, "Default", "name", "Default");
+    cfg_set_single_value_as_string(self->_priv->profiles, "Default", "password","");
+    cfg_set_single_value_as_int(self->_priv->profiles, "Default", "portnumber",6600);
+    cfg_set_single_value_as_int(self->_priv->profiles, "Default", "useauth",FALSE);
+  }
+
+  /*********
+   * PROFILE
+   */
+  /* free a profile */
+  public 
+  void
+  free_profile(Profile *profile)
+  {
+    if(profile->name)
+      g_free(profile->name);
+    if(profile->id)
+      g_free(profile->id);
+    if(profile->hostname)
+      g_free(profile->hostname);
+    if(profile->password)
+      g_free(profile->password); 
+    g_free(profile);
+  }
+
+  public 
+  Profile * 
+  new_profile(void)
+  {
+    Profile *retv = g_malloc0(sizeof(*retv));
+    /* Init values */
+    retv->name      = NULL;
+    retv->id        = NULL;
+    retv->password  = NULL;
+    retv->hostname  = NULL;
+    retv->port      = 6600;
+    retv->do_auth   = FALSE; 
+
+    return retv;
+  }
+
+  private 
+  void
+  load_from_config(self)
+  {
+    conf_mult_obj *iter,*mult = cfg_get_class_list(self->_priv->profiles);
+    /* free the old list */
+    for(iter = mult;iter;iter = iter->next)
+    {
+      Profile *prof = self_new_profile();
+
+      self->_priv->num_profiles++;
+      self->_priv->list = g_realloc(self->_priv->list, (self->_priv->num_profiles+1)*sizeof(Profile *)); 
+      self->_priv->list[self->_priv->num_profiles] = NULL;
+      self->_priv->list[self->_priv->num_profiles-1] = prof;
+
+      prof->id = g_strdup(iter->key);
+      prof->name = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "name");
+      prof->hostname = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "hostname");
+      prof->password = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "password");
+      prof->port = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "portnumber");
+      prof->do_auth = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "useauth");
+      printf("added: %s\n", prof->name);
+    }
+    cfg_free_multiple(mult);
+  }
+
+  /**
+   * get profile
+   */
+  public 
+  Profile *
+  get_profile(self , gchar *id(check null))
+  {
+    int i = 0;
+    if(self->_priv->list)
+    {
+      for(i=0;self->_priv->list[i]; i++)
+      {
+        if(!strcmp(self->_priv->list[i]->id, id))
+          return self->_priv->list[i];
+      }
+    } 
+    return NULL;
+  }
+
+  /**
+   * get hostname 
+   */
+  public 
+  gchar *
+  get_hostname(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return NULL;
+    return prof->hostname;
+  }
+  /**
+   * get name  
+   */
+  public 
+  gchar *                                 
+  get_name(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return NULL;
+    return prof->name;
+  }
+  /**
+   * get id 
+   */
+  public 
+  gchar *                                 
+  get_id(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return NULL;
+    return prof->id;
+  }
+  /**
+   * get password 
+   */
+  public 
+  gchar *                                 
+  get_password(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return NULL;
+    return prof->password;
+  }
+
+  /**
+   * get port 
+   */
+  public 
+  int                     
+  get_port(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return -1;
+    return prof->port;
+  }
+
+  /**
+   * get do_auth 
+   */
+  public 
+  gboolean 
+  get_do_auth(self, gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return FALSE;
+    return prof->do_auth;
+  }
+
+  /**
+   * Create new item
+   */
+  public 
+  gchar *
+  create_new_item(self, gchar *id)
+  {
+    Profile *prof = g_malloc0(sizeof(*prof));
+    if(!id)
+      prof->id = g_strdup_printf("%u",g_random_int());
+    else
+      prof->id = g_strdup(id);
+    prof->name = g_strdup("New Profile");
+    prof->hostname = g_strdup("localhost");
+    prof->password= g_strdup("");
+    prof->port = 6600;
+    prof->do_auth = 0;
+    
+    cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "name", prof->name);
+    cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "hostname", prof->hostname);
+    cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "password", prof->password);
+    cfg_set_single_value_as_int(self->_priv->profiles, prof->id, "portnumber", prof->port);
+    cfg_set_single_value_as_int(self->_priv->profiles, prof->id, "useauth", prof->do_auth);
+
+    self->_priv->num_profiles++;
+    self->_priv->list = g_realloc(self->_priv->list, (self->_priv->num_profiles+1)*sizeof(Profile *));     
+    self->_priv->list[self->_priv->num_profiles] = NULL;
+    self->_priv->list[self->_priv->num_profiles-1] = prof;
+    /* propagate */
+    self_changed(self, prof->id);
+    return prof->id;
+  }
+  public
+  void
+  remove_item(self, gchar *id)
+  {
+    int i=0;
+    Profile *prof =  self_get_profile(self, id);
+    if(!prof)
+      return;
+    for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
+    if(self->_priv->list[i] == prof)
+    {
+      for(; self->_priv->list[i] ;i++)
+      {
+        self->_priv->list[i] = self->_priv->list[i+1];
+      }
+      self->_priv->num_profiles--;
+      cfg_remove_class(self->_priv->profiles, id);
+      self_free_profile(prof);
+    }
+    self_changed(self, NULL);
+  }
+
+  /**
+   * GET CURRENT
+   */
+  public
+  gchar *
+  get_current(self)
+  {
+		return cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
+  }
+
+  public
+  void
+  set_current(self, gchar *id(check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(prof)
+      cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", id);
+  }
+  public
+  GList *
+  get_profiles_ids(self)
+  {
+    GList *list = NULL;
+    int i=0;
+    for(i=0; self->_priv->list[i] ; i++)
+    {
+      list = g_list_append(list,g_strdup(self->_priv->list[i]->id));
+    }
+    return list;
+  }
+
+  /**
+   * set field
+   */
+  public
+  void
+  set_name(self, gchar *id (check null), gchar *value (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return ;                              
+    if(prof->name)
+      g_free(prof->name);
+
+    prof->name = g_strdup(value);
+    cfg_set_single_value_as_string(self->_priv->profiles, id, "name",prof->name);
+    self_changed(self,id);
+  }
+
+  public
+  void
+  set_hostname(self, gchar *id (check null), gchar *value (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return ;                              
+    printf("set: %s->%s\n", prof->hostname, value);
+    if(prof->hostname)
+      g_free(prof->hostname);
+    prof->hostname = g_strdup(value);
+    cfg_set_single_value_as_string(self->_priv->profiles, id, "hostname",prof->hostname);
+    self_changed(self,id);
+  }
+  public
+  void
+  set_password(self, gchar *id (check null), gchar *value)
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return ;                              
+    if(prof->password)
+      g_free(prof->password);
+    if(value)
+      prof->password = g_strdup(value);
+    else
+      prof->password = g_strdup("");
+    cfg_set_single_value_as_string(self->_priv->profiles, id, "password",prof->password);
+    self_changed(self,id);
+  }
+
+  public
+  void
+  set_port(self, gchar *id (check null), int value)
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return ;                              
+    prof->port = value;
+    cfg_set_single_value_as_int(self->_priv->profiles, id, "portnumber",prof->port);
+    self_changed(self,id);
+  }
+
+  public
+  void
+  set_do_auth(self, gchar *id (check null), int value)
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return ;                              
+    prof->do_auth = value;
+    cfg_set_single_value_as_int(self->_priv->profiles, id, "useauth",prof->do_auth);
+    self_changed(self,id);
+  }
+
+
+
+}

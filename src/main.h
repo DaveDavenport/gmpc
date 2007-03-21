@@ -28,6 +28,7 @@
 #include "playlist-list.h"
 #include "mpdinteraction.h"
 #include "tray-icon.h"
+#include "gmpc-profiles.h"
 
 /**
  * Some gobjects
@@ -70,6 +71,8 @@ extern gmpcPlugin url_plugin;
 /** main.c **/
 extern GladeXML *xml_main_window;
 extern MpdObj *connection;
+extern GmpcProfiles *gmpc_profiles;
+
 
 enum{
 	TIME_FORMAT_ELAPSED,
