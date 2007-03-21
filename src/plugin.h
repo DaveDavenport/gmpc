@@ -3,6 +3,7 @@
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include "metadata.h"
+#include "gmpc-profiles.h"
 
 #ifndef __GMPC_PLUGIN_H__
 #define __GMPC_PLUGIN_H__
@@ -11,6 +12,7 @@
 #define PLUGIN_ID_INTERNALL 2048
 extern MpdObj *connection;
 extern config_obj *config;
+extern GmpcProfiles *gmpc_profiles;
 //extern config_obj *profiles;
 
 /* Plugin Type's */

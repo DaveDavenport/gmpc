@@ -1,13 +1,14 @@
 requires 2.0.0
 %ht{
-	#include <stdio.h>
-  #include <stdlib.h>
-	#include <libmpd/libmpd.h>
-	#include <libmpd/debug_printf.h>
-  #include "config1.h"
-  #include "plugin.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <libmpd/libmpd.h>
+#include <libmpd/debug_printf.h>
+#include "config1.h"
 %}
-
+%privateheader{
+	#include "plugin.h"
+%}
 %h{
   enum {
     PROFILE_COL_NAME,
