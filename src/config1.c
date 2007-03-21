@@ -653,7 +653,7 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 		cfg_add_child(node,newnode);
 
 	}	
-	else if(!memcmp(newnode->value, value,strlen(newnode->value)))
+	else if(strlen(newnode->value) == strlen(value) && !memcmp(newnode->value, value,strlen(newnode->value)))
 	{
 		/* Check if the content is the same, if it is, do nothing */
 		return;
@@ -723,7 +723,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 	cur = cfg_get_multiple_value(cfg, class,key,id);
 	if(cur != NULL)
 	{
-		if(!memcmp(cur->value, value, strlen(cur->value)))
+		if(strlen(cur->value) == strlen(value) && !memcmp(cur->value, value, strlen(cur->value)))
 		{
 			return;
 		}
