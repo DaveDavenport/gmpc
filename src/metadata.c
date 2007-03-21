@@ -416,7 +416,6 @@ void meta_data_handle_remove_request(guint id)
 	q_async_queue_lock(meta_commands);
 	if((data = q_async_queue_remove_data_unlocked(meta_commands, (GCompareFunc)meta_data_handler_data_match, GINT_TO_POINTER(id))))
 	{
-		printf("Removing: %i\n", data->id);
 		if(data->result_path)q_free(data->result_path);
 		mpd_freeSong(data->song);
 		q_free(data);

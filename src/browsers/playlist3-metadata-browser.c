@@ -34,19 +34,6 @@ static GtkEntryCompletion *entry_completion = NULL;
 /**
  * playing 
  */
-/*
-#include <libmpd/libmpd-internal.h>
-static void info2_play_code(char *ar);
-gboolean metab_play_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
-static void play_fill_vbox(GtkWidget *vbox,GtkWidget *table);
-void metab_play_show_albums(GtkTable *table, gchar *artist);
-void metab_play_sel_changed(GtkTreeSelection *sel, GtkTable *table);
-void play_button_press_event(GtkWidget *button);
-int do_playing = FALSE;
-GtkWidget *play_label = NULL, *button_vbox = NULL, *play_table;
-MpdData *play_data= NULL;
-MpdData *play_cur_data= NULL;
-*/
 static int current_id = 0;
 
 typedef struct {
@@ -1367,30 +1354,18 @@ void info2_fill_album_view(char *artist,char *album)
 		i=1;
 		for(data = mpd_data_get_first(data);data;data = mpd_data_get_next(data))
 		{
-			markup =  g_markup_printf_escaped ("%i:\t%s",
-					i, data->song->title);
-			label = gtk_label_new("");
-			gtk_label_set_markup(GTK_LABEL(label),markup);
-			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+			markup =  g_strdup_printf("%02i:%s",i, data->song->title);
+			label = gmpc_clicklabel_new(markup);
+			g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data->song->file), g_free);
+			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
+			gtk_widget_set_size_request(label, 250,-1);
 			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-/*			button = gtk_button_new();
-			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_BUTTON));
-			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
-			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(1));
-			gtk_table_attach(GTK_TABLE(table2), button, 1,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-*/			button = gtk_button_new();
+			button = gtk_button_new();
 			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(0));
 			gtk_table_attach(GTK_TABLE(table2), button, 2,3,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-			button = gtk_button_new();
-			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
-			gtk_table_attach(GTK_TABLE(table2), button, 3,4,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
-			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
 
 			q_free(markup);
 			i++;
