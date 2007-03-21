@@ -11,7 +11,7 @@
 #define PLUGIN_ID_INTERNALL 2048
 extern MpdObj *connection;
 extern config_obj *config;
-extern config_obj *profiles;
+//extern config_obj *profiles;
 
 /* Plugin Type's */
 typedef enum {
