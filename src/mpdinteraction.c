@@ -6,6 +6,7 @@
 #include "config1.h"
 #include "mpdinteraction.h"
 
+static int ignore = FALSE;
 extern GtkWidget *pl3_cp_tree;
 
 /* old stuff */
@@ -592,6 +593,7 @@ void entry_auth_changed(GtkEntry *entry)
 	GtkComboBox *combo = (GtkComboBox *)glade_xml_get_widget(connection_pref_xml, "cb_profiles");
 	GtkTreeIter iter;
 	GtkListStore *store = (GtkListStore *)gtk_combo_box_get_model(combo);
+	if(ignore) return;
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		gchar *value= NULL, *uid = NULL;
@@ -610,6 +612,7 @@ void auth_enable_toggled(GtkToggleButton *but)
 	GtkComboBox *combo = (GtkComboBox *) glade_xml_get_widget(connection_pref_xml, "cb_profiles");
 	GtkTreeIter iter;
 	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+	if(ignore) return;
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		char *value= NULL, *uid = NULL;
@@ -628,12 +631,13 @@ void update_preferences_name(void)
 	GtkComboBox *combo = (GtkComboBox *) glade_xml_get_widget(connection_pref_xml, "cb_profiles");
 	GtkTreeIter iter;
 	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+	if(ignore) return;
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		char *value= NULL, *uid = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 		/*cfg_set_single_value_as_string(profiles,uid,"name", */
-    gmpc_profiles_set_name(gmpc_profiles, uid,
+		gmpc_profiles_set_name(gmpc_profiles, uid,
 				(char *)gtk_entry_get_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "name_entry"))));
 		q_free(uid);
 		q_free(value);
@@ -648,6 +652,8 @@ void update_preferences_hostname(void)
 	GtkComboBox *combo = (GtkComboBox *) glade_xml_get_widget(connection_pref_xml, "cb_profiles");
 	GtkTreeIter iter;
 	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+	if(ignore) return;
+
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		char *value= NULL, *uid = NULL;
@@ -665,6 +671,7 @@ void update_preferences_portnumber(void)
 	GtkComboBox *combo = (GtkComboBox *) glade_xml_get_widget(connection_pref_xml, "cb_profiles");
 	GtkTreeIter iter;
 	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+	if(ignore) return;
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		char *value= NULL, *uid = NULL;
@@ -752,6 +759,9 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 	{
 		char *value= NULL, *uid = NULL, *string;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
+
+		ignore = TRUE;
+
 		/**
 		 * Set name
 		 */
@@ -759,36 +769,29 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 		/**
 		 * Set hostname
 		 */
-/*		string = cfg_get_single_value_as_string_with_default(profiles,uid,"hostname","localhost");*/
-    string = g_strdup(gmpc_profiles_get_hostname(gmpc_profiles, uid));
+		string = g_strdup(gmpc_profiles_get_hostname(gmpc_profiles, uid));
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "hostname_entry")), 
-        string);
-    g_free(string);
-/*		cfg_free_string(string);*/
+				string);
+		g_free(string);
 		/**
 		 * Set port number 
 		 */
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(connection_pref_xml, "port_spin")), 
           gmpc_profiles_get_port(gmpc_profiles, uid));
-/*				cfg_get_single_value_as_int_with_default(profiles,uid,"portnumber",6600));*/
 
 		/**
 		 * Set password check, and entry
 		 */
-/*		string = cfg_get_single_value_as_string_with_default(profiles, uid,"password", "");*/
-    string = g_strdup(gmpc_profiles_get_password(gmpc_profiles, uid));
+		string = g_strdup(gmpc_profiles_get_password(gmpc_profiles, uid));
 		gtk_toggle_button_set_active((GtkToggleButton *)
 				glade_xml_get_widget(connection_pref_xml, "ck_auth"), 
           gmpc_profiles_get_do_auth(gmpc_profiles, uid));
-/*				cfg_get_single_value_as_int_with_default(profiles, uid, "useauth", 0));*/
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "entry_auth"), 
           gmpc_profiles_get_do_auth(gmpc_profiles, uid));
-/*				cfg_get_single_value_as_int_with_default(profiles, uid, "useauth", 0));*/
 
 		gtk_entry_set_text(GTK_ENTRY(glade_xml_get_widget(connection_pref_xml, "entry_auth")),/*string);*/
           string);
     g_free(string);
-/*		cfg_free_string(string);*/
 
 		/**
 		 * Only enable the rmeove button when there is more then 1 profile
@@ -803,6 +806,7 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 		}
 		q_free(value);
 		q_free(uid);
+		ignore = FALSE;
 	}
 
 }
@@ -931,15 +935,12 @@ void connection_set_password(char *password)
 	 */ 
 	if(password && password[0] != '\0')
 	{
-//		cfg_set_single_value_as_int(profiles, profile, "useauth", TRUE);
-	//	cfg_set_single_value_as_string(profiles, profile, "password", password);
 	  gmpc_profiles_set_password(gmpc_profiles, profile, password);
 	  gmpc_profiles_set_do_auth(gmpc_profiles, profile, TRUE);
 
 	}
 	else
 	{
-//		cfg_set_single_value_as_int(profiles, profile, "useauth", FALSE);
 	  gmpc_profiles_set_password(gmpc_profiles, profile, NULL);
 	  gmpc_profiles_set_do_auth(gmpc_profiles, profile, FALSE);
 	}
@@ -950,8 +951,6 @@ int connection_use_auth()
 {
   int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
-	//gchar *profile = connection_get_current_profile();
-	//int retv = cfg_get_single_value_as_int_with_default(profiles, profile, "useauth",0);
 	retv  = gmpc_profiles_get_do_auth(gmpc_profiles, profile);
   q_free(profile);
   return retv;
@@ -959,8 +958,6 @@ int connection_use_auth()
 
 char *connection_get_hostname()
 {
-//	gchar *profile = connection_get_current_profile();
-//	gchar *retv = cfg_get_single_value_as_string_with_default(profiles,profile,"hostname","localhost");
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_hostname(gmpc_profiles, profile);
   g_free(profile);
@@ -969,8 +966,6 @@ char *connection_get_hostname()
 }
 int connection_get_port()
 {
-//	gchar *profile = connection_get_current_profile();
-//	int retv = cfg_get_single_value_as_int_with_default(profiles,profile,"portnumber", 6600);
   int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	retv  = gmpc_profiles_get_port(gmpc_profiles, profile);
@@ -979,8 +974,6 @@ int connection_get_port()
 }
 char *connection_get_password()
 {
-//	gchar *profile = connection_get_current_profile();
-//	gchar *retv = cfg_get_single_value_as_string_with_default(profiles, profile,"password", "");
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_password(gmpc_profiles, profile);
   g_free(profile);

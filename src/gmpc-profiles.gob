@@ -285,7 +285,8 @@ class Gmpc:Profiles from G:Object
     prof->password= g_strdup("");
     prof->port = 6600;
     prof->do_auth = 0;
-    
+   
+	/* safe this to the config file */ 
     cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "name", prof->name);
     cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "hostname", prof->hostname);
     cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "password", prof->password);
