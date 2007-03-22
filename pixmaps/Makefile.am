@@ -6,6 +6,7 @@ appicon_DATA =	\
 	media-audiofile.png\
 	media-stream.png\
 	media-artist.png\
+	media-playback-start.png\
 	gmpc-tray.png\
 	gmpc-tray-play.png\
 	gmpc-tray-pause.png\
@@ -14,8 +15,6 @@ appicon_DATA =	\
 	gmpc.png\
 	media-album.png\
 	media-playlist.png\
-	player-repeat.png\
-	player-shuffle.png\
 	stock_volume.png\
 	gmpc-add-url.png\
 	gmpc-loading-cover.png

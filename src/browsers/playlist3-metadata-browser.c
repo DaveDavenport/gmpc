@@ -1562,7 +1562,7 @@ static int info2_add_go_menu(GtkWidget *menu)
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return 0;
 	item = gtk_image_menu_item_new_with_label(_("Metadata Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-			gtk_image_new_from_stock("gtk-info", GTK_ICON_SIZE_MENU));
+			gtk_image_new_from_icon_name("gtk-info", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(info2_activate), NULL);
