@@ -339,7 +339,6 @@ class Gmpc:Profiles from G:Object
 			self_set_current(self, self->_priv->list[0]->id);
 			id = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
 		}
-		
 		return id; 
   }
 
@@ -349,7 +348,7 @@ class Gmpc:Profiles from G:Object
   {
     Profile *prof = self_get_profile(self, id);
     if(prof)
-      cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", (char *)id);
+      cfg_set_single_value_as_string(config, "connection", "currentprofile", (char *)id);
   }
   public
   GList *
