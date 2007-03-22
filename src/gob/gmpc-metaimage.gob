@@ -31,8 +31,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean draw_border = {TRUE};
 	public gboolean draw_shadow = {FALSE};
 	public gboolean squared = {TRUE};
-	public gchar *no_cover_icon = {g_strdup("media-no-cover")} destroywith g_free;
-	public gchar *loading_cover_icon = {g_strdup("media-loading-cover")} destroywith g_free;
+	public gchar *no_cover_icon = {g_strdup("gmpc-no-cover")} destroywith g_free;
+	public gchar *loading_cover_icon = {g_strdup("gmpc-loading-cover")} destroywith g_free;
 	/**
 	 * I want fully set/get control,so I don't use property stuff,
 	 * is there a way around this?
@@ -384,12 +384,16 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				gtk_widget_hide(GTK_WIDGET(self));
 				return;
 			}
-			pb = gtk_widget_render_icon(GTK_WIDGET(self), self->no_cover_icon, -1, NULL);
-			pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+        GError *err = NULL;
+//			pb = gtk_widget_render_icon(GTK_WIDGET(self), self->no_cover_icon, -1, NULL);
+	//		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
+			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&err);
+        if(!pb2)
+          printf("uh owh %s\n", err->message);
+        gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
 //			if(self->squared)
 				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-			g_object_unref(pb);
+		//	g_object_unref(pb);
 			g_object_unref(pb2);
 			self_image_changed(self,META_DATA_UNAVAILABLE);
 		}
@@ -408,12 +412,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{		
 				gtk_widget_hide(GTK_WIDGET(self));
 			}
-			pb = gtk_widget_render_icon(GTK_WIDGET(self), self->loading_cover_icon, -1, NULL);
-			pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
+//			pb = gtk_widget_render_icon(GTK_WIDGET(self), self->loading_cover_icon, -1, NULL);
+	//		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
+			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->loading_cover_icon, self->size, 0,NULL);
+        
 			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
 			if(self->squared)
 				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-			g_object_unref(pb);
+		//	g_object_unref(pb);
 			g_object_unref(pb2);
 			self_image_changed(self,META_DATA_FETCHING);
 		}

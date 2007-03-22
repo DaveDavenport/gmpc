@@ -418,11 +418,11 @@ static void tray_icon_song_change()
 void tray_icon_connection_changed(MpdObj *mi, int connect)
 {
 	if(connect){
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", -1);
+		if(tray_icon)gtk_image_set_from_icon_name(GTK_IMAGE(logo), "gmpc-tray", -1);
 		tray_icon_state_change();
 	}
 	else{
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-disconnected", -1);
+		if(tray_icon)gtk_image_set_from_icon_name(GTK_IMAGE(logo), "gmpc-tray-disconnected", -1);
 	}
 }
 
@@ -431,7 +431,7 @@ static void tray_icon_state_change()
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 	{
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray", -1);
+		if(tray_icon)gtk_image_set_from_icon_name(GTK_IMAGE(logo), "gmpc-tray", -1);
 		tray_leave_cb(NULL, NULL,0);
 		/*if(cover_pb)
 		  {
@@ -441,11 +441,11 @@ static void tray_icon_state_change()
 	}
 	else if(state == MPD_PLAYER_PLAY){
 
-		if(tray_icon)	gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-play", -1);
+		if(tray_icon)	gtk_image_set_from_icon_name(GTK_IMAGE(logo), "gmpc-tray-play", -1);
 		tray_icon_song_change();
 	}
 	else if(state == MPD_PLAYER_PAUSE){
-		if(tray_icon)gtk_image_set_from_stock(GTK_IMAGE(logo), "gmpc-tray-pause", -1);
+		if(tray_icon)gtk_image_set_from_icon_name(GTK_IMAGE(logo), "gmpc-tray-pause", -1);
 	}
 	if(tray_icon)
 	{
@@ -528,29 +528,21 @@ static int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)
 		{
 			if(mpd_server_check_command_allowed(connection, "play"))
 			{
-				item = gtk_image_menu_item_new_with_mnemonic(_("Pl_ay/Pause"));
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-						gtk_image_new_from_stock("gtk-media-play", GTK_ICON_SIZE_MENU));
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PLAY, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
 
 
-				item = gtk_image_menu_item_new_with_mnemonic(_("_Stop"));
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-						gtk_image_new_from_stock("gtk-media-stop", GTK_ICON_SIZE_MENU));
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_STOP, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(stop_song), NULL);
 
-				item = gtk_image_menu_item_new_with_mnemonic(_("_Next"));
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-						gtk_image_new_from_stock("gtk-media-next", GTK_ICON_SIZE_MENU));
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_NEXT, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(next_song), NULL);
 
 
-				item = gtk_image_menu_item_new_with_mnemonic(_("_Previous"));
-				gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-						gtk_image_new_from_stock("gtk-media-previous", GTK_ICON_SIZE_MENU));
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PREVIOUS, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(prev_song), NULL);
 				item = gtk_separator_menu_item_new();
@@ -636,7 +628,7 @@ static int create_tray_icon()
 	tray_icon = egg_tray_icon_new(_("Gnome Music Player Client"));
 	event = gtk_event_box_new();
 	gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), FALSE);
-	logo = 	gtk_image_new_from_stock("gmpc-tray-disconnected",-1);
+	logo = 	gtk_image_new_from_icon_name("gmpc-tray-disconnected",-1);
 
 
 

@@ -892,7 +892,7 @@ void create_playlist3 ()
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
 	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes (column, renderer, "stock-id",3,"stock-size",5,NULL);
+	gtk_tree_view_column_set_attributes (column, renderer, "icon-name",3,"stock-size",5,NULL);
 
 	renderer = gtk_cell_renderer_text_new ();
 	/* insert the column in the tree */
