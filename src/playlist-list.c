@@ -936,7 +936,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		case PLAYLIST_LIST_COL_ICON_ID:
 			if (song->pos ==
 					PLAYLIST_LIST(tree_model)->current_song_pos) {
-				g_value_set_string(value, "gtk-media-play");
+				g_value_set_string(value, "media-playback-start");
 			} else if (strstr(song->file, "://")) {
 				g_value_set_string(value, "media-stream");
 			} else {

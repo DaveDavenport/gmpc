@@ -2,7 +2,8 @@ gmpcicondir = $(datadir)/pixmaps/
 gmpcicon_DATA = gmpc.png
 
 appicondir = $(datadir)/gmpc/
-appicon_DATA =	media-audiofile.png\
+appicon_DATA =	\
+	media-audiofile.png\
 	media-stream.png\
 	media-artist.png\
 	gmpc-tray.png\
