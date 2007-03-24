@@ -15,7 +15,7 @@ appicon_DATA =	\
 	gmpc.png\
 	media-album.png\
 	media-playlist.png\
-	stock_volume.png\
+	gmpc-volume.png\
 	gmpc-add-url.png\
 	gmpc-loading-cover.png
 
