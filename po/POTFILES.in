@@ -30,6 +30,10 @@ src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-tag-browser.c
 src/egg/eggcellrendererkeys.c
 src/egg/eggtrayicon.c
-src/gob/gmpc-metaimage.gob
+src/gob/gmpc-clicklabel.gob  
 src/gob/gmpc-mpddata-model.gob
+src/gob/gmpc-connection.gob  
+src/gob/gmpc-mpddata-treeview.gob
+src/gob/gmpc-metaimage.gob   
+src/gob/gmpc-profiles.gob
 
