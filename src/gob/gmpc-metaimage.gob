@@ -372,7 +372,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		set_cover_na(self)
 		{
-			GdkPixbuf *pb,*pb2; 
+			//GdkPixbuf *pb,*pb2; 
+			GdkPixbuf *pb2; 
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);
@@ -401,7 +402,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		set_cover_fetching(self)
 		{
-			GdkPixbuf *pb,*pb2; 
+			//GdkPixbuf *pb,*pb2; 
+			GdkPixbuf *pb2; 
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);
