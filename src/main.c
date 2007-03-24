@@ -718,6 +718,12 @@ static void init_stock_icons()
 	gtk_window_set_default_icon(pb);
 	g_object_unref(G_OBJECT(pb));
 
+#ifdef WIN32
+	/* The Windows gtkrc sets this to 0, so images don't work on buttons */
+	gtk_settings_set_long_property(gtk_settings_get_default(),
+	                               "gtk-button-images", TRUE, "main");
+#endif
+
 	return;
 }
 
