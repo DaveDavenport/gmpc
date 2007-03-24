@@ -16,6 +16,6 @@ media-playlist
 media-stream
 media-repeat
 media-random
-stock_volume
+stock_volume (renamed to gmpc-volume)
 
-Other unkown
+Other unknown
