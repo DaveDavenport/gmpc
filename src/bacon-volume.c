@@ -600,7 +600,7 @@ bacon_volume_scale_value_changed (GtkRange * range)
   }
   else
   {
-	  gtk_image_set_from_stock(GTK_IMAGE (button->image), "gmpc-volume", button->size);
+	  gtk_image_set_from_icon_name(GTK_IMAGE (button->image), "gmpc-volume", button->size);
   }
 #endif
 
