@@ -6,6 +6,8 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
 		media-playlist.png\
+		playlist-search-browser.png\
+		playlist-browser.png\
 		tag-browser.png
 
 noinst_DATA = 

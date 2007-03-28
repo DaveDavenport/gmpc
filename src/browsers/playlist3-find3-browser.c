@@ -312,7 +312,7 @@ static void pl3_find3_browser_add(GtkWidget *cat_tree)
             PL3_CAT_TYPE, find3_browser_plug.id,
             PL3_CAT_TITLE, _("Playlist Search"),
             PL3_CAT_INT_ID, "",
-            PL3_CAT_ICON_ID, "gtk-find",
+            PL3_CAT_ICON_ID, "playlist-search-browser",
             PL3_CAT_PROC, TRUE,
             PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 
@@ -694,7 +694,7 @@ static int pl3_find3_browser_add_go_menu(GtkWidget *menu)
 
   item = gtk_image_menu_item_new_with_label(_("Playlist Search"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-      gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
+      gtk_image_new_from_icon_name("playlist-search-browser", GTK_ICON_SIZE_MENU));
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_activate), NULL);
 
