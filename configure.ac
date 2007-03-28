@@ -163,6 +163,10 @@ pixmaps/icons/22x22/Makefile
 pixmaps/icons/22x22/actions/Makefile 
 pixmaps/icons/32x32/Makefile
 pixmaps/icons/32x32/actions/Makefile
+pixmaps/icons/32x32/status/Makefile
+pixmaps/icons/48x48/Makefile
+pixmaps/icons/48x48/actions/Makefile
+pixmaps/icons/48x48/status/Makefile
 ])
 echo ""
 echo ""
