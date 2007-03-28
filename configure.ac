@@ -148,7 +148,22 @@ AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files
 AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
 
-AC_OUTPUT(Makefile src/Makefile pixmaps/Makefile glade/Makefile data/Makefile po/Makefile.in po/Makefile data/gmpc.pc doc/Makefile)
+AC_OUTPUT([
+Makefile 
+src/Makefile 
+glade/Makefile 
+data/Makefile 
+po/Makefile.in 
+po/Makefile 
+data/gmpc.pc 
+doc/Makefile 
+pixmaps/Makefile 
+pixmaps/icons/Makefile
+pixmaps/icons/22x22/Makefile
+pixmaps/icons/22x22/actions/Makefile 
+pixmaps/icons/32x32/Makefile
+pixmaps/icons/32x32/actions/Makefile
+])
 echo ""
 echo ""
 echo "-------------- Status --------------"

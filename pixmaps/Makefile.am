@@ -14,9 +14,10 @@ appicon_DATA =	\
 	gmpc-tray-disconnected.png\
 	gmpc.png\
 	media-album.png\
-	media-playlist.png\
 	gmpc-volume.png\
 	gmpc-add-url.png\
 	gmpc-loading-cover.png
 
 EXTRA_DIST = $(appicon_DATA)
+
+SUBDIRS = icons
