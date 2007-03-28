@@ -12,10 +12,15 @@ gmpc
 -Gnome Default Theme (author not in theme file dir?)
 -Tango project
 media-artist
-media-playlist
 media-stream
 media-repeat
 media-random
 stock_volume (renamed to gmpc-volume)
+
+TheSheep
+- media-playlist
+- tag-browser
+- playlist-browser
+- playlist-search-browser
 
 Other unknown
