@@ -159,6 +159,8 @@ data/gmpc.pc
 doc/Makefile 
 pixmaps/Makefile 
 pixmaps/icons/Makefile
+pixmaps/icons/16x16/Makefile
+pixmaps/icons/16x16/actions/Makefile 
 pixmaps/icons/22x22/Makefile
 pixmaps/icons/22x22/actions/Makefile 
 pixmaps/icons/32x32/Makefile
