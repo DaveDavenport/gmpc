@@ -217,7 +217,7 @@ static void pl3_custom_tag_browser_add(GtkWidget *cat_tree)
 				PL3_CAT_TYPE, tag_plug.id,
 				PL3_CAT_TITLE, _("Tag Browser"),
 				PL3_CAT_INT_ID, "",
-				PL3_CAT_ICON_ID, "media-artist",
+				PL3_CAT_ICON_ID, "tag-browser",
 				PL3_CAT_PROC, TRUE,
 				PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 				PL3_CAT_BROWSE_FORMAT, "",
