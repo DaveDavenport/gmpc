@@ -886,8 +886,6 @@ void create_playlist3 ()
 				);
 	}
 
-	gtk_window_set_icon_name(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), "gmpc");
-
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));

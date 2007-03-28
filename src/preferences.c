@@ -122,7 +122,6 @@ void create_preferences_window()
 	/* check for errors and axit when there is no gui file */
 	if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
 
-	gtk_window_set_icon_name(GTK_WINDOW(glade_xml_get_widget(xml_preferences_window, "preferences_window")), "gmpc");
 
 	/* set info from struct */
 	/* hostname */
