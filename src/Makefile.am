@@ -55,7 +55,9 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
-	@GOB2@ -o gob/ --no-touch-headers $<
+	@GOB2@ -o gob/ --no-touch $<
+	@touch $@
+	
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
