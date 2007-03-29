@@ -282,8 +282,11 @@ requires 2.0.0
 						case MPD_TAG_ITEM_ALBUM:
 							g_value_set_string(value, "media-album");
 							break;
-						default:
+            case MPD_TAG_ITEM_ARTIST:
 							g_value_set_string(value, "media-artist");
+              break;
+						default:
+							g_value_set_string(value, "media-tag");
 					}
 					break;
 				case MPDDATA_MODEL_COL_SONG_TITLE:

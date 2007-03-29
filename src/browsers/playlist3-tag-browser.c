@@ -248,7 +248,7 @@ static void pl3_custom_tag_browser_add_single(GtkTreeIter *piter, char *title, c
 			PL3_CAT_TYPE, tag_plug.id,
 			PL3_CAT_TITLE, title,        	
 			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "media-artist",
+			PL3_CAT_ICON_ID, "tag-browser",//"media-artist",
 			PL3_CAT_PROC, FALSE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 			PL3_CAT_BROWSE_FORMAT, format,
@@ -471,7 +471,8 @@ static long unsigned pl3_custom_tag_browser_view_folder(GtkTreeIter *iter_cat)
 				data2 = mpd_new_data_struct_append(data2);
 				data2->type = MPD_DATA_TYPE_TAG;
 				data2->tag = g_strdup(data->key);
-				data2->tag_type = MPD_TAG_ITEM_ARTIST;
+        /* hack to show tag entry */
+				data2->tag_type = MPD_TAG_ITEM_COMMENT;
 
 				data = data->next;
 			}while(data != NULL);

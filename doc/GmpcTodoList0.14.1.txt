@@ -14,7 +14,7 @@ Gmpc
 6. Skip to next album keybinding.
 7. Rethink keybindings, is a mess now.
 8. Try to finish help/manual.
-9. Get some artwork redone.
+
 
 Plugins
 -------
