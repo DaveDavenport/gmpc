@@ -927,7 +927,7 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 			g_value_set_string(value, song->comment);
 			break;                                			
 		case PLAYLIST_LIST_COL_SONG_POS:
-			g_value_set_int(value, song->pos);
+			g_value_set_int(value, song->pos+1);
 			break;
 		case PLAYLIST_LIST_COL_SONG_ID:
 			g_value_set_int(value, song->id);
