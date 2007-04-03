@@ -55,7 +55,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
-	@GOB2@ -o gob/ --no-touch $<
+	@GOB2@ -o gob/ --no-touch-headers $<
 	@touch $@
 	
 
