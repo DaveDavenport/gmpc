@@ -263,7 +263,7 @@ static void pl3_current_playlist_browser_init()
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Genre"), PLAYLIST_LIST_COL_SONG_GENRE,-1);
 	sprintf(smallstring,"%i", PL_COLUMN_GENRE);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -306,7 +306,7 @@ static void pl3_current_playlist_browser_init()
 
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Disc"), PLAYLIST_LIST_COL_SONG_DISC,-1);
 	sprintf(smallstring,"%i", PL_COLUMN_DISC);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{                                                                                                         	
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -318,7 +318,7 @@ static void pl3_current_playlist_browser_init()
 	 */
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Comment"), PLAYLIST_LIST_COL_SONG_COMMENT,-1);
 	sprintf(smallstring,"%i", PL_COLUMN_COMMENT);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{                                                                                                         	
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -330,7 +330,7 @@ static void pl3_current_playlist_browser_init()
 	 */
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Date"), PLAYLIST_LIST_COL_SONG_DATE, -1);
 	sprintf(smallstring,"%i", PL_COLUMN_DATE);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{                                                                                                         	
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}
@@ -342,7 +342,7 @@ static void pl3_current_playlist_browser_init()
 	 */
 	column = pl3_current_playlist_add_column(pl3_cp_tree, _("Pos"), PLAYLIST_LIST_COL_SONG_POS,-1);
 	sprintf(smallstring,"%i", PL_COLUMN_SONGPOS);
-	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, TRUE))
+	if(!cfg_get_single_value_as_int_with_default(config, "current-playlist-column-enable", smallstring, FALSE))
 	{                                                                                                         	
 		gtk_tree_view_column_set_visible(column, FALSE);	
 	}

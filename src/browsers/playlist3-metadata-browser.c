@@ -149,8 +149,10 @@ static void info2_prepare_view()
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
+
 	
-	/**
+  gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
+  /**
 	 *  new id
 	 */
 	
