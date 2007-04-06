@@ -971,27 +971,23 @@ char *connection_get_password()
 void submenu_artist_clicked(GtkWidget *item)
 {
 	gchar *artist = g_object_get_data(G_OBJECT(item), "artist");
-	printf("abcd\n");
 	add_artist(artist);	
 }
 void submenu_album_clicked(GtkWidget *item)
 {
 	gchar *artist = g_object_get_data(G_OBJECT(item), "artist");
 	gchar *album = g_object_get_data(G_OBJECT(item), "album");
-	printf("abcd\n");
 	add_album(artist,album);	
 }
 void submenu_genre_clicked(GtkWidget *item)
 {
 	gchar *genre = g_object_get_data(G_OBJECT(item), "genre");
-	printf("abcd\n");
 	add_genre(genre);	
 }
 
 void submenu_dir_clicked(GtkWidget *item)
 {
 	gchar *dir = g_object_get_data(G_OBJECT(item), "path");
-	printf("abcd\n");
 	add_directory(dir);	
 }
 void submenu_for_song(GtkWidget *menu, mpd_Song *song)
