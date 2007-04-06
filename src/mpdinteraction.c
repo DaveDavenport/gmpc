@@ -1004,7 +1004,7 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	{
 		/* Add all from artist */
 		sitem = gtk_image_menu_item_new_with_label(_("All from album"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("media-album", GTK_ICON_SIZE_MENU));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_icon_name("media-album", GTK_ICON_SIZE_MENU));
 		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
 		g_object_set_data_full(G_OBJECT(sitem), "album", g_strdup(song->album), g_free);
 		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_album_clicked), NULL);
@@ -1016,7 +1016,7 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	{
 		/* Add all from album */
 		sitem = gtk_image_menu_item_new_with_label(_("All from artist"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("media-artist", GTK_ICON_SIZE_MENU));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_icon_name("media-artist", GTK_ICON_SIZE_MENU));
 		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
 		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_artist_clicked), NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
@@ -1034,7 +1034,7 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	}
 	/* Add all from file */
 	sitem = gtk_image_menu_item_new_with_label(_("All from same directory"));
-	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_stock("gtk-directory",GTK_ICON_SIZE_MENU));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_icon_name("gtk-directory",GTK_ICON_SIZE_MENU));
 	g_object_set_data_full(G_OBJECT(sitem), "path", g_strdup(song->file), g_free);
 	g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_dir_clicked), NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
