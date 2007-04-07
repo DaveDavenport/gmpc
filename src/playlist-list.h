@@ -24,6 +24,7 @@ enum
 	PLAYLIST_LIST_COL_PLAYING,	/* Shows if this song is the current song */
 	PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT,	/* Shows if this song is the current song */
 	PLAYLIST_LIST_COL_SONG_FILE,	/* internal field of mpd_Song ->file */
+	PLAYLIST_LIST_COL_SONG_FILE_BASENAME,	/* internal field of mpd_Song ->file, but withouth path. */
 	PLAYLIST_LIST_COL_SONG_ARTIST,	/* artist name */
 	PLAYLIST_LIST_COL_SONG_ALBUM,	/* album name */
 	PLAYLIST_LIST_COL_SONG_TITLE,	/* song title */

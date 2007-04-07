@@ -616,6 +616,7 @@ static void playlist_list_init(CustomList * playlist_list)
 	playlist_list->column_types[PLAYLIST_LIST_COL_PLAYING] = G_TYPE_BOOLEAN;
 	playlist_list->column_types[PLAYLIST_LIST_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_FILE] = G_TYPE_STRING;
+	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_FILE_BASENAME] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ARTIST] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_ALBUM] = G_TYPE_STRING;
 	playlist_list->column_types[PLAYLIST_LIST_COL_SONG_TITLE] = G_TYPE_STRING;
@@ -865,6 +866,13 @@ playlist_list_get_value(GtkTreeModel * tree_model,
 		case PLAYLIST_LIST_COL_SONG_FILE:
 			g_value_set_string(value, song->file);
 			break;
+		case PLAYLIST_LIST_COL_SONG_FILE_BASENAME:
+			{
+				gchar *path = g_path_get_basename(song->file);
+				g_value_set_string(value, path);
+				q_free(path);
+				break;
+			}
 		case PLAYLIST_LIST_COL_SONG_ARTIST:
 			g_value_set_string(value, song->artist);
 			break;
