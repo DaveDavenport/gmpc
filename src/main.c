@@ -709,6 +709,7 @@ static void init_stock_icons()
 	GdkPixbuf *pb;
 
 	path = gmpc_get_full_image_path("");
+	printf("image-path: %s\n",path);
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default (),path);
 	q_free(path);
 
