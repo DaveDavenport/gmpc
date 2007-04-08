@@ -45,7 +45,7 @@ static int plugin_load(char *path, const char *file)
 	{
 		return 1;
 	}
-	full_path = g_strdup_printf("%s/%s", path, file);
+	full_path = g_strdup_printf("%s%c%s", path,G_DIR_SEPARATOR, file);
 	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
 
 	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
