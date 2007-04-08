@@ -197,6 +197,9 @@ int main (int argc, char **argv)
     int i;
     int clean_config = FALSE;
     char *config_path = NULL;
+#ifdef WIN32
+	gchar *packagedir;
+#endif
 #ifdef ENABLE_MMKEYS
     MmKeys *keys = NULL;
 #endif
@@ -362,7 +365,7 @@ int main (int argc, char **argv)
      */
     if(!config_path)
     {
-        url = g_strdup_printf("%s/.gmpc/gmpc.cfg", g_get_home_dir());
+        url = g_strdup_printf("%s%c.gmpc%cgmpc.cfg", g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR);
     }
     else{
         url = config_path;
@@ -494,117 +497,132 @@ int main (int argc, char **argv)
     /**
      *  load dynamic plugins 
      */
-    /** Load the global installed plugins */
-    url = g_strdup_printf("%s/%s",GLADE_PATH, "plugins");
-    plugin_load_dir(url);
-    q_free(url);
-    /* user space dynamic plugins */
-    url = g_strdup_printf("%s/.gmpc/plugins/",g_get_home_dir());
-    /**
-     * if dir exists, try to load the plugins.
-     */
-    if(g_file_test(url, G_FILE_TEST_IS_DIR))
-    {
-        plugin_load_dir(url);
-    }
-    q_free(url);
+#ifdef WIN32
+	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+    url = g_build_filename(packagedir, "data", "plugins", NULL);
+	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
+	 * a pointer which is returned on further calls to g_win32_get...
+	 * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
+	 */
+#if GLIB_CHECK_VERSION(2,8,4)
+	q_free(packagedir);
+#endif
 
 
-    /* time todo some initialisation of plugins */
-    for(i=0; i< num_plugins && plugins[i] != NULL;i++)
-    {
-        if(plugins[i]->init)
-        {
-            plugins[i]->init();
-        }
-    }
+#else
+	/** Load the global installed plugins */
+	url = g_strdup_printf("%s%c%s",GLADE_PATH,G_DIR_SEPARATOR, "plugins");
+#endif
+	plugin_load_dir(url);
+	q_free(url);
+	/* user space dynamic plugins */
+	url = g_strdup_printf("%s%c.gmpc%cplugins%c",g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+	/**
+	 * if dir exists, try to load the plugins.
+	 */
+	if(g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		plugin_load_dir(url);
+	}
+	q_free(url);
 
-    /**
-     * Create the backend store for the current playlist
-     */
-    init_playlist_store ();
 
-    /**
-     * Ask user about added/removed provider plugins 
-     */
-    meta_data_check_plugin_changed();
-    /**
-     * Create the main window
-     */	
-    debug_printf(DEBUG_INFO, "Create main window\n");
-    create_playlist3();
-    /** 
-     * If autoconnect is enabled, tell gmpc that it's in state it should connect
-     */	
-    if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
-    {
-        gmpc_connected = TRUE;
-    }
-    /*
-     * create timeouts 
-     * get the status every 1/2 second should be enough, but it's configurable.
-     */
-    g_timeout_add (cfg_get_single_value_as_int_with_default(config,
-                "connection","mpd-update-speed",500),
-            (GSourceFunc)update_mpd_status, NULL);
-    /**
-     * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
-     * if you are still connected, and reconnects you if not.
-     */
-    autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
-    /** 
-     * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
-     */
-    gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
+	/* time todo some initialisation of plugins */
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+	{
+		if(plugins[i]->init)
+		{
+			plugins[i]->init();
+		}
+	}
+
+	/**
+	 * Create the backend store for the current playlist
+	 */
+	init_playlist_store ();
+
+	/**
+	 * Ask user about added/removed provider plugins 
+	 */
+	meta_data_check_plugin_changed();
+	/**
+	 * Create the main window
+	 */	
+	debug_printf(DEBUG_INFO, "Create main window\n");
+	create_playlist3();
+	/** 
+	 * If autoconnect is enabled, tell gmpc that it's in state it should connect
+	 */	
+	if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
+	{
+		gmpc_connected = TRUE;
+	}
+	/*
+	 * create timeouts 
+	 * get the status every 1/2 second should be enough, but it's configurable.
+	 */
+	g_timeout_add (cfg_get_single_value_as_int_with_default(config,
+				"connection","mpd-update-speed",500),
+			(GSourceFunc)update_mpd_status, NULL);
+	/**
+	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
+	 * if you are still connected, and reconnects you if not.
+	 */
+	autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+	/** 
+	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
+	 */
+	gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
 
 #ifdef ENABLE_MMKEYS
-    /**
-     * Setup Multimedia Keys
-     */
-    /**
-     * Create mmkeys object
-     */
-    keys = mmkeys_new();
-    /**
-     * Connect the wanted key's
-     */
-    g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_fastforward", G_CALLBACK(song_fastforward), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_repeat", G_CALLBACK(repeat_toggle), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_random", G_CALLBACK(random_toggle), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(pl3_show_window), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_hide", G_CALLBACK(pl3_hide), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_notify_popup), NULL );
+	/**
+	 * Setup Multimedia Keys
+	 */
+	/**
+	 * Create mmkeys object
+	 */
+	keys = mmkeys_new();
+	/**
+	 * Connect the wanted key's
+	 */
+	g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_fastforward", G_CALLBACK(song_fastforward), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_repeat", G_CALLBACK(repeat_toggle), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_random", G_CALLBACK(random_toggle), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(pl3_show_window), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_hide", G_CALLBACK(pl3_hide), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_notify_popup), NULL );
 
 
 #endif
 
 
-    /*
-     * run the main loop
-     */
-    gtk_main ();
+	/*
+	 * run the main loop
+	 */
+	gtk_main ();
 
-    /**
-     *  cleaning up. 
-     */
+	/**
+	 *  cleaning up. 
+	 */
 #ifndef WIN32
-    if(bacon_connection)
-    {
-        bacon_message_connection_free (bacon_connection);
-    }
+	if(bacon_connection)
+	{
+		bacon_message_connection_free (bacon_connection);
+	}
 #endif	
-    /**
-     * Clear metadata struct
-     */
-    meta_data_destroy();
+	/**
+	 * Clear metadata struct
+	 */
+	meta_data_destroy();
 
 	/* time todo some destruction of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
@@ -618,12 +636,12 @@ int main (int argc, char **argv)
 	 * Close the config file
 	 */
 	cfg_close(config);
-//	cfg_close(profiles);
-  g_object_unref(gmpc_profiles);
-    /** 
-     * Destroy the connection object 
-     */
-    mpd_free(connection);
+	//	cfg_close(profiles);
+	g_object_unref(gmpc_profiles);
+	/** 
+	 * Destroy the connection object 
+	 */
+	mpd_free(connection);
 
 	/**
 	 * remove (probly allready done) 
@@ -721,7 +739,7 @@ static void init_stock_icons()
 #ifdef WIN32
 	/* The Windows gtkrc sets this to 0, so images don't work on buttons */
 	gtk_settings_set_long_property(gtk_settings_get_default(),
-	                               "gtk-button-images", TRUE, "main");
+			"gtk-button-images", TRUE, "main");
 #endif
 
 	return;
@@ -1046,7 +1064,7 @@ static void create_gmpc_paths(void)
 	 */	
 
 	/** create path */
-	gchar *url = g_strdup_printf("%s/.gmpc/", g_get_home_dir());
+	gchar *url = g_strdup_printf("%s%c.gmpc%c", g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR);
 	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
 
 	/**
