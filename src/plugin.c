@@ -109,7 +109,7 @@ void plugin_load_dir(gchar *path)
 		const gchar *dirname = NULL;
 		while((dirname = g_dir_read_name(dir)) != NULL)
 		{
-			gchar *full_path = g_strdup_printf("%s/%s",path,dirname);
+			gchar *full_path = g_strdup_printf("%s%c%s",path,G_DIR_SEPARATOR,dirname);
 			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
 			{
 				if(plugin_load(path,dirname)){
