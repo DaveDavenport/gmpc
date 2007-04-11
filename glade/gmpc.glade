@@ -4982,7 +4982,7 @@ Disc</property>
   <property name="visible">True</property>
   <property name="destroy_with_parent">True</property>
   <property name="name" translatable="yes">gmpc</property>
-  <property name="copyright" translatable="yes">Copyright 2003-2006 Qball Cow</property>
+  <property name="copyright" translatable="yes">Copyright 2003-2007 Qball Cow</property>
   <property name="license">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 

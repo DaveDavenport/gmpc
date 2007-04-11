@@ -256,10 +256,10 @@ int main (int argc, char **argv)
             else if (!strcasecmp(argv[i], _("--version")))
             {
                 printf(("Gnome Music Player Client\n"));
-                printf(_("Version: %s\n"), VERSION);
+                printf(_("Version:\t%s\n"), VERSION);
                 if(revision && revision[0] != '\0')
                 {
-                    printf(_("Revision: %s\n"),revision);
+                    printf(_("Revision:\t%s\n"),revision);
                 }
                 exit(0);
             }

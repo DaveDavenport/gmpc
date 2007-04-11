@@ -182,35 +182,38 @@ static gboolean tray_motion_cb (GtkWidget *evt, GdkEventCrossing *event1, gpoint
 		gtk_widget_set_app_paintable(GTK_WIDGET(tip), TRUE);
 		g_signal_connect(G_OBJECT(tip), "expose-event", G_CALLBACK(tip_expose_event), NULL);
 
-		alimg = gmpc_metaimage_new(META_ALBUM_ART);
-		gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
-		gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
-		gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(alimg),"gmpc"); 
-		state = mpd_player_get_state(connection);
-		if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)		
-		{
-			gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
-		}
-		else 
-		{
-			gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(alimg));
-		}
-		gtk_widget_show(alimg);
+    if(cfg_get_single_value_as_int_with_default(config, "tray-icon", "show-image", TRUE))
+    {
+      alimg = gmpc_metaimage_new(META_ALBUM_ART);
+      gmpc_metaimage_set_connection(GMPC_METAIMAGE(alimg), connection);
+      gmpc_metaimage_set_size(GMPC_METAIMAGE(alimg), 80);
+      gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(alimg),"gmpc"); 
+      state = mpd_player_get_state(connection);
+      if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)		
+      {
+        gmpc_metaimage_update_cover(GMPC_METAIMAGE(alimg), connection, MPD_CST_SONGID,NULL);
+      }
+      else 
+      {
+        gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(alimg));
+      }
+      gtk_widget_show(alimg);
 
-		event = gtk_event_box_new();
+      event = gtk_event_box_new();
 
-		gtk_widget_modify_bg(GTK_WIDGET(event),GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
-		gtk_widget_set_size_request(event, 86,86);
-		gtk_container_add(GTK_CONTAINER(event), alimg);
-		gtk_widget_show_all(event);	
-
+      gtk_widget_modify_bg(GTK_WIDGET(event),GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
+      gtk_widget_set_size_request(event, 86,86);
+      gtk_container_add(GTK_CONTAINER(event), alimg);
+      gtk_widget_show_all(event);	
+      gtk_box_pack_start(GTK_BOX(hbox), event,FALSE, TRUE,0);
+    }
 		/**
 		 * Add tip to event
 		 */
 		gtk_container_add(GTK_CONTAINER(tip), event2);
 		gtk_widget_show(event2);
 		gtk_container_add(GTK_CONTAINER(event2), hbox);
-		gtk_box_pack_start(GTK_BOX(hbox), event,FALSE, TRUE,0);
+
 
 		vbox = gtk_vbox_new(FALSE,0);
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 3);
@@ -664,7 +667,7 @@ static void TrayStatusChanged(MpdObj *mi, ChangedStatusType what, void *userdata
 	{
 		tray_icon_state_change();
 	}
-	else if(what&(MPD_CST_SONGID/*|MPD_CST_PLAYLIST*/|MPD_CST_SONGPOS))
+	else if(what&(MPD_CST_SONGID/*|MPD_CST_PLAYLIST|MPD_CST_SONGPOS)*/))
 	{
 		if(!tip)
 		{
