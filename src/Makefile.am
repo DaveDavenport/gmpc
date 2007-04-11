@@ -3,7 +3,7 @@ CONF_VERSION=0
 -include Makefile.config
 
 bin_PROGRAMS=gmpc
-gmpc_SOURCES=\
+sources=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -44,7 +44,11 @@ gmpc_SOURCES=\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c
 
-	
+if HAVE_RC
+gmpc_SOURCES=$(sources) gmpc.rc
+else
+gmpc_SOURCES=$(sources)
+endif
 
 BUILT_SOURCES= revisiont.h\
 	gob/gmpc-connection.c\
@@ -57,7 +61,12 @@ BUILT_SOURCES= revisiont.h\
 %.c %.h %-private.h: %.gob
 	@GOB2@ -o gob/ --no-touch-headers $<
 	@touch $@
-	
+
+%.o: %.rc
+	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
+
+.rc.o:
+	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 revisiont.h:
 	if test '$(REVISION)' != '$(CONF_VERSION)'; then\

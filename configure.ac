@@ -9,6 +9,9 @@ AC_PREREQ(2.59)
 AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
+AC_LIBTOOL_RC
+
+AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
 AC_ARG_ENABLE(sm,	[  --disable-sm            Disable Session Support.],,enable_sm=yes)
 AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
