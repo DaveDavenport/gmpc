@@ -638,6 +638,7 @@ int main (int argc, char **argv)
 	cfg_close(config);
 	//	cfg_close(profiles);
 	g_object_unref(gmpc_profiles);
+  g_object_unref(gmpcconn);
 	/** 
 	 * Destroy the connection object 
 	 */
