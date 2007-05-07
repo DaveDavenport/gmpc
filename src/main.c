@@ -390,7 +390,22 @@ int main (int argc, char **argv)
      * cleanup 
      */
     q_free(url);
-    
+
+	/**
+	 * TODO, Check if version changed, then say something about it 
+	 */
+	url = cfg_get_single_value_as_string(config, "Default", "version");
+	if(url == NULL || strcmp(url, VERSION))
+	{
+		printf("Welcome to a new version of gmpc.\n");
+		/* set new */
+		cfg_set_single_value_as_string(config, "Default", "version",VERSION); 
+	}
+	if(url){
+		q_free(url);
+	}
+
+
     gmpc_profiles = gmpc_profiles_new();
 
 
