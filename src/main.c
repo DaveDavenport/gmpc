@@ -398,6 +398,8 @@ int main (int argc, char **argv)
 	if(url == NULL || strcmp(url, VERSION))
 	{
 		printf("Welcome to a new version of gmpc.\n");
+		/* Do possible cleanup of config files and stuff */
+
 		/* set new */
 		cfg_set_single_value_as_string(config, "Default", "version",VERSION); 
 	}
