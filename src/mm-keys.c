@@ -320,7 +320,7 @@ static void mmkeys_init (MmKeys *object)
 
 	if (anyKeybindsFailed)
 	{
-		GString *message = g_string_new (_("<b>Could not grab the following multimedia keys:</b>\n\n"));
+		GString *message = g_string_new (_("Could not grab the following multimedia keys:\n\n"));
 		for (i=0;i<LAST_SIGNAL;i++)
 		{
 			if (keyerror[i] && keycodes[i] != 0)
@@ -344,7 +344,7 @@ static void mmkeys_init (MmKeys *object)
 
 	if (anyDuplicatesFound)
 	{
-		show_error_message(_("<b>Duplicate mapping(s) detected</b>\n\n"
+		show_error_message(_("Duplicate mapping(s) detected\n\n"
 				"Some duplicate multimedia key mappings were detected, and disabled.  Please revisit the preferences and ensure your settings are now correct."), TRUE );
 	}
 }
@@ -642,7 +642,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 		q_free (rawkeysym);
 		gchar *message = g_strdup_printf(
-			_("<b>Could not grab multimedia key:</b>\n\n"
+			_("Could not grab multimedia key:\n\n"
 			"\t%s: %s\n\n"
 			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),
 			keynames[key], keysym );
