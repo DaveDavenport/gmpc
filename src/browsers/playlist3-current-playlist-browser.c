@@ -608,7 +608,7 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 
 
 		/* add the delete widget */
-		item = gtk_image_menu_item_new_with_label("Crop");
+		item = gtk_image_menu_item_new_with_label(_("Crop"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_crop_selected_songs), NULL);		
@@ -622,7 +622,7 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 
 
 		/* add the shuffle widget */
-		item = gtk_image_menu_item_new_with_label("Shuffle");
+		item = gtk_image_menu_item_new_with_label(_("Shuffle"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_shuffle_playlist), NULL);		
@@ -637,9 +637,9 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 
 
 		/* add the shuffle widget */
-		item = gtk_image_menu_item_new_with_label("Columns");
+		item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+				gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_enable_columns), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
