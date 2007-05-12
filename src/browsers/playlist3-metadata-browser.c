@@ -150,8 +150,8 @@ static void info2_prepare_view()
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
 
-	
-  gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
+	if(resizer_vbox && GTK_WIDGET(resizer_vbox)->window)
+		gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
   /**
 	 *  new id
 	 */
