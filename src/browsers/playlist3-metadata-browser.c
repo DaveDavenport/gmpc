@@ -676,7 +676,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 		int skip = 0;
 		int num_cols = 2;
 		int songs = 0;
-		int tile_size = 310;
+		int tile_size = 300;
 		MpdData *data = NULL;
 		mpd_Song *song;
 		/**
@@ -726,7 +726,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 			gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
 			gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
 			num_cols = 1;
-			info2_create_artist_button(song);
+		//	info2_create_artist_button(song);
 			
 			g_list_foreach(list, (GFunc)gtk_widget_destroy, NULL);
 			g_list_free(list);
@@ -936,12 +936,9 @@ void info2_fill_artist_view(char *artist)
 	 */
 	GtkWidget *label= gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Albums:</span>");
-/*	ali = gtk_alignment_new(0,0.5,0,0);*/
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);
-/*	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	gtk_container_add(GTK_CONTAINER(ali), label);
-*/	gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
 
 
 
@@ -1279,10 +1276,7 @@ void info2_fill_album_view(char *artist,char *album)
 	 */
 	label= gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Songs:</span>");
-/*	ali = gtk_alignment_new(0,0.5,0,0);
-	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
-	gtk_container_add(GTK_CONTAINER(ali), label);
-*/
+
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);
 
@@ -1356,7 +1350,7 @@ void info2_fill_album_view(char *artist,char *album)
 		i=1;
 		for(data = mpd_data_get_first(data);data;data = mpd_data_get_next(data))
 		{
-			markup =  g_strdup_printf("%02i:%s",i, data->song->title);
+			markup =  g_strdup_printf("%02i: %s",i, data->song->title);
 			label = gmpc_clicklabel_new(markup);
 			g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
