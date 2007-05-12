@@ -392,7 +392,7 @@ static void info3_fill_view()
 				if(data->type == MPD_DATA_TYPE_SONG)
 				{
 					i++;
-					gchar *markup = g_strdup_printf("%i. %s",i, data->song->title);
+					gchar *markup = g_strdup_printf("%02i: %s",i, data->song->title);
 					label = gmpc_clicklabel_new(markup);
 					g_object_set_data_full(G_OBJECT(label), "path",g_strdup(data->song->file), g_free);
 					gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE,0);	

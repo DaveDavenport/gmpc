@@ -726,8 +726,6 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 			gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
 			gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
 			num_cols = 1;
-		//	info2_create_artist_button(song);
-			
 			g_list_foreach(list, (GFunc)gtk_widget_destroy, NULL);
 			g_list_free(list);
 			list = NULL;
