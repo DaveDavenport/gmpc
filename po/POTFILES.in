@@ -3,7 +3,7 @@
 data/gmpc.desktop.in
 glade/gmpc.glade
 glade/playlist3.glade
-src/bacon-volume.c
+src/bacon/bacon-volume.c
 src/config1.c
 src/edit_markup.c
 src/id3info.c
