@@ -6,6 +6,8 @@
 #include "main.h"
 #include "misc.h"
 
+#include "gob/gmpc-clicklabel.h"
+
 extern GladeXML *pl3_xml;
 
 static void info2_add(GtkWidget *);
