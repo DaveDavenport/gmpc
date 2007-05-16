@@ -62,7 +62,7 @@
  * blub
  */
 #ifndef WIN32
-#include "bacon-message-connection.h"
+#include "bacon/bacon-message-connection.h"
 static BaconMessageConnection *bacon_connection = NULL;
 #endif
 
@@ -110,7 +110,6 @@ guint autoconnect_timeout = 0;
  * The Config object
  */
 config_obj *config = NULL;
-//config_obj *profiles = NULL;
 
 /*
  * The Connection object
@@ -653,9 +652,9 @@ int main (int argc, char **argv)
 	 * Close the config file
 	 */
 	cfg_close(config);
-	//	cfg_close(profiles);
+
 	g_object_unref(gmpc_profiles);
-  g_object_unref(gmpcconn);
+	g_object_unref(gmpcconn);
 	/** 
 	 * Destroy the connection object 
 	 */

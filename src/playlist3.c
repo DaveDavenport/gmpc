@@ -23,7 +23,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <config.h>
-#include "bacon-volume.h"
+#include "bacon/bacon-volume.h"
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"

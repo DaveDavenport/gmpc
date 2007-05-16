@@ -24,10 +24,10 @@ sources=\
 	playlist-list.c\
 	mm-keys.c\
 	config1.c\
-	bacon-volume.c\
+	bacon/bacon-volume.c\
 	sm.c\
 	metadata.c\
-	bacon-message-connection.c\
+	bacon/bacon-message-connection.c\
 	gob/gmpc-connection.c\
 	gob/gmpc-metaimage.c\
 	gob/gmpc-mpddata-model.c\
@@ -129,12 +129,12 @@ EXTRA_DIST = 	playlist3.h\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-find3-browser.h\
 		playlist-list.h\
-		bacon-volume.h\
+		bacon/bacon-volume.h\
+		bacon/bacon-message-connection.h\
 		sm.h\
 		metadata.h\
 		egg/eggcellrendererkeys.h\
 		egg/eggaccelerators.h\
-		bacon-message-connection.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
 		gob/gmpc-connection.h\

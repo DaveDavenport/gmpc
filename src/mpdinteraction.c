@@ -845,7 +845,7 @@ static void connection_pref_construct(GtkWidget *container)
 	 * Profile selector
 	 * uid, name
 	 */
-	def_profile = gmpc_profiles_get_current(gmpc_profiles);//connection_get_current_profile();
+	def_profile = gmpc_profiles_get_current(gmpc_profiles);
 	store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(connection_pref_xml, "cb_profiles")), GTK_TREE_MODEL(store));
 	renderer = gtk_cell_renderer_text_new();
