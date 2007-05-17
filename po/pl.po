@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-16 14:01+0200\n"
-"PO-Revision-Date: 2007-03-28 23:56+0100\n"
+"POT-Creation-Date: 2007-05-17 17:47+0200\n"
+"PO-Revision-Date: 2007-05-16 18:27+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -228,7 +228,6 @@ msgid "Conn_ect"
 msgstr "Podłącz"
 
 #: ../glade/gmpc.glade.h:48
-#, fuzzy
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr "Copyright 2003-2006 Qball Cow"
 
@@ -588,14 +587,14 @@ msgid "--version"
 msgstr "--version"
 
 #: ../src/main.c:258
-#, fuzzy, c-format
+#, c-format
 msgid "Version:\t%s\n"
-msgstr "Wersja: %s\n"
+msgstr "Wersja:\t%s\n"
 
 #: ../src/main.c:261
-#, fuzzy, c-format
+#, c-format
 msgid "Revision:\t%s\n"
-msgstr "Rewizja: %s\n"
+msgstr "Rewizja:\t%s\n"
 
 #. *
 #. * Allow the user to pick another config file
@@ -744,12 +743,11 @@ msgid "minutes"
 msgstr "minut"
 
 #: ../src/mm-keys.c:323
-#, fuzzy
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
-"<b>Nie można przechwycić następujących klawiszy multimedialnych:</b>\n"
+"Nie można przechwycić następujących klawiszy multimedialnych:\n"
 "\n"
 
 #: ../src/mm-keys.c:340
@@ -763,14 +761,13 @@ msgstr ""
 "przypisanego tego klawisza do innej funkcji, potem zrestartuj gmpc."
 
 #: ../src/mm-keys.c:347
-#, fuzzy
 msgid ""
 "Duplicate mapping(s) detected\n"
 "\n"
 "Some duplicate multimedia key mappings were detected, and disabled.  Please "
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
-"<b>Duplicate mapping(s) detected</b>\n"
+"Wykryto zduplikowane przypisania\n"
 "\n"
 "Wykryto duplikaty przypisania klawiszy multimedialnych, zablokowano je. "
 "Przejdź do Preferencji i upewnij się czy twoje ustawienia są teraz poprawne."
@@ -787,7 +784,7 @@ msgstr ""
 "%s został już przypisany do %s"
 
 #: ../src/mm-keys.c:645
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not grab multimedia key:\n"
 "\n"
@@ -796,7 +793,7 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
-"<b>Nie można przechwycić przycisku multimedialnego:</b>\n"
+"Nie można przechwycić przycisku multimedialnego:\n"
 "\n"
 "\t%s: %s\n"
 "\n"
@@ -914,9 +911,8 @@ msgid "Metadata Provider"
 msgstr "Dostawca metadanych"
 
 #: ../src/preferences.c:287
-#, fuzzy
 msgid "Metadata Provider and Browser Extention"
-msgstr "Rozszerzenie przeglądarki"
+msgstr "Dostarczyciele metadanych i rozszerzenie przeglądarki"
 
 #: ../src/preferences.c:290
 msgid "Misc."
@@ -1026,9 +1022,8 @@ msgid "Title"
 msgstr "Tytuł"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:255
-#, fuzzy
 msgid "Filename"
-msgstr "<b>Nazwa pliku:</b>"
+msgstr "Nazwa pliku:"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:265
 msgid "Album"
@@ -1097,12 +1092,12 @@ msgstr "Czy jesteś pewny, że chcesz wyczyścic listę odtwarzania?"
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:611
 msgid "Crop"
-msgstr ""
+msgstr "Wytnij"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:625
 msgid "Shuffle"
-msgstr ""
+msgstr "Tasuj"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:640
@@ -1357,11 +1352,11 @@ msgstr "Orientacja"
 msgid "The orientation of the tray."
 msgstr "Położenie obszaru powiadamiania"
 
-#: ../src/gob/gmpc-mpddata-model.gob:62
+#: ../src/gob/gmpc-mpddata-model.gob:65
 msgid "Has Up"
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-model.gob:63
+#: ../src/gob/gmpc-mpddata-model.gob:66
 msgid "Show an 'up row"
 msgstr ""
 
