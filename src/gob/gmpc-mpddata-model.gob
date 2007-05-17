@@ -4,6 +4,9 @@ requires 2.0.0
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpd-internal.h>
+%}
+
+%privateheader{
 #include "playlist3.h"
 #include "config1.h"
 #include "config-defaults.h"

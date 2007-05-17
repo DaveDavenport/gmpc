@@ -2,6 +2,8 @@ requires 2.0.0
 
 %ht{
 #include <gtk/gtk.h>
+%}
+%privateheader{
 #include "main.h"
 #include "config.h"
 #include "gmpc-mpddata-model.h"
