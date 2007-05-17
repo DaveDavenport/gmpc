@@ -112,6 +112,10 @@ gmpcinclude_HEADERS = \
 		config1.h	\
 		gmpc_easy_download.h\
 		gob/gmpc-profiles.h\
+		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-treeview.h\
+		gob/gmpc-clicklabel.h\
+		gob/gmpc-metaimage.h\
 		TreeSearchWidget.h \
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
