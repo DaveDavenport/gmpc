@@ -2,7 +2,7 @@ REVISION=
 CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
-gmpc_SOURCES=\
+sources=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -117,11 +117,11 @@ EXTRA_DIST = 	playlist3.h\
 		browsers/playlist3-find3-browser.h\
 		playlist-list.h\
 		bacon/bacon-volume.h\
+		bacon/bacon-message-connection.h\
 		sm.h\
 		metadata.h\
 		egg/eggcellrendererkeys.h\
 		egg/eggaccelerators.h\
-		bacon/bacon-message-connection.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
 		gob/gmpc-connection.h\
