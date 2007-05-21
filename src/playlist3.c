@@ -85,7 +85,8 @@ gboolean pl3_close(void);
 static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
 
 static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
-
+static void playlist3_server_output_changed(GtkWidget *item, gpointer data);
+static void playlist3_fill_server_menu(void);
 /* Old category browser style */
 static int old_type = -1;
 
@@ -408,8 +409,8 @@ void pl3_option_menu_activate(void)
 	if(menu_items)
 	{
 		gtk_widget_show_all(menu);
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
-    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
+    	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
+	    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
 	}
 	else{
 		gtk_widget_destroy(menu);
@@ -1330,6 +1331,8 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), TRUE);
+
+
 		pl3_push_rsb_message(_("Connected"));	
 	} else {
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_control"), FALSE);
@@ -1380,6 +1383,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	 */
 	pl3_option_menu_activate();
 
+	playlist3_fill_server_menu();
 
 	/**
 	 * update interface
@@ -1822,3 +1826,44 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 	}
 	g_free(current);
 }
+
+static void playlist3_server_output_changed(GtkWidget *item, gpointer data)
+{
+	int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(item), "id"));
+	int state = gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(item));
+	mpd_server_set_output_device(connection, id, state);
+
+}
+
+static void playlist3_fill_server_menu(void)
+{
+	/** Clear old items */
+	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")));
+	
+	/* if connected fill with items */
+	if(mpd_check_connected(connection))
+	{
+		GtkWidget *menu = gtk_menu_new();
+		GtkWidget *menu_item = NULL;
+
+		MpdData *data = mpd_server_get_output_devices(connection);
+		for(;data;data = mpd_data_get_next(data))
+		{
+			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
+			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
+			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+		}
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")),menu);
+		gtk_widget_show_all(menu);
+		/* Server Menu Item */
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_server"), TRUE);
+	}
+	else
+	{
+		/* Server Menu Item */
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_server"), FALSE);
+	}
+}
+
