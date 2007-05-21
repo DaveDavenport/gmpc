@@ -3,7 +3,7 @@ CONF_VERSION=0
 -include Makefile.config
 
 bin_PROGRAMS=gmpc
-gmpc_SOURCES=\
+sources=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
