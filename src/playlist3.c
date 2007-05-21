@@ -87,6 +87,8 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
 static void playlist3_server_output_changed(GtkWidget *item, gpointer data);
 static void playlist3_fill_server_menu(void);
+static void playlist3_server_update_db(void);
+
 /* Old category browser style */
 static int old_type = -1;
 
@@ -1834,6 +1836,10 @@ static void playlist3_server_output_changed(GtkWidget *item, gpointer data)
 	mpd_server_set_output_device(connection, id, state);
 
 }
+static void playlist3_server_update_db(void)
+{
+	mpd_database_update_dir(connection, "/");
+}
 
 static void playlist3_fill_server_menu(void)
 {
@@ -1845,8 +1851,19 @@ static void playlist3_fill_server_menu(void)
 	{
 		GtkWidget *menu = gtk_menu_new();
 		GtkWidget *menu_item = NULL;
+		MpdData *data= NULL;
 
-		MpdData *data = mpd_server_get_output_devices(connection);
+		/* Update DB */
+		menu_item = gtk_image_menu_item_new_with_label(_("Update Database"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+							gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(playlist3_server_update_db), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+
+		menu_item = gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+
+		data = mpd_server_get_output_devices(connection);
 		for(;data;data = mpd_data_get_next(data))
 		{
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
