@@ -73,6 +73,7 @@ extern GladeXML *xml_main_window;
 extern MpdObj *connection;
 extern GmpcProfiles *gmpc_profiles;
 
+extern gmpcPlugin playlist_plugin;
 
 enum{
 	TIME_FORMAT_ELAPSED,
