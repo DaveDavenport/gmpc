@@ -508,7 +508,7 @@ int main (int argc, char **argv)
     /* Meta data browser */
     plugin_add(&metab_plugin,0);	
 	/* Playlist editor */
-	plugin_add(&playlist_plugin,0);
+	plugin_add(&playlist_editor_plugin,0);
 
 
 

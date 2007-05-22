@@ -584,6 +584,48 @@ static void pl3_file_browser_edit_columns(void)
 {
   gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
 }
+
+static void pl3_file_browser_add_to_playlist(GtkWidget *menu)
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
+	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
+	GList *iter, *list = gtk_tree_selection_get_selected_rows (selection, &model);
+	printf("add to playlist\n");
+	if(list)
+	{
+		iter = g_list_first(list);
+		do{
+			GtkTreeIter giter;
+			if(gtk_tree_model_get_iter(model, &giter, (GtkTreePath *)iter->data))
+			{
+				gchar *file = NULL;
+				int type = 0;
+				gtk_tree_model_get(model, &giter, MPDDATA_MODEL_COL_PATH, &file, MPDDATA_MODEL_ROW_TYPE, &type,-1);
+				if(type == MPD_DATA_TYPE_SONG)
+				{
+					mpd_database_playlist_list_add(connection, data,file); 
+				}
+				else if(type == MPD_DATA_TYPE_DIRECTORY){
+					MpdData *data2 =  mpd_database_get_directory_recursive(connection, file);
+					for(;data2;data2 = mpd_data_get_next(data2))
+					{
+						if(data2->type == MPD_DATA_TYPE_SONG)
+						{
+							mpd_database_playlist_list_add(connection, data,data2->song->file); 
+						}
+					}
+				}
+				g_free(file);
+			}
+		}while((iter = g_list_next(iter)));
+
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
+
+
 static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
 
@@ -653,6 +695,9 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
 				gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
+
+
+				playlist_editor_right_mouse(menu,pl3_file_browser_add_to_playlist);
 				has_item = 1;
 			}
 			{
@@ -667,7 +712,10 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
 				if(path && gtk_tree_model_get_iter(model, &iter, path)) {
 					gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
 					if(song)
+					{
 						submenu_for_song(menu, song);
+					}
+
 				}
 				if(path)
 					gtk_tree_path_free(path);

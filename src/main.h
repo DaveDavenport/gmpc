@@ -30,6 +30,7 @@
 #include "tray-icon.h"
 #include "gmpc-profiles.h"
 
+#include "browsers/playlist3-playlist-editor.h"
 /**
  * Some gobjects
  */
@@ -73,7 +74,7 @@ extern GladeXML *xml_main_window;
 extern MpdObj *connection;
 extern GmpcProfiles *gmpc_profiles;
 
-extern gmpcPlugin playlist_plugin;
+extern gmpcPlugin playlist_editor_plugin;
 
 enum{
 	TIME_FORMAT_ELAPSED,

@@ -404,8 +404,8 @@ static void pl3_current_playlist_browser_init()
 
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "row-activated",G_CALLBACK(pl3_current_playlist_browser_row_activated), NULL); 
-	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-release-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
+/*	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);*/
+	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), NULL);
 
 	/* set up the scrolled window */
@@ -594,6 +594,33 @@ static void pl3_current_playlist_enable_columns()
 	gtk_widget_show_all(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 }
+
+static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(playlist);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
+	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
+	GList *iter, *list = gtk_tree_selection_get_selected_rows (selection, &model);
+	printf("add to playlist\n");
+	if(list)
+	{
+		iter = g_list_first(list);
+		do{
+			GtkTreeIter giter;
+			if(gtk_tree_model_get_iter(model, &giter, (GtkTreePath *)iter->data))
+			{
+				gchar *file = NULL;
+				gtk_tree_model_get(model, &giter, PLAYLIST_LIST_COL_SONG_FILE, &file, -1);
+				mpd_database_playlist_list_add(connection, data,file); 
+				g_free(file);
+			}
+		}while((iter = g_list_next(iter)));
+
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
+
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -642,6 +669,8 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 				gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_enable_columns), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+		playlist_editor_right_mouse(menu,pl3_current_playlist_editor_add_to_playlist);
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);	
