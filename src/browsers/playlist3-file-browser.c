@@ -328,7 +328,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 
 			q_free (basename);
 		}
-		else if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
+	/*	else if(support_playlist && data->type == MPD_DATA_TYPE_PLAYLIST)
 		{
 			gchar *basename = g_path_get_basename(data->playlist);
 			gtk_tree_store_append (pl3_tree, &child, iter);
@@ -342,6 +342,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 					-1);
 			q_free(basename);
 		}
+*/
 		data = mpd_data_get_next(data);
 	}
 	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
