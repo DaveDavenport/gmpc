@@ -118,7 +118,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TYPE, playlist_editor_plugin.id,
 			PL3_CAT_TITLE, "Playlist Editor",
 			PL3_CAT_INT_ID, "",
-			PL3_CAT_ICON_ID, "gtk-yes",
+			PL3_CAT_ICON_ID, "media-playlist",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/**
@@ -404,6 +404,13 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
 	GtkWidget *sitem;
 	GtkWidget *item;
 	GtkWidget *smenu;
+
+	if(!mpd_server_check_version(connection, 0,13,0))
+	{
+		return;
+	}
+
+
 	smenu  = gtk_menu_new();
 	{
 		MpdData *data = mpd_database_get_directory(connection, "/");
