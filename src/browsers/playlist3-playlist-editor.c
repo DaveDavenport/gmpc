@@ -3,10 +3,10 @@
 #include <gdk/gdkkeysyms.h>
 
 
-#include <gmpc/plugin.h>
+#include "plugin.h"
 #include <libmpd/libmpd.h>
-#include <gmpc/gmpc-mpddata-model.h>
-#include <gmpc/gmpc-mpddata-treeview.h>
+#include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-treeview.h"
 #include "browsers/playlist3-playlist-editor.h"
 #include "main.h"
 
