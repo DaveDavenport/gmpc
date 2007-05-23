@@ -1850,9 +1850,14 @@ static void playlist3_fill_server_menu(void)
 	if(mpd_check_connected(connection))
 	{
 		GtkWidget *menu = gtk_menu_new();
-		GtkWidget *menu_item = NULL;
+  	GtkWidget *menu_item = NULL;
+    GtkAccelGroup *group = gtk_accel_group_new();
+    int i = 0;
 		MpdData *data= NULL;
-
+    gtk_menu_set_accel_group(GTK_MENU(menu), group);
+    /* todo, does this needs to be removed, or does that go automatically when the accell group get destroyed?  */
+    gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
+    
 		/* Update DB */
 		menu_item = gtk_image_menu_item_new_with_label(_("Update Database"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
@@ -1868,9 +1873,12 @@ static void playlist3_fill_server_menu(void)
 		{
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
+      gtk_widget_add_accelerator(menu_item, "activate", gtk_menu_get_accel_group(menu), GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+
 			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
 			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+      i++;
 		}
 		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")),menu);
 		gtk_widget_show_all(menu);
