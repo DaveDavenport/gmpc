@@ -168,7 +168,7 @@ static void playlist_editor_fill_list(void)
 {
 	if(playlist_editor_browser)
 	{
-    int selected = 0;
+		int selected = 0;
 		MpdData *data = mpd_database_get_directory(connection, "/");
 		gtk_list_store_clear(playlist_editor_store);
 		for(;data;data =mpd_data_get_next(data))
@@ -182,16 +182,17 @@ static void playlist_editor_fill_list(void)
 				gtk_list_store_set(playlist_editor_store, &iter,PL_NAME, data->playlist, PL_IMAGE, pb, -1);
 				if(pb)
 					g_object_unref(pb);
-        if(!selected)
-        {
-          GtkTreePath *path;
-          path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist_editor_store), &iter);
-          if(path)
-          {
-            gtk_icon_view_select_path(GTK_ICON_VIEW(playlist_editor_icon_view), path);
-            gtk_tree_path_free(path);
-          }
-        }
+				if(!selected)
+				{
+					GtkTreePath *path;
+					path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist_editor_store), &iter);
+					if(path)
+					{
+						gtk_icon_view_select_path(GTK_ICON_VIEW(playlist_editor_icon_view), path);
+						gtk_tree_path_free(path);
+						selected = TRUE;
+					}
+				}
 			}
 		}
 	}
