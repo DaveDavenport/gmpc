@@ -302,7 +302,6 @@ static long unsigned pl3_file_browser_view_folder(GtkTreeIter *iter_cat)
 static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter)
 {
 	char *path;
-	int support_playlist = (mpd_server_check_command_allowed(connection, "listPlaylistInfo") == MPD_SERVER_COMMAND_ALLOWED);
 	MpdData *data = NULL;
 	GtkTreeIter child,child2;
 	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree),iter, 2, &path, -1);

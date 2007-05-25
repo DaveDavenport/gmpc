@@ -1873,7 +1873,7 @@ static void playlist3_fill_server_menu(void)
 		{
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
-      gtk_widget_add_accelerator(menu_item, "activate", gtk_menu_get_accel_group(menu), GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+      gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
 			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
