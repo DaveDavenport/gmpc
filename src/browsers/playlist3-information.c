@@ -538,7 +538,7 @@ static void info3_fill_view()
 						
 				gtk_box_pack_start(GTK_BOX(hbox),button, TRUE, TRUE,0);	
 	
-				gtk_widget_set_size_request(GTK_WIDGET(hbox), 200,-1);
+				gtk_widget_set_size_request(GTK_WIDGET(hbox), 150,-1);
 
 				list = g_list_append(list, hbox);
 				song2->artist = NULL;
