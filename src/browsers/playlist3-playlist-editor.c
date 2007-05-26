@@ -431,7 +431,7 @@ static gboolean playlist_editor_key_pressed(GtkTreeView *tree, GdkEventButton *b
         item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_add_songs), tree);
-      	if(!mpd_server_check_version(connection, 0,13,0))
+      	if(mpd_server_check_version(connection, 0,13,0))
         {
           item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -462,7 +462,7 @@ static gboolean playlist_editor_browser_button_press_event(GtkWidget *giv, GdkEv
     GtkWidget *item = NULL;
     GList *list = NULL;
     /* New */
-    if(!mpd_server_check_version(connection, 0,13,0))
+    if(mpd_server_check_version(connection, 0,13,0))
     {
       item = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -489,7 +489,7 @@ static gboolean playlist_editor_browser_button_press_event(GtkWidget *giv, GdkEv
         g_object_set_data_full(G_OBJECT(item), "path", g_strdup(path), g_free);
         gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);                            
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_load_playlist),NULL);
-        if(!mpd_server_check_version(connection, 0,13,0))
+        if(mpd_server_check_version(connection, 0,13,0))
         {
           /* delete */
           item = gtk_image_menu_item_new_with_label(_("Rename"));
