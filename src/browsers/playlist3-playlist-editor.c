@@ -316,6 +316,7 @@ static void playlist_editor_replace_playlist(GtkWidget *item, gpointer data)
   mpd_playlist_clear(connection);
   mpd_playlist_queue_load(connection,path);
   mpd_playlist_queue_commit(connection);
+  mpd_player_play(connection);
 }
 static void playlist_editor_delete_playlist(GtkWidget *item, gpointer data)
 {
