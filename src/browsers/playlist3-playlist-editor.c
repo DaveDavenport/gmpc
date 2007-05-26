@@ -203,7 +203,6 @@ static void playlist_editor_fill_list(void)
 }
 static void playlist_editor_browser_activate_cursor_item(GtkIconView *giv, gpointer data)
 {
-	printf("activated\n");
 	gchar *pl_path = NULL;
 	GtkTreeIter iter;
 	GList *it,*list = gtk_icon_view_get_selected_items(giv);
@@ -254,7 +253,6 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 			{
 				int *pos = gtk_tree_path_get_indices(path);
 				mpd_database_playlist_list_delete(connection, pl_path,pos[0]);
-				printf("pc: %s:%i\n", pl_path, pos[0]);
 
 			}
 		}
@@ -297,7 +295,6 @@ static void playlist_editor_list_add_songs(GtkButton *button, GtkTreeView *tree)
 static void playlist_editor_clear_playlist(GtkWidget *item, gpointer data)
 {
   gchar *path = g_object_get_data(G_OBJECT(item), "path");
-  printf("clearing: %s\n",path);
   mpd_database_playlist_clear(connection,path);
   playlist_editor_browser_playlist_editor_changed(playlist_editor_icon_view,NULL);
 
@@ -305,14 +302,12 @@ static void playlist_editor_clear_playlist(GtkWidget *item, gpointer data)
 static void playlist_editor_load_playlist(GtkWidget *item, gpointer data)
 {
   gchar *path = g_object_get_data(G_OBJECT(item), "path");
-  printf("loading: %s\n",path);
   mpd_playlist_queue_load(connection,path);
   mpd_playlist_queue_commit(connection);
 }
 static void playlist_editor_replace_playlist(GtkWidget *item, gpointer data)
 {
   gchar *path = g_object_get_data(G_OBJECT(item), "path");
-  printf("replace-ing: %s\n",path);
   mpd_playlist_clear(connection);
   mpd_playlist_queue_load(connection,path);
   mpd_playlist_queue_commit(connection);
@@ -321,7 +316,6 @@ static void playlist_editor_replace_playlist(GtkWidget *item, gpointer data)
 static void playlist_editor_delete_playlist(GtkWidget *item, gpointer data)
 {
   gchar *path = g_object_get_data(G_OBJECT(item), "path");
-  printf("deleteing: %s\n",path);
   mpd_database_delete_playlist(connection, path);
   playlist_editor_fill_list();
 }
