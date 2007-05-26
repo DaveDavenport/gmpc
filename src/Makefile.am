@@ -32,6 +32,7 @@ sources=\
 	gob/gmpc-connection.c\
 	gob/gmpc-metaimage.c\
 	gob/gmpc-mpddata-model.c\
+	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
 	gmpc_easy_download.c\
@@ -57,6 +58,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-mpddata-model.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
+	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
@@ -114,6 +116,7 @@ gmpcinclude_HEADERS = \
 		gmpc_easy_download.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-treeview.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
@@ -147,6 +150,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-metaimage-private.h\
 		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-model-sort.h\
+		gob/gmpc-mpddata-model-sort-private.c\
 		gob/gmpc-mpddata-model-private.h\
 		gob/gmpc-mpddata-treeview.h\
 		gob/gmpc-mpddata-treeview-private.h\

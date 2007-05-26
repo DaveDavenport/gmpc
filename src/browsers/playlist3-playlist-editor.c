@@ -8,6 +8,7 @@
 
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
+#include "gmpc-mpddata-model-sort.h"
 #include "browsers/playlist3-playlist-editor.h"
 #include "main.h"
 
@@ -154,6 +155,7 @@ static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, G
 		gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), &iter, PL_NAME, &pl_path, -1);
 		data = mpd_database_get_playlist_content(connection, pl_path); 
 		gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, data);		
+		gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, pl_path);
 		g_free(pl_path);
 	}
 }
@@ -161,6 +163,7 @@ static void playlist_editor_browser_playlist_editor_changed(GtkWidget *giv, gpoi
 {
 
 	gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, NULL);		
+	gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, NULL);
 	/* iter all the selected items (aka 1) */
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(giv), playlist_editor_browser_playlist_editor_selected, NULL);
 }
@@ -262,6 +265,7 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 		
 		data2 = mpd_database_get_playlist_content(connection, pl_path); 
 		gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, data2);		
+		gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, pl_path);
 
 		g_free(pl_path);
 	}
@@ -557,11 +561,11 @@ static void playlist_editor_browser_init()
 	gtk_paned_add2(GTK_PANED(playlist_editor_browser), sw);
 
 
-	playlist_editor_list_store= gmpc_mpddata_model_new();
+	playlist_editor_list_store= gmpc_mpddata_model_sort_new();
 
 	playlist_editor_song_tree = tree = gmpc_mpddata_treeview_new("playlist-browser",FALSE, GTK_TREE_MODEL(playlist_editor_list_store));
 	gtk_container_add(GTK_CONTAINER(sw), tree);
-
+	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
 	g_signal_connect(G_OBJECT(tree), "button-press-event", G_CALLBACK(playlist_editor_key_pressed), NULL);
 	g_object_ref(playlist_editor_browser);
