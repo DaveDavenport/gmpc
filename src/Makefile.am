@@ -56,9 +56,9 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-connection.c\
 	gob/gmpc-profiles.c\
 	gob/gmpc-mpddata-model.c\
+	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
-	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
