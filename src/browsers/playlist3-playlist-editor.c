@@ -19,7 +19,7 @@ static GtkWidget *playlist_editor_browser = NULL;
 static GtkWidget *playlist_editor_song_tree = NULL;
 
 GtkWidget *playlist_editor_icon_view = NULL;
-GmpcMpdDataModel *playlist_editor_list_store = NULL;
+GmpcMpdDataModelSort *playlist_editor_list_store = NULL;
 
 enum {
 	PL_NAME,
@@ -154,16 +154,16 @@ static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, G
 		MpdData *data ;
 		gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), &iter, PL_NAME, &pl_path, -1);
 		data = mpd_database_get_playlist_content(connection, pl_path); 
-		gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, data);		
-		gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, pl_path);
+		gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data);		
+		gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), pl_path);
 		g_free(pl_path);
 	}
 }
 static void playlist_editor_browser_playlist_editor_changed(GtkWidget *giv, gpointer data)
 {
 
-	gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, NULL);		
-	gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, NULL);
+	gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), NULL);		
+	gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), NULL);
 	/* iter all the selected items (aka 1) */
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(giv), playlist_editor_browser_playlist_editor_selected, NULL);
 }
@@ -262,8 +262,8 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 
 		
 		data2 = mpd_database_get_playlist_content(connection, pl_path); 
-		gmpc_mpddata_model_set_mpd_data(playlist_editor_list_store, data2);		
-		gmpc_mpddata_model_sort_set_playlist(playlist_editor_list_store, pl_path);
+		gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data2);		
+		gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), pl_path);
 
 		g_free(pl_path);
 	}

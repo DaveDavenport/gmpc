@@ -98,11 +98,8 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 
 
 		public
-			Gmpc:MpdData:Model *new (void)
-			{
-				return GET_NEW;
-			}
-
-
-
+		Gmpc:MpdData:Model:Sort *new (void)
+		{
+			return GET_NEW;
+		}
 }
