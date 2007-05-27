@@ -30,7 +30,11 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 		private 
 		gboolean row_draggable (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path)
 		{
-			return TRUE;
+			if(mpd_server_check_version(connection, 0,13,0))
+			{
+				return TRUE;
+			}
+			return FALSE;
 		}
 
 		interface Gtk:Tree:Drag:Source
