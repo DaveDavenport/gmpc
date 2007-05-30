@@ -7,6 +7,7 @@
 #include "misc.h"
 
 #include "gob/gmpc-clicklabel.h"
+#include "gmpc-meta-text-view.h"
 
 extern GladeXML *pl3_xml;
 
@@ -206,75 +207,6 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 	q_free(album);
 }
 
-
-static void info2_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
-{
-	GtkWidget *vbox= pd->widget;
-	/*GtkWidget *ali = NULL;*/
-	if(pd->id != current_id)
-	{
-			if(ret != META_DATA_FETCHING)q_free(pd);
-			return;
-	}
-	if(ret == META_DATA_AVAILABLE)
-	{
-		gsize size;
-		char *content = NULL;
-		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<b>%s:</b>"), pd->name);
-		remove_container_entries(GTK_CONTAINER(vbox));
-
-		expander = gtk_expander_new(labstr);	
-		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
-		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-		q_free(labstr);
-
-		label = gtk_label_new("");
-/*		ali = gtk_alignment_new(0,0.5,0,0);
-*/		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_misc_set_padding(GTK_MISC(label), 6,6);
-/*		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);
-		gtk_container_add(GTK_CONTAINER(ali), label);
-*/		gtk_container_add(GTK_CONTAINER(expander), label);		
-		g_file_get_contents(path, &content, &size,NULL);
-		gtk_label_set_text(GTK_LABEL(label), content);
-		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-		gtk_widget_show_all(vbox);
-		q_free(content);
-	}
-	else if(ret == META_DATA_UNAVAILABLE)
-	{
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>No %s found</i>"), pd->name);
-		remove_container_entries(GTK_CONTAINER(vbox));
-		label = gtk_label_new("");
-		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-		gtk_label_set_markup(GTK_LABEL(label), labstr);
-		gtk_container_add(GTK_CONTAINER(vbox), label);
-		gtk_widget_show_all(vbox);
-		q_free(labstr);
-	}
-	else if(ret == META_DATA_FETCHING)
-	{
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
-		remove_container_entries(GTK_CONTAINER(vbox));
-		label = gtk_label_new("");
-		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-		gtk_label_set_markup(GTK_LABEL(label),labstr); 
-		gtk_container_add(GTK_CONTAINER(vbox),label);
-		gtk_widget_show_all(vbox);
-		q_free(labstr);
-	}
-
-	if(ret != META_DATA_FETCHING){
-		if(pd->name) q_free(pd->name);
-		q_free(pd);
-	}
-}
-
 static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
@@ -311,19 +243,14 @@ static void as_artist_clicked(GtkButton *button, gpointer data)
 
 static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
-	GtkWidget *label/*, *ali*/;
+	GtkWidget *label;
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), name);
-/*	ali = gtk_alignment_new(0,0.5,0,0);
-	gtk_container_add(GTK_CONTAINER(ali), label);
-*/
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-/*	ali = gtk_alignment_new(0,0.5,1,0);*/
 	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-/*	gtk_container_add(GTK_CONTAINER(ali), label);*/
 	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 }
@@ -394,12 +321,12 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
  */
 static void info2_fill_song_view(char *path) 
 {
+	GtkWidget *expander, *gmtv;
 	GtkWidget *ali = NULL;
 	GtkWidget *vbox= NULL;
 	mpd_Song *song = NULL;
 	GtkWidget *button = NULL;
 	GtkWidget *label = NULL;
-	PassData *pd = NULL;
 	char *markup = NULL;
 
 	/** 
@@ -480,15 +407,12 @@ static void info2_fill_song_view(char *path)
 	 * Title Label
 	 */
 	label = gtk_label_new("");
-/*	ali = gtk_alignment_new(0,0.5,0,0);*/
-/*	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);*/
 	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>"
 			, song->title);
 	gtk_label_set_markup(GTK_LABEL(label),markup);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);
 	q_free(markup);
-/*	gtk_container_add(GTK_CONTAINER(ali),label);*/
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
 
 
@@ -516,15 +440,17 @@ static void info2_fill_song_view(char *path)
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
+	expander= gtk_expander_new(_("Lyric:"));
+	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	/* expander */
+	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Lyric:</b>"));
+	/* query */
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
+	gtk_container_add(GTK_CONTAINER(expander), gmtv);
+	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
 
-
-	vbox = gtk_vbox_new(FALSE, 6);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-	pd = g_malloc0(sizeof(*pd));
-	pd->widget = vbox;
-	pd->id = current_id;     		
-	pd->name = g_strdup(_("lyric"));
-	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 	/**
@@ -836,7 +762,6 @@ void info2_fill_artist_view(char *artist)
 	MpdData *data = NULL;
 	GtkWidget *ali = NULL, *table2 = NULL;
 	mpd_Song *song2 = NULL;
-	PassData *pd = NULL;
 	info2_prepare_view();
 	song2 = mpd_newSong();
 	song2->artist = g_strdup(artist);
@@ -844,6 +769,7 @@ void info2_fill_artist_view(char *artist)
 	/**
 	 * Set artist image
 	 */
+	GtkWidget *expander, *gmtv;
 	GtkWidget *hbox = NULL;
 	GtkWidget *table = gtk_table_new(2,2,FALSE);
 	GtkWidget *image = NULL; 
@@ -862,11 +788,23 @@ void info2_fill_artist_view(char *artist)
 
 	vbox = gtk_vbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-	pd = g_malloc0(sizeof(*pd));
-	pd->widget = vbox;
-	pd->id = current_id;     		
-	pd->name = g_strdup(_("artist info"));
-	meta_data_get_path_callback(song2, META_ARTIST_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
+
+	/**
+	 * Artist Information 
+	 */
+	expander = gtk_expander_new(_("Artist info:"));
+	gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+	/* expander */
+	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Artist info:</b>"));
+	/* query */
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song2);
+	gtk_container_add(GTK_CONTAINER(expander), gmtv);
+	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
+
+
+
+
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 	/**
@@ -1135,12 +1073,14 @@ void info2_fill_artist_view(char *artist)
  */
 void info2_fill_album_view(char *artist,char *album)
 {
-	GtkWidget *button = NULL;
-	GtkWidget *ali = NULL;
-	mpd_Song *song2 = NULL;
-	PassData *pd = NULL;
-	GtkWidget *label = NULL; 
-	char *markup = NULL;
+	GtkWidget *vbox 	= NULL;
+	GtkWidget *gmtv		= NULL;
+	GtkWidget *expander = NULL;
+	GtkWidget *button	= NULL;
+	GtkWidget *ali 		= NULL;
+	mpd_Song *song2 	= NULL;
+	GtkWidget *label 	= NULL; 
+	char *markup 		= NULL;
 
 	info2_prepare_view();
 	song2 = mpd_newSong();
@@ -1225,12 +1165,29 @@ void info2_fill_album_view(char *artist,char *album)
 
 
 
-	GtkWidget *vbox = gtk_vbox_new(FALSE, 6);
-	pd = g_malloc0(sizeof(*pd));
+	vbox = gtk_vbox_new(FALSE, 6);
+/*	pd = g_malloc0(sizeof(*pd));
 	pd->widget = vbox;
 	pd->id = current_id;     		
 	pd->name = g_strdup(_("album info"));
 	meta_data_get_path_callback(song2, META_ALBUM_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
+*/
+	/**
+	 * Album Information 
+	 */
+	expander = gtk_expander_new(_("Album info:"));
+	gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	/* expander */
+	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Album info:</b>"));
+	/* query */
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song2);
+	gtk_container_add(GTK_CONTAINER(expander), gmtv);
+	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
+
+
+
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 	/**
@@ -1576,4 +1533,3 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 	}
 	return FALSE;
 }
-

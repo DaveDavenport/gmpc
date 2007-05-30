@@ -1,0 +1,93 @@
+requires 2.0.0
+
+%headertop{
+#include <gtk/gtk.h>
+#include <libmpd/libmpd.h>
+#include "main.h"
+#include "misc.h"
+%}
+
+class Gmpc:Meta:Text:View from Gtk:Text:View {
+	private GtkTextBuffer *buffer = {gtk_text_buffer_new(NULL)} destroywith g_object_unref;
+	private int type = {META_ARTIST_TXT};
+	private guint meta_id = {0};
+
+	init (self)
+	{
+		gtk_text_view_set_buffer(GTK_TEXT_VIEW(self), self->_priv->buffer);
+		gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+	}
+
+	public 
+	GtkWidget * new (int type)
+	{
+		Self *gmi =  GET_NEW;
+		gmi->_priv->type = type;
+		return (GtkWidget *)gmi;
+	}
+
+	public 
+	void
+	query_text_from_song(self, mpd_Song *song)
+	{
+		if(self->_priv->meta_id)
+		{
+			meta_data_handle_remove_request(self->_priv->meta_id);
+			self->_priv->meta_id =  0;
+		}
+		self->_priv->meta_id = meta_data_get_path_callback(song, self->_priv->type, self_meta_callback, self);
+	}
+	private
+	void
+	set_text_from_path(self, gchar *path)
+	{
+		gchar *content=NULL;
+		gsize size = 0;
+		if(g_file_get_contents (path,&content,&size,NULL))
+		{
+			gtk_text_buffer_set_text(self->_priv->buffer, content, size);
+			g_free(content);
+		}
+	}
+	private 
+	void
+	set_text_fetching(self)
+	{
+		gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Lyric"),-1);
+	}
+	private 
+	void
+	set_text_na(self)
+	{
+		gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Not Available"),-1);
+	}
+
+	private
+	void
+	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,gpointer data)
+	{
+		Self *self = data;
+		if(ret == META_DATA_AVAILABLE) {
+			self_set_text_from_path(self,path); 
+			self->_priv->meta_id = 0;
+		} else if (ret == META_DATA_FETCHING) {
+			self_set_text_fetching(self);
+		} else {
+			self_set_text_na(self);
+			self->_priv->meta_id = 0;
+		}
+	}
+
+	override (G:Object)
+		void 
+		finalize (G:Object *obj)
+		{
+			Self *self = GMPC_META_TEXT_VIEW(obj); 
+			if(self->_priv->meta_id)
+			{
+				meta_data_handle_remove_request(self->_priv->meta_id);
+				self->_priv->meta_id =  0;
+			}
+		}
+
+}

@@ -422,6 +422,7 @@ void meta_data_handle_remove_request(guint id)
 		found = TRUE;
 	}
 	q_async_queue_unlock(meta_commands);
+	debug_printf(DEBUG_ERROR, "(no error) Removing id: %u", id);
 	/* if not found, it _could_ be that it's being processed now by the other thread, 
 	 * if that's the case push it in the queue that is checked on executing the callback.
 	 */

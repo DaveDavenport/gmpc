@@ -1,3 +1,4 @@
+Q=@
 REVISION=$(shell svn info | grep "Last Changed Rev" | awk -F': ' '{ print $$2}')
 CONF_VERSION=0
 -include Makefile.config
@@ -31,6 +32,7 @@ sources=\
 	bacon/bacon-message-connection.c\
 	gob/gmpc-connection.c\
 	gob/gmpc-metaimage.c\
+	gob/gmpc-meta-text-view.c\
 	gob/gmpc-mpddata-model.c\
 	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
@@ -59,6 +61,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
+	gob/gmpc-meta-text-view.c\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
@@ -72,7 +75,7 @@ BUILT_SOURCES= revisiont.h\
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 revisiont.h:
-	if test '$(REVISION)' != '$(CONF_VERSION)'; then\
+	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
 		echo "Writing new Makefile.config file";\
 		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
@@ -149,6 +152,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-connection.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-metaimage-private.h\
+		gob/gmpc-meta-text-view.h\
+		gob/gmpc-meta-text-view-private.g\
 		gob/gmpc-mpddata-model.h\
 		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-model-sort-private.c\
@@ -164,3 +169,7 @@ EXTRA_DIST = 	playlist3.h\
 		revision.h\
 		tray-icon.h\
 		qlib/qasyncqueue.h
+
+#%.o: %.c Makefile.am
+#	$(info ==> Building: $@)
+#	$(Q)$(CC) $(AM_CFLAGS) $(INCLUDES) -I. -I../ -c $< -o $@

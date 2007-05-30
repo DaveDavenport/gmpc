@@ -386,23 +386,18 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				return;
 			}
         GError *err = NULL;
-//			pb = gtk_widget_render_icon(GTK_WIDGET(self), self->no_cover_icon, -1, NULL);
-	//		pb2=gdk_pixbuf_scale_simple(pb, self->size, self->size, GDK_INTERP_BILINEAR);
 			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&err);
-        if(!pb2)
-          printf("uh owh %s\n", err->message);
-        gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
-//			if(self->squared)
-				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-		//	g_object_unref(pb);
-			g_object_unref(pb2);
-			self_image_changed(self,META_DATA_UNAVAILABLE);
+			  if(!pb2)
+				  printf("uh owh %s\n", err->message);
+			  gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+			  gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+			  g_object_unref(pb2);
+			  self_image_changed(self,META_DATA_UNAVAILABLE);
 		}
 	public 
 		void
 		set_cover_fetching(self)
 		{
-			//GdkPixbuf *pb,*pb2; 
 			GdkPixbuf *pb2; 
 			if(self->_priv->image_url)
 			{

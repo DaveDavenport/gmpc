@@ -6,6 +6,7 @@
 #include "main.h"
 #include "misc.h"
 #include "gmpc-clicklabel.h"
+#include "gmpc-meta-text-view.h"
 
 /**
  * TODO; Move to header file 
@@ -122,70 +123,6 @@ static void info3_prepare_view()
 	current_id = g_random_int();
 }
 
-static void info3_cover_txt_fetched(mpd_Song *song,MetaDataResult ret, char *path,PassData *pd)
-{
-	GtkWidget *vbox= pd->widget;
-	/*GtkWidget *ali = NULL;*/
-	if(pd->id != current_id)
-	{
-		if(ret != META_DATA_FETCHING)q_free(pd);
-		return;
-	}
-	if(ret == META_DATA_AVAILABLE)
-	{
-		gsize size;
-		char *content = NULL;
-		GtkWidget *expander = NULL;
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<b>%s:</b>"), pd->name);
-		remove_container_entries(GTK_CONTAINER(vbox));
-
-		expander = gtk_expander_new(labstr);	
-		gtk_expander_set_use_markup(GTK_EXPANDER(expander), TRUE);
-		gtk_box_pack_start(GTK_BOX(vbox), expander, FALSE, FALSE, 0);		
-		q_free(labstr);
-		if(cfg_get_single_value_as_int_with_default(config, "Song Information", "auto-expand-lyric", FALSE))
-		{
-			gtk_expander_set_expanded(GTK_EXPANDER(expander), TRUE);
-		}
-
-		label = gtk_label_new("");
-		/*		ali = gtk_alignment_new(0,0.5,0,0);*/
-		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);		
-		/*		gtk_alignment_set_padding(GTK_ALIGNMENT(ali),0,0,6,0);*/
-		/*		gtk_container_add(GTK_CONTAINER(ali), label);*/
-		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-		gtk_misc_set_padding(GTK_MISC(label),6,6);
-		gtk_container_add(GTK_CONTAINER(expander), label);		
-//		gtk_box_pack_start(GTK_BOX(vbox), label,FALSE,TRUE,0);
-		g_file_get_contents(path, &content, &size,NULL);
-		gtk_label_set_text(GTK_LABEL(label), content);
-		gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-		gtk_widget_show_all(vbox);
-		q_free(content);
-	}
-	else if(ret == META_DATA_UNAVAILABLE)
-	{
-		remove_container_entries(GTK_CONTAINER(vbox));
-	}
-	else if(ret == META_DATA_FETCHING)
-	{
-		GtkWidget *label = NULL;
-		gchar *labstr= g_strdup_printf(_("<i>Fetching %s</i>"),pd->name);
-		remove_container_entries(GTK_CONTAINER(vbox));
-		label = gtk_label_new("");
-		gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-		gtk_label_set_markup(GTK_LABEL(label),labstr); 
-		gtk_container_add(GTK_CONTAINER(vbox),label);
-		gtk_widget_show_all(vbox);
-		q_free(labstr);
-	}
-
-	if(ret != META_DATA_FETCHING){
-		if(pd->name) q_free(pd->name);
-		q_free(pd);
-	}
-}
 static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i)
 {
 	GtkWidget *label/*, *ali*/;
@@ -213,6 +150,8 @@ static void info3_add_table_item(GtkWidget *table,char *name, char *value, int i
  */
 static void info3_fill_view() 
 {
+	GtkWidget *gmtv		= NULL; 
+	GtkWidget *expander	= NULL; 
 	GtkWidget *table2 	= NULL;
 	GtkWidget *table 	= NULL;
 	GtkWidget *image	= NULL;
@@ -221,9 +160,8 @@ static void info3_fill_view()
 	GtkWidget *hbox		= NULL;
 	mpd_Song *song 		= NULL;
 	GtkWidget *label 	= NULL;
-	PassData *pd 		= NULL;
 	char *markup 		= NULL;
-	int state 		= mpd_player_get_state(connection);
+	int state 			= mpd_player_get_state(connection);
 	/** 
 	 * Clear the view
 	 */
@@ -414,13 +352,16 @@ static void info3_fill_view()
 	 * The lyric display
 	 */
 	vbox = gtk_vbox_new(FALSE, 6);
-	pd = g_malloc0(sizeof(*pd));
-	pd->widget = vbox;
-	pd->id = current_id;     		
-	pd->name = g_strdup(_("lyric"));
-	meta_data_get_path_callback(song, META_SONG_TXT, (MetaDataCallback)info3_cover_txt_fetched, pd);
-
-
+	expander= gtk_expander_new(_("Lyric:"));
+	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	/* expander */
+	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Lyric:</b>"));
+	/* query */
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
+	gtk_container_add(GTK_CONTAINER(expander), gmtv);
+	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
 	gtk_box_pack_start(GTK_BOX(hbox), vbox, FALSE, FALSE,0);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 6);
 
@@ -490,13 +431,22 @@ static void info3_fill_view()
 		gtk_box_pack_start(GTK_BOX(table), table2,TRUE,TRUE,0);
 
 		vbox = gtk_vbox_new(FALSE, 6);
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-		pd = g_malloc0(sizeof(*pd));
-		pd->widget = vbox;
-		pd->id = current_id;     		
-		pd->name = g_strdup(_("Artist Info"));
-		meta_data_get_path_callback(song, META_ARTIST_TXT, (MetaDataCallback)info3_cover_txt_fetched, pd);
+		/**
+		 * Artist Information 
+		 */
+		expander = gtk_expander_new(_("Artist info:"));
+		gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+		gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+		/* expander */
+		gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+		gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Artist info:</b>"));
+		/* query */
+		gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
+		gtk_container_add(GTK_CONTAINER(expander), gmtv);
+		gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
+
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
+
 	}
 
 
