@@ -16,6 +16,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		gtk_text_view_set_buffer(GTK_TEXT_VIEW(self), self->_priv->buffer);
 		gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+		gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self), GTK_WRAP_WORD);
 	}
 
 	public 

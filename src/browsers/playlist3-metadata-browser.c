@@ -1166,17 +1166,12 @@ void info2_fill_album_view(char *artist,char *album)
 
 
 	vbox = gtk_vbox_new(FALSE, 6);
-/*	pd = g_malloc0(sizeof(*pd));
-	pd->widget = vbox;
-	pd->id = current_id;     		
-	pd->name = g_strdup(_("album info"));
-	meta_data_get_path_callback(song2, META_ALBUM_TXT, (MetaDataCallback)info2_cover_txt_fetched, pd);
-*/
+
 	/**
 	 * Album Information 
 	 */
 	expander = gtk_expander_new(_("Album info:"));
-	gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+	gmtv = gmpc_meta_text_view_new(META_ALBUM_TXT);
 	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
 	/* expander */
 	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
