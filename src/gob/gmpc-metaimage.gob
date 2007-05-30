@@ -116,7 +116,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		self->_priv->meta_id =  0;
 		g_signal_connect(G_OBJECT(self), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), NULL);
 		g_signal_connect(G_OBJECT(self), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), NULL);
-
+		g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_menu_populate_callback), NULL);
 		g_signal_connect(G_OBJECT(self), "motion-notify-event" , G_CALLBACK(self_motion_notify_event), NULL);
 		gtk_widget_add_events(GTK_WIDGET(self), GDK_POINTER_MOTION_MASK);
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
@@ -502,4 +502,39 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			return self->is_visible;
 		}
+	public 
+	void
+	query_refetch(self)
+	{
+		if(self->_priv->song)
+		{
+			/* TODO: Make less copies */
+			if(self->_priv->meta_id)
+			{
+				meta_data_handle_remove_request(self->_priv->meta_id);
+				self->_priv->meta_id =  0;
+			}
+			self->_priv->meta_id = meta_data_get_path_callback(self->_priv->song, self->image_type|META_QUERY_NO_CACHE, self_meta_callback, self);
+		}
+	}
+
+
+	private 
+	gboolean	
+	menu_populate_callback(self,GdkEventButton *event,  gpointer data)
+	{
+		if(self->_priv->song && event->button == 3)
+		{
+			GtkWidget *menu = gtk_menu_new();
+			GtkWidget *item = NULL; 
+			item = gtk_image_menu_item_new_with_label(_("Refetch"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_query_refetch),self);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			gtk_widget_show_all(menu);
+			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+			return TRUE;
+		}
+		return FALSE;
+	}
 }
