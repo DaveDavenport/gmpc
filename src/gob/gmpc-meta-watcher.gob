@@ -1,0 +1,49 @@
+requires 2.0.0
+%ht{
+#include <gtk/gtk.h>
+#include <libmpd/libmpd.h>
+#include "metadata.h"
+
+%}
+
+
+class Gmpc:Meta:Watcher from  G:Object {
+
+    init(self)
+    {
+
+    }
+
+    public
+    GmpcMetaWatcher * new (void)
+    {
+      return GET_NEW;
+    }
+
+
+    signal last NONE (POINTER, INT)
+    void
+    data_changed(self, mpd_Song *song, MetaDataType type)
+    { 
+
+
+    }
+
+    public
+    gboolean
+    match_data(MetaDataType type, mpd_Song *song1, mpd_Song *song2)
+    {
+      switch(type)
+      {
+          case META_ARTIST_ART: 
+              if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
+              {
+                return TRUE;
+              }
+              break;
+          default:
+            break;
+      }
+      return FALSE;
+    }
+}

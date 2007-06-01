@@ -32,6 +32,7 @@ sources=\
 	bacon/bacon-message-connection.c\
 	gob/gmpc-connection.c\
 	gob/gmpc-metaimage.c\
+	gob/gmpc-meta-watcher.c\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-mpddata-model.c\
 	gob/gmpc-mpddata-model-sort.c\
@@ -62,6 +63,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-meta-text-view.c\
+	gob/gmpc-meta-watcher.c\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
@@ -150,6 +152,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
 		gob/gmpc-connection.h\
+		gob/gmpc-meta-watcher.h\
+		gob/gmpc-meta-watcher-private.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-metaimage-private.h\
 		gob/gmpc-meta-text-view.h\
