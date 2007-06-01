@@ -113,11 +113,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				G_CALLBACK(self_connection_changed), G_OBJECT(self));                            		
 
 
-		self->_priv->meta_id =  0;
 		g_signal_connect(G_OBJECT(self), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), NULL);
 		g_signal_connect(G_OBJECT(self), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), NULL);
 		g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_menu_populate_callback), NULL);
 		g_signal_connect(G_OBJECT(self), "motion-notify-event" , G_CALLBACK(self_motion_notify_event), NULL);
+
+		self->_priv->meta_id= g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 		gtk_widget_add_events(GTK_WIDGET(self), GDK_POINTER_MOTION_MASK);
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 	}
@@ -222,7 +223,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			Self *self = GMPC_METAIMAGE(obj); 
 			if(self->_priv->meta_id)
 			{
-				meta_data_handle_remove_request(self->_priv->meta_id);
+				g_source_remove(self->_priv->meta_id);
 				self->_priv->meta_id =  0;
 			}
 			if(self->_priv->popup_timer_id)
@@ -302,33 +303,49 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		update_cover_from_song(self, mpd_Song *song)
 		{
-			self_set_cover_na(self);
+			gchar *path=  NULL;
+			MetaDataResult ret;
+
+
 			if(self->_priv->song)
 				mpd_freeSong(self->_priv->song);
+
 			if(!song)
+			{
+				self_set_cover_na(self);
 				return;
+			}
 			if(self->_priv->status_signal)
 				self->_priv->song = mpd_songDup(song);
 
-			if(self->_priv->meta_id)
+			ret = meta_data_get_path(song, self->image_type, &path);
+			if(ret == META_DATA_FETCHING)
 			{
-				meta_data_handle_remove_request(self->_priv->meta_id);
-				self->_priv->meta_id =  0;
+				self_set_cover_fetching(self);
+			}else if (ret == META_DATA_AVAILABLE) {
+					self_set_cover_from_path(self,path); 
+			} else {
+				self_set_cover_na(self);
 			}
-			self->_priv->meta_id = meta_data_get_path_callback(song, self->image_type, self_meta_callback, self);
-
+			if(path)
+			{
+				q_free(path);
+			}
 		}
 
 	private
 		void
-		meta_callback(mpd_Song *song, MetaDataResult ret, char *path,gpointer data)
+		meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path,gpointer data)
 		{
 			Self *self = data;
 			if(!song || !self || !self->_priv || !self->_priv->song)
 				return;
+
 			/**
 			 * Check for fields
 			 */
+			if(self->image_type != type)
+				return;
 			if(song->artist == NULL || self->_priv->song->artist == NULL)
 				return;
 			if(self->image_type&META_ALBUM_ART && (song->album == NULL || self->_priv->song->album == NULL))
@@ -338,31 +355,24 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			 */
 			if(strcmp(song->artist, self->_priv->song->artist))
 				return;
-			else if(self->image_type&META_ALBUM_ART && 
+			if(self->image_type&META_ALBUM_ART && 
 					strcmp(song->album, self->_priv->song->album))
 				return;
 			/**
 			 * If mpd is stopped before the result is back, set the cover to na, and ignore the result
 			 */
-			else if(self->connection && mpd_player_get_state(self->connection) == MPD_PLAYER_STOP)
+			if(self->connection && mpd_player_get_state(self->connection) == MPD_PLAYER_STOP)
 			{
 				self_set_cover_na(self);
-				if(ret != META_DATA_FETCHING)
-				{
-					self->_priv->meta_id = 0;
-				}
-
 			}
 			else
 			{
 				if(ret == META_DATA_AVAILABLE) {
 					self_set_cover_from_path(self,path); 
-					self->_priv->meta_id = 0;
 				} else if (ret == META_DATA_FETCHING) {
 					self_set_cover_fetching(self);
 				} else {
 					self_set_cover_na(self);
-					self->_priv->meta_id = 0;
 				}
 			}
 		}
@@ -508,13 +518,22 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	{
 		if(self->_priv->song)
 		{
-			/* TODO: Make less copies */
-			if(self->_priv->meta_id)
+			gchar *path = NULL;
+			MetaDataResult ret;
+
+			ret = meta_data_get_path(self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &path);
+			if(ret == META_DATA_FETCHING)
 			{
-				meta_data_handle_remove_request(self->_priv->meta_id);
-				self->_priv->meta_id =  0;
+				self_set_cover_fetching(self);
+			}else if (ret == META_DATA_AVAILABLE) {
+					self_set_cover_from_path(self,path); 
+			} else {
+				self_set_cover_na(self);
 			}
-			self->_priv->meta_id = meta_data_get_path_callback(self->_priv->song, self->image_type|META_QUERY_NO_CACHE, self_meta_callback, self);
+			if(path)
+			{
+				q_free(path);
+			}
 		}
 	}
 

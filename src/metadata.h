@@ -1,5 +1,8 @@
 #ifndef __METADATA_H__
 #define __METADATA_H__
+
+
+
 typedef enum {
 	META_ALBUM_ART = 1, 	/* Album Cover art 	*/
 	META_ARTIST_ART = 2, 	/* Artist  image 	*/
@@ -16,6 +19,8 @@ typedef enum {
 	META_DATA_FETCHING
 } MetaDataResult;
 
+#include "gmpc-meta-watcher.h"
+extern GmpcMetaWatcher *gmw;
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path);
@@ -26,5 +31,5 @@ void meta_data_destroy(void);
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path);
 
 void meta_data_cleanup(void);
-
+MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path);
 #endif
