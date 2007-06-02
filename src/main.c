@@ -281,14 +281,14 @@ int main (int argc, char **argv)
             {
                 printf(_("Gnome Music Player Client\n"\
                             "Options:\n"\
-                            "\t--help:\t\t\tThis help message.\n"\
+                            "\t--help\t\t\tThis help message.\n"\
                             "\t--debug-level=<level>\tMake gmpc print out debug information.\n"\
                             "\t\t\t\tLevel:\n"\
-                            "\t\t\t\t\t0: No Output\n"\
-                            "\t\t\t\t\t1: Error Messages\n"\
-                            "\t\t\t\t\t2: Error + Warning Messages\n"\
-                            "\t\t\t\t\t3: All messages\n"\
-                            "\t--version:\t\tPrint version and svn revision\n"\
+                            "\t\t\t\t\t0 No Output\n"\
+                            "\t\t\t\t\t1 Error Messages\n"\
+                            "\t\t\t\t\t2 Error + Warning Messages\n"\
+                            "\t\t\t\t\t3 All messages\n"\
+                            "\t--version\t\tPrint version and svn revision\n"\
                             "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
                             "\t--clean-cover-db\tCleanup the cover file.\n"
                         ));
