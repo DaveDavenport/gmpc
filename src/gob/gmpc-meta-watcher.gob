@@ -63,6 +63,24 @@ class Gmpc:Meta:Watcher from  G:Object {
 		}
 		return FALSE;
 	}
+
+	public
+	void	
+	get_meta_path_callback(self, mpd_Song *song, MetaDataType type,  MetaDataCallback callback, gpointer data)
+	{
+		gchar *path = NULL;
+		MetaDataResult ret;
+
+		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
+		{
+			printf("request invalid %i \n", type);
+			callback(song, META_DATA_UNAVAILABLE, NULL, data);			
+		}
+		ret = meta_data_get_path(song, type, &path,callback,data);
+		callback(song,ret,path,data);
+		if(path) g_free(path);
+	}
+
 	public 
 	MetaDataResult
 	get_meta_path(self, mpd_Song *song, MetaDataType type, gchar **path)
@@ -75,6 +93,6 @@ class Gmpc:Meta:Watcher from  G:Object {
 			return META_DATA_UNAVAILABLE;
 		}
 
-		return meta_data_get_path(song, type, path);
+		return meta_data_get_path(song, type, path,NULL,NULL);
 	}
 }

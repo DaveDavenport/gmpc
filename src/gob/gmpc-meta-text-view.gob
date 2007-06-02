@@ -95,11 +95,6 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			{
 				q_free(path);
 			}
-
-
-
-
-
 	}
 
 	signal last NONE (STRING)	
@@ -131,7 +126,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 	private
 	void
-	meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
+	meta_callback(GmpcMetaWatcher *gmw , mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
 	{
 		Self *self = data;
 		/**

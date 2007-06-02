@@ -123,6 +123,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-mpddata-model.h\
 		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-treeview.h\
+		gob/gmpc-meta-watcher.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
 		TreeSearchWidget.h \

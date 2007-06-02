@@ -19,9 +19,11 @@ typedef enum {
 	META_DATA_FETCHING
 } MetaDataResult;
 
+typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
+
 #include "gmpc-meta-watcher.h"
 extern GmpcMetaWatcher *gmw;
-typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
+
 /*guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);*/
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path);
 void meta_data_init(void);
@@ -31,5 +33,5 @@ void meta_data_destroy(void);
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path);
 
 void meta_data_cleanup(void);
-MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path);
+MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data);
 #endif

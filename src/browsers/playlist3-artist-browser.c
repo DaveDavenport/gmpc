@@ -334,7 +334,7 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
           mpd_Song *song = mpd_newSong();
           song->artist = g_strdup(data->tag);
           song->album = NULL; 
-          //meta_data_get_path_callback(song, META_ARTIST_ART, pl3_artist_browser_cover_art_fetched, rowref);
+          gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ARTIST_ART, pl3_artist_browser_cover_art_fetched, rowref);
           mpd_freeSong(song);	
           gtk_tree_path_free(path);
         }
@@ -389,6 +389,7 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 			song = mpd_newSong();                                                                     			
 			song->artist = g_strdup(artist);
 			song->album = g_strdup(data->tag);
+			gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, pl3_artist_browser_cover_art_fetched, rowref);
 			//meta_data_get_path_callback(song, META_ALBUM_ART, pl3_artist_browser_cover_art_fetched, rowref);
 			mpd_freeSong(song);	
 			gtk_tree_path_free(path);

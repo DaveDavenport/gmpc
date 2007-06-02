@@ -32,6 +32,9 @@ typedef struct {
 	/* Resuls  */
 	MetaDataResult result;
 	char *result_path;
+	/* Callback */
+	MetaDataCallback callback;
+	gpointer data;
 } meta_thread_data;
 
 
@@ -432,6 +435,11 @@ static gboolean meta_data_handle_results()
 {
 	meta_thread_data *data = NULL;
 	printf("handle result\n");
+	if(meta_thread == g_thread_self())
+	{
+		printf("Crap, handled in wrong thread\n");
+
+	}
 	/**
 	 * Should check is one is being processed  (implemented)
 	 */
@@ -459,6 +467,10 @@ static gboolean meta_data_handle_results()
 		int test = 0, i = 0;
 
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
+		if(data->callback)
+		{
+			data->callback(data->song,data->result,data->result_path, data->data);
+		}
 
 		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--) {
 			int num = GPOINTER_TO_INT(g_queue_peek_nth(meta_remove,i));
@@ -605,7 +617,7 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 /**
  * Function called by the "client" 
  */
-MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path)
+MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data)
 {
 	MetaDataResult ret;
 	meta_thread_data *mtd = NULL;
@@ -629,6 +641,10 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	{
 		/* For others */
 		gmpc_meta_watcher_data_changed(gmw,tsong, (type)&META_QUERY_DATA_TYPES,META_DATA_FETCHING, NULL); 
+		if(callback)
+		{
+			callback(song,META_DATA_FETCHING,NULL,data);
+		}
 		ret = META_DATA_FETCHING;
 	}
 	else
@@ -662,6 +678,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	id = mtd->id = g_random_int_range(1,2147483647);
 	mtd->song = song;
 	mtd->type = type;
+	mtd->callback = callback;
+	mtd->data = data;
 	/**
 	 * Check if request is allready in queue
 	 */
