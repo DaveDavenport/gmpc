@@ -576,20 +576,33 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	select_file(self)
 	{
+		mpd_Song *song = mpd_songDup(self->_priv->song);
+		MetaDataType type = self->image_type;
+		GtkFileFilter *gff = gtk_file_filter_new();
 		GtkFileChooserDialog *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
 					 GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 				      NULL);
-   
+		gtk_file_filter_set_name(gff, _("Images"));
+		gtk_file_filter_add_pixbuf_formats(gff);
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+
+		gff = gtk_file_filter_new();
+		gtk_file_filter_set_name(gff, _("All"));
+		gtk_file_filter_add_pattern(gff, "*");
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+
 		gtk_widget_show_all(fcd);
 		switch(gtk_dialog_run(fcd))
 		{
 			case GTK_RESPONSE_ACCEPT:
 				{	
+		
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
-					meta_data_set_cache(self->_priv->song,self->image_type, META_DATA_AVAILABLE, filename); 
-					gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->image_type, META_DATA_AVAILABLE, filename);
+
+					meta_data_set_cache(song,type, META_DATA_AVAILABLE, filename); 
+					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
 
 					g_free(filename);
 				}
@@ -597,5 +610,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				break;
 		} 
 		gtk_widget_destroy(fcd);
+		mpd_freeSong(song);
 	}
 }
