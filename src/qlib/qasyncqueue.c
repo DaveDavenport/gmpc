@@ -676,4 +676,28 @@ q_async_queue_remove_data_unlocked (QAsyncQueue* queue, GCompareFunc func, gpoin
 	}
   return NULL;
 }
+
+gboolean
+q_async_queue_has_data (QAsyncQueue *queue, GCompareFunc func, gpointer data)
+{
+	gint length;
+	GList *list = NULL;
+  gpointer retval= NULL;
+
+  g_return_val_if_fail (queue,FALSE);
+  g_return_val_if_fail (g_atomic_int_get (&queue->ref_count) > 0, FALSE);
+
+	/* get the first */
+	list = g_queue_peek_nth_link(queue->queue, 0);
+	for(length = g_queue_get_length(queue->queue);list;length++)
+	{
+		if(!func(list->data, data))
+		{
+			return TRUE;	
+		}
+		list = list->next;
+	}
+  return FALSE;
+}
+
 #define __Q_ASYNCQUEUE_C__

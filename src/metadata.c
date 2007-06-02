@@ -548,19 +548,11 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 	char *path = NULL;
 	guint id = 0;
 
-	/**
-	 * if there is no callback, it's a programming error.
-	 */
-//	g_assert(callback != NULL);
 
-	/**
-	 * If there is no song
-	 * return;
-	 */
 	/*	g_return_if_fail(tsong != NULL); */
 	if(tsong == NULL)
 	{
-		return 0;	
+		return META_DATA_UNAVAILABLE;	
 	}
 
 	/**
@@ -596,56 +588,7 @@ guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCa
 	 */
 	song = mpd_songDup(tsong);
 
-	/**
-	 * Check if the song is complete, (has file) so we can actually use it with all plugins
-	 * If not, f.e. only artist, or only album, get a song from mpd
-	 * so plugins based on path can work with it.
-	 */
-	/** For speed reason and mpd stressing disabled */
-/*	if(song->file == NULL)*/
-	/*
-	if(FALSE){
-	*/	/* Only mpd 0.12 supports this */
-	/*	if(mpd_server_check_version(connection, 0,12,0))
-		{
-			MpdData *data  = NULL;
-	*/		/** We need new libmpd data here.
-			 * The we don't need the check what type of search
-			 */
-			/**
-			 * this should be done faster, it can now cause extra slowdown
-			 * because of the mpd roundtrips
-			 */
-			/*
-			if(song->artist && song->album)
-			{
-				data= mpd_database_find_adv(connection,TRUE, 
-						MPD_TAG_ITEM_ARTIST,
-						song->artist,
-						MPD_TAG_ITEM_ALBUM,
-						song->album,
-						-1);
-			}
-			else if(song->artist)
-			{
-				data= mpd_database_find_adv(connection, TRUE,
-						MPD_TAG_ITEM_ARTIST,
-						song->artist,
-						-1);
-			}
-			if(data)
-			{
-				if(data->type == MPD_DATA_TYPE_SONG)
-				{
-					song->file = g_strdup(data->song->file);
-				}
 
-				mpd_data_free(data);
-			}
-
-		}
-	}
-*/
 	/**
 	 * If no result, start a thread and start fetching the data from there
 	 */
@@ -754,6 +697,14 @@ void meta_data_destroy(void)
 	}
 	cfg_close(cover_index);
 }
+gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
+{
+	if((mt1->type&META_QUERY_DATA_TYPES) != (mt2->type&META_QUERY_DATA_TYPES))
+		return TRUE;
+	if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
+		return TRUE;
+	return FALSE;
+}
 /**
  * Function called by the "client" 
  */
@@ -798,6 +749,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 		return ret;	
 	}
 
+
 	/**
 	 * Make a copy
 	 */
@@ -812,9 +764,26 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	 * Not needed, but can be usefull for debugging
 	 */
 	id = mtd->id = g_random_int_range(1,2147483647);
-	mtd->song = mpd_songDup(song);
+	mtd->song = song;
 	mtd->callback = NULL;
 	mtd->type = type;
+	/**
+	 * Check if request is allready in queue
+	 */
+
+	q_async_queue_lock(meta_commands);
+	if(q_async_queue_has_data(meta_commands,meta_compare_func, mtd))
+	{
+		q_async_queue_unlock(meta_commands);
+		mpd_freeSong(song);
+		g_free(mtd);
+		printf("Request allready queued\n");
+		return ret;
+	}
+	q_async_queue_unlock(meta_commands);
+
+
+
 	/** push it to the other thread */
 	q_async_queue_push(meta_commands, mtd);
 	/** clean reference to pointer, it's now to the other thread */

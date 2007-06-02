@@ -127,5 +127,7 @@ gpointer
 q_async_queue_remove_data_unlocked (QAsyncQueue* queue, GCompareFunc func, gpointer data);
 
 
+gboolean
+q_async_queue_has_data (QAsyncQueue *queue, GCompareFunc func, gpointer data);
 #endif /* __Q_ASYNCQUEUE_H__ */
 

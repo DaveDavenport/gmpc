@@ -32,18 +32,49 @@ class Gmpc:Meta:Watcher from  G:Object {
     public
     gboolean
     match_data(MetaDataType type, mpd_Song *song1, mpd_Song *song2)
-    {
-      switch(type)
-      {
-          case META_ARTIST_ART: 
-              if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
-              {
-                return TRUE;
-              }
-              break;
-          default:
-            break;
-      }
-      return FALSE;
-    }
+	{
+		if(song1 == NULL || song2 == NULL)
+			return FALSE;
+		switch(type)
+		{
+			case META_SONG_TXT:
+				if(song1->file && song2->file && !strcmp(song1->file, song2->file))
+					return TRUE;
+				return FALSE;
+			case META_ALBUM_TXT:
+			case META_ALBUM_ART:
+				if(song1->album == NULL || song2->album == NULL || strcmp(song1->album, song2->album))
+				{
+					printf("album: %s %s not valid and equal\n", song1->album, song2->album);
+					return FALSE;
+				}
+			case META_ARTIST_TXT:
+			case META_ARTIST_ART: 
+				if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
+				{
+
+					return TRUE;
+				}
+				printf("artist: %s %s not valid and equal\n", song1->artist,song2->artist);
+				break;
+			default:
+				printf("unknown type\n");
+				break;
+		}
+		return FALSE;
+	}
+	public 
+	MetaDataResult
+	get_meta_path(self, mpd_Song *song, MetaDataType type, gchar **path)
+	{
+		g_assert(path != NULL);
+			
+		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
+		{
+			printf("request invalid %i \n", type);
+			return META_DATA_UNAVAILABLE;
+		}
+
+		return meta_data_get_path(song, type, path);
+	}
 }

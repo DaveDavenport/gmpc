@@ -223,7 +223,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			Self *self = GMPC_METAIMAGE(obj); 
 			if(self->_priv->meta_id)
 			{
-				g_source_remove(self->_priv->meta_id);
+				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 				self->_priv->meta_id =  0;
 			}
 			if(self->_priv->popup_timer_id)
@@ -318,7 +318,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			if(self->_priv->status_signal)
 				self->_priv->song = mpd_songDup(song);
 
-			ret = meta_data_get_path(song, self->image_type, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,song, self->image_type, &path);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
@@ -341,23 +341,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			if(!song || !self || !self->_priv || !self->_priv->song)
 				return;
 
+			
 			/**
 			 * Check for fields
 			 */
 			if(self->image_type != type)
 				return;
-			if(song->artist == NULL || self->_priv->song->artist == NULL)
+
+			if(!gmpc_meta_watcher_match_data(self->image_type, self->_priv->song, song))
+			{
+				printf("not for me\n");
 				return;
-			if(self->image_type&META_ALBUM_ART && (song->album == NULL || self->_priv->song->album == NULL))
-				return;
-			/**
-			 * match song
-			 */
-			if(strcmp(song->artist, self->_priv->song->artist))
-				return;
-			if(self->image_type&META_ALBUM_ART && 
-					strcmp(song->album, self->_priv->song->album))
-				return;
+			}
+
 			/**
 			 * If mpd is stopped before the result is back, set the cover to na, and ignore the result
 			 */
@@ -521,7 +517,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			gchar *path = NULL;
 			MetaDataResult ret;
 
-			ret = meta_data_get_path(self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &path);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
