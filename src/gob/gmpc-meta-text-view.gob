@@ -19,6 +19,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
 		gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self), GTK_WRAP_WORD);
 		g_signal_connect(G_OBJECT(self), "populate-popup", G_CALLBACK(self_menu_populate_callback), NULL);
+		self->_priv->meta_id= g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 	}
 	
 	public 
@@ -52,13 +53,21 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		if(self->_priv->song)
 		{
-			/* TODO: Make less copies */
-			if(self->_priv->meta_id)
+			gchar *path = NULL;
+			MetaDataResult ret;
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &path);
+			if(ret == META_DATA_FETCHING)
 			{
-				meta_data_handle_remove_request(self->_priv->meta_id);
-				self->_priv->meta_id =  0;
+				self_set_text_fetching(self);
+			}else if (ret == META_DATA_AVAILABLE) {
+				self_set_text_from_path(self,path); 
+			} else {
+				self_set_text_na(self);
 			}
-			self->_priv->meta_id = meta_data_get_path_callback(self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, self_meta_callback, self);
+			if(path)
+			{
+				q_free(path);
+			}
 		}
 	}
 
@@ -71,12 +80,26 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			mpd_freeSong(self->_priv->song);
 		}
 		self->_priv->song = mpd_songDup(song);
-		if(self->_priv->meta_id)
-		{
-			meta_data_handle_remove_request(self->_priv->meta_id);
-			self->_priv->meta_id =  0;
-		}
-		self->_priv->meta_id = meta_data_get_path_callback(song, self->_priv->type, self_meta_callback, self);
+	gchar *path = NULL;
+			MetaDataResult ret;
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &path);
+			if(ret == META_DATA_FETCHING)
+			{
+				self_set_text_fetching(self);
+			}else if (ret == META_DATA_AVAILABLE) {
+				self_set_text_from_path(self,path); 
+			} else {
+				self_set_text_na(self);
+			}
+			if(path)
+			{
+				q_free(path);
+			}
+
+
+
+
+
 	}
 
 	signal last NONE (STRING)	
@@ -108,9 +131,22 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 	private
 	void
-	meta_callback(mpd_Song *song, MetaDataResult ret, char *path,gpointer data)
+	meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
 	{
 		Self *self = data;
+		/**
+		 * Check for fields
+		 */
+		if(self->_priv->type != type)
+			return;
+
+		if(!gmpc_meta_watcher_match_data(self->_priv->type, self->_priv->song, song))
+		{
+			printf("not for me\n");
+			return;
+		}
+
+
 		if(ret == META_DATA_AVAILABLE) {
 			self_set_text_from_path(self,path); 
 			self->_priv->meta_id = 0;
@@ -123,14 +159,15 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	}
 
 	override (G:Object)
-	void 
-	finalize (G:Object *obj)
-	{
-		Self *self = GMPC_META_TEXT_VIEW(obj); 
-		if(self->_priv->meta_id)
+		void 
+		finalize (G:Object *obj)
 		{
-			meta_data_handle_remove_request(self->_priv->meta_id);
-			self->_priv->meta_id =  0;
+			Self *self = GMPC_META_TEXT_VIEW(obj); 
+			printf("%i\n", self->_priv->meta_id);
+			if(self->_priv->meta_id)
+			{
+				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
+				self->_priv->meta_id =  0;
+			}
 		}
-	}
 }

@@ -6,7 +6,7 @@
 
 #include "metadata.h"
 
-GmpcMetaWatcher *gmw = NULL;
+
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
 gmpcPlugin **meta_plugins = NULL;
@@ -28,8 +28,6 @@ typedef struct {
 	guint id;
 	/* Data */
 	mpd_Song *song;
-	MetaDataCallback callback;
-	gpointer data;
 	MetaDataType type;
 	/* Resuls  */
 	MetaDataResult result;
@@ -37,7 +35,7 @@ typedef struct {
 } meta_thread_data;
 
 
-
+static gboolean meta_data_handle_results();
 gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
 
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
@@ -210,10 +208,6 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 				*path = NULL;
 				return META_DATA_FETCHING;	
 			}
-
-
-
-
 			/* return that data is availible */
 			return META_DATA_AVAILABLE;
 		}
@@ -390,6 +384,7 @@ static void meta_data_retrieve_thread()
 		 * Push the result back
 		 */	
 		q_async_queue_push(meta_results, data);		
+		g_idle_add(meta_data_handle_results,NULL);
 		/**
 		 * clear our reference to the object
 		 */
@@ -436,7 +431,7 @@ void meta_data_handle_remove_request(guint id)
 static gboolean meta_data_handle_results()
 {
 	meta_thread_data *data = NULL;
-
+	printf("handle result\n");
 	/**
 	 * Should check is one is being processed  (implemented)
 	 */
@@ -475,9 +470,6 @@ static gboolean meta_data_handle_results()
 		}
 	
 	
-		if(test == 0&& data->callback) {
-			data->callback(data->song, data->result,data->result_path, data->data);
-		}
 		if(data->result_path)q_free(data->result_path);
 		mpd_freeSong(data->song);
 		q_free(data);
@@ -485,7 +477,7 @@ static gboolean meta_data_handle_results()
 	/**
 	 * Keep the timer running
 	 */
-	return TRUE;
+	return FALSE;
 }
 
 /**
@@ -525,102 +517,7 @@ void meta_data_init()
 	 */
 	meta_thread = g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, TRUE, NULL);
 
-	/**
-	 * New Metadata object 
-	 */
-	gmw = gmpc_meta_watcher_new();
-	
-	/**
-	 * Set a timer on checking the results
-	 * for now every 250 ms?
-	 */
-	g_timeout_add(250,(GSourceFunc)meta_data_handle_results, NULL);
-
 }
-/**
- * Function called by the "client" 
- */
-guint meta_data_get_path_callback(mpd_Song *tsong, MetaDataType type, MetaDataCallback callback, gpointer data)
-{
-	MetaDataResult ret;
-	meta_thread_data *mtd = NULL;
-	mpd_Song *song =NULL;
-	char *path = NULL;
-	guint id = 0;
-
-
-	/*	g_return_if_fail(tsong != NULL); */
-	if(tsong == NULL)
-	{
-		return META_DATA_UNAVAILABLE;	
-	}
-
-	/**
-	 * Check cache for result.
-	 */
-	if(type&META_QUERY_NO_CACHE)
-	{
-		ret = META_DATA_FETCHING;
-	}
-	else
-	{
-		ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, &path);
-	}
-
-	/**
-	 * If the data is know. (and doesn't need fectching) 
-	 * call the callback and stop
-	 */
-	if(ret != META_DATA_FETCHING)
-	{
-		/* Call the callback function */
-		if(callback)
-			callback(tsong, ret, path,data);
-		/* clean up path if exists */
-		if(path) q_free(path);
-		/* return */
-
-		return 0;
-	}
-
-	/**
-	 * Make a copy
-	 */
-	song = mpd_songDup(tsong);
-
-
-	/**
-	 * If no result, start a thread and start fetching the data from there
-	 */
-
-	mtd = g_malloc0(sizeof(*mtd));
-	/**
-	 * unique id 
-	 * Not needed, but can be usefull for debugging
-	 */
-	id = mtd->id = g_random_int_range(1,2147483647);
-	mtd->song = mpd_songDup(song);
-	mtd->callback = callback;
-	mtd->data = data;
-	mtd->type = type;
-	/** push it to the other thread */
-	q_async_queue_push(meta_commands, mtd);
-	/** clean reference to pointer, it's now to the other thread */
-	mtd = NULL;
-
-	/**
-	 * Call the callback to let the client know where are going todo a 
-	 * background fetch
-	 */
-
-	/**
-	 * Tell the calling part we are fetching */
-	if(callback)
-		callback(song, META_DATA_FETCHING,NULL, data);
-	mpd_freeSong(song);
-	return id;
-}
-
 
 void meta_data_add_plugin(gmpcPlugin *plug)
 {
@@ -720,7 +617,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	 * If there is no song
 	 * return;
 	 */
-	/*	g_return_if_fail(tsong != NULL); */
 	if(tsong == NULL)
 	{
 		return META_DATA_UNAVAILABLE;	
@@ -765,7 +661,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	 */
 	id = mtd->id = g_random_int_range(1,2147483647);
 	mtd->song = song;
-	mtd->callback = NULL;
 	mtd->type = type;
 	/**
 	 * Check if request is allready in queue

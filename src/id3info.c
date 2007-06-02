@@ -31,7 +31,7 @@ GList *songs = NULL;
 static void set_text (GList * node);
 
 /* Glade declarations, without glade these would be static*/
-void id3_status_update(void);
+/*void id3_status_update(void);*/
 void id3_save_artist_txt(void);
 void id3_save_album_txt(void);
 void remove_id3_window(void);
@@ -55,6 +55,7 @@ static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox);
 /**
  * The Functions 
  */
+/*
 static void art_set_from_path(GtkWidget *metaimage, int type, GtkWidget *vbox)
 {
     gtk_widget_set_sensitive(vbox, TRUE);
@@ -71,17 +72,15 @@ void id3_del_album_txt(void)
 
     GtkTextBuffer *buffer = NULL;
     GtkTextView *tv = NULL;
-    /** Get the text view */
+ 
     tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
     buffer = gtk_text_view_get_buffer(tv);
     gtk_text_buffer_set_text(buffer, "", -1);
 }
-
+*/
+/*
 void id3_save_album_txt()
 {
-    /**
-     * Safety check
-     */
     if(songs != NULL && songs->data != NULL && ((mpd_Song *)(songs->data))->artist && ((mpd_Song *)(songs->data))->album)
     {
         GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
@@ -90,10 +89,10 @@ void id3_save_album_txt()
                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                 GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
         gchar *filename = NULL, *temp = NULL;
-        /* get s direct pointer */
+    
         mpd_Song *sg = songs->data;
 
-        /* Get stored path */
+   
         temp = g_strdup_printf("albumtxt:%s", sg->album);
         filename = cfg_get_single_value_as_string(cover_index, sg->artist,temp);
         if(filename)
@@ -107,28 +106,28 @@ void id3_save_album_txt()
             case GTK_RESPONSE_OK:
                 {
                     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
-                    /**
-                     * Implement saving and setting db 
-                     */
+               
+              
+             
                     {
                         char *content =NULL; 
                         GtkTextIter end, start;
                         GtkTextBuffer *buffer = NULL;
                         GtkTextView *tv = NULL;
-                        /** Get the text view */
+            
                         tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "album_tv");
                         buffer = gtk_text_view_get_buffer(tv);
-                        /* get start and end */
+           
                         gtk_text_buffer_get_start_iter(buffer, &start);
                         gtk_text_buffer_get_end_iter(buffer, &end);
-                        /** get content */
+          
                         content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
                         if(g_file_set_contents(filename, content, -1,NULL))
                         {
                             cfg_set_single_value_as_string(cover_index, sg->artist,temp,filename);
                         }
 
-                        /* free content */
+         
                         q_free(content);
                     }
                     q_free(filename);
@@ -149,7 +148,7 @@ void id3_del_artist_txt(void)
         cfg_set_single_value_as_string(cover_index, sg->artist,"biography","");
         GtkTextBuffer *buffer = NULL;
         GtkTextView *tv = NULL;
-        /** Get the text view */
+        
         tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
         buffer = gtk_text_view_get_buffer(tv);
         gtk_text_buffer_set_text(buffer, "",-1);
@@ -158,9 +157,9 @@ void id3_del_artist_txt(void)
 
 void id3_save_artist_txt()
 {
-    /**
-     * Safety check
-     */
+
+
+
     if(songs != NULL && songs->data != NULL && ((mpd_Song*)songs->data)->artist)
     {
         GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
@@ -182,28 +181,28 @@ void id3_save_artist_txt()
             case GTK_RESPONSE_OK:
                 {
                     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
-                    /**
-                     * Implement saving and setting db 
-                     */
+
+
+
                     {
                         char *content =NULL; 
                         GtkTextIter end, start;
                         GtkTextBuffer *buffer = NULL;
                         GtkTextView *tv = NULL;
-                        /** Get the text view */
+
                         tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "artist_tv");
                         buffer = gtk_text_view_get_buffer(tv);
-                        /* get start and end */
+
                         gtk_text_buffer_get_start_iter(buffer, &start);
                         gtk_text_buffer_get_end_iter(buffer, &end);
-                        /** get content */
+
                         content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
                         if(g_file_set_contents(filename, content, -1,NULL))
                         {
                             cfg_set_single_value_as_string(cover_index, sg->artist, "biography",filename);
                         }
 
-                        /* free content */
+
                         q_free(content);
                     }
                     q_free(filename);
@@ -277,7 +276,7 @@ void id3_del_song_lyric(void)
         q_free(temp);
         GtkTextBuffer *buffer = NULL;
         GtkTextView *tv = NULL;
-        /** Get the text view */
+
         tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "lyric_tv");
         buffer = gtk_text_view_get_buffer(tv);
         gtk_text_buffer_set_text(buffer, "",-1);
@@ -285,9 +284,9 @@ void id3_del_song_lyric(void)
 }
 void id3_save_song_lyric()
 {
-    /**
-     * Safety check
-     */
+
+
+
     if(songs != NULL && songs->data != NULL&& ((mpd_Song*)songs->data)->title && ((mpd_Song*)songs->data)->artist)
     {
         GtkWidget *parent = glade_xml_get_widget(xml_id3_window, "id3_info_window");
@@ -297,7 +296,7 @@ void id3_save_song_lyric()
                 GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL);
         mpd_Song *sg = songs->data;
 
-        /* get old value */
+
         char *temp = g_strdup_printf("lyrics:%s", sg->title);    
         gchar *filename = cfg_get_single_value_as_string(cover_index, sg->artist,temp);
         if(filename)
@@ -311,29 +310,29 @@ void id3_save_song_lyric()
             case GTK_RESPONSE_OK:
                 {
                     gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fs_dialog));
-                    /**
-                     * Implement saving and setting db 
-                     */
+
+
+
                     {
                         char *content =NULL; 
                         GtkTextIter end, start;
                         GtkTextBuffer *buffer = NULL;
                         GtkTextView *tv = NULL;
                         mpd_Song *sg = songs->data;
-                        /** Get the text view */
+
                         tv = (GtkTextView *)glade_xml_get_widget(xml_id3_window, "lyric_tv");
                         buffer = gtk_text_view_get_buffer(tv);
-                        /* get start and end */
+
                         gtk_text_buffer_get_start_iter(buffer, &start);
                         gtk_text_buffer_get_end_iter(buffer, &end);
-                        /** get content */
+
                         content = gtk_text_buffer_get_text(buffer,&start, &end,TRUE); 
                         if(g_file_set_contents(filename, content, -1,NULL))
                         {
                             cfg_set_single_value_as_string(cover_index, sg->artist, temp,filename);
                         }
 
-                        /* free content */
+
                         q_free(content);
                     }
                     q_free(filename);
@@ -350,14 +349,14 @@ void remove_id3_window ()
 {
     GtkWidget *window =
         glade_xml_get_widget (xml_id3_window, "id3_info_window");
-    /* destroy and free memory */
+ 
     if (window)
         gtk_widget_destroy (window);
     if (xml_id3_window != NULL)
         g_object_unref (xml_id3_window);
     xml_id3_window = NULL;
 
-    /* Clean up list and free it */ 
+
     songs = g_list_first(songs);
     while ((songs = g_list_next (songs)))
     {
@@ -414,7 +413,8 @@ void id3_status_update()
     }
 
 }
-
+*/
+/*
 static void create_window (int song)
 {
     char *path;
@@ -427,7 +427,7 @@ static void create_window (int song)
     path = gmpc_get_full_glade_path("gmpc.glade");	
     xml_id3_window = glade_xml_new (path,"id3_info_window", NULL);
     q_free(path);
-    /* check for errors and axit when there is no gui file */
+ 
     if (xml_id3_window == NULL)
     {
         g_error ("Couldnt initialize GUI. Please check installation\n");
@@ -649,12 +649,12 @@ void id3_last_song ()
     songs = g_list_previous (songs);
     set_text (songs);
 }
-
+*/
 
 
 void call_id3_window_song(mpd_Song *songstr)
 {
-    if(songstr == NULL)
+/*    if(songstr == NULL)
     {
         return;
     }
@@ -678,7 +678,6 @@ void call_id3_window_song(mpd_Song *songstr)
 
 
 
-        /* check for errors and axit when there is no gui file */
         if (xml_id3_window == NULL)
             g_error ("Couldnt initialize GUI. Please check installation\n");
         glade_xml_signal_autoconnect (xml_id3_window);
@@ -688,11 +687,14 @@ void call_id3_window_song(mpd_Song *songstr)
     songs = g_list_last (songs);
     set_text (songs);
 
-
+*/
 }
 
 void call_id3_window (int song)
 {
+}
+
+/*
     if (xml_id3_window == NULL)
     {
         create_window (song);
@@ -729,9 +731,12 @@ void id3_album_image_file_selector(GtkFileChooser *chooser)
         q_free(path);
     }
 }
-/**
+*/
+/*
+ * *
  * Reget lyric
  */
+/*
 void id3_reget_lyric_txt()
 {
     if(songs)
@@ -820,3 +825,4 @@ void id3_reget_artist_art()
         }
     }
 }
+*/

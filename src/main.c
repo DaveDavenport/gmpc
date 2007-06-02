@@ -68,6 +68,7 @@ static BaconMessageConnection *bacon_connection = NULL;
 
 GmpcConnection *gmpcconn = NULL;
 GmpcProfiles *gmpc_profiles = NULL;
+GmpcMetaWatcher *gmw = NULL;
 int gmpc_connected = FALSE;
 int gmpc_failed_tries = 0;
 
@@ -477,6 +478,14 @@ int main (int argc, char **argv)
      */
     gmpcconn = (GmpcConnection *)gmpc_connection_new();
 
+	/**
+	 * New Metadata object 
+	 */
+	gmw = gmpc_meta_watcher_new();
+
+
+
+
     /** 
      * Add the internall plugins 
      */
@@ -640,6 +649,7 @@ int main (int argc, char **argv)
 	/**
 	 * Clear metadata struct
 	 */
+	g_object_unref(G_OBJECT(gmw));
 	meta_data_destroy();
 
 	/* time todo some destruction of plugins */
@@ -802,7 +812,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	/**
 	 * Propagete to the id3 window, so it can update time
 	 */
-	id3_status_update();
+/*	id3_status_update();*/
 	/**
 	 * Make the plugins recieve the signals 
 	 */
