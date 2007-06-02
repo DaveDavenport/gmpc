@@ -38,12 +38,23 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		{
 			GtkWidget *item = gtk_separator_menu_item_new();
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			gtk_widget_show(item);
+
+
 			item = gtk_image_menu_item_new_with_label(_("Refetch"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
 			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_query_refetch),self);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			gtk_widget_show(item);
+
+			item = gtk_image_menu_item_new_with_label(_("Select file"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU));
+			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_select_file),self);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR, NULL);
+			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_clear_entry),self);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+			gtk_widget_show_all(menu);
 		}
 	}
 
@@ -176,4 +187,37 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 				self->_priv->meta_id =  0;
 			}
 		}
+	public 
+	void
+	clear_entry(self)
+	{
+		meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_UNAVAILABLE, NULL); 
+		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_UNAVAILABLE, NULL);
+	}
+	public
+	void
+	select_file(self)
+	{
+		GtkFileChooserDialog *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
+					 GTK_FILE_CHOOSER_ACTION_OPEN,
+				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+				      NULL);
+   
+		gtk_widget_show_all(fcd);
+		switch(gtk_dialog_run(fcd))
+		{
+			case GTK_RESPONSE_ACCEPT:
+				{	
+					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
+					meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_AVAILABLE, filename); 
+					gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, filename);
+
+					g_free(filename);
+				}
+			default:
+				break;
+		} 
+		gtk_widget_destroy(fcd);
+	}
 }
