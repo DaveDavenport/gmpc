@@ -683,19 +683,20 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	/**
 	 * Check if request is allready in queue
 	 */
-
-	q_async_queue_lock(meta_commands);
-	if(q_async_queue_has_data(meta_commands,meta_compare_func, mtd))
+	/* when using old api style, the request is commited anyway */
+	if(!callback)
 	{
+		q_async_queue_lock(meta_commands);
+		if(q_async_queue_has_data(meta_commands,meta_compare_func, mtd))
+		{
+			q_async_queue_unlock(meta_commands);
+			mpd_freeSong(song);
+			g_free(mtd);
+			printf("Request allready queued\n");
+			return ret;
+		}
 		q_async_queue_unlock(meta_commands);
-		mpd_freeSong(song);
-		g_free(mtd);
-		printf("Request allready queued\n");
-		return ret;
 	}
-	q_async_queue_unlock(meta_commands);
-
-
 
 	/** push it to the other thread */
 	q_async_queue_push(meta_commands, mtd);

@@ -114,7 +114,18 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	set_text_fetching(self)
 	{
-		gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Lyric"),-1);
+		if(self->_priv->type == META_SONG_TXT)
+		{
+			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Lyric"),-1);
+		}
+		else if (self->_priv->type == META_ARTIST_TXT)
+		{
+			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Artist Info"),-1);
+		}
+		else
+		{
+			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Album Info"),-1);
+		}
 	}
 
 	signal last NONE (NONE)	
