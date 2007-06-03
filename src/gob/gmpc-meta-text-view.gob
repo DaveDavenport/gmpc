@@ -8,10 +8,10 @@ requires 2.0.0
 %}
 
 class Gmpc:Meta:Text:View from Gtk:Text:View {
-	private GtkTextBuffer *buffer 	= {gtk_text_buffer_new(NULL)} destroywith g_object_unref;
+	private GtkTextBuffer *buffer 	= {gtk_text_buffer_new(NULL)} unrefwith g_object_unref;
 	private mpd_Song *song 			= {NULL} destroywith mpd_freeSong;
 	private int type 				= {META_ARTIST_TXT};
-	private guint meta_id 			= {0};
+	private gulong meta_id 			= {0};
 
 	init (self)
 	{
@@ -176,17 +176,17 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	}
 
 	override (G:Object)
-		void 
-		finalize (G:Object *obj)
+	void 
+	dispose (G:Object *obj)
+	{
+		Self *self = GMPC_META_TEXT_VIEW(obj); 
+		printf("%i\n", self->_priv->meta_id);
+		if(self->_priv->meta_id)
 		{
-			Self *self = GMPC_META_TEXT_VIEW(obj); 
-			printf("%i\n", self->_priv->meta_id);
-			if(self->_priv->meta_id)
-			{
-				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
-				self->_priv->meta_id =  0;
-			}
+			g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
+			self->_priv->meta_id =  0;
 		}
+	}
 	public 
 	void
 	clear_entry(self)
