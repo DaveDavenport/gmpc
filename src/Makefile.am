@@ -9,7 +9,6 @@ sources=\
 	plugin.c\
 	mpdinteraction.c\
 	preferences.c\
-	id3info.c\
 	tray-icon.c\
 	misc.c\
 	playlist3.c\
@@ -167,7 +166,6 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-mpddata-treeview-private.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
-		id3info.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		egg/eggtrayicon.h\

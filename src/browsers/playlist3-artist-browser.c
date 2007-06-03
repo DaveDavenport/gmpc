@@ -668,6 +668,7 @@ static void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *
 
 static void pl3_artist_browser_show_info()
 {
+/*
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_ab_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_ab_tree));
 	if(!mpd_server_check_version(connection,0,12,0))
@@ -678,7 +679,7 @@ static void pl3_artist_browser_show_info()
 	{
 		GList *list = NULL;
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
-		/* iterate over every row */
+
 		list = g_list_last (list);
 		do
 		{
@@ -700,10 +701,11 @@ static void pl3_artist_browser_show_info()
 			if(path)q_free(path);
 		}
 		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
-		/* free list */
+
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
+*/
 }
 
 static void pl3_artist_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)

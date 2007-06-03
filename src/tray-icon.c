@@ -489,11 +489,12 @@ static void destroy_tray_icon()
 
 static void tray_icon_info()
 {
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
+/*	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
 		call_id3_window_song(mpd_songDup(song));
 	}
+*/
 }
 
 static int  tray_mouse_menu(GtkWidget *wid, GdkEventButton *event)

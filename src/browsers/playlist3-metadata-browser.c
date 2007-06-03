@@ -18,8 +18,6 @@ static int info2_add_go_menu(GtkWidget *);
 static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-
-
 static void info2_fill_song_view(char *);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -137,9 +135,7 @@ static void info2_widget_clear_children(GtkWidget *wid)
 	list = gtk_container_get_children(GTK_CONTAINER(wid));
 	if(list)
 	{
-		for(node = g_list_first(list);
-				node;
-				node = g_list_next(node))
+		for(node = g_list_first(list); node; node = g_list_next(node))
 		{
 			gtk_widget_destroy(node->data);	
 		}
@@ -323,7 +319,6 @@ static void info2_fill_song_view(char *path)
 {
 	GtkWidget *expander, *gmtv;
 	GtkWidget *ali = NULL;
-	GtkWidget *vbox= NULL;
 	mpd_Song *song = NULL;
 	GtkWidget *button = NULL;
 	GtkWidget *label = NULL;
@@ -332,8 +327,6 @@ static void info2_fill_song_view(char *path)
 	/** 
 	 * Clear the view
 	 */
-
-
 	info2_prepare_view();
 
 	song = mpd_database_get_fileinfo(connection, path);
@@ -449,7 +442,6 @@ static void info2_fill_song_view(char *path)
 	/* query */
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
-//	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
 
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, FALSE, FALSE,0);
 

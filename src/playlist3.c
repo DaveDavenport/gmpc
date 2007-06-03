@@ -32,7 +32,6 @@
 #include "browsers/playlist3-artist-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
-#include "id3info.h"
 
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
@@ -1635,7 +1634,7 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
 	if(!mpd_check_connected(connection)) return;
-	call_id3_window(mpd_player_get_current_song_id(connection));
+	/*call_id3_window(mpd_player_get_current_song_id(connection));*/
 }
 
 static void playlist_player_volume_changed(BaconVolumeButton *vol_but)
