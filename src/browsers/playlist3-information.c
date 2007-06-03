@@ -499,12 +499,13 @@ static void info3_fill_view()
 			if(list)
 			{
 				int a=0;
-				i = g_list_length(list);
+				GList *il = g_list_first(list);
+				i = g_list_length(il);
 				gtk_table_resize(GTK_TABLE(table2), (int)ceil(i/3.0), 3);
 				do{
-					gtk_table_attach_defaults(GTK_TABLE(table2), list->data, a%3, a%3+1, a/3,a/3+1);
+					gtk_table_attach_defaults(GTK_TABLE(table2), il->data, a%3, a%3+1, a/3,a/3+1);
 					a++;
-				}while((list = g_list_next(list)));
+				}while((il = g_list_next(il)));
 				g_list_free(list);
 			}
 

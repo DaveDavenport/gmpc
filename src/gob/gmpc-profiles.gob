@@ -37,7 +37,7 @@ requires 2.0.0
 
 class Gmpc:Profiles from G:Object
 {
-  private config_obj *profiles = {NULL} destroywith cfg_close; 
+  private config_obj *profiles = {NULL}; 
   private Profile **list = {NULL};
   private int num_profiles = {0};
 
@@ -456,6 +456,33 @@ class Gmpc:Profiles from G:Object
 			return TRUE;                                 	
 
 	}
-
-
+	override (G:Object)
+	void
+	finalize (G:Object *obj)
+	{
+		Self *self = GMPC_PROFILES(obj);
+		if(self->_priv->list)
+		{
+			int i = 0;
+			do{
+				Profile * prof = self->_priv->list[i];
+				if(prof->name)
+					g_free(prof->name);
+				if(prof->hostname)
+					g_free(prof->hostname);
+				if(prof->password)
+					g_free(prof->password);
+				g_free(prof);
+				self->_priv->list[i] = NULL;
+				i++;
+			}while(self->_priv->list[i]);
+			g_free(self->_priv->list);
+			self->_priv->list = NULL;
+		}
+		if(self->_priv->profiles)
+		{
+			cfg_close(self->_priv->profiles);
+			self->_priv->profiles=  NULL;
+		}
+	}
 }
