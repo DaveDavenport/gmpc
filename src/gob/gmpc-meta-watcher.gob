@@ -25,7 +25,6 @@ class Gmpc:Meta:Watcher from  G:Object {
     void
     data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, gchar *path)
     { 
-		printf("data changed: %i:%i:%s\n",type, result, path);
 
     }
 
@@ -45,7 +44,6 @@ class Gmpc:Meta:Watcher from  G:Object {
 			case META_ALBUM_ART:
 				if(song1->album == NULL || song2->album == NULL || strcmp(song1->album, song2->album))
 				{
-					printf("album: %s %s not valid and equal\n", song1->album, song2->album);
 					return FALSE;
 				}
 			case META_ARTIST_TXT:
@@ -55,10 +53,8 @@ class Gmpc:Meta:Watcher from  G:Object {
 
 					return TRUE;
 				}
-				printf("artist: %s %s not valid and equal\n", song1->artist,song2->artist);
 				break;
 			default:
-				printf("unknown type\n");
 				break;
 		}
 		return FALSE;
@@ -73,7 +69,6 @@ class Gmpc:Meta:Watcher from  G:Object {
 
 		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
 		{
-			printf("request invalid %i \n", type);
 			callback(song, META_DATA_UNAVAILABLE, NULL, data);			
 		}
 		ret = meta_data_get_path(song, type, &path,callback,data);
@@ -89,7 +84,6 @@ class Gmpc:Meta:Watcher from  G:Object {
 			
 		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
 		{
-			printf("request invalid %i \n", type);
 			return META_DATA_UNAVAILABLE;
 		}
 

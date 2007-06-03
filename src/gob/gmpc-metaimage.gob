@@ -221,10 +221,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		dispose(G:Object *obj)
 		{
 			Self *self = GMPC_METAIMAGE(obj); 
-			printf("%s: disposing metaimage\n", (self->image_type == META_ARTIST_ART)?self->_priv->song->artist:"Album");
 			if(self->_priv->meta_id)
 			{
-				printf("disconnecting handler %lu\n", self->_priv->meta_id);
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 				self->_priv->meta_id =  0;
 			}
@@ -356,7 +354,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 			if(!gmpc_meta_watcher_match_data(self->image_type, self->_priv->song, song))
 			{
-				printf("%s: not for me\n",__FUNCTION__);
 				return;
 			}
 

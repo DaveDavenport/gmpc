@@ -159,11 +159,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 		if(!gmpc_meta_watcher_match_data(self->_priv->type, self->_priv->song, song))
 		{
-			printf("not for me\n");
 			return;
 		}
-
-
 		if(ret == META_DATA_AVAILABLE) {
 			self_set_text_from_path(self,path); 
 			self->_priv->meta_id = 0;
@@ -180,7 +177,6 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	dispose (G:Object *obj)
 	{
 		Self *self = GMPC_META_TEXT_VIEW(obj); 
-		printf("%i\n", self->_priv->meta_id);
 		if(self->_priv->meta_id)
 		{
 			g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);

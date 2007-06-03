@@ -449,9 +449,9 @@ static void info2_fill_song_view(char *path)
 	/* query */
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
-	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
+//	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
 
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, FALSE, FALSE,0);
 
 	/**
 	 * Play Button 

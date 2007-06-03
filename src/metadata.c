@@ -37,10 +37,11 @@ typedef struct {
 	gpointer data;
 } meta_thread_data;
 
-
-static gboolean meta_data_handle_results();
-gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
-
+gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
+static gboolean meta_data_handle_results(void);
+/*
+static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
+*/
 void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
 {
 	if(!song) return;
@@ -387,7 +388,7 @@ static void meta_data_retrieve_thread()
 		 * Push the result back
 		 */	
 		q_async_queue_push(meta_results, data);		
-		g_idle_add(meta_data_handle_results,NULL);
+		g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
 		/**
 		 * clear our reference to the object
 		 */
@@ -395,9 +396,9 @@ static void meta_data_retrieve_thread()
 		g_mutex_unlock(meta_processing);
 	}while(1);
 }
+/*
 
-
-gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2)
+static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2)
 {
 	if(data && data->id == GPOINTER_TO_INT(data2))
 	{
@@ -424,17 +425,14 @@ void meta_data_handle_remove_request(guint id)
 	}
 	q_async_queue_unlock(meta_commands);
 	debug_printf(DEBUG_ERROR, "(no error) Removing id: %u", id);
-	/* if not found, it _could_ be that it's being processed now by the other thread, 
-	 * if that's the case push it in the queue that is checked on executing the callback.
-	 */
+
 	if(!found)
 		g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
 }
-
-static gboolean meta_data_handle_results()
+*/
+static gboolean meta_data_handle_results(void)
 {
 	meta_thread_data *data = NULL;
-	printf("handle result\n");
 	if(meta_thread == g_thread_self())
 	{
 		printf("Crap, handled in wrong thread\n");
@@ -612,7 +610,6 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 		return TRUE;
 	if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
 	{
-		printf("meta compare invalid\n");
 		return TRUE;
 	}
 	return FALSE;
@@ -690,7 +687,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	if(!callback)
 	{
 		q_async_queue_lock(meta_commands);
-		if(q_async_queue_has_data(meta_commands,meta_compare_func, mtd))
+		if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
 		{
 			q_async_queue_unlock(meta_commands);
 			mpd_freeSong(song);
@@ -708,5 +705,3 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 
 	return ret;
 }
-
-
