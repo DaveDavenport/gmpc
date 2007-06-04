@@ -304,6 +304,24 @@ static void info3_fill_view()
 		i++;
 	}
 
+	/**
+	 * Album info 
+	 */
+	expander= gtk_expander_new(_("Album Info:"));
+	gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	/* expander */
+	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
+	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Album Info:</b>"));
+	/* query */
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
+	gtk_container_add(GTK_CONTAINER(expander), gmtv);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, TRUE,TRUE,0);	
+
+
+
+
+
 	hbox = gtk_hbox_new(FALSE, 24);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, FALSE,0);
 	
@@ -346,6 +364,10 @@ static void info3_fill_view()
 
 
 	gtk_box_pack_start(GTK_BOX(hbox),vbox, FALSE, FALSE,0);
+
+
+
+
 
 
 	/**

@@ -1631,9 +1631,16 @@ int pl3_progress_seek_stop()
 
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
 {
+	mpd_Song *song = NULL;
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN) return;
 	if(!mpd_check_connected(connection)) return;
+	song = mpd_playlist_get_current_song(connection);
+	if(song)
+	{
+		info2_activate();
+		info2_fill_song_view(song->file);	
+	}
 	/*call_id3_window(mpd_player_get_current_song_id(connection));*/
 }
 

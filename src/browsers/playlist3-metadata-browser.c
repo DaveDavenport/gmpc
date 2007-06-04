@@ -18,7 +18,7 @@ static int info2_add_go_menu(GtkWidget *);
 static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-static void info2_fill_song_view(char *);
+
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
@@ -315,7 +315,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 /** 
  * Song View 
  */
-static void info2_fill_song_view(char *path) 
+void info2_fill_song_view(char *path) 
 {
 	GtkWidget *expander, *gmtv;
 	GtkWidget *ali = NULL;

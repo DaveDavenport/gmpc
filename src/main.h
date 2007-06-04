@@ -92,7 +92,6 @@ void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);
 
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
-void call_id3_window_song(mpd_Song *songstr);
 void playlist_changed(MpdObj *mi);
 
 void main_quit(void);
@@ -145,6 +144,7 @@ void preferences_show_pref_window(int plugin_id);
 void info2_activate(void);
 void info2_fill_artist_view(char *);
 void info2_fill_album_view(char *, char *);
+void info2_fill_song_view(char *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 #endif

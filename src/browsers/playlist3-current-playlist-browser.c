@@ -690,7 +690,7 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
 
 static void pl3_current_playlist_browser_show_info()
 {
-/*
+
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_cp_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
@@ -699,20 +699,21 @@ static void pl3_current_playlist_browser_show_info()
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 
 		list = g_list_last (list);
-		do
+
 		{
 			GtkTreeIter iter;
 			mpd_Song *song = NULL;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-			call_id3_window_song (mpd_songDup(song));
+	/*		call_id3_window_song (mpd_songDup(song));*/
+			info2_activate();
+			info2_fill_song_view(song->file);	
 		}
-		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
+
 
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
-*/
 }
 
 static void pl3_current_playlist_browser_selected(GtkWidget *container)
