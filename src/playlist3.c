@@ -673,7 +673,7 @@ gboolean pl3_close()
  */
 int pl3_hide()
 {
-	if(!tray_availible())
+	if(!tray_availible() && !tray_icon2_get_available())
 	{
 		return 1;
 	}

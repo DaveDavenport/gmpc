@@ -39,6 +39,7 @@
 
 extern GmpcConnection *gmpcconn;
 
+
 extern int gmpc_connected;
 
 extern GtkTreeModel *playlist;
@@ -66,6 +67,8 @@ extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
 
 extern gmpcPlugin tray_icon_plug;
+extern gmpcPlugin tray_icon2_plug;
+
 extern gmpcPlugin info3_plugin;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin url_plugin; 
@@ -142,4 +145,6 @@ void preferences_show_pref_window(int plugin_id);
 void info2_activate(void);
 void info2_fill_artist_view(char *);
 void info2_fill_album_view(char *, char *);
+/* tray stuff */
+gboolean tray_icon2_get_available(void);
 #endif

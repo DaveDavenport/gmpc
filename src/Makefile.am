@@ -10,6 +10,7 @@ sources=\
 	mpdinteraction.c\
 	preferences.c\
 	tray-icon.c\
+	tray-icon2.c\
 	misc.c\
 	playlist3.c\
 	edit_markup.c\
