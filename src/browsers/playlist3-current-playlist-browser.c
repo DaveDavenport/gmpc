@@ -99,7 +99,7 @@ GtkWidget *pl3_cp_tree = NULL;
 GtkWidget *pl3_cp_sw = NULL;
 GtkWidget *pl3_cp_vbox = NULL;
 TreeSearch *tree_search = NULL;
-
+/*
 static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
@@ -109,7 +109,7 @@ static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, Gd
 	}
 	return TRUE;
 }
-
+*/
 static void pl3_current_playlist_search_activate()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(playlist);

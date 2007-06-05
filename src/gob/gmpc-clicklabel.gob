@@ -7,9 +7,18 @@ requires 2.0.0
 
 class Gmpc:ClickLabel from Gtk:Event:Box
 {
+	private gint size = {10};
+	public gint do_italic = {FALSE};
+	public gint do_bold = {TRUE};
 	private GtkWidget *label = {NULL};
-	private gchar *text = {NULL} destroywith g_free;
-	private gchar *text_bold = {NULL} destroywith g_free;
+
+	property INT do_bold
+		(nick = "Bold when mouse over",
+		 blurb = "Bold when mouse over",
+		 default_value = TRUE,
+		export,
+		link);
+
 	/* initialize, set signal handlers */
 	init(self)
 	{
@@ -26,44 +35,173 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	private
 	gboolean focus_in_event(self, GdkEventFocus *event, gpointer data)
 	{
-		/* do this more efficient? */
-		gtk_label_set_markup(GTK_LABEL(self->_priv->label),self->_priv->text_bold);
+		PangoAttrList *attrs = NULL;
+		PangoAttribute *attr = NULL;
+		attrs = pango_attr_list_new ();
+		if(self->do_bold)
+		{
+			attr = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
+			attr->start_index = 0;
+			attr->end_index = -1;
+			pango_attr_list_change (attrs, attr);
+		}
+		if(self->do_italic)
+		{
+			attr = pango_attr_style_new (PANGO_STYLE_ITALIC);
+			attr->start_index = 0;
+			attr->end_index = -1;
+			pango_attr_list_change (attrs, attr);
+		}
+
+		attr = pango_attr_size_new (self->_priv->size);
+		attr->start_index = 0;
+		attr->end_index = -1;
+		pango_attr_list_change (attrs, attr);
+
+		gtk_label_set_attributes(GTK_LABEL(self->_priv->label), attrs);
+		pango_attr_list_unref (attrs);
+
 		gdk_window_set_cursor(GTK_WIDGET(self)->window, gdk_cursor_new(GDK_HAND2));
 		return TRUE;
 	}
 	private
 	gboolean focus_out_event(self, GdkEventFocus *event, gpointer data)
 	{
-		gtk_label_set_markup(GTK_LABEL(self->_priv->label),self->_priv->text);
+		PangoAttrList *attrs = NULL;
+		PangoAttribute *attr = NULL;
+		attrs = pango_attr_list_new ();
+
+		attr = pango_attr_size_new (self->_priv->size);
+		attr->start_index = 0;
+		attr->end_index = -1;
+		pango_attr_list_change (attrs, attr);
+
+		if(self->do_italic)
+		{
+			attr = pango_attr_style_new (PANGO_STYLE_ITALIC);
+			attr->start_index = 0;
+			attr->end_index = -1;
+			pango_attr_list_change (attrs, attr);
+		}
+
+
+		gtk_label_set_attributes(GTK_LABEL(self->_priv->label), attrs);
+		pango_attr_list_unref(attrs);
 		gdk_window_set_cursor(GTK_WIDGET(self)->window,NULL); 
 		return TRUE;
 	}
 
 	/* clicked signal */
 	signal last NONE (POINTER)
-	void
-	clicked (self, gpointer data)
-	{
+		void
+		clicked (self, gpointer data)
+		{
 
-	}
-	
+		}
 	public
-	GtkWidget *new(gchar *value (check null))
+		void
+		set_text (self , const gchar *value (check null))
+		{
+			gtk_label_set_text(GTK_LABEL(self->_priv->label), value);
+		}	
+	public 
+		void
+		set_ellipsize(self,PangoEllipsizeMode el)
+		{
+			gtk_label_set_ellipsize(GTK_LABEL(self->_priv->label), el);
+		}
+	public 
+	void
+	font_size(self,gint size_diff)
 	{
-		Self *lb = GET_NEW;
-		/* create strings, should make this smarter */
-		lb->_priv->text = g_markup_escape_text(value,-1);
-		lb->_priv->text_bold = g_markup_printf_escaped("<b>%s</b>",value);
-		/* label */
-		lb->_priv->label = gtk_label_new(value);
-		gtk_label_set_markup(GTK_LABEL(lb->_priv->label), lb->_priv->text);
-		gtk_misc_set_alignment(GTK_MISC(lb->_priv->label), 0,0.5);
-		/* setup event box */
-		gtk_event_box_set_visible_window(GTK_EVENT_BOX(lb), FALSE);	
-		gtk_container_add(GTK_CONTAINER(lb),lb->_priv->label);
-		gtk_label_set_ellipsize(GTK_LABEL(lb->_priv->label), PANGO_ELLIPSIZE_END);
-		return (GtkWidget *)lb;
+		self->_priv->size += size_diff*PANGO_SCALE;
+
+		PangoAttrList *attrs = NULL;
+		PangoAttribute *attr = NULL;
+		attrs = pango_attr_list_new ();
+		attr = pango_attr_size_new (self->_priv->size);
+		attr->start_index = 0;
+		attr->end_index = -1;
+		pango_attr_list_change (attrs, attr);
+		if(self->do_italic)
+		{
+			attr = pango_attr_style_new (PANGO_STYLE_ITALIC);
+			attr->start_index = 0;
+			attr->end_index = -1;
+			pango_attr_list_change (attrs, attr);
+		}
+
+
+		gtk_label_set_attributes(GTK_LABEL(self->_priv->label), attrs);
+		pango_attr_list_unref(attrs);
 	}
+
+	public 
+	void
+	set_do_italic(self,gboolean toggle)
+	{
+		self->do_italic = toggle;
+
+		PangoAttrList *attrs = NULL;
+		PangoAttribute *attr = NULL;
+		attrs = pango_attr_list_new ();
+		attr = pango_attr_size_new (self->_priv->size);
+		attr->start_index = 0;
+		attr->end_index = -1;
+		pango_attr_list_change (attrs, attr);
+		if(self->do_italic)
+		{
+			attr = pango_attr_style_new (PANGO_STYLE_ITALIC);
+			attr->start_index = 0;
+			attr->end_index = -1;
+			pango_attr_list_change (attrs, attr);
+		}
+	
+		gtk_label_set_attributes(GTK_LABEL(self->_priv->label), attrs);
+		pango_attr_list_unref(attrs);
+	}
+
+	public
+		GtkWidget *new(gchar *value (check null))
+		{
+			PangoContext *pc = NULL;
+			PangoFontDescription *pfd = NULL;
+			PangoAttrList *attrs = NULL;
+			PangoAttribute *attr = NULL;
+			Self *lb = GET_NEW;
+			/* create strings, should make this smarter */
+			/* label */
+			lb->_priv->label = gtk_label_new(value);
+			//gtk_label_set_markup(GTK_LABEL(lb->_priv->label), lb->_priv->text);
+			gtk_misc_set_alignment(GTK_MISC(lb->_priv->label), 0,0.5);
+			/* setup event box */
+			gtk_event_box_set_visible_window(GTK_EVENT_BOX(lb), FALSE);	
+			gtk_container_add(GTK_CONTAINER(lb),lb->_priv->label);
+			gtk_label_set_ellipsize(GTK_LABEL(lb->_priv->label), PANGO_ELLIPSIZE_END);
+
+			pc = gtk_widget_get_pango_context(GTK_WIDGET(lb->_priv->label));
+			pfd = pango_context_get_font_description(pc);
+			lb->_priv->size = pango_font_description_get_size(pfd);
+
+			attrs = pango_attr_list_new ();
+			attr = pango_attr_size_new (lb->_priv->size);
+			attr->start_index = 0;
+			attr->end_index = -1;
+
+			if(lb->do_italic)
+			{
+				attr = pango_attr_style_new (PANGO_STYLE_ITALIC);
+				attr->start_index = 0;
+				attr->end_index = -1;
+				pango_attr_list_change (attrs, attr);
+			}
+			pango_attr_list_change (attrs, attr);
+
+			gtk_label_set_attributes(GTK_LABEL(lb->_priv->label), attrs);
+			pango_attr_list_unref(attrs);
+
+			return (GtkWidget *)lb;
+		}
 
 }
 

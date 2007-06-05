@@ -32,6 +32,11 @@
 #include "browsers/playlist3-artist-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
+#include "gmpc-clicklabel.h"
+
+GtkWidget *header_labels[5];
+void playlist3_new_header(void);
+void playlist3_update_header(void);
 
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
@@ -956,7 +961,7 @@ void create_playlist3 ()
 
 	/* Make sure change is applied */
 
-
+	playlist3_new_header();
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
@@ -1048,6 +1053,7 @@ void create_playlist3 ()
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
+
 
 	/**
 	 *
@@ -1177,9 +1183,9 @@ static void playlist_player_set_song(MpdObj *mi)
 		/**
 		 * Set markup
 		 */
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
+/*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
 				buffer);
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+*/		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 				buffer);
 	}
 	else
@@ -1187,10 +1193,10 @@ static void playlist_player_set_song(MpdObj *mi)
 		/**
 		 * When not playing set "not playlist
 		 */
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
+/*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
 				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));
 
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+*/		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));		
 	}
 }
@@ -1273,7 +1279,8 @@ static void playlist_zoom_level_changed()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));
+/*	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));*/
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "header_box"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
 	/** Menu Bar */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
@@ -1302,7 +1309,8 @@ static void playlist_zoom_level_changed()
 			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));     			
+/*			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));     			*/
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "header_box"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		case PLAYLIST_SMALL:
@@ -1445,10 +1453,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				/**
 				 * Set paused in Window string 
 				 */
-				gtk_label_set_markup(GTK_LABEL
+/*				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Paused</span>");
-
+*/
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 						"<span size=\"large\" weight=\"bold\">Paused</span>");				
@@ -1463,16 +1471,17 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
-				gtk_label_set_markup(GTK_LABEL
+/*				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Not Playing</span>");
-
+*/
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 						"<span size=\"large\" weight=\"bold\">Not Playing</span>");				
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
 		}
+		playlist3_update_header();
 	}
 	/**
 	 * Handle song change or Playlist change
@@ -1480,6 +1489,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	 */
 	if(what&MPD_CST_SONGID || what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
+		playlist3_update_header();
 		if(mpd_player_get_state(mi) == MPD_PLAYER_PLAY)
 		{
 			playlist_player_set_song(mi);
@@ -1895,6 +1905,120 @@ static void playlist3_fill_server_menu(void)
 	{
 		/* Server Menu Item */
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_server"), FALSE);
+	}
+}
+/**
+ * new header 
+ */
+
+static void playlist3_header_song(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song)
+	{
+		info2_activate();
+		info2_fill_song_view(song->file);	
+	}
+}
+static void playlist3_header_artist(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song && song->artist)
+	{
+		info2_activate();
+		info2_fill_artist_view(song->artist);
+	}
+}
+static void playlist3_header_album(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song && song->artist && song->album)
+	{
+		info2_activate();
+		info2_fill_album_view(song->artist,song->album);
+	}
+}
+
+
+void playlist3_new_header(void)
+{
+	GtkWidget *hbox10 = glade_xml_get_widget(pl3_xml, "header_box");
+	if(hbox10)
+	{
+		GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
+		GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+		/** Title */
+		header_labels[0] = gmpc_clicklabel_new("");
+		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]),4);
+		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[0]),FALSE);
+
+		header_labels[1] = gtk_label_new(_("By"));
+		/** Artist */
+		header_labels[2] = gmpc_clicklabel_new("");
+		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]),PANGO_ELLIPSIZE_NONE);
+		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[2]),FALSE);
+		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]),TRUE);
+
+		header_labels[3] = gtk_label_new(_("From"));
+		/** Albumr */
+		header_labels[4] = gmpc_clicklabel_new("");
+		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[4]),FALSE);
+		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]),TRUE);
+
+		gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox), header_labels[1], FALSE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox), header_labels[2], FALSE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE,0);
+
+		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE,0);
+
+		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
+		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
+		g_signal_connect(G_OBJECT(header_labels[4]), "button-press-event", G_CALLBACK(playlist3_header_album), NULL);
+
+		gtk_container_add(GTK_CONTAINER(hbox10), vbox);
+		gtk_widget_show_all(hbox10);
+	}
+}
+
+void playlist3_update_header(void)
+{
+	if(header_labels[0] != NULL)
+	{
+		char buffer[1024];
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
+		/** Set new header */
+		if(mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song){
+
+			mpd_song_markup(buffer, 1024,"[%name%][%title%|%shortfile%]",song);
+			gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),buffer);
+			if(song->artist) {
+				gtk_widget_show(header_labels[1]);
+				gtk_widget_show(header_labels[2]);
+				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[2]),song->artist);
+			} else {
+				gtk_widget_hide(header_labels[1]);
+				gtk_widget_hide(header_labels[2]);
+			}
+			if(song->album) {
+				gtk_widget_show(header_labels[3]);
+				gtk_widget_show(header_labels[4]);
+				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),song->album);
+			} else {
+				gtk_widget_hide(header_labels[3]);
+				gtk_widget_hide(header_labels[4]);
+			}
+
+		}
+		else
+		{
+			gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),_("Not Playing"));
+			gtk_widget_hide(header_labels[1]);
+			gtk_widget_hide(header_labels[2]);
+			gtk_widget_hide(header_labels[3]);
+			gtk_widget_hide(header_labels[4]);
+		}
 	}
 }
 

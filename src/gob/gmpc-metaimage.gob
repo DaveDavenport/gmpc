@@ -582,7 +582,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		mpd_Song *song = mpd_songDup(self->_priv->song);
 		MetaDataType type = self->image_type;
 		GtkFileFilter *gff = gtk_file_filter_new();
-		GtkFileChooserDialog *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
+		GtkWidget *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
 					 GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -597,7 +597,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
 
 		gtk_widget_show_all(fcd);
-		switch(gtk_dialog_run(fcd))
+		switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
 			case GTK_RESPONSE_ACCEPT:
 				{	

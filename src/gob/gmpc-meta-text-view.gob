@@ -54,7 +54,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_clear_entry),self);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-			gtk_widget_show_all(menu);
+			gtk_widget_show_all(GTK_WIDGET(menu));
 		}
 	}
 
@@ -116,7 +116,24 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		gsize size = 0;
 		if(g_file_get_contents (path,&content,&size,NULL))
 		{
-			gtk_text_buffer_set_text(self->_priv->buffer, content, size);
+			gchar *new_data = NULL;
+			gsize new_size = 0;
+			if(g_utf8_validate(content, size, NULL))
+			{
+				gtk_text_buffer_set_text(self->_priv->buffer, content, size);
+			}
+			new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
+			if(new_data)
+			{
+				gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
+				g_free(new_data);
+			}
+			else
+			{
+				new_data = g_strdup_printf("%s: '%s' %s", _("Failed to open file:"), path,_("because of encoding issues"));
+				gtk_text_buffer_set_text(self->_priv->buffer,new_data,-1);
+				g_free(new_data);
+			}
 			g_free(content);
 		}
 	}
@@ -197,7 +214,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		mpd_Song *song = mpd_songDup(self->_priv->song);
 		MetaDataType type = self->_priv->type;
 		GtkFileFilter *gff = gtk_file_filter_new();
-		GtkFileChooserDialog *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
+		GtkWidget *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
 					 GTK_FILE_CHOOSER_ACTION_OPEN,
 				      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
@@ -211,7 +228,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
 
 		gtk_widget_show_all(fcd);
-		switch(gtk_dialog_run(fcd))
+		switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
 			case GTK_RESPONSE_ACCEPT:
 				{	
