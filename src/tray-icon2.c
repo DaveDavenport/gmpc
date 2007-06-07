@@ -397,35 +397,37 @@ void tray_icon2_create_tooltip(void)
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
 		int monitor;
-		int x,y;
+		int x=0,y=0;
 		GdkScreen *screen;
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
-		gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation);
-		monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
-		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		/* Get Y */
-		y= rect.y+rect.height+5;
-		/* if the lower part falls off the screen, move it up */
-		if((y+90) > rect2.height) {
-			y = rect.y - 90 - 5;
-		}
-		if(y < 0) y =0;
-
-		/* Get X */
-		x = rect.x - 300/2;
-		if((x+300) > rect2.width){
-			if(orientation == GTK_ORIENTATION_VERTICAL) {
-				x = rect2.width+-300-rect.width-5;
-			} else {
-				x = rect2.width - 300;
+		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
+		{
+			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
+			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+			/* Get Y */
+			y= rect.y+rect.height+5;
+			/* if the lower part falls off the screen, move it up */
+			if((y+90) > rect2.height) {
+				y = rect.y - 90 - 5;
 			}
-		}
-		if(x<0) {
-			if(orientation == GTK_ORIENTATION_VERTICAL) {
-				x = rect.width+5;
-			} else {
-				x = 0;
+			if(y < 0) y =0;
+
+			/* Get X */
+			x = rect.x - 300/2;
+			if((x+300) > rect2.width){
+				if(orientation == GTK_ORIENTATION_VERTICAL) {
+					x = rect2.width+-300-rect.width-5;
+				} else {
+					x = rect2.width - 300;
+				}
+			}
+			if(x<0) {
+				if(orientation == GTK_ORIENTATION_VERTICAL) {
+					x = rect.width+5;
+				} else {
+					x = 0;
+				}
 			}
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
