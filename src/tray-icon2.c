@@ -29,12 +29,10 @@ enum{
 
 gboolean tray_icon2_get_available(void)
 {
-	if(tray_icon2_gsi)
-	{
-		if(gtk_status_icon_is_embedded(tray_icon2_gsi))
-		{
-			if(gtk_status_icon_get_visible(tray_icon2_gsi))
-				return TRUE;
+	if(tray_icon2_gsi) {
+		if(gtk_status_icon_is_embedded(tray_icon2_gsi) &&
+				gtk_status_icon_get_visible(tray_icon2_gsi)) {
+			return TRUE;
 		}
 	}
 	return FALSE;
@@ -222,6 +220,35 @@ static void tray_icon2_set_enabled(int enabled)
 /**
  * TOOLTIP 
  */
+static void tray_icon2_tooltip_song(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song)
+	{
+		info2_activate();
+		info2_fill_song_view(song->file);	
+	}
+}
+static void tray_icon2_tooltip_artist(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song && song->artist)
+	{
+		info2_activate();
+		info2_fill_artist_view(song->artist);
+	}
+}
+static void tray_icon2_tooltip_album(void)
+{
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song && song->artist && song->album)
+	{
+		info2_activate();
+		info2_fill_album_view(song->artist,song->album);
+	}
+}
+
+
 static gboolean tray_icon2_tooltip_destroy(void)
 {
 	tray_icon2_tooltip_pb = NULL;
@@ -274,7 +301,7 @@ void tray_icon2_create_tooltip(void)
 	 */
 
 	coverimg = gmpc_metaimage_new(META_ALBUM_ART);
-	
+
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(coverimg), 80);
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg),"gmpc"); 
@@ -316,16 +343,20 @@ void tray_icon2_create_tooltip(void)
 	if(song)
 	{
 		/** Artist label */
-		if(song->title)
+		if(song->title || song->file || song->name)
 		{
-			label = gmpc_clicklabel_new(song->title);
+			char buffer[256];
+			mpd_song_markup(buffer, 256,"[%name%][%title%|%shortfile%]",song);
+			label = gmpc_clicklabel_new(buffer);
+			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_song), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),4);
+			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),3);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->artist)
 		{
 			label = gmpc_clicklabel_new(song->artist);
+			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_artist), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
 			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),0);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
@@ -333,8 +364,9 @@ void tray_icon2_create_tooltip(void)
 		if(song->album)
 		{
 			label = gmpc_clicklabel_new(song->album);
+			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_album), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),-2);
+			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),-3);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		tray_icon2_tooltip_pb = gtk_progress_bar_new();
@@ -354,7 +386,8 @@ void tray_icon2_create_tooltip(void)
 		gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE,FALSE,0);
 	} else {
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), _("<span size='larger'>Gnome Music Player Client</span>"));
+		gtk_label_set_markup(GTK_LABEL(label), _("<span size='large'>Gnome Music Player Client</span>"));
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start(GTK_BOX(vbox), label, TRUE,TRUE,0);
 
 	}
@@ -362,8 +395,7 @@ void tray_icon2_create_tooltip(void)
 	 * 	Position the popup
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
-	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available())
-	{
+	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
 		int monitor;
 		int x,y;
 		GdkScreen *screen;
@@ -382,13 +414,22 @@ void tray_icon2_create_tooltip(void)
 
 		/* Get X */
 		x = rect.x - 300/2;
-		if((x+300/2) > rect2.width){
-			x = rect2.width - 300;
+		if((x+300) > rect2.width){
+			if(orientation == GTK_ORIENTATION_VERTICAL) {
+				x = rect2.width+-300-rect.width-5;
+			} else {
+				x = rect2.width - 300;
+			}
+		}
+		if(x<0) {
+			if(orientation == GTK_ORIENTATION_VERTICAL) {
+				x = rect.width+5;
+			} else {
+				x = 0;
+			}
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
-	} 
-	else if (state == TI2_AT_UPPER_LEFT)
-	{
+	} else if (state == TI2_AT_UPPER_LEFT) {
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), 0,0);
 	}
 
