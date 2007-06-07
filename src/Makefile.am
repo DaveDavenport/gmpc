@@ -9,7 +9,6 @@ sources=\
 	plugin.c\
 	mpdinteraction.c\
 	preferences.c\
-	tray-icon.c\
 	tray-icon2.c\
 	misc.c\
 	playlist3.c\
@@ -171,7 +170,6 @@ EXTRA_DIST = 	playlist3.h\
 		egg/eggcolumnmodel.h\
 		egg/eggtrayicon.h\
 		revision.h\
-		tray-icon.h\
 		qlib/qasyncqueue.h
 
 #%.o: %.c Makefile.am

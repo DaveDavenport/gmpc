@@ -657,7 +657,7 @@ gboolean pl3_close()
 
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "hide-on-close", FALSE))
 	{
-		if(tray_availible())
+		if(tray_icon2_get_available())
 		{
 			pl3_toggle_hidden();
 			return TRUE;
@@ -678,7 +678,7 @@ gboolean pl3_close()
  */
 int pl3_hide()
 {
-	if(!tray_availible() && !tray_icon2_get_available())
+	if(!tray_icon2_get_available())
 	{
 		return 1;
 	}
@@ -1987,37 +1987,49 @@ void playlist3_update_header(void)
 	if(header_labels[0] != NULL)
 	{
 		char buffer[1024];
-		mpd_Song *song = mpd_playlist_get_current_song(connection);
-		/** Set new header */
-		if(mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song){
+		if(mpd_check_connected(connection))
+		{
+			mpd_Song *song = mpd_playlist_get_current_song(connection);
+			/** Set new header */
+			if(mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song){
 
-			mpd_song_markup(buffer, 1024,"[%name%][%title%|%shortfile%]",song);
-			gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),buffer);
-			if(song->artist) {
-				gtk_widget_show(header_labels[1]);
-				gtk_widget_show(header_labels[2]);
-				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[2]),song->artist);
-			} else {
+				mpd_song_markup(buffer, 1024,"[%name%][%title%|%shortfile%]",song);
+				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),buffer);
+				if(song->artist) {
+					gtk_widget_show(header_labels[1]);
+					gtk_widget_show(header_labels[2]);
+					gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[2]),song->artist);
+				} else {
+					gtk_widget_hide(header_labels[1]);
+					gtk_widget_hide(header_labels[2]);
+				}
+				if(song->album) {
+					gtk_widget_show(header_labels[3]);
+					gtk_widget_show(header_labels[4]);
+					gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),song->album);
+				} else {
+					gtk_widget_hide(header_labels[3]);
+					gtk_widget_hide(header_labels[4]);
+				}
+
+			}
+			else
+			{
+				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),_("Not Playing"));
 				gtk_widget_hide(header_labels[1]);
 				gtk_widget_hide(header_labels[2]);
-			}
-			if(song->album) {
-				gtk_widget_show(header_labels[3]);
-				gtk_widget_show(header_labels[4]);
-				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),song->album);
-			} else {
 				gtk_widget_hide(header_labels[3]);
 				gtk_widget_hide(header_labels[4]);
 			}
-
 		}
-		else
+		else 
 		{
-			gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),_("Not Playing"));
+			gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),_("Not Connected"));
 			gtk_widget_hide(header_labels[1]);
 			gtk_widget_hide(header_labels[2]);
 			gtk_widget_hide(header_labels[3]);
 			gtk_widget_hide(header_labels[4]);
+
 		}
 	}
 }

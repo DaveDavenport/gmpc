@@ -147,4 +147,5 @@ void info2_fill_album_view(char *, char *);
 void info2_fill_song_view(char *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
+void tray_icon2_create_tooltip(void);
 #endif

@@ -510,7 +510,7 @@ int main (int argc, char **argv)
 #endif
     plugin_add(&url_plugin,0);
     /* the tray icon */
-    plugin_add(&tray_icon_plug,0);
+    /*plugin_add(&tray_icon_plug,0);*/
     plugin_add(&tray_icon2_plug,0);
     /* Info3 data browser */
     plugin_add(&info3_plugin,0);	
@@ -626,7 +626,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_notify_popup), NULL );
+	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_icon2_create_tooltip), NULL );
 
 
 #endif
@@ -978,9 +978,6 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
 	 */
 	debug_printf(DEBUG_INFO, "Connection changed\n");
 	playlist_connection_changed(mi, connect);
-#ifdef ENABLE_TRAYICON
-	tray_icon_connection_changed(mi, connect);
-#endif
 	for(i=0; i< num_plugins; i++)
 	{
 		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);

@@ -80,7 +80,7 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 				printf("Move playlist: %s %i-%i\n",  GMPC_MPDDATA_MODEL_SORT(model)->playlist,original,destination);
 				mpd_database_playlist_move(connection, GMPC_MPDDATA_MODEL_SORT(model)->playlist,original,destination);
 				data = mpd_database_get_playlist_content(connection, GMPC_MPDDATA_MODEL_SORT(model)->playlist); 
-				gmpc_mpddata_model_set_mpd_data(model, data);		
+				gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(model), data);		
 			}
 			gtk_tree_path_free(path);
 			return TRUE;
