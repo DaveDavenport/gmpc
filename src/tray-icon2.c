@@ -1,4 +1,5 @@
 #include <gtk/gtk.h>
+#include <glade/glade.h>
 #include <libmpd/libmpd.h>
 #include "main.h"
 #include "plugin.h"
@@ -22,6 +23,14 @@ enum{
 	TI2_AT_LOWER_RIGHT,
 	TI2_AT_NUM_OPTIONS
 };
+/**
+ * Preferences
+ */
+static GladeXML *tray_icon2_preferences_xml = NULL;
+void popup_timeout_changed(void);
+void popup_position_changed(GtkComboBox *om);
+void popup_enable_toggled(GtkToggleButton *but);
+void tray_enable_toggled(GtkToggleButton *but);
 
 /**
  * Tray icon
@@ -149,12 +158,8 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
 			q_free(label);
-
-
 		}
 	}
-
-
 }
 /**
  * Show right icon when (dis)connected
@@ -260,6 +265,8 @@ static gboolean tray_icon2_tooltip_destroy(void)
 }
 void tray_icon2_create_tooltip(void)
 {
+	int x=0,y=0,monitor;
+	GdkScreen *screen;
 	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	GtkWidget *hbox = NULL;
 	GtkWidget *vbox = NULL;
@@ -396,9 +403,7 @@ void tray_icon2_create_tooltip(void)
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
-		int monitor;
-		int x=0,y=0;
-		GdkScreen *screen;
+	
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
 		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
@@ -408,8 +413,8 @@ void tray_icon2_create_tooltip(void)
 			/* Get Y */
 			y= rect.y+rect.height+5;
 			/* if the lower part falls off the screen, move it up */
-			if((y+90) > rect2.height) {
-				y = rect.y - 90 - 5;
+			if((y+95) > rect2.height) {
+				y = rect.y - 95 - 5;
 			}
 			if(y < 0) y =0;
 
@@ -432,7 +437,42 @@ void tray_icon2_create_tooltip(void)
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
 	} else if (state == TI2_AT_UPPER_LEFT) {
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), 0,0);
+		screen =gtk_widget_get_screen(pl3_win);
+		GdkRectangle rect2;
+		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5,rect2.y+5);
+	} else if (state == TI2_AT_UPPER_RIGHT) {
+		screen =gtk_widget_get_screen(pl3_win);
+		GdkRectangle rect2;
+		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+		/** Set Y = 0; */
+		y = rect2.y+5;
+		/** X is upper right - width */
+		x = rect2.x+rect2.width-5-300;
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+	} else if (state == TI2_AT_LOWER_LEFT) {
+
+		screen =gtk_widget_get_screen(pl3_win);
+		GdkRectangle rect2;
+		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+		/** Set Y = window height - size; */
+		y = rect2.y+rect2.height-5-95;
+		/** X =5 */ 
+		x = rect2.x+ 5; 
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+	} else {
+		screen =gtk_widget_get_screen(pl3_win);
+		GdkRectangle rect2;
+		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+		/** Set Y = window height - size; */
+		y = rect2.y+rect2.height-5-95;
+		/** X =window width - width */ 
+		x = rect2.x+rect2.width-5-300; 
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
 	}
 
 	/**
@@ -442,11 +482,91 @@ void tray_icon2_create_tooltip(void)
 	/**
 	 * Destroy it after 5 seconds
 	 */
-	tray_icon2_tooltip_timeout = g_timeout_add(5000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+	tray_icon2_tooltip_timeout = g_timeout_add(state*1000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
 
+/**
+ *  PREFERENCES 
+ */
+
+
+void tray_enable_toggled(GtkToggleButton *but)
+{
+	debug_printf(DEBUG_INFO,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
+	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", (int)gtk_toggle_button_get_active(but));
+	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", 1)) {
+		tray_icon2_set_enabled(TRUE);
+	} else {
+		tray_icon2_set_enabled(FALSE);
+	}
+}
+
+/* this sets all the settings in the notification area preferences correct */
+static void tray_update_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_tray_enable"), 
+			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", DEFAULT_TRAY_ICON_ENABLE));
+}
+
+void popup_enable_toggled(GtkToggleButton *but)
+{
+	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "show-tooltip", gtk_toggle_button_get_active(but));
+}
+
+
+void popup_position_changed(GtkComboBox *om)
+{
+	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "tooltip-position", gtk_combo_box_get_active(om));
+}
+
+void popup_timeout_changed(void)
+{
+	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "tooltip-timeout",
+			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_icon2_preferences_xml, "popup_timeout"))));
+}
+
+static void update_popup_settings()
+{
+	gtk_toggle_button_set_active((GtkToggleButton *)
+			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_popup_enable"),
+			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tray_icon2_preferences_xml, "om_popup_position")),
+			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-position", 0));
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_icon2_preferences_xml, "popup_timeout")),
+			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5));
+}
+
+static void tray_icon2_preferences_destroy(GtkWidget *container)
+{
+	if(tray_icon2_preferences_xml) {
+		GtkWidget *vbox = glade_xml_get_widget(tray_icon2_preferences_xml, "tray-pref-vbox");
+		gtk_container_remove(GTK_CONTAINER(container),vbox);
+		g_object_unref(tray_icon2_preferences_xml);
+		tray_icon2_preferences_xml = NULL;
+	}
+}
+static void tray_icon2_preferences_construct(GtkWidget *container)
+{
+	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
+	tray_icon2_preferences_xml = glade_xml_new(path, "tray-pref-vbox",NULL);
+
+	if(tray_icon2_preferences_xml) {
+		GtkWidget *vbox = glade_xml_get_widget(tray_icon2_preferences_xml, "tray-pref-vbox");
+		gtk_container_add(GTK_CONTAINER(container),vbox);
+		tray_update_settings();
+		update_popup_settings();
+		glade_xml_signal_autoconnect(tray_icon2_preferences_xml);
+	}
+}
+gmpcPrefPlugin tray_icon2_preferences = {
+	tray_icon2_preferences_construct,
+	tray_icon2_preferences_destroy
+};
+
 gmpcPlugin tray_icon2_plug = {
-	.name 						= "Notification Tray 2",
+	.name 						= "Notification",
 	.version 					= {0,0,0},
 	.plugin_type 				= GMPC_INTERNALL,
 	.init 						= tray_icon2_init,
@@ -454,5 +574,6 @@ gmpcPlugin tray_icon2_plug = {
 	.mpd_status_changed 		= tray_icon2_status_changed,
 	.mpd_connection_changed 	= tray_icon2_connection_changed,
 	.set_enabled 				= tray_icon2_set_enabled,
-	.get_enabled				= tray_icon2_get_enabled
+	.get_enabled				= tray_icon2_get_enabled,
+	.pref						= &tray_icon2_preferences
 };
