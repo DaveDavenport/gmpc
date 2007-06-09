@@ -541,16 +541,54 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
 	
-	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
-	cairo_rectangle(cr,0,0,width,height);
-	cairo_fill(cr);
-
 
 	cairo_set_line_width (cr, 1.5);
 
 	cairo_rectangle(cr, 0,0,width,height);
+
+	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
+	cairo_fill(cr);
 	
+	gdouble xc = 0;
+	gdouble yc = 0;
+	gdouble rounding_offset = 12;
+	gdouble _w = width;
+	gdouble _h = height;
+    cairo_move_to (cr, xc, yc+(rounding_offset*2));
+
+    cairo_curve_to (cr, 	xc, yc+rounding_offset,
+				xc, yc+0.5,
+				xc+rounding_offset, yc+0.5);
+
+    cairo_line_to  (cr, xc+_w-(rounding_offset*2), yc+0.5);
+
+    cairo_curve_to (cr, xc+_w-rounding_offset, yc+0.5,
+			xc+_w, yc+0.5,
+			xc+_w, yc+rounding_offset);
+
+    cairo_line_to (cr,  xc+_w, yc+_h-(rounding_offset*2));
+
+    cairo_curve_to (cr, xc+_w, yc+_h-rounding_offset,
+		        xc+_w, yc+_h-0.5,
+			xc+_w-rounding_offset, yc+_h-0.5);
+
+    cairo_line_to (cr, xc+(rounding_offset*2), yc+_h-0.5);
+
+    cairo_curve_to (cr, xc+rounding_offset, yc+_h-0.5,
+			xc, yc+_h-0.5,
+			xc, yc+_h-rounding_offset);
+
+
+    cairo_close_path (cr);
+
 	cairo_close_path (cr);
+	gdk_cairo_set_source_color(cr, 	&(widget->style->light[GTK_STATE_SELECTED]));
+	cairo_fill_preserve(cr);
+	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
+	cairo_stroke (cr);
+	
+
+/*
 	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
 
 	color = &(widget->style->base[GTK_STATE_SELECTED]);
@@ -565,7 +603,8 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
 	cairo_stroke (cr);
 	cairo_pattern_destroy(pat);
-	cairo_destroy(cr);
+*/	cairo_destroy(cr);
+
 	return FALSE;
 }
 /***
