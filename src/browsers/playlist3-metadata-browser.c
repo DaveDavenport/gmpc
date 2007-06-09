@@ -1230,6 +1230,7 @@ void info2_fill_album_view(char *artist,char *album)
 	{
 		MpdData *data = NULL;
 		GString *string = NULL;
+		mpd_Song *cursong = NULL;
 		int i=1;
 		int tracks = 0;
 		/** Album name */
@@ -1254,6 +1255,7 @@ void info2_fill_album_view(char *artist,char *album)
 			i++;
 		}
 		g_string_free(string, TRUE);
+
 
 
 		mpd_database_search_start(connection, TRUE);
@@ -1285,32 +1287,38 @@ void info2_fill_album_view(char *artist,char *album)
 			}
 		}
 
-		table2 = gtk_table_new(4, tracks,0);
+		table2 = gtk_table_new(2, tracks,0);
 		/**
 		 * set a table
 		 */
 		gtk_table_set_col_spacings(GTK_TABLE(table2), 0);
 		gtk_table_set_row_spacings(GTK_TABLE(table2), 0);
 		i=1;
+		cursong = mpd_playlist_get_current_song(connection);
 		for(data = mpd_data_get_first(data);data;data = mpd_data_get_next(data))
 		{
 			markup =  g_strdup_printf("%02i: %s",i, data->song->title);
 			label = gmpc_clicklabel_new(markup);
+			if(cursong && strcmp(data->song->file,cursong->file) == 0)
+			{
+				gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(label), TRUE);
+			}	
 			g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-			gtk_widget_set_size_request(label, 250,-1);
-			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+//			gtk_widget_set_size_request(label, 250,-1);
+			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+/*
 			button = gtk_button_new();
 			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
 			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(0));
 			gtk_table_attach(GTK_TABLE(table2), button, 2,3,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-
+*/
 			q_free(markup);
 			i++;
 		}
-		ali = gtk_alignment_new(0,0.5,0,0);
+		ali = gtk_alignment_new(0,0.5,1,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,10,0);
 		gtk_container_add(GTK_CONTAINER(ali), table2);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
