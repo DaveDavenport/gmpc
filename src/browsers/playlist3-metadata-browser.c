@@ -260,6 +260,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	GtkWidget *label,*button,*event;
 	GtkWidget *table;
 	GtkWidget *metaimage;
+	gchar *markup = NULL;
 	/* Button bg drawing code */
 	event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
@@ -277,7 +278,10 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_table_attach(GTK_TABLE(table), metaimage, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
 	/** Label */
+	markup = g_markup_printf_escaped("<b>%s</b>", song->artist);
 	label = gtk_label_new(song->artist);
+	gtk_label_set_markup(GTK_LABEL(label), markup);
+	g_free(markup);
 	gtk_label_set_ellipsize(GTK_LABEL(label),PANGO_ELLIPSIZE_END);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);	
 	gtk_table_attach(GTK_TABLE(table), label, 1,2,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,6,0);	
@@ -542,68 +546,32 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	int height = widget->allocation.height;
 	
 
-	cairo_set_line_width (cr, 1.5);
+	cairo_set_line_width (cr, 1.0);
 
 	cairo_rectangle(cr, 0,0,width,height);
 
 	gdk_cairo_set_source_color(cr, 	&(widget->style->base[GTK_STATE_NORMAL]));
 	cairo_fill(cr);
 	
-	gdouble xc = 0;
-	gdouble yc = 0;
-	gdouble rounding_offset = 12;
-	gdouble _w = width;
-	gdouble _h = height;
-    cairo_move_to (cr, xc, yc+(rounding_offset*2));
-
-    cairo_curve_to (cr, 	xc, yc+rounding_offset,
-				xc, yc+0.5,
-				xc+rounding_offset, yc+0.5);
-
-    cairo_line_to  (cr, xc+_w-(rounding_offset*2), yc+0.5);
-
-    cairo_curve_to (cr, xc+_w-rounding_offset, yc+0.5,
-			xc+_w, yc+0.5,
-			xc+_w, yc+rounding_offset);
-
-    cairo_line_to (cr,  xc+_w, yc+_h-(rounding_offset*2));
-
-    cairo_curve_to (cr, xc+_w, yc+_h-rounding_offset,
-		        xc+_w, yc+_h-0.5,
-			xc+_w-rounding_offset, yc+_h-0.5);
-
-    cairo_line_to (cr, xc+(rounding_offset*2), yc+_h-0.5);
-
-    cairo_curve_to (cr, xc+rounding_offset, yc+_h-0.5,
-			xc, yc+_h-0.5,
-			xc, yc+_h-rounding_offset);
-
+	cairo_rectangle(cr, 0,0,width,height);
 
     cairo_close_path (cr);
-
-	cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->light[GTK_STATE_SELECTED]));
+	gdk_cairo_set_source_color(cr, 	&(widget->style->mid[GTK_STATE_NORMAL]));
 	cairo_fill_preserve(cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
+	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
 	cairo_stroke (cr);
-	
+	/**
 
-/*
-	pat = cairo_pattern_create_linear (width/2, 0.0,width/2, height);
+	cairo_rectangle(cr, 0,0,136,height);
 
-	color = &(widget->style->base[GTK_STATE_SELECTED]);
-	cairo_pattern_add_color_stop_rgba (pat, 1, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
-
-	color = &(widget->style->base[GTK_STATE_NORMAL]);
-	cairo_pattern_add_color_stop_rgba (pat, 0, color->red/65535.0, color->green/65535.0, color->blue/65535.0, 1);
-
-	cairo_set_source (cr, pat);
-
-	cairo_fill_preserve (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_SELECTED]));
+    cairo_close_path (cr);
+	gdk_cairo_set_source_color(cr, 	&(widget->style->bg[GTK_STATE_SELECTED]));
+	cairo_fill_preserve(cr);
+	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
 	cairo_stroke (cr);
-	cairo_pattern_destroy(pat);
-*/	cairo_destroy(cr);
+	*/
+
+	cairo_destroy(cr);
 
 	return FALSE;
 }
@@ -832,10 +800,6 @@ void info2_fill_artist_view(char *artist)
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song2);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
 	gtk_box_pack_start(GTK_BOX(vbox), expander, TRUE,TRUE,0);	
-
-
-
-
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), vbox, FALSE, FALSE,0);
 
 	/**
@@ -923,7 +887,7 @@ void info2_fill_artist_view(char *artist)
 		 */
 		GtkWidget *button = NULL;
 		GtkWidget *ali = NULL;
-		GtkWidget *table2 = gtk_table_new(1,1,TRUE);
+		GtkWidget *vbox1 =NULL;
 		GtkWidget *label = gtk_label_new("");
 		char *markup = NULL;
 		info2_widget_clear_children(title_vbox);
@@ -949,16 +913,18 @@ void info2_fill_artist_view(char *artist)
 		gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
 		q_free(markup);
 		/**
-		 * set a table
+		 * set a vbox 
 		 */
-		gtk_table_set_col_spacings(GTK_TABLE(table2), 6);
-		gtk_table_set_row_spacings(GTK_TABLE(table2), 6);
+		vbox1 = gtk_vbox_new(FALSE, 6);
 		/**
 		 * Image
 		 */
 		MpdData *data = mpd_database_get_albums(connection, song2->artist);
 		for(;data;data = mpd_data_get_next(data))
 		{
+			GtkWidget *table, *image,*event;
+			GtkWidget *hbox;
+			GtkWidget *button;
 			MpdData *data2 = NULL;
 			mpd_Song *song  = NULL;
 			int tracks = 0;
@@ -979,58 +945,50 @@ void info2_fill_artist_view(char *artist)
 			/** 
 			 * Create cover art image 
 			 */
-			GtkWidget *table, *image,*event;
-			table = gtk_table_new(2,2,FALSE);
-			gtk_table_set_col_spacings(GTK_TABLE(table),6);
+			table = gtk_hbox_new(FALSE, 6); 
+
 			image = gmpc_metaimage_new(META_ALBUM_ART);
-			gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 120);
+			gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 100);
 			gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
 
 			gtk_container_set_border_width(GTK_CONTAINER(table), 8);
-			gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-
+			gtk_box_pack_start(GTK_BOX(table), image, FALSE, TRUE,0);
 			/**
 			 * The meta data printed out in alot of data
 			 */
 			table2 = gtk_table_new(8,2,FALSE);
 			gtk_table_set_col_spacings(GTK_TABLE(table2),6);
 			i=0;
-			if(song->album)
-			{
+			if(song->album) {
 				info2_add_table_item(table2,_("<b>Album:</b>"), song->album,i);
 				i++;
 			}
-			if(song->genre)
-			{
+			if(song->genre) {
 				info2_add_table_item(table2, _("<b>Genre:</b>"), song->genre,i);
 				i++;
 			}
-
-			if(song->date)
-			{
+			if(song->date) {
 				info2_add_table_item(table2, _("<b>Date:</b>"), song->date,i);
 				i++;
 			}
-			if(tracks)
-			{
+			if(tracks) {
 				char *str = g_strdup_printf("%i", tracks);
 				info2_add_table_item(table2, _("<b>Tracks:</b>"), str,i);
 				q_free(str);
 				i++;
 			}
-			if(song->file)
-			{
+			if(song->file) {
 				gchar *dirname = g_path_get_dirname(song->file);
 				info2_add_table_item(table2,_("<b>Directory:</b>"),dirname,i);
 				i++;
 				q_free(dirname);
 			}
-			gtk_table_attach(GTK_TABLE(table), table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
+			gtk_box_pack_start(GTK_BOX(table), table2, TRUE, TRUE,0);
 			/**
 			 * Play Button 
 			 */
-			GtkWidget *hbox = gtk_hbox_new(FALSE,6);
-			GtkWidget *button = gtk_button_new_with_label(_("Replace"));
+			hbox = gtk_vbox_new(FALSE,0);
+			button = gtk_button_new_with_label(_("Replace"));
 			gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 			g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 			g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
@@ -1063,36 +1021,20 @@ void info2_fill_artist_view(char *artist)
 			ali = gtk_alignment_new(0,0.5,0,0);
 			gtk_container_add(GTK_CONTAINER(ali), button);
 			gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
-			gtk_table_attach(GTK_TABLE(table), hbox, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK/*|GTK_FILL*/,6,0);
+			gtk_box_pack_start(GTK_BOX(table), hbox, FALSE, TRUE,0);
 
 			event = gtk_event_box_new();
 			gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
 			g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
 
-			ali = gtk_alignment_new(0,0.5,0,0);
-			gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,10,10);
-			gtk_widget_set_size_request(event, tile_size,-1);
-			gtk_container_add(GTK_CONTAINER(ali), event);
-
 
 			gtk_container_add(GTK_CONTAINER(event), table);
+			gtk_box_pack_start(GTK_BOX(vbox1),event, FALSE,TRUE,0);
 
-
-
-			list = g_list_append(list, ali);
 			mpd_data_free(data2);
 		}
-
-		gtk_box_pack_start(GTK_BOX(resizer_vbox),table2,FALSE, TRUE, 0);
-		num_cols = (resizer_vbox->allocation.width-20)/(tile_size+6);
-		if(list)
-		{
-			resize_table(GTK_TABLE(table2), num_cols, list);
-			relayout_table(GTK_TABLE(table2), list);
-			g_list_free(list);
-		}                                           		
-
-
+		gtk_container_set_border_width(GTK_CONTAINER(vbox1), 8);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox1,FALSE, TRUE, 0);
 	}
 	mpd_freeSong(song2);
 	gtk_widget_show_all(info2_vbox);
@@ -1183,7 +1125,7 @@ void info2_fill_album_view(char *artist,char *album)
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
 	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 80);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song2);
 
@@ -1219,7 +1161,7 @@ void info2_fill_album_view(char *artist,char *album)
 	/**
 	 * Play Button 
 	 */
-	hbox = gtk_hbox_new(FALSE,6);
+	hbox = gtk_hbox_new(FALSE,0);
 	button = gtk_button_new_with_label(_("Replace"));
 	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
@@ -1344,16 +1286,7 @@ void info2_fill_album_view(char *artist,char *album)
 			}	
 			g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data->song->file), g_free);
 			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-//			gtk_widget_set_size_request(label, 250,-1);
 			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-/*
-			button = gtk_button_new();
-			gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-			gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
-			g_object_set_data_full(G_OBJECT(button), "file",g_strdup(data->song->file), g_free);
-			g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_song_clicked), GINT_TO_POINTER(0));
-			gtk_table_attach(GTK_TABLE(table2), button, 2,3,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-*/
 			q_free(markup);
 			i++;
 		}
