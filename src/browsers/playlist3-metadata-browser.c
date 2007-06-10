@@ -539,8 +539,6 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 
-	GdkColor *color = NULL;
-	cairo_pattern_t *pat;
 	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
@@ -560,16 +558,7 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	cairo_fill_preserve(cr);
 	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
 	cairo_stroke (cr);
-	/**
 
-	cairo_rectangle(cr, 0,0,136,height);
-
-    cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->bg[GTK_STATE_SELECTED]));
-	cairo_fill_preserve(cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
-	cairo_stroke (cr);
-	*/
 
 	cairo_destroy(cr);
 
@@ -877,11 +866,7 @@ void info2_fill_artist_view(char *artist)
 
 	if(song2 && song2->artist)
 	{
-		GList *list = NULL;
-		int num_cols = 2;
-		int tile_size = 450;
 		int i=0;
-
 		/**
 		 * and event box, so I can draw a background color 
 		 */
@@ -1125,7 +1110,7 @@ void info2_fill_album_view(char *artist,char *album)
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
 	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 80);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
 	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song2);
 
