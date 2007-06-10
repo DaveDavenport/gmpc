@@ -484,5 +484,6 @@ class Gmpc:Profiles from G:Object
 			cfg_close(self->_priv->profiles);
 			self->_priv->profiles=  NULL;
 		}
+		PARENT_HANDLER(obj);
 	}
 }

@@ -111,6 +111,7 @@ requires 2.0.0
 		Self *self = GMPC_MPDDATA_MODEL(obj); 
 		if(self->_priv->data)
 			mpd_data_free(self->_priv->data);
+		PARENT_HANDLER(obj);
 	}
 		/* function implemented for the Gtk:Tree:Model interface */
 	interface Gtk:Tree:Model

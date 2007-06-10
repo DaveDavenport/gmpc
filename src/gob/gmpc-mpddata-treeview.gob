@@ -193,6 +193,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 	{
 		Self *self = GMPC_MPDDATA_TREEVIEW(obj);
 		self_save_column_setup(self);
+		PARENT_HANDLER(obj);
 	}
 
 	private

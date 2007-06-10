@@ -122,17 +122,20 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			{
 				gtk_text_buffer_set_text(self->_priv->buffer, content, size);
 			}
-			new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
-			if(new_data)
-			{
-				gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
-				g_free(new_data);
-			}
 			else
 			{
-				new_data = g_strdup_printf("%s: '%s' %s", _("Failed to open file:"), path,_("because of encoding issues"));
-				gtk_text_buffer_set_text(self->_priv->buffer,new_data,-1);
-				g_free(new_data);
+				new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
+				if(new_data)
+				{
+					gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
+					g_free(new_data);
+				}
+				else
+				{
+					new_data = g_strdup_printf("%s: '%s' %s", _("Failed to open file:"), path,_("because of encoding issues"));
+					gtk_text_buffer_set_text(self->_priv->buffer,new_data,-1);
+					g_free(new_data);
+				}
 			}
 			g_free(content);
 		}
@@ -193,6 +196,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	finalize (G:Object *obj)
 	{
 		printf("Finalizing\n");
+
+		PARENT_HANDLER(obj);
 	}
 	override (G:Object)
 	void 
@@ -205,6 +210,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			self->_priv->meta_id =  0;
 		}
 		printf("Desposing\n");
+
+		PARENT_HANDLER(obj);
 	}
 	public 
 	void

@@ -105,6 +105,11 @@ static void info3_widget_clear_children(GtkWidget *wid)
 				node;
 				node = g_list_next(node))
 		{
+			if(GTK_IS_EXPANDER(node->data))
+			{
+				printf("container removing children\n");
+				info3_widget_clear_children(node->data);
+			}
 			gtk_container_remove(GTK_CONTAINER(wid),node->data);	
 		}
 		g_list_free(list);
@@ -317,10 +322,6 @@ static void info3_fill_view()
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, TRUE,TRUE,0);	
-
-
-
-
 
 	hbox = gtk_hbox_new(FALSE, 24);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, FALSE,0);

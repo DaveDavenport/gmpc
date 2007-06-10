@@ -217,10 +217,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		}
 
 	override (G:Object)
+	void
+	finalize (G:Object *obj)
+	{
+		printf("finalizing meta-image\n");
+		PARENT_HANDLER(obj);
+	}
+
+	override (G:Object)
 		void 
 		dispose(G:Object *obj)
 		{
 			Self *self = GMPC_METAIMAGE(obj); 
+			printf("despoing meta-image\n");
 			if(self->_priv->meta_id)
 			{
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
@@ -243,7 +252,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->_priv->connect_signal);
 				self->_priv->connect_signal=0;
 			}
-
+			PARENT_HANDLER(obj);
 		}
 
 	public 
