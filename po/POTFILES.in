@@ -6,7 +6,6 @@ glade/playlist3.glade
 src/bacon/bacon-volume.c
 src/config1.c
 src/edit_markup.c
-src/id3info.c
 src/main.c
 src/metadata.c
 src/misc.c
@@ -30,10 +29,15 @@ src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-tag-browser.c
 src/egg/eggcellrendererkeys.c
 src/egg/eggtrayicon.c
-src/gob/gmpc-clicklabel.gob  
+src/tray-icon2.c
 src/gob/gmpc-mpddata-model.gob
-src/gob/gmpc-connection.gob  
 src/gob/gmpc-mpddata-treeview.gob
-src/gob/gmpc-metaimage.gob   
 src/gob/gmpc-profiles.gob
-
+src/browsers/playlist3-playlist-editor.c
+src/gob/gmpc-meta-text-view.c
+src/gob/gmpc-meta-text-view.gob
+src/gob/gmpc-metaimage.gob
+src/gob/gmpc-mpddata-model-sort.c
+src/gob/gmpc-mpddata-model-sort.gob
+src/gob/gmpc-clicklabel.gob
+src/gob/gmpc-connection.gob
