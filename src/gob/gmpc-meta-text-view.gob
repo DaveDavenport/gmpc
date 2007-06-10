@@ -188,7 +188,12 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			self->_priv->meta_id = 0;
 		}
 	}
-
+	override (G:Object)
+	void
+	finalize (G:Object *obj)
+	{
+		printf("Finalizing\n");
+	}
 	override (G:Object)
 	void 
 	dispose (G:Object *obj)
@@ -199,6 +204,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 			self->_priv->meta_id =  0;
 		}
+		printf("Desposing\n");
 	}
 	public 
 	void

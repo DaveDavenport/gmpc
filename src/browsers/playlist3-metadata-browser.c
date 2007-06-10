@@ -137,7 +137,11 @@ static void info2_widget_clear_children(GtkWidget *wid)
 	{
 		for(node = g_list_first(list); node; node = g_list_next(node))
 		{
-			gtk_widget_destroy(node->data);	
+			if(GMPC_IS_META_TEXT_VIEW(node->data))
+			{
+				printf("destroying text view\n");
+			}
+			gtk_container_remove(GTK_CONTAINER(wid), node->data);
 		}
 		g_list_free(list);
 	}
@@ -437,17 +441,18 @@ void info2_fill_song_view(char *path)
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
-	expander= gtk_expander_new(_("Lyric:"));
+	expander= gtk_label_new(_("Lyric:"));
 	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
 	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
 	/* expander */
-	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
-	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Lyric:</b>"));
+	gtk_label_set_markup(GTK_LABEL(expander), _("<b>Lyric:</b>"));
 	/* query */
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
-	gtk_container_add(GTK_CONTAINER(expander), gmtv);
-
+	gtk_misc_set_alignment(GTK_MISC(expander), 0,0.5);
+	gtk_misc_set_padding(GTK_MISC(expander), 8,0);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), gmtv, FALSE, FALSE,0);
+
 
 	/**
 	 * Play Button 

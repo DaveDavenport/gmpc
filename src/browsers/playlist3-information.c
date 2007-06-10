@@ -105,7 +105,7 @@ static void info3_widget_clear_children(GtkWidget *wid)
 				node;
 				node = g_list_next(node))
 		{
-			gtk_widget_destroy(node->data);	
+			gtk_container_remove(GTK_CONTAINER(wid),node->data);	
 		}
 		g_list_free(list);
 	}
