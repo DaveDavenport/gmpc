@@ -223,73 +223,64 @@ void url_start_real(const gchar *url)
 
 	gtk_widget_show_all(dialog);
 	gtk_widget_hide(progress);
-	switch(gtk_dialog_run(GTK_DIALOG(dialog)))
-	{
-		case GTK_RESPONSE_OK:
-			{	
 
-				const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-				/*  In any case, don't download more then 2 kbyte */
-				gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
-				gtk_widget_show(progress);
-				gtk_widget_set_sensitive(dialog, FALSE);
-				if(gmpc_easy_download(text, &dld) && dld.size)
-				{
-					if(url_check_binary(dld.data, dld.size))
-					{
-						printf("Adding url: %s\n", text);
-						mpd_playlist_add(connection, (char *)text);
-						pl3_push_statusbar_message(_("Added 1 stream"));
-					}	
-					/** pls file: */
-					else if(!strncasecmp(dld.data, "[playlist]",10))
-					{
-						printf("Detected a PLS\n");
-						url_parse_pls_file(dld.data, dld.size);
-					}
-					/** Extended M3U file */
-					else if (!strncasecmp(dld.data, "#EXTM3U", 7))
-					{
-						printf("Detected a Extended M3U\n");
-						url_parse_extm3u_file(dld.data, dld.size);
-					}
-					/** Hack to detect most non-extended m3u files */
-					else if (!strncasecmp(dld.data, "http://", 7))
-					{
-						printf("Might be a M3U, or generic list\n");
-						url_parse_extm3u_file(dld.data, dld.size);
-					}
-					/** Assume Binary file */
-					else
-					{
-						printf("Adding url: %s\n", text);
-						mpd_playlist_add(connection, (char *)text);
-
-						pl3_push_statusbar_message(_("Added 1 stream"));
-					}
-					gmpc_easy_download_clean(&dld);
-				}
-				else{
-					/** 
-					 * Failed to contact %s
-					 * Show an error dialog  
-					 */
-					/* Make a copy so we can safely destroy the widget */
-					gchar *url = g_strdup(text);
-					/* Destroy old popup */
-					gtk_widget_destroy(dialog);
-					/* Create info dialog */
-					dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-						GTK_MESSAGE_INFO,GTK_BUTTONS_CLOSE,
-						_("Failed to contact url: '%s'"), url);
-					q_free(url);
-					/* run it */
-					gtk_dialog_run(GTK_DIALOG(dialog));
-
-				}
-			}		
-		default:
-			break;
+	while(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
+		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+		/*  In any case, don't download more then 2 kbyte */
+		gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
+		gtk_widget_show(progress);
+		gtk_widget_set_sensitive(dialog, FALSE);
+		if(gmpc_easy_download(text, &dld) && dld.size)
+		{
+			if(url_check_binary(dld.data, dld.size))
+			{
+				printf("Adding url: %s\n", text);
+				mpd_playlist_add(connection, (char *)text);
+				pl3_push_statusbar_message(_("Added 1 stream"));
+			}
+			/** pls file: */
+			else if(!strncasecmp(dld.data, "[playlist]",10))
+			{
+				printf("Detected a PLS\n");
+				url_parse_pls_file(dld.data, dld.size);
+			}
+			/** Extended M3U file */
+			else if (!strncasecmp(dld.data, "#EXTM3U", 7))
+			{
+				printf("Detected a Extended M3U\n");
+				url_parse_extm3u_file(dld.data, dld.size);
+			}
+			/** Hack to detect most non-extended m3u files */
+			else if (!strncasecmp(dld.data, "http://", 7))
+			{
+				printf("Might be a M3U, or generic list\n");
+				url_parse_extm3u_file(dld.data, dld.size);
+			}
+			/** Assume Binary file */
+			else
+			{
+				printf("Adding url: %s\n", text);
+				mpd_playlist_add(connection, (char *)text);
+				pl3_push_statusbar_message(_("Added 1 stream"));
+			}
+			gmpc_easy_download_clean(&dld);
+		} else {
+			/**
+			 * Failed to contact %s
+			 * Show an error dialog
+			 */
+			/* Make a copy so we can safely destroy the widget */
+			gchar *url = g_strdup(text);
+			/* Destroy old popup */
+			gtk_widget_destroy(dialog);
+			/* Create info dialog */
+			dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
+				GTK_MESSAGE_INFO,GTK_BUTTONS_CLOSE,
+				_("Failed to contact url: '%s'"), url);
+			q_free(url);
+			/* run it */
+			gtk_dialog_run(GTK_DIALOG(dialog));
+		}
 	}	
 	gtk_widget_destroy(dialog);
 }
