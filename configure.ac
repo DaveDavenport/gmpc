@@ -15,7 +15,6 @@ AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
 AC_ARG_ENABLE(sm,	[  --disable-sm            Disable Session Support.],,enable_sm=yes)
 AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
-AC_ARG_ENABLE(trayicon,	[  --disable-trayicon      Disable tray icon support.],,enable_trayicon=yes)
 
 # Checks for libraries.
 
@@ -82,9 +81,6 @@ if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
 fi
 
-if test x${enable_trayicon} = xyes; then
-	AC_DEFINE(ENABLE_TRAYICON, 1, [Enable tray icon support])
-fi
 
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -178,11 +174,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:  		enabled"
 else
 	echo "Multimedia keys support is:  		disabled"
-fi
-if test x${enable_trayicon} = xyes; then
-	echo "Tray icon support is:			enabled"
-else
-	echo "Tray icon support is:			disabled"
 fi
 if test x${enable_sm} = xyes; then
 	echo "Session Manager support is:		enabled"
