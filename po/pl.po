@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-10 20:20+0200\n"
+"POT-Creation-Date: 2007-06-10 20:47+0200\n"
 "PO-Revision-Date: 2007-05-16 18:27+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -20,8 +20,7 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Nakładka gnome na demona mpd"
 
-#. set up tray icon
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon.c:632
+#: ../data/gmpc.desktop.in.h:2
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -292,8 +291,8 @@ msgstr "Port:"
 msgid "Position:"
 msgstr "Pozycja:"
 
-#: ../glade/gmpc.glade.h:64 gob/gmpc-meta-text-view.gob:43
-#: ../src/gob/gmpc-meta-text-view.gob:43 ../src/gob/gmpc-metaimage.gob:558
+#: ../glade/gmpc.glade.h:64 ../src/gob/gmpc-meta-text-view.gob:43
+#: ../src/gob/gmpc-metaimage.gob:558
 msgid "Refetch"
 msgstr "Pobierz jeszcze raz"
 
@@ -937,18 +936,6 @@ msgstr "Inne."
 msgid "Unkown"
 msgstr "Nieznany"
 
-#: ../src/tray-icon.c:111
-msgid "<b>Gnome Music Player Client</b>"
-msgstr "<b>Gnome Music Player Client</b>"
-
-#: ../src/tray-icon.c:564 ../src/tray-icon2.c:97
-msgid "Pla_ylist"
-msgstr "Lista odtwarzania"
-
-#: ../src/tray-icon.c:573
-msgid "Song _Information"
-msgstr "Informacje o utworze"
-
 #: ../src/TreeSearchWidget.c:250
 msgid "Find:"
 msgstr "Szukaj:"
@@ -985,6 +972,15 @@ msgstr "Nie można podłączyć się do url: '%s'"
 #: ../src/url_fetcher.c:300
 msgid "Add URL"
 msgstr "Dodaj URL"
+
+#: ../src/tray-icon2.c:97
+msgid "Pla_ylist"
+msgstr "Lista odtwarzania"
+
+#: ../src/tray-icon2.c:396
+#, fuzzy
+msgid "<span size='large'>Gnome Music Player Client</span>"
+msgstr "<b>Gnome Music Player Client</b>"
 
 #: ../src/browsers/playlist3-artist-browser.c:206
 msgid "Browse Artists"
@@ -1119,8 +1115,8 @@ msgstr "Tasuj"
 #: ../src/browsers/playlist3-file-browser.c:746
 #: ../src/browsers/playlist3-find2-browser.c:549
 #: ../src/browsers/playlist3-find3-browser.c:637
-#: ../src/browsers/playlist3-tag-browser.c:938
 #: ../src/browsers/playlist3-playlist-editor.c:436
+#: ../src/browsers/playlist3-tag-browser.c:938
 msgid "Edit Columns"
 msgstr "Edytuj kolumny"
 
@@ -1151,8 +1147,8 @@ msgstr "Przeglądaj pliki"
 #. add the replace widget
 #. |GTK_FILL
 #. Play button
-#. add the replace widget
 #. replace
+#. add the replace widget
 #: ../src/browsers/playlist3-file-browser.c:368
 #: ../src/browsers/playlist3-file-browser.c:692
 #: ../src/browsers/playlist3-file-browser.c:732
@@ -1162,8 +1158,8 @@ msgstr "Przeglądaj pliki"
 #: ../src/browsers/playlist3-metadata-browser.c:803
 #: ../src/browsers/playlist3-metadata-browser.c:981
 #: ../src/browsers/playlist3-metadata-browser.c:1155
-#: ../src/browsers/playlist3-tag-browser.c:609
 #: ../src/browsers/playlist3-playlist-editor.c:477
+#: ../src/browsers/playlist3-tag-browser.c:609
 msgid "Replace"
 msgstr "Zastąp"
 
@@ -1193,8 +1189,7 @@ msgstr "katalog"
 msgid "playlists"
 msgstr "listy odtwarzania"
 
-#. name
-#: ../src/browsers/playlist3-file-browser.c:815 gmpc-mpddata-model-sort.c:187
+#: ../src/browsers/playlist3-file-browser.c:815
 #: ../src/gob/gmpc-mpddata-model-sort.gob:22
 msgid "playlist"
 msgstr "lista odtwarzania"
@@ -1336,6 +1331,29 @@ msgstr "<b>Album:</b>"
 msgid "Metadata Browser"
 msgstr "Przeglądarka metadanych"
 
+#: ../src/browsers/playlist3-playlist-editor.c:338
+#, fuzzy
+msgid "New playlist"
+msgstr "lista odtwarzania"
+
+#: ../src/browsers/playlist3-playlist-editor.c:375
+#, fuzzy
+msgid "Rename Playlist"
+msgstr "Zapisz listę odtwarzania"
+
+#. delete
+#: ../src/browsers/playlist3-playlist-editor.c:382
+#: ../src/browsers/playlist3-playlist-editor.c:490
+#, fuzzy
+msgid "Rename"
+msgstr "nazwa:"
+
+#. Add
+#: ../src/browsers/playlist3-playlist-editor.c:645
+#, fuzzy
+msgid "Add to playlist"
+msgstr "Załadowano listę odtwarzania"
+
 #: ../src/browsers/playlist3-tag-browser.c:171
 #: ../src/browsers/playlist3-tag-browser.c:218
 #: ../src/browsers/playlist3-tag-browser.c:1497
@@ -1388,11 +1406,6 @@ msgstr "Orientacja"
 msgid "The orientation of the tray."
 msgstr "Położenie obszaru powiadamiania"
 
-#: ../src/tray-icon2.c:396
-#, fuzzy
-msgid "<span size='large'>Gnome Music Player Client</span>"
-msgstr "<b>Gnome Music Player Client</b>"
-
 #: ../src/gob/gmpc-mpddata-model.gob:65
 msgid "Has Up"
 msgstr ""
@@ -1401,74 +1414,53 @@ msgstr ""
 msgid "Show an 'up row"
 msgstr ""
 
-#: ../src/browsers/playlist3-playlist-editor.c:338
+#: ../src/gob/gmpc-mpddata-model-sort.gob:23
 #, fuzzy
-msgid "New playlist"
-msgstr "lista odtwarzania"
+msgid "The current playlist name"
+msgstr "<wprowadź nazwę listy odtwarzania>"
 
-#: ../src/browsers/playlist3-playlist-editor.c:375
-#, fuzzy
-msgid "Rename Playlist"
-msgstr "Zapisz listę odtwarzania"
-
-#. delete
-#: ../src/browsers/playlist3-playlist-editor.c:382
-#: ../src/browsers/playlist3-playlist-editor.c:490
-#, fuzzy
-msgid "Rename"
-msgstr "nazwa:"
-
-#. Add
-#: ../src/browsers/playlist3-playlist-editor.c:645
-#, fuzzy
-msgid "Add to playlist"
-msgstr "Załadowano listę odtwarzania"
-
-#: gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-meta-text-view.gob:48
-#: ../src/gob/gmpc-metaimage.gob:563
+#: ../src/gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-metaimage.gob:563
 #, fuzzy
 msgid "Select file"
 msgstr "Zaznacz plik"
 
-#: gob/gmpc-meta-text-view.gob:135 ../src/gob/gmpc-meta-text-view.gob:135
+#: ../src/gob/gmpc-meta-text-view.gob:135
 #, fuzzy
 msgid "Failed to open file:"
 msgstr "Nie można podłączyć się do url: '%s'"
 
-#: gob/gmpc-meta-text-view.gob:135 ../src/gob/gmpc-meta-text-view.gob:135
+#: ../src/gob/gmpc-meta-text-view.gob:135
 msgid "because of encoding issues"
 msgstr ""
 
-#: gob/gmpc-meta-text-view.gob:150 ../src/gob/gmpc-meta-text-view.gob:150
+#: ../src/gob/gmpc-meta-text-view.gob:150
 #, fuzzy
 msgid "Fetching Lyric"
 msgstr "<i>Pobieranie %s</i>"
 
-#: gob/gmpc-meta-text-view.gob:154 ../src/gob/gmpc-meta-text-view.gob:154
+#: ../src/gob/gmpc-meta-text-view.gob:154
 #, fuzzy
 msgid "Fetching Artist Info"
 msgstr "Informacje o wykonawcy"
 
-#: gob/gmpc-meta-text-view.gob:158 ../src/gob/gmpc-meta-text-view.gob:158
+#: ../src/gob/gmpc-meta-text-view.gob:158
 msgid "Fetching Album Info"
 msgstr ""
 
-#: gob/gmpc-meta-text-view.gob:166 ../src/gob/gmpc-meta-text-view.gob:166
+#: ../src/gob/gmpc-meta-text-view.gob:166
 msgid "Not Available"
 msgstr ""
 
-#: gob/gmpc-meta-text-view.gob:230 ../src/gob/gmpc-meta-text-view.gob:230
-#: ../src/gob/gmpc-metaimage.gob:594
+#: ../src/gob/gmpc-meta-text-view.gob:230 ../src/gob/gmpc-metaimage.gob:594
 #, fuzzy
 msgid "Select File"
 msgstr "Zaznacz plik"
 
-#: gob/gmpc-meta-text-view.gob:235 ../src/gob/gmpc-meta-text-view.gob:235
+#: ../src/gob/gmpc-meta-text-view.gob:235
 msgid "Text Document"
 msgstr ""
 
-#: gob/gmpc-meta-text-view.gob:239 ../src/gob/gmpc-meta-text-view.gob:239
-#: ../src/gob/gmpc-metaimage.gob:604
+#: ../src/gob/gmpc-meta-text-view.gob:239 ../src/gob/gmpc-metaimage.gob:604
 msgid "All"
 msgstr ""
 
@@ -1541,11 +1533,11 @@ msgstr "Rysuj cień pod obrazem"
 msgid "Images"
 msgstr "Rodzaj obrazu"
 
-#. nick
-#: gmpc-mpddata-model-sort.c:188 ../src/gob/gmpc-mpddata-model-sort.gob:23
-#, fuzzy
-msgid "The current playlist name"
-msgstr "<wprowadź nazwę listy odtwarzania>"
+#~ msgid "<b>Gnome Music Player Client</b>"
+#~ msgstr "<b>Gnome Music Player Client</b>"
+
+#~ msgid "Song _Information"
+#~ msgstr "Informacje o utworze"
 
 #~ msgid "Save Album Text"
 #~ msgstr "Zapisz tekst albumu"

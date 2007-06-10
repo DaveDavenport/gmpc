@@ -16,9 +16,10 @@ src/playlist-list.c
 src/plugin.c
 src/preferences.c
 src/sm.c
-src/tray-icon.c
 src/TreeSearchWidget.c
 src/url_fetcher.c
+src/tray-icon2.c
+# Browsers 
 src/browsers/playlist3-artist-browser.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
@@ -26,18 +27,19 @@ src/browsers/playlist3-find2-browser.c
 src/browsers/playlist3-find3-browser.c
 src/browsers/playlist3-information.c
 src/browsers/playlist3-metadata-browser.c
+src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag-browser.c
+# Egg files
 src/egg/eggcellrendererkeys.c
 src/egg/eggtrayicon.c
-src/tray-icon2.c
+
+# Gob files
 src/gob/gmpc-mpddata-model.gob
+src/gob/gmpc-mpddata-model-sort.gob
 src/gob/gmpc-mpddata-treeview.gob
 src/gob/gmpc-profiles.gob
-src/browsers/playlist3-playlist-editor.c
-src/gob/gmpc-meta-text-view.c
 src/gob/gmpc-meta-text-view.gob
 src/gob/gmpc-metaimage.gob
-src/gob/gmpc-mpddata-model-sort.c
-src/gob/gmpc-mpddata-model-sort.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-connection.gob
+src/gob/gmpc-clicklabel.gob

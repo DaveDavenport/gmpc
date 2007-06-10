@@ -27,7 +27,6 @@
 #include "playlist3.h"
 #include "playlist-list.h"
 #include "mpdinteraction.h"
-#include "tray-icon.h"
 #include "gmpc-profiles.h"
 
 #include "browsers/playlist3-playlist-editor.h"
