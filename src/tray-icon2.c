@@ -259,6 +259,10 @@ static gboolean tray_icon2_tooltip_destroy(void)
 	tray_icon2_tooltip_pb = NULL;
 	gtk_widget_destroy(tray_icon2_tooltip);
 	tray_icon2_tooltip = NULL;
+	if(tray_icon2_tooltip_timeout)
+	{
+		g_source_remove(tray_icon2_tooltip_timeout);
+	}
 	tray_icon2_tooltip_timeout = 0;
 	/* remove the timeout */
 	return FALSE;	
@@ -325,6 +329,7 @@ void tray_icon2_create_tooltip(void)
 	 * Pack the widget in a eventbox so we can set background color 
 	 */
 	event = gtk_event_box_new();
+	g_signal_connect(G_OBJECT(event), "button-press-event", G_CALLBACK(tray_icon2_tooltip_destroy), NULL);
 	gtk_widget_set_size_request(event, 86,86);
 	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
 	gtk_container_add(GTK_CONTAINER(event), coverimg);
