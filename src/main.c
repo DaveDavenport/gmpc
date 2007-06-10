@@ -338,10 +338,6 @@ int main (int argc, char **argv)
         }	
 
     }	
-
-
-
-
     create_gmpc_paths();
 
     /* do the clean config stuff */
@@ -431,9 +427,8 @@ int main (int argc, char **argv)
                     NULL);
         }
     }
-
-
 #endif		
+
     /**
      * Setup session support
      */
