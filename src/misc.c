@@ -338,16 +338,10 @@ char *gmpc_get_full_image_path(char *filename)
 
     path = g_build_filename(packagedir, "data", "images", filename, NULL);
 
-    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
-     * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
-     */
-#if GLIB_CHECK_VERSION(2,8,4)
     q_free(packagedir);
-#endif
 
 #else
-    path = g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
+    path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, filename,NULL);
 #endif
     return path;
 }
@@ -367,16 +361,10 @@ char *gmpc_get_full_glade_path(char *filename)
 
     path = g_build_filename(packagedir, "data", "glade", filename, NULL);
 
-    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
-     * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
-     */
-#if GLIB_CHECK_VERSION(2,8,4)
     q_free(packagedir);
-#endif
 
 #else
-    path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
+    path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
 #endif
     return path;
 }
