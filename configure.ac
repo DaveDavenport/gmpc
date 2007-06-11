@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [0.15.2],qball@sarine.nl)
+AM_INIT_AUTOMAKE([gmpc], [0.15.2.1],qball@sarine.nl)
 
 # Checks for programs.
 
@@ -13,8 +13,10 @@ AC_LIBTOOL_RC
 
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
-AC_ARG_ENABLE(sm,	[  --disable-sm            Disable Session Support.],,enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys        Disable multimedia keys support.],,enable_mmkeys=yes)
+AC_ARG_ENABLE(configdir,[  --enable-configdir			Use .config instead of .gmpc or .covers.],,enable_configdir=no)
+AC_ARG_ENABLE(sm,		[  --disable-sm				Disable Session Support.],,enable_sm=yes)
+AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys			Disable multimedia keys support.],,enable_mmkeys=yes)
+
 
 # Checks for libraries.
 
@@ -80,7 +82,9 @@ fi
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
 fi
-
+if test x${enable_configdir} = xyes; then
+	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
+fi
 
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -180,5 +184,11 @@ if test x${enable_sm} = xyes; then
 else
 	echo "Session Manager support is:		disabled"
 fi
+if test x${enable_configdir} = xyes; then
+	echo "Use ~/.config/ for config files:	enabled"
+else
+	echo "Use ~/.config/ for config files:	disabled"
+fi
+
 
 echo "Now type make to build"

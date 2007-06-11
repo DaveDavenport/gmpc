@@ -131,4 +131,11 @@ typedef struct {
 gmpcPlugin * plugin_get_from_id(int id);
 GtkTreeStore *playlist3_get_category_tree_store(void);
 GtkTreeView *playlist3_get_category_tree_view(void);
+/**
+ * Helper functions to get path to gmpc directory and metadata directory
+ */
+
+gchar * gmpc_get_covers_path(const gchar *filename);
+gchar * gmpc_get_user_path(const gchar *filename);
+
 #endif

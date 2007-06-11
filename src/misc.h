@@ -19,6 +19,6 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 void screenshot_add_shadow (GdkPixbuf **src);
 void screenshot_add_border (GdkPixbuf **src);
 
-gchar * gmpc_get_user_path(const gchar *filename);
-gchar * gmpc_get_covers_path(const gchar *filename);
+
+
 #endif

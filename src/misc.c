@@ -318,7 +318,11 @@ gchar * gmpc_get_user_path(const gchar *filename)
 	gchar *ret = NULL;
 
 	/* Build the path */
+#ifdef USE_CONFIG_DIR
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir,".config", "gmpc", filename,NULL);
+#else
 	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".gmpc", filename,NULL);
+#endif
 
 	return ret;
 }
@@ -336,8 +340,11 @@ gchar * gmpc_get_covers_path(const gchar *filename)
 	gchar *ret = NULL;
 
 	/* Build the path */
+#ifdef USE_CONFIG_DIR
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir,".config", "covers", filename,NULL);
+#else
 	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".covers", filename,NULL);
-
+#endif
 	return ret;
 }
 
