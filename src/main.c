@@ -65,10 +65,18 @@
 static BaconMessageConnection *bacon_connection = NULL;
 #endif
 
+/**
+ * Global objects that give signals
+ */
+/* gives signal on connection changes, and state changes of mpd.*/
 GmpcConnection *gmpcconn = NULL;
+/* Implements, and gives signals on profiles */
 GmpcProfiles *gmpc_profiles = NULL;
+/* Implements, and gives signals on meta_data*/
 GmpcMetaWatcher *gmw = NULL;
+/* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
 int gmpc_connected = FALSE;
+/* number of sequential autoconnect attempts that failed. */
 int gmpc_failed_tries = 0;
 
 
@@ -669,15 +677,14 @@ static int autoconnect_callback(void)
 		/*
 		 * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
 		 */
-		if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) 
-				&& gmpc_connected && cfg_get_single_value_as_int_with_default(config,"connection","autoconnect",FALSE))
+		if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) && 
+				gmpc_connected && cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
 		{
 			/** updated failed time, if it doesn't fail it will be set to 0
 			 * later 
 			 */
 			gmpc_failed_tries++;
 			connect_to_mpd ();
-
 		}
 	}
 	/**
