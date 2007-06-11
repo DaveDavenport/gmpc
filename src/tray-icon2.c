@@ -259,6 +259,7 @@ static gboolean tray_icon2_tooltip_destroy(void)
 	tray_icon2_tooltip_pb = NULL;
 	gtk_widget_destroy(tray_icon2_tooltip);
 	tray_icon2_tooltip = NULL;
+	/* remove timeout, this is for when it doesn't get called from inside the timeout */
 	if(tray_icon2_tooltip_timeout)
 	{
 		g_source_remove(tray_icon2_tooltip_timeout);
@@ -284,7 +285,6 @@ void tray_icon2_create_tooltip(void)
 	 */
 	if(tray_icon2_tooltip)
 	{
-		g_source_remove(tray_icon2_tooltip_timeout);
 		tray_icon2_tooltip_destroy();
 	}
 	/*
