@@ -20,5 +20,5 @@ void screenshot_add_shadow (GdkPixbuf **src);
 void screenshot_add_border (GdkPixbuf **src);
 
 gchar * gmpc_get_user_path(const gchar *filename);
-
+gchar * gmpc_get_covers_path(const gchar *filename);
 #endif

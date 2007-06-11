@@ -322,6 +322,24 @@ gchar * gmpc_get_user_path(const gchar *filename)
 
 	return ret;
 }
+/**
+ * @param: The filename or empty, to get dir path.
+ *
+ * Function to get the full user of filename for gmpc's cover. 
+ * On unix this is ~/.covers/filename 
+ *
+ * returns: an allocated string.
+ */
+gchar * gmpc_get_covers_path(const gchar *filename)
+{
+	const gchar *homedir = g_get_home_dir();
+	gchar *ret = NULL;
+
+	/* Build the path */
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".covers", filename,NULL);
+
+	return ret;
+}
 
 /**
  * Get's the full path to an image,
