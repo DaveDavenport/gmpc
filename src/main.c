@@ -110,7 +110,7 @@ GladeXML *xml_password_window = NULL;
 static int autoconnect_callback (void);
 
 /*
- * the ID of the autoconnect timeout
+ * the ID of the autoconnect timeout callback
  */
 guint autoconnect_timeout = 0;
 
@@ -471,14 +471,7 @@ int main (int argc, char **argv)
 	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
     url = g_build_filename(packagedir, "data", "plugins", NULL);
-	/* From a certain version of GTK+ this g_free will be needed, but for now it will free
-	 * a pointer which is returned on further calls to g_win32_get...
-	 * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
-	 */
-#if GLIB_CHECK_VERSION(2,8,4)
 	q_free(packagedir);
-#endif
-
 
 #else
 	/** Load the global installed plugins */
@@ -486,6 +479,7 @@ int main (int argc, char **argv)
 #endif
 	plugin_load_dir(url);
 	q_free(url);
+
 	/* user space dynamic plugins */
 	url = gmpc_get_user_path("plugins");
 	/**
