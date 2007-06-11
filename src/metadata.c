@@ -495,14 +495,14 @@ static gboolean meta_data_handle_results(void)
  */
 void meta_data_init()
 {
-	gchar *url = g_strdup_printf("%s/.covers/", g_get_home_dir());
+	gchar *url = g_build_path(G_DIR_SEPARATOR_S, g_get_home_dir(), ".covers",NULL);
 	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
 		if(g_mkdir(url, 0700)<0){
 			g_error("Cannot make %s\n", url);
 		}
 	}
 	q_free(url);
-	url = g_strdup_printf("%s/.covers/covers.db", g_get_home_dir());
+	url = g_build_path(G_DIR_SEPARATOR_S, g_get_home_dir(), ".covers","covers.db",NULL);
 	cover_index = cfg_open(url);
 	q_free(url);
 

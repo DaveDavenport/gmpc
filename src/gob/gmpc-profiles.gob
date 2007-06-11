@@ -79,7 +79,7 @@ class Gmpc:Profiles from G:Object
     gchar *url = cfg_get_single_value_as_string(config, "connection", "profile-file");
     if(!url)
     {
-      url = g_strdup_printf("%s/.gmpc/profiles.cfg", g_get_home_dir());
+	  url = gmpc_get_user_path("profiles.cfg");
       cfg_set_single_value_as_string(config, "connection", "profile-file",url);
     }
     self->_priv->profiles = cfg_open(url);

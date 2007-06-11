@@ -126,64 +126,6 @@ void send_password(void);
  */
 static void create_gmpc_paths(void);
 
-
-/**
- * Get's the full path to an image,
- * While this is compile time on linux, windows
- * needs to determine it run-time.
- */
-char *gmpc_get_full_image_path(char *filename)
-{
-    gchar *path;
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-
-    path = g_build_filename(packagedir, "data", "images", filename, NULL);
-
-    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
-     * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
-     */
-#if GLIB_CHECK_VERSION(2,8,4)
-    q_free(packagedir);
-#endif
-
-#else
-    path = g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
-#endif
-    return path;
-}
-
-/** 
- * Get the full path to the glade files.
- * While this is compile time on linux, windows 
- * needs to determine it run-time
- */
-char *gmpc_get_full_glade_path(char *filename)
-{
-    gchar *path;
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-
-    path = g_build_filename(packagedir, "data", "glade", filename, NULL);
-
-    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
-     * a pointer which is returned on further calls to g_win32_get...
-     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
-     */
-#if GLIB_CHECK_VERSION(2,8,4)
-    q_free(packagedir);
-#endif
-
-#else
-    path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
-#endif
-    return path;
-}
 #ifndef WIN32
 static void bacon_on_message_received(const char *message, gpointer data)
 {
@@ -358,11 +300,9 @@ int main (int argc, char **argv)
      * Check if the user has forced a different config file location.
      * else set to ~/.gmpc/gmpc.cfg
      */
-    if(!config_path)
-    {
-        url = g_strdup_printf("%s%c.gmpc%cgmpc.cfg", g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR);
-    }
-    else{
+    if(!config_path) {
+        url = gmpc_get_user_path("gmpc.cfg");
+    } else {
         url = config_path;
     }
     /**
@@ -534,17 +474,18 @@ int main (int argc, char **argv)
 
 #else
 	/** Load the global installed plugins */
-	url = g_strdup_printf("%s%c%s",GLADE_PATH,G_DIR_SEPARATOR, "plugins");
+	url = g_build_path(G_DIR_SEPARATOR_S, GLADE_PATH,"plugins",NULL);
 #endif
 	plugin_load_dir(url);
 	q_free(url);
 	/* user space dynamic plugins */
-	url = g_strdup_printf("%s%c.gmpc%cplugins%c",g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+	url = gmpc_get_user_path("plugins");
 	/**
 	 * if dir exists, try to load the plugins.
 	 */
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
+		debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
 		plugin_load_dir(url);
 	}
 	q_free(url);
@@ -1093,7 +1034,7 @@ static void create_gmpc_paths(void)
 	 */	
 
 	/** create path */
-	gchar *url = g_strdup_printf("%s%c.gmpc%c", g_get_home_dir(),G_DIR_SEPARATOR,G_DIR_SEPARATOR);
+	gchar *url = gmpc_get_user_path(NULL);
 	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
 
 	/**
@@ -1103,7 +1044,7 @@ static void create_gmpc_paths(void)
 	if(!g_file_test(url, G_FILE_TEST_EXISTS))
 	{
 		debug_printf(DEBUG_INFO, "Trying to create %s",url);
-		if(g_mkdir(url,0700) < 0)
+		if(g_mkdir_with_parents(url,0700) < 0)
 		{
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
 			show_error_message("Failed to create ~/.gmpc/.", TRUE);

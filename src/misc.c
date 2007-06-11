@@ -303,3 +303,81 @@ void screenshot_add_border (GdkPixbuf **src)
                 }
         }
 }
+
+/**
+ * @param: The filename or empty, to get dir path.
+ *
+ * Function to get the full user of filename for gmpc. 
+ * On unix this is ~/.gmpc/filename 
+ *
+ * returns: an allocated string.
+ */
+gchar * gmpc_get_user_path(const gchar *filename)
+{
+	const gchar *homedir = g_get_home_dir();
+	gchar *ret = NULL;
+
+	/* Build the path */
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".gmpc", filename,NULL);
+
+	return ret;
+}
+
+/**
+ * Get's the full path to an image,
+ * While this is compile time on linux, windows
+ * needs to determine it run-time.
+ */
+char *gmpc_get_full_image_path(char *filename)
+{
+    gchar *path;
+#ifdef WIN32
+    gchar *packagedir;
+    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+
+    path = g_build_filename(packagedir, "data", "images", filename, NULL);
+
+    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
+     * a pointer which is returned on further calls to g_win32_get...
+     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
+     */
+#if GLIB_CHECK_VERSION(2,8,4)
+    q_free(packagedir);
+#endif
+
+#else
+    path = g_strdup_printf("%s/%s", PIXMAP_PATH, filename);
+#endif
+    return path;
+}
+
+/** 
+ * Get the full path to the glade files.
+ * While this is compile time on linux, windows 
+ * needs to determine it run-time
+ */
+char *gmpc_get_full_glade_path(char *filename)
+{
+    gchar *path;
+#ifdef WIN32
+    gchar *packagedir;
+    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+
+    path = g_build_filename(packagedir, "data", "glade", filename, NULL);
+
+    /* From a certain version of GTK+ this g_free will be needed, but for now it will free
+     * a pointer which is returned on further calls to g_win32_get...
+     * This bug is fixed now (30-10-2007), so it will probably be in glib 2.6.7 and/or 2.8.4
+     */
+#if GLIB_CHECK_VERSION(2,8,4)
+    q_free(packagedir);
+#endif
+
+#else
+    path = g_strdup_printf("%s/%s", GLADE_PATH, filename);
+#endif
+    return path;
+}
+
