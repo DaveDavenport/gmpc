@@ -195,7 +195,6 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	finalize (G:Object *obj)
 	{
-		printf("Finalizing\n");
 
 		PARENT_HANDLER(obj);
 	}
@@ -209,7 +208,6 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 			self->_priv->meta_id =  0;
 		}
-		printf("Desposing\n");
 
 		PARENT_HANDLER(obj);
 	}
