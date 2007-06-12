@@ -443,7 +443,7 @@ void info2_fill_song_view(char *path)
 
 	expander= gtk_label_new(_("Lyric:"));
 	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
-	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
 	/* expander */
 	gtk_label_set_markup(GTK_LABEL(expander), _("<b>Lyric:</b>"));
 	/* query */
@@ -787,6 +787,7 @@ void info2_fill_artist_view(char *artist)
 	 */
 	expander = gtk_expander_new(_("Artist info:"));
 	gmtv = gmpc_meta_text_view_new(META_ARTIST_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
 	/* expander */
 	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
 	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Artist info:</b>"));
@@ -1135,7 +1136,7 @@ void info2_fill_album_view(char *artist,char *album)
 	 */
 	expander = gtk_expander_new(_("Album info:"));
 	gmtv = gmpc_meta_text_view_new(META_ALBUM_TXT);
-	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
 	/* expander */
 	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
 	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Album info:</b>"));
