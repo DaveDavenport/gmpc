@@ -137,10 +137,6 @@ static void info2_widget_clear_children(GtkWidget *wid)
 	{
 		for(node = g_list_first(list); node; node = g_list_next(node))
 		{
-			if(GMPC_IS_META_TEXT_VIEW(node->data))
-			{
-				printf("destroying text view\n");
-			}
 			gtk_container_remove(GTK_CONTAINER(wid), node->data);
 		}
 		g_list_free(list);
@@ -469,7 +465,7 @@ void info2_fill_song_view(char *path)
 	/**
 	 * Add Button 
 	 */
-	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
 	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_song_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
