@@ -183,12 +183,10 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		}
 		if(ret == META_DATA_AVAILABLE) {
 			self_set_text_from_path(self,path); 
-			self->_priv->meta_id = 0;
 		} else if (ret == META_DATA_FETCHING) {
 			self_set_text_fetching(self);
 		} else {
 			self_set_text_na(self);
-			self->_priv->meta_id = 0;
 		}
 	}
 	override (G:Object)

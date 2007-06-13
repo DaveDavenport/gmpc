@@ -20,7 +20,6 @@ sources=\
 	browsers/playlist3-find2-browser.c\
 	browsers/playlist3-find3-browser.c\
 	browsers/playlist3-metadata-browser.c\
-	browsers/playlist3-information.c\
 	browsers/playlist3-playlist-editor.c\
 	playlist-list.c\
 	mm-keys.c\
@@ -47,6 +46,8 @@ sources=\
 	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c
+
+
 
 if HAVE_RC
 gmpc_SOURCES=$(sources) gmpc.rc
