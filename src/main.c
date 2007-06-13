@@ -404,7 +404,7 @@ int main (int argc, char **argv)
         /**
          * if failed, print error message
          */
-        debug_printf(DEBUG_ERROR,"Failed to create connection obj\n");
+        debug_printf(DEBUG_ERROR,"Failed to create connection object\n");
         show_error_message(_("Failed to setup libmpd"), TRUE);
         abort();
     }
@@ -534,7 +534,7 @@ int main (int argc, char **argv)
 	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
 	 * if you are still connected, and reconnects you if not.
 	 */
-	autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+	autoconnect_timeout = g_timeout_add (15000,(GSourceFunc)autoconnect_callback, NULL);
 	/** 
 	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
 	 */
@@ -587,14 +587,13 @@ int main (int argc, char **argv)
 	/**
 	 * Clear metadata struct
 	 */
-	g_object_unref(G_OBJECT(gmw));
 	meta_data_destroy();
+	g_object_unref(G_OBJECT(gmw));
+
 
 	/* time todo some destruction of plugins */
-	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
-	{
-		if(plugins[i]->destroy)
-		{
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
+		if(plugins[i]->destroy) {
 			plugins[i]->destroy();
 		}
 	}
@@ -703,7 +702,7 @@ static void init_stock_icons()
 	g_object_unref(G_OBJECT(pb));
 
 #ifdef WIN32
-	/* hack to help files */
+	/* hack to help finding files */
 	gchar *hack = NULL;
 	path = gmpc_get_full_image_path("");
 	hack = g_strdup_printf("%s%chicolor%c32x32%cactions",path, G_DIR_SEPARATOR,G_DIR_SEPARATOR, G_DIR_SEPARATOR);
@@ -747,16 +746,10 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 {
 	int i;
 	/**
-	 * Propagete to the id3 window, so it can update time
-	 */
-/*	id3_status_update();*/
-	/**
 	 * Make the plugins recieve the signals 
 	 */
-	for(i=0; i< num_plugins; i++)
-	{
-		if(plugins[i]->mpd_status_changed!= NULL)
-		{
+	for(i=0; i< num_plugins; i++) {
+		if(plugins[i]->mpd_status_changed!= NULL) {
 			plugins[i]->mpd_status_changed(mi,what,NULL);
 		}
 	}
@@ -1036,17 +1029,13 @@ static void create_gmpc_paths(void)
 
 	/** create path */
 	gchar *url = gmpc_get_user_path(NULL);
-	debug_printf(DEBUG_INFO, "Checking for %s existence",url);
 
 	/**
 	 * Check if ~/.gmpc/ exists 
 	 * If not try to create it.
 	 */
-	if(!g_file_test(url, G_FILE_TEST_EXISTS))
-	{
-		debug_printf(DEBUG_INFO, "Trying to create %s",url);
-		if(g_mkdir_with_parents(url,0700) < 0)
-		{
+	if(!g_file_test(url, G_FILE_TEST_EXISTS)) {
+		if(g_mkdir_with_parents(url,0700) < 0) {
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
 			show_error_message("Failed to create ~/.gmpc/.", TRUE);
 			abort();
@@ -1055,15 +1044,10 @@ static void create_gmpc_paths(void)
 	/**
 	 * if it exists, check if it's a directory 
 	 */
-	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
-	{
-		debug_printf(DEBUG_ERROR, "%s isn't a directory.\n", url);
-		debug_printf(DEBUG_ERROR, "Quitting.\n");
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR)) {
 		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
 		abort();
-	}
-	else
-	{
+	} else {
 		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
 	}
 	/* Free the path */
