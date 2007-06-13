@@ -32,6 +32,7 @@
 #include "playlist3-artist-browser.h"
 #include "config1.h"
 #include "TreeSearchWidget.h"
+#include <libmpd/libmpd-internal.h>
 
 static void pl3_artist_browser_add(GtkWidget *cat_tree);
 static void pl3_artist_browser_fill_tree(GtkWidget *, GtkTreeIter *);
@@ -50,6 +51,7 @@ static int pl3_artist_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *e
 static void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_artist_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
+static MpdData *pl3_artist_browser_sort_tracks(MpdData *);
 
 static void pl3_artist_browser_reupdate(void);
 
@@ -272,7 +274,60 @@ static void pl3_artist_browser_cover_art_fetched(mpd_Song *song, MetaDataResult 
 
 }
 
+static MpdData *pl3_artist_browser_sort_tracks(MpdData *data)
+{
+	MpdData_real *new_list = NULL;
 
+	/* This should always be the case anyway, but just to make sure... */
+	data = mpd_data_get_first(data);
+
+	while (data) {
+		/* Insert new element 'data' into list 'new_list' */
+		MpdData_real **pos;
+		MpdData_real *data_real = (MpdData_real *)data;
+
+		data = mpd_data_get_next_real(data, FALSE);
+
+		data_real->next = NULL;
+
+		for (pos = &new_list; *pos; pos = &(*pos)->next) {
+			/* Sort on two keys. First album... */
+			int cmp = strcmp((*pos)->song->album?:"",
+					 data_real->song->album?:"");
+
+			if (cmp > 0)
+				break;
+			if (cmp < 0)
+				continue;
+
+			cmp = strcmp((*pos)->song->disc?:"",
+					 data_real->song->disc?:"");
+			if (cmp > 0)
+				break;
+			if (cmp < 0)
+				continue;
+
+			/* ... then track number */
+			if (atoi((*pos)->song->track?:"") >
+			    atoi(data_real->song->track?:""))
+				break;
+		}
+		data_real->next = *pos;
+		*pos = data_real;
+	}
+	data = (MpdData *)new_list;
+
+	if (new_list) {
+		new_list->head->first = new_list;
+
+		new_list->prev = NULL;
+		while (new_list->next) {
+			new_list->next->prev = new_list;
+			new_list = new_list->next;
+		}
+	}		
+	return data;
+}
 
 static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 {
@@ -400,6 +455,7 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 
 
 		data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+		data = pl3_artist_browser_sort_tracks(data);
 		/* artist is selected */
 		while(data != NULL)
 		{
@@ -466,6 +522,7 @@ static long unsigned pl3_artist_browser_view_folder(GtkTreeIter *iter_cat)
 		if(pb) g_object_unref(pb);	
 		/* artist and album is selected */
 		data = mpd_database_find(connection,MPD_TABLE_ALBUM, string, TRUE);
+		data = pl3_artist_browser_sort_tracks(data);
 		while (data != NULL)
 		{
 			if(data->type == MPD_DATA_TYPE_SONG)
@@ -605,6 +662,7 @@ static void pl3_artist_browser_add_folder()
 			/* artist selected */
 			gchar *message = g_strdup_printf("Added songs from artist '%s'",artist);
 			MpdData * data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+			data = pl3_artist_browser_sort_tracks(data);
 			while (data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
@@ -623,6 +681,7 @@ static void pl3_artist_browser_add_folder()
 			/* fetch all songs by this album and check if the artist is right. from mpd and add them to the add-list */
 			gchar *message = g_strdup_printf("Added songs from album '%s' ",title);
 			MpdData *data = mpd_database_find(connection, MPD_TABLE_ALBUM, title, TRUE);
+			data = pl3_artist_browser_sort_tracks(data);
 			while (data != NULL)
 			{
 				if(data->type == MPD_DATA_TYPE_SONG)
@@ -898,6 +957,7 @@ static void pl3_artist_browser_add_selected()
 			else if (type&PL3_ENTRY_ARTIST)
 			{
 				MpdData * data = mpd_database_find(connection, MPD_TABLE_ARTIST, artist, TRUE);
+				data = pl3_artist_browser_sort_tracks(data);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
@@ -912,6 +972,7 @@ static void pl3_artist_browser_add_selected()
 			{
 				MpdData *data = NULL;
 				data = mpd_database_find(connection, MPD_TABLE_ALBUM, album, TRUE);
+				data = pl3_artist_browser_sort_tracks(data);
 				while (data != NULL)
 				{
 					if(data->type == MPD_DATA_TYPE_SONG)
