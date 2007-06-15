@@ -842,24 +842,23 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		url_start_real(g_strstrip(url[0]));
 		g_strfreev(url);
 	} else {
+		MpdData * mdata ;
 		gchar **stripped;
 		int i;
 		gchar * odata = gtk_selection_data_get_text(data);
-		printf("internal drop\n %s\n",odata);
 		stripped = g_strsplit(odata, "\n", 0);
 		g_free(odata);
 		mpd_database_search_start(connection, TRUE);
 		for(i=0; stripped && stripped[i];i++)	
 		{
 			gchar ** request = g_strsplit(stripped[i],":", 2);
-			printf("data: %s\n",stripped[i]);
 			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(request[0]), request[1]);
 			g_strfreev(request);
 		}
-		MpdData * data = mpd_database_search_commit(connection);
-		for(; data; data= mpd_data_get_next(data))
+		mdata = mpd_database_search_commit(connection);
+		for(; mdata; mdata= mpd_data_get_next(mdata))
 		{
-			mpd_playlist_queue_add(connection, data->song->file);
+			mpd_playlist_queue_add(connection, mdata->song->file);
 		}
 		mpd_playlist_queue_commit(connection);
 		g_strfreev(stripped);

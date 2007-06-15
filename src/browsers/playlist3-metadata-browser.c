@@ -78,6 +78,34 @@ gmpcPlugin metab_plugin = {
 	info2_get_enabled,
 	info2_set_enabled
 };
+/**
+ * Drag test
+ */
+static void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
+{
+	gchar *data = g_strdup_printf("artist:%s\nalbum:%s", 
+			(gchar *)g_object_get_data(G_OBJECT(event), "artist"), 
+			(gchar *)g_object_get_data(G_OBJECT(event), "album"));
+
+	gtk_selection_data_set (sel_data, GDK_TARGET_STRING, 8,
+			(const guchar *) data, strlen(data));
+	g_free(data);
+
+}
+static void info2_artist_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
+{
+	gchar *data = g_strdup_printf("artist:%s", 
+			(gchar *)g_object_get_data(G_OBJECT(event), "artist"));
+
+	gtk_selection_data_set (sel_data, GDK_TARGET_STRING, 8,
+			(const guchar *) data, strlen(data));
+	g_free(data);
+
+}
+
+
+
+
 
 
 /* Playlist window row reference */
@@ -253,7 +281,6 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
 	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-//	gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 }
@@ -632,6 +659,14 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 				song->artist = data->tag;
 				/* Create button */
 				button = info2_create_artist_button(song);
+
+				gtk_drag_source_set(button, GDK_BUTTON1_MASK,target_table, 1,
+						GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+				g_signal_connect(G_OBJECT(button), "drag-data-get", info2_artist_drag_data_get, NULL);
+				g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
+				gtk_drag_source_set_icon_name(button, "media-artist");
+
+
 				/* Add button to list (so it gets added to the table) */
 				list = g_list_append(list, button);				
 				/* cleanup pointer*/
@@ -743,17 +778,6 @@ static void info2_fill_view()
 	gtk_entry_set_completion(GTK_ENTRY(entry), GTK_ENTRY_COMPLETION(entry_completion));
 
 	gtk_widget_show_all(resizer_vbox);
-}
-/**
- * Drag test
- */
-void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
-{
-	gchar *data = g_strdup_printf("artist:%s\nalbum:%s", (gchar *)g_object_get_data(event, "artist"), (gchar *)g_object_get_data(event, "album"));
-    gtk_selection_data_set (sel_data, GDK_TARGET_STRING, 8,
-			    (const gchar *) data, strlen(data));
-	g_free(data);
-	
 }
 
 /*******
@@ -940,7 +964,7 @@ void info2_fill_artist_view(char *artist)
 			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
 			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, data->tag);
 			data2 = mpd_database_search_commit(connection);
-			
+
 			if(!data2)
 				continue;
 			song = data2->song;
@@ -1333,8 +1357,8 @@ static void info2_init()
 	 * main widget used to pack the browser
 	 */
 	info2_vbox = gtk_frame_new(NULL);
-	
-	
+
+
 	gtk_widget_set_name(info2_vbox, "gtk_scrolled_window");
 	gtk_frame_set_shadow_type(GTK_FRAME(info2_vbox), GTK_SHADOW_ETCHED_IN);
 	vbox = gtk_vbox_new(FALSE, 0);
