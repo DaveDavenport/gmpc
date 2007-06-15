@@ -41,7 +41,8 @@ void playlist3_update_header(void);
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
 	{ "_NETSCAPE_URL", 0, 1},
-	{ "text/uri-list", 0, 2}
+	{ "text/uri-list", 0, 2},
+	{ "internal-drop",0,99}
 };
 
 
@@ -832,12 +833,41 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		guint               info,
 		guint               time)
 {
-	gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
+	if(info != 99)
+	{
+		gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
 
 
-	gtk_drag_finish(context, TRUE, FALSE, time);
-	url_start_real(g_strstrip(url[0]));
-	g_strfreev(url);
+		gtk_drag_finish(context, TRUE, FALSE, time);
+		url_start_real(g_strstrip(url[0]));
+		g_strfreev(url);
+	} else {
+		gchar **stripped;
+		int i;
+		gchar * odata = gtk_selection_data_get_text(data);
+		printf("internal drop\n %s\n",odata);
+		stripped = g_strsplit(odata, "\n", 0);
+		g_free(odata);
+		mpd_database_search_start(connection, TRUE);
+		for(i=0; stripped && stripped[i];i++)	
+		{
+			gchar ** request = g_strsplit(stripped[i],":", 2);
+			printf("data: %s\n",stripped[i]);
+			mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(request[0]), request[1]);
+			g_strfreev(request);
+		}
+		MpdData * data = mpd_database_search_commit(connection);
+		for(; data; data= mpd_data_get_next(data))
+		{
+			mpd_playlist_queue_add(connection, data->song->file);
+		}
+		mpd_playlist_queue_commit(connection);
+		g_strfreev(stripped);
+		gtk_drag_finish(context, TRUE, FALSE, time);
+
+
+	}
+	
 }
 
 void create_playlist3 ()
@@ -1048,7 +1078,7 @@ void create_playlist3 ()
 	 */
 	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "pl3_win"),
 			GTK_DEST_DEFAULT_ALL,
-			target_table, 3,
+			target_table, 4,
 			GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),

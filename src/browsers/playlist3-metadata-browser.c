@@ -9,6 +9,13 @@
 #include "gob/gmpc-clicklabel.h"
 #include "gmpc-meta-text-view.h"
 
+static GtkTargetEntry target_table[] = {
+	{ "internal-drop",GTK_TARGET_SAME_APP,99}
+};
+
+
+
+
 extern GladeXML *pl3_xml;
 
 static void info2_add(GtkWidget *);
@@ -737,7 +744,17 @@ static void info2_fill_view()
 
 	gtk_widget_show_all(resizer_vbox);
 }
-
+/**
+ * Drag test
+ */
+void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
+{
+	gchar *data = g_strdup_printf("artist:%s\nalbum:%s", (gchar *)g_object_get_data(event, "artist"), (gchar *)g_object_get_data(event, "album"));
+    gtk_selection_data_set (sel_data, GDK_TARGET_STRING, 8,
+			    (const gchar *) data, strlen(data));
+	g_free(data);
+	
+}
 
 /*******
  * ARTIST VIEW
@@ -1017,6 +1034,17 @@ void info2_fill_artist_view(char *artist)
 
 			gtk_container_add(GTK_CONTAINER(event), table);
 			gtk_box_pack_start(GTK_BOX(vbox1),event, FALSE,TRUE,0);
+			/**
+			 * Drag testing 
+			 */
+
+			gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,
+					GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+			g_signal_connect(G_OBJECT(event), "drag-data-get", info2_album_drag_data_get, NULL);
+			g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
+			g_object_set_data_full(G_OBJECT(event), "album",g_strdup(song->album), g_free);
+			gtk_drag_source_set_icon_name(event, "gmpc-no-cover");
+
 
 			mpd_data_free(data2);
 		}
