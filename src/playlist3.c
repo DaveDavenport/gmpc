@@ -1076,11 +1076,11 @@ void create_playlist3 ()
 	/**
 	 * Set as drag destination
 	 */
-	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "pl3_win"),
+	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "hbox_playlist_player"),
 			GTK_DEST_DEFAULT_ALL,
 			target_table, 4,
 			GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
-	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "pl3_win")),"drag_data_received",
+	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "hbox_playlist_player")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
 
