@@ -1085,8 +1085,7 @@ void info2_fill_artist_view(char *artist)
 			 * Drag testing 
 			 */
 
-			gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,
-					GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+			gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1, GDK_ACTION_COPY|GDK_ACTION_MOVE);
 			g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_album_drag_data_get), NULL);
 			g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
 			g_object_set_data_full(G_OBJECT(event), "album",g_strdup(song->album), g_free);
@@ -1361,16 +1360,6 @@ void info2_fill_album_view(char *artist,char *album)
 	mpd_freeSong(song2);
 	gtk_widget_show_all(info2_vbox);
 }
-
-
-
-
-
-
-
-
-
-
 
 static void info2_init()
 {

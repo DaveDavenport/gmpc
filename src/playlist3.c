@@ -848,6 +848,10 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		gchar * odata = gtk_selection_data_get_text(data);
 		stripped = g_strsplit(odata, "\n", 0);
 		g_free(odata);
+		if(context->action == GDK_ACTION_MOVE)
+		{
+			mpd_playlist_clear(connection);
+		}
 		mpd_database_search_start(connection, TRUE);
 		for(i=0; stripped && stripped[i];i++)	
 		{
@@ -861,12 +865,14 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 			mpd_playlist_queue_add(connection, mdata->song->file);
 		}
 		mpd_playlist_queue_commit(connection);
+		if(context->action == GDK_ACTION_MOVE)
+		{
+			mpd_player_play(connection);
+		}
+
 		g_strfreev(stripped);
 		gtk_drag_finish(context, TRUE, FALSE, time);
-
-
 	}
-	
 }
 
 void create_playlist3 ()
