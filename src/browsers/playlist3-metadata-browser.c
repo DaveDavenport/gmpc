@@ -102,8 +102,14 @@ static void info2_artist_drag_data_get(GtkWidget *event, GdkDragContext *context
 	g_free(data);
 
 }
-
-
+static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
+{
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
+}
+static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
+{
+	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->light[GTK_STATE_SELECTED]));
+}
 
 
 
@@ -298,7 +304,6 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/* Button bg drawing code */
 	event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
-	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
 	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
 
 	/** Create table */
@@ -471,17 +476,35 @@ void info2_fill_song_view(char *path)
 	gtk_container_add(GTK_CONTAINER(ali), table);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE, FALSE,0);
 
+	/***
+	 * Lyrics
+	 */
+	/* label */
 	expander= gtk_label_new(_("Lyric:"));
-	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
-	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
-	/* expander */
 	gtk_label_set_markup(GTK_LABEL(expander), _("<b>Lyric:</b>"));
-	/* query */
-	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
 	gtk_misc_set_alignment(GTK_MISC(expander), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(expander), 8,0);
+
+	GtkWidget *event = gtk_event_box_new();
+	GtkWidget *ali2 = gtk_alignment_new(0,0,0.5,0);
+	ali = gtk_alignment_new(0,0,0.5,0);
+	/* the lyric */
+	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
+	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 8);
+	gtk_widget_modify_base(gmtv, GTK_STATE_NORMAL, &(resizer_vbox->style->mid[GTK_STATE_NORMAL]));
+	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song);
+
+
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), expander, FALSE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), gmtv, FALSE, FALSE,0);
+	gtk_widget_modify_bg(event, GTK_STATE_NORMAL, &(resizer_vbox->style->dark[GTK_STATE_NORMAL]));
+	gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 1,1,1,1);
+	gtk_alignment_set(GTK_ALIGNMENT(ali), 0,0,1,0);
+	gtk_alignment_set_padding(GTK_ALIGNMENT(ali2), 0,0,12,0);
+
+	gtk_container_add(GTK_CONTAINER(ali), gmtv);
+	gtk_container_add(GTK_CONTAINER(event), ali);
+	gtk_container_add(GTK_CONTAINER(ali2), event);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali2, FALSE,FALSE,0);
 
 
 	/**
@@ -662,7 +685,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 
 				gtk_drag_source_set(button, GDK_BUTTON1_MASK,target_table, 1,
 						GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
-				g_signal_connect(G_OBJECT(button), "drag-data-get", info2_artist_drag_data_get, NULL);
+				g_signal_connect(G_OBJECT(button), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
 				g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
 				gtk_drag_source_set_icon_name(button, "media-artist");
 
@@ -1064,7 +1087,7 @@ void info2_fill_artist_view(char *artist)
 
 			gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,
 					GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
-			g_signal_connect(G_OBJECT(event), "drag-data-get", info2_album_drag_data_get, NULL);
+			g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_album_drag_data_get), NULL);
 			g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
 			g_object_set_data_full(G_OBJECT(event), "album",g_strdup(song->album), g_free);
 			gtk_drag_source_set_icon_name(event, "gmpc-no-cover");
@@ -1339,14 +1362,14 @@ void info2_fill_album_view(char *artist,char *album)
 	gtk_widget_show_all(info2_vbox);
 }
 
-static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
-{
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
-}
-static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
-{
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->light[GTK_STATE_SELECTED]));
-}
+
+
+
+
+
+
+
+
 
 
 static void info2_init()

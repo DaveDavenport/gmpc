@@ -343,7 +343,7 @@ void tray_icon2_create_tooltip(void)
 	 * Create white background label box
 	 */
 	event = gtk_event_box_new();
-	vbox = gtk_vbox_new(FALSE, 2);
+	vbox = gtk_vbox_new(FALSE, 0);
 	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->white));
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),3);
 	gtk_container_add(GTK_CONTAINER(event), vbox);
