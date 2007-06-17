@@ -77,7 +77,6 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 				int destination = ind[0];
 				/*		if(destination >0 && ind[1] != '\0') destination--; */
 				if(destination > original) destination--;
-				printf("Move playlist: %s %i-%i\n",  GMPC_MPDDATA_MODEL_SORT(model)->playlist,original,destination);
 				mpd_database_playlist_move(connection, GMPC_MPDDATA_MODEL_SORT(model)->playlist,original,destination);
 				data = mpd_database_get_playlist_content(connection, GMPC_MPDDATA_MODEL_SORT(model)->playlist); 
 				gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(model), data);		
