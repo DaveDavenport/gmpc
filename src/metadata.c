@@ -692,7 +692,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 			q_async_queue_unlock(meta_commands);
 			mpd_freeSong(song);
 			g_free(mtd);
-			printf("Request allready queued\n");
 			return ret;
 		}
 		q_async_queue_unlock(meta_commands);
