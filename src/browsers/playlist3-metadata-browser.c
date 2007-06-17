@@ -82,6 +82,11 @@ gmpcPlugin metab_plugin = {
 static GtkTreeRowReference *info2_ref = NULL;
 
 
+static void info2_start_drag(GtkWidget *event, GdkDragContext *context, gpointer data)
+{
+	GdkPixbuf *pb = gdk_pixbuf_get_from_drawable(NULL,event->window,NULL,0,0,0,0,event->allocation.width, event->allocation.height);
+	gtk_drag_set_icon_pixbuf(context, pb, 0,0);
+}
 /**
  * Drag test
  */
@@ -404,6 +409,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/** Setup dragging */
 	gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,GDK_ACTION_COPY|GDK_ACTION_MOVE);
 	g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
+	g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
 	g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
 	gtk_drag_source_set_icon_name(event, "media-artist");
 
@@ -1099,6 +1105,7 @@ void info2_fill_artist_view(char *artist)
 
 			gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1, GDK_ACTION_COPY|GDK_ACTION_MOVE);
 			g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_album_drag_data_get), NULL);
+			g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
 			g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
 			g_object_set_data_full(G_OBJECT(event), "album",g_strdup(song->album), g_free);
 			gtk_drag_source_set_icon_name(event, "gmpc-no-cover");
