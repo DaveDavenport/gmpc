@@ -32,7 +32,11 @@
  * format time into 
  * Total time: %i days %i hours %i minutes
  */
-gchar * format_time(unsigned long seconds)
+gchar *format_time(unsigned long seconds)
+{
+	return format_time_real(seconds, _(" Total time: "));
+}
+gchar * format_time_real(unsigned long seconds, const gchar *data)
 {
 	GString *str = NULL;
 	int days = seconds/86400;
@@ -43,7 +47,7 @@ gchar * format_time(unsigned long seconds)
 	{
 		return g_strdup("");
 	}
-	str = g_string_new(_(" Total time: "));
+	str = g_string_new(data);
 	if(days != 0)
 	{
 		

@@ -8,7 +8,7 @@
  */
 
 gchar * format_time(unsigned long seconds);
-
+gchar * format_time_real(unsigned long seconds, const gchar *data);
 /**
  * this draws a 1 pixel border around a pixbuf.
  * It doesn't work for all color depths (I think)
