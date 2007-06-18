@@ -9,11 +9,12 @@
 #include "gob/gmpc-clicklabel.h"
 #include "gmpc-meta-text-view.h"
 
+/**
+ * Dragging 
+ */
 static GtkTargetEntry target_table[] = {
 	{ "internal-drop",GTK_TARGET_SAME_APP,99}
 };
-
-
 
 
 extern GladeXML *pl3_xml;
@@ -68,7 +69,7 @@ gmpcPlugin metab_plugin = {
 	0,
 	NULL,                   /* parth */
 	NULL,                   /* init */
-        NULL,                   /* Destroy */
+	NULL,                   /* Destroy */
 	&info2_gbp,             /* Browser */
 	NULL,                   /* status changed */
 	NULL,                   /* connection changed */
@@ -81,17 +82,17 @@ gmpcPlugin metab_plugin = {
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
 
-
+/**
+ * Dragging code 
+ */
 static void info2_start_drag(GtkWidget *event, GdkDragContext *context, gpointer data)
 {
 	GdkPixbuf *pb2,*pb = gdk_pixbuf_get_from_drawable(NULL,event->window,NULL,0,0,0,0,event->allocation.width, event->allocation.height);
 	pb2 = gdk_pixbuf_scale_simple(pb, 200,((200/((float)event->allocation.width))*event->allocation.height),GDK_INTERP_BILINEAR);
 	gtk_drag_set_icon_pixbuf(context, pb2, 0,0);
 	g_object_unref(pb);
+	g_object_unref(pb2);
 }
-/**
- * Drag test
- */
 static void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
 {
 	gchar *data = g_strdup_printf("artist:%s\nalbum:%s", 
@@ -111,8 +112,8 @@ static void info2_artist_drag_data_get(GtkWidget *event, GdkDragContext *context
 	gtk_selection_data_set (sel_data, GDK_TARGET_STRING, 8,
 			(const guchar *) data, strlen(data));
 	g_free(data);
-
 }
+
 /**
  * Callback functions to propperly react too changes in theme/style
  */
@@ -208,9 +209,7 @@ static void as_album_clicked(GtkButton *button, gpointer data)
 		mpd_playlist_queue_commit(connection);
 		if(clear)
 			mpd_player_play(connection);
-
 	}
-
 }
 
 static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
@@ -219,7 +218,12 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 	info2_fill_artist_view(artist);
 	q_free(artist);
 }
-
+static void as_artist_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
+{
+	if(event->type == GDK_2BUTTON_PRESS) {
+		as_artist_viewed_clicked(button, data);
+	}
+}
 static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "artist"));
@@ -228,7 +232,12 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 	q_free(artist);
 	q_free(album);
 }
-
+static void as_album_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
+{
+	if(event->type == GDK_2BUTTON_PRESS) {
+		as_album_viewed_clicked(button, data);
+	}
+}
 static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
@@ -416,6 +425,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
 	g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
 	g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
+	g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
 	gtk_drag_source_set_icon_name(event, "media-artist");
 
 	return event;
@@ -446,7 +456,10 @@ void info2_fill_song_view(char *path)
 	 * Clear header
 	 */
 	info2_widget_clear_children(title_vbox);
-
+	
+	/** 
+	 * Create Header
+	 */
 	/**
 	 * Collection 
 	 */
@@ -1617,6 +1630,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
 	g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(event), "album",g_strdup(song->album), g_free);
+	g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_album_viewed_clicked_event),NULL);
 	gtk_drag_source_set_icon_name(event, "gmpc-no-cover");
 
 
