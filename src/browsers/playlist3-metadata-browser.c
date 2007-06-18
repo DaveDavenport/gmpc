@@ -84,8 +84,10 @@ static GtkTreeRowReference *info2_ref = NULL;
 
 static void info2_start_drag(GtkWidget *event, GdkDragContext *context, gpointer data)
 {
-	GdkPixbuf *pb = gdk_pixbuf_get_from_drawable(NULL,event->window,NULL,0,0,0,0,event->allocation.width, event->allocation.height);
-	gtk_drag_set_icon_pixbuf(context, pb, 0,0);
+	GdkPixbuf *pb2,*pb = gdk_pixbuf_get_from_drawable(NULL,event->window,NULL,0,0,0,0,event->allocation.width, event->allocation.height);
+	pb2 = gdk_pixbuf_scale_simple(pb, 200,((200/((float)event->allocation.width))*event->allocation.height),GDK_INTERP_BILINEAR);
+	gtk_drag_set_icon_pixbuf(context, pb2, 0,0);
+	g_object_unref(pb);
 }
 /**
  * Drag test
