@@ -845,8 +845,8 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		MpdData * mdata ;
 		gchar **stripped;
 		int i;
-		gchar * odata = gtk_selection_data_get_text(data);
-		stripped = g_strsplit(odata, "\n", 0);
+		guchar * odata = gtk_selection_data_get_text(data);
+		stripped = g_strsplit((gchar *)odata, "\n", 0);
 		g_free(odata);
 		if(context->action == GDK_ACTION_MOVE)
 		{
