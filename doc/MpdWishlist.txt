@@ -5,8 +5,6 @@ v0.1, October 2006
 
 List of features that can improve gmpc::
 ----------------------------------------
-1. *Playlist Editing*: Gmpc could benefit if mpd allowed clients to create, remove and edit offline playlists.
-2. *Check in Current Playlist*: Check if a <path> is in the Current playlist.
 3. *Insert at id/position*: To make some cut/paste code in gmpc, it would be nice if you can do a insert that passes a position/id 
 4. *Improved list command*: Something like this: 
 +
@@ -25,8 +23,6 @@ would give a list off all artist/album pairs that "fuzzy" match "\*Unpl\*" (f.e.
 
 5. *Playlist Changes signal*: It would be nice if mpd provides a way to let clients know that a playlist is remove/added or changed. 
 6. *Database Differences*: It would be fancy to be able what new music was added in the last database update. (store add time with a song in the db?)
-7. *Server Side Playlist search*
 
 The features are sorted by priority, the highest on top.
 
-NOTE: I don't mind writing some of the patches myself.
