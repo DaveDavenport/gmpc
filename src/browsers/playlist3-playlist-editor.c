@@ -412,7 +412,7 @@ static void playlist_editor_edit_columns(void)
   gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(playlist_editor_song_tree));
 }
 
-static gboolean playlist_editor_key_pressed(GtkTreeView *tree, GdkEventButton *button, gpointer data)
+static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *button, gpointer data)
 {
 	if(button->button == 3)
 	{
@@ -449,7 +449,24 @@ static gboolean playlist_editor_key_pressed(GtkTreeView *tree, GdkEventButton *b
   }
   return FALSE;
 }
-static gboolean playlist_editor_browser_button_press_event(GtkWidget *giv, GdkEventButton *event, gpointer data)
+static gboolean playlist_editor_key_pressed(GtkWidget *giv, GdkEventButton *event, gpointer data)
+{
+	GtkTreePath *path = NULL;
+	if(event->button == 3 &&gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(giv), event->x, event->y,&path,NULL,NULL,NULL))
+	{	
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(giv));
+		if(gtk_tree_selection_path_is_selected(sel, path))
+		{
+			gtk_tree_path_free(path);
+			return TRUE;
+		}
+	}
+	if(path) {
+		gtk_tree_path_free(path);
+	}
+	return FALSE;                                                                                                     
+}
+static gboolean playlist_editor_browser_button_release_event(GtkWidget *giv, GdkEventButton *event, gpointer data)
 {
   if(event->button == 3)
   {
@@ -544,7 +561,7 @@ static void playlist_editor_browser_init()
 
 	g_signal_connect(G_OBJECT(tree), "selection-changed", G_CALLBACK(playlist_editor_browser_playlist_editor_changed), NULL);
 	g_signal_connect(G_OBJECT(tree), "item-activated", G_CALLBACK(playlist_editor_browser_activate_cursor_item), NULL);
-  g_signal_connect(G_OBJECT(tree), "button-press-event", G_CALLBACK(playlist_editor_browser_button_press_event), NULL);
+	g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(playlist_editor_browser_button_release_event), NULL);
 
 	/* file list */
 
@@ -562,6 +579,7 @@ static void playlist_editor_browser_init()
 	gtk_container_add(GTK_CONTAINER(sw), tree);
 	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
+	g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(playlist_editor_key_released), NULL);
 	g_signal_connect(G_OBJECT(tree), "button-press-event", G_CALLBACK(playlist_editor_key_pressed), NULL);
 	g_object_ref(playlist_editor_browser);
 

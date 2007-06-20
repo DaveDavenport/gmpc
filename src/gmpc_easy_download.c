@@ -135,3 +135,32 @@ void gmpc_easy_download_clean(gmpc_easy_download_struct *dld)
 	dld->size = 0;
 }
 
+/***
+ * preferences window
+ */
+static GtkWidget *proxy_pref_vbox = NULL;
+static void proxy_pref_construct(GtkWidget *container)
+{
+
+
+	gtk_container_remove(GTK_CONTAINER(container), proxy_pref_vbox);
+	proxy_pref_vbox = NULL;
+}
+static void proxy_pref_destroy(GtkWidget *container)
+{
+	proxy_pref_vbox = gtk_vbox_new(FALSE,6);
+
+	gtk_container_add(GTK_CONTAINER(container), proxy_pref_vbox);
+}
+gmpcPrefPlugin proxyplug_pref = {
+	.construct		= proxy_pref_construct,
+	.destroy		= proxy_pref_destroy
+};
+gmpcPlugin proxyplug = {
+	.name 			= "Proxy",
+	.version 	 	= {0,0,0},
+	.plugin_type	= GMPC_INTERNALL,
+	.pref			= &proxyplug_pref
+
+};
+

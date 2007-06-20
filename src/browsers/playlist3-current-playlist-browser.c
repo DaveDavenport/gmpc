@@ -54,6 +54,7 @@ GtkTreeModel *playlist = NULL;
 /* just for here */
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
 static int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
+static int  pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
 static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event);
 static void pl3_current_playlist_browser_show_info(void);
 static void pl3_current_playlist_save_playlist(void);
@@ -404,8 +405,8 @@ static void pl3_current_playlist_browser_init()
 
 	/* setup signals */
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "row-activated",G_CALLBACK(pl3_current_playlist_browser_row_activated), NULL); 
-/*	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);*/
-	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);
+	g_signal_connect(G_OBJECT(pl3_cp_tree), "button-release-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_cp_tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), NULL);
 
 	/* set up the scrolled window */
@@ -619,6 +620,23 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
 	}
+}
+static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
+{
+	GtkTreePath *path = NULL;
+	if(event->button == 3 &&gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(tree), event->x, event->y,&path,NULL,NULL,NULL))
+	{	
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+		if(gtk_tree_selection_path_is_selected(sel, path))
+		{
+			gtk_tree_path_free(path);
+			return TRUE;
+		}
+	}
+	if(path) {
+		gtk_tree_path_free(path);
+	}
+	return FALSE;                                                                                                     
 }
 
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)

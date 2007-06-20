@@ -48,6 +48,7 @@ static int pl3_find3_browser_add_go_menu(GtkWidget *);
 static void pl3_find3_browser_search(void);
 static void pl3_find3_browser_row_activated(GtkTreeView *, GtkTreePath *);
 static int pl3_find3_browser_playlist_key_press(GtkWidget *, GdkEventKey *);
+static gboolean pl3_find3_browser_button_press_event(GtkWidget *but, GdkEventButton *event,gpointer data);
 static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find3_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -215,8 +216,8 @@ static void pl3_find3_browser_init()
 
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find3_tree), "row-activated",G_CALLBACK(pl3_find3_browser_row_activated), NULL); 
-    g_signal_connect(G_OBJECT(pl3_find3_tree), "button-press-event", G_CALLBACK(pl3_find3_browser_button_release_event), NULL);
-//    g_signal_connect(G_OBJECT(pl3_find3_tree), "button-release-event", G_CALLBACK(pl3_find3_browser_button_release_event), NULL);
+    g_signal_connect(G_OBJECT(pl3_find3_tree), "button-press-event", G_CALLBACK(pl3_find3_browser_button_press_event), NULL);
+    g_signal_connect(G_OBJECT(pl3_find3_tree), "button-release-event", G_CALLBACK(pl3_find3_browser_button_release_event), NULL);
     g_signal_connect(G_OBJECT(pl3_find3_tree), "key-press-event", G_CALLBACK(pl3_find3_browser_playlist_key_press), NULL);
 
     /* set up the scrolled window */
@@ -588,6 +589,23 @@ static int pl3_find3_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *ev
 static void pl3_find3_browser_edit_columns(void)
 {
   gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_find3_tree));
+}
+static gboolean pl3_find3_browser_button_press_event(GtkWidget *but, GdkEventButton *event, gpointer data)
+{
+	GtkTreePath *path = NULL;
+	if(event->button == 3 &&gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
+	{	
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(but));
+		if(gtk_tree_selection_path_is_selected(sel, path))
+		{
+			gtk_tree_path_free(path);
+			return TRUE;
+		}
+	}
+	if(path) {
+		gtk_tree_path_free(path);
+	}
+	return FALSE;                                                                                                     
 }
 
 static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
