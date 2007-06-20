@@ -682,10 +682,9 @@ q_async_queue_has_data (QAsyncQueue *queue, GCompareFunc func, gpointer data)
 {
 	gint length;
 	GList *list = NULL;
-  gpointer retval= NULL;
 
-  g_return_val_if_fail (queue,FALSE);
-  g_return_val_if_fail (g_atomic_int_get (&queue->ref_count) > 0, FALSE);
+	g_return_val_if_fail (queue,FALSE);
+	g_return_val_if_fail (g_atomic_int_get (&queue->ref_count) > 0, FALSE);
 
 	/* get the first */
 	list = g_queue_peek_nth_link(queue->queue, 0);
@@ -697,7 +696,7 @@ q_async_queue_has_data (QAsyncQueue *queue, GCompareFunc func, gpointer data)
 		}
 		list = list->next;
 	}
-  return FALSE;
+	return FALSE;
 }
 
 #define __Q_ASYNCQUEUE_C__
