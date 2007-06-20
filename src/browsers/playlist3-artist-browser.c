@@ -110,12 +110,20 @@ GtkTreeRowReference *pl3_ab_tree_ref = NULL;
 
 static int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))
-	{
-		return FALSE;
+	GtkTreePath *path = NULL;
+	if(event->button == 3 &&gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(tree), event->x, event->y,&path,NULL,NULL,NULL))
+	{	
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+		if(gtk_tree_selection_path_is_selected(sel, path))
+		{
+			gtk_tree_path_free(path);
+			return TRUE;
+		}
 	}
-	return TRUE;
+	if(path) {
+		gtk_tree_path_free(path);
+	}
+	return FALSE; 
 }
 static void pl3_artist_browser_search_activate()
 {
