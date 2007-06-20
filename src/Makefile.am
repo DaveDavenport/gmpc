@@ -41,7 +41,6 @@ sources=\
 	url_fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
-	egg/eggtrayicon.c\
 	egg/eggcellrendererkeys.c\
 	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
@@ -169,7 +168,6 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-clicklabel-private.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
-		egg/eggtrayicon.h\
 		revision.h\
 		qlib/qasyncqueue.h
 
