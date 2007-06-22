@@ -138,19 +138,73 @@ void gmpc_easy_download_clean(gmpc_easy_download_struct *dld)
 /***
  * preferences window
  */
-static GtkWidget *proxy_pref_vbox = NULL;
-static void proxy_pref_construct(GtkWidget *container)
-{
-
-
-	gtk_container_remove(GTK_CONTAINER(container), proxy_pref_vbox);
-	proxy_pref_vbox = NULL;
-}
+static GtkWidget *proxy_pref_frame = NULL;
 static void proxy_pref_destroy(GtkWidget *container)
 {
-	proxy_pref_vbox = gtk_vbox_new(FALSE,6);
+	gtk_container_remove(GTK_CONTAINER(container), proxy_pref_frame);
+	proxy_pref_frame = NULL;
+}
+static void proxy_pref_use_proxy_toggled(GtkWidget *toggle_button)
+{
+	cfg_set_single_value_as_int(config, "Network Settings", "Use Proxy",
+			gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggle_button)));
+}
+static void proxy_pref_http_adress_changed(GtkWidget *entry)
+{
+		cfg_set_single_value_as_string(config, "Network Settings", "Proxy Address",(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+}
+static void proxy_pref_http_port_changed(GtkWidget *entry)
+{
+		cfg_set_single_value_as_int(config, "Network Settings", "Proxy Port",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+}
+static void proxy_pref_construct(GtkWidget *container)
+{
+	GtkWidget *temp = NULL, *vbox,*hbox;
+	gchar *value = NULL;
+	/* Create frame and create a widget with markup for the frame */
+	proxy_pref_frame = gtk_frame_new("");
+	temp = gtk_label_new(_("Proxy"));
+	gtk_label_set_markup(GTK_LABEL(temp), "<b>Proxy</b>");
+	gtk_frame_set_label_widget(GTK_FRAME(proxy_pref_frame), temp);
+	gtk_frame_set_shadow_type(GTK_FRAME(proxy_pref_frame), GTK_SHADOW_NONE);
+	/* setup vbox for inside the frame */
+	vbox = gtk_vbox_new(FALSE,6);
+	gtk_container_set_border_width(GTK_CONTAINER(vbox),12);
+	gtk_container_add(GTK_CONTAINER(proxy_pref_frame), vbox);
+	/* enable/disable */
+	temp = gtk_check_button_new_with_label(_("Use a proxy for internet connectivity"));
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(temp), 
+			cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE));
+	gtk_box_pack_start(GTK_BOX(vbox), temp,FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(temp), "toggled", G_CALLBACK(proxy_pref_use_proxy_toggled), NULL);
+	/* Add other widgets */
+	hbox= gtk_hbox_new(FALSE,6);
+	gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,0);
+	/* label */
+	temp = gtk_label_new(_("HTTP Proxy:"));
+	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
+	/* entry (address)*/
+	temp = gtk_entry_new();
+	value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+	if(value) {
+		gtk_entry_set_text(GTK_ENTRY(temp),value); 
+	}
+	gtk_entry_set_width_chars(GTK_ENTRY(temp), 20);
+	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(temp), "changed", G_CALLBACK(proxy_pref_http_adress_changed), NULL);
+	/* label */
+	temp = gtk_label_new(_("Port:"));
+	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
+	/* spinbox (port) */
+	temp = gtk_spin_button_new_with_range(1,65536,1);	
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(temp),(double)
+			cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080));
+	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(temp), "value-changed", G_CALLBACK(proxy_pref_http_port_changed), NULL);
 
-	gtk_container_add(GTK_CONTAINER(container), proxy_pref_vbox);
+
+	gtk_widget_show_all(proxy_pref_frame);
+	gtk_container_add(GTK_CONTAINER(container), proxy_pref_frame);
 }
 gmpcPrefPlugin proxyplug_pref = {
 	.construct		= proxy_pref_construct,

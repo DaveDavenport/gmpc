@@ -462,6 +462,8 @@ int main (int argc, char **argv)
 	/* Playlist editor */
 	plugin_add(&playlist_editor_plugin,0);
 
+	plugin_add(&proxyplug,0);
+
 
 
     /**

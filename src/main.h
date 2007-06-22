@@ -67,7 +67,7 @@ extern gmpcPlugin cover_art_plug;
 
 extern gmpcPlugin tray_icon_plug;
 extern gmpcPlugin tray_icon2_plug;
-
+extern gmpcPlugin proxyplug;
 //extern gmpcPlugin info3_plugin;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin url_plugin; 
