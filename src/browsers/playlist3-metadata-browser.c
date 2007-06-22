@@ -38,6 +38,7 @@ static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
 static GtkWidget *title_event=NULL;
 static GtkWidget *scrolled_window = NULL;
 static GtkEntryCompletion *entry_completion = NULL;
+static GtkWidget *info2_entry = NULL;
 static GtkWidget * info2_create_album_button(gchar *artist, gchar *album);
 
 /**
@@ -173,6 +174,9 @@ static void info2_widget_clear_children(GtkWidget *wid)
 static void info2_prepare_view()
 {
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
+	/** Clear widget pointer */
+	info2_entry = NULL;
+
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
 	/**
@@ -756,7 +760,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 
 static void info2_fill_view()
 {
-	GtkWidget *hbox, *label, *entry, *button;
+	GtkWidget *hbox, *label, *button;
 	GtkWidget *artist_table = NULL;
 
 
@@ -788,16 +792,16 @@ static void info2_fill_view()
 	label = gtk_label_new("Find Artist:");
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
 	/* The Entry */
-	entry = gtk_entry_new();
+	info2_entry = gtk_entry_new();
 
-	gtk_box_pack_start(GTK_BOX(hbox), entry, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(hbox), info2_entry, TRUE, TRUE, 0);
 	/* button */
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), hbox, FALSE, TRUE, 0);	
 
 	artist_table = gtk_vbox_new(FALSE,8);
 	gtk_container_set_border_width(GTK_CONTAINER(artist_table), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), artist_table, FALSE, TRUE, 0);	
-	g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(info2_fill_view_entry_activate), artist_table);
+	g_signal_connect(G_OBJECT(info2_entry), "activate", G_CALLBACK(info2_fill_view_entry_activate), artist_table);
 	/**
 	 * Entry completion
 	 */
@@ -818,13 +822,13 @@ static void info2_fill_view()
 			gchar *text= NULL;
 			gtk_tree_model_get(model, &iter,0, &text, -1);
 			if(text){
-				gtk_entry_set_text(GTK_ENTRY(entry), text);
-				gtk_widget_activate(GTK_WIDGET(entry));
+				gtk_entry_set_text(GTK_ENTRY(info2_entry), text);
+				gtk_widget_activate(GTK_WIDGET(info2_entry));
 				q_free(text);
 			}
 		}
 	}
-	gtk_entry_set_completion(GTK_ENTRY(entry), GTK_ENTRY_COMPLETION(entry_completion));
+	gtk_entry_set_completion(GTK_ENTRY(info2_entry), GTK_ENTRY_COMPLETION(entry_completion));
 
 	gtk_widget_show_all(resizer_vbox);
 }
@@ -1507,6 +1511,17 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 		info2_fill_view();
 		return TRUE;
 	}
+	if (pl3_cat_get_selected_browser() == metab_plugin.id)
+	{
+		if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
+		{
+			if(info2_entry)
+			{
+				gtk_widget_grab_focus(info2_entry);
+			}
+		}
+
+	}  
 	return FALSE;
 }
 
