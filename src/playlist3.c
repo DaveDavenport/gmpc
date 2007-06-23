@@ -1341,13 +1341,25 @@ static void playlist_zoom_level_changed()
 		case PLAYLIST_NO_ZOOM:
 			break;
 		case PLAYLIST_MINI:
-			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
-/*			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label"));     			*/
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "header_box"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
+			if(glade_xml_get_widget(pl3_xml, "pl3_win")->window)
+			{
+				if(gdk_window_get_state(glade_xml_get_widget(pl3_xml, "pl3_win")->window)&GDK_WINDOW_STATE_MAXIMIZED)
+				{
+					gtk_window_unmaximize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+				}
+
+				if(gdk_window_get_state(glade_xml_get_widget(pl3_xml, "pl3_win")->window)&GDK_WINDOW_STATE_FULLSCREEN)
+				{
+					gtk_window_unfullscreen(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+				}
+			}
+			gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), FALSE);
+
 		case PLAYLIST_SMALL:
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "bread_crumb"));
