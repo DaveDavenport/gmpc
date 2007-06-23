@@ -943,7 +943,14 @@ static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkE
 				if(path && gtk_tree_model_get_iter(model, &iter, path)) {
 					gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
 					if(song)
+					{
 						submenu_for_song(menu, song);
+						item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+						gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+						g_signal_connect(G_OBJECT(item), "activate",
+								G_CALLBACK(pl3_tag_browser_show_info), NULL);
+						gtk_widget_show(item);
+					}
 				}
 				if(path)
 					gtk_tree_path_free(path);
@@ -957,12 +964,12 @@ static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkE
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_tag_browser_replace_selected), NULL);
 
 
-        item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        g_signal_connect(G_OBJECT(item), "activate",
-                G_CALLBACK(pl3_tag_browser_edit_columns), NULL);
+			item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate",
+					G_CALLBACK(pl3_tag_browser_edit_columns), NULL);
 
 			gtk_widget_show_all(GTK_WIDGET(menu));
 			gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
@@ -1049,7 +1056,7 @@ static void pl3_tag_browser_add_folder_to_queue(char *name)
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, mpd_misc_get_tag_by_name(tk_format[0]), name);
 		data = mpd_database_search_commit(connection);
-		
+
 		/* lowest level selected*/
 		if(data != NULL)
 		{
@@ -1196,7 +1203,7 @@ static void pl3_tag_browser_show_info()
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 
 		list = g_list_last (list);
-//		do
+		//		do
 		{
 			mpd_Song *song; 
 			GtkTreeIter iter;
@@ -1217,7 +1224,7 @@ static void pl3_tag_browser_show_info()
 
 			q_free(path);
 		}
-	//	while ((list = g_list_previous (list)) && mpd_check_connected(connection));
+		//	while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
@@ -1421,7 +1428,7 @@ static void pref_id3b_fill()
 static void pref_id3b_init()
 {
 	GtkCellRenderer *renderer = NULL;
-	
+
 	GtkWidget *tree = glade_xml_get_widget(tag_pref_xml,"id3b_tree");
 
 	/* create model to store the data in */
@@ -1529,16 +1536,16 @@ static int pl3_custom_tag_add_go_menu(GtkWidget *menu)
 
 static void pl3_tag_browser_destroy(void)
 {
-  if(pl3_tb_sw)
-  {
-    gtk_widget_destroy(pl3_tb_sw);
-  }
-  if(pl3_tag_store2)
-  {
-    g_object_unref(pl3_tag_store2);
-  }
-  if(pl3_tag_tree_ref)
-  {
-    gtk_tree_row_reference_free(pl3_tag_tree_ref);
-  }                                   
+	if(pl3_tb_sw)
+	{
+		gtk_widget_destroy(pl3_tb_sw);
+	}
+	if(pl3_tag_store2)
+	{
+		g_object_unref(pl3_tag_store2);
+	}
+	if(pl3_tag_tree_ref)
+	{
+		gtk_tree_row_reference_free(pl3_tag_tree_ref);
+	}                                   
 }

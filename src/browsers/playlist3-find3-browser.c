@@ -524,7 +524,6 @@ static void pl3_find3_browser_search()
 
 static void pl3_find3_browser_show_info()
 {
-/*
 	GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_find3_tree));
 	GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find3_tree));
 	if(!mpd_server_check_version(connection,0,12,0))
@@ -537,21 +536,22 @@ static void pl3_find3_browser_show_info()
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 
 		list = g_list_last (list);
-		do
+	//	do
 		{
 			GtkTreeIter iter;
+			mpd_Song *song = NULL;
 			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find3_tree));
-			int id;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-			gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_SONG_ID, &id,-1);
+			gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_MPDSONG, &song,-1);
+			info2_activate();
+			info2_fill_song_view(song->file);	
 
 		}
-		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
+	//	while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
-*/
 }
 
 static void pl3_find3_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
