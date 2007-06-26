@@ -591,6 +591,16 @@ void info2_fill_song_view(char *path)
 		i++;
 		q_free(dirname);
 	}
+
+	if(song->file &&  strncmp(song->file, "http://",7)) {
+		char *ext = NULL;
+		int j = strlen(song->file);
+		for(;j>0&&song->file[j] != '.';j--);
+		ext= g_strdup(&(song->file)[j+1]);
+		info2_add_table_item(table2,_("<b>Extention:</b>"),ext,i);
+		i++;
+		q_free(ext);
+	}
 	/**
 	 * Play Button 
 	 */
@@ -1505,11 +1515,22 @@ static int info2_add_go_menu(GtkWidget *menu)
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
 	/** Global keybinding */
-	if (event->keyval == GDK_F7)
+	if (event->keyval == GDK_F6)
 	{
 		info2_activate();
 		info2_fill_view();
 		return TRUE;
+	}
+	if (event->keyval == GDK_F7)
+	{
+		info2_activate();
+		info2_fill_view();
+		if(info2_entry)
+		{
+			gtk_widget_grab_focus(info2_entry);
+		}
+		return TRUE;
+
 	}
 	if (pl3_cat_get_selected_browser() == metab_plugin.id)
 	{
