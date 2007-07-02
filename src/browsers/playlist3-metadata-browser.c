@@ -1518,7 +1518,7 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 	if (event->keyval == GDK_F6)
 	{
 		info2_activate();
-		info2_fill_view();
+	//	info2_fill_view();
 		return TRUE;
 	}
 	if (event->keyval == GDK_F7)
