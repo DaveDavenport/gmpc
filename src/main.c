@@ -678,7 +678,7 @@ static int autoconnect_callback(void)
 			/** updated failed time, if it doesn't fail it will be set to 0
 			 * later 
 			 */
-			gmpc_failed_tries++;
+			//gmpc_failed_tries++;
 			connect_to_mpd ();
 		}
 	}

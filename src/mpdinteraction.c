@@ -7,6 +7,7 @@
 #include "mpdinteraction.h"
 
 static int ignore = FALSE;
+static int is_connecting = FALSE;
 extern GtkWidget *pl3_cp_tree;
 
 /* old stuff */
@@ -117,11 +118,32 @@ static void disconnect_callback(MpdObj *mi)
 	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
 
 }
+static int connected_to_mpd(mpd_Connection *mpd_conn)
+{
+	is_connecting = FALSE;
+	if(connection)
+	{
+		mpd_connect_real(connection, mpd_conn);
+	}
+
+	return FALSE;
+}
+static void connection_thread(void)
+{
+	mpd_Connection *conn = mpd_newConnection(connection_get_hostname(),connection_get_port(), DEFAULT_TIMEOUT);
+	g_idle_add(connected_to_mpd,conn);
+	return;
+}
 
 /* the functiont that connects to mpd */
 int connect_to_mpd()
 {
 	char *string = NULL;
+	if(is_connecting)
+	{
+		printf("Allready trying to connect\n");
+		return;
+	}
 	/**
 	 * Set Hostname
 	 */
@@ -145,15 +167,18 @@ int connect_to_mpd()
 	{
 		mpd_set_password(connection,"");
 	}
-
+/*
 	if(mpd_connect(connection) < 0)
 	{
 		debug_printf(DEBUG_INFO,"Connection failed\n");
 		return TRUE;
 	}
+*/
+	is_connecting = TRUE;
+	g_thread_create(connection_thread, NULL, FALSE,NULL);
 	/* Set the title */
-	update_mpd_status();
-	mpd_stats_update(connection);
+//	update_mpd_status();
+//	mpd_stats_update(connection);
 	/* set that user wants to connect */
 	gmpc_connected = TRUE;
 
