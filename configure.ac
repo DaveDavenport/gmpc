@@ -55,7 +55,7 @@ AC_SUBST(gmodule_LIBS)
 AC_SUBST(gmodule_CFLAGS)
 
 # libmpd
-PKG_CHECK_MODULES([libmpd], libmpd >= 0.14.5)
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.14.6)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
@@ -98,7 +98,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="de fr gl it nl pl ru"
+ALL_LINGUAS="de fr gl it nl no pl ru"
 
 GETTEXT_PACKAGE=gmpc
 AC_SUBST(GETTEXT_PACKAGE)
