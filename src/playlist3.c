@@ -37,6 +37,7 @@
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
+gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
 
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
@@ -875,6 +876,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 	}
 }
 
+
 void create_playlist3 ()
 {
 	GtkListStore *pl3_crumbs = NULL;
@@ -1089,6 +1091,14 @@ void create_playlist3 ()
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
 			NULL);
 
+	/**
+	 * Setup error box
+	 */
+	{
+		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
+		gtk_widget_set_app_paintable(event, TRUE);
+		g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(playlist3_error_expose), NULL);
+	}
 
 	/**
 	 *
@@ -1380,7 +1390,8 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 {
 	/* Set menu items */
 	if(connect) {
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_control"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), TRUE);
 
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), FALSE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), TRUE);
@@ -1391,7 +1402,8 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 
 		pl3_push_rsb_message(_("Connected"));	
 	} else {
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_control"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), FALSE);             		
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), FALSE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"),FALSE);
@@ -2081,3 +2093,26 @@ void playlist3_update_header(void)
 	}
 }
 
+void playlist3_close_error(void)
+{
+	GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
+	gtk_widget_hide(event);
+	event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+	gtk_container_foreach(GTK_CONTAINER(event), gtk_widget_destroy, NULL);
+}
+
+gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
+{
+	int width = wid->allocation.width;
+	int height = wid->allocation.height;
+	cairo_t *cr = gdk_cairo_create(wid->window);
+	cairo_set_line_width (cr, 1.0);
+	cairo_rectangle(cr, 0,0,width,height);
+	cairo_close_path (cr);                                                    	
+	gdk_cairo_set_source_color(cr, 	&(wid->style->mid[GTK_STATE_NORMAL]));
+	cairo_fill_preserve(cr);                                                 
+	gdk_cairo_set_source_color(cr, 	&(wid->style->black));
+	cairo_stroke (cr);
+	cairo_destroy(cr);
+	return FALSE;
+}

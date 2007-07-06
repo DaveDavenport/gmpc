@@ -99,6 +99,18 @@ gmpcPlugin connection_plug = {
 	NULL                    /* set_enabled */
 };
 
+extern GladeXML *pl3_xml;
+guint connecting_pulse = 0;
+gboolean connecting_pulse_callback(void);
+gboolean connecting_pulse_callback(void)
+{
+	if(pl3_xml)
+	{
+		GtkProgressBar *pb = glade_xml_get_widget(pl3_xml, "pl3_progressbar");
+		gtk_progress_bar_pulse(pb);
+	}
+	return TRUE;
+}
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 
 int update_mpd_status()
@@ -121,6 +133,9 @@ static void disconnect_callback(MpdObj *mi)
 static int connected_to_mpd(mpd_Connection *mpd_conn)
 {
 	is_connecting = FALSE;
+	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
+	g_source_remove(connecting_pulse);
+	connecting_pulse = 0;
 	if(connection)
 	{
 		mpd_connect_real(connection, mpd_conn);
@@ -176,9 +191,14 @@ int connect_to_mpd()
 */
 	is_connecting = TRUE;
 	g_thread_create(connection_thread, NULL, FALSE,NULL);
-	/* Set the title */
-//	update_mpd_status();
-//	mpd_stats_update(connection);
+	connecting_pulse = g_timeout_add(200,G_CALLBACK(connecting_pulse_callback),NULL);
+	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
+
+	/* Set the title 
+	update_mpd_status();
+	mpd_stats_update(connection);
+	*/
 	/* set that user wants to connect */
 	gmpc_connected = TRUE;
 

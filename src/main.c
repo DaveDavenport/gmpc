@@ -64,7 +64,7 @@
 #include "bacon/bacon-message-connection.h"
 static BaconMessageConnection *bacon_connection = NULL;
 #endif
-
+extern GladeXML *pl3_xml;
 /**
  * Global objects that give signals
  */
@@ -830,6 +830,7 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	{
 		/* no response? then we just ignore it when autoconnecting. */
 		if(error_id == 15 && autoconnect) return;
+/*
 		if (xml_error_window == NULL)
 		{
 			gchar *str = g_strdup_printf(_("error code %i: %s"), error_id, error_msg);
@@ -848,6 +849,23 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_error_window,"em_label")), str);
 			q_free(str);
 		}
+*/
+		playlist3_close_error();
+		gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
+		GtkWidget *label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_BUTTON);
+		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+		label = gtk_label_new("") ;
+		gtk_label_set_markup(GTK_LABEL(label),str);
+		
+		q_free(str);
+		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+	
+		label = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
+		gtk_box_pack_end(GTK_BOX(event), label, FALSE, TRUE, 0);	
+		g_signal_connect(G_OBJECT(label), "clicked", connect_to_mpd, NULL);
+		event = glade_xml_get_widget(pl3_xml, "error_event");
+		gtk_widget_show_all(event);
 	}
 	else
 	{
@@ -865,10 +883,25 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 			password_dialog(FALSE);
 		}
 		else {
+			playlist3_close_error();
+			gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
+			GtkWidget *label = gtk_image_new_from_stock(GTK_STOCK_INFO, GTK_ICON_SIZE_BUTTON);
+			GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+			gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+			label = gtk_label_new("") ;
+			gtk_label_set_markup(GTK_LABEL(label),str);
+		
+			q_free(str);
+			gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+
+			event = glade_xml_get_widget(pl3_xml, "error_event");
+			gtk_widget_show_all(event);
+
+/*
 			gchar *str = g_strdup_printf(_("The following error occured: %i:'%s'"), error_id, error_msg);
 			show_error_message(str, FALSE);
 			q_free(str);
-		}
+*/		}
 	}
 }
 
@@ -882,8 +915,9 @@ void connect_callback(MpdObj *mi)
 				DEFAULT_AUTOCONNECT);
 		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
 				GINT_TO_POINTER(autocon));
+		
 	}
-
+	playlist3_close_error();
 }
 
 /**
