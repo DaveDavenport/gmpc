@@ -51,14 +51,14 @@ static int plugin_load(char *path, const char *file)
 	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
 	q_free(full_path);
 	if (!handle) {
-		gchar *message = g_strdup_printf("Failed to load plugin:\n%s", g_module_error());
+		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
 		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s:%s\n", file, g_module_error());
 		show_error_message(message, FALSE);
 		q_free(message);
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin_api_version", (gpointer)&api_version)){
-		gchar *message = g_strdup_printf("Failed to load plugin:\n%s", g_module_error());
+		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
 		show_error_message(message,FALSE);
 		q_free(string);
