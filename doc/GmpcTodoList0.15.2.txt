@@ -7,8 +7,6 @@ v0.1, Feb. 2007
 Gmpc
 -----
 
-1. Make non-crit. errors/warnings gedit style. (aka in the same window) *low priority*
-2. Add a profile selector to the connection error dialog.
 4. Improve tag-browser usability, if succeeds make it replace the artist browser.
 6. Skip to next album keybinding.
 7. Rethink keybindings, is a mess now.
