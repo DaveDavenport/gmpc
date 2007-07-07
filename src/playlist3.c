@@ -2095,10 +2095,13 @@ void playlist3_update_header(void)
 
 void playlist3_close_error(void)
 {
-	GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
-	gtk_widget_hide(event);
-	event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
-	gtk_container_foreach(GTK_CONTAINER(event), gtk_widget_destroy, NULL);
+	if(pl3_xml)
+	{
+		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
+		gtk_widget_hide(event);
+		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+		gtk_container_foreach(GTK_CONTAINER(event), gtk_widget_destroy, NULL);
+	}
 }
 
 gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
@@ -2106,6 +2109,7 @@ gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer 
 	int width = wid->allocation.width;
 	int height = wid->allocation.height;
 	cairo_t *cr = gdk_cairo_create(wid->window);
+
 	cairo_set_line_width (cr, 1.0);
 	cairo_rectangle(cr, 0,0,width,height);
 	cairo_close_path (cr);                                                    	
