@@ -597,7 +597,7 @@ void info2_fill_song_view(char *path)
 		int j = strlen(song->file);
 		for(;j>0&&song->file[j] != '.';j--);
 		ext= g_strdup(&(song->file)[j+1]);
-		info2_add_table_item(table2,_("<b>Extention:</b>"),ext,i);
+		info2_add_table_item(table2,_("<b>Extension:</b>"),ext,i);
 		i++;
 		q_free(ext);
 	}
