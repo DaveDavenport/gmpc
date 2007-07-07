@@ -80,8 +80,8 @@ static int plugin_load(char *path, const char *file)
 	}
 
 	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
-		gchar *message = g_strdup_printf("Failed to load plugin:\n%s", g_module_error());
-		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s\n", g_module_error());
+		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
+		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file g_module_error());
 		show_error_message(message,FALSE);
 		q_free(string);
 		q_free(message);
