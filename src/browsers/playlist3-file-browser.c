@@ -264,7 +264,7 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 			gchar *test_path = NULL;
 			gboolean has_next = FALSE;	
 			gboolean temp= FALSE;
-			do{
+			do {
 				gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &child, PL3_CAT_PROC, &temp, PL3_CAT_INT_ID, &test_path, -1);
 
 				if(data == NULL)
@@ -280,8 +280,7 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 					compare = strcmp(data->directory, test_path);
 					if(compare < 0)
 					{
-						gchar *basename =
-							g_path_get_basename (data->directory);
+						gchar *basename = g_path_get_basename (data->directory);
 						gtk_tree_store_insert_before(GTK_TREE_STORE(pl3_tree), &child2,iter,&child);
 						gtk_tree_store_set (GTK_TREE_STORE(pl3_tree), &child2,
 								0, file_browser_plug.id,
@@ -303,7 +302,6 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 					if(compare > 0)
 					{	
 						/* if it's bigger, we delete the row */
-
 						has_next = gtk_tree_store_remove(pl3_tree, &child);
 
 					}else{
@@ -312,15 +310,11 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 						{
 							pl3_file_browser_reupdate_folder(&child);
 						}
-
+						/* move to next entry in both */
 						has_next = gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &child);					
-
 						data = mpd_data_get_next(data);
 					}
-
-
 				}
-
 			}while(has_next);
 			if(data)
 			{
@@ -329,7 +323,7 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 					{
 						gchar *basename =
 							g_path_get_basename (data->directory);
-						gtk_tree_store_insert_before(pl3_tree, &child2, iter,&child);
+						gtk_tree_store_append(pl3_tree, &child2, iter);
 						gtk_tree_store_set (pl3_tree, &child2,
 								0, file_browser_plug.id,
 								1, basename,
