@@ -1700,7 +1700,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 
 static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-	if(pl3_cat_get_selected_browser() == metab_plugin.id)
+	if(info2_vbox)
 	{
 		if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
 		{
