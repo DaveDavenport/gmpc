@@ -18,7 +18,9 @@ static GtkTargetEntry target_table[] = {
 
 
 extern GladeXML *pl3_xml;
-
+void info2_disable_show_current(void);
+void info2_enable_show_current(void);
+void info2_show_current_song(void);
 static void info2_add(GtkWidget *);
 static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
@@ -26,7 +28,7 @@ static int info2_add_go_menu(GtkWidget *);
 static int info2_get_enabled(void);
 static void info2_set_enabled(int);
 static void remove_container_entries(GtkContainer *);
-
+static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
@@ -41,6 +43,8 @@ static GtkEntryCompletion *entry_completion = NULL;
 static GtkWidget *info2_entry = NULL;
 static GtkWidget * info2_create_album_button(gchar *artist, gchar *album);
 
+
+int show_current_song = FALSE;
 /**
  * playing 
  */
@@ -72,7 +76,7 @@ gmpcPlugin metab_plugin = {
 	NULL,                   /* init */
 	NULL,                   /* Destroy */
 	&info2_gbp,             /* Browser */
-	NULL,                   /* status changed */
+	info2_status_changed,	/* status changed */
 	NULL,                   /* connection changed */
 	NULL,                   /* Preferences */
 	NULL,                   /* cover */
@@ -465,54 +469,64 @@ void info2_fill_song_view(char *path)
 	 * +----------------------------------------------------+
 	 */
 	/* Collection  */
-	button = gtk_button_new();
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>Collection</span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
-	gtk_container_add(GTK_CONTAINER(button),label);
-	gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
+	if(show_current_song == FALSE)
+	{
+		button = gtk_button_new();
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>Collection</span>");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
+		gtk_container_add(GTK_CONTAINER(button),label);
+		gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
 
-	/* separator */	
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);                        		
-	/* artist */
-	button = gtk_button_new();
-	label = gtk_label_new("");
-	markup = g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", song->artist);
-	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_label_set_markup(GTK_LABEL(label),markup);
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_viewed_clicked), NULL);
-	gtk_container_add(GTK_CONTAINER(button),label);
-	gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
-	q_free(markup);
-	
-	/* separator */	
-	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
-	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
-	/* album */
-	button = gtk_button_new();
-	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", song->album);
-	label = gtk_label_new("");
-	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_label_set_markup(GTK_LABEL(label),markup);
-	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
-	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
-	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_viewed_clicked), NULL);
-	gtk_container_add(GTK_CONTAINER(button),label);
-	gtk_box_pack_start(GTK_BOX(title_vbox), button, TRUE, TRUE,0);
-	q_free(markup);
-	gtk_widget_show_all(title_vbox);
+		/* separator */	
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);                        		
+		/* artist */
+		button = gtk_button_new();
+		label = gtk_label_new("");
+		markup = g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", song->artist);
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+		g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_viewed_clicked), NULL);
+		gtk_container_add(GTK_CONTAINER(button),label);
+		gtk_box_pack_start(GTK_BOX(title_vbox),button, FALSE, TRUE,0);
+		q_free(markup);
 
+		/* separator */	
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);
+		/* album */
+		button = gtk_button_new();
+		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>", song->album);
+		label = gtk_label_new("");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+		g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
+		g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_viewed_clicked), NULL);
+		gtk_container_add(GTK_CONTAINER(button),label);
+		gtk_box_pack_start(GTK_BOX(title_vbox), button, TRUE, TRUE,0);
+		q_free(markup);
+		gtk_widget_show_all(title_vbox);
+	}
+	else
+	{
+		button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+		gtk_box_pack_start(GTK_BOX(title_vbox), button, FALSE,FALSE,0);
+		g_signal_connect(G_OBJECT(button), "clicked" , G_CALLBACK(info2_disable_show_current), NULL);
+		gtk_widget_hide(title_vbox);
+	}
 	/** 
 	 * Title Label
 	 * +-----------------+
@@ -1509,6 +1523,15 @@ static int info2_add_go_menu(GtkWidget *menu)
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(info2_activate), NULL);
+	item = gtk_image_menu_item_new_with_label(_("Show Current Song"));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+			gtk_image_new_from_icon_name("gtk-info", GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(info2_show_current_song), NULL);
+
+
+
 	return 1;
 }
 
@@ -1518,16 +1541,19 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 	if (event->keyval == GDK_F6)
 	{
 		info2_activate();
-	//	info2_fill_view();
+		//	info2_fill_view();
 		return TRUE;
 	}
 	if (event->keyval == GDK_F7)
 	{
 		info2_activate();
-		info2_fill_view();
-		if(info2_entry)
+		if(!show_current_song)
 		{
-			gtk_widget_grab_focus(info2_entry);
+			info2_fill_view();
+			if(info2_entry)
+			{
+				gtk_widget_grab_focus(info2_entry);
+			}
 		}
 		return TRUE;
 
@@ -1670,4 +1696,42 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	mpd_data_free(data2);
 
 	return event;
+}
+
+static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+	if(pl3_cat_get_selected_browser() == metab_plugin.id)
+	{
+		if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+		{
+			if(show_current_song) {
+				mpd_Song *song = mpd_playlist_get_current_song(connection);
+				if(song) {
+					info2_fill_song_view(song->file);
+				}
+			}
+		}
+	}
+}
+void info2_show_current_song(void)
+{
+
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song) {
+		info2_enable_show_current();
+		info2_activate();
+		info2_fill_song_view(song->file);
+	}
+}
+void info2_disable_show_current(void)
+{
+	show_current_song = FALSE;
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	if(song) {
+		info2_fill_song_view(song->file);
+	}
+}
+void info2_enable_show_current(void)
+{
+	show_current_song = TRUE;
 }
