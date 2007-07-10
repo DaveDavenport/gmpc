@@ -253,17 +253,17 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 {
 	MpdData *data = NULL;
 	gchar *path = NULL;
-
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, PL3_CAT_INT_ID, &path, -1);
-	if(path)
+	gboolean temp = FALSE;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, PL3_CAT_PROC, &temp,PL3_CAT_INT_ID, &path, -1);
+	if(path && temp)
 	{
 		GtkTreeIter child, child2,child3;
 		data = mpd_database_get_directory(connection,path);
+		g_free(path);
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
 		{
 			gchar *test_path = NULL;
 			gboolean has_next = FALSE;	
-			gboolean temp= FALSE;
 			do {
 				gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), &child, PL3_CAT_PROC, &temp, PL3_CAT_INT_ID, &test_path, -1);
 
@@ -315,6 +315,7 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 						data = mpd_data_get_next(data);
 					}
 				}
+				g_free(test_path);
 			}while(has_next);
 			if(data)
 			{
