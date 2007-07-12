@@ -106,7 +106,7 @@ gboolean connecting_pulse_callback(void)
 {
 	if(pl3_xml)
 	{
-		GtkProgressBar *pb = glade_xml_get_widget(pl3_xml, "pl3_progressbar");
+		GtkProgressBar *pb = (GtkProgressBar *)glade_xml_get_widget(pl3_xml, "pl3_progressbar");
 		gtk_progress_bar_pulse(pb);
 	}
 	return TRUE;
@@ -146,7 +146,7 @@ static int connected_to_mpd(mpd_Connection *mpd_conn)
 static void connection_thread(void)
 {
 	mpd_Connection *conn = mpd_newConnection(connection_get_hostname(),connection_get_port(), DEFAULT_TIMEOUT);
-	g_idle_add(connected_to_mpd,conn);
+	g_idle_add((GSourceFunc)connected_to_mpd,conn);
 	return;
 }
 
@@ -157,7 +157,7 @@ int connect_to_mpd()
 	if(is_connecting)
 	{
 		printf("Allready trying to connect\n");
-		return;
+		return FALSE;
 	}
 	/**
 	 * Set Hostname
@@ -190,8 +190,8 @@ int connect_to_mpd()
 	}
 */
 	is_connecting = TRUE;
-	g_thread_create(connection_thread, NULL, FALSE,NULL);
-	connecting_pulse = g_timeout_add(200,G_CALLBACK(connecting_pulse_callback),NULL);
+	g_thread_create((GThreadFunc)connection_thread, NULL, FALSE,NULL);
+	connecting_pulse = g_timeout_add(200,(GSourceFunc)(connecting_pulse_callback),NULL);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
 

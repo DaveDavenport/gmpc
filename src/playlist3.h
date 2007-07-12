@@ -41,4 +41,6 @@ enum PlaylistColums {
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
 };
+
+void playlist3_close_error(void);
 #endif

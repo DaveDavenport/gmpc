@@ -863,7 +863,7 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	
 		label = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
 		gtk_box_pack_end(GTK_BOX(event), label, FALSE, TRUE, 0);	
-		g_signal_connect(G_OBJECT(label), "clicked", connect_to_mpd, NULL);
+		g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(connect_to_mpd), NULL);
 		event = glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_show_all(event);
 	}

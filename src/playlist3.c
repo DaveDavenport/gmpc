@@ -2100,7 +2100,7 @@ void playlist3_close_error(void)
 		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_hide(event);
 		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
-		gtk_container_foreach(GTK_CONTAINER(event), gtk_widget_destroy, NULL);
+		gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback)(gtk_widget_destroy), NULL);
 	}
 }
 
