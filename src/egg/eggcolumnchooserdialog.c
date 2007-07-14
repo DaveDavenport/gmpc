@@ -251,7 +251,7 @@ egg_column_chooser_dialog_init (EggColumnChooserDialog *dialog)
 	
 	dialog->tree_view = gtk_tree_view_new ();
 	g_object_set_data (G_OBJECT (dialog->tree_view), "foo-data", GINT_TO_POINTER (TRUE));
-	gtk_tree_view_set_reorderable (GTK_TREE_VIEW (dialog->tree_view), TRUE);
+	gtk_tree_view_set_reorderable (GTK_TREE_VIEW (dialog->tree_view), FALSE);
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
 	g_signal_connect (G_OBJECT (selection), "changed",
 			  G_CALLBACK (selection_changed), dialog);
