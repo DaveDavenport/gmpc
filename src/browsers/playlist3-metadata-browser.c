@@ -537,6 +537,7 @@ void info2_fill_song_view(char *path)
 	 */
 	label = gtk_label_new("");
 	markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>", song->title);
+	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 	gtk_label_set_markup(GTK_LABEL(label),markup);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);
