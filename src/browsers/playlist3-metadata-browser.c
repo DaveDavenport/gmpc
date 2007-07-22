@@ -323,7 +323,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, FALSE,0);
 
 	/** Create table */
-	table = gtk_table_new(2,2, FALSE); 
+	table = gtk_table_new(1,1,FALSE); 
 	gtk_table_set_col_spacings(GTK_TABLE(table),6);
 	/**
 	 *  Artist 
@@ -861,6 +861,96 @@ static void info2_fill_view()
 /*******
  * ARTIST VIEW
  */
+void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
+{
+	printf("destroy\n");
+	g_signal_handler_disconnect(G_OBJECT(gmw),GPOINTER_TO_INT(id));
+}
+void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
+{
+	if(type != META_ARTIST_SIMILAR)
+		return;
+
+	info2_widget_clear_children(vbox);	
+	if(ret == META_DATA_AVAILABLE)
+	{
+		char **str = g_strsplit(path, "\n", 0);
+		mpd_Song *song = mpd_newSong();
+		GList *list = NULL;
+		int i=0;
+		for(;str && str[i]&& i<20 ;i++)
+		{
+			MpdData *data = NULL;
+			mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
+			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, str[i]);
+			data = mpd_database_search_commit(connection);
+			{
+				GtkWidget *event = NULL;
+				GtkWidget *hbox;
+				GtkWidget *label;
+				GtkWidget *gmtv = gmpc_metaimage_new(META_ARTIST_ART);
+
+				event = gtk_event_box_new();
+				gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
+				g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
+
+
+				hbox = gtk_hbox_new(FALSE,6);
+				gtk_container_set_border_width(GTK_CONTAINER(hbox),6);
+				/**
+				 * Aritst Image
+				 */
+				song->artist = str[i];
+				gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 50);
+				gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(gmtv), song);
+				gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,FALSE,0);
+				song->artist = NULL;
+				/**
+				 * Label
+				 */
+				label = gtk_label_new(str[i]);
+				gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+				gtk_misc_set_padding(GTK_MISC(label), 8,0);
+				gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+				gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
+
+
+				/**
+				 *  View button 
+				 */ 
+				if(data)
+				{
+					GtkWidget *button = gtk_button_new_with_label("View");
+					gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
+					gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+					g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
+					g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_artist_viewed_clicked),NULL);
+					gtk_box_pack_end(GTK_BOX(hbox), button,FALSE,FALSE,0);
+				}	
+
+				gtk_container_add(GTK_CONTAINER(event), hbox);
+				list = g_list_append(list, event);
+
+			}
+			mpd_data_free(data);
+		}
+		if(list){
+			int i = 0;
+			GList *node = g_list_first(list);
+			for(;node;node = g_list_next(node)){
+				gtk_table_attach_defaults(GTK_TABLE(vbox),node->data, i%3, (i)%3+1,i/3,i/3+1);
+				i++;
+			}
+
+		}
+		g_list_free(list);
+		gtk_widget_show_all(vbox);
+		mpd_freeSong(song);
+		g_strfreev(str);
+	}
+}
+
+
 
 void info2_fill_artist_view(char *artist)
 {
@@ -924,7 +1014,7 @@ void info2_fill_artist_view(char *artist)
 	 *	|       | buttons       |
 	 *	+-------+---------------+
 	 */
-	
+
 	table = gtk_table_new(2,2,FALSE);
 
 	gtk_table_set_col_spacings(GTK_TABLE(table),6);
@@ -1064,7 +1154,7 @@ void info2_fill_artist_view(char *artist)
 		MpdData 	*data;
 
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Albums:</span>");
+		gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Albums:</span>"));
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label),8,8);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
@@ -1082,8 +1172,31 @@ void info2_fill_artist_view(char *artist)
 			}
 		}
 		gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox,FALSE, TRUE, 0);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox,FALSE, FALSE, 0);
 	}
+	if(song2 && song2->artist)
+	{
+		GtkWidget *vbox = gtk_table_new(2,3,TRUE);
+		char *similar = NULL; 
+
+		gtk_table_set_col_spacings(GTK_TABLE(vbox), 6);
+		gtk_table_set_row_spacings(GTK_TABLE(vbox), 6);
+
+		gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
+		guint id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox);
+		MetaDataResult ret = gmpc_meta_watcher_get_meta_path(gmw,song2, META_ARTIST_SIMILAR, &similar);
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>");
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_misc_set_padding(GTK_MISC(label), 8,0);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
+
+		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox);
+		g_signal_connect(G_OBJECT(vbox), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox,FALSE, FALSE, 0);
+	}
+
+
 	mpd_freeSong(song2);
 	gtk_widget_show_all(info2_vbox);
 }

@@ -46,6 +46,7 @@ class Gmpc:Meta:Watcher from  G:Object {
 				{
 					return FALSE;
 				}
+			case META_ARTIST_SIMILAR:
 			case META_ARTIST_TXT:
 			case META_ARTIST_ART: 
 				if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
