@@ -163,7 +163,6 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 	/* Get values acording to type */
 	else if(type == META_ARTIST_SIMILAR)
 	{
-		gchar *temp = NULL;
 		if(!song->artist) 
 		{
 			return META_DATA_UNAVAILABLE;	

@@ -33,7 +33,7 @@ static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
-
+static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id);
 static GtkWidget *info2_create_artist_button(mpd_Song *song);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
@@ -861,12 +861,12 @@ static void info2_fill_view()
 /*******
  * ARTIST VIEW
  */
-void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
+static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
 {
 	printf("destroy\n");
 	g_signal_handler_disconnect(G_OBJECT(gmw),GPOINTER_TO_INT(id));
 }
-void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
+static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
 {
 	if(type != META_ARTIST_SIMILAR)
 		return;
