@@ -926,6 +926,14 @@ void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaData
 					g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
 					g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_artist_viewed_clicked),NULL);
 					gtk_box_pack_end(GTK_BOX(hbox), button,FALSE,FALSE,0);
+
+					/** Setup dragging */
+					gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,GDK_ACTION_COPY|GDK_ACTION_MOVE);
+					g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
+					g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
+					g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
+					g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
+					gtk_drag_source_set_icon_name(event, "media-artist");
 				}	
 
 				gtk_container_add(GTK_CONTAINER(event), hbox);
