@@ -863,7 +863,6 @@ static void info2_fill_view()
  */
 static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
 {
-	printf("destroy\n");
 	g_signal_handler_disconnect(G_OBJECT(gmw),GPOINTER_TO_INT(id));
 }
 static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
