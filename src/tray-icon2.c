@@ -65,7 +65,12 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 	{
 		if(mpd_server_check_command_allowed(connection, "play"))
 		{
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PLAY, NULL);
+			if(mpd_player_get_state(connection) == MPD_STATUS_STATE_PLAY) 
+			{
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PAUSE, NULL);
+			}else{
+				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PLAY, NULL);
+			}
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(play_song), NULL);
 
@@ -408,7 +413,7 @@ void tray_icon2_create_tooltip(void)
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
-	
+
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
 		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
