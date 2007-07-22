@@ -2,3 +2,4 @@ See http://sarine.nl/gmpc/ and http://mpd.wikia.com
 
 Requirements:
 * libmpd
+* gob2 (for svn compilation)
