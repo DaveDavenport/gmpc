@@ -359,6 +359,7 @@ void tray_icon2_create_tooltip(void)
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
+		int size = cfg_get_single_value_as_int_with_default(config, "tray-icon2", "size-offset", 0);
 		/** Artist label */
 		if(song->title || song->file || song->name)
 		{
@@ -367,7 +368,7 @@ void tray_icon2_create_tooltip(void)
 			label = gmpc_clicklabel_new(buffer);
 			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_song), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),3);
+			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size+3);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->artist)
@@ -375,7 +376,7 @@ void tray_icon2_create_tooltip(void)
 			label = gmpc_clicklabel_new(song->artist);
 			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_artist), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),0);
+			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->album)
@@ -383,7 +384,7 @@ void tray_icon2_create_tooltip(void)
 			label = gmpc_clicklabel_new(song->album);
 			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_album), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),-3);
+			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size-3);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		tray_icon2_tooltip_pb = gtk_progress_bar_new();
