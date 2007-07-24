@@ -883,6 +883,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 		int i=0;
 		for(;str && str[i]&& i<20 ;i++)
 		{
+			gchar *string = NULL;
 			MpdData *data = NULL;
 			GtkWidget *event = NULL;
 			GtkWidget *hbox;
@@ -891,9 +892,34 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 
 
 			/* search if the artist is in the db.*/
-			mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
-			mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, str[i]);
-			data = mpd_database_search_commit(connection);
+		
+			if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
+				int length = strlen(str[i]); 
+				string = g_malloc0((length+4)*sizeof(char ));
+
+			
+				for(; length >= 0 && str[i][length] != ' ';length--);
+
+				if(length > 0 && length < strlen(str[i]))
+				{
+					int id = strlen(str[i])-length-1;
+					strncat(string, &(str[i][length+1]),id);
+					string[id] = ',';
+					string[id+1] = ' ';
+					strncat(&(string[id+2]),str[i],length);
+					mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
+					mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, string);
+					data = mpd_database_search_commit(connection);
+				}
+				g_free(string);
+				string = NULL;
+			}
+			if(!data )
+			{
+				mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
+				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, str[i]);
+				data = mpd_database_search_commit(connection);
+			}
 			gmtv = gmpc_metaimage_new(META_ARTIST_ART);
 
 
@@ -909,7 +935,11 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 			/**
 			 * Aritst Image
 			 */
-			song->artist = str[i];
+			if(data)
+			{
+				song->artist = data->tag;
+			}else
+				song->artist = str[i];
 			gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 50);
 			gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(gmtv), song);
 			gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,FALSE,0);
@@ -917,7 +947,10 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 			/**
 			 * Label
 			 */
-			label = gtk_label_new(str[i]);
+			if(data)
+				label = gtk_label_new(data->tag);
+			else
+				label = gtk_label_new(str[i]);
 			gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 			gtk_misc_set_padding(GTK_MISC(label), 8,0);
 			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
@@ -940,7 +973,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 				gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,GDK_ACTION_COPY|GDK_ACTION_MOVE);
 				g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
 				g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
-				g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(song->artist), g_free);
+				g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(data->tag), g_free);
 				g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
 				gtk_drag_source_set_icon_name(event, "media-artist");
 			}	
