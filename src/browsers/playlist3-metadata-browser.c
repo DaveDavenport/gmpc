@@ -226,11 +226,14 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data)
 	info2_fill_artist_view(artist);
 	q_free(artist);
 }
-static void as_artist_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
+static gboolean as_artist_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
 {
+
 	if(event->type == GDK_2BUTTON_PRESS) {
 		as_artist_viewed_clicked(button, data);
+		return TRUE;
 	}
+	return FALSE;
 }
 static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 {
@@ -240,11 +243,14 @@ static void as_album_viewed_clicked(GtkButton *button, gpointer data)
 	q_free(artist);
 	q_free(album);
 }
-static void as_album_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
+static gboolean as_album_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data)
 {
+
 	if(event->type == GDK_2BUTTON_PRESS) {
 		as_album_viewed_clicked(button, data);
+		return TRUE;
 	}
+	return FALSE;
 }
 static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
