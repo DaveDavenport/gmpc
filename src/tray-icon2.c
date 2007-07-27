@@ -422,7 +422,7 @@ void tray_icon2_create_tooltip(void)
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/* Get Y */
-			y= rect.y+rect.height+5;
+			y= rect.y+rect.height+5-rect2.y;
 			/* if the lower part falls off the screen, move it up */
 			if((y+95) > rect2.height) {
 				y = rect.y - 95 - 5;
@@ -430,7 +430,7 @@ void tray_icon2_create_tooltip(void)
 			if(y < 0) y =0;
 
 			/* Get X */
-			x = rect.x - 300/2;
+			x = rect.x - 300/2-rect2.x;
 			if((x+300) > rect2.width){
 				if(orientation == GTK_ORIENTATION_VERTICAL) {
 					x = rect2.width+-300-rect.width-5;
@@ -446,7 +446,7 @@ void tray_icon2_create_tooltip(void)
 				}
 			}
 		}
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else if (state == TI2_AT_UPPER_LEFT) {
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;

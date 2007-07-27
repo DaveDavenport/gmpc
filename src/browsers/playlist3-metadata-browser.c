@@ -793,8 +793,8 @@ static void info2_fill_view()
 {
 	GtkWidget *hbox, *label, *button;
 	GtkWidget *artist_table = NULL;
-
-
+	/* disable the current songs thingy */
+	show_current_song = FALSE;
 	info2_prepare_view();
 	/** Nothing is selected so we are in the basic view
 	*/
@@ -1018,6 +1018,8 @@ void info2_fill_artist_view(char *artist)
 	gchar *buffer = NULL;
 	MpdData *data = NULL;
 	mpd_Song *song2 = NULL;
+	/* disable the current songs thingy */
+	show_current_song = FALSE;
 	/** 
 	 * clean the view 
 	 */
@@ -1280,6 +1282,9 @@ void info2_fill_album_view(char *artist,char *album)
 	mpd_Song *song2 	= NULL;
 	GtkWidget *label 	= NULL; 
 	char *markup 		= NULL;
+
+	/* disable the current songs thingy */
+	show_current_song = FALSE;
 
 	info2_prepare_view();
 	song2 = mpd_newSong();
