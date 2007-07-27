@@ -1477,9 +1477,14 @@ void info2_fill_album_view(char *artist,char *album)
 		if(data)
 		{
 			MpdData *data2;
+			long unsigned time = 0;
 			mpd_Song *song = data->song;
-			for(data2 = mpd_data_get_first(data);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) tracks++;
+			for(data2 = mpd_data_get_first(data);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) {
+			   	tracks++;
+				time += data2->song->time;
+			}
 			tracks++;
+			time += data2->song->time;
 
 			if(song->date) {
 				info2_add_table_item(table2, _("<b>Date:</b>"), song->date, i);
@@ -1490,6 +1495,12 @@ void info2_fill_album_view(char *artist,char *album)
 				info2_add_table_item(table2, _("<b>Tracks:</b>"), str, i);
 				q_free(str);
 				i++;
+			}
+			if(time) {
+				char *buffer = format_time_real(time,"");
+				info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i);
+				i++;                                                    	
+				q_free(buffer); 
 			}
 			if(song->file) {
 				char *filename = g_path_get_dirname(song->file);
@@ -1764,6 +1775,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	MpdData *data2 = NULL;
 	mpd_Song *song  = NULL;
 	int tracks = 0,i=0;
+	long unsigned time = 0;
 	GtkWidget *table2= NULL;
 
 	mpd_database_search_start(connection, TRUE);
@@ -1774,8 +1786,12 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	if(!data2)
 		return NULL;
 	song = data2->song;
-	for(data2 = mpd_data_get_first(data2);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) tracks++;
+	for(data2 = mpd_data_get_first(data2);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)){
+	   	tracks++;
+		time += data2->song->time;
+	}
 	tracks++;
+	time += data2->song->time;
 	/** 
 	 * Create cover art image 
 	 */
@@ -1810,6 +1826,12 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 		info2_add_table_item(table2, _("<b>Tracks:</b>"), str,i);
 		q_free(str);
 		i++;
+	}
+	if(time) {
+		char *buffer = format_time_real(time,"");
+		info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i);
+		i++;                                                    	
+		q_free(buffer); 
 	}
 	if(song->file) {
 		gchar *dirname = g_path_get_dirname(song->file);
