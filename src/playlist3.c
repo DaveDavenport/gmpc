@@ -1676,6 +1676,20 @@ int pl3_progress_seek_start()
 	return FALSE;
 }
 
+gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data)
+{
+	if(event->direction == GDK_SCROLL_UP)
+	{
+		seek_ps(5);	
+	}
+	else if (event->direction == GDK_SCROLL_DOWN)
+	{
+		seek_ns(5);
+	}
+
+
+	return TRUE;
+}
 
 /* apply seek changes */
 int pl3_progress_seek_stop()
