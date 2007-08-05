@@ -26,6 +26,12 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 		g_signal_connect(G_OBJECT(self), "leave-notify-event", G_CALLBACK(self_focus_out_event), NULL);	
 		g_signal_connect(G_OBJECT(self), "button-release-event", G_CALLBACK(self_button_release), NULL);	
 	}
+
+	public
+	void set_padding(self, gint x,gint y)
+	{
+		gtk_misc_set_padding(GTK_MISC(self->_priv->label), x,y);
+	}
 	/* passing along the signal */
 	private
 	void button_release(self,GdkEventButton *event, gpointer data)

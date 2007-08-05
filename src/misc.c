@@ -28,6 +28,7 @@
 #define __USE_BSD
 #endif
 #include <math.h>
+extern GladeXML *pl3_xml;
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
@@ -397,4 +398,68 @@ char *gmpc_get_full_glade_path(char *filename)
 #endif
     return path;
 }
+static gint
+count_of_char_in_string (const gchar * string,
+			 const gchar c)
+{
+	int cnt = 0;
+	for(; *string; string++) {
+		if (*string == c) cnt++;
+	}
+	return cnt;
+}
 
+gchar *
+escape_single_quotes (const gchar * string)
+{
+	GString * gs;
+
+	if (string == NULL) {
+		return NULL;
+	}
+
+	if (count_of_char_in_string (string, '\'') == 0) {
+		return g_strdup(string);
+	}
+	gs = g_string_new ("");
+	for(; *string; string++) {
+		if (*string == '\'') {
+			g_string_append(gs, "'\\''");
+		}
+		else {
+			g_string_append_c(gs, *string);
+		}
+	}
+	return g_string_free (gs, FALSE);
+}
+
+
+void open_uri(const gchar *uri)
+{
+	int result;
+	gchar *command;
+	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
+	command	= g_strdup_printf(browser_command, uri);
+	result = g_spawn_command_line_async (command, NULL);
+	if(!result)
+	{
+
+		gchar *str = g_markup_printf_escaped("%s: '%s'", _("Failed to execute"),command); 
+		GtkWidget *label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_BUTTON);
+		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+
+		playlist3_close_error();
+
+		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+		label = gtk_label_new("") ;
+		gtk_label_set_markup(GTK_LABEL(label),str);
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+		q_free(str);
+		gtk_box_pack_start(GTK_BOX(event), label, TRUE, TRUE, 0);
+		event = glade_xml_get_widget(pl3_xml, "error_event");
+		gtk_widget_show_all(event);
+	}
+	g_free(browser_command);
+	g_free(command);
+}

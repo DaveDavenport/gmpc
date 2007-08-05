@@ -86,7 +86,47 @@ gmpcPlugin metab_plugin = {
 
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
+/**
+ *
+ */
+static void info2_lookup_secondhandsongs(GtkWidget *label)
+{
+	mpd_Song *song = g_object_get_data(G_OBJECT(label), "song");
+	if(song)
+	{
+		gchar *artist, *title;
+		gchar *command;
 
+		/* rename artist is req. */
+		if(cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
+		{
+			gchar *temp;
+			gchar **str = g_strsplit(song->artist, ",", 2);
+			if(str[1]) {
+				temp = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
+			}else{
+				temp = g_strdup(song->artist);
+			}	
+			g_strfreev(str);
+			artist = escape_single_quotes (temp);
+			g_free(temp);
+		}		
+		else{
+			artist = escape_single_quotes (song->artist);
+		}
+
+		/* escape quotes */
+		title = escape_single_quotes (song->title);
+		/* create full uri */
+		command	= g_strconcat ( "http://www.secondhandsongs.com/cgi/cluster.php?title=",title,"&performer=",artist,"&search=Search", NULL);
+		/* open uri */
+		open_uri(command);
+		/* cleanup */
+		g_free (command);
+		g_free(artist);
+		g_free(title);
+	}
+}
 /**
  * Dragging code 
  */
@@ -312,7 +352,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	MpdData *data;
 
 	MpdDBStats *stats = NULL;
-	
+
 	/* Button bg drawing code */
 	event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
@@ -467,7 +507,7 @@ void info2_fill_song_view(char *path)
 	 * Clear header
 	 */
 	info2_widget_clear_children(title_vbox);
-	
+
 	/** 
 	 * Create Header
 	 * +----------------------------------------------------+
@@ -562,7 +602,7 @@ void info2_fill_song_view(char *path)
 	 *   /\
 	 *    |
 	 */
-	
+
 	table = gtk_table_new(2,2,FALSE);
 	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
 	image = gmpc_metaimage_new(META_ALBUM_ART);
@@ -676,6 +716,23 @@ void info2_fill_song_view(char *path)
 	gtk_container_add(GTK_CONTAINER(event), ali);
 	gtk_container_add(GTK_CONTAINER(ali2), event);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali2, FALSE,FALSE,0);
+
+	/* Interesting links */
+
+	if(song->artist && song->title)
+	{
+		label = gtk_label_new("");
+		gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Links</span>"));
+		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		gtk_misc_set_padding(GTK_MISC(label), 8,3);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
+		label = gmpc_clicklabel_new("Lookup this song on secondhandsongs.com");
+		gmpc_clicklabel_set_padding(GMPC_CLICKLABEL(label), 8,0);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
+		g_object_set_data_full(G_OBJECT(label), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
+		g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(info2_lookup_secondhandsongs), NULL);
+	}
+
 
 	mpd_freeSong(song);
 	gtk_widget_show_all(info2_vbox);
@@ -898,12 +955,12 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 
 
 			/* search if the artist is in the db.*/
-		
+
 			if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
 				int length = strlen(str[i]); 
 				string = g_malloc0((length+4)*sizeof(char ));
 
-			
+
 				for(; length >= 0 && str[i][length] != ' ';length--);
 
 				if(length > 0 && length < strlen(str[i]))
@@ -1480,7 +1537,7 @@ void info2_fill_album_view(char *artist,char *album)
 			long unsigned time = 0;
 			mpd_Song *song = data->song;
 			for(data2 = mpd_data_get_first(data);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) {
-			   	tracks++;
+				tracks++;
 				time += data2->song->time;
 			}
 			tracks++;
@@ -1787,7 +1844,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 		return NULL;
 	song = data2->song;
 	for(data2 = mpd_data_get_first(data2);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)){
-	   	tracks++;
+		tracks++;
 		time += data2->song->time;
 	}
 	tracks++;
