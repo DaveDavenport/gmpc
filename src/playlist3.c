@@ -1338,7 +1338,7 @@ static void playlist_zoom_level_changed()
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
 	if(pl3_wsize.width > 0 && pl3_wsize.height >0 && pl3_old_zoom == PLAYLIST_MINI)
 	{
-		debug_printf(DEBUG_INFO,"restore size\n");
+		debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
 		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),	pl3_wsize.width, pl3_wsize.height);
 	}
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
