@@ -498,9 +498,6 @@
                                   <placeholder/>
                                 </child>
                               </widget>
-                              <packing>
-                                <property name="position">2</property>
-                              </packing>
                             </child>
                             <child>
                               <widget class="GtkLabel" id="pp_progres_label">
@@ -513,8 +510,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
-                                <property name="pack_type">GTK_PACK_END</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                             <child>
@@ -638,6 +634,7 @@
                     <property name="visible">True</property>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
