@@ -828,11 +828,15 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	/* if we are not connected we show a reconnect */
 	if(!mpd_check_connected(mi))
 	{
+		GtkWidget *button;
 		/* no response? then we just ignore it when autoconnecting. */
 		if(error_id == 15 && autoconnect) return;
 
 		gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
 		playlist3_show_error_message(str, ERROR_CRITICAL);
+		button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
+		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(connect_to_mpd), NULL);
+		playlist3_error_add_widget(button);
 		g_free(str);
 	}
 	else

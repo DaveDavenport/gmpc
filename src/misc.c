@@ -445,20 +445,8 @@ void open_uri(const gchar *uri)
 	{
 
 		gchar *str = g_markup_printf_escaped("%s: '%s'", _("Failed to execute"),command); 
-		GtkWidget *label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_BUTTON);
-		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
-
-		playlist3_close_error();
-
-		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
-		label = gtk_label_new("") ;
-		gtk_label_set_markup(GTK_LABEL(label),str);
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-		q_free(str);
-		gtk_box_pack_start(GTK_BOX(event), label, TRUE, TRUE, 0);
-		event = glade_xml_get_widget(pl3_xml, "error_event");
-		gtk_widget_show_all(event);
+		playlist3_show_error_message(str, ERROR_WARNING);
+		g_free(str);
 	}
 	g_free(browser_command);
 	g_free(command);

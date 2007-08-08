@@ -712,7 +712,7 @@ int pl3_hide()
 
 void pl3_updating_changed(MpdObj *mi, int updating)
 {
-	char *mesg = "MPD database is updating";
+	char *mesg = _("MPD database is updating");
 	if(pl3_xml != NULL)
 	{
 		gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
@@ -721,11 +721,16 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 		{
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
+
+			playlist3_show_error_message(_("<b>MPD is updating it's database</b>"), ERROR_INFO);
 		}
 		else
 		{
 			gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
+			
+			playlist3_show_error_message(_("<b>MPD finished updating it's database</b>"), ERROR_INFO);
+
 		}
 	}
 }
@@ -1927,6 +1932,7 @@ static void playlist3_server_output_changed(GtkWidget *item, gpointer data)
 }
 static void playlist3_server_update_db(void)
 {
+	
 	mpd_database_update_dir(connection, "/");
 }
 
