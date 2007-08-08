@@ -2107,16 +2107,7 @@ void playlist3_update_header(void)
 	}
 }
 
-void playlist3_close_error(void)
-{
-	if(pl3_xml)
-	{
-		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
-		gtk_widget_hide(event);
-		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
-		gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback)(gtk_widget_destroy), NULL);
-	}
-}
+
 
 gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
 {

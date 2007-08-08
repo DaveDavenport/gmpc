@@ -28,7 +28,7 @@
 #include "playlist-list.h"
 #include "mpdinteraction.h"
 #include "gmpc-profiles.h"
-
+#include "playlist3-messages.h" 
 #include "browsers/playlist3-playlist-editor.h"
 /**
  * Some gobjects

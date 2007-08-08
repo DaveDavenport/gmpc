@@ -12,6 +12,7 @@ sources=\
 	tray-icon2.c\
 	misc.c\
 	playlist3.c\
+	playlist3-messages.c\
 	edit_markup.c\
 	browsers/playlist3-tag-browser.c\
 	browsers/playlist3-file-browser.c\
@@ -126,6 +127,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
 		TreeSearchWidget.h \
+		playlist3-messages.c\
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 
