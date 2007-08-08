@@ -7,7 +7,7 @@ guint timeout_callback = 0;
 
 void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 {
-	GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+	GtkWidget *event;
 	GtkWidget *label = NULL; 
 	if(error_visible)
 	{
@@ -17,6 +17,9 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	}
 	/* Error */
 	error_visible = TRUE;
+	event = glade_xml_get_widget(pl3_xml, "error_event");
+	gtk_widget_set_size_request(event, -1,-1);
+	event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
 	/* right image */
 	switch(el)
 	{
@@ -59,6 +62,16 @@ void playlist3_close_error(void)
 		if(pl3_xml)
 		{
 			GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
+			int size = event->allocation.height;
+			/* dirty hack to make it look better */
+			for(;size>0;size--)
+			{
+
+				gtk_widget_set_size_request(event, -1, size);
+				g_usleep(10000);
+				while(gtk_events_pending())gtk_main_iteration();
+
+			}
 			gtk_widget_hide(event);
 			event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
 			gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback)(gtk_widget_destroy), NULL);
