@@ -722,14 +722,14 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
 
-			playlist3_show_error_message(_("<b>MPD is updating it's database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("<b>MPD is updating its database</b>"), ERROR_INFO);
 		}
 		else
 		{
 			gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
 			
-			playlist3_show_error_message(_("<b>MPD finished updating it's database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("<b>MPD finished updating its database</b>"), ERROR_INFO);
 
 		}
 	}
