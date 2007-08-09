@@ -368,6 +368,9 @@ void pl3_cat_sel_changed()
 			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
 		}
 		old_type = -1;
+		gtk_tree_model_get_iter_first(model, &iter);
+		gtk_tree_selection_select_iter(selec, &iter);
+
 	}
 	pl3_option_menu_activate();
 }
@@ -938,6 +941,8 @@ void create_playlist3 ()
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
@@ -950,7 +955,7 @@ void create_playlist3 ()
 	gtk_tree_view_column_set_attributes (column, renderer, "text", 1, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
-	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+
 	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
 	/* Make sure the scroll bars get removed when folding in the folders again */
