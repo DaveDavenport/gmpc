@@ -224,7 +224,8 @@ void url_start_real(const gchar *url)
 	gtk_widget_show_all(dialog);
 	gtk_widget_hide(progress);
 
-	while(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
+	while(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) 
+	{
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 		/*  In any case, don't download more then 2 kbyte */
 		gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
@@ -264,6 +265,8 @@ void url_start_real(const gchar *url)
 				pl3_push_statusbar_message(_("Added 1 stream"));
 			}
 			gmpc_easy_download_clean(&dld);
+			gtk_widget_destroy(dialog);
+			return;
 		} else {
 			/**
 			 * Failed to contact %s
