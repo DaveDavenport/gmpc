@@ -140,6 +140,22 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 			tray_icon2_create_tooltip();
 	}
 
+
+	/* update the progress bar if available */
+	if(what&MPD_CST_ELAPSED_TIME)
+	{
+		if(tray_icon2_tooltip && tray_icon2_tooltip_pb)
+		{
+			int totalTime = mpd_status_get_total_song_time(connection);                                 		
+			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
+			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
+			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
+					totalTime/60,totalTime%60);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
+			q_free(label);
+		}
+	}
 	if(tray_icon2_gsi == NULL)
 		return;
 
@@ -156,21 +172,6 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		}
 		else if(state == MPD_PLAYER_PAUSE){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
-		}
-	}
-	/* update the progress bar if available */
-	if(what&MPD_CST_ELAPSED_TIME)
-	{
-		if(tray_icon2_tooltip && tray_icon2_tooltip_pb)
-		{
-			int totalTime = mpd_status_get_total_song_time(connection);                                 		
-			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
-			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
-			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
-					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
-			q_free(label);
 		}
 	}
 }
