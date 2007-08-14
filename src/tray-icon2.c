@@ -119,7 +119,7 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 
-	if(what&(MPD_CST_SONGID|MPD_CST_PLAYLIST))
+	if(what&(MPD_CST_SONGID))
 	{
 		/** 
 		 * If enabled by user, show the tooltip.
@@ -134,6 +134,10 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 				tray_icon2_create_tooltip();
 			}
 		}
+	}
+	if(what&MPD_CST_PLAYLIST && tray_icon2_tooltip != NULL)
+	{
+			tray_icon2_create_tooltip();
 	}
 
 	if(tray_icon2_gsi == NULL)
