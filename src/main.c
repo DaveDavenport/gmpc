@@ -927,6 +927,12 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
 			gtk_widget_show(GTK_WIDGET(dialog));
 		}
 	}
+	if(connect)
+	{
+		playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
+	} else {
+		playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
+	}
 }
 
 

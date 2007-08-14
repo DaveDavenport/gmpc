@@ -1,7 +1,7 @@
 #ifndef __PLAYLIST_MESSAGES_H__
 #define __PLAYLIST_MESSAGES_H__
 
-void playlist3_close_error(void);
+gboolean playlist3_close_error(void);
 
 typedef enum {
 	ERROR_INFO,

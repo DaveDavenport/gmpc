@@ -220,19 +220,21 @@ find_file_with_pattern (const char *dir, const char *pattern)
 
 	return found_filename;
 }
-
+/** 
+ * Changed by qball to support different displays
+ */
 static char *
 socket_filename (const char *prefix)
 {
 	char *pattern, *newfile, *path, *filename;
 	const char *tmpdir;
 
-	pattern = g_strdup_printf ("%s.%s.*", prefix, g_get_user_name ());
+	pattern = g_strdup_printf ("%s.%s.%s.*",gdk_get_display(), prefix, g_get_user_name ());
 	tmpdir = g_get_tmp_dir ();
 	filename = find_file_with_pattern (tmpdir, pattern);
 	if (filename == NULL)
 	{
-		newfile = g_strdup_printf ("%s.%s.%u", prefix,
+		newfile = g_strdup_printf ("%s.%s.%s.%u",gdk_get_display(), prefix,
 				g_get_user_name (), g_random_int ());
 		path = g_build_filename (tmpdir, newfile, NULL);
 		q_free (newfile);
