@@ -118,23 +118,8 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-	if(tray_icon2_gsi == NULL)
-		return;
-	if(what&MPD_CST_STATE)
-	{
-		int state = mpd_player_get_state(connection);
-		if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
-		{
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
-		}
-		else if(state == MPD_PLAYER_PLAY){
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
-		}
-		else if(state == MPD_PLAYER_PAUSE){
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
-		}
-	}
-	if(what&MPD_CST_SONGID)
+
+	if(what&(MPD_CST_SONGID|MPD_CST_PLAYLIST))
 	{
 		/** 
 		 * If enabled by user, show the tooltip.
@@ -148,6 +133,25 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 			{
 				tray_icon2_create_tooltip();
 			}
+		}
+	}
+
+	if(tray_icon2_gsi == NULL)
+		return;
+
+
+	if(what&MPD_CST_STATE)
+	{
+		int state = mpd_player_get_state(connection);
+		if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
+		{
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
+		}
+		else if(state == MPD_PLAYER_PLAY){
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+		}
+		else if(state == MPD_PLAYER_PAUSE){
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
 		}
 	}
 	/* update the progress bar if available */
