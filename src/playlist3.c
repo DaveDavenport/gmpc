@@ -37,6 +37,7 @@
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
+gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data);
 gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
 
 static GtkTargetEntry target_table[] = {

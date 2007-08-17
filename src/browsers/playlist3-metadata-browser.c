@@ -1039,12 +1039,13 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 				g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(data->tag), g_free);
 				g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
 				gtk_drag_source_set_icon_name(event, "media-artist");
+				mpd_data_free(data);
 			}	
 
 			gtk_container_add(GTK_CONTAINER(event), hbox);
 			list = g_list_append(list, event);
 
-			mpd_data_free(data);
+
 		}
 		g_strfreev(str);	
 

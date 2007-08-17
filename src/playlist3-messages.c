@@ -1,10 +1,13 @@
 #include <gtk/gtk.h>
+#include <time.h>
 #include "main.h" 
 
 extern GladeXML *pl3_xml;
 static gboolean error_visible = FALSE;
 guint timeout_callback = 0;
 GtkListStore *message_list = NULL;
+void message_window_open(void);
+void message_window_destroy(GtkWidget *win);
 
 static void playlist3_message_init(void)
 {
@@ -64,7 +67,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 
 		/* Error */
 		error_visible = TRUE;
-		timeout_callback = g_timeout_add(5000, G_CALLBACK(playlist3_close_error), NULL);
+		timeout_callback = g_timeout_add(5000, (GSourceFunc)playlist3_close_error, NULL);
 	}else{
 		error_visible = FALSE;
 	}
@@ -102,8 +105,7 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 		GtkTreeIter *iter,
 		gpointer data)
 {
-	GValue val = {-1,};
-	guint id;
+	time_t id;
 	gchar text[64];
 	struct tm *lt;
 	gtk_tree_model_get(tree_model, iter, 0,&id, -1);
@@ -111,7 +113,7 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 	strftime(text, 64,"%H:%M:%S", lt);
 	g_object_set(G_OBJECT(cell), "text",text,NULL);
 }
-void message_window_open()
+void message_window_open(void)
 {
 	GladeXML *xml;
 	GtkCellRenderer *renderer;
@@ -129,7 +131,7 @@ void message_window_open()
 	gtk_tree_view_insert_column_with_data_func(GTK_TREE_VIEW(tree), -1,_("Time"), renderer,(GtkTreeCellDataFunc)message_cell_data_func, NULL,NULL);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1,_("Message"), renderer, "markup", 2,NULL);
-	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), message_list);
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(message_list));
 	
 	glade_xml_signal_autoconnect(xml);
 }

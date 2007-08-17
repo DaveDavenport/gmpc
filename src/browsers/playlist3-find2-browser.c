@@ -101,16 +101,16 @@ static GtkTreeRowReference *pl3_find2_ref = NULL;
 extern GladeXML *pl3_xml;
 
 /* internal */
-GtkWidget 	*pl3_find2_tree 	= NULL;
-GmpcMpdDataModel *pl3_find2_store2 = NULL;
-GtkWidget 	*pl3_find2_vbox 	= NULL;
-GtkWidget	*pl3_find2_findbut     = NULL;
-GtkWidget       *pl3_find2_critaddbut   = NULL;
-GtkListStore	*pl3_find2_combo_store 	= NULL;
-GtkWidget	*pl3_find2_pb = NULL;
-
-GList *criterias = NULL;
-GtkWidget *pl3_find2_crit_vbox = NULL;
+GtkWidget 			*pl3_find2_tree 		= NULL;
+GmpcMpdDataModel 	*pl3_find2_store2 		= NULL;
+GtkWidget 			*pl3_find2_vbox 		= NULL;
+GtkWidget			*pl3_find2_findbut		= NULL;
+GtkWidget       	*pl3_find2_critaddbut   = NULL;
+GtkListStore		*pl3_find2_combo_store 	= NULL;
+GtkWidget			*pl3_find2_pb 			= NULL;
+static GtkListStore 		*pl3_find2_autocomplete = NULL;
+GList 				*criterias 				= NULL;
+GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
 
 static void pl3_find2_fill_combo()
 {
@@ -155,6 +155,7 @@ static void pl3_find2_browser_add_crit()
     crit_struct *cs = g_malloc0(sizeof(*cs));
     GtkWidget *removebut = NULL;
     GtkCellRenderer *renderer = NULL;
+	GtkEntryCompletion *ent_comp = NULL;
 
     cs->hbox = gtk_hbox_new(FALSE, 6);
     cs->combo= gtk_combo_box_new();
@@ -167,6 +168,14 @@ static void pl3_find2_browser_add_crit()
     g_signal_connect(G_OBJECT(cs->combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
 
     cs->entry = gtk_entry_new();
+	ent_comp = gtk_entry_completion_new();
+	gtk_entry_completion_set_text_column(ent_comp, 0);
+	gtk_entry_completion_set_inline_completion(ent_comp, TRUE);
+	gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(ent_comp), GTK_TREE_MODEL(pl3_find2_autocomplete));
+	gtk_entry_completion_set_popup_completion(GTK_ENTRY_COMPLETION(ent_comp), TRUE);
+	gtk_entry_set_completion(GTK_ENTRY(cs->entry), ent_comp);
+
+
     g_signal_connect(G_OBJECT(cs->entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
     gtk_box_pack_start(GTK_BOX(cs->hbox), cs->entry, TRUE, TRUE, 0);
 
@@ -196,6 +205,8 @@ static void pl3_find2_browser_init()
 {
     GtkWidget  *pl3_find2_sw = NULL;
     GtkWidget *hbox = NULL;
+	/* autocomplete later on */
+	pl3_find2_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
 	pl3_find2_store2 = gmpc_mpddata_model_new();
 
@@ -344,6 +355,26 @@ static unsigned long pl3_find2_browser_view_browser()
             }
             gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
             mpd_database_search_add_constraint(connection, num_field, (char *)name);
+			/* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
+			{
+				GtkTreeIter iter;
+				gboolean found = FALSE;
+				for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
+						gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found;
+						gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
+				{
+					gchar *entry;
+					gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
+					if(strcmp(entry, name) == 0)
+					{
+						found = TRUE;
+					}
+					g_free(entry);
+				}
+				if(!found) {
+					gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
+				}					
+			}
         }
     }
     if(!found)
