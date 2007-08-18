@@ -118,6 +118,8 @@ GladeXML *playlist_pref_xml = NULL;
 
 static GtkWidget *volume_slider = NULL;
 
+static guint updating_id = 0;
+
 gmpcPrefPlugin playlist_gpp = {
 	playlist_pref_construct,
 	playlist_pref_destroy
@@ -719,20 +721,19 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 	char *mesg = _("MPD database is updating");
 	if(pl3_xml != NULL)
 	{
-		gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
-
+		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
+		updating_id = 0;
 		if(updating >0)
 		{
-			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
+			updating_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
+			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id,mesg);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
 
 			playlist3_show_error_message(_("<b>MPD is updating its database</b>"), ERROR_INFO);
 		}
-		else
+		else if(updating_id != 0)
 		{
-			gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id);
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
-			
 			playlist3_show_error_message(_("<b>MPD finished updating its database</b>"), ERROR_INFO);
 
 		}
@@ -1470,6 +1471,10 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	 */
 	pl3_plugin_changed_interface();
 
+	/**
+	 * Make sure the updating is actually in the right state
+	 */
+	pl3_updating_changed(connection,-1);
 }
 /**
  * Update the window to status changes in mpd
