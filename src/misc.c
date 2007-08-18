@@ -41,7 +41,7 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 {
 	GString *str = NULL;
 	int days = seconds/86400;
-	int houres = (seconds % 86400)/3600;
+	int hours = (seconds % 86400)/3600;
 	int minutes = (seconds % 3600)/60;
 	char *ret;
 	if(seconds == 0)
@@ -52,15 +52,15 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	if(days != 0)
 	{
 		
-		g_string_append_printf(str, "%i %s ", days, (days == 1)?_("day"):_("days"));
+		g_string_append_printf(str, "%i %s ", days, ngettext("day", "days", days));
 	}	
-	if(houres != 0)
+	if(hours != 0)
 	{
-		g_string_append_printf(str, "%i %s ", houres, (houres == 1)?_("hour"):_("hours"));
+		g_string_append_printf(str, "%i %s ", hours, ngettext("hour", "hours", hours));
 	}
 	if(minutes != 0)
 	{
-		g_string_append_printf(str, "%i %s", minutes,(minutes==1)?_("minute"):_("minutes"));
+		g_string_append_printf(str, "%i %s", minutes, ngettext("minute", "minutes", minutes));
 	}
 	ret = str->str;
 	g_string_free(str, FALSE);
