@@ -593,6 +593,8 @@ requires 2.0.0
       /* trigger signal */
       if(old_col != sort_column_id || old_ord != order)
        gtk_tree_sortable_sort_column_changed(model);
+	  self->_priv->old_sort_column = self->_priv->sort_column;
+
     }
 
     interface Gtk:Tree:Sortable
