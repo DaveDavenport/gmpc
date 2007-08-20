@@ -244,7 +244,7 @@
 		      <signal name="activate" handler="preferences_window_connect"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image757">
+			<widget class="GtkImage" id="image778">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-connect</property>
 			  <property name="icon_size">1</property>
@@ -266,7 +266,7 @@
 		      <signal name="activate" handler="preferences_window_disconnect"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image758">
+			<widget class="GtkImage" id="image779">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-disconnect</property>
 			  <property name="icon_size">1</property>
@@ -288,7 +288,7 @@
 		      <signal name="activate" handler="send_password"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image759">
+			<widget class="GtkImage" id="image780">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-dialog-authentication</property>
 			  <property name="icon_size">1</property>
@@ -314,7 +314,7 @@
 		      <property name="use_underline">True</property>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image760">
+			<widget class="GtkImage" id="image781">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-open</property>
 			  <property name="icon_size">1</property>
@@ -387,7 +387,7 @@
 		      <accelerator key="Up" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image761">
+			<widget class="GtkImage" id="image782">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-play</property>
 			  <property name="icon_size">1</property>
@@ -409,7 +409,7 @@
 		      <accelerator key="Down" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image762">
+			<widget class="GtkImage" id="image783">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-stop</property>
 			  <property name="icon_size">1</property>
@@ -437,7 +437,7 @@
 		      <accelerator key="Right" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image763">
+			<widget class="GtkImage" id="image784">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-next</property>
 			  <property name="icon_size">1</property>
@@ -459,7 +459,7 @@
 		      <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image764">
+			<widget class="GtkImage" id="image785">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-media-previous</property>
 			  <property name="icon_size">1</property>
@@ -521,7 +521,7 @@
 		      <signal name="activate" handler="playlist_zoom_in"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image765">
+			<widget class="GtkImage" id="image786">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-zoom-in</property>
 			  <property name="icon_size">1</property>
@@ -542,7 +542,7 @@
 		      <signal name="activate" handler="playlist_zoom_out"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image766">
+			<widget class="GtkImage" id="image787">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-zoom-out</property>
 			  <property name="icon_size">1</property>
@@ -561,28 +561,6 @@
 		      <property name="label">gtk-fullscreen</property>
 		      <property name="use_stock">True</property>
 		      <signal name="activate" handler="pl3_window_fullscreen"/>
-		    </widget>
-		  </child>
-
-		  <child>
-		    <widget class="GtkImageMenuItem" id="current_song_information1">
-		      <property name="visible">True</property>
-		      <property name="label" translatable="yes">_Current Song Information</property>
-		      <property name="use_underline">True</property>
-		      <signal name="activate" handler="playlist_player_cover_art_pressed"/>
-		      <accelerator key="i" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-
-		      <child internal-child="image">
-			<widget class="GtkImage" id="image767">
-			  <property name="visible">True</property>
-			  <property name="stock">gtk-info</property>
-			  <property name="icon_size">1</property>
-			  <property name="xalign">0.5</property>
-			  <property name="yalign">0.5</property>
-			  <property name="xpad">0</property>
-			  <property name="ypad">0</property>
-			</widget>
-		      </child>
 		    </widget>
 		  </child>
 
@@ -633,7 +611,7 @@
 		      <signal name="activate" handler="message_window_open" last_modification_time="Tue, 14 Aug 2007 08:30:43 GMT"/>
 
 		      <child internal-child="image">
-			<widget class="GtkImage" id="image768">
+			<widget class="GtkImage" id="image788">
 			  <property name="visible">True</property>
 			  <property name="stock">gtk-index</property>
 			  <property name="icon_size">1</property>
@@ -1248,9 +1226,9 @@
 
 	  <child>
 	    <widget class="GtkStatusbar" id="statusbar2">
+	      <property name="width_request">300</property>
 	      <property name="visible">True</property>
 	      <property name="has_resize_grip">True</property>
-	      <property name="width_request">300</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
