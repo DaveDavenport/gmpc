@@ -1348,6 +1348,7 @@ static void playlist_zoom_level_changed()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "bread_crumb"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menu_option"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menu_go"));
 
 	/* Now start hiding */
 	switch(pl3_zoom)
@@ -1361,6 +1362,7 @@ static void playlist_zoom_level_changed()
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_option"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_go"));
 			if(glade_xml_get_widget(pl3_xml, "pl3_win")->window)
 			{
 				if(gdk_window_get_state(glade_xml_get_widget(pl3_xml, "pl3_win")->window)&GDK_WINDOW_STATE_MAXIMIZED)
