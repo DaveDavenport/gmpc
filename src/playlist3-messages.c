@@ -2,6 +2,7 @@
 #include <time.h>
 #include "main.h" 
 
+extern int pl3_zoom;
 extern GladeXML *pl3_xml;
 static gboolean error_visible = FALSE;
 guint timeout_callback = 0;
@@ -35,7 +36,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		timeout_callback = 0;
 
 	}
-	if(pl3_xml)
+	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
 		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
 		/* right image */

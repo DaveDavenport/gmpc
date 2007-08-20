@@ -47,14 +47,6 @@ static GtkTargetEntry target_table[] = {
 	{ "internal-drop",0,99}
 };
 
-
-enum {
-	PLAYLIST_NO_ZOOM,
-	PLAYLIST_SMALL,
-	PLAYLIST_MINI,
-	PLAYLIST_ZOOM_LEVELS
-}PlaylistZoom;
-
 static void playlist_zoom_level_changed(void);
 static void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_option_menu_activate(void);
@@ -1355,7 +1347,7 @@ static void playlist_zoom_level_changed()
 	}
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "bread_crumb"));
-
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menu_option"));
 
 	/* Now start hiding */
 	switch(pl3_zoom)
@@ -1368,6 +1360,7 @@ static void playlist_zoom_level_changed()
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "header_box"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
+			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_option"));
 			if(glade_xml_get_widget(pl3_xml, "pl3_win")->window)
 			{
 				if(gdk_window_get_state(glade_xml_get_widget(pl3_xml, "pl3_win")->window)&GDK_WINDOW_STATE_MAXIMIZED)

@@ -42,5 +42,11 @@ enum PlaylistColums {
 	PL_COLUMN_TOTAL
 };
 
+enum {
+	PLAYLIST_NO_ZOOM,
+	PLAYLIST_SMALL,
+	PLAYLIST_MINI,
+	PLAYLIST_ZOOM_LEVELS
+}PlaylistZoom;
 
 #endif
