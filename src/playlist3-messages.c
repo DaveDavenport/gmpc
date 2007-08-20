@@ -22,6 +22,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	GtkWidget *event;
 	GtkWidget *label = NULL; 
 	GtkTreeIter iter;
+	gchar *image_name;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
 	gtk_list_store_set(message_list, &iter, 0,time(NULL), 2, message,-1);
@@ -36,25 +37,27 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		timeout_callback = 0;
 
 	}
+	switch(el)
+	{
+		case ERROR_CRITICAL:
+			image_name = GTK_STOCK_DIALOG_ERROR;
+
+			break;
+		case ERROR_WARNING:
+			image_name = GTK_STOCK_DIALOG_WARNING;
+			break;
+		default:
+			image_name = GTK_STOCK_DIALOG_INFO;
+			break;
+	}
+	gtk_list_store_set(message_list, &iter, 1, image_name,-1);
+
 	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
+		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
+
 		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
 		/* right image */
-		switch(el)
-		{
-			case ERROR_CRITICAL:
-				label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_BUTTON);
-				gtk_list_store_set(message_list, &iter, 1, GTK_STOCK_DIALOG_ERROR,-1);
-				break;
-			case ERROR_WARNING:
-				label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_BUTTON);
-				gtk_list_store_set(message_list, &iter, 1, GTK_STOCK_DIALOG_WARNING,-1);
-				break;
-			default:
-				label = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_BUTTON);
-				gtk_list_store_set(message_list, &iter, 1, GTK_STOCK_DIALOG_INFO,-1);
-				break;
-		}
 
 		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
 		label = gtk_label_new("") ;
