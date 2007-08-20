@@ -606,6 +606,7 @@ void playlist_editor_browser_unselected(GtkWidget *container)
 
 void playlist_editor_browser_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
+	playlist_editor_fill_list();
 }
 
 
@@ -673,9 +674,9 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
 
 static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
 {
-	if(what&MPD_CST_STORED_PLAYLIST)
+/*	if(what&MPD_CST_STORED_PLAYLIST)
 	{
 		playlist_editor_fill_list();
-	}
+	}*/
 }
 
