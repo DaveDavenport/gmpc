@@ -68,20 +68,20 @@ enum {
 };
 
 char *keynames[LAST_SIGNAL] = {
-	"PlayPause",	/** MM_PLAYPAUSE */
-	"Next", 	/** MM_NEXT*/
-	"Previous",	/** MM_PREV */
-	"Stop",		/** MM_STOP */
-	"Fast Forward", /** MM_FASTFORWARD */
-	"Fast Backward",/** MM_FASTBACKWARD */
-	"Repeat",	/** MM_REPEAT */
-	"Random",	/** MM_RANDOM */
-	"Raise window",	/** MM_RAISE */
-	"Hide window",	/** MM_HIDE */
-	"Toggle window",/** MM_TOGGLE_HIDDEN */
-	"Volume Up",	/** MM_VOLUME_UP */
-	"Volume Down",	/** MM_VOLUME_DOWN */
-	"Show song",	/** MM_SHOW_NOTIFICATION */
+	N_("PlayPause"),	/** MM_PLAYPAUSE */
+	N_("Next"),	 	/** MM_NEXT*/
+	N_("Previous"),		/** MM_PREV */
+	N_("Stop"),		/** MM_STOP */
+	N_("Fast Forward"),	/** MM_FASTFORWARD */
+	N_("Fast Backward"),	/** MM_FASTBACKWARD */
+	N_("Repeat"),		/** MM_REPEAT */
+	N_("Random"),		/** MM_RANDOM */
+	N_("Raise window"),	/** MM_RAISE */
+	N_("Hide window"),	/** MM_HIDE */
+	N_("Toggle window"),	/** MM_TOGGLE_HIDDEN */
+	N_("Volume Up"),	/** MM_VOLUME_UP */
+	N_("Volume Down"),	/** MM_VOLUME_DOWN */
+	N_("Show song"),	/** MM_SHOW_NOTIFICATION */
 };	
 
 static GObjectClass *parent_class;
@@ -332,7 +332,7 @@ static void mmkeys_init (MmKeys *object)
 				q_free (rawkeysym);
 				g_string_append_printf( message,
 					"\t%s: %s\n",
-					keynames[i], keysym );
+					_(keynames[i]), keysym );
 				q_free (keysym);
 			}
 		}
@@ -540,7 +540,7 @@ gmpcPrefPlugin mmkeys_gpp = {
 
 gmpcPlugin mmkeys_plug = 
  {
-	"Multimedia Keys",
+	N_("Multimedia Keys"),
 	{1,1,1},
 	GMPC_INTERNALL,
 	0,
@@ -615,7 +615,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 			q_free (rawkeysym);
 			gchar *message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
 					"%s is already mapped to %s"),
-					keysym, keynames[i] );
+					keysym, _(keynames[i]) );
 			q_free (keysym);
 			show_error_message (message, TRUE);
 			q_free (message);
@@ -645,7 +645,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 			_("Could not grab multimedia key:\n\n"
 			"\t%s: %s\n\n"
 			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),
-			keynames[key], keysym );
+			_(keynames[key]), keysym );
 		q_free (keysym);
 		show_error_message (message, TRUE);
 		q_free (message);
@@ -731,7 +731,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 			GtkTreeIter iter;
 			gtk_list_store_append(store, &iter);
 			gtk_list_store_set(store, &iter,
-				MM_STORE_KEYNAME,	keynames[i],
+				MM_STORE_KEYNAME,	_(keynames[i]),
 				MM_STORE_INDEX,		i,
 				MM_STORE_KEYCODE,	keycodes[i],
 				MM_STORE_MASK,		masks[i],

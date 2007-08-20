@@ -586,7 +586,7 @@ gmpcPrefPlugin tray_icon2_preferences = {
 };
 
 gmpcPlugin tray_icon2_plug = {
-	.name 						= "Notification",
+	.name 						= N_("Notification"),
 	.version 					= {0,0,0},
 	.plugin_type 				= GMPC_INTERNALL,
 	.init 						= tray_icon2_init,

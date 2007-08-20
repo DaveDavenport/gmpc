@@ -17,6 +17,8 @@
 static GtkTreeRowReference *playlist_editor_browser_ref = NULL;
 static GtkWidget *playlist_editor_browser = NULL;
 static GtkWidget *playlist_editor_song_tree = NULL;
+static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data);
+static void playlist_editor_fill_list(void);
 
 GtkWidget *playlist_editor_icon_view = NULL;
 GmpcMpdDataModelSort *playlist_editor_list_store = NULL;
@@ -72,7 +74,7 @@ gmpcPlugin playlist_editor_plugin = {
   playlist_editor_init,         /* Init    */
   playlist_editor_destroy,      /* Destroy */
   &playlist_editor_gbp,         /* Browser plugin */
-  NULL,                   /* Status changed */
+  playlist_editor_status_changed,                 /* Status changed */
   playlist_editor_conn_changed, /* Connection changed */
   NULL,                   /* Preferences */
   NULL,                   /* MetaData */
@@ -104,6 +106,7 @@ void playlist_editor_destroy(void)
  */
 void playlist_editor_conn_changed(MpdObj *mi, int connect, void *userdata)
 {
+	playlist_editor_fill_list();
 }
 
 
@@ -118,7 +121,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, playlist_editor_plugin.id,
-			PL3_CAT_TITLE, "Playlist Editor",
+			PL3_CAT_TITLE, _("Playlist Editor"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-playlist",
 			PL3_CAT_PROC, TRUE,
@@ -590,6 +593,7 @@ void playlist_editor_browser_selected(GtkWidget *container)
 {
   if(!playlist_editor_browser) {
     playlist_editor_browser_init();
+	playlist_editor_fill_list();
   }
   gtk_container_add(GTK_CONTAINER(container), playlist_editor_browser);
   gtk_widget_show_all(playlist_editor_browser);
@@ -602,7 +606,6 @@ void playlist_editor_browser_unselected(GtkWidget *container)
 
 void playlist_editor_browser_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
-	playlist_editor_fill_list();
 }
 
 
@@ -666,5 +669,13 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
 	gtk_widget_show(item);
 	
 	gtk_widget_show(smenu);
+}
+
+static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
+{
+	if(what&MPD_CST_STORED_PLAYLIST)
+	{
+		playlist_editor_fill_list();
+	}
 }
 

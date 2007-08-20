@@ -429,7 +429,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	}
 	if(string->len >0)
 	{
-		info2_add_table_item(table, (items >1)?_("<b>Dates: </b>"):_("<b>Date: </b>"), string->str, i);
+		info2_add_table_item(table, ngettext("<b>Date: </b>", "<b>Dates: </b>", items), string->str, i);
 		i++;
 	}
 	g_string_free(string, TRUE);
@@ -519,7 +519,7 @@ void info2_fill_song_view(char *path)
 	{
 		button = gtk_button_new();
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>Collection</span>");
+		gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
@@ -863,7 +863,7 @@ static void info2_fill_view()
 	/** add buttons */
 	button = gtk_button_new();
 	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label),"<span size=\"xx-large\" weight=\"bold\">Collection</span>");
+	gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
@@ -1167,7 +1167,7 @@ void info2_fill_artist_view(char *artist)
 		items++;
 	}
 	if(string->len >0) {
-		info2_add_table_item(table2,(items>1)?_("<b>Genres: </b>"):_("<b>Genre: </b>"), string->str, i);
+		info2_add_table_item(table2, ngettext("<b>Genre: </b>", "<b>Genres: </b>", items), string->str, i);
 		i++;
 	}
 	g_string_free(string, TRUE);
@@ -1182,7 +1182,7 @@ void info2_fill_artist_view(char *artist)
 		items++;
 	}
 	if(string->len >0) {
-		info2_add_table_item(table2, (items >1)?_("<b>Dates: </b>"):_("<b>Date: </b>"), string->str, i);
+		info2_add_table_item(table2, ngettext("<b>Date: </b>", "<b>Dates: </b>", items), string->str, i);
 		i++;
 	}
 	g_string_free(string, TRUE);
@@ -1310,7 +1310,7 @@ void info2_fill_artist_view(char *artist)
 		ret = gmpc_meta_watcher_get_meta_path(gmw,song2, META_ARTIST_SIMILAR, &similar);
 		/* set the label */
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>");
+		gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>"));
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
@@ -1358,7 +1358,7 @@ void info2_fill_album_view(char *artist,char *album)
 	button = gtk_button_new();
 	label = gtk_label_new("");
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>Collection</span>");
+	gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
 	gtk_container_add(GTK_CONTAINER(button),label);
@@ -1489,7 +1489,7 @@ void info2_fill_album_view(char *artist,char *album)
 	 * label
 	 */
 	label= gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), "<span size=\"x-large\" weight=\"bold\">Songs:</span>");
+	gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Songs:</span>"));
 
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);

@@ -66,7 +66,7 @@ static void pref_plugin_changed()
 				else
 				{
 					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
-							plugins[id]->name);
+							_(plugins[id]->name));
 				}
 
 				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
@@ -153,7 +153,7 @@ void create_preferences_window()
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, plugin_get_pos(plugins[i]->id)/*^PLUGIN_ID_MARK*/,
-						1, plugins[i]->name, -1);
+						1, _(plugins[i]->name), -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
 				{
@@ -172,7 +172,7 @@ void create_preferences_window()
 	{
 		GtkTreeIter iter;
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,PLUGIN_STATS, 1,"<b>Plugins:</b>", -1);
+		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,PLUGIN_STATS, 1, _("<b>Plugins:</b>"), -1);
 		for(i=0; i< num_plugins; i++)
 		{
 			if(plugins[i]->pref != NULL && plugins[i]->id&PLUGIN_ID_MARK)
@@ -278,20 +278,20 @@ static void plugin_stats_construct(GtkWidget *container)
 						gtk_list_store_set(store, &iter, 2, _("Dummy"),-1);
 						break;
 					case GMPC_PLUGIN_PL_BROWSER:
-						gtk_list_store_set(store, &iter, 2, _("Browser Extention"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Browser Extension"),-1);
 						break;
 					case GMPC_PLUGIN_META_DATA:
 						gtk_list_store_set(store, &iter, 2, _("Metadata Provider"),-1);
 						break;
           case GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_META_DATA:
-						gtk_list_store_set(store, &iter, 2, _("Metadata Provider and Browser Extention"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Metadata Provider and Browser Extension"),-1);
             break;
 					case GMPC_PLUGIN_NO_GUI:
 						gtk_list_store_set(store, &iter, 2, _("Misc."),-1);
 						break;                                                         					
 
 					default:
-						gtk_list_store_set(store, &iter, 2, _("Unkown"),-1);
+						gtk_list_store_set(store, &iter, 2, _("Unknown"),-1);
 						break;
 
 				}

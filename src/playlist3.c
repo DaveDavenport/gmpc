@@ -126,7 +126,7 @@ gmpcPrefPlugin playlist_gpp = {
 };
 
 gmpcPlugin playlist_plug = {
-	"Interface",
+	N_("Interface"),
 	{1,1,1},
 	GMPC_INTERNALL,                 /* type */
 	0,                              /*id*/
@@ -1534,7 +1534,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 */
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-						"<span size=\"large\" weight=\"bold\">Paused</span>");				
+						_("<span size=\"large\" weight=\"bold\">Paused</span>"));				
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 				break;
@@ -1552,7 +1552,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 */
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-						"<span size=\"large\" weight=\"bold\">Not Playing</span>");				
+						_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));				
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
 		}
@@ -1583,7 +1583,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		if(mpd_check_connected(connection))
 		{
-			char *string = g_strdup_printf("Repeat: %s", (mpd_player_get_repeat(connection))? _("On"):_("Off"));
+			char *string = g_strdup_printf(_("Repeat: %s"), (mpd_player_get_repeat(connection))? _("On"):_("Off"));
 			pl3_push_statusbar_message(string);
 			q_free(string);
 
@@ -1596,7 +1596,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		if(mpd_check_connected(connection))
 		{
-			char *string = g_strdup_printf("Random: %s", (mpd_player_get_random(connection))? _("On"):_("Off"));
+			char *string = g_strdup_printf(_("Random: %s"), (mpd_player_get_random(connection))? _("On"):_("Off"));
 			pl3_push_statusbar_message(string);
 			q_free(string);
 

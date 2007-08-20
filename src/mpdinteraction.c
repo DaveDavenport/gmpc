@@ -53,7 +53,7 @@ void submenu_genre_clicked(GtkWidget *item);
 void submenu_dir_clicked(GtkWidget *item);
 
 gmpcPlugin server_plug = {
-	"Server Settings", 	/** name */
+	N_("Server Settings"), 	/** name */
 	{1,1,1},			/** Version */
 	GMPC_INTERNALL,		/** Plugin Type */
 	0,					/** Internal Id */
@@ -83,7 +83,7 @@ gmpcPrefPlugin connection_gpp = {
 };
 
 gmpcPlugin connection_plug = {
-	"Connection",           /* name */
+	N_("Connection"),       /* name */
 	{1,1,1},                /* version */
 	GMPC_INTERNALL,         /* type */
 	0,                      /* id */

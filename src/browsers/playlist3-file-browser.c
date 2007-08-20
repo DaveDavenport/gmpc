@@ -82,7 +82,7 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 };
 
 gmpcPlugin file_browser_plug = {
-	"File Browser",
+	N_("File Browser"),
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
@@ -229,7 +229,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, file_browser_plug.id,
-			PL3_CAT_TITLE, _("Browse Filesystem"),
+			PL3_CAT_TITLE, _("File Browser"),
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
 			PL3_CAT_PROC, FALSE,
@@ -466,6 +466,7 @@ static int pl3_file_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tree,
 		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+		gtk_menu_item_set_accel_path(GTK_MENU_ITEM(item), NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_folder), NULL);
 
@@ -921,11 +922,11 @@ static void pl3_file_browser_add_selected()
 	{
 		GString *string= g_string_new(_("Added"));
 		if(songs)
-			g_string_append_printf(string, " %i %s%c", songs, (songs >1)? _("songs"):_("songs"), (dirs+pl >0)?',':' ');
+			g_string_append_printf(string, " %i %s%c", songs, ngettext("song", "songs", songs), (dirs+pl >0)?',':' ');
 		if(dirs)
-			g_string_append_printf(string, " %i %s%c", dirs, (dirs>1)?_("directories"):_("directory"), (pl>0)?',':' ');
+			g_string_append_printf(string, " %i %s%c", dirs, ngettext("directory", "directories", dirs), (pl>0)?',':' ');
 		if(pl)
-			g_string_append_printf(string, " %i %s", pl, (pl>1)?_("playlists"):_("playlist"));
+			g_string_append_printf(string, " %i %s", pl, ngettext("playlist", "playlists", pl));
 		pl3_push_statusbar_message(string->str);
 		g_string_free(string, TRUE);
 	}

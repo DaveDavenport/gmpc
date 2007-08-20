@@ -4,8 +4,10 @@ data/gmpc.desktop.in
 glade/gmpc.glade
 glade/playlist3.glade
 src/bacon/bacon-volume.c
+src/bacon/bacon-message-connection.c
 src/config1.c
 src/edit_markup.c
+src/gmpc_easy_download.c
 src/main.c
 src/metadata.c
 src/misc.c
@@ -13,25 +15,30 @@ src/mm-keys.c
 src/mpdinteraction.c
 src/playlist3.c
 src/playlist-list.c
+src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
 src/sm.c
 src/TreeSearchWidget.c
 src/url_fetcher.c
 src/tray-icon2.c
+
 # Browsers 
 src/browsers/playlist3-artist-browser.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
 src/browsers/playlist3-find2-browser.c
 src/browsers/playlist3-find3-browser.c
-src/browsers/playlist3-information.c
 src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag-browser.c
+
 # Egg files
+src/egg/eggcolumnmodel.c
+src/egg/eggcolumnchooserdialog.c
 src/egg/eggcellrendererkeys.c
-src/egg/eggtrayicon.c
+src/egg/eggaccelerators.c
+
 
 # Gob files
 src/gob/gmpc-mpddata-model.gob
@@ -43,3 +50,8 @@ src/gob/gmpc-metaimage.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-connection.gob
 src/gob/gmpc-clicklabel.gob
+
+#?
+src/qlib/qasyncqueue.c
+
+

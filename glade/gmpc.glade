@@ -2570,7 +2570,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
 	  <child>
 	    <widget class="GtkComboBox" id="id3b_cb3">
 	      <property name="visible">True</property>
-	      <property name="items">None
+	      <property name="items" translatable="yes">None
 Artist
 Album
 Title
@@ -2714,7 +2714,7 @@ Disc</property>
 	  <child>
 	    <widget class="GtkComboBox" id="id3b_cb2">
 	      <property name="visible">True</property>
-	      <property name="items">None
+	      <property name="items" translatable="yes">None
 Artist
 Album
 Title
@@ -2741,7 +2741,7 @@ Disc</property>
 	  <child>
 	    <widget class="GtkComboBox" id="id3b_cb1">
 	      <property name="visible">True</property>
-	      <property name="items">None
+	      <property name="items" translatable="yes">None
 Artist
 Album
 Title

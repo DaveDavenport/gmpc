@@ -87,7 +87,7 @@ static void url_parse_pls_file(const char *data, int size)
 	}
 	if(songs)
 	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
+		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
 		pl3_push_statusbar_message(string);
 		q_free(string);
 	}
@@ -116,7 +116,7 @@ static void url_parse_extm3u_file(const char *data, int size)
 	}
 	if(songs)
 	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, (songs > 1)? _("streams"):_("stream"));
+		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
 		pl3_push_statusbar_message(string);
 		q_free(string);
 	}

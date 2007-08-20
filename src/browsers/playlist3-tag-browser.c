@@ -69,7 +69,7 @@ gmpcPlBrowserPlugin tag_gbp = {
 };
 
 gmpcPlugin tag_plug = {
-	"Tag Browser",
+	N_("Tag Browser"),
 	{1,1,1},
 	GMPC_PLUGIN_PL_BROWSER,
 	0,
@@ -957,7 +957,7 @@ static gboolean pl3_custom_tag_browser_button_release_event(GtkWidget *wid, GdkE
 			}
 
 			/* add the replace widget */
-			item = gtk_image_menu_item_new_with_label("Replace");
+			item = gtk_image_menu_item_new_with_label(_("Replace"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));                   	
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

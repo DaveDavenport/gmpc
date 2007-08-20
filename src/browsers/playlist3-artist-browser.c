@@ -213,7 +213,7 @@ static void pl3_artist_browser_add(GtkWidget *cat_tree)
 	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, artist_browser_plug.id,
-			PL3_CAT_TITLE, _("Browse Artists"),
+			PL3_CAT_TITLE, _("Artist Browser"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-artist",
 			PL3_CAT_PROC, FALSE,
@@ -911,7 +911,7 @@ static void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButt
 		}
 	}
 	/* add the replace widget */
-	item = gtk_image_menu_item_new_with_label("Replace");
+	item = gtk_image_menu_item_new_with_label(_("Replace"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 			gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
@@ -1008,15 +1008,15 @@ static void pl3_artist_browser_add_selected()
 		GString *str = g_string_new("Added: ");
 		if(songs)
 		{
-			g_string_append_printf(str, "%i %s", songs, (songs > 1)?_("songs"):_("song"));
+			g_string_append_printf(str, "%i %s", songs, ngettext("song", "songs", songs));
 		}		
 		if(artists)
 		{
-			g_string_append_printf(str, "%i %s", artists, (artists > 1)?_("artists"):_("artist"));
+			g_string_append_printf(str, "%i %s", artists, ngettext("artist", "artists", artists));
 		}		
 		if(albums)
 		{
-			g_string_append_printf(str, "%i %s", albums, (albums > 1)?_("albums"):_("album"));
+			g_string_append_printf(str, "%i %s", albums, ngettext("album", "albums", albums));
 		}		
 		pl3_push_statusbar_message(str->str);
 		g_string_free(str, TRUE);
@@ -1088,7 +1088,7 @@ static int pl3_artist_browser_cat_popup(GtkWidget *menu, int type,GtkWidget *tre
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_artist_browser_add_folder), NULL);
 
 		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
+		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
