@@ -877,7 +877,7 @@ static void info2_fill_view()
 	hbox = gtk_hbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(hbox), 8);
 	/* The label */
-	label = gtk_label_new("Find Artist:");
+	label = gtk_label_new(_("Find Artist:"));
 	gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
 	/* The Entry */
 	info2_entry = gtk_entry_new();
