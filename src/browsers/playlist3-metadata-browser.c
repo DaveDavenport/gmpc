@@ -1982,9 +1982,10 @@ void info2_show_current_song(void)
 
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song) {
-		info2_enable_show_current();
 		info2_activate();
+		info2_enable_show_current();
 		info2_fill_song_view(song->file);
+	
 	}
 }
 void info2_disable_show_current(void)
