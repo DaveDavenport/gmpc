@@ -461,7 +461,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_container_add(GTK_CONTAINER(ali), button);
 	gtk_box_pack_start(GTK_BOX(label),ali,FALSE,TRUE,0);
 	/* View */
-	button = gtk_button_new_with_label("View");
+	button = gtk_button_new_with_label(_("View"));
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
@@ -1025,7 +1025,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 			 */ 
 			if(data)
 			{
-				GtkWidget *button = gtk_button_new_with_label("View");
+				GtkWidget *button = gtk_button_new_with_label(_("View"));
 				gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
 				gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 				g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
@@ -1925,7 +1925,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	/**
 	 * View Button
 	 */
-	button = gtk_button_new_with_label("View");
+	button = gtk_button_new_with_label(_("View"));
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
