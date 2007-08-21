@@ -363,7 +363,7 @@ char *gmpc_get_full_image_path(char *filename)
     gchar *path;
 #ifdef WIN32
     gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    packagedir = g_win32_get_package_installation_directory(NULL, NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
 
     path = g_build_filename(packagedir, "data", "images", filename, NULL);
@@ -386,7 +386,7 @@ char *gmpc_get_full_glade_path(char *filename)
     gchar *path;
 #ifdef WIN32
     gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    packagedir = g_win32_get_package_installation_directory(NULL, NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
 
     path = g_build_filename(packagedir, "data", "glade", filename, NULL);
