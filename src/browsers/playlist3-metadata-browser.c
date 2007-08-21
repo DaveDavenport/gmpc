@@ -378,7 +378,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 		info2_add_table_item(table,_("<b>Artist:</b>"),song->artist,i);
 		i++;
 	}
-	if(mpd_server_check_version(connection, 0,13,0))
+	if(mpd_server_check_version(connection, 0,13,0) && song->artist)
 	{
 		/**
 		 * Songs list 
@@ -386,18 +386,21 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 		mpd_database_search_stats_start(connection);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
 		stats = mpd_database_search_stats_commit(connection);
-		buffer = g_strdup_printf("%i", stats->numberOfSongs);
-		info2_add_table_item(table,_("<b>Songs:</b>"),buffer,i);
-		i++;
-		q_free(buffer); 
-		/**
-		 * Playtime
-		 */
-		buffer = format_time_real(stats->playTime,"");
-		info2_add_table_item(table,_("<b>Playtime:</b>"),buffer,i);
-		i++;                                                    	
-		q_free(buffer); 
-		mpd_database_search_free_stats(stats);
+		if(stats)
+		{
+			buffer = g_strdup_printf("%i", stats->numberOfSongs);
+			info2_add_table_item(table,_("<b>Songs:</b>"),buffer,i);
+			i++;
+			q_free(buffer); 
+			/**
+			 * Playtime
+			 */
+			buffer = format_time_real(stats->playTime,"");
+			info2_add_table_item(table,_("<b>Playtime:</b>"),buffer,i);
+			i++;                                                    	
+			q_free(buffer); 
+			mpd_database_search_free_stats(stats);
+		}
 	}
 	/**
 	 * Genre
@@ -1188,23 +1191,26 @@ void info2_fill_artist_view(char *artist)
 	g_string_free(string, TRUE);
 
 
-	if(mpd_server_check_version(connection, 0,13,0))
+	if(mpd_server_check_version(connection, 0,13,0) && song2->artist)
 	{
 		MpdDBStats *stats = NULL;
 		/* Songs list  */
 		mpd_database_search_stats_start(connection);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
 		stats = mpd_database_search_stats_commit(connection);
-		buffer = g_strdup_printf("%i", stats->numberOfSongs);
-		info2_add_table_item(table2,_("<b>Songs:</b>"),buffer,i);
-		i++;
-		q_free(buffer); 
-		/* Playtime */
-		buffer = format_time_real(stats->playTime,"");
-		info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i);
-		i++;                                                    	
-		q_free(buffer); 
-		mpd_database_search_free_stats(stats);
+		if(stats)
+		{
+			buffer = g_strdup_printf("%i", stats->numberOfSongs);
+			info2_add_table_item(table2,_("<b>Songs:</b>"),buffer,i);
+			i++;
+			q_free(buffer); 
+			/* Playtime */
+			buffer = format_time_real(stats->playTime,"");
+			info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i);
+			i++;                                                    	
+			q_free(buffer); 
+			mpd_database_search_free_stats(stats);
+		}
 	}
 
 	/** 
