@@ -70,11 +70,17 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
 	{
 		char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
-		int port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+		gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
 		if(value)
 		{
-			curl_easy_setopt(curl, CURLOPT_PROXY, value);
+			gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
+			debug_printf(DEBUG_INFO, "Setting proxy: %s:%i\n", value, port);
+			/* hack to make stuff work */
+			curl_easy_setopt(curl, CURLOPT_PROXY, ppath);
+			/*			curl_easy_setopt(curl, CURLOPT_PROXY, value);
 			curl_easy_setopt(curl, CURLOPT_PROXYPORT, port);
+			*/
+			q_free(ppath);
 			cfg_free_string(value);
 		}
 		else{
