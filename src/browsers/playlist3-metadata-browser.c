@@ -994,6 +994,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, str[i]);
 				data = mpd_database_search_commit(connection);
 			}
+            if (!data && cfg_get_single_value_as_int_with_default(config, "metadata","onlyownsimilar",FALSE))
+                continue;
 			gmtv = gmpc_metaimage_new(META_ARTIST_ART);
 
 
