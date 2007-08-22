@@ -172,7 +172,3 @@ EXTRA_DIST = 	playlist3.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
 		qlib/qasyncqueue.h
-
-#%.o: %.c Makefile.am
-#	$(info ==> Building: $@)
-#	$(Q)$(CC) $(AM_CFLAGS) $(INCLUDES) -I. -I../ -c $< -o $@
