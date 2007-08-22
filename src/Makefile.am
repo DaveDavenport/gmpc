@@ -67,7 +67,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-metaimage.c
 
 %.c %.h %-private.h: %.gob
-	@GOB2@ -o gob/ --no-touch-headers $<
+	@GOB2@ -o gob/ --no-touch-headers --always-private-header $<
 	@touch $@
 
 %.o: %.rc
@@ -159,7 +159,7 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-metaimage-private.h\
 		gob/gmpc-meta-text-view.h\
-		gob/gmpc-meta-text-view-private.g\
+		gob/gmpc-meta-text-view-private.h\
 		gob/gmpc-mpddata-model.h\
 		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-model-sort-private.c\

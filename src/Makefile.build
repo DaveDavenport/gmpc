@@ -152,7 +152,7 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-metaimage-private.h\
 		gob/gmpc-meta-text-view.h\
-		gob/gmpc-meta-text-view-private.g\
+		gob/gmpc-meta-text-view-private.h\
 		gob/gmpc-mpddata-model.h\
 		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-model-sort-private.c\
