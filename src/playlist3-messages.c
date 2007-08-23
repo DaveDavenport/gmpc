@@ -22,10 +22,11 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	GtkWidget *event;
 	GtkWidget *label = NULL; 
 	GtkTreeIter iter;
+	guint t = time(NULL);
 	gchar *image_name;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
-	gtk_list_store_set(message_list, &iter, 0,time(NULL), 2, message,-1);
+	gtk_list_store_set(message_list, &iter, 0,t, 2, message,-1);
 
 	if(error_visible)
 	{
@@ -109,11 +110,13 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 		GtkTreeIter *iter,
 		gpointer data)
 {
-	time_t id;
+	time_t t;
+	guint id;
 	gchar text[64];
 	struct tm *lt;
 	gtk_tree_model_get(tree_model, iter, 0,&id, -1);
-	lt = localtime(&id);
+	t = (time_t) id;
+	lt = localtime(&t);
 	strftime(text, 64,"%H:%M:%S", lt);
 	g_object_set(G_OBJECT(cell), "text",text,NULL);
 }
