@@ -351,7 +351,6 @@ int main (int argc, char **argv)
 	}
 
 
-    gmpc_profiles = gmpc_profiles_new();
 
 
 #ifndef WIN32
@@ -368,7 +367,10 @@ int main (int argc, char **argv)
             {
                 debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
                 bacon_message_connection_send(bacon_connection, "PRESENT");
-                exit(0);
+				bacon_message_connection_free (bacon_connection);
+				cfg_close(config);
+				config = NULL;
+				exit(0);
             }
             bacon_message_connection_set_callback (bacon_connection,
                     bacon_on_message_received,
@@ -377,12 +379,16 @@ int main (int argc, char **argv)
     }
 #endif		
 
+
     /**
      * Setup session support
      */
 #ifdef ENABLE_SM
     smc_connect(argc, argv);
 #endif	
+
+
+    gmpc_profiles = gmpc_profiles_new();
     /**
      * Initialize the new metadata subsystem.
      * (Will spawn a new thread, so have to be after the init threading 

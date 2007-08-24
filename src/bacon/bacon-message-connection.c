@@ -228,13 +228,14 @@ socket_filename (const char *prefix)
 {
 	char *pattern, *newfile, *path, *filename;
 	const char *tmpdir;
+	char *display = gdk_get_display();
+	pattern = g_strdup_printf ("%s.%s.%s.*",display,prefix, g_get_user_name ());
 
-	pattern = g_strdup_printf ("%s.%s.%s.*",gdk_get_display(), prefix, g_get_user_name ());
 	tmpdir = g_get_tmp_dir ();
 	filename = find_file_with_pattern (tmpdir, pattern);
 	if (filename == NULL)
 	{
-		newfile = g_strdup_printf ("%s.%s.%s.%u",gdk_get_display(), prefix,
+		newfile = g_strdup_printf ("%s.%s.%s.%u",display, prefix,
 				g_get_user_name (), g_random_int ());
 		path = g_build_filename (tmpdir, newfile, NULL);
 		q_free (newfile);
@@ -242,7 +243,7 @@ socket_filename (const char *prefix)
 		path = g_build_filename (tmpdir, filename, NULL);
 		q_free (filename);
 	}
-
+	q_free(display);
 	q_free (pattern);
 	return path;
 }

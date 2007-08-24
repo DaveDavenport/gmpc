@@ -115,6 +115,9 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 	gchar text[64];
 	struct tm *lt;
 	gtk_tree_model_get(tree_model, iter, 0,&id, -1);
+	/* gtk_list_store only knows the type unsigned int, not time_T
+	 * so lets do some casting)
+	 */
 	t = (time_t) id;
 	lt = localtime(&t);
 	strftime(text, 64,"%H:%M:%S", lt);
