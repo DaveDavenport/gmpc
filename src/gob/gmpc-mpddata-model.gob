@@ -59,7 +59,7 @@ requires 2.0.0
   private int sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
   private int old_sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
 	public gboolean has_up	 = FALSE;
-	public gchar *markup	 = {cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER)};
+	public gchar *markup	 = {cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER)} destroywith g_free;
 
 	property BOOLEAN has_up
 		(nick = _("Has Up"),

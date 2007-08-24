@@ -122,8 +122,6 @@ class Gmpc:Profiles from G:Object
   void
   free_profile(Profile *profile)
   {
-	if(profile->id)
-		g_free(profile->id);
     if(profile->name)
       g_free(profile->name);
     if(profile->id)
@@ -468,13 +466,7 @@ class Gmpc:Profiles from G:Object
 			int i = 0;
 			do{
 				Profile * prof = self->_priv->list[i];
-				if(prof->name)
-					g_free(prof->name);
-				if(prof->hostname)
-					g_free(prof->hostname);
-				if(prof->password)
-					g_free(prof->password);
-				g_free(prof);
+				self_free_profile(prof);
 				self->_priv->list[i] = NULL;
 				i++;
 			}while(self->_priv->list[i]);

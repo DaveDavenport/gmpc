@@ -396,6 +396,7 @@ void pl3_option_menu_activate(void)
 	GtkWidget *menu = NULL;
 
 	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
+/*	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), NULL);*/
 
 	if(!mpd_check_connected(connection) || type == -1) return;
 
@@ -1784,6 +1785,7 @@ void pl3_update_go_menu()
 	 * Remove any old menu
 	 */
 	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")));
+/*	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")), NULL);*/
 	/**
 	 * Create a new menu
 	 */
