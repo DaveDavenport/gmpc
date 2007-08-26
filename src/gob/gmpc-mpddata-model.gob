@@ -706,8 +706,8 @@ requires 2.0.0
 			if(a && b)
 			{
 				gchar *aa,*bb;
-				aa = g_utf8_normalize(a, -1, G_NORMALIZE_ALL_COMPOSE);
-				bb = g_utf8_normalize(b, -1, G_NORMALIZE_ALL_COMPOSE);
+				aa = g_utf8_strdown(a, -1);
+				bb = g_utf8_strdown(b, -1);
 				val = g_utf8_collate(aa,bb);
 				g_free(aa);
 				g_free(bb);
