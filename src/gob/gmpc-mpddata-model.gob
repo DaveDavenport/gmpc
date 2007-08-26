@@ -677,53 +677,49 @@ requires 2.0.0
       }
    private 
      int sort_func(MpdData_real *a, MpdData_real *b,Self *self)
-     {
-       if(a->type != b->type )
-       {
-        int val = a->type - b->type; 
-        return (self->_priv->sort_order)?(val>0):(val<0);
-       }
-       else if(a->type == b->type)
-       {
-         int val=0;
-         GtkTreeIter iter;
-         GValue va = {0,},vb = {0,};
-          /* Get values from tree view, so we don't have to replicate code to sort the right entries */
-         iter.user_data = a;
-         iter.user_data2 = GPOINTER_TO_INT(0);
-         self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
-         iter.user_data = b;
-         self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
+	 {
+		 if(a->type != b->type )
+		 {
+			 int val = a->type - b->type; 
+			 return (self->_priv->sort_order)?(val>0):(val<0);
+		 }
+		 else if(a->type == b->type)
+		 {
+			 int val=0;
+			 GtkTreeIter iter;
+			 GValue va = {0,},vb = {0,};
+			 /* Get values from tree view, so we don't have to replicate code to sort the right entries */
+			 iter.user_data = a;
+			 iter.user_data2 = GPOINTER_TO_INT(0);
+			 self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
+			 iter.user_data = b;
+			 self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
 
-         if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
-         {
-           val = g_value_get_int(&va) - g_value_get_int(&vb);
-         }
-         else if (self->_priv->types[self->_priv->sort_column] == G_TYPE_STRING)
-         {
-           const char *a = g_value_get_string(&va);
-           const char *b = g_value_get_string(&vb);
-			if(a && b)
-			{
-				gchar *aa,*bb;
-				aa = g_utf8_strdown(a, -1);
-				bb = g_utf8_strdown(b, -1);
-				val = g_utf8_collate(aa,bb);
-				g_free(aa);
-				g_free(bb);
-			}
-			else
-			{
-				val = (a == NULL)?((b==NULL)?1:0):-1;
-			}
-//           val = (a != NULL)?((b != NULL)?g_utf8_collate(a,b):1):((a==b)?0:-1);
-         }
-         g_value_unset(&va);
-         g_value_unset(&vb);
-         return (self->_priv->sort_order)?(val>0):(val<0);
-       }
-       return 0;
-     }
+			 if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
+			 {
+				 val = g_value_get_int(&va) - g_value_get_int(&vb);
+			 }
+			 else if (self->_priv->types[self->_priv->sort_column] == G_TYPE_STRING)
+			 {
+				 const char *a = g_value_get_string(&va);
+				 const char *b = g_value_get_string(&vb);
+				 if(a && b) {
+					 gchar *aa,*bb;
+					 aa = g_utf8_strdown(a, -1);
+					 bb = g_utf8_strdown(b, -1);
+					 val = g_utf8_collate(aa,bb);
+					 g_free(aa);
+					 g_free(bb);
+				 } else {
+					 val = (a == NULL)?((b==NULL)?1:0):-1;
+				 }
+			 }
+			 g_value_unset(&va);
+			 g_value_unset(&vb);
+			 return (self->_priv->sort_order)?(val>0):(val<0);
+		 }
+		 return 0;
+	 }
 
     interface Gtk:Tree:Sortable
       private
