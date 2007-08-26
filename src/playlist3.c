@@ -2080,7 +2080,7 @@ void playlist3_update_header(void)
 			/** Set new header */
 			if(mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song){
 
-				mpd_song_markup(buffer, 1024,"[%name%][%title%|%shortfile%]",song);
+				mpd_song_markup(buffer, 1024,"[%title%|%shortfile%][ (%name%)]",song);
 				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),buffer);
 				if(song->artist) {
 					gtk_widget_show(header_labels[1]);

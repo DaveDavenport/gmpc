@@ -373,7 +373,7 @@ void tray_icon2_create_tooltip(void)
 		if(song->title || song->file || song->name)
 		{
 			char buffer[256];
-			mpd_song_markup(buffer, 256,"[%name%][%title%|%shortfile%]",song);
+			mpd_song_markup(buffer, 256,"[%title%|%shortfile%][ (%name%)]",song);
 			label = gmpc_clicklabel_new(buffer);
 			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_song), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
