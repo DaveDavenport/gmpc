@@ -703,7 +703,20 @@ requires 2.0.0
          {
            const char *a = g_value_get_string(&va);
            const char *b = g_value_get_string(&vb);
-           val = (a != NULL)?((b != NULL)?/*g_utf8_collate*/strcmp(a,b):1):((a==b)?0:-1);
+			if(a && b)
+			{
+				gchar *aa,*bb;
+				aa = g_utf8_normalize(a, -1, G_NORMALIZE_ALL_COMPOSE);
+				bb = g_utf8_normalize(b, -1, G_NORMALIZE_ALL_COMPOSE);
+				val = g_utf8_collate(aa,bb);
+				g_free(aa);
+				g_free(bb);
+			}
+			else
+			{
+				val = (a == NULL)?((b==NULL)?1:0):-1;
+			}
+//           val = (a != NULL)?((b != NULL)?g_utf8_collate(a,b):1):((a==b)?0:-1);
          }
          g_value_unset(&va);
          g_value_unset(&vb);
