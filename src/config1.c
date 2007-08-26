@@ -873,7 +873,7 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,char *class)
 
 static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 {
-	config_node *root = NULL;
+	config_node *item,*root = NULL;
 	if(!cfg || !cfg->root)
 		return;
 	if(node == NULL)
@@ -887,15 +887,27 @@ static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 		{
 			if(root->children)
 				__int_cfg_do_special_cleanup(cfg, root->children);		
+			if(root->children == NULL)
+			{
+				item = NULL;
+				printf("debug remove node\n");
+				if(root->prev)
+					item =  root->prev;
+				else if(root->next)
+					item = root->next;
+				__int_cfg_remove_node(cfg, root);	
+				root = item;
+			}
 		}	
 		else if(root->type == TYPE_ITEM)
 		{
-			if(root->value == NULL || root->value[0] == '\0')
+			if(root->value == NULL || root->value[0] == '\0' || strlen(root->value) == 0 )
 			{
 				config_node *node = root;
 				root = node->prev;
 				if(!root)
 					root = node->next;
+				printf("remove another node\n");
 				__int_cfg_remove_node(cfg, node);
 				if(!root) return;
 			}
