@@ -107,6 +107,41 @@ then
 	DIE="$DIE libtoolize(libtool)"
 fi
 
+
+if test -n "$INTLTOOLIZE"
+then
+	echo "INTLTOOLIZE=$INTLTOOLIZE in environment," \
+			"will not attempt to auto-detect"
+else
+	printf "checking for intltoolize ... "
+	for x in intltoolize
+	do
+		($x --version < /dev/null > /dev/null 2>&1) > /dev/null 2>&1
+		if test $? -eq 0
+		then
+			echo $x
+			INTLTOOLIZE=$x
+			break
+		fi
+	done
+fi
+
+if test -z "$INTLTOOLIZE"
+then
+	DIE="$DIE libtoolize(libtool)"
+fi
+
+
+
+
+
+
+
+
+
+
+
+
 if test -n "$DIE"
 then
 	echo "You must have the following installed to compile $package:"
@@ -150,6 +185,9 @@ $AUTOHEADER || exit 1
 
 echo "  $LIBTOOLIZE --automake"
 $LIBTOOLIZE --automake || exit 1
+
+echo "  $INTLTOOLIZE --automake"
+$INTLTOOLIZE --automake || exit 1
 
 echo "  $AUTOMAKE --add-missing $AUTOMAKE_FLAGS"
 $AUTOMAKE --add-missing $AUTOMAKE_FLAGS || exit 1
