@@ -509,17 +509,17 @@ requires 2.0.0
 			long unsigned retval = 0;
 			GtkTreeIter iter;
 			GtkTreePath *path = NULL;
-			
-			data2 = mpd_data_get_first(data2);
 			/* loop and remove */
-			while(self->_priv->num_rows){
+			while ( self->_priv->num_rows > 0 ) {
 				path = gtk_tree_path_new();
-				gtk_tree_path_append_index(path, self->_priv->num_rows-1);
+				gtk_tree_path_append_index(path, self->_priv->num_rows - 1 );
 				/* propegate change */
 				gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
 				gtk_tree_path_free(path);
 				self->_priv->num_rows--;
 			}
+
+
 			/**
 			 * Free if there is a list and set it to NULL 
 			 */
@@ -528,13 +528,16 @@ requires 2.0.0
 			self->_priv->data = NULL;
 
 			if(self->_priv->num_rows != 0)
-				printf("ERROR not every row cleared\n");
-
+				debug_printf(DEBUG_ERROR,"not every row cleared %i\n",self->_priv->num_rows);
+			self->_priv->num_rows =0;
+			if(data2 == NULL)
+				return 0;
+			data2 = mpd_data_get_first(data2);
 			self->_priv->data = data2;
-      /* SORT IT */
-      self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
+			/* SORT IT */
+			self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
 
-      if(self->has_up) {
+			if(self->has_up) {
 				path = gtk_tree_path_new();
 				gtk_tree_path_append_index(path, self->_priv->num_rows);
 				iter.stamp = self->_priv->stamp;
@@ -563,7 +566,7 @@ requires 2.0.0
 					retval+= data2->song->time;
 				}
 			}
-      //self_sort_model(self);
+			//self_sort_model(self);
 			return retval;
 		}
 
