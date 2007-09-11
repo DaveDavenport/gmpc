@@ -1,4 +1,10 @@
 /**
+ * TODO:
+ * $ If disconnected, don't destroy all tag browsers, just clear the first one, if connected refill the first one
+ * $ Before adding albums use some sort of sorting. (see old tag browser?)
+ */
+
+/**
  * Released under the GPL.
  *
  */
@@ -27,10 +33,17 @@ static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
 static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter);
 
+/**
+ *  preferences 
+ */
 static void tag2_pref_construct(GtkWidget *container);
 static void tag2_pref_destroy(GtkWidget *container);
-static GtkWidget *pref_vbox;
-static GtkWidget *pref_entry;
+static GtkWidget *pref_vbox = NULL;
+static GtkWidget *pref_entry = NULL;
+
+/** 
+ * Preferences structure 
+ */
 gmpcPrefPlugin tag2_prefs = {
 	.construct = tag2_pref_construct,
 	.destroy = tag2_pref_destroy
@@ -81,6 +94,7 @@ typedef struct _tag_browser {
 	/* GtkTreeRowReference */
 	GtkTreeRowReference *ref_iter;
 } tag_browser;
+
 /* The current visible browser, this is needed to workaround gmpc's limitation */
 static GtkWidget *tag2_current = NULL;
 static void tag2_destroy_browser(gchar *key,tag_browser *browser);
@@ -716,12 +730,8 @@ static void tag2_browser_unselected(GtkWidget *container)
 {
 	if(tag2_current)
 		gtk_container_remove(GTK_CONTAINER(container), tag2_current);
+	tag2_current = NULL;
 }
-
-
-
-
-
 
 static void tag2_clear(gchar *key, tag_browser *browser)
 {
