@@ -43,7 +43,7 @@
 #include "browsers/playlist3-file-browser.h"
 #include "browsers/playlist3-find2-browser.h"
 #include "browsers/playlist3-find3-browser.h"
-#include "browsers/playlist3-tag-browser.h"
+#include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-artist-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 
@@ -453,7 +453,8 @@ int main (int argc, char **argv)
     /* this shows the playlist preferences */
     plugin_add(&playlist_plug,0);
     /* this shows the markup stuff */
-    plugin_add(&tag_plug,0);
+//    plugin_add(&tag_plug,0);
+    plugin_add(&tag2_plug,0);
 #ifdef ENABLE_MMKEYS
     plugin_add(&mmkeys_plug,0);
 #endif
