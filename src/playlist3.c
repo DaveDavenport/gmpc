@@ -1419,6 +1419,8 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
 		pl3_push_rsb_message(_("Not Connected"));
 	}
+	while(gtk_events_pending())
+		gtk_main_iteration();
 
 	/** Set back to the current borwser, and update window title */
 	if(connect){
