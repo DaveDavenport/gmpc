@@ -66,6 +66,28 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_file_browser_disconnect(void);
 
+GtkTreeRowReference *pl3_fb_tree_ref = NULL;
+/**
+ * Get/Set enabled
+ */
+int pl3_file_browser_get_enabled()
+{
+	return cfg_get_single_value_as_int_with_default(config, "file-browser","enable", TRUE);
+}
+static void pl3_file_browser_set_enabled(int enabled)
+{
+	cfg_set_single_value_as_int(config, "file-browser","enable", enabled);
+	if(enabled )
+	{
+		GtkTreeView *tree = playlist3_get_category_tree_view();
+		pl3_file_browser_add((GtkWidget *)tree);
+	} else if (!enabled ) {
+		pl3_file_browser_destroy();
+	}
+}
+
+
+
 /**
  * Plugin structure
  */
@@ -94,14 +116,14 @@ gmpcPlugin file_browser_plug = {
 	pl3_file_browser_connection_changed, 	/* connection changed */
 	NULL,		                        /* Preferences */
 	NULL,			                /* MetaData */
-	NULL,                                   /* get enable */
-	NULL                                    /* set enable */
+	.get_enabled = pl3_file_browser_get_enabled,
+	.set_enabled = pl3_file_browser_set_enabled
 };
 
 
 extern GladeXML *pl3_xml;
 
-GtkTreeRowReference *pl3_fb_tree_ref = NULL;
+
 /* internal */
 GtkWidget *pl3_fb_tree = NULL;
 GtkWidget *pl3_fb_vbox = NULL;
@@ -1085,6 +1107,8 @@ static void pl3_file_browser_activate(void)
 static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 {
 	GtkWidget *item = NULL;
+	if(!pl3_file_browser_get_enabled())
+		return 0;
 
 	item = gtk_image_menu_item_new_with_label(_("File Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
