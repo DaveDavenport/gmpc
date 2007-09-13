@@ -1159,9 +1159,6 @@ static void pl3_artist_browser_activate()
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			glade_xml_get_widget (pl3_xml, "cat_tree"));
 
-	/**
-	 * Fix this to be nnot static
-	 */	
 	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref); 
 	if(path)
 	{
@@ -1180,6 +1177,7 @@ static int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_icon_name("media-artist", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F4, 0, GTK_ACCEL_VISIBLE);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_artist_browser_activate), NULL);
 
@@ -1197,13 +1195,13 @@ static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event,
 {
 	if(!pl3_artist_browser_get_enabled())
 		return FALSE;
-
+/*
 	if (event->keyval == GDK_F4)
 	{
 		pl3_artist_browser_activate();
 		return TRUE;
 	}                                           	
-
+*/
 	return FALSE;
 }
 static void pl3_artist_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)

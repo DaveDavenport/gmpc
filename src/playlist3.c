@@ -1786,6 +1786,7 @@ void pl3_update_go_menu()
 	int i=0;
 	int items = 0;
 	GtkWidget *menu = NULL;
+    GtkAccelGroup *group = gtk_accel_group_new();
 	/***
 	 * Remove any old menu
 	 */
@@ -1795,7 +1796,8 @@ void pl3_update_go_menu()
 	 * Create a new menu
 	 */
 	menu = gtk_menu_new();
-
+    gtk_menu_set_accel_group(GTK_MENU(menu), group);
+    gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
 	if(mpd_check_connected(connection)) {
 		for(i=0; i< num_plugins;i++) {
 			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {                                                   
@@ -1981,7 +1983,7 @@ static void playlist3_fill_server_menu(void)
 		{
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
-      gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
 			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));

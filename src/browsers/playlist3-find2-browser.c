@@ -637,6 +637,7 @@ static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F5, 0, GTK_ACCEL_VISIBLE);
     g_signal_connect(G_OBJECT(item), "activate", 
             G_CALLBACK(pl3_find2_browser_activate), NULL);
 
@@ -653,12 +654,12 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
 
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-    if (event->keyval == GDK_F5)
+/*    if (event->keyval == GDK_F5)
     {
         pl3_find2_browser_activate();
         return TRUE;
     }                                           	
-
+*/
     return FALSE;
 }
 
