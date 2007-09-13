@@ -166,9 +166,12 @@ static void pl3_initialize_tree()
 	{
 		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
 		{
-			if(plugins[i]->browser && plugins[i]->browser->add)
+			if(!(plugins[i]->get_enabled && plugins[i]->get_enabled() == FALSE))
 			{
-				plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
+				if(plugins[i]->browser && plugins[i]->browser->add)
+				{
+					plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
+				}
 			}
 		}
 	}

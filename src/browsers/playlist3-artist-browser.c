@@ -65,6 +65,40 @@ enum{
 	PL3_AB_ROWS
 };
 extern GladeXML *pl3_xml;
+GtkTreeRowReference *pl3_ab_tree_ref = NULL;
+/**
+ * Helper functions 
+ */
+static void pl3_artist_browser_set_enabled(int enabled)
+{
+	cfg_set_single_value_as_int(config, "artist-browser", "enable", enabled);
+	if (enabled)
+	{
+		if(pl3_ab_tree_ref == NULL)
+		{
+			pl3_artist_browser_add(GTK_WIDGET(playlist3_get_category_tree_view()));
+		}
+	}
+	else if (pl3_ab_tree_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
+		if (path){
+			GtkTreeIter iter;
+			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(playlist3_get_category_tree_store()), &iter, path)){
+				gtk_tree_store_remove(playlist3_get_category_tree_store(), &iter);
+			}
+			gtk_tree_path_free(path);
+			gtk_tree_row_reference_free(pl3_ab_tree_ref);
+			pl3_ab_tree_ref = NULL;
+		}                                                                                                  	
+	}                                                                                                      	
+	pl3_update_go_menu();
+}
+
+static int pl3_artist_browser_get_enabled(void)
+{
+	return	cfg_get_single_value_as_int_with_default(config, "artist-browser", "enable", TRUE); 
+}
 
 /**
  * Plugin structure
@@ -94,8 +128,8 @@ gmpcPlugin artist_browser_plug = {
 	pl3_artist_browser_connection_changed, 	/* connection changed */
 	NULL,		                        /* Preferences */
 	NULL,			                /* MetaData */
-	NULL,			                /* Get enable */
-	NULL			                /* Set Enable */
+	.get_enabled = pl3_artist_browser_get_enabled,
+	.set_enabled = pl3_artist_browser_set_enabled/* Set Enable */
 };
 
 /* internal */
@@ -106,7 +140,7 @@ GtkWidget *pl3_ab_tree_search = NULL;
 
 
 
-GtkTreeRowReference *pl3_ab_tree_ref = NULL;
+
 
 static int pl3_artist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
@@ -1139,6 +1173,8 @@ static void pl3_artist_browser_activate()
 static int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 {
 	GtkWidget *item = NULL;
+	if(!pl3_artist_browser_get_enabled())
+		return 0;
 
 	item = gtk_image_menu_item_new_with_label(_("Artist Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
@@ -1159,6 +1195,9 @@ static void pl3_artist_browser_connection_changed(MpdObj *mi, int connect, gpoin
 }
 static int pl3_artist_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
+	if(!pl3_artist_browser_get_enabled())
+		return FALSE;
+
 	if (event->keyval == GDK_F4)
 	{
 		pl3_artist_browser_activate();
