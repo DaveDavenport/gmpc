@@ -8,7 +8,6 @@
 
 #include "main.h"
 #include "playlist3.h"
-#include "browsers/playlist3-tag-browser.h"
 #include "config1.h"
 
 #define PLUGIN_STATS -200
