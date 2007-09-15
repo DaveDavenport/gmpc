@@ -697,8 +697,16 @@ requires 2.0.0
 			 self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
 			 iter.user_data = b;
 			 self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
+			 if(self->_priv->sort_column == MPDDATA_MODEL_COL_SONG_TRACK)
+			 {
+				 const char *a = g_value_get_string(&va);
+				 const char *b = g_value_get_string(&vb);
+				 gint a1 = (a)?atoi(a):0;
+				 gint b1 = (b)?atoi(b):0;
 
-			 if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
+				 return (self->_priv->sort_order)?((a1-b1)>0):((a1-b1)<0);
+			 }
+			 else if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
 			 {
 				 val = g_value_get_int(&va) - g_value_get_int(&vb);
 			 }
