@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <libmpd/debug_printf.h>
 #include "plugin.h"
 #include "main.h"
@@ -32,6 +33,7 @@ static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data);
 static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
 static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter);
+static int tag2_browser_add_go_menu(GtkWidget *menu);
 
 /**
  *  preferences 
@@ -59,7 +61,7 @@ gmpcPlBrowserPlugin tag2_browser_plugin ={
 	.selected = tag2_browser_selected,
 	.cat_selection_changed = tag2_browser_selection_changed,
 	.unselected = tag2_browser_unselected,
-
+	.add_go_menu = tag2_browser_add_go_menu
 };
 
 gmpcPlugin tag2_plug = {
@@ -1204,4 +1206,28 @@ void tag2_pref_construct(GtkWidget *container)
 
 	gtk_container_add(GTK_CONTAINER(container), pref_vbox);
 	gtk_widget_show_all(container);
+}
+static void tag2_browser_add_go_menu_foreach(gchar *key, tag_browser *browser, GtkWidget *menu)
+{
+	GtkWidget *item = gtk_image_menu_item_new_with_label(browser->name);
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+			gtk_image_new_from_icon_name("media-tag", GTK_ICON_SIZE_MENU));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+//	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F1 +(browser->index-1),GDK_SHIFT_MASK , GTK_ACCEL_VISIBLE);
+/*	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(pl3_artist_browser_activate), NULL);                                                                }
+*/
+	}
+static int tag2_browser_add_go_menu(GtkWidget *menu)
+{
+	GtkWidget *item = NULL;
+	if(tag2_get_enabled() == FALSE)
+		return 0;
+	if(tag2_ht)
+	{
+		g_hash_table_foreach(tag2_ht,(GHFunc)tag2_browser_add_go_menu_foreach, menu);
+		return 1;
+	}
+
+	return 0;
 }
