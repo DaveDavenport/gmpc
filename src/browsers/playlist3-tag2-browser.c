@@ -19,6 +19,11 @@
 #include "gmpc-mpddata-model.h"
 #include <libmpd/libmpd-internal.h>
 
+/**
+ * dirty hack to workaround single parameter for now 
+ */
+static int counter;
+
 static void tag2_init(void);
 static void tag2_destroy(void);
 static void tag2_set_enabled(int enabled);
@@ -134,6 +139,8 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 
 	tag2_init_browser(tb);
 	gtk_tree_path_free(path);
+	pl3_update_go_menu();	
+
 }
 static void tag2_browser_add(GtkWidget *cat_tree)
 {
@@ -987,6 +994,7 @@ static void tag2_pref_browser_remove(GtkWidget *but, GtkComboBox *box)
 		cfg_remove_class(config, name);
 		g_free(name);
 		g_free(key);
+		pl3_update_go_menu();	
 	}
 }
 /**
@@ -1207,24 +1215,41 @@ void tag2_pref_construct(GtkWidget *container)
 	gtk_container_add(GTK_CONTAINER(container), pref_vbox);
 	gtk_widget_show_all(container);
 }
+static void tag2_browser_activate(GtkWidget *item, tag_browser *browser)
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			playlist3_get_category_tree_view());	
+
+	GtkTreePath *path = gtk_tree_row_reference_get_path(browser->ref_iter); 
+	if(path)
+	{
+		gtk_tree_selection_select_path(selec, path);
+		gtk_tree_path_free(path);
+	}
+
+
+
+}
 static void tag2_browser_add_go_menu_foreach(gchar *key, tag_browser *browser, GtkWidget *menu)
 {
 	GtkWidget *item = gtk_image_menu_item_new_with_label(browser->name);
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_icon_name("media-tag", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-//	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F1 +(browser->index-1),GDK_SHIFT_MASK , GTK_ACCEL_VISIBLE);
-/*	g_signal_connect(G_OBJECT(item), "activate", 
-			G_CALLBACK(pl3_artist_browser_activate), NULL);                                                                }
-*/
-	}
+
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F1 +counter,GDK_SHIFT_MASK , GTK_ACCEL_VISIBLE);
+	counter++;
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(tag2_browser_activate), browser);
+}
+
 static int tag2_browser_add_go_menu(GtkWidget *menu)
 {
-	GtkWidget *item = NULL;
 	if(tag2_get_enabled() == FALSE)
 		return 0;
 	if(tag2_ht)
 	{
+		counter = 0;
 		g_hash_table_foreach(tag2_ht,(GHFunc)tag2_browser_add_go_menu_foreach, menu);
 		return 1;
 	}
