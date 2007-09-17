@@ -239,8 +239,10 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 	if(gtk_combo_box_get_active_iter(box, &iter)) 
 	{
 		GtkTreeIter cat_iter;
+		GtkTreeRowReference *rr = NULL;
 		GtkTreePath *path = NULL;
-		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &path, -1);
+		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &rr, -1);
+		path = gtk_tree_row_reference_get_path(rr);
 		if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
 		{
 			GtkTreeIter piter;
@@ -788,11 +790,13 @@ static void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTre
 {
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
+		GtkTreeRowReference *rp = gtk_tree_row_reference_new(model, path);
+		gint *data = gtk_tree_path_get_indices(path);
 		GtkTreeIter citer;
 		char *name, *stock_id;
 		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
-		gtk_list_store_append(GTK_LIST_STORE(model2), &citer);
-		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,-1);
+		gtk_list_store_insert(GTK_LIST_STORE(model2), &citer,data[0]);
+		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,rp,-1);
 		if(name)q_free(name);
 		if(stock_id)q_free(stock_id);
 	}
@@ -803,13 +807,15 @@ static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTree
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
 		GtkTreeIter citer;
+		
 		char *name, *stock_id,*strpath;
 		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
 		strpath = gtk_tree_path_to_string(path);
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
 		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 
 				0,name,
-				1,stock_id,2,gtk_tree_path_copy(path),-1);
+				1,stock_id,
+				-1);
 		q_free(strpath);
 		if(name) q_free(name);
 		if(stock_id) q_free(stock_id);
@@ -826,7 +832,7 @@ static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTree
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
 		gtk_tree_model_get(model2, &citer, 2,&cpath, -1);
 		if(cpath)
-			gtk_tree_path_free(cpath);
+			gtk_tree_row_reference_free(cpath);
 		gtk_list_store_remove(GTK_LIST_STORE(model2), &citer);
 		q_free(strpath);
 	}
@@ -932,7 +938,8 @@ void create_playlist3 ()
 				G_TYPE_STRING, /* icon id */
 				G_TYPE_BOOLEAN,  /* cat proc */
 				G_TYPE_UINT,  /* icon size */
-				G_TYPE_STRING /* browser markup */
+				G_TYPE_STRING, /* browser markup */
+				G_TYPE_INT 		/* ordering */
 				);
 	}
 
@@ -2146,3 +2153,24 @@ gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer 
 	cairo_destroy(cr);
 	return FALSE;
 }
+
+void playlist3_insert_browser(GtkTreeIter *iter, gint position)
+{
+	GtkTreeIter it,*sib= NULL;
+	gint pos=0;
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree); 
+	if(gtk_tree_model_get_iter_first(model, &it))
+	{
+
+		do{
+			gtk_tree_model_get(model, &it, PL3_CAT_ORDER, &pos, -1); 
+			if(position < pos)
+				sib = &it;
+			printf("iter: %i:%i\n", pos, position);
+		}while(sib == NULL && gtk_tree_model_iter_next(model, &it));
+	}
+	printf("insert %i before %i\n", position, pos);
+	gtk_tree_store_insert_before(pl3_tree, iter, NULL, sib);
+	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
+}
+

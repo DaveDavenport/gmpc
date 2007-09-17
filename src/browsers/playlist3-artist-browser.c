@@ -244,7 +244,9 @@ static void pl3_artist_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter,child;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	gint pos = cfg_get_single_value_as_int_with_default(config, "artist-browser","position",3);
+	playlist3_insert_browser(&iter, pos);
+//	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, artist_browser_plug.id,
 			PL3_CAT_TITLE, _("Artist Browser"),

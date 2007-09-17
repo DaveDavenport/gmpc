@@ -55,6 +55,7 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 GtkTreeModel *playlist = NULL;
 GtkTreeModel *playlist_queue = NULL;
 GtkWidget *pl3_queue_sw = NULL;
+GtkTreeRowReference *pl3_curb_tree_ref = NULL;
 
 /* just for here */
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
@@ -544,7 +545,10 @@ static void pl3_current_playlist_browser_scroll_to_current_song()
 static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 {
 	GtkTreeIter iter;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	GtkTreePath *path;
+	gint pos = cfg_get_single_value_as_int_with_default(config, "current-playlist","position",0);
+	playlist3_insert_browser(&iter, pos);
+	//gtk_tree_store_append(pl3_tree, &iter, NULL);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
 			PL3_CAT_TITLE, _("Current Playlist"),
@@ -553,6 +557,17 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 			-1);
+	if(pl3_curb_tree_ref)
+	{
+		gtk_tree_row_reference_free(pl3_curb_tree_ref);
+		pl3_curb_tree_ref = NULL;
+	}
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+	if(path)
+	{
+		pl3_curb_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
+		gtk_tree_path_free(path);
+	}
 }
 
 
@@ -1081,13 +1096,15 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
 	}
 	if(what&MPD_CST_QUEUE)
 	{
-		MpdData *data = mpd_playlist_get_mpd_queue(connection);
-		gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_queue),data);
-		if(data)
-			gtk_widget_show_all(pl3_queue_sw);
-		else
-			gtk_widget_hide(pl3_queue_sw);
-
+		if(playlist_queue)
+		{
+			MpdData *data = mpd_playlist_get_mpd_queue(connection);
+			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_queue),data);
+			if(data)
+				gtk_widget_show_all(pl3_queue_sw);
+			else
+				gtk_widget_hide(pl3_queue_sw);
+		}
 	}
 }
 
@@ -1100,7 +1117,8 @@ static void pl3_current_playlist_browser_activate()
 	/**
 	 * Fix this to be nnot static
 	 */	
-	GtkTreePath *path = gtk_tree_path_new_from_indices(0,-1);
+//	GtkTreePath *path = gtk_tree_path_new_from_indices(0,-1);
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref); 
 	if(path)
 	{
 		gtk_tree_selection_select_path(selec, path);

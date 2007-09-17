@@ -45,6 +45,7 @@ typedef enum
 	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
 	PL3_CAT_ICON_SIZE, /** icon size */
 	PL3_CAT_BROWSE_FORMAT, /** string, added for tag browser */
+	PL3_CAT_ORDER, /* int for sorting the list */
 	PL3_CAT_NROWS
 } pl3_cat_store;
 
@@ -137,5 +138,5 @@ GtkTreeView *playlist3_get_category_tree_view(void);
 
 gchar * gmpc_get_covers_path(const gchar *filename);
 gchar * gmpc_get_user_path(const gchar *filename);
-
+void playlist3_insert_browser(GtkTreeIter *iter, gint position);
 #endif
