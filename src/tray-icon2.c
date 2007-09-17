@@ -163,15 +163,12 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	if(what&MPD_CST_STATE)
 	{
 		int state = mpd_player_get_state(connection);
-		if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
-		{
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
-		}
-		else if(state == MPD_PLAYER_PLAY){
+		if(state == MPD_PLAYER_PLAY){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
-		}
-		else if(state == MPD_PLAYER_PAUSE){
+		} else if(state == MPD_PLAYER_PAUSE){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
+		} else {
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
 		}
 	}
 }
