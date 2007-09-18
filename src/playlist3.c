@@ -2166,10 +2166,8 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 			gtk_tree_model_get(model, &it, PL3_CAT_ORDER, &pos, -1); 
 			if(position < pos)
 				sib = &it;
-			printf("iter: %i:%i\n", pos, position);
 		}while(sib == NULL && gtk_tree_model_iter_next(model, &it));
 	}
-	printf("insert %i before %i\n", position, pos);
 	gtk_tree_store_insert_before(pl3_tree, iter, NULL, sib);
 	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
 }

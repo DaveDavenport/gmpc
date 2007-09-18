@@ -1707,8 +1707,10 @@ static void info2_add(GtkWidget *cat_tree)
 	GtkTreePath *path = NULL;
 	GtkTreeStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
 	GtkTreeIter iter;
+	gint pos = cfg_get_single_value_as_int_with_default(config, "info2-plugin","position",5);
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
+//	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	playlist3_insert_browser(&iter, pos);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
 			PL3_CAT_TITLE, _("Metadata Browser"),

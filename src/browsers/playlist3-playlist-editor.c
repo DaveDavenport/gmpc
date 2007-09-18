@@ -19,7 +19,7 @@ static GtkWidget *playlist_editor_browser = NULL;
 static GtkWidget *playlist_editor_song_tree = NULL;
 static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data);
 static void playlist_editor_fill_list(void);
-
+static int playlist_editor_add_go_menu(GtkWidget *);
 GtkWidget *playlist_editor_icon_view = NULL;
 GmpcMpdDataModelSort *playlist_editor_list_store = NULL;
 
@@ -60,7 +60,7 @@ gmpcPlBrowserPlugin playlist_editor_gbp = {
   NULL,
   playlist_editor_browser_cat_menu,   /* */
   NULL,   /* cat key press */
-  NULL, 
+  playlist_editor_add_go_menu, 
   NULL 
 };
 
@@ -112,13 +112,16 @@ void playlist_editor_conn_changed(MpdObj *mi, int connect, void *userdata)
 
 void playlist_editor_browser_add(GtkWidget *cat_tree)
 {
-  GtkTreeStore *pl3_tree = playlist3_get_category_tree_store();
+	GtkTreeStore *pl3_tree = playlist3_get_category_tree_store();
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
-  /* Check if enabled */
-  if(!cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "enable", TRUE)) return;
+	gint pos = cfg_get_single_value_as_int_with_default(config, "playlist-plugin","position",6);
 
-	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	/* Check if enabled */
+	if(!cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "enable", TRUE)) return;
+
+//	gtk_tree_store_append(pl3_tree, &iter, NULL);
+	playlist3_insert_browser(&iter, pos);
 	gtk_tree_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, playlist_editor_plugin.id,
 			PL3_CAT_TITLE, _("Playlist Editor"),
@@ -144,7 +147,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 		gtk_tree_path_free(path);
 	}
 
-	
+
 }
 
 static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, GtkTreePath *path, gpointer data)
@@ -678,5 +681,39 @@ static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, v
 	{
 		playlist_editor_fill_list();
 	}*/
+}
+static void playlist_editor_activate(GtkWidget *item, gpointer data)
+{
+	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+			playlist3_get_category_tree_view());	
+
+	if(playlist_editor_browser_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(playlist_editor_browser_ref); 
+		if(path)
+		{
+			gtk_tree_selection_select_path(selec, path);
+			gtk_tree_path_free(path);
+		}
+	}
+}
+
+
+
+
+
+static int playlist_editor_add_go_menu(GtkWidget *menu)
+{
+	GtkWidget *item = NULL;
+	if(!cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "enable", 1)) return 0;
+	item = gtk_image_menu_item_new_with_label(_("Playlist Editor"));
+	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+			gtk_image_new_from_icon_name("media-playlist", GTK_ICON_SIZE_MENU));
+
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F7, 0, GTK_ACCEL_VISIBLE);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", 
+			G_CALLBACK(playlist_editor_activate), NULL);
+	return 1;
 }
 

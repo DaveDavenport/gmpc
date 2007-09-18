@@ -312,7 +312,10 @@ static void pl3_find3_browser_selected(GtkWidget *container)
 }
 static void pl3_find3_browser_unselected(GtkWidget *container)
 {
-    gtk_container_remove(GTK_CONTAINER(container), pl3_find3_vbox);
+	if(pl3_find3_vbox)
+	{
+	    gtk_container_remove(GTK_CONTAINER(container), pl3_find3_vbox);
+	}
 }
 
 /*****************************************************************
@@ -911,14 +914,24 @@ static void pl3_find3_browser_destroy(void)
   if(pl3_find3_vbox)
   {
     gtk_widget_destroy(pl3_find3_vbox);
+	pl3_find3_vbox = NULL;
   }
   if(pl3_find3_store2)
   {
     g_object_unref(pl3_find3_store2);
+	pl3_find3_store2 = NULL;
   }
   if(pl3_find3_ref)
   {
+	GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_find3_ref);
+	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter(model, &iter, path))
+	{
+		gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+	}
     gtk_tree_row_reference_free(pl3_find3_ref);
+	pl3_find3_ref = NULL;
   }
 }
 static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
