@@ -242,7 +242,7 @@ static void tray_icon2_tooltip_song(void)
 	if(song)
 	{
 		info2_activate();
-		info2_fill_song_view(song->file);	
+		info2_fill_song_view(song);	
 	}
 }
 static void tray_icon2_tooltip_artist(void)
