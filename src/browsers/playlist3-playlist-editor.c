@@ -699,9 +699,6 @@ static void playlist_editor_activate(GtkWidget *item, gpointer data)
 }
 
 
-
-
-
 static int playlist_editor_add_go_menu(GtkWidget *menu)
 {
 	GtkWidget *item = NULL;
