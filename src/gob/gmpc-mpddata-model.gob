@@ -691,6 +691,32 @@ requires 2.0.0
 			 int val=0;
 			 GtkTreeIter iter;
 			 GValue va = {0,},vb = {0,};
+			/* if the type is a directory or a tag, always sort on the title column */
+			 if(a->type == MPD_DATA_TYPE_DIRECTORY || b->type == MPD_DATA_TYPE_TAG)
+			 {
+				 const char *ca,*cb;
+				 iter.user_data = a;
+				 iter.user_data2 = GPOINTER_TO_INT(0);
+				 self_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &va);
+				 iter.user_data = b;
+				 self_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &vb);
+				 ca = g_value_get_string(&va);
+				 cb = g_value_get_string(&vb);
+				 if(ca && cb) {
+					 gchar *aa,*bb;
+					 aa = g_utf8_strdown(ca, -1);
+					 bb = g_utf8_strdown(cb, -1);
+					 val = g_utf8_collate(aa,bb);
+					 g_free(aa);
+					 g_free(bb);
+				 } else {
+					 val = (ca == NULL)?((cb==NULL)?1:0):-1;
+				 }
+				 g_value_unset(&va);
+				 g_value_unset(&vb);
+				 /* return */
+				 return (self->_priv->sort_order)?(val>0):(val<0);
+			 }
 			 /* Get values from tree view, so we don't have to replicate code to sort the right entries */
 			 iter.user_data = a;
 			 iter.user_data2 = GPOINTER_TO_INT(0);
@@ -703,7 +729,8 @@ requires 2.0.0
 				 const char *b = g_value_get_string(&vb);
 				 gint a1 = (a)?atoi(a):0;
 				 gint b1 = (b)?atoi(b):0;
-
+				 g_value_unset(&va);
+				 g_value_unset(&vb);
 				 return (self->_priv->sort_order)?((a1-b1)>0):((a1-b1)<0);
 			 }
 			 else if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
@@ -732,57 +759,57 @@ requires 2.0.0
 		 return 0;
 	 }
 
-    interface Gtk:Tree:Sortable
-      private
-      void 
-      sort_column_changed(Gtk:Tree:Sortable *model)
-      {
-        Self *self = GMPC_MPDDATA_MODEL(model);
-        if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
-          return; 
-        if(self->_priv->sort_column <0)
-          return;
-        /* call the sort function */
-        if(self->_priv->sort_column != self->_priv->old_sort_column)
-        {
-          self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
-          self->_priv->old_sort_column = self->_priv->sort_column;
-        }
-        else 
-        {
-          MpdData_real *a, *b;
-          a = (MpdData_real *)mpd_data_get_first(self->_priv->data);
-          for(b=a;b->next;b = b->next);
-          while(a != b)
-          {
-            self_swap(a,b);
-            a = a->next;
-            if(a==b)break;
-            b= b->prev;
-          }
-        }
+   interface Gtk:Tree:Sortable
+	   private
+	   void 
+	   sort_column_changed(Gtk:Tree:Sortable *model)
+	   {
+		   Self *self = GMPC_MPDDATA_MODEL(model);
+		   if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
+			   return; 
+		   if(self->_priv->sort_column <0)
+			   return;
+		   /* call the sort function */
+		   if(self->_priv->sort_column != self->_priv->old_sort_column)
+		   {
+			   self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
+			   self->_priv->old_sort_column = self->_priv->sort_column;
+		   }
+		   else 
+		   {
+			   MpdData_real *a, *b;
+			   a = (MpdData_real *)mpd_data_get_first(self->_priv->data);
+			   for(b=a;b->next;b = b->next);
+			   while(a != b)
+			   {
+				   self_swap(a,b);
+				   a = a->next;
+				   if(a==b)break;
+				   b= b->prev;
+			   }
+		   }
 
-        /* tell the view that rows have changed  */    
-        {
-          int i=0;
-          GtkTreePath *path = NULL;
-          GtkTreeIter iter;
-          MpdData *data2 = mpd_data_get_first(self->_priv->data); 
-          if(self->has_up) i = 1;
-          for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) 
-          {
-            path = gtk_tree_path_new();
-            gtk_tree_path_append_index(path,i);
-            iter.stamp = self->_priv->stamp;
-            iter.user_data = data2;
-            iter.user_data2 =  GINT_TO_POINTER(i);
+		   /* tell the view that rows have changed  */    
+		   {
+			   int i=0;
+			   GtkTreePath *path = NULL;
+			   GtkTreeIter iter;
+			   MpdData *data2 = mpd_data_get_first(self->_priv->data); 
+			   if(self->has_up) i = 1;
+			   for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) 
+			   {
+				   path = gtk_tree_path_new();
+				   gtk_tree_path_append_index(path,i);
+				   iter.stamp = self->_priv->stamp;
+				   iter.user_data = data2;
+				   iter.user_data2 =  GINT_TO_POINTER(i);
 
-            /* propegate change */
-            gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
-            i++;
-          }
-        }
-      }
+				   /* propegate change */
+				   gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+				   i++;
+			   }
+		   }
+	   }
 
 }
 
