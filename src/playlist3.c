@@ -1746,7 +1746,7 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 	if(song)
 	{
 		info2_activate();
-		info2_fill_song_view(song->file);	
+		info2_fill_song_view(song);	
 	}
 	/*call_id3_window(mpd_player_get_current_song_id(connection));*/
 }
@@ -2018,7 +2018,7 @@ static void playlist3_header_song(void)
 	if(song)
 	{
 		info2_activate();
-		info2_fill_song_view(song->file);	
+		info2_fill_song_view(song);	
 	}
 }
 static void playlist3_header_artist(void)

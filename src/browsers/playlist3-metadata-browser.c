@@ -298,7 +298,9 @@ static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 	if(artist == NULL) {
 		printf("CRAP NO PATH\n");
 	} else {
-		info2_fill_song_view(artist);
+		mpd_Song *song = mpd_database_get_fileinfo(connection, artist);
+		info2_fill_song_view(song);
+		mpd_freeSong(song);
 	}
 	q_free(artist);
 }
@@ -491,10 +493,9 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 /** 
  * Song View 
  */
-void info2_fill_song_view(char *path) 
+void info2_fill_song_view(mpd_Song *song)
 {
 	GtkWidget *expander, *gmtv,*table, *table2,*image,*ali,*button, *label,*hbox;
-	mpd_Song *song = NULL;
 	char *markup = NULL;
 	int i = 0;
 	/** 
@@ -502,7 +503,7 @@ void info2_fill_song_view(char *path)
 	 */
 	info2_prepare_view();
 
-	song = mpd_database_get_fileinfo(connection, path);
+	//song = mpd_database_get_fileinfo(connection, path);
 	if(!song)
 		return;
 
@@ -745,7 +746,7 @@ void info2_fill_song_view(char *path)
 	}
 
 
-	mpd_freeSong(song);
+	//mpd_freeSong(song);
 	gtk_widget_show_all(info2_vbox);
 }
 
@@ -2001,7 +2002,7 @@ static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userd
 			if(show_current_song) {
 				mpd_Song *song = mpd_playlist_get_current_song(connection);
 				if(song) {
-					info2_fill_song_view(song->file);
+					info2_fill_song_view(song);
 				}
 			}
 		}
@@ -2014,7 +2015,7 @@ void info2_show_current_song(void)
 	if(song) {
 		info2_activate();
 		info2_enable_show_current();
-		info2_fill_song_view(song->file);
+		info2_fill_song_view(song);
 	
 	}
 }
@@ -2023,7 +2024,7 @@ void info2_disable_show_current(void)
 	show_current_song = FALSE;
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song) {
-		info2_fill_song_view(song->file);
+		info2_fill_song_view(song);
 	}
 }
 void info2_enable_show_current(void)

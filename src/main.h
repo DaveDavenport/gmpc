@@ -143,7 +143,7 @@ void preferences_show_pref_window(int plugin_id);
 void info2_activate(void);
 void info2_fill_artist_view(char *);
 void info2_fill_album_view(char *, char *);
-void info2_fill_song_view(char *);
+void info2_fill_song_view(mpd_Song *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);
