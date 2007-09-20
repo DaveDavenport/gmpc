@@ -1802,7 +1802,7 @@ static int info2_add_go_menu(GtkWidget *menu)
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_icon_name("gtk-info", GTK_ICON_SIZE_MENU));
 
-	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F6, 0, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F6, 0, GTK_ACCEL_VISIBLE);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(info2_activate), NULL);
@@ -1810,7 +1810,7 @@ static int info2_add_go_menu(GtkWidget *menu)
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_icon_name("gtk-info", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(info2_show_current_song), NULL);
 

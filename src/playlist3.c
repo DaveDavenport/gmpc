@@ -826,7 +826,7 @@ static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTree
 	if(gtk_tree_path_get_depth(path) == 1)
 	{
 		GtkTreeIter citer;
-		GtkTreePath *cpath;
+		GtkTreeRowReference *cpath;
 		char *strpath;
 		strpath = gtk_tree_path_to_string(path);
 		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);

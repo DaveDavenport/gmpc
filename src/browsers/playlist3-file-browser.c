@@ -70,7 +70,7 @@ GtkTreeRowReference *pl3_fb_tree_ref = NULL;
 /**
  * Get/Set enabled
  */
-int pl3_file_browser_get_enabled()
+static int pl3_file_browser_get_enabled(void)
 {
 	return cfg_get_single_value_as_int_with_default(config, "file-browser","enable", TRUE);
 }
@@ -616,9 +616,9 @@ static void pl3_file_browser_show_info()
 				if(song)
 				{
 					info2_activate();
-					info2_fill_song_view(song->file);	
+					info2_fill_song_view(song);	
+					mpd_freeSong(song);
 				}
-				//					call_id3_window_song(song); 
 			}
 			q_free(path);
 		}
@@ -1115,7 +1115,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 	item = gtk_image_menu_item_new_with_label(_("File Browser"));
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
-	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F3, 0, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F3, 0, GTK_ACCEL_VISIBLE);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_file_browser_activate), NULL);

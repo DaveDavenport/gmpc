@@ -799,7 +799,8 @@ static void pl3_artist_browser_show_info()
 				if(song)
 				{
 					info2_activate();
-					info2_fill_song_view(song->file);	
+					info2_fill_song_view(song);	
+					mpd_freeSong(song);
 				}
 				//	call_id3_window_song(song);
 
@@ -1179,7 +1180,7 @@ static int pl3_artist_browser_add_go_menu(GtkWidget *menu)
 	gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
 			gtk_image_new_from_icon_name("media-artist", GTK_ICON_SIZE_MENU));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F4, 0, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F4, 0, GTK_ACCEL_VISIBLE);
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(pl3_artist_browser_activate), NULL);
 

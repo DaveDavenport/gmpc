@@ -204,7 +204,7 @@ static void tag2_destroy()
 {
 	/* clear all the browsers */	
 //	g_hash_table_foreach(tag2_ht,(GHFunc)tag2_destroy_browser, NULL);
-	g_list_foreach(tag2_ht, (GHFunc)tag2_destroy_browser, NULL);
+	g_list_foreach(tag2_ht, (GFunc)tag2_destroy_browser, NULL);
 	/* free the hash table */
 	//g_hash_table_destroy(tag2_ht);
 	g_list_free(tag2_ht);

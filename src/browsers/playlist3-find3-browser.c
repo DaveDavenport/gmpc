@@ -588,7 +588,7 @@ static void pl3_find3_browser_show_info()
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_MPDSONG, &song,-1);
 			info2_activate();
-			info2_fill_song_view(song->file);	
+			info2_fill_song_view(song);	
 
 		}
 	//	while ((list = g_list_previous (list)) && mpd_check_connected(connection));
@@ -800,7 +800,7 @@ static int pl3_find3_browser_add_go_menu(GtkWidget *menu)
   item = gtk_image_menu_item_new_with_label(_("Playlist Search"));
   gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
       gtk_image_new_from_icon_name("playlist-search-browser", GTK_ICON_SIZE_MENU));
-  gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(menu), GDK_F2, 0, GTK_ACCEL_VISIBLE);
+  gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F2, 0, GTK_ACCEL_VISIBLE);
   gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
   g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_activate), NULL);
 
