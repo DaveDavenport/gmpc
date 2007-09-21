@@ -118,6 +118,7 @@ AM_CFLAGS = @CFLAGS@\
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
+		misc.h\
 		gmpc_easy_download.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-mpddata-model.h\
@@ -134,7 +135,6 @@ gmpcincludedir =$(includedir)/gmpc/
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 	   	mm-keys.h\
-		misc.h\
 		mpdinteraction.h\
 		config-defaults.h\
 		browsers/playlist3-tag2-browser.h\
