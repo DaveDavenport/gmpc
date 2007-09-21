@@ -156,7 +156,6 @@ int connect_to_mpd()
 	char *string = NULL;
 	if(is_connecting)
 	{
-		printf("Allready trying to connect\n");
 		return FALSE;
 	}
 	/**
@@ -532,7 +531,6 @@ void add_directory(const gchar *path)
 {
 	gchar *dirpath = g_path_get_dirname(path);
 	MpdData *data =  mpd_database_get_directory(connection,dirpath);
-	printf("dir: %s from path: %s\n", dirpath, path);
 	for(;data;data = mpd_data_get_next(data))
 	{
 		if(data->type == MPD_DATA_TYPE_SONG)

@@ -145,7 +145,6 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 				new->type = TYPE_ITEM;
 				new->name = g_strndup(buffer, len);	
 				cfgo->total_size+= len+sizeof(config_node);
-			/*	printf("node size: %i\n", sizeof(config_node));*/
 				/* Get value */
 				len = 0;
 				/* skip spaces */
@@ -890,7 +889,6 @@ static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 			if(root->children == NULL)
 			{
 				item = NULL;
-				printf("debug remove node\n");
 				if(root->prev)
 					item =  root->prev;
 				else if(root->next)
@@ -907,7 +905,6 @@ static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 				root = node->prev;
 				if(!root)
 					root = node->next;
-				printf("remove another node\n");
 				__int_cfg_remove_node(cfg, node);
 				if(!root) return;
 			}

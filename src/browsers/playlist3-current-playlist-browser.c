@@ -843,7 +843,7 @@ static void pl3_current_playlist_browser_show_info()
 			mpd_Song *song = NULL;
 			gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
 			gtk_tree_model_get (model, &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-	/*		call_id3_window_song (mpd_songDup(song));*/
+
 			info2_activate();
 			info2_fill_song_view(song);	
 		}
@@ -1037,9 +1037,7 @@ static void pl3_current_playlist_browser_shuffle_playlist()
 
 static void pl3_current_playlist_highlight_song_change ()
 {
-/*	GtkTreeIter iter;
-	gchar *temp;
-*/	if (!mpd_check_connected (connection))
+	if (!mpd_check_connected (connection))
 	{
 		return;
 	}
@@ -1047,29 +1045,11 @@ static void pl3_current_playlist_highlight_song_change ()
 	/* check if we need to highlight a song */
 	if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
 	{
-/*
-		temp = g_strdup_printf ("%i", mpd_player_get_current_song_pos(connection));
-		if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (playlist), &iter, temp))
-		{
-			gint pos;
-			gtk_tree_model_get (GTK_TREE_MODEL (playlist), &iter, PLAYLIST_LIST_COL_SONG_POS,
-					&pos, -1);
-*/			/* check if we have the right song, if not, print an error */
-/*			if (pos != mpd_player_get_current_song_pos(connection))
-			{
-				debug_printf(DEBUG_ERROR,"Error %i "\
-						" %i should be the same\n",
-						pos,
-						mpd_player_get_current_song_pos(connection));
-			}
-*/
 			if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0) && pl3_cp_tree) 
 			{
 				pl3_current_playlist_browser_scroll_to_current_song();
 			}
-/*		}
-		q_free (temp);
-*/	}
+	}
 }
 
 
@@ -1108,16 +1088,12 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
 	}
 }
 
-
 static void pl3_current_playlist_browser_activate()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-			glade_xml_get_widget (pl3_xml, "cat_tree"));
+       GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+                       glade_xml_get_widget (pl3_xml, "cat_tree"));
 
-	/**
-	 * Fix this to be nnot static
-	 */	
-//	GtkTreePath *path = gtk_tree_path_new_from_indices(0,-1);
+
 	GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref); 
 	if(path)
 	{
@@ -1141,15 +1117,11 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu)
 	return 1;
 }
 
-
+/**
+ * 
+ */
 static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-	/** Global keybinding */
-/*	if (event->keyval == GDK_F1)
-	{
-		pl3_current_playlist_browser_activate();
-		return TRUE;
-	}
-*/
+
 	return FALSE;
 }

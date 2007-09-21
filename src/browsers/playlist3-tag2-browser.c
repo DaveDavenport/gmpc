@@ -410,7 +410,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 		printf("nothing to destroy\n");
 		return;
 	}
-	printf("Destroying: %s:%s\n",browser->key,browser->name); 
 
 	d = g_strdup_printf("tag2-plugin:%s", browser->key);
 	cfg_set_single_value_as_int(config, d, "pane-pos", gtk_paned_get_position(GTK_PANED(browser->tag2_vbox))); 
