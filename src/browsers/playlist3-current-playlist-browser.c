@@ -54,8 +54,8 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 
 GtkTreeModel *playlist = NULL;
 GtkTreeModel *playlist_queue = NULL;
-GtkWidget *pl3_queue_sw = NULL;
-GtkTreeRowReference *pl3_curb_tree_ref = NULL;
+
+
 
 /* just for here */
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
@@ -67,7 +67,7 @@ static void pl3_current_playlist_save_playlist(void);
 static void pl3_current_playlist_browser_shuffle_playlist(void);
 static void pl3_current_playlist_browser_clear_playlist(void);
 static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
-
+static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 gmpcPlBrowserPlugin current_playlist_gbp = {
 	pl3_current_playlist_browser_add,
 	pl3_current_playlist_browser_selected,
@@ -90,7 +90,7 @@ gmpcPlugin current_playlist_plug = {
         NULL,                                   /* Destroy */
 	&current_playlist_gbp,		        /* Browser */
 	pl3_current_playlist_status_changed,	/* status changed */
-	NULL, 		                        /* connection changed */
+	pl3_current_playlist_connection_changed,/* connection changed */
 	NULL,		                        /* Preferences */
 	NULL,			                /* MetaData */
 	NULL,                                   /* get_enabled */
@@ -102,21 +102,13 @@ gmpcPlugin current_playlist_plug = {
 extern GladeXML *pl3_xml;
 
 /* internal */
-GtkWidget *pl3_cp_tree = NULL;
-GtkWidget *pl3_cp_sw = NULL;
-GtkWidget *pl3_cp_vbox = NULL;
-TreeSearch *tree_search = NULL;
-/*
-static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
-{
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
-	if(event->button != 3 || gtk_tree_selection_count_selected_rows(sel) < 2|| !mpd_check_connected(connection))	
-	{
-		return FALSE;                                                                                           	
-	}
-	return TRUE;
-}
-*/
+static GtkWidget *pl3_cp_tree = NULL;
+static GtkWidget *pl3_cp_sw = NULL;
+static GtkWidget *pl3_cp_vbox = NULL;
+static TreeSearch *tree_search = NULL;
+static GtkWidget *pl3_queue_sw = NULL;
+static GtkTreeRowReference *pl3_curb_tree_ref = NULL;
+
 static void pl3_current_playlist_search_activate()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(playlist);
@@ -172,6 +164,7 @@ static void pl3_current_playlist_column_changed(GtkTreeView *tree)
 
 void pl3_current_playlist_destroy()
 {
+	printf("destroying\n");
 	if(pl3_cp_tree)
 	{
 		GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
@@ -185,6 +178,32 @@ void pl3_current_playlist_destroy()
 			q_free(string);
 		}
 		g_list_free(cols);
+
+		/* destroy the entry */ 
+		if(pl3_curb_tree_ref)
+		{
+			GtkTreeIter iter;
+			GtkTreePath *path;
+			path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref);
+			if(path)
+			{
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter,path))
+				{
+					gtk_tree_store_remove(GTK_TREE_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter);
+				}
+			}
+			gtk_tree_row_reference_free(pl3_curb_tree_ref);
+			pl3_curb_tree_ref = NULL;
+		}
+		/* destroy the browser */
+		if(pl3_cp_vbox)
+		{
+			/* remove the signal handler so when the widget is destroyed, the numbering of the labels are not changed again */
+			g_signal_handlers_disconnect_by_func(G_OBJECT(pl3_cp_tree), G_CALLBACK(pl3_current_playlist_column_changed), NULL);
+			g_object_unref(pl3_cp_vbox);
+			pl3_cp_vbox = NULL;
+		}
+		pl3_cp_tree =  NULL;
 	}
 }
 static void pl3_current_browser_queue_delete(GtkTreeView *tree, GtkTreePath *path)
@@ -1125,3 +1144,11 @@ static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *even
 
 	return FALSE;
 }
+
+static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpointer data)
+{
+	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
+	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
+	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");            
+}
+

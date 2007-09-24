@@ -8,11 +8,9 @@
 
 static int ignore = FALSE;
 static int is_connecting = FALSE;
-extern GtkWidget *pl3_cp_tree;
 
 /* old stuff */
 static void preferences_update(void);
-static void disconnect_callback(MpdObj *);
 
 /* Server Settings plugin */
 static void server_pref_construct(GtkWidget *);
@@ -25,7 +23,7 @@ static void connection_pref_destroy(GtkWidget *container);
 static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
 static void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
-GladeXML *server_pref_xml = NULL;
+static GladeXML *server_pref_xml = NULL;
 gmpcPrefPlugin server_gpp = {
 	server_pref_construct,
 	server_pref_destroy
@@ -122,14 +120,6 @@ int update_mpd_status()
 	return TRUE;
 }
 
-static void disconnect_callback(MpdObj *mi)
-{
-	/* disconnect playlist */
-	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
-	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
-	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");
-
-}
 static int connected_to_mpd(mpd_Connection *mpd_conn)
 {
 	is_connecting = FALSE;
@@ -210,10 +200,6 @@ static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer 
 	if(connected)
 	{
 		connect_callback(mi);
-	}
-	else
-	{
-		disconnect_callback(mi);
 	}
 	preferences_update();
 }

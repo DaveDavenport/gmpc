@@ -243,7 +243,7 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 		GtkTreePath *path = NULL;
 		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &rr, -1);
 		path = gtk_tree_row_reference_get_path(rr);
-		if(gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
+		if( path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
 		{
 			GtkTreeIter piter;
 			if(gtk_tree_selection_get_selected(selec,&model, &piter))
