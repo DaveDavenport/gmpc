@@ -1147,8 +1147,11 @@ static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *even
 
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpointer data)
 {
-	debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
-	playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
-	debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");            
+	if(connect == 0)
+	{ 
+		debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
+		playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
+		debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");            
+	}
 }
 
