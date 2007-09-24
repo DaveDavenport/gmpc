@@ -191,6 +191,7 @@ void pl3_current_playlist_destroy()
 				{
 					gtk_tree_store_remove(GTK_TREE_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter);
 				}
+				gtk_tree_path_free(path);
 			}
 			gtk_tree_row_reference_free(pl3_curb_tree_ref);
 			pl3_curb_tree_ref = NULL;

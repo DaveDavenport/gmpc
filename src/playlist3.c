@@ -251,9 +251,9 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 				GtkTreePath *ppath = gtk_tree_model_get_path(model, &piter);
 				if(ppath && gtk_tree_path_is_descendant(ppath, path))
 				{
+					gtk_tree_path_free(path);
 					gtk_tree_path_free(ppath);
 					return;
-
 				}
 				gtk_tree_path_free(ppath);
 			}	
@@ -276,6 +276,8 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 				}
 			}
 		}
+		if(path)
+			gtk_tree_path_free(path);
 	}
 }
 

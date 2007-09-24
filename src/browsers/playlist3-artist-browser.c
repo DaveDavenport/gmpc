@@ -1153,6 +1153,7 @@ static void pl3_artist_browser_disconnect()
 			/* add phantom child */
 			gtk_tree_store_append(pl3_tree, &child, &iter);
 		}
+		if(path) gtk_tree_path_free(path);
 		if(pl3_ab_store) gtk_list_store_clear(pl3_ab_store);
 	}
 }

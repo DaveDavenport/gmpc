@@ -1783,9 +1783,6 @@ void info2_activate(void)
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 			playlist3_get_category_tree_view());	
 
-	/**
-	 * Fix this to be nnot static
-	 */	
 	GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
 	if(path)
 	{

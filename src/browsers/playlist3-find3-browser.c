@@ -930,6 +930,7 @@ static void pl3_find3_browser_destroy(void)
 	{
 		gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
 	}
+	if(path) gtk_tree_path_free(path);
     gtk_tree_row_reference_free(pl3_find3_ref);
 	pl3_find3_ref = NULL;
   }

@@ -373,7 +373,7 @@ static void pl3_file_browser_reupdate()
 		GtkTreeModel *model = gtk_tree_row_reference_get_model(pl3_fb_tree_ref);
 		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
 
-		if(gtk_tree_model_get_iter(model, &iter, path))
+		if( path  && gtk_tree_model_get_iter(model, &iter, path))
 		{
 			pl3_file_browser_reupdate_folder(&iter);
 			if(pl3_cat_get_selected_browser() == file_browser_plug.id)
@@ -385,7 +385,7 @@ static void pl3_file_browser_reupdate()
 				}
 			}
 		}
-		gtk_tree_path_free(path);
+		if(path) gtk_tree_path_free(path);
 	}
 }
 
@@ -1084,6 +1084,7 @@ static void pl3_file_browser_disconnect()
 			/* add phantom child */
 			gtk_tree_store_append(pl3_tree, &child, &iter);
 		}
+		if(path) gtk_tree_path_free(path);
 	}
 	if(pl3_fb_store2)
 	{

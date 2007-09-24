@@ -418,10 +418,14 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	/* remove it from the left hand view */
 	model = gtk_tree_row_reference_get_model(browser->ref_iter);
 	path = gtk_tree_row_reference_get_path(browser->ref_iter);
-	if(gtk_tree_model_get_iter(model,&iter, path))
+	if(path)
 	{
-		gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
-	}
+		if(gtk_tree_model_get_iter(model,&iter, path))
+		{
+			gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+		}
+		gtk_tree_path_free(path);
+	}	
 	gtk_tree_row_reference_free(browser->ref_iter);
 	
 	/* free browser */
@@ -922,6 +926,7 @@ static void tag2_pref_entry_changed(GtkWidget *entry, GtkComboBox *combo)
 
 			gtk_tree_model_get_iter(model, &iter, path);	
 			gtk_tree_store_set(GTK_TREE_STORE(model), &iter, PL3_CAT_TITLE, name, -1);
+			gtk_tree_path_free(path);
 		}
 
 		group = g_strdup_printf("tag2-plugin:%s", key);
