@@ -1806,6 +1806,7 @@ void pl3_update_go_menu()
 	 */
 	menu = gtk_menu_new();
     gtk_menu_set_accel_group(GTK_MENU(menu), group);
+	g_object_unref(group);
     gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
 	if(mpd_check_connected(connection)) {
 		for(i=0; i< num_plugins;i++) {

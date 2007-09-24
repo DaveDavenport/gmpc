@@ -436,7 +436,8 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	g_list_free(browser->tag_lists);
 	/* destroy the container */
 	if(browser->tag2_vbox) {
-		gtk_widget_destroy(browser->tag2_vbox);
+		//gtk_widget_destroy(browser->tag2_vbox);
+		g_object_unref(browser->tag2_vbox);
 	}
 	/* clear structure */
 	g_free(browser);

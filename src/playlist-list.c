@@ -673,7 +673,7 @@ static void playlist_list_finalize(GObject * object)
 		}
 	}
 	if(cl->playlist)q_free(cl->playlist);
-
+	if(cl->markup) q_free(cl->markup);
 
 
 	/* must chain up - finalize parent */
