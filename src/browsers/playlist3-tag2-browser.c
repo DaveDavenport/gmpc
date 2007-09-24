@@ -325,7 +325,7 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 
 		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
 		return TRUE;
 
 	}
@@ -610,7 +610,7 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 
 		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));
-		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
 		return TRUE;
 
 	}

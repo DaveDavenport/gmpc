@@ -450,7 +450,7 @@ static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *
 
 
       gtk_widget_show_all(menu);
-      gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, button->button, button->time);
+      gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, button->time);
       return TRUE;
   }
   return FALSE;
@@ -537,7 +537,7 @@ static gboolean playlist_editor_browser_button_release_event(GtkWidget *giv, Gdk
     }
 
     gtk_widget_show_all(menu);
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
     return TRUE;
   }
   return FALSE;

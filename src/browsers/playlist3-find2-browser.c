@@ -608,7 +608,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
       gtk_widget_show(item);
 
       gtk_widget_show_all(menu);
-      gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, event->button, event->time);
+      gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
       return TRUE;
     }
     return FALSE;

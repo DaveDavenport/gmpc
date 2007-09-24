@@ -474,6 +474,7 @@ void add_artist(const gchar *artist)
 {
 	MpdData *data = NULL;
 	/* Check artist */
+	printf("artist: %s\n", artist);
 	g_return_if_fail(artist != NULL);
 
 	mpd_database_search_start(connection,TRUE);
@@ -1041,7 +1042,7 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	smenu  = gtk_menu_new();
 	if(song->artist && song->album) 
 	{
-		/* Add all from artist */
+		/* Add all from album */
 		sitem = gtk_image_menu_item_new_with_label(_("All from album"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_icon_name("media-album", GTK_ICON_SIZE_MENU));
 		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
@@ -1053,7 +1054,7 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	}
 	if(song->artist )
 	{
-		/* Add all from album */
+		/* Add all from artist */
 		sitem = gtk_image_menu_item_new_with_label(_("All from artist"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(sitem), gtk_image_new_from_icon_name("media-artist", GTK_ICON_SIZE_MENU));
 		g_object_set_data_full(G_OBJECT(sitem), "artist", g_strdup(song->artist), g_free);
