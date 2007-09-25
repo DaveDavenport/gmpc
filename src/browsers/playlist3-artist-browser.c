@@ -54,6 +54,7 @@ static void pl3_artist_browser_status_changed(MpdObj *mi,ChangedStatusType what,
 static MpdData *pl3_artist_browser_sort_tracks(MpdData *);
 
 static void pl3_artist_browser_reupdate(void);
+static void pl3_artist_browser_save_myself(void);
 
 enum{
 	PL3_AB_ARTIST,
@@ -116,20 +117,15 @@ gmpcPlBrowserPlugin artist_browser_gbp = {
 };
 
 gmpcPlugin artist_browser_plug = {
-	"Artist Browser",
-	{1,1,1},
-	GMPC_PLUGIN_PL_BROWSER,
-	0,
-	NULL,			                /* path*/
-	NULL,			                /* init */
-        NULL,                                   /* Destroy */
-	&artist_browser_gbp,		        /* Browser */
-	pl3_artist_browser_status_changed,	/* status changed */
-	pl3_artist_browser_connection_changed, 	/* connection changed */
-	NULL,		                        /* Preferences */
-	NULL,			                /* MetaData */
-	.get_enabled = pl3_artist_browser_get_enabled,
-	.set_enabled = pl3_artist_browser_set_enabled/* Set Enable */
+	.name 					= "Artist Browser",
+	.version 				= {1,1,1},
+	.plugin_type 			= GMPC_PLUGIN_PL_BROWSER,
+	.browser 				= &artist_browser_gbp,		        /* Browser */
+	.mpd_status_changed		= pl3_artist_browser_status_changed,	/* status changed */
+	.mpd_connection_changed = pl3_artist_browser_connection_changed, 	/* connection changed */
+	.get_enabled 			= pl3_artist_browser_get_enabled,
+	.set_enabled 			= pl3_artist_browser_set_enabled,
+	.save_yourself			= pl3_artist_browser_save_myself
 };
 
 /* internal */
@@ -1241,3 +1237,17 @@ static void pl3_artist_browser_reupdate(void)
 }
 
 
+static void pl3_artist_browser_save_myself(void)
+{
+	if(pl3_ab_tree_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_ab_tree_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "artist-browser","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
+	}
+}

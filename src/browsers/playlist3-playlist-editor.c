@@ -23,6 +23,8 @@ static int playlist_editor_add_go_menu(GtkWidget *);
 GtkWidget *playlist_editor_icon_view = NULL;
 GmpcMpdDataModelSort *playlist_editor_list_store = NULL;
 
+static void playlist_editor_save_myself(void);
+
 enum {
 	PL_NAME,
 	PL_IMAGE,
@@ -65,21 +67,17 @@ gmpcPlBrowserPlugin playlist_editor_gbp = {
 };
 
 gmpcPlugin playlist_editor_plugin = {
-  "Favorites Plugin",
-  {0,15,0},
-  GMPC_PLUGIN_PL_BROWSER, /* type    */
-  0,                      /* id      */
-  NULL,                   /* Path    */
-  /* functions */
-  playlist_editor_init,         /* Init    */
-  playlist_editor_destroy,      /* Destroy */
-  &playlist_editor_gbp,         /* Browser plugin */
-  playlist_editor_status_changed,                 /* Status changed */
-  playlist_editor_conn_changed, /* Connection changed */
-  NULL,                   /* Preferences */
-  NULL,                   /* MetaData */
-  playlist_editor_get_enabled,  /* get Enabled */
-  playlist_editor_set_enabled   /* set Enabled */
+  .name 					= "Favorites Plugin",
+  .version					=  {0,15,0},
+  .plugin_type 				= GMPC_PLUGIN_PL_BROWSER,
+  .init						= playlist_editor_init,
+  .destroy 					= playlist_editor_destroy, 
+  .browser					=  &playlist_editor_gbp,
+  .mpd_status_changed		= playlist_editor_status_changed,
+  .mpd_connection_changed 	= playlist_editor_conn_changed,
+  .get_enabled				= playlist_editor_get_enabled,
+  .set_enabled				= playlist_editor_set_enabled,
+  .save_yourself			= playlist_editor_save_myself
 };
 
 /**
@@ -712,5 +710,20 @@ static int playlist_editor_add_go_menu(GtkWidget *menu)
 	g_signal_connect(G_OBJECT(item), "activate", 
 			G_CALLBACK(playlist_editor_activate), NULL);
 	return 1;
+}
+
+static void playlist_editor_save_myself(void)
+{
+	if(playlist_editor_browser_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(playlist_editor_browser_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "playlist-browser","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
+	}
 }
 

@@ -47,7 +47,7 @@ static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event, 
 static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem *bt);
 /* testing */
 static void pl3_file_browser_reupdate(void);
-
+static void pl3_file_browser_save_myself(void);
 static int pl3_file_browser_add_go_menu(GtkWidget *menu);
 static void pl3_file_browser_activate(void);
 static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
@@ -104,20 +104,16 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 };
 
 gmpcPlugin file_browser_plug = {
-	N_("File Browser"),
-	{1,1,1},
-	GMPC_PLUGIN_PL_BROWSER,
-	0,
-	NULL,			                /* path*/
-	NULL,			                /* init */
-  pl3_file_browser_destroy,                                   /* destroy */
-	&file_browser_gbp,		        /* Browser */
-	pl3_file_browser_status_changed,        /* status changed */
-	pl3_file_browser_connection_changed, 	/* connection changed */
-	NULL,		                        /* Preferences */
-	NULL,			                /* MetaData */
-	.get_enabled = pl3_file_browser_get_enabled,
-	.set_enabled = pl3_file_browser_set_enabled
+	.name = 						N_("File Browser"),
+	.version = 						{1,1,1},
+	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER,
+  	.destroy = 						pl3_file_browser_destroy,
+	.browser = 						&file_browser_gbp,
+	.mpd_status_changed = 			pl3_file_browser_status_changed,
+	.mpd_connection_changed = 		pl3_file_browser_connection_changed, 
+	.get_enabled = 					pl3_file_browser_get_enabled,
+	.set_enabled = 					pl3_file_browser_set_enabled,
+	.save_yourself = 				pl3_file_browser_save_myself
 };
 
 
@@ -1160,5 +1156,19 @@ static void pl3_file_browser_destroy(void)
 	{
 		gtk_tree_row_reference_free(pl3_fb_tree_ref);
 	}                                   
+}
+static void pl3_file_browser_save_myself(void)
+{
+	if(pl3_fb_tree_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_fb_tree_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "file-browser","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
+	}
 }
 

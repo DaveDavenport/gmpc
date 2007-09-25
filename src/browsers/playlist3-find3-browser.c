@@ -57,6 +57,8 @@ extern GladeXML *pl3_xml;
 
 static void pl3_find3_combo_box_changed(GtkComboBox *cb, gpointer data);
 
+static void pl3_find3_save_myself(void);
+
 int pl3_find3_last_entry = MPD_TAG_ITEM_ANY;
 /**
  * Plugin structure
@@ -74,20 +76,14 @@ gmpcPlBrowserPlugin find3_browser_gbp = {
 };
 
 gmpcPlugin find3_browser_plug = {
-    "Playlist Browser",
-    {1,1,1},
-    GMPC_PLUGIN_PL_BROWSER,
-    0,
-    NULL,		                	/* path*/
-    NULL,			                /* init */
-    pl3_find3_browser_destroy,      /* Destroy */
-    &find3_browser_gbp,	        	/* Browser */
-    pl3_find3_browser_status_changed,		/* status changed */
-    pl3_find3_browser_connection_changed, 	/* connection changed */
-    NULL,		                    /* Preferences */
-    NULL,			                /* MetaData */
-    NULL,                           /* get_enable */
-    NULL                            /* set_enable */
+   	.name = 						 "Playlist Browser",
+	.version = 					    {1,1,1},
+	.plugin_type = 				    GMPC_PLUGIN_PL_BROWSER,
+    .destroy = 						pl3_find3_browser_destroy,  
+    .browser = 						&find3_browser_gbp,	
+    .mpd_status_changed = 			pl3_find3_browser_status_changed,
+    .mpd_connection_changed = 		pl3_find3_browser_connection_changed,
+	.save_yourself = 				pl3_find3_save_myself,
 };
 
 
@@ -942,4 +938,18 @@ static void pl3_find3_browser_status_changed(MpdObj *mi,ChangedStatusType what, 
     pl3_find3_browser_search(); 
   }
 }	
+static void pl3_find3_save_myself(void)
+{
+	if(pl3_find3_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_find3_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "find3-browser","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
+	}
+}
 

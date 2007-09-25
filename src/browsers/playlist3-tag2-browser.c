@@ -29,7 +29,7 @@ static void tag2_destroy(void);
 static void tag2_set_enabled(int enabled);
 static int tag2_get_enabled(void);
 
-
+static void tag2_save_myself(void);
 static void tag2_browser_add(GtkWidget *cat_tree);
 
 /* connection changed signal handling */
@@ -75,6 +75,7 @@ gmpcPlugin tag2_plug = {
 	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
 	.init = tag2_init,
 	.destroy = tag2_destroy,
+	.save_yourself = tag2_save_myself,
 	.get_enabled = tag2_get_enabled,
 	.set_enabled = tag2_set_enabled,
 	.browser = &tag2_browser_plugin,
@@ -1285,4 +1286,26 @@ static int tag2_browser_add_go_menu(GtkWidget *menu)
 	}
 
 	return 0;
+}
+
+static void tag2_save_myself(void)
+{
+	if(tag2_ht)
+	{
+		GList *iter = g_list_first(tag2_ht);
+		while(iter){
+			tag_browser *tb = iter->data;
+			GtkTreePath *path = gtk_tree_row_reference_get_path(tb->ref_iter);
+			if(path)
+			{
+				gint *indices = gtk_tree_path_get_indices(path);
+				gchar *group = g_strdup_printf("tag2-plugin:%s",tb->key);
+				printf("Saving myself to position: %i\n", indices[0]);
+				cfg_set_single_value_as_int(config, group,"position",indices[0]);
+				gtk_tree_path_free(path);
+				g_free(group);
+			}
+			iter = g_list_next(iter);
+		}	
+	}
 }

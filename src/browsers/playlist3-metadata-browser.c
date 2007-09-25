@@ -43,6 +43,7 @@ static GtkEntryCompletion *entry_completion = NULL;
 static GtkWidget *info2_entry = NULL;
 static GtkWidget * info2_create_album_button(gchar *artist, gchar *album);
 
+static void info2_save_myself(void);
 
 int show_current_song = FALSE;
 /**
@@ -68,20 +69,14 @@ gmpcPlBrowserPlugin info2_gbp = {
 	info2_key_press_event	/** key press event */		
 };
 gmpcPlugin metab_plugin = {
-	"Metadata Browser",
-	{0,0,1},
-	GMPC_PLUGIN_PL_BROWSER,
-	0,
-	NULL,                   /* parth */
-	NULL,                   /* init */
-	NULL,                   /* Destroy */
-	&info2_gbp,             /* Browser */
-	info2_status_changed,	/* status changed */
-	NULL,                   /* connection changed */
-	NULL,                   /* Preferences */
-	NULL,                   /* cover */
-	info2_get_enabled,
-	info2_set_enabled
+	.name = 				"Metadata Browser",
+	.version = 				{0,0,1},
+	.plugin_type = 			GMPC_PLUGIN_PL_BROWSER,
+	.browser = 				&info2_gbp, 
+	.mpd_status_changed = 		info2_status_changed,
+	.get_enabled = 			info2_get_enabled,
+	.set_enabled = 			info2_set_enabled,
+	.save_yourself = 		info2_save_myself,
 };
 
 /* Playlist window row reference */
@@ -2027,4 +2022,18 @@ void info2_disable_show_current(void)
 void info2_enable_show_current(void)
 {
 	show_current_song = TRUE;
+}
+static void info2_save_myself(void)
+{
+	if(info2_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(info2_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "info2-browser","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
+	}
 }
