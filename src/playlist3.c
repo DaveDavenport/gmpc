@@ -118,20 +118,11 @@ gmpcPrefPlugin playlist_gpp = {
 };
 
 gmpcPlugin playlist_plug = {
-	N_("Interface"),
-	{1,1,1},
-	GMPC_INTERNALL,                 /* type */
-	0,                              /*id*/
-        NULL,                           /* path */
-	NULL,                           /* initialize */
-        NULL,                           /* destroy */
-	NULL,                           /* browser */
-	&playlist_status_changed,       /* status changed */
-	NULL,                           /* connection changed */
-	&playlist_gpp,                  /* preference */
-	NULL,                           /* metadata */
-	NULL,                           /* set enable */
-	NULL                            /* get enable */
+	.name 						= N_("Interface"),
+	.version 					= {1,1,1},
+	.plugin_type 				= GMPC_INTERNALL,
+	.mpd_status_changed 		= &playlist_status_changed,
+	.pref 						= &playlist_gpp,
 };
 
 /* Get the type of the selected row..
