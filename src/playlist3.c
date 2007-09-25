@@ -113,8 +113,8 @@ static GtkWidget *volume_slider = NULL;
 static guint updating_id = 0;
 
 gmpcPrefPlugin playlist_gpp = {
-	playlist_pref_construct,
-	playlist_pref_destroy
+	.construct					= playlist_pref_construct,
+	.destroy  					= playlist_pref_destroy
 };
 
 gmpcPlugin playlist_plug = {
