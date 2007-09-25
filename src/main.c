@@ -603,6 +603,7 @@ int main (int argc, char **argv)
 	/* tell the plugins to save themself. */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->save_yourself) {
+			debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", plugins[i]->name);
 			plugins[i]->save_yourself();
 		}
 	}
@@ -649,10 +650,6 @@ void main_quit()
 	 * Remove the autoconnect timeout,
 	 */
 	g_source_remove(autoconnect_timeout);
-	/**
-	 * destroy the current playlist..
-	 */
-	pl3_current_playlist_destroy();
 
 	/** 
 	 * Call the connection changed.

@@ -68,6 +68,8 @@ static void pl3_current_playlist_browser_shuffle_playlist(void);
 static void pl3_current_playlist_browser_clear_playlist(void);
 static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
+static void pl3_current_playlist_save_myself(void);
+
 gmpcPlBrowserPlugin current_playlist_gbp = {
 	pl3_current_playlist_browser_add,
 	pl3_current_playlist_browser_selected,
@@ -87,6 +89,8 @@ gmpcPlugin current_playlist_plug = {
 	.browser = 							&current_playlist_gbp,
 	.mpd_status_changed = 				pl3_current_playlist_status_changed,
 	.mpd_connection_changed = 			pl3_current_playlist_connection_changed,
+	.destroy = 							pl3_current_playlist_destroy,
+	.save_yourself = 					pl3_current_playlist_save_myself
 };
 
 
@@ -1145,6 +1149,21 @@ static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpoi
 		debug_printf(DEBUG_INFO, "Going To Clear the playlist-list");
 		playlist_list_clear(PLAYLIST_LIST(playlist),GTK_TREE_VIEW(pl3_cp_tree));
 		debug_printf(DEBUG_INFO, "Done Clearing the playlist-list");            
+	}
+}
+/* function that saves the settings */
+static void pl3_current_playlist_save_myself(void)
+{
+	if(pl3_curb_tree_ref)
+	{
+		GtkTreePath *path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref);
+		if(path)
+		{
+			gint *indices = gtk_tree_path_get_indices(path);
+			printf("Saving myself to position: %i\n", indices[0]);
+			cfg_set_single_value_as_int(config, "current-playlist","position",indices[0]);
+			gtk_tree_path_free(path);
+		}
 	}
 }
 
