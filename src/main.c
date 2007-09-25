@@ -600,6 +600,13 @@ int main (int argc, char **argv)
 	g_object_unref(G_OBJECT(gmw));
 
 
+	/* tell the plugins to save themself. */
+	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
+		if(plugins[i]->save_yourself) {
+			plugins[i]->save_yourself();
+		}
+	}
+
 	/* time todo some destruction of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->destroy) {
