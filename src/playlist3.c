@@ -2166,3 +2166,35 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
 }
 
+
+/**
+ * Category editing
+ */
+static GtkWidget *vbox_cat_editor = NULL;
+static void pl3_cat_editor_pref_construct(GtkWidget *container)
+{
+	GtkListStore 	*ls = NULL;
+	GtkWidget		*tree = NULL;
+	GtkWidget		*sw = NULL;
+
+}
+static void pl3_cat_editor_pref_destroy(GtkWidget *container)
+{
+	if(vbox_cat_editor)
+	{
+		gtk_container_remove(vbox_cat_editor);
+		vbox_cat_editor = NULL;
+	}
+}
+
+gmpcPrefPlugin pl3_cat_editor_gpp = {
+	.construct					= pl3_cat_editor_pref_construct,
+	.destroy  					= pl3_cat_editor_pref_destroy
+};
+
+gmpcPlugin pl3_cat_editor_plug = {
+	.name 						= ("Advanced"),
+	.version 					= {1,1,1},
+	.plugin_type 				= GMPC_INTERNALL,
+	.pref 						= &pl3_cat_editor_gpp,
+};

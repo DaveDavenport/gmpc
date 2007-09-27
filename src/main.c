@@ -452,6 +452,7 @@ int main (int argc, char **argv)
     plugin_add(&server_plug,0);
     /* this shows the playlist preferences */
     plugin_add(&playlist_plug,0);
+	plugin_add(&pl3_cat_editor_plug, 0);
     /* this shows the markup stuff */
 //    plugin_add(&tag_plug,0);
     plugin_add(&tag2_plug,0);
