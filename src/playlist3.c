@@ -2182,7 +2182,7 @@ static void pl3_cat_editor_pref_destroy(GtkWidget *container)
 {
 	if(vbox_cat_editor)
 	{
-		gtk_container_remove(vbox_cat_editor);
+		gtk_container_remove(GTK_CONTAINER(container),vbox_cat_editor);
 		vbox_cat_editor = NULL;
 	}
 }
