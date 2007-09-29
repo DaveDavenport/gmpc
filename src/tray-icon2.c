@@ -291,6 +291,8 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *coverimg = NULL;
 	mpd_Song *song = NULL;
 	int state;
+
+
 	/**
 	 * if the tooltip still exists destroy it... 
 	 */
@@ -298,6 +300,8 @@ void tray_icon2_create_tooltip(void)
 	{
 		tray_icon2_tooltip_destroy();
 	}
+	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1) == 0)
+		return;
 	/*
 	 * 	Creat the tootlip window 
 	 */
