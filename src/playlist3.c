@@ -34,6 +34,10 @@
 #include "revision.h"
 #include "gmpc-clicklabel.h"
 
+
+static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
+
+
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
@@ -230,11 +234,10 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 	if(gtk_combo_box_get_active_iter(box, &iter)) 
 	{
 		GtkTreeIter cat_iter;
-		GtkTreeRowReference *rr = NULL;
 		GtkTreePath *path = NULL;
-		gtk_tree_model_get(gtk_combo_box_get_model(box), &iter, 2, &rr, -1);
-		path = gtk_tree_row_reference_get_path(rr);
-		if( path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
+
+        path = gtk_tree_model_get_path(gtk_combo_box_get_model(box), &iter);
+        if( path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
 		{
 			GtkTreeIter piter;
 			if(gtk_tree_selection_get_selected(selec,&model, &piter))
@@ -776,61 +779,6 @@ void pl3_toggle_hidden()
 	}
 }
 
-/**
- * Sync the lowest level of the cat_tree with the crumb system
- */
-static void pl3_tree_row_inserted(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
-{
-	if(gtk_tree_path_get_depth(path) == 1)
-	{
-		GtkTreeRowReference *rp = gtk_tree_row_reference_new(model, path);
-		gint *data = gtk_tree_path_get_indices(path);
-		GtkTreeIter citer;
-		char *name, *stock_id;
-		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
-		gtk_list_store_insert(GTK_LIST_STORE(model2), &citer,data[0]);
-		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 0,name,1,stock_id,2,rp,-1);
-		if(name)q_free(name);
-		if(stock_id)q_free(stock_id);
-	}
-}
-
-static void pl3_tree_row_changed(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GtkTreeModel *model2)
-{
-	if(gtk_tree_path_get_depth(path) == 1)
-	{
-		GtkTreeIter citer;
-		
-		char *name, *stock_id,*strpath;
-		gtk_tree_model_get(model, iter, PL3_CAT_TITLE, &name, PL3_CAT_ICON_ID, &stock_id, -1);
-		strpath = gtk_tree_path_to_string(path);
-		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
-		gtk_list_store_set(GTK_LIST_STORE(model2), &citer, 
-				0,name,
-				1,stock_id,
-				-1);
-		q_free(strpath);
-		if(name) q_free(name);
-		if(stock_id) q_free(stock_id);
-	}
-}
-static void pl3_tree_row_deleted(GtkTreeModel *model, GtkTreePath *path, GtkTreeModel *model2)
-{
-	if(gtk_tree_path_get_depth(path) == 1)
-	{
-		GtkTreeIter citer;
-		GtkTreeRowReference *cpath;
-		char *strpath;
-		strpath = gtk_tree_path_to_string(path);
-		gtk_tree_model_get_iter_from_string(model2,&citer,strpath);
-		gtk_tree_model_get(model2, &citer, 2,&cpath, -1);
-		if(cpath)
-			gtk_tree_row_reference_free(cpath);
-		gtk_list_store_remove(GTK_LIST_STORE(model2), &citer);
-		q_free(strpath);
-	}
-
-}
 static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		GdkDragContext     *context,
 		gint                x,
@@ -964,29 +912,24 @@ void create_playlist3 ()
 	/**
 	 * Bread Crumb system.
 	 */
-	pl3_crumbs = gtk_list_store_new(3, 
-			G_TYPE_STRING, /* text */
-			G_TYPE_STRING, /* stock id */
-			G_TYPE_POINTER /* Tree Path */
-			);
+
+	pl3_crumbs = (GtkListStore *)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
+    gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl3_crumbs), pl3_cat_editor_vis_func, NULL, NULL);
 
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 			GTK_TREE_MODEL(pl3_crumbs));
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,FALSE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"icon-name", 1);                                                                                          	
+			"icon-name", PL3_CAT_ICON_ID);                                                                                          	
 
 	renderer = gtk_cell_renderer_text_new ();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,TRUE); 
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
-			"text", 0);
+			"text", PL3_CAT_TITLE);
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
-	g_signal_connect(G_OBJECT(pl3_tree), "row-inserted", G_CALLBACK(pl3_tree_row_inserted),pl3_crumbs);
-	g_signal_connect(G_OBJECT(pl3_tree), "row-changed", G_CALLBACK(pl3_tree_row_changed),pl3_crumbs);
-	g_signal_connect(G_OBJECT(pl3_tree), "row-deleted", G_CALLBACK(pl3_tree_row_deleted),pl3_crumbs);
 	/* initialize the category view */ 
 	pl3_initialize_tree();
 
@@ -2171,25 +2114,105 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
  * Category editing
  */
 static GtkWidget *vbox_cat_editor = NULL;
+static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data)
+{
+    gboolean retv = FALSE;
+    GtkTreePath *path = gtk_tree_model_get_path(model, iter);
+    if(gtk_tree_path_get_depth(path) == 1)
+        retv = TRUE;
+    gtk_tree_path_free(path);
+    return retv;
+}
+static void pl3_cat_editor_pref_up_pressed(GtkWidget *button, GtkWidget *tree)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+    GtkTreeIter citer;
+    if(gtk_tree_selection_get_selected(sel, &model, &citer))
+    {
+            GtkTreeIter iter, piter;
+            GtkTreePath *path;
+            gtk_tree_model_filter_convert_iter_to_child_iter(GTK_TREE_MODEL_FILTER(model), &piter, &citer);
+            path= gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree),&piter);
+            if(path && gtk_tree_path_prev(path))
+            {   
+                gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
+                gtk_tree_store_move_before(pl3_tree, &piter, &iter);
+
+            }
+            if(path)
+                gtk_tree_path_free(path);
+
+    }
+}
+
+static void pl3_cat_editor_pref_next_pressed(GtkWidget *button, GtkWidget *tree)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+    GtkTreeIter citer;
+    if(gtk_tree_selection_get_selected(sel, &model, &citer))
+    {
+            GtkTreeIter iter, piter;
+            gtk_tree_model_filter_convert_iter_to_child_iter(GTK_TREE_MODEL_FILTER(model), &piter, &citer);
+            iter = piter;
+            if(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter))
+            {   
+                gtk_tree_store_move_after(pl3_tree, &piter, &iter);
+
+            }
+
+    }
+}
+
 static void pl3_cat_editor_pref_construct(GtkWidget *container)
 {
-	GtkListStore 	*ls = NULL;
+	GtkTreeModel *ls = NULL;
 	GtkWidget		*tree = NULL;
 	GtkWidget		*sw = NULL;
-
+    GtkCellRenderer *renderer = NULL;
+    GtkWidget       *button = NULL;
+    GtkWidget       *vbox = NULL;
 	vbox_cat_editor = gtk_hbox_new(FALSE, 6);
 
-	ls = gtk_list_store_new(1, G_TYPE_STRING);
+	/* */
+	ls = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
+    gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(ls), pl3_cat_editor_vis_func, NULL, NULL);
+
+
 
 
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
 	tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(ls));
+    /* show something in the tree */
+    renderer = gtk_cell_renderer_pixbuf_new();
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1, "", renderer, "icon-name",  PL3_CAT_ICON_ID, NULL);
 
+
+
+    renderer = gtk_cell_renderer_text_new();
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1, "Browser", renderer, "text",  PL3_CAT_TITLE, NULL);
+
+
+	gtk_container_add(GTK_CONTAINER(sw), tree);
 	gtk_box_pack_start(GTK_BOX(vbox_cat_editor), sw, TRUE, TRUE, 0);
 
 	gtk_container_add(GTK_CONTAINER(container), vbox_cat_editor);
+
+    /* buttons */
+    vbox = gtk_vbox_new(FALSE, 6);
+    button = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pl3_cat_editor_pref_up_pressed), tree);
+    gtk_box_pack_start(GTK_BOX(vbox), button, FALSE, TRUE,0);
+    button = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pl3_cat_editor_pref_next_pressed), tree);
+    gtk_box_pack_start(GTK_BOX(vbox), button, FALSE, TRUE,0);
+
+	gtk_box_pack_start(GTK_BOX(vbox_cat_editor), vbox, FALSE, TRUE, 0);
+	/* show all */
+	gtk_widget_show_all(container);
 }
 static void pl3_cat_editor_pref_destroy(GtkWidget *container)
 {
