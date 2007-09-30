@@ -2177,6 +2177,19 @@ static void pl3_cat_editor_pref_construct(GtkWidget *container)
 	GtkWidget		*tree = NULL;
 	GtkWidget		*sw = NULL;
 
+	vbox_cat_editor = gtk_hbox_new(FALSE, 6);
+
+	ls = gtk_list_store_new(1, G_TYPE_STRING);
+
+
+	sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+	tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(ls));
+
+	gtk_box_pack_start(GTK_BOX(vbox_cat_editor), sw, TRUE, TRUE, 0);
+
+	gtk_container_add(GTK_CONTAINER(container), vbox_cat_editor);
 }
 static void pl3_cat_editor_pref_destroy(GtkWidget *container)
 {
