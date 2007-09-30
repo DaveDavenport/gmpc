@@ -1,4 +1,6 @@
 #include <config.h>
+#ifdef ENABLE_MMKEYS
+
 #include <libintl.h>
 #include <gtk/gtk.h>
 #if defined (GDK_WINDOWING_X11)
@@ -712,3 +714,4 @@ egg_cell_renderer_keys_set_accel_mode (EggCellRendererKeys     *keys,
   keys->accel_mode = accel_mode;
   g_object_notify (G_OBJECT (keys), "accel_mode");
 }
+#endif
