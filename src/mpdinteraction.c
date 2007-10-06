@@ -7,7 +7,7 @@
 #include "mpdinteraction.h"
 
 static int ignore = FALSE;
-static int is_connecting = FALSE;
+G_LOCK_DEFINE (connecting_lock);
 
 /* old stuff */
 static void preferences_update(void);
@@ -122,7 +122,6 @@ int update_mpd_status()
 
 static int connected_to_mpd(mpd_Connection *mpd_conn)
 {
-	is_connecting = FALSE;
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
 	g_source_remove(connecting_pulse);
 	connecting_pulse = 0;
@@ -130,7 +129,7 @@ static int connected_to_mpd(mpd_Connection *mpd_conn)
 	{
 		mpd_connect_real(connection, mpd_conn);
 	}
-
+    G_UNLOCK(connecting_lock);
 	return FALSE;
 }
 static void connection_thread(void)
@@ -144,10 +143,11 @@ static void connection_thread(void)
 int connect_to_mpd()
 {
 	char *string = NULL;
-	if(is_connecting)
-	{
-		return FALSE;
-	}
+    if(!G_TRYLOCK(connecting_lock))
+    {
+        debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
+        return FALSE;
+    }
 	/**
 	 * Set Hostname
 	 */
@@ -178,7 +178,6 @@ int connect_to_mpd()
 		return TRUE;
 	}
 */
-	is_connecting = TRUE;
 	g_thread_create((GThreadFunc)connection_thread, NULL, FALSE,NULL);
 	connecting_pulse = g_timeout_add(200,(GSourceFunc)(connecting_pulse_callback),NULL);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
