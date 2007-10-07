@@ -1071,9 +1071,11 @@ static void pl3_file_browser_disconnect()
 		if(path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path))
 		{
 			GtkTreeIter child;
-			int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter);
-			while(valid){
-				valid = gtk_tree_store_remove(pl3_tree,&child);
+            int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter);
+            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(pl3_fb_tree), &iter);
+
+            while(valid){
+                valid = gtk_tree_store_remove(pl3_tree,&child);
 			}
 			/* set unopened */
 			gtk_tree_store_set(pl3_tree,&iter,PL3_CAT_PROC,FALSE,-1);
