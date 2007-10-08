@@ -107,10 +107,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 		gtk_widget_show_all(GTK_WIDGET(self));
 		self_set_cover_na(self);
-		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",
-				G_CALLBACK(self_update_cover), G_OBJECT(self));
-		self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "connection_changed",
-				G_CALLBACK(self_connection_changed), G_OBJECT(self));                            		
+		self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "status_changed",	G_CALLBACK(self_update_cover), G_OBJECT(self));
+		self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), "connection_changed", G_CALLBACK(self_connection_changed), G_OBJECT(self));                            		
 
 
 		g_signal_connect(G_OBJECT(self), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), NULL);

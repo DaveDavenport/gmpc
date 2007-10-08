@@ -76,7 +76,8 @@ GmpcProfiles *gmpc_profiles = NULL;
 GmpcMetaWatcher *gmw = NULL;
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
 int gmpc_connected = FALSE;
-
+static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect,gpointer data);
+static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *mi, ChangedStatusType what, gpointer data);
 
 /**
  * Define some local functions
@@ -423,7 +424,8 @@ int main (int argc, char **argv)
      * Just some trick to provide glib signals
      */
     gmpcconn = (GmpcConnection *)gmpc_connection_new();
-
+    g_signal_connect(G_OBJECT(gmpcconn), "connection_changed", G_CALLBACK(connection_changed_real),NULL);
+    g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(gmpc_status_changed_callback_real), NULL);
 	/**
 	 * New Metadata object 
 	 */
@@ -753,6 +755,11 @@ static void init_playlist_store ()
  */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+	gmpc_connection_status_changed(gmpcconn, mi, what);
+}
+
+static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *mi, ChangedStatusType what, gpointer data)
+{
 	int i;
 	/**
 	 * Make the plugins recieve the signals 
@@ -762,7 +769,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 			plugins[i]->mpd_status_changed(mi,what,NULL);
 		}
 	}
-	gmpc_connection_status_changed(gmpcconn, mi, what);
+
 }
 
 
@@ -889,6 +896,12 @@ void connect_callback(MpdObj *mi)
  */
 static void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
+    /* propagate the signal to the connection object */
+    gmpc_connection_connection_changed(gmpcconn, mi, connect);
+}
+
+static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect, gpointer data)
+{
     int i=0;
 
     if(connect)
@@ -932,12 +945,11 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
             plugins[i]->mpd_connection_changed(mi,connect,NULL);
         }
     }
-    gmpc_connection_connection_changed(gmpcconn, mi, connect);
+
     /**
      * force an update of status
      */
     mpd_status_update(mi);
-
 
     if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
             mpd_check_connected(connection))
