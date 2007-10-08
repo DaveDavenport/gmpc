@@ -76,8 +76,6 @@ GmpcProfiles *gmpc_profiles = NULL;
 GmpcMetaWatcher *gmw = NULL;
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
 int gmpc_connected = FALSE;
-/* number of sequential autoconnect attempts that failed. */
-int gmpc_failed_tries = 0;
 
 
 /**
@@ -112,7 +110,7 @@ static int autoconnect_callback (void);
 /*
  * the ID of the autoconnect timeout callback
  */
-guint autoconnect_timeout = 0;
+static guint autoconnect_timeout = 0;
 
 /*
  * The Config object
@@ -544,8 +542,8 @@ int main (int argc, char **argv)
 	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
 	 * if you are still connected, and reconnects you if not.
 	 */
-	autoconnect_timeout = g_timeout_add (15000,(GSourceFunc)autoconnect_callback, NULL);
-	/** 
+    autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+    /** 
 	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
 	 */
 	gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
@@ -650,7 +648,8 @@ void main_quit()
 	/**
 	 * Remove the autoconnect timeout,
 	 */
-	g_source_remove(autoconnect_timeout);
+	if(autoconnect_timeout)
+        g_source_remove(autoconnect_timeout);
 
 	/** 
 	 * Call the connection changed.
@@ -678,19 +677,15 @@ void main_quit()
  */
 static int autoconnect_callback(void)
 {
+    printf("autoconnect ping\n");
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
 		/* update the popup  */
 		/*
 		 * connect when autoconnect is enabled, the user wants to be connected, and it hasn't failed 3 times 
 		 */
-		if (gmpc_failed_tries <  cfg_get_single_value_as_int_with_default(config, "connection","number-of-retries", 3) && 
-				gmpc_connected && cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
+		if ( gmpc_connected && cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
 		{
-			/** updated failed time, if it doesn't fail it will be set to 0
-			 * later 
-			 */
-			//gmpc_failed_tries++;
 			connect_to_mpd ();
 		}
 	}
@@ -894,57 +889,73 @@ void connect_callback(MpdObj *mi)
  */
 static void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-	int i=0;
-	/**
-	 * send password, first thing we do, if connected 
-	 */
-	if(connect)
-	{
-		/* set failed to 0 */
-		gmpc_failed_tries = 0;		
-		if(connection_use_auth())
-		{
-			mpd_send_password(connection);
-		}
-	}	
+    int i=0;
 
-	/**
-	 * propegate signals
-	 */
-	debug_printf(DEBUG_INFO, "Connection changed\n");
-	playlist_connection_changed(mi, connect);
-	for(i=0; i< num_plugins; i++)
-	{
-		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
-		if(plugins[i]->mpd_connection_changed!= NULL)
-		{
-			plugins[i]->mpd_connection_changed(mi,connect,NULL);
-		}
-	}
-	gmpc_connection_connection_changed(gmpcconn, mi, connect);
-	/**
-	 * force an update of status
-	 */
-	mpd_status_update(mi);
+    if(connect)
+    {
+        printf("removing auto connect timeout\n");
+        if(autoconnect_timeout)
+            g_source_remove(autoconnect_timeout);
+        autoconnect_timeout = 0;
+
+    }
+    else
+    {
+        if(autoconnect_timeout)
+            g_source_remove(autoconnect_timeout);
+        printf("adding auto connect timeout\n");
+        autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+
+    }
+
+    /**
+     * send password, first thing we do, if connected 
+     */
+    if(connect)
+    {
+        if(connection_use_auth())
+        {
+            mpd_send_password(connection);
+        }
+    }	
+
+    /**
+     * propegate signals
+     */
+    debug_printf(DEBUG_INFO, "Connection changed\n");
+    playlist_connection_changed(mi, connect);
+    for(i=0; i< num_plugins; i++)
+    {
+        debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
+        if(plugins[i]->mpd_connection_changed!= NULL)
+        {
+            plugins[i]->mpd_connection_changed(mi,connect,NULL);
+        }
+    }
+    gmpc_connection_connection_changed(gmpcconn, mi, connect);
+    /**
+     * force an update of status
+     */
+    mpd_status_update(mi);
 
 
-	if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
-			mpd_check_connected(connection))
-	{
-		if(!mpd_server_check_version(connection, 0,12,0)) {
-			GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-					GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
-					_("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
-			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-			gtk_widget_show(GTK_WIDGET(dialog));
-		}
-	}
-	if(connect)
-	{
-		playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
-	} else {
-		playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
-	}
+    if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
+            mpd_check_connected(connection))
+    {
+        if(!mpd_server_check_version(connection, 0,12,0)) {
+            GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
+                    GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
+                    _("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
+            g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+            gtk_widget_show(GTK_WIDGET(dialog));
+        }
+    }
+    if(connect)
+    {
+        playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
+    } else {
+        playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
+    }
 }
 
 
