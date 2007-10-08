@@ -1073,7 +1073,8 @@ static void pl3_file_browser_disconnect()
 			GtkTreeIter child;
             GtkTreeView *tree = playlist3_get_category_tree_view();
             int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, &iter);
-            gtk_tree_selection_select_iter(gtk_tree_view_get_selection(tree), &iter);
+            if(pl3_cat_get_selected_browser() == file_browser_plug.id)
+                gtk_tree_selection_select_iter(gtk_tree_view_get_selection(tree), &iter);
 
             while(valid){
                 valid = gtk_tree_store_remove(pl3_tree,&child);
