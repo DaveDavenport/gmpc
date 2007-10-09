@@ -380,11 +380,13 @@ void tray_icon2_create_tooltip(void)
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
 			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size+3);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
+            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
 		}
 		if(song->artist)
 		{
 			label = gmpc_clicklabel_new(song->artist);
-			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_artist), NULL);
+            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
+            g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_artist), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
 			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
@@ -392,6 +394,7 @@ void tray_icon2_create_tooltip(void)
 		if(song->album)
 		{
 			label = gmpc_clicklabel_new(song->album);
+            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
 			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_album), NULL);
 			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
 			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size-3);
@@ -495,11 +498,22 @@ void tray_icon2_create_tooltip(void)
 		x = rect2.x+rect2.width-5-300; 
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
 	}
-
 	/**
 	 * Show the tooltip
 	 */
 	gtk_widget_show_all(tray_icon2_tooltip);
+
+#if GTK_CHECK_VERSION(2,12,0)
+    if(gdk_screen_is_composited(gtk_window_get_screen(tray_icon2_tooltip)))
+    {
+        gdk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip)->window, 0.8);
+    }
+#endif
+
+
+
+
+
 	/**
 	 * Destroy it after 5 seconds
 	 */
