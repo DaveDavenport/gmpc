@@ -86,8 +86,8 @@ revisiont.h:
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
-	-DVERSION=\"@VERSION@\"
-	-DGLADE_BUILD
+	-DVERSION=\"@VERSION@\"\
+	-DGMPC_BUILD=1
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
