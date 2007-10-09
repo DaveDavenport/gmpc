@@ -87,6 +87,7 @@ INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"
+	-DGLADE_BUILD
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
@@ -127,6 +128,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-meta-watcher.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
+		gob/gmpc-connection.h\
 		TreeSearchWidget.h \
 		playlist3-messages.c\
 		metadata.h
@@ -153,7 +155,6 @@ EXTRA_DIST = 	playlist3.h\
 		egg/eggaccelerators.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
-		gob/gmpc-connection.h\
 		gob/gmpc-meta-watcher.h\
 		gob/gmpc-meta-watcher-private.h\
 		gob/gmpc-metaimage.h\

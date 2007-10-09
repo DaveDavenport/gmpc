@@ -4,6 +4,7 @@
 #include "main.h"
 #include "plugin.h"
 #include "gmpc-clicklabel.h"
+#include "misc.h"
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 extern GladeXML *pl3_xml;
@@ -498,18 +499,25 @@ void tray_icon2_create_tooltip(void)
 		x = rect2.x+rect2.width-5-300; 
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
 	}
-
-#if GTK_CHECK_VERSION(2,12,0)
-    if(gtk_widget_is_composited(tray_icon2_tooltip))
-    {
-        gtk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip), 0.8);
-    }
-#endif
-
 	/**
 	 * Show the tooltip
 	 */
 	gtk_widget_show_all(tray_icon2_tooltip);
+#if GTK_CHECK_VERSION(2,12,0)
+    if(gtk_widget_is_composited(tray_icon2_tooltip))
+    {
+        printf("Have composite, set 80%% opacity\n");
+/*        gtk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip), 0.8);
+*/
+        gdk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip)->window, 0.8);
+    }
+#endif
+
+
+
+
+
+
 
 	/**
 	 * Destroy it after 5 seconds

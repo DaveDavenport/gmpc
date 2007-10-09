@@ -1,12 +1,25 @@
 requires 2.0.0
 
+%ph{
+#include "main.h"
+#include "misc.h"
+%}
+
 %headertop{
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
-#include "main.h"
-#include "misc.h"
+#ifdef GMPC_BUILD 
+#include <gmpc-connection.h>
+#else
+#include <gmpc/gmpc-connection.h>
+#endif
+
 #define MOUSE_DISTANCE 8
 %}
+
+
+
+
 
 
 class Gmpc:MetaImage from Gtk:Event:Box{
