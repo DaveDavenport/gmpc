@@ -308,7 +308,18 @@ void tray_icon2_create_tooltip(void)
 	/*
 	 * 	Creat the tootlip window 
 	 */
+#if GTK_CHECK_VERSION(2,12,0)
+	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_decorated(GTK_WINDOW (tray_icon2_tooltip),FALSE);      
+    gtk_window_set_type_hint (GTK_WINDOW (tray_icon2_tooltip),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
+    gtk_window_stick (GTK_WINDOW (tray_icon2_tooltip));
+
+    gtk_window_set_skip_taskbar_hint(GTK_WINDOW (tray_icon2_tooltip),TRUE);
+    gtk_window_set_keep_above (GTK_WINDOW (tray_icon2_tooltip),TRUE);
+    gtk_window_set_accept_focus(GTK_WINDOW (tray_icon2_tooltip),FALSE);
+#else
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
+#endif
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
