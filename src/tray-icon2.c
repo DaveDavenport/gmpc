@@ -511,7 +511,7 @@ void tray_icon2_create_tooltip(void)
 	if (colormap != NULL && gdk_screen_is_composited(screen))
 	{
 		gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
-        gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0,8);
+        gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0.8);
 	}	    
 
 #endif
