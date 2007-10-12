@@ -589,6 +589,7 @@ void info2_fill_song_view(mpd_Song *song)
 	if(song->title)
 	{
 		label = gtk_label_new("");
+        gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 		markup =  g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\" style=\"italic\">%s</span>", song->title);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
