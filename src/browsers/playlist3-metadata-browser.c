@@ -331,6 +331,7 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
+    gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);

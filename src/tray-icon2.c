@@ -292,8 +292,10 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *coverimg = NULL;
 	mpd_Song *song = NULL;
 	int state;
-
-
+ 
+#if GTK_CHECK_VERSION(2,12,0)
+	GdkColormap *colormap;
+#endif
 	/**
 	 * if the tooltip still exists destroy it... 
 	 */
@@ -502,21 +504,18 @@ void tray_icon2_create_tooltip(void)
 	/**
 	 * Show the tooltip
 	 */
-	gtk_widget_show_all(tray_icon2_tooltip);
+/* do some stuff to allow transparency */
 #if GTK_CHECK_VERSION(2,12,0)
-    if(gtk_widget_is_composited(tray_icon2_tooltip))
-    {
-        printf("Have composite, set 80%% opacity\n");
-/*        gtk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip), 0.8);
-*/
-        gdk_window_set_opacity(GTK_WIDGET(tray_icon2_tooltip)->window, 0.8);
-    }
+    screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
+    colormap = gdk_screen_get_rgba_colormap(screen);
+	if (colormap != NULL && gdk_screen_is_composited(screen))
+	{
+		gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
+        gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0,8);
+	}	    
+
 #endif
-
-
-
-
-
+	gtk_widget_show_all(tray_icon2_tooltip);
 
 
 	/**
