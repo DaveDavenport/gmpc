@@ -897,7 +897,20 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         q_free(url);
         gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
         i++;
-
+            label = gtk_label_new("");
+            url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Version"));
+            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+            gtk_label_set_markup(GTK_LABEL(label), url);
+            gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
+            q_free(url);
+            gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
+            label = gtk_label_new("");
+            url = g_markup_printf_escaped("%s",(mpd_server_get_version(connection))?mpd_server_get_version(connection):_("N/A"));
+            gtk_label_set_markup(GTK_LABEL(label), url);
+            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+            q_free(url);
+            gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+            i++;
         label = gtk_label_new("");
         url = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Metadata"));
         gtk_label_set_markup(GTK_LABEL(label), url);
