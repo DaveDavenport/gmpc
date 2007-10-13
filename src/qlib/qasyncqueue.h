@@ -93,6 +93,8 @@ gpointer     q_async_queue_timed_pop            (QAsyncQueue      *queue,
 gpointer     q_async_queue_timed_pop_unlocked   (QAsyncQueue      *queue,
 						 GTimeVal         *end_time);
 
+gint
+q_async_queue_true_length (QAsyncQueue* queue);
 /* Return the length of the queue. Negative values mean that threads
  * are waiting, positve values mean that there are entries in the
  * queue. Actually this function returns the length of the queue minus

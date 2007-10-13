@@ -494,7 +494,34 @@ q_async_queue_timed_pop_unlocked (QAsyncQueue* queue, GTimeVal *end_time)
 
   return q_async_queue_pop_intern_unlocked (queue, FALSE, end_time);
 }
+/**
+ * q_async_queue_true_length:
+ * @queue: a #QAsyncQueue.
+ * 
+ * Returns the length of the queue, negative values mean waiting
+ * threads, positive values mean available entries in the
+ * @queue. Actually this function returns the number of data items in
+ * the queue minus the number of waiting threads. Thus a return value
+ * of 0 could mean 'n' entries in the queue and 'n' thread waiting.
+ * That can happen due to locking of the queue or due to
+ * scheduling.  
+ *
+ * Return value: the length of the @queue.
+ **/
+gint
+q_async_queue_true_length (QAsyncQueue* queue)
+{
+  gint retval;
 
+  g_return_val_if_fail (queue, 0);
+  g_return_val_if_fail (g_atomic_int_get (&queue->ref_count) > 0, 0);
+
+  g_mutex_lock (queue->mutex);
+  retval = queue->queue->length;
+  g_mutex_unlock (queue->mutex);
+
+  return retval;
+}
 /**
  * q_async_queue_length:
  * @queue: a #QAsyncQueue.

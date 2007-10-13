@@ -829,10 +829,20 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 	}
 }
 
+static void queue_size_changed(GmpcMetaWatcher *gmw, int queued, int total)
+{
+    if(pl3_xml)
+    {
+        GtkWidget *label = glade_xml_get_widget(pl3_xml, "number_label");
+        gchar *name = g_strdup_printf("%i/%i", queued, total);
+        gtk_label_set_text(GTK_LABEL(label), name);
+        g_free(name);
 
+    }
+}
 void create_playlist3 ()
 {
-	GtkListStore *pl3_crumbs = NULL;
+    GtkListStore *pl3_crumbs = NULL;
 
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
@@ -1055,6 +1065,7 @@ void create_playlist3 ()
 	 *
 	 */
 	playlist_connection_changed(connection, FALSE);
+    g_signal_connect(G_OBJECT(gmw), "queue_size_changed", G_CALLBACK(queue_size_changed), NULL);
 }
 
 /**

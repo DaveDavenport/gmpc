@@ -2,6 +2,7 @@ requires 2.0.0
 %ht{
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
+#include <libmpd/debug_printf.h>
 #include "metadata.h"
 
 %}
@@ -19,7 +20,12 @@ class Gmpc:Meta:Watcher from  G:Object {
     {
       return GET_NEW;
     }
-
+    signal last NONE (INT,INT)
+    void
+    queue_size_changed(self, int queued_items,int total_items)
+    {
+        debug_printf(DEBUG_INFO, "%i:%i\n", queued_items, total_items);
+    }
 
     signal last NONE (POINTER, INT, INT, STRING)
     void

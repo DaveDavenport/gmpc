@@ -6,6 +6,7 @@
 
 #include "metadata.h"
 
+long unsigned num_queries = 0;
 
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
@@ -422,6 +423,7 @@ static void meta_data_retrieve_thread()
 		 * Push the result back
 		 */	
 		q_async_queue_push(meta_results, data);		
+        
 		g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
 		/**
 		 * clear our reference to the object
@@ -499,6 +501,10 @@ static gboolean meta_data_handle_results(void)
 		int test = 0, i = 0;
 
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
+        test = g_mutex_trylock(meta_processing);
+        if(test)
+            g_mutex_unlock(meta_processing);
+        gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
 		if(data->callback)
 		{
 			data->callback(data->song,data->result,data->result_path, data->data);
@@ -657,6 +663,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	meta_thread_data *mtd = NULL;
 	mpd_Song *song =NULL;
 	guint id = 0;
+    int test = 0;
 	/* TODO: Validate request */
 
 	/**
@@ -732,8 +739,15 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 	}
 
 	/** push it to the other thread */
+
+    num_queries ++;
+    /* I should fix this */
+    if(test)
+        g_mutex_unlock(meta_processing);
+    gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
+
 	q_async_queue_push(meta_commands, mtd);
-	/** clean reference to pointer, it's now to the other thread */
+    /** clean reference to pointer, it's now to the other thread */
 	mtd = NULL;
 
 	return ret;
