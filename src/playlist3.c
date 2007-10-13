@@ -1561,10 +1561,22 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 						(elapsedTime/(float)totalTime)*100.0);
 			}
 			if(totalTime == 0)
-			{
-				string = g_strdup("");
+            {
+                if(elapsedTime/60 >99 )
+                {
+                    string = g_strdup_printf("%02i:%02i",
+                            (elapsedTime/3600),
+                            (elapsedTime/60)%60
+                            );
+                }
+                else{
+                    string = g_strdup_printf("%02i:%02i",
+                            (elapsedTime/60),
+                            elapsedTime%60
+                            );
+                }
 
-			}
+            }
 			else if(elapsedTime/60 >99 || totalTime/60 > 99)
 			{
 				string = g_strdup_printf("%02i:%02i - %02i:%02i",
