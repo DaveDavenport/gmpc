@@ -864,6 +864,7 @@ void playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpoin
         q_free(url);
         gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,0,1);
         label = gtk_label_new("");
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
         url = g_markup_printf_escaped("%s",id);
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -872,6 +873,7 @@ void playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpoin
 
         label = gtk_label_new("");
         url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Server"));
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
         q_free(url);
@@ -884,16 +886,13 @@ void playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpoin
         gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,1,2);
 
 
-
-
-
-
+        gtk_widget_set_size_request(GTK_WINDOW(win), 300,-1);
     
-        /* show the window */
-        gtk_widget_show_all(win);
+
         /* place the window */
-        gdk_window_get_root_origin(wid->window, &x, &y); 
-        gtk_window_move(GTK_WINDOW(win), x+wid->allocation.x+wid->allocation.width-win->allocation.width, y+wid->allocation.y+wid->allocation.height);
+        gdk_window_get_origin(wid->window, &x, &y); 
+        /* show the window */
+        gtk_window_move(GTK_WINDOW(win), x+wid->allocation.width-300, y+wid->allocation.height);
         gtk_widget_show_all(GTK_WINDOW(win));
         g_object_set_data(G_OBJECT(wid), "window", win);
         q_free(id);
