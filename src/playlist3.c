@@ -86,6 +86,8 @@ void hide_on_close_enable_tb(GtkToggleButton *but);
 void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
 static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
+gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data);
+gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data);
 
 static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int col, const gchar *id);
 static void playlist3_server_output_changed(GtkWidget *item, gpointer data);
@@ -829,47 +831,57 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 	}
 }
 
-void playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
+gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
 {
 
     GtkWidget *win = g_object_get_data(G_OBJECT(wid), "window");
     if(win == NULL)
     {
         int x,y;
-        GtkTable *table = NULL;
+        int i=0;
+        GtkWidget *event = gtk_event_box_new();
+        GtkWidget *table = NULL;
         GtkWidget *label;
         gchar *url;
         gchar *id = gmpc_profiles_get_current(gmpc_profiles);
         printf("enter\n");
         win = gtk_window_new(GTK_WINDOW_POPUP);
-        gtk_window_set_decorated(GTK_WINDOW (win),FALSE);      
         gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
-        gtk_window_stick (GTK_WINDOW (win));
 
         gtk_window_set_skip_taskbar_hint(GTK_WINDOW (win),TRUE);
         gtk_window_set_keep_above (GTK_WINDOW (win),TRUE);
         gtk_window_set_accept_focus(GTK_WINDOW (win),FALSE);
         /* container */
-        gtk_container_set_border_width(GTK_CONTAINER(win), 8);
-        table = gtk_table_new(2,2,FALSE);
+        gtk_container_add(GTK_CONTAINER(win), event);
+        gtk_container_set_border_width(GTK_CONTAINER(event), 1);
+        table = gtk_table_new(6,2,FALSE);
+        gtk_container_set_border_width(GTK_CONTAINER(table), 6);
         gtk_table_set_row_spacings(GTK_TABLE(table), 6);
         gtk_table_set_col_spacings(GTK_TABLE(table), 6);
-        gtk_container_add(GTK_CONTAINER(win), table);
+        gtk_container_add(GTK_CONTAINER(event), table);
 
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Connection"));
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 0.5,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,2,i,i+1);
+        i++;
         /* Server name */
         label = gtk_label_new("");
         url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Profile"));
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
         q_free(url);
-        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,0,1);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
         label = gtk_label_new("");
         gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
         url = g_markup_printf_escaped("%s",id);
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
         q_free(url);
-        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,0,1);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+        i++;
 
         label = gtk_label_new("");
         url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Server"));
@@ -877,29 +889,72 @@ void playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpoin
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
         q_free(url);
-        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,1,2);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
         label = gtk_label_new("");
         url = g_markup_printf_escaped("%s:%i",gmpc_profiles_get_hostname(gmpc_profiles,id), gmpc_profiles_get_port(gmpc_profiles,id));
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
         q_free(url);
-        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,1,2);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+        i++;
+
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Metadata"));
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 0.5,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,2,i,i+1);
+        i++;
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Requested"));
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("%i",gmpc_meta_watcher_get_total_requested(gmw));
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+        i++;
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Processing"));
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("%i",gmpc_meta_watcher_get_queued_requests(gmw));
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+        i++;
 
 
-        gtk_widget_set_size_request(GTK_WINDOW(win), 300,-1);
+        gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(wid->style->fg[GTK_STATE_NORMAL]));
+        gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(wid->style->light[GTK_STATE_NORMAL]));
+
+
+
+
+        gtk_widget_set_size_request(win, 300,-1);
     
 
         /* place the window */
         gdk_window_get_origin(wid->window, &x, &y); 
         /* show the window */
         gtk_window_move(GTK_WINDOW(win), x+wid->allocation.width-300, y+wid->allocation.height);
-        gtk_widget_show_all(GTK_WINDOW(win));
+        gtk_widget_show_all(win);
         g_object_set_data(G_OBJECT(wid), "window", win);
         q_free(id);
     }
     return FALSE;
 }
-void playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
+gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
 {
     GtkWidget *win = g_object_get_data(G_OBJECT(wid), "window");
     printf("leave\n");
