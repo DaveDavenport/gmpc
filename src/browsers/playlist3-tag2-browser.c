@@ -346,7 +346,10 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
 	{
 		tag_element *te2 = g_list_nth_data(browser->tag_lists, i);
 		if(te2)
+        {
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), NULL);
+            gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), NULL);
+        }
 		else 
 			printf("error\n");
 	}
@@ -374,10 +377,20 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
 					gchar *value;
 					gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
 					mpd_database_search_add_constraint(connection, te3->type, value);
-					g_free(value);
+                    if(te3->index == (te2->index-1))
+                    {           
+                        if(te3->type == MPD_TAG_ITEM_ARTIST)
+                        {
+                            gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), value);
+
+                        }
+                    }
+
+                    g_free(value);
 				}
-			}
-			data = mpd_database_search_commit(connection);
+            }
+            data = mpd_database_search_commit(connection);
+            
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
 		}
 		/* now get the song content, this needs all the fields of the previous 
@@ -461,17 +474,31 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(te->sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(te->sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
 	
 	gtk_container_add(GTK_CONTAINER(te->sw), te->tree);
 
 	/* Add the column, and set it up */
 	column = gtk_tree_view_column_new();
-	gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+	
 	gtk_tree_view_column_set_title(column, name);
 
 	renderer = gtk_cell_renderer_pixbuf_new();
+
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute(column, renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+    {
+        gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), TRUE);
+
+	    gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
+        gtk_cell_renderer_set_fixed_size(renderer, 64,64);
+        gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
+    }
+    else
+    {
+	    gtk_tree_view_column_add_attribute(column, renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+        gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_AUTOSIZE);
+    }
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute(column, renderer, "text", MPDDATA_MODEL_COL_SONG_TITLE);
