@@ -831,12 +831,41 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 	}
 }
 
+
+
+
+
+
+
+static void queue_size_changed(GmpcMetaWatcher *gmw, int queued, int total,GtkWidget *win)
+{
+    printf("update\n");
+    if(pl3_xml)
+    {
+        gchar *url;
+        GtkWidget *label = g_object_get_data(G_OBJECT(win), "total-label");
+        GtkWidget *label1 = g_object_get_data(G_OBJECT(win), "processing-label");
+
+        url = g_markup_printf_escaped("%i",total);
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        q_free(url);
+        url = g_markup_printf_escaped("%i",queued);
+        gtk_label_set_markup(GTK_LABEL(label1), url);
+        q_free(url);
+
+    }
+}
+static void playlist3_destroy_gwm_callback(gpointer data)
+{
+    g_signal_handler_disconnect(G_OBJECT(gmw), GPOINTER_TO_INT(data));
+}
 gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
 {
 
     GtkWidget *win = g_object_get_data(G_OBJECT(wid), "window");
     if(win == NULL)
     {
+        guint sid;
         int x,y;
         int i=0;
         GtkWidget *event = gtk_event_box_new();
@@ -897,20 +926,20 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         q_free(url);
         gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
         i++;
-            label = gtk_label_new("");
-            url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Version"));
-            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-            gtk_label_set_markup(GTK_LABEL(label), url);
-            gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
-            q_free(url);
-            gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
-            label = gtk_label_new("");
-            url = g_markup_printf_escaped("%s",(mpd_server_get_version(connection))?mpd_server_get_version(connection):_("N/A"));
-            gtk_label_set_markup(GTK_LABEL(label), url);
-            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-            q_free(url);
-            gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
-            i++;
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Version"));
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
+        label = gtk_label_new("");
+        url = g_markup_printf_escaped("%s",(mpd_server_get_version(connection))?mpd_server_get_version(connection):_("N/A"));
+        gtk_label_set_markup(GTK_LABEL(label), url);
+        gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+        q_free(url);
+        gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
+        i++;
         label = gtk_label_new("");
         url = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Metadata"));
         gtk_label_set_markup(GTK_LABEL(label), url);
@@ -926,6 +955,7 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         q_free(url);
         gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
         label = gtk_label_new("");
+        g_object_set_data(G_OBJECT(win), "total-label", label);
         url = g_markup_printf_escaped("%i",gmpc_meta_watcher_get_total_requested(gmw));
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -940,6 +970,7 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         q_free(url);
         gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
         label = gtk_label_new("");
+        g_object_set_data(G_OBJECT(win), "processing-label", label);
         url = g_markup_printf_escaped("%i",gmpc_meta_watcher_get_queued_requests(gmw));
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -947,7 +978,8 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
         i++;
 
-
+        sid = g_signal_connect(G_OBJECT(gmw), "queue_size_changed", G_CALLBACK(queue_size_changed), win);
+        g_object_set_data_full(G_OBJECT(win), "signal_id", GINT_TO_POINTER(sid), playlist3_destroy_gwm_callback);
         gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(wid->style->fg[GTK_STATE_NORMAL]));
         gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(wid->style->light[GTK_STATE_NORMAL]));
 
@@ -980,17 +1012,17 @@ gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
 
 
 
-static void queue_size_changed(GmpcMetaWatcher *gmw, int queued, int total)
-{
-    if(pl3_xml)
-    {
-        GtkWidget *label = glade_xml_get_widget(pl3_xml, "number_label");
-        gchar *name = g_strdup_printf("%i/%i", queued, total);
-        gtk_label_set_text(GTK_LABEL(label), name);
-        g_free(name);
 
-    }
-}
+
+
+
+
+
+
+
+
+
+
 void create_playlist3 ()
 {
     GtkListStore *pl3_crumbs = NULL;
@@ -1216,7 +1248,6 @@ void create_playlist3 ()
 	 *
 	 */
 	playlist_connection_changed(connection, FALSE);
-    g_signal_connect(G_OBJECT(gmw), "queue_size_changed", G_CALLBACK(queue_size_changed), NULL);
 }
 
 /**
