@@ -444,12 +444,14 @@ void tray_icon2_create_tooltip(void)
 
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
+        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
 		{
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/* Get Y */
-			y= rect.y+rect.height+5-rect2.y;
+			y= rect.y+rect.height+5-rect2.y+y_offset;
 			/* if the lower part falls off the screen, move it up */
 			if((y+95) > rect2.height) {
 				y = rect.y - 95 - 5;
@@ -457,7 +459,7 @@ void tray_icon2_create_tooltip(void)
 			if(y < 0) y =0;
 
 			/* Get X */
-			x = rect.x - 300/2-rect2.x;
+			x = rect.x - 300/2-rect2.x+x_offset;
 			if((x+300) > rect2.width){
 				if(orientation == GTK_ORIENTATION_VERTICAL) {
 					x = rect2.width+-300-rect.width-5;
@@ -475,12 +477,16 @@ void tray_icon2_create_tooltip(void)
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else if (state == TI2_AT_UPPER_LEFT) {
+       int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5,rect2.y+5);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
 	} else if (state == TI2_AT_UPPER_RIGHT) {
+        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -489,9 +495,10 @@ void tray_icon2_create_tooltip(void)
 		y = rect2.y+5;
 		/** X is upper right - width */
 		x = rect2.x+rect2.width-5-300;
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 	} else if (state == TI2_AT_LOWER_LEFT) {
-
+        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -500,8 +507,10 @@ void tray_icon2_create_tooltip(void)
 		y = rect2.y+rect2.height-5-95;
 		/** X =5 */ 
 		x = rect2.x+ 5; 
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 	} else {
+        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -510,7 +519,7 @@ void tray_icon2_create_tooltip(void)
 		y = rect2.y+rect2.height-5-95;
 		/** X =window width - width */ 
 		x = rect2.x+rect2.width-5-300; 
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x,y);
+		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 	}
 	/**
 	 * Show the tooltip
