@@ -1823,6 +1823,17 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
 	}
+    if(what&MPD_CST_SERVER_ERROR)
+    {
+        gchar *error = mpd_status_get_mpd_error(mi);
+        if(error)
+        {
+            gchar *mes = g_strdup_printf("%s: '%s'", _("Mpd Reported the following error"), error);
+            playlist3_show_error_message(mes, ERROR_WARNING);
+            q_free(mes);
+            q_free(error);
+        }
+    }
 }
 
 
