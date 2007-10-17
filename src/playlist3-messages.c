@@ -17,7 +17,7 @@ void playlist3_message_destroy(void)
     g_io_channel_write_chars(log_file, path, -1, NULL, NULL);
     q_free(path);
     g_io_channel_flush(log_file, NULL);
-    g_object_unref(log_file);
+    g_io_channel_unref(log_file);
 }
 
 void playlist3_message_init(void)
