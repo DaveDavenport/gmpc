@@ -9,13 +9,37 @@ guint timeout_callback = 0;
 GtkListStore *message_list = NULL;
 void message_window_open(void);
 void message_window_destroy(GtkWidget *win);
+static GIOChannel *log_file = NULL;
+void playlist3_message_destroy(void)
+{
+    gchar *path;
+    path = g_strdup_printf("%u:%s\n", (unsigned int)time(NULL), _("Stopped GMPC"));
+    g_io_channel_write_chars(log_file, path, -1, NULL, NULL);
+    q_free(path);
+    g_io_channel_flush(log_file, NULL);
+    g_object_unref(log_file);
+}
 
-static void playlist3_message_init(void)
+void playlist3_message_init(void)
 {
 	if(!message_list)
 	{
+        GError *error = NULL;
+        gchar *path = gmpc_get_user_path("gmpc.log"); 
 		message_list = gtk_list_store_new(3, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING);
-	}
+
+        log_file = g_io_channel_new_file(path, "a", &error);
+        if(error)
+        {
+            g_error("Failed to log file: '%s'", error->message);
+        }
+        q_free(path);
+
+        path = g_strdup_printf("%u:%s\n", (unsigned int)time(NULL), _("Started GMPC"));
+        g_io_channel_write_chars(log_file, path, -1, NULL, NULL);
+        q_free(path);
+        g_io_channel_flush(log_file, NULL);
+    }
 }
 void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 {
@@ -24,9 +48,15 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	GtkTreeIter iter;
 	guint t = time(NULL);
 	gchar *image_name;
+    gchar *string;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
 	gtk_list_store_set(message_list, &iter, 0,t, 2, message,-1);
+
+    string = g_strdup_printf("%u:%i:%s\n",(unsigned int)t,el, message);
+    g_io_channel_write_chars(log_file, string, -1, NULL, NULL);
+    q_free(string);
+    g_io_channel_flush(log_file, NULL);
 
 	if(error_visible)
 	{
@@ -148,8 +178,10 @@ void message_window_open(void)
 
 void message_window_destroy(GtkWidget *win)
 {
+
 	GladeXML *xl = glade_get_widget_tree(win);
 	gtk_widget_destroy(win);
 	g_object_unref(xl);
+
 }
 

@@ -12,4 +12,9 @@ typedef enum {
 void playlist3_show_error_message(const gchar *message, ErrorLevel el);
 void playlist3_error_add_widget(GtkWidget *widget);
 
+
+
+void playlist3_message_init(void);
+void playlist3_message_destroy(void);
+
 #endif

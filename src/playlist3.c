@@ -1046,6 +1046,7 @@ void create_playlist3 ()
 		pl3_show_and_position_window();
 		return;
 	}
+
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);

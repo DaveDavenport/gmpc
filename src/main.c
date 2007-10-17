@@ -526,6 +526,8 @@ int main (int argc, char **argv)
 	 */	
 	debug_printf(DEBUG_INFO, "Create main window\n");
 	create_playlist3();
+    playlist3_message_init();
+
 	/** 
 	 * If autoconnect is enabled, tell gmpc that it's in state it should connect
 	 */	
@@ -627,6 +629,7 @@ int main (int argc, char **argv)
 	 */
 	mpd_free(connection);
 
+    playlist3_message_destroy();
 	/**
 	 * remove (probly allready done) 
 	 * the playlist object
