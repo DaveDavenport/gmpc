@@ -1112,12 +1112,15 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
     {
         if(playlist_queue)
         {
-            MpdData *data = mpd_playlist_get_mpd_queue(connection);
-            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_queue),data);
-            if(data)
-                gtk_widget_show_all(pl3_queue_sw);
-            else
-                gtk_widget_hide(pl3_queue_sw);
+            if(mpd_server_check_command_allowed(connection, "queueinfo") == MPD_SERVER_COMMAND_ALLOWED)
+            {
+                MpdData *data = mpd_playlist_get_mpd_queue(connection);
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_queue),data);
+                if(data)
+                    gtk_widget_show_all(pl3_queue_sw);
+                else
+                    gtk_widget_hide(pl3_queue_sw);
+            }
         }
     }
 }
