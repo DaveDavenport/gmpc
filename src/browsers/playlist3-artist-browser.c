@@ -1,3 +1,4 @@
+#ifdef ARTIST_BROWSER
 /*
  *Copyright (C) 2004-2007 Qball Cow <qball@sarine.nl>
  *
@@ -1251,3 +1252,4 @@ static void pl3_artist_browser_save_myself(void)
 		}
 	}
 }
+#endif

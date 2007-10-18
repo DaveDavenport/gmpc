@@ -44,7 +44,9 @@
 #include "browsers/playlist3-find2-browser.h"
 #include "browsers/playlist3-find3-browser.h"
 #include "browsers/playlist3-tag2-browser.h"
+#ifdef ARTIST_BROWSER
 #include "browsers/playlist3-artist-browser.h"
+#endif
 #include "browsers/playlist3-current-playlist-browser.h"
 
 
@@ -443,7 +445,9 @@ int main (int argc, char **argv)
     /** file browser */
     plugin_add(&file_browser_plug, 0);
     /** Artist browser */
+#ifdef ARTIST_BROWSER
     plugin_add(&artist_browser_plug, 0);
+#endif
     /** File Browser */
     plugin_add(&find2_browser_plug, 0);
     /* this shows the connection preferences */
