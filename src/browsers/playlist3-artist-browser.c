@@ -1,3 +1,4 @@
+#include <config.h>
 #ifdef ARTIST_BROWSER
 /*
  *Copyright (C) 2004-2007 Qball Cow <qball@sarine.nl>

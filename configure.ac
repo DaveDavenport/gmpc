@@ -13,9 +13,10 @@ AC_LIBTOOL_RC
 
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
-AC_ARG_ENABLE(configdir,[  --enable-configdir			Use .config instead of .gmpc or .covers.],,enable_configdir=no)
-AC_ARG_ENABLE(sm,		[  --disable-sm				Disable Session Support.],,enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,	[  --disable-mmkeys			Disable multimedia keys support.],,enable_mmkeys=yes)
+AC_ARG_ENABLE(configdir,    [  --enable-configdir		Use .config instead of .gmpc or .covers.],  enable_configdir=yes,       enable_configdir=no)
+AC_ARG_ENABLE(artistbrowser,[  --enable-artist-browser  Enable the artist browser.],                enable_artistbrowser=yes,   enable_artistbrowser=no)
+AC_ARG_ENABLE(sm,		    [  --disable-sm				Disable Session Support.],                  enable_sm=no,               enable_sm=yes)
+AC_ARG_ENABLE(mmkeys,	    [  --disable-mmkeys			Disable multimedia keys support.],          enable_mmkeys=no,           enable_mmkeys=yes)
 
 
 # Checks for libraries.
@@ -85,7 +86,9 @@ fi
 if test x${enable_configdir} = xyes; then
 	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
 fi
-
+if test x${enable_artistbrowser} = xyes; then
+	AC_DEFINE(ARTIST_BROWSER,1, [Enable Artist Browser])
+fi
 # installation paths
 AC_MSG_CHECKING(prefix)
 
