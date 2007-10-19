@@ -350,8 +350,6 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), NULL);
             gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), NULL);
         }
-		else 
-			printf("error\n");
 	}
 	/* check if the user selected a row, if not do nothing */
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));	
@@ -421,7 +419,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	gchar *d;
 	if(!browser)
 	{
-		printf("nothing to destroy\n");
 		return;
 	}
 
@@ -771,7 +768,7 @@ static void tag2_browser_selected(GtkWidget *container)
 						tag2_current = tb->tag2_vbox;
 					}
 					else{
-						printf("not found\n");
+
 					}
 					g_free(key);
 				}
@@ -1327,7 +1324,7 @@ static void tag2_save_myself(void)
 			{
 				gint *indices = gtk_tree_path_get_indices(path);
 				gchar *group = g_strdup_printf("tag2-plugin:%s",tb->key);
-				printf("Saving myself to position: %i\n", indices[0]);
+				debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
 				cfg_set_single_value_as_int(config, group,"position",indices[0]);
 				gtk_tree_path_free(path);
 				g_free(group);

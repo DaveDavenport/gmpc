@@ -160,7 +160,6 @@ static void pl3_current_playlist_column_changed(GtkTreeView *tree)
 
 void pl3_current_playlist_destroy()
 {
-	printf("destroying\n");
 	if(pl3_cp_tree)
 	{
 		GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
@@ -211,7 +210,6 @@ static void pl3_current_browser_queue_delete(GtkTreeView *tree, GtkTreePath *pat
 	{
 		guint id;
 		gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);
-		printf("removing %i from q ueue\n", id);
 		mpd_playlist_mpd_queue_remove(connection, id);
 
 	}
@@ -233,7 +231,6 @@ static int  pl3_current_playlist_browser_queue_key_release_event(GtkTreeView *tr
 				{
 					guint id;
 					gtk_tree_model_get(model, &liter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);
-					printf("removing %i from q ueue\n", id);
 					mpd_playlist_queue_mpd_queue_remove(connection, id);
 				}
 			}
@@ -728,7 +725,6 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_cp_tree));
 	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
 	GList *iter, *list = gtk_tree_selection_get_selected_rows (selection, &model);
-	printf("add to playlist\n");
 	if(list)
 	{
 		iter = g_list_first(list);
@@ -1181,7 +1177,7 @@ static void pl3_current_playlist_save_myself(void)
         if(path)
         {
             gint *indices = gtk_tree_path_get_indices(path);
-            printf("Saving myself to position: %i\n", indices[0]);
+            debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
             cfg_set_single_value_as_int(config, "current-playlist","position",indices[0]);
             gtk_tree_path_free(path);
         }

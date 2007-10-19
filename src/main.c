@@ -205,11 +205,11 @@ int main (int argc, char **argv)
              */
             else if (!strcasecmp(argv[i], _("--version")))
             {
-                printf(("Gnome Music Player Client\n"));
-                printf(_("Version:\t%s\n"), VERSION);
+                printf(_("Gnome Music Player Client\n"));
+                printf("%s:\t%s\n",_("Version"), VERSION);
                 if(revision && revision[0] != '\0')
                 {
-                    printf(_("Revision:\t%s\n"),revision);
+                    printf("%s:\t%s\n",_("Revision"),revision);
                 }
                 exit(0);
             }
@@ -343,18 +343,17 @@ int main (int argc, char **argv)
 	{
         int *old_version = split_version((const char *)url);
         int *new_version = split_version(VERSION); 
-		printf("Welcome to a new version of gmpc.\n");
+		debug_printf(DEBUG_INFO,"Welcome to a new version of gmpc.\n");
 		/* Do possible cleanup of config files and stuff */
-        printf("Old Version: %i.%i.%i.%i\n", old_version[0],old_version[1],old_version[2],old_version[3]);
         if(!(old_version[0] >= 0 && old_version[1] >= 15 && old_version[2] >= 4 && old_version[3] >= 98))
         {
             conf_mult_obj *iter,*cmo = cfg_get_class_list(config);
-            printf("gmpc-treeview purging\n");
+            debug_printf(DEBUG_INFO,"Purging old keys from the config file.\n");
             for(iter = cmo; iter ; iter = iter->next)
             {
                 if(strstr(iter->key, "colpos") || strstr(iter->key, "colshow") || strstr(iter->key, "colsize"))
                 {
-                    printf("Removing entry: %s\n", iter->key);
+                    debug_printf(DEBUG_INFO,"Removing entry: %s\n", iter->key);
                     cfg_remove_class(config, iter->key);
                 }
             }
@@ -706,7 +705,6 @@ void main_quit()
  */
 static int autoconnect_callback(void)
 {
-    printf("autoconnect ping\n");
 	/* check if there is an connection.*/
 	if (!mpd_check_connected(connection)){
 		/* update the popup  */
@@ -933,7 +931,6 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
 
     if(connect)
     {
-        printf("removing auto connect timeout\n");
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
         autoconnect_timeout = 0;
@@ -943,7 +940,6 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
     {
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
-        printf("adding auto connect timeout\n");
         autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
 
     }

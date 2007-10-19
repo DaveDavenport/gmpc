@@ -714,7 +714,6 @@ static void pl3_file_browser_add_to_playlist(GtkWidget *menu)
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
 	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
 	GList *iter, *list = gtk_tree_selection_get_selected_rows (selection, &model);
-	printf("add to playlist\n");
 	if(list)
 	{
 		iter = g_list_first(list);
@@ -1169,7 +1168,7 @@ static void pl3_file_browser_save_myself(void)
 		if(path)
 		{
 			gint *indices = gtk_tree_path_get_indices(path);
-			printf("Saving myself to position: %i\n", indices[0]);
+			debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
 			cfg_set_single_value_as_int(config, "file-browser","position",indices[0]);
 			gtk_tree_path_free(path);
 		}

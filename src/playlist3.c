@@ -837,7 +837,6 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 
 static void queue_size_changed(GmpcMetaWatcher *gmw, int queued, int total,GtkWidget *win)
 {
-    printf("update\n");
     if(pl3_xml)
     {
         gchar *url;
@@ -871,7 +870,6 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         GtkWidget *label;
         gchar *url;
         gchar *id = gmpc_profiles_get_current(gmpc_profiles);
-        printf("enter\n");
         win = gtk_window_new(GTK_WINDOW_POPUP);
         gtk_window_set_type_hint (GTK_WINDOW (win),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
 
@@ -1000,26 +998,12 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
 gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, gpointer data)
 {
     GtkWidget *win = g_object_get_data(G_OBJECT(wid), "window");
-    printf("leave\n");
     if(win)
         gtk_widget_destroy(win);
 
    g_object_set_data(G_OBJECT(wid), "window", NULL);
     return FALSE;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void create_playlist3 ()
 {
