@@ -48,7 +48,7 @@
 #include "browsers/playlist3-artist-browser.h"
 #endif
 #include "browsers/playlist3-current-playlist-browser.h"
-
+#include "misc.h"
 
 /**
  * Get revision
@@ -341,11 +341,31 @@ int main (int argc, char **argv)
 	url = cfg_get_single_value_as_string(config, "Default", "version");
 	if(url == NULL || strcmp(url, VERSION))
 	{
+        int *old_version = split_version((const char *)url);
+        int *new_version = split_version(VERSION); 
 		printf("Welcome to a new version of gmpc.\n");
 		/* Do possible cleanup of config files and stuff */
+        printf("Old Version: %i.%i.%i.%i\n", old_version[0],old_version[1],old_version[2],old_version[3]);
+        if(!(old_version[0] >= 0 && old_version[1] >= 15 && old_version[2] >= 4 && old_version[3] >= 98))
+        {
+            conf_mult_obj *iter,*cmo = cfg_get_class_list(config);
+            printf("gmpc-treeview purging\n");
+            for(iter = cmo; iter ; iter = iter->next)
+            {
+                if(strstr(iter->key, "colpos") || strstr(iter->key, "colshow") || strstr(iter->key, "colsize"))
+                {
+                    printf("Removing entry: %s\n", iter->key);
+                    cfg_remove_class(config, iter->key);
+                }
+            }
+            cfg_free_multiple(cmo);
 
+
+        }
 		/* set new */
 		cfg_set_single_value_as_string(config, "Default", "version",VERSION); 
+        q_free(old_version);
+        q_free(new_version);
 	}
 	if(url){
 		q_free(url);

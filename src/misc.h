@@ -22,4 +22,6 @@ void screenshot_add_border (GdkPixbuf **src);
 gchar *escape_single_quotes (const gchar * string);
 
 void open_uri(const gchar *uri);
+int *split_version(const char *uri);
+
 #endif

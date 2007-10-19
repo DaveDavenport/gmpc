@@ -74,8 +74,6 @@ int pl3_cat_key_press_event(GtkWidget *, GdkEventKey *);
 void cur_song_center_enable_tb(GtkToggleButton *);
 void open_to_position_enable_tb(GtkToggleButton *);
 void save_possize_enable_tb(GtkToggleButton *);
-void set_browser_format(void);
-void set_playlist_format(void);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
@@ -1292,30 +1290,7 @@ void save_possize_enable_tb(GtkToggleButton *but)
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","savepossize", bool1);
 }
-void set_browser_format()
-{
-	char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER);
-	char *format = edit_song_markup(string);
-	cfg_free_string(string);
-	if(format != NULL)
-	{
-		cfg_set_single_value_as_string(config, "playlist","browser_markup",format);
-	}
-	q_free(format);
-}
 
-void set_playlist_format()
-{
-	char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "markup",DEFAULT_PLAYLIST_MARKUP);
-	char *format = edit_song_markup(string);
-	cfg_free_string(string);
-	if(format != NULL)
-	{
-		cfg_set_single_value_as_string(config, "playlist","markup",format);
-		playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
-	}
-	q_free(format);
-}
 
 void playlist_pref_destroy(GtkWidget *container)
 {
@@ -2446,7 +2421,7 @@ gmpcPrefPlugin pl3_cat_editor_gpp = {
 };
 
 gmpcPlugin pl3_cat_editor_plug = {
-	.name 						= ("Advanced"),
+	.name 						= N_("Advanced"),
 	.version 					= {1,1,1},
 	.plugin_type 				= GMPC_INTERNALL,
 	.pref 						= &pl3_cat_editor_gpp,
