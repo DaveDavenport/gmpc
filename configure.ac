@@ -13,10 +13,38 @@ AC_LIBTOOL_RC
 
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
-AC_ARG_ENABLE(configdir,    [  --enable-configdir		Use .config instead of .gmpc or .covers.],  enable_configdir=yes,       enable_configdir=no)
-AC_ARG_ENABLE(artistbrowser,[  --enable-artist-browser  Enable the artist browser.],                enable_artistbrowser=yes,   enable_artistbrowser=no)
-AC_ARG_ENABLE(sm,		    [  --disable-sm				Disable Session Support.],                  enable_sm=no,               enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,	    [  --disable-mmkeys			Disable multimedia keys support.],          enable_mmkeys=no,           enable_mmkeys=yes)
+AC_ARG_ENABLE(configdir,    
+              [  --enable-configdir		Use .config instead of .gmpc or .covers.],  
+               [ if test "x$enableval" = "xyes"; then              
+                enable_configdir=yes                           
+            else                                                   
+                enable_configdir=no                            
+            fi],                                                   
+              enable_configdir=no)
+AC_ARG_ENABLE(artistbrowser,
+              [  --enable-artist-browser  Enable the artist browser.],         
+              [ if test "x$enableval" = "xyes"; then 
+               enable_artistbrowser=yes
+           else
+               enable_artistbrowser=no
+           fi],               
+              enable_artistbrowser=no)
+AC_ARG_ENABLE(sm,		    
+              [  --disable-sm				Disable Session Support.],                 
+              [ if test "x$enableval" = "xyes"; then 
+               enable_sm=yes
+           else
+               enable_sm=no
+           fi],               
+              enable_sm=yes)
+AC_ARG_ENABLE(mmkeys,	    
+              [  --disable-mmkeys			Disable multimedia keys support.],          
+              [ if test "x$enableval" = "xyes"; then 
+                    enable_mmkeys=yes
+                else
+                    enable_mmkeys=no
+                fi],           
+              enable_mmkeys=yes)
 
 
 # Checks for libraries.
