@@ -93,6 +93,7 @@ static void pref_plugin_changed()
 
 void create_preferences_window()
 {
+	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	GtkWidget *dialog;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
@@ -125,6 +126,7 @@ void create_preferences_window()
 	/* set info from struct */
 	/* hostname */
 	dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	running = 1;
 

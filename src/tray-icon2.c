@@ -7,7 +7,6 @@
 #include "misc.h"
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
-extern GladeXML *pl3_xml;
 
 GtkStatusIcon *tray_icon2_gsi = NULL;
 /**
@@ -323,6 +322,7 @@ void tray_icon2_create_tooltip(void)
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
+    gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
 	/*
 	 * Tooltip exists from 2 parts..
 	 * ------------------

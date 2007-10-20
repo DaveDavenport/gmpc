@@ -155,6 +155,7 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 }
 void message_window_open(void)
 {
+	GtkWidget *win,*pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	GladeXML *xml;
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
@@ -163,7 +164,11 @@ void message_window_open(void)
  	xml = glade_xml_new (path, "message_window", NULL);
  	q_free(path);
 	playlist3_message_init();
-	
+    
+    /* set transient */
+    win = glade_xml_get_widget(xml, "message_window");
+    gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
+
 	tree= glade_xml_get_widget(xml, "message_tree");
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1,"", renderer, "stock-id", 1,NULL);

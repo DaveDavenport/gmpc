@@ -150,4 +150,7 @@ void info2_fill_song_view(mpd_Song *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);
+
+/* usefull for some stuff */
+extern GladeXML *pl3_xml;
 #endif

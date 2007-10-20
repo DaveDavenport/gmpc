@@ -182,12 +182,15 @@ void url_start_real(const gchar *url)
 	 * Setup the Dialog
 	 */
 	GtkWidget *vbox = NULL, *label = NULL, *entry=NULL,*ali = NULL, *progress = NULL;
+	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	GtkWidget *add_button = NULL;
 	GtkWidget *dialog = gtk_dialog_new_with_buttons
 		("Open URL", NULL,
 		 GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
 		 NULL);
+
 	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
 	/* Add buttons */
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL); /** CANCEL BUTTON */
 	add_button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_ADD, GTK_RESPONSE_OK); /** ADD BUTTON */
