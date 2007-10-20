@@ -1,5 +1,6 @@
 Q=@
-REVISION=$(shell svn info | grep "Last Changed Rev" | awk -F': ' '{ print $$2}')
+#REVISION=$(shell svn info | grep "Last Changed Rev" | awk -F': ' '{ print $$2}')
+REVISION=$(shell git rev-parse master)
 CONF_VERSION=0
 -include Makefile.config
 
