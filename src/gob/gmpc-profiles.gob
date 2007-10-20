@@ -47,13 +47,17 @@ class Gmpc:Profiles from G:Object
   changed(self,const int changed, const int col, const char * id)
   {
 	if(changed == PROFILE_ADDED)
-	    printf("Item %s added\n", id);
+    {
+	    debug_printf(DEBUG_INFO,"Item %s added\n", id);
+        }
 	else if(changed == PROFILE_REMOVED)
-		printf("Item %s removed\n", id);
+    {
+		debug_printf(DEBUG_INFO,"Item %s removed\n", id);
+    }
 	else if(changed == PROFILE_COL_CHANGED)
 	{
-		printf("Item %s changed col: %i\n", id, col);
-	}
+        debug_printf(DEBUG_INFO,"Item %s changed col: %i\n", id, col);
+    }
   }
 
 
