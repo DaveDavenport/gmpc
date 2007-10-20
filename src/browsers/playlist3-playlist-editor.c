@@ -339,13 +339,15 @@ static void playlist_editor_new_entry_changed(GtkEntry *entry, GtkWidget *button
 static void playlist_editor_new_playlist(GtkWidget *item, gpointer data)
 {
 	int done = 0;
-	GtkWidget *dialog = gtk_dialog_new_with_buttons(_("New playlist"), NULL,GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
+    GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(_("New playlist"), NULL,GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
 				GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 				NULL);
 	GtkWidget *button = NULL; 
 	GtkWidget *hbox = gtk_hbox_new(FALSE,6);
 	GtkWidget *label = gtk_label_new(_("Name:"));	
 	GtkWidget *entry = gtk_entry_new();
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
 	button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_NEW, GTK_RESPONSE_ACCEPT);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(playlist_editor_new_entry_changed), button);
 	gtk_widget_set_sensitive(button, FALSE);

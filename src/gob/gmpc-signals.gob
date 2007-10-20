@@ -31,7 +31,7 @@ class Gmpc:Signals from G:Object{
      * new 
      */
 	public 
-	GObject *
+	GmpcSignals *
 	new(void)
 	{
 		return (GObject *)GET_NEW;

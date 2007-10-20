@@ -821,11 +821,13 @@ static void error_window_destroy(GtkWidget *window,int response, gpointer autoco
 
 static void password_dialog(int failed)
 {
-	gchar *path  = NULL;
+    GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+    gchar *path  = NULL;
 	if(xml_password_window) return;
 	path = gmpc_get_full_glade_path("gmpc.glade");
 	xml_password_window = glade_xml_new(path, "password-dialog",NULL);
-	q_free(path);
+    gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
+    q_free(path);
 	if(!xml_password_window) return;
 	if(failed)
 	{
@@ -1018,7 +1020,8 @@ void show_error_message(gchar *string, int block)
 	{    
 		GtkWidget *hbox = NULL, *image;
 		GtkWidget *vbox = NULL,*sw = NULL, *tree = NULL;
-		GtkCellRenderer *renderer;
+        GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+        GtkCellRenderer *renderer;
 		/* create dialog */
 		error_dialog = gtk_dialog_new_with_buttons(
 				_("Error occured during operation"),
@@ -1027,7 +1030,8 @@ void show_error_message(gchar *string, int block)
 				GTK_STOCK_CLOSE,
 				GTK_RESPONSE_OK,
 				NULL);
-		/** create list store */
+        gtk_window_set_transient_for(GTK_WINDOW(error_dialog), GTK_WINDOW(pl3_win));
+        /** create list store */
 		if(!error_list_store)
 		{
 			error_list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
