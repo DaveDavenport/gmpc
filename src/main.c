@@ -74,6 +74,7 @@ extern GladeXML *pl3_xml;
 GmpcConnection *gmpcconn = NULL;
 /* Implements, and gives signals on profiles */
 GmpcProfiles *gmpc_profiles = NULL;
+GmpcSignals *gmpc_signals =NULL;
 /* Implements, and gives signals on meta_data*/
 GmpcMetaWatcher *gmw = NULL;
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
@@ -406,7 +407,8 @@ int main (int argc, char **argv)
 #ifdef ENABLE_SM
     smc_connect(argc, argv);
 #endif	
-
+    /** Signals */
+    gmpc_signals = gmpc_signals_new();
 
     gmpc_profiles = gmpc_profiles_new();
     /**

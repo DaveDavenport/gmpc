@@ -35,8 +35,10 @@
  */
 #include "gmpc-connection.h"
 #include "gmpc-metaimage.h"
+#include "gmpc-signals.h"
 
 extern GmpcConnection *gmpcconn;
+extern GmpcSignals *gmpc_signals;
 
 
 extern int gmpc_connected;

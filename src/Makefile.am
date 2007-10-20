@@ -37,6 +37,7 @@ sources=\
 	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
+	gob/gmpc-signals.c\
 	gmpc_easy_download.c\
 	gob/gmpc-profiles.c\
 	url_fetcher.c\
@@ -64,7 +65,8 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-meta-watcher.c\
-	gob/gmpc-metaimage.c
+	gob/gmpc-metaimage.c\
+	gob/gmpc-signals.c
 
 %.c %.h %-private.h: %.gob
 	@GOB2@ -o gob/ --no-touch-headers --always-private-header $<
@@ -129,6 +131,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
 		gob/gmpc-connection.h\
+		gob/gmpc-signals.h\
 		TreeSearchWidget.h \
 		playlist3-messages.c\
 		metadata.h
@@ -169,6 +172,7 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-mpddata-treeview-private.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
+		gob/gmpc-signals-private.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\

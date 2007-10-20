@@ -51,6 +51,8 @@ static GtkTargetEntry target_table[] = {
 	{ "internal-drop",0,99}
 };
 
+void set_browser_format();
+void set_playlist_format();
 static void playlist_zoom_level_changed(void);
 static void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_option_menu_activate(void);
@@ -2410,3 +2412,28 @@ gmpcPlugin pl3_cat_editor_plug = {
 	.plugin_type 				= GMPC_INTERNALL,
 	.pref 						= &pl3_cat_editor_gpp,
 };
+
+void set_browser_format()
+{
+    char *string = gmpc_signals_get_browser_markup(gmpc_signals); 
+    char *format = edit_song_markup(string);
+    cfg_free_string(string);
+    if(format != NULL)
+    {
+        gmpc_signals_browser_markup_changed(gmpc_signals, format); 
+    }
+    q_free(format);
+}
+
+void set_playlist_format()
+{
+    char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "markup",DEFAULT_PLAYLIST_MARKUP);
+    char *format = edit_song_markup(string);
+    cfg_free_string(string);
+    if(format != NULL)
+    {
+        cfg_set_single_value_as_string(config, "playlist","markup",format);
+        playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
+    }
+    q_free(format);
+}
