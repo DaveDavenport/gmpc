@@ -133,7 +133,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-connection.h\
 		gob/gmpc-signals.h\
 		TreeSearchWidget.h \
-		playlist3-messages.c\
+		playlist3-messages.h\
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 
