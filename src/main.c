@@ -1020,7 +1020,7 @@ void show_error_message(gchar *string, int block)
 	{    
 		GtkWidget *hbox = NULL, *image;
 		GtkWidget *vbox = NULL,*sw = NULL, *tree = NULL;
-        GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+        GtkWidget *pl3_win = NULL;
         GtkCellRenderer *renderer;
 		/* create dialog */
 		error_dialog = gtk_dialog_new_with_buttons(
@@ -1030,7 +1030,11 @@ void show_error_message(gchar *string, int block)
 				GTK_STOCK_CLOSE,
 				GTK_RESPONSE_OK,
 				NULL);
-        gtk_window_set_transient_for(GTK_WINDOW(error_dialog), GTK_WINDOW(pl3_win));
+         if(pl3_xml)
+         {
+             pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+             gtk_window_set_transient_for(GTK_WINDOW(error_dialog), GTK_WINDOW(pl3_win));
+         }
         /** create list store */
 		if(!error_list_store)
 		{
