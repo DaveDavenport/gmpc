@@ -139,7 +139,7 @@ static void create_gmpc_paths(void);
 #ifndef WIN32
 static void bacon_on_message_received(const char *message, gpointer data)
 {
-    pl3_show_window();
+   create_playlist3(); 
 }
 #endif
 
@@ -600,7 +600,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_repeat", G_CALLBACK(repeat_toggle), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_random", G_CALLBACK(random_toggle), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(pl3_show_window), NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(create_playlist3), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_hide", G_CALLBACK(pl3_hide), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);

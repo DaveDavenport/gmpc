@@ -185,6 +185,19 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
 	}
 }
+
+static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
+{
+    if(gtk_status_icon_is_embedded(icon))
+    {
+        /* the status icon just got embedded */
+    }
+    else
+    {
+        /* the widget isn't embedded anymore */
+        create_playlist3();
+    }
+}
 /**
  * Initialize the tray icon 
  */
@@ -196,6 +209,7 @@ static void tray_icon2_init(void)
 		/* connect the (sparse) signals */
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
+        g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
 	}
 }
 /**

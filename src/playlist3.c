@@ -756,6 +756,7 @@ static void pl3_show_and_position_window()
 	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 
 }
+/*
 void pl3_show_window()
 {
 	if(!pl3_xml) return;
@@ -769,6 +770,7 @@ void pl3_show_window()
 		create_playlist3();
 	}
 }
+*/
 void pl3_toggle_hidden()
 {
 	if(pl3_hidden)
