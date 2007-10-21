@@ -148,6 +148,7 @@ int main (int argc, char **argv)
     int i;
     int clean_config = FALSE;
     char *config_path = NULL;
+    int start_hidden = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
@@ -221,6 +222,10 @@ int main (int argc, char **argv)
             {
                 config_path = g_strdup(&argv[i][strlen(_("--config="))]);
             }
+            else if (!strncasecmp(argv[i], _("--start-hidden"), strlen(_("--start-hidden"))))
+            {
+                start_hidden = TRUE;
+            }
             else if (!strncasecmp(argv[i], _("--clean-cover-db"), strlen(_("--clean-cover-db"))))
             {
                 clean_config = TRUE;
@@ -232,6 +237,7 @@ int main (int argc, char **argv)
             {
                 printf(_("Gnome Music Player Client\n"\
                             "Options:\n"\
+                            "\t--start-hidden\t\tStart hidden\n"\
                             "\t--help\t\t\tThis help message.\n"\
                             "\t--debug-level=<level>\tMake gmpc print out debug information.\n"\
                             "\t\t\t\tLevel:\n"\
@@ -580,6 +586,11 @@ int main (int argc, char **argv)
 	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
 	 */
 	gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
+
+    if(cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden)
+    {
+        gtk_init_add((GSourceFunc)pl3_hide, NULL);
+    }
 
 #ifdef ENABLE_MMKEYS
 	/**

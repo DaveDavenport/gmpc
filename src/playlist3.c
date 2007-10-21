@@ -684,6 +684,7 @@ int pl3_hide()
 {
 	if(!tray_icon2_get_available())
 	{
+		gtk_window_iconify(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 		return 1;
 	}
 	if(pl3_xml != NULL && !pl3_hidden )
