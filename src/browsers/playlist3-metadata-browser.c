@@ -2034,7 +2034,8 @@ static void info2_save_myself(void)
 		{
 			gint *indices = gtk_tree_path_get_indices(path);
 			debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
-			cfg_set_single_value_as_int(config, "info2-browser","position",indices[0]);
+
+			cfg_set_single_value_as_int(config, "info2-plugin","position",indices[0]);
 			gtk_tree_path_free(path);
 		}
 	}
