@@ -269,6 +269,48 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 		gtk_tree_path_free(path);
 	}
 }
+/*
+static MpdData *sort_mpd_data(MpdData *data)
+{
+    MpdData *data2 = NULL,*node,*node2;
+    if(!data)
+        return NULL;
+    for(; data; data = mpd_data_get_next(data))
+    {
+        if(data->type == MPD_DATA_TYPE_DIRECTORY)
+        {
+            data2 = mpd_new_data_struct_append(data2);
+            data2->type = data->type;
+            data2->directory = data->directory;
+            data->directory = NULL;
+        }
+    }
+    if(!data2)
+        return NULL;
+ 
+    int changed = 0; 
+
+    data2 = mpd_data_get_first(data2);
+    do{
+        node = data2;
+        do{
+            node2 = mpd_data_get_next_real(node, FALSE);
+            if(node2)
+            {
+                int compare = strcmp(node->directory,node2->directory);
+                if(compare > 0)
+                {
+                    char *temp = node->directory;
+                    node->directory = node2->directory;
+                    node2->directory = temp;
+                    changed = TRUE;
+                }
+            }
+        }while(node2 && (node = mpd_data_get_next_real(node, FALSE)));
+    }while(changed);
+    return data2;
+}
+*/               
 static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 {
 	MpdData *data = NULL;
@@ -278,6 +320,10 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 	if(path && temp)
 	{
 		GtkTreeIter child, child2,child3;
+ /*       MpdData *data2;
+		data2 = mpd_database_get_directory(connection,path);
+        data = sort_mpd_data(data2);
+        */
 		data = mpd_database_get_directory(connection,path);
 		g_free(path);
 		if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_tree), &child, iter))
@@ -314,12 +360,11 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 						gtk_tree_store_append(pl3_tree, &child3, &child2);
 						q_free(basename);
 
-
 						/* if the new dir is smaller the temp, we add it. */
 						data = mpd_data_get_next(data);
 						has_next = TRUE;//gtk_tree_model_iter_next(pl3_tree, &child);					
 					}
-					if(compare > 0)
+                    else if(compare > 0)
 					{	
 						/* if it's bigger, we delete the row */
 						has_next = gtk_tree_store_remove(pl3_tree, &child);
@@ -353,6 +398,7 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 								4, FALSE,
 								PL3_CAT_ICON_SIZE,1,
 								-1);
+						gtk_tree_store_append(pl3_tree, &child3, &child2);
 						q_free(basename);
 					}
 				}while((data = mpd_data_get_next(data)));
