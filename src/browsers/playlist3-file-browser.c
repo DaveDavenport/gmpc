@@ -231,6 +231,39 @@ static void pl3_file_browser_update_folder()
 
 }
 
+static void pl3_file_browser_update_folder_left_pane()
+{
+	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
+	GtkTreeIter iter;
+
+	if(!mpd_check_connected(connection))
+	{
+		return;
+	}
+
+
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
+	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
+	{
+		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
+		/* free list */
+        if(gtk_tree_model_get_iter(model, &iter,list->data))
+        {
+            char *path;
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_PATH, &path, -1);
+            if(path)
+            {
+                mpd_database_update_dir(connection, path);
+                q_free(path);
+            }
+        }
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+}
+
+
+
 static void pl3_file_browser_replace_folder()
 {
 	mpd_playlist_clear(connection);
@@ -859,7 +892,7 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
 						gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate",
-						G_CALLBACK(pl3_file_browser_update_folder), NULL);
+						G_CALLBACK(pl3_file_browser_update_folder_left_pane), NULL);
 				has_item = 1;
 			}
 			g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
