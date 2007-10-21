@@ -34,6 +34,6 @@ class Gmpc:Signals from G:Object{
 	GmpcSignals *
 	new(void)
 	{
-		return (GObject *)GET_NEW;
+		return GET_NEW;
 	}
 }

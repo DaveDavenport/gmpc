@@ -11,6 +11,7 @@ requires 2.0.0
 #include "config1.h"
 #include "config-defaults.h"
 #include "main.h"
+#include "misc.h"
 
 %}
 

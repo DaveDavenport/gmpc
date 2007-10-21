@@ -7,7 +7,9 @@ requires 2.0.0
 #include "config1.h"
 %}
 %privateheader{
+    #include "main.h"
 	#include "plugin.h"
+    #include "playlist3-messages.h"
 %}
 %h{
   enum {
@@ -46,16 +48,30 @@ class Gmpc:Profiles from G:Object
   void
   changed(self,const int changed, const int col, const char * id)
   {
+      gchar *message = NULL;
 	if(changed == PROFILE_ADDED)
     {
-	    debug_printf(DEBUG_INFO,"Item %s added\n", id);
-        }
-	else if(changed == PROFILE_REMOVED)
+        gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Added profile"),self_get_name(self,id));
+        playlist3_show_error_message(message, ERROR_INFO);
+        q_free(message);
+
+        debug_printf(DEBUG_INFO,"Item %s added\n", id);
+    }
+    else if(changed == PROFILE_REMOVED)
     {
+        gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Removed profile"),self_get_name(self,id));
+        playlist3_show_error_message(message, ERROR_INFO);
+        q_free(message);
 		debug_printf(DEBUG_INFO,"Item %s removed\n", id);
     }
 	else if(changed == PROFILE_COL_CHANGED)
 	{
+        /* Disabled because of grand spamming charges */
+    /*    
+        gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Changed profile"),self_get_name(self,id));
+        playlist3_show_error_message(message, ERROR_INFO);
+        q_free(message);
+        */
         debug_printf(DEBUG_INFO,"Item %s changed col: %i\n", id, col);
     }
   }
@@ -279,12 +295,21 @@ class Gmpc:Profiles from G:Object
   gchar *
   create_new_item(self, const gchar *id)
   {
+        self_create_new_item_with_name(self, id, "New Profile");
+  }
+  public 
+  gchar*
+  create_new_item_with_name(self, const gchar *id, const gchar *name)
+  {
     Profile *prof = g_malloc0(sizeof(*prof));
     if(!id)
       prof->id = g_strdup_printf("%u",g_random_int());
     else
       prof->id = g_strdup(id);
-    prof->name = g_strdup("New Profile");
+    if(!name)
+        prof->name = g_strdup("New Profile");
+    else
+        prof->name = g_strdup(name);
     prof->hostname = g_strdup("localhost");
     prof->password= g_strdup("");
     prof->port = 6600;
@@ -313,6 +338,7 @@ class Gmpc:Profiles from G:Object
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
       return;
+    self_changed(self,PROFILE_REMOVED,-1, id);
     for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
     if(self->_priv->list[i] == prof)
     {
@@ -324,7 +350,7 @@ class Gmpc:Profiles from G:Object
       cfg_remove_class(self->_priv->profiles, (char *)id);
       self_free_profile(prof);
     }
-    self_changed(self,PROFILE_REMOVED,-1, id);
+
   }
 
   /**
