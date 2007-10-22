@@ -782,11 +782,9 @@ requires 2.0.0
 
             temp.next = b->next;
             temp.prev = b->prev;
-            temp.head = b->head;
 
             b->next = a->next;
             b->prev = a->prev;
-            b->head = a->head;
             memcpy(a, b, sizeof(temp));
             memcpy(b, &temp, sizeof(temp));
         }
