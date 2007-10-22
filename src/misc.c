@@ -23,6 +23,7 @@
 
 #include <config.h>
 #include "main.h"
+#include <libmpd/libmpd-internal.h>
 #include "misc.h"
 #ifndef __USE_BSD
 #define __USE_BSD
@@ -464,3 +465,40 @@ int *split_version(const char *uri)
     g_strfreev(sp);
     return retv;
 }
+
+MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data)
+{
+    int i=0;
+    MpdData_real *node;
+    MpdData_real **nodes;
+    
+    
+    if(data == NULL)
+        return NULL;
+
+    for(node = (MpdData_real*)mpd_data_get_first(data);node;node =(MpdData_real *)mpd_data_get_next_real((MpdData *)node, FALSE))i++;
+
+    nodes = g_malloc0(i*sizeof(*node));
+    int j;
+    node = (MpdData_real *)mpd_data_get_first(data);
+    for(j=0;j<i;j++)
+    {
+        nodes[j] = node;
+        node =(MpdData_real *) mpd_data_get_next_real((MpdData *)node, FALSE);
+    }
+    g_qsort_with_data(nodes, i, sizeof(*nodes), func,user_data);
+
+    nodes[0]->prev = NULL;
+    nodes[0]->first=nodes[0];
+    for(j=1;j<i;j++)
+    {
+        nodes[j]->prev = nodes[j-1];
+        nodes[j]->next = NULL;
+        nodes[j]->prev->next = nodes[j];
+        nodes[j]->first = nodes[0];
+    }
+    data =(MpdData*)nodes[0];
+    g_free(nodes);
+    return data;
+}
+

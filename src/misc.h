@@ -24,4 +24,5 @@ gchar *escape_single_quotes (const gchar * string);
 void open_uri(const gchar *uri);
 int *split_version(const char *uri);
 
+MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data);
 #endif
