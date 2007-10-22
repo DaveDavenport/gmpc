@@ -237,9 +237,8 @@ static void as_album_clicked(GtkButton *button, gpointer data)
 		MpdData *data = NULL;
 		if(clear)
 			mpd_playlist_clear(connection);
-
-		for(data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE)
-				;data;data = mpd_data_get_next(data))
+        data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE);
+            for(data = misc_sort_mpddata_by_album_disc_track(data);data;data = mpd_data_get_next(data))
 		{
 			if(data->type == MPD_DATA_TYPE_SONG)
 			{
@@ -304,23 +303,22 @@ static void as_artist_clicked(GtkButton *button, gpointer data)
 	int clear = GPOINTER_TO_INT(data);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
 	if(artist)
-	{
-		MpdData *data = NULL;
-		if(clear)
-			mpd_playlist_clear(connection);
-
-		for(data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE)
-				;data;data = mpd_data_get_next(data))
-		{
-			if(data->type == MPD_DATA_TYPE_SONG)
-			{
-				mpd_playlist_queue_add(connection, data->song->file);
-			}
-		}
-		mpd_playlist_queue_commit(connection);
-		if(clear)
-			mpd_player_play(connection);
-	}
+    {
+        MpdData *data = NULL;
+        if(clear)
+            mpd_playlist_clear(connection);
+        data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE);
+        for(data = misc_sort_mpddata_by_album_disc_track(data);data;data = mpd_data_get_next(data))
+        {
+            if(data->type == MPD_DATA_TYPE_SONG)
+            {
+                mpd_playlist_queue_add(connection, data->song->file);
+            }
+        }
+        mpd_playlist_queue_commit(connection);
+        if(clear)
+            mpd_player_play(connection);
+    }
 }
 
 static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i)
