@@ -694,13 +694,16 @@ requires 2.0.0
 
             if(data2 == NULL)
                 return 0;
-            data2 = mpd_data_get_first(data2);
+/*            data2 = mpd_data_get_first(data2);*/
             self->_priv->data = data2;
             if(self->_priv->sort_column >=0)
             {
-                /* SORT IT */
                 self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
             }
+            else
+            {
+                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
+           }
 
             if(self->has_up) {
                 path = gtk_tree_path_new();
@@ -714,7 +717,7 @@ requires 2.0.0
                 gtk_tree_path_free(path);
                 self->_priv->num_rows++;
             }
-            for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
+            for(data2 = mpd_data_get_first(self->_priv->data);data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
                 path = gtk_tree_path_new();
                 gtk_tree_path_append_index(path,self->_priv->num_rows);
                 iter.stamp = self->_priv->stamp;
@@ -773,12 +776,16 @@ requires 2.0.0
             return FALSE;
         }
       private 
-        int sort_func(MpdData_real *a, MpdData_real *b,Self *self)
+        int sort_func(gpointer ppaa, gpointer ppbb, Self *self)
         {
+            MpdData_real *a = *(MpdData_real **)ppaa;
+            MpdData_real *b = *(MpdData_real **)ppbb;
+            int fact = (self->_priv->sort_order == GTK_SORT_ASCENDING)?-1:1;
+
             if(a->type != b->type )
             {
                 int val = a->type - b->type; 
-                return (self->_priv->sort_order)?(val>0):(val<0);
+                return val; 
             }
             else if(a->type == b->type)
             {
@@ -804,12 +811,12 @@ requires 2.0.0
                         g_free(aa);
                         g_free(bb);
                     } else {
-                        val = (ca == NULL)?((cb==NULL)?1:0):-1;
+                        val = (ca == NULL)?((cb==NULL)?0:-1):1;
                     }
                     g_value_unset(&va);
                     g_value_unset(&vb);
                     /* return */
-                    return (self->_priv->sort_order)?(val>0):(val<0);
+                    return val*fact;
                 }
                 /* Get values from tree view, so we don't have to replicate code to sort the right entries */
                 iter.user_data = a;
@@ -825,7 +832,7 @@ requires 2.0.0
                     gint b1 = (b)?atoi(b):0;
                     g_value_unset(&va);
                     g_value_unset(&vb);
-                    return (self->_priv->sort_order)?((a1-b1)>0):((a1-b1)<0);
+                    return fact*(a1-b1);
                 }
                 else if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
                 {
@@ -843,12 +850,12 @@ requires 2.0.0
                         g_free(aa);
                         g_free(bb);
                     } else {
-                        val = (a == NULL)?((b==NULL)?1:0):-1;
+                        val = (a == NULL)?((b==NULL)?0:-1):1;
                     }
                 }
                 g_value_unset(&va);
                 g_value_unset(&vb);
-                return (self->_priv->sort_order)?(val>0):(val<0);
+                return fact*val; 
             }
             return 0;
         }
@@ -862,8 +869,9 @@ requires 2.0.0
             if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
                 return; 
             if(self->_priv->sort_column <0)
-                return;
-            self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data); 
+            else
+                self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
             self->_priv->old_sort_column = self->_priv->sort_column;
 
             /* tell the view that rows have changed  */    

@@ -25,4 +25,5 @@ void open_uri(const gchar *uri);
 int *split_version(const char *uri);
 
 MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data);
+MpdData * misc_sort_mpddata_by_album_disc_track(MpdData *data);
 #endif

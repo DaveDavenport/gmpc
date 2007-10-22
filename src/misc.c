@@ -486,9 +486,9 @@ MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_dat
         nodes[j] = node;
         node =(MpdData_real *) mpd_data_get_next_real((MpdData *)node, FALSE);
     }
-    g_qsort_with_data(nodes, i, sizeof(*nodes), func,user_data);
-
+    g_qsort_with_data(nodes, i, sizeof(MpdData_real *), func,user_data);
     nodes[0]->prev = NULL;
+    nodes[0]->next= NULL;
     nodes[0]->first=nodes[0];
     for(j=1;j<i;j++)
     {
@@ -500,5 +500,89 @@ MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_dat
     data =(MpdData*)nodes[0];
     g_free(nodes);
     return data;
+}
+static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)aa;
+    MpdData_real *b = *(MpdData_real **)bb;
+          
+    if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
+    {
+        if(a->tag_type != b->tag_type)
+            return a->tag_type - b->tag_type;
+        if(a->tag== NULL && b->tag != NULL)
+            return -1;
+        else if(b->tag == NULL && a->tag != NULL)
+            return 1;
+        else if (a->tag  && b->tag)
+        {
+            int val;
+            if(a->tag && b->tag) {
+                gchar *sa,*sb;
+                sa = g_utf8_strdown(a->tag, -1);
+                sb = g_utf8_strdown(b->tag, -1);
+                val = g_utf8_collate(sa,sb);
+                g_free(sa);
+                g_free(sb);
+            } else {
+                val = (a == NULL)?((b==NULL)?0:-1):1;
+            }
+            return val;
+        }
+    }
+    if(a->type == MPD_DATA_TYPE_SONG && b->type == MPD_DATA_TYPE_SONG)
+    {
+        if(a->song->artist == NULL && b->song->artist != NULL)
+            return -1;
+        else if(b->song->artist == NULL && a->song->artist != NULL)
+            return 1;
+        else if (a->song->artist  && b->song->artist)
+        {
+            int compv = strcmp(a->song->artist, b->song->artist);
+            if(compv != 0)
+            {
+                return compv;
+            }
+        }
+        if(a->song->album == NULL && b->song->album != NULL)
+            return -1;
+        else if(b->song->album == NULL && a->song->album != NULL)
+            return 1;
+        else if (a->song->album  && b->song->album)
+        {
+            int compv = strcmp(a->song->album, b->song->album);
+
+            if(compv != 0)
+            {
+                return compv;
+            }
+        }
+        if(a->song->disc == NULL && b->song->disc != NULL)
+            return -1;
+        else if(b->song->disc == NULL && a->song->disc != NULL)
+            return 1;
+        else if (a->song->disc  && b->song->disc)
+        {
+            int compv = strcmp(a->song->disc, b->song->disc);
+            if(compv != 0)
+            {
+                return compv;
+            }
+        }
+        if(a->song->track == NULL && b->song->track != NULL)
+            return -1;
+        else if(b->song->track == NULL && a->song->track != NULL)
+            return 1;
+        else if (a->song->track  && b->song->track)
+        {
+            int compv = atoi(a->song->track)-atoi(b->song->track); 
+            return compv;
+        }
+    }
+    return a->type - b->type;
+}
+MpdData * misc_sort_mpddata_by_album_disc_track(MpdData *data)
+{
+    return misc_sort_mpddata(data, __add_sort,NULL);
 }
 
