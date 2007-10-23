@@ -162,11 +162,6 @@ static void pl3_find2_browser_add_crit()
     gtk_combo_box_set_active(GTK_COMBO_BOX(cs->lcombo), 0);
     gtk_box_pack_start(GTK_BOX(cs->hbox), cs->lcombo, FALSE, TRUE, 0);
 
-
-
-
-
-
     cs->combo= gtk_combo_box_new();
 
     renderer = gtk_cell_renderer_text_new();
@@ -360,57 +355,54 @@ static unsigned long pl3_find2_browser_view_browser()
         return 0;
     }   
     node= g_list_first(criterias);
-    do
-    { 
-        for(; node; node = g_list_next(node))
+    for(; node; node = g_list_next(node))
+    {
+        GtkTreeIter cc_iter;
+        int num_field;
+        crit_struct *cs = node->data;
+        const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
+        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
         {
-            GtkTreeIter cc_iter;
-            int num_field;
-            crit_struct *cs = node->data;
-            const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
-            if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
+            if(!found)
             {
-                if(!found)
-                {
-                    mpd_database_search_start(connection, FALSE);
-                    found = TRUE;
-                }
-                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
-                mpd_database_search_add_constraint(connection, num_field, (char *)name);
-                /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
-                {
-                    GtkTreeIter iter;
-                    gboolean found2 = FALSE;
-                    for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
-                            gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found2;
-                            gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
-                    {
-                        gchar *entry;
-                        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
-                        if(strcmp(entry, name) == 0)
-                        {
-                            found2 = TRUE;
-                        }
-                        g_free(entry);
-                    }
-                    if(!found2) {
-                        gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
-                    }					
-                }
+                mpd_database_search_start(connection, FALSE);
+                found = TRUE;
             }
-            if(node->next)
+            gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
+            mpd_database_search_add_constraint(connection, num_field, (char *)name);
+            /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
             {
-                crit_struct *cs2 = node->next->data;
-                if(gtk_combo_box_get_active(GTK_COMBO_BOX(cs2->lcombo))==1)
+                GtkTreeIter iter;
+                gboolean found2 = FALSE;
+                for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
+                        gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found2;
+                        gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
                 {
-                    data = mpd_database_search_commit(connection);
-                    data_t = mpd_data_concatenate(data_t, data);
-                    data = NULL;
-                    found = FALSE;
+                    gchar *entry;
+                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
+                    if(strcmp(entry, name) == 0)
+                    {
+                        found2 = TRUE;
+                    }
+                    g_free(entry);
                 }
+                if(!found2) {
+                    gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
+                }					
             }
         }
-    }while(node);
+        if(node->next)
+        {
+            crit_struct *cs2 = node->next->data;
+            if(gtk_combo_box_get_active(GTK_COMBO_BOX(cs2->lcombo))==1)
+            {
+                data = mpd_database_search_commit(connection);
+                data_t = mpd_data_concatenate(data_t, data);
+                data = NULL;
+                found = FALSE;
+            }
+        }
+    }
     if(found)
         data = mpd_database_search_commit(connection);
     data_t = mpd_data_concatenate(data_t, data);

@@ -90,6 +90,7 @@ gmpcPlugin find3_browser_plug = {
 typedef struct {
     GtkWidget *hbox;
     GtkWidget *combo;
+    GtkWidget *lcombo;
     GtkWidget *entry;
     regex_t preq;
     int tag_type; 
@@ -161,6 +162,17 @@ static void pl3_find3_browser_add_crit()
 	GtkEntryCompletion *ent_comp;
 
     cs->hbox = gtk_hbox_new(FALSE, 6);
+    cs->lcombo = gtk_combo_box_new_text();
+    gtk_combo_box_append_text(GTK_COMBO_BOX(cs->lcombo), _("And"));
+    gtk_combo_box_append_text(GTK_COMBO_BOX(cs->lcombo), _("Or"));
+    gtk_combo_box_set_active(GTK_COMBO_BOX(cs->lcombo), 0);
+	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
+			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED/*&&
+            criterias3*/)
+    {
+        gtk_box_pack_start(GTK_BOX(cs->hbox), cs->lcombo, FALSE, TRUE, 0);
+    }
+
     cs->combo= gtk_combo_box_new();
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(cs->combo), renderer, TRUE);
@@ -488,59 +500,75 @@ static unsigned long pl3_find3_browser_view_browser()
 {
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
-	{
-		int time=0;
-		GList *node = NULL;
-		int found = 0;
-		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
-		if(criterias3 == NULL)
-			return 0;
-		/** check rules, see if there is a usefull one, if so compile a regex */
-		for(node= g_list_first(criterias3); node; node = g_list_next(node))
-		{
-			GtkTreeIter cc_iter;
-			crit3_struct *cs = node->data;
-			const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
-			cs->tag_type = -1;
-			if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
-			{
-				int num_field;
-				if(!found)
-				{
-					mpd_playlist_search_start(connection, FALSE);
-					found = TRUE;
-				}
-				gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
-				mpd_playlist_search_add_constraint(connection, num_field, name);
+    {
+        int time=0;
+        GList *node = NULL;
+        int found = 0;
+        MpdData *data = NULL, *data_t= NULL;
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
+        if(criterias3 == NULL)
+            return 0;
+        /** check rules, see if there is a usefull one, if so compile a regex */
+        node= g_list_first(criterias3);
+        for(; node; node = g_list_next(node))
+        {
+            GtkTreeIter cc_iter;
+            crit3_struct *cs = node->data;
+            const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
+            cs->tag_type = -1;
+            if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
+            {
+                int num_field;
+                if(!found)
+                {
+                    mpd_playlist_search_start(connection, FALSE);
+                    found = TRUE;
+                }
+                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
+                mpd_playlist_search_add_constraint(connection, num_field, name);
 
-				{
-					GtkTreeIter iter;
-					gboolean found = FALSE;
-					for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter);
-							gtk_list_store_iter_is_valid(pl3_find3_autocomplete, &iter) && !found;
-							gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter))
-					{
-						gchar *entry;
-						gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter, 0,&entry,-1);
-						if(strcmp(entry, name) == 0)
-						{
-							found = TRUE;
-						}
-						g_free(entry);
-					}
-					if(!found) {
-						gtk_list_store_insert_with_values(pl3_find3_autocomplete, &iter,-1, 0,name,-1);
-					}					
-				}
+                {
+                    GtkTreeIter iter;
+                    gboolean found2 = FALSE;
+                    for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter);
+                            gtk_list_store_iter_is_valid(pl3_find3_autocomplete, &iter) && !found2;
+                            gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter))
+                    {
+                        gchar *entry;
+                        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_autocomplete), &iter, 0,&entry,-1);
+                        if(strcmp(entry, name) == 0)
+                        {
+                            found2 = TRUE;
+                        }
+                        g_free(entry);
+                    }
+                    if(!found2) {
+                        gtk_list_store_insert_with_values(pl3_find3_autocomplete, &iter,-1, 0,name,-1);
+                    }					
+                }
 
-			}
-		}
-		if(!found) return 0;	
-		MpdData *data = mpd_playlist_search_commit(connection);
-		time = gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
-		gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
-		return time;
-	}
+            }
+            if(node->next)
+            {
+                crit3_struct *cs2 = node->next->data;
+                if(gtk_combo_box_get_active(GTK_COMBO_BOX(cs2->lcombo))==1)
+                {
+                    data = mpd_database_search_commit(connection);
+                    data_t = mpd_data_concatenate(data_t, data);
+                    data = NULL;
+                    found = FALSE;
+                }
+
+            }
+        }
+        if(found)
+            data = mpd_playlist_search_commit(connection);
+        data_t = mpd_data_concatenate(data_t, data);
+        gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data_t);
+
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
+        return time;
+    }
 	else
 		return pl3_find3_browser_view_browser_old_style();
 }
@@ -749,6 +777,7 @@ static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventB
 
 static void pl3_find3_browser_disconnect()
 {
+/*   while(criterias3)pl3_find3_browser_remove_crit(NULL, criterias3);*/
   /*	if(pl3_find3_store) gtk_list_store_clear(pl3_find3_store);*/
 }
 
