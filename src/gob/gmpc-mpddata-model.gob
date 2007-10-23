@@ -694,10 +694,16 @@ requires 2.0.0
 
             if(data2 == NULL)
                 return 0;
-            data2 = mpd_data_get_first(data2);
+/*            data2 = mpd_data_get_first(data2);*/
             self->_priv->data = data2;
-            /* SORT IT */
-            self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
+            if(self->_priv->sort_column >=0)
+            {
+                self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+            }
+            else
+            {
+                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
+           }
 
             if(self->has_up) {
                 path = gtk_tree_path_new();
@@ -711,9 +717,7 @@ requires 2.0.0
                 gtk_tree_path_free(path);
                 self->_priv->num_rows++;
             }
-
-
-            for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
+            for(data2 = mpd_data_get_first(self->_priv->data);data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
                 path = gtk_tree_path_new();
                 gtk_tree_path_append_index(path,self->_priv->num_rows);
                 iter.stamp = self->_priv->stamp;
@@ -771,84 +775,17 @@ requires 2.0.0
         {
             return FALSE;
         }
-
-    private 
-        void 
-        swap(MpdData_real *a, MpdData_real *b)
+      private 
+        int sort_func(gpointer ppaa, gpointer ppbb, Self *self)
         {
-            MpdData_real temp;
-            if(a==b)return;
-            memcpy(&temp, (a), sizeof(temp));
+            MpdData_real *a = *(MpdData_real **)ppaa;
+            MpdData_real *b = *(MpdData_real **)ppbb;
+            int fact = (self->_priv->sort_order == GTK_SORT_ASCENDING)?-1:1;
 
-            temp.next = b->next;
-            temp.prev = b->prev;
-            temp.head = b->head;
-
-            b->next = a->next;
-            b->prev = a->prev;
-            b->head = a->head;
-            memcpy(a, b, sizeof(temp));
-            memcpy(b, &temp, sizeof(temp));
-        }
-
-    private
-        MpdData_real *partition(MpdData_real *a, MpdData_real *b,MpdData_real *j, GCompareDataFunc sort,Self *self)
-        {
-            MpdData_real *si = a;
-            self_swap(j,b);
-            while(  a != b)
-            {
-                if(sort(a,b,self) )
-                {
-                    self_swap(si,a);
-                    si = si->next;
-                }
-                a = a->next;
-            }
-            self_swap(si,b);
-            return si;
-        }
-
-    private
-        void q_sort_data2(MpdData_real *a, MpdData_real *b, GCompareDataFunc sort,Self*self)
-        {
-            if( a && b && a != b)
-            {
-                MpdData_real *j = self_partition(a,b,a,sort,self);
-                if(a!=j)
-                    self_q_sort_data2(a,j->prev,sort,self);
-                if(j!= b)
-                    self_q_sort_data2(j->next,b,sort,self);
-            }
-        }
-    private
-        void sort_data(MpdData *data,GCompareDataFunc sort,Self *self) 
-        {
-            MpdData_real *a,*b;
-            a = (MpdData_real *) mpd_data_get_first(data);
-            /* get last b */
-            if(!data)
-                return;
-            for(b=a;b->next;b = b->next);
-            self_q_sort_data2(a,b,sort,self);
-        }
-
-    private 
-        MpdData * 
-        sort_mpddata(self, MpdData *data)
-        {
-            if(self->_priv->sort_column <0)
-                return data;
-            self_sort_data(data, (GCompareDataFunc)self_sort_func, self);
-            return data;
-        }
-    private 
-        int sort_func(MpdData_real *a, MpdData_real *b,Self *self)
-        {
             if(a->type != b->type )
             {
                 int val = a->type - b->type; 
-                return (self->_priv->sort_order)?(val>0):(val<0);
+                return val; 
             }
             else if(a->type == b->type)
             {
@@ -874,12 +811,12 @@ requires 2.0.0
                         g_free(aa);
                         g_free(bb);
                     } else {
-                        val = (ca == NULL)?((cb==NULL)?1:0):-1;
+                        val = (ca == NULL)?((cb==NULL)?0:-1):1;
                     }
                     g_value_unset(&va);
                     g_value_unset(&vb);
                     /* return */
-                    return (self->_priv->sort_order)?(val>0):(val<0);
+                    return val*fact;
                 }
                 /* Get values from tree view, so we don't have to replicate code to sort the right entries */
                 iter.user_data = a;
@@ -895,7 +832,7 @@ requires 2.0.0
                     gint b1 = (b)?atoi(b):0;
                     g_value_unset(&va);
                     g_value_unset(&vb);
-                    return (self->_priv->sort_order)?((a1-b1)>0):((a1-b1)<0);
+                    return fact*(a1-b1);
                 }
                 else if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
                 {
@@ -913,12 +850,12 @@ requires 2.0.0
                         g_free(aa);
                         g_free(bb);
                     } else {
-                        val = (a == NULL)?((b==NULL)?1:0):-1;
+                        val = (a == NULL)?((b==NULL)?0:-1):1;
                     }
                 }
                 g_value_unset(&va);
                 g_value_unset(&vb);
-                return (self->_priv->sort_order)?(val>0):(val<0);
+                return fact*val; 
             }
             return 0;
         }
@@ -932,26 +869,10 @@ requires 2.0.0
             if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
                 return; 
             if(self->_priv->sort_column <0)
-                return;
-            /* call the sort function */
-            if(self->_priv->sort_column != self->_priv->old_sort_column)
-            {
-                self->_priv->data = self_sort_mpddata(self, self->_priv->data); 
-                self->_priv->old_sort_column = self->_priv->sort_column;
-            }
-            else 
-            {
-                MpdData_real *a, *b;
-                a = (MpdData_real *)mpd_data_get_first(self->_priv->data);
-                for(b=a;b->next;b = b->next);
-                while(a != b)
-                {
-                    self_swap(a,b);
-                    a = a->next;
-                    if(a==b)break;
-                    b= b->prev;
-                }
-            }
+                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data); 
+            else
+                self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+            self->_priv->old_sort_column = self->_priv->sort_column;
 
             /* tell the view that rows have changed  */    
             {

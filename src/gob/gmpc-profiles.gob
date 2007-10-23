@@ -48,7 +48,6 @@ class Gmpc:Profiles from G:Object
   void
   changed(self,const int changed, const int col, const char * id)
   {
-      gchar *message = NULL;
 	if(changed == PROFILE_ADDED)
     {
         gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Added profile"),self_get_name(self,id));

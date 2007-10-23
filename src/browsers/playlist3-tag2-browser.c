@@ -277,7 +277,8 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
 		/* if there is a result queue them and add them */
 		if(data)
 		{
-			for(;data;data = mpd_data_get_next(data))
+            data = misc_sort_mpddata_by_album_disc_track(data);
+            for(;data;data = mpd_data_get_next(data))
 			{
 				mpd_playlist_queue_add(connection,data->song->file);
 			}
