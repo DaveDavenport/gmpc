@@ -406,6 +406,7 @@ static unsigned long pl3_find2_browser_view_browser()
     if(found)
         data = mpd_database_search_commit(connection);
     data_t = mpd_data_concatenate(data_t, data);
+    data_t = misc_mpddata_remove_duplicate_songs(data_t);
     gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
     return time;

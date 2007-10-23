@@ -244,7 +244,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
             if(self->_priv->do_sort)
             {
-                if(valuerow >= MPDDATA_MODEL_COL_SONG_ARTIST && valuerow <= MPDDATA_MODEL_COL_SONG_POS)
+/*                if(valuerow >= MPDDATA_MODEL_COL_SONG_ARTIST && valuerow <= MPDDATA_MODEL_COL_SONG_POS)*/
                     gtk_tree_view_column_set_sort_column_id(column,valuerow); 
                 gtk_tree_view_column_set_sort_indicator(column, TRUE);
             }

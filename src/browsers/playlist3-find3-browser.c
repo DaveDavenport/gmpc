@@ -394,7 +394,7 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
             if(node->next)
             {
                 crit3_struct *cs2 = node->next->data;
-                if(gtk_combo_box_get_active(cs2->lcombo) == 1)
+                if(gtk_combo_box_get_active(GTK_COMBO_BOX(cs2->lcombo)) == 1)
                 {
                     node = node->next;
                     break;
@@ -507,6 +507,7 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
             cs->tag_type = -1;
         }
     }
+    data = misc_mpddata_remove_duplicate_songs(data);
     gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
     /* set model again */
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
@@ -514,7 +515,7 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
 }
 static unsigned long pl3_find3_browser_view_browser()
 {
-	if(FALSE &&mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
+	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
         int time=0;
@@ -580,6 +581,7 @@ static unsigned long pl3_find3_browser_view_browser()
         if(found)
             data = mpd_playlist_search_commit(connection);
         data_t = mpd_data_concatenate(data_t, data);
+        data_t = misc_mpddata_remove_duplicate_songs(data_t);
         gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data_t);
 
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));

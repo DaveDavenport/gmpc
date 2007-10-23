@@ -689,20 +689,17 @@ requires 2.0.0
                 q_free(self->_priv->images);
             }
 
-
-
-
             if(data2 == NULL)
                 return 0;
-/*            data2 = mpd_data_get_first(data2);*/
             self->_priv->data = data2;
-            if(self->_priv->sort_column >=0)
+            if(self->_priv->sort_column < 0 || self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
             {
-                self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
             }
             else
             {
-                self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
+                self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+
            }
 
             if(self->has_up) {
@@ -868,7 +865,7 @@ requires 2.0.0
             Self *self = GMPC_MPDDATA_MODEL(model);
             if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
                 return; 
-            if(self->_priv->sort_column <0)
+            if(self->_priv->sort_column < 0 || self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
                 self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data); 
             else
                 self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 

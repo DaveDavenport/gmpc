@@ -15,6 +15,7 @@
 #include <libmpd/debug_printf.h>
 #include "plugin.h"
 #include "main.h"
+#include "misc.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model.h"
 #include <libmpd/libmpd-internal.h>

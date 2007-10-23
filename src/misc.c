@@ -583,6 +583,38 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
 }
 MpdData * misc_sort_mpddata_by_album_disc_track(MpdData *data)
 {
-    return misc_sort_mpddata(data, __add_sort,NULL);
+    return misc_sort_mpddata(data, (GCompareDataFunc)__add_sort,NULL);
+}
+static gint __sort_filename(gpointer aa, gpointer bb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)aa;
+    MpdData_real *b = *(MpdData_real **)bb;
+
+    if(a->type == MPD_DATA_TYPE_SONG && b->type == MPD_DATA_TYPE_SONG)
+    {
+        return strcmp(a->song->file, b->song->file);
+    }
+    return a->type - b->type;
+}
+
+MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data)
+{
+    MpdData_real *node;
+    if(!data)
+        return NULL;
+    /* sort on file filename, this is our key */
+    node  = (MpdData_real *)misc_sort_mpddata(data,(GCompareDataFunc) __sort_filename, NULL);
+    /* loop through it */
+    for(;node->next;node = node->next)
+    {
+        if(node->type == MPD_DATA_TYPE_SONG && node->next->type == MPD_DATA_TYPE_SONG)
+        {
+            if(strcmp(node->song->file, node->next->song->file) == 0)
+            {
+                node = (MpdData_real *) mpd_data_delete_item((MpdData *)node);
+            }
+        }
+    }
+    return (MpdData *)node->first;
 }
 
