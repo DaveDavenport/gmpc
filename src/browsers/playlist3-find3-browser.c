@@ -160,7 +160,7 @@ static void pl3_find3_browser_add_crit()
     GtkWidget *removebut = NULL;
     GtkCellRenderer *renderer = NULL;
 	GtkEntryCompletion *ent_comp;
-
+    cs->tag_type = -1;
     cs->hbox = gtk_hbox_new(FALSE, 6);
     cs->lcombo = gtk_combo_box_new_text();
     gtk_combo_box_append_text(GTK_COMBO_BOX(cs->lcombo), _("And"));
@@ -361,144 +361,160 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
 {
 	MpdData *data = NULL;
     int time=0;
-    GList *node = NULL;
+    GList *node2,*node = NULL;
     int found = 0;
 
     if(criterias3 == NULL)
         return 0;
     /** check rules, see if there is a usefull one, if so compile a regex */
-    for(node= g_list_first(criterias3); node; node = g_list_next(node))
+    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
+    node= g_list_first(criterias3);
+    while(node)
     {
-        GtkTreeIter cc_iter;
-        crit3_struct *cs = node->data;
-        const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
-        cs->tag_type = -1;
-        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
+        found = FALSE;
+        for(; node; node = g_list_next(node))
         {
-            if(!regcomp(&(cs->preq),name, REG_EXTENDED|REG_ICASE))
+            GtkTreeIter cc_iter;
+            crit3_struct *cs = node->data;
+            const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
+            cs->tag_type = -1;
+            if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
             {
-                int num_field;
-                found = TRUE;
-                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
-                cs->tag_type = num_field;
-            } else {
-                regfree(&(cs->preq));
+                if(!regcomp(&(cs->preq),name, REG_EXTENDED|REG_ICASE))
+                {
+                    int num_field;
+                    found = TRUE;
+                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
+                    cs->tag_type = num_field;
+                } else {
+                    regfree(&(cs->preq));
+                    cs->tag_type = -1;
+                }
+            }
+            if(node->next)
+            {
+                crit3_struct *cs2 = node->next->data;
+                if(gtk_combo_box_get_active(cs2->lcombo) == 1)
+                {
+                    node = node->next;
+                    break;
+                }
             }
         }
-    }
-    if(!found)
-        return 0;
-    /* get markup */
-    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), NULL);
-    /** Fill now */
-    {
-        GtkTreeIter iter;
-        if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist), &iter))
-        {
-            GList *node = NULL;
-            int songs = 0, total_songs = mpd_playlist_get_playlist_length(connection);
-            int step = total_songs/50;
-            if(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) < 1)
+
+        /** Fill now */
+        if(found){
+            GtkTreeIter iter;
+            if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist), &iter))
             {
-                gtk_widget_show(pl3_find3_pb);
-                gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),FALSE);
-            }
-            else{
-                total_songs = 0;
-            }
-            do {
-                int loop = TRUE;
-                mpd_Song *song = NULL;
-                gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-
-
-                songs++;
-                if(step && total_songs && (songs % step) == 0)
+                GList *node3 = NULL;
+                int songs = 0, total_songs = mpd_playlist_get_playlist_length(connection);
+                int step = total_songs/50;
+                if(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) < 1)
                 {
-                    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pl3_find3_pb), songs/(gdouble)total_songs);
-                    while(gtk_events_pending()) gtk_main_iteration();
+                    gtk_widget_show(pl3_find3_pb);
+                    gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),FALSE);
                 }
+                else{
+                    total_songs = 0;
+                }
+                do {
+                    int loop = TRUE;
+                    mpd_Song *song = NULL;
+                    gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
 
-                if((node = g_list_first(criterias3)))
-                {
-                    loop = FALSE;
-                    for(;!loop && node; node = g_list_next(node))
+
+                    songs++;
+                    if(step && total_songs && (songs % step) == 0)
                     {
-                        loop = TRUE;
+                        gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pl3_find3_pb), songs/(gdouble)total_songs);
+                        while(gtk_events_pending()) gtk_main_iteration();
+                    }
 
-                        crit3_struct *cs = node->data;
-                        if(cs && cs->tag_type >= 0)
+                    if((node3 = g_list_first(criterias3)))
+                    {
+                        loop = FALSE;
+                        for(;!loop && node3; node3 = g_list_next(node3))
                         {
-                            if(song->artist && (cs->tag_type == MPD_TAG_ITEM_ARTIST || cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->artist,0,NULL,0) == 0)loop = FALSE; 
-                            } 
-                            if(song->album && (cs->tag_type == MPD_TAG_ITEM_ALBUM || cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->album,0,NULL,0) == 0)loop = FALSE; 
+                            loop = TRUE;
+
+                            crit3_struct *cs = node3->data;
+                            if(cs && cs->tag_type >= 0)
+                            {
+                                if(song->artist && (cs->tag_type == MPD_TAG_ITEM_ARTIST || cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->artist,0,NULL,0) == 0)loop = FALSE; 
+                                } 
+                                if(song->album && (cs->tag_type == MPD_TAG_ITEM_ALBUM || cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->album,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->title && (cs->tag_type == MPD_TAG_ITEM_TITLE || cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->title,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->track && (cs->tag_type == MPD_TAG_ITEM_TRACK || cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->track,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->name && (cs->tag_type == MPD_TAG_ITEM_NAME || cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->name,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->genre&& (cs->tag_type == MPD_TAG_ITEM_GENRE|| cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->genre,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->date&& (cs->tag_type == MPD_TAG_ITEM_DATE|| cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->date,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->composer&& (cs->tag_type == MPD_TAG_ITEM_COMPOSER|| cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->composer,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->performer&& (cs->tag_type == MPD_TAG_ITEM_PERFORMER||cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->performer,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->comment&& (cs->tag_type == MPD_TAG_ITEM_COMMENT||cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->comment,0,NULL,0) == 0)loop = FALSE; 
+                                }                                                                        
+                                if(song->disc&& (cs->tag_type == MPD_TAG_ITEM_DISC||cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->disc,0,NULL,0) == 0)loop = FALSE; 
+                                }
+                                if(song->file&& (cs->tag_type == MPD_TAG_ITEM_FILENAME||cs->tag_type == MPD_TAG_ITEM_ANY)){
+                                    if(regexec(&(cs->preq),song->file,0,NULL,0) == 0)loop = FALSE; 
+                                }
                             }
-                            if(song->title && (cs->tag_type == MPD_TAG_ITEM_TITLE || cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->title,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->track && (cs->tag_type == MPD_TAG_ITEM_TRACK || cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->track,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->name && (cs->tag_type == MPD_TAG_ITEM_NAME || cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->name,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->genre&& (cs->tag_type == MPD_TAG_ITEM_GENRE|| cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->genre,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->date&& (cs->tag_type == MPD_TAG_ITEM_DATE|| cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->date,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->composer&& (cs->tag_type == MPD_TAG_ITEM_COMPOSER|| cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->composer,0,NULL,0) == 0)loop = FALSE; 
-                            }
-							if(song->performer&& (cs->tag_type == MPD_TAG_ITEM_PERFORMER||cs->tag_type == MPD_TAG_ITEM_ANY)){
-								if(regexec(&(cs->preq),song->performer,0,NULL,0) == 0)loop = FALSE; 
-							}
-                            if(song->comment&& (cs->tag_type == MPD_TAG_ITEM_COMMENT||cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->comment,0,NULL,0) == 0)loop = FALSE; 
-                            }                                                                        
-                            if(song->disc&& (cs->tag_type == MPD_TAG_ITEM_DISC||cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->disc,0,NULL,0) == 0)loop = FALSE; 
-                            }
-                            if(song->file&& (cs->tag_type == MPD_TAG_ITEM_FILENAME||cs->tag_type == MPD_TAG_ITEM_ANY)){
-                                if(regexec(&(cs->preq),song->file,0,NULL,0) == 0)loop = FALSE; 
-                            }
+                            else
+                                loop = FALSE;
                         }
                     }
+                    if(!loop)
+                    {
+                        mpd_Song *song = NULL;
+                        gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
+                        data = mpd_new_data_struct_append(data);
+                        data->type = MPD_DATA_TYPE_SONG;
+                        data->song = mpd_songDup(song);  
+                    }
+                } while(gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist), &iter));
+
+                /* remove the progress bar */
+                if(total_songs) {
+                    gtk_widget_hide(pl3_find3_pb);   		   
+                    gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),TRUE);
                 }
-                if(!loop)
-		{
-			mpd_Song *song = NULL;
-			gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
-			data = mpd_new_data_struct_append(data);
-			data->type = MPD_DATA_TYPE_SONG;
-			data->song = mpd_songDup(song);  
-		}
-            } while(gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist), &iter));
-			gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
-            /* remove the progress bar */
-            if(total_songs) {
-                gtk_widget_hide(pl3_find3_pb);   		   
-                gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),TRUE);
             }
         }
+        /* cleanup the regex compiled */
+        for(node2= g_list_first(criterias3); node2 ; node2 = g_list_next(node2)) {
+            crit3_struct *cs = node2->data;
+            if(cs->tag_type >= 0)
+                regfree(&(cs->preq));
+            cs->tag_type = -1;
+        }
     }
-    /* cleanup the regex compiled */
-    for(node= g_list_first(criterias3); node; node = g_list_next(node)) {
-        crit3_struct *cs = node->data;
-        if(cs->tag_type >= 0)
-            regfree(&(cs->preq));
-        cs->tag_type = -1;
-    }
+    gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data);
     /* set model again */
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
     return time;
 }
 static unsigned long pl3_find3_browser_view_browser()
 {
-	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
+	if(FALSE &&mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
         int time=0;
