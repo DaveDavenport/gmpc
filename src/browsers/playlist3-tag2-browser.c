@@ -487,10 +487,11 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
     if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
     {
+        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
         gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), TRUE);
 
 	    gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
-        gtk_cell_renderer_set_fixed_size(renderer, 64,64);
+        gtk_cell_renderer_set_fixed_size(renderer, size,size);
         gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
     }
     else

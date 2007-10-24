@@ -297,7 +297,7 @@ requires 2.0.0
                 GtkTreeModel *model = gtk_tree_row_reference_get_model(ref);
                 if(path && model)
                 {
-                    int size = 64;
+                    int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                     Self *self = GMPC_MPDDATA_MODEL(model);
                     GtkTreeIter iter;
                     gtk_tree_model_get_iter(model, &iter, path);
