@@ -118,7 +118,10 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-
+#if GTK_CHECK_VERSION(2,12,0)
+    char buffer[256];
+    mpd_Song *song = mpd_playlist_get_current_song(connection);
+#endif
 	if(what&(MPD_CST_SONGID))
 	{
 		/** 
@@ -134,12 +137,14 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 				tray_icon2_create_tooltip();
 			}
 		}
+#if GTK_CHECK_VERSION(2,12,0)
+        if(tray_icon2_gsi)
+        {
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%][ - %artist%]",song);
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+        }
+#endif
 	}
-	if(what&MPD_CST_PLAYLIST && tray_icon2_tooltip != NULL)
-	{
-			tray_icon2_create_tooltip();
-	}
-
 
 	/* update the progress bar if available */
 	if(what&MPD_CST_ELAPSED_TIME)
@@ -165,10 +170,20 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		int state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+#if GTK_CHECK_VERSION(2,12,0)
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%][ - %artist%]",song);
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+#endif
 		} else if(state == MPD_PLAYER_PAUSE){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
+#if GTK_CHECK_VERSION(2,12,0)
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
 		} else {
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
+#if GTK_CHECK_VERSION(2,12,0)
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
 		}
 	}
 }
@@ -179,7 +194,10 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
 {
 	if(tray_icon2_gsi == NULL)
 		return;
-	if(connect)	{
+
+
+
+    if(connect)	{
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
