@@ -18,6 +18,36 @@ int plugin_get_pos(int id)
 {
 	return id&(PLUGIN_ID_MARK-1);
 }
+static int plugin_validate(gmpcPlugin *plug)
+{
+    if(plug->name == NULL)
+    {
+        debug_printf(DEBUG_ERROR, "Plugin has no name.");
+        return FALSE;
+    }
+    if(plug->set_enabled == NULL || plug->get_enabled == NULL)
+    {
+        debug_printf(DEBUG_ERROR, "%s: set_enabled == NULL || get_enabled == NULL",plug->name);
+        return FALSE;
+    }
+    if(plug->plugin_type&GMPC_PLUGIN_PL_BROWSER)
+    {
+        if(plug->browser == NULL)
+        {   
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed");
+            return FALSE;
+        }
+    }
+    if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
+    {
+        if(plug->metadata == NULL)
+        {   
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed");
+            return FALSE;                                                                                             
+        }
+    }
+    return TRUE;
+}
 
 void plugin_add(gmpcPlugin *plug, int plugin)
 {
@@ -94,31 +124,36 @@ static int plugin_load(char *path, const char *file)
 		g_module_close(handle);
 		return 1;
 	}
-	/* set path, plugins might want this for images and glade files. */
-	plug->path = g_strdup(path);
-	/* add the plugin to the list */
-	plugin_add(plug,1);
-	return 0;
+    if(!plugin_validate(plug))
+    {
+        g_module_close(handle);
+        return 1;
+    }
+    /* set path, plugins might want this for images and glade files. */
+    plug->path = g_strdup(path);
+    /* add the plugin to the list */
+    plugin_add(plug,1);
+    return 0;
 }
 
 void plugin_load_dir(gchar *path)
 {
-	GDir *dir = g_dir_open(path, 0, NULL);
-	if(dir)
-	{
-		const gchar *dirname = NULL;
-		while((dirname = g_dir_read_name(dir)) != NULL)
-		{
-			gchar *full_path = g_strdup_printf("%s%c%s",path,G_DIR_SEPARATOR,dirname);
-			if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
-			{
-				if(plugin_load(path,dirname)){
-					debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
+    GDir *dir = g_dir_open(path, 0, NULL);
+    if(dir)
+    {
+        const gchar *dirname = NULL;
+        while((dirname = g_dir_read_name(dir)) != NULL)
+        {
+            gchar *full_path = g_strdup_printf("%s%c%s",path,G_DIR_SEPARATOR,dirname);
+            if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
+            {
+                if(plugin_load(path,dirname)){
+                    debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
 
-				}
-			}
-			q_free(full_path);
-		}
-		g_dir_close(dir);
-	}
+                }
+            }
+            q_free(full_path);
+        }
+        g_dir_close(dir);
+    }
 }
