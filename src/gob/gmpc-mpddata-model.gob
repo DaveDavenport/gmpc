@@ -369,7 +369,7 @@ requires 2.0.0
             {
                 if(self->_priv->images[n] == NULL)
                 {
-                    int size=64;
+                    int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                     if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
                     {
                         mpd_Song *song;
