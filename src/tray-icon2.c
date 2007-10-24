@@ -140,7 +140,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 #if GTK_CHECK_VERSION(2,12,0)
         if(tray_icon2_gsi)
         {
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%][ - %artist%]",song);
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
             gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
         }
 #endif
@@ -171,7 +171,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		if(state == MPD_PLAYER_PLAY){
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
 #if GTK_CHECK_VERSION(2,12,0)
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%][ - %artist%]",song);
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
             gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
 #endif
 		} else if(state == MPD_PLAYER_PAUSE){
