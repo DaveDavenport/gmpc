@@ -7,32 +7,89 @@ The best tip I can give you is, look at the existing plugins and at the gmpc sou
 
 Plugin Example
 --------------
+Here is a simple example of a useless plugin.
+This can be used as template.
+The fields of the gmpcPlugin will be explained in the next chapter.
 
 [c,numbered]
 source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #include <gmpc/plugin.h>
 
+gmpcPlugin plugin;
+
+static int plugin_get_enabled(void)
+{
+    /* Getting the enable state from gmpc's config system */
+    return cfg_get_single_value_as_int_with_default(config, plugin.name, "enabled", TRUE);
+}
+
+static void plugin_set_enabled(int enabled)
+{
+    /* Storing the enable state in gmpc's config system */
+    cfg_set_single_value_as_int(config, plugin.name, "enabled", enabled);
+    /* Now handle the changes */
+}
+
 static void plugin_init(void)
 {
     /* initialize the plugin here */
-
-
 }
 static void plugin_destroy(void)
 {
     /* destroy the plugin here */
+}
+static void plugin_save_myself(void)
+{
+    /* Save any settings */
+}
 
+/**
+ * Signals
+ */
+static void plugin_connection_changed(MpdObj *mi, int connect, void *userdata)
+{
 
+}
+static void plugin_status_changed(MpdObj *mi,ChangedStatusType what , void *userdata)
+{
+    if(what&MPD_CST_SONGID)
+    {
+        /* This part of the function is called when mpd changes song */
+
+    }
 }
 
 gmpcPlugin plugin = {
-	.name           = "The plugin Name",
-	.version        = {0,15,5},
-	.plugin_type    = GMPC_PLUGIN_NO_GUI,
-    .init           = plugin_init,
-    .destroy        = plugin_destroy,
-	.get_enabled    = plugin_get_enabled,
-	.set_enabled    = plugin_set_enabled
+    /* Required fields */
+    .name                   = "The plugin Name",
+    .version                = {0,15,5},
+    .plugin_type            = GMPC_PLUGIN_NO_GUI,
+    .get_enabled            = plugin_get_enabled,
+    .set_enabled            = plugin_set_enabled,
+
+    /* Optional fields */
+    .init                   = plugin_init,
+    .destroy                = plugin_destroy,
+    .save_yourself          = plugin_save_myself,
+
+    /* Extentions 
+     * (These are sub-structures)
+     */
+
+     /* A structure that provide the functionality off adding a browser to the main interface,
+      * catching keystrokes, add menu options, etc.
+      */
+    .browser                = NULL,
+
+    /* A structure that exposes 2 functions that are needed to make the plugin function as metadata provider */
+    .metadata               = NULL,
+
+    /* A structure that allows the plugin to add a panel to the preferences window.*/
+    .pref                   = NULL,
+
+    /* Signals */
+    .mpd_connection_changed = plugin_connection_changed,
+    .mpd_status_changed     = plugin_status_changed
 };                                                         
 
 int plugin_api_version = PLUGIN_API_VERSION;
