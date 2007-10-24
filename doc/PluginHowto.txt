@@ -1,0 +1,132 @@
+Howto write a plugin for gmpc
+=============================
+Qball Cow <Qball@sarine.nl>
+v0.1, Oct. 2007
+
+The best tip I can give you is, look at the existing plugins and at the gmpc source. Internally gmpc uses the plugin structure for almost all parts.
+
+Plugin Example
+--------------
+
+[c,numbered]
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#include <gmpc/plugin.h>
+
+static void plugin_init(void)
+{
+    /* initialize the plugin here */
+
+
+}
+static void plugin_destroy(void)
+{
+    /* destroy the plugin here */
+
+
+}
+
+gmpcPlugin plugin = {
+	.name           = "The plugin Name",
+	.version        = {0,15,5},
+	.plugin_type    = GMPC_PLUGIN_NO_GUI,
+    .init           = plugin_init,
+    .destroy        = plugin_destroy,
+	.get_enabled    = plugin_get_enabled,
+	.set_enabled    = plugin_set_enabled
+};                                                         
+
+int plugin_api_version = PLUGIN_API_VERSION;
+source~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+gmpcPlugin
+----------
+
+Every plugin must have a (filled in) version of the gmpcPlugin called plugin. This will be what gmpc tries to load.
+
+It is prefered to use the "named" filling of the plugin ( .name = <value>,), instead of making a long list of values.
+2 fields are filled in by gmpc and should be left empty. This is the id field (an number that identifies the plugin) and the path field (is filled in with the path to the executable).
+
+Plugin name and version
+~~~~~~~~~~~~~~~~~~~~~~~
+A plugin must have a name and a version to be valid.
+The version consists of 3 numbers, normally plugin numbers are kept in sync with the gmpc release. 
+The name will be used to report error about the plugin and in the preferences window.
+
+Types of plugins
+~~~~~~~~~~~~~~~~~
+A plugin can have one or several different functions.
+This is set using the plugin_type field in the gmpcPlugin structure.
+The following types are available:
+
+1. GMPC_PLUGIN_DUMMY:
+   This plugin does not have a particular function, and should not be used.
+
+2. GMPC_PLUGIN_PL_BROWSER:
+    This plugin extends the main window with an extra browser.  Therefor the browser field in the gmpcPlugin must be filled in.
+    examples:
+    * Magnatune browser
+    * Server statistics
+    * Wikipedia
+3. GMPC_PLUGIN_NO_GUI:
+    Extends gmpc withouth adding a gui component to the main interface.
+    examples:
+    * osd
+4. GMPC_INTERNALL:
+    Should never be used, this is used to mark an internal plugin. 
+5. GMPC_DEPRECATED:
+    This used to be the id of plugin for the old metadata system.
+6. GMPC_PLUGIN_META_DATA:
+    This plugin provides gmpc with metadata. the metadata field in gmpcPlugin needs to be filled in.
+    examples:
+    * mdcover
+    * coveramazon
+    * Magnatune browsr.
+
+The Magnatune browser, as visible above, is an example of a plugin that implements 2 types. 1 a GMPC_PLUGIN_PL_BROWSER and 2 a GMPC_PLUGIN_META_DATA.
+In the plugin_type field those can be added bitwise. for example plugin_type = GMPC_PLUGIN PL_BROWSER|GMPC_PLUGIN_META_DATA.
+Remeber that both the metadata and the browser entry in the gmpcPlugin needs to be filled in.
+
+
+Init/Destroy/Save yourself
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+There are 3 functions used to construct and destroy the plugin.
+
+init
+^^^^
+On startup, before gtk enters it mainloop and before the main interface is created. the init() function of the plugin gets called.
+At this time the config system is working and gtk is initialized. Here plugins can initialize libraries (f.e. libxosd or dbus) that it requires later in the program.
+
+Save yourself
+^^^^^^^^^^^^^
+This is called for all plugins, then every plugin is destroyed. 
+F.e.  a Browser plugin should save the position of browser here (and not in the destroy handler, because other plugins that are destoyed might cause the location to change). 
+
+Destroy
+^^^^^^^
+A plugin should destroy itself here.
+
+Get/Set Enabled
+~~~~~~~~~~~~~~~
+[NOTE] These functions are needed for the plugin to be loaded.
+
+Get Enabled
+^^^^^^^^^^^
+Queries the plugin's enable state.
+
+Set Enabled
+^^^^^^^^^^^
+Set the plugin enable state.
+If the plugin add's gui elements to the interface, it should show/hide them. 
+For example the stop button plugin removes the button when set_enabled(FALSE) is called.
+
+plugin_api_version
+------------------
+Every plugin must have the following define:
+
+    int plugin_api_version = PLUGIN_API_VERSION;
+
+This allows gmpc to check if the plugin is compiled against the same plugin interface as gmpc has.
+
+
