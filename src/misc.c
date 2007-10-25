@@ -594,6 +594,11 @@ static gint __sort_filename(gpointer aa, gpointer bb, gpointer data)
     {
         return strcmp(a->song->file, b->song->file);
     }
+    else if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
+    {
+        if (a->tag_type == b->tag_type)
+            return strcmp(a->tag, b->tag);
+    }
     return a->type - b->type;
 }
 
@@ -605,15 +610,25 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data)
     /* sort on file filename, this is our key */
     node  = (MpdData_real *)misc_sort_mpddata(data,(GCompareDataFunc) __sort_filename, NULL);
     /* loop through it */
-    for(;node->next;node = node->next)
+    while(node->next) 
     {
         if(node->type == MPD_DATA_TYPE_SONG && node->next->type == MPD_DATA_TYPE_SONG)
         {
             if(strcmp(node->song->file, node->next->song->file) == 0)
             {
                 node = (MpdData_real *) mpd_data_delete_item((MpdData *)node);
+                continue;
             }
         }
+        else if(node->type == MPD_DATA_TYPE_TAG && node->next->type == MPD_DATA_TYPE_TAG)
+        {
+            if(strcmp(node->tag, node->next->tag) == 0)
+            {
+                node = (MpdData_real *) mpd_data_delete_item((MpdData *)node);
+                continue;
+            }
+        }
+        node = node->next;
     }
     return (MpdData *)node->first;
 }
