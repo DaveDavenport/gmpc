@@ -143,7 +143,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             {
                 int sort_col = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-column",MPDDATA_MODEL_COL_SONG_TITLE);
                 int sort_order = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-order", GTK_SORT_ASCENDING);
-                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))), (sort_col < 0)? 0:((sort_col > 16)? 16: sort_col), sort_order); 
+                gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))),sort_col, sort_order); 
             }
         }
 
@@ -244,8 +244,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
             if(self->_priv->do_sort)
             {
-/*                if(valuerow >= MPDDATA_MODEL_COL_SONG_ARTIST && valuerow <= MPDDATA_MODEL_COL_SONG_POS)*/
-                    gtk_tree_view_column_set_sort_column_id(column,valuerow); 
+                gtk_tree_view_column_set_sort_column_id(column,valuerow); 
                 gtk_tree_view_column_set_sort_indicator(column, TRUE);
             }
 
