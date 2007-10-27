@@ -519,33 +519,36 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
 	char *path;
 	MpdData *data = NULL;
 	GtkTreeIter child,child2;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store),iter, PL3_FB_PATH, &path, -1);
+    gboolean open;
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store),iter, PL3_FB_PATH, &path, PL3_FB_OPEN, &open,-1);
 	gtk_tree_store_set(pl3_fb_dir_store, iter, PL3_FB_OPEN, TRUE, -1);
+    if(open == FALSE)
+    {
+        data = mpd_database_get_directory(connection, path);
+        while (data != NULL)
+        {
+            if (data->type == MPD_DATA_TYPE_DIRECTORY)
+            {
+                gchar *basename =
+                    g_path_get_basename (data->directory);
+                gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
+                gtk_tree_store_set (pl3_fb_dir_store, &child,
+                        PL3_FB_ICON, "gtk-open",
+                        PL3_FB_NAME, basename,
+                        PL3_FB_PATH, data->directory,
+                        PL3_FB_OPEN, FALSE,
+                        -1);
+                gtk_tree_store_append(pl3_fb_dir_store, &child2, &child);
 
-	data = mpd_database_get_directory(connection, path);
-	while (data != NULL)
-	{
-		if (data->type == MPD_DATA_TYPE_DIRECTORY)
-		{
-			gchar *basename =
-				g_path_get_basename (data->directory);
-			gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
-			gtk_tree_store_set (pl3_fb_dir_store, &child,
-                    PL3_FB_ICON, "gtk-open",
-                    PL3_FB_NAME, basename,
-					PL3_FB_PATH, data->directory,
-					PL3_FB_OPEN, FALSE,
-					-1);
-			gtk_tree_store_append(pl3_fb_dir_store, &child2, &child);
-
-			q_free (basename);
-		}
-		data = mpd_data_get_next(data);
-	}
-	if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &child, iter))
-	{
-		gtk_tree_store_remove(pl3_fb_dir_store, &child);
-	}
+                q_free (basename);
+            }
+            data = mpd_data_get_next(data);
+        }
+        if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &child, iter))
+        {
+            gtk_tree_store_remove(pl3_fb_dir_store, &child);
+        }
+    }
 	q_free(path);
 }
 
