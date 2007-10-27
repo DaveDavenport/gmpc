@@ -336,6 +336,7 @@ static void meta_data_retrieve_thread()
 		/* check if quit signal */
 		if(data->id == 0)
 		{
+            debug_printf(DEBUG_ERROR, "Quit command recieved.. quitting");
 			return;
 		}
 		g_mutex_lock(meta_processing);
@@ -432,46 +433,14 @@ static void meta_data_retrieve_thread()
 		g_mutex_unlock(meta_processing);
 	}while(1);
 }
-/*
 
-static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2)
-{
-	if(data && data->id == GPOINTER_TO_INT(data2))
-	{
-		return 0;
-	}
-	return 1;
-}
-
-void meta_data_handle_remove_request(guint id)
-{
-	meta_thread_data *data = NULL;
-	gboolean found = FALSE;
-	
-	if(!meta_commands)	
-		return;
-
-	q_async_queue_lock(meta_commands);
-	if((data = q_async_queue_remove_data_unlocked(meta_commands, (GCompareFunc)meta_data_handler_data_match, GINT_TO_POINTER(id))))
-	{
-		if(data->result_path)q_free(data->result_path);
-		mpd_freeSong(data->song);
-		q_free(data);
-		found = TRUE;
-	}
-	q_async_queue_unlock(meta_commands);
-	debug_printf(DEBUG_ERROR, "(no error) Removing id: %u", id);
-
-	if(!found)
-		g_queue_push_head(meta_remove, GINT_TO_POINTER(id));
-}
-*/
 static gboolean meta_data_handle_results(void)
 {
 	meta_thread_data *data = NULL;
+    int test = 0;
 	if(meta_thread == g_thread_self())
 	{
-		printf("Crap, handled in wrong thread\n");
+		debug_printf(DEBUG_ERROR,"Crap, handled in wrong thread\n");
 
 	}
 	/**
@@ -498,14 +467,10 @@ static gboolean meta_data_handle_results(void)
 	 */
 	for(data = q_async_queue_try_pop(meta_results);data;
 			data = q_async_queue_try_pop(meta_results)) {	
-		int test = 0, i = 0;
+		int i = 0;
 
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
-        test = g_mutex_trylock(meta_processing);
-        if(test)
-            g_mutex_unlock(meta_processing);
-        gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
-		if(data->callback)
+ 		if(data->callback)
 		{
 			data->callback(data->song,data->result,data->result_path, data->data);
 		}
@@ -527,7 +492,12 @@ static gboolean meta_data_handle_results(void)
 	/**
 	 * Keep the timer running
 	 */
-	return FALSE;
+    /* update when handled */
+    test = g_mutex_trylock(meta_processing);
+    if(test)
+        g_mutex_unlock(meta_processing);
+    gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
+    return FALSE;
 }
 
 /**
@@ -535,210 +505,210 @@ static gboolean meta_data_handle_results(void)
  */
 void meta_data_init()
 {
-	gchar *url = gmpc_get_covers_path(NULL); 
-	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
-		if(g_mkdir(url, 0700)<0){
-			g_error("Cannot make %s\n", url);
-		}
-	}
-	q_free(url);
-	url = gmpc_get_covers_path("covers.db");
-	cover_index = cfg_open(url);
-	q_free(url);
+    gchar *url = gmpc_get_covers_path(NULL); 
+    if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
+        if(g_mkdir(url, 0700)<0){
+            g_error("Cannot make %s\n", url);
+        }
+    }
+    q_free(url);
+    url = gmpc_get_covers_path("covers.db");
+    cover_index = cfg_open(url);
+    q_free(url);
 
-	/**
-	 * The command queue
-	 */
-	meta_commands = q_async_queue_new();
-	/**
-	 * the result queue
-	 */
-	meta_results = q_async_queue_new();
-	/**
- 	*  remove callbacks...
- 	*  not thread save
- 	*/
-	meta_remove = g_queue_new();
+    /**
+     * The command queue
+     */
+    meta_commands = q_async_queue_new();
+    /**
+     * the result queue
+     */
+    meta_results = q_async_queue_new();
+    /**
+     *  remove callbacks...
+     *  not thread save
+     */
+    meta_remove = g_queue_new();
 
 
-	meta_processing = g_mutex_new();
-	/**
-	 * Create the retrieval thread
-	 */
-	meta_thread = g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, TRUE, NULL);
+    meta_processing = g_mutex_new();
+    /**
+     * Create the retrieval thread
+     */
+    meta_thread = g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, TRUE, NULL);
 
 }
 
 void meta_data_add_plugin(gmpcPlugin *plug)
 {
-	int i=0;
-	int changed = FALSE;	
-	meta_num_plugins++;
-	meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPlugin **));
-	meta_plugins[meta_num_plugins-1] = plug;
-	meta_plugins[meta_num_plugins] = NULL;
+    int i=0;
+    int changed = FALSE;	
+    meta_num_plugins++;
+    meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPlugin **));
+    meta_plugins[meta_num_plugins-1] = plug;
+    meta_plugins[meta_num_plugins] = NULL;
 
-	do{	
-		changed=0;
-		for(i=0; i< (meta_num_plugins-1);i++)
-		{
-			if(meta_plugins[i]->metadata->get_priority() > meta_plugins[i+1]->metadata->get_priority())
-			{
-				gmpcPlugin *temp = meta_plugins[i];
-				changed=1;
-				meta_plugins[i] = meta_plugins[i+1];
-				meta_plugins[i+1] = temp;
-			}
-		}
-	}while(changed);
+    do{	
+        changed=0;
+        for(i=0; i< (meta_num_plugins-1);i++)
+        {
+            if(meta_plugins[i]->metadata->get_priority() > meta_plugins[i+1]->metadata->get_priority())
+            {
+                gmpcPlugin *temp = meta_plugins[i];
+                changed=1;
+                meta_plugins[i] = meta_plugins[i+1];
+                meta_plugins[i+1] = temp;
+            }
+        }
+    }while(changed);
 }
 
 void meta_data_cleanup(void)
 {
-	cfg_do_special_cleanup(cover_index);
+    cfg_do_special_cleanup(cover_index);
 }
 
 void meta_data_check_plugin_changed()
 {
-	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
-	if(old_amount < meta_num_plugins)
-	{
-		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-				_("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
-		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-		gtk_widget_show_all(GTK_WIDGET(dialog));
-		meta_data_cleanup();
-	}
-	if(old_amount != meta_num_plugins)
-	{
-		cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
-	}
+    int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
+    if(old_amount < meta_num_plugins)
+    {
+        GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+                _("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
+        g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
+        gtk_widget_show_all(GTK_WIDGET(dialog));
+        meta_data_cleanup();
+    }
+    if(old_amount != meta_num_plugins)
+    {
+        cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
+    }
 }
 
 void meta_data_destroy(void)
 {
-	meta_thread_data *mtd = NULL;
+    meta_thread_data *mtd = NULL;
 
-	if(meta_thread)
-	{
-		debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
-		/* remove old stuff */
-		q_async_queue_lock(meta_commands);
-		while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
-		{
-			mpd_freeSong(mtd->song);
-                        q_free(mtd);
-		}
-		/* Create the quiet signal, this is just an empty request with id 0 */
-		
-		mtd = g_malloc0(sizeof(*mtd));
-		mtd->id = 0;
-		/* push the request to the thread */
-		q_async_queue_push_unlocked(meta_commands, mtd);
-		q_async_queue_unlock(meta_commands);
-		/* wait for the thread to finish */
-		g_thread_join(meta_thread);
-		/* cleanup */
-		g_free(mtd);
-		debug_printf(DEBUG_INFO,"Done..");
-	}
-	cfg_close(cover_index);
+    if(meta_thread)
+    {
+        debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
+        /* remove old stuff */
+        q_async_queue_lock(meta_commands);
+        while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
+        {
+            mpd_freeSong(mtd->song);
+            q_free(mtd);
+        }
+        /* Create the quiet signal, this is just an empty request with id 0 */
+
+        mtd = g_malloc0(sizeof(*mtd));
+        mtd->id = 0;
+        /* push the request to the thread */
+        q_async_queue_push_unlocked(meta_commands, mtd);
+        q_async_queue_unlock(meta_commands);
+        /* wait for the thread to finish */
+        g_thread_join(meta_thread);
+        /* cleanup */
+        g_free(mtd);
+        debug_printf(DEBUG_INFO,"Done..");
+    }
+    cfg_close(cover_index);
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 {
-	if((mt1->type&META_QUERY_DATA_TYPES) != (mt2->type&META_QUERY_DATA_TYPES))
-		return TRUE;
-	if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
-	{
-		return TRUE;
-	}
-	return FALSE;
+    if((mt1->type&META_QUERY_DATA_TYPES) != (mt2->type&META_QUERY_DATA_TYPES))
+        return TRUE;
+    if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
+    {
+        return TRUE;
+    }
+    return FALSE;
 }
 /**
  * Function called by the "client" 
  */
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data)
 {
-	MetaDataResult ret;
-	meta_thread_data *mtd = NULL;
-	mpd_Song *song =NULL;
-	guint id = 0;
+    MetaDataResult ret;
+    meta_thread_data *mtd = NULL;
+    mpd_Song *song =NULL;
+    guint id = 0;
     int test = 0;
-	/* TODO: Validate request */
+    /* TODO: Validate request */
 
-	/**
-	 * If there is no song
-	 * return;
-	 */
-	if(tsong == NULL)
-	{
-		return META_DATA_UNAVAILABLE;	
-	}
+    /**
+     * If there is no song
+     * return;
+     */
+    if(tsong == NULL)
+    {
+        return META_DATA_UNAVAILABLE;	
+    }
 
-	/**
-	 * Check cache for result.
-	 */
-	if(type&META_QUERY_NO_CACHE)
-	{
-		/* For others */
-		gmpc_meta_watcher_data_changed(gmw,tsong, (type)&META_QUERY_DATA_TYPES,META_DATA_FETCHING, NULL); 
-		if(callback)
-		{
-			callback(song,META_DATA_FETCHING,NULL,data);
-		}
-		ret = META_DATA_FETCHING;
-	}
-	else
-	{
-		ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, path);
-	}
+    /**
+     * Check cache for result.
+     */
+    if(type&META_QUERY_NO_CACHE)
+    {
+        /* For others */
+        gmpc_meta_watcher_data_changed(gmw,tsong, (type)&META_QUERY_DATA_TYPES,META_DATA_FETCHING, NULL); 
+        if(callback)
+        {
+            callback(song,META_DATA_FETCHING,NULL,data);
+        }
+        ret = META_DATA_FETCHING;
+    }
+    else
+    {
+        ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, path);
+    }
 
-	/**
-	 * If the data is know. (and doesn't need fectching) 
-	 * call the callback and stop
-	 */
-	if(ret != META_DATA_FETCHING)
-	{
-		return ret;	
-	}
+    /**
+     * If the data is know. (and doesn't need fectching) 
+     * call the callback and stop
+     */
+    if(ret != META_DATA_FETCHING)
+    {
+        return ret;	
+    }
 
 
-	/**
-	 * Make a copy
-	 */
-	song = mpd_songDup(tsong);
-	/**
-	 * If no result, start a thread and start fetching the data from there
-	 */
+    /**
+     * Make a copy
+     */
+    song = mpd_songDup(tsong);
+    /**
+     * If no result, start a thread and start fetching the data from there
+     */
 
-	mtd = g_malloc0(sizeof(*mtd));
-	/**
-	 * unique id 
-	 * Not needed, but can be usefull for debugging
-	 */
-	id = mtd->id = g_random_int_range(1,2147483647);
-	mtd->song = song;
-	mtd->type = type;
-	mtd->callback = callback;
-	mtd->data = data;
-	/**
-	 * Check if request is allready in queue
-	 */
-	/* when using old api style, the request is commited anyway */
-	if(!callback)
-	{
-		q_async_queue_lock(meta_commands);
-		if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
-		{
-			q_async_queue_unlock(meta_commands);
-			mpd_freeSong(song);
-			g_free(mtd);
-			return ret;
-		}
-		q_async_queue_unlock(meta_commands);
-	}
+    mtd = g_malloc0(sizeof(*mtd));
+    /**
+     * unique id 
+     * Not needed, but can be usefull for debugging
+     */
+    id = mtd->id = g_random_int_range(1,2147483647);
+    mtd->song = song;
+    mtd->type = type;
+    mtd->callback = callback;
+    mtd->data = data;
+    /**
+     * Check if request is allready in queue
+     */
+    /* when using old api style, the request is commited anyway */
+    if(!callback)
+    {
+        q_async_queue_lock(meta_commands);
+        if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
+        {
+            q_async_queue_unlock(meta_commands);
+            mpd_freeSong(song);
+            g_free(mtd);
+            return ret;
+        }
+        q_async_queue_unlock(meta_commands);
+    }
 
-	/** push it to the other thread */
+    /** push it to the other thread */
 
     num_queries ++;
     /* I should fix this */
@@ -746,9 +716,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         g_mutex_unlock(meta_processing);
     gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
 
-	q_async_queue_push(meta_commands, mtd);
+    q_async_queue_push(meta_commands, mtd);
     /** clean reference to pointer, it's now to the other thread */
-	mtd = NULL;
+    mtd = NULL;
 
-	return ret;
+    return ret;
 }
