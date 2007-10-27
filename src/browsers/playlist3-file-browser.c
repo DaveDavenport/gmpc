@@ -1023,8 +1023,8 @@ static void pl3_file_browser_add_selected()
 
 static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem *bt)
 {
-	GtkTreeView *tree = playlist3_get_category_tree_view();
-	GtkTreeModel *model = (GtkTreeModel *) playlist3_get_category_tree_store();
+	GtkTreeView *tree = GTK_TREE_VIEW(pl3_fb_dir_tree); 
+	GtkTreeModel *model = (GtkTreeModel *) pl3_fb_dir_store; 
 	GtkTreeSelection *selection  = gtk_tree_view_get_selection(tree);
 	GtkTreeIter iter;
 	char *path= NULL;
