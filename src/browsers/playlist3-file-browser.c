@@ -62,7 +62,6 @@ static void pl3_file_browser_add_folder(void);
 static void pl3_file_browser_delete_playlist(GtkMenuItem *bt);
 static void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
-static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_file_browser_disconnect(void);
 
 GtkTreeRowReference *pl3_fb_tree_ref = NULL;
@@ -76,8 +75,7 @@ static int pl3_file_browser_get_enabled(void)
 static void pl3_file_browser_set_enabled(int enabled)
 {
 	cfg_set_single_value_as_int(config, "file-browser","enable", enabled);
-	if(enabled )
-	{
+	if(enabled ) {
 		GtkTreeView *tree = playlist3_get_category_tree_view();
 		pl3_file_browser_add((GtkWidget *)tree);
 	} else if (!enabled ) {
@@ -85,21 +83,14 @@ static void pl3_file_browser_set_enabled(int enabled)
 	}
 }
 
-
-
 /**
  * Plugin structure
  */
 gmpcPlBrowserPlugin file_browser_gbp = {
-	pl3_file_browser_add,
-	pl3_file_browser_selected,
-	pl3_file_browser_unselected,
-	NULL, 
-	NULL,/*pl3_file_browser_fill_tree,*/
-	NULL/*pl3_file_browser_cat_popup*/,
-	NULL/*pl3_file_browser_cat_key_press*/,
-	pl3_file_browser_add_go_menu,
-	pl3_file_browser_key_press_event
+	.add            = pl3_file_browser_add,
+	.selected       = pl3_file_browser_selected,
+	.unselected     = pl3_file_browser_unselected,
+	.add_go_menu    = pl3_file_browser_add_go_menu,
 };
 
 gmpcPlugin file_browser_plug = {
@@ -197,10 +188,6 @@ static void pl3_file_browser_init()
     g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_file_browser_cat_key_press), NULL);
     g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(pl3_file_browser_dir_row_activated), NULL);
 
-
-
-
-
     gtk_container_add(GTK_CONTAINER(sw), tree);
     gtk_widget_show_all(sw);
     gtk_paned_add1(GTK_PANED(pl3_fb_vbox), sw);
@@ -295,15 +282,12 @@ static void pl3_file_browser_update_folder()
 static void pl3_file_browser_update_folder_left_pane()
 {
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
 	GtkTreeIter iter;
 
 	if(!mpd_check_connected(connection))
-	{
 		return;
-	}
 
-
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
 	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
 	{
 		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
@@ -644,8 +628,6 @@ static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *eve
 		gtk_entry_set_text(GTK_ENTRY(TREESEARCH(pl3_fb_tree_search)->entry),data); 
 		gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(pl3_fb_tree_search)->entry),1);
 		return TRUE;
-	} else {
-		return pl3_window_key_press_event(tree,event);
 	}
 	return TRUE;
 }
@@ -681,7 +663,6 @@ static void pl3_file_browser_show_info()
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 
 		list = g_list_last (list);
-		//		do
 		{
 			GtkTreeIter iter;
 			char *path;
@@ -700,8 +681,6 @@ static void pl3_file_browser_show_info()
 			}
 			q_free(path);
 		}
-		//		while ((list = g_list_previous (list)) && mpd_check_connected(connection));
-
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 	}
@@ -713,7 +692,6 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	GtkTreeIter iter;
 	gchar *song_path;
 	gint r_type;
-	/*int playlist_length = mpd_playlist_get_playlist_length(connection);*/
 
 	gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
 	gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH,&song_path, MPDDATA_MODEL_ROW_TYPE, &r_type, -1);
@@ -1213,14 +1191,6 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 		pl3_file_browser_reupdate();
 	}
 }	
-static int pl3_file_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
-{
-/*	if (event->keyval == GDK_F3) {
-		pl3_file_browser_activate();
-		return TRUE;
-	}                                           	*/
-	return FALSE;
-}
 
 static void pl3_file_browser_destroy(void)
 {
@@ -1256,4 +1226,3 @@ static void pl3_file_browser_save_myself(void)
         cfg_set_single_value_as_int(config, "file-browser", "pane-pos", pos);
     }
 }
-
