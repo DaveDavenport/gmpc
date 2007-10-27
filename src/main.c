@@ -182,6 +182,7 @@ int main (int argc, char **argv)
     textdomain (GETTEXT_PACKAGE);
 
 #endif
+    gtk_set_locale();
     /**
      * Parse Command line options
      */
