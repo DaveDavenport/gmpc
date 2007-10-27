@@ -178,6 +178,19 @@ Set the plugin enable state.
 If the plugin add's gui elements to the interface, it should show/hide them. 
 For example the stop button plugin removes the button when set_enabled(FALSE) is called.
 
+Signals
+~~~~~~~
+Libmpd can give 3 types of signals to the users, 2 of them are forwarded to the plugins.
+Namely the 'status changed' and the 'connection changed'. 
+
+Status changed
+^^^^^^^^^^^^^^
+A bitmask 'what' is passed, telling  you how mpd changed. See the libmpd documentation for more information.
+
+Connection Changed
+^^^^^^^^^^^^^^^^^^
+The function is called when the state of the connection changed. The 'connect' field indicates the new state.
+
 plugin_api_version
 ------------------
 Every plugin must have the following define:

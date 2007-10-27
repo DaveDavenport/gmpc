@@ -336,7 +336,7 @@ static void meta_data_retrieve_thread()
 		/* check if quit signal */
 		if(data->id == 0)
 		{
-            debug_printf(DEBUG_ERROR, "Quit command recieved.. quitting");
+            debug_printf(DEBUG_INFO, "Quit command recieved.. quitting");
 			return;
 		}
 		g_mutex_lock(meta_processing);

@@ -27,3 +27,6 @@ clean:
 	then\
 		rm Manual.xml;\
 	fi;
+
+plugin-howto: PluginHowto.txt
+		asciidoc $<

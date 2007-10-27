@@ -324,7 +324,7 @@ void tray_icon2_create_tooltip(void)
 	mpd_Song *song = NULL;
 	int state;
  
-#if GTK_CHECK_VERSION(2,12,0)
+#if 0 //GTK_CHECK_VERSION(2,12,0)
 	GdkColormap *colormap;
 #endif
 	/**
@@ -339,7 +339,7 @@ void tray_icon2_create_tooltip(void)
 	/*
 	 * 	Creat the tootlip window 
 	 */
-#if GTK_CHECK_VERSION(2,12,0)
+#if 0//GTK_CHECK_VERSION(2,12,0)
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_decorated(GTK_WINDOW (tray_icon2_tooltip),FALSE);      
     gtk_window_set_type_hint (GTK_WINDOW (tray_icon2_tooltip),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
@@ -558,7 +558,7 @@ void tray_icon2_create_tooltip(void)
 	 * Show the tooltip
 	 */
 /* do some stuff to allow transparency */
-#if GTK_CHECK_VERSION(2,12,0)
+#if 0 //GTK_CHECK_VERSION(2,12,0)
     screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
     colormap = gdk_screen_get_rgba_colormap(screen);
 	if (colormap != NULL && gdk_screen_is_composited(screen))
