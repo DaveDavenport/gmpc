@@ -348,6 +348,7 @@ void tray_icon2_create_tooltip(void)
     gtk_window_set_skip_taskbar_hint(GTK_WINDOW (tray_icon2_tooltip),TRUE);
     gtk_window_set_keep_above (GTK_WINDOW (tray_icon2_tooltip),TRUE);
     gtk_window_set_accept_focus(GTK_WINDOW (tray_icon2_tooltip),FALSE);
+	gtk_window_set_focus_on_map(GTK_WINDOW (tray_icon2_tooltip), FALSE);
 #else
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
 #endif
