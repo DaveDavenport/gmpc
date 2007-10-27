@@ -452,6 +452,7 @@ requires 2.0.0
                         g_value_set_string(value, GTK_STOCK_OPEN);
                         break;
                     case MPDDATA_MODEL_COL_SONG_TITLE:
+                    case MPDDATA_MODEL_COL_SONG_TITLEFILE:
                     case MPDDATA_MODEL_COL_MARKUP:
                         {
                             gchar *basename = g_path_get_basename(data->directory);
@@ -474,6 +475,7 @@ requires 2.0.0
                         g_value_set_string(value, "media-playlist");
                         break;
                     case MPDDATA_MODEL_COL_SONG_TITLE:
+                    case MPDDATA_MODEL_COL_SONG_TITLEFILE:
                     case MPDDATA_MODEL_COL_MARKUP:
                         {
                             gchar *basename = g_path_get_basename(data->playlist);
