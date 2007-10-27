@@ -225,7 +225,7 @@ static void pl3_file_browser_init()
 
 static void pl3_file_browser_add_folder()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection(playlist3_get_category_tree_view());
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(pl3_fb_dir_tree);
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_dir_store);
 	GtkTreeIter iter;
 
@@ -237,7 +237,7 @@ static void pl3_file_browser_add_folder()
 	{
 		char *path, *icon;
 		char *message = NULL;
-		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &path,3, &icon, -1);
+		gtk_tree_model_get(model, &iter, 2, &path,0, &icon, -1);
 	
 	
 		message = g_strdup_printf(_("Added folder '%s' recursively"), path);
