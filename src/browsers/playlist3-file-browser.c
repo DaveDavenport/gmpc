@@ -65,6 +65,13 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 static void pl3_file_browser_disconnect(void);
 
 GtkTreeRowReference *pl3_fb_tree_ref = NULL;
+
+enum {
+    PL3_FB_ICON = 0,
+    PL3_FB_NAME = 1,
+    PL3_FB_PATH = 2,
+    PL3_FB_OPEN = 3
+};
 /**
  * Get/Set enabled
  */
@@ -173,14 +180,14 @@ static void pl3_file_browser_init()
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
     gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(tree), TRUE);
-    gtk_tree_view_column_add_attribute(column, renderer, "icon-name",0);
+    gtk_tree_view_column_add_attribute(column, renderer, "icon-name",PL3_FB_ICON);
     gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
-	gtk_tree_view_column_add_attribute(column, renderer, "text", 1);
+	gtk_tree_view_column_add_attribute(column, renderer, "text", PL3_FB_NAME);
 	gtk_tree_view_insert_column(GTK_TREE_VIEW(tree),column, -1);
 	/* set the search column */
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), MPDDATA_MODEL_COL_SONG_TITLE);
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_FB_NAME);
 
     g_signal_connect(G_OBJECT(tree), "row-expanded", G_CALLBACK(pl3_file_browser_fill_tree), NULL);
     g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree))), "changed", G_CALLBACK(pl3_file_browser_view_folder), NULL);
@@ -225,7 +232,7 @@ static void pl3_file_browser_init()
 
 static void pl3_file_browser_add_folder()
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection(pl3_fb_dir_tree);
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_dir_tree));
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_dir_store);
 	GtkTreeIter iter;
 
@@ -237,7 +244,7 @@ static void pl3_file_browser_add_folder()
 	{
 		char *path, *icon;
 		char *message = NULL;
-		gtk_tree_model_get(model, &iter, 2, &path,0, &icon, -1);
+		gtk_tree_model_get(model, &iter, PL3_FB_PATH, &path,PL3_FB_ICON, &icon, -1);
 	
 	
 		message = g_strdup_printf(_("Added folder '%s' recursively"), path);
@@ -269,7 +276,7 @@ static void pl3_file_browser_update_folder()
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		char *path;
-		gtk_tree_model_get(model, &iter, 2, &path, -1);
+		gtk_tree_model_get(model, &iter, PL3_FB_PATH, &path, -1);
 		if(path)
 		{
 			mpd_database_update_dir(connection, path);
@@ -354,10 +361,10 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 
     gtk_tree_store_append(pl3_fb_dir_store, &iter, NULL);
     gtk_tree_store_set(pl3_fb_dir_store, &iter, 
-			0, "gtk-open",
-            1, "/",
-            2,"/",
-            3,FALSE,
+			PL3_FB_ICON, "gtk-open",
+            PL3_FB_NAME, "/",
+            PL3_FB_PATH,"/",
+            PL3_FB_OPEN,FALSE,
 			-1);
     gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
 
@@ -399,10 +406,10 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 						gchar *basename = g_path_get_basename (data->directory);
 						gtk_tree_store_insert_before(pl3_fb_dir_store, &child2,iter,&child);
 						gtk_tree_store_set (pl3_fb_dir_store, &child2,
-                                0, "gtk-open",
-								1, basename,
-								2, data->directory,
-								3, FALSE,
+                                PL3_FB_ICON, "gtk-open",
+								PL3_FB_NAME, basename,
+								PL3_FB_PATH, data->directory,
+								PL3_FB_OPEN, FALSE,
 								-1);
 
 						gtk_tree_store_append(pl3_fb_dir_store, &child3, &child2);
@@ -439,10 +446,10 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 							g_path_get_basename (data->directory);
 						gtk_tree_store_append(pl3_fb_dir_store, &child2, iter);
 						gtk_tree_store_set (pl3_fb_dir_store, &child2,
-                                0, "gtk-open",
-                                1, basename,
-								2, data->directory,
-								3, FALSE,
+                                PL3_FB_ICON, "gtk-open",
+                                PL3_FB_NAME, basename,
+								PL3_FB_PATH, data->directory,
+								PL3_FB_OPEN, FALSE,
 								-1);
 						gtk_tree_store_append(pl3_fb_dir_store, &child3, &child2);
 						q_free(basename);
@@ -486,7 +493,7 @@ static void pl3_file_browser_view_folder(GtkTreeSelection *selection, gpointer u
 	{
 		return;
 	}
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store), &iter_cat, 2 , &path,0,&icon, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store), &iter_cat, PL3_FB_PATH , &path,PL3_FB_ICON,&icon, -1);
 	if(strcmp("media-playlist",icon))
 	{
 		data = mpd_database_get_directory(connection, path);
@@ -512,8 +519,8 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
 	char *path;
 	MpdData *data = NULL;
 	GtkTreeIter child,child2;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store),iter, 2, &path, -1);
-	gtk_tree_store_set(pl3_fb_dir_store, iter, 3, TRUE, -1);
+	gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store),iter, PL3_FB_PATH, &path, -1);
+	gtk_tree_store_set(pl3_fb_dir_store, iter, PL3_FB_OPEN, TRUE, -1);
 
 	data = mpd_database_get_directory(connection, path);
 	while (data != NULL)
@@ -524,10 +531,10 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
 				g_path_get_basename (data->directory);
 			gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
 			gtk_tree_store_set (pl3_fb_dir_store, &child,
-                    0, "gtk-open",
-                    1, basename,
-					2, data->directory,
-					3, FALSE,
+                    PL3_FB_ICON, "gtk-open",
+                    PL3_FB_NAME, basename,
+					PL3_FB_PATH, data->directory,
+					PL3_FB_OPEN, FALSE,
 					-1);
 			gtk_tree_store_append(pl3_fb_dir_store, &child2, &child);
 
@@ -566,14 +573,14 @@ static int pl3_file_browser_cat_popup(GtkWidget *tree, GdkEventButton *event, gp
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_folder), NULL);
 
 		{
-			GtkTreeView *tree = playlist3_get_category_tree_view();
-			GtkTreeModel *model = (GtkTreeModel *) playlist3_get_category_tree_store();
+			GtkTreeView *tree = GTK_TREE_VIEW(pl3_fb_dir_tree); 
+			GtkTreeModel *model = (GtkTreeModel *)pl3_fb_dir_store; 
 			GtkTreeSelection *selection  = gtk_tree_view_get_selection(tree);
 			GtkTreeIter iter;
 			if(gtk_tree_selection_get_selected(selection, &model, &iter))
 			{
 				char *icon = NULL;
-				gtk_tree_model_get(model, &iter,3, &icon, -1);
+				gtk_tree_model_get(model, &iter,PL3_FB_ICON, &icon, -1);
 				if(!strcmp("media-playlist", icon))
 				{
 					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
@@ -722,7 +729,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 				do{
 					char *name = NULL;
 					char *type= NULL;
-					gtk_tree_model_get(model, &citer, 2, &name, 0, &type,-1);
+					gtk_tree_model_get(model, &citer, PL3_FB_PATH, &name, PL3_FB_ICON, &type,-1);
 					if(strcmp(name, song_path) == 0 && strcmp(type, "gtk-open") == 0)
 					{
 						gtk_tree_selection_select_iter(selec,&citer);
@@ -1135,7 +1142,7 @@ static void pl3_file_browser_disconnect()
                 valid = gtk_tree_store_remove(pl3_fb_dir_store,&child);
             }
             /* set unopened */
-            gtk_tree_store_set(pl3_fb_dir_store,&iter,3,FALSE,-1);
+            gtk_tree_store_set(pl3_fb_dir_store,&iter,PL3_FB_OPEN,FALSE,-1);
             /* add phantom child */
             gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
         }
