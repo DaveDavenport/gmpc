@@ -149,6 +149,7 @@ int main (int argc, char **argv)
     int clean_config = FALSE;
     char *config_path = NULL;
     int start_hidden = FALSE;
+    int load_plugins = TRUE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
@@ -231,7 +232,10 @@ int main (int argc, char **argv)
             {
                 clean_config = TRUE;
             }
-            /**
+            else if (!strncasecmp(argv[i], _("--disable-plugins"), strlen(_("--disable-plugins"))))
+            {
+                load_plugins = FALSE;
+            }                                                                                                /**
              * Print out help message
              */
             else if (!strncasecmp(argv[i], _("--help"),strlen(_("--help"))))
@@ -248,7 +252,8 @@ int main (int argc, char **argv)
                             "\t\t\t\t\t3 All messages\n"\
                             "\t--version\t\tPrint version and svn revision\n"\
                             "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
-                            "\t--clean-cover-db\tCleanup the cover file.\n"
+                            "\t--clean-cover-db\tCleanup the cover file.\n"\
+                            "\t--disable-plugins\tDon't load any plugins.\n"
                         ));
                 exit(0);
             }
@@ -489,7 +494,6 @@ int main (int argc, char **argv)
     /* this shows the playlist preferences */
     plugin_add(&playlist_plug,0);
     /* this shows the markup stuff */
-//    plugin_add(&tag_plug,0);
     plugin_add(&tag2_plug,0);
 #ifdef ENABLE_MMKEYS
     plugin_add(&mmkeys_plug,0);
@@ -499,7 +503,6 @@ int main (int argc, char **argv)
     /*plugin_add(&tray_icon_plug,0);*/
     plugin_add(&tray_icon2_plug,0);
     /* Info3 data browser */
-//    plugin_add(&info3_plugin,0);	
     /* Meta data browser */
     plugin_add(&metab_plugin,0);	
 	/* Playlist editor */
@@ -523,7 +526,8 @@ int main (int argc, char **argv)
 	/** Load the global installed plugins */
 	url = g_build_path(G_DIR_SEPARATOR_S, GLADE_PATH,"plugins",NULL);
 #endif
-	plugin_load_dir(url);
+    if(load_plugins)
+        plugin_load_dir(url);
 	q_free(url);
 
 	/* user space dynamic plugins */
@@ -534,7 +538,8 @@ int main (int argc, char **argv)
 	if(g_file_test(url, G_FILE_TEST_IS_DIR))
 	{
 		debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
-		plugin_load_dir(url);
+        if(load_plugins)
+            plugin_load_dir(url);
 	}
 	q_free(url);
 
