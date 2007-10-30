@@ -20,6 +20,11 @@ int plugin_get_pos(int id)
 }
 static int plugin_validate(gmpcPlugin *plug)
 {
+    if(plug == NULL)
+    {
+        debug_printf(DEBUG_ERROR, "plug != NULL failed");
+        return FALSE;
+    }
     if(plug->name == NULL)
     {
         debug_printf(DEBUG_ERROR, "Plugin has no name.");
@@ -27,14 +32,14 @@ static int plugin_validate(gmpcPlugin *plug)
     }
     if(plug->set_enabled == NULL || plug->get_enabled == NULL)
     {
-        debug_printf(DEBUG_ERROR, "%s: set_enabled == NULL || get_enabled == NULL",plug->name);
+        debug_printf(DEBUG_ERROR, "%s: set_enabled == NULL || get_enabled == NULL failed",plug->name);
         return FALSE;
     }
     if(plug->plugin_type&GMPC_PLUGIN_PL_BROWSER)
     {
         if(plug->browser == NULL)
         {   
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed");
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed",plug->name);
             return FALSE;
         }
     }
@@ -42,10 +47,38 @@ static int plugin_validate(gmpcPlugin *plug)
     {
         if(plug->metadata == NULL)
         {   
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed");
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed",plug->name);
+            return FALSE;                                                                                             
+        }
+        if(plug->metadata->get_priority == NULL)
+        {   
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_priority != NULL Failed",plug->name);
+            return FALSE;                                                                                             
+        }
+        if(plug->metadata->get_image == NULL)
+        {   
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
     }
+    /* if there is a browser field, check validity */
+    if(plug->browser)
+    {
+        if((plug->browser->selected && plug->browser->unselected == NULL) ||(plug->browser->selected  == NULL && plug->browser->unselected))
+        {
+            debug_printf(DEBUG_ERROR, "%s: If a plugin provides a browser pane, it needs both selected and unselected",plug->name); 
+            return FALSE;
+        }
+    }
+    /* if there is a pref window withouth both construct/destroy, give an error */
+    if(plug->pref)
+    {
+        if(!(plug->pref->construct && plug->pref->destroy))
+        {
+            debug_printf(DEBUG_ERROR, "%s: If a plugin has a preferences pane, it needs both construct and destroy", plug->name);
+        }
+    }
+
     return TRUE;
 }
 
@@ -126,6 +159,7 @@ static int plugin_load(char *path, const char *file)
 	}
     if(!plugin_validate(plug))
     {
+        debug_printf(DEBUG_ERROR, "Faled to validate plugin: %s\n", file);
         g_module_close(handle);
         return 1;
     }

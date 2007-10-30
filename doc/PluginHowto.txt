@@ -182,6 +182,7 @@ Signals
 ~~~~~~~
 Libmpd can give 3 types of signals to the users, 2 of them are forwarded to the plugins.
 Namely the 'status changed' and the 'connection changed'. 
+For more information see the libmpd api reference.
 
 Status changed
 ^^^^^^^^^^^^^^
@@ -190,6 +191,52 @@ A bitmask 'what' is passed, telling  you how mpd changed. See the libmpd documen
 Connection Changed
 ^^^^^^^^^^^^^^^^^^
 The function is called when the state of the connection changed. The 'connect' field indicates the new state.
+
+Preferences
+~~~~~~~~~~~
+The 'gmpcPlugin' structure can hold a substructure for preferences: 'gmpcPrefPlugin'.
+[c]
+source~~~~~~~~~~
+static GtkWidget *vbox = NULL;
+static void preferences_panel_construct(GtkWidget *container)
+{
+    GtkWidget *label;
+    vbox = gtk_vbox_new(FALSE, 6);
+    label = gtk_label_new("Testing");
+    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE,0);
+    /* add it to the right part of the preferences window */
+    /* vbox has a floating ref. on creation, adding it to the 
+     * container will give it a real one
+     */
+    gtk_container_add(GTK_CONTAINER(container), vbox);
+}
+static void preferences_panel_destroy(GtkWidget *container)
+{
+    /* Removing the vbox from the container will release the ref. the container has on it. 
+     * So the vbox will be free-ed
+     * If you don't want this, you must add your own ref. to the vbox in the construct function
+     */
+    gtk_container(remove(GTK_CONTAINER(container), vbox);
+    vbox = NULL;
+}
+gmpcPrefPugin pref = {
+    .construct  = preferences_panel_construct,
+    .destroy    = preferences_panel_destroy 
+}
+source~~~~~~~~~~
+These functions allow you to embed a 'window' in the preferences window. If the structure isn't available, no entry will be made.
+
+construct
+~~~~~~~~~
+Create a widget that contains the panel, add this then to the container using *gtk_container_add*.
+
+destroy
+~~~~~~~
+Remove the added panel from the container, using *gtk_container_remove*, and cleanup.
+
+Metadata
+^^^^^^^^
+'gmpcMetaDataPlugin'
 
 plugin_api_version
 ------------------
