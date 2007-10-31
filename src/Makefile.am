@@ -171,6 +171,7 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-mpddata-model-private.h\
 		gob/gmpc-mpddata-treeview.h\
 		gob/gmpc-mpddata-treeview-private.h\
+		gob/gmpc-connection-private.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
 		gob/gmpc-signals-private.h\
