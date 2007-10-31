@@ -3,8 +3,6 @@
 data/gmpc.desktop.in
 glade/gmpc.glade
 glade/playlist3.glade
-src/bacon/bacon-volume.c
-src/bacon/bacon-message-connection.c
 src/config1.c
 src/edit_markup.c
 src/gmpc_easy_download.c
@@ -23,6 +21,10 @@ src/TreeSearchWidget.c
 src/url_fetcher.c
 src/tray-icon2.c
 
+#bacon
+src/bacon/bacon-volume.c
+src/bacon/bacon-message-connection.c
+
 # Browsers 
 src/browsers/playlist3-artist-browser.c
 src/browsers/playlist3-current-playlist-browser.c
@@ -31,7 +33,7 @@ src/browsers/playlist3-find2-browser.c
 src/browsers/playlist3-find3-browser.c
 src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-playlist-editor.c
-src/browsers/playlist3-tag-browser.c
+src/browsers/playlist3-tag2-browser.c
 
 # Egg files
 src/egg/eggcolumnmodel.c
@@ -50,6 +52,7 @@ src/gob/gmpc-metaimage.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-connection.gob
 src/gob/gmpc-clicklabel.gob
+src/gob/gmpc-meta-watcher.gob
 
 #?
 src/qlib/qasyncqueue.c
