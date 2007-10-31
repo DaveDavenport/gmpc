@@ -612,6 +612,11 @@ void meta_data_destroy(void)
         g_free(mtd);
         debug_printf(DEBUG_INFO,"Done..");
     }
+    if(meta_commands)
+        g_mutex_free(meta_processing);
+    if(meta_commands)
+        q_async_queue_unref(meta_commands);
+    meta_processing = NULL;
     cfg_close(cover_index);
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
