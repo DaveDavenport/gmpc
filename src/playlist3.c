@@ -2282,7 +2282,7 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 
 		do{
 			gtk_tree_model_get(model, &it, PL3_CAT_ORDER, &pos, -1); 
-			if(position < pos)
+			if(position <= pos)
 				sib = &it;
 		}while(sib == NULL && gtk_tree_model_iter_next(model, &it));
 	}
