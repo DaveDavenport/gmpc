@@ -358,7 +358,6 @@ int main (int argc, char **argv)
         if(url)
         {
             int *old_version = split_version((const char *)url);
-
             debug_printf(DEBUG_INFO,"Welcome to a new version of gmpc.\n");
             /* Do possible cleanup of config files and stuff */
             if(!(old_version[0] >= 0 && old_version[1] >= 15 && old_version[2] >= 4 && old_version[3] >= 98))
@@ -378,7 +377,7 @@ int main (int argc, char **argv)
 
             }
             q_free(old_version);
-                }
+        }
 		/* set new */
 		cfg_set_single_value_as_string(config, "Default", "version",VERSION); 
         q_free(new_version);
@@ -386,7 +385,6 @@ int main (int argc, char **argv)
 	if(url){
 		q_free(url);
 	}
-
 
 
 
