@@ -253,7 +253,8 @@ static void plugin_stats_construct(GtkWidget *container)
 		/**
 		 * new 
 		 */
-		store = gtk_list_store_new(4,G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING,G_TYPE_POINTER);
+		store = gtk_list_store_new(5,G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_STRING,G_TYPE_POINTER,G_TYPE_STRING);
+
 		gtk_tree_view_set_model(GTK_TREE_VIEW(tree),GTK_TREE_MODEL(store));
 		renderer = gtk_cell_renderer_toggle_new();
 		g_object_set_data(G_OBJECT(renderer), "editable", GINT_TO_POINTER(1));
@@ -263,12 +264,16 @@ static void plugin_stats_construct(GtkWidget *container)
 		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Name"), renderer, "text", 1,NULL);
 		renderer = gtk_cell_renderer_text_new();
 		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Function"), renderer, "text", 2,NULL);
+		renderer = gtk_cell_renderer_text_new();
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Version"), renderer, "text", 4,NULL);
 		for(i=0;i<num_plugins;i++)
 		{
 			if(plugins[i]->id&PLUGIN_ID_MARK)
 			{
+                gchar *version = g_strdup_printf("%i.%i.%i",plugins[i]->version[0], plugins[i]->version[1],plugins[i]->version[2]);
 				gtk_list_store_append(store, &iter);
-				gtk_list_store_set(store, &iter, 0,TRUE,1, plugins[i]->name,3,(plugins[i]), -1);
+				gtk_list_store_set(store, &iter, 0,TRUE,1, plugins[i]->name,3,(plugins[i]),4,version, -1);
+                g_free(version);
 				if(plugins[i]->get_enabled != NULL)
 				{
 					gtk_list_store_set(store, &iter, 0,plugins[i]->get_enabled(),-1);
