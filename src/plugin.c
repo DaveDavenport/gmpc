@@ -179,12 +179,17 @@ void plugin_load_dir(gchar *path)
         while((dirname = g_dir_read_name(dir)) != NULL)
         {
             gchar *full_path = g_strdup_printf("%s%c%s",path,G_DIR_SEPARATOR,dirname);
-            if(g_file_test(full_path, G_FILE_TEST_IS_REGULAR))
+            /* Make sure only to load plugins */
+            if(g_str_has_suffix(dirname, G_MODULE_SUFFIX))
             {
-                if(plugin_load(path,dirname)){
+                if(plugin_load(path,dirname))
+                {
                     debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
-
                 }
+            }
+            else
+            {
+                debug_printf(DEBUG_INFO, "File not loaded, wrong extention, should be: '%s'", G_MODULE_SUFFIX);
             }
             q_free(full_path);
         }
