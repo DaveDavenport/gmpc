@@ -40,7 +40,6 @@
 static void pl3_find3_browser_edit_columns(void);
 static void pl3_find3_browser_destroy(void);
 static void pl3_find3_browser_delete_selected_songs (void);
-static void pl3_find3_browser_category_selection_changed(GtkWidget *, GtkTreeIter *);
 static void pl3_find3_browser_selected(GtkWidget *);
 static void pl3_find3_browser_unselected(GtkWidget *);
 static void pl3_find3_browser_add(GtkWidget *cat_tree);
@@ -64,15 +63,11 @@ int pl3_find3_last_entry = MPD_TAG_ITEM_ANY;
  * Plugin structure
  */
 gmpcPlBrowserPlugin find3_browser_gbp = {
-    pl3_find3_browser_add,
-    pl3_find3_browser_selected,
-    pl3_find3_browser_unselected,
-    pl3_find3_browser_category_selection_changed,
-    NULL,
-    NULL,
-    NULL,
-    pl3_find3_browser_add_go_menu,
-    pl3_find3_browser_key_press_event
+    .add                = pl3_find3_browser_add,
+    .selected           = pl3_find3_browser_selected,
+    .unselected         = pl3_find3_browser_unselected,
+    .add_go_menu        = pl3_find3_browser_add_go_menu,
+    .key_press_event    = pl3_find3_browser_key_press_event
 };
 
 gmpcPlugin find3_browser_plug = {
@@ -105,17 +100,17 @@ static GtkListStore 		*pl3_find3_autocomplete = NULL;
 extern GladeXML *pl3_xml;
 
 /* internal */
-GtkWidget 	*pl3_find3_tree 	= NULL;
-GmpcMpdDataModel *pl3_find3_store2 = NULL;
+static GtkWidget 	*pl3_find3_tree 	= NULL;
+static GmpcMpdDataModel *pl3_find3_store2 = NULL;
 
-GtkWidget 	*pl3_find3_vbox 	= NULL;
-GtkWidget	*pl3_find3_findbut     = NULL;
-GtkWidget       *pl3_find3_critaddbut   = NULL;
-GtkListStore	*pl3_find3_combo_store 	= NULL;
-GtkWidget	*pl3_find3_pb = NULL;
+static GtkWidget 	*pl3_find3_vbox 	= NULL;
+static GtkWidget	*pl3_find3_findbut     = NULL;
+static GtkWidget       *pl3_find3_critaddbut   = NULL;
+static GtkListStore	*pl3_find3_combo_store 	= NULL;
+static GtkWidget	*pl3_find3_pb = NULL;
 
-GList *criterias3 = NULL;
-GtkWidget *pl3_find3_crit_vbox = NULL;
+static GList *criterias3 = NULL;
+static GtkWidget *pl3_find3_crit_vbox = NULL;
 
 static void pl3_find3_fill_combo()
 {
@@ -145,7 +140,6 @@ static void pl3_find3_browser_remove_crit(GtkWidget *button,crit3_struct *cs)
     {
         gtk_widget_set_sensitive(pl3_find3_findbut, FALSE);
     }
-/*    pl3_find3_browser_search(); */
     gtk_widget_set_sensitive(pl3_find3_critaddbut, TRUE);
 }
 
@@ -649,18 +643,6 @@ static void pl3_find3_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 	mpd_player_play_id(connection, id);
 }
 
-static void pl3_find3_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
-{
-    /*
-	long unsigned time = 0;
-	gchar *string;	
-	time = pl3_find3_browser_view_browser();
-	string = format_time(time);
-	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-	q_free(string);
-    */
-}
-
 static int pl3_find3_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
 	if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK)
@@ -818,6 +800,7 @@ static void pl3_find3_browser_activate()
  * This switches to the search window set focus on entry and set searh on playlist.
  * TODO: Move to search plugin?
  */
+/*
 static void pl3_playlist_search()
 {
   if(!mpd_check_connected(connection))
@@ -835,7 +818,7 @@ static void pl3_playlist_search()
     gtk_tree_path_free(path);
   }
 }
-
+*/
 static int pl3_find3_browser_add_go_menu(GtkWidget *menu)
 {
   GtkWidget *item = NULL;
