@@ -651,13 +651,14 @@ static void pl3_find3_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
 static void pl3_find3_browser_category_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
+    /*
 	long unsigned time = 0;
 	gchar *string;	
-/*	gtk_list_store_clear(pl3_find3_store);*/
 	time = pl3_find3_browser_view_browser();
 	string = format_time(time);
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 	q_free(string);
+    */
 }
 
 static int pl3_find3_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
@@ -867,7 +868,8 @@ static int pl3_find3_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
   }                                           	
   else*/ if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
   {
-    pl3_playlist_search();
+      pl3_find3_browser_activate();
+      //pl3_playlist_search();
     crit3_struct *cs;
     while(criterias3 && g_list_length(criterias3) > 1)
     {
