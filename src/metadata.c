@@ -684,11 +684,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     /* If it is not a mpd got song */
     if(tsong->file == NULL )
     {
-        printf("Aap %i %i\n", type, META_ALBUM_ART);
         if(type&META_ALBUM_ART || type&META_ALBUM_TXT)
         {
             MpdData *data2 = NULL;
-            printf("Doing a search\n");
             mpd_database_search_start(connection, TRUE);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
