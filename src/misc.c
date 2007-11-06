@@ -505,7 +505,28 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
 {
     MpdData_real *a = *(MpdData_real **)aa;
     MpdData_real *b = *(MpdData_real **)bb;
-          
+    if(a->type == MPD_DATA_TYPE_DIRECTORY && b->type == MPD_DATA_TYPE_DIRECTORY)
+    {
+        if(a->directory== NULL && b->directory != NULL)
+            return -1;
+        else if(b->directory == NULL && a->directory != NULL)
+            return 1;
+        else if (a->directory  && b->directory)
+        {
+            int val;
+            if(a->directory && b->directory) {
+                gchar *sa,*sb;
+                sa = g_utf8_strdown(a->directory, -1);
+                sb = g_utf8_strdown(b->directory, -1);
+                val = g_utf8_collate(sa,sb);
+                g_free(sa);
+                g_free(sb);
+            } else {
+                val = (a == NULL)?((b==NULL)?0:-1):1;
+            }
+            return val;
+        }
+    }
     if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
     {
         if(a->tag_type != b->tag_type)
