@@ -161,8 +161,7 @@ static void pl3_find3_browser_add_crit()
     gtk_combo_box_append_text(GTK_COMBO_BOX(cs->lcombo), _("Or"));
     gtk_combo_box_set_active(GTK_COMBO_BOX(cs->lcombo), 0);
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
-			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED/*&&
-            criterias3*/)
+			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
         gtk_box_pack_start(GTK_BOX(cs->hbox), cs->lcombo, FALSE, TRUE, 0);
     }
@@ -330,7 +329,6 @@ static void pl3_find3_browser_add(GtkWidget *cat_tree)
     GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "find3-browser","position",1);
 	playlist3_insert_browser(&iter, pos);
-//    gtk_tree_store_append(pl3_tree, &iter, NULL);
     gtk_tree_store_set(pl3_tree, &iter, 
             PL3_CAT_TYPE, find3_browser_plug.id,
             PL3_CAT_TITLE, _("Playlist Search"),
