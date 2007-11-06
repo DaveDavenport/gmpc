@@ -229,7 +229,6 @@ static void pl3_find3_browser_init()
 	pl3_find3_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
 	pl3_find3_store2 = gmpc_mpddata_model_new();
-    printf("%i\n", GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID);
     gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(pl3_find3_store2), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 
     pl3_find3_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
