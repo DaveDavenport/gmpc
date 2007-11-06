@@ -694,15 +694,14 @@ requires 2.0.0
             if(data2 == NULL)
                 return 0;
             self->_priv->data = data2;
-            if(self->_priv->sort_column < 0 || self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
+            if(self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
             {
                 self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
             }
-            else
+            else if ( self->_priv->sort_column != GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID )
             {
                 self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
-
-           }
+            }
 
             if(self->has_up) {
                 path = gtk_tree_path_new();
@@ -756,9 +755,9 @@ requires 2.0.0
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
             int old_col = self->_priv->sort_column, old_ord = self->_priv->sort_order;
-            if(sort_column_id == -1)
+/*            if(sort_column_id == -1)
                 return;
-            self->_priv->sort_column = sort_column_id;
+  */          self->_priv->sort_column = sort_column_id;
             self->_priv->sort_order = order;
             /* trigger signal */
             if(old_col != sort_column_id || old_ord != order)
@@ -867,10 +866,14 @@ requires 2.0.0
             Self *self = GMPC_MPDDATA_MODEL(model);
             if(!self->_priv->data || !(((MpdData_real *)self->_priv->data)->next))
                 return; 
-            if(self->_priv->sort_column < 0 || self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
+            if(self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
+            {
                 self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data); 
-            else
+            }
+            else if(self->_priv->sort_column !=  GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID)
+            {
                 self->_priv->data = misc_sort_mpddata(self->_priv->data,(GCompareDataFunc)self_sort_func,self ); 
+            }
             self->_priv->old_sort_column = self->_priv->sort_column;
 
             /* tell the view that rows have changed  */    

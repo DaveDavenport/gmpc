@@ -229,7 +229,8 @@ static void pl3_find3_browser_init()
 	pl3_find3_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
 	pl3_find3_store2 = gmpc_mpddata_model_new();
-
+    printf("%i\n", GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID);
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(pl3_find3_store2), GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
 
     pl3_find3_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
     /** Fill the view */
@@ -513,6 +514,17 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
     return time;
 }
+
+static gint __position_sort(gpointer aa, gpointer bb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)aa;
+    MpdData_real *b = *(MpdData_real **)bb;
+    return a->song->pos - b->song->pos;         
+}
+
+
+
+
 static unsigned long pl3_find3_browser_view_browser()
 {
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
@@ -582,6 +594,7 @@ static unsigned long pl3_find3_browser_view_browser()
             data = mpd_playlist_search_commit(connection);
         data_t = mpd_data_concatenate(data_t, data);
         data_t = misc_mpddata_remove_duplicate_songs(data_t);
+        data_t = misc_sort_mpddata(data_t,(GCompareDataFunc)__position_sort,NULL); 
         gmpc_mpddata_model_set_mpd_data(pl3_find3_store2, data_t);
 
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find3_tree), GTK_TREE_MODEL(pl3_find3_store2));
