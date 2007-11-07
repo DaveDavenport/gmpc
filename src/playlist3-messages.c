@@ -10,12 +10,14 @@ GtkListStore *message_list = NULL;
 void message_window_open(void);
 void message_window_destroy(GtkWidget *win);
 static GIOChannel *log_file = NULL;
+
+static char *error_levels[3] = {
+    N_("Info"),
+    N_("Warning"),
+    N_("Critical")
+};
 void playlist3_message_destroy(void)
 {
-    gchar *path;
-    path = g_strdup_printf("%u:%s\n", (unsigned int)time(NULL), _("Stopped GMPC"));
-    g_io_channel_write_chars(log_file, path, -1, NULL, NULL);
-    q_free(path);
     g_io_channel_flush(log_file, NULL);
     g_io_channel_unref(log_file);
 }
@@ -35,25 +37,29 @@ void playlist3_message_init(void)
         }
         q_free(path);
 
-        path = g_strdup_printf("%u:%s\n", (unsigned int)time(NULL), _("Started GMPC"));
-        g_io_channel_write_chars(log_file, path, -1, NULL, NULL);
-        q_free(path);
         g_io_channel_flush(log_file, NULL);
     }
 }
 void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 {
+	gchar text[64];
+	struct tm *lt;
 	GtkWidget *event;
 	GtkWidget *label = NULL; 
 	GtkTreeIter iter;
-	guint t = time(NULL);
+	time_t t = time(NULL);
+    int level;
 	gchar *image_name;
     gchar *string;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
 	gtk_list_store_set(message_list, &iter, 0,t, 2, message,-1);
 
-    string = g_strdup_printf("%u:%i:%s\n",(unsigned int)t,el, message);
+
+	lt = localtime((time_t *)&t);
+	strftime(text, 64,"%d/%m/%Y-%H:%M:%S", lt);
+
+    string = g_strdup_printf("%s:%s:%s\n",text,error_levels[el], message);
     g_io_channel_write_chars(log_file, string, -1, NULL, NULL);
     q_free(string);
     g_io_channel_flush(log_file, NULL);
@@ -68,6 +74,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		timeout_callback = 0;
 
 	}
+    level = cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO);
 	switch(el)
 	{
 		case ERROR_CRITICAL:
@@ -82,8 +89,11 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 			break;
 	}
 	gtk_list_store_set(message_list, &iter, 1, image_name,-1);
-
-	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
+    if(el < level)
+    {
+        return;
+    }
+    if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 

@@ -639,6 +639,11 @@ static void tray_icon2_preferences_destroy(GtkWidget *container)
 		tray_icon2_preferences_xml = NULL;
 	}
 }
+void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data)
+{
+    int level = gtk_combo_box_get_active(cm);
+    cfg_set_single_value_as_int(config, "Default","min-error-level", level);
+}
 static void tray_icon2_preferences_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
@@ -651,6 +656,8 @@ static void tray_icon2_preferences_construct(GtkWidget *container)
 		update_popup_settings();
 		glade_xml_signal_autoconnect(tray_icon2_preferences_xml);
 	}
+    gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tray_icon2_preferences_xml, "pm-combo")),
+        cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO));
 }
 gmpcPrefPlugin tray_icon2_preferences = {
 	tray_icon2_preferences_construct,
