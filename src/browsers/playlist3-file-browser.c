@@ -656,7 +656,7 @@ static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *eve
         gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(pl3_fb_tree_search)->entry),1);
         return TRUE;
     }
-    return TRUE;
+    return FALSE;
 }
 
 
