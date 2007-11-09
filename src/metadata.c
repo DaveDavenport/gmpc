@@ -380,7 +380,11 @@ static void meta_data_retrieve_thread()
 				if(str[1]) {
 					data->song->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
 				}else{
-					data->song->artist = g_strdup(old);
+                    /* This one isn't needed to be done, just set old to NULL again so we don't 
+                     * get a double free 
+                     */
+					/*data->song->artist = g_strdup(old);*/
+                    old = NULL;
 				}					
 				g_strfreev(str);
 				debug_printf(DEBUG_INFO, "string converted to: '%s'", data->song->artist);
