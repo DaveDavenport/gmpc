@@ -428,13 +428,15 @@ static void meta_data_retrieve_thread()
 		 */	
 		q_async_queue_push(meta_results, data);		
         
-		g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
+		
 		/**
 		 * clear our reference to the object
 		 */
 		data = NULL;
 		g_mutex_unlock(meta_processing);
-	}while(1);
+
+        g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
+    }while(1);
 }
 
 static gboolean meta_data_handle_results(void)
