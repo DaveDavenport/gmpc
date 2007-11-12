@@ -161,7 +161,7 @@ static void url_progress_callback(int size, int total,GtkProgressBar *pb)
 }
 static int url_check_binary(char *data, int size)
 {
-	int i=0;
+/*	int i=0;*/
 	int binary = FALSE;
     /*
 	for(i=0;i < size;i++) {
