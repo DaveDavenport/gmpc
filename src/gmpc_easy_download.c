@@ -64,6 +64,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout);
 	/* set redirect */
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION ,1);
+	curl_easy_setopt(curl, CURLOPT_AUTOREFERER ,1);
 	/* set NO SIGNAL */
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
 

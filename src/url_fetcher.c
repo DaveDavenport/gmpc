@@ -163,9 +163,12 @@ static int url_check_binary(char *data, int size)
 {
 	int i=0;
 	int binary = FALSE;
+    /*
 	for(i=0;i < size;i++) {
 		if((unsigned int)data[i] > 127) binary = TRUE;
 	}
+    */
+    binary = !g_utf8_validate(data, size,NULL);
 	if(binary)
 		printf("Binary data found\n");
 	return binary;
@@ -238,32 +241,32 @@ void url_start_real(const gchar *url)
 		{
 			if(url_check_binary(dld.data, dld.size))
 			{
-				printf("Adding url: %s\n", text);
+				debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
 				mpd_playlist_add(connection, (char *)text);
 				pl3_push_statusbar_message(_("Added 1 stream"));
 			}
 			/** pls file: */
 			else if(!strncasecmp(dld.data, "[playlist]",10))
 			{
-				printf("Detected a PLS\n");
+				debug_printf(DEBUG_INFO,"Detected a PLS\n");
 				url_parse_pls_file(dld.data, dld.size);
 			}
 			/** Extended M3U file */
 			else if (!strncasecmp(dld.data, "#EXTM3U", 7))
 			{
-				printf("Detected a Extended M3U\n");
+				debug_printf(DEBUG_INFO,"Detected a Extended M3U\n");
 				url_parse_extm3u_file(dld.data, dld.size);
 			}
 			/** Hack to detect most non-extended m3u files */
 			else if (!strncasecmp(dld.data, "http://", 7))
 			{
-				printf("Might be a M3U, or generic list\n");
+				debug_printf(DEBUG_INFO,"Might be a M3U, or generic list\n");
 				url_parse_extm3u_file(dld.data, dld.size);
 			}
 			/** Assume Binary file */
 			else
 			{
-				printf("Adding url: %s\n", text);
+				debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
 				mpd_playlist_add(connection, (char *)text);
 				pl3_push_statusbar_message(_("Added 1 stream"));
 			}
