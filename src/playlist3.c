@@ -914,7 +914,7 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         i++;
 
         label = gtk_label_new("");
-        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Server"));
+        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("MPD Server"));
         gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
@@ -928,7 +928,7 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         gtk_table_attach_defaults(GTK_TABLE(table), label, 1,2,i,i+1);
         i++;
         label = gtk_label_new("");
-        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Mpd Version"));
+        url = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("MPD Version"));
         gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 1,0.5);
@@ -1793,7 +1793,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
         gchar *error = mpd_status_get_mpd_error(mi);
         if(error)
         {
-            gchar *mes = g_strdup_printf("%s: '%s'", _("Mpd Reported the following error"), error);
+            gchar *mes = g_markup_printf_escaped("%s: '%s'", _("MPD Reported the following error"), error);
             playlist3_show_error_message(mes, ERROR_WARNING);
             q_free(mes);
             q_free(error);

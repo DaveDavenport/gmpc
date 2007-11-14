@@ -196,6 +196,23 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		g_source_remove(cl->pd.timeout);
 		cl->pd.timeout = 0;
 	}
+    /* make sure this is fetched at once */
+    /* this might be worth puttin in a background process */
+    if(mpd_server_check_version(mi,0,12,0) &&
+            mpd_server_check_command_allowed(mi,"plchangesposid") == MPD_SERVER_COMMAND_ALLOWED)
+    {
+        data = mpd_playlist_get_changes_posid(mi, cl->playlist_id);
+    }
+    else{
+        /** This is slow */
+        data = mpd_playlist_get_changes(mi, cl->playlist_id);
+    }
+
+	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
+
+
+
+
 	/**
 	 * INITIAL FILL 
 	 */
@@ -285,16 +302,7 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 		 * What we do is, delete all cached data and give an update event */
 		/* For unpatched mpd I should directly move the mpd_Song
 		*/
-		/* this might be worth puttin in a background process */
-		if(mpd_server_check_version(mi,0,12,0) &&
-			       	mpd_server_check_command_allowed(mi,"plchangesposid") == MPD_SERVER_COMMAND_ALLOWED)
-		{
-			data = mpd_playlist_get_changes_posid(mi, cl->playlist_id);
-		}
-		else{
-			/** This is slow */
-			data = mpd_playlist_get_changes(mi, cl->playlist_id);
-		}
+
 		for(;data != NULL;
 				data = mpd_data_get_next(data))
 		{
@@ -353,7 +361,6 @@ void playlist_list_data_update(CustomList * cl, MpdObj * mi,GtkTreeView *tree)
 			}
 		}
 	}
-	cl->playlist_id = mpd_playlist_get_playlist_id(mi);
 	/**
 	 * Signal that something changed
 	 */

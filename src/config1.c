@@ -909,7 +909,8 @@ static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 				if(!root) return;
 			}
 		}
-		root = root->next;
+        if(root)
+            root = root->next;
 	}
 }
 void cfg_do_special_cleanup(config_obj *cfg)

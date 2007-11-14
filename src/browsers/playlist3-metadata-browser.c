@@ -493,6 +493,8 @@ void info2_fill_song_view(mpd_Song *song)
 	GtkWidget *expander, *gmtv,*table, *table2,*image,*ali,*button, *label,*hbox;
 	char *markup = NULL;
 	int i = 0;
+    mpd_Song *cur = mpd_playlist_get_current_song(connection);
+   
 	/** 
 	 * Clear the view
 	 */
@@ -501,6 +503,11 @@ void info2_fill_song_view(mpd_Song *song)
 	//song = mpd_database_get_fileinfo(connection, path);
 	if(!song)
 		return;
+    if(cur && strcmp(song->file, cur->file))
+    {
+        /* disable the current songs thingy */       
+        show_current_song = FALSE;
+    }
 
 	/**
 	 * Clear header
@@ -2022,6 +2029,8 @@ static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userd
 			if(show_current_song) {
 				mpd_Song *song = mpd_playlist_get_current_song(connection);
 				if(song) {
+                    
+                    
 					info2_fill_song_view(song);
 				}
 			}

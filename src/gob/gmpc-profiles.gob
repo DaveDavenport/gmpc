@@ -294,7 +294,7 @@ class Gmpc:Profiles from G:Object
   gchar *
   create_new_item(self, const gchar *id)
   {
-        self_create_new_item_with_name(self, id, "New Profile");
+        return self_create_new_item_with_name(self, id, "New Profile");
   }
   public 
   gchar*
@@ -336,7 +336,10 @@ class Gmpc:Profiles from G:Object
     int i=0;
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
+    {
+        debug_printf(DEBUG_WARNING, "Trying to remove not-existing profile: %i\n", id);
       return;
+    }
     self_changed(self,PROFILE_REMOVED,-1, id);
     for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
     if(self->_priv->list[i] == prof)
@@ -346,6 +349,8 @@ class Gmpc:Profiles from G:Object
         self->_priv->list[i] = self->_priv->list[i+1];
       }
       self->_priv->num_profiles--;
+      self->_priv->list = g_realloc(self->_priv->list, (self->_priv->num_profiles+1)*sizeof(Profile *));     
+      
       cfg_remove_class(self->_priv->profiles, (char *)id);
       self_free_profile(prof);
     }
@@ -365,7 +370,12 @@ class Gmpc:Profiles from G:Object
 		if(!prof)
 		{
 			g_free(id);
-			self_set_current(self, self->_priv->list[0]->id);
+            if(self->_priv->list != NULL)
+            {
+			    self_set_current(self, self->_priv->list[0]->id);
+            } else {
+                self_add_default(self);    
+            }
 			id = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
 		}
 		return id; 
