@@ -124,7 +124,6 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 	{
 		return META_DATA_UNAVAILABLE;	
 	}
-	debug_printf(DEBUG_INFO,"request for: %s, %i\n", song->title, type);
 	/* Get values acording to type */
 	if(type == META_ALBUM_ART)
 	{

@@ -297,7 +297,6 @@ static void pl3_find2_browser_selected(GtkWidget *container)
     {
         pl3_find2_browser_init();
     }
-
     gtk_container_add(GTK_CONTAINER(container),pl3_find2_vbox);
     gtk_widget_grab_focus(pl3_find2_tree);
     gtk_widget_show(pl3_find2_vbox);
@@ -692,19 +691,34 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 
 static void pl3_find2_browser_destroy(void)
 {
+  if(pl3_find2_ref)
+  {
+      GtkTreeIter iter;
+      GtkTreePath *path;
+      path = gtk_tree_row_reference_get_path(pl3_find2_ref);
+      if(path)
+      {
+          if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
+          {
+              gtk_tree_store_remove(GTK_TREE_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter);
+          }
+          gtk_tree_path_free(path);
+      }
+      gtk_tree_row_reference_free(pl3_find2_ref);
+      pl3_find2_ref = NULL;
+  }
   if(pl3_find2_vbox)
   {
     gtk_widget_destroy(pl3_find2_vbox);
+    pl3_find2_vbox = NULL;
   }
   if(pl3_find2_store2)
   {
     g_object_unref(pl3_find2_store2);
-  }
-  if(pl3_find2_ref)
-  {
-    gtk_tree_row_reference_free(pl3_find2_ref);
+    pl3_find2_store2 = NULL;
   }
 }
+
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
 {
 	if(what&MPD_CST_DATABASE)

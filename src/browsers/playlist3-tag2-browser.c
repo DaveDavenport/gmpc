@@ -35,6 +35,7 @@ static void tag2_browser_add(GtkWidget *cat_tree);
 
 /* connection changed signal handling */
 static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data);
+static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data);
 /* intergration in gmpc */
 static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
@@ -82,6 +83,7 @@ gmpcPlugin tag2_plug = {
 	.browser = &tag2_browser_plugin,
 	.pref = &tag2_prefs,
 	.mpd_connection_changed = tag2_connection_changed,
+	.mpd_status_changed = tag2_status_changed,
 };
 /** Little hack to work around gmpc's limitations */
 //static GHashTable *tag2_ht = NULL;
@@ -841,6 +843,18 @@ static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data)
 
 	}
 
+}
+
+static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
+{
+    if(what&MPD_CST_DATABASE)
+    {
+        if(tag2_ht)
+        {
+            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
+            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
+        }
+    }
 }
 
 static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter)

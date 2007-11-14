@@ -294,7 +294,7 @@ class Gmpc:Profiles from G:Object
   gchar *
   create_new_item(self, const gchar *id)
   {
-        self_create_new_item_with_name(self, id, "New Profile");
+        return self_create_new_item_with_name(self, id, "New Profile");
   }
   public 
   gchar*
