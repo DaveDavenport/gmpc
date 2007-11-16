@@ -131,6 +131,8 @@ void connect_callback(MpdObj *mi);
 /* Glade prototypes, these would be static otherwise */
 void send_password(void);
 
+/* hack */
+extern guint sel_changed_handler_id;
 /**
  * Set paths
  */
@@ -654,7 +656,11 @@ int main (int argc, char **argv)
 			plugins[i]->save_yourself();
 		}
 	}
+    /* Should fix some possible crashes */
+    g_signal_handler_disconnect(gtk_tree_view_get_selection(playlist3_get_category_tree_view()), sel_changed_handler_id);
+    gtk_tree_view_set_model(playlist3_get_category_tree_view(),NULL);
 
+    
 	/* time todo some destruction of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->destroy) {

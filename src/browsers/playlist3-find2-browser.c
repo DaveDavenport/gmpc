@@ -480,9 +480,11 @@ static void pl3_find2_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 static void pl3_find2_browser_replace_selected()
 {
     mpd_playlist_clear(connection);
-    pl3_find2_browser_add_selected();
-    mpd_player_play(connection);	
-
+    if(mpd_check_connected(connection))
+    {
+        pl3_find2_browser_add_selected();
+        mpd_player_play(connection);	
+    }
 }
 
 static int pl3_find2_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)

@@ -296,8 +296,11 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
 static void tag2_browser_replace_selected(GtkWidget *item, tag_element *te)
 {
 	mpd_playlist_clear(connection);
-	tag2_browser_add_selected(item, te);
-	mpd_player_play(connection);
+    if(mpd_check_connected(connection))
+    {
+    	tag2_browser_add_selected(item, te);
+        mpd_player_play(connection);
+    }
 }
 
 /**

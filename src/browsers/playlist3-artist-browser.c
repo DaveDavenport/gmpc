@@ -749,8 +749,11 @@ static void pl3_artist_browser_add_folder()
 static void pl3_artist_browser_replace_folder()
 {
 	mpd_playlist_clear(connection);
-	pl3_artist_browser_add_folder();
-	mpd_player_play(connection);
+    if(mpd_check_connected(connection))
+    {
+        pl3_artist_browser_add_folder();
+        mpd_player_play(connection);
+    }
 }
 
 static void pl3_artist_browser_category_key_press(GtkWidget *tree, GdkEventKey *event, int selected_type)
@@ -964,8 +967,11 @@ static void pl3_artist_browser_button_release_event(GtkWidget *but, GdkEventButt
 static void pl3_artist_browser_replace_selected()
 {
 	mpd_playlist_clear(connection);
-	pl3_artist_browser_add_selected();
-	mpd_player_play(connection);
+    if(mpd_check_connected(connection))
+    {
+        pl3_artist_browser_add_selected();
+        mpd_player_play(connection);
+    }
 }
 
 static void pl3_artist_browser_add_selected()

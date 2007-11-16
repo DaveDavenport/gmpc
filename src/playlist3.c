@@ -34,7 +34,7 @@
 #include "revision.h"
 #include "gmpc-clicklabel.h"
 
-
+guint sel_changed_handler_id = 0;
 static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 
 
@@ -1083,7 +1083,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
-	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
+	sel_changed_handler_id = g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
 	/* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
