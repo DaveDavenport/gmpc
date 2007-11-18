@@ -375,6 +375,8 @@ class Gmpc:Profiles from G:Object
 			    self_set_current(self, self->_priv->list[0]->id);
             } else {
                 self_add_default(self);    
+                self_load_from_config(self);
+                self_changed(self, PROFILE_ADDED, -1,"Default");
             }
 			id = cfg_get_single_value_as_string_with_default(config, "connection", "currentprofile", "Default");
 		}
