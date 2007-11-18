@@ -370,7 +370,7 @@ class Gmpc:Profiles from G:Object
 		if(!prof)
 		{
 			g_free(id);
-            if(self->_priv->list != NULL)
+            if(self->_priv->list != NULL && self->_priv->list[0])
             {
 			    self_set_current(self, self->_priv->list[0]->id);
             } else {
