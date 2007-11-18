@@ -906,7 +906,7 @@ gboolean playlist3_enter_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
         gtk_table_attach_defaults(GTK_TABLE(table), label, 0,1,i,i+1);
         label = gtk_label_new("");
         gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-        url = g_markup_printf_escaped("%s",id);
+        url = g_markup_printf_escaped("%s",gmpc_profiles_get_name(gmpc_profiles,id));
         gtk_label_set_markup(GTK_LABEL(label), url);
         gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
         q_free(url);
