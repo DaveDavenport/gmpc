@@ -459,7 +459,6 @@ void add_artist(const gchar *artist)
 {
 	MpdData *data = NULL;
 	/* Check artist */
-	printf("artist: %s\n", artist);
 	g_return_if_fail(artist != NULL);
 
 	mpd_database_search_start(connection,TRUE);
@@ -974,7 +973,7 @@ char *connection_get_hostname()
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_hostname(gmpc_profiles, profile);
-  g_free(profile);
+    g_free(profile);
 
 	return retv;
 }
