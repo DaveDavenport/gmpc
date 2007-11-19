@@ -7,10 +7,27 @@ v0.1, Feb. 2007
 Gmpc
 -----
 
-4. Improve tag-browser usability, if succeeds make it replace the artist browser.
 6. Skip to next album keybinding.
 7. Rethink keybindings, is a mess now.
 8. Try to finish help/manual.
+
+Gmpc 0.15.5+
+------------
+1. Show tooltips in GmpcMpdDataTreeview (Gtk 2.12 api)
+    a. Model tooltip after the notification tooltip (image on left, + some basic song info)
+2. Move main playlist to use the GmpcMpdDataModel, do this by inheriting GmpcMpdDataModel and writing custom filling functions.
+    a. This will remove any remaining support for mpd 0.11.*
+    b. Can resue GmpcMpdDataTreeview 
+    c. Easier for extreplaylist to provide more full interface.
+    d. implicitely supports 1
+3.  Plugins connection_changed and status change removed? (use GmpcConnection) (no sure yet).
+4.  Turn the browser list into a list.
+    a. Write 2 Models, one that shows all. one that showed filtered list.
+5.  Create a button list that can use GtkTreeModel backend. As possible alternative of the dropdown in collapsed mode.
+6.  Support loading an image directly from the internet. (This can be prefered when using a metadata daemon).
+7.  Make a non-blocking signal based curl download module. (Keep old api for plugins where blocking does not matter (allready runs in other thread)).
+    This is usefull for f.e. 6. and magnatune/jamendo plugin.
+
 
 
 Plugins
