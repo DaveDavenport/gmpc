@@ -231,9 +231,9 @@ requires 2.0.0
             {
                 data = mpd_data_get_next_real(data,FALSE);
             }
+            g_assert(n<self->_priv->num_rows);
             if(self->has_up && n == 0)
                 data = NULL;
-
 
             iter->stamp = self->_priv->stamp;
             iter->user_data = data; 
@@ -257,9 +257,12 @@ requires 2.0.0
                 return TRUE;
             }
             if(mpd_data_get_next_real(data,FALSE) == NULL)
+            {
                 return FALSE;
+            }
             iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
             iter->user_data2 = GINT_TO_POINTER(n+1);
+            g_assert(n < self->_priv->num_rows);
 
             return TRUE;
         }
@@ -340,6 +343,12 @@ requires 2.0.0
             /* set value to the correct type */
             g_value_init(value, self->_priv->types[column]);
 
+            /** 
+             * Sanity checks 
+             */
+             g_assert((n < self->_priv->num_rows || n == 0));
+            g_assert(!(data == NULL && n != 0));
+
             /* handle row up */
             if(data == NULL && n == 0)
             {
@@ -365,6 +374,7 @@ requires 2.0.0
                 }
                 return;
             }
+
             if(column == MPDDATA_MODEL_META_DATA)
             {
                 if(self->_priv->images[n] == NULL)
@@ -690,10 +700,11 @@ requires 2.0.0
                 }
                 q_free(self->_priv->images);
             }
-
             if(data2 == NULL)
                 return 0;
-            self->_priv->data = data2;
+
+            self->_priv->data = mpd_data_get_first(data2);
+            data2 = NULL;
             if(self->_priv->sort_column == MPDDATA_MODEL_COL_ICON_ID)
             {
                 self->_priv->data = misc_sort_mpddata_by_album_disc_track(self->_priv->data);
