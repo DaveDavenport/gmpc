@@ -349,7 +349,29 @@ int main (int argc, char **argv)
      * cleanup 
      */
     q_free(url);
-
+    /** 
+     * If requested, output debug info to file 
+     */
+    if(cfg_get_single_value_as_int_with_default(config, "Default", "Debug-log",FALSE))
+    {
+        url = gmpc_get_user_path("debug-info.log");
+        if(url)
+        {
+            FILE *fp = fopen(url, "a");
+            if(!fp)
+            {
+                debug_printf(DEBUG_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
+                show_error_message(_("Failed to load debug-log file."), TRUE);
+                abort();
+            }
+            /* Set the output */
+            debug_set_output(fp);
+            /* Force highest level */
+            debug_set_level(DEBUG_INFO);
+            debug_printf(DEBUG_INFO,"***** Opened debug log file\n");
+            q_free(url);
+        }
+    }
 	/**
 	 * TODO, Check if version changed, then say something about it 
 	 */
@@ -687,6 +709,8 @@ int main (int argc, char **argv)
 	g_object_unref(playlist);
 	/* cleanup curl */
 	curl_global_cleanup();
+
+    debug_printf(DEBUG_INFO, "Quit....\n");
 	return 0;
 }
 

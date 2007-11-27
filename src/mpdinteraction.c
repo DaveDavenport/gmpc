@@ -116,7 +116,6 @@ int update_mpd_status()
 	if(!mpd_check_connected(connection)) return TRUE;
 	mpd_status_update(connection);
 
-	/* unlock it */
 	return TRUE;
 }
 

@@ -2,7 +2,7 @@
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [15])
 m4_define([gmpc_micro_version], [4])
-m4_define([gmpc_nano_version], [102])
+m4_define([gmpc_nano_version], [103])
 m4_define([gmpc_version],
           [gmpc_major_version.gmpc_minor_version.gmpc_micro_version.gmpc_nano_version])
 
@@ -102,7 +102,7 @@ AC_SUBST(gmodule_LIBS)
 AC_SUBST(gmodule_CFLAGS)
 
 # libmpd
-PKG_CHECK_MODULES([libmpd], libmpd >= 0.14.99)
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.14.103)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 

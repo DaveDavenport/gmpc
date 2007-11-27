@@ -12,7 +12,11 @@ class Gmpc:Connection from G:Object{
 	void
 	connection_changed(self, MpdObj *mi,int connect)
 	{
-		debug_printf(DEBUG_INFO, "Connection Changed fired\n");
+		debug_printf(DEBUG_INFO, "Connection Changed fired: %i\n", connect);
+        if(mpd_check_connected(mi) != connect)
+        {
+            debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connect, connect);
+        }
 	} 
 	signal last NONE (POINTER, INT)
 	void
