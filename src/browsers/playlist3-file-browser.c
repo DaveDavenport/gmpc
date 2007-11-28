@@ -43,7 +43,7 @@ static void pl3_file_browser_selected(GtkWidget *container);
 static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTreePath *tpath, gpointer user_data);
 static void pl3_file_browser_collapse_row(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path, gpointer user_data);
 static int pl3_file_browser_cat_popup(GtkWidget *tree, GdkEventButton *event, gpointer user_data);
-static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event,gpointer data); 
+static gboolean pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event,gpointer data); 
 static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem *bt);
 /* testing */
 static void pl3_file_browser_reupdate(void);
@@ -627,16 +627,17 @@ static int pl3_file_browser_cat_popup(GtkWidget *tree, GdkEventButton *event, gp
         /* show everything and popup */
         return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
-static void pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event,gpointer data)
+static gboolean pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event,gpointer data)
 {
     if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert) {
         pl3_file_browser_replace_folder();
     } else if(event->keyval == GDK_Insert) {
         pl3_file_browser_add_folder();
     }
+    return FALSE;
 }
 
 static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
