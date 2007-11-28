@@ -1,4 +1,8 @@
 28-11-2007 Qball Cow <Qball@Sarine.nl>
+	* src/gob/gmpc-mpddata-treeview.gob: Do some sanity checking on
+	sort-column.
+	
+28-11-2007 Qball Cow <Qball@Sarine.nl>
 	* src/browser/playlist3-file-browser.c:	fix key-press-event propagation.
 
 28-11-2007 Qball Cow <Qball@Sarine.nl>

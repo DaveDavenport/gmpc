@@ -334,7 +334,7 @@ requires 2.0.0
 
     interface Gtk:Tree:Model
         private void
-        get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0), GValue *value (check null))
+        get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0 < MPDDATA_MODEL_N_COLUMNS), GValue *value (check null))
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
             MpdData_real *data = iter->user_data;	
