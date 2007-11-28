@@ -1,3 +1,4064 @@
+28-11-2007 Qball Cow <Qball@Sarine.nl>
+    * Changelog: Add missing entries.
+
+commit 84053c8cab765eb38f87628d577a570236d5ea2a
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Nov 27 15:26:00 2007 +0100
+
+    1. allow user to redirect output to debug file.
+    2. Print connection state out, and error if it's wrong.
+
+commit bee5658bec9c91c26ece8658b36a2c13a060d88b
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Fri Nov 23 14:28:46 2007 +0100
+
+    * Add some extra sanity checks to gmpc-mpddata-model. (asserts, so gmpc won't run in a broken state, should make finding bugs easier).
+    * Make gmpc-mpddata-model supports getting a MpdData list that does not point to the first entry. (causing the crash by magnatune plugin). It was the magnatune plugin misbehaving. But it's more important that gmpc-mpddata is robust.
+
+commit c8b0a0cd2601788eb9005b35f6467a763996071e
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Mon Nov 19 12:51:56 2007 +0100
+
+    Update todo list
+
+commit bd368b4657a6d230210fc7f09f3e4a24bf0ed90e
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Mon Nov 19 00:32:36 2007 +0100
+
+    Fix profile crasher, after adding default to profiles file, I should actually load that file
+
+commit 4fca5f7533669a4e397155e2a21f8cc10dc74c4a
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Mon Nov 19 00:05:28 2007 +0100
+
+    fix profile naming
+
+commit f283e4ed5d05f453c117b70b8965b947b1211a1c
+Author: Qball Cow <qball@qball-desktop.(none)>
+Date:   Sun Nov 18 16:16:05 2007 +0100
+
+    Even an extra check for existing list element, but should never happen
+
+commit 790cce0dbc73bd5cad590ada482b3cc55b64cd57
+Author: Qball Cow <qball@qball-desktop.(none)>
+Date:   Fri Nov 16 22:18:55 2007 +0100
+
+    Bump version to 0.15.4.102
+
+commit 4abcecd0242f48a93a736fbf134fa936a59eb01e
+Author: Qball Cow <qball@qball-desktop.(none)>
+Date:   Fri Nov 16 16:34:00 2007 +0100
+
+    fix crasher bug if mpd crashes during transaction, and another crash on exit bug
+
+commit 0b18f539f877a487107789235087604dd9faa937
+Merge: 7c1dfc4... b7cdc5f...
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Nov 14 18:07:40 2007 +0100
+
+    Merge branch 'master' of git://repo.or.cz/gmpc
+
+commit 7c1dfc41ec9cedf21ef31a2c7d7efe80a1146329
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Nov 14 12:40:05 2007 +0100
+
+    Disable 'tracking mode' when song_view is requested on another song
+
+commit 4e00d36c94951ec79fcba7bb98bf97b5e30560f0
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Nov 14 12:23:49 2007 +0100
+
+    Check if there are items in the avahi list, if not, add a default element and return that.
+
+commit b7cdc5f81cb0005e934880dcf3549737f0cb8dbc
+Author: Qball Cow <qball@qball-desktop.(none)>
+Date:   Tue Nov 13 22:32:47 2007 +0100
+
+    Fix crasher when trying to cleanup config file with only one element
+
+commit 1f65817fe046148e90efcda5dad66829a46f0a28
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Nov 13 00:27:45 2007 +0100
+
+    Destroy find2 completely, not 1/2
+
+commit e056258fa54841718a71f2c5909034e2a05144b9
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Nov 12 23:16:15 2007 +0100
+
+    Moving code so its less likely that something goes wrong
+
+commit f222ce8f95afe8631bcad10a3d1aa993a3b1dca7
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Nov 12 17:17:51 2007 +0100
+
+    fix warnings
+
+commit 5e5d4189cdac96a5cc10582e99171c5a48cce411
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Nov 12 16:43:19 2007 +0100
+
+    When the db changes reload all tag browsers (by faking a reconnect)
+
+commit a282a480cbc28be665e85041bb8d1963477af3b7
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Nov 12 16:30:10 2007 +0100
+
+    Fix detecting valid playlist.. remove printf's
+
+commit 81d0bc176d3044835b92fae980676bee2f299f93
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Nov 12 15:55:30 2007 +0100
+
+    Remove a debug_printf that could have tried to print a NULL pointer
+
+commit 82d4b2d394dca790dbbee867bb3cc3f31994c404
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Fri Nov 9 00:02:02 2007 +0100
+
+    Fix broken keyboard navigation in file browser
+
+commit e5d0963a5b573d2121ca40cf8c70e34574f18204
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Thu Nov 8 13:44:57 2007 +0100
+
+    update some translation files
+
+commit 79e461feb3b4e310e5637d343ea528625a067236
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Nov 7 17:46:15 2007 +0100
+
+    * Cleanup the gmpc.log file output. Now show date+time instead of unix time, and show severity as string, not number.
+    * Don't show started gmpc and stopped gmpc. This isn't that usefull
+    * Add an option to the configuration window to set the severity level of the shown inline messages. (or turm them off)
+
+commit c468a1025242cfa3daf30b36fda5483024f809fe
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Nov 6 22:57:16 2007 +0100
+
+    remove printf
+
+commit 6705dec77035debddb26e01898d1ebb64b078e03
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Nov 6 22:37:16 2007 +0100
+
+    Bump too gmpc 0.15.4.101
+
+commit 80a86a7f93c67b429a570492942ca358267a31e5
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Nov 6 22:11:04 2007 +0100
+
+    Extra sorting fix
+
+commit 6500e889e153403cd960537dca8e3d7327e0b095
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Nov 6 20:45:45 2007 +0100
+
+    Fixing sorting issues
+
+commit 94cd3a29d22b4fcf9569927d4eef84861b95e724
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Nov 3 14:48:38 2007 +0100
+
+    Add version to plugin list
+
+commit 62a3d40fef8717bc96a2ac2fad5357b57ec80b1b
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Nov 3 14:26:47 2007 +0100
+
+    Make all version major/minor/micro/nano available in gmpc by defines
+
+commit 68559b3e5010fc429ba78325bbfb490571f7b9ff
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Fri Nov 2 14:55:05 2007 +0100
+
+    Fix crash when the version number is less then 4 numbers large.
+
+commit 914924730d481d1a3b98da7850b7fb88cf0c66e1
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 31 21:09:03 2007 +0100
+
+    Update potfile
+
+commit 579cae4551bc093a0e827f08d5ccec6e227f36c4
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 31 14:41:53 2007 +0100
+
+    Fix build
+
+commit 95102bb27805f933d6fbf14fc386889eaf653695
+Merge: e15be39... 331acc0...
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Oct 31 14:17:00 2007 +0100
+
+    Merge branch 'master' of git+ssh://repo.or.cz/srv/git/gmpc
+
+commit e15be390397ff92777b648af6787ca54427eb036
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Oct 31 13:43:04 2007 +0100
+
+    save position
+
+commit 331acc0364e0503cd18771afd4ab911553a1717a
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Oct 30 21:42:28 2007 +0100
+
+    Bump version 0.15.4.99
+
+commit 3a55d8d86db656cbe99921bc2efbfb26f475cfd6
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Oct 30 20:09:53 2007 +0100
+
+    Some cleanup
+
+commit c4e435430fe83c31edfd21594a2c82bc62d06c3a
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Tue Oct 30 15:43:44 2007 +0100
+
+    Extra lazy file-browser tree
+
+commit e0ba6ef1eb884214792182d4141f0fe67c40d27d
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 30 13:21:39 2007 +0100
+
+    Add an option to _not_ load the plugins
+
+commit 9f97bd16dfdf659539cf88e38358f4ed0f01ae1d
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 30 13:03:48 2007 +0100
+
+    Update plugin howto documentation.
+    Add more checks to the plugin validation.
+
+commit 7c31d19d5f5a17ff49a6a246c72d75601f5a720e
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 19:54:17 2007 +0200
+
+    Some doc update, and removing opacity from tooltip, causing more problems then profit
+
+commit 7db40207d273bd5313b4ce8c7e022b76e84d97e2
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 17:07:21 2007 +0200
+
+    Don't load the dir on every open/close
+
+commit 0491d9e7bd66c4227894c7112f6c991ea5c96425
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 17:02:32 2007 +0200
+
+    Fix another possible crasher, but code should not be touched anyway
+
+commit 43b73b788fbe5379623dd2935fd547b21ff29fab
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 17:00:54 2007 +0200
+
+    Use enumertion for readability, fix using right treeview, and enable search as you type
+
+commit a7d0c2a6fbf36d91eb879a714f041976d615940d
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 16:49:12 2007 +0200
+
+    Fix add folder directory selection
+
+commit 9bc481e89d4a5470467b10edc729b6affcab41b0
+Merge: 9cd950a... b0316b4...
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 16:29:47 2007 +0200
+
+    Merge branch 'file-rewrite'
+
+commit 9cd950a7b1f3f0d2d551ac64240153d343966668
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 16:19:23 2007 +0200
+
+    Cleanup metadata.c a little
+
+commit b0316b41d123c462f5cd02dfefb73cb47b55340b
+Merge: 4546747... 957b891...
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 15:45:31 2007 +0200
+
+    Merge branch 'master' into file-rewrite
+
+commit 957b89157c1e18d6b06405be42433c3c87ed9776
+Author: Qball Cow <qball@qball-vbox-kubuntu.(none)>
+Date:   Sat Oct 27 15:42:45 2007 +0200
+
+    Fix for popping up in KDE
+
+commit 45467474f773480fd665997680c76002775cacde
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 15:16:36 2007 +0200
+
+    Some cleanups
+
+commit 074c04a339d34f87b08f67b22b5ff5f9a6e61524
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 15:08:18 2007 +0200
+
+    Show dirname and playlist name in filename column
+
+commit d4bc5fab02762c795b50cac8910cbdfadf83bbb7
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 27 15:00:03 2007 +0200
+
+    Move file browser to 2 pane view
+
+commit 4f18409919a82970620535310b34811a5f2423cf
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Sat Oct 27 02:15:43 2007 +0200
+
+    Add gtk_set_locale
+
+commit ef304a67aca69d86a50b088f25544bebf7237095
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Thu Oct 25 21:15:16 2007 +0200
+
+    Fix the song deleting
+
+commit eea7de3f6c23aeb3cfe1c9a1c4d49de986c9b18b
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Thu Oct 25 20:41:39 2007 +0200
+
+    Fix saving of sorting on the icon column
+
+commit 37df7ba368961c97324ec3ab22e2640b8797ed98
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 24 22:26:21 2007 +0200
+
+    Fix size of gmpc-fetching-cover
+
+commit b63dcb947132dc45ca0e0877b1ae352f5015874c
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 24 22:10:25 2007 +0200
+
+    Allow setting of images size, [gmpc-mpddata-model] size='32'
+
+commit fb94ab94901ed43430e282ffa8aa0dd9a49b5296
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 24 21:40:56 2007 +0200
+
+    Sorting the albums in the metadata browser on date.
+    Making labels on buttons not selectable.
+
+commit f37a09c63e52863ceb9abc229cc4b2c856731816
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 24 20:33:49 2007 +0200
+
+    Some documentations updates
+
+commit 9b9fe92830e91f7b245dc9c7f99760cfab2d7c14
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Wed Oct 24 18:26:36 2007 +0200
+
+    Fix tray tooltip for songs withouth tag
+
+commit b7e02983c34bf6d0a08481510515761ce19ef6d5
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Oct 24 17:26:23 2007 +0200
+
+    Add pluginhowto first scribbles
+
+commit 0c54c5ca0adbede40c80b100f920fb49918663f8
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Oct 24 15:42:38 2007 +0200
+
+    Some sanity checking for plugins
+
+commit 0ddc30f622ede380baf3d3f0fa01b2e178decb9a
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Wed Oct 24 08:19:24 2007 +0200
+
+    Set tooltip on GtkStatusIcon if on gtk+-2.12.0 or higher.
+    Don't refresh tooltip if playlist changes. no longer needed.
+
+commit cdb63b9a2908b2a29ff9f696c77b726348a8ea2a
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 23 14:25:16 2007 +0200
+
+    Fix compiler warnings.
+    Add deleting of multiple items to the db-search
+    Remove forcing of old search method
+    Make sorting on icon, is sorting on artist/album/disc/track
+
+commit a4e0dac178ef68cfe1deb391dccc3757cbc62b58
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 23 13:32:45 2007 +0200
+
+    Fix the and/or style search for the old_style (mpd < 0.13) playlist search
+
+commit b517a1fe34aded3e27da864f91b57c8a6fc5a042
+Merge: ed7f98e... 2c97f8e...
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 23 12:37:00 2007 +0200
+
+    Merge branch 'master' into Advanced-DB-Search
+
+commit ed7f98ed88f90851b42e3e44da14e43b8acd491b
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 23 12:36:18 2007 +0200
+
+    Extend to playlist browser
+
+commit 3c5f7524154ddff04f73f7ad82b41c04cb39ac1e
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Tue Oct 23 09:28:27 2007 +0200
+
+    Add 'And/Or' support to the database browser
+
+commit 2c97f8eee000a12bf6365cb3a29444d9dd9b6150
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Oct 22 21:21:15 2007 +0200
+
+    Sort the songs by artist/album/disc/track when added massifely from tag-browser or metabrowser. (f.e. adding all from genre Jazz or Artist Norah Jones
+
+commit d2e8b95e938f966b7ecf82b7b66f48a3f9dee73c
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Oct 22 21:03:27 2007 +0200
+
+    Fix the sorting issue:
+    The sort function in gmpc-mpddata-model needs to return -1 0 1 now.. not just 0 or 1. (different sorting system.)
+    Right casting of the pointer from qsort to the linked list index...
+    Lots more
+
+commit 1c3072adcbd1ad0f9309237c6fc85e2933967bf4
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Oct 22 17:00:03 2007 +0200
+
+    bump version to 0.15.4.99
+
+commit 60d514e7e636dcec9a84a49cd8db0b4c0ea8727c
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Oct 22 16:57:29 2007 +0200
+
+    Better sorting algorithm, that is tons faster
+
+commit adbf5878c0fcfa2774d749c2ef52f172e70b48a9
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Mon Oct 22 13:09:41 2007 +0200
+
+    fix gmpc-mpddata-obj for glib libmpd
+
+commit 41c342b675ca961aa4f5e8579477af698bec7133
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 23:24:00 2007 +0200
+
+    Allow gmpc to be started hidden. using --start-hidden.
+    Or the start-hidden=1 option in the config file.
+
+commit 412cc3965c63640d7c1c00e63060408ae6a92ace
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 22:03:10 2007 +0200
+
+    Fixing bug 1551
+
+commit cd4e0559ce3372ab1e12f6ddc0160dacd991b2cd
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 21:13:51 2007 +0200
+
+    Fixing bug 1588
+
+commit 4741a2a9d6ce9190e48fcd17cc3d0908f1dd4d6b
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 20:49:38 2007 +0200
+
+    Fix metadata browser not saving his current position to the wrong config key
+
+commit d3a11cacaa623ace328f817e3c28b59ac20c0ccb
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 20:03:06 2007 +0200
+
+    Show a message when a profile is added/removed.  Also add a function so you can add a new profile directly with a name.
+
+commit 2ec11ab972b6a43a4967f39aafc05a617469bad5
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sun Oct 21 18:07:44 2007 +0200
+
+    Fix broken browser updating (because of missing else in if , if else, else statenment)
+
+commit a75793e47074cdfcefed7fb63483e3fb136d5035
+Author: Qball Cow <Qball@sarine.nl>
+Date:   Sun Oct 21 01:50:21 2007 +0200
+
+    Adjust revision to git hash
+
+commit 9b4eec95f883390e12d19aad17430f2cbd5e5bc9
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 20 23:07:35 2007 +0200
+
+    Only set transient window if transient window is available
+
+commit 176fa754104295ccdf5bc60aa897c39d3a0086d1
+Author: Qball Cow <Qball@Sarine.nl>
+Date:   Sat Oct 20 22:34:08 2007 +0200
+
+    Fix typing error that caused playlist3-messages.c to be placed inside include/gmpc/ instead of playlist3-messages.h
+
+commit 6bb2b42ce58ddfd323893039f8054c8de571fb38
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 20 18:19:29 2007 +0000
+
+    Make popup windows transient for the main window
+    
+    
+
+
+commit 26d66b25bba2b0f396bed1a8a65f18bba7427f34
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 20 17:42:46 2007 +0000
+
+    Make popup windows transient for the main window
+    
+    
+
+
+commit a7d2327ba25513de2b5b605b1191853e800e3b33
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 20 16:31:24 2007 +0000
+
+    remove more printf spam
+    
+    
+
+
+commit e455b0036f4e0cf1e1af160fe5367b6051ad6ae4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 20 15:16:48 2007 +0000
+
+    Fix segfault
+    
+    
+
+
+commit 94ecf5f02bde037596c7d61ccda6d6f963d78f52
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 20 14:58:04 2007 +0000
+
+    Add a Gmpc::Signals object. For now it only contains a markup-changed signal, this is used by gmpc-mpddata-model for changing the markup used.
+    
+    Readd the markup editor in the interface preferences window.
+    
+    
+
+
+commit 0cae9ee6b5d176e082f9b25e11928765f51caa9d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 19 22:23:22 2007 +0000
+
+    Fix configure script so --enable-mmkeys doesn't disable it
+    
+    
+
+
+commit 4889d11800e005cffc0ebf2fb8c0f323e14c99bd
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 19 21:27:24 2007 +0000
+
+    Deleting of playlists can also happen with mpd < 0.13.0
+    
+    
+
+
+commit 071d52b0f4a380ebbe3ba21be525a7977ab334ce
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 19 21:24:09 2007 +0000
+
+    Remove alot of printf's
+    
+    
+
+
+commit f55e05c5ee6f355c14140b7df92abc9eb997a274
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 19 20:52:03 2007 +0000
+
+    Add  a function to split version into 4 subversions (0.15.4.96-> 0 15 4 96)
+    Check if the old version was below 0.15.4.98, if it was remove all the column configurations. to avoid crashing.
+    
+    
+
+
+commit bbe19a5e9206e62f6096ca2c123c18a37d8b2633
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Oct 18 20:50:56 2007 +0000
+
+    Remove some files that won't belong in svn
+    
+    
+
+
+commit e94905aafed359866f56d45372b8b8fb6873c4af
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Oct 18 14:48:23 2007 +0000
+
+    Make the artist-browser enable-able using configure flag (--enable-artistbrowser)
+    Fix the --enable/--disable options in the configure script.
+    
+    
+
+
+commit e3f65db683676daf86160c6dd139e4c5cd222d2b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Oct 18 13:57:42 2007 +0000
+
+    Disable the artist browser, to enable it a define (ARTIST_BROWSER) needs to be set.
+    
+    
+
+
+commit 7eb442140cc2b56a8d9e070cb9f1fd2c03440d71
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Oct 17 20:20:40 2007 +0000
+
+    fix g_object_unref to g_io_channel_unref
+    
+    
+
+
+commit 8dac2f36c6e014258541d23b0f9ecebffd9721db
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Oct 17 20:18:39 2007 +0000
+
+    Write messages to the message window also to a log file ~/.gmpc/gmpc.log
+    
+    
+
+
+commit 271e6a806ae9df3df2db493910df4e0822b2c995
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Oct 17 18:14:12 2007 +0000
+
+    fix queueinfo request
+    
+    
+
+
+commit 8324a962a71751b44b728f84751824c5ba407830
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Oct 17 17:23:06 2007 +0000
+
+    show mpd error messages
+    
+    
+
+
+commit 452b2eec9928858275fdcad899b586064867fb0f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 16 21:57:29 2007 +0000
+
+    Allow the user to set an x and y offset (always positive) in the configuration file.
+    example:
+    
+    [tray-icon2]
+    x-offset="-10"
+    y-offset="30"
+    
+    
+
+
+commit 258737e38b65697a78327dac1ba03bd87644b0ae
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 16 13:43:55 2007 +0000
+
+    Add missing icons
+    
+    
+
+
+commit 81cfc1307762e9de1a061e5673f5b27837044383
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 16 09:18:14 2007 +0000
+
+    Add scalable icons
+    
+    
+
+
+commit 0301b1e1d69b1508d790599ded47c4bd7f316d36
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Oct 14 20:29:06 2007 +0000
+
+    workaround failing git-svn, this adds some images to the tag browser.
+    
+
+
+commit 2b8d0604b0fe94f78d3c51ee0c8696c64f4be104
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Oct 14 12:22:45 2007 +0000
+
+    1. Don't update the meta data label in the lower left corner anymore.
+    2. Update the label in the info-tooltip when the metadata changed
+    
+    
+
+
+commit 6e676e5d6fd18c35e0627aa7e563e86519e5638e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 23:24:03 2007 +0000
+
+    Add version to tooltip
+    
+    
+
+
+commit 3d38024fa6a61d7c4525b5344adf208540afdfbc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 23:13:24 2007 +0000
+
+    Fix tooltip positioning and add extra information
+    Metadata total and processing.
+    and add header + change color background and add a little border
+    
+    
+
+
+commit 11a074059991f6772d8be87276ebbb84b91fa039
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 22:32:36 2007 +0000
+
+    fix position of testing popup
+    
+    
+
+
+commit 73431e7e8680adec0a063ad1f55535e7546758ea
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 22:07:41 2007 +0000
+
+    A first start at a small information window that quickly shows some info, like profile,ip/port etc
+    
+    
+
+
+commit 9ba88519a6b850741111bc1894c0a34d64e84374
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 20:50:14 2007 +0000
+
+    Add a little counter, need better position
+    
+    
+
+
+commit f010a5fd69324785837fc10173bd93a0bff2f83b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 13 19:34:26 2007 +0000
+
+    Show atleast elapsed time when there is no totaltime.
+    
+    
+
+
+commit 5e4a21972c1e1e15b41f99e313b8a93a080a4820
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 12 22:36:53 2007 +0000
+
+    gtk_window_set_opacity doesn't like GTK_WINDOW_POPUP, so if we are possible using opacity, build it using a normal TOPLEVEL window, and use hints to the window manager to make it act like a tooltip
+    
+    
+
+
+commit 5fa2586eb626710322fc17e6dca7423976ec17af
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 12 22:02:28 2007 +0000
+
+    Fix 0,8 -> 0.8
+    
+    
+
+
+commit 24cbffee109118be3376b50748189b25323b91a4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 12 20:34:27 2007 +0000
+
+    Also make the title in the song information view selectable.
+    
+    
+
+
+commit 24b52e2d2c22342f6342f6d16435d63cc69f623d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Oct 12 20:31:48 2007 +0000
+
+    Slightly changing the composite detection, just for trying some stuff.
+    This uses the gdk* stuff to detect a composited window.  This can be called from gtk+-2.10 shamefully the [gtk|gdk]_window_set_opacity is gtk+-2.12 only..
+    
+    2nd it makes the text in the metadata browser selectable. everything added by info2_add_table_item.
+    
+    
+
+
+commit 41c4adefa65423634a7f53110deb13dbc9383336
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 9 20:16:12 2007 +0000
+
+    Fix build breakage caused by wrong Define.
+    
+    
+
+
+commit d15f213bde42252bd93bac7659539ed08f7eb385
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 9 20:09:38 2007 +0000
+
+    Export extra header files like the gmpc-connection.h
+    Fix the header file of gmpc-metaimage to include gmpc-connection.h when compiled for a plugin, with a special else/if for compiling inside gmpc (GMPC_BUILD define is used for this)
+    
+    
+
+
+commit e37fc034c403a5ce7d675da9db9fedc7313b1203
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 9 14:39:26 2007 +0000
+
+    Use right composite functions
+    
+    
+
+
+commit ebbeef3e4aea9a156b90f0da534408fe34c43fa6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 9 08:37:56 2007 +0000
+
+    1. If gtk+-2.0 >= 2.12.0 and the screen is composited show the "tooltip" with only 80% opacity.
+    2. The background of the tooltip if forced while, but the fonts are theme-color. Change this to have the font-color forced black.
+    
+    
+
+
+commit dbf7381954ee7d7253db79701481aff0b7484d84
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Oct 8 11:22:09 2007 +0000
+
+    Remove mix of direct pass signals from libmpd and the indirect from GmpcConnection object.
+    Now libmpd only triggers the signals on GmpcConnection, and those are passed.
+    This should keep things more predictable and in-order.
+    
+    
+
+
+commit 5067cbd4241a6f39fe42f494e8efbb9e0db47a33
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Oct 8 09:41:01 2007 +0000
+
+    Only go to parent level in the file browser if the file-browser is the active browser
+    
+    
+
+
+commit b2c1e7573aaab2f85bf6d4e62f7b781baa05fbc6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Oct 8 09:33:46 2007 +0000
+
+    Fixing some out of order signals.
+    only start reconnecting AFTER the disconnect signal
+    
+    
+
+
+commit c57f065f268ca11e66630bf849d25c317f8923bb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Oct 7 14:27:23 2007 +0000
+
+    Fix the sensitivity error on the file system browser when disconnected
+    
+    
+
+
+commit 8a84322da31f66e64fd8dd4f3088d1aabb50ab94
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Oct 6 23:20:58 2007 +0000
+
+    Making a lock a _real_ thread-safe lock.
+    This probably won't fix anything yet, but it sure is a more correct way of doing it.
+    
+    
+
+
+commit a706574151872249c582b6faa876d2159f7755c3
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Oct 2 12:58:56 2007 +0000
+
+    Add the add-more context menu item to the right mouse menu of the current playlist.
+    Also move it in the playlist_search to the same position as used in the current-playlist
+    This fixes bug 1585
+    
+    
+
+
+commit b71211937c72dfbc9589af277e3f781028a5816e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Sep 30 19:08:12 2007 +0000
+
+    Move the advanced config screen to the bottom of the prefereces list
+    
+    
+
+
+commit b31c7656696b68e3588b90041cd19f993751d782
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Sep 30 19:01:29 2007 +0000
+
+    Implementation of request 1555.
+    
+    It also changes the backend to the combo box to a filtered version of the pl3_tree. Removing 60 lines of code.
+    
+    Needs testing.
+    
+    (bug 1554 will be implemented later).
+    
+    
+
+
+commit c06ea7eccac4280911454e1f70c384f089f7005f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Sep 30 12:43:32 2007 +0000
+
+    Fix compile warning on mac osX, that tries to include xglib.h header
+    
+    
+
+
+commit afe6124e32053ad48619202bb0c7711149780fb0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Sep 30 12:41:31 2007 +0000
+
+    Updates, that stop compiler whining
+    
+    
+
+
+commit 6c58206b1cccd72acc43980bd5137b0cdd3945eb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Sep 29 12:06:19 2007 +0000
+
+    Fix the popup showing when disabled, this also fixes an update issue with the popup labels
+    
+    
+
+
+commit e49523f9f73021b2267be665ec22ac4ca295beda
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 28 07:46:55 2007 +0000
+
+    Fix commit before save sc*** up.
+    
+    
+
+
+commit 317bfda04ffe331a93d7361bf14d10a45a0d9734
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 27 21:30:58 2007 +0000
+
+    Putting a few things in place for advanced config windows, where f.e. the order of the categories can be defined.
+    
+    
+
+
+commit 920739ae7780772c130ca54570a50143829a6822
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 17:09:46 2007 +0000
+
+    Fix some data
+    
+    
+
+
+commit 266195fb87565b46e7107e23f450fa5b06a17a4a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 17:06:44 2007 +0000
+
+    Move structure to named entries, making things more readable.
+    
+    
+
+
+commit 80adef4cf8f402adb2794ed76d676bb96fb986b0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 14:08:33 2007 +0000
+
+    Playlist editor saved position in wrong field. fixed
+    
+    
+
+
+commit cd9543842baab3cfa8466edd2ce0706d9da90f4e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 13:52:19 2007 +0000
+
+    Give the other browsers in gmpc the capability of saving themself.
+    So now if browsers are reordered, on closing the changes should be saved.
+    Next, build the moving interface.
+    
+    
+
+
+commit 224c87df08e8bccd4a9c22105d8c5f7704599e79
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 13:51:43 2007 +0000
+
+    Remove the destroying of the playlist from main.c and add it to the playlist3-current-playlist-browser.c.
+    Add support for saving position in the current-playlist.
+    Also added some debug-printf's for now, will be removed later.
+    
+    
+
+
+commit 3ebdae8ed030a6eec8065f725b5cebedaab5a891
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 13:51:17 2007 +0000
+
+    Change the structure of the current-playlist plugin to .<fieldname> = <value>. This improve readability.
+    
+    
+
+
+commit 9d1a3042fc1c40548606bd569d9399f439ffa3f9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 25 13:50:51 2007 +0000
+
+    Before destroying the plugins, loop over all plugins telling them to save themself.
+    Plugins should f.e. save category_tree position in this callback. Also do things like disconnecting signal handlers that could force data to be saved if something changes.
+    
+    
+
+
+commit a8c27aa2131670b558ab3d721ccdf40de5a62654
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 21:03:48 2007 +0000
+
+    Add an extra field to the plugin field. The field, called 'save_yourself', is called when gmpc is about to destory the plugin. It gives the plugin time to save it state.
+    Gmpc will handle it like the following:
+    
+    foreach plugin:
+    	plugin->save_yourself();
+    done
+    
+    foreach plugin:
+    	plugin->destroy();
+    done
+    
+    
+
+
+commit 31d239cb3f70c5103200bc95c5cad7a01975afeb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 16:32:02 2007 +0000
+
+    Trying to fix some memory leaks.
+    unref the accell group after attaching it to the gtk::menu
+    In playlist-list free the cached markup.
+    
+    
+
+
+commit a62df642299cd9c37bbdaa484f89b94c9eaae912
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 15:59:40 2007 +0000
+
+    Free the return value of gtk_tree_row_reference_get_path, this wasn't free'ed in alot of new code. Also a old, invalid comment was removed.
+    
+    
+
+
+commit 5b7aad42a96aea6e0a2b38cb03e982dc7ed222c2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 15:15:14 2007 +0000
+
+    browsers/pl3-current-playlist.c: Fix error in clearing the playlist, only clear it when disconnected.
+    
+    
+
+
+commit 10a5b46d7d58d9b94eccff924909b9f64de72dd1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 15:15:08 2007 +0000
+
+    In current-playlist make more widgets static, also move the disconnect handling from mpd-interaction to the current-playlist.
+    When destroying the current playlist remove the entry from the left pane and destroy the row-reference and treeview. To stop saving wrong config files values (the column position) disconnect the "columns-changed" signal before destroying.
+    
+    
+
+
+commit 453c6391303ae2ecd38e71abce53d9380c10be5b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 24 09:13:11 2007 +0000
+
+    Fix problem with missing activate signals on a right mouse menu containing a submenu.
+    The error was caused because on a button-release-event the button parameter of gtk_menu_popup should be 0. If not 0, it will cause loss of keypresses on the submenu. (only on key-press it should the button that initiated it)
+    
+    This should also fix: bug 1577
+    
+    
+
+
+commit f4a14381aab75b7c5005f5ed78af7a7c702acead
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 21 22:22:21 2007 +0000
+
+    bump version
+    
+    
+
+
+commit 45982777972df61f77770f395b1dea387a3f2e94
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 21 21:49:38 2007 +0000
+
+    export misc.h for plugins to use
+    
+    
+
+
+commit aecc5961e2a5a59663ad70534c350ac519910107
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 21 19:04:51 2007 +0000
+
+    some cleanups
+    
+    
+
+
+commit e52b69020a2e00bf51b6ea298c2b0882303367d6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 20 16:09:46 2007 +0000
+
+    fix another avutonish bug
+    
+    
+
+
+commit 41937d349c020fcd6d1e11ef43a9c0661dcea204
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 20 08:21:58 2007 +0000
+
+    syncing
+    
+    
+
+
+commit 22ac1034b669129aeb09ed78a98407506d81adee
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 20 08:21:53 2007 +0000
+
+    Fix more compile warnings
+    
+    
+
+
+commit 0f431849006d78fb137854032f43076813b0e61f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 20 08:21:41 2007 +0000
+
+    Allow streams to be viewed in the current song view, fixed forgotten change
+    
+    
+
+
+commit 209b95d0c85f023bc364cdb9311410635613ab2b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 20 08:21:35 2007 +0000
+
+    Allow streams to be viewed in the current song view
+    
+    
+
+
+commit e8362db699abc47a3da6e50f831d6203e1dbd62c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 18 15:57:19 2007 +0000
+
+    improve reordering of cateogory list and fix some other bugs that surfaced
+    
+    
+
+
+commit c5c81c7be1d8ac0061b6bd263769f108b9ae6636
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 17 19:08:01 2007 +0000
+
+    Set first stuff into place to allow reordering category list
+    
+    
+
+
+commit aa3ecde36e5a4244014239c444816752464bc2a6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 17 09:41:17 2007 +0000
+
+    a small updating adding keybinding for the tag browser (needs fixing)
+    
+    
+
+
+commit 7e2ba5eff72b08fff585b44589055d71eb76a3fc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 17 09:41:12 2007 +0000
+
+    possible fix for avuton's tray problem
+    
+    
+
+
+commit 3636adcce992b91a6d23d4d5be4938475b9d8231
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Sep 16 14:15:15 2007 +0000
+
+    extra space the ; for last.fm
+    
+    
+
+
+commit bbfa200b33c742c0382f5237a159e44a8089ca58
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Sep 15 16:21:26 2007 +0000
+
+    update sorting for tracks
+    
+    
+
+
+commit 2f0c58f9a40fe18d986e4b2223430bffaa01c503
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 14 19:17:53 2007 +0000
+
+    fix some stuff
+    
+    
+
+
+commit 424eb8450a0b36f53e0586f7fa73e1b041b59db6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Sep 14 19:17:45 2007 +0000
+
+    remove old tag browser
+    
+    
+
+
+commit 036c076547ef117c4679a50981fee8b7bd299aae
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 13 15:30:29 2007 +0000
+
+    improve some more keybindings, and option to disable stuff
+    
+    
+
+
+commit a0e9f28b03b4669a7ff4782ae52102a7cf6e6a90
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 13 15:30:23 2007 +0000
+
+    fix severall bindings, make them visible in the go_menu
+    
+    
+
+
+commit 689402d1b2bb6935f7eaddc077b3353f879dd33f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 13 15:30:14 2007 +0000
+
+    make the artist browser capable of being disabled
+    
+    
+
+
+commit 346fd07e31306351d0b5334814af06697df572f8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Sep 12 19:04:56 2007 +0000
+
+    fix stupid bug with non-sensitive
+    
+    
+
+
+commit ee0e59403709bfe0d18f2bd63a91050efc282933
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 11 16:39:46 2007 +0000
+
+    Add some comments and a small todo
+    
+    
+
+
+commit 1e96c27204331e9281bdc5990b77a573e5a9c8c3
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Sep 11 16:39:40 2007 +0000
+
+    Add tag2 browser into gmpc tree and disable old tag browser
+    
+    
+
+
+commit c6fa27bad88c519682ed2d219398651d53bd77bd
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 10 21:05:13 2007 +0000
+
+    intltool downmerge to 0.21 again, somehow distro's don't ship a 3 year old intltool
+    
+    
+
+
+commit c46a767b7f824236ebb6da3f53f89eb22a5cdc73
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Sep 10 21:02:57 2007 +0000
+
+    update intltool req to 0.31
+    
+    
+
+
+commit d086ca4805578dffc96be6cd5cdfb0794c94af1e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Sep 8 18:10:45 2007 +0000
+
+    small fix and crash avoidance in wrong use
+    
+    
+
+
+commit 6d004663eb1ded261464ae53e179b754644a64e7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Sep 6 09:49:29 2007 +0000
+
+    Fix the build error by making autogen run intltoolize
+    
+    
+
+
+commit 1c38fbb4c005af5e03635675c6759aaa87426140
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Sep 5 18:40:28 2007 +0000
+
+    Make name editable with full instant apply
+    
+    
+
+
+commit 408d4e9813b1fe6b5371c4012be159cdd901a99d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 21:06:54 2007 +0000
+
+    no normalization but strdown
+    
+    
+
+
+commit 95f5193716de9ed1cb69d4c0afd1b5758c7a6f12
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 20:59:34 2007 +0000
+
+    no normalization but strdown
+    
+    
+
+
+commit e5038e3943e840a50f1132f8eb78dadabd2fb346
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 20:54:33 2007 +0000
+
+    make eulex and cervik a happy camper
+    
+    
+
+
+commit 47925b62823b2a46290250ccdeb3bed5c4714a91
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 19:03:11 2007 +0000
+
+    use strcmp it's slightly faster
+    
+    
+
+
+commit 1b47e50dad3bf44097ce90a74f76fce264055a07
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 12:20:21 2007 +0000
+
+    Improve the cleandb function
+    
+    
+
+
+commit 6b66057d0fccb228b26acd2b0d5ff28c88001844
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 26 09:30:37 2007 +0000
+
+    fix title
+    
+    
+
+
+commit 866520e4e8ed332b5752dfac1a96e7d19d63d12f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Aug 24 10:08:07 2007 +0000
+
+    fix some more stuff
+    
+    
+
+
+commit 27904c9390791a280f7ff37cb749a398399e8d1b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Aug 24 09:40:26 2007 +0000
+
+    Fix memory leak in profile system
+    
+    
+
+
+commit 41ddb4611294b1d7e975721a49f9da201ab8f4e9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Aug 23 10:40:59 2007 +0000
+
+    fix a small variable length error
+    
+    
+
+
+commit b25ab32b504cf35b1ebc983a67247f5396267c80
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 20:34:44 2007 +0000
+
+    fix build
+    
+    
+
+
+commit 3f3706bcca9977bd44b8c65973bbd1e069f1327e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 20:29:30 2007 +0000
+
+    fix build
+    
+    
+
+
+commit cc8af479ab9f421a2dcbc94000c29ff6a48c3e01
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 19:56:46 2007 +0000
+
+    fix build
+    
+    
+
+
+commit 12022caef4749939e74aac193a21b896f52cc702
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 15:28:56 2007 +0000
+
+    remove unneeded free
+    
+    
+
+
+commit 3682b49f18535f2d7672ec1549d43f1c4649c97a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 15:25:20 2007 +0000
+
+     fix memory leak in rasher patch
+    
+    
+
+
+commit 16f9ef2d83f4fa61815aaabd09a3c73af25bca26
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 22 10:04:41 2007 +0000
+
+    Added patch 1548
+    
+    
+
+
+commit 5eb13d54d4ef2efc0f9e04d0f0dc6d8e41ddea33
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 21 21:01:17 2007 +0000
+
+    hack to make proxy work with libcurl
+    
+    
+
+
+commit 271e7e4914f7f908b16e6626ceb11fb43b8351d1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 21 19:59:55 2007 +0000
+
+    updates
+    
+    
+
+
+commit 0c50f0f7bb9725b51687de18da8c8d708ae273fd
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 21 19:59:49 2007 +0000
+
+    fix some stuff
+    
+    
+
+
+commit 9e87ef962fcc1d6948b83a92f6cd7a2958567e7c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 21 19:59:43 2007 +0000
+
+    update for win32
+    
+    
+
+
+commit 2fc438c580742da39f4e720f262f53499b3c604c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 21 18:32:23 2007 +0000
+
+    bump version
+    
+    
+
+
+commit 9244c648ffad79979412dc377f64d488a6f2036a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 19:45:39 2007 +0000
+
+    make show current song indirect
+    
+    
+
+
+commit 07018285022c40d7b955682ec1cea36db4e9073a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 19:32:22 2007 +0000
+
+    fix error message image
+    
+    
+
+
+commit ccbaf29d1a84dd117d57ffc17ea23489d73974e4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 19:19:56 2007 +0000
+
+    Hide go menu
+    
+    
+
+
+commit da8a81f4b8c1ee18085dfaff686bb505ed391566
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 19:17:36 2007 +0000
+
+    Remove current song inside view
+    
+    
+
+
+commit c05a0ed9d10baa6b0ef5404a0e6064914fe51ed2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 18:51:20 2007 +0000
+
+    hide option menu when in mini mode
+    
+    
+
+
+commit 3f26211c46a66081e7c1fa0af65ef141c5b81bf5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 18:19:29 2007 +0000
+
+    possible fix for 1549
+    
+    
+
+
+commit c357b79f9bc7620e7dc93f22d65cf8d8eb292877
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 15:32:59 2007 +0000
+
+    Update "View"
+    
+    
+
+
+commit 621b56d0e17a871d80d7990a86c351f4b6bb6bcb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 15:11:27 2007 +0000
+
+    fix for stable mpd
+    
+    
+
+
+commit 9dfa4317623bcb5a0c3c9b98ff70b4c17e5d1033
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 15:08:39 2007 +0000
+
+    Fix some translation of find artist in metadata browser
+    
+    
+
+
+commit bc27c7431d6bdbeb5a802e1bc354276dfee7e781
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Aug 20 15:08:35 2007 +0000
+
+    Updates i18n
+    
+    
+
+
+commit b54c9dc944a6300f21ec3e9a49a80235e2b0fac9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Aug 18 20:26:39 2007 +0000
+
+    Fix avuton bug
+    
+    
+
+
+commit 799ce9aa9590d34c2db90a7a4a11473641c80e5b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Aug 18 19:40:55 2007 +0000
+
+    fix plurals
+    
+    
+
+
+commit 395606a3b3ef5afabf847e3e2e96cef8839847c8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Aug 17 13:45:25 2007 +0000
+
+    Add support for queue-ing, and several bug fixes
+    
+    
+
+
+commit c0d341c5c99fa14ef1c99b9ed7506ec0b0bc1a5c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 14 19:38:49 2007 +0000
+
+    another small annoyance fixed
+    
+    
+
+
+commit ffc317d2a0f17b8e88c936d0051c7dc4cd4134c2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 14 19:35:54 2007 +0000
+
+     hopefully cleaner fixing of osd thingy
+    
+    
+
+
+commit 17dcf629f3f548bd40ddcee842b27e6fdbbd2162
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 14 18:40:12 2007 +0000
+
+    Fix tooltip
+    
+    
+
+
+commit 1fb7c9e6804f7fed4cc3b503752329bda8188c6a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Aug 14 16:06:27 2007 +0000
+
+    extended bacon to support display, add message window
+    
+    
+
+
+commit fad395e54fa0703c1c0148c01d2143bd666166e2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Aug 11 16:18:47 2007 +0000
+
+     fix 133
+    
+    
+
+
+commit 6f261040ac0a54ceb1673994a52cfd0d8d9082e6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Aug 9 15:14:19 2007 +0000
+
+    Force visible browser, and grid lines.
+    
+    
+
+
+commit 1c07d72c76dd22a5341e61e6171496c606acbda1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 8 21:30:46 2007 +0000
+
+    removing dirty hack
+    
+    
+
+
+commit 2d597589026432a3c74008b25276cc5424e3d932
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 8 21:23:51 2007 +0000
+
+    hack to make the error slide close.. kind of dirty
+    
+    
+
+
+commit 3d13efc5aa0a4e7876373b112a9d44c0198555ea
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 8 18:22:55 2007 +0000
+
+    spelling
+    
+    
+
+
+commit 6e6f0eb48d89708a1bf5c65938cd4f1e8be25162
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 8 18:19:33 2007 +0000
+
+    A message when updating is started/finished
+    
+    
+
+
+commit 178d934736fbc5e7a70861d477c0bdfcf34977b1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Aug 8 18:19:25 2007 +0000
+
+    Adding playlist3-messages
+    
+    
+
+
+commit a95ca46132180751e05589634da1ac61f026ca17
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 5 19:23:59 2007 +0000
+
+    reload
+    
+    
+
+
+commit e2440a97ce8e6fcfc4b877b6461a6e324d225bd2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 5 14:54:28 2007 +0000
+
+    hopefull fix icons
+    
+    
+
+
+commit 7af9cd50fa044a26fd6ff9b97ce0925fe621cc40
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 5 14:44:35 2007 +0000
+
+    stupid glade
+    
+    
+
+
+commit 09a5a53fff0fb11b69afcbca60acb4f148f4f20d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 5 14:37:59 2007 +0000
+
+    scrolling on progress bar
+    
+    
+
+
+commit 8397cb8b01ca7268a0e3e8079928a8794db265f0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Aug 5 14:01:52 2007 +0000
+
+    Add a secondhandsongs link to the song view
+    
+    
+
+
+commit 5be8c3e3f6c72f38035c9137d6a1004027bd533c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jul 27 18:19:57 2007 +0000
+
+     Some more data in the metabrowser
+    
+    
+
+
+commit 6e825b478548f9391f9a27c5d1bce68b31bc9e11
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jul 27 14:52:05 2007 +0000
+
+     Fix positioning icon with dual-monitor setup, stupid regression after chaning to gtkstatusicon
+    
+    
+
+
+commit c93bf55c2961e509087c325ea6511f06061f821d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jul 27 12:50:37 2007 +0000
+
+    fixing some stuff that didn't fix the arch problem
+    
+    
+
+
+commit 7d3e151afab78f754f5531a65ba62e8f14ce20e1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 24 19:43:56 2007 +0000
+
+    cleanup similar artist a little and add rename option
+    
+    
+
+
+commit 1fbd0933e82e0056557d0f759d724a5fcd1dc5d1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 23 19:51:36 2007 +0000
+
+    Add size offset
+    
+    
+
+
+commit cfe56d36c83bbc5faf7b5f463bd5d6037bf753ee
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 23 19:04:14 2007 +0000
+
+    Cleanup the db
+    
+    
+
+
+commit b4eda3a02c1d01b858b6378354757e4cf60fbd4d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 20:36:36 2007 +0000
+
+    More cleanup
+    
+    
+
+
+commit 5606aad5e027c488e0603800067d4516cf05d4c7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 20:02:22 2007 +0000
+
+    cleanups
+    
+    
+
+
+commit 2d907eeaa5e5ce90a1f3d002bd3fc39c9ef54258
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 19:53:12 2007 +0000
+
+    d'n'd similar artist
+    
+    
+
+
+commit b732f28cfc6b6a2e24d55f304ab3db09e5b76f19
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 19:47:51 2007 +0000
+
+    support for similar artist (initial)
+    
+    
+
+
+commit 6047fc34b23d61e5b9a9b3658ed295f04087112a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 11:16:50 2007 +0000
+
+    Fix play/pause text in mouse menu tray icon
+    
+    
+
+
+commit 1c21c9de61070d455545604f0827d07cfd145f49
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 22 10:27:37 2007 +0000
+
+    test
+    
+
+
+commit 043bacf1bab39eec364b0e568cc65e08d15648a8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 17 17:25:34 2007 +0000
+
+    fix bug 0001536
+    
+    
+
+
+commit 0a3e5ec9e15acc86fb09254813516824a2337179
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 16 18:19:55 2007 +0000
+
+    Fixing some stuff
+    
+    
+
+
+commit 0610d9d9271eff4dbc5e9518ee419349713ce0ec
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 14 21:41:10 2007 +0000
+
+    cleanup
+    
+    
+
+
+commit 34275952cf73a789b25889218cef68320d66dfe3
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 14 19:17:55 2007 +0000
+
+    reordable disabled in column editing, it should work, but doesn't so let it be
+    
+    
+
+
+commit ce19c6c66ffd1098484a979b67faa015a4cee05a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Jul 12 19:03:41 2007 +0000
+
+    Fix some compile errors
+    
+    
+
+
+commit ec5b60b1b42ab1d8d6803bec4b91a520e91d22af
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 10 21:14:25 2007 +0000
+
+    Also update currensong view when not visible
+    
+    
+
+
+commit 600700937da9f6fe42340af1e779d9383c00058e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 10 21:08:39 2007 +0000
+
+    test
+    
+    
+
+
+commit 1eb788b2eb3e55935009c4ad9b3906b61fde2cc2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 10 21:06:59 2007 +0000
+
+    Remove old files
+    
+    
+
+
+commit 2f14694cad16ffe6f1b06303452e0bcbdf90ac1c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 10 21:06:55 2007 +0000
+
+    Allow metadata to show the current song. (via go menu)
+    
+    
+
+
+commit 31347bed17376b8963559c590acb1341ef670a2b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 10 15:06:47 2007 +0000
+
+    fix for crash zaunmayrc
+    
+    
+
+
+commit 0ffbad2d02f808de4964437a1281f8dfdf606e6d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 8 21:17:48 2007 +0000
+
+    some more updates
+    
+    
+
+
+commit ba6c9a9bc0cec738eaf4a2e4dc7459e1aaa03132
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jul 8 19:46:54 2007 +0000
+
+    Avuton's second big bug to fix, hopefully working now
+    
+    
+
+
+commit 42315a3ef1f441e851e327e23198aa3f1e4b4552
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 19:01:17 2007 +0000
+
+    print filename in plugin error
+    
+    
+
+
+commit 7fc4d833493edb2510f2cd16de31ec50dc14078d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 18:53:27 2007 +0000
+
+    print filename in plugin error
+    
+    
+
+
+commit cc39f9e2d31b8c4777abca3b62fe756fcad19e5e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 18:46:00 2007 +0000
+
+    print filename in plugin error
+    
+    
+
+
+commit 9550482368d8efac200f3be3381c01304c7d0c36
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 18:44:55 2007 +0000
+
+    Fixing typo
+    
+    
+
+
+commit 2a2820074851505aaa254270f84e16dd720adb9e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 17:44:11 2007 +0000
+
+    Fixing typo
+    
+    
+
+
+commit 0d10726c6278e829923b7c423fcded0576346e4c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 17:29:13 2007 +0000
+
+    test
+    
+    
+
+
+commit f495a702aa97f3ef49fcf7a1b3cfdc5d31cf7df1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jul 7 17:06:20 2007 +0000
+
+    some update
+    
+    
+
+
+commit 8bd7b16a5d2876c8612de4f55a5adee2b5e23fa6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jul 6 18:19:40 2007 +0000
+
+    pulsing while connecting, exp. error window
+    
+    
+
+
+commit bf0a1b81e5d78525460ac481b15c02412a62f88c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 3 22:00:28 2007 +0000
+
+    fix translation
+    
+    
+
+
+commit f9e2beff9c80d71b2d6a9fe47fd88ec0c4bc04ea
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jul 3 21:59:42 2007 +0000
+
+    fix translation
+    
+    
+
+
+commit 36ece1d07b51560098be3270774087671b068716
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 2 18:44:30 2007 +0000
+
+    fix keybinding
+    
+    
+
+
+commit c0bc5a9ebf7eee4e4683a024d1c55169c653971e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 2 18:26:37 2007 +0000
+
+    add translation
+    
+    
+
+
+commit a11dd09d204da9f73f4ec9874733f1bbea789178
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jul 2 17:57:47 2007 +0000
+
+    breaking everything
+    
+    
+
+
+commit 290ad734e9ee8dab8d6fdce492a59fe0f199dac8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jun 26 21:26:59 2007 +0000
+
+    small things
+    
+    
+
+
+commit ea28dbee681009f8dfeffbb69c788a4322739bff
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 23 20:53:58 2007 +0000
+
+    Some small fix
+    
+    
+
+
+commit 868c901ef643c5110955c8d3c8313323fcb2a96f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 23 15:07:26 2007 +0000
+
+    Fix severall right mouse information view
+    
+    
+
+
+commit 5f431f6489397a9ada69b550e902b3b51d73d3fe
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 23 14:40:31 2007 +0000
+
+    If going to mi mode remove fullscreen/maximized state
+    
+    
+
+
+commit 865d1660cf003f4ae0efab2670478f7a5a3b3ef1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 22 19:57:39 2007 +0000
+
+     ctrl-f in metabrowser goes to entry box, if visible..
+    
+    
+
+
+commit 08c0c971e94f0101beef7b256cc103810e7e3cfd
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 22 15:47:24 2007 +0000
+
+    Adding a proxy page
+    
+    
+
+
+commit 850cb01b2e3a3c7d15c03c59a976b98929e51e25
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 22:05:22 2007 +0000
+
+    fix right mouse behauviour artist browser
+    
+    
+
+
+commit fdb820df4be1962f2377868a5be0c01b39a7ebb2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 22:02:54 2007 +0000
+
+    fix right mouse behauviour
+    
+    
+
+
+commit 7d8663b872bb55c5e78a29005ec76b58aff20275
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 18:32:26 2007 +0000
+
+    fix warning
+    
+    
+
+
+commit 13ba3d0c66226b449ee790b40bd264ca95edf763
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 18:32:22 2007 +0000
+
+    fix compile warning
+    
+    
+
+
+commit 96924478ea1ead8fc4c7c8feb7ff5549d7ecaf4c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 18:32:16 2007 +0000
+
+    remove eggtrayicon
+    
+    
+
+
+commit 42cc39ebd67a04550edf395d78148e6e24136b9d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 20 18:32:11 2007 +0000
+
+    cleanup wishlist
+    
+    
+
+
+commit 560988afd428e22bef126d5c816a92bfa7a3c4cd
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 18 21:13:31 2007 +0000
+
+    Cleanups
+    
+    
+
+
+commit ca359df438cb69fb05a1f554d8d093cd7b8f6c2f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 18 21:13:26 2007 +0000
+
+    Allow double click on artist/album button in metabrowser
+    
+    
+
+
+commit f3bc10e4ceb95eb805c733c3f668aa07cf6cb8e5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 18 11:59:07 2007 +0000
+
+    scale drag image
+    
+    
+
+
+commit ab8c95d122bae453401e0275441242915d196718
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 18 11:59:02 2007 +0000
+
+    Cleanup and add some more code
+    
+    
+
+
+commit dfdde8bac230426a24055040ee30e1ce011a9658
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 17 22:17:03 2007 +0000
+
+    Drag shows widget
+    
+    
+
+
+commit 49e95891db978db51739d7432f0c507e157e92be
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 17 21:05:36 2007 +0000
+
+    Cleaning up the metadata browser
+    
+    
+
+
+commit 182ba0beddf53c1934388b000f37d3f9586a92bc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 17 14:29:47 2007 +0000
+
+    remove a printf in playlist sorting
+    
+    
+
+
+commit 9a46cc86619580d8003143639389a6138356b88a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 17 14:28:20 2007 +0000
+
+    remove a printf
+    
+    
+
+
+commit 04782081f8f983b7caf601283acd4ef864572123
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 16 18:31:25 2007 +0000
+
+    Allow more and copy in drag Selection
+    
+    
+
+
+commit 817721581becddc9f51bb8cc6f06e2af0dcdf64e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 16 18:01:13 2007 +0000
+
+    Cleanup interface of info
+    
+    
+
+
+commit d24b00f059a2101a2307d6e482d2fa6c4fb0d67d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 16 18:01:09 2007 +0000
+
+    Giving lyric a backend.
+    
+    
+
+
+commit 10f59af1677b14dc8f8f2a9d0673bd32f70b47e9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 15 22:18:40 2007 +0000
+
+    more drag updates
+    
+    
+
+
+commit 490db34ac2022ad3037291358fb847c410fe7b95
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 15 21:23:12 2007 +0000
+
+    updates
+    
+    
+
+
+commit 487be5d1b73c10e5b906dce19c6423355849db4e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 15 19:48:58 2007 +0000
+
+    testing some stuff
+    
+    
+
+
+commit 68b374ba33c44e11dd22b970e044510a7d93cb9c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 13 14:06:43 2007 +0000
+
+    Fix a possible segfault and remove the song-information window for now
+    
+    
+
+
+commit 4ceff00528697026ce0f3307b173b16a441d9b4f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 13 12:41:11 2007 +0000
+
+    Remove stray printf and change add -> play
+    
+    
+
+
+commit f621b4107efa89f8c6ba9102963818055ce9ebe4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 13 11:46:19 2007 +0000
+
+    dwmw2 patch for sorting
+    
+    
+
+
+commit c3c4010c613fb7137a9e52103285e3d93520165f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Jun 13 10:11:54 2007 +0000
+
+    Small updates
+    
+    
+
+
+commit 5a6aff39eb28216193fcf6d892216d25250e525f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jun 12 16:05:51 2007 +0000
+
+    Fixing some left margins.
+    
+    
+
+
+commit f31851e1f87cf69d6e56781c10e8e09269c833cf
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 21:39:06 2007 +0000
+
+    Fixing some missing printf's
+    
+    
+
+
+commit 1cb39e0ad0eef086f000cea39c5b601e276af36a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:46 2007 +0000
+
+    small cleanups + comments
+    
+    
+
+
+commit d80f40ccca525f1b638ff030fbc389c259ff6542
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:39 2007 +0000
+
+    Move directory functions to the plugin.h, so plugins can use it.
+    Add an compile time option (--enable-configdir) that makes gmpc store it's config file in ~/.config/gmpc and the covers in ~/.config/covers.
+    Plugins need to be told to use this..
+    
+    
+
+
+commit a8792557b0bc5562e978c4e95286de436a1c92c2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:33 2007 +0000
+
+    Make a gmpc_get_cover_path function..
+    
+    
+
+
+commit 88d1083cefbf7e60c28ddedd7055a6e58c164111
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:30 2007 +0000
+
+    Remove hack for glib < 2.8.6.
+    Move from g_strdup_printf to g_path_build_filename to build path.
+    
+    
+
+
+commit 5bd926c65bb39e959eaf336d864901ed60ef19ba
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:26 2007 +0000
+
+    Fix some comments, and set a config default value to the right define
+    
+    
+
+
+commit c760d4f3ec4bad7b9b6351ecf5b29088d23b7500
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:23 2007 +0000
+
+    Bump version number, now that I made a 0.15.1 bug-fix release
+    
+    
+
+
+commit 18ddd788445c2a1248c0000e1a310c2fd1c6aaa9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:17 2007 +0000
+
+    Use one function that gets  ~/.gmpc/, this allows for easy moving too ~/.config/gmpc/.
+    Fix the cover.db on win32, it used unix path's.
+    
+    
+
+
+commit bd58ef19816dbc10e6833ec2e7ce22c4aa93ecb8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 11 16:49:13 2007 +0000
+
+    Fix double removing of timeout in tray-icon2.c, witch could lead to unexpected bugs.
+    
+    
+
+
+commit 2d882984142614eee069331c8a60566b85c5e578
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 22:34:05 2007 +0000
+
+    Clicking on tooltip image closes popup
+    
+    
+
+
+commit a1bc25d9926a85cfcfc4ebcd246588c04ac912d0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 21:38:59 2007 +0000
+
+    testing git
+    
+
+
+commit 01cb5a00b6e6f8f966c9fd77e789d9b291adfa0e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 21:27:13 2007 +0000
+
+    sync
+    
+
+
+commit a367a1ac8be227bd0104234253bdbdaeb8ebdf80
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 19:29:53 2007 +0000
+
+    update polish translation
+    
+
+
+commit e77d4c650e2050b29e1ccd010ba447f443acb293
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 18:48:01 2007 +0000
+
+    remove tray-icon.c and more intltool updates.
+    
+
+
+commit 7aa375ff82decb1e46fb099bd1356f3a0b6bd438
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 18:22:12 2007 +0000
+
+    translation stuff updates
+    
+
+
+commit 1f96e1ceac9de2efa5e8f14db7d72f1c2d025a85
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 16:35:52 2007 +0000
+
+    remove unused tray icon compile flag
+    
+
+
+commit 3671d8db039b580552dc722b2539bab6ff262bca
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 15:58:45 2007 +0000
+
+    fix some memory leaks
+    
+
+
+commit a46605f9f2912d199ef4b7571cd5412d34c6f397
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 15:02:16 2007 +0000
+
+    fix destroying of widgets
+    
+
+
+commit 5e5757de6dd540a936febf10a47475eb921ad25a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 13:39:38 2007 +0000
+
+    Avuton cleanup patch
+    
+
+
+commit 56d1ad5f8435bc2d8873e58f57c82c30007ec864
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 10 07:53:24 2007 +0000
+
+    some cleanups
+    
+
+
+commit 278ba9502d954ddcbce809d7676bdb4e2cf92390
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 9 21:27:12 2007 +0000
+
+    updates
+    
+
+
+commit 225502bdd8415c02fb5d52c84a1daa06cb7b8e67
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 9 16:45:19 2007 +0000
+
+    some more gui updates
+    
+
+
+commit 32866ffef019d4855e85ca08a56e2cfed8bc5404
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 9 16:31:44 2007 +0000
+
+    updates
+    
+
+
+commit 56440d36b97923793a34c21c94229b5788ba62a1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 8 13:11:38 2007 +0000
+
+    updates to tooltip
+    
+
+
+commit a5b67dbc2293809b549d1724027fb97d2fe01097
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Jun 7 22:40:53 2007 +0000
+
+     fix some stuff, I hope
+    
+
+
+commit 5d7a2f1fb29793c34d068f39311331ac8bd56298
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Jun 7 21:52:06 2007 +0000
+
+    More updates on tooltip
+    
+
+
+commit 40694b107d8163281e0877c07d9cf838ecc4e77f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Jun 7 21:02:48 2007 +0000
+
+    remove old tray icon
+    
+
+
+commit c9e6acc7a7e9d3a26682353d891d30731d9e8d6e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Jun 5 18:05:16 2007 +0000
+
+    Yet another header
+    
+
+
+commit 733ef13d1c6ae4d7832c274216977bf460998b8f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 4 18:47:24 2007 +0000
+
+    Make song info to metabrowser
+    
+
+
+commit 931cdd3dd5ccf127c3e9c85a82ce31cf373ebfda
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Jun 4 15:22:43 2007 +0000
+
+    adding gtkstatusicon
+    
+
+
+commit 197178d4a6ca593bb9ffdc92dd6ab9528e3e4a0e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 3 20:14:42 2007 +0000
+
+    remove id3info.*
+    
+
+
+commit 93fec3ac08744d362129ef2a4fe99db8601447bc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 3 19:50:17 2007 +0000
+
+    cleanups and fixes
+    
+
+
+commit aa9707b453893bf23b9bef26459e92caef06c7e5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 3 14:34:29 2007 +0000
+
+    plug some holes
+    
+
+
+commit df64c8a036164d127e7f57b977de2cd095ca6e8a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Jun 3 12:39:31 2007 +0000
+
+    fix race condition
+    
+
+
+commit 627460bda03be525ea43d5266f3d36b700c7d1ae
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 21:29:07 2007 +0000
+
+    tag editing
+    
+
+
+commit f4320cba20633c94adeaf350854c17d4c3be15b1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 21:10:32 2007 +0000
+
+    Allow editing of stuff
+    
+
+
+commit fd5b64bbde8b0dbe1ec1fd25df9741b549043913
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 19:35:41 2007 +0000
+
+    fix help
+    
+
+
+commit 8e4c88e765328d26318e18b374e956e8d520e886
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 19:31:11 2007 +0000
+
+    set right fetching text
+    
+
+
+commit 59e072fa8a1162799d3fae08f84eb4bd38c4e692
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 18:44:44 2007 +0000
+
+    fixing plugin build and other stuff
+    
+
+
+commit fe0b441d7739437599cf37be2730708a86b0e798
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 15:58:14 2007 +0000
+
+    More breakage
+    
+
+
+commit 70d0926b6f3116812ebd31a9ae9585e63d0644e4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Jun 2 11:30:35 2007 +0000
+
+    More metasystem updates
+    
+
+
+commit b90f40647a850146d8ba283e157f4f33db3cbc87
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 1 22:43:48 2007 +0000
+
+    first start at better gmpc-meta-watcher, will break stuff
+    
+
+
+commit 38ffa31200929d675a4ce9c5e439a61effbc2988
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Jun 1 20:44:57 2007 +0000
+
+    add meta watcher
+    
+
+
+commit 4a73ef5546beb0349d098f2c76fe58684a783cca
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 30 20:48:53 2007 +0000
+
+    refresh images
+    
+
+
+commit 5b1ee34599addaccea4c99eea971455206f73069
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 30 19:59:46 2007 +0000
+
+    Allow refetching of text
+    
+
+
+commit 2ba2ddb684dc8e86114b633d004e07fce0597ae8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 30 19:20:25 2007 +0000
+
+    some fixes
+    
+
+
+commit 088fc9b61c4f0047a029eddd2056f02a2ed32572
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 30 18:02:03 2007 +0000
+
+    set wrapping
+    
+
+
+commit 1eb33409d6441bde36dac90c46bcb9f32597756b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 30 17:56:29 2007 +0000
+
+    Use custom text widget
+    
+
+
+commit a675d9d23d3c39d127bdab3c95dc27b370dbe0ba
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 28 13:16:39 2007 +0000
+
+    new icon, still in doubt
+    
+
+
+commit c979ad511af35eaadd8880d9236b4d9562e755f7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun May 27 14:29:04 2007 +0000
+
+    fix compile warnings
+    
+
+
+commit 8f6fd7258c113de6535fb9688b11c0198a1233a5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun May 27 14:11:59 2007 +0000
+
+    stop moving in playlist on mpd < 0.13.0
+    
+
+
+commit 98d58d5a8db194b35a8703c18220f19a38c289b2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 21:42:06 2007 +0000
+
+    remove some printf's
+    
+
+
+commit 234e64b7e0156c06055bc19911a49607bdd8248d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 21:03:55 2007 +0000
+
+    play on replace
+    
+
+
+commit 2df9c29ed75dae5d32ff6099cb874a1416c4f0da
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 20:58:17 2007 +0000
+
+    fix check
+    
+
+
+commit 553171df34d98113b85ff03a8a396a992ae6d19f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 20:44:39 2007 +0000
+
+    add missing file
+    
+
+
+commit c5dea986f63f339513a31e2cf52759ffdb478619
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 20:43:31 2007 +0000
+
+    try order
+    
+
+
+commit eb3b1e3a79c8eca53bf6e2815dd83c2f3cb8d708
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 20:35:00 2007 +0000
+
+    fix build
+    
+
+
+commit e069c352cb08a97bf310a11e196223eb70374c0d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 26 20:33:14 2007 +0000
+
+    Playlist moving song
+    
+
+
+commit 960245810ee3acabc8afeede7be84ef1c01c7bfe
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri May 25 20:03:19 2007 +0000
+
+    some updates
+    
+
+
+commit 467ff81d8473fb6ee061d62b7e6170829ade7b82
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri May 25 10:13:27 2007 +0000
+
+    more playlist editing
+    
+
+
+commit 31193906e0771a7ff4d1e96dd1763033b29f78a7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 24 22:12:41 2007 +0000
+
+    speedup
+    
+
+
+commit a0d3ff1e720345ca7f8040430356a823a33c7c8a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 24 22:07:42 2007 +0000
+
+    add playlist editing fucntions, for testing mpd part
+    
+
+
+commit e59cdf1fd8e9e6ac917d444aa680d71c8944653a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 24 21:49:41 2007 +0000
+
+    more adding of features
+    
+
+
+commit a2bb7e7a9576c3ccd8e265445302aa240f86060c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 24 14:46:50 2007 +0000
+
+    updates
+    
+
+
+commit 6a72f353eedb2fe537adff5ea6ab3575b9383a10
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 23 12:29:49 2007 +0000
+
+    bindings for outputs
+    
+
+
+commit 143bc74a8b4610cb3f89f5cfb06fe694af55bd35
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 23 06:13:09 2007 +0000
+
+    fix compile errors, I hope
+    
+
+
+commit b39e71b0a3239950682c06c6d1fb61ade9f04b75
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue May 22 22:12:17 2007 +0000
+
+    something
+    
+
+
+commit e72087324b69b1919cc805413e1c2a82b8a8b3ce
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue May 22 21:30:48 2007 +0000
+
+    some small other fixes
+    
+
+
+commit 39fb44f82cddd9671d29e82483cf61b724c01bde
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue May 22 21:13:04 2007 +0000
+
+    more playlist editing stuff
+    
+
+
+commit 0fb0b5624716c86089f2e24debe43e1ef10eaace
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue May 22 19:13:00 2007 +0000
+
+    add IT translation
+    
+
+
+commit 73a6c0dc473f5cae838203308fe2a63bcb4453f0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue May 22 18:39:03 2007 +0000
+
+    put playlist editor in gmpc
+    
+
+
+commit cedca3d825b26f27d56db78b3fd51ac92b207f5d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 21 21:17:43 2007 +0000
+
+    add update db to server menu
+    
+
+
+commit 5a71246aff3eaa4f6e4349e2875b440cd8f09e21
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 21 21:05:03 2007 +0000
+
+    Server menu item with outputs
+    
+
+
+commit aad33c300622b2730aa90bcc53afe654bf9d07d3
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 21 18:29:23 2007 +0000
+
+    fix Makefile.am
+    
+
+
+commit ba90bd85a62dee421c8984121b7596c09c895012
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 19 20:24:02 2007 +0000
+
+    bump libmpd to 0.14.0
+    
+
+
+commit 6b73ef505fde4cf46040c22839908766d2f75a1d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 19 20:19:26 2007 +0000
+
+    bump to 0.15.0
+    
+
+
+commit 37e757681427bb543ee6bfe6caa4c17aa186bcf9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 19 13:32:28 2007 +0000
+
+    fix,I hope
+    
+
+
+commit d0db41252124175f02b825d975a46e4929a16945
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 19 13:14:02 2007 +0000
+
+    sync build makefile
+    
+
+
+commit abd19803b339fb62782254ffd4e0be9b01697e7c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 17 15:48:14 2007 +0000
+
+    updated translation pl
+    
+
+
+commit 1ef7f5d63b7f1efec46ff0f3f1f18c2fec437d96
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 17 12:01:09 2007 +0000
+
+    Export some extra widgets for use in plugins.
+    
+
+
+commit 92bb1e20a46941237ef32c5e5777737e2def3c02
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu May 17 11:54:39 2007 +0000
+
+    Export some extra widgets for use in plugins.
+    
+
+
+commit c2874fc8eebf3e67ee23fd8e7e476652ad0a0cee
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 16 19:13:45 2007 +0000
+
+    bump version
+    
+
+
+commit 75768416e92c30ced428ec691a16ad82a2eea5bc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 16 15:28:20 2007 +0000
+
+    updated de translation
+    
+
+
+commit ba5b600fce95c19ddce71f11a4be5259f51192ac
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 16 12:01:13 2007 +0000
+
+    update po files
+    
+
+
+commit 8e82bc16a0ced11fa7ec7d131593f6c7646eff7a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 16 11:57:22 2007 +0000
+
+    moving bacon stuff to subdir
+    
+
+
+commit be3e86afefcce84d953566095137e697621afc53
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 16 10:44:30 2007 +0000
+
+    fix compile waring
+    
+
+
+commit eb7915c52efdc6ece0818d79d2b1d62797cf5551
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 12 21:31:10 2007 +0000
+
+    more small cleanups
+    
+
+
+commit 8f79be5e1b1ead25836d7039accf30c4b2e24d3e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 12 21:05:40 2007 +0000
+
+    cleanups
+    
+
+
+commit fe89609c6d96d34cbc92372abd0166b53c8c22d4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat May 12 20:40:58 2007 +0000
+
+    fix warning
+    
+
+
+commit c1260397cbc8188d99853e0424ddcade4d65f06e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed May 9 00:20:53 2007 +0000
+
+    updates
+    
+
+
+commit 72a41ee8537bc1f1bd32c29fe90213d21876c308
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 7 16:11:58 2007 +0000
+
+    Add needed changelog for dist
+    
+
+
+commit 1bae00cdaff91e4febdd081093aa7fbbba1a9d5f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 7 15:50:51 2007 +0000
+
+    Save version in config file
+    
+
+
+commit 872d5207f04e410005c394ceffaaf9232eeb0341
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon May 7 10:18:29 2007 +0000
+
+    strip markup from error messages of mmkeys
+    
+
+
+commit 462d95ed62cbb1d572d46c7b6e75fda69bd524d8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Apr 16 15:41:02 2007 +0000
+
+    unref object
+    
+
+
+commit d03a32c62ec8d0a1b57f6b2d7b50cc4ab3fa634a
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Apr 11 22:57:22 2007 +0000
+
+    Adding support for an app icon on Windows.
+    
+    
+
+
+commit 31951e6452e10632bf89e2b3981a22041ca8c0ff
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Apr 11 18:49:26 2007 +0000
+
+    more updates
+    
+
+
+commit 27d66c78bff14ade0a713affb6b59cf2ec11dea5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Apr 10 21:10:37 2007 +0000
+
+    compile fix
+    
+
+
+commit 86b5ea6be393e257913fc96997a015ba81b02e6e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Apr 10 21:01:14 2007 +0000
+
+    hack that might fix windows
+    
+
+
+commit beb19f4e189196004794e56d1c82d73afe0181f3
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Apr 10 14:26:17 2007 +0000
+
+    bump version to 0.14.95
+    
+
+
+commit dc44368a739d1af20688a5116256c55f2d78e325
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Apr 10 14:20:34 2007 +0000
+
+    update Makefile.build
+    
+
+
+commit 34b65ea32f2267d242438c7cd4daade69d3c085e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Apr 8 13:40:40 2007 +0000
+
+    Fix plugins under windows
+    
+
+
+commit d1cb9fa8c40743d77cebc6fade94205673e38c42
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Apr 8 13:18:41 2007 +0000
+
+    Fix a windows path
+    
+
+
+commit c0b8ddec4203e364ac48ededf718712baa4c95cf
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Apr 8 13:15:15 2007 +0000
+
+    Fix a windows path
+    
+
+
+commit a772efe77e5a4b19691378d04b2b4c3ab3a91a6f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Apr 7 15:30:01 2007 +0000
+
+    remove printf
+    
+
+
+commit 0fa36405c5b8d84b0b52d91c00ef0498fff9ef38
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Apr 7 15:14:51 2007 +0000
+
+    debug printf'je
+    
+
+
+commit cb021cadb9ac4bd9aa7051421d08b30290d5c67e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Apr 7 13:20:06 2007 +0000
+
+    make file columns show filename
+    
+
+
+commit 41f4c8ec3ed36ceb1a6df4b2288b9a1a3cbe93d5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Apr 7 13:11:19 2007 +0000
+
+    add a filename column to the playlist view
+    
+
+
+commit af19814c3af47ce82d820528b0e23572e50c487a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Apr 6 10:55:51 2007 +0000
+
+    remove some printf's so jat is happy
+    
+
+
+commit 397aa2a2395e33d056608007076942015c8047f1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Apr 6 10:54:27 2007 +0000
+
+    fix icons in add more menu
+    
+
+
+commit 22555374ebcdda60ff1bc618a92954fe0c568095
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Apr 4 16:48:54 2007 +0000
+
+    saner defaults
+    
+
+
+commit 141063584d6a44100bf9d488d6b7da32ae3da76e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Apr 3 21:10:40 2007 +0000
+
+    readd pointless builds to make jat happy
+    
+
+
+commit 220f615d2af93d51c7097192db04c574a696284f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 30 15:18:09 2007 +0000
+
+    updated polish translation
+    
+
+
+commit b9308bd140e41f95491176a88de2da64546d4c44
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 30 10:43:33 2007 +0000
+
+    Add 16x16 playlist-browser icon
+    
+
+
+commit c9fc5765a7ba5f239ca42ff1b7ec300ae3e7cc30
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 30 10:34:44 2007 +0000
+
+    show pos +1
+    
+
+
+commit ea2b10636ff83e60b72e81025f2c6e61c054d80c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 29 22:40:34 2007 +0000
+
+    update icons
+    
+
+
+commit 5569f17289dafc2ffd2f8f7e14aa1e67d6a8c311
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 29 22:40:12 2007 +0000
+
+    fix builds
+    
+
+
+commit 13f8d4fa99f579d3169b13f4ff584f25ee09ae56
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 21:05:11 2007 +0000
+
+    update copyright
+    
+
+
+commit 69deae9956a44fd365badee18fc7d93c9e2280f2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 21:04:13 2007 +0000
+
+    more sizes of icons
+    
+
+
+commit 80548b4cfc9845b9ecbe96f69c71bfbcc6175851
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 20:19:07 2007 +0000
+
+    icons updated and go menu updates
+    
+
+
+commit 4f876f17416fd3701a117beecc10b3b0da4869e9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 19:47:42 2007 +0000
+
+    fix icon size of current playlist
+    
+
+
+commit 7d60648cf6841c8462ce3e3589bbf712f4e8a9a4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 19:41:48 2007 +0000
+
+    added playlist icons
+    
+
+
+commit 8d03fdb58c3e08932923dd64121291c7b325f37b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 16:27:47 2007 +0000
+
+    tag-browser icon take 2
+    
+
+
+commit f1a5b82231c6026979bc28962232794650cd7ab8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 15:59:03 2007 +0000
+
+    add another icon
+    
+
+
+commit 3d51eec29b8a2b871643c35445ad70d66a0d0ffb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 15:48:18 2007 +0000
+
+    add right size
+    
+
+
+commit 79c2e146636b90ca3a15eeb649631189092f000e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 15:47:51 2007 +0000
+
+    add 48x48 icons
+    
+
+
+commit 568f6379eac1f587756808a6dc69f085d6e822ea
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 15:46:31 2007 +0000
+
+    re-add makefile.in.in, why doesn't it install it during autogen.sh, weird
+    
+
+
+commit e42b9c80af9a6d186e20a4976e73defe25fb552d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 15:33:22 2007 +0000
+
+    Add media-playlist icons, in 2 sizes, remove po/Makefile.in.in
+    
+
+
+commit 7033d5e22b11c832cc60c8ee49eaa35e7f4b29f7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 14:48:10 2007 +0000
+
+     reverting
+    
+
+
+commit 7594c04b44f521413959e690c2d17bfb4df502df
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 28 14:02:51 2007 +0000
+
+    set window icon
+    
+
+
+commit ab3062764fffe09c94660b13ffd791df93afdb0a
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 13:30:12 2007 +0000
+
+    Updating icon copyrights.
+    
+    
+
+
+commit f90ca8129d04bdf76499bed261424fa454c0c6b9
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 13:26:21 2007 +0000
+
+    Oops.  Forgot to change stock_volume.png to gmpc-volume.png in Makefile.am.
+    
+    
+
+
+commit b4717eec71cae938c98e8bd308472470750948ee
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 13:20:09 2007 +0000
+
+    Moving stock_volume.png to gmpc-volume.png.  The old icon code loaded
+    stock_volume.png and made it available as gmpc-volume, so the new icon
+    theme code needs it named correctly.
+    
+    
+
+
+commit d51e80ba2c0ee5a3260ea3cd35aa9be3c6659476
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 13:12:45 2007 +0000
+
+    Set gtk-button-images to TRUE, so that button images work on Windows (where
+    the gtkrc disables them by default, even though they work fine).
+    
+    
+
+
+commit 5224624e278566196804926aaba07b8114c8215b
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 13:05:33 2007 +0000
+
+    Set the window icon in init_stock_icons().  This was done their previously,
+    but got removed with the icon cleanup.
+    
+    
+
+
+commit bb10fae61138e1fd06fe2dcf1f023e90ffb4bc9b
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 12:56:34 2007 +0000
+
+    Changing gtk_image_set_from_stock to gtk_image_set_from_icon_name in
+    bacon-volume.c.  Hoping this will fix the volume icon on Windows.
+    
+    
+
+
+commit fff43276375346b621ea077592b38ff28ccb1905
+Author: jat <jat@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 12:54:26 2007 +0000
+
+    Fix some warnings about unused variables.
+    
+    
+
+
+commit a3353d2bea68ec44702c8788dbbcf07128a96ab4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 12:50:06 2007 +0000
+
+    Add missing gob files
+    
+
+
+commit ff4c723f234cf354cd713ccc6de3d5618a3247fa
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 12:46:15 2007 +0000
+
+    update some stuff
+    
+
+
+commit 9f103c2d0a625166a93a9d6a4dfe2c203ae9041b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 24 12:43:15 2007 +0000
+
+    remove gmpc.pot
+    
+
+
+commit de8ca2f99d291e835139141ce8d5ff877e83eac7
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 23 16:27:21 2007 +0000
+
+    fix add-url
+    
+
+
+commit bd5a3daae19cbd01bf956cfc8d29ae76f998115f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 23 16:08:04 2007 +0000
+
+    fix collapsed mode dropdown icons
+    
+
+
+commit bf24d19c3202c85cc66d366049e8878f55d181f0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 16:57:06 2007 +0000
+
+    some icon fixed
+    
+
+
+commit 1b9029eb1d7d3682237550e9377b2ecc2914f476
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 16:39:50 2007 +0000
+
+    update playlist icon
+    
+
+
+commit 08f180ab4c0962898846e0419b13e6d4386602ad
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 16:37:27 2007 +0000
+
+    update artist icon
+    
+
+
+commit 965adefbcb0f6e3596f51cd5ceac6346a155b8d4
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 16:28:36 2007 +0000
+
+    cleaning up some icons
+    
+
+
+commit 5a0a0632586310e3a2d88c4a5136d31f50785b8c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 12:37:44 2007 +0000
+
+    Move to named icons, this is going to break a few plugins....
+    
+
+
+commit d10187323d582cb9f04c6a211cdd849aed8fed6b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 22 12:30:33 2007 +0000
+
+    fix avuton profile bug
+    
+
+
+commit 21b2c6bc85e04bfd5c34c0ad010bfce9417d6ba5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 22:44:30 2007 +0000
+
+    remove printf to make jat happy
+    
+
+
+commit 4e82d5ed4f9a3f41e77f7e134ab75fee05903c67
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 22:40:11 2007 +0000
+
+    Change gtk-directory->gtk-open, the first isn't themed in 99% of the themes
+    
+
+
+commit 6ceb221522e7fe5d49bcbbe0d93cab00360113d2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 22:39:31 2007 +0000
+
+    Change gtk-directory->gtk-open, the first isn't themed in 99% of the themes
+    
+
+
+commit 7f25101ef24ff5f4bf3c5f4dae48f6ed5eaf6175
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 21:58:39 2007 +0000
+
+    Make jat a happy camper
+    
+
+
+commit 0fff6cbb2d52c216860c507cd83fd827ac5f7f52
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 20:37:21 2007 +0000
+
+    updates
+    
+
+
+commit 60eecc9b5203c02defe7d1d93c701437a0d63713
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 20:29:38 2007 +0000
+
+    cleanup the code
+    
+
+
+commit 292f2f43435ae4620e0599fde91e46517db6b66d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 20:19:49 2007 +0000
+
+    move gob files to subdir
+    
+
+
+commit 140fed2fff2a29450105307efdbe011ab3b69294
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 16:41:37 2007 +0000
+
+    Code cleanups
+    
+
+
+commit 1991e0a5cb908cdb9a1715da854be13a2b2802d9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 15:56:15 2007 +0000
+
+    hack to stop unneeded changes to the profile
+    
+
+
+commit 051aa59b1fe2b8ccd42a7fd1638f4fa5183df360
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 13:56:17 2007 +0000
+
+    Cleanups and some added feedback
+    
+
+
+commit be558c0764eebb799e66ba52bd8176d80872a31a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 12:48:13 2007 +0000
+
+    update for avahi plugin
+    
+
+
+commit 811bbeeb5abf7a5f721f7c4f22128f06c0edc4a0
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 12:12:16 2007 +0000
+
+    fix type
+    
+
+
+commit 7f964f0809c4a15d5fed36397715bbfd332d20cb
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 12:08:13 2007 +0000
+
+    compile updates
+    
+
+
+commit 719470c111c1a47b8b969a1e1b652b13e9d0b5bc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 11:26:44 2007 +0000
+
+    add possible playlist-list auto-clean
+    
+
+
+commit a83bb94ee12e71c6935b1f319f0a2216e11612db
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 11:26:24 2007 +0000
+
+    fix profiles in plugin header
+    
+
+
+commit b44ced93524b07edc7e754884b92cb195516dd6e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 11:25:55 2007 +0000
+
+    update makefile
+    
+
+
+commit 28c9de2ca1939d772244c4fca1e9269938d483bc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 11:24:59 2007 +0000
+
+    adding profiles object
+    
+
+
+commit f3a699b1a22195951712abdc047b0cdcbbd6978d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 21 11:24:15 2007 +0000
+
+    fixing config system error
+    
+
+
+commit ecf8d99b1550e5883345d030c4cad644c14133ad
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Mar 20 21:21:05 2007 +0000
+
+    fix fix fix
+    
+
+
+commit f663a01a6b6b9ae56d9fe266b3410728e7f05367
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Mar 20 20:53:14 2007 +0000
+
+    fix makefile
+    
+
+
+commit 706cb790efd048ba57d88f06f32d849be5f873d5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Tue Mar 20 20:48:41 2007 +0000
+
+    stop unneeded compiles
+    
+
+
+commit 72e6b81142a9af082e12476639cefeae9bcb528d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 19 21:28:50 2007 +0000
+
+    export profiles
+    
+
+
+commit 8d17e02758bb615f05bf4c33ab056edcfc89046a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 19 18:42:11 2007 +0000
+
+    more right mouse menu action
+    
+
+
+commit 3349d0d678aa5b9e8a5b8cb2e76f3a2009753a92
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 19 14:25:36 2007 +0000
+
+    move from button-release to button press, seems to fix the gtk submenu bug
+    
+
+
+commit f8ae45bfb6acba4cc533ab377ffc85942e77d22b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 19 00:07:06 2007 +0000
+
+    updates..
+    
+
+
+commit 0efce01e4114d39e0f445363cd77af113580d09f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Mar 18 23:27:50 2007 +0000
+
+    commit broken stupid menu stuff
+    
+    
+
+
+commit 747d23d612e440ce17aecf4aa4a880c7d751cdb8
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Mar 18 20:24:59 2007 +0000
+
+    Extra config validation
+    
+
+
+commit 513d213b07b0e00fe52aaa9ad1cef4de990a5f59
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 16 23:52:51 2007 +0000
+
+    column edit
+    
+
+
+commit fef82d7efbbb8dcfe2af7ba90b1ce88419274859
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 16 12:42:15 2007 +0000
+
+    Saving and cleanup of sorting.
+    
+
+
+commit 07b4538cebb73a53fbded33af5f45be2b71ce9e9
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 14 11:40:26 2007 +0000
+
+    breaking stuff by implementing some form of sorting
+    
+
+
+commit 379ce2cc6392a8da4d39a73b956f5602f3d2bc24
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 10 21:43:47 2007 +0000
+
+
+
+commit e286cc5638916e016e8930e6d2d2b92a2e705e4a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 10 19:11:10 2007 +0000
+
+    update information
+    
+
+
+commit 5037b4cf914b544714ea728cdce75b8dec5d271b
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 9 12:59:15 2007 +0000
+
+    More moving to click label
+    
+
+
+commit 69e5d1b5aba79e8e1ef260afc4a2102ff971c21a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 9 00:36:16 2007 +0000
+
+    show right cursor
+    
+
+
+commit 64ba40ec564b1aa96527c7487ad1fe3889f158b5
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 8 23:46:09 2007 +0000
+
+    some playing with clickable label
+    
+
+
+commit 3def1e65881533db982b98df1d1515dbcf480d7d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 8 13:17:28 2007 +0000
+
+    remove printf spam from the config system
+    
+
+
+commit 7bf4fca5c079eae5b2539eacd2084dd596806c66
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Wed Mar 7 16:38:12 2007 +0000
+
+    Make the config system slightly faster, so it won't save if the value hasn't changed
+    
+
+
+commit 5a8f47cc9ce016c05c0b988d1cb777ba71ad5818
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 5 22:23:34 2007 +0000
+
+    sync
+    
+
+
+commit 10996f4e66f27531df97013e24ef2b25fd473184
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 5 18:41:09 2007 +0000
+
+    Generick gob2 build in makefile
+    
+
+
+commit 2de43f61e287e05ef09cc6871f998a48606d2fbe
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 5 16:23:18 2007 +0000
+
+    linkage
+    
+
+
+commit d564ceba5f32b74b1d83f456124680e588d33fc2
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Mon Mar 5 11:05:38 2007 +0000
+
+    fix bug and some intergration love
+    
+
+
+commit 3cb3848bd2691bc185033d64bb0974a6e3f388cf
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sun Mar 4 21:20:38 2007 +0000
+
+    Update information
+    
+
+
+commit 41402a53cb9db2b1585f1ea53742662d7cc7eaa6
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 3 23:02:46 2007 +0000
+
+    sync
+    
+
+
+commit 0c42329224c69c656af4f4fbf770b8de650de47a
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 3 21:26:16 2007 +0000
+
+    Add galician translation
+    
+
+
+commit 7b3a93af380af2e4b0c5c0852fa63ffaa83a930f
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 3 12:49:10 2007 +0000
+
+    Remove easter egg
+    
+
+
+commit 4f5e029054b11e6426c9990a1387f540a380d90c
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Sat Mar 3 00:25:15 2007 +0000
+
+    updates
+    
+
+
+commit 60ef871afee245825274cca89afacf5bc6a0a17e
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 22:28:37 2007 +0000
+
+    Easter updates
+    
+
+
+commit 1010b08555d94f513bfc18df1079b30ae1240bd1
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 21:29:48 2007 +0000
+
+    easter updates
+    
+
+
+commit 30345908bedec5b20a59f04b8f42de4b823cebbc
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 20:25:34 2007 +0000
+
+    easter updates
+    
+
+
+commit fd25daa0cff9edb656d75958774c4b5d546c5381
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 17:30:42 2007 +0000
+
+    update
+    
+
+
+commit e3445a04e10707e36934342b8ac6943443ef318d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 17:24:31 2007 +0000
+
+    easter egg
+    
+
+
+commit cc0e8a0fa2617eedc206eae0b44815c5b692bb70
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 14:44:35 2007 +0000
+
+    When 'adding one song' and is allready in playlist, just play the version in the playlist + track list info browser
+    
+
+
+commit 8594b061dd94b61837ebca3eac740c19f83a0c89
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 13:27:17 2007 +0000
+
+    fix popup placing for non square images
+    
+
+
+commit fa41a1fa6b80a921801951a6c59cba9c21fae389
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 13:07:03 2007 +0000
+
+    Some logic to keep the cover-popup always on the monitor, dualscreen aware
+    
+
+
+commit 19f9ebd7a6cdda9cb1715d2a4cade5de26b15ced
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 12:51:02 2007 +0000
+
+    Limit the number of results in the metadata browser
+    
+
+
+commit 96abfa9aa123fbe8becd92dccbd9420ca2ba3bff
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 09:59:48 2007 +0000
+
+    When a metadata request gets removed, remove it before being processed instead of after.
+    
+
+
+commit f7312ef2468492d055079a6501476a0b090aea35
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Fri Mar 2 08:39:57 2007 +0000
+
+    And then there was QLIB
+    
+
+
+commit 8b03c28e2a258fa2c590620c10daaca84ce65277
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 1 20:20:16 2007 +0000
+
+    Update find browsers when mpd changes
+    
+
+
+commit 9874f1f87e0bc50f97fe556948c86a9bcc5e141d
+Author: qball <qball@09075e82-0dd4-0310-85a5-a0d7c8717e4f>
+Date:   Thu Mar 1 19:52:51 2007 +0000
+
+    Fix for avuton problem with tagless files
+    
+
 28-02-2007 Qball <Qball@Sarine.nl>
 	* src/gmpc-mpddata-treeview.gob:	A custom GtkTreeView implementation
 	that does columns. suited for an mpd_data list.
