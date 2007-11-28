@@ -141,6 +141,7 @@ gmpcincludedir =$(includedir)/gmpc/
 EXTRA_DIST = 	playlist3.h\
 	    	main.h\
 	   	mm-keys.h\
+		misc.h\
 		mpdinteraction.h\
 		config-defaults.h\
 		browsers/playlist3-tag2-browser.h\
@@ -159,6 +160,7 @@ EXTRA_DIST = 	playlist3.h\
 		egg/eggaccelerators.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-profiles-private.h\
+		gob/gmpc-connection.h\
 		gob/gmpc-meta-watcher.h\
 		gob/gmpc-meta-watcher-private.h\
 		gob/gmpc-metaimage.h\

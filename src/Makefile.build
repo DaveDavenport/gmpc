@@ -11,7 +11,7 @@ sources=\
 	playlist3.c\
 	playlist3-messages.c\
 	edit_markup.c\
-	browsers/playlist3-tag-browser.c\
+	browsers/playlist3-tag2-browser.c\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
 	browsers/playlist3-artist-browser.c\
@@ -34,6 +34,7 @@ sources=\
 	gob/gmpc-mpddata-model-sort.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
+	gob/gmpc-signals.c\
 	gmpc_easy_download.c\
 	gob/gmpc-profiles.c\
 	url_fetcher.c\
@@ -61,7 +62,8 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-meta-watcher.c\
-	gob/gmpc-metaimage.c
+	gob/gmpc-metaimage.c\
+	gob/gmpc-signals.c
 
 %.o: %.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
@@ -79,7 +81,8 @@ revisiont.h:
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
-	-DVERSION=\"@VERSION@\"
+	-DVERSION=\"@VERSION@\"\
+	-DGMPC_BUILD=1
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
@@ -111,6 +114,7 @@ AM_CFLAGS = @CFLAGS@\
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
+		misc.h\
 		gmpc_easy_download.h\
 		gob/gmpc-profiles.h\
 		gob/gmpc-mpddata-model.h\
@@ -119,8 +123,10 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-meta-watcher.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-metaimage.h\
+		gob/gmpc-connection.h\
+		gob/gmpc-signals.h\
 		TreeSearchWidget.h \
-		playlist3-messages.c\
+		playlist3-messages.h\
 		metadata.h
 gmpcincludedir =$(includedir)/gmpc/
 
@@ -130,7 +136,7 @@ EXTRA_DIST = 	playlist3.h\
 		misc.h\
 		mpdinteraction.h\
 		config-defaults.h\
-		browsers/playlist3-tag-browser.h\
+		browsers/playlist3-tag2-browser.h\
 		browsers/playlist3-file-browser.h\
 		browsers/playlist3-current-playlist-browser.h\
 		browsers/playlist3-artist-browser.h\
@@ -159,8 +165,10 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-mpddata-model-private.h\
 		gob/gmpc-mpddata-treeview.h\
 		gob/gmpc-mpddata-treeview-private.h\
+		gob/gmpc-connection-private.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
+		gob/gmpc-signals-private.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\

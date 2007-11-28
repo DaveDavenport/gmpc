@@ -1,4 +1,7 @@
 28-11-2007 Qball Cow <Qball@Sarine.nl>
+	* src/Makefile.build:	Fix build-makefile
+
+28-11-2007 Qball Cow <Qball@Sarine.nl>
 	* doc/WhatsNew0.15.5.txt:	Added
 
 28-11-2007 Qball Cow <Qball@Sarine.nl>

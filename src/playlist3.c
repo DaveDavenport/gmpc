@@ -1891,9 +1891,9 @@ void about_window()
 	}
 	else
 	{
-		path = g_strdup_printf("%s\n", VERSION);
+		path = g_strdup_printf("%s\n%s\n","while(bug_count > 0) fixBug();", VERSION);
 	}
-
+    gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://sarine.nl");
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
 	q_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
