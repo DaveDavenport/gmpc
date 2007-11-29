@@ -1,4 +1,7 @@
 29-11-2007 Qball Cow <Qball@Sarine.nl>
+	* data/gmpc.pc.in:			Add requires field for libmpd.
+
+29-11-2007 Qball Cow <Qball@Sarine.nl>
 	* TestSet/gmpc_1.cfg/txt:	Config that used to be able to crash mpd.
 
 28-11-2007 Qball Cow <Qball@Sarine.nl>
