@@ -22,7 +22,6 @@ QAsyncQueue *meta_commands = NULL;
  */
 QAsyncQueue *meta_results = NULL;
 
-GQueue *meta_remove = NULL;
 GMutex *meta_processing = NULL;
 
 typedef struct {
@@ -371,7 +370,7 @@ static void meta_data_retrieve_thread()
 			char *old = NULL;
 			int i = 0;
 			
-
+            /* For mdcover2, this _should_ not be on? how can we work around that. */
 			if(data->song->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
 			{
 				gchar **str = g_strsplit(data->song->artist, ",", 2);
@@ -379,7 +378,11 @@ static void meta_data_retrieve_thread()
 				if(str[1]) {
 					data->song->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
 				}else{
-					data->song->artist = g_strdup(old);
+                    /* This one isn't needed to be done, just set old to NULL again so we don't 
+                     * get a double free 
+                     */
+					/*data->song->artist = g_strdup(old);*/
+                    old = NULL;
 				}					
 				g_strfreev(str);
 				debug_printf(DEBUG_INFO, "string converted to: '%s'", data->song->artist);
@@ -424,13 +427,15 @@ static void meta_data_retrieve_thread()
 		 */	
 		q_async_queue_push(meta_results, data);		
         
-		g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
+		
 		/**
 		 * clear our reference to the object
 		 */
 		data = NULL;
 		g_mutex_unlock(meta_processing);
-	}while(1);
+
+        g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
+    }while(1);
 }
 
 static gboolean meta_data_handle_results(void)
@@ -442,31 +447,12 @@ static gboolean meta_data_handle_results(void)
 		debug_printf(DEBUG_ERROR,"Crap, handled in wrong thread\n");
 
 	}
-	/**
-	 * Should check is one is being processed  (implemented)
-	 */
-	if(q_async_queue_length(meta_results) == 0 &&
-		q_async_queue_length(meta_commands) == 0)
-	{
-		/** if the fetching thread is busy, don't do anything,
-		 * if not, then lock it and clear it
-		 */
-		if(g_mutex_trylock(meta_processing)){
-			debug_printf(DEBUG_INFO, "Clearing callback remove list");
-			while(g_queue_pop_head(meta_remove));
-			g_mutex_unlock(meta_processing);
-		}
-	}
-
-
-
-	/**
+    /**
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
 	for(data = q_async_queue_try_pop(meta_results);data;
 			data = q_async_queue_try_pop(meta_results)) {	
-		int i = 0;
 
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
  		if(data->callback)
@@ -474,18 +460,8 @@ static gboolean meta_data_handle_results(void)
 			data->callback(data->song,data->result,data->result_path, data->data);
 		}
 
-		for(i=g_queue_get_length(meta_remove)-1; i>=0;i--) {
-			int num = GPOINTER_TO_INT(g_queue_peek_nth(meta_remove,i));
-			if(num == data->id) { 
-				test = 1;
-				g_queue_pop_nth(meta_remove, i);	
-				debug_printf(DEBUG_INFO, "Removing callback: %u\n", num);
-			}
-		}
-	
-	
-		if(data->result_path)q_free(data->result_path);
-		mpd_freeSong(data->song);
+        if(data->result_path)q_free(data->result_path);
+        mpd_freeSong(data->song);
 		q_free(data);
 	}
 	/**
@@ -523,12 +499,6 @@ void meta_data_init()
      * the result queue
      */
     meta_results = q_async_queue_new();
-    /**
-     *  remove callbacks...
-     *  not thread save
-     */
-    meta_remove = g_queue_new();
-
 
     meta_processing = g_mutex_new();
     /**
@@ -598,10 +568,10 @@ void meta_data_destroy(void)
             mpd_freeSong(mtd->song);
             q_free(mtd);
         }
-        /* Create the quiet signal, this is just an empty request with id 0 */
-
+        /* Create the quit signal, this is just an empty request with id 0 */
         mtd = g_malloc0(sizeof(*mtd));
         mtd->id = 0;
+
         /* push the request to the thread */
         q_async_queue_push_unlocked(meta_commands, mtd);
         q_async_queue_unlock(meta_commands);
@@ -616,6 +586,7 @@ void meta_data_destroy(void)
     if(meta_commands)
         q_async_queue_unref(meta_commands);
     meta_processing = NULL;
+    /* Close the cover database  */
     cfg_close(cover_index);
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
@@ -665,22 +636,40 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     else
     {
         ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, path);
+        /**
+         * If the data is know. (and doesn't need fectching) 
+         * call the callback and stop
+         */
+        if(ret != META_DATA_FETCHING)
+        {
+            return ret;	
+        }
     }
-
-    /**
-     * If the data is know. (and doesn't need fectching) 
-     * call the callback and stop
-     */
-    if(ret != META_DATA_FETCHING)
-    {
-        return ret;	
-    }
-
 
     /**
      * Make a copy
      */
-    song = mpd_songDup(tsong);
+    /* If it is not a mpd got song */
+    if(tsong->file == NULL )
+    {
+        if(type&META_ALBUM_ART || type&META_ALBUM_TXT)
+        {
+            MpdData *data2 = NULL;
+            mpd_database_search_start(connection, TRUE);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
+            data2 = mpd_database_search_commit(connection);
+            if(data2)
+            {
+                song = data2->song;
+                data2->song = NULL;
+                mpd_data_free(data2);
+            }
+
+        }
+    }
+    if(song == NULL)
+        song = mpd_songDup(tsong);
     /**
      * If no result, start a thread and start fetching the data from there
      */
@@ -701,6 +690,12 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     /* when using old api style, the request is commited anyway */
     if(!callback)
     {
+        /* if it is allready in the queue, there is no need to push it again
+         * because GmpcMetaWatcher signal will arrive at every widget
+         */
+        /*
+         * TODO: this misses items currently in the queue, try to catch that too.
+         */
         q_async_queue_lock(meta_commands);
         if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
         {
@@ -716,6 +711,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 
     num_queries ++;
     /* I should fix this */
+    test = g_mutex_trylock(meta_processing);
     if(test)
         g_mutex_unlock(meta_processing);
     gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
