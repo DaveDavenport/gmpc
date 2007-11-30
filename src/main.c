@@ -975,7 +975,12 @@ void connect_callback(MpdObj *mi)
 static void connection_changed(MpdObj *mi, int connect, gpointer data)
 {
     /* propagate the signal to the connection object */
-    gmpc_connection_connection_changed(gmpcconn, mi, connect);
+    if(mpd_check_connected(mi) != connect)
+    {
+        debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connect, connect);
+    }
+    /* remove this when it does not fix it */
+    gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
 }
 
 static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect, gpointer data)
