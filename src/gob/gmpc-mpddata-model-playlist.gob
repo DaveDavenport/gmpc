@@ -21,6 +21,7 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
     private uint connection_changed = 0;
     private MpdObj *mi;
     private long long playlist_id = {0};
+    private int old_highlight = -1;
 
 override (G:Object)
         void 
@@ -165,6 +166,36 @@ override (G:Object)
             }
             self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
         }
+        if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+        {
+            GtkTreeIter iter;
+            GtkTreePath *path = NULL;
+            int i = mpd_player_get_current_song_pos(self->_priv->mi);
+            if(self->_priv->old_highlight >= 0)
+            {
+                /* get the right entry */
+                path = gtk_tree_path_new(); 
+                iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                iter.user_data = NULL; 
+                iter.user_data2 =  GINT_TO_POINTER(self->_priv->old_highlight);
+                gtk_tree_path_append_index(path, self->_priv->old_highlight);
+                gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                gtk_tree_path_free(path);
+                self->_priv->old_highlight = -1;
+            }
+            if(i >= 0)
+            {
+                /* get the right entry */
+                path = gtk_tree_path_new(); 
+                iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                iter.user_data = NULL; 
+                iter.user_data2 =  GINT_TO_POINTER(i);
+                gtk_tree_path_append_index(path, i);
+                gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                gtk_tree_path_free(path);
+                self->_priv->old_highlight = i;
+            }
+        }
 
     }
     private
@@ -175,22 +206,6 @@ override (G:Object)
         {
             gmpc_mpddata_model_set_mpd_data(self, NULL);
             self->_priv->playlist_id = 0;
-        }
-        else
-        {
-/*            MpdData *data = NULL;
-            int new_length =   mpd_playlist_get_playlist_length(mi);
-            for(new_length; new_length > 0; new_length--)
-            {
-                data= mpd_new_data_struct_append(data);
-                data->type = MPD_DATA_TYPE_SONG;
-                data->song = NULL;
-            }
-            gmpc_mpddata_model_set_mpd_data(self, mpd_data_get_first(data));
-            printf("I now have: %i rows\n", GMPC_MPDDATA_MODEL(self)->num_rows);
-            self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
-*/
-
         }
     }
 
@@ -218,6 +233,16 @@ override (G:Object)
             g_value_init(value, GMPC_MPDDATA_MODEL(self)->types[column]);
             debug_printf(DEBUG_ERROR,"failed to get song entry\n");
             return;
+        }
+        if(column == MPDDATA_MODEL_COL_ICON_ID)
+        {
+            if(n == mpd_player_get_current_song_pos(self->_priv->mi))
+            {
+                g_value_init(value, GMPC_MPDDATA_MODEL(self)->types[column]);
+                g_value_set_string(value, "gtk-media-play-ltr");
+                return;
+            }
+
         }
         /**
          * Call the parent function again

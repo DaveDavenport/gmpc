@@ -65,7 +65,6 @@ int pl3_old_zoom = PLAYLIST_NO_ZOOM;
 void about_window(void);
 void pl3_cat_row_activated(GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *);
 void pl3_cat_row_expanded(GtkTreeView *, GtkTreeIter *, GtkTreePath *);
-void pl3_cat_bread_crumb_up(void);
 int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
 int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
 int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
@@ -277,20 +276,6 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 	}
 }
 
-void pl3_cat_bread_crumb_up()
-{
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
-	GtkTreeIter iter,parent;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
-	{
-		if(gtk_tree_model_iter_parent(model, &parent, &iter))
-		{
-			gtk_tree_selection_select_iter(selec, &parent);
-		}
-	}
-}
 
 /**
  * Function to handle a change in category.
@@ -319,14 +304,7 @@ void pl3_cat_sel_changed()
 			ind = gtk_tree_path_get_indices(path);
 			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),
 					ind[0]);
-			/**
-			 * Set up button only active when you can go up 
-			 */
-			if(gtk_tree_path_get_depth(path)>1) {
-				gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml,"bread_crumb_up"), TRUE);
-			} else {
-				gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml,"bread_crumb_up"), FALSE);
-			}
+
 			gtk_tree_path_free(path);
 
 		}
