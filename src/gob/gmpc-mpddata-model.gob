@@ -52,7 +52,7 @@ requires 2.0.0
           (interface Gtk:Tree:Model)
 {
     private gint stamp 		= {g_random_int()};
-    private	GType types[MPDDATA_MODEL_N_COLUMNS]; 
+    public	GType types[MPDDATA_MODEL_N_COLUMNS]; 
     private MpdData *data 	= NULL;
     private gint num_rows = 0;
     private GdkPixbuf **images = NULL;
@@ -104,31 +104,31 @@ requires 2.0.0
 
     init(self)
     {
-        self->_priv->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
-        self->_priv->types[MPDDATA_MODEL_COL_MARKUP] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_PLAYING] = G_TYPE_BOOLEAN;
-        self->_priv->types[MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_COL_PATH] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_ARTIST] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_ALBUM] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_TITLE] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_TITLEFILE] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_TRACK] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_GENRE] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_NAME] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_COMPOSER] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
-        self->_priv->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
-        self->_priv->types[MPDDATA_MODEL_META_DATA] = G_TYPE_OBJECT;
+        self->types[MPDDATA_MODEL_COL_MPDSONG] = G_TYPE_POINTER;
+        self->types[MPDDATA_MODEL_COL_MARKUP] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_PLAYING] = G_TYPE_BOOLEAN;
+        self->types[MPDDATA_MODEL_COL_PLAYING_FONT_WEIGHT] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_PATH] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_ARTIST] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_ALBUM] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_TITLE] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_TITLEFILE] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_TRACK] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_GENRE] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_NAME] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_COMPOSER] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_META_DATA] = G_TYPE_OBJECT;
 
         self->_priv->markup_signal = g_signal_connect_swapped(G_OBJECT(gmpc_signals), "browser-markup-changed", G_CALLBACK(self_markup_changed), self);
     }
@@ -333,7 +333,7 @@ requires 2.0.0
         }
 
     interface Gtk:Tree:Model
-        private void
+        public void
         get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0 < MPDDATA_MODEL_N_COLUMNS), GValue *value (check null))
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
@@ -341,7 +341,7 @@ requires 2.0.0
             int n = GPOINTER_TO_INT(iter->user_data2);
 
             /* set value to the correct type */
-            g_value_init(value, self->_priv->types[column]);
+            g_value_init(value, self->types[column]);
 
             /** 
              * Sanity checks 
@@ -650,7 +650,7 @@ requires 2.0.0
         get_column_type(Gtk:Tree:Model *model(check null type), gint index (check >= 0))
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
-            return self->_priv->types[index];
+            return self->types[index];
         } 
     public 
         void 
@@ -739,7 +739,8 @@ requires 2.0.0
                 self->_priv->num_rows++;
                 if(data2->type == MPD_DATA_TYPE_SONG)
                 {
-                    retval+= data2->song->time;
+                    if(data2->song)
+                        retval+= data2->song->time;
                 }
             }
             self->_priv->images = g_malloc0((self->_priv->num_rows)*sizeof(*(self->_priv->images)));
@@ -807,9 +808,9 @@ requires 2.0.0
                     const char *ca,*cb;
                     iter.user_data = a;
                     iter.user_data2 = GPOINTER_TO_INT(0);
-                    self_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &va);
+                    gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &va);
                     iter.user_data = b;
-                    self_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &vb);
+                    gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &vb);
                     ca = g_value_get_string(&va);
                     cb = g_value_get_string(&vb);
                     if(ca && cb) {
@@ -830,9 +831,9 @@ requires 2.0.0
                 /* Get values from tree view, so we don't have to replicate code to sort the right entries */
                 iter.user_data = a;
                 iter.user_data2 = GPOINTER_TO_INT(0);
-                self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
+                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
                 iter.user_data = b;
-                self_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
+                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
                 if(self->_priv->sort_column == MPDDATA_MODEL_COL_SONG_TRACK)
                 {
                     const char *a = g_value_get_string(&va);
@@ -843,11 +844,11 @@ requires 2.0.0
                     g_value_unset(&vb);
                     return fact*(a1-b1);
                 }
-                else if(self->_priv->types[self->_priv->sort_column] == G_TYPE_INT)
+                else if(self->types[self->_priv->sort_column] == G_TYPE_INT)
                 {
                     val = g_value_get_int(&va) - g_value_get_int(&vb);
                 }
-                else if (self->_priv->types[self->_priv->sort_column] == G_TYPE_STRING)
+                else if (self->types[self->_priv->sort_column] == G_TYPE_STRING)
                 {
                     const char *a = g_value_get_string(&va);
                     const char *b = g_value_get_string(&vb);

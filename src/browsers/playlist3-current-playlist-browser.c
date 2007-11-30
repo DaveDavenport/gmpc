@@ -34,6 +34,7 @@
 #include "config1.h"
 #include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
 
@@ -255,6 +256,15 @@ static void pl3_current_playlist_browser_init()
 	GtkTreeViewColumn *columns[PL_COLUMN_TOTAL];
 
 	GValue value = {0,};
+	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
+    GmpcMpdDataModelPlaylist *model = gmpc_mpddata_model_playlist_new(gmpcconn,connection);
+    GtkWidget *tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(model));
+	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+    gtk_container_add(GTK_CONTAINER(sw), tree);
+	gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), GTK_WIDGET(sw), TRUE, TRUE,0);
+    gtk_widget_show_all(sw);
 	/* set up the tree */
 	pl3_cp_tree= gtk_tree_view_new_with_model(GTK_TREE_MODEL(playlist));
 	renderer = gtk_cell_renderer_pixbuf_new ();
@@ -477,7 +487,7 @@ static void pl3_current_playlist_browser_init()
 	pl3_cp_sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_SHADOW_ETCHED_IN);
-	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
+
 
 	gtk_container_add(GTK_CONTAINER(pl3_cp_sw), pl3_cp_tree);
 	gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), pl3_cp_sw, TRUE, TRUE,0);

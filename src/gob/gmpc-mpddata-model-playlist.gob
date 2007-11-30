@@ -1,0 +1,76 @@
+requires 2.0.0
+
+%ht{
+#include "gmpc-mpddata-model.h" 
+#include "gmpc-mpddata-model-private.h" 
+   #include "gmpc-connection.h" 
+%}
+
+class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model 
+        (interface Gtk:Tree:Model)
+{
+    private GmpcConnection *conn = {NULL};
+    private uint status_changed = 0;
+    private uint connection_changed = 0;
+    private MpdObj *mi;
+
+    public
+        Gmpc:MpdData:Model:Playlist *new (Gmpc:Connection *conn (check type null), MpdObj *mi(check null))
+        {
+            Self *self = GET_NEW;
+            self->_priv->conn = conn;
+            self->_priv->status_changed = g_signal_connect_swapped(G_OBJECT(conn), "status_changed", self_status_changed, self);
+            self->_priv->connection_changed = g_signal_connect_swapped(G_OBJECT(conn), "connection_changed", self_connection_changed, self);
+            self->_priv->mi = mi;
+            return self;
+        }
+    private
+    void
+    status_changed(self, MpdObj *mi, ChangedStatusType what, Gmpc:Connection *conn (check type))
+    {
+
+
+    }
+    private
+    void
+    connection_changed(self, MpdObj *mi, int connect, Gmpc:Connection *conn (check type))
+    {
+        if(connect == 0)
+        {
+            gmpc_mpddata_model_set_mpd_data(self, NULL);
+        }
+        else
+        {
+            MpdData *data = NULL;
+            int new_length =   mpd_playlist_get_playlist_length(mi);
+            for(new_length; new_length > 0; new_length--)
+            {
+                data= mpd_new_data_struct_append(data);
+                data->type = MPD_DATA_TYPE_SONG;
+                data->song = NULL;
+            }
+            gmpc_mpddata_model_set_mpd_data(self, mpd_data_get_first(data));
+        }
+    }
+    interface Gtk:Tree:Model
+    private void 
+    get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0 < MPDDATA_MODEL_N_COLUMNS), GValue *value (check null))
+    {
+        Self *self = GMPC_MPDDATA_MODEL_PLAYLIST(model);
+        MpdData_real *data = iter->user_data;	
+        int n = GPOINTER_TO_INT(iter->user_data2);
+        if(data->song == NULL)
+        {
+            data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,n);
+        }
+        if(data->song == NULL)
+        {
+            g_value_init(value, GMPC_MPDDATA_MODEL(self)->types[column]);
+            debug_printf(DEBUG_ERROR,"failed to get song entry\n");
+            return;
+        }
+        gmpc_mpddata_model_get_value(model, iter, column, value);
+    }
+
+
+}

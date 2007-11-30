@@ -36,6 +36,7 @@ sources=\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-mpddata-model.c\
 	gob/gmpc-mpddata-model-sort.c\
+	gob/gmpc-mpddata-model-playlist.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-signals.c\
@@ -62,6 +63,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-profiles.c\
 	gob/gmpc-mpddata-model.c\
 	gob/gmpc-mpddata-model-sort.c\
+	gob/gmpc-mpddata-model-playlist.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-meta-text-view.c\
@@ -168,6 +170,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-meta-text-view.h\
 		gob/gmpc-meta-text-view-private.h\
 		gob/gmpc-mpddata-model.h\
+		gob/gmpc-mpddata-model-playlist.h\
+		gob/gmpc-mpddata-model-playlist-private.h\
 		gob/gmpc-mpddata-model-sort.h\
 		gob/gmpc-mpddata-model-sort-private.h\
 		gob/gmpc-mpddata-model-private.h\
