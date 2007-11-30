@@ -166,7 +166,7 @@ override (G:Object)
             }
             self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
         }
-        if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
+        if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS|MPD_CST_STATE))
         {
             GtkTreeIter iter;
             GtkTreePath *path = NULL;
