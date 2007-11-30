@@ -11,18 +11,18 @@ New Features
 ------------
 Some of these features may only work in combination with mpd from svn.
 
-* Playlist queue's: You can now select songs to be played next.
-* Playlist Editor:  You can now create/delete a playlist. add, remove and move songs in a playlist.
-* Chain search rules:   When searching in the playlist or the database you can now chain your queries using and and or f.e: **Artist "Norah Jones" and Album "Not Too Late" or Artist "Eric Clapton" and Album  "Unplugged"**. 
-* New Tag browser:  You can now create your own tag browsers in "itunes" style. With inline cover art.
-* Similar artist support:   The metadata can now show (if the last.fm plugin is installed) show similar artists, and allows you to browse them.
+* Playlist queue's: You can now select songs to be played next. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/playlist-queue.png[Screenshot]
+* Playlist Editor:  You can now create/delete a playlist. add, remove and move songs in a playlist. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/playlist-editor.png[Screenshot]
+* Chain search rules:   When searching in the playlist or the database you can now chain your queries using and and or f.e: **Artist "Norah Jones" and Album "Not Too Late" or Artist "Eric Clapton" and Album  "Unplugged"**. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/search-browser.png[Screenshot]
+* New Tag browser:  You can now create your own tag browsers in "itunes" style. With inline cover art. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/tag-browser.png[Screenshot]
+* Similar artist support:   The metadata can now show (if the last.fm plugin is installed) show similar artists, and allows you to browse them. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/similar.png[Screenshot]
 * Message bar:  When an event occurs, f.e. a disconnect gmpc now shows an inline message. The type of messages to be showed can be configured.
-* Message window:   Shows a backlog of old messages showed in gmpc.
+* Message window:   Shows a backlog of old messages showed in gmpc. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/messages.png[Screenshot]
 
 Improvements
 ------------
-* File browser: The file browser now has 2 panes, one folder tree, and a folder content list. 
-* Sorting:      Song list, tag lists and more can everywhere be sorted by clicking on the headers.
+* File browser: The file browser now has 2 panes, one folder tree, and a folder content list. http://download.sarine.nl/gmpc-0.15.5/WhatsNew/file-browser.png[Screenshot]
+* Sorting:      Song list, tag lists and more can everywhere be sorted by clicking on the headers.http://download.sarine.nl/gmpc-0.15.5/WhatsNew/sorting.png[Screenshot]
 * Keybindings:  You can now easily with the keyboard enabled disable audio outputs, or switch from one browser to the other.
 * Metadata:     It's now easier to (re)fetch metadata. 
 * Drag and Drop: You can now drag and drop artist/albums from the metabrowser on the player-bar, adding to or replacing the current playlist.

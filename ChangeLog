@@ -1,3 +1,6 @@
+30-11-2007 Qball Cow <Qball@Sarine.nl>
+	* doc/WhatsNew0.15.5.txt: updated
+
 29-11-2007 Qball Cow <Qball@Sarine.nl>
 	* data/gmpc.pc.in:			Add requires field for libmpd.
 
