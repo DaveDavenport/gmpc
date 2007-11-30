@@ -68,10 +68,12 @@ static void pl3_current_playlist_browser_clear_playlist(void);
 static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 static void pl3_current_playlist_save_myself(void);
+static void pl3_current_playlist_browser_init();
 GtkTreeModel *playlist = NULL;
 static void pl3_cp_init()
 {
     playlist = gmpc_mpddata_model_playlist_new(gmpcconn,connection);
+    pl3_current_playlist_browser_init();
 
 }
 
