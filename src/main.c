@@ -91,8 +91,6 @@ static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *
 static GtkWidget *error_dialog = NULL;
 static GtkListStore *error_list_store = NULL;
 
-/** Creating the backend */
-static void init_playlist_store(void);
 /** handle connection changed */
 static void connection_changed(MpdObj *mi, int connect, gpointer data);
 
@@ -576,11 +574,6 @@ int main (int argc, char **argv)
 	}
 
 	/**
-	 * Create the backend store for the current playlist
-	 */
-	init_playlist_store ();
-
-	/**
 	 * Ask user about added/removed provider plugins 
 	 */
 	meta_data_check_plugin_changed();
@@ -702,11 +695,6 @@ int main (int argc, char **argv)
 	mpd_free(connection);
 
     playlist3_message_destroy();
-	/**
-	 * remove (probly allready done) 
-	 * the playlist object
-	 */
-	g_object_unref(playlist);
 	/* cleanup curl */
 	curl_global_cleanup();
 
@@ -805,25 +793,6 @@ static void init_stock_icons()
 	return;
 }
 
-/**
- * Create the "Current" playlist backend.
- * This needs to be created from the start so it keeps in sync.
- */
-
-static void init_playlist_store ()
-{
-	gchar *markup = cfg_get_single_value_as_string_with_default(config,"playlist","markup", DEFAULT_PLAYLIST_MARKUP);
-	/**
-	 * Create the (custom) playlist widget 
-	 */
-	playlist = (GtkTreeModel *)playlist_list_new();
-
-	/**
-	 * restore the markup
-	 */
-	playlist_list_set_markup((CustomList *)playlist,markup);
-	q_free(markup);
-}
 
 /**
  * Handle status changed callback from the libmpd object
@@ -986,7 +955,6 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
 static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect, gpointer data)
 {
     int i=0;
-
     if(connect)
     {
         if(autoconnect_timeout)
@@ -994,14 +962,6 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
         autoconnect_timeout = 0;
 
     }
-    else
-    {
-        if(autoconnect_timeout)
-            g_source_remove(autoconnect_timeout);
-        autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
-
-    }
-
     /**
      * send password, first thing we do, if connected 
      */
@@ -1048,6 +1008,14 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
         playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
     } else {
         playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
+    }
+
+    if(!connect) 
+    {
+        if(autoconnect_timeout)
+            g_source_remove(autoconnect_timeout);
+        autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+
     }
 }
 

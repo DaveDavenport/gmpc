@@ -54,7 +54,7 @@ requires 2.0.0
     private gint stamp 		= {g_random_int()};
     public	GType types[MPDDATA_MODEL_N_COLUMNS]; 
     private MpdData *data 	= NULL;
-    private gint num_rows = 0;
+    public gint num_rows = 0;
     private GdkPixbuf **images = NULL;
     private gchar *req_artist = {NULL} destroywith g_free;
 
@@ -156,7 +156,7 @@ requires 2.0.0
                 mpd_data_free(self->_priv->data);
             if(self->_priv->images)
             {
-                for(i=0;i<self->_priv->num_rows;i++)
+                for(i=0;i<self->num_rows;i++)
                 {
                     if(self->_priv->images[i])
                         g_object_unref(self->_priv->images[i]);
@@ -182,7 +182,7 @@ requires 2.0.0
             Self *self  = GMPC_MPDDATA_MODEL(model);
             if(parent)
                 return FALSE;
-            if(self->_priv->num_rows == 0)
+            if(self->num_rows == 0)
                 return FALSE;
             /* Set iter to first item in list */
             iter->stamp = self->_priv->stamp; 
@@ -218,7 +218,7 @@ requires 2.0.0
             g_assert(depth == 1); 
 
             n = indices[0];		/* the n-th top level row */
-            if (n >= self->_priv->num_rows || n < 0)
+            if (n >= self->num_rows || n < 0)
                 return FALSE; 
 
             data = (MpdData*)self->_priv->data;
@@ -231,7 +231,7 @@ requires 2.0.0
             {
                 data = mpd_data_get_next_real(data,FALSE);
             }
-            g_assert(n<self->_priv->num_rows);
+            g_assert(n<self->num_rows);
             if(self->has_up && n == 0)
                 data = NULL;
 
@@ -262,7 +262,7 @@ requires 2.0.0
             }
             iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
             iter->user_data2 = GINT_TO_POINTER(n+1);
-            g_assert(n < self->_priv->num_rows);
+            g_assert(n < self->num_rows);
 
             return TRUE;
         }
@@ -280,7 +280,7 @@ requires 2.0.0
             Self *list = GMPC_MPDDATA_MODEL(model);
             if(iter)
                 return 0;
-            return list->_priv->num_rows;
+            return list->num_rows;
         }
 
     interface Gtk:Tree:Model
@@ -346,7 +346,7 @@ requires 2.0.0
             /** 
              * Sanity checks 
              */
-             g_assert((n < self->_priv->num_rows || n == 0));
+             g_assert((n < self->num_rows || n == 0));
             g_assert(!(data == NULL && n != 0));
 
             /* handle row up */
@@ -614,7 +614,7 @@ requires 2.0.0
             MpdData *data = NULL;
             if(parent)
                 return FALSE;
-            if (n >= self->_priv->num_rows || n < 0)
+            if (n >= self->num_rows || n < 0)
                 return FALSE; 
 
             data = (MpdData *)self->_priv->data;
@@ -669,13 +669,13 @@ requires 2.0.0
             GtkTreePath *path = NULL;
             /* Do some cleanup, like removing rows, and so */
             /* loop and remove */
-            while ( self->_priv->num_rows > 0 ) {
+            while ( self->num_rows > 0 ) {
                 path = gtk_tree_path_new();
-                gtk_tree_path_append_index(path, self->_priv->num_rows - 1 );
+                gtk_tree_path_append_index(path, self->num_rows - 1 );
                 /* propegate change */
                 gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                 gtk_tree_path_free(path);
-                self->_priv->num_rows--;
+                self->num_rows--;
             }
 
 
@@ -686,14 +686,14 @@ requires 2.0.0
                 mpd_data_free(self->_priv->data);
             self->_priv->data = NULL;
 
-            if(self->_priv->num_rows != 0)
-                debug_printf(DEBUG_ERROR,"not every row cleared %i\n",self->_priv->num_rows);
-            self->_priv->num_rows =0;
+            if(self->num_rows != 0)
+                debug_printf(DEBUG_ERROR,"not every row cleared %i\n",self->num_rows);
+            self->num_rows =0;
 
             /* Free possible stored images */
             if(self->_priv->images)
             {
-                for(i=0;i<self->_priv->num_rows;i++)
+                for(i=0;i<self->num_rows;i++)
                 {
                     if(self->_priv->images[i])
                         g_object_unref(self->_priv->images[i]);
@@ -716,34 +716,34 @@ requires 2.0.0
 
             if(self->has_up) {
                 path = gtk_tree_path_new();
-                gtk_tree_path_append_index(path, self->_priv->num_rows);
+                gtk_tree_path_append_index(path, self->num_rows);
                 iter.stamp = self->_priv->stamp;
                 iter.user_data = NULL; 
-                iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+                iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
 
                 /* propegate change */
                 gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                 gtk_tree_path_free(path);
-                self->_priv->num_rows++;
+                self->num_rows++;
             }
             for(data2 = mpd_data_get_first(self->_priv->data);data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
                 path = gtk_tree_path_new();
-                gtk_tree_path_append_index(path,self->_priv->num_rows);
+                gtk_tree_path_append_index(path,self->num_rows);
                 iter.stamp = self->_priv->stamp;
                 iter.user_data = data2;
-                iter.user_data2 =  GINT_TO_POINTER(self->_priv->num_rows);
+                iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
 
                 /* propegate change */
                 gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                 gtk_tree_path_free(path);
-                self->_priv->num_rows++;
+                self->num_rows++;
                 if(data2->type == MPD_DATA_TYPE_SONG)
                 {
                     if(data2->song)
                         retval+= data2->song->time;
                 }
             }
-            self->_priv->images = g_malloc0((self->_priv->num_rows)*sizeof(*(self->_priv->images)));
+            self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
 
             return retval;
         }

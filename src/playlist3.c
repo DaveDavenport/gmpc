@@ -2436,7 +2436,7 @@ void set_playlist_format(void)
     if(format != NULL)
     {
         cfg_set_single_value_as_string(config, "playlist","markup",format);
-        playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
+        //playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
     }
     q_free(format);
 }

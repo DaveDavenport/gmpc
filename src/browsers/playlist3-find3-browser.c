@@ -59,6 +59,7 @@ static void pl3_find3_combo_box_changed(GtkComboBox *cb, gpointer data);
 static void pl3_find3_save_myself(void);
 
 int pl3_find3_last_entry = MPD_TAG_ITEM_ANY;
+extern GtkWidget *pl3_cp_tree;
 /**
  * Plugin structure
  */
@@ -397,12 +398,13 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
         /** Fill now */
         if(found){
             GtkTreeIter iter;
-            if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist), &iter))
+            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+            if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(model), &iter))
             {
                 GList *node3 = NULL;
                 int songs = 0, total_songs = mpd_playlist_get_playlist_length(connection);
                 int step = total_songs/50;
-                if(playlist_list_get_loaded(PLAYLIST_LIST(playlist)) < 1)
+                if( TRUE )
                 {
                     gtk_widget_show(pl3_find3_pb);
                     gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_win"),FALSE);
@@ -413,7 +415,7 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
                 do {
                     int loop = TRUE;
                     mpd_Song *song = NULL;
-                    gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
+                    gtk_tree_model_get(GTK_TREE_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree))), &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
 
 
                     songs++;
@@ -477,12 +479,12 @@ static unsigned long pl3_find3_browser_view_browser_old_style()
                     if(!loop)
                     {
                         mpd_Song *song = NULL;
-                        gtk_tree_model_get(GTK_TREE_MODEL(playlist), &iter, PLAYLIST_LIST_COL_MPDSONG, &song, -1);
+                        gtk_tree_model_get(GTK_TREE_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree))), &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
                         data = mpd_new_data_struct_append(data);
                         data->type = MPD_DATA_TYPE_SONG;
                         data->song = mpd_songDup(song);  
                     }
-                } while(gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist), &iter));
+                } while(gtk_tree_model_iter_next(gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree)), &iter));
 
                 /* remove the progress bar */
                 if(total_songs) {

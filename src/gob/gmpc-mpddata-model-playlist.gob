@@ -3,24 +3,50 @@ requires 2.0.0
 %ht{
 #include "gmpc-mpddata-model.h" 
 #include "gmpc-mpddata-model-private.h" 
-   #include "gmpc-connection.h" 
+#include "gmpc-connection.h" 
 %}
+/**
+ * This is a Special version of Gmpc:MpdData:Model that is made to show the current playlist, and keep in sync with it.
+ * This is to replace the old playlist-lis backend.
+ * Use this model with Gmpc:MpdData:Treeview
+ */
 
 class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model 
         (interface Gtk:Tree:Model)
+		(interface Gtk:Tree:Drag:Source)
+		(interface Gtk:Tree:Drag:Dest)
 {
     private GmpcConnection *conn = {NULL};
     private uint status_changed = 0;
     private uint connection_changed = 0;
     private MpdObj *mi;
+    private long long playlist_id = {0};
 
+override (G:Object)
+        void 
+        finalize (G:Object *obj)
+        {
+            Self *self = GMPC_MPDDATA_MODEL_PLAYLIST(obj); 
+            printf("Destroy gmpc-mpddata-model-playlist\n");
+            if(self->_priv->status_changed)
+            {
+                g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->status_changed);
+                self->_priv->status_changed = 0;
+            }
+            if(self->_priv->connection_changed)
+            {
+                g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->connection_changed);
+                self->_priv->connection_changed = 0;
+            }
+            PARENT_HANDLER(obj);
+        }
     public
         Gmpc:MpdData:Model:Playlist *new (Gmpc:Connection *conn (check type null), MpdObj *mi(check null))
         {
             Self *self = GET_NEW;
             self->_priv->conn = conn;
-            self->_priv->status_changed = g_signal_connect_swapped(G_OBJECT(conn), "status_changed", self_status_changed, self);
-            self->_priv->connection_changed = g_signal_connect_swapped(G_OBJECT(conn), "connection_changed", self_connection_changed, self);
+            self->_priv->status_changed = g_signal_connect_swapped(G_OBJECT(conn), "status_changed", G_CALLBACK(self_status_changed), self);
+            self->_priv->connection_changed = g_signal_connect_swapped(G_OBJECT(conn), "connection_changed", G_CALLBACK(self_connection_changed), self);
             self->_priv->mi = mi;
             return self;
         }
@@ -28,7 +54,117 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
     void
     status_changed(self, MpdObj *mi, ChangedStatusType what, Gmpc:Connection *conn (check type))
     {
+        if(what&MPD_CST_PLAYLIST)
+        {
+            MpdData *data  = NULL;
+            int new_length = mpd_playlist_get_playlist_length(mi);
+           
+            int old_length = GMPC_MPDDATA_MODEL(self)->num_rows; 
+            /* if it was empty just add everything */
+            if(new_length == 0)
+            {
+                printf("Clearing the list\n");
+                gmpc_mpddata_model_set_mpd_data(self, NULL);
+            }
+            else if(old_length == 0)
+            {
+                printf("Adding list\n");
+                int  i;
+                for(i = new_length; i > 0; i--)
+                {
+                    data= mpd_new_data_struct_append(data);
+                    data->type = MPD_DATA_TYPE_SONG;
+                    data->song = NULL;
+                }
+                gmpc_mpddata_model_set_mpd_data(self, mpd_data_get_first(data));
+            }
+            else
+            {
+                data = mpd_playlist_get_changes_posid(mi, self->_priv->playlist_id);
+                /* if the new length is shorter then the old, remove rows at the end */
+                if(new_length < old_length)
+                {
+                    printf("Remove rows\n");
+                    int i;
+                    MpdData_real *data = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    while(data->next)data = data->next;
+                    /* data should be last */
 
+                    for(i=old_length-1;i>=new_length;i--)
+                    {
+                        GtkTreePath *path = gtk_tree_path_new(); 
+                        gtk_tree_path_append_index(path, i);
+                        gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+                        gtk_tree_path_free(path);
+                        data = mpd_data_delete_item(data);
+                       GMPC_MPDDATA_MODEL(self)->num_rows--;
+                    }
+                }
+                /* if it's longer, append rows */
+                else if ( new_length > old_length)
+                {
+                    printf("Add rows\n");
+                    int i;
+                    MpdData_real *data = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    /* get the last element */
+                    while(data->next) data = data->next;
+                    for(i=old_length; i< new_length;i++)
+                    {
+                       GtkTreePath *path = gtk_tree_path_new(); 
+                       GtkTreeIter iter;
+                       /* Append node */
+                       data = mpd_new_data_struct_append(data);
+                       data->type = MPD_DATA_TYPE_SONG;
+                       data->song = NULL;
+                        /* Create iter */
+                       iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                       iter.user_data = NULL; 
+                       iter.user_data2 =  GINT_TO_POINTER(GMPC_MPDDATA_MODEL(self)->num_rows);
+                       /* show the path */
+                       gtk_tree_path_append_index(path, i);
+                        /* insert it */
+                       gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                       gtk_tree_path_free(path);
+                       GMPC_MPDDATA_MODEL(self)->num_rows++;
+
+                    }
+                }
+                /* Now mark the changed rows */
+                if(data)
+                {
+                    printf("Update rows\n");
+                    int i=0;
+                    MpdData_real *list_iter = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    MpdData_real *data_iter = mpd_data_get_first(data);
+                    while(data_iter)
+                    {
+                        GtkTreeIter iter;
+                        GtkTreePath *path = gtk_tree_path_new(); 
+                        /* get the right entry */
+                        for(;i!= data_iter->song->pos;i++)
+                            list_iter = list_iter->next;
+
+                        if(list_iter->song)
+                            mpd_freeSong(list_iter->song);
+                        list_iter->song = NULL;
+
+                        iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                        iter.user_data = NULL; 
+                        iter.user_data2 =  GINT_TO_POINTER(i);
+                        gtk_tree_path_append_index(path, i);
+                        gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                        gtk_tree_path_free(path);
+                        data_iter = data_iter->next;
+                    }
+                    mpd_data_free(data);
+                }
+            }
+            if(GMPC_MPDDATA_MODEL(self)->num_rows != new_length)
+            {
+                debug_printf(DEBUG_ERROR, "Playlist out of sync: %i-%i \n",GMPC_MPDDATA_MODEL(self)->num_rows,new_length);
+            }
+            self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
+        }
 
     }
     private
@@ -38,10 +174,11 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
         if(connect == 0)
         {
             gmpc_mpddata_model_set_mpd_data(self, NULL);
+            self->_priv->playlist_id = 0;
         }
         else
         {
-            MpdData *data = NULL;
+/*            MpdData *data = NULL;
             int new_length =   mpd_playlist_get_playlist_length(mi);
             for(new_length; new_length > 0; new_length--)
             {
@@ -50,8 +187,17 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
                 data->song = NULL;
             }
             gmpc_mpddata_model_set_mpd_data(self, mpd_data_get_first(data));
+            printf("I now have: %i rows\n", GMPC_MPDDATA_MODEL(self)->num_rows);
+            self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
+*/
+
         }
     }
+
+    /**
+     * "override" the get_value method, because we need to fetch the value before it's available.
+     * So after we fetch it, let the Gmpc:MpdData:Model handle the hard work again.
+     */
     interface Gtk:Tree:Model
     private void 
     get_value(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null), gint column (check >= 0 < MPDDATA_MODEL_N_COLUMNS), GValue *value (check null))
@@ -61,16 +207,89 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
         int n = GPOINTER_TO_INT(iter->user_data2);
         if(data->song == NULL)
         {
+            printf("Fetching row: %i\n", n);
             data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,n);
         }
+        /**
+         * If the fetch failed, return an empty value, otherwise we will get crashes
+         */
         if(data->song == NULL)
         {
             g_value_init(value, GMPC_MPDDATA_MODEL(self)->types[column]);
             debug_printf(DEBUG_ERROR,"failed to get song entry\n");
             return;
         }
+        /**
+         * Call the parent function again
+         */
         gmpc_mpddata_model_get_value(model, iter, column, value);
     }
+    /**
+     * Moving interface 
+     */
+		interface Gtk:Tree:Drag:Source
+		private 
+		gboolean row_draggable (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path)
+		{
+				return TRUE;
+		}
 
+        interface Gtk:Tree:Drag:Source
+        private 
+		gboolean drag_data_delete (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path) 
+		{
+			return TRUE;
+		}
+		interface Gtk:Tree:Drag:Source
+			private 
+		gboolean drag_data_get (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path, Gtk:Selection:Data *selection_data)
+		{
+			return FALSE;
+		}
 
+        interface Gtk:Tree:Drag:Dest
+            private gboolean row_drop_possible 
+					(Gtk:Tree:Drag:Dest *drag_dest,
+					 Gtk:Tree:Path 		*dest,
+					 Gtk:Selection:Data *selection_data)
+		{
+			return TRUE;
+		}
+   
+		interface Gtk:Tree:Drag:Dest
+		private gboolean drag_data_received 
+				(Gtk:Tree:Drag:Dest *drag_dest, 
+				 Gtk:Tree:Path *dest,
+				 Gtk:Selection:Data *selection_data) 
+       {
+           GtkTreePath *path=NULL;
+           GtkTreeModel *model=NULL;
+
+           Self *self = NULL;
+           gint *ind = NULL, *ind2 = NULL;
+           if(dest == NULL || !gtk_tree_get_row_drag_data(selection_data, &model, &path))
+           {
+               return FALSE;
+           }
+           if(GMPC_MPDDATA_MODEL(model)->num_rows < 2)
+           {
+               gtk_tree_path_free(path);
+               return FALSE;
+           }
+           self =  GMPC_MPDDATA_MODEL_PLAYLIST(model);
+           ind = gtk_tree_path_get_indices(dest);
+           ind2 = gtk_tree_path_get_indices(path);
+           if(ind && ind2)
+           {
+               MpdData *data = NULL;
+               int original = ind2[0];
+               int destination = ind[0];
+               /*		if(destination >0 && ind[1] != '\0') destination--; */
+               if(destination > original) destination--;
+               mpd_playlist_move_pos(self->_priv->mi,original,destination);
+           }
+           gtk_tree_path_free(path);
+           return TRUE;
+       } 
 }
+

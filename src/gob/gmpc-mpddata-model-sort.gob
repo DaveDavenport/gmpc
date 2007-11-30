@@ -63,7 +63,7 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 			{
 				return FALSE;
 			}
-			if(GMPC_MPDDATA_MODEL(model)->_priv->num_rows < 2)
+			if(GMPC_MPDDATA_MODEL(model)->num_rows < 2)
 			{
 				gtk_tree_path_free(path);
 				return FALSE;

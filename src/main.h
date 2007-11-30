@@ -25,7 +25,6 @@
 #include "plugin.h"
 #include "metadata.h"
 #include "playlist3.h"
-#include "playlist-list.h"
 #include "mpdinteraction.h"
 #include "gmpc-profiles.h"
 #include "playlist3-messages.h" 
