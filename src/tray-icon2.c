@@ -31,7 +31,7 @@ void popup_timeout_changed(void);
 void popup_position_changed(GtkComboBox *om);
 void popup_enable_toggled(GtkToggleButton *but);
 void tray_enable_toggled(GtkToggleButton *but);
-
+void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data);
 /**
  * Tray icon
  */

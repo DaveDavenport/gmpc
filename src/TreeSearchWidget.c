@@ -274,7 +274,7 @@ static void treesearch_set_treeview(TreeSearch *ts, GtkTreeView *view)
 }
 GtkWidget *treesearch_get_treeview(TreeSearch *ts)
 {
-	return ts->treeview ;
+	return GTK_WIDGET(ts->treeview);
 }
 static void treesearch_set_search_row(TreeSearch *ts,int search_row)
 {

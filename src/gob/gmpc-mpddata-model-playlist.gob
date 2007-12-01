@@ -68,7 +68,7 @@ override (G:Object)
             if(new_length == 0)
             {
                 printf("Clearing the list\n");
-                gmpc_mpddata_model_set_mpd_data(self, NULL);
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), NULL);
             }
             else if(old_length == 0)
             {
@@ -80,7 +80,7 @@ override (G:Object)
                     data->type = MPD_DATA_TYPE_SONG;
                     data->song = NULL;
                 }
-                gmpc_mpddata_model_set_mpd_data(self, mpd_data_get_first(data));
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), mpd_data_get_first(data));
             }
             else
             {
@@ -90,7 +90,7 @@ override (G:Object)
                 {
                     printf("Remove rows\n");
                     int i;
-                    MpdData_real *data = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     while(data->next)data = data->next;
                     /* data should be last */
 
@@ -100,7 +100,7 @@ override (G:Object)
                         gtk_tree_path_append_index(path, i);
                         gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                         gtk_tree_path_free(path);
-                        data = mpd_data_delete_item(data);
+                        data = (MpdData_real *)mpd_data_delete_item((MpdData *)data);
                        GMPC_MPDDATA_MODEL(self)->num_rows--;
                     }
                 }
@@ -109,7 +109,7 @@ override (G:Object)
                 {
                     printf("Add rows\n");
                     int i;
-                    MpdData_real *data = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     /* get the last element */
                     while(data->next) data = data->next;
                     for(i=old_length; i< new_length;i++)
@@ -117,7 +117,7 @@ override (G:Object)
                        GtkTreePath *path = gtk_tree_path_new(); 
                        GtkTreeIter iter;
                        /* Append node */
-                       data = mpd_new_data_struct_append(data);
+                       data = (MpdData_real *)mpd_new_data_struct_append((MpdData *)data);
                        data->type = MPD_DATA_TYPE_SONG;
                        data->song = NULL;
                         /* Create iter */
@@ -138,8 +138,8 @@ override (G:Object)
                 {
                     printf("Update rows\n");
                     int i=0;
-                    MpdData_real *list_iter = mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
-                    MpdData_real *data_iter = mpd_data_get_first(data);
+                    MpdData_real *list_iter =(MpdData_real *) mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    MpdData_real *data_iter =(MpdData_real *) mpd_data_get_first(data);
                     while(data_iter)
                     {
                         GtkTreeIter iter;
@@ -207,7 +207,7 @@ override (G:Object)
     {
         if(connect == 0)
         {
-            gmpc_mpddata_model_set_mpd_data(self, NULL);
+            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), NULL);
             self->_priv->playlist_id = 0;
         }
     }
@@ -309,7 +309,6 @@ override (G:Object)
            ind2 = gtk_tree_path_get_indices(path);
            if(ind && ind2)
            {
-               MpdData *data = NULL;
                int original = ind2[0];
                int destination = ind[0];
                /*		if(destination >0 && ind[1] != '\0') destination--; */
