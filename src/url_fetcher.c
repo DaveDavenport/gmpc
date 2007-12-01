@@ -173,13 +173,55 @@ static int url_check_binary(char *data, int size)
 		printf("Binary data found\n");
 	return binary;
 }
-
+/*
 static void url_start()
 {
 	url_start_real(NULL);
 }
 
-void url_start_real(const gchar *url)
+*/
+
+
+
+
+
+
+
+static void parse_data(gmpc_easy_download_struct dld, const char *text)
+{
+    if(url_check_binary(dld.data, dld.size))
+    {
+        debug_printf(DEBUG_INFO,"Adding url\n", text);
+        mpd_playlist_add(connection, (char *)text);
+        pl3_push_statusbar_message(_("Added 1 stream"));
+    }
+    /** pls file: */
+    else if(!strncasecmp(dld.data, "[playlist]",10))
+    {
+        debug_printf(DEBUG_INFO,"Detected a PLS\n");
+        url_parse_pls_file(dld.data, dld.size);
+    }
+    /** Extended M3U file */
+    else if (!strncasecmp(dld.data, "#EXTM3U", 7))
+    {
+        debug_printf(DEBUG_INFO,"Detected a Extended M3U\n");
+        url_parse_extm3u_file(dld.data, dld.size);
+    }
+    /** Hack to detect most non-extended m3u files */
+    else if (!strncasecmp(dld.data, "http://", 7))
+    {
+        debug_printf(DEBUG_INFO,"Might be a M3U, or generic list\n");
+        url_parse_extm3u_file(dld.data, dld.size);
+    }
+    /** Assume Binary file */
+    else
+    {
+        debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
+        mpd_playlist_add(connection, (char *)text);
+        pl3_push_statusbar_message(_("Added 1 stream"));
+    }
+}
+static void url_start()
 {
 	/**
 	 * Setup the Dialog
@@ -222,8 +264,9 @@ void url_start_real(const gchar *url)
 	entry = gtk_entry_new();
 	gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, TRUE, 0);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(url_entry_changed), add_button);
-	if(url)
+/*	if(url)
 		gtk_entry_set_text(GTK_ENTRY(entry), url);
+        */
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), progress, FALSE, TRUE, 0);
 
@@ -239,38 +282,8 @@ void url_start_real(const gchar *url)
 		gtk_widget_set_sensitive(dialog, FALSE);
 		if(gmpc_easy_download(text, &dld) && dld.size)
 		{
-			if(url_check_binary(dld.data, dld.size))
-			{
-				debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
-				mpd_playlist_add(connection, (char *)text);
-				pl3_push_statusbar_message(_("Added 1 stream"));
-			}
-			/** pls file: */
-			else if(!strncasecmp(dld.data, "[playlist]",10))
-			{
-				debug_printf(DEBUG_INFO,"Detected a PLS\n");
-				url_parse_pls_file(dld.data, dld.size);
-			}
-			/** Extended M3U file */
-			else if (!strncasecmp(dld.data, "#EXTM3U", 7))
-			{
-				debug_printf(DEBUG_INFO,"Detected a Extended M3U\n");
-				url_parse_extm3u_file(dld.data, dld.size);
-			}
-			/** Hack to detect most non-extended m3u files */
-			else if (!strncasecmp(dld.data, "http://", 7))
-			{
-				debug_printf(DEBUG_INFO,"Might be a M3U, or generic list\n");
-				url_parse_extm3u_file(dld.data, dld.size);
-			}
-			/** Assume Binary file */
-			else
-			{
-				debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
-				mpd_playlist_add(connection, (char *)text);
-				pl3_push_statusbar_message(_("Added 1 stream"));
-			}
-			gmpc_easy_download_clean(&dld);
+            parse_data(dld,text);
+            gmpc_easy_download_clean(&dld);
 			gtk_widget_destroy(dialog);
 			return;
 		} else {
@@ -314,4 +327,22 @@ int url_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventBut
 		return 1;
 	}
 	return 0;
+}
+
+void url_start_real(const gchar *url)
+{
+	gmpc_easy_download_struct dld = {NULL, 0, 4096,NULL, NULL};
+	if(gmpc_easy_download(url, &dld) && dld.size)
+	{
+        parse_data(dld,url);
+        gmpc_easy_download_clean(&dld);
+	} else {
+		/**
+		 * Failed to contact %s
+		 * Show an error dialog
+		 */
+        gchar *mes = g_strdup_printf("%s: %s",_("Failed to parse the playlist link"), url);
+	    playlist3_show_error_message(mes, ERROR_CRITICAL);
+        q_free(mes);
+	}
 }
