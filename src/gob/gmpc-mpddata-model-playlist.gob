@@ -20,8 +20,8 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
 		(interface Gtk:Tree:Drag:Dest)
 {
     private GmpcConnection *conn = {NULL};
-    private uint status_changed = 0;
-    private uint connection_changed = 0;
+    private unsigned int status_changed = 0;
+    private unsigned int connection_changed = 0;
     private MpdObj *mi;
     private long long playlist_id = {0};
     private int old_highlight = -1;
