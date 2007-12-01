@@ -1,9 +1,12 @@
 requires 2.0.0
 
-%ht{
+%a{
 #include "gmpc-mpddata-model.h" 
-#include "gmpc-mpddata-model-private.h" 
+
 #include "gmpc-connection.h" 
+%}
+%h{
+#include "gmpc-mpddata-model-private.h" 
 %}
 /**
  * This is a Special version of Gmpc:MpdData:Model that is made to show the current playlist, and keep in sync with it.
