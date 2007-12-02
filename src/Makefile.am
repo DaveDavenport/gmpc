@@ -118,7 +118,8 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
 	-Igob/ \
-	-Iegg/
+	-Iegg/\
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" 
 
 gmpcinclude_HEADERS = \
 		plugin.h	\

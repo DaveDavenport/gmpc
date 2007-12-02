@@ -549,7 +549,15 @@ int main (int argc, char **argv)
     if(load_plugins)
         plugin_load_dir(url);
 	q_free(url);
-
+#ifndef WIN32
+    /* This is the right location to load gmpc plugins */
+    if(load_plugins)
+    {
+        url = g_build_path(G_DIR_SEPARATOR_S,PACKAGE_LIB_DIR, "plugins",NULL);
+        plugin_load_dir(url);
+        q_free(url);
+    }
+#endif
 	/* user space dynamic plugins */
 	url = gmpc_get_user_path("plugins");
 	/**
