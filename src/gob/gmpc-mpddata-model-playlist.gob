@@ -31,7 +31,6 @@ override (G:Object)
         finalize (G:Object *obj)
         {
             Self *self = GMPC_MPDDATA_MODEL_PLAYLIST(obj); 
-            printf("Destroy gmpc-mpddata-model-playlist\n");
             if(self->_priv->status_changed)
             {
                 g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->status_changed);
@@ -67,12 +66,10 @@ override (G:Object)
             /* if it was empty just add everything */
             if(new_length == 0)
             {
-                printf("Clearing the list\n");
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), NULL);
             }
             else if(old_length == 0)
             {
-                printf("Adding list\n");
                 int  i;
                 for(i = new_length; i > 0; i--)
                 {
@@ -88,7 +85,6 @@ override (G:Object)
                 /* if the new length is shorter then the old, remove rows at the end */
                 if(new_length < old_length)
                 {
-                    printf("Remove rows\n");
                     int i;
                     MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     while(data->next)data = data->next;
@@ -107,7 +103,6 @@ override (G:Object)
                 /* if it's longer, append rows */
                 else if ( new_length > old_length)
                 {
-                    printf("Add rows\n");
                     int i;
                     MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     /* get the last element */
@@ -136,7 +131,6 @@ override (G:Object)
                 /* Now mark the changed rows */
                 if(data)
                 {
-                    printf("Update rows\n");
                     int i=0;
                     MpdData_real *list_iter =(MpdData_real *) mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     MpdData_real *data_iter =(MpdData_real *) mpd_data_get_first(data);
@@ -195,12 +189,21 @@ override (G:Object)
                 iter.user_data2 =  GINT_TO_POINTER(i);
                 gtk_tree_path_append_index(path, i);
                 gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                self_current_song_changed(self, path, &iter);
                 gtk_tree_path_free(path);
                 self->_priv->old_highlight = i;
             }
         }
 
     }
+
+    signal last NONE (POINTER, POINTER)
+    void
+    current_song_changed(self,  GtkTreePath *path,GtkTreeIter *iter)
+    {
+
+    }
+
     private
     void
     connection_changed(self, MpdObj *mi, int connect, Gmpc:Connection *conn (check type))
@@ -225,7 +228,6 @@ override (G:Object)
         int n = GPOINTER_TO_INT(iter->user_data2);
         if(data->song == NULL)
         {
-            printf("Fetching row: %i\n", n);
             data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,n);
         }
         /**

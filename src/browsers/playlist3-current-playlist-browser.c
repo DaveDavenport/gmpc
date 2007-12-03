@@ -69,11 +69,25 @@ static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpo
 static void pl3_current_playlist_save_myself(void);
 static void pl3_current_playlist_browser_init(void);
 GtkTreeModel *playlist = NULL;
+GtkWidget *pl3_cp_tree = NULL;
+
+static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
+{
+        if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
+        {
+            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
+                    path,
+                    NULL,
+                    TRUE,0.5,0);
+        }
+}
+
+
 static void pl3_cp_init()
 {
     playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
     pl3_current_playlist_browser_init();
-
+    g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), NULL);
 }
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
@@ -106,7 +120,7 @@ gmpcPlugin current_playlist_plug = {
 extern GladeXML *pl3_xml;
 
 /* internal */
-GtkWidget *pl3_cp_tree = NULL;
+
 static GtkWidget *pl3_cp_sw = NULL;
 static GtkWidget *pl3_cp_vbox = NULL;
 static TreeSearch *tree_search = NULL;
@@ -810,38 +824,11 @@ static void pl3_current_playlist_browser_shuffle_playlist()
     mpd_playlist_shuffle(connection);
 }
 
-static void pl3_current_playlist_highlight_song_change ()
-{
-    if (!mpd_check_connected (connection))
-    {
-        return;
-    }
-
-    /* check if we need to highlight a song */
-    if (mpd_player_get_state(connection) > MPD_PLAYER_STOP && mpd_player_get_current_song_pos(connection) >= 0)
-    {
-        if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
-        {
-            pl3_current_playlist_browser_scroll_to_current_song();
-        }
-    }
-}
-
-
 static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
     if(pl3_cp_vbox == NULL)
         return;
-    if(what&MPD_CST_SONGPOS)
-    {
-        pl3_current_playlist_highlight_song_change();
-    }
-    if(what&MPD_CST_STATE)
-    {
-        if (mpd_player_get_state(mi) == MPD_STATUS_STATE_PLAY) {
-            pl3_current_playlist_browser_scroll_to_current_song();
-        }
-    }
+
     if(what&MPD_CST_QUEUE)
     {
         if(playlist_queue)
