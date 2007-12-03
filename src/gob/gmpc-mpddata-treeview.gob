@@ -8,6 +8,7 @@ requires 2.0.0
 #include "config.h"
 #include "gmpc-mpddata-model.h"
 #include "eggcolumnchooserdialog.h"
+#include "gmpc-mpddata-model-playlist.h"
 %}
 %h{
 #define NUM_COLS 15
@@ -207,6 +208,22 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             self_save_column_setup(self);
             PARENT_HANDLER(obj);
         }
+    private
+    void
+    highlight_row (GtkTreeViewColumn *tree_column,
+                                                         GtkCellRenderer *cell,
+                                                         GtkTreeModel *tree_model,
+                                                         GtkTreeIter *iter,
+                                                         gpointer data)
+    {
+       if(gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
+       {
+        g_object_set(G_OBJECT(cell), "weight", 800,NULL);
+        }
+        else
+            g_object_set(G_OBJECT(cell), "weight", 400,NULL);
+
+    }
 
     private
         GtkTreeViewColumn * 
@@ -238,6 +255,12 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                 g_value_set_int(&value, PANGO_ELLIPSIZE_END);
                 g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
                 gtk_tree_view_column_set_resizable(column, TRUE);
+                if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(gtk_tree_view_get_model(GTK_TREE_VIEW(self))))
+                {
+                    g_object_set(G_OBJECT(renderer), "weight-set", TRUE, NULL);
+                    gtk_tree_view_column_set_cell_data_func (column,renderer,self_highlight_row, NULL, NULL);
+                }
+
             }
             gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
             gtk_tree_view_column_set_reorderable(column, TRUE);

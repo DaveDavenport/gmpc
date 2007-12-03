@@ -215,6 +215,20 @@ override (G:Object)
         }
     }
 
+    public
+    gboolean
+    is_current_song(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null))
+    {
+        Self *self = GMPC_MPDDATA_MODEL_PLAYLIST(model);
+        MpdData_real *data = iter->user_data;	
+        int n = GPOINTER_TO_INT(iter->user_data2);
+        if(n == self->_priv->old_highlight)
+            return TRUE;
+        return FALSE;
+    }
+
+
+
     /**
      * "override" the get_value method, because we need to fetch the value before it's available.
      * So after we fetch it, let the Gmpc:MpdData:Model handle the hard work again.
