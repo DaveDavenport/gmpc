@@ -1777,6 +1777,10 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
             q_free(error);
         }
     }
+    if(what&MPD_CST_OUTPUT)
+    {
+        playlist3_fill_server_menu();
+    }
 }
 
 

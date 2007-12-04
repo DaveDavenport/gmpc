@@ -535,6 +535,10 @@ void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	{
 		xfade_update();
 	}
+    if(what&MPD_CST_OUTPUT)
+    {
+        update_outputs_settings();
+    }
 }
 
 
