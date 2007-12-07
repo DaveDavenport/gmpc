@@ -43,7 +43,7 @@ void playlist3_update_header(void);
 gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data);
 gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
-
+gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
 	{ "_NETSCAPE_URL", 0, 1},
@@ -987,6 +987,20 @@ gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
    g_object_set_data(G_OBJECT(wid), "window", NULL);
     return FALSE;
 }
+gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data)
+{
+    if(event->direction == GDK_SCROLL_UP)
+    {
+        seek_ps(5);
+    }
+    else if (event->direction == GDK_SCROLL_DOWN)
+    {
+        seek_ns(5);
+    }
+    return TRUE;
+}
+
+
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data)
 {
     gint width;
