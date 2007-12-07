@@ -1330,8 +1330,9 @@ static void playlist_player_set_song(MpdObj *mi)
 		 */
 /*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
 				buffer);
-*/		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 				buffer);
+*/
 	}
 	else
 	{
@@ -1341,8 +1342,9 @@ static void playlist_player_set_song(MpdObj *mi)
 /*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
 				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));
 
-*/		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
+		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));		
+        */
 	}
 }
 
@@ -1423,7 +1425,7 @@ static void playlist_zoom_level_changed()
 	/* Show full view */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
-	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
+/*	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pp_label_mini"));*/
 /*	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label"));*/
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "header_box"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hseparator1"));
@@ -1453,8 +1455,8 @@ static void playlist_zoom_level_changed()
 			break;
 		case PLAYLIST_MINI:
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
-			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));
-			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "header_box"));
+/*			gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_label_mini"));*/
+/*			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "header_box"));*/
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hseparator1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_option"));
@@ -1624,10 +1626,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 /*				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Paused</span>");
-*/
+
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 						_("<span size=\"large\" weight=\"bold\">Paused</span>"));				
+                */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 				break;
@@ -1642,11 +1645,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 /*				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label")),
 						"<span size=\"large\" weight=\"bold\">Not Playing</span>");
-*/
+
 				gtk_label_set_markup(GTK_LABEL
 						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 						_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));				
-
+*/
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
 		}
 		playlist3_update_header();
