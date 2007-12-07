@@ -23,6 +23,7 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <config.h>
+#include "bacon/bacon-volume.h"
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
@@ -53,7 +54,7 @@ static GtkTargetEntry target_table[] = {
 void set_browser_format(void);
 void set_playlist_format(void);
 static void playlist_zoom_level_changed(void);
-static void playlist_player_volume_changed(GtkScaleButton *vol_but);
+static void playlist_player_volume_changed(BaconVolumeButton *vol_but);
 void pl3_option_menu_activate(void);
 static void pl3_plugin_changed_interface(void);
 
@@ -1108,7 +1109,7 @@ void create_playlist3 ()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 
 	/* Add volume slider. */
-	volume_slider = gtk_volume_button_new();//bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
+	volume_slider = bacon_volume_button_new(GTK_ICON_SIZE_BUTTON, 0, 100, 1);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_slider, FALSE, TRUE, 0);
 	gtk_widget_show_all(volume_slider);
 	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,NULL);
@@ -1762,8 +1763,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}
 	if(what&MPD_CST_VOLUME)
 	{
-//		bacon_volume_button_set_value(BACON_VOLUME_BUTTON(volume_slider),mpd_status_get_volume(connection));
-		gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_slider),(gdouble)(mpd_status_get_volume(connection)/100.0));
+		bacon_volume_button_set_value(BACON_VOLUME_BUTTON(volume_slider),mpd_status_get_volume(connection));
 
 	}
 	if(what&MPD_CST_PERMISSION)
@@ -1872,9 +1872,9 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 	/*call_id3_window(mpd_player_get_current_song_id(connection));*/
 }
 
-static void playlist_player_volume_changed(GtkScaleButton *vol_but)
+static void playlist_player_volume_changed(BaconVolumeButton *vol_but)
 {
-	int volume = (int)(gtk_scale_button_get_value(vol_but)*100);
+	int volume = bacon_volume_button_get_value(vol_but);
 	if(mpd_status_get_volume(connection) != volume)
 	{
 		mpd_status_set_volume(connection, volume);
