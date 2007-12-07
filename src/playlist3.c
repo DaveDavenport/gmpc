@@ -32,7 +32,6 @@
 #include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
 #include "gmpc-clicklabel.h"
-
 guint sel_changed_handler_id = 0;
 static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 
@@ -1710,7 +1709,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			if(!pl3p_seek)
 			{
 //				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),(elapsedTime/(float)totalTime));
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0,1,(elapsedTime/(float)totalTime)));
 			}
 			if(totalTime == 0)
             {
