@@ -1637,6 +1637,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
+                /* Make sure it's reset correctly */
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
 
 
 				gtk_image_set_from_stock(GTK_IMAGE(
@@ -1710,7 +1712,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			if(!pl3p_seek)
 			{
 //				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0,1,(elapsedTime/(float)totalTime)));
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
 			}
 			if(totalTime == 0)
             {
@@ -1751,7 +1753,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			string = g_strdup(_("Not Connected"));
 //			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
-            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0);
+            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
         }
 
 /*		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
