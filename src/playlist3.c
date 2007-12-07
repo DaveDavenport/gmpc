@@ -42,6 +42,7 @@ void playlist3_new_header(void);
 void playlist3_update_header(void);
 gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data);
 gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
+gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
 
 static GtkTargetEntry target_table[] = {
         { "x-url/http", 0, 0 },
@@ -986,6 +987,19 @@ gboolean playlist3_leave_notify_event(GtkWidget *wid, GdkEventCrossing *event, g
    g_object_set_data(G_OBJECT(wid), "window", NULL);
     return FALSE;
 }
+gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data)
+{
+    gint width;
+    gdouble pos;
+    if(event->window)
+    {
+        gdk_window_get_size(event->window, &width, NULL);
+        pos = (gdouble)event->x/(gdouble)width;
+        mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
+    }
+    /* propagate the signal */
+    return FALSE;
+}
 
 void create_playlist3 ()
 {
@@ -1692,8 +1706,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);			
 			if(!pl3p_seek)
 			{
-				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),
-						(elapsedTime/(float)totalTime)*100.0);
+				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),(elapsedTime/(float)totalTime));
 			}
 			if(totalTime == 0)
             {
@@ -1734,11 +1748,13 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			string = g_strdup(_("Not Connected"));
 			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
-		}
+            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0);
+        }
 
 		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
 				string);
-		q_free(string);
+        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
+        q_free(string);
 	}
 	if(what&MPD_CST_VOLUME)
 	{
