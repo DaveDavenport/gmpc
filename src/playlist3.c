@@ -1430,7 +1430,7 @@ static void playlist_zoom_level_changed()
 	/** Menu Bar */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
 	/** BUTTON BOX */
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
+//	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pp_progres_label"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
 
@@ -1706,7 +1706,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);			
 			if(!pl3p_seek)
 			{
-				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
+//				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
                 gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),(elapsedTime/(float)totalTime));
 			}
 			if(totalTime == 0)
@@ -1747,12 +1747,14 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		else
 		{
 			string = g_strdup(_("Not Connected"));
-			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
+//			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
             gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0);
         }
 
-		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
+/*		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
 				string);
+*
+*/
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
         q_free(string);
 	}
@@ -1833,6 +1835,7 @@ gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointe
 /* apply seek changes */
 int pl3_progress_seek_stop()
 {
+    /*
 	pl3p_seek = FALSE;
 	if(!mpd_check_connected(connection))
 	{
@@ -1840,7 +1843,7 @@ int pl3_progress_seek_stop()
 	}
 	else if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY || mpd_player_get_state(connection) == MPD_PLAYER_PAUSE)
 	{
-		GtkRange *scale = (GtkRange *)glade_xml_get_widget(pl3_xml, "pp_progres");
+//		GtkRange *scale = (GtkRange *)glade_xml_get_widget(pl3_xml, "pp_progres");
 		gdouble value = gtk_range_get_value(scale);
 		if(value >=0)
 		{
@@ -1849,6 +1852,7 @@ int pl3_progress_seek_stop()
 		}
 	}
 	return FALSE;
+    */
 }
 
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
