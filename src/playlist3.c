@@ -1713,8 +1713,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			if(!pl3p_seek)
 			{
 //				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
-			}
+                if(totalTime>0)
+                    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
+                else
+                    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
+            }
 			if(totalTime == 0)
             {
                 if(elapsedTime/60 >99 )
