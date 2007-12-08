@@ -78,8 +78,6 @@ void save_possize_enable_tb(GtkToggleButton *);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
-int pl3_progress_seek_start(void);
-int pl3_progress_seek_stop(void);
 void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
 void hide_on_close_enable_tb(GtkToggleButton *but);
 void pl3_window_fullscreen(void);
@@ -105,7 +103,6 @@ GtkTreeStore *pl3_tree = NULL;
 /* size */
 GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
-static int pl3p_seek = FALSE;
 
 static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 /* Playlist "Plugin" */
@@ -1721,18 +1718,15 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	{
 		char *string = NULL;
 		if(mpd_check_connected(connection))
-		{
-			int totalTime = mpd_status_get_total_song_time(connection);
-			int elapsedTime = mpd_status_get_elapsed_song_time(connection);			
-			if(!pl3p_seek)
-			{
-//				gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),(elapsedTime/(float)totalTime)*100.0);
-                if(totalTime>0)
-                    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
-                else
-                    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
-            }
-			if(totalTime == 0)
+        {
+            int totalTime = mpd_status_get_total_song_time(connection);
+            int elapsedTime = mpd_status_get_elapsed_song_time(connection);			
+        
+            if(totalTime>0)
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
+            else
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
+            if(totalTime == 0)
             {
                 if(elapsedTime/60 >99 )
                 {
@@ -1749,24 +1743,24 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
                 }
 
             }
-			else if(elapsedTime/60 >99 || totalTime/60 > 99)
-			{
-				string = g_strdup_printf("%02i:%02i - %02i:%02i",
-						(elapsedTime/3600),
-						(elapsedTime/60)%60,
-						(totalTime/3600),
-						(totalTime/60)%60
-						);
-			}
-			else{
-				string = g_strdup_printf("%02i:%02i - %02i:%02i",
-						(elapsedTime/60),
-						elapsedTime%60,
-						(totalTime/60),
-						(totalTime%60)
-						);
-			}
-		}
+            else if(elapsedTime/60 >99 || totalTime/60 > 99)
+            {
+                string = g_strdup_printf("%02i:%02i - %02i:%02i",
+                        (elapsedTime/3600),
+                        (elapsedTime/60)%60,
+                        (totalTime/3600),
+                        (totalTime/60)%60
+                        );
+            }
+            else{
+                string = g_strdup_printf("%02i:%02i - %02i:%02i",
+                        (elapsedTime/60),
+                        elapsedTime%60,
+                        (totalTime/60),
+                        (totalTime%60)
+                        );
+            }
+        }
 		else
 		{
 			string = g_strdup(_("Not Connected"));
@@ -1824,21 +1818,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 }
 
 
-/* start seeking in the song..  only allow this when you're playing or paused */
-/* block it other wise. */
-/* everything is blocked until the seek is done. */
-/* show time to seek to in entry box */
-int pl3_progress_seek_start()
-{
-	if(mpd_player_get_state(connection) != MPD_PLAYER_PLAY && 
-			mpd_player_get_state(connection) != MPD_PLAYER_PAUSE)
-	{
-		return TRUE;
-	}
-	pl3p_seek = TRUE;
-	return FALSE;
-}
-
 gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data)
 {
 	if(event->direction == GDK_SCROLL_UP)
@@ -1852,29 +1831,6 @@ gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointe
 
 
 	return TRUE;
-}
-
-/* apply seek changes */
-int pl3_progress_seek_stop()
-{
-    /*
-	pl3p_seek = FALSE;
-	if(!mpd_check_connected(connection))
-	{
-		return TRUE;
-	}
-	else if(mpd_player_get_state(connection) == MPD_PLAYER_PLAY || mpd_player_get_state(connection) == MPD_PLAYER_PAUSE)
-	{
-//		GtkRange *scale = (GtkRange *)glade_xml_get_widget(pl3_xml, "pp_progres");
-		gdouble value = gtk_range_get_value(scale);
-		if(value >=0)
-		{
-			int change = (int)(mpd_status_get_total_song_time(connection)*(double)(value/100));
-			mpd_player_seek(connection, change);
-		}
-	}
-	return FALSE;
-    */
 }
 
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
