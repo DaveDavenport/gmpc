@@ -277,7 +277,7 @@ static void pl3_current_playlist_browser_init(void)
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(pl3_cp_sw), GTK_SHADOW_ETCHED_IN);
 
 
-	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(tree), MPDDATA_MODEL_COL_SONG_TITLE);
+	tree_search = (TreeSearch *)treesearch_new(GTK_TREE_VIEW(tree), MPDDATA_MODEL_COL_MARKUP);
 	g_signal_connect(G_OBJECT(tree_search), "result-activate", G_CALLBACK(pl3_current_playlist_search_activate),tree);
 
 
