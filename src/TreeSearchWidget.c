@@ -216,7 +216,7 @@ static void treesearch_entry_activate(GtkEntry *entry, TreeSearch *ts)
 }
 static int treesearch_entry_key_press(GtkWidget *entry, GdkEventKey *event, TreeSearch *ts)
 {
-	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return)&& event->state&GDK_CONTROL_MASK)
+	if((event->keyval == GDK_KP_Enter || event->keyval == GDK_Return || event->keyval == GDK_space)&& event->state&GDK_CONTROL_MASK)
 	{
 		treesearch_entry_activate(NULL,ts);
 		return TRUE;
