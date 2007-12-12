@@ -12,7 +12,6 @@ src/misc.c
 src/mm-keys.c
 src/mpdinteraction.c
 src/playlist3.c
-src/playlist-list.c
 src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
