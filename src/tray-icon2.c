@@ -369,7 +369,7 @@ void tray_icon2_create_tooltip(void)
 		if(song->title || song->file || song->name)
 		{
 			char buffer[256];
-			mpd_song_markup(buffer, 256,"<span size='x-large' weight='bold'>[%title%|%shortfile%][ (%name%)]</span>",song);
+			mpd_song_markup_escaped(buffer, 256,"<span size='x-large' weight='bold'>[%title%|%shortfile%][ (%name%)]</span>",song);
 			label = gtk_label_new("");
             gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -389,7 +389,7 @@ void tray_icon2_create_tooltip(void)
             char buffer[256];
             label = gtk_label_new("");
             gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
-            mpd_song_markup(buffer, 256,"<span size='x-small'>%album%[ (%year%)]</span>",song);
+            mpd_song_markup_escaped(buffer, 256,"<span size='x-small'>%album%[ (%year%)]</span>",song);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
             gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
