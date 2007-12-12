@@ -275,7 +275,7 @@ int main (int argc, char **argv)
                             "\t--clean-cover-db\tCleanup the cover file.\n"\
                             "\t--disable-plugins\tDon't load any plugins.\n"\
                             "\t--replace\t\tReplace the running session with the current\n"\
-                            "\t--quit\t\t\tQuit the running gmpc session\n"
+                            "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-instances is disabled.\n"
                         ));
                 exit(0);
             }
@@ -462,16 +462,18 @@ int main (int argc, char **argv)
                     bacon_on_message_received,
                     NULL);
         }
-    }
+
 #endif		
-    if(quit)
-    {
-        cfg_close(config);
-        config = NULL;
+        if(quit)
+        {
+            cfg_close(config);
+            config = NULL;
 #ifndef WIN32        
-        bacon_message_connection_free (bacon_connection);
+            if(bacon_connection)
+                bacon_message_connection_free (bacon_connection);
 #endif
-        exit(0);
+            exit(0);
+        }
     }
 
     /**
