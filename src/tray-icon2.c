@@ -116,94 +116,6 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, button, activate_time);
 }
 
-static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
-{
-#if GTK_CHECK_VERSION(2,12,0)
-    char buffer[256];
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-#endif
-	if(what&(MPD_CST_SONGID))
-	{
-		/** 
-		 * If enabled by user, show the tooltip.
-		 * But only if playing or paused.
-		 *
-		 */
-		if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", TRUE))
-		{
-			int state = mpd_player_get_state(connection);
-			if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
-			{
-				tray_icon2_create_tooltip();
-			}
-		}
-#if GTK_CHECK_VERSION(2,12,0)
-        if(tray_icon2_gsi)
-        {
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-        }
-#endif
-	}
-
-	/* update the progress bar if available */
-	if(what&MPD_CST_ELAPSED_TIME)
-	{
-		if(tray_icon2_tooltip && tray_icon2_tooltip_pb)
-		{
-			int totalTime = mpd_status_get_total_song_time(connection);                                 		
-			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
-			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
-			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
-					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
-			q_free(label);
-		}
-	}
-	if(tray_icon2_gsi == NULL)
-		return;
-
-
-	if(what&MPD_CST_STATE)
-	{
-		int state = mpd_player_get_state(connection);
-		if(state == MPD_PLAYER_PLAY){
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
-#if GTK_CHECK_VERSION(2,12,0)
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-#endif
-		} else if(state == MPD_PLAYER_PAUSE){
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
-#if GTK_CHECK_VERSION(2,12,0)
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif
-		} else {
-			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
-#if GTK_CHECK_VERSION(2,12,0)
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif
-		}
-	}
-}
-/**
- * Show right icon when (dis)connected
- */
-static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_data)
-{
-	if(tray_icon2_gsi == NULL)
-		return;
-
-
-
-    if(connect)	{
-		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
-	} else {
-		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
-	}
-}
-
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
 {
     if(gtk_status_icon_is_embedded(icon))
@@ -268,34 +180,9 @@ static void tray_icon2_set_enabled(int enabled)
 /**
  * TOOLTIP 
  */
-static void tray_icon2_tooltip_song(void)
-{
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(song)
-	{
-		info2_activate();
-		info2_fill_song_view(song);	
-	}
-}
-static void tray_icon2_tooltip_artist(void)
-{
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(song && song->artist)
-	{
-		info2_activate();
-		info2_fill_artist_view(song->artist);
-	}
-}
-static void tray_icon2_tooltip_album(void)
-{
-	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(song && song->artist && song->album)
-	{
-		info2_activate();
-		info2_fill_album_view(song->artist,song->album);
-	}
-}
 
+static gboolean has_buttons = FALSE;
+static GtkWidget *play_button = NULL;
 
 static gboolean tray_icon2_tooltip_destroy(void)
 {
@@ -308,9 +195,70 @@ static gboolean tray_icon2_tooltip_destroy(void)
 		g_source_remove(tray_icon2_tooltip_timeout);
 	}
 	tray_icon2_tooltip_timeout = 0;
+    has_buttons = FALSE;
 	/* remove the timeout */
 	return FALSE;	
 }
+
+static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *hbox, GdkEventButton *event, GtkWidget *vbox)
+{
+    if(event->button == 3 && !has_buttons)
+    {
+        GtkWidget *hbox,*button;
+        int	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+        if(tray_icon2_tooltip_timeout)
+        {
+            g_source_remove(tray_icon2_tooltip_timeout);
+        }
+        tray_icon2_tooltip_timeout = g_timeout_add(state*2000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+
+        has_buttons = TRUE;
+
+        hbox = gtk_hbox_new(TRUE, 6);
+        /* prev */
+        button = gtk_button_new();
+        gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PREVIOUS,GTK_ICON_SIZE_BUTTON));
+        gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+        g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(prev_song), NULL);
+        /* stop */
+        button = gtk_button_new();
+        gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_STOP,GTK_ICON_SIZE_BUTTON));
+        gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+        g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(stop_song), NULL);
+        /* pause/play */
+		state = mpd_player_get_state(connection);
+		if(state != MPD_PLAYER_PLAY)
+        {
+            play_button = button = gtk_button_new();
+            gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY,GTK_ICON_SIZE_BUTTON));
+            gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+            g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(play_song), NULL);
+        }
+        else
+        {
+            play_button = button = gtk_button_new();
+            gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE,GTK_ICON_SIZE_BUTTON));
+
+            gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+            g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(play_song), NULL);
+        }
+        /* next */
+        button = gtk_button_new();
+        gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_NEXT,GTK_ICON_SIZE_BUTTON));
+
+        gtk_box_pack_start(GTK_BOX(hbox), button, TRUE, TRUE, 0);
+        g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(next_song), NULL);
+
+        gtk_widget_show_all(hbox);
+        gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, TRUE,0);
+
+        return TRUE;
+    }
+    tray_icon2_tooltip_destroy();
+    return TRUE;
+}
+
+
 void tray_icon2_create_tooltip(void)
 {
 	int x=0,y=0,monitor;
@@ -352,6 +300,7 @@ void tray_icon2_create_tooltip(void)
 #else
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
 #endif
+    /* causes the border */
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
@@ -365,7 +314,6 @@ void tray_icon2_create_tooltip(void)
 	 */
 	hbox = gtk_hbox_new(FALSE,0);
 	gtk_container_add(GTK_CONTAINER(tray_icon2_tooltip), hbox);	
-
 	/**
 	 *  1
 	 *
@@ -391,7 +339,6 @@ void tray_icon2_create_tooltip(void)
 	 * Pack the widget in a eventbox so we can set background color 
 	 */
 	event = gtk_event_box_new();
-	g_signal_connect(G_OBJECT(event), "button-press-event", G_CALLBACK(tray_icon2_tooltip_destroy), NULL);
 	gtk_widget_set_size_request(event, 86,86);
 	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
 	gtk_container_add(GTK_CONTAINER(event), coverimg);
@@ -406,7 +353,9 @@ void tray_icon2_create_tooltip(void)
 	 */
 	event = gtk_event_box_new();
 	vbox = gtk_vbox_new(FALSE, 0);
-	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->white));
+	g_signal_connect(G_OBJECT(hbox), "button-press-event", G_CALLBACK(tray_icon2_tooltip_button_press_event), vbox);
+
+	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),3);
 	gtk_container_add(GTK_CONTAINER(event), vbox);
 	gtk_box_pack_start(GTK_BOX(hbox), event, TRUE,TRUE,0);
@@ -416,35 +365,33 @@ void tray_icon2_create_tooltip(void)
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
-		int size = cfg_get_single_value_as_int_with_default(config, "tray-icon2", "size-offset", 0);
 		/** Artist label */
 		if(song->title || song->file || song->name)
 		{
 			char buffer[256];
-			mpd_song_markup(buffer, 256,"[%title%|%shortfile%][ (%name%)]",song);
-			label = gmpc_clicklabel_new(buffer);
-			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_song), NULL);
-			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size+3);
+			mpd_song_markup(buffer, 256,"<span size='x-large' weight='bold'>[%title%|%shortfile%][ (%name%)]</span>",song);
+			label = gtk_label_new("");
+            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+            gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
-            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
 		}
 		if(song->artist)
 		{
-			label = gmpc_clicklabel_new(song->artist);
-            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
-            g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_artist), NULL);
-			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size);
+			label = gtk_label_new(song->artist);
+            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->album)
 		{
-			label = gmpc_clicklabel_new(song->album);
-            gtk_widget_modify_fg(GMPC_CLICKLABEL(label)->label, GTK_STATE_NORMAL, &(pl3_win->style->black));
-			g_signal_connect(G_OBJECT(label), "button-press-event", G_CALLBACK(tray_icon2_tooltip_album), NULL);
-			gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(label),FALSE);
-			gmpc_clicklabel_font_size(GMPC_CLICKLABEL(label),size-3);
+            char buffer[256];
+            label = gtk_label_new("");
+            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
+            mpd_song_markup(buffer, 256,"<span size='x-small'>%album%[ (%year%)]</span>",song);
+            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+            gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		tray_icon2_tooltip_pb = gtk_progress_bar_new();
@@ -577,6 +524,106 @@ void tray_icon2_create_tooltip(void)
 	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
 	tray_icon2_tooltip_timeout = g_timeout_add(state*1000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
+
+static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
+{
+#if GTK_CHECK_VERSION(2,12,0)
+    char buffer[256];
+    mpd_Song *song = mpd_playlist_get_current_song(connection);
+#endif
+	if(what&(MPD_CST_SONGID))
+	{
+		/** 
+		 * If enabled by user, show the tooltip.
+		 * But only if playing or paused.
+		 *
+		 */
+		if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", TRUE))
+		{
+			int state = mpd_player_get_state(connection);
+			if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
+			{
+				tray_icon2_create_tooltip();
+			}
+		}
+#if GTK_CHECK_VERSION(2,12,0)
+        if(tray_icon2_gsi)
+        {
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+        }
+#endif
+	}
+
+	/* update the progress bar if available */
+	if(what&MPD_CST_ELAPSED_TIME)
+	{
+		if(tray_icon2_tooltip && tray_icon2_tooltip_pb)
+		{
+			int totalTime = mpd_status_get_total_song_time(connection);                                 		
+			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
+			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
+			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
+					totalTime/60,totalTime%60);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
+			q_free(label);
+		}
+	}
+	if(tray_icon2_gsi == NULL)
+		return;
+
+
+	if(what&MPD_CST_STATE)
+	{
+		int state = mpd_player_get_state(connection);
+		if(state == MPD_PLAYER_PLAY){
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+#if GTK_CHECK_VERSION(2,12,0)
+            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+#endif
+            if(has_buttons)
+            {
+                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
+            }
+		} else if(state == MPD_PLAYER_PAUSE){
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
+#if GTK_CHECK_VERSION(2,12,0)
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
+            if(has_buttons)
+            {
+                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+            }
+		} else {
+			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
+#if GTK_CHECK_VERSION(2,12,0)
+            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
+            if(has_buttons)
+            {
+                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+            }
+		}
+	}
+}
+/**
+ * Show right icon when (dis)connected
+ */
+static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_data)
+{
+	if(tray_icon2_gsi == NULL)
+		return;
+
+    if(connect)	{
+		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
+	} else {
+		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
+	}
+}
+
+
 
 /**
  *  PREFERENCES 
