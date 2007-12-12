@@ -139,6 +139,13 @@ static void create_gmpc_paths(void);
 #ifndef WIN32
 static void bacon_on_message_received(const char *message, gpointer data)
 {
+    debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
+    if(message && strcmp(message,"QUIT") == 0)
+    {
+        printf("I've been told to quit, doing this now\n");
+        main_quit();
+        return;
+    }
    create_playlist3(); 
 }
 #endif
@@ -148,8 +155,11 @@ int main (int argc, char **argv)
     int i;
     int clean_config = FALSE;
     char *config_path = NULL;
+    /* config keys */
     int start_hidden = FALSE;
     int load_plugins = TRUE;
+    int replace = FALSE;
+    int quit = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
@@ -235,7 +245,17 @@ int main (int argc, char **argv)
             else if (!strncasecmp(argv[i], _("--disable-plugins"), strlen(_("--disable-plugins"))))
             {
                 load_plugins = FALSE;
-            }                                                                                                /**
+            }
+            else if (!strncasecmp(argv[i], _("--replace"), strlen(_("--replace"))))
+            {
+                replace = TRUE;
+            }
+            else if (!strncasecmp(argv[i], _("--quit"), strlen(_("--quit"))))
+            {
+                quit = TRUE;
+            }
+
+            /**
              * Print out help message
              */
             else if (!strncasecmp(argv[i], _("--help"),strlen(_("--help"))))
@@ -253,7 +273,9 @@ int main (int argc, char **argv)
                             "\t--version\t\tPrint version and svn revision\n"\
                             "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
                             "\t--clean-cover-db\tCleanup the cover file.\n"\
-                            "\t--disable-plugins\tDon't load any plugins.\n"
+                            "\t--disable-plugins\tDon't load any plugins.\n"\
+                            "\t--replace\t\tReplace the running session with the current\n"\
+                            "\t--quit\t\t\tQuit the running gmpc session\n"
                         ));
                 exit(0);
             }
@@ -422,12 +444,19 @@ int main (int argc, char **argv)
         {
             if (!bacon_message_connection_get_is_server (bacon_connection)) 
             {
-                debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
-                bacon_message_connection_send(bacon_connection, "PRESENT");
-				bacon_message_connection_free (bacon_connection);
-				cfg_close(config);
-				config = NULL;
-				exit(0);
+                if(replace || quit)
+                {
+                    bacon_message_connection_send(bacon_connection, "QUIT");
+                }
+                else
+                {
+                    debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+                    bacon_message_connection_send(bacon_connection, "PRESENT");
+                    bacon_message_connection_free (bacon_connection);
+                    cfg_close(config);
+                    config = NULL;
+                    exit(0);
+                }
             }
             bacon_message_connection_set_callback (bacon_connection,
                     bacon_on_message_received,
@@ -435,7 +464,15 @@ int main (int argc, char **argv)
         }
     }
 #endif		
-
+    if(quit)
+    {
+        cfg_close(config);
+        config = NULL;
+#ifndef WIN32        
+        bacon_message_connection_free (bacon_connection);
+#endif
+        exit(0);
+    }
 
     /**
      * Setup session support
