@@ -220,7 +220,6 @@ override (G:Object)
     is_current_song(Gtk:Tree:Model *model(check null type), GtkTreeIter *iter (check null))
     {
         Self *self = GMPC_MPDDATA_MODEL_PLAYLIST(model);
-        MpdData_real *data = iter->user_data;	
         int n = GPOINTER_TO_INT(iter->user_data2);
         if(n == self->_priv->old_highlight)
             return TRUE;

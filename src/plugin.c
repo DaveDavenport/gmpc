@@ -1,3 +1,4 @@
+#include <string.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gmodule.h>
