@@ -20,6 +20,7 @@ int plugin_get_pos(int id)
 }
 static int plugin_validate(gmpcPlugin *plug)
 {
+    int i;
     if(plug == NULL)
     {
         debug_printf(DEBUG_ERROR, "plug != NULL failed");
@@ -29,6 +30,15 @@ static int plugin_validate(gmpcPlugin *plug)
     {
         debug_printf(DEBUG_ERROR, "Plugin has no name.");
         return FALSE;
+    }
+    /* check if plugin with same name is allready loaded */
+    for(i=0;i<num_plugins;i++)
+    {
+        if(strcmp(plugins[i]->name, plug->name) == 0)
+        {
+            debug_printf(DEBUG_ERROR, "Plugin with same name allready exists.");
+            return FALSE;
+        }
     }
     if(plug->set_enabled == NULL || plug->get_enabled == NULL)
     {
