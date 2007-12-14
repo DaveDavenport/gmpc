@@ -882,7 +882,11 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
 {
     if(pl3_cp_vbox == NULL)
         return;
+    if(what&MPD_CST_PLAYLIST)
+    {
+        mod_fill_do_entry_changed(filter_entry, NULL);
 
+    }
     if(what&MPD_CST_QUEUE)
     {
         if(playlist_queue)
