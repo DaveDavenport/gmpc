@@ -83,7 +83,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	property BOOLEAN hide_on_na
 		(nick = _("HideOnNA"),
-		blurb = _("Hide the image when not availibe"),
+		blurb = _("Hide the image when not available"),
 		default_value = FALSE,
 		export,
 		link);
