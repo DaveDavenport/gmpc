@@ -216,7 +216,8 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                                                          GtkTreeIter *iter,
                                                          gpointer data)
     {
-        if(gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
+        
+        if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(tree_model) && gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
             g_object_set(G_OBJECT(cell), "weight", 800,NULL);
         else
             g_object_set(G_OBJECT(cell), "weight", 400,NULL);
