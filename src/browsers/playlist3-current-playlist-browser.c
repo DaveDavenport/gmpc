@@ -37,7 +37,7 @@
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
-
+#include "sexy-icon-entry.h"
 
 static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
@@ -59,7 +59,7 @@ GtkTreeModel *playlist_queue = NULL;
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
 static int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
 static int  pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
-static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event);
+static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event,GtkWidget *entry);
 static void pl3_current_playlist_browser_show_info(void);
 static void pl3_current_playlist_save_playlist(void);
 static void pl3_current_playlist_browser_shuffle_playlist(void);
@@ -246,14 +246,64 @@ static int  pl3_current_playlist_browser_queue_key_release_event(GtkTreeView *tr
 	}
 	return FALSE;
 }
+static GtkTreeModel *mod_fill = NULL;
+static GtkWidget *filter_entry = NULL;
+static guint timeout=0;
+
+static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
+{
+    const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+    if(strlen(text) > 0)
+    {
+        MpdData *data;
+        int i =0;
+        gchar **splitted = g_strsplit(text, " ", 0);
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), NULL);
+        
+        mpd_playlist_search_start(connection,FALSE);
+        for(i=0;splitted[i];i++)
+        {
+            mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_ANY, splitted[i]);
+        }
+        data = mpd_playlist_search_commit(connection);
+        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), data);
+
+        g_strfreev(splitted);
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), mod_fill);
+    }
+    else
+    {
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
+        gtk_widget_hide(entry);
+    }
+    timeout = 0;
+    return FALSE;
+}
+
+static void  mod_fill_entry_changed(GtkWidget *entry, GtkWidget *tree)
+{
+    if(timeout != 0)
+        g_source_remove(timeout);
+    timeout = g_timeout_add(1000, (GSourceFunc)mod_fill_do_entry_changed, entry);
+    gtk_widget_show(entry);
+}
+
 
 static void pl3_current_playlist_browser_init(void)
 {
 	GtkWidget *queue_tree;
-
+  
 	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
-
     GtkWidget *tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
+    /* filter */
+    mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();
+    GtkWidget *entry = sexy_icon_entry_new(); 
+    sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
+    gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
+    filter_entry= entry;
+    //gtk_widget_show(entry);
+    g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
 
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
@@ -269,7 +319,7 @@ static void pl3_current_playlist_browser_init(void)
 	g_signal_connect(G_OBJECT(tree), "row-activated",G_CALLBACK(pl3_current_playlist_browser_row_activated), NULL); 
 	g_signal_connect(G_OBJECT(tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
-	g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), NULL);
+	g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), entry);
 
 	/* set up the scrolled window */
 	pl3_cp_sw = gtk_scrolled_window_new(NULL, NULL);
@@ -704,7 +754,7 @@ static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type
     return 1;
 }
 
-static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event)
+static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event,GtkWidget *entry)
 {
     if(event->keyval == GDK_Delete)
     {
@@ -724,7 +774,9 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
     }
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
-        treesearch_start(tree_search);
+//        treesearch_start(tree_search);
+        mod_fill_entry_changed(entry, NULL);
+        gtk_widget_grab_focus(entry);        
         return TRUE;
     }
     else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
@@ -733,9 +785,11 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         char data[2];
         data[0] = (char)gdk_keyval_to_unicode(event->keyval);
         data[1] = '\0';
-        treesearch_start(TREESEARCH(tree_search));
-        gtk_entry_set_text(GTK_ENTRY(TREESEARCH(tree_search)->entry),data);
-        gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(tree_search)->entry),1);
+//        treesearch_start(TREESEARCH(tree_search));
+         gtk_widget_grab_focus(entry);      
+        gtk_entry_set_text(GTK_ENTRY(entry),data);
+        gtk_editable_set_position(GTK_EDITABLE(entry),1);
+
         return TRUE;
     }
     return pl3_window_key_press_event(GTK_WIDGET(tree),event);
@@ -828,7 +882,11 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
 {
     if(pl3_cp_vbox == NULL)
         return;
+    if(what&MPD_CST_PLAYLIST)
+    {
+        mod_fill_do_entry_changed(filter_entry, NULL);
 
+    }
     if(what&MPD_CST_QUEUE)
     {
         if(playlist_queue)
@@ -886,6 +944,10 @@ static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *even
 
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpointer data)
 {
+    if(!connect && filter_entry)
+    {
+        gtk_entry_set_text(GTK_ENTRY(filter_entry), "");
+    }
 }
 /* function that saves the settings */
 static void pl3_current_playlist_save_myself(void)

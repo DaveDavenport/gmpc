@@ -362,13 +362,23 @@ static unsigned long pl3_find2_browser_view_browser()
         const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
         if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
         {
+            gchar **splitted = NULL;
+            int i =0;
             if(!found)
             {
                 mpd_database_search_start(connection, FALSE);
                 found = TRUE;
             }
             gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
-            mpd_database_search_add_constraint(connection, num_field, (char *)name);
+
+            splitted = g_strsplit(name, " ",0);
+            for(i=0;splitted[i];i++)
+            {
+                mpd_database_search_add_constraint(connection, num_field, splitted[i]);
+            }
+            //mpd_database_search_add_constraint(connection, num_field, (char *)name);
+
+            g_strfreev(splitted);
             /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
             {
                 GtkTreeIter iter;

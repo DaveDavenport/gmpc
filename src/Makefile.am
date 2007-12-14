@@ -47,7 +47,9 @@ sources=\
 	egg/eggcellrendererkeys.c\
 	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
-	qlib/qasyncqueue.c
+	qlib/qasyncqueue.c\
+	sexy-icon-entry.c
+
 
 
 
@@ -183,4 +185,5 @@ EXTRA_DIST = 	playlist3.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
-		qlib/qasyncqueue.h
+		qlib/qasyncqueue.h\
+		sexy-icon-entry.h
