@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-10 21:37+0100\n"
+"POT-Creation-Date: 2007-12-14 21:12+0100\n"
 "PO-Revision-Date: 2007-12-10 00:32+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Nakładka GNOME na usługę mpd"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:180 ../src/tray-icon2.c:185
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:593 ../src/tray-icon2.c:602
 msgid "Gnome Music Player Client"
 msgstr "Klient odtwarzacza muzyki GNOME"
 
@@ -513,58 +513,67 @@ msgstr "Serwer pośredniczący HTTP"
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:202 ../src/main.c:204
+#: ../src/main.c:212 ../src/main.c:214
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:210
+#: ../src/main.c:220
 msgid "--version"
 msgstr "--version"
 
-#: ../src/main.c:212
+#: ../src/main.c:222
 #, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Klient odtwarzacza muzyki GNOME\n"
 
-#: ../src/main.c:213 ../src/preferences.c:268
+#: ../src/main.c:223 ../src/preferences.c:268
 msgid "Version"
 msgstr "Wersja"
 
-#: ../src/main.c:216
+#: ../src/main.c:226
 msgid "Revision"
 msgstr "Rewizja"
 
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:223 ../src/main.c:225
+#: ../src/main.c:233 ../src/main.c:235
 msgid "--config="
 msgstr "--config="
 
-#: ../src/main.c:227
+#: ../src/main.c:237
 msgid "--start-hidden"
 msgstr "--start-hidden"
 
-#: ../src/main.c:231
+#: ../src/main.c:241
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
-#: ../src/main.c:235
+#: ../src/main.c:245
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
+
+#: ../src/main.c:249
+#, fuzzy
+msgid "--replace"
+msgstr "Zastąp"
+
+#: ../src/main.c:253
+msgid "--quit"
+msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:241
+#: ../src/main.c:261
 msgid "--help"
 msgstr "--help"
 
-#: ../src/main.c:243
-#, c-format
+#: ../src/main.c:263
+#, fuzzy, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -580,6 +589,9 @@ msgid ""
 "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"
 "\t--clean-cover-db\tCleanup the cover file.\n"
 "\t--disable-plugins\tDon't load any plugins.\n"
+"\t--replace\t\tReplace the running session with the current\n"
+"\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
+"instances is disabled.\n"
 msgstr ""
 "Klient odtwarzacza muzyki GNOME\n"
 "Opcje:\n"
@@ -597,24 +609,24 @@ msgstr ""
 "\t--clean-cover-db\tCzyści plik z okładkami.\n"
 "\t--disable-plugins\tNie ładuje wtyczek\n"
 
-#: ../src/main.c:281
+#: ../src/main.c:303
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "Próbujesz uruchomić gmpc z niewłaściwą wersją libmpd."
 
-#: ../src/main.c:343
+#: ../src/main.c:365
 msgid "Failed to load the configuration system"
 msgstr "Nie można wczytać systemu konfiguracji"
 
-#: ../src/main.c:362
+#: ../src/main.c:384
 #, fuzzy
 msgid "Failed to load debug-log file."
 msgstr "Nie można otworzyć pliku:"
 
-#: ../src/main.c:472
+#: ../src/main.c:511
 msgid "Failed to setup libmpd"
 msgstr "Nie można ustawić libmpd"
 
-#: ../src/main.c:856
+#: ../src/main.c:895
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -623,20 +635,20 @@ msgstr ""
 "Nie można ustawić hasła dla: '%s'\n"
 "Spróbuj ponownie."
 
-#: ../src/main.c:860
+#: ../src/main.c:899
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Wprowadź hasło dla: '%s'"
 
-#: ../src/main.c:880
+#: ../src/main.c:919
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC ma niewystarczające prawa dostępu do serwera mpd."
 
-#: ../src/main.c:904 ../src/main.c:927
+#: ../src/main.c:943 ../src/main.c:966
 msgid "error code"
 msgstr "kod błędu"
 
-#: ../src/main.c:1009
+#: ../src/main.c:1048
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -644,24 +656,24 @@ msgstr ""
 "GMPC jest podłączony do serwera mpd w wersji niższej niż 0.12.0\n"
 "Może funkcjonować, ale nie jest już wspierane."
 
-#: ../src/main.c:1016
+#: ../src/main.c:1055
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Podłączony do mpd</b>"
 
-#: ../src/main.c:1018
+#: ../src/main.c:1057
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Rozłączony z mpd</b>"
 
-#: ../src/main.c:1053
+#: ../src/main.c:1092
 msgid "Error occured during operation"
 msgstr "Napotkano błąd podczas wykonywania operacji"
 
 #. Create label
-#: ../src/main.c:1083
+#: ../src/main.c:1122
 msgid "The following error(s) occured:"
 msgstr "Napotkano następujące błędy:"
 
-#: ../src/main.c:1099
+#: ../src/main.c:1138
 msgid "Error Message"
 msgstr "Wiadomość o błędzie"
 
@@ -1106,11 +1118,11 @@ msgstr "Nie można ustawić libmpd"
 msgid "Pla_ylist"
 msgstr "Lista odtwarzania"
 
-#: ../src/tray-icon2.c:467
+#: ../src/tray-icon2.c:414
 msgid "<span size='large'>Gnome Music Player Client</span>"
 msgstr "<span size='large'>Klient odtwarzacza muzyki GNOME</span>"
 
-#: ../src/tray-icon2.c:668
+#: ../src/tray-icon2.c:715
 msgid "Notification"
 msgstr "Powiadomienie"
 
@@ -1139,7 +1151,7 @@ msgstr "Przeglądarka wykonawców"
 #: ../src/browsers/playlist3-file-browser.c:591
 #: ../src/browsers/playlist3-file-browser.c:916
 #: ../src/browsers/playlist3-file-browser.c:956
-#: ../src/browsers/playlist3-find2-browser.c:610
+#: ../src/browsers/playlist3-find2-browser.c:620
 #: ../src/browsers/playlist3-metadata-browser.c:447
 #: ../src/browsers/playlist3-metadata-browser.c:684
 #: ../src/browsers/playlist3-metadata-browser.c:1254
@@ -1172,41 +1184,41 @@ msgstr[1] "albumy"
 msgstr[2] "albumów"
 
 #. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:346
-#: ../src/browsers/playlist3-current-playlist-browser.c:868
+#: ../src/browsers/playlist3-current-playlist-browser.c:396
+#: ../src/browsers/playlist3-current-playlist-browser.c:926
 msgid "Current Playlist"
 msgstr "Bieżąca lista odtwarzania"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:440
-#: ../src/browsers/playlist3-find3-browser.c:930
+#: ../src/browsers/playlist3-current-playlist-browser.c:490
+#: ../src/browsers/playlist3-find3-browser.c:939
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Czy jesteś pewny, że chcesz wyczyścic listę odtwarzania?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:552
-#: ../src/browsers/playlist3-find3-browser.c:734
+#: ../src/browsers/playlist3-current-playlist-browser.c:602
+#: ../src/browsers/playlist3-find3-browser.c:743
 msgid "Add to Queue"
 msgstr "Dodaj do kolejki"
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:585
+#: ../src/browsers/playlist3-current-playlist-browser.c:635
 msgid "Crop"
 msgstr "Wytnij"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:599
+#: ../src/browsers/playlist3-current-playlist-browser.c:649
 msgid "Shuffle"
 msgstr "Tasuj"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:614
+#: ../src/browsers/playlist3-current-playlist-browser.c:664
 #: ../src/browsers/playlist3-file-browser.c:970
-#: ../src/browsers/playlist3-find2-browser.c:627
-#: ../src/browsers/playlist3-find3-browser.c:777
+#: ../src/browsers/playlist3-find2-browser.c:637
+#: ../src/browsers/playlist3-find3-browser.c:786
 #: ../src/browsers/playlist3-playlist-editor.c:442
 msgid "Edit Columns"
 msgstr "Modyfikuj kolumny"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:778
+#: ../src/browsers/playlist3-current-playlist-browser.c:832
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1279,7 +1291,7 @@ msgid "<span size='xx-large' weight='bold'>Database Search</span>"
 msgstr "<span size='xx-large' weight='bold'>Szukaj w bazie danych</span>"
 
 #: ../src/browsers/playlist3-find2-browser.c:325
-#: ../src/browsers/playlist3-find2-browser.c:664
+#: ../src/browsers/playlist3-find2-browser.c:674
 msgid "Database Search"
 msgstr "Szukaj w bazie danych"
 
@@ -1288,7 +1300,7 @@ msgid "<span size='xx-large' weight='bold'>Playlist Search</span>"
 msgstr "<span size='xx-large' weight='bold'>Szukaj w liście odtwarzania</span>"
 
 #: ../src/browsers/playlist3-find3-browser.c:335
-#: ../src/browsers/playlist3-find3-browser.c:838
+#: ../src/browsers/playlist3-find3-browser.c:847
 msgid "Playlist Search"
 msgstr "Szukaj w liście odtwarzania"
 
@@ -1618,7 +1630,8 @@ msgid "HideOnNA"
 msgstr ""
 
 #: ../src/gob/gmpc-metaimage.gob:86
-msgid "Hide the image when not availibe"
+#, fuzzy
+msgid "Hide the image when not available"
 msgstr "Ukryj obraz jeżeli niedostępny"
 
 #: ../src/gob/gmpc-metaimage.gob:92
