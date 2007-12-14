@@ -274,6 +274,7 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
+        gtk_widget_hide(entry);
     }
     timeout = 0;
     return FALSE;
@@ -284,6 +285,7 @@ static void  mod_fill_entry_changed(GtkWidget *entry, GtkWidget *tree)
     if(timeout != 0)
         g_source_remove(timeout);
     timeout = g_timeout_add(1000, (GSourceFunc)mod_fill_do_entry_changed, entry);
+    gtk_widget_show(entry);
 }
 
 
@@ -298,7 +300,7 @@ static void pl3_current_playlist_browser_init(void)
     GtkWidget *entry = sexy_icon_entry_new(); 
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
     gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
-    gtk_widget_show(entry);
+    //gtk_widget_show(entry);
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
 
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
@@ -771,6 +773,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
 //        treesearch_start(tree_search);
+        mod_fill_entry_changed(entry, NULL);
         gtk_widget_grab_focus(entry);        
         return TRUE;
     }
