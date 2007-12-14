@@ -541,14 +541,23 @@ static unsigned long pl3_find3_browser_view_browser()
             if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
             {
                 int num_field;
+                gchar **splitted = NULL;
+                int i =0;
                 if(!found)
                 {
                     mpd_playlist_search_start(connection, FALSE);
                     found = TRUE;
                 }
                 gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
-                mpd_playlist_search_add_constraint(connection, num_field, name);
 
+                splitted =  g_strsplit(name, " ",0);
+                for(i=0;splitted[i];i++)
+                {
+                    mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+                }
+
+                //mpd_playlist_search_add_constraint(connection, num_field, name);
+                g_strfreev(splitted);
                 {
                     GtkTreeIter iter;
                     gboolean found2 = FALSE;

@@ -247,6 +247,7 @@ static int  pl3_current_playlist_browser_queue_key_release_event(GtkTreeView *tr
 	return FALSE;
 }
 static GtkTreeModel *mod_fill = NULL;
+static GtkWidget *filter_entry = NULL;
 static guint timeout=0;
 
 static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
@@ -300,6 +301,7 @@ static void pl3_current_playlist_browser_init(void)
     GtkWidget *entry = sexy_icon_entry_new(); 
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
     gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
+    filter_entry= entry;
     //gtk_widget_show(entry);
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
 
@@ -938,6 +940,10 @@ static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *even
 
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpointer data)
 {
+    if(!connect && filter_entry)
+    {
+        gtk_entry_set_text(GTK_ENTRY(filter_entry), "");
+    }
 }
 /* function that saves the settings */
 static void pl3_current_playlist_save_myself(void)
