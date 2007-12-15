@@ -26,15 +26,16 @@
 #include "metadata.h"
 #include "playlist3.h"
 #include "mpdinteraction.h"
-#include "gmpc-profiles.h"
+
 #include "playlist3-messages.h" 
 #include "browsers/playlist3-playlist-editor.h"
 /**
  * Some gobjects
  */
-#include <gmpc-connection.h>
-#include <gmpc-metaimage.h>
-#include <gmpc-signals.h>
+#include "gob/gmpc-profiles.h"
+#include "gob/gmpc-connection.h"
+#include "gob/gmpc-metaimage.h"
+#include "gob/gmpc-signals.h"
 
 extern GmpcConnection *gmpcconn;
 extern GmpcSignals *gmpc_signals;
