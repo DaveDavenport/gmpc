@@ -28,6 +28,7 @@ typedef struct {
 	guint id;
 	/* Data */
 	mpd_Song *song;
+    mpd_Song *edited;
 	MetaDataType type;
 	/* Resuls  */
 	MetaDataResult result;
@@ -367,28 +368,7 @@ static void meta_data_retrieve_thread()
 		if(data->result == META_DATA_FETCHING)
 		{
 			char *path = NULL;
-			char *old = NULL;
 			int i = 0;
-
-
-
-            /* For mdcover2, this _should_ not be on? how can we work around that. */
-			if(data->song->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE) && !old)
-			{
-				gchar **str = g_strsplit(data->song->artist, ",", 2);
-				old = data->song->artist;
-				if(str[1]) {
-					data->song->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
-				}else{
-                    /* This one isn't needed to be done, just set old to NULL again so we don't 
-                     * get a double free 
-                     */
-					/*data->song->artist = g_strdup(old);*/
-                    old = NULL;
-				}					
-				g_strfreev(str);
-				debug_printf(DEBUG_INFO, "string converted to: '%s'", data->song->artist);
-			}
 			/* 
 			 * Set default return values
 			 * Need to be reset, because of cache fetch
@@ -408,16 +388,10 @@ static void meta_data_retrieve_thread()
 				 */
 				if(meta_plugins[i]->get_enabled())
 				{
-					data->result = meta_plugins[i]->metadata->get_image(data->song, data->type&META_QUERY_DATA_TYPES, &path);
+					data->result = meta_plugins[i]->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
 			}
-			if(old)
-			{
-				g_free(data->song->artist);
-				data->song->artist = old;
-			}
-
 		}
 		/** 
 		 * update cache 
@@ -464,7 +438,8 @@ static gboolean meta_data_handle_results(void)
 
         if(data->result_path)q_free(data->result_path);
         mpd_freeSong(data->song);
-		q_free(data);
+        mpd_freeSong(data->edited);
+        q_free(data);
 	}
 	/**
 	 * Keep the timer running
@@ -568,6 +543,7 @@ void meta_data_destroy(void)
         while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
         {
             mpd_freeSong(mtd->song);
+            mpd_freeSong(mtd->edited);
             q_free(mtd);
         }
         /* Create the quit signal, this is just an empty request with id 0 */
@@ -648,6 +624,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         }
     }
 
+    mtd = g_malloc0(sizeof(*mtd));
+    mtd->song = mpd_songDup(tsong);
     /**
      * Make a copy
      */
@@ -663,43 +641,55 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
             data2 = mpd_database_search_commit(connection);
             if(data2)
             {
-                song = data2->song;
+                mtd->edited = data2->song;
                 data2->song = NULL;
                 mpd_data_free(data2);
             }
         }
     }
-    if(song == NULL)
-        song = mpd_songDup(tsong);
+    if(!mtd->edited)
+        mtd->edited = mpd_songDup(mtd->song);
 
-
-    if(song->album)
+    if(mtd->edited->album)
     {
         int i;
         MpdData *data2;
         mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
-        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, song->album);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, mtd->edited->album);
         data2 = mpd_database_search_commit(connection);
         for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
         if(i >=3)
         {
-            if(song->artist)
-                g_free(song->artist);
-            song->artist = g_strdup("Various Artists");
+            if(mtd->edited->artist)
+                g_free(mtd->edited->artist);
+            mtd->edited->artist = g_strdup("Various Artists");
             printf("collection detected\n");
         }
     }
+    
+    if(mtd->edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
+    {
+        gchar **str = g_strsplit(mtd->edited->artist, ",", 2);
+
+        if(str[1]) {
+            g_free(mtd->edited->artist);
+            mtd->edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
+        }
+        g_strfreev(str);
+        debug_printf(DEBUG_INFO, "string converted to: '%s'", mtd->edited->artist);
+    }
+
+
       /**
      * If no result, start a thread and start fetching the data from there
      */
 
-    mtd = g_malloc0(sizeof(*mtd));
+   
     /**
      * unique id 
      * Not needed, but can be usefull for debugging
      */
     id = mtd->id = g_random_int_range(1,2147483647);
-    mtd->song = song;
     mtd->type = type;
     mtd->callback = callback;
     mtd->data = data;
@@ -719,7 +709,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
         {
             q_async_queue_unlock(meta_commands);
-            mpd_freeSong(song);
+            mpd_freeSong(mtd->song);
+            mpd_freeSong(mtd->edited);
             g_free(mtd);
             return ret;
         }
