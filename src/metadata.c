@@ -369,9 +369,11 @@ static void meta_data_retrieve_thread()
 			char *path = NULL;
 			char *old = NULL;
 			int i = 0;
-			
+
+
+
             /* For mdcover2, this _should_ not be on? how can we work around that. */
-			if(data->song->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
+			if(data->song->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE) && !old)
 			{
 				gchar **str = g_strsplit(data->song->artist, ",", 2);
 				old = data->song->artist;
@@ -665,12 +667,29 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
                 data2->song = NULL;
                 mpd_data_free(data2);
             }
-
         }
     }
     if(song == NULL)
         song = mpd_songDup(tsong);
-    /**
+
+
+    if(song->album)
+    {
+        int i;
+        MpdData *data2;
+        mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, song->album);
+        data2 = mpd_database_search_commit(connection);
+        for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
+        if(i >=3)
+        {
+            if(song->artist)
+                g_free(song->artist);
+            song->artist = g_strdup("Various Artists");
+            printf("collection detected\n");
+        }
+    }
+      /**
      * If no result, start a thread and start fetching the data from there
      */
 

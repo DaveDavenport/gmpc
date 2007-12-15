@@ -75,7 +75,13 @@ class Gmpc:Meta:Watcher from  G:Object {
 
 					return TRUE;
 				}
-				break;
+                /* if we rewrite the artist, to be various (collection) also "see that" */
+                if((song1->artist && !strcmp(song1->artist, "Various Artists")) ||
+                        (song2->artist && !strcmp(song2->artist, "Various Artists")))
+                {
+                    return TRUE;
+                }
+                break;
 			default:
 				break;
 		}
