@@ -186,7 +186,7 @@ void pl3_current_playlist_destroy()
 			{
 				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter,path))
 				{
-					gtk_tree_store_remove(GTK_TREE_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter);
+					gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter);
 				}
 				gtk_tree_path_free(path);
 			}
@@ -391,7 +391,7 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 	gint pos = cfg_get_single_value_as_int_with_default(config, "current-playlist","position",0);
 	playlist3_insert_browser(&iter, pos);
 	//gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_tree_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
 			PL3_CAT_TITLE, _("Current Playlist"),
 			PL3_CAT_INT_ID, "",

@@ -110,7 +110,7 @@ void playlist_editor_conn_changed(MpdObj *mi, int connect, void *userdata)
 
 void playlist_editor_browser_add(GtkWidget *cat_tree)
 {
-	GtkTreeStore *pl3_tree = playlist3_get_category_tree_store();
+	GtkListStore *pl3_tree = playlist3_get_category_tree_store();
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "playlist-plugin","position",6);
@@ -120,7 +120,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 
 //	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	playlist3_insert_browser(&iter, pos);
-	gtk_tree_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, playlist_editor_plugin.id,
 			PL3_CAT_TITLE, _("Playlist Editor"),
 			PL3_CAT_INT_ID, "",

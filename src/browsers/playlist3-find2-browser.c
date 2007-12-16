@@ -320,7 +320,7 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
 	gint pos = cfg_get_single_value_as_int_with_default(config, "find2-browser","position",4);
 	playlist3_insert_browser(&iter, pos);
    // gtk_tree_store_append(pl3_tree, &iter, NULL);
-    gtk_tree_store_set(pl3_tree, &iter, 
+    gtk_list_store_set(pl3_tree, &iter, 
             PL3_CAT_TYPE, find2_browser_plug.id,
             PL3_CAT_TITLE, _("Database Search"),
             PL3_CAT_INT_ID, "",
@@ -712,7 +712,7 @@ static void pl3_find2_browser_destroy(void)
       {
           if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
           {
-              gtk_tree_store_remove(GTK_TREE_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter);
+              gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter);
           }
           gtk_tree_path_free(path);
       }

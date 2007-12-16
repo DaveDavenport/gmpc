@@ -29,7 +29,6 @@
 #include "playlist3.h"
 /* every part split out over multiple files */
 #include "browsers/playlist3-file-browser.h"
-#include "browsers/playlist3-artist-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
 #include "gmpc-clicklabel.h"
@@ -97,7 +96,7 @@ static int old_type = -1;
 /* interface description */
 GladeXML *pl3_xml = NULL;
 /* category treeview-store */
-GtkTreeStore *pl3_tree = NULL;
+GtkListStore *pl3_tree = NULL;
 
 
 /* size */
@@ -153,7 +152,7 @@ static void pl3_initialize_tree()
 		old_type = -1;
 	}
 
-	gtk_tree_store_clear(pl3_tree);
+	gtk_list_store_clear(pl3_tree);
 
 	for(i=0; i< num_plugins;i++)
 	{
@@ -1055,7 +1054,7 @@ void create_playlist3 ()
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
-		pl3_tree = gtk_tree_store_new (PL3_CAT_NROWS, 
+		pl3_tree = gtk_list_store_new (PL3_CAT_NROWS, 
 				G_TYPE_INT,	/* row type, see free_type struct */
 				G_TYPE_STRING, /* display name */
 				G_TYPE_STRING,/* full path and stuff for backend */
@@ -1248,7 +1247,7 @@ gboolean playlist3_get_active()
 {
 	return (pl3_xml != NULL);
 }
-GtkTreeStore *playlist3_get_category_tree_store()
+GtkListStore *playlist3_get_category_tree_store()
 {
 	if(!playlist3_get_active()) return NULL;
 	return pl3_tree;
@@ -2266,8 +2265,8 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 				sib = &it;
 		}while(sib == NULL && gtk_tree_model_iter_next(model, &it));
 	}
-	gtk_tree_store_insert_before(pl3_tree, iter, NULL, sib);
-	gtk_tree_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
+	gtk_list_store_insert_before(pl3_tree, iter, sib);
+	gtk_list_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
 }
 
 
@@ -2298,7 +2297,7 @@ static void pl3_cat_editor_pref_up_pressed(GtkWidget *button, GtkWidget *tree)
             if(path && gtk_tree_path_prev(path))
             {   
                 gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &iter, path);
-                gtk_tree_store_move_before(pl3_tree, &piter, &iter);
+                gtk_list_store_move_before(pl3_tree, &piter, &iter);
 
             }
             if(path)
@@ -2319,7 +2318,7 @@ static void pl3_cat_editor_pref_next_pressed(GtkWidget *button, GtkWidget *tree)
             iter = piter;
             if(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_tree), &iter))
             {   
-                gtk_tree_store_move_after(pl3_tree, &piter, &iter);
+                gtk_list_store_move_after(pl3_tree, &piter, &iter);
 
             }
 

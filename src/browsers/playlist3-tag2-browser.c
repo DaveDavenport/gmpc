@@ -122,12 +122,12 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 	tag_browser *tb;
 	gchar *group = g_strdup_printf("tag2-plugin:%s",key);
 	gchar *name = cfg_get_single_value_as_string_with_default(config, group, "name", "default");
-	GtkTreeStore *pl3_tree = (GtkTreeStore  *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
+	GtkListStore *pl3_tree = (GtkListStore  *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	gint pos = cfg_get_single_value_as_int_with_default(config, group,"position",50+g_list_length(tag2_ht));
 	g_free(group);
 //	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	playlist3_insert_browser(&iter, pos);
-	gtk_tree_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, tag2_plug.id,
 			PL3_CAT_TITLE, name,
 			PL3_CAT_INT_ID,key,
@@ -440,7 +440,7 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	{
 		if(gtk_tree_model_get_iter(model,&iter, path))
 		{
-			gtk_tree_store_remove(GTK_TREE_STORE(model), &iter);
+			gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 		}
 		gtk_tree_path_free(path);
 	}	
@@ -971,7 +971,7 @@ static void tag2_pref_entry_changed(GtkWidget *entry, GtkComboBox *combo)
 			GtkTreeIter iter;
 
 			gtk_tree_model_get_iter(model, &iter, path);	
-			gtk_tree_store_set(GTK_TREE_STORE(model), &iter, PL3_CAT_TITLE, name, -1);
+			gtk_list_store_set(GTK_LIST_STORE(model), &iter, PL3_CAT_TITLE, name, -1);
 			gtk_tree_path_free(path);
 		}
 

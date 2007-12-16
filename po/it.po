@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-14 21:12+0100\n"
+"POT-Creation-Date: 2007-12-16 14:36+0100\n"
 "PO-Revision-Date: 2007-05-22 20:49+0200\n"
 "Last-Translator: Marco Albanese aka Delian <delian2@gmail.com>\n"
 "Language-Team: Italian\n"
@@ -654,7 +654,7 @@ msgstr "Si sono presentati i seguenti errori:"
 msgid "Error Message"
 msgstr "Messaggio d'Errore"
 
-#: ../src/metadata.c:546
+#: ../src/metadata.c:523
 msgid ""
 "A new metadata plugin was added, gmpc will now purge all missing metadata "
 "from the cache"
@@ -817,7 +817,7 @@ msgstr "Scorciatoia"
 msgid "Server Settings"
 msgstr "_ParamÃ¨tres du serveur"
 
-#: ../src/mpdinteraction.c:84 ../src/playlist3.c:869
+#: ../src/mpdinteraction.c:84 ../src/playlist3.c:868
 #: ../src/gob/gmpc-metaimage.gob:91
 msgid "Connection"
 msgstr "Connesione"
@@ -853,60 +853,60 @@ msgstr "Tutto dalla stessa directory"
 msgid "Add more"
 msgstr "Aggiungi altro"
 
-#: ../src/playlist3.c:123
+#: ../src/playlist3.c:122
 #, fuzzy
 msgid "Interface"
 msgstr "_Espandi Interfaccia"
 
-#: ../src/playlist3.c:693
+#: ../src/playlist3.c:692
 #, fuzzy
 msgid "MPD database is updating"
 msgstr "Database MPD in aggiornamento."
 
-#: ../src/playlist3.c:705
+#: ../src/playlist3.c:704
 #, fuzzy
 msgid "<b>MPD is updating its database</b>"
 msgstr ""
 "MPD est en train de mettre Ã  jour sa base de donnÃ©es, veuillez patienter"
 
-#: ../src/playlist3.c:709
+#: ../src/playlist3.c:708
 #, fuzzy
 msgid "<b>MPD finished updating its database</b>"
 msgstr ""
 "MPD est en train de mettre Ã  jour sa base de donnÃ©es, veuillez patienter"
 
-#: ../src/playlist3.c:877 ../src/playlist3.c:1961 ../src/playlist3.c:1967
+#: ../src/playlist3.c:876 ../src/playlist3.c:1960 ../src/playlist3.c:1966
 msgid "Profile"
 msgstr "Profilo"
 
-#: ../src/playlist3.c:892
+#: ../src/playlist3.c:891
 #, fuzzy
 msgid "MPD Server"
 msgstr "_Enregistrer"
 
-#: ../src/playlist3.c:906
+#: ../src/playlist3.c:905
 #, fuzzy
 msgid "MPD Version"
 msgstr "Versione:\t%s\n"
 
-#: ../src/playlist3.c:913
+#: ../src/playlist3.c:912
 msgid "N/A"
 msgstr "N/D"
 
-#: ../src/playlist3.c:920
+#: ../src/playlist3.c:919
 #, fuzzy
 msgid "Metadata"
 msgstr "Navigatore Metadati"
 
-#: ../src/playlist3.c:927
+#: ../src/playlist3.c:926
 msgid "Requested"
 msgstr ""
 
-#: ../src/playlist3.c:942
+#: ../src/playlist3.c:941
 msgid "Processing"
 msgstr ""
 
-#: ../src/playlist3.c:1049
+#: ../src/playlist3.c:1048
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc"
@@ -914,11 +914,11 @@ msgstr ""
 "Non riesco ad aprire l'interfaccia di descrizione file!\n"
 "Reinstallare gmpc"
 
-#: ../src/playlist3.c:1520
+#: ../src/playlist3.c:1519
 msgid "Connected"
 msgstr "GMPC - Connesso"
 
-#: ../src/playlist3.c:1529 ../src/playlist3.c:1766 ../src/playlist3.c:2226
+#: ../src/playlist3.c:1528 ../src/playlist3.c:1765 ../src/playlist3.c:2225
 msgid "Not Connected"
 msgstr "Non Connesso"
 
@@ -930,68 +930,68 @@ msgstr "Non Connesso"
 #. (glade_xml_get_widget(pl3_xml,"pp_label_mini")),
 #. _("<span size=\"large\" weight=\"bold\">Not Playing</span>"));
 #.
-#: ../src/playlist3.c:1545 ../src/playlist3.c:1554 ../src/playlist3.c:1667
+#: ../src/playlist3.c:1544 ../src/playlist3.c:1553 ../src/playlist3.c:1666
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:1546
+#: ../src/playlist3.c:1545
 msgid "Connected to"
 msgstr "Connesso a"
 
-#: ../src/playlist3.c:1555
+#: ../src/playlist3.c:1554
 msgid "Disconnected"
 msgstr "Disconnesso"
 
-#: ../src/playlist3.c:1696
+#: ../src/playlist3.c:1695
 #, fuzzy, c-format
 msgid "Repeat: %s"
 msgstr "Ripeti"
 
-#: ../src/playlist3.c:1696 ../src/playlist3.c:1709
+#: ../src/playlist3.c:1695 ../src/playlist3.c:1708
 msgid "On"
 msgstr "Acceso"
 
-#: ../src/playlist3.c:1696 ../src/playlist3.c:1709
+#: ../src/playlist3.c:1695 ../src/playlist3.c:1708
 msgid "Off"
 msgstr "Spento"
 
-#: ../src/playlist3.c:1709
+#: ../src/playlist3.c:1708
 #, fuzzy, c-format
 msgid "Random: %s"
 msgstr "Casuale"
 
-#: ../src/playlist3.c:1808
+#: ../src/playlist3.c:1807
 msgid "MPD Reported the following error"
 msgstr ""
 
-#: ../src/playlist3.c:1961
+#: ../src/playlist3.c:1960
 msgid "added"
 msgstr "aggiunto"
 
-#: ../src/playlist3.c:1967
+#: ../src/playlist3.c:1966
 msgid "changed hostname to:"
 msgstr "hostname cambiato in:"
 
 #. Update DB
-#: ../src/playlist3.c:2077
+#: ../src/playlist3.c:2076
 #, fuzzy
 msgid "Update Database"
 msgstr "_Mettre Ã  jour la base de donnÃ©es"
 
-#: ../src/playlist3.c:2154
+#: ../src/playlist3.c:2153
 msgid "By"
 msgstr ""
 
-#: ../src/playlist3.c:2161
+#: ../src/playlist3.c:2160
 #, fuzzy
 msgid "From"
 msgstr "Formato"
 
-#: ../src/playlist3.c:2217
+#: ../src/playlist3.c:2216
 msgid "Not Playing"
 msgstr "Non In Esecuzione"
 
-#: ../src/playlist3.c:2393
+#: ../src/playlist3.c:2392
 #, fuzzy
 msgid "Advanced"
 msgstr "Aggiunto"
@@ -1139,53 +1139,6 @@ msgstr ""
 msgid "-"
 msgstr ""
 
-#: ../src/browsers/playlist3-artist-browser.c:250
-#: ../src/browsers/playlist3-artist-browser.c:1184
-msgid "Artist Browser"
-msgstr "Navigatore Artisti"
-
-#. add the replace widget
-#. replace the replace widget
-#. add the replace widget
-#. Play button
-#. replace
-#: ../src/browsers/playlist3-artist-browser.c:952
-#: ../src/browsers/playlist3-artist-browser.c:1132
-#: ../src/browsers/playlist3-file-browser.c:591
-#: ../src/browsers/playlist3-file-browser.c:916
-#: ../src/browsers/playlist3-file-browser.c:956
-#: ../src/browsers/playlist3-find2-browser.c:620
-#: ../src/browsers/playlist3-metadata-browser.c:447
-#: ../src/browsers/playlist3-metadata-browser.c:684
-#: ../src/browsers/playlist3-metadata-browser.c:1254
-#: ../src/browsers/playlist3-metadata-browser.c:1508
-#: ../src/browsers/playlist3-metadata-browser.c:1964
-#: ../src/browsers/playlist3-playlist-editor.c:500
-msgid "Replace"
-msgstr "Rimpiazza"
-
-#: ../src/browsers/playlist3-artist-browser.c:1052
-#: ../src/browsers/playlist3-file-browser.c:1038
-#, fuzzy
-msgid "song"
-msgid_plural "songs"
-msgstr[0] "canzone"
-msgstr[1] "canzone"
-
-#: ../src/browsers/playlist3-artist-browser.c:1056
-#, fuzzy
-msgid "artist"
-msgid_plural "artists"
-msgstr[0] "artista"
-msgstr[1] "artista"
-
-#: ../src/browsers/playlist3-artist-browser.c:1060
-#, fuzzy
-msgid "album"
-msgid_plural "albums"
-msgstr[0] "album"
-msgstr[1] "album"
-
 #. PL3_CURRENT_PLAYLIST,
 #: ../src/browsers/playlist3-current-playlist-browser.c:396
 #: ../src/browsers/playlist3-current-playlist-browser.c:926
@@ -1247,6 +1200,24 @@ msgstr "cartelle"
 msgid "Added folder '%s' recursively"
 msgstr "Aggiunta la cartella '%s' ricorsivamente"
 
+#. add the replace widget
+#. replace the replace widget
+#. add the replace widget
+#. Play button
+#. replace
+#: ../src/browsers/playlist3-file-browser.c:591
+#: ../src/browsers/playlist3-file-browser.c:916
+#: ../src/browsers/playlist3-file-browser.c:956
+#: ../src/browsers/playlist3-find2-browser.c:620
+#: ../src/browsers/playlist3-metadata-browser.c:447
+#: ../src/browsers/playlist3-metadata-browser.c:684
+#: ../src/browsers/playlist3-metadata-browser.c:1254
+#: ../src/browsers/playlist3-metadata-browser.c:1508
+#: ../src/browsers/playlist3-metadata-browser.c:1964
+#: ../src/browsers/playlist3-playlist-editor.c:500
+msgid "Replace"
+msgstr "Rimpiazza"
+
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:616
 #: ../src/browsers/playlist3-file-browser.c:902
@@ -1260,6 +1231,13 @@ msgstr "Lista d'Ascolto Caricata"
 #: ../src/browsers/playlist3-file-browser.c:1036
 msgid "Added"
 msgstr "Aggiunto"
+
+#: ../src/browsers/playlist3-file-browser.c:1038
+#, fuzzy
+msgid "song"
+msgid_plural "songs"
+msgstr[0] "canzone"
+msgstr[1] "canzone"
 
 #: ../src/browsers/playlist3-file-browser.c:1040
 #, fuzzy
@@ -1693,6 +1671,21 @@ msgstr "Disegna un'ombra sotto l'immagine"
 #, fuzzy
 msgid "Images"
 msgstr "Tipo Immagine"
+
+#~ msgid "Artist Browser"
+#~ msgstr "Navigatore Artisti"
+
+#, fuzzy
+#~ msgid "artist"
+#~ msgid_plural "artists"
+#~ msgstr[0] "artista"
+#~ msgstr[1] "artista"
+
+#, fuzzy
+#~ msgid "album"
+#~ msgid_plural "albums"
+#~ msgstr[0] "album"
+#~ msgstr[1] "album"
 
 #, fuzzy
 #~ msgid "<span size=\"large\" weight=\"bold\">Paused</span>"

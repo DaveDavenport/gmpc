@@ -336,7 +336,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 	GtkTreePath *path;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "file-browser","position",2);
 	playlist3_insert_browser(&iter, pos);
-	gtk_tree_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, file_browser_plug.id,
 			PL3_CAT_TITLE, _("File Browser"),
 			PL3_CAT_INT_ID, "/",

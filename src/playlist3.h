@@ -3,7 +3,7 @@
 
 #include <libmpd/libmpd.h>
 
-extern GtkTreeStore *pl3_tree;
+extern GtkListStore *pl3_tree;
 extern GtkListStore *pl3_store;
 
 

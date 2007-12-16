@@ -18,7 +18,6 @@ sources=\
 	browsers/playlist3-tag2-browser.c\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
-	browsers/playlist3-artist-browser.c\
 	browsers/playlist3-find2-browser.c\
 	browsers/playlist3-find3-browser.c\
 	browsers/playlist3-metadata-browser.c\
@@ -151,7 +150,6 @@ EXTRA_DIST = 	playlist3.h\
 		browsers/playlist3-tag2-browser.h\
 		browsers/playlist3-file-browser.h\
 		browsers/playlist3-current-playlist-browser.h\
-		browsers/playlist3-artist-browser.h\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-find3-browser.h\
 		browsers/playlist3-playlist-editor.h\

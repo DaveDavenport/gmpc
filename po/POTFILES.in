@@ -25,7 +25,6 @@ src/bacon/bacon-volume.c
 src/bacon/bacon-message-connection.c
 
 # Browsers 
-src/browsers/playlist3-artist-browser.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
 src/browsers/playlist3-find2-browser.c
