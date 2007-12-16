@@ -94,7 +94,8 @@ typedef struct {
 
 /* Unique number */
 /* 16 == 0.14 release */
-#define PLUGIN_API_VERSION 17
+/* 17 == 0.15.5 release */
+#define PLUGIN_API_VERSION 18
 
 /* sturcture */
 typedef struct {
