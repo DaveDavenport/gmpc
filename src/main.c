@@ -463,19 +463,17 @@ int main (int argc, char **argv)
                     NULL);
         }
 
-#endif		
         if(quit)
         {
             cfg_close(config);
             config = NULL;
-#ifndef WIN32        
             if(bacon_connection)
                 bacon_message_connection_free (bacon_connection);
-#endif
+
             exit(0);
         }
     }
-
+#endif
     /**
      * Setup session support
      */
