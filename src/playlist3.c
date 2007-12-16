@@ -33,7 +33,7 @@
 #include "revision.h"
 #include "gmpc-clicklabel.h"
 guint sel_changed_handler_id = 0;
-static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
+/*static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);*/
 
 
 GtkWidget *header_labels[5];
@@ -1071,6 +1071,7 @@ void create_playlist3 ()
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
+    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
@@ -1094,10 +1095,10 @@ void create_playlist3 ()
 	/**
 	 * Bread Crumb system.
 	 */
-
-	pl3_crumbs = (GtkListStore *)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
+	pl3_crumbs = (GtkListStore *)(pl3_tree);
+/*	pl3_crumbs = (GtkListStore *)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
     gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl3_crumbs), pl3_cat_editor_vis_func, NULL, NULL);
-
+*/
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 			GTK_TREE_MODEL(pl3_crumbs));
 	renderer = gtk_cell_renderer_pixbuf_new ();
@@ -2274,6 +2275,7 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
  * Category editing
  */
 static GtkWidget *vbox_cat_editor = NULL;
+/*
 static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data)
 {
     gboolean retv = FALSE;
@@ -2283,6 +2285,7 @@ static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, 
     gtk_tree_path_free(path);
     return retv;
 }
+*/
 static void pl3_cat_editor_pref_up_pressed(GtkWidget *button, GtkWidget *tree)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
@@ -2336,9 +2339,9 @@ static void pl3_cat_editor_pref_construct(GtkWidget *container)
 	vbox_cat_editor = gtk_hbox_new(FALSE, 6);
 
 	/* */
-	ls = gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
+	ls = pl3_tree; /*gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
     gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(ls), pl3_cat_editor_vis_func, NULL, NULL);
-
+*/
 
 
 
