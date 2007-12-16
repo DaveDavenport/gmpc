@@ -195,6 +195,7 @@ The function is called when the state of the connection changed. The 'connect' f
 Preferences
 ~~~~~~~~~~~
 The 'gmpcPlugin' structure can hold a substructure for preferences: 'gmpcPrefPlugin'.
+
 [c]
 source~~~~~~~~~~
 static GtkWidget *vbox = NULL;
@@ -224,6 +225,7 @@ gmpcPrefPugin pref = {
     .destroy    = preferences_panel_destroy 
 }
 source~~~~~~~~~~
+
 These functions allow you to embed a 'window' in the preferences window. If the structure isn't available, no entry will be made.
 
 construct
