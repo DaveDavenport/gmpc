@@ -79,7 +79,6 @@ extern MpdObj *connection;
 extern GmpcProfiles *gmpc_profiles;
 
 extern gmpcPlugin playlist_editor_plugin;
-extern gmpcPlugin pl3_cat_editor_plug;
 
 enum{
 	TIME_FORMAT_ELAPSED,

@@ -567,8 +567,6 @@ int main (int argc, char **argv)
 
 	plugin_add(&proxyplug,0);
 
-	plugin_add(&pl3_cat_editor_plug, 0);
-
 
     /**
      *  load dynamic plugins 
