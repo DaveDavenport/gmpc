@@ -30,24 +30,12 @@
 #include <glib/gstdio.h>
 #include <glade/glade.h>
 
-/** auto*'s config file */
-#include <config.h>
-
-/** session support */
-#include "sm.h"
 /* header files */
 #include "plugin.h"
 #include "main.h"
 
-/* as internall plugin */
-#include "browsers/playlist3-file-browser.h"
-#include "browsers/playlist3-find2-browser.h"
-#include "browsers/playlist3-find3-browser.h"
-#include "browsers/playlist3-tag2-browser.h"
-#ifdef ARTIST_BROWSER
-#include "browsers/playlist3-artist-browser.h"
-#endif
-#include "browsers/playlist3-current-playlist-browser.h"
+/** session support */
+#include "sm.h"
 #include "misc.h"
 
 /**
@@ -56,16 +44,17 @@
 #include "revision.h"
 
 #ifdef ENABLE_MMKEYS
-#include "mm-keys.h"
+    #include "mm-keys.h"
 #endif
 
 /**
  * blub
  */
 #ifndef WIN32
-#include "bacon/bacon-message-connection.h"
-static BaconMessageConnection *bacon_connection = NULL;
+    #include "bacon/bacon-message-connection.h"
+    static BaconMessageConnection *bacon_connection = NULL;
 #endif
+
 extern GladeXML *pl3_xml;
 /**
  * Global objects that give signals
@@ -104,8 +93,6 @@ static void init_stock_icons(void);
 /*
  * the xml fle pointer to the player window
  */
-
-GladeXML *xml_error_window = NULL;
 GladeXML *xml_password_window = NULL;
 static int autoconnect_callback (void);
 
@@ -140,12 +127,32 @@ static void create_gmpc_paths(void);
 static void bacon_on_message_received(const char *message, gpointer data)
 {
     debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
-    if(message && strcmp(message,"QUIT") == 0)
+    if(message)
     {
-        printf("I've been told to quit, doing this now\n");
-        main_quit();
-        return;
+        if(strcmp(message,"QUIT") == 0)
+        {
+            printf("I've been told to quit, doing this now\n");
+            main_quit();
+            return;
+        }
+        else if(strcmp(message, "PLAY") == 0)
+        {
+            play_song();
+        }
+        else if (strcmp(message, "NEXT") == 0)
+        {
+            next_song();
+        }
+        else if (strcmp(message, "PREV") == 0)
+        {
+            prev_song();
+        }
+        else if (strcmp(message, "STOP") == 0)
+        {
+            stop_song();
+        }
     }
+    /* popup */
    create_playlist3(); 
 }
 #endif
@@ -865,17 +872,6 @@ static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *
  * Error handling 
  * TODO: Needs to be redone/rethought
  */
-static void error_window_destroy(GtkWidget *window,int response, gpointer autoconnect)
-{
-	gtk_widget_destroy(window);
-	g_object_unref(xml_error_window);
-	xml_error_window = NULL;
-	if(response == GTK_RESPONSE_OK)
-	{
-		connect_to_mpd();
-	}
-}
-
 static void password_dialog(int failed)
 {
     GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
@@ -968,16 +964,6 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 
 void connect_callback(MpdObj *mi)
 {
-	if(xml_error_window != NULL)
-	{
-		int autocon = cfg_get_single_value_as_int_with_default(config,
-				"connection",
-				"autoconnect",
-				DEFAULT_AUTOCONNECT);
-		error_window_destroy(glade_xml_get_widget(xml_error_window, "error_dialog"),0,
-				GINT_TO_POINTER(autocon));
-		
-	}
 	playlist3_close_error();
 }
 
@@ -1003,7 +989,6 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
         autoconnect_timeout = 0;
-
     }
     /**
      * send password, first thing we do, if connected 
