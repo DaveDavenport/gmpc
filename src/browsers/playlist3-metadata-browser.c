@@ -76,8 +76,13 @@ gmpcPlugin metab_plugin = {
 	.mpd_status_changed = 		info2_status_changed,
 	.get_enabled = 			info2_get_enabled,
 	.set_enabled = 			info2_set_enabled,
-	.save_yourself = 		info2_save_myself,
+	.save_yourself = 		info2_save_myself
 };
+
+/* 
+ * this label is used to show the bitrate.
+ */
+static GtkWidget *bitrate_label= NULL;
 
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
@@ -206,7 +211,6 @@ static void info2_widget_clear_children(GtkWidget *wid)
 		g_list_free(list);
 	}
 }
-
 /**
  * Resets the view
  */
@@ -215,7 +219,7 @@ static void info2_prepare_view()
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
 	/** Clear widget pointer */
 	info2_entry = NULL;
-
+    bitrate_label = NULL;
 	info2_widget_clear_children(resizer_vbox);
 	gtk_adjustment_set_value(h, 0.0);
 	/**
@@ -485,6 +489,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	return event;
 }
 
+
 /** 
  * Song View 
  */
@@ -677,6 +682,23 @@ void info2_fill_song_view(mpd_Song *song)
 		i++;
 		q_free(ext);
 	}
+    if(show_current_song)
+    {
+        GtkWidget *label;
+        gchar *value;
+        label = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Bitrate:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        value = g_strdup_printf("%i %s",mpd_status_get_bitrate(connection),_("kbit/sec"));
+        bitrate_label = label = gtk_label_new(value);
+        q_free(value);
+        gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_table_attach(GTK_TABLE(table2),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+
+    }
 	/**
 	 * Play Button 
 	 */
@@ -1734,7 +1756,7 @@ static void info2_init()
 static void info2_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
-	GtkListStore *pl3_tree = (GtkTreeStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
+	GtkListStore *pl3_tree = (GtkListStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "info2-plugin","position",5);
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
@@ -2022,19 +2044,27 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 
 static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-	if(info2_vbox)
+	if(info2_vbox && show_current_song) 
 	{
 		if(what&(MPD_CST_SONGID|MPD_CST_SONGPOS))
-		{
-			if(show_current_song) {
-				mpd_Song *song = mpd_playlist_get_current_song(connection);
-				if(song) {
-                    
-                    
-					info2_fill_song_view(song);
-				}
-			}
-		}
+        {
+
+            mpd_Song *song = mpd_playlist_get_current_song(connection);
+            if(song) {
+
+
+                info2_fill_song_view(song);
+            }
+        }
+        if(what&MPD_CST_BITRATE)
+        {
+            if(bitrate_label)
+            {
+                gchar *value = g_strdup_printf("%i %s",mpd_status_get_bitrate(connection),_("kbit/sec"));
+                gtk_label_set_text(GTK_LABEL(bitrate_label), value);
+                q_free(value);
+            }
+        }
 	}
 }
 void info2_show_current_song(void)
