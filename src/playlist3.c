@@ -2330,7 +2330,6 @@ static void pl3_cat_editor_pref_next_pressed(GtkWidget *button, GtkWidget *tree)
 
 static void pl3_cat_editor_pref_construct(GtkWidget *container)
 {
-	GtkTreeModel *ls = NULL;
 	GtkWidget		*tree = NULL;
 	GtkWidget		*sw = NULL;
     GtkCellRenderer *renderer = NULL;
@@ -2338,17 +2337,12 @@ static void pl3_cat_editor_pref_construct(GtkWidget *container)
     GtkWidget       *vbox = NULL;
 	vbox_cat_editor = gtk_hbox_new(FALSE, 6);
 
-	/* */
-	ls = pl3_tree; /*gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
-    gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(ls), pl3_cat_editor_vis_func, NULL, NULL);
-*/
-
 
 
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(ls));
+	tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(pl3_tree));
     /* show something in the tree */
     renderer = gtk_cell_renderer_pixbuf_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree),-1, "", renderer, "icon-name",  PL3_CAT_ICON_ID, NULL);

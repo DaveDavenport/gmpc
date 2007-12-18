@@ -72,7 +72,7 @@ gmpcPlBrowserPlugin tag2_browser_plugin ={
 };
 
 gmpcPlugin tag2_plug = {
-	.name = "Tag based browser",
+	.name = N_("Tag based browser"),
 	.version = {0,15,0},
 	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
 	.init = tag2_init,
