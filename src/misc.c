@@ -654,3 +654,46 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data)
     return (MpdData *)node->first;
 }
 
+
+gchar ** tokenize_string(const gchar *string)
+{
+    gchar ** result = NULL; 	/* the result with tokens 		*/
+	int i = 0;		/* position in string 			*/
+	int br = 0;		/* number for open ()[]'s		*/
+	int bpos = 0;		/* begin position of the cur. token 	*/
+    int bstop = 0;
+	int tokens=0;
+	if(string == NULL) return NULL;
+	for(i=0; i < strlen(string)+1;i++)
+	{
+		/* check for opening  [( */
+		if(string[i] == '(' || string[i] == '[' || string[i] == '{'){
+            if(!br)
+                bpos = i+1;
+            br++;
+        }
+		/* check closing */
+		else if(string[i] == ')' || string[i] == ']' || string[i] == '}'){
+            br--;
+            if(!br) bstop = i;
+        }
+		/* if multiple spaces at begin of token skip them */
+		else if(string[i] == ' ' && !(i-bpos))bpos++;
+		/* if token end or string end add token to list */
+		else if((string[i] == ' ' && !br) || string[i] == '\0')
+		{
+			char * temp=NULL;
+            printf("from %i to %i\n", bpos, bstop);
+			result = g_realloc(result,(tokens+2)*sizeof(gchar *));
+			result[tokens] = g_strndup(&string[bpos], bstop-bpos);
+			result[tokens+1] = NULL;
+			bpos = i+1;
+            bstop = bpos;
+			tokens++;
+		}
+        else 
+            bstop++;
+
+	}
+	return result;
+}

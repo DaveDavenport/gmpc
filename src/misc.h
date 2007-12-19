@@ -27,4 +27,7 @@ int *split_version(const char *uri);
 MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data);
 MpdData * misc_sort_mpddata_by_album_disc_track(MpdData *data);
 MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data);
+
+
+gchar ** tokenize_string(const gchar *string);
 #endif

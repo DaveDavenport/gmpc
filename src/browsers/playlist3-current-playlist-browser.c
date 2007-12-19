@@ -256,67 +256,22 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
     if(strlen(text2) > 0)
     {
         MpdData *data = NULL;
-        gchar *text = g_strdup(text2);
-        int i =0;
-
-        int len = strlen(text2);
+        gchar **text = tokenize_string(text2);
+        int i;
         int searched = 0;
-//        gchar **splitted = g_strsplit(text, " ", 0);
-        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), NULL);
-        
-        
-        /* find first entry */
-
-        if(i<len)
-        {
-            int quoted = 0;
-            int stop = 0;
-            int start = 0;
-            do {
-                /* find start */
-                while(text[i] == ' ' && text[i] != '\0')i++;
-                start = i;
-                /* determine ( */
-                if(text[start] == '(')
-                {
-                    quoted=1;
-                    start++;
-                    i++;
-                }   
-                /* find end */
-                while(i < len)
-                {
-                    if(text[i] == '(')
-                        quoted++;
-                    if(text[i] == ')')
-                        quoted--;
-                    if(quoted == 0 && (text[i] == ' ' || text[i] == ')'))
-                        break;
-                    i++;
-                }
-                stop = i;
-                if(text[stop] == ')' && quoted)
-                {
-                    quoted = 0;
-                }
-
-                if( stop > start)
-                {
-                    text[stop] = '\0';  
-                    if(!searched)
-                    {
-                        mpd_playlist_search_start(connection,FALSE);
-                        searched=1;
-                    }
-                    mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_ANY,&(text[start]));
-                }
-                i++;
-            }while(i<len);
-        }
+         
+         for(i=0;text && text[i];i++)
+         {
+            if(!searched)
+                mpd_playlist_search_start(connection, FALSE);
+            printf("search: %s\n", text[i]);
+            mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_ANY,text[i]);
+            searched = 1;
+         }
         if(searched)
             data = mpd_playlist_search_commit(connection);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), data);
-        g_free(text);
+        g_strfreev(text);
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), mod_fill);
     }
     else
