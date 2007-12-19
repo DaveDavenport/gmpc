@@ -358,7 +358,7 @@ static void meta_data_retrieve_thread()
 		}
 		else
 		{
-			data->result = meta_data_get_from_cache(data->song,data->type&META_QUERY_DATA_TYPES, &(data->result_path));
+			data->result = meta_data_get_from_cache(data->edited/*song*/,data->type&META_QUERY_DATA_TYPES, &(data->result_path));
 		}
 		/**
 		 * Handle cache result.
@@ -396,7 +396,7 @@ static void meta_data_retrieve_thread()
 		/** 
 		 * update cache 
 		 */
-		meta_data_set_cache(data->song, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
+		meta_data_set_cache(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
 
 		/**
 		 * Push the result back
@@ -611,28 +611,27 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         }
         ret = META_DATA_FETCHING;
     }
-    else
+/*    else
     {
         ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, path);
-        /**
+    */    /**
          * If the data is know. (and doesn't need fectching) 
          * call the callback and stop
          */
-        if(ret != META_DATA_FETCHING)
+      /*  if(ret != META_DATA_FETCHING)
         {
             return ret;	
         }
     }
-
+*/
     mtd = g_malloc0(sizeof(*mtd));
-    mtd->song = mpd_songDup(tsong);
     /**
      * Make a copy
      */
     /* If it is not a mpd got song */
     if(tsong->file == NULL )
     {
-        if(type&META_ALBUM_ART || type&META_ALBUM_TXT)
+        if(type&(META_ALBUM_ART|META_ALBUM_TXT))
         {
             MpdData *data2 = NULL;
             mpd_database_search_start(connection, TRUE);
@@ -648,25 +647,34 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         }
     }
     if(!mtd->edited)
-        mtd->edited = mpd_songDup(mtd->song);
+        mtd->edited = mpd_songDup(tsong);
 
-    if(mtd->edited->album)
+    /**
+     * Collections detection 
+     * Only do this for album related queries.
+     */
+    if(type&(META_ALBUM_ART|META_ALBUM_TXT))
     {
-        int i;
-        MpdData *data2;
-        mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
-        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, mtd->edited->album);
-        data2 = mpd_database_search_commit(connection);
-        for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
-        if(i >=3)
+        if(mtd->edited->album)
         {
-            if(mtd->edited->artist)
-                g_free(mtd->edited->artist);
-            mtd->edited->artist = g_strdup("Various Artists");
-            printf("collection detected\n");
+            int i;
+            MpdData *data2;
+            mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, mtd->edited->album);
+            data2 = mpd_database_search_commit(connection);
+            for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
+            if(i >=3)
+            {
+                if(mtd->edited->artist)
+                    g_free(mtd->edited->artist);
+                mtd->edited->artist = g_strdup("Various Artists");
+                printf("collection detected\n");
+            }
         }
     }
-    
+    /**
+     * Artist renaming, Clapton, Eric -> Eric Clapton
+     */
     if(mtd->edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
     {
         gchar **str = g_strsplit(mtd->edited->artist, ",", 2);
@@ -679,8 +687,26 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         debug_printf(DEBUG_INFO, "string converted to: '%s'", mtd->edited->artist);
     }
 
+    /** 
+     * Query cache, but for changed artist name 
+     */
+    if((type&META_QUERY_NO_CACHE) == 0)
+    {
+        ret = meta_data_get_from_cache(mtd->edited, type&META_QUERY_DATA_TYPES, path);
+        /**
+         * If the data is know. (and doesn't need fectching) 
+         * call the callback and stop
+         */
+        if(ret != META_DATA_FETCHING)
+        {
+            mpd_freeSong(mtd->edited);
+            q_free(mtd);
+            return ret;	
+        }
+    }
 
-      /**
+
+     /**
      * If no result, start a thread and start fetching the data from there
      */
 
@@ -689,6 +715,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
      * unique id 
      * Not needed, but can be usefull for debugging
      */
+    mtd->song = mpd_songDup(tsong);
+
     id = mtd->id = g_random_int_range(1,2147483647);
     mtd->type = type;
     mtd->callback = callback;
