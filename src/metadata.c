@@ -40,10 +40,75 @@ typedef struct {
 
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 static gboolean meta_data_handle_results(void);
+
 /*
 static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
 */
-void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
+static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
+{
+    mpd_Song *edited = NULL;
+    /* If it is not a mpd got song */
+    if(tsong->file == NULL )
+    {
+        if(type&(META_ALBUM_ART|META_ALBUM_TXT))
+        {
+            MpdData *data2 = NULL;
+            mpd_database_search_start(connection, TRUE);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
+            data2 = mpd_database_search_commit(connection);
+            if(data2)
+            {
+                edited = data2->song;
+                data2->song = NULL;
+                mpd_data_free(data2);
+            }
+        }
+    }
+    if(!edited)
+        edited = mpd_songDup(tsong);
+
+    /**
+     * Collections detection 
+     * Only do this for album related queries.
+     */
+    if(type&(META_ALBUM_ART|META_ALBUM_TXT))
+    {
+        if(edited->album)
+        {
+            int i;
+            MpdData *data2;
+            mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, edited->album);
+            data2 = mpd_database_search_commit(connection);
+            for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
+            if(i >=3)
+            {
+                if(edited->artist)
+                    g_free(edited->artist);
+                edited->artist = g_strdup("Various Artists");
+                printf("collection detected\n");
+            }
+        }
+    }
+    /**
+     * Artist renaming, Clapton, Eric -> Eric Clapton
+     */
+    if(edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
+    {
+        gchar **str = g_strsplit(edited->artist, ",", 2);
+
+        if(str[1]) {
+            g_free(edited->artist);
+            edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
+        }
+        g_strfreev(str);
+        debug_printf(DEBUG_INFO, "string converted to: '%s'", edited->artist);
+    }
+    return edited;
+}
+
+static void meta_data_set_cache_real(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
 {
 	if(!song) return;
 	/**
@@ -110,6 +175,12 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 			q_free(temp);
 		}
 	}
+}
+void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
+{
+    mpd_Song *edited = rewrite_mpd_song(song, type);
+    meta_data_set_cache_real(edited, type, result, path);
+    mpd_freeSong(edited);
 }
 
 /**
@@ -396,7 +467,7 @@ static void meta_data_retrieve_thread()
 		/** 
 		 * update cache 
 		 */
-		meta_data_set_cache(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
+		meta_data_set_cache_real(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
 
 		/**
 		 * Push the result back
@@ -628,64 +699,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     /**
      * Make a copy
      */
-    /* If it is not a mpd got song */
-    if(tsong->file == NULL )
-    {
-        if(type&(META_ALBUM_ART|META_ALBUM_TXT))
-        {
-            MpdData *data2 = NULL;
-            mpd_database_search_start(connection, TRUE);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
-            data2 = mpd_database_search_commit(connection);
-            if(data2)
-            {
-                mtd->edited = data2->song;
-                data2->song = NULL;
-                mpd_data_free(data2);
-            }
-        }
-    }
-    if(!mtd->edited)
-        mtd->edited = mpd_songDup(tsong);
-
-    /**
-     * Collections detection 
-     * Only do this for album related queries.
-     */
-    if(type&(META_ALBUM_ART|META_ALBUM_TXT))
-    {
-        if(mtd->edited->album)
-        {
-            int i;
-            MpdData *data2;
-            mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, mtd->edited->album);
-            data2 = mpd_database_search_commit(connection);
-            for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
-            if(i >=3)
-            {
-                if(mtd->edited->artist)
-                    g_free(mtd->edited->artist);
-                mtd->edited->artist = g_strdup("Various Artists");
-                printf("collection detected\n");
-            }
-        }
-    }
-    /**
-     * Artist renaming, Clapton, Eric -> Eric Clapton
-     */
-    if(mtd->edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
-    {
-        gchar **str = g_strsplit(mtd->edited->artist, ",", 2);
-
-        if(str[1]) {
-            g_free(mtd->edited->artist);
-            mtd->edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
-        }
-        g_strfreev(str);
-        debug_printf(DEBUG_INFO, "string converted to: '%s'", mtd->edited->artist);
-    }
+    mtd->edited = rewrite_mpd_song(tsong, type);
 
     /** 
      * Query cache, but for changed artist name 
