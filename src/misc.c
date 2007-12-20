@@ -667,18 +667,24 @@ gchar ** tokenize_string(const gchar *string)
 	for(i=0; i <= strlen(string);i++)
 	{
 		/* check for opening  [( */
-		if(string[i] == '(' || string[i] == '[' || string[i] == '{'){
-            if(!br)
+		if((br !=0 || bpos == i) && string[i] == '(' || string[i] == '[' || string[i] == '{'){
+            if(!br && bpos == i)
                 bpos = i+1;
             br++;
         }
 		/* check closing */
-		else if(string[i] == ')' || string[i] == ']' || string[i] == '}'){
+		else if(br && (string[i] == ')' || string[i] == ']' || string[i] == '}')){
             br--;
-            if(!br) bstop = i;
+            bstop = i;
+            if(!br && (string[i+1] == ' ' || string[i+1] == '\0')) { 
+                i++;
+            }
+
         }
-		/* if multiple spaces at begin of token skip them */
-		else if(string[i] == ' ' && !(i-bpos))bpos++;
+        else 
+            bstop=i;
+        /* if multiple spaces at begin of token skip them */
+		if(string[i] == ' ' && !(i-bpos))bpos++;
 		/* if token end or string end add token to list */
 		else if((string[i] == ' ' && !br) || string[i] == '\0')
 		{
@@ -689,14 +695,12 @@ gchar ** tokenize_string(const gchar *string)
                 result = g_realloc(result,(tokens+2)*sizeof(gchar *));
                 result[tokens] = g_strndup(&string[bpos], bstop-bpos);
                 result[tokens+1] = NULL;
-                printf("token: %s\n", result[tokens]);
+                printf("token: '%s'\n", result[tokens]);
                 bpos = i+1;
                 bstop = bpos;
                 tokens++;
             }
 		}
-        else 
-            bstop++;
 
 	}
 	return result;

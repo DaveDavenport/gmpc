@@ -71,8 +71,11 @@ static void pl3_current_playlist_browser_init(void);
 GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
 
-static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
+static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+    if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model))
+    {
         if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
         {
             gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_cp_tree),
@@ -80,6 +83,7 @@ static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model,GtkTreeP
                     NULL,
                     TRUE,0.5,0);
         }
+    }
 }
 
 
