@@ -664,7 +664,7 @@ gchar ** tokenize_string(const gchar *string)
     int bstop = 0;
 	int tokens=0;
 	if(string == NULL) return NULL;
-	for(i=0; i < strlen(string)+1;i++)
+	for(i=0; i <= strlen(string);i++)
 	{
 		/* check for opening  [( */
 		if(string[i] == '(' || string[i] == '[' || string[i] == '{'){
@@ -684,12 +684,16 @@ gchar ** tokenize_string(const gchar *string)
 		{
 			char * temp=NULL;
             printf("from %i to %i\n", bpos, bstop);
-			result = g_realloc(result,(tokens+2)*sizeof(gchar *));
-			result[tokens] = g_strndup(&string[bpos], bstop-bpos);
-			result[tokens+1] = NULL;
-			bpos = i+1;
-            bstop = bpos;
-			tokens++;
+            if((bstop-bpos) >0)
+            {
+                result = g_realloc(result,(tokens+2)*sizeof(gchar *));
+                result[tokens] = g_strndup(&string[bpos], bstop-bpos);
+                result[tokens+1] = NULL;
+                printf("token: %s\n", result[tokens]);
+                bpos = i+1;
+                bstop = bpos;
+                tokens++;
+            }
 		}
         else 
             bstop++;
