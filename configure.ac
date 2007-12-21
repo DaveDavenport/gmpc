@@ -39,14 +39,14 @@ AC_ARG_ENABLE(configdir,
                 enable_configdir=no                            
             fi],                                                   
               enable_configdir=no)
-AC_ARG_ENABLE(artistbrowser,
-              [  --enable-artist-browser  Enable the artist browser.],         
+AC_ARG_ENABLE(trayicon,
+              [  --disable-trayicon  Disable the tray icon.],         
               [ if test "x$enableval" = "xyes"; then 
-               enable_artistbrowser=yes
+               enable_trayicon=yes
            else
-               enable_artistbrowser=no
+               enable_trayicon=no
            fi],               
-              enable_artistbrowser=no)
+              enable_trayicon=yes)
 AC_ARG_ENABLE(sm,		    
               [  --disable-sm				Disable Session Support.],                 
               [ if test "x$enableval" = "xyes"; then 
@@ -132,8 +132,8 @@ fi
 if test x${enable_configdir} = xyes; then
 	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
 fi
-if test x${enable_artistbrowser} = xyes; then
-	AC_DEFINE(ARTIST_BROWSER,1, [Enable Artist Browser])
+if test x${enable_trayicon} = xyes; then
+	AC_DEFINE(ENABLE_TRAYICON,1, [Disable Tray Icon])
 fi
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -234,6 +234,11 @@ if test x${enable_sm} = xyes; then
 	echo "Session Manager support is:		enabled"
 else
 	echo "Session Manager support is:		disabled"
+fi
+if test x${enable_trayicon} = xyes; then
+	echo "Trayicon support is:		        enabled"
+else
+	echo "Trayicon support is:		        disabled"
 fi
 if test x${enable_configdir} = xyes; then
 	echo "Use ~/.config/ for config files:	enabled"

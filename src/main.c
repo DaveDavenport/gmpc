@@ -564,8 +564,10 @@ int main (int argc, char **argv)
 #endif
     plugin_add(&url_plugin,0);
     /* the tray icon */
-    /*plugin_add(&tray_icon_plug,0);*/
+#ifdef ENABLE_TRAYICON    
     plugin_add(&tray_icon2_plug,0);
+#endif
+
     /* Info3 data browser */
     /* Meta data browser */
     plugin_add(&metab_plugin,0);	

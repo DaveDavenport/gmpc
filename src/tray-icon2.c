@@ -5,6 +5,8 @@
 #include "plugin.h"
 #include "gmpc-clicklabel.h"
 #include "misc.h"
+
+#ifdef ENABLE_TRAYICON
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 
@@ -723,3 +725,13 @@ gmpcPlugin tray_icon2_plug = {
 	.get_enabled				= tray_icon2_get_enabled,
 	.pref						= &tray_icon2_preferences
 };
+#else
+gboolean tray_icon2_get_available(void)
+{
+    return FALSE;
+}
+void tray_icon2_create_tooltip(void)
+{
+}
+#endif
+

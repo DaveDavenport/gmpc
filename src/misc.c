@@ -667,7 +667,7 @@ gchar ** tokenize_string(const gchar *string)
 	for(i=0; i <= strlen(string);i++)
 	{
 		/* check for opening  [( */
-		if((br !=0 || bpos == i) && string[i] == '(' || string[i] == '[' || string[i] == '{'){
+		if((br !=0 || bpos == i) && (string[i] == '(' || string[i] == '[' || string[i] == '{')){
             if(!br && bpos == i)
                 bpos = i+1;
             br++;
@@ -688,7 +688,6 @@ gchar ** tokenize_string(const gchar *string)
 		/* if token end or string end add token to list */
 		else if((string[i] == ' ' && !br) || string[i] == '\0')
 		{
-			char * temp=NULL;
             printf("from %i to %i\n", bpos, bstop);
             if((bstop-bpos) >0)
             {
