@@ -6,11 +6,15 @@
 #include "gmpc-clicklabel.h"
 #include "misc.h"
 
-#ifdef ENABLE_TRAYICON
+
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 
+#ifdef ENABLE_TRAYICON
 GtkStatusIcon *tray_icon2_gsi = NULL;
+#else
+GtkWidget *tray_icon2_gsi = NULL;
+#endif
 /**
  * Tooltip 
  */
@@ -40,12 +44,14 @@ void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data);
 
 gboolean tray_icon2_get_available(void)
 {
+#ifdef ENABLE_TRAYICON    
 	if(tray_icon2_gsi) {
 		if(gtk_status_icon_is_embedded(tray_icon2_gsi) &&
 				gtk_status_icon_get_visible(tray_icon2_gsi)) {
 			return TRUE;
 		}
 	}
+#endif
 	return FALSE;
 }
 /** 
@@ -120,6 +126,7 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
 {
+#ifdef ENABLE_TRAYICON 
     if(gtk_status_icon_is_embedded(icon))
     {
         /* the status icon just got embedded */
@@ -129,12 +136,15 @@ static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gp
         /* the widget isn't embedded anymore */
         create_playlist3();
     }
+#endif
 }
 /**
  * Initialize the tray icon 
  */
 static void tray_icon2_init(void)
 {
+#ifdef ENABLE_TRAYICON 
+
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", TRUE))
 	{
 		tray_icon2_gsi = gtk_status_icon_new_from_icon_name ("gmpc-tray-disconnected");
@@ -143,6 +153,7 @@ static void tray_icon2_init(void)
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
         g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
 	}
+#endif
 }
 /**
  * Destroy and cleanup 
@@ -166,6 +177,7 @@ static gboolean tray_icon2_get_enabled(void)
  */
 static void tray_icon2_set_enabled(int enabled)
 {
+#ifdef ENABLE_TRAYICON 
 	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", enabled);
 	if(enabled)	{
 		if(!tray_icon2_gsi) {
@@ -178,6 +190,7 @@ static void tray_icon2_set_enabled(int enabled)
 			gtk_status_icon_set_visible(GTK_STATUS_ICON(tray_icon2_gsi), FALSE);
 		}		
 	}
+#endif
 }
 /**
  * TOOLTIP 
@@ -422,12 +435,14 @@ void tray_icon2_create_tooltip(void)
 	 * 	Position the popup
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
+#ifdef ENABLE_TRAYICON 
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
 
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
         int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
         int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+
 		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
 		{
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
@@ -458,7 +473,9 @@ void tray_icon2_create_tooltip(void)
 			}
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
-	} else if (state == TI2_AT_UPPER_LEFT) {
+	} else 
+#endif
+    if (state == TI2_AT_UPPER_LEFT) {
        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
         int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 		screen =gtk_widget_get_screen(pl3_win);
@@ -529,9 +546,11 @@ void tray_icon2_create_tooltip(void)
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+#ifdef TRAYICON_ENABLED
 #if GTK_CHECK_VERSION(2,12,0)
     char buffer[256];
     mpd_Song *song = mpd_playlist_get_current_song(connection);
+#endif
 #endif
 	if(what&(MPD_CST_SONGID))
 	{
@@ -548,12 +567,14 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 				tray_icon2_create_tooltip();
 			}
 		}
+#ifdef TRAYICON_ENABLED        
 #if GTK_CHECK_VERSION(2,12,0)
         if(tray_icon2_gsi)
         {
             mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
             gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
         }
+#endif
 #endif
 	}
 
@@ -580,28 +601,35 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	{
 		int state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY){
+#ifdef TRAYICON_ENABLE 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+
 #if GTK_CHECK_VERSION(2,12,0)
             mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
             gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+#endif
 #endif
             if(has_buttons)
             {
                 gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
             }
 		} else if(state == MPD_PLAYER_PAUSE){
+#ifdef TRAYICON_ENABLE 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
 #if GTK_CHECK_VERSION(2,12,0)
             gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
 #endif
             if(has_buttons)
             {
                 gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
             }
 		} else {
+#ifdef TRAYICON_ENABLE 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
 #if GTK_CHECK_VERSION(2,12,0)
             gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+#endif
 #endif
             if(has_buttons)
             {
@@ -621,11 +649,11 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
     if(connect)	{
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
+#ifdef TRAYICON_ENABLE 
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
+#endif
 	}
 }
-
-
 
 /**
  *  PREFERENCES 
@@ -725,13 +753,3 @@ gmpcPlugin tray_icon2_plug = {
 	.get_enabled				= tray_icon2_get_enabled,
 	.pref						= &tray_icon2_preferences
 };
-#else
-gboolean tray_icon2_get_available(void)
-{
-    return FALSE;
-}
-void tray_icon2_create_tooltip(void)
-{
-}
-#endif
-

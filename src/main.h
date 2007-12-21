@@ -78,9 +78,7 @@ extern gmpcPlugin playlist_plug;
 
 extern gmpcPlugin cover_art_plug;
 
-#ifdef ENABLE_TRAYICON
 extern gmpcPlugin tray_icon2_plug;
-#endif 
 
 extern gmpcPlugin proxyplug;
 //extern gmpcPlugin info3_plugin;
