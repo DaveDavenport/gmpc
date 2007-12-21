@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-21 14:36+0100\n"
+"POT-Creation-Date: 2007-12-21 15:43+0100\n"
 "PO-Revision-Date: 2007-12-21 14:12+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Nakładka GNOME na demona mpd"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:595 ../src/tray-icon2.c:604
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:620 ../src/tray-icon2.c:631
 msgid "Gnome Music Player Client"
 msgstr "Klient odtwarzacza muzyki GNOME"
 
@@ -624,7 +624,7 @@ msgstr "Nie można wczytać pliku logowania odpluskwiania."
 msgid "Failed to setup libmpd"
 msgstr "Nie można ustawić libmpd"
 
-#: ../src/main.c:889
+#: ../src/main.c:887
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -633,20 +633,20 @@ msgstr ""
 "Nie można ustawić hasła dla: '%s'\n"
 "Spróbuj ponownie."
 
-#: ../src/main.c:893
+#: ../src/main.c:891
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Wprowadź hasło dla: '%s'"
 
-#: ../src/main.c:913
+#: ../src/main.c:911
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC ma niewystarczające prawa dostępu do serwera mpd."
 
-#: ../src/main.c:937 ../src/main.c:960
+#: ../src/main.c:935 ../src/main.c:958
 msgid "error code"
 msgstr "kod błędu"
 
-#: ../src/main.c:1031
+#: ../src/main.c:1029
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -654,24 +654,24 @@ msgstr ""
 "GMPC jest połączony z serwerem mpd w wersji niższej niż 0.12.0\n"
 "Taka konfiguracja może funkcjonować, ale nie jest już wspierana."
 
-#: ../src/main.c:1038
+#: ../src/main.c:1036
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Połączono z mpd</b>"
 
-#: ../src/main.c:1040
+#: ../src/main.c:1038
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Rozłączono z mpd</b>"
 
-#: ../src/main.c:1075
+#: ../src/main.c:1073
 msgid "Error occured during operation"
 msgstr "Napotkano błąd podczas wykonywania operacji"
 
 #. Create label
-#: ../src/main.c:1105
+#: ../src/main.c:1103
 msgid "The following error(s) occured:"
 msgstr "Napotkano następujące błędy:"
 
-#: ../src/main.c:1121
+#: ../src/main.c:1119
 msgid "Error Message"
 msgstr "Wiadomość o błędzie"
 
@@ -1103,15 +1103,15 @@ msgstr "Dodaj URL"
 msgid "Failed to parse the playlist link"
 msgstr "Nie można przetworzyć linku listy odtwarzania"
 
-#: ../src/tray-icon2.c:104
+#: ../src/tray-icon2.c:110
 msgid "Pla_ylist"
 msgstr "Lista odtwarzania"
 
-#: ../src/tray-icon2.c:416
+#: ../src/tray-icon2.c:429
 msgid "<span size='large'>Gnome Music Player Client</span>"
 msgstr "<span size='large'>Klient odtwarzacza muzyki GNOME</span>"
 
-#: ../src/tray-icon2.c:717
+#: ../src/tray-icon2.c:745
 msgid "Notification"
 msgstr "Powiadomienie"
 

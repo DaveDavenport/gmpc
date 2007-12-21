@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-18 09:27+0100\n"
+"POT-Creation-Date: 2007-12-21 15:43+0100\n"
 "PO-Revision-Date: 2007-12-16 14:10+0100\n"
 "Last-Translator: Maxime Petazzoni <maxime.petazzoni@bulix.org>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Une interface gnome pour le démon mpd"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:593 ../src/tray-icon2.c:602
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:620 ../src/tray-icon2.c:631
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -507,7 +507,7 @@ msgstr "Proxy HTTP :"
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:212 ../src/main.c:214
+#: ../src/main.c:219 ../src/main.c:221
 #, fuzzy
 msgid "--debug-level="
 msgstr "--debug-level="
@@ -515,65 +515,65 @@ msgstr "--debug-level="
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:220
+#: ../src/main.c:227
 #, fuzzy
 msgid "--version"
 msgstr "--version"
 
-#: ../src/main.c:222
+#: ../src/main.c:229
 #, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Music Player Client\n"
 
-#: ../src/main.c:223 ../src/preferences.c:268
+#: ../src/main.c:230 ../src/preferences.c:268
 msgid "Version"
 msgstr "Version"
 
-#: ../src/main.c:226
+#: ../src/main.c:233
 msgid "Revision"
 msgstr "Révision"
 
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:233 ../src/main.c:235
+#: ../src/main.c:240 ../src/main.c:242
 #, fuzzy
 msgid "--config="
 msgstr "--config="
 
-#: ../src/main.c:237
+#: ../src/main.c:244
 #, fuzzy
 msgid "--start-hidden"
 msgstr "--start-hidden"
 
-#: ../src/main.c:241
+#: ../src/main.c:248
 #, fuzzy
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
-#: ../src/main.c:245
+#: ../src/main.c:252
 #, fuzzy
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
-#: ../src/main.c:249
+#: ../src/main.c:256
 #, fuzzy
 msgid "--replace"
 msgstr "Remplacer"
 
-#: ../src/main.c:253
+#: ../src/main.c:260
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:261
+#: ../src/main.c:268
 #, fuzzy
 msgid "--help"
 msgstr "--help"
 
-#: ../src/main.c:263
+#: ../src/main.c:270
 #, fuzzy, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -609,71 +609,71 @@ msgstr ""
 "\t--clean-cover-db\tCleanup the cover file.\n"
 "\t--disable-plugins\tDon't load any plugins.\n"
 
-#: ../src/main.c:303
+#: ../src/main.c:310
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr ""
 
-#: ../src/main.c:365
+#: ../src/main.c:372
 msgid "Failed to load the configuration system"
 msgstr "Échec lors du chargement du système de configuration"
 
-#: ../src/main.c:384
+#: ../src/main.c:391
 #, fuzzy
 msgid "Failed to load debug-log file."
 msgstr "Erreur lors de l'ouverture du fichier :"
 
-#: ../src/main.c:509
+#: ../src/main.c:516
 msgid "Failed to setup libmpd"
 msgstr "Échec de configuration de libmpd"
 
-#: ../src/main.c:893
+#: ../src/main.c:887
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
 
-#: ../src/main.c:897
+#: ../src/main.c:891
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Entrez le mot de passe pour : '%s'"
 
-#: ../src/main.c:917
+#: ../src/main.c:911
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr ""
 
-#: ../src/main.c:941 ../src/main.c:964
+#: ../src/main.c:935 ../src/main.c:958
 msgid "error code"
 msgstr "code d'erreur"
 
-#: ../src/main.c:1046
+#: ../src/main.c:1029
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
 msgstr ""
 
-#: ../src/main.c:1053
+#: ../src/main.c:1036
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Connecté à mpd</b>"
 
-#: ../src/main.c:1055
+#: ../src/main.c:1038
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Déconnecté de mpd</b>"
 
-#: ../src/main.c:1090
+#: ../src/main.c:1073
 msgid "Error occured during operation"
 msgstr "Une erreur est survenue pendant l'opération"
 
 #. Create label
-#: ../src/main.c:1120
+#: ../src/main.c:1103
 msgid "The following error(s) occured:"
 msgstr "Le(s) erreur(s) suivante(s) est/sont apparue(s) :"
 
-#: ../src/main.c:1136
+#: ../src/main.c:1119
 msgid "Error Message"
 msgstr "Message d'erreur"
 
-#: ../src/metadata.c:523
+#: ../src/metadata.c:594
 msgid ""
 "A new metadata plugin was added, gmpc will now purge all missing metadata "
 "from the cache"
@@ -811,7 +811,6 @@ msgid "Server Settings"
 msgstr "Paramètres du serveur"
 
 #: ../src/mpdinteraction.c:84 ../src/playlist3.c:868
-#: ../src/gob/gmpc-metaimage.gob:91
 msgid "Connection"
 msgstr "Connexion"
 
@@ -975,10 +974,6 @@ msgstr "Depuis"
 msgid "Not Playing"
 msgstr "Arrêté"
 
-#: ../src/playlist3.c:2389
-msgid "Advanced"
-msgstr "Avancé"
-
 #: ../src/playlist3-messages.c:15
 msgid "Info"
 msgstr "Info"
@@ -1092,15 +1087,15 @@ msgstr "Ajouter une URL"
 msgid "Failed to parse the playlist link"
 msgstr "Échec de configuration de libmpd"
 
-#: ../src/tray-icon2.c:102
+#: ../src/tray-icon2.c:110
 msgid "Pla_ylist"
 msgstr "Liste de _lecture"
 
-#: ../src/tray-icon2.c:414
+#: ../src/tray-icon2.c:429
 msgid "<span size='large'>Gnome Music Player Client</span>"
 msgstr "<span size='large'>Gnome Music Player Client</span>"
 
-#: ../src/tray-icon2.c:715
+#: ../src/tray-icon2.c:745
 msgid "Notification"
 msgstr "Notification"
 
@@ -1115,33 +1110,33 @@ msgid "-"
 msgstr "-"
 
 #. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:396
-#: ../src/browsers/playlist3-current-playlist-browser.c:926
+#: ../src/browsers/playlist3-current-playlist-browser.c:403
+#: ../src/browsers/playlist3-current-playlist-browser.c:933
 msgid "Current Playlist"
 msgstr "Liste de lecture actuelle"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:490
+#: ../src/browsers/playlist3-current-playlist-browser.c:497
 #: ../src/browsers/playlist3-find3-browser.c:939
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Êtes vous sûr de vouloir effacer la liste de lecture ?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:602
+#: ../src/browsers/playlist3-current-playlist-browser.c:609
 #: ../src/browsers/playlist3-find3-browser.c:743
 msgid "Add to Queue"
 msgstr "Ajouter à la file d'attente"
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:635
+#: ../src/browsers/playlist3-current-playlist-browser.c:642
 msgid "Crop"
 msgstr "Rogner"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:649
+#: ../src/browsers/playlist3-current-playlist-browser.c:656
 msgid "Shuffle"
 msgstr "Aléatoire"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:664
+#: ../src/browsers/playlist3-current-playlist-browser.c:671
 #: ../src/browsers/playlist3-file-browser.c:970
 #: ../src/browsers/playlist3-find2-browser.c:637
 #: ../src/browsers/playlist3-find3-browser.c:786
@@ -1149,7 +1144,7 @@ msgstr "Aléatoire"
 msgid "Edit Columns"
 msgstr "Changer les colonnes"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:832
+#: ../src/browsers/playlist3-current-playlist-browser.c:839
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1220,7 +1215,6 @@ msgstr[0] "répertoire"
 msgstr[1] "répertoire"
 
 #: ../src/browsers/playlist3-file-browser.c:1042
-#: ../src/gob/gmpc-mpddata-model-sort.gob:22
 #, fuzzy
 msgid "playlist"
 msgid_plural "playlists"
@@ -1500,18 +1494,6 @@ msgstr ""
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: ../src/gob/gmpc-mpddata-model.gob:70
-msgid "Has Up"
-msgstr ""
-
-#: ../src/gob/gmpc-mpddata-model.gob:71
-msgid "Show an 'up row"
-msgstr ""
-
-#: ../src/gob/gmpc-mpddata-model-sort.gob:23
-msgid "The current playlist name"
-msgstr "Nom de la liste de lecture actuelle"
-
 #: ../src/gob/gmpc-profiles.gob:53
 msgid "Added profile"
 msgstr "Profil ajouté"
@@ -1564,73 +1546,49 @@ msgstr "Document texte"
 msgid "All"
 msgstr "Tout"
 
-#: ../src/gob/gmpc-metaimage.gob:56
-#, fuzzy
-msgid "Loading Cover Icon"
-msgstr "Chargement de la pochette"
-
-#: ../src/gob/gmpc-metaimage.gob:57
-#, fuzzy
-msgid "Stock icon to use when loading a cover"
-msgstr "Icône à utiliser pendant le chargement de la pochette"
-
-#: ../src/gob/gmpc-metaimage.gob:65
-#, fuzzy
-msgid "No Cover Icon"
-msgstr "Pas de pochette"
-
-#: ../src/gob/gmpc-metaimage.gob:66
-#, fuzzy
-msgid "Stock icon to use when no cover is present"
-msgstr "Icône à utiliser en l'absence de pochette"
-
-#: ../src/gob/gmpc-metaimage.gob:71
-msgid "Image type"
-msgstr "Type de l'image"
-
-#: ../src/gob/gmpc-metaimage.gob:72
-msgid "Type of the image, like artist art"
-msgstr "Type de l'image (pochette par exemple)"
-
-#: ../src/gob/gmpc-metaimage.gob:78
-msgid "Size"
-msgstr "Taille"
-
-#: ../src/gob/gmpc-metaimage.gob:79
-msgid "Size of the image"
-msgstr "Taille de l'image"
-
-#: ../src/gob/gmpc-metaimage.gob:85
-msgid "HideOnNA"
-msgstr ""
-
-#: ../src/gob/gmpc-metaimage.gob:86
-msgid "Hide the image when not available"
-msgstr ""
-
-#: ../src/gob/gmpc-metaimage.gob:92
-msgid "A mpdObj to check on"
-msgstr ""
-
-#: ../src/gob/gmpc-metaimage.gob:97
-msgid "DrawBorder"
-msgstr ""
-
-#: ../src/gob/gmpc-metaimage.gob:98
-msgid "Draw a border around the image"
-msgstr "Dessiner une bordure autour de l'image"
-
-#: ../src/gob/gmpc-metaimage.gob:103
-msgid "DrawShadow"
-msgstr ""
-
-#: ../src/gob/gmpc-metaimage.gob:104
-msgid "Draw a shadow under the image"
-msgstr "Dessiner une ombre sous l'image"
-
 #: ../src/gob/gmpc-metaimage.gob:604
 msgid "Images"
 msgstr "Images"
+
+#~ msgid "Advanced"
+#~ msgstr "Avancé"
+
+#~ msgid "The current playlist name"
+#~ msgstr "Nom de la liste de lecture actuelle"
+
+#, fuzzy
+#~ msgid "Loading Cover Icon"
+#~ msgstr "Chargement de la pochette"
+
+#, fuzzy
+#~ msgid "Stock icon to use when loading a cover"
+#~ msgstr "Icône à utiliser pendant le chargement de la pochette"
+
+#, fuzzy
+#~ msgid "No Cover Icon"
+#~ msgstr "Pas de pochette"
+
+#, fuzzy
+#~ msgid "Stock icon to use when no cover is present"
+#~ msgstr "Icône à utiliser en l'absence de pochette"
+
+#~ msgid "Image type"
+#~ msgstr "Type de l'image"
+
+#~ msgid "Type of the image, like artist art"
+#~ msgstr "Type de l'image (pochette par exemple)"
+
+#~ msgid "Size"
+#~ msgstr "Taille"
+
+#~ msgid "Size of the image"
+#~ msgstr "Taille de l'image"
+
+#~ msgid "Draw a border around the image"
+#~ msgstr "Dessiner une bordure autour de l'image"
+
+#~ msgid "Draw a shadow under the image"
+#~ msgstr "Dessiner une ombre sous l'image"
 
 #~ msgid "<span size=\"large\" weight=\"bold\">Paused</span>"
 #~ msgstr "<span size=\"large\" weight=\"bold\">En pause</span>"
