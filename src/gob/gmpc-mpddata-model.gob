@@ -67,8 +67,8 @@ requires 2.0.0
     private gulong markup_signal = 0; 
 
     property BOOLEAN has_up
-        (nick = _("Has Up"),
-         blurb = _("Show an 'up row"),
+        (nick = "Has Up",
+         blurb = "Show an 'up row",
          default_value = FALSE,
          export,
          link);

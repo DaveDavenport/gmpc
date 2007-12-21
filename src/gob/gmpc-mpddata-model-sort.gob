@@ -19,8 +19,8 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 		public gchar *playlist = {NULL} destroywith g_free;
 
 	property STRING playlist 
-		(nick = _("playlist"),
-		blurb = _("The current playlist name"),
+		(nick = "playlist",
+		blurb = "The current playlist name",
 		default_value = NULL, 
 		export,
 		link);

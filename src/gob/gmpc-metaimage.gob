@@ -53,8 +53,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean is_visible = {TRUE};
 
 	property STRING loading_cover_icon
-		(nick = _("Loading Cover Icon"),
-		blurb = _("Stock icon to use when loading a cover"),
+		(nick = "Loading Cover Icon",
+		blurb = "Stock icon to use when loading a cover",
 		default_value = "media-loading-cover",
 		export,
 		link);
@@ -62,46 +62,46 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 
 	property STRING no_cover_icon
-		(nick = _("No Cover Icon"),
-		blurb = _("Stock icon to use when no cover is present"),
+		(nick = "No Cover Icon",
+		blurb = "Stock icon to use when no cover is present",
 		default_value = "media-no-cover",
 		export,
 		link);
 	property INT image_type 
-		(nick = _("Image type"),
-		blurb = _("Type of the image, like artist art"),
+		(nick = "Image type",
+		blurb = "Type of the image, like artist art",
 		default_value = META_ALBUM_ART,
 		export,
 		link);
 		 
 	property INT size
-		(nick = _("Size"),
-		blurb = _("Size of the image"),
+		(nick = "Size",
+		blurb = "Size of the image",
 		default_value = 64,
 		export,
 		link);
 
 	property BOOLEAN hide_on_na
-		(nick = _("HideOnNA"),
-		blurb = _("Hide the image when not available"),
+		(nick = "HideOnNA",
+		blurb = "Hide the image when not available",
 		default_value = FALSE,
 		export,
 		link);
 	property POINTER connection
-		(nick = _("Connection"),
-		blurb = _("A mpdObj to check on"),
+		(nick = "Connection",
+		blurb = "A mpdObj to check on",
 		default_value = NULL,
 		export,
 		link);
 	property BOOLEAN draw_border
-		(nick = _("DrawBorder"),
-		 blurb = _("Draw a border around the image"),
+		(nick = "DrawBorder",
+		 blurb = "Draw a border around the image",
 		 default_value = TRUE,
 		 export,
 		 link);
 	property BOOLEAN draw_shadow
-		(nick = _("DrawShadow"),
-		 blurb = _("Draw a shadow under the image"),
+		(nick = "DrawShadow",
+		 blurb = "Draw a shadow under the image",
 		 default_value = FALSE,
 		export,
 		link);
