@@ -546,7 +546,7 @@ void tray_icon2_create_tooltip(void)
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-#ifdef TRAYICON_ENABLED
+#ifdef ENABLE_TRAYICON
 #if GTK_CHECK_VERSION(2,12,0)
     char buffer[256];
     mpd_Song *song = mpd_playlist_get_current_song(connection);
@@ -567,7 +567,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 				tray_icon2_create_tooltip();
 			}
 		}
-#ifdef TRAYICON_ENABLED        
+#ifdef ENABLE_TRAYICON
 #if GTK_CHECK_VERSION(2,12,0)
         if(tray_icon2_gsi)
         {
@@ -601,7 +601,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	{
 		int state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY){
-#ifdef TRAYICON_ENABLE 
+#ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
 
 #if GTK_CHECK_VERSION(2,12,0)
@@ -614,7 +614,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
                 gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
             }
 		} else if(state == MPD_PLAYER_PAUSE){
-#ifdef TRAYICON_ENABLE 
+#ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
 #if GTK_CHECK_VERSION(2,12,0)
             gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
@@ -625,7 +625,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
                 gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
             }
 		} else {
-#ifdef TRAYICON_ENABLE 
+#ifdef ENABLE_TRAYICON 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
 #if GTK_CHECK_VERSION(2,12,0)
             gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
@@ -649,7 +649,7 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
     if(connect)	{
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
-#ifdef TRAYICON_ENABLE 
+#ifdef ENABLE_TRAYICON 
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
 #endif
 	}
