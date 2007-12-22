@@ -67,7 +67,7 @@ gmpcPlBrowserPlugin playlist_editor_gbp = {
 };
 
 gmpcPlugin playlist_editor_plugin = {
-  .name 					= "Favorites Plugin",
+  .name 					= "Playlist Editor",
   .version					=  {0,15,0},
   .plugin_type 				= GMPC_PLUGIN_PL_BROWSER,
   .init						= playlist_editor_init,
