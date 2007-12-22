@@ -583,14 +583,16 @@ int main (int argc, char **argv)
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
     url = g_build_filename(packagedir, "data", "plugins", NULL);
 	q_free(packagedir);
+/*
+//#else
 
-#else
-	/** Load the global installed plugins */
 	url = g_build_path(G_DIR_SEPARATOR_S, GLADE_PATH,"plugins",NULL);
-#endif
+//#endif
+    */
     if(load_plugins)
         plugin_load_dir(url);
 	q_free(url);
+#endif
 #ifndef WIN32
     /* This is the right location to load gmpc plugins */
     if(load_plugins)
