@@ -762,25 +762,33 @@ static void tag2_browser_selected(GtkWidget *container)
 		gchar *key;
 		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &key, -1);
 		if(key)
-		{
-			GList *node = g_list_find_custom(tag2_ht, key, (GCompareFunc)tag2_custom_find);
-				if(node)
-				{
-					tag_browser *tb = node->data;//g_hash_table_lookup(tag2_ht, key);
-					if(tb)
-					{
-						if(tb->tag2_vbox ==NULL)
-							tag2_init_browser(tb);
-						gtk_container_add(GTK_CONTAINER(container), tb->tag2_vbox);
-						gtk_widget_show_all(container);
-						tag2_current = tb->tag2_vbox;
-					}
-					else{
+        {
+            GList *node = g_list_find_custom(tag2_ht, key, (GCompareFunc)tag2_custom_find);
+            if(node)
+            {
+                tag_browser *tb = node->data;
+                if(tb)
+                {
+                    GList *list;
+                    if(tb->tag2_vbox ==NULL)
+                        tag2_init_browser(tb);
+                    gtk_container_add(GTK_CONTAINER(container), tb->tag2_vbox);
+                    gtk_widget_show_all(container);
+                    tag2_current = tb->tag2_vbox;
 
-					}
-					g_free(key);
-				}
-		}
+                    list = g_list_first(tb->tag_lists);
+                    if(list)
+                    {
+                        tag_element *te= list->data;
+                        gtk_widget_grab_focus(te->tree);
+                    }
+                }
+                else{
+
+                }
+                g_free(key);
+            }
+        }
 	}
 }
 
