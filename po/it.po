@@ -1505,7 +1505,6 @@ msgid "Markup"
 msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:37
-#, fuzzy
 msgid "Artist"
 msgstr "_Artista:"
 

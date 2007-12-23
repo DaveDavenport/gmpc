@@ -248,6 +248,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             }
             else{
                 renderer = gtk_cell_renderer_text_new();
+                printf("%s\n", _(columnname));
                 column = gtk_tree_view_column_new_with_attributes (_(columnname), renderer,
                         "text", valuerow,NULL);
                 g_value_init(&value, G_TYPE_INT);
