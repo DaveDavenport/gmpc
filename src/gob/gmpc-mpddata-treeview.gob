@@ -33,21 +33,21 @@ static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
 };
 static gchar *col_names[NUM_COLS] = {
-    "Markup",
-    "Artist",
-    "Album",
-    "Title",
-    "File",
-    "Genre",
-    "Track",
-    "Name",
-    "Composer",
-    "Performer",
-    "Date",
-    "Duration",
-    "Disc",
-    "Comment",
-    "Icon Id"
+    N_("Markup"),
+    N_("Artist"),
+    N_("Album"),
+    N_("Title"),
+    N_("File"),
+    N_("Genre"),
+    N_("Track"),
+    N_("Name"),
+    N_("Composer"),
+    N_("Performer"),
+    N_("Date"),
+    N_("Duration"),
+    N_("Disc"),
+    N_("Comment"),
+    N_("Icon Id")
 }; 
 
 static gint  col_enabled[NUM_COLS] = {
