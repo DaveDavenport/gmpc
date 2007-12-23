@@ -133,7 +133,6 @@ static GtkTreeRowReference *pl3_curb_tree_ref = NULL;
 
 static void pl3_current_playlist_search_activate(TreeSearch *search,GtkTreeView *tree)
 {
-    printf("tree %p %p\n",search, tree);
 	GtkTreeModel *model = gtk_tree_view_get_model(tree); 
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
@@ -268,7 +267,6 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
          {
             if(!searched)
                 mpd_playlist_search_start(connection, FALSE);
-            printf("search: %s\n", text[i]);
             mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_ANY,text[i]);
             searched = 1;
          }

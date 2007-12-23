@@ -679,7 +679,6 @@ gchar ** tokenize_string(const gchar *string)
             if(!br && (string[i+1] == ' ' || string[i+1] == '\0')) { 
                 i++;
             }
-
         }
         else 
             bstop=i;
@@ -688,13 +687,11 @@ gchar ** tokenize_string(const gchar *string)
 		/* if token end or string end add token to list */
 		else if((string[i] == ' ' && !br) || string[i] == '\0')
 		{
-            printf("from %i to %i\n", bpos, bstop);
             if((bstop-bpos) >0)
             {
                 result = g_realloc(result,(tokens+2)*sizeof(gchar *));
                 result[tokens] = g_strndup(&string[bpos], bstop-bpos);
                 result[tokens+1] = NULL;
-                printf("token: '%s'\n", result[tokens]);
                 bpos = i+1;
                 bstop = bpos;
                 tokens++;

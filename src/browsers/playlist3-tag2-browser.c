@@ -86,7 +86,6 @@ gmpcPlugin tag2_plug = {
 	.mpd_status_changed = tag2_status_changed,
 };
 /** Little hack to work around gmpc's limitations */
-//static GHashTable *tag2_ht = NULL;
 static GList *tag2_ht = NULL;
 /** This stucture contains all the needed data for a browser
  */
@@ -125,7 +124,6 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 	GtkListStore *pl3_tree = (GtkListStore  *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	gint pos = cfg_get_single_value_as_int_with_default(config, group,"position",50+g_list_length(tag2_ht));
 	g_free(group);
-//	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	playlist3_insert_browser(&iter, pos);
 	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, tag2_plug.id,
@@ -141,7 +139,6 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 	tb->key = g_strdup(key);
 	/* get a reference to the key */
 	tb->ref_iter = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
-	//g_hash_table_insert(tag2_ht, tb->key, tb);
 	tag2_ht = g_list_append(tag2_ht,tb);
 	tag2_init_browser(tb);
 	gtk_tree_path_free(path);
@@ -156,12 +153,6 @@ static void tag2_browser_add(GtkWidget *cat_tree)
 	/**
 	 * Init hash table if it does not extists
 	 */
-	if(!tag2_ht)
-	{
-		/* init a hash-table based on strings */
-		//tag2_ht = g_hash_table_new(g_str_hash, g_str_equal);
-	}
-
 	cmo = cfg_get_key_list(config, "tag2-browsers");
 	for(iter=cmo;iter;iter = iter->next)
 	{
@@ -207,10 +198,7 @@ static void tag2_set_enabled(int enabled)
 static void tag2_destroy()
 {
 	/* clear all the browsers */	
-//	g_hash_table_foreach(tag2_ht,(GHFunc)tag2_destroy_browser, NULL);
 	g_list_foreach(tag2_ht, (GFunc)tag2_destroy_browser, NULL);
-	/* free the hash table */
-	//g_hash_table_destroy(tag2_ht);
 	g_list_free(tag2_ht);
 	tag2_ht = NULL;
 }
@@ -454,7 +442,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	g_list_free(browser->tag_lists);
 	/* destroy the container */
 	if(browser->tag2_vbox) {
-		//gtk_widget_destroy(browser->tag2_vbox);
 		g_object_unref(browser->tag2_vbox);
 	}
 	/* clear structure */
@@ -507,7 +494,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute(column, renderer, "text", MPDDATA_MODEL_COL_SONG_TITLE);
-	gtk_tree_view_insert_column(GTK_TREE_VIEW(te->tree),column, -1);//, name,renderer, "text", MPDDATA_MODEL_COL_SONG_TITLE, NULL);
+	gtk_tree_view_insert_column(GTK_TREE_VIEW(te->tree),column, -1);
 	/* set the search column */
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(te->tree), MPDDATA_MODEL_COL_SONG_TITLE);
 
@@ -843,13 +830,11 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer data)
 static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	if(tag2_ht)
-		//g_hash_table_foreach(tag2_ht,(GHFunc)tag2_clear, NULL);
 		g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
 	/*tag2_clear();*/
 	if(connect && tag2_ht)
 	{
 		/* create tags */
-//		g_hash_table_foreach(tag2_ht,(GHFunc)tag2_connection_changed_foreach, NULL);
 		g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
 
 	}
@@ -942,7 +927,6 @@ static void tag2_pref_add_browser_clicked(GtkWidget *but, GtkComboBox *combo)
 
 	tag2_browser_add_browser(GTK_WIDGET(pl3_tree),name);
 
-	//tag_browser *tb = g_hash_table_lookup(tag2_ht, name);
 	GList *node = g_list_find_custom(tag2_ht, name, (GCompareFunc)tag2_custom_find);
 	if(node)
 	{
@@ -1050,7 +1034,6 @@ static void tag2_pref_browser_remove(GtkWidget *but, GtkComboBox *box)
 
 		key = g_strdup(tb->key);
 		/* remove from browser list */
-//		g_hash_table_remove(tag2_ht, tb->key);
 		tag2_ht = g_list_remove(tag2_ht, tb);
 		/* destroy remaining */
 		tag2_destroy_browser(tb,NULL);	
@@ -1233,7 +1216,7 @@ void tag2_pref_construct(GtkWidget *container)
 		GList *node = g_list_find_custom(tag2_ht, iter->key, (GCompareFunc)tag2_custom_find);
 		if(node)
 		{
-			tag_browser *tb = node->data;//g_hash_table_lookup(tag2_ht, iter->key);
+			tag_browser *tb = node->data;
 			/* add to list */
 			gtk_list_store_append(GTK_LIST_STORE(model), &titer);
 			gtk_list_store_set(GTK_LIST_STORE(model), &titer, 0, iter->key,1,name,2,tb,-1);
@@ -1332,7 +1315,6 @@ static int tag2_browser_add_go_menu(GtkWidget *menu)
 	if(tag2_ht)
 	{
 		counter = 0;
-	//	g_hash_table_foreach(tag2_ht,(GHFunc)tag2_browser_add_go_menu_foreach, menu);
 		g_list_foreach(tag2_ht,(GFunc)tag2_browser_add_go_menu_foreach, menu);
 	return 1;
 	}
