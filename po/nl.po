@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-21 15:43+0100\n"
+"POT-Creation-Date: 2007-12-23 12:18+0100\n"
 "PO-Revision-Date: 2006-11-02 18:24-0000\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -598,28 +598,28 @@ msgstr "Niet ingeslaagd om libmpd in te stellen"
 msgid "Failed to setup libmpd"
 msgstr "Niet ingeslaagd om libmpd in te stellen"
 
-#: ../src/main.c:887
+#: ../src/main.c:889
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
 
-#: ../src/main.c:891
+#: ../src/main.c:893
 #, fuzzy, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Voer uw wachtwoord voor '<hostname>' in"
 
-#: ../src/main.c:911
+#: ../src/main.c:913
 #, fuzzy
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC heeft niet genoeg permissies op de mpd server."
 
-#: ../src/main.c:935 ../src/main.c:958
+#: ../src/main.c:937 ../src/main.c:960
 msgid "error code"
 msgstr ""
 
-#: ../src/main.c:1029
+#: ../src/main.c:1031
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -627,26 +627,26 @@ msgstr ""
 "Gmpc is momenteel verbonden met een versie van Mpd onder de 0.12.0.\n"
 "Misschien werkt het, maar het wordt niet meer ondersteund."
 
-#: ../src/main.c:1036
+#: ../src/main.c:1038
 #, fuzzy
 msgid "<b>Connected to mpd</b>"
 msgstr "Verbonden met"
 
-#: ../src/main.c:1038
+#: ../src/main.c:1040
 #, fuzzy
 msgid "<b>Disconnected from mpd</b>"
 msgstr "Niet verbonden"
 
-#: ../src/main.c:1073
+#: ../src/main.c:1075
 msgid "Error occured during operation"
 msgstr ""
 
 #. Create label
-#: ../src/main.c:1103
+#: ../src/main.c:1105
 msgid "The following error(s) occured:"
 msgstr ""
 
-#: ../src/main.c:1119
+#: ../src/main.c:1121
 #, fuzzy
 msgid "Error Message"
 msgstr "Foutbericht"

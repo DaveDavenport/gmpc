@@ -111,7 +111,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             for(i = 0;i< NUM_COLS;i++)
             { 
                 int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
-                col = self_add_column(self,_(col_names[i]),col_ids[i],conf_pos);
+                col = self_add_column(self,col_names[i],col_ids[i],conf_pos);
                 g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
             }
             q_free(conf_opt);
@@ -248,7 +248,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             }
             else{
                 renderer = gtk_cell_renderer_text_new();
-                column = gtk_tree_view_column_new_with_attributes (columnname, renderer,
+                column = gtk_tree_view_column_new_with_attributes (_(columnname), renderer,
                         "text", valuerow,NULL);
                 g_value_init(&value, G_TYPE_INT);
                 g_value_set_int(&value, PANGO_ELLIPSIZE_END);

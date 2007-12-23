@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-21 15:43+0100\n"
+"POT-Creation-Date: 2007-12-23 12:18+0100\n"
 "PO-Revision-Date: 2007-12-21 14:12+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -624,7 +624,7 @@ msgstr "Nie można wczytać pliku logowania odpluskwiania."
 msgid "Failed to setup libmpd"
 msgstr "Nie można ustawić libmpd"
 
-#: ../src/main.c:887
+#: ../src/main.c:889
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -633,20 +633,20 @@ msgstr ""
 "Nie można ustawić hasła dla: '%s'\n"
 "Spróbuj ponownie."
 
-#: ../src/main.c:891
+#: ../src/main.c:893
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Wprowadź hasło dla: '%s'"
 
-#: ../src/main.c:911
+#: ../src/main.c:913
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC ma niewystarczające prawa dostępu do serwera mpd."
 
-#: ../src/main.c:935 ../src/main.c:958
+#: ../src/main.c:937 ../src/main.c:960
 msgid "error code"
 msgstr "kod błędu"
 
-#: ../src/main.c:1029
+#: ../src/main.c:1031
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -654,24 +654,24 @@ msgstr ""
 "GMPC jest połączony z serwerem mpd w wersji niższej niż 0.12.0\n"
 "Taka konfiguracja może funkcjonować, ale nie jest już wspierana."
 
-#: ../src/main.c:1036
+#: ../src/main.c:1038
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Połączono z mpd</b>"
 
-#: ../src/main.c:1038
+#: ../src/main.c:1040
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Rozłączono z mpd</b>"
 
-#: ../src/main.c:1073
+#: ../src/main.c:1075
 msgid "Error occured during operation"
 msgstr "Napotkano błąd podczas wykonywania operacji"
 
 #. Create label
-#: ../src/main.c:1103
+#: ../src/main.c:1105
 msgid "The following error(s) occured:"
 msgstr "Napotkano następujące błędy:"
 
-#: ../src/main.c:1119
+#: ../src/main.c:1121
 msgid "Error Message"
 msgstr "Wiadomość o błędzie"
 

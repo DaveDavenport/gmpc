@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-21 15:43+0100\n"
+"POT-Creation-Date: 2007-12-23 12:18+0100\n"
 "PO-Revision-Date: 2007-03-03 18:20+0100\n"
 "Last-Translator: Johám-Luís Miguéns Vila <galiza.ceive@gmail.com>\n"
 "Language-Team: Galician\n"
@@ -611,7 +611,7 @@ msgstr "Nom se puido ligar à URL: '%s'"
 msgid "Failed to setup libmpd"
 msgstr "Erro ao configurar libmpd"
 
-#: ../src/main.c:887
+#: ../src/main.c:889
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -620,21 +620,21 @@ msgstr ""
 "Nom se puido estabelecer a palavra-chave em: '%s'\n"
 "Por favor, tenta-o de novo."
 
-#: ../src/main.c:891
+#: ../src/main.c:893
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Introduz a palavra-chave para: '%s'"
 
-#: ../src/main.c:911
+#: ../src/main.c:913
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
-#: ../src/main.c:935 ../src/main.c:958
+#: ../src/main.c:937 ../src/main.c:960
 #, fuzzy
 msgid "error code"
 msgstr "código de erro %i: %s"
 
-#: ../src/main.c:1029
+#: ../src/main.c:1031
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -642,26 +642,26 @@ msgstr ""
 "O gmpc está actualmente conectado a um mpd com versom anterior à 0.12.0.\n"
 "Pode funcionar mais já nom está suportado."
 
-#: ../src/main.c:1036
+#: ../src/main.c:1038
 #, fuzzy
 msgid "<b>Connected to mpd</b>"
 msgstr "Conectado a"
 
-#: ../src/main.c:1038
+#: ../src/main.c:1040
 #, fuzzy
 msgid "<b>Disconnected from mpd</b>"
 msgstr "Desconectado"
 
-#: ../src/main.c:1073
+#: ../src/main.c:1075
 msgid "Error occured during operation"
 msgstr "Ocorreu um erro durante a operaçom"
 
 #. Create label
-#: ../src/main.c:1103
+#: ../src/main.c:1105
 msgid "The following error(s) occured:"
 msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
 
-#: ../src/main.c:1119
+#: ../src/main.c:1121
 msgid "Error Message"
 msgstr "Mensagem de erro"
 
