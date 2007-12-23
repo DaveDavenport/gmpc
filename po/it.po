@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-23 12:21+0100\n"
+"POT-Creation-Date: 2007-12-23 15:29+0100\n"
 "PO-Revision-Date: 2007-05-22 20:49+0200\n"
 "Last-Translator: Corrado Gizzi <corradogizzi@alice.it>\n"
 "Language-Team: Italian\n"
@@ -30,7 +30,7 @@ msgstr "/"
 
 #: ../glade/gmpc.glade.h:2
 msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
-msgstr "<b><span size=\"x-large\">Si e' verificato un errore</span></b>"
+msgstr "<b><span size=\"x-large\">Si è verificato un errore</span></b>"
 
 #: ../glade/gmpc.glade.h:3
 msgid "<b>Crossfade:</b>"
@@ -258,7 +258,7 @@ msgstr "Timeout:"
 
 #: ../glade/gmpc.glade.h:64
 msgid "_Artist"
-msgstr "_Artista:"
+msgstr "_Artista"
 
 #: ../glade/gmpc.glade.h:65
 msgid "_Autoconnect"
@@ -298,7 +298,7 @@ msgstr "_Usa autenticazione"
 
 #: ../glade/gmpc.glade.h:74
 msgid "example"
-msgstr "Esempio"
+msgstr "esempio"
 
 #: ../glade/gmpc.glade.h:75
 msgid "fade time (s):"
@@ -627,7 +627,7 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
-"Fallita impostazione della password in:·'%s'\n"
+"Fallita impostazione della password su: '%s'\n"
 "Per favore ritenta"
 
 #: ../src/main.c:893
@@ -677,8 +677,8 @@ msgid ""
 "A new metadata plugin was added, gmpc will now purge all missing metadata "
 "from the cache"
 msgstr ""
-"Un nuovo plugin per i metadati è stato aggiunto, gmpc rilascerà tutti i "
-"metadati mancanti dalla cache"
+"Un nuovo plugin per i metadati è stato aggiunto, gmpc rilascerà dalla cache "
+"tutti i metadati mancanti"
 
 #: ../src/misc.c:39
 msgid " Total time: "
@@ -755,7 +755,7 @@ msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
-"Impossibile prendere i seguenti tasti multimediali:\n"
+"Impossibile acquisire i seguenti tasti multimediali:\n"
 "\n"
 
 #: ../src/mm-keys.c:340
@@ -806,7 +806,7 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
-"Impossibile prendere il tasto multimediale:\n"
+"Impossibile acquisire il tasto multimediale:\n"
 "\n"
 "\t%s: %s\n"
 "\n"
@@ -851,7 +851,7 @@ msgstr "Tutto del genere"
 #. Add all from file
 #: ../src/mpdinteraction.c:1063
 msgid "All from same directory"
-msgstr "Tutto dalla stessa directory"
+msgstr "Tutto dalla stessa cartella"
 
 #. Create sub menu
 #. Add
@@ -873,7 +873,7 @@ msgstr "<b>MPD sta aggiornando il suo database</b>"
 
 #: ../src/playlist3.c:708
 msgid "<b>MPD finished updating its database</b>"
-msgstr "<b>MPD ha concluso l'aggiornamento del suo database"
+msgstr "<b>MPD ha concluso l'aggiornamento del suo database</b>"
 
 #: ../src/playlist3.c:876 ../src/playlist3.c:1961 ../src/playlist3.c:1967
 msgid "Profile"
@@ -963,7 +963,7 @@ msgstr "MPD ha riscontrato il seguente errore"
 
 #: ../src/playlist3.c:1961
 msgid "added"
-msgstr "Aggiunto"
+msgstr "aggiunto"
 
 #: ../src/playlist3.c:1967
 msgid "changed hostname to:"
@@ -1342,14 +1342,13 @@ msgid "<b>Extension:</b>"
 msgstr "<b>Estensione:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:690
-#, fuzzy
 msgid "<b>Bitrate:</b>"
-msgstr "<b>Data:</b>"
+msgstr "<b>Bitrate:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:693
 #: ../src/browsers/playlist3-metadata-browser.c:2063
 msgid "kbit/sec"
-msgstr ""
+msgstr "kbit/sec"
 
 #.
 #. * Lyrics
@@ -1470,7 +1469,7 @@ msgstr "Aggiungi alla playlist"
 
 #: ../src/browsers/playlist3-tag2-browser.c:75
 msgid "Tag based browser"
-msgstr ""
+msgstr "Browser delle etichette"
 
 #: ../src/egg/eggcellrendererkeys.c:27
 msgid "New accelerator..."
@@ -1502,68 +1501,59 @@ msgstr "Disabilitato"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:36
 msgid "Markup"
-msgstr ""
+msgstr "Contrassegno"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:37
 msgid "Artist"
-msgstr "_Artista:"
+msgstr "Artista"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:38
-#, fuzzy
 msgid "Album"
-msgstr "A_lbum"
+msgstr "Album"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:39
-#, fuzzy
 msgid "Title"
-msgstr "_Titolo"
+msgstr "Titolo"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:40
-#, fuzzy
 msgid "File"
-msgstr "_Titolo"
+msgstr "File"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:41
 msgid "Genre"
-msgstr ""
+msgstr "Genere"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:42
-#, fuzzy
 msgid "Track"
-msgstr "T_raccia"
+msgstr "Traccia"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:44
-#, fuzzy
 msgid "Composer"
-msgstr "<b>Compositore:</b>"
+msgstr "Compositore"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:45
-#, fuzzy
 msgid "Performer"
-msgstr "<b>Esecutore:</b>"
+msgstr "Esecutore"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:46
-#, fuzzy
 msgid "Date"
-msgstr "_Data"
+msgstr "Data"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:47
-#, fuzzy
 msgid "Duration"
-msgstr "Funzione"
+msgstr "Durata"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:48
-#, fuzzy
 msgid "Disc"
-msgstr "Vari"
+msgstr "Disco"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:49
 msgid "Comment"
-msgstr ""
+msgstr "Commento"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:50
 msgid "Icon Id"
-msgstr ""
+msgstr "Id dell'icona"
 
 #: ../src/gob/gmpc-profiles.gob:53
 msgid "Added profile"
@@ -1620,60 +1610,3 @@ msgstr "Tutto"
 #: ../src/gob/gmpc-metaimage.gob:604
 msgid "Images"
 msgstr "Immagini"
-
-#~ msgid "Advanced"
-#~ msgstr "Avanzato"
-
-#~ msgid "Has Up"
-#~ msgstr "Ha sopra"
-
-#~ msgid "Show an 'up row"
-#~ msgstr "Mostra una riga sopra"
-
-#~ msgid "The current playlist name"
-#~ msgstr "Il nome della playlist corrente"
-
-#~ msgid "Loading Cover Icon"
-#~ msgstr "Caricamento icona copertina"
-
-#~ msgid "Stock icon to use when loading a cover"
-#~ msgstr "Icona di riserva da usare durante il caricamento della copertina"
-
-#~ msgid "No Cover Icon"
-#~ msgstr "Nessuna icona di copertina"
-
-#~ msgid "Stock icon to use when no cover is present"
-#~ msgstr "Icona di riserva da usare durante il caricamento della copertina"
-
-#~ msgid "Image type"
-#~ msgstr "Tipo di immagine"
-
-#~ msgid "Type of the image, like artist art"
-#~ msgstr "Tipo dell'immagine, come arte dell'artista"
-
-#~ msgid "Size"
-#~ msgstr "Dimensione"
-
-#~ msgid "Size of the image"
-#~ msgstr "Dimesione dell'immagine"
-
-#~ msgid "HideOnNA"
-#~ msgstr "NascondiSeND"
-
-#~ msgid "Hide the image when not available"
-#~ msgstr "Nascondi l'immagine quando non disponibile"
-
-#~ msgid "A mpdObj to check on"
-#~ msgstr "Un mpdObj da controllare"
-
-#~ msgid "DrawBorder"
-#~ msgstr "DisegnaBordo"
-
-#~ msgid "Draw a border around the image"
-#~ msgstr "Disegna un bordo attorno all'immagine"
-
-#~ msgid "DrawShadow"
-#~ msgstr "DisegnaOmbra"
-
-#~ msgid "Draw a shadow under the image"
-#~ msgstr "Disegna un'ombra sotto l'immagine"
