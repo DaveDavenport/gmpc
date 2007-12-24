@@ -32,7 +32,7 @@ void preferences_window_destroy(void);
 
 int plugin_last;
 
-static void pref_plugin_changed()
+static void pref_plugin_changed(void)
 {
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
 	GtkTreeModel *model = GTK_TREE_MODEL(plugin_store);

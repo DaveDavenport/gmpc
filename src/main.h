@@ -28,15 +28,13 @@
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 
-#include "browsers/playlist3-playlist-editor.h"
+
 /* as internall plugin */
+#include "browsers/playlist3-playlist-editor.h"
 #include "browsers/playlist3-file-browser.h"
 #include "browsers/playlist3-find2-browser.h"
 #include "browsers/playlist3-find3-browser.h"
 #include "browsers/playlist3-tag2-browser.h"
-#ifdef ARTIST_BROWSER
-#include "browsers/playlist3-artist-browser.h"
-#endif
 #include "browsers/playlist3-current-playlist-browser.h"
 
 
@@ -97,10 +95,6 @@ enum{
 	TIME_FORMAT_PERCENTAGE
 };
 
-/* main.h*/
-void main_trigger_update();
-
-void pl3_highlight_song_change ();
 char * edit_song_markup(char *format);
 
 gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);

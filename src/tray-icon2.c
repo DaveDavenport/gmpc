@@ -672,7 +672,7 @@ void tray_enable_toggled(GtkToggleButton *but)
 }
 
 /* this sets all the settings in the notification area preferences correct */
-static void tray_update_settings()
+static void tray_update_settings(void)
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_tray_enable"), 
@@ -696,7 +696,7 @@ void popup_timeout_changed(void)
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_icon2_preferences_xml, "popup_timeout"))));
 }
 
-static void update_popup_settings()
+static void update_popup_settings(void)
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
 			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_popup_enable"),

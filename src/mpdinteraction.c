@@ -307,7 +307,7 @@ static void outputs_toggled(GtkCellRendererToggle *cell, gchar *path_str, GtkTre
 	gtk_tree_path_free(path);
 }
 
-static void create_outputs_tree()
+static void create_outputs_tree(void)
 {
 	GtkListStore *model;
 	GtkCellRenderer *cell;
@@ -338,7 +338,7 @@ static void create_outputs_tree()
 	gtk_tree_view_column_set_visible(col, FALSE);
 	gtk_tree_view_append_column(tree, col);
 }
-static void update_outputs_settings()
+static void update_outputs_settings(void)
 {
 	GtkTreeIter iter;
 	GtkListStore *store;
@@ -396,7 +396,7 @@ void xfade_time_changed(GtkSpinButton *but)
 	}
 	mpd_status_set_crossfade(connection, fade_time);
 }
-static void xfade_update()
+static void xfade_update(void)
 {
 	if(mpd_status_get_crossfade(connection) > 0)
 	{

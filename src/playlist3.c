@@ -138,7 +138,7 @@ int  pl3_cat_get_selected_browser()
 /**************************************************
  * Category Tree
  */
-static void pl3_initialize_tree()
+static void pl3_initialize_tree(void)
 {
 	int i;
 	if(pl3_xml == NULL) return;

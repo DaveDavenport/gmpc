@@ -32,11 +32,6 @@ enum {
 };
 
 GtkListStore *playlist_editor_store = NULL;
-/**
- * Functions from gmpc 
- */
-int connection_get_port();
-char *connection_get_hostname();
 
 /**
  * Enable/Disable plugin
