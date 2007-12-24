@@ -13,6 +13,7 @@ extern config_obj *config;
 extern GmpcProfiles *gmpc_profiles;
 
 /* Plugin Type's */
+/* This is a bitmask.*/
 typedef enum {
 	GMPC_PLUGIN_DUMMY		= 1,
 	GMPC_PLUGIN_PL_BROWSER	= 2,
@@ -21,16 +22,6 @@ typedef enum {
 	GMPC_DEPRECATED			= 16,
 	GMPC_PLUGIN_META_DATA	= 32
 } PluginType;
-
-/* usefull defines */
-#define PL3_ENTRY_DIR_UP 128
-#define PL3_ENTRY_ALBUM 64
-#define PL3_ENTRY_ARTIST 32
-#define PL3_ENTRY_DIRECTORY 16
-#define PL3_CUR_PLAYLIST 8
-#define PL3_ENTRY_STREAM 4
-#define PL3_ENTRY_PLAYLIST 2
-#define PL3_ENTRY_SONG 1
 
 /* the gtk_tree_store row's */
 typedef enum
@@ -45,8 +36,6 @@ typedef enum
 	PL3_CAT_ORDER, /* int for sorting the list */
 	PL3_CAT_NROWS
 } pl3_cat_store;
-
-
 
 /* structures */
 /** gmpcPrefPlugin: need to be instant apply.

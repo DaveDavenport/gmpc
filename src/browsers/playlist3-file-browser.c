@@ -1018,8 +1018,8 @@ static void pl3_file_browser_add_selected()
             {
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);
-                if(type&PL3_ENTRY_DIRECTORY) dirs++;
-                if(type&PL3_ENTRY_SONG) songs++;
+                if(type==MPD_DATA_TYPE_DIRECTORY) dirs++;
+                if(type==MPD_DATA_TYPE_SONG) songs++;
             }
             else if (type == MPD_DATA_TYPE_PLAYLIST)
             {

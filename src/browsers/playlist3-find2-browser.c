@@ -538,7 +538,7 @@ static void pl3_find2_browser_add_selected()
             gtk_tree_model_get_iter (model, &iter, path);
             gtk_tree_model_get (model, &iter,MPDDATA_MODEL_COL_PATH,&name,MPDDATA_MODEL_ROW_TYPE, &type, -1);	  
             /* does this bitmask thingy works ok? I think it hsould */
-            if(type&(PL3_ENTRY_SONG))
+            if(type == MPD_DATA_TYPE_SONG)
             {
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);
