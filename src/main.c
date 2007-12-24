@@ -111,8 +111,6 @@ config_obj *config = NULL;
  */
 MpdObj *connection = NULL;
 
-void connect_callback(MpdObj *mi);
-
 /* Glade prototypes, these would be static otherwise */
 void send_password(void);
 
@@ -924,6 +922,7 @@ void send_password()
 {
 	password_dialog(FALSE);
 }
+
 static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
@@ -964,11 +963,6 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	}
 }
 
-void connect_callback(MpdObj *mi)
-{
-	playlist3_close_error();
-}
-
 /**
  * handle a connection changed 
  */
@@ -978,6 +972,10 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
     if(mpd_check_connected(mi) != connect)
     {
         debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connect, connect);
+    }
+    if(connect)
+    {
+        playlist3_close_error();
     }
     /* remove this when it does not fix it */
     gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));

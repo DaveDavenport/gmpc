@@ -10,7 +10,7 @@ static int ignore = FALSE;
 G_LOCK_DEFINE (connecting_lock);
 
 /* old stuff */
-static void preferences_update(void);
+static void preferences_update(MpdObj *mi, int connect, void *userdata);
 
 /* Server Settings plugin */
 static void server_pref_construct(GtkWidget *);
@@ -20,7 +20,6 @@ static void server_pref_destroy(GtkWidget *);
 static void connection_pref_construct(GtkWidget *container);
 static void connection_pref_destroy(GtkWidget *container);
 
-static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data);
 static void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 static GladeXML *server_pref_xml = NULL;
@@ -59,8 +58,8 @@ gmpcPlugin server_plug = {
 	NULL,				/** init */
         NULL,                           /** Destroy */
 	NULL,				/** browser ext */
-	&ServerStatusChangedCallback,	/** status changed */
-	&ServerConnectionChangedCallback,	/** connection changed */
+	ServerStatusChangedCallback,	/** status changed */
+	preferences_update,	/** connection changed */
 	&server_gpp,			/** preferences */
 	NULL,				/** Metadata */
 	NULL,				/** get enabled */
@@ -191,17 +190,6 @@ int connect_to_mpd()
 
 	return FALSE;
 }
-
-/* DEFAULT FUNCTIONS */
-static void ServerConnectionChangedCallback(MpdObj *mi, int connected, gpointer data)
-{
-	if(connected)
-	{
-		connect_callback(mi);
-	}
-	preferences_update();
-}
-
 
 /******************************************************
  * PLAYER FUNCTIONS
@@ -600,15 +588,10 @@ static void server_pref_construct(GtkWidget *container)
 /**************************************************
  * Connection Preferences *
  */
-/* this function is called from the main loop, it makes sure stuff is up-to-date(r) */
-
-
-
-
-static void preferences_update()
+static void preferences_update(MpdObj *mi, int connect, void *userdata)
 {
 	if(connection_pref_xml == NULL) return;
-	if(!mpd_check_connected(connection))
+	if(!connect)
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_con"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(connection_pref_xml, "bt_dis"), FALSE);

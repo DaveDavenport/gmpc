@@ -169,7 +169,6 @@ void create_preferences_window()
 		}
 	}
 	/* plugins */
-/*	if(plugs) */
 	{
 		GtkTreeIter iter;
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
