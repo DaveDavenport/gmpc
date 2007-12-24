@@ -1062,9 +1062,7 @@
 			  <property name="hover_selection">False</property>
 			  <property name="hover_expand">False</property>
 			  <signal name="button_press_event" handler="pl3_cat_tree_button_press_event"/>
-			  <signal name="row_expanded" handler="pl3_cat_row_expanded"/>
 			  <signal name="key_press_event" handler="pl3_cat_key_press_event"/>
-			  <signal name="row_activated" handler="pl3_cat_row_activated"/>
 			  <signal name="button_release_event" handler="pl3_cat_tree_button_release_event"/>
 			</widget>
 		      </child>

@@ -50,15 +50,11 @@ static void playlist_editor_set_enabled(int enabled)
  * Browser extention 
  */
 gmpcPlBrowserPlugin playlist_editor_gbp = {
-  playlist_editor_browser_add,   /* Add */
-  playlist_editor_browser_selected,   /* Selected */
-  playlist_editor_browser_unselected,   /* Unselected */
-  playlist_editor_browser_changed,   /* Changed */
-  NULL,
-  playlist_editor_browser_cat_menu,   /* */
-  NULL,   /* cat key press */
-  playlist_editor_add_go_menu, 
-  NULL 
+  .add = playlist_editor_browser_add,   /* Add */
+  .selected = playlist_editor_browser_selected,   /* Selected */
+  .unselected = playlist_editor_browser_unselected,   /* Unselected */
+  .cat_right_mouse_menu = playlist_editor_browser_cat_menu,   /* */
+  .add_go_menu = playlist_editor_add_go_menu
 };
 
 gmpcPlugin playlist_editor_plugin = {
@@ -601,12 +597,6 @@ void playlist_editor_browser_unselected(GtkWidget *container)
 {
     gtk_container_remove(GTK_CONTAINER(container), playlist_editor_browser);
 }
-
-void playlist_editor_browser_changed(GtkWidget *tree, GtkTreeIter *iter)
-{
-    playlist_editor_fill_list();
-}
-
 
 int playlist_editor_browser_cat_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {

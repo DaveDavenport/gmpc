@@ -8,6 +8,7 @@
 
 #define PLUGIN_ID_MARK 1024
 #define PLUGIN_ID_INTERNALL 2048
+/* Usefull signal objects. */
 extern MpdObj *connection;
 extern config_obj *config;
 extern GmpcProfiles *gmpc_profiles;
@@ -60,14 +61,6 @@ typedef struct {
 	 * if unselected, you need to remove youself from the container
 	 */
 	void (*unselected)				(GtkWidget *container);
-	/**
-	 * if selection changed, but still the same plugin 
-	 */
-	void (*cat_selection_changed)	(GtkWidget *tree, GtkTreeIter *iter);
-	/**
-	 * if the user expands the tree.
-	 */
-	void (*cat_row_expanded)		(GtkWidget *tree,GtkTreeIter *iter);
 	int  (*cat_right_mouse_menu)	(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
 	void (*cat_key_press)			(GtkWidget *tree, GdkEventKey *event, int selected_type);
 	/****** GO MENU ********/
@@ -84,7 +77,7 @@ typedef struct {
 /* Unique number */
 /* 16 == 0.14 release */
 /* 17 == 0.15.5 release */
-#define PLUGIN_API_VERSION 18
+#define PLUGIN_API_VERSION 19
 
 /* sturcture */
 typedef struct {

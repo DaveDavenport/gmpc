@@ -18,32 +18,16 @@ void pl3_push_statusbar_message(char *mesg);
 
 
 gmpcPlBrowserPlugin url_gpb  = {
-	NULL, /**Add */
-	NULL, /** Selected */
-	NULL, /** Unselected */
-	NULL, /** slection changed */ 
-	NULL, /** expanded */ 
-	url_right_mouse_menu, /* right mouse menu */
-	NULL, /** cat key press */
-	NULL, /** add go menu */
-	NULL /** key press event */ 
+	.cat_right_mouse_menu = url_right_mouse_menu
 };
 
 gmpcPlugin url_plugin = {
-	"Url Parser Plugin",
-	{0,0,3},
-	GMPC_PLUGIN_PL_BROWSER,
-	0,  	/* plugin id */
-	NULL,   /* path to plugin */
-	NULL,   /* initialization */
-        NULL,   /* Destroy */
-	&url_gpb, /* browser intergration */
-	NULL,	/* status changed */
-	NULL,	/* connection changed */
-	NULL,	/* preferences */
-	NULL,	/* Metadata */
-	url_get_enabled,
-	url_set_enabled
+	.name = "Url Parser Plugin",
+	.version = {0,0,3},
+	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
+	.browser = &url_gpb, /* browser intergration */
+	.get_enabled = url_get_enabled,
+	.set_enabled = url_set_enabled
 };
 
 static int url_get_enabled(void)

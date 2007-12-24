@@ -116,6 +116,7 @@ void send_password(void);
 
 /* hack */
 extern guint sel_changed_handler_id;
+
 /**
  * Set paths
  */
@@ -580,30 +581,23 @@ int main (int argc, char **argv)
     /**
      *  load dynamic plugins 
      */
+    if(load_plugins)
+    {
 #ifdef WIN32
 	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
     url = g_build_filename(packagedir, "data", "plugins", NULL);
 	q_free(packagedir);
-/*
-//#else
 
-	url = g_build_path(G_DIR_SEPARATOR_S, GLADE_PATH,"plugins",NULL);
-//#endif
-    */
-    if(load_plugins)
-        plugin_load_dir(url);
-	q_free(url);
-#endif
-#ifndef WIN32
+    plugin_load_dir(url);
+    q_free(url);
+#else
     /* This is the right location to load gmpc plugins */
-    if(load_plugins)
-    {
-        url = g_build_path(G_DIR_SEPARATOR_S,PACKAGE_LIB_DIR, "plugins",NULL);
-        plugin_load_dir(url);
-        q_free(url);
-    }
+    url = g_build_path(G_DIR_SEPARATOR_S,PACKAGE_LIB_DIR, "plugins",NULL);
+    plugin_load_dir(url);
+    q_free(url);
 #endif
+    }
 	/* user space dynamic plugins */
 	url = gmpc_get_user_path("plugins");
 	/**

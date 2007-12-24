@@ -59,15 +59,11 @@ int pl3_find2_last_entry = MPD_TAG_ITEM_ANY;
  * Plugin structure
  */
 gmpcPlBrowserPlugin find2_browser_gbp = {
-	pl3_find2_browser_add,
-	pl3_find2_browser_selected,
-	pl3_find2_browser_unselected,
-	NULL,//pl3_find2_browser_category_selection_changed,
-	NULL,
-	NULL,
-	NULL,
-	pl3_find2_browser_add_go_menu,
-	pl3_find2_browser_key_press_event
+	.add = pl3_find2_browser_add,
+	.selected = pl3_find2_browser_selected,
+	.unselected = pl3_find2_browser_unselected,
+	.add_go_menu = pl3_find2_browser_add_go_menu,
+	.key_press_event = pl3_find2_browser_key_press_event
 };
 
 gmpcPlugin find2_browser_plug = {

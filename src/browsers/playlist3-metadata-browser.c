@@ -58,15 +58,11 @@ typedef struct {
 
 /* Needed plugin_wp stuff */
 gmpcPlBrowserPlugin info2_gbp = {
-	info2_add,		/** add */
-	info2_selected,		/** selected */
-	info2_unselected,	/** unselected */
-	NULL,			/** changed */
-	NULL,			/** row expand */
-	NULL,			/** cat right mouse menu */ 
-	NULL,			/** cat key press */
-	info2_add_go_menu,	/** add go menu */
-	info2_key_press_event	/** key press event */		
+	.add = info2_add,		/** add */
+	.selected = info2_selected,		/** selected */
+	.unselected = info2_unselected,	/** unselected */
+	.add_go_menu = info2_add_go_menu,	/** add go menu */
+	.key_press_event = info2_key_press_event	/** key press event */		
 };
 gmpcPlugin metab_plugin = {
 	.name = 				"Metadata Browser",

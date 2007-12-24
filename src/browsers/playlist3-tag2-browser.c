@@ -39,7 +39,7 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
 /* intergration in gmpc */
 static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
-static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter);
+/*static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter);*/
 static int tag2_browser_add_go_menu(GtkWidget *menu);
 
 /**
@@ -66,7 +66,7 @@ gmpcPrefPlugin tag2_prefs = {
 gmpcPlBrowserPlugin tag2_browser_plugin ={
 	.add = tag2_browser_add,
 	.selected = tag2_browser_selected,
-	.cat_selection_changed = tag2_browser_selection_changed,
+	/*.cat_selection_changed = tag2_browser_selection_changed,*/
 	.unselected = tag2_browser_unselected,
 	.add_go_menu = tag2_browser_add_go_menu
 };
@@ -852,7 +852,7 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
         }
     }
 }
-
+/*
 static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
 {
 	if(tag2_current)
@@ -862,6 +862,7 @@ static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
 		tag2_browser_selected(container);
 	}
 }
+*/
 /**
  * Preferences window
  */

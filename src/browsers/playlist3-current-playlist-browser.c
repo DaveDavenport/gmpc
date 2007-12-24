@@ -95,15 +95,12 @@ static void pl3_cp_init()
 }
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
-	pl3_current_playlist_browser_add,
-	pl3_current_playlist_browser_selected,
-	pl3_current_playlist_browser_unselected,
-	NULL,
-	NULL,
-	pl3_current_playlist_browser_cat_menu_popup,
-	NULL,
-	pl3_current_playlist_browser_add_go_menu,
-	pl3_current_playlist_key_press_event
+	.add = pl3_current_playlist_browser_add,
+	.selected = pl3_current_playlist_browser_selected,
+	.unselected = pl3_current_playlist_browser_unselected,
+	.cat_right_mouse_menu = pl3_current_playlist_browser_cat_menu_popup,
+	.add_go_menu = pl3_current_playlist_browser_add_go_menu,
+	.key_press_event = pl3_current_playlist_key_press_event
 };
 
 

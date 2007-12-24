@@ -28,27 +28,33 @@
 #include "misc.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
-#include "browsers/playlist3-file-browser.h"
-#include "browsers/playlist3-current-playlist-browser.h"
 #include "revision.h"
 #include "gmpc-clicklabel.h"
+
+/* Drag and drop Target table */
+static GtkTargetEntry target_table[] = 
+{
+    { "x-url/http", 0, 0 },
+	{ "_NETSCAPE_URL", 0, 1},
+	{ "text/uri-list", 0, 2},
+	{ "internal-drop",0,99}
+};
+
+
+
+
+
 guint sel_changed_handler_id = 0;
-/*static gboolean pl3_cat_editor_vis_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);*/
 
 
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
-gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data);
-gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
+
+static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
+
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
-static GtkTargetEntry target_table[] = {
-        { "x-url/http", 0, 0 },
-	{ "_NETSCAPE_URL", 0, 1},
-	{ "text/uri-list", 0, 2},
-	{ "internal-drop",0,99}
-};
 
 void set_browser_format(void);
 void set_playlist_format(void);
@@ -62,8 +68,6 @@ int pl3_old_zoom = PLAYLIST_NO_ZOOM;
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
-void pl3_cat_row_activated(GtkTreeView *, GtkTreePath *, GtkTreeViewColumn *);
-void pl3_cat_row_expanded(GtkTreeView *, GtkTreeIter *, GtkTreePath *);
 int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
 int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
 int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
@@ -104,6 +108,7 @@ GtkAllocation pl3_wsize = { 0,0,0,0};
 int pl3_hidden = TRUE;
 
 static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+
 /* Playlist "Plugin" */
 static void playlist_pref_construct(GtkWidget *container);
 static void playlist_pref_destroy(GtkWidget *container);
@@ -175,54 +180,6 @@ static void pl3_initialize_tree(void)
 	gtk_tree_path_free(path);
 }
 
-void pl3_cat_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col)
-{
-	gint type = pl3_cat_get_selected_browser();
-	if(!mpd_check_connected(connection) || type == -1)
-	{
-		return;
-	}
-
-	if(gtk_tree_view_row_expanded(tree,tp))
-	{
-		gtk_tree_view_collapse_row(tree,tp);
-	}
-	else
-	{
-		gtk_tree_view_expand_row(tree,tp,FALSE);
-	}
-}
-
-
-void pl3_cat_row_expanded(GtkTreeView *tree, GtkTreeIter *iter, GtkTreePath *path)
-{
-	gint type,read;
-	gtk_tree_model_get(GTK_TREE_MODEL(pl3_tree), iter, 0, &type,4,&read, -1);
-	/* check if the connection isnt down */
-	if(!mpd_check_connected(connection))
-	{
-		/* if connection down, don't let the treeview open */
-		gtk_tree_view_collapse_row(tree,path);
-		return;
-	}
-	if(!read)
-	{
-		if(plugins[plugin_get_pos(type)]->browser != NULL)
-		{
-			if(plugins[plugin_get_pos(type)]->browser->cat_row_expanded != NULL)
-			{
-				plugins[plugin_get_pos(type)]->browser->cat_row_expanded(GTK_WIDGET(tree), iter);
-			}
-		}
-	}
-	/* avuton's Idea */
-	if(cfg_get_single_value_as_int_with_default(config, "playlist", "open-to-position",0))
-	{
-		gtk_tree_view_scroll_to_cell(tree, path,gtk_tree_view_get_column(tree,0),TRUE,0.5,0);
-	}
-}
-
-
 static void pl3_cat_combo_changed(GtkComboBox *box)
 {
 	GtkTreeIter iter;
@@ -281,7 +238,7 @@ void pl3_cat_sel_changed()
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	GtkTreeIter iter;
 	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
-	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
+	/*GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");*/
 
 	GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
 
@@ -328,10 +285,11 @@ void pl3_cat_sel_changed()
 		/**
 		 * now give a selection changed signal 
 		 */
-		if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
+		/*if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
 		{
 			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
 		}
+        */
 	}
 	else
 	{
@@ -1817,22 +1775,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
     }
 }
 
-
-gboolean pl3_progress_scroll_event(GtkWidget *pb, GdkEventScroll *event, gpointer data)
-{
-	if(event->direction == GDK_SCROLL_UP)
-	{
-		seek_ps(5);	
-	}
-	else if (event->direction == GDK_SCROLL_DOWN)
-	{
-		seek_ns(5);
-	}
-
-
-	return TRUE;
-}
-
 void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton *event)
 {
 	mpd_Song *song = NULL;
@@ -1845,7 +1787,6 @@ void playlist_player_cover_art_pressed(GtkEventBox *event_widget, GdkEventButton
 		info2_activate();
 		info2_fill_song_view(song);	
 	}
-	/*call_id3_window(mpd_player_get_current_song_id(connection));*/
 }
 
 static void playlist_player_volume_changed(BaconVolumeButton *vol_but)
@@ -2235,7 +2176,7 @@ void playlist3_update_header(void)
 
 
 
-gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
+static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
 {
 	int width = wid->allocation.width;
 	int height = wid->allocation.height;
