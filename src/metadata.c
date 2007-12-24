@@ -87,7 +87,6 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
                 if(edited->artist)
                     g_free(edited->artist);
                 edited->artist = g_strdup("Various Artists");
-                printf("collection detected\n");
             }
         }
     }
