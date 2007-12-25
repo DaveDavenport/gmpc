@@ -477,7 +477,9 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     }
     else
     {
-        gtk_cell_renderer_set_fixed_size(te->image_renderer, -1,-1);
+        int width, height;
+        gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
+        gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
 	    gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
     }
 
@@ -561,6 +563,9 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     }
     else
     {
+        int width, height;
+        gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
+        gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
 	    gtk_tree_view_column_add_attribute(column, renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
         gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
     }
