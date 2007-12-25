@@ -264,7 +264,7 @@ void pl3_cat_sel_changed()
 		/**
 		 * Start switching side view (if type changed )
 		 */
-		if(old_type != type )
+	//	if(old_type != type )
 		{
 			if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected != NULL)
 			{
