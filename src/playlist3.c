@@ -30,6 +30,7 @@
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
+#include <gmpc-liststore-sort.h>
 
 /* Drag and drop Target table */
 static GtkTargetEntry target_table[] = 
@@ -1012,7 +1013,7 @@ void create_playlist3 ()
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
-		pl3_tree = gtk_list_store_new (PL3_CAT_NROWS, 
+		pl3_tree = gmpc_liststore_sort_new (PL3_CAT_NROWS, 
 				G_TYPE_INT,	/* row type, see free_type struct */
 				G_TYPE_STRING, /* display name */
 				G_TYPE_STRING,/* full path and stuff for backend */
@@ -1029,7 +1030,7 @@ void create_playlist3 ()
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
-//    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
+    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
