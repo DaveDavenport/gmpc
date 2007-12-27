@@ -326,7 +326,8 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
 	GtkWidget *label;
 	label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label), name);
-	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+	gtk_misc_set_alignment(GTK_MISC(label),0,0);
+    
 	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	label = gtk_label_new(value);
     if(selectable)
