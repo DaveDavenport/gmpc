@@ -938,12 +938,13 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	else
 	{
         printf("error: %i\n", error_id);
+        /*
 		if(error_id == MPD_ACK_ERROR_NO_EXIST)
 		{
-			/* quick hack so a small playlist out of sync is handled nicer */
 			return;
 		}
-		else if(error_id == MPD_ACK_ERROR_PASSWORD)
+		else */
+            if(error_id == MPD_ACK_ERROR_PASSWORD)
 		{
 			password_dialog(TRUE);
 		}
