@@ -829,7 +829,8 @@ static void pl3_current_playlist_save_playlist ()
                 /* also check if there is a connection */
                 if (strlen (str) != 0 && mpd_check_connected(connection))
                 {
-                    if(mpd_database_save_playlist(connection, str) == MPD_DATABASE_PLAYLIST_EXIST )
+                    int retv = mpd_database_save_playlist(connection, str);
+                    if(retv == MPD_DATABASE_PLAYLIST_EXIST )
                     {
                         gchar *errormsg = g_strdup_printf(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
                         gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
@@ -852,6 +853,10 @@ static void pl3_current_playlist_save_playlist ()
                         gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
 
                         q_free(errormsg);
+                    }
+                    else if (retv != MPD_OK)
+                    {
+                        playlist3_show_error_message(_("Failed to save the playlist file."), ERROR_WARNING);
                     }
                     else 
                     {

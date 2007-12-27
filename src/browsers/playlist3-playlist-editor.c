@@ -355,9 +355,10 @@ static void playlist_editor_new_playlist(GtkWidget *item, gpointer data)
 		switch(gtk_dialog_run(GTK_DIALOG(dialog)))
 		{
 			case GTK_RESPONSE_ACCEPT:
-        g_object_set_data_full(G_OBJECT(item), "playlist", g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))), g_free);
-				mpd_database_playlist_clear(connection, gtk_entry_get_text(GTK_ENTRY(entry)));
+                g_object_set_data_full(G_OBJECT(item), "playlist", g_strdup(gtk_entry_get_text(GTK_ENTRY(entry))), g_free);
+                mpd_database_playlist_clear(connection, gtk_entry_get_text(GTK_ENTRY(entry)));
 				playlist_editor_fill_list();
+
 			default:
 				done = TRUE;
 				break;
