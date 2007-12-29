@@ -360,21 +360,22 @@ static unsigned long pl3_find2_browser_view_browser()
         {
             gchar **splitted = NULL;
             int i =0;
-            if(!found)
-            {
-                mpd_database_search_start(connection, FALSE);
-                found = TRUE;
-            }
+
             gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
 
             splitted = tokenize_string(name);//g_strsplit(name, " ",0);
             for(i=0;splitted && splitted[i];i++)
             {
+                if(!found)
+                {
+                    mpd_database_search_start(connection, FALSE);
+                    found = TRUE;
+                }
                 mpd_database_search_add_constraint(connection, num_field, splitted[i]);
             }
             //mpd_database_search_add_constraint(connection, num_field, (char *)name);
-
-            g_strfreev(splitted);
+            if(splitted)
+                g_strfreev(splitted);
             /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
             {
                 GtkTreeIter iter;

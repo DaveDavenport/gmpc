@@ -543,21 +543,22 @@ static unsigned long pl3_find3_browser_view_browser()
                 int num_field;
                 gchar **splitted = NULL;
                 int i =0;
-                if(!found)
-                {
-                    mpd_playlist_search_start(connection, FALSE);
-                    found = TRUE;
-                }
-                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
-
                 splitted = tokenize_string(name);// g_strsplit(name, " ",0);
-                for(i=0;splitted[i];i++)
-                {
+                for(i=0;splitted && splitted[i];i++)
+                {                                                          
+                    if(!found)
+                    {
+                        mpd_playlist_search_start(connection, FALSE);
+                        found = TRUE;
+                    }
+                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find3_combo_store),&cc_iter , 0, &num_field, -1);
+
                     mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
                 }
 
                 //mpd_playlist_search_add_constraint(connection, num_field, name);
-                g_strfreev(splitted);
+                if(splitted)
+                    g_strfreev(splitted);
                 {
                     GtkTreeIter iter;
                     gboolean found2 = FALSE;
