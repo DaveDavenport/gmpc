@@ -263,7 +263,7 @@ requires 2.0.0
             iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
             iter->user_data2 = GINT_TO_POINTER(n+1);
             g_assert(n < self->num_rows);
-
+            g_assert(iter->user_data != NULL);
             return TRUE;
         }
 
@@ -910,5 +910,174 @@ requires 2.0.0
             }
         }
 
-}
+        private
+        int
+        test_sort_func(gpointer ppaa, gpointer ppbb, Self *self)
+        {
+            MpdData_real *a = *(MpdData_real **)ppaa;
+            MpdData_real *b = *(MpdData_real **)ppbb;
+            return strcmp(a->tag, b->tag); 
+        }
 
+        /**
+         * For now this assumes tag list only.
+         */
+    public 
+        long unsigned set_mpd_data_slow (self, MpdData *data2)
+        {                                               
+            MpdData_real *new_list = NULL;
+            int i=0;
+            int items=0;
+            MpdData_real *original = self->_priv->data;
+            MpdData_real *new = data2;
+            GtkTreePath *path =NULL;
+            GtkTreeIter iter;
+
+            /* Free possible stored images */
+            if(self->_priv->images)
+            {
+                for(i=0;i<self->num_rows;i++)
+                {
+                    if(self->_priv->images[i])
+                        g_object_unref(self->_priv->images[i]);
+                }
+                q_free(self->_priv->images);
+            }
+
+            
+
+            /* sort it identical */
+            new = misc_sort_mpddata(data2,(GCompareDataFunc)self_test_sort_func,self ); 
+
+
+           if(new) {
+               MpdData_real *n = new->first;
+               while(n) {
+                   items++;
+                   n = n->next;
+               }
+           }
+           i=0;
+           /* compare lists */
+           if(original)
+           {
+
+               int has_next;
+               do
+               {
+                   has_next = 0;
+                   if(new == NULL)
+                   {
+                       if(self->num_rows > items)
+                       {
+                           /* remove current row */
+                           self->num_rows--;
+                           
+                           path = gtk_tree_path_new();
+                           gtk_tree_path_append_index(path,i);
+
+                           /* propegate change */
+                           gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+                           gtk_tree_path_free(path);
+
+                           original = original->next;
+                           has_next = (original )?1:0;
+                       }
+                   }
+                   else
+                   {
+                       int compare = strcmp(new->tag, original->tag);
+                       if(compare < 0)
+                       {
+                           /* add */
+                           MpdData_real *n = mpd_new_data_struct_append(new_list); 
+                           n->type = MPD_DATA_TYPE_TAG;
+                           n->tag_type = new->tag_type;
+                           n->tag = new->tag;
+                           new->tag = NULL;
+                           new_list = n;
+
+                           /* add */
+                           path = gtk_tree_path_new();
+                           gtk_tree_path_append_index(path,i);
+                           iter.stamp = self->_priv->stamp;
+                           iter.user_data = n;
+                           iter.user_data2 =  GINT_TO_POINTER(i);
+
+                           /* propegate change */
+                           gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                           gtk_tree_path_free(path);
+                           self->num_rows++;
+
+                           new=new->next;
+                           i++;
+                           has_next = 1;
+                       }
+                       else if (compare > 0)
+                       {
+                           path = gtk_tree_path_new();
+                           gtk_tree_path_append_index(path,i);
+                           /* propegate change */
+                           gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+                           gtk_tree_path_free(path);
+                           self->num_rows--;
+
+
+                           original = original->next; 
+                           has_next = (original )?1:0;
+
+                       }else{
+                           new_list = mpd_new_data_struct_append(new_list); 
+                           new_list->type = MPD_DATA_TYPE_TAG;
+                           new_list->tag_type = new->tag_type;
+                           new_list->tag = new->tag;
+                           new->tag = NULL;
+
+                           new = new->next;
+                           original = original->next;
+                           has_next = (original )?1:0;
+                           i++;
+                       }
+                   }            
+               }while(has_next);
+           }
+           /* add entries remaining in new */
+           if(new)
+           {
+               do{
+                   new_list = mpd_new_data_struct_append(new_list); 
+                   new_list->type = MPD_DATA_TYPE_TAG;
+                   new_list->tag_type = new->tag_type;
+                   new_list->tag = new->tag;
+                   new->tag = NULL;
+
+                   /* add */
+                   path = gtk_tree_path_new();
+                   gtk_tree_path_append_index(path,self->num_rows);
+                   iter.stamp = self->_priv->stamp;
+                   iter.user_data = new_list;
+                   iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
+
+                   /* propegate change */
+                   gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                   gtk_tree_path_free(path);
+                   self->num_rows++;
+
+                   new = new->next;
+                   i++;
+               }while(new);
+           }
+           if(self->_priv->data)
+               mpd_data_free(self->_priv->data);
+           self->_priv->data = mpd_data_get_first(new_list);//mpd_data_get_first(original);
+           if(data2)
+               g_assert(self->_priv->data != NULL);
+
+           self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
+           if(data2)
+               mpd_data_free(data2);
+           g_assert(items == self->num_rows);
+                           
+       }
+
+}
