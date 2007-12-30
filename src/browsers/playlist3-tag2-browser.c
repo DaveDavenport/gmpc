@@ -520,12 +520,19 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     {
         MpdData *data;
         list = g_list_first(te->browser->tag_lists);
-        if(list)
+        if(list->next)
         {
-            tag_element *te2 = list->data;
-            mpd_database_search_field_start(connection, te2->type);
+            tag_element *te2 = list->next->data;
+       //     mpd_database_search_field_start(connection, te2->type);
+         //   data = mpd_database_search_commit(connection);
+           // gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
+            tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te2->tree)),te2); 
+        }
+        else
+        {
+            mpd_database_search_field_start(connection, te->type);
             data = mpd_database_search_commit(connection);
-            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
+            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
         }
     }
 
