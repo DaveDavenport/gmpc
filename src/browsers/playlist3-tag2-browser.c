@@ -427,6 +427,17 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
                         data = mpd_data_get_first(data); 
                 }
                 gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te2->model), data);
+                {
+                    GtkTreeSelection *sel = gtk_tree_view_get_selection(te2->tree);
+                    GtkTreeIter iter;
+                    if(gtk_tree_selection_get_selected(sel, &(te2->model), &iter))
+                    {
+                        GtkTreePath *path = gtk_tree_model_get_path(te2->model, &iter);
+                        gtk_tree_view_scroll_to_cell(te2->tree, path, NULL, TRUE, 0.5,0);
+                        gtk_tree_path_free(path);
+                    }
+                }
+
             }
  
         }
