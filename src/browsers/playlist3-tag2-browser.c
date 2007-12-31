@@ -943,6 +943,7 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer data)
 			mpd_database_search_field_start(connection, te->type);
 			data = mpd_database_search_commit(connection);
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+            tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree)),te);
 		}
 	}
 }
