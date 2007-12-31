@@ -17,6 +17,7 @@
 #include "misc.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model.h"
+#include "sexy-icon-entry.h"
 #include <libmpd/libmpd-internal.h>
 
 /**
@@ -175,10 +176,12 @@ typedef struct _tag_element{
     GtkWidget       *vbox;
     GtkCellRenderer *image_renderer;
     GtkTreeViewColumn   *column;
+
+    GtkWidget       *sentry;
 	int				type;
 	int 			index;
 	tag_browser		*browser;
-
+    guint           timeout;
 }tag_element;
 
 
@@ -213,6 +216,8 @@ static void tag2_destroy()
 
 static void tag2_destroy_tag(tag_element *te)
 {
+    if(te->timeout)
+        g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
 	g_free(te);
 
@@ -404,6 +409,23 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
                     first =first->next;
                 }
                 data = mpd_database_search_commit(connection);
+                /* Delete items that match */
+                if(strlen(gtk_entry_get_text(GTK_ENTRY(te2->sentry))) > 0)
+                {
+                    MpdData_real *d = data;
+                    char *str = gtk_entry_get_text(GTK_ENTRY(te2->sentry));
+                    while(d)
+                    {                 
+                        if(strcasestr(d->tag,str) == NULL) 
+                        {
+                            d= data= mpd_data_delete_item(d);
+                        }
+                        else
+                            d = d->next;
+                    }
+                    if (data)
+                        data = mpd_data_get_first(data); 
+                }
                 gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te2->model), data);
             }
  
@@ -540,6 +562,27 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     tag2_save_browser(te->browser);
 }
 
+static gboolean tag2_sentry_changed_real(tag_element *te)
+{
+    tag_element *te2 = g_malloc0(sizeof(*te2));
+    te2->index = -1;
+    te2->browser = te->browser;
+    tag2_changed(NULL, te2);
+
+    g_free(te2);
+    te->timeout = 0;
+    return FALSE;
+}
+
+static void tag2_sentry_changed(SexyIconEntry *entry, tag_element *te)
+{
+    if(te->timeout)
+        g_source_remove(te->timeout);
+    te->timeout = g_timeout_add(1000, (GSourceFunc)tag2_sentry_changed_real, te);
+}
+
+
+
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)
 {
 	GtkCellRenderer *renderer;
@@ -553,6 +596,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	te->index 	= g_list_length(browser->tag_lists);
 	te->model 	= (GtkTreeModel *) gmpc_mpddata_model_new();
 	te->combo   = gtk_combo_box_new_with_model(tags_store);
+    te->sentry  = sexy_icon_entry_new(); 
 	te->sw 		= gtk_scrolled_window_new(NULL,NULL);
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
@@ -564,6 +608,11 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
     gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), te->type);
     g_signal_connect(G_OBJECT(te->combo), "changed", G_CALLBACK(tag2_songlist_combo_box_changed), te);
+
+
+    sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(te->sentry));
+    g_signal_connect(G_OBJECT(te->sentry), "changed", G_CALLBACK(tag2_sentry_changed), te);
+    gtk_box_pack_start(GTK_BOX(te->vbox), te->sentry,FALSE, TRUE, 0);
     /* setup sw */
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(te->sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(te->sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -571,7 +620,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	gtk_container_add(GTK_CONTAINER(te->sw), te->tree);
     gtk_box_pack_start(GTK_BOX(te->vbox), te->sw, TRUE, TRUE, 0);
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(te->tree), FALSE);
-
+    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(te->tree), FALSE);
 
 
 
