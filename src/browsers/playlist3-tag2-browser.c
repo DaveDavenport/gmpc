@@ -343,13 +343,30 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 	return FALSE;
 }
 
+static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_element *te)
+{
+    if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
+            ((event->keyval >= GDK_space && event->keyval <= GDK_z)))
+    {
+        char data[2];
+        data[0] = (char)gdk_keyval_to_unicode(event->keyval);
+        data[1] = '\0';
+        gtk_widget_grab_focus(te->sentry);      
+        gtk_entry_set_text(GTK_ENTRY(te->sentry),data);
+        gtk_editable_set_position(GTK_EDITABLE(te->sentry),1);
+
+        return TRUE;
+    }
+    return FALSE;
+
+}
+
 static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
 {
 	GtkTreeIter iter;
 	tag_browser *browser = te->browser;
     int not_to_update = te->index;
     GList *tel = g_list_first(browser->tag_lists);
-    printf("TAG 2 CHANGED\n");
 	/* Clear songs list */
     /* clear the depending browsers  (All the browsers on the right)*/
 	while(tel)
@@ -517,7 +534,6 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
 {
     GList *list;
     te->type = gtk_combo_box_get_active(box);
-    printf("changed index: %i\n", te->index);
     /* if the first is changed, refill the first.
      * if any other is changed, make the edited refill by triggering changed signal on the previous.
      */
@@ -582,11 +598,16 @@ static gboolean tag2_sentry_changed_real(tag_element *te)
 
     g_free(te2);
     te->timeout = 0;
+    if(strlen(gtk_entry_get_text(GTK_ENTRY(te->sentry)))==0)
+    {
+        gtk_widget_hide(te->sentry);
+    }
     return FALSE;
 }
 
 static void tag2_sentry_changed(SexyIconEntry *entry, tag_element *te)
 {
+    gtk_widget_show(te->sentry);
     if(te->timeout)
         g_source_remove(te->timeout);
     te->timeout = g_timeout_add(1000, (GSourceFunc)tag2_sentry_changed_real, te);
@@ -599,7 +620,6 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	tag_element *te = g_malloc0(sizeof(*te));
-    printf("add tag: %i\n",type);
 
 	browser->tag_lists = g_list_append(browser->tag_lists, te);
 	/* Tag Element */
@@ -620,10 +640,14 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), te->type);
     g_signal_connect(G_OBJECT(te->combo), "changed", G_CALLBACK(tag2_songlist_combo_box_changed), te);
 
-
+    /* entry */
+    gtk_widget_set_no_show_all(te->sentry, TRUE);
+    gtk_widget_hide(te->sentry);
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(te->sentry));
     g_signal_connect(G_OBJECT(te->sentry), "changed", G_CALLBACK(tag2_sentry_changed), te);
     gtk_box_pack_start(GTK_BOX(te->vbox), te->sentry,FALSE, TRUE, 0);
+
+    g_signal_connect(G_OBJECT(te->tree), "key-press-event", G_CALLBACK(tag2_key_release_event), te);
     /* setup sw */
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(te->sw), GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(te->sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);

@@ -787,8 +787,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         char data[2];
         data[0] = (char)gdk_keyval_to_unicode(event->keyval);
         data[1] = '\0';
-//        treesearch_start(TREESEARCH(tree_search));
-         gtk_widget_grab_focus(entry);      
+        gtk_widget_grab_focus(entry);      
         gtk_entry_set_text(GTK_ENTRY(entry),data);
         gtk_editable_set_position(GTK_EDITABLE(entry),1);
 
