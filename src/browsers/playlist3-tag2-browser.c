@@ -344,6 +344,7 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
 	tag_browser *browser = te->browser;
     int not_to_update = te->index;
     GList *tel = g_list_first(browser->tag_lists);
+    printf("TAG 2 CHANGED\n");
 	/* Clear songs list */
     /* clear the depending browsers  (All the browsers on the right)*/
 	while(tel)
