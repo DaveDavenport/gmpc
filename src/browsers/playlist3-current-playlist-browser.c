@@ -85,13 +85,48 @@ static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTree
         }
     }
 }
+static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned long long loaded_songs, unsigned long long total_playtime, gpointer user_data)
+{
+     if(mpd_playlist_get_playlist_length(connection)&&loaded_songs)
 
+     {
+         unsigned long long total_songs = mpd_playlist_get_playlist_length(connection);
+         guint playtime = total_playtime*((gdouble)(total_songs/(gdouble)loaded_songs));
+         gchar *string = format_time(playtime);
+         gchar *mesg = NULL;
+
+         mesg = g_strdup_printf("%llu %s%c %s %s", total_songs, 
+                 ngettext("item", "items", total_songs ), (string[0])?',':' ', string,     
+                 (string[0] == 0 || total_songs == loaded_songs)? "":_("(Estimation)"));
+
+         pl3_push_rsb_message(mesg);
+
+         q_free(string);
+
+         q_free(mesg);
+
+     } else {
+
+         pl3_push_rsb_message("");
+
+     }
+}
+
+static void pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned long long loaded_songs, unsigned long long total_playtime, gpointer user_data)
+{
+    if(pl3_cat_get_selected_browser() == current_playlist_plug.id)
+    {
+        __real_pl3_total_playtime_changed(model, loaded_songs, total_playtime, user_data);
+    }
+}
 
 static void pl3_cp_init()
 {
     playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
     pl3_current_playlist_browser_init();
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), NULL);
+    g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), NULL);
+
 }
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
@@ -722,6 +757,7 @@ static void pl3_current_playlist_browser_show_info()
 
 static void pl3_current_playlist_browser_selected(GtkWidget *container)
 {
+    unsigned long long a,b;
     if(pl3_cp_vbox == NULL)
     {
         pl3_current_playlist_browser_init();
@@ -730,6 +766,9 @@ static void pl3_current_playlist_browser_selected(GtkWidget *container)
     gtk_widget_show(pl3_cp_vbox);
 
     gtk_widget_grab_focus(pl3_cp_tree);
+    gmpc_mpddata_model_playlist_get_total_playtime(GMPC_MPDDATA_MODEL_PLAYLIST(playlist), &a, &b);
+    __real_pl3_total_playtime_changed(GMPC_MPDDATA_MODEL_PLAYLIST(playlist),a,b,NULL);
+
 }
 static void pl3_current_playlist_browser_unselected(GtkWidget *container)
 {

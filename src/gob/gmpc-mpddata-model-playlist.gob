@@ -24,6 +24,8 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
     private unsigned int connection_changed = 0;
     private MpdObj *mi;
     private long long playlist_id = {0};
+    private unsigned long long total_time = {0};
+    private unsigned long long loaded_songs = {0};
     private int old_highlight = -1;
 
 override (G:Object)
@@ -66,7 +68,14 @@ override (G:Object)
             /* if it was empty just add everything */
             if(new_length == 0)
             {
+                self->_priv->loaded_songs=0;
+                self->_priv->total_time =0;
+                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+
+                
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), NULL);
+
+
             }
             else if(old_length == 0)
             {
@@ -96,6 +105,14 @@ override (G:Object)
                         gtk_tree_path_append_index(path, i);
                         gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                         gtk_tree_path_free(path);
+
+                        if(data->song)
+                        {
+                            self->_priv->loaded_songs--;
+                            self->_priv->total_time -= data->song->time;
+                            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                        }
+
                         data = (MpdData_real *)mpd_data_delete_item((MpdData *)data);
                        GMPC_MPDDATA_MODEL(self)->num_rows--;
                     }
@@ -143,6 +160,13 @@ override (G:Object)
                             list_iter = list_iter->next;
 
                         if(list_iter->song)
+                        {
+                            self->_priv->loaded_songs--;
+                            self->_priv->total_time -= list_iter->song->time;
+                            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                        }
+
+                        if(list_iter->song)
                             mpd_freeSong(list_iter->song);
                         list_iter->song = NULL;
 
@@ -151,6 +175,8 @@ override (G:Object)
                         iter.user_data2 =  GINT_TO_POINTER(i);
                         gtk_tree_path_append_index(path, i);
                         gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+
+                      
                         gtk_tree_path_free(path);
                         data_iter = data_iter->next;
                     }
@@ -203,6 +229,14 @@ override (G:Object)
     {
 
     }
+    
+    signal last NONE (LONG, LONG)
+    void
+    total_playtime_changed(self, unsigned long long loaded_songs, unsigned long long total_playtime)
+    {
+        gchar *data = format_time((unsigned long)total_playtime);
+        g_free(data);
+    }
 
     private
     void
@@ -212,6 +246,9 @@ override (G:Object)
         {
             gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), NULL);
             self->_priv->playlist_id = 0;
+            self->_priv->loaded_songs = 0;
+            self->_priv->total_time = 0;
+            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
         }
     }
 
@@ -242,6 +279,13 @@ override (G:Object)
         if(data->song == NULL)
         {
             data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,n);
+            if(data->song)
+            {
+                self->_priv->loaded_songs++;
+                self->_priv->total_time += data->song->time;
+
+                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+            }
         }
         /**
          * If the fetch failed, return an empty value, otherwise we will get crashes
@@ -333,5 +377,20 @@ override (G:Object)
            gtk_tree_path_free(path);
            return TRUE;
        } 
+       public 
+       void
+       trigger_total_playtime_signal(self)
+       {
+           self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+       }
+       public
+       void
+       get_total_playtime(self, unsigned long long *loaded_songs, unsigned long long *total_time)
+       {
+            if(loaded_songs)
+                (*loaded_songs) = self->_priv->loaded_songs;
+            if(total_time)
+                (*total_time)= self->_priv->total_time;
+       }
 }
 
