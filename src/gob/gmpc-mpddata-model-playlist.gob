@@ -24,8 +24,8 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
     private unsigned int connection_changed = 0;
     private MpdObj *mi;
     private long long playlist_id = {0};
-    private unsigned long long total_time = {0};
-    private unsigned long long loaded_songs = {0};
+    private unsigned long total_time = {0};
+    private unsigned long loaded_songs = {0};
     private int old_highlight = -1;
 
 override (G:Object)
@@ -232,7 +232,7 @@ override (G:Object)
     
     signal last NONE (LONG, LONG)
     void
-    total_playtime_changed(self, unsigned long long loaded_songs, unsigned long long total_playtime)
+    total_playtime_changed(self, unsigned long loaded_songs, unsigned long total_playtime)
     {
         gchar *data = format_time((unsigned long)total_playtime);
         g_free(data);
@@ -385,7 +385,7 @@ override (G:Object)
        }
        public
        void
-       get_total_playtime(self, unsigned long long *loaded_songs, unsigned long long *total_time)
+       get_total_playtime(self, unsigned long *loaded_songs, unsigned long *total_time)
        {
             if(loaded_songs)
                 (*loaded_songs) = self->_priv->loaded_songs;
