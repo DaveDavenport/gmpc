@@ -387,76 +387,100 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
         te = tel->data;
         if(te->index != not_to_update)
         {
-            tag_element *te2 ;
+            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
+            GtkTreeIter iter;
             MpdData *data;
             GList *first = g_list_first(browser->tag_lists);
             /* only do the following query if it isn't the last one */
 
-            //	while(first){	
             int artist_seen = 0;
-            te2 = te;
-            {
-                /* Search for the fields of the next tag, this needs the value/type of all the previous,
-                 * Parsed from left to right 
-                 */
-                mpd_database_search_field_start(connection, te2->type);
-                /* fil in the next */
-                while(first){
-                    tag_element *te3  = first->data;
-                    if(te3->index != te2->index)
-                    {
-                        sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
-                        if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
-                        {	
-                            gchar *value;
-                            gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-                            mpd_database_search_add_constraint(connection, te3->type, value);
-                            if(te3->index < (te2->index) && !artist_seen)
-                            {           
-                                if(te3->type == MPD_TAG_ITEM_ARTIST)
-                                {
-                                    gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), value);
-                                    artist_seen = 1;
-                                }
+            /* Search for the fields of the next tag, this needs the value/type of all the previous,
+             * Parsed from left to right 
+             */
+            mpd_database_search_field_start(connection, te->type);
+            /* fil in the next */
+            while(first){
+                tag_element *te3  = first->data;
+                if(te3->index != te->index)
+                {
+                    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
+                    if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
+                    {	
+                        gchar *value;
+                        gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
+                        mpd_database_search_add_constraint(connection, te3->type, value);
+                        if(te3->index < (te->index) && !artist_seen)
+                        {           
+                            if(te3->type == MPD_TAG_ITEM_ARTIST)
+                            {
+                                gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te->model), value);
+                                artist_seen = 1;
                             }
-
-                            g_free(value);
                         }
-                    }
-                    first =first->next;
-                }
-                data = mpd_database_search_commit(connection);
-                /* Delete items that match */
-                if(strlen(gtk_entry_get_text(GTK_ENTRY(te2->sentry))) > 0)
-                {
-                    MpdData_real *d = data;
-                    char *str = gtk_entry_get_text(GTK_ENTRY(te2->sentry));
-                    while(d)
-                    {                 
-                        if(strcasestr(d->tag,str) == NULL) 
-                        {
-                            d= data= mpd_data_delete_item(d);
-                        }
-                        else
-                            d = d->next;
-                    }
-                    if (data)
-                        data = mpd_data_get_first(data); 
-                }
-                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te2->model), data);
-                {
-                    GtkTreeSelection *sel = gtk_tree_view_get_selection(te2->tree);
-                    GtkTreeIter iter;
-                    if(gtk_tree_selection_get_selected(sel, &(te2->model), &iter))
-                    {
-                        GtkTreePath *path = gtk_tree_model_get_path(te2->model, &iter);
-                        gtk_tree_view_scroll_to_cell(te2->tree, path, NULL, TRUE, 0.5,0);
-                        gtk_tree_path_free(path);
-                    }
-                }
 
+                        g_free(value);
+                    }
+                }
+                first =first->next;
             }
- 
+            data = mpd_database_search_commit(connection);
+            /* Delete items that match */
+            if(strlen(gtk_entry_get_text(GTK_ENTRY(te->sentry))) > 0)
+            {
+                MpdData_real *d = (MpdData_real *)data;
+                /* Get the entry from the text view */
+                const char *str = gtk_entry_get_text(GTK_ENTRY(te->sentry));
+                /* Lowercase it. */
+                gchar *sb1 = g_utf8_casefold(str, -1);
+                /* Normalize it, this to ensure they use the same way of representing the character */
+                gchar *sb = g_utf8_normalize(sb1,-1,G_NORMALIZE_ALL_COMPOSE);
+                g_free(sb1);
+                while(d)
+                {                 
+                    /* Lowercase it. */
+                    gchar *sa1 = g_utf8_casefold(d->tag, -1);
+                    /* Normalize it, this to ensure they use the same way of representing the character */
+                    gchar *sa = g_utf8_normalize(sa1,-1,G_NORMALIZE_ALL_COMPOSE);
+                    g_free(sa1);
+                    /* compare the utf-8 strings, this should be a fairly good compare
+                     * because I made sure the utf-8 is represented in a equal way 
+                     */
+                    if(strstr(sa,sb) == NULL) 
+                    {
+                        /* If it does not match, remove the item from the list */
+                        data= mpd_data_delete_item((MpdData *)d);
+                        d= (MpdData_real *)data;
+                    }
+                    else
+                        /* if it does match, we go to the next and check that */
+                        d = d->next;
+                    /* cleanup */
+                    g_free(sa);
+
+                }
+                /* if there are items in the lest, make sure we get the first one */
+                if (data)
+                    data = mpd_data_get_first(data); 
+                g_free(sb);
+            }
+            /* 
+             * Update the TreeModel using the special incremental replace function.
+             * This will make sure, selected rows that are matched, don't get de-selected 
+             */
+            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+            /* this make sure the selected row is centered in the middle of the treeview.
+             * Otherwise the user could have the tedious job of finding it again
+             */
+            /* get the selected row, if any */
+            if(gtk_tree_selection_get_selected(sel, &(te->model), &iter))
+            {
+                /* get the path to the selected row */
+                GtkTreePath *path = gtk_tree_model_get_path(te->model, &iter);
+                /* scroll to the path, and center it in the middle of the treeview, at the left of the column */
+                gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(te->tree), path, NULL, TRUE, 0.5,0);
+                /* free the path */
+                gtk_tree_path_free(path);
+            }
         }
         tel = tel->next;
     }
@@ -573,9 +597,6 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
         if(list->next)
         {
             tag_element *te2 = list->next->data;
-       //     mpd_database_search_field_start(connection, te2->type);
-         //   data = mpd_database_search_commit(connection);
-           // gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
             tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te2->tree)),te2); 
         }
         else
@@ -1191,41 +1212,7 @@ static void tag2_pref_column_type_edited(GtkCellRendererText *text, gchar *path,
 		tag_element *te;
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, new_data,1,tag, -1);
 		gtk_tree_model_get(model, &iter, 2, &te, -1);
-        gtk_combo_box_set_active(te->combo, tag);
-        /*
-		te->type = tag;
-		gtk_tree_view_column_set_title(gtk_tree_view_get_column(GTK_TREE_VIEW(te->tree), 0), new_data);
-        */
-		/* if the first is changed, refill the first.
-		 * if any other is changed, make the edited refill by triggering changed signal on the previous.
-		 */
-		/* index starts at 1 */
-        /*
-		if(te->index != 1)
-		{
-			list = g_list_nth(te->browser->tag_lists,te->index -2);
-			if(list)
-			{
-				tag_element *te2 = list->data;
-
-				tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te2->tree)),te2); 
-			}
-		}
-		else
-		{
-			MpdData *data;
-			list = g_list_first(te->browser->tag_lists);
-			if(list)
-			{
-				tag_element *te2 = list->data;
-				mpd_database_search_field_start(connection, te2->type);
-				data = mpd_database_search_commit(connection);
-				gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
-			}
-		}
-
-		tag2_save_browser(te->browser);
-        */
+        gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), tag);
 	}
 }
 /**
