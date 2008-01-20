@@ -248,10 +248,9 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 			{
 				int *pos = gtk_tree_path_get_indices(path);
 				mpd_database_playlist_list_delete(connection, pl_path,pos[0]);
-
 			}
 		}
-		mpd_playlist_queue_commit(connection);
+        debug_printf(DEBUG_INFO,"ping\n");
 		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
 
