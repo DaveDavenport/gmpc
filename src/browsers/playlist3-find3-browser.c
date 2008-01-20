@@ -330,7 +330,7 @@ static void pl3_find3_browser_add(GtkWidget *cat_tree)
     GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "find3-browser","position",1);
 	playlist3_insert_browser(&iter, pos);
-    gtk_list_store_set(pl3_tree, &iter, 
+    gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
             PL3_CAT_TYPE, find3_browser_plug.id,
             PL3_CAT_TITLE, _("Playlist Search"),
             PL3_CAT_INT_ID, "",

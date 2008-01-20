@@ -427,8 +427,7 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 	GtkTreePath *path;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "current-playlist","position",0);
 	playlist3_insert_browser(&iter, pos);
-	//gtk_tree_store_append(pl3_tree, &iter, NULL);
-	gtk_list_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
 			PL3_CAT_TITLE, _("Current Playlist"),
 			PL3_CAT_INT_ID, "",

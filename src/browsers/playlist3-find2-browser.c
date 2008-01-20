@@ -315,8 +315,7 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
     GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "find2-browser","position",4);
 	playlist3_insert_browser(&iter, pos);
-   // gtk_tree_store_append(pl3_tree, &iter, NULL);
-    gtk_list_store_set(pl3_tree, &iter, 
+    gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
             PL3_CAT_TYPE, find2_browser_plug.id,
             PL3_CAT_TITLE, _("Database Search"),
             PL3_CAT_INT_ID, "",

@@ -101,7 +101,7 @@ static int old_type = -1;
 /* interface description */
 GladeXML *pl3_xml = NULL;
 /* category treeview-store */
-GtkListStore *pl3_tree = NULL;
+GtkTreeModel *pl3_tree = NULL;
 
 
 /* size */
@@ -158,7 +158,7 @@ static void pl3_initialize_tree(void)
 		old_type = -1;
 	}
 
-	gtk_list_store_clear(pl3_tree);
+	gtk_list_store_clear(GTK_LIST_STORE(pl3_tree));
 
 	for(i=0; i< num_plugins;i++)
 	{
@@ -1013,7 +1013,7 @@ void create_playlist3 ()
 	if (pl3_tree == NULL)
 	{
 		/* song id, song title */
-		pl3_tree = gmpc_liststore_sort_new (PL3_CAT_NROWS, 
+		pl3_tree = (GtkTreeModel *)gmpc_liststore_sort_new (PL3_CAT_NROWS, 
 				G_TYPE_INT,	/* row type, see free_type struct */
 				G_TYPE_STRING, /* display name */
 				G_TYPE_STRING,/* full path and stuff for backend */
@@ -1210,7 +1210,7 @@ gboolean playlist3_get_active()
 GtkListStore *playlist3_get_category_tree_store()
 {
 	if(!playlist3_get_active()) return NULL;
-	return pl3_tree;
+	return GTK_LIST_STORE(pl3_tree);
 }
 GtkTreeView *playlist3_get_category_tree_view()
 {
@@ -2208,8 +2208,8 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 				sib = &it;
 		}while(sib == NULL && gtk_tree_model_iter_next(model, &it));
 	}
-	gtk_list_store_insert_before(pl3_tree, iter, sib);
-	gtk_list_store_set(pl3_tree, iter, PL3_CAT_ORDER, position, -1);
+	gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
+	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, -1);
 }
 
 
