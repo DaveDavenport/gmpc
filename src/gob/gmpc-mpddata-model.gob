@@ -146,7 +146,7 @@ requires 2.0.0
         {
             int i =0;
             Self *self = GMPC_MPDDATA_MODEL(obj); 
-            printf("destroying\n");
+            printf("destroying Gmpc::MpdData::Model \n");
             if(self->_priv->markup_signal)
             {
                 g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->markup_signal);
@@ -154,7 +154,10 @@ requires 2.0.0
             self->_priv->markup_signal = 0;
 
             if(self->_priv->data)
+            {
                 mpd_data_free(self->_priv->data);
+                self->_priv->data = NULL;
+            }
             if(self->_priv->images)
             {
                 for(i=0;i<self->num_rows;i++)
