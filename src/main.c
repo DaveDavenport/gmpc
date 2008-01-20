@@ -705,13 +705,6 @@ int main (int argc, char **argv)
 		bacon_message_connection_free (bacon_connection);
 	}
 #endif	
-	/**
-	 * Clear metadata struct
-	 */
-	meta_data_destroy();
-	g_object_unref(G_OBJECT(gmw));
-
-
 	/* tell the plugins to save themself. */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->save_yourself) {
@@ -731,11 +724,22 @@ int main (int argc, char **argv)
 			plugins[i]->destroy();
 		}
 	}
+
+    playlist3_message_destroy();
+    playlist3_destroy();
+    g_object_unref(playlist);
+
+    /**
+     * Clear metadata struct
+     */
+    meta_data_destroy();
+    g_object_unref(G_OBJECT(gmw));
+
 	/**
 	 * Close the config file
 	 */
 	cfg_close(config);
-
+    g_object_unref(gmpc_signals);
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);
 	/** 
@@ -743,7 +747,8 @@ int main (int argc, char **argv)
 	 */
 	mpd_free(connection);
 
-    playlist3_message_destroy();
+    
+    
 	/* cleanup curl */
 	curl_global_cleanup();
 
@@ -937,7 +942,6 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	}
 	else
 	{
-        printf("error: %i\n", error_id);
         /*
 		if(error_id == MPD_ACK_ERROR_NO_EXIST)
 		{

@@ -2242,3 +2242,10 @@ void set_playlist_format(void)
     }
     q_free(format);
 }
+
+void playlist3_destroy(void)
+{
+	GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
+    gtk_widget_destroy(win);
+    g_object_unref(pl3_xml);
+}

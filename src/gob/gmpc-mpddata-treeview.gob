@@ -286,4 +286,18 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             gtk_dialog_run(GTK_DIALOG(dialog));
             self_save_column_setup(self);
         }
+
+    override (G:Object)
+    void
+    finalize(G:Object *obj)
+    {
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(obj));
+        if(model)
+        {
+            gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
+            g_object_unref(model);
+        }
+        printf("destroying treeview\n");
+        PARENT_HANDLER(obj);
+    }
 }

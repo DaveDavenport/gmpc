@@ -36,4 +36,11 @@ class Gmpc:Signals from G:Object{
 	{
 		return GET_NEW;
 	}
+
+    override (G:Object)
+    void
+    finalize (G:Object *obj)
+    {
+        PARENT_HANDLER(obj);
+    }
 }

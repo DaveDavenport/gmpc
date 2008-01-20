@@ -48,5 +48,5 @@ enum {
 	PLAYLIST_MINI,
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
-
+void playlist3_destroy(void);
 #endif
