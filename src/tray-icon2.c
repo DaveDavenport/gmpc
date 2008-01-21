@@ -286,6 +286,11 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *coverimg = NULL;
 	mpd_Song *song = NULL;
 	int state;
+    int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+    int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+
+
+
  
 #if 0 //GTK_CHECK_VERSION(2,12,0)
 	GdkColormap *colormap;
@@ -380,11 +385,15 @@ void tray_icon2_create_tooltip(void)
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
+        int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
+
 		/** Artist label */
 		if(song->title || song->file || song->name)
 		{
 			char buffer[256];
-			mpd_song_markup_escaped(buffer, 256,"<span size='x-large' weight='bold'>[%title%|%shortfile%][ (%name%)]</span>",song);
+            gchar *test = g_strdup_printf("<span size='%i' weight='bold'>[%%title%%|%%shortfile%%][ (%%name%%)]</span>", 14*size_offset);
+			mpd_song_markup_escaped(buffer, 256,test,song);
+            q_free(test);
 			label = gtk_label_new("");
             gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -393,8 +402,13 @@ void tray_icon2_create_tooltip(void)
 		}
 		if(song->artist)
 		{
-			label = gtk_label_new(song->artist);
+            char buffer[256];
+            gchar *test = g_strdup_printf("<span size='%i'>%%artist%%</span>", 10*size_offset);
+			label = gtk_label_new("");
             gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+            mpd_song_markup_escaped(buffer, 256,test,song);
+            q_free(test);
+            gtk_label_set_markup(GTK_LABEL(label), buffer);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
@@ -402,9 +416,11 @@ void tray_icon2_create_tooltip(void)
 		if(song->album)
 		{
             char buffer[256];
+            gchar *test = g_strdup_printf("<span size='%i'>%%album%%[ (%%year%%)]</span>", 8*size_offset);
             label = gtk_label_new("");
             gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
-            mpd_song_markup_escaped(buffer, 256,"<span size='x-small'>%album%[ (%year%)]</span>",song);
+            mpd_song_markup_escaped(buffer, 256,test,song);
+            q_free(test);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
             gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
@@ -436,14 +452,12 @@ void tray_icon2_create_tooltip(void)
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
 #ifdef ENABLE_TRAYICON 
-	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) {
+	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) 
+    {
 
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
-        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
-
-		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
+       		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
 		{
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
@@ -475,17 +489,15 @@ void tray_icon2_create_tooltip(void)
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else 
 #endif
-    if (state == TI2_AT_UPPER_LEFT) {
-       int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+    if (state == TI2_AT_UPPER_LEFT) 
+    {
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
-	} else if (state == TI2_AT_UPPER_RIGHT) {
-        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+	} else if (state == TI2_AT_UPPER_RIGHT) 
+    {
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -495,9 +507,8 @@ void tray_icon2_create_tooltip(void)
 		/** X is upper right - width */
 		x = rect2.x+rect2.width-5-300;
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-	} else if (state == TI2_AT_LOWER_LEFT) {
-        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+	} else if (state == TI2_AT_LOWER_LEFT) 
+    {
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -507,9 +518,8 @@ void tray_icon2_create_tooltip(void)
 		/** X =5 */ 
 		x = rect2.x+ 5; 
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-	} else {
-        int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-        int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+	} else 
+    {
 		screen =gtk_widget_get_screen(pl3_win);
 		GdkRectangle rect2;
 		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
@@ -520,20 +530,7 @@ void tray_icon2_create_tooltip(void)
 		x = rect2.x+rect2.width-5-300; 
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 	}
-	/**
-	 * Show the tooltip
-	 */
-/* do some stuff to allow transparency */
-#if 0 //GTK_CHECK_VERSION(2,12,0)
-    screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
-    colormap = gdk_screen_get_rgba_colormap(screen);
-	if (colormap != NULL && gdk_screen_is_composited(screen))
-	{
-		gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
-        gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0.8);
-	}	    
 
-#endif
 	gtk_widget_show_all(tray_icon2_tooltip);
 
 
