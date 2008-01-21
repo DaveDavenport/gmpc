@@ -11,7 +11,7 @@ requires 2.0.0
 #include "gmpc-mpddata-model-playlist.h"
 %}
 %h{
-#define NUM_COLS 15
+#define NUM_COLS 16
 %}
 
 %{
@@ -31,6 +31,7 @@ static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_SONG_DISC,			      /* disc */
     MPDDATA_MODEL_COL_SONG_COMMENT,			    /* comment */
     MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
+    MPDDATA_MODEL_COL_SONG_POS
 };
 static gchar *col_names[NUM_COLS] = {
     N_("Markup"),
@@ -47,7 +48,8 @@ static gchar *col_names[NUM_COLS] = {
     N_("Duration"),
     N_("Disc"),
     N_("Comment"),
-    N_("Icon Id")
+    N_("Icon Id"),
+    N_("Position")
 }; 
 
 static gint  col_enabled[NUM_COLS] = {
@@ -65,7 +67,8 @@ static gint  col_enabled[NUM_COLS] = {
     FALSE,//"Duration",
     FALSE,//"Disc",
     FALSE,//"Comment",
-    TRUE//"Icon Id"
+    TRUE,//"Icon Id"
+    FALSE//"Position"
 };
 static gint  col_position[NUM_COLS] = {
     14,//"Markup",
@@ -82,7 +85,8 @@ static gint  col_position[NUM_COLS] = {
     11,//"Duration",
     12,//"Disc",
     13,//"Comment",
-    0//"Icon Id"
+    0,//"Icon Id"
+    15 // "Position"
 };
 %}
 
