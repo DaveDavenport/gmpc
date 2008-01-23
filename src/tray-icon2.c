@@ -386,6 +386,7 @@ void tray_icon2_create_tooltip(void)
 	if(song)
 	{
         int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
+        size_offset = (size_offset < 100)?1024:size_offset;
 
 		/** Artist label */
 		if(song->title || song->file || song->name)
