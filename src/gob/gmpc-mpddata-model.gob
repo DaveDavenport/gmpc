@@ -252,6 +252,14 @@ requires 2.0.0
             Self *self = GMPC_MPDDATA_MODEL(model);
             MpdData *data = iter->user_data;
             int n = GPOINTER_TO_INT(iter->user_data2) ;
+            /* if the row is the last row in the list or bigger then the last row, return FALSE */
+            if(n >= self->num_rows)
+            {
+                return FALSE;
+            }
+            /* if the row is the first row in the list, and it has a "go-up" entry, 
+             * it can have a next entry
+             */
             if(data == NULL &&  n == 0 && self->has_up == TRUE)
             {
                 iter->user_data = (MpdData *)self->_priv->data; 
@@ -266,7 +274,6 @@ requires 2.0.0
             }
             iter->user_data = (MpdData *)mpd_data_get_next_real(data,FALSE); 
             iter->user_data2 = GINT_TO_POINTER(n+1);
-            g_assert(n < self->num_rows);
             g_assert(iter->user_data != NULL);
             return TRUE;
         }
