@@ -577,7 +577,32 @@ static gboolean pl3_find2_browser_button_press_event(GtkWidget *giv, GdkEventBut
 	}
 	return FALSE;                                                                                                     
 }
+static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree));
+	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
+	GList *iter, *list = gtk_tree_selection_get_selected_rows (selection, &model);
+	if(list)
+	{
+		iter = g_list_first(list);
+		do{
+			GtkTreeIter giter;
+			if(gtk_tree_model_get_iter(model, &giter, (GtkTreePath *)iter->data))
+			{
+				gchar *file = NULL;
+				gtk_tree_model_get(model, &giter, MPDDATA_MODEL_COL_PATH, &file, -1);
+				mpd_database_playlist_list_add(connection, data,file); 
+				g_free(file);
+			}
+		}while((iter = g_list_next(iter)));
 
+		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
+		g_list_free (list);
+	}
+
+	playlist_editor_fill_list();
+}
 
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {
@@ -637,6 +662,9 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
       g_signal_connect(G_OBJECT(item), "activate",
           G_CALLBACK(pl3_find2_browser_edit_columns), NULL);
       gtk_widget_show(item);
+
+
+      playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist);
 
       gtk_widget_show_all(menu);
       gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);

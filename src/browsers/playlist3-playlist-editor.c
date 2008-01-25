@@ -18,7 +18,6 @@ static GtkTreeRowReference *playlist_editor_browser_ref = NULL;
 static GtkWidget *playlist_editor_browser = NULL;
 static GtkWidget *playlist_editor_song_tree = NULL;
 static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data);
-static void playlist_editor_fill_list(void);
 static int playlist_editor_add_go_menu(GtkWidget *);
 GtkWidget *playlist_editor_icon_view = NULL;
 GmpcMpdDataModelSort *playlist_editor_list_store = NULL;
@@ -163,7 +162,7 @@ static void playlist_editor_browser_playlist_editor_changed(GtkWidget *giv, gpoi
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(giv), playlist_editor_browser_playlist_editor_selected, NULL);
 }
 
-static void playlist_editor_fill_list(void)
+void playlist_editor_fill_list(void)
 {
 	if(playlist_editor_browser)
 	{

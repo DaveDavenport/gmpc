@@ -49,4 +49,6 @@ enum {
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
 void playlist3_destroy(void);
+void playlist_editor_fill_list(void);
+
 #endif

@@ -601,6 +601,8 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
 		g_list_free (list);
 	}
+
+	playlist_editor_fill_list();
 }
 static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event)
 {
