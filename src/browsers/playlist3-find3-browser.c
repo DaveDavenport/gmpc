@@ -698,36 +698,6 @@ static gboolean pl3_find3_browser_button_press_event(GtkWidget *but, GdkEventBut
 	}
 	return FALSE;                                                                                                     
 }
-static void pl3_find3_browser_queue_add()
-{
-	/* grab the selection from the tree */
-	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find3_tree));
-	/* check if where connected */
-	/* see if there is a row selected */
-	if (gtk_tree_selection_count_selected_rows (selection) > 0)
-	{
-		GList *list = NULL, *llist = NULL;
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_find3_store2);
-		/* start a command list */
-		/* grab the selected songs */
-		list = gtk_tree_selection_get_selected_rows (selection, &model);
-		/* grab the last song that is selected */
-		llist = g_list_first (list);
-		/* remove every selected song one by one */
-		do{
-			GtkTreeIter iter;
-			int value;
-			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_ID, &value, -1);
-			mpd_playlist_queue_mpd_queue_add(connection, value);			
-		} while ((llist = g_list_next (llist)));
-		mpd_playlist_queue_commit(connection);
-		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free (list);
-	}
-	mpd_status_queue_update(connection);
-}
 static void pl3_find3_playlist_editor_add_to_playlist(GtkWidget *menu)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find3_tree));
@@ -765,15 +735,6 @@ static gboolean pl3_find3_browser_button_release_event(GtkWidget *but, GdkEventB
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();
 
-		/* */
-		if(mpd_server_check_command_allowed(connection, "queueinfo") == MPD_SERVER_COMMAND_ALLOWED)
-		{
-			item = gtk_image_menu_item_new_with_label(_("Add to Queue"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find3_browser_queue_add), NULL);		
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        }
         if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find3_tree))) == 1)	
         {
             mpd_Song *song;
