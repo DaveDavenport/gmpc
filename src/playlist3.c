@@ -980,8 +980,6 @@ void create_playlist3 ()
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
 	GtkTreeIter iter;
-    GdkColormap *cm = NULL;
-    GtkWidget *pl3_win;
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 
@@ -1015,13 +1013,6 @@ void create_playlist3 ()
 					"Please reinstall gmpc"), TRUE);
 		abort();
 	}
-
-    pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
-    cm = gdk_screen_get_rgba_colormap(gtk_window_get_screen(GTK_WINDOW(pl3_win)));
-    if(!cm)
-        cm = gdk_screen_get_rgb_colormap(gtk_window_get_screen(GTK_WINDOW(pl3_win)));
-    gtk_widget_set_default_colormap(cm);
-
 
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL)
