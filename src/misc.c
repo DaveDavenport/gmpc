@@ -180,134 +180,148 @@ create_blur_filter (int radius)
 static GdkPixbuf *
 create_effect (GdkPixbuf *src, ConvFilter const *filter, int radius, int offset, double opacity)
 {
-  GdkPixbuf *dest;
-  int x, y, i, j;
-  int src_x, src_y;
-  int suma;
-  int dest_width, dest_height;
-  int src_width, src_height;
-  int src_rowstride, dest_rowstride;
-  gboolean src_has_alpha;
-  
-  guchar *src_pixels, *dest_pixels;
+    GdkPixbuf *dest;
+    int x, y, i, j;
+    int src_x, src_y;
+    int suma;
+    int dest_width, dest_height;
+    int src_width, src_height;
+    int src_rowstride, dest_rowstride;
+    gboolean src_has_alpha;
 
-  src_has_alpha =  gdk_pixbuf_get_has_alpha (src);
 
-  src_width = gdk_pixbuf_get_width (src);
-  src_height = gdk_pixbuf_get_height (src);
-  dest_width = src_width + 2 * radius + offset;
-  dest_height = src_height + 2 * radius + offset;
+    guchar *src_pixels, *dest_pixels;
 
-  dest = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (src),
-			 TRUE,
-			 gdk_pixbuf_get_bits_per_sample (src),
-			 dest_width, dest_height);
-  
-  gdk_pixbuf_fill (dest, 0);  
-  
-  src_pixels = gdk_pixbuf_get_pixels (src);
-  src_rowstride = gdk_pixbuf_get_rowstride (src);
-  
-  dest_pixels = gdk_pixbuf_get_pixels (dest);
-  dest_rowstride = gdk_pixbuf_get_rowstride (dest);
-  
-  for (y = 0; y < dest_height; y++)
-    {
-      for (x = 0; x < dest_width; x++)
-	{
-	  suma = 0;
-
-	  src_x = x - radius;
-	  src_y = y - radius;
-
-	  /* We don't need to compute effect here, since this pixel will be 
-	   * discarded when compositing */
-	  if (src_x >= 0 && src_x < src_width &&
-	      src_y >= 0 && src_y < src_height && 
-	      (!src_has_alpha ||
-	       src_pixels [src_y * src_rowstride + src_x * 4 + 3] == 0xFF))
-	    continue;
-
-	  for (i = 0; i < filter->size; i++)
-	    {
-	      for (j = 0; j < filter->size; j++)
-		{
-		  src_y = -(radius + offset) + y - (filter->size >> 1) + i;
-		  src_x = -(radius + offset) + x - (filter->size >> 1) + j;
-
-		  if (src_y < 0 || src_y >= src_height ||
-		      src_x < 0 || src_x >= src_width)
-		    continue;
-
-		  suma += ( src_has_alpha ? 
-			    src_pixels [src_y * src_rowstride + src_x * 4 + 3] :
-			    0xFF ) * filter->data [i * filter->size + j];
-		}
-	    }
-
-	  dest_pixels [y * dest_rowstride + x * 4 + 3] = CLAMP (suma * opacity, 0x00, 0xFF);
-	}
+    /* No source, nothing todo */
+    if(!src) {
+        return NULL;
     }
-  
-  return dest;
+
+    src_has_alpha =  gdk_pixbuf_get_has_alpha (src);
+
+    src_width = gdk_pixbuf_get_width (src);
+    src_height = gdk_pixbuf_get_height (src);
+    dest_width = src_width + 2 * radius + offset;
+    dest_height = src_height + 2 * radius + offset;
+
+    dest = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (src),
+            TRUE,
+            gdk_pixbuf_get_bits_per_sample (src),
+            dest_width, dest_height);
+
+    gdk_pixbuf_fill (dest, 0);  
+
+    src_pixels = gdk_pixbuf_get_pixels (src);
+    src_rowstride = gdk_pixbuf_get_rowstride (src);
+
+    dest_pixels = gdk_pixbuf_get_pixels (dest);
+    dest_rowstride = gdk_pixbuf_get_rowstride (dest);
+
+    for (y = 0; y < dest_height; y++)
+    {
+        for (x = 0; x < dest_width; x++)
+        {
+            suma = 0;
+
+            src_x = x - radius;
+            src_y = y - radius;
+
+            /* We don't need to compute effect here, since this pixel will be 
+             * discarded when compositing */
+            if (src_x >= 0 && src_x < src_width &&
+                    src_y >= 0 && src_y < src_height && 
+                    (!src_has_alpha ||
+                     src_pixels [src_y * src_rowstride + src_x * 4 + 3] == 0xFF))
+                continue;
+
+            for (i = 0; i < filter->size; i++)
+            {
+                for (j = 0; j < filter->size; j++)
+                {
+                    src_y = -(radius + offset) + y - (filter->size >> 1) + i;
+                    src_x = -(radius + offset) + x - (filter->size >> 1) + j;
+
+                    if (src_y < 0 || src_y >= src_height ||
+                            src_x < 0 || src_x >= src_width)
+                        continue;
+
+                    suma += ( src_has_alpha ? 
+                            src_pixels [src_y * src_rowstride + src_x * 4 + 3] :
+                            0xFF ) * filter->data [i * filter->size + j];
+                }
+            }
+
+            dest_pixels [y * dest_rowstride + x * 4 + 3] = CLAMP (suma * opacity, 0x00, 0xFF);
+        }
+    }
+
+    return dest;
 }
 
 void
 screenshot_add_shadow (GdkPixbuf **src)
 {
-  GdkPixbuf *dest;
-  static ConvFilter *filter = NULL;
-  
-  if (!filter)
-    filter = create_blur_filter (BLUR_RADIUS);
-  
-  dest = create_effect (*src, filter, 
-			BLUR_RADIUS, SHADOW_OFFSET, SHADOW_OPACITY);
+    GdkPixbuf *dest;
+    static ConvFilter *filter = NULL;
 
-  if (dest == NULL)
-	  return;
+    /* If *src == NULL, return nothing to do 
+    */
+    if(!(*src))
+        return;
 
-  gdk_pixbuf_composite (*src, dest,
-			BLUR_RADIUS, BLUR_RADIUS,
-			gdk_pixbuf_get_width (*src),
-			gdk_pixbuf_get_height (*src),
-			BLUR_RADIUS, BLUR_RADIUS, 1.0, 1.0,
-			GDK_INTERP_NEAREST, 255);
-  g_object_unref (*src);
-  *src = dest;
+
+    if (!filter)
+        filter = create_blur_filter (BLUR_RADIUS);
+
+    dest = create_effect (*src, filter, 
+            BLUR_RADIUS, SHADOW_OFFSET, SHADOW_OPACITY);
+
+    /* Failed to create effect */
+    if (dest == NULL)
+        return;
+
+    gdk_pixbuf_composite (*src, dest,
+            BLUR_RADIUS, BLUR_RADIUS,
+            gdk_pixbuf_get_width (*src),
+            gdk_pixbuf_get_height (*src),
+            BLUR_RADIUS, BLUR_RADIUS, 1.0, 1.0,
+            GDK_INTERP_NEAREST, 255);
+    g_object_unref (*src);
+    *src = dest;
 }
 
 void screenshot_add_border (GdkPixbuf **src)
 {
-	GdkPixbuf *pb = *src;
-        int x,y,width,height;
-        int pixel;
-        int n_channels = 0;
-        int rowstride = 0;
-        guchar *pixels;
-        if(!pb){
-                return;
-        }
-        
-        rowstride = gdk_pixbuf_get_rowstride(pb);	
-        n_channels = gdk_pixbuf_get_n_channels(pb);
-        width = gdk_pixbuf_get_width (pb);
-        height = gdk_pixbuf_get_height (pb);
-        pixels = gdk_pixbuf_get_pixels(pb);
+    GdkPixbuf *pb = *src;
+    int x,y,width,height;
+    int pixel;
+    int n_channels = 0;
+    int rowstride = 0;
+    guchar *pixels;
 
-        for(y=0;y<height;y++)
+    if(!pb){
+        return;
+    }
+
+    rowstride = gdk_pixbuf_get_rowstride(pb);	
+    n_channels = gdk_pixbuf_get_n_channels(pb);
+    width = gdk_pixbuf_get_width (pb);
+    height = gdk_pixbuf_get_height (pb);
+    pixels = gdk_pixbuf_get_pixels(pb);
+
+    for(y=0;y<height;y++)
+    {
+        for(x=0;x<width;x++)
         {
-                for(x=0;x<width;x++)
+            if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
+            {
+                for(pixel=0; pixel < n_channels;pixel++)
                 {
-                        if(y == 0 || y == (height-1) || x == 0 || x == (width-1))
-                        {
-                                for(pixel=0; pixel < n_channels;pixel++)
-                                {
-                                        pixels[x*n_channels+y*rowstride+pixel] = 0;
-                                }
-                        }
+                    pixels[x*n_channels+y*rowstride+pixel] = 0;
                 }
+            }
         }
+    }
 }
 
 /**
@@ -399,6 +413,7 @@ char *gmpc_get_full_glade_path(char *filename)
 #endif
     return path;
 }
+
 static gint
 count_of_char_in_string (const gchar * string,
 			 const gchar c)

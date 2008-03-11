@@ -693,7 +693,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
     if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
     {
-        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
+        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
 
         gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
         gtk_cell_renderer_set_fixed_size(renderer, size,size);
