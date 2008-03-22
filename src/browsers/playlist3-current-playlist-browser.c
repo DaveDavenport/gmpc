@@ -285,6 +285,7 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
 static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
 {
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
     if(strlen(text) == 0)
     {
         if(event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
@@ -294,6 +295,10 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
             gtk_widget_grab_focus(pl3_cp_tree);
             return TRUE;
         }
+    }else if(event->keyval == GDK_Escape)
+    {
+        search_keep_open = FALSE;
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
     }
     return FALSE;
 }
