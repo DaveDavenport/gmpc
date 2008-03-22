@@ -146,7 +146,6 @@ requires 2.0.0
         {
             int i =0;
             Self *self = GMPC_MPDDATA_MODEL(obj); 
-            printf("destroying Gmpc::MpdData::Model \n");
             if(self->_priv->markup_signal)
             {
                 g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->markup_signal);

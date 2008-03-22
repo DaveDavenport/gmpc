@@ -301,7 +301,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
             g_object_unref(model);
         }
-        printf("destroying treeview\n");
         PARENT_HANDLER(obj);
     }
 }

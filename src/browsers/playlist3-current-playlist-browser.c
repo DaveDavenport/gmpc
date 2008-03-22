@@ -89,7 +89,7 @@ static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, u
      if(mpd_playlist_get_playlist_length(connection)&&loaded_songs)
 
      {
-         unsigned long total_songs = GMPC_MPDDATA_MODEL(model)->num_rows;//mpd_playlist_get_playlist_length(connection);
+         unsigned long total_songs = GMPC_MPDDATA_MODEL(model)->num_rows;
          guint playtime = total_playtime*((gdouble)(total_songs/(gdouble)loaded_songs));
          gchar *string = format_time(playtime);
          gchar *mesg = NULL;
@@ -322,7 +322,6 @@ static void pl3_current_playlist_browser_init(void)
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
     gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
     filter_entry= entry;
-    //gtk_widget_show(entry);
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
     g_signal_connect(G_OBJECT(entry), "key-press-event", G_CALLBACK(mod_fill_entry_key_press_event), NULL);
 
