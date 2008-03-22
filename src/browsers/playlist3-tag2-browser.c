@@ -238,13 +238,21 @@ static void tag2_destroy_tag(tag_element *te)
 static gboolean tag2_song_list_button_press_event(GtkWidget *but, GdkEventButton *event)
 {
 	GtkTreePath *path = NULL;
-	if(event->button == 3 &&gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
+	if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
 	{	
 		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(but));
 		if(gtk_tree_selection_path_is_selected(sel, path))
 		{
-			gtk_tree_path_free(path);
-			return TRUE;
+            if(event->button == 3)
+            {
+    			gtk_tree_path_free(path);
+                return TRUE;
+            }else{
+                gtk_tree_selection_unselect_path(sel, path);
+                return TRUE;
+            }
+
+
 		}
 	}
 	if(path) {
