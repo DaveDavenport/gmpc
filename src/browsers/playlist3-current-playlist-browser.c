@@ -271,6 +271,7 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
         gtk_widget_hide(entry);
+        gtk_widget_grab_focus(pl3_cp_tree);
     }
     timeout = 0;
     return FALSE;
@@ -677,6 +678,7 @@ static void pl3_current_playlist_browser_selected(GtkWidget *container)
     gmpc_mpddata_model_playlist_get_total_playtime(GMPC_MPDDATA_MODEL_PLAYLIST(playlist), &a, &b);
     __real_pl3_total_playtime_changed(GMPC_MPDDATA_MODEL_PLAYLIST(playlist),a,b,NULL);
 
+    gtk_widget_grab_focus(pl3_cp_tree);
 }
 static void pl3_current_playlist_browser_unselected(GtkWidget *container)
 {
