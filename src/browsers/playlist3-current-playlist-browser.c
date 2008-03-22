@@ -65,8 +65,10 @@ static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *even
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 static void pl3_current_playlist_save_myself(void);
 static void pl3_current_playlist_browser_init(void);
+
 GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
+static gboolean search_keep_open = FALSE;
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
@@ -270,10 +272,29 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
-        gtk_widget_hide(entry);
-        gtk_widget_grab_focus(pl3_cp_tree);
+        if(!search_keep_open)
+        {
+            gtk_widget_hide(entry);
+            gtk_widget_grab_focus(pl3_cp_tree);
+        }
     }
     timeout = 0;
+    return FALSE;
+}
+
+static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
+{
+    const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+    if(strlen(text) == 0)
+    {
+        if(event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
+        {
+            search_keep_open = FALSE;
+            gtk_widget_hide(entry);
+            gtk_widget_grab_focus(pl3_cp_tree);
+            return TRUE;
+        }
+    }
     return FALSE;
 }
 
@@ -298,6 +319,7 @@ static void pl3_current_playlist_browser_init(void)
     filter_entry= entry;
     //gtk_widget_show(entry);
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
+    g_signal_connect(G_OBJECT(entry), "key-press-event", G_CALLBACK(mod_fill_entry_key_press_event), NULL);
 
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
@@ -725,9 +747,9 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
     }
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
-//        treesearch_start(tree_search);
         mod_fill_entry_changed(entry, NULL);
         gtk_widget_grab_focus(entry);        
+        search_keep_open = TRUE;
         return TRUE;
     }
     else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
