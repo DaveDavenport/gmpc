@@ -47,6 +47,7 @@ int main ( int argc, char **argv )
             gboolean quit=FALSE;
             /* play */
             gboolean play=FALSE;
+            gboolean pause=FALSE;
             gboolean prev=FALSE;
             gboolean next=FALSE;
             gboolean stop=FALSE;
@@ -65,7 +66,11 @@ int main ( int argc, char **argv )
                     "Give the running gmpc the play command", NULL
                 },
                 {
-                    "next",     'v', 0, G_OPTION_ARG_NONE, &next,
+                    "pause",     'v', 0, G_OPTION_ARG_NONE, &pause,
+                    "Give the running gmpc the pause command", NULL
+                },
+                {
+                    "next",     'b', 0, G_OPTION_ARG_NONE, &next,
                     "Give the running gmpc the next command", NULL
                 },
                 {
@@ -96,7 +101,7 @@ int main ( int argc, char **argv )
                 printf("send quit\n");
                 bacon_message_connection_send(bacon_connection, "QUIT");
             }
-            if(play)
+            if(play || pause)
             {
                 printf("send play\n");
                 bacon_message_connection_send(bacon_connection, "PLAY");

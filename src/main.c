@@ -143,6 +143,11 @@ static void bacon_on_message_received(const char *message, gpointer data)
             play_song();
             return;
         }
+        else if (strcmp(message, "PAUSE") == 0)
+        {
+            play_song();
+            return;
+        }
         else if (strcmp(message, "NEXT") == 0)
         {
             next_song();
