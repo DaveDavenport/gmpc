@@ -1,6 +1,3 @@
-if OS_WIN32
-
-else
 bin_PROGRAMS=gmpc-remote
 gmpc_remote_SOURCES=\
 		main.c\
@@ -31,4 +28,3 @@ AM_CFLAGS = @CFLAGS@\
 
 EXTRA_DIST = \
 		bacon-message-connection.h
-endif		
