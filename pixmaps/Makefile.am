@@ -16,6 +16,7 @@ appicon_DATA =	\
 	media-album.png\
 	gmpc-volume.png\
 	gmpc-add-url.png\
+	mpdBrowser_case.png\
 	gmpc-loading-cover.png
 
 EXTRA_DIST = $(appicon_DATA)
