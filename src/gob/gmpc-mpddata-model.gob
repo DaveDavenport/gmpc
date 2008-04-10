@@ -598,7 +598,7 @@ requires 2.0.0
                         g_value_set_string(value, song->comment);
                         break;                                			
                     case MPDDATA_MODEL_COL_SONG_POS:
-                        g_value_set_int(value, song->pos);
+                        g_value_set_int(value, song->pos+1);
                         break;
                     case MPDDATA_MODEL_COL_SONG_ID:
                         g_value_set_int(value, song->id);
