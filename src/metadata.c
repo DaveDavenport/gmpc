@@ -28,8 +28,8 @@ typedef struct {
 	guint id;
 	/* Data */
 	mpd_Song *song;
-    mpd_Song *edited;
-	MetaDataType type;
+        mpd_Song *edited;
+        MetaDataType type;
 	/* Resuls  */
 	MetaDataResult result;
 	char *result_path;
@@ -87,20 +87,31 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
      */
     if(type&(META_ALBUM_ART|META_ALBUM_TXT))
     {
-        if(edited->album)
+        if(edited->album && edited->file)
         {
-            int i;
+            int i=0;
             MpdData *data2;
-            mpd_database_search_field_start(connection,MPD_TAG_ITEM_ARTIST);
+            char *dir = g_path_get_dirname(edited->file);
+            mpd_database_search_start(connection,TRUE);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, edited->album);
+
+
             data2 = mpd_database_search_commit(connection);
-            for(i=0;data2; data2 = mpd_data_get_next(data2))i++;
+            if(data2)
+            for(i=0;data2; data2 = mpd_data_get_next(data2)){
+                if(strncasecmp(data2->song->file, dir, strlen(dir))==0 &&
+                   strcmp(data2->song->artist, edited->artist))
+                    i++;
+            }
+            printf("%i\n", i);
             if(i >=3)
             {
                 if(edited->artist)
                     g_free(edited->artist);
                 edited->artist = g_strdup("Various Artists");
+                printf("Collection found\n");
             }
+            g_free(dir);
         }
     }
     /**
@@ -192,6 +203,8 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 {
     mpd_Song *edited = rewrite_mpd_song(song, type);
     meta_data_set_cache_real(edited, type, result, path);
+    if(strcmp(edited->artist, "Various Artists")!=0)
+        meta_data_set_cache_real(song, type, result, path);
     mpd_freeSong(edited);
 }
 
@@ -480,6 +493,8 @@ static void meta_data_retrieve_thread()
 		 * update cache 
 		 */
 		meta_data_set_cache_real(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
+                if(strcmp(data->edited->artist, "Various Artists")!=0)
+                    meta_data_set_cache_real(data->song, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
 
 		/**
 		 * Push the result back
@@ -694,19 +709,19 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         }
         ret = META_DATA_FETCHING;
     }
-/*    else
+    else
     {
         ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, path);
-    */    /**
+        /**
          * If the data is know. (and doesn't need fectching) 
          * call the callback and stop
          */
-      /*  if(ret != META_DATA_FETCHING)
+        if(ret != META_DATA_FETCHING)
         {
             return ret;	
         }
     }
-*/
+
     mtd = g_malloc0(sizeof(*mtd));
     /**
      * Make a copy
@@ -725,6 +740,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
          */
         if(ret != META_DATA_FETCHING)
         {
+            /* store it under the original */
+            meta_data_set_cache_real(tsong, type, ret, *path);
+            printf("storing various to original\n");
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             return ret;	

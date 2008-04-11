@@ -38,6 +38,7 @@ sources=\
 	gob/gmpc-mpddata-model-playlist.c\
 	gob/gmpc-mpddata-treeview.c\
 	gob/gmpc-clicklabel.c\
+	gob/gmpc-stats-label.c\
 	gob/gmpc-signals.c\
 	gmpc_easy_download.c\
 	gob/gmpc-profiles.c\
@@ -67,6 +68,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-liststore-sort.c\
 	gob/gmpc-mpddata-model-playlist.c\
 	gob/gmpc-mpddata-treeview.c\
+	gob/gmpc-stats-label.c\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-meta-watcher.c\
@@ -184,6 +186,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-clicklabel.h\
 		gob/gmpc-clicklabel-private.h\
 		gob/gmpc-signals-private.h\
+		gob/gmpc-stats-label.h\
+		gob/gmpc-stats-label-private.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\

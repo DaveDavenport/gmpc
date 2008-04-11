@@ -7,6 +7,8 @@
 #include "misc.h"
 
 #include "gob/gmpc-clicklabel.h"
+#include "gob/gmpc-stats-label.h"
+
 #include "gmpc-meta-text-view.h"
 
 /**
@@ -338,6 +340,22 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
     gtk_label_set_line_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
     gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
 }
+static void info2_add_table_item_widget(GtkWidget *table,char *name, GtkWidget *value, int i)
+{
+	GtkWidget *label;
+	label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label), name);
+	gtk_misc_set_alignment(GTK_MISC(label),0,0);
+    
+	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+	label = value;
+	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+	//gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+    gtk_label_set_line_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
+    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+}
 
 /**
  * Create an artist "button"
@@ -379,10 +397,21 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 		i++;
 	}
 	if(mpd_server_check_version(connection, 0,13,0) && song->artist)
-	{
-		/**
-		 * Songs list 
-		 */
+    {
+        /**
+         * Songs list 
+         */
+
+        info2_add_table_item_widget(table,_("<b>Songs:</b>"),gmpc_stats_label_new(ARTIST_NUM_SONGS,song),i);
+        i++;
+        info2_add_table_item_widget(table,_("<b>PlayTime:</b>"),gmpc_stats_label_new(ARTIST_PLAYTIME_SONGS,song),i);
+        i++;
+    }
+    info2_add_table_item_widget(table,_("<b>Genre:</b>"),gmpc_stats_label_new(ARTIST_GENRES_SONGS,song),i);
+    i++;
+    info2_add_table_item_widget(table,_("<b>Date:</b>"),gmpc_stats_label_new(ARTIST_DATES_SONGS,song),i);
+    i++;
+        /*
 		mpd_database_search_stats_start(connection);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
 		stats = mpd_database_search_stats_commit(connection);
@@ -392,16 +421,19 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 			info2_add_table_item(table,_("<b>Songs:</b>"),buffer,i,FALSE);
 			i++;
 			q_free(buffer); 
+            */
 			/**
 			 * Playtime
 			 */
+        /*
 			buffer = format_time_real(stats->playTime,"");
 			info2_add_table_item(table,_("<b>Playtime:</b>"),buffer,i,FALSE);
 			i++;                                                    	
 			q_free(buffer); 
 			mpd_database_search_free_stats(stats);
 		}
-	}
+        */
+	/*}*/
 	/**
 	 * Genre
 	 */

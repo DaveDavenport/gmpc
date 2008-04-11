@@ -1,0 +1,158 @@
+requires 2.0.10
+
+%ph{
+#include "main.h"
+#include "misc.h"
+%}
+
+%h{
+    typedef enum _LabelType {
+        ARTIST_NUM_SONGS,
+        ARTIST_PLAYTIME_SONGS,
+        ARTIST_GENRES_SONGS,
+        ARTIST_DATES_SONGS
+    }LabelType;
+
+%}
+%ht{
+#include <gtk/gtk.h>
+#include <libmpd/libmpd.h>
+%}
+
+class Gmpc:Stats:Label from Gtk:Label 
+{
+    private LabelType ltype = ARTIST_NUM_SONGS; 
+	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
+    private guint idle_id = 0;
+
+    private 
+    gboolean
+    idle_handler(self)
+    {
+        if(self->_priv->ltype == ARTIST_NUM_SONGS)
+        {
+            MpdDBStats *stats = NULL;
+            mpd_database_search_stats_start(connection);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            stats = mpd_database_search_stats_commit(connection);
+            if(stats)
+            {
+                char *buffer = g_strdup_printf("%i", stats->numberOfSongs);
+                gtk_label_set_text(GTK_LABEL(self), buffer); 
+                q_free(buffer); 
+                mpd_database_search_free_stats(stats);
+            }
+            else
+                gtk_label_set_text(GTK_LABEL(self), ""); 
+
+        }else if (self->_priv->ltype == ARTIST_PLAYTIME_SONGS)
+        {
+            MpdDBStats *stats = NULL;
+            mpd_database_search_stats_start(connection);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            stats = mpd_database_search_stats_commit(connection);
+            if(stats)
+            {
+                char *buffer = format_time_real(stats->playTime,"");
+                gtk_label_set_text(GTK_LABEL(self), buffer); 
+                q_free(buffer); 
+                mpd_database_search_free_stats(stats);
+            }
+            else
+                gtk_label_set_text(GTK_LABEL(self), ""); 
+        }else if (self->_priv->ltype == ARTIST_GENRES_SONGS)
+        {
+            GString *string = NULL;
+            MpdData *data = NULL;
+            mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            string = g_string_new("");
+            for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+            {
+                g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+            }
+            if(string->len >0)
+            {
+                gtk_label_set_text(GTK_LABEL(self), string->str); 
+            }
+            else
+            {
+                gtk_label_set_text(GTK_LABEL(self), ""); 
+            }
+            g_string_free(string, TRUE);
+        }
+        else if (self->_priv->ltype == ARTIST_DATES_SONGS)
+        {
+            int items = 0;
+            GString *string = NULL;
+            MpdData *data = NULL;
+            mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            string = g_string_new("");
+            items= 0;
+            for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
+            {
+                g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+                items++;
+            }
+            if(string->len >0)
+            {
+
+                gtk_label_set_text(GTK_LABEL(self), string->str); 
+            }
+            else
+                gtk_label_set_text(GTK_LABEL(self), ""); 
+            g_string_free(string, TRUE);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+        self->_priv->idle_id = 0;
+        return FALSE;
+    }
+
+
+    /* Constructor */
+    public
+    GtkWidget *
+    new(LabelType ltype, mpd_Song *song)
+    {
+        Self *self = GET_NEW;
+
+        self->_priv->song = mpd_songDup(song);
+        self->_priv->ltype = ltype;
+
+        self->_priv->idle_id = g_idle_add(self_idle_handler, self);
+
+        gtk_label_set_markup(GTK_LABEL(self),_("<i>Loading</i>"));
+        return (GtkWidget *)self;
+    }
+    override (G:Object)
+    void
+    finalize(G:Object *obj)
+    {
+        Self *self = SELF(obj);
+        if(self->_priv->idle_id)
+        {
+            g_source_remove(self->_priv->idle_id);
+            self->_priv->idle_id = 0;
+        }
+        printf("free label\n");
+    }
+
+
+}
