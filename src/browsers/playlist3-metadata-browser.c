@@ -864,7 +864,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         int num_cols = 2;
         int songs = 0;
         int tile_size = 300;
-        int overflow = 50;
+        int overflow = cfg_get_single_value_as_int_with_default(config, "metadata", "overflow-amount", 50);
         MpdData *data = NULL;
         mpd_Song *song;
 
@@ -1032,7 +1032,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 		mpd_Song *song = mpd_newSong();
 		GList *list = NULL;
 		int i=0;
-		for(;str && str[i]&& i<200 ;i++)
+		for(;str && str[i]&& i<20 ;i++)
 		{
 			gchar *string = NULL;
 			MpdData *data = NULL;
