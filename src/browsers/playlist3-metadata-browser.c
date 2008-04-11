@@ -864,6 +864,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         int num_cols = 2;
         int songs = 0;
         int tile_size = 300;
+        int overflow = 50;
         MpdData *data = NULL;
         mpd_Song *song;
 
@@ -894,7 +895,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         song = mpd_newSong();
         for(;data;data = mpd_data_get_next(data))
         {
-            if(songs < 20 && !regexec(&regt,data->tag, 0,NULL,0))
+            if(songs < overflow && !regexec(&regt,data->tag, 0,NULL,0))
             {
                 GtkWidget *button;
                 song->artist = data->tag;
@@ -906,17 +907,19 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         }
 
         /* if there is an "overflow" show a message */
-        if(songs >= 20)
+        if(songs >= overflow)
         {
             GtkWidget *box = gtk_hbox_new(FALSE, 6);
+            gchar *buffer = g_strdup_printf(_("Only the first %i result displayed, please refine your search query"), overflow);
             GtkWidget *temp = gtk_image_new_from_stock(GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG);
             gtk_box_pack_start(GTK_BOX(box), temp, FALSE, TRUE, 0);
-            temp = gtk_label_new(_("Only the first 20 result displayed, please refine your search query"));
+            temp = gtk_label_new(buffer);
             gtk_misc_set_alignment(GTK_MISC(temp), 0,0.5);
             gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
             gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
 
             gtk_box_pack_start(GTK_BOX(table), box, FALSE, FALSE,0);
+            g_free(buffer);
         }
         gettimeofday(&stop, NULL);
         timersub(&stop, &start, &diff);
@@ -1029,7 +1032,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 		mpd_Song *song = mpd_newSong();
 		GList *list = NULL;
 		int i=0;
-		for(;str && str[i]&& i<20 ;i++)
+		for(;str && str[i]&& i<200 ;i++)
 		{
 			gchar *string = NULL;
 			MpdData *data = NULL;

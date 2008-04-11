@@ -151,7 +151,6 @@ class Gmpc:Stats:Label from Gtk:Label
             g_source_remove(self->_priv->idle_id);
             self->_priv->idle_id = 0;
         }
-        printf("free label\n");
     }
 
 
