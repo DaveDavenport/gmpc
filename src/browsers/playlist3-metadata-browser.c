@@ -405,6 +405,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/**
 	 * Genre
 	 */
+    /*
 	mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
 	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
 	string = g_string_new("");
@@ -418,9 +419,11 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 		i++;
 	}
 	g_string_free(string, TRUE);
+    */
 	/**
 	 *  Dates 
 	 */
+    /*
 	mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
 	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
 	string = g_string_new("");
@@ -436,7 +439,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 		i++;
 	}
 	g_string_free(string, TRUE);
-
+*/
 
 
 
@@ -808,79 +811,93 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
  */
 static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 {
-	regex_t regt;
-	const char *text = NULL;
-	GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
-	GtkTreeIter iter;
-	/**
-	 * Remove all the remaining widgets in the view
-	 */
-	remove_container_entries(GTK_CONTAINER(table));
+    regex_t regt;
+    const char *text = NULL;
+    GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
+    GtkTreeIter iter;
+    struct timeval start, stop;
+    struct timeval diff;
+    /**
+     * Remove all the remaining widgets in the view
+     */
+    remove_container_entries(GTK_CONTAINER(table));
 
 
-	/** get text
-	*/
-	text = gtk_entry_get_text(entry);
-	if(strlen(text) && !regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB))
-	{
-		int skip = 0;
-		int num_cols = 2;
-		int songs = 0;
-		int tile_size = 300;
-		MpdData *data = NULL;
-		mpd_Song *song;
-		/**
-		 * 		update completion
-		 */
-		if(gtk_tree_model_get_iter_first(model, &iter))
-		{	
-			do{
-				char *oldname = NULL;
-				gtk_tree_model_get(model, &iter, 0,&oldname,-1);
-				if(!strcmp(text, oldname))  skip=TRUE;
-				q_free(oldname);
-			}while(gtk_tree_model_iter_next(model, &iter) && skip);
-		}
-		if(!skip)
-		{
-			gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
-		}
+    /** get text
+    */
+    text = gtk_entry_get_text(entry);
+    if(strlen(text) && !regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB))
+    {
+        int skip = 0;
+        int num_cols = 2;
+        int songs = 0;
+        int tile_size = 300;
+        MpdData *data = NULL;
+        mpd_Song *song;
 
-		data = mpd_database_get_artists(connection);
-		num_cols = (int)(resizer_vbox->allocation.width-20)/(tile_size+6);
-		song = mpd_newSong();
-		for(;data;data = mpd_data_get_next(data))
-		{
-			if(songs < 20 && !regexec(&regt,data->tag, 0,NULL,0))
-			{
-				GtkWidget *button;
-				song->artist = data->tag;
-				button = info2_create_artist_button(song);
-				gtk_box_pack_start(GTK_BOX(table), button, FALSE, FALSE,0);
-				song->artist = NULL;				
-				songs++;
-			}
-		}
 
-		/* if there is an "overflow" show a message */
-		if(songs >= 20)
-		{
-			GtkWidget *box = gtk_hbox_new(FALSE, 6);
-			GtkWidget *temp = gtk_image_new_from_stock(GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG);
-			gtk_box_pack_start(GTK_BOX(box), temp, FALSE, TRUE, 0);
-			temp = gtk_label_new(_("Only the first 20 result displayed, please refine your search query"));
-			gtk_misc_set_alignment(GTK_MISC(temp), 0,0.5);
-			gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
-			gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
 
-			gtk_box_pack_start(GTK_BOX(table), box, FALSE, FALSE,0);
-		}
+        /**
+         * 		update completion
+         */
+        if(gtk_tree_model_get_iter_first(model, &iter))
+        {	
+            do{
+                char *oldname = NULL;
+                gtk_tree_model_get(model, &iter, 0,&oldname,-1);
+                if(!strcmp(text, oldname))  skip=TRUE;
+                q_free(oldname);
+            }while(gtk_tree_model_iter_next(model, &iter) && skip);
+        }
+        if(!skip)
+        {
+            gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, 0, 0, text, -1);
+        }
 
-		regfree(&regt);
-		mpd_freeSong(song);
-	}
-	gtk_widget_show_all(resizer_vbox);
-}
+
+        gettimeofday(&start, NULL);
+
+        data = mpd_database_get_artists(connection);
+        num_cols = (int)(resizer_vbox->allocation.width-20)/(tile_size+6);
+        song = mpd_newSong();
+        for(;data;data = mpd_data_get_next(data))
+        {
+            if(songs < 20 && !regexec(&regt,data->tag, 0,NULL,0))
+            {
+                GtkWidget *button;
+                song->artist = data->tag;
+                button = info2_create_artist_button(song);
+                gtk_box_pack_start(GTK_BOX(table), button, FALSE, FALSE,0);
+                song->artist = NULL;				
+                songs++;
+            }
+        }
+
+        /* if there is an "overflow" show a message */
+        if(songs >= 20)
+        {
+            GtkWidget *box = gtk_hbox_new(FALSE, 6);
+            GtkWidget *temp = gtk_image_new_from_stock(GTK_STOCK_DIALOG_WARNING, GTK_ICON_SIZE_DIALOG);
+            gtk_box_pack_start(GTK_BOX(box), temp, FALSE, TRUE, 0);
+            temp = gtk_label_new(_("Only the first 20 result displayed, please refine your search query"));
+            gtk_misc_set_alignment(GTK_MISC(temp), 0,0.5);
+            gtk_label_set_line_wrap(GTK_LABEL(temp), TRUE);
+            gtk_box_pack_start(GTK_BOX(box), temp, TRUE, TRUE, 0);
+
+            gtk_box_pack_start(GTK_BOX(table), box, FALSE, FALSE,0);
+        }
+        gettimeofday(&stop, NULL);
+        timersub(&stop, &start, &diff);
+    printf("time elapsed until loaded: %lu s, %lu us\n",(unsigned long)( diff.tv_sec),(unsigned long)( diff.tv_usec));    
+
+
+
+
+        regfree(&regt);
+        mpd_freeSong(song);
+    }
+    gtk_widget_show_all(resizer_vbox);
+  }
 
 static void info2_fill_view()
 {
