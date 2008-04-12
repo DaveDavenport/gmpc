@@ -336,7 +336,6 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
         gtk_label_set_selectable(GTK_LABEL(label), TRUE);
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-	//gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
     gtk_label_set_line_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
     gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
 }
@@ -411,69 +410,6 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
     i++;
     info2_add_table_item_widget(table,_("<b>Date:</b>"),gmpc_stats_label_new(ARTIST_DATES_SONGS,song),i);
     i++;
-        /*
-		mpd_database_search_stats_start(connection);
-		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
-		stats = mpd_database_search_stats_commit(connection);
-		if(stats)
-		{
-			buffer = g_strdup_printf("%i", stats->numberOfSongs);
-			info2_add_table_item(table,_("<b>Songs:</b>"),buffer,i,FALSE);
-			i++;
-			q_free(buffer); 
-            */
-			/**
-			 * Playtime
-			 */
-        /*
-			buffer = format_time_real(stats->playTime,"");
-			info2_add_table_item(table,_("<b>Playtime:</b>"),buffer,i,FALSE);
-			i++;                                                    	
-			q_free(buffer); 
-			mpd_database_search_free_stats(stats);
-		}
-        */
-	/*}*/
-	/**
-	 * Genre
-	 */
-    /*
-	mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
-	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
-	string = g_string_new("");
-	for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
-	{
-		g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
-	}
-	if(string->len >0)
-	{
-		info2_add_table_item(table, _("<b>Genre:</b>"), string->str, i,FALSE);
-		i++;
-	}
-	g_string_free(string, TRUE);
-    */
-	/**
-	 *  Dates 
-	 */
-    /*
-	mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
-	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song->artist);
-	string = g_string_new("");
-	items= 0;
-	for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
-	{
-		g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
-		items++;
-	}
-	if(string->len >0)
-	{
-		info2_add_table_item(table, ngettext("<b>Date: </b>", "<b>Dates: </b>", items), string->str, i,FALSE);
-		i++;
-	}
-	g_string_free(string, TRUE);
-*/
-
-
 
 	gtk_box_pack_start(GTK_BOX(vbox), table, TRUE,TRUE,0);
 
@@ -1405,10 +1341,6 @@ void info2_fill_artist_view(char *artist)
 		{
 			GtkWidget *event = info2_create_album_button(song2->artist, data->tag); 	
             list = g_list_append(list, event);
-/*			if(event) {
-				gtk_box_pack_start(GTK_BOX(vbox),event, FALSE,TRUE,0);
-			}
-            */
 		}
         /* sort it */
         list = g_list_sort(list, (GCompareFunc)info2_sort_year);
@@ -1818,7 +1750,6 @@ static void info2_add(GtkWidget *cat_tree)
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "info2-plugin","position",5);
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
-//	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	playlist3_insert_browser(&iter, pos);
 	gtk_list_store_set(pl3_tree, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
@@ -1926,27 +1857,6 @@ static int info2_add_go_menu(GtkWidget *menu)
 
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-/*
-	if (event->keyval == GDK_F6)
-	{
-		info2_activate();
-		return TRUE;
-	}
-	if (event->keyval == GDK_F7)
-	{
-		info2_activate();
-		if(!show_current_song)
-		{
-			info2_fill_view();
-			if(info2_entry)
-			{
-				gtk_widget_grab_focus(info2_entry);
-			}
-		}
-		return TRUE;
-
-	}
-*/
 	if (pl3_cat_get_selected_browser() == metab_plugin.id)
 	{
 		if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
