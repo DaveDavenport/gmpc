@@ -662,7 +662,7 @@ void info2_fill_song_view(mpd_Song *song)
 	image = gmpc_metaimage_new(META_ALBUM_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
-	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE, FALSE,0);
 
@@ -1102,7 +1102,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 			}else
 				song->artist = str[i];
 			gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 50);
-			gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(gmtv), song);
+			gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song);
 			gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,FALSE,0);
 			song->artist = NULL;
 			/**
@@ -1261,7 +1261,7 @@ void info2_fill_artist_view(char *artist)
 	gmtv = gmpc_metaimage_new(META_ARTIST_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(gmtv), TRUE);
-	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(gmtv), song2);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song2);
 
 	gtk_table_attach(GTK_TABLE(table), gmtv, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 
@@ -1550,7 +1550,7 @@ void info2_fill_album_view(char *artist,char *album)
 	image = gmpc_metaimage_new(META_ALBUM_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
 	gmpc_metaimage_set_draw_shadow(GMPC_METAIMAGE(image), TRUE);
-	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song2);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song2);
 
 
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1995,7 +1995,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 
 	image = gmpc_metaimage_new(META_ALBUM_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 100);
-	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(image), song);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
 
 	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
 	gtk_box_pack_start(GTK_BOX(table), image, FALSE, TRUE,0);
