@@ -847,8 +847,8 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     const char *text = NULL;
     GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
     GtkTreeIter iter;
-    struct timeval start, stop;
-    struct timeval diff;
+    GTimeVal start, stop;
+    GTimeVal diff;
     /**
      * Remove all the remaining widgets in the view
      */
@@ -888,7 +888,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         }
 
 
-        gettimeofday(&start, NULL);
+        g_get_current_time(&start);
 
         data = mpd_database_get_artists(connection);
         num_cols = (int)(resizer_vbox->allocation.width-20)/(tile_size+6);
@@ -921,8 +921,15 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
             gtk_box_pack_start(GTK_BOX(table), box, FALSE, FALSE,0);
             g_free(buffer);
         }
-        gettimeofday(&stop, NULL);
-        timersub(&stop, &start, &diff);
+        g_get_current_time(&stop);
+        diff.tv_usec = stop.tv_usec - start.tv_usec;
+
+        diff.tv_sec = stop.tv_sec - start.tv_sec;
+        if(diff.tv_usec < 0)
+        {
+            diff.tv_sec -= 1;
+            diff.tv_sec += G_USEC_PER_SEC;
+        }
     printf("time elapsed until loaded: %lu s, %lu us\n",(unsigned long)( diff.tv_sec),(unsigned long)( diff.tv_usec));    
 
 
