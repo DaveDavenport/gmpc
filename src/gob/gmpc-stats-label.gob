@@ -103,22 +103,6 @@ class Gmpc:Stats:Label from Gtk:Label
             else
                 gtk_label_set_text(GTK_LABEL(self), ""); 
             g_string_free(string, TRUE);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
         self->_priv->idle_id = 0;
@@ -136,7 +120,7 @@ class Gmpc:Stats:Label from Gtk:Label
         self->_priv->song = mpd_songDup(song);
         self->_priv->ltype = ltype;
 
-        self->_priv->idle_id = g_idle_add(self_idle_handler, self);
+        self->_priv->idle_id = gmpc_idle_add(gmpc_idle,self_idle_handler, self);
 
         gtk_label_set_markup(GTK_LABEL(self),_("<i>Loading</i>"));
         return (GtkWidget *)self;
@@ -148,9 +132,10 @@ class Gmpc:Stats:Label from Gtk:Label
         Self *self = SELF(obj);
         if(self->_priv->idle_id)
         {
-            g_source_remove(self->_priv->idle_id);
+            gmpc_idle_source_remove(gmpc_idle,self->_priv->idle_id);
             self->_priv->idle_id = 0;
         }
+        PARENT_HANDLER(obj);
     }
 
 

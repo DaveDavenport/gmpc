@@ -383,7 +383,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/** Create artist image */	
 	metaimage = gmpc_metaimage_new(META_ARTIST_ART);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage), 100);
-	gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(metaimage), song);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(metaimage), song);
 	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, FALSE,0);
 
 	/** Create table */

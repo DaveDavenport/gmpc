@@ -40,6 +40,7 @@ sources=\
 	gob/gmpc-clicklabel.c\
 	gob/gmpc-stats-label.c\
 	gob/gmpc-signals.c\
+gob/gmpc-idle.c\
 	gmpc_easy_download.c\
 	gob/gmpc-profiles.c\
 	url_fetcher.c\
@@ -73,6 +74,7 @@ BUILT_SOURCES= revisiont.h\
 	gob/gmpc-meta-text-view.c\
 	gob/gmpc-meta-watcher.c\
 	gob/gmpc-metaimage.c\
+	gob/gmpc-idle.c\
 	gob/gmpc-signals.c
 
 %.c %.h %-private.h: %.gob
@@ -140,6 +142,7 @@ gmpcinclude_HEADERS = \
 		gob/gmpc-metaimage.h\
 		gob/gmpc-connection.h\
 		gob/gmpc-signals.h\
+		gob/gmpc-idle.h\
 		TreeSearchWidget.h \
 		playlist3-messages.h\
 		metadata.h
@@ -188,6 +191,8 @@ EXTRA_DIST = 	playlist3.h\
 		gob/gmpc-signals-private.h\
 		gob/gmpc-stats-label.h\
 		gob/gmpc-stats-label-private.h\
+		gob/gmpc-idle.h\
+		gob/gmpc-idle-private.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\

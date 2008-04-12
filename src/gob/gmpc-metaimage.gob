@@ -33,6 +33,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	private GtkWidget *popup_win = {NULL};
 	private guint popup_timer_id = {0};
+    private guint gmpc_idle_id = {0};
 	private int popup_w = {0};
 	private int popup_h = {0};
 	/** Public */
@@ -232,6 +233,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	finalize (G:Object *obj)
 	{
+        
+        
+        
+        
+        
 		PARENT_HANDLER(obj);
 	}
 
@@ -240,7 +246,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		dispose(G:Object *obj)
 		{
 			Self *self = GMPC_METAIMAGE(obj); 
-			if(self->_priv->meta_id)
+            if(self->_priv->gmpc_idle_id)
+            {
+                gmpc_idle_source_remove(gmpc_idle,self->_priv->gmpc_idle_id);
+                self->_priv->gmpc_idle_id = 0;
+            }
+            if(self->_priv->meta_id)
 			{
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 				self->_priv->meta_id =  0;
@@ -332,6 +343,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 			if(self->_priv->song)
 				mpd_freeSong(self->_priv->song);
+            self->_priv->song = NULL;
 
 			if(!song)
 			{
@@ -355,7 +367,40 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				q_free(path);
 			}
 		}
+        private
+        gboolean
+        update_cover_from_song_delayed_real(self)
+        {
+            gchar *path = NULL;
+            int ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &path);
+            if(ret == META_DATA_FETCHING)
+            {
+                self_set_cover_fetching(self);
+            }else if (ret == META_DATA_AVAILABLE) {
+                self_set_cover_from_path(self,path); 
+            } else {
+                self_set_cover_na(self);
+            }
+            if(path)
+            {
+                q_free(path);
+            }
 
+            self->_priv->gmpc_idle_id = 0;
+            return FALSE;
+        }
+	public 
+		void
+		update_cover_from_song_delayed(self, mpd_Song *song)
+        {
+            if(self->_priv->song)
+                mpd_freeSong(self->_priv->song);
+
+            self->_priv->song = mpd_songDup(song);
+            self->_priv->gmpc_idle_id = gmpc_idle_add(gmpc_idle,self_update_cover_from_song_delayed_real,self);
+
+        }
+		
 	private
 		void
 		meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path,gpointer data)
