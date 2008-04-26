@@ -722,10 +722,8 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
         if(url_data)
         {
             gchar **url = g_uri_list_extract_uris(url_data);
-            printf("url\n");
             if(url)
             {
-                printf("uri: %s\n", url[0]);
                 gtk_drag_finish(context, TRUE, FALSE, time);
                 url_start_real(url[0]);
                 g_strfreev(url);
@@ -1594,18 +1592,9 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
 
-
 				/**
 				 * Set paused in Window string 
 				 */
-/*				gtk_label_set_markup(GTK_LABEL
-						(glade_xml_get_widget(pl3_xml,"pp_label")),
-						"<span size=\"large\" weight=\"bold\">Paused</span>");
-
-				gtk_label_set_markup(GTK_LABEL
-						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-						_("<span size=\"large\" weight=\"bold\">Paused</span>"));				
-                */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 				break;
@@ -1619,14 +1608,7 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
-/*				gtk_label_set_markup(GTK_LABEL
-						(glade_xml_get_widget(pl3_xml,"pp_label")),
-						"<span size=\"large\" weight=\"bold\">Not Playing</span>");
 
-				gtk_label_set_markup(GTK_LABEL
-						(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-						_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));				
-*/
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
 		}
 		playlist3_update_header();

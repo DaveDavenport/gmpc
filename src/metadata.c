@@ -103,13 +103,11 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
                    strcmp(data2->song->artist, edited->artist))
                     i++;
             }
-            printf("%i\n", i);
             if(i >=3)
             {
                 if(edited->artist)
                     g_free(edited->artist);
                 edited->artist = g_strdup("Various Artists");
-                printf("Collection found\n");
             }
             g_free(dir);
         }
@@ -742,7 +740,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         {
             /* store it under the original */
             meta_data_set_cache_real(tsong, type, ret, *path);
-            printf("storing various to original\n");
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             return ret;	
