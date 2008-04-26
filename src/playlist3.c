@@ -716,12 +716,15 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 {
 	if(info != 99)
 	{
-		gchar **url = g_strsplit((const gchar *)data->data,"\n", -1);
+		gchar **url = gtk_selection_data_get_uris(data);
+        if(url)
+        {
+            gchar *stripped = g_filename_from_uri(url[0], NULL, NULL); 
 
-
-		gtk_drag_finish(context, TRUE, FALSE, time);
-		url_start_real(g_strstrip(url[0]));
-		g_strfreev(url);
+            gtk_drag_finish(context, TRUE, FALSE, time);
+            url_start_real(stripped);
+            g_strfreev(url);
+        }
 	} else {
 		MpdData * mdata ;
 		gchar **stripped;
