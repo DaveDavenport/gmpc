@@ -718,7 +718,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 {
 	if(info != 99)
 	{
-		gchar *url_data = data->data; 
+		const gchar *url_data = (gchar *)data->data; 
         if(url_data)
         {
             gchar **url = g_uri_list_extract_uris(url_data);
@@ -1490,10 +1490,11 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
 		pl3_push_rsb_message(_("Not Connected"));
 	}
+    /*
 	while(gtk_events_pending())
 		gtk_main_iteration();
-
-	/** Set back to the current borwser, and update window title */
+        */
+    /** Set back to the current borwser, and update window title */
 	if(connect){
 		gchar *string = NULL;
 		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
