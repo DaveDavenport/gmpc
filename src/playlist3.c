@@ -38,6 +38,8 @@ static GtkTargetEntry target_table[] =
     { "x-url/http", 0, 0 },
 	{ "_NETSCAPE_URL", 0, 1},
 	{ "text/uri-list", 0, 2},
+    { "audio/*",0,3},
+    { "audio/x-scpls", 0,4},
 	{ "internal-drop",0,99}
 };
 
@@ -716,14 +718,18 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 {
 	if(info != 99)
 	{
-		gchar **url = gtk_selection_data_get_uris(data);
-        if(url)
+		gchar *url_data = data->data; 
+        if(url_data)
         {
-            gchar *stripped = g_filename_from_uri(url[0], NULL, NULL); 
-
-            gtk_drag_finish(context, TRUE, FALSE, time);
-            url_start_real(stripped);
-            g_strfreev(url);
+            gchar **url = g_uri_list_extract_uris(url_data);
+            printf("url\n");
+            if(url)
+            {
+                printf("uri: %s\n", url[0]);
+                gtk_drag_finish(context, TRUE, FALSE, time);
+                url_start_real(url[0]);
+                g_strfreev(url);
+            }
         }
 	} else {
 		MpdData * mdata ;
@@ -1176,7 +1182,7 @@ void create_playlist3 ()
 	 */
 	gtk_drag_dest_set(glade_xml_get_widget(pl3_xml, "hbox_playlist_player"),
 			GTK_DEST_DEFAULT_ALL,
-			target_table, 4,
+			target_table, 6,
 			GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
 	g_signal_connect (G_OBJECT (glade_xml_get_widget(pl3_xml, "hbox_playlist_player")),"drag_data_received",
 			GTK_SIGNAL_FUNC (playlist3_source_drag_data_recieved),
