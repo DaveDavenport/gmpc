@@ -208,7 +208,6 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 			}	
 			if(gtk_tree_path_get_depth(path)>0)
 			{
-				GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");
 				if(!gtk_tree_selection_iter_is_selected(selec, &cat_iter))
 				{
 					gtk_tree_selection_select_iter(selec, &cat_iter);
