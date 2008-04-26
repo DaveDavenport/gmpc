@@ -2092,6 +2092,8 @@ void playlist3_new_header(void)
 	{
 		GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
 		GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+
+        gtk_widget_set_size_request(hbox, 250,-1);
 		/** Title */
 		header_labels[0] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]),4);
@@ -2112,11 +2114,11 @@ void playlist3_new_header(void)
 
 		gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE,0);
 		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE,0);
+
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[1], FALSE, TRUE,0);
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[2], FALSE, TRUE,0);
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE,0);
-
-		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE,  TRUE,0);
 
 		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
 		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
