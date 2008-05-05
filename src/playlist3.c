@@ -107,7 +107,7 @@ GtkTreeModel *pl3_tree = NULL;
 
 
 /* size */
-GtkAllocation pl3_wsize = { 0,0,0,0};
+GtkAllocation pl3_wsize = {0,0,0,0};
 int pl3_hidden = TRUE;
 
 static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
@@ -1194,6 +1194,12 @@ GtkTreeView *playlist3_get_category_tree_view()
 /****************************************************************************************
  *  PREFERENCES										*
  ****************************************************************************************/
+
+void show_cover_case_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "metaimage","addcase", bool1);
+}
 void hide_on_close_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
@@ -1238,6 +1244,11 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_hide_on_close")),      		
 				cfg_get_single_value_as_int_with_default(config,"playlist", "hide-on-close", 0));
+		gtk_toggle_button_set_active(
+				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_cover_case")),      		
+				cfg_get_single_value_as_int_with_default(config,"metaimage", "addcase", FALSE));
+
+
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
