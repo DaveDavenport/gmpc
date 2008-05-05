@@ -555,10 +555,9 @@ int main (int argc, char **argv)
      */
     /** current playlist */
     plugin_add(&current_playlist_plug, 0);
-    plugin_add(&find3_browser_plug, 0);
     /** file browser */
     plugin_add(&file_browser_plug, 0);
-    /** File Browser */
+    /** Find Browser */
     plugin_add(&find2_browser_plug, 0);
     /* this shows the connection preferences */
     plugin_add(&connection_plug,0);

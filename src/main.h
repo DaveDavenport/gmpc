@@ -33,7 +33,6 @@
 #include "browsers/playlist3-playlist-editor.h"
 #include "browsers/playlist3-file-browser.h"
 #include "browsers/playlist3-find2-browser.h"
-#include "browsers/playlist3-find3-browser.h"
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 

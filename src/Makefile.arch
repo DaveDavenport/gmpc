@@ -19,7 +19,6 @@ sources=\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
 	browsers/playlist3-find2-browser.c\
-	browsers/playlist3-find3-browser.c\
 	browsers/playlist3-metadata-browser.c\
 	browsers/playlist3-playlist-editor.c\
 	mm-keys.c\
@@ -158,7 +157,6 @@ EXTRA_DIST = 	playlist3.h\
 		browsers/playlist3-file-browser.h\
 		browsers/playlist3-current-playlist-browser.h\
 		browsers/playlist3-find2-browser.h\
-		browsers/playlist3-find3-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		bacon/bacon-volume.h\
 		bacon/bacon-message-connection.h\

@@ -67,7 +67,7 @@ gmpcPlBrowserPlugin find2_browser_gbp = {
 };
 
 gmpcPlugin find2_browser_plug = {
-	.name = 						"Database Search Browser",
+	.name = 						"Search Browser",
 	.version = 						{1,1,1},
 	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER,
     .destroy = 						pl3_find2_browser_destroy,
@@ -83,6 +83,8 @@ typedef struct {
     GtkWidget *combo;
     GtkWidget  *lcombo;
     GtkWidget *entry;
+    regex_t preq;
+    int tag_type; 
 }crit_struct;
 
 
@@ -94,16 +96,17 @@ static GtkTreeRowReference *pl3_find2_ref = NULL;
 extern GladeXML *pl3_xml;
 
 /* internal */
-GtkWidget 			*pl3_find2_tree 		= NULL;
-GmpcMpdDataModel 	*pl3_find2_store2 		= NULL;
-GtkWidget 			*pl3_find2_vbox 		= NULL;
-GtkWidget			*pl3_find2_findbut		= NULL;
-GtkWidget       	*pl3_find2_critaddbut   = NULL;
-GtkListStore		*pl3_find2_combo_store 	= NULL;
-GtkWidget			*pl3_find2_pb 			= NULL;
+static GtkWidget            *pl3_find2_curpl        = NULL;
+static GtkWidget 			*pl3_find2_tree 		= NULL;
+static GmpcMpdDataModel 	*pl3_find2_store2 		= NULL;
+static GtkWidget 			*pl3_find2_vbox 		= NULL;
+static GtkWidget			*pl3_find2_findbut		= NULL;
+static GtkWidget       	    *pl3_find2_critaddbut   = NULL;
+static GtkListStore		    *pl3_find2_combo_store 	= NULL;
+static GtkWidget			*pl3_find2_pb 			= NULL;
 static GtkListStore 		*pl3_find2_autocomplete = NULL;
-GList 				*criterias 				= NULL;
-GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
+static GList 				*criterias 				= NULL;
+static GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
 
 static void pl3_find2_fill_combo()
 {
@@ -143,6 +146,10 @@ static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
 {
   pl3_find2_last_entry= gtk_combo_box_get_active(cb);
 }
+
+/**
+ * Add a criteria 
+ */
 static void pl3_find2_browser_add_crit()
 {
     crit_struct *cs = g_malloc0(sizeof(*cs));
@@ -167,12 +174,6 @@ static void pl3_find2_browser_add_crit()
     gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), pl3_find2_last_entry);
     gtk_box_pack_start(GTK_BOX(cs->hbox), cs->combo, FALSE, TRUE, 0);
     g_signal_connect(G_OBJECT(cs->combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
-
-
-
-
-
-
 
 
     cs->entry = gtk_entry_new();
@@ -209,6 +210,9 @@ static void pl3_find2_browser_add_crit()
     }
 }
 
+/**
+ * Construct the browser 
+ */
 static void pl3_find2_browser_init()
 {
     GtkWidget  *pl3_find2_sw = NULL;
@@ -245,28 +249,38 @@ static void pl3_find2_browser_init()
     gtk_box_pack_end(GTK_BOX(pl3_find2_vbox), pl3_find2_sw, TRUE, TRUE,0);
 
     /* pom */
-	GtkWidget *frame = gtk_frame_new(NULL);
+    GtkWidget *frame = gtk_frame_new(NULL);
     GtkWidget *event = gtk_event_box_new();
     GtkWidget *vbox = gtk_vbox_new(FALSE,6);
     GtkWidget *label = gtk_label_new("");
     gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-    /* Add button */
-    pl3_find2_critaddbut = gtk_button_new();
-    gtk_button_set_image(GTK_BUTTON(pl3_find2_critaddbut), gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_BUTTON));
-    g_signal_connect(G_OBJECT(pl3_find2_critaddbut), "clicked", G_CALLBACK(pl3_find2_browser_add_crit), NULL);
 
+    /* Header box */
+    hbox = gtk_hbox_new(FALSE,0);
 
-    /* Find button */
+    /* browser label */
+    gtk_label_set_markup(GTK_LABEL(label), _("<span size='xx-large' weight='bold'>Search</span>"));
+    gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE,0);
+
+    /* search in playlist */
+    pl3_find2_curpl = gtk_check_button_new_with_mnemonic(_("Search in current _playlist"));
+    g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
+    gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_curpl, FALSE, TRUE,6);
+
+    /* find button */
     pl3_find2_findbut = gtk_button_new_from_stock(GTK_STOCK_FIND);
     gtk_widget_set_sensitive(pl3_find2_findbut, FALSE);
     g_signal_connect(G_OBJECT(pl3_find2_findbut), "clicked", G_CALLBACK(pl3_find2_browser_search),NULL);
-    gtk_label_set_markup(GTK_LABEL(label), _("<span size='xx-large' weight='bold'>Database Search</span>"));
-    hbox = gtk_hbox_new(FALSE,0);
-    gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE,0);
     gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_findbut, FALSE, TRUE,0);       
-    gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_critaddbut, FALSE, TRUE,0);       
+
+    /* Add criteria button */
+    pl3_find2_critaddbut = gtk_button_new();
+    gtk_button_set_image(GTK_BUTTON(pl3_find2_critaddbut), gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_BUTTON));
+    g_signal_connect(G_OBJECT(pl3_find2_critaddbut), "clicked", G_CALLBACK(pl3_find2_browser_add_crit), NULL);
+    gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_critaddbut, FALSE, TRUE,0);
+
+    /* Add it to the vbox */
     gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE,0);
-    /* add it */
 
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 12);
     g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_find2_browser_bg_style_changed), event);
@@ -284,7 +298,7 @@ static void pl3_find2_browser_init()
     g_object_ref(G_OBJECT(pl3_find2_vbox));
 
     /** Add a default item */
-   pl3_find2_browser_add_crit();
+    pl3_find2_browser_add_crit();
 }
 
 static void pl3_find2_browser_selected(GtkWidget *container)
@@ -317,7 +331,7 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
 	playlist3_insert_browser(&iter, pos);
     gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
             PL3_CAT_TYPE, find2_browser_plug.id,
-            PL3_CAT_TITLE, _("Database Search"),
+            PL3_CAT_TITLE, _("Search"),
             PL3_CAT_INT_ID, "",
             PL3_CAT_ICON_ID, "gtk-find",
             PL3_CAT_PROC, TRUE,
@@ -335,7 +349,111 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
     }
 }
 
-static unsigned long pl3_find2_browser_view_browser()
+
+
+
+
+
+
+
+
+
+static gint __position_sort(gpointer aa, gpointer bb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)aa;
+    MpdData_real *b = *(MpdData_real **)bb;
+    return a->song->pos - b->song->pos;         
+}
+static unsigned long pl3_find2_browser_view_playlist()
+{
+	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
+			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
+    {
+        int time=0;
+        GList *node = NULL;
+        int found = 0;
+        MpdData *data = NULL, *data_t= NULL;
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
+        if(criterias == NULL)
+            return 0;
+        /** check rules, see if there is a usefull one, if so compile a regex */
+        node= g_list_first(criterias);
+        for(; node; node = g_list_next(node))
+        {
+            GtkTreeIter cc_iter;
+            crit_struct *cs = node->data;
+            const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
+            cs->tag_type = -1;
+            if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
+            {
+                int num_field;
+                gchar **splitted = NULL;
+                int i =0;
+                splitted = tokenize_string(name);// g_strsplit(name, " ",0);
+                for(i=0;splitted && splitted[i];i++)
+                {                                                          
+                    if(!found)
+                    {
+                        mpd_playlist_search_start(connection, FALSE);
+                        found = TRUE;
+                    }
+                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
+
+                    mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+                }
+
+                //mpd_playlist_search_add_constraint(connection, num_field, name);
+                if(splitted)
+                    g_strfreev(splitted);
+                {
+                    GtkTreeIter iter;
+                    gboolean found2 = FALSE;
+                    for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
+                            gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found2;
+                            gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
+                    {
+                        gchar *entry;
+                        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
+                        if(strcmp(entry, name) == 0)
+                        {
+                            found2 = TRUE;
+                        }
+                        g_free(entry);
+                    }
+                    if(!found2) {
+                        gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
+                    }					
+                }
+
+            }
+            if(node->next)
+            {
+                crit_struct *cs2 = node->next->data;
+                if(gtk_combo_box_get_active(GTK_COMBO_BOX(cs2->lcombo))==1)
+                {
+                    data = mpd_database_search_commit(connection);
+                    data_t = mpd_data_concatenate(data_t, data);
+                    data = NULL;
+                    found = FALSE;
+                }
+
+            }
+        }
+        if(found)
+            data = mpd_playlist_search_commit(connection);
+        data_t = mpd_data_concatenate(data_t, data);
+        data_t = misc_mpddata_remove_duplicate_songs(data_t);
+        data_t = misc_sort_mpddata(data_t,(GCompareDataFunc)__position_sort,NULL); 
+        gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
+
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
+        return time;
+    }
+    return 0;
+}
+
+
+static unsigned long pl3_find2_browser_view_database()
 {
     int time=0;
     GList *node = NULL;
@@ -372,7 +490,6 @@ static unsigned long pl3_find2_browser_view_browser()
                 }
                 mpd_database_search_add_constraint(connection, num_field, splitted[i]);
             }
-            //mpd_database_search_add_constraint(connection, num_field, (char *)name);
             if(splitted)
                 g_strfreev(splitted);
             /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
@@ -417,14 +534,21 @@ static unsigned long pl3_find2_browser_view_browser()
     return time;
 }
 
-
+/**
+ * Search 
+ */
 static void pl3_find2_browser_search()
 {
     long unsigned time = 0;
     gchar *string;	
     if(pl3_find2_vbox == NULL)
-	return;
-    time = pl3_find2_browser_view_browser();
+        return;
+    if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl)))
+    {
+        time = pl3_find2_browser_view_playlist();
+    }else{
+        time = pl3_find2_browser_view_database();
+    }
     string = format_time(time);
     gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
     q_free(string);
@@ -446,7 +570,6 @@ static void pl3_find2_browser_show_info()
         list = gtk_tree_selection_get_selected_rows (selection, &model);
         
         list = g_list_last (list);
-  //      do
         {
             GtkTreeIter iter;
             mpd_Song *song =NULL;
@@ -462,7 +585,6 @@ static void pl3_find2_browser_show_info()
 			}
             q_free(path);
         }
-//        while ((list = g_list_previous (list)) && mpd_check_connected(connection));
 
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free (list);
@@ -695,7 +817,7 @@ static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
 {
     GtkWidget *item = NULL;
 
-    item = gtk_image_menu_item_new_with_label(_("Database Search"));
+    item = gtk_image_menu_item_new_with_label(_("Search"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -714,14 +836,33 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
     }
 }
 
+/**
+ * Handle program-global key events
+ */
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 {
-/*    if (event->keyval == GDK_F5)
+    if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
     {
         pl3_find2_browser_activate();
+        crit_struct *cs;
+        while(criterias && g_list_length(criterias) > 1)
+        {
+            cs = criterias->data;
+            criterias = g_list_remove(criterias, cs);
+            gtk_widget_destroy(cs->hbox);
+            q_free(cs);
+        }
+        if(!criterias)
+        {
+            pl3_find2_browser_add_crit();
+        } 
+        cs = criterias->data;
+        gtk_combo_box_set_active(GTK_COMBO_BOX(cs->combo), MPD_TAG_ITEM_ANY); 
+        gtk_widget_grab_focus(cs->entry);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl), TRUE);
         return TRUE;
-    }                                           	
-*/
+    }
+
     return FALSE;
 }
 
