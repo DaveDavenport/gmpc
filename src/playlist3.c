@@ -1232,11 +1232,6 @@ void cur_song_center_enable_tb(GtkToggleButton *but)
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","st_cur_song", bool1);
 }
-void open_to_position_enable_tb(GtkToggleButton *but)
-{
-	int bool1  = gtk_toggle_button_get_active(but);
-	cfg_set_single_value_as_int(config, "playlist","open-to-position", bool1);
-}
 void save_possize_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
@@ -1262,9 +1257,6 @@ void playlist_pref_construct(GtkWidget *container)
 	if(playlist_pref_xml)
 	{
 		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
-		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml,"ck_of")),
-				cfg_get_single_value_as_int_with_default(config,"playlist", "open-to-position", 0));
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_ps")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "st_cur_song", 0));
@@ -2214,19 +2206,6 @@ void set_browser_format(void)
     if(format != NULL)
     {
         gmpc_signals_browser_markup_changed(gmpc_signals, format); 
-    }
-    q_free(format);
-}
-
-void set_playlist_format(void)
-{
-    char *string = cfg_get_single_value_as_string_with_default(config, "playlist", "markup",DEFAULT_PLAYLIST_MARKUP);
-    char *format = edit_song_markup(string);
-    cfg_free_string(string);
-    if(format != NULL)
-    {
-        cfg_set_single_value_as_string(config, "playlist","markup",format);
-        //playlist_list_set_markup(PLAYLIST_LIST(playlist),format);
     }
     q_free(format);
 }
