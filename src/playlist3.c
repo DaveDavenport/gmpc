@@ -256,14 +256,11 @@ void pl3_cat_sel_changed()
 		/**
 		 * Start switching side view (if type changed )
 		 */
-	//	if(old_type != type )
-		{
-			if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected != NULL)
-			{
-				plugins[plugin_get_pos(old_type)]->browser->unselected(container);
-			}
-			old_type = -1;
-		}
+        if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected != NULL)
+        {
+            plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+        }
+        old_type = -1;
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
 		if((old_type != type) && (plugins[plugin_get_pos(type)]->browser->selected != NULL))
@@ -274,14 +271,7 @@ void pl3_cat_sel_changed()
 		 * update old value, so get_selected_category is correct before calling selection_changed
 		 */
 		old_type = type;
-		/**
-		 * now give a selection changed signal 
-		 */
-		/*if(plugins[plugin_get_pos(type)]->browser->cat_selection_changed)
-		{
-			plugins[plugin_get_pos(type)]->browser->cat_selection_changed(GTK_WIDGET(tree),&iter);
-		}
-        */
+
 	}
 	else
 	{
@@ -322,8 +312,7 @@ void pl3_option_menu_activate(void)
 	GdkEventButton *event = NULL;
 	GtkWidget *menu = NULL;
 
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")));
-/*	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), NULL);*/
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), NULL);
 
 	if(!mpd_check_connected(connection) || type == -1) return;
 
@@ -681,21 +670,7 @@ static void pl3_show_and_position_window()
 	gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 
 }
-/*
-void pl3_show_window()
-{
-	if(!pl3_xml) return;
-	if(!pl3_hidden)
-	{
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-		gtk_window_present(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
-	}
-	else
-	{
-		create_playlist3();
-	}
-}
-*/
+
 void pl3_toggle_hidden()
 {
 	if(pl3_hidden)
@@ -958,7 +933,7 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
     gdouble pos;
     if(event->window)
     {
-        gdk_window_get_size(event->window, &width, NULL);
+        gdk_drawable_get_size(event->window, &width, NULL);
         pos = (gdouble)event->x/(gdouble)width;
         mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
     }
@@ -1056,9 +1031,6 @@ void create_playlist3 ()
 	 * Bread Crumb system.
 	 */
 	pl3_crumbs = (GtkListStore *)(pl3_tree);
-/*	pl3_crumbs = (GtkListStore *)gtk_tree_model_filter_new(GTK_TREE_MODEL(pl3_tree), NULL);
-    gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(pl3_crumbs), pl3_cat_editor_vis_func, NULL, NULL);
-*/
 	gtk_combo_box_set_model(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), 
 			GTK_TREE_MODEL(pl3_crumbs));
 	renderer = gtk_cell_renderer_pixbuf_new ();
@@ -1289,26 +1261,6 @@ static void playlist_player_set_song(MpdObj *mi)
 		 */
 		mpd_song_markup_escaped(buffer, 1024,mark,song);
 		cfg_free_string(mark);
-		/**
-		 * Set markup
-		 */
-/*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
-				buffer);
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-				buffer);
-*/
-	}
-	else
-	{
-		/**
-		 * When not playing set "not playlist
-		 */
-/*		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label")),
-				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));
-
-		gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(pl3_xml,"pp_label_mini")),
-				_("<span size=\"large\" weight=\"bold\">Not Playing</span>"));		
-        */
 	}
 }
 
@@ -1342,16 +1294,7 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 {
 	int active = gtk_check_menu_item_get_active(menu);
 	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
-	/*	if(active)
-		{
-		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
-		gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection,MPD_CST_SONGID,gmpcconn);
-		}
-		else{
-		gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), NULL);
-		gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
-		}
-		*/
+
 	gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), active);
 }
 
@@ -1480,10 +1423,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
 		pl3_push_rsb_message(_("Not Connected"));
 	}
-    /*
-	while(gtk_events_pending())
-		gtk_main_iteration();
-        */
     /** Set back to the current borwser, and update window title */
 	if(connect){
 		gchar *string = NULL;
@@ -1701,14 +1640,9 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		else
 		{
 			string = g_strdup(_("Not Connected"));
-//			gtk_range_set_value(GTK_RANGE(glade_xml_get_widget(pl3_xml, "pp_progres")),0);
             gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
         }
 
-/*		gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "pp_progres_label")),
-				string);
-*
-*/
         gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
         q_free(string);
 	}
@@ -1814,8 +1748,7 @@ void pl3_update_go_menu()
 	/***
 	 * Remove any old menu
 	 */
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")));
-/*	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")), NULL);*/
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_go")), NULL);
 	/**
 	 * Create a new menu
 	 */
@@ -1905,7 +1838,7 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 	/***
 	 * Remove any old menu
 	 */
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_profiles")));
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_profiles")),NULL);
 	/**
 	 * Create a new menu
 	 */
@@ -1979,7 +1912,7 @@ static void playlist3_server_update_db(void)
 static void playlist3_fill_server_menu(void)
 {
 	/** Clear old items */
-	gtk_menu_item_remove_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")));
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")),NULL);
 	
 	/* if connected fill with items */
 	if(mpd_check_connected(connection))
