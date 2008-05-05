@@ -423,26 +423,8 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 			return GDK_FILTER_REMOVE;
 		}
 	}
-	/*
-	if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay) == key->keycode) {
-		g_signal_emit (data, signals[MM_PLAYPAUSE], 0, 0);
-		return GDK_FILTER_REMOVE;
-	} else if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPause) == key->keycode) {
-		g_signal_emit (data, signals[MM_PLAYPAUSE], 0, 0);
-		return GDK_FILTER_REMOVE;
-	} else if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPrev) == key->keycode) {
-		g_signal_emit (data, signals[MM_PREV], 0, 0);
-		return GDK_FILTER_REMOVE;
-	} else if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioNext) == key->keycode) {
-		g_signal_emit (data, signals[MM_NEXT], 0, 0);
-		return GDK_FILTER_REMOVE;
-	} else if (XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop) == key->keycode) {
-		g_signal_emit (data, signals[MM_STOP], 0, 0);
-		return GDK_FILTER_REMOVE;
-	} else {
-	*/
-		return GDK_FILTER_CONTINUE;
-	/*}*/
+
+    return GDK_FILTER_CONTINUE;
 }
 
 
@@ -534,26 +516,16 @@ void mmkeys_pref_construct(GtkWidget *container);
 GladeXML *mmkeys_pref_xml = NULL;
 
 gmpcPrefPlugin mmkeys_gpp = {
-	mmkeys_pref_construct,
-	mmkeys_pref_destroy
+	.construct      = mmkeys_pref_construct,
+	.destroy        = mmkeys_pref_destroy
 };
 
 gmpcPlugin mmkeys_plug = 
  {
-	N_("Multimedia Keys"),
-	{1,1,1},
-	GMPC_INTERNALL,
-	0,
-	NULL,           /* path */
-	NULL,           /* init */
-	NULL,           /* Destroy */
-	NULL,           /* browser ext */
-	NULL,           /* status changed */
-        NULL,           /* connection changed */
-	&mmkeys_gpp,    /* preferences */
-	NULL,           /* metadata */
-	NULL,           /* get_enable*/
-	NULL            /* set enable */
+	. name          = N_("Multimedia Keys"),
+	.version        = {1,1,1},
+	.plugin_type    = GMPC_INTERNALL,
+	.pref           = &mmkeys_gpp    /* preferences */
 };
 
 static void accel_cleared_callback(GtkCellRendererText *cell, const char *path_string, gpointer data)

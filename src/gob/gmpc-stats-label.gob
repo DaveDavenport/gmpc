@@ -120,7 +120,7 @@ class Gmpc:Stats:Label from Gtk:Label
         self->_priv->song = mpd_songDup(song);
         self->_priv->ltype = ltype;
 
-        self->_priv->idle_id = gmpc_idle_add(gmpc_idle,self_idle_handler, self);
+        self->_priv->idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_idle_handler, self);
 
         gtk_label_set_markup(GTK_LABEL(self),_("<i>Loading</i>"));
         return (GtkWidget *)self;

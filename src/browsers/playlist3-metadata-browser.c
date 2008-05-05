@@ -363,12 +363,8 @@ static void info2_add_table_item_widget(GtkWidget *table,char *name, GtkWidget *
 static GtkWidget *info2_create_artist_button(mpd_Song *song)
 {
 	GtkWidget *metaimage,*vbox,*ali,*label,*button,*event,*table;
-	int i = 0,items;
-	gchar *buffer;
-	GString *string;
-	MpdData *data;
+	int i = 0;
 
-	MpdDBStats *stats = NULL;
 
 	/* Button bg drawing code */
 	event = gtk_event_box_new();

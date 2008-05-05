@@ -70,7 +70,7 @@ class Gmpc:Idle from G:Object
         self->_priv->signals = g_list_append(self->_priv->signals, gs);
         if(self->_priv->idle_id == 0)
         {
-            self->_priv->idle_id = g_idle_add(self_idle_handler, self);
+            self->_priv->idle_id = g_idle_add((GSourceFunc)self_idle_handler, self);
         }
         return gs->id;
     }

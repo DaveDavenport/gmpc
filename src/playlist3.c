@@ -79,7 +79,7 @@ void playlist_zoom_in(void);
 void playlist_zoom_out(void);
 int pl3_cat_key_press_event(GtkWidget *, GdkEventKey *);
 void cur_song_center_enable_tb(GtkToggleButton *);
-void open_to_position_enable_tb(GtkToggleButton *);
+void show_cover_case_tb(GtkToggleButton *but);
 void save_possize_enable_tb(GtkToggleButton *);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
 void playlist_menu_random_changed(GtkCheckMenuItem *);

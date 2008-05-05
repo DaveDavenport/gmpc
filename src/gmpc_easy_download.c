@@ -8,9 +8,10 @@
 #include "main.h"
 #define CURL_TIMEOUT 10 
 
-static size_t write_data(void *buffer, size_t size, size_t nmemb, gmpc_easy_download_struct *dld)
+static size_t write_data(void *buffer, size_t size, size_t nmemb,void *stream )
 {
-	if(!size || !nmemb)
+    gmpc_easy_download_struct *dld = stream;
+        if(!size || !nmemb)
 		return 0;
 	if(dld->data == NULL)
 	{

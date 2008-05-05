@@ -397,7 +397,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 mpd_freeSong(self->_priv->song);
 
             self->_priv->song = mpd_songDup(song);
-            self->_priv->gmpc_idle_id = gmpc_idle_add(gmpc_idle,self_update_cover_from_song_delayed_real,self);
+            self->_priv->gmpc_idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_update_cover_from_song_delayed_real,self);
 
         }
 		

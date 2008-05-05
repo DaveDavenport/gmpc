@@ -103,7 +103,6 @@ static GtkWidget 			*pl3_find2_vbox 		= NULL;
 static GtkWidget			*pl3_find2_findbut		= NULL;
 static GtkWidget       	    *pl3_find2_critaddbut   = NULL;
 static GtkListStore		    *pl3_find2_combo_store 	= NULL;
-static GtkWidget			*pl3_find2_pb 			= NULL;
 static GtkListStore 		*pl3_find2_autocomplete = NULL;
 static GList 				*criterias 				= NULL;
 static GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
