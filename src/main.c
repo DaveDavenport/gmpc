@@ -38,6 +38,7 @@
 #include "sm.h"
 #include "misc.h"
 
+#include "gmpc_easy_download.h"
 /**
  * Get revision
  */
@@ -711,7 +712,10 @@ int main (int argc, char **argv)
 		bacon_message_connection_free (bacon_connection);
 	}
 #endif	
-	/* tell the plugins to save themself. */
+    /* Quit _all_ downloads */
+    quit_easy_download();
+
+    /* tell the plugins to save themself. */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->save_yourself) {
 			debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", plugins[i]->name);

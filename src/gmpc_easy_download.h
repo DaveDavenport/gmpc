@@ -11,3 +11,4 @@ typedef struct _gmpc_easy_download_struct{
 
 int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld);
 void gmpc_easy_download_clean(gmpc_easy_download_struct *dld);
+void quit_easy_download(void);

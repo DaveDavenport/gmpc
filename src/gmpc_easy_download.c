@@ -8,6 +8,8 @@
 #include "main.h"
 #define CURL_TIMEOUT 10 
 
+static int quit = FALSE;
+
 static size_t write_data(void *buffer, size_t size, size_t nmemb,void *stream )
 {
     gmpc_easy_download_struct *dld = stream;
@@ -40,6 +42,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	CURLM *curlm = NULL;
 	CURLMsg *msg = NULL;
 	double total_size = 0;
+    if(quit) return 0;
 	/*int res;*/
 	if(!dld) return 0;
 	if(url == NULL) return 0;
@@ -121,7 +124,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 				}
 			}
 		}
-	}while(running);
+	}while(running && !quit);
 	/**
 	 * remove handler
 	 */
@@ -214,6 +217,12 @@ static void proxy_pref_construct(GtkWidget *container)
 	gtk_widget_show_all(proxy_pref_frame);
 	gtk_container_add(GTK_CONTAINER(container), proxy_pref_frame);
 }
+
+void quit_easy_download(void)
+{
+    printf("quitting easy download\n");
+    quit = TRUE;
+}
 gmpcPrefPlugin proxyplug_pref = {
 	.construct		= proxy_pref_construct,
 	.destroy		= proxy_pref_destroy
@@ -223,6 +232,5 @@ gmpcPlugin proxyplug = {
 	.version 	 	= {0,0,0},
 	.plugin_type	= GMPC_INTERNALL,
 	.pref			= &proxyplug_pref
-
 };
 
