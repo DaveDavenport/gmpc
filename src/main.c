@@ -327,6 +327,7 @@ int main (int argc, char **argv)
     /** initialize it */
     if(!g_thread_supported())g_thread_init (NULL);
 
+    gdk_threads_init();
     /*
      * initialize gtk
      */
