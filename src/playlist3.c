@@ -1506,26 +1506,34 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_PLAYER_PLAY:
-				/**
-				 * Update the image in the menu
-				 */
-				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
-				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
-				gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
-						"gtk-media-pause",GTK_ICON_SIZE_BUTTON);
+                {
+                    gchar *markup = cfg_get_single_value_as_string_with_default(config, 
+                            "playlist",                             /* Category */
+                            "window-markup",                        /* Key */
+                            "[%title% - &[%artist%]]|%shortfile%"   /* default value */
+                            );
+                    /**
+                     * Update the image in the menu
+                     */
+                    image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+                    gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
+                    gtk_image_set_from_stock(GTK_IMAGE(glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
+                            "gtk-media-pause",GTK_ICON_SIZE_BUTTON);
 
-				/**
-				 * Update song indicator in window 
-				 */	
-				playlist_player_set_song(mi);
+                    /**
+                     * Update song indicator in window 
+                     */	
+                    playlist_player_set_song(mi);
 
-				/**
-				 * Update window title
-				 */
-				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%]]|%shortfile%", mpd_playlist_get_current_song(connection));
-				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
+                    /**
+                     * Update window title
+                     */
+                    mpd_song_markup(buffer,1024,markup, mpd_playlist_get_current_song(connection));
+                    gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 
-				break;
+                    g_free(markup);
+                    break;
+                }
 			case MPD_PLAYER_PAUSE:
 				/** Update menu and button images */
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
