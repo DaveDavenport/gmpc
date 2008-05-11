@@ -98,10 +98,19 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
             data2 = mpd_database_search_commit(connection);
             if(data2)
-            for(i=0;data2; data2 = mpd_data_get_next(data2)){
-                if(strncasecmp(data2->song->file, dir, strlen(dir))==0 &&
-                   strcmp(data2->song->artist, edited->artist))
-                    i++;
+            {
+                for(i=0;data2; data2 = mpd_data_get_next(data2))
+                {
+                    if(strncasecmp(data2->song->file, dir, strlen(dir))==0)
+                    {
+                           /* Check for NULL pointers */
+                        if(data2->song->artist && edited->artist)
+                        {
+                            if(strcmp(data2->song->artist, edited->artist))
+                                i++;
+                        }
+                    }
+                }
             }
             if(i >=3)
             {
@@ -201,8 +210,11 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 {
     mpd_Song *edited = rewrite_mpd_song(song, type);
     meta_data_set_cache_real(edited, type, result, path);
-    if(strcmp(edited->artist, "Various Artists")!=0)
-        meta_data_set_cache_real(song, type, result, path);
+    if(edited->artist)
+    {
+        if(strcmp(edited->artist, "Various Artists")!=0)
+            meta_data_set_cache_real(song, type, result, path);
+    }
     mpd_freeSong(edited);
 }
 
@@ -491,8 +503,11 @@ static void meta_data_retrieve_thread()
 		 * update cache 
 		 */
 		meta_data_set_cache_real(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
+        if(data->edited->artist)
+        {
                 if(strcmp(data->edited->artist, "Various Artists")!=0)
                     meta_data_set_cache_real(data->song, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
+        }
 
 		/**
 		 * Push the result back
