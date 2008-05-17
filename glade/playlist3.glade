@@ -132,336 +132,107 @@
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <child>
-          <widget class="GtkHBox" id="hbox15">
+          <widget class="GtkMenuBar" id="menubar1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkMenuBar" id="menubar1">
+              <widget class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
+                <property name="label" translatable="yes">_Music</property>
+                <property name="use_underline">True</property>
                 <child>
-                  <widget class="GtkMenuItem" id="menuitem1">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Music</property>
-                    <property name="use_underline">True</property>
+                  <widget class="GtkMenu" id="menuitem1_menu">
                     <child>
-                      <widget class="GtkMenu" id="menuitem1_menu">
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_connect">
+                      <widget class="GtkImageMenuItem" id="menu_connect">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Connect</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="preferences_window_connect"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image13">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Connect</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="preferences_window_connect"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image821">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-connect</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_disconnect">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="label" translatable="yes">_Disconnect</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="preferences_window_disconnect"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image822">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-disconnect</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menuitem_sendpassword">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="label" translatable="yes">_Send Password</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="send_password"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image823">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-dialog-authentication</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkSeparatorMenuItem" id="separator4">
-                            <property name="visible">True</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_profiles">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Profiles</property>
-                            <property name="use_underline">True</property>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image824">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-open</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkSeparatorMenuItem" id="separator1">
-                            <property name="visible">True</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="save1">
-                            <property name="visible">True</property>
-                            <property name="label">gtk-preferences</property>
-                            <property name="use_underline">True</property>
-                            <property name="use_stock">True</property>
-                            <signal name="activate" handler="create_preferences_window"/>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
-                            <property name="visible">True</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="quit1">
-                            <property name="visible">True</property>
-                            <property name="label">gtk-quit</property>
-                            <property name="use_underline">True</property>
-                            <property name="use_stock">True</property>
-                            <signal name="activate" handler="main_quit"/>
+                            <property name="stock">gtk-connect</property>
+                            <property name="icon_size">1</property>
                           </widget>
                         </child>
                       </widget>
                     </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="menuitem_server">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Server</property>
-                    <property name="use_underline">True</property>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="menuitem_control">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Control</property>
-                    <property name="use_underline">True</property>
                     <child>
-                      <widget class="GtkMenu" id="menuitem_control_menu">
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_play">
+                      <widget class="GtkImageMenuItem" id="menu_disconnect">
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="label" translatable="yes">_Disconnect</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="preferences_window_disconnect"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image14">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Play/Pause</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="play_song"/>
-                            <accelerator key="Up" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image825">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-media-play</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_stop">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Stop</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="stop_song"/>
-                            <accelerator key="Down" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image826">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-media-stop</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkSeparatorMenuItem" id="separator2">
-                            <property name="visible">True</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_next">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Next</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="next_song"/>
-                            <accelerator key="Right" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image827">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-media-next</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="menu_prev">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Previous</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="prev_song"/>
-                            <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image828">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-media-previous</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkSeparatorMenuItem" id="separator3">
-                            <property name="visible">True</property>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkCheckMenuItem" id="menu_repeat">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Repeat</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="playlist_menu_repeat_changed"/>
-                            <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="activate"/>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkCheckMenuItem" id="menu_random">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Random</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="playlist_menu_random_changed"/>
-                            <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                            <property name="stock">gtk-disconnect</property>
+                            <property name="icon_size">1</property>
                           </widget>
                         </child>
                       </widget>
                     </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="view1">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_View</property>
-                    <property name="use_underline">True</property>
                     <child>
-                      <widget class="GtkMenu" id="view1_menu">
-                        <child>
-                          <widget class="GtkImageMenuItem" id="zoom_in2">
+                      <widget class="GtkImageMenuItem" id="menuitem_sendpassword">
+                        <property name="visible">True</property>
+                        <property name="sensitive">False</property>
+                        <property name="label" translatable="yes">_Send Password</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="send_password"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image15">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Expand Interface</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="playlist_zoom_in"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image829">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-zoom-in</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="zoom_out2">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Collapse Interface</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="playlist_zoom_out"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image830">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-zoom-out</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="fullscreen2">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Fullscreen</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="pl3_window_fullscreen"/>
-                            <accelerator key="F11" modifiers="" signal="activate"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image831">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-fullscreen</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
-                          </widget>
-                        </child>
-                        <child>
-                          <widget class="GtkCheckMenuItem" id="menu_check_cover_image">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">_Show Artist Image</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="playlist_menu_cover_image_changed"/>
+                            <property name="stock">gtk-dialog-authentication</property>
+                            <property name="icon_size">1</property>
                           </widget>
                         </child>
                       </widget>
                     </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="menu_option">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Option</property>
-                    <property name="use_underline">True</property>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="menu_go">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Go</property>
-                    <property name="use_underline">True</property>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkMenuItem" id="menuitem4">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Help</property>
-                    <property name="use_underline">True</property>
                     <child>
-                      <widget class="GtkMenu" id="menuitem4_menu">
-                        <child>
-                          <widget class="GtkImageMenuItem" id="show_messages1">
+                      <widget class="GtkSeparatorMenuItem" id="separator4">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_profiles">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Profiles</property>
+                        <property name="use_underline">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image16">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Show Messages</property>
-                            <property name="use_underline">True</property>
-                            <signal name="activate" handler="message_window_open"/>
-                            <child internal-child="image">
-                              <widget class="GtkImage" id="image832">
-                                <property name="visible">True</property>
-                                <property name="stock">gtk-index</property>
-                                <property name="icon_size">1</property>
-                              </widget>
-                            </child>
+                            <property name="stock">gtk-open</property>
+                            <property name="icon_size">1</property>
                           </widget>
                         </child>
-                        <child>
-                          <widget class="GtkImageMenuItem" id="about1">
-                            <property name="visible">True</property>
-                            <property name="label">gtk-about</property>
-                            <property name="use_underline">True</property>
-                            <property name="use_stock">True</property>
-                            <signal name="activate" handler="about_window"/>
-                          </widget>
-                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="separator1">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="save1">
+                        <property name="visible">True</property>
+                        <property name="label">gtk-preferences</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="create_preferences_window"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="quit1">
+                        <property name="visible">True</property>
+                        <property name="label">gtk-quit</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="main_quit"/>
                       </widget>
                     </child>
                   </widget>
@@ -469,27 +240,232 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkEventBox" id="eventbox2">
+              <widget class="GtkMenuItem" id="menuitem_server">
                 <property name="visible">True</property>
-                <property name="events">GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK</property>
-                <signal name="leave_notify_event" handler="playlist3_leave_notify_event"/>
-                <signal name="enter_notify_event" handler="playlist3_enter_notify_event"/>
+                <property name="label" translatable="yes">_Server</property>
+                <property name="use_underline">True</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menuitem_control">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Control</property>
+                <property name="use_underline">True</property>
                 <child>
-                  <widget class="GtkImage" id="image833">
-                    <property name="visible">True</property>
-                    <property name="stock">gtk-info</property>
+                  <widget class="GtkMenu" id="menuitem_control_menu">
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_play">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Play/Pause</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="play_song"/>
+                        <accelerator key="Up" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image17">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-media-play</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_stop">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Stop</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="stop_song"/>
+                        <accelerator key="Down" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image18">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-media-stop</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="separator2">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_next">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Next</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="next_song"/>
+                        <accelerator key="Right" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image19">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-media-next</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_prev">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Previous</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="prev_song"/>
+                        <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image20">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-media-previous</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="separator3">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_repeat">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Repeat</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_menu_repeat_changed"/>
+                        <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_random">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Random</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_menu_random_changed"/>
+                        <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                      </widget>
+                    </child>
                   </widget>
                 </child>
               </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">1</property>
-              </packing>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="view1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="view1_menu">
+                    <child>
+                      <widget class="GtkImageMenuItem" id="zoom_in2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Expand Interface</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_zoom_in"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image21">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-zoom-in</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="zoom_out2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Collapse Interface</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_zoom_out"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image22">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-zoom-out</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="fullscreen2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Fullscreen</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="pl3_window_fullscreen"/>
+                        <accelerator key="F11" modifiers="" signal="activate"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image23">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-fullscreen</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_check_cover_image">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Show Artist Image</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_menu_cover_image_changed"/>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menu_option">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Option</property>
+                <property name="use_underline">True</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menu_go">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Go</property>
+                <property name="use_underline">True</property>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menuitem4">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menuitem4_menu">
+                    <child>
+                      <widget class="GtkImageMenuItem" id="show_messages1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show Messages</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="message_window_open"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image24">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-index</property>
+                            <property name="icon_size">1</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="about1">
+                        <property name="visible">True</property>
+                        <property name="label">gtk-about</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="about_window"/>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
           </packing>
         </child>
         <child>
