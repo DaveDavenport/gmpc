@@ -28,7 +28,6 @@ src/bacon/bacon-message-connection.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
 src/browsers/playlist3-find2-browser.c
-src/browsers/playlist3-find3-browser.c
 src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag2-browser.c
@@ -51,6 +50,7 @@ src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-connection.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-meta-watcher.gob
+src/gob/gmpc-stats-label.gob
 
 #?
 src/qlib/qasyncqueue.c

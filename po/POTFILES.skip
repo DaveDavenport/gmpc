@@ -7,3 +7,4 @@ src/gob/gmpc-mpddata-model-sort.c
 src/gob/gmpc-clicklabel.c
 src/gob/gmpc-meta-watcher.c
 src/gob/gmpc-profiles.c
+src/gob/gmpc-stats-label.c
