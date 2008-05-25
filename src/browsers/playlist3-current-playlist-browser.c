@@ -139,7 +139,7 @@ gmpcPlBrowserPlugin current_playlist_gbp = {
 
 
 gmpcPlugin current_playlist_plug = {
-	.name = 							"Current Playlist Browser",
+	.name = 							"Play Queue Browser",
 	.version = 							{1,1,1},
 	.plugin_type =						GMPC_PLUGIN_PL_BROWSER,
     .init   =                           pl3_cp_init,
@@ -402,7 +402,7 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 	playlist3_insert_browser(&iter, pos);
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
-			PL3_CAT_TITLE, _("Current Playlist"),
+			PL3_CAT_TITLE, _("Play Queue"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "playlist-browser",
 			PL3_CAT_PROC, TRUE,
@@ -889,7 +889,7 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu)
 {
     GtkWidget *item = NULL;
 
-    item = gtk_image_menu_item_new_with_label(_("Current Playlist"));
+    item = gtk_image_menu_item_new_with_label(_("Play Queue"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_icon_name("playlist-browser", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
