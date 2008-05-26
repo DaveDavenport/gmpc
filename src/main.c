@@ -328,7 +328,9 @@ int main (int argc, char **argv)
     /** initialize it */
     if(!g_thread_supported())g_thread_init (NULL);
 
+#ifndef WIN32
     gdk_threads_init();
+#endif
     /*
      * initialize gtk
      */
