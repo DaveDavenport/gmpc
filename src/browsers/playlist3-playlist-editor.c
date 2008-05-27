@@ -532,6 +532,14 @@ static gboolean playlist_editor_browser_button_release_event(GtkWidget *giv, Gdk
   }
   return FALSE;
 }
+static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
+{
+    if(pl3_cat_get_selected_browser() == playlist_editor_plugin.id)
+    {
+        playlist3_show_playtime(playtime);
+    }
+}
+
 
 static void playlist_editor_browser_init()
 {
@@ -570,6 +578,8 @@ static void playlist_editor_browser_init()
 
 
     playlist_editor_list_store= gmpc_mpddata_model_sort_new();
+    g_signal_connect(G_OBJECT(playlist_editor_list_store), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
+
 
     playlist_editor_song_tree = tree = gmpc_mpddata_treeview_new("playlist-browser",FALSE, GTK_TREE_MODEL(playlist_editor_list_store));
     gtk_container_add(GTK_CONTAINER(sw), tree);
@@ -590,6 +600,8 @@ void playlist_editor_browser_selected(GtkWidget *container)
     }
     gtk_container_add(GTK_CONTAINER(container), playlist_editor_browser);
     gtk_widget_show_all(playlist_editor_browser);
+
+    playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(playlist_editor_list_store))); 
 }
 
 void playlist_editor_browser_unselected(GtkWidget *container)

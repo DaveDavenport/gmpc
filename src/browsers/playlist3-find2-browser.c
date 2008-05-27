@@ -209,6 +209,14 @@ static void pl3_find2_browser_add_crit()
     }
 }
 
+static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
+{
+    if(pl3_cat_get_selected_browser() == find2_browser_plug.id)
+    {
+        playlist3_show_playtime(playtime);
+    }
+}
+
 /**
  * Construct the browser 
  */
@@ -220,6 +228,7 @@ static void pl3_find2_browser_init()
 	pl3_find2_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
 	pl3_find2_store2 = gmpc_mpddata_model_new();
+    g_signal_connect(G_OBJECT(pl3_find2_store2), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 
     pl3_find2_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
@@ -309,6 +318,8 @@ static void pl3_find2_browser_selected(GtkWidget *container)
     gtk_container_add(GTK_CONTAINER(container),pl3_find2_vbox);
     gtk_widget_grab_focus(pl3_find2_tree);
     gtk_widget_show(pl3_find2_vbox);
+
+    playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(pl3_find2_store2))); 
 }
 static void pl3_find2_browser_unselected(GtkWidget *container)
 {
@@ -538,20 +549,14 @@ static unsigned long pl3_find2_browser_view_database()
  */
 static void pl3_find2_browser_search()
 {
-    long unsigned time = 0;
-    gchar *string;	
     if(pl3_find2_vbox == NULL)
         return;
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl)))
     {
-        time = pl3_find2_browser_view_playlist();
+        pl3_find2_browser_view_playlist();
     }else{
-        time = pl3_find2_browser_view_database();
+        pl3_find2_browser_view_database();
     }
-    string = format_time(time);
-    gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
-    q_free(string);
-    return;	
 }
 
 

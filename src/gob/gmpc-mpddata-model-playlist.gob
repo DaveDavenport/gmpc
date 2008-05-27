@@ -234,8 +234,6 @@ override (G:Object)
     void
     total_playtime_changed(self, unsigned long loaded_songs, unsigned long total_playtime)
     {
-        gchar *data = format_time((unsigned long)total_playtime);
-        g_free(data);
     }
 
     private

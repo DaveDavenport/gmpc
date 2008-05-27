@@ -51,4 +51,5 @@ enum {
 void playlist3_destroy(void);
 void playlist_editor_fill_list(void);
 
+gboolean playlist3_show_playtime(gulong playtime);
 #endif

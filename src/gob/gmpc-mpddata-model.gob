@@ -66,6 +66,8 @@ requires 2.0.0
     private gchar *markup	 = {gmpc_signals_get_browser_markup(gmpc_signals)} destroywith g_free;
     private gulong markup_signal = 0; 
 
+    private gulong playtime = {0};
+
     property BOOLEAN has_up
         (nick = "Has Up",
          blurb = "Show an 'up row",
@@ -711,7 +713,11 @@ requires 2.0.0
                 q_free(self->_priv->images);
             }
             if(data2 == NULL)
+            {
+                self->_priv->playtime = 0;
+                self_playtime_changed(self, self->_priv->playtime);
                 return 0;
+            }
 
             self->_priv->data = mpd_data_get_first(data2);
             data2 = NULL;
@@ -755,6 +761,8 @@ requires 2.0.0
             }
             self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
 
+            self->_priv->playtime = retval;
+            self_playtime_changed(self, self->_priv->playtime);
             return retval;
         }
 
@@ -1091,4 +1099,17 @@ requires 2.0.0
             return 0;                    
         }
 
+        signal last NONE (LONG)
+        void
+        playtime_changed(self, gulong playtime)
+        {
+            return;
+        }
+
+    public
+    gulong
+    get_playtime(self)
+    {
+        return self->_priv->playtime;
+    }
 }

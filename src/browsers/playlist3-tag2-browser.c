@@ -646,6 +646,13 @@ static void tag2_sentry_changed(SexyIconEntry *entry, tag_element *te)
 }
 
 
+static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
+{
+    if(pl3_cat_get_selected_browser() == tag2_plug.id)
+    {
+        playlist3_show_playtime(playtime);
+    }
+}
 
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)
 {
@@ -664,6 +671,8 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
 	te->browser = browser;
+
+
     /* setup combo box */
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(te->combo), renderer, TRUE);
@@ -941,6 +950,7 @@ static void tag2_init_browser(tag_browser *browser) {
 	/** Create Songs list view */
 	/* create the treeview model, this is a GmpcMpdData model */
 	model = gmpc_mpddata_model_new();
+    g_signal_connect(G_OBJECT(model), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 	/* create scrolled window to make the treeview scrollable */
 	sw = gtk_scrolled_window_new(NULL,NULL);
 	/* setup the scrolled window */
@@ -1004,6 +1014,9 @@ static void tag2_browser_selected(GtkWidget *container)
                         tag_element *te= list->data;
                         gtk_widget_grab_focus(te->tree);
                     }
+
+                    playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(
+                                gtk_tree_view_get_model(tb->tag_songlist)))); 
                 }
                 else{
 

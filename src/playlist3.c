@@ -2017,3 +2017,16 @@ void playlist3_destroy(void)
     gtk_widget_destroy(win);
     g_object_unref(pl3_xml);
 }
+
+gboolean playlist3_show_playtime(gulong playtime)
+{
+     if(playtime) {
+         gchar *string = format_time(playtime);
+         pl3_push_rsb_message(string);
+         q_free(string);
+     } else {
+         pl3_push_rsb_message("");
+     }
+     return FALSE;
+}
+

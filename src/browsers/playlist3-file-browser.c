@@ -148,7 +148,13 @@ static void pl3_file_browser_dir_row_activated(GtkTreeView *tree, GtkTreePath *t
 	else
 		gtk_tree_view_expand_row(tree,tp,FALSE);
 }
-
+static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
+{
+    if(pl3_cat_get_selected_browser() == file_browser_plug.id)
+    {
+        playlist3_show_playtime(playtime);
+    }
+}
 
 static void pl3_file_browser_init()
 {
@@ -159,6 +165,7 @@ static void pl3_file_browser_init()
     int pos;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
+    g_signal_connect(G_OBJECT(pl3_fb_store2), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 
     pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "pane-pos", 150);
@@ -674,6 +681,8 @@ static void pl3_file_browser_selected(GtkWidget *container)
     gtk_container_add(GTK_CONTAINER(container), pl3_fb_vbox);
     gtk_widget_grab_focus(pl3_fb_tree);
     gtk_widget_show(pl3_fb_vbox);
+
+    playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(pl3_fb_store2))); 
 }
 static void pl3_file_browser_unselected(GtkWidget *container)
 {
