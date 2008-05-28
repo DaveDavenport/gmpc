@@ -271,7 +271,7 @@ static void pl3_find2_browser_init()
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE,0);
 
     /* search in playlist */
-    pl3_find2_curpl = gtk_check_button_new_with_mnemonic(_("Search in current _playlist"));
+    pl3_find2_curpl = gtk_check_button_new_with_mnemonic(_("Search in current _play queue"));
     g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
     gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_curpl, FALSE, TRUE,6);
 
@@ -332,7 +332,6 @@ static void pl3_find2_browser_unselected(GtkWidget *container)
 /*****************************************************************
  * Find Browser
  */
-/* add's the toplevel entry for the current playlist view */
 static void pl3_find2_browser_add(GtkWidget *cat_tree)
 {
     GtkTreePath *path = NULL;
