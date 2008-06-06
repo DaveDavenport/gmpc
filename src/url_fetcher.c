@@ -6,40 +6,18 @@
 #include  "plugin.h"
 #include "main.h"
 #include "gmpc_easy_download.h"
-int url_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
-
-
-static int url_get_enabled(void);
-static void url_set_enabled(int enabled);
 
 /** in gmpc */
 void pl3_option_menu_activate(); 
 void pl3_push_statusbar_message(char *mesg);	
 
 
-gmpcPlBrowserPlugin url_gpb  = {
-	.cat_right_mouse_menu = url_right_mouse_menu
-};
 
 gmpcPlugin url_plugin = {
 	.name = "Url Parser Plugin",
 	.version = {0,0,3},
 	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
-	.browser = &url_gpb, /* browser intergration */
-	.get_enabled = url_get_enabled,
-	.set_enabled = url_set_enabled
 };
-
-static int url_get_enabled(void)
-{
-	return cfg_get_single_value_as_int_with_default(config, "url", "enable", TRUE);
-}
-static void url_set_enabled(int enabled)
-{
-	cfg_set_single_value_as_int(config, "url", "enable", enabled);
-	pl3_option_menu_activate(); 
-}
-
 /***
  * Parse PLS files:
  */
@@ -157,19 +135,6 @@ static int url_check_binary(char *data, int size)
 		printf("Binary data found\n");
 	return binary;
 }
-/*
-static void url_start()
-{
-	url_start_real(NULL);
-}
-
-*/
-
-
-
-
-
-
 
 static void parse_data(gmpc_easy_download_struct dld, const char *text)
 {
@@ -205,7 +170,7 @@ static void parse_data(gmpc_easy_download_struct dld, const char *text)
         pl3_push_statusbar_message(_("Added 1 stream"));
     }
 }
-static void url_start()
+void url_start()
 {
 	/**
 	 * Setup the Dialog
@@ -292,26 +257,6 @@ static void url_start()
 }
 
 
-
-int url_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
-{
-	gmpcPlugin *plug = plugin_get_from_id(type);
-	if(!cfg_get_single_value_as_int_with_default(config, "url", "enable", TRUE)) {
-		return 0;
-	}
-	debug_printf(DEBUG_INFO,"URL right mouse clicked");	
-	if(!strcmp(plug->name, "Current Playlist Browser")) 
-	{
-		GtkWidget *item;
-		item = gtk_image_menu_item_new_with_label(_("Add URL"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_icon_name("gmpc-add-url", GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(url_start), NULL);
-		return 1;
-	}
-	return 0;
-}
 
 void url_start_real(const gchar *url)
 {
