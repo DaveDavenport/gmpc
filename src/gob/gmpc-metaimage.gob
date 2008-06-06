@@ -511,7 +511,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		set_cover_from_path(self, gchar *path)
 		{
 			GdkPixbuf *pb = NULL;
-			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*10-2,self->size-self->draw_shadow*10-2,TRUE,NULL);
+			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*12,self->size-self->draw_shadow*12,TRUE,NULL);
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);

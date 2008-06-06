@@ -743,24 +743,6 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 
 
 
-static void queue_size_changed(GmpcMetaWatcher *gmw, int queued, int total,GtkWidget *win)
-{
-    if(pl3_xml)
-    {
-        gchar *url;
-        GtkWidget *label = g_object_get_data(G_OBJECT(win), "total-label");
-        GtkWidget *label1 = g_object_get_data(G_OBJECT(win), "processing-label");
-
-        url = g_markup_printf_escaped("%i",total);
-        gtk_label_set_markup(GTK_LABEL(label), url);
-        q_free(url);
-        url = g_markup_printf_escaped("%i",queued);
-        gtk_label_set_markup(GTK_LABEL(label1), url);
-        q_free(url);
-
-    }
-}
-
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data)
 {
     if(event->direction == GDK_SCROLL_UP)

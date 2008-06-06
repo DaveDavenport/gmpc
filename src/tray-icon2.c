@@ -286,15 +286,10 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *coverimg = NULL;
 	mpd_Song *song = NULL;
 	int state;
-    int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
-    int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+	int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
+	int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 
 
-
- 
-#if 0 //GTK_CHECK_VERSION(2,12,0)
-	GdkColormap *colormap;
-#endif
 	/**
 	 * if the tooltip still exists destroy it... 
 	 */
@@ -307,24 +302,12 @@ void tray_icon2_create_tooltip(void)
 	/*
 	 * 	Creat the tootlip window 
 	 */
-#if 0//GTK_CHECK_VERSION(2,12,0)
-	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_decorated(GTK_WINDOW (tray_icon2_tooltip),FALSE);      
-    gtk_window_set_type_hint (GTK_WINDOW (tray_icon2_tooltip),GDK_WINDOW_TYPE_HINT_NOTIFICATION);
-    gtk_window_stick (GTK_WINDOW (tray_icon2_tooltip));
-
-    gtk_window_set_skip_taskbar_hint(GTK_WINDOW (tray_icon2_tooltip),TRUE);
-    gtk_window_set_keep_above (GTK_WINDOW (tray_icon2_tooltip),TRUE);
-    gtk_window_set_accept_focus(GTK_WINDOW (tray_icon2_tooltip),FALSE);
-	gtk_window_set_focus_on_map(GTK_WINDOW (tray_icon2_tooltip), FALSE);
-#else
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
-#endif
-    /* causes the border */
+	/* causes the border */
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
-    gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
+	gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
 	/*
 	 * Tooltip exists from 2 parts..
 	 * ------------------
@@ -385,45 +368,45 @@ void tray_icon2_create_tooltip(void)
 	song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
-        int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
-        size_offset = (size_offset < 100)?1024:size_offset;
+		int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
+		size_offset = (size_offset < 100)?1024:size_offset;
 
 		/** Artist label */
 		if(song->title || song->file || song->name)
 		{
 			char buffer[256];
-            gchar *test = g_strdup_printf("<span size='%i' weight='bold'>[%%title%%|%%shortfile%%][ (%%name%%)]</span>", 14*size_offset);
+			gchar *test = g_strdup_printf("<span size='%i' weight='bold'>[%%title%%|%%shortfile%%][ (%%name%%)]</span>", 14*size_offset);
 			mpd_song_markup_escaped(buffer, 256,test,song);
-            q_free(test);
+			q_free(test);
 			label = gtk_label_new("");
-            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-            gtk_label_set_markup(GTK_LABEL(label), buffer);
+			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+			gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->artist)
 		{
-            char buffer[256];
-            gchar *test = g_strdup_printf("<span size='%i'>%%artist%%</span>", 10*size_offset);
+			char buffer[256];
+			gchar *test = g_strdup_printf("<span size='%i'>%%artist%%</span>", 10*size_offset);
 			label = gtk_label_new("");
-            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-            mpd_song_markup_escaped(buffer, 256,test,song);
-            q_free(test);
-            gtk_label_set_markup(GTK_LABEL(label), buffer);
-            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+			mpd_song_markup_escaped(buffer, 256,test,song);
+			q_free(test);
+			gtk_label_set_markup(GTK_LABEL(label), buffer);
+			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		if(song->album)
 		{
-            char buffer[256];
-            gchar *test = g_strdup_printf("<span size='%i'>%%album%%[ (%%year%%)]</span>", 8*size_offset);
-            label = gtk_label_new("");
-            gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
-            mpd_song_markup_escaped(buffer, 256,test,song);
-            q_free(test);
-            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-            gtk_label_set_markup(GTK_LABEL(label), buffer);
+			char buffer[256];
+			gchar *test = g_strdup_printf("<span size='%i'>%%album%%[ (%%year%%)]</span>", 8*size_offset);
+			label = gtk_label_new("");
+			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
+			mpd_song_markup_escaped(buffer, 256,test,song);
+			q_free(test);
+			gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+			gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		tray_icon2_tooltip_pb = gtk_progress_bar_new();
@@ -454,11 +437,11 @@ void tray_icon2_create_tooltip(void)
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
 #ifdef ENABLE_TRAYICON 
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) 
-    {
+	{
 
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
-       		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
+		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
 		{
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
@@ -490,65 +473,63 @@ void tray_icon2_create_tooltip(void)
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else 
 #endif
-    if (state == TI2_AT_UPPER_LEFT) 
-    {
-		screen =gtk_widget_get_screen(pl3_win);
-		GdkRectangle rect2;
-		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
-		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
-	} else if (state == TI2_AT_UPPER_RIGHT) 
-    {
-		screen =gtk_widget_get_screen(pl3_win);
-		GdkRectangle rect2;
-		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
-		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		/** Set Y = 0; */
-		y = rect2.y+5;
-		/** X is upper right - width */
-		x = rect2.x+rect2.width-5-300;
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-	} else if (state == TI2_AT_LOWER_LEFT) 
-    {
-		screen =gtk_widget_get_screen(pl3_win);
-		GdkRectangle rect2;
-		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
-		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		/** Set Y = window height - size; */
-		y = rect2.y+rect2.height-5-95;
-		/** X =5 */ 
-		x = rect2.x+ 5; 
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-	} else 
-    {
-		screen =gtk_widget_get_screen(pl3_win);
-		GdkRectangle rect2;
-		monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
-		gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
-		/** Set Y = window height - size; */
-		y = rect2.y+rect2.height-5-95;
-		/** X =window width - width */ 
-		x = rect2.x+rect2.width-5-300; 
-		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-	}
+		if (state == TI2_AT_UPPER_LEFT) 
+		{
+			screen =gtk_widget_get_screen(pl3_win);
+			GdkRectangle rect2;
+			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
+		} else if (state == TI2_AT_UPPER_RIGHT) 
+		{
+			screen =gtk_widget_get_screen(pl3_win);
+			GdkRectangle rect2;
+			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+			/** Set Y = 0; */
+			y = rect2.y+5;
+			/** X is upper right - width */
+			x = rect2.x+rect2.width-5-300;
+			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
+		} else if (state == TI2_AT_LOWER_LEFT) 
+		{
+			screen =gtk_widget_get_screen(pl3_win);
+			GdkRectangle rect2;
+			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+			/** Set Y = window height - size; */
+			y = rect2.y+rect2.height-5-95;
+			/** X =5 */ 
+			x = rect2.x+ 5; 
+			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
+		} else 
+		{
+			screen =gtk_widget_get_screen(pl3_win);
+			GdkRectangle rect2;
+			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+			/** Set Y = window height - size; */
+			y = rect2.y+rect2.height-5-95;
+			/** X =window width - width */ 
+			x = rect2.x+rect2.width-5-300; 
+			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
+		}
 
-	gtk_widget_show_all(tray_icon2_tooltip);
+		gtk_widget_show_all(tray_icon2_tooltip);
 
 
-	/**
-	 * Destroy it after 5 seconds
-	 */
-	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
-	tray_icon2_tooltip_timeout = g_timeout_add(state*1000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+		/**
+		 * Destroy it after 5 seconds
+		 */
+		state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+		tray_icon2_tooltip_timeout = g_timeout_add(state*1000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 #ifdef ENABLE_TRAYICON
-#if GTK_CHECK_VERSION(2,12,0)
-    char buffer[256];
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-#endif
+	char buffer[256];
+	mpd_Song *song = mpd_playlist_get_current_song(connection);
 #endif
 	if(what&(MPD_CST_SONGID))
 	{
@@ -566,13 +547,11 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 			}
 		}
 #ifdef ENABLE_TRAYICON
-#if GTK_CHECK_VERSION(2,12,0)
-        if(tray_icon2_gsi)
-        {
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-        }
-#endif
+		if(tray_icon2_gsi)
+		{
+			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
+			gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+		}
 #endif
 	}
 
@@ -602,37 +581,31 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 #ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
 
-#if GTK_CHECK_VERSION(2,12,0)
-            mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
+			gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
 #endif
-#endif
-            if(has_buttons)
-            {
-                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
-            }
+			if(has_buttons)
+			{
+				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
+			}
 		} else if(state == MPD_PLAYER_PAUSE){
 #ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
-#if GTK_CHECK_VERSION(2,12,0)
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+			gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
 #endif
-#endif
-            if(has_buttons)
-            {
-                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
-            }
+			if(has_buttons)
+			{
+				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+			}
 		} else {
 #ifdef ENABLE_TRAYICON 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
-#if GTK_CHECK_VERSION(2,12,0)
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+			gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
 #endif
-#endif
-            if(has_buttons)
-            {
-                gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
-            }
+			if(has_buttons)
+			{
+				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
+			}
 		}
 	}
 }
