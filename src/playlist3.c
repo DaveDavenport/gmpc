@@ -1028,11 +1028,17 @@ GtkTreeView *playlist3_get_category_tree_view()
 /****************************************************************************************
  *  PREFERENCES										*
  ****************************************************************************************/
+void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data);
 
 void show_cover_case_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "metaimage","addcase", bool1);
+}
+void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "connection","stop-on-exit", bool1);
 }
 void hide_on_close_enable_tb(GtkToggleButton *but)
 {
@@ -1078,6 +1084,11 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_hide_on_close")),      		
 				cfg_get_single_value_as_int_with_default(config,"playlist", "hide-on-close", 0));
+
+		gtk_toggle_button_set_active(
+				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_stop_on_exit")),      		
+				cfg_get_single_value_as_int_with_default(config,"connection","stop-on-exit", 0));
+
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_cover_case")),      		
 				cfg_get_single_value_as_int_with_default(config,"metaimage", "addcase", FALSE));

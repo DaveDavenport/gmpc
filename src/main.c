@@ -785,6 +785,8 @@ void main_quit()
 	if(autoconnect_timeout)
         g_source_remove(autoconnect_timeout);
 
+
+
 	/** 
 	 * Call the connection changed.
 	 * so it saves the playlist pos 
@@ -796,7 +798,12 @@ void main_quit()
 	 */
 	if(mpd_check_connected(connection))
 	{
+        if(cfg_get_single_value_as_int_with_default(config, "connection",
+                    "stop-on-exit", FALSE)){
+            mpd_player_stop(connection);
+        }
 		mpd_disconnect(connection);
+        
 	}
 	/**
 	 * Exit main loop 
