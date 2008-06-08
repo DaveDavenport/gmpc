@@ -109,8 +109,11 @@ override (G:Object)
                         if(data->song)
                         {
                             self->_priv->loaded_songs--;
-                            self->_priv->total_time -= data->song->time;
-                            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                            if(data->song->time > 0)
+                            {
+                                self->_priv->total_time -= data->song->time;
+                                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                            }
                         }
 
                         data = (MpdData_real *)mpd_data_delete_item((MpdData *)data);
@@ -162,8 +165,11 @@ override (G:Object)
                         if(list_iter->song)
                         {
                             self->_priv->loaded_songs--;
-                            self->_priv->total_time -= list_iter->song->time;
-                            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                            if(list_iter->song->time > 0)
+                            {
+                                self->_priv->total_time -= list_iter->song->time;
+                                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                            }
                         }
 
                         if(list_iter->song)
@@ -280,9 +286,11 @@ override (G:Object)
             if(data->song)
             {
                 self->_priv->loaded_songs++;
-                self->_priv->total_time += data->song->time;
-
-                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                if(data->song->time>0)
+                {
+                    self->_priv->total_time += data->song->time;
+                    self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                }
             }
         }
         /**

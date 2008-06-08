@@ -86,7 +86,7 @@ static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTree
 }
 static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned long loaded_songs, unsigned long total_playtime, gpointer user_data)
 {
-     if(mpd_playlist_get_playlist_length(connection)&&loaded_songs)
+     if(mpd_playlist_get_playlist_length(connection)&&loaded_songs > 0)
 
      {
          unsigned long total_songs = GMPC_MPDDATA_MODEL(model)->num_rows;
@@ -692,7 +692,7 @@ static void pl3_current_playlist_browser_show_info()
 
 static void pl3_current_playlist_browser_selected(GtkWidget *container)
 {
-    unsigned long a,b;
+    unsigned long a = 0,b = 0;
     if(pl3_cp_vbox == NULL)
     {
         pl3_current_playlist_browser_init();
