@@ -66,9 +66,16 @@ static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpo
 static void pl3_current_playlist_save_myself(void);
 static void pl3_current_playlist_browser_init(void);
 
+
+
 GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
 static gboolean search_keep_open = FALSE;
+
+
+/* Tooltip */
+static void self_enable_tooltip(GtkWidget *treeview);
+
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
@@ -316,6 +323,12 @@ static void pl3_current_playlist_browser_init(void)
 {
 	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
     GtkWidget *tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
+
+    /** 
+     * Popup
+     */
+    self_enable_tooltip(tree);
+
     /* filter */
     mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();
     GtkWidget *entry = sexy_icon_entry_new(); 
@@ -934,5 +947,168 @@ static void pl3_current_playlist_save_myself(void)
             gtk_tree_path_free(path);
         }
     }
+}
+
+/****
+ * TREEVIEW
+ */
+static GtkWidget *tooltip_window = NULL;
+static GtkWidget *tw_image = NULL;
+
+static GtkWidget *tw_title = NULL;
+static GtkWidget *tw_artist = NULL;
+static GtkWidget *tw_album = NULL;
+static GtkWidget *tw_genre = NULL;
+static GtkWidget *tw_date = NULL;
+
+static gchar *file = NULL;
+
+#define MOUSE_OFFSET 10
+
+static gboolean self_query_tooltip(GtkWidget *treeview, 
+        gint x, gint y, 
+        gboolean keyboard_tip,
+        GtkTooltip *tooltip, 
+        gpointer data)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+    GtkTreeIter iter;
+    GtkTreePath *path = NULL;
+    int show = FALSE;
+    if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW(treeview), &x, &y,
+                keyboard_tip,
+                &model, &path, &iter))
+        return FALSE;
+    
+    mpd_Song *song = NULL;
+    gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+    if(song)
+    {
+        show = TRUE;
+        /* makes it look a bit nicer */
+        if(file && song->file && strcmp(file, song->file))
+        {
+            show = FALSE;
+            g_free(file);file = NULL; 
+        }
+        else if(!(file && song->file && strcmp(file, song->file) == 0))
+        {
+            gchar *temp;
+
+            gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(tw_image), song);
+            if(file)
+                g_free(file);
+            file = NULL;
+            if(song->file)
+                file = g_strdup(song->file);
+
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &temp, -1);
+            gtk_label_set_text(GTK_LABEL(tw_title), temp);
+            g_free(temp);
+
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ARTIST,&temp, -1);
+            gtk_label_set_text(GTK_LABEL(tw_artist), temp);
+            g_free(temp);
+
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ALBUM, &temp, -1);
+            gtk_label_set_text(GTK_LABEL(tw_album), temp);
+            g_free(temp);
+
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_GENRE, &temp, -1);
+            gtk_label_set_text(GTK_LABEL(tw_genre), temp);
+            g_free(temp);
+
+            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_DATE, &temp, -1);
+            gtk_label_set_text(GTK_LABEL(tw_date), temp);
+            g_free(temp);
+        }
+    }
+    gtk_tree_path_free(path);
+    return show;
+}
+static void self_enable_tooltip(GtkWidget *treeview)
+{
+    GtkWidget *table = gtk_table_new(5,2, FALSE);
+    GtkWidget *vbox = gtk_hbox_new(FALSE, 6);
+    GtkWidget *label;
+    GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
+    tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
+    gtk_window_set_default_size(GTK_WINDOW(tooltip_window), 3*128,128);
+    
+    gtk_container_add(GTK_CONTAINER(tooltip_window), vbox);
+    tw_image = gmpc_metaimage_new(META_ALBUM_ART);
+    gmpc_metaimage_set_size(GMPC_METAIMAGE(tw_image), 128);
+    gtk_box_pack_start(GTK_BOX(vbox), tw_image, FALSE, FALSE, 0);
+
+    gtk_table_set_row_spacings(GTK_TABLE(table), 6);
+    gtk_table_set_col_spacings(GTK_TABLE(table), 6);
+
+    label = gtk_label_new("");
+    gtk_size_group_add_widget(group, label);
+    gtk_label_set_markup(GTK_LABEL(label), _("<b>Title:</b>"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+    gtk_table_attach(GTK_TABLE(table), label, 0,1,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+    tw_title = gtk_label_new("n/a");
+    gtk_misc_set_alignment(GTK_MISC(tw_title), 0.0,0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(tw_title), PANGO_ELLIPSIZE_END);
+    gtk_table_attach(GTK_TABLE(table), tw_title, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+    label = gtk_label_new("");
+    gtk_size_group_add_widget(group, label);
+    gtk_label_set_markup(GTK_LABEL(label), _("<b>Artist:</b>"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+    gtk_table_attach(GTK_TABLE(table), label, 0,1,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+    tw_artist = gtk_label_new("n/a");
+    gtk_misc_set_alignment(GTK_MISC(tw_artist), 0.0,0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(tw_artist),PANGO_ELLIPSIZE_END);
+    gtk_table_attach(GTK_TABLE(table), tw_artist, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+
+    label = gtk_label_new("");
+    gtk_size_group_add_widget(group, label);
+    gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+    gtk_table_attach(GTK_TABLE(table), label, 0,1,2,3,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+    tw_album = gtk_label_new("n/a");
+    gtk_misc_set_alignment(GTK_MISC(tw_album), 0.0,0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(tw_album),PANGO_ELLIPSIZE_END);
+    gtk_table_attach(GTK_TABLE(table), tw_album, 1,2,2,3,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+    label = gtk_label_new("");
+    gtk_size_group_add_widget(group, label);
+    gtk_label_set_markup(GTK_LABEL(label), _("<b>Genre:</b>"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+    gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+    tw_genre = gtk_label_new("n/a"); 
+    gtk_misc_set_alignment(GTK_MISC(tw_genre), 0.0,0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(tw_genre),PANGO_ELLIPSIZE_END);
+    gtk_table_attach(GTK_TABLE(table), tw_genre, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+    label = gtk_label_new("");
+    gtk_size_group_add_widget(group, label);
+    gtk_label_set_markup(GTK_LABEL(label), _("<b>Date:</b>"));
+    gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+    gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+    tw_date = gtk_label_new("n/a"); 
+    gtk_misc_set_alignment(GTK_MISC(tw_date), 0.0,0.5);
+    gtk_label_set_ellipsize(GTK_LABEL(tw_date),PANGO_ELLIPSIZE_END);
+    gtk_table_attach(GTK_TABLE(table), tw_date, 1,2,4,5,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+
+
+
+    gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
+
+
+
+    g_signal_connect(G_OBJECT(treeview), 
+            "query-tooltip",
+            G_CALLBACK(self_query_tooltip),
+            NULL); 
+    gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(tooltip_window));
+    gtk_widget_show_all(vbox);
 }
 
