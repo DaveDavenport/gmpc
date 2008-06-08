@@ -10,8 +10,10 @@ requires 2.0.0
 #include "eggcolumnchooserdialog.h"
 #include "gmpc-mpddata-model-playlist.h"
 %}
+
 %h{
 #define NUM_COLS 16
+#define MOUSE_OFFSET 10
 %}
 
 %{
@@ -94,6 +96,22 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     private gchar *name = {NULL} destroywith g_free;
     private gboolean do_sort = {TRUE};
     private GtkTreeViewColumn *columns[NUM_COLS];
+    /* Tooltip */
+    private GtkWidget   *tooltip_window = {NULL};
+    private GtkWidget   *tw_image = {NULL};
+    private GtkWidget   *tw_title = {NULL};
+    private GtkWidget   *tw_artist = {NULL};
+    private GtkWidget   *tw_album = {NULL};
+    private GtkWidget   *tw_genre = {NULL};
+    private GtkWidget   *tw_date = {NULL};
+    private gchar       *file = NULL;
+
+
+
+
+
+
+
 
     public 
         GtkWidget * new (char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
@@ -104,6 +122,8 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             gtk_tree_view_set_model(GTK_TREE_VIEW(self), model);
             /* init the tree */
             self_do_init(self);
+            /* set tooltip */
+            self_enable_tooltip(self);
             return (GtkWidget *)self;
         }
     private
@@ -213,20 +233,20 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             PARENT_HANDLER(obj);
         }
     private
-    void
-    highlight_row (GtkTreeViewColumn *tree_column,
-                                                         GtkCellRenderer *cell,
-                                                         GtkTreeModel *tree_model,
-                                                         GtkTreeIter *iter,
-                                                         gpointer data)
-    {
-        
-        if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(tree_model) && gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
-            g_object_set(G_OBJECT(cell), "weight", 800,NULL);
-        else
-            g_object_set(G_OBJECT(cell), "weight", 400,NULL);
+        void
+        highlight_row (GtkTreeViewColumn *tree_column,
+                GtkCellRenderer *cell,
+                GtkTreeModel *tree_model,
+                GtkTreeIter *iter,
+                gpointer data)
+        {
 
-    }
+            if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(tree_model) && gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
+                g_object_set(G_OBJECT(cell), "weight", 800,NULL);
+            else
+                g_object_set(G_OBJECT(cell), "weight", 400,NULL);
+
+        }
 
     private
         GtkTreeViewColumn * 
@@ -292,15 +312,204 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         }
 
     override (G:Object)
-    void
-    finalize(G:Object *obj)
-    {
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(obj));
-        if(model)
+        void
+        finalize(G:Object *obj)
         {
-            gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
-            g_object_unref(model);
+            Self *self = SELF(obj);
+            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(obj));
+            if(model)
+            {
+                gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
+                g_object_unref(model);
+            }
+            if(self->_priv->tooltip_window)
+            {
+                gtk_widget_destroy(self->_priv->tooltip_window);
+                self->_priv->tooltip_window = NULL;
+            }
+            if(self->_priv->file)
+            {
+                g_free(self->_priv->file);
+                self->_priv->file = NULL;
+            }
+            PARENT_HANDLER(obj);
         }
-        PARENT_HANDLER(obj);
+
+    /****
+     * TREEVIEW POPUP
+     */
+    private gboolean query_tooltip(self,
+            gint x, gint y, 
+            gboolean keyboard_tip,
+            GtkTooltip *tooltip, 
+            gpointer data)
+    {
+        GtkTreeView *treeview = GTK_TREE_VIEW(self);
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+        GtkTreeIter iter;
+        GtkTreePath *path = NULL;
+        mpd_Song *song = NULL;
+        int show = FALSE;
+
+        if(!cfg_get_single_value_as_int_with_default(config, "GmpcTreeView", "show-tooltip", TRUE))
+            return FALSE;
+        if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW(treeview), &x, &y,
+                    keyboard_tip,
+                    &model, &path, &iter))
+           return FALSE;
+
+        
+        gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+        if(song)
+        {
+            show = TRUE;
+            /* makes it look a bit nicer */
+            if(self->_priv->file && song->file && strcmp(self->_priv->file, song->file))
+            {
+                show = FALSE;
+                g_free(self->_priv->file);self->_priv->file = NULL; 
+            }
+            else if(!(self->_priv->file && song->file && strcmp(self->_priv->file, song->file) == 0))
+            {
+                gchar *temp;
+
+                gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(self->_priv->tw_image), song);
+                if(self->_priv->file)
+                    g_free(self->_priv->file);
+                self->_priv->file = NULL;
+                if(song->file)
+                    self->_priv->file = g_strdup(song->file);
+
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &temp, -1);
+                gtk_label_set_text(GTK_LABEL(self->_priv->tw_title), temp);
+                g_free(temp);
+
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ARTIST,&temp, -1);
+                gtk_label_set_text(GTK_LABEL(self->_priv->tw_artist), temp);
+                g_free(temp);
+
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ALBUM, &temp, -1);
+                gtk_label_set_text(GTK_LABEL(self->_priv->tw_album), temp);
+                g_free(temp);
+
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_GENRE, &temp, -1);
+                gtk_label_set_text(GTK_LABEL(self->_priv->tw_genre), temp);
+                g_free(temp);
+
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_DATE, &temp, -1);
+                gtk_label_set_text(GTK_LABEL(self->_priv->tw_date), temp);
+                g_free(temp);
+            }
+        }
+        gtk_tree_path_free(path);
+        return show;
+    }
+    private
+    gboolean
+    tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
+    {
+        GtkRequisition req;
+
+        gtk_widget_size_request(widget, &req);
+        gtk_widget_ensure_style(widget);
+        gtk_paint_flat_box(widget->style, widget->window,
+                GTK_STATE_NORMAL, GTK_SHADOW_NONE,
+                NULL, widget, "tooltip",
+                0, 0, req.width, req.height);
+
+        return FALSE;//GTK_WIDGET_CLASS(parent_class)->expose_event(widget, event);
+    }
+
+    private void enable_tooltip(self)
+    {
+        GtkWidget *treeview = GTK_TREE_VIEW(self);
+        GtkWidget *table = gtk_table_new(5,2, FALSE);
+        GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
+        GtkWidget *label;
+        GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
+        self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
+        gtk_widget_set_size_request(GTK_WIDGET(self->_priv->tooltip_window), 3*128,130);
+
+        gtk_widget_set_app_paintable(self->_priv->tooltip_window, TRUE);
+        g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), NULL);
+
+        gtk_container_add(GTK_CONTAINER(self->_priv->tooltip_window), vbox);
+        self->_priv->tw_image = gmpc_metaimage_new(META_ALBUM_ART);
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(self->_priv->tw_image), 128);
+        gtk_box_pack_start(GTK_BOX(vbox), self->_priv->tw_image, FALSE, FALSE, 0);
+
+        gtk_table_set_row_spacings(GTK_TABLE(table), 6);
+        gtk_table_set_col_spacings(GTK_TABLE(table), 6);
+        /* set layout up */
+        gtk_container_set_border_width(GTK_CONTAINER(vbox),1);
+        gtk_container_set_border_width(GTK_CONTAINER(table), 6);
+
+        label = gtk_label_new("");
+        gtk_size_group_add_widget(group, label);
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Title:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+        gtk_table_attach(GTK_TABLE(table), label, 0,1,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        self->_priv->tw_title = gtk_label_new("n/a");
+        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_title), 0.0,0.5);
+        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_title), PANGO_ELLIPSIZE_END);
+        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_title, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+        label = gtk_label_new("");
+        gtk_size_group_add_widget(group, label);
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Artist:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+        gtk_table_attach(GTK_TABLE(table), label, 0,1,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        self->_priv->tw_artist = gtk_label_new("n/a");
+        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_artist), 0.0,0.5);
+        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_artist),PANGO_ELLIPSIZE_END);
+        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_artist, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+
+        label = gtk_label_new("");
+        gtk_size_group_add_widget(group, label);
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+        gtk_table_attach(GTK_TABLE(table), label, 0,1,2,3,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        self->_priv->tw_album = gtk_label_new("n/a");
+        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_album), 0.0,0.5);
+        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_album),PANGO_ELLIPSIZE_END);
+        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_album, 1,2,2,3,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+        label = gtk_label_new("");
+        gtk_size_group_add_widget(group, label);
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Genre:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+        gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        self->_priv->tw_genre = gtk_label_new("n/a"); 
+        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_genre), 0.0,0.5);
+        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_genre),PANGO_ELLIPSIZE_END);
+        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_genre, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+        label = gtk_label_new("");
+        gtk_size_group_add_widget(group, label);
+        gtk_label_set_markup(GTK_LABEL(label), _("<b>Date:</b>"));
+        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+        gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        self->_priv->tw_date = gtk_label_new("n/a"); 
+        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_date), 0.0,0.5);
+        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_date),PANGO_ELLIPSIZE_END);
+        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_date, 1,2,4,5,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+
+
+
+
+        gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
+
+
+
+        g_signal_connect(G_OBJECT(treeview), 
+                "query-tooltip",
+                G_CALLBACK(self_query_tooltip),
+                NULL); 
+        gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(self->_priv->tooltip_window));
+        gtk_widget_show_all(vbox);
     }
 }
