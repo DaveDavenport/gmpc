@@ -1,10 +1,9 @@
 # Process this file with autoconf to produce a configure script.
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [15])
-m4_define([gmpc_micro_version], [5])
-m4_define([gmpc_nano_version], [2])
+m4_define([gmpc_micro_version], [6])
 m4_define([gmpc_version],
-          [gmpc_major_version.gmpc_minor_version.gmpc_micro_version.gmpc_nano_version])
+          [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
 
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
@@ -14,11 +13,9 @@ AM_INIT_AUTOMAKE([gmpc], [gmpc_version],qball@sarine.nl)
 GMPC_MAJOR_VERSION=gmpc_major_version
 GMPC_MINOR_VERSION=gmpc_minor_version
 GMPC_MICRO_VERSION=gmpc_micro_version
-GMPC_NANO_VERSION=gmpc_nano_version
 AC_DEFINE(GMPC_MAJOR_VERSION, gmpc_major_version, ["Major version of gmpc"])
 AC_DEFINE(GMPC_MINOR_VERSION, gmpc_minor_version, ["Minor version of gmpc"])
 AC_DEFINE(GMPC_MICRO_VERSION, gmpc_micro_version, ["Micro version of gmpc"])
-AC_DEFINE(GMPC_NANO_VERSION, gmpc_nano_version, ["Nano version of gmpc"])
 
 
 # Checks for programs.
