@@ -14,6 +14,9 @@ requires 2.0.0
 %h{
 #define NUM_COLS 16
 #define MOUSE_OFFSET 10
+#define ENABLE_GRADIENT_LOOK 1
+#define BACKGROUND_OPACITY 0.92
+#define BOTTOM_GRADIENT_HEIGHT 30
 %}
 
 %{
@@ -404,34 +407,132 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         gtk_tree_path_free(path);
         return show;
     }
+
+
     private
     gboolean
     tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
     {
-        GtkRequisition req;
 
-        gtk_widget_size_request(widget, &req);
-        gtk_widget_ensure_style(widget);
-        gtk_paint_flat_box(widget->style, widget->window,
-                GTK_STATE_NORMAL, GTK_SHADOW_NONE,
-                NULL, widget, "tooltip",
-                0, 0, req.width, req.height);
+
+
+
+        GtkStyle *style = gtk_widget_get_style(widget);
+        GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
+        cairo_t *context;
+        cairo_surface_t *surface;
+        cairo_t *cr;
+        GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(widget));
+#ifdef ENABLE_GRADIENT_LOOK
+        cairo_pattern_t *gradient;
+        double r, g, b;
+        int gradient_y = widget->allocation.height - BOTTOM_GRADIENT_HEIGHT;
+#endif
+
+
+        context = gdk_cairo_create(widget->window);
+
+        cairo_set_operator(context, CAIRO_OPERATOR_SOURCE);
+        surface = cairo_surface_create_similar(cairo_get_target(context),
+                CAIRO_CONTENT_COLOR_ALPHA,
+                widget->allocation.width,
+                widget->allocation.height);
+        cr = cairo_create(surface);
+
+
+
+
+        if (gdk_screen_is_composited(screen))
+        {
+            cairo_set_source_rgba(cr,
+                    background_color->red   / 65535.0,
+                    background_color->green / 65535.0,
+                    background_color->blue  / 65535.0,
+                    BACKGROUND_OPACITY);
+        }
+        else
+        {
+            gdk_cairo_set_source_color(cr, background_color);
+        }
+
+        cairo_rectangle(cr, 0, 0,
+                widget->allocation.width,
+                widget->allocation.height);
+        cairo_fill(cr);
+
+#ifdef ENABLE_GRADIENT_LOOK
+        /* Add a very subtle gradient to the bottom of the notification */
+        gradient = cairo_pattern_create_linear(0, gradient_y, 0,
+                widget->allocation.height);
+        cairo_pattern_add_color_stop_rgba(gradient, 0, 0, 0, 0, 0);
+        cairo_pattern_add_color_stop_rgba(gradient, 1, 0, 0, 0, 0.15);
+        cairo_rectangle(cr, 0, gradient_y, widget->allocation.width,
+                BOTTOM_GRADIENT_HEIGHT);
+        cairo_set_source(cr, gradient);
+        cairo_fill(cr);
+        cairo_pattern_destroy(gradient);
+#endif
+
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+        cairo_set_line_width(cr, 1.0);
+        cairo_rectangle(cr, 0.5, 0.5,widget->allocation.width - 0.5, widget->allocation.height - 0.5);
+        cairo_stroke(cr);
+        GdkColor color;
+        int stripe_x = 0+ 1;
+        int stripe_y = 0+ 1;
+        int stripe_height = 128; 
+
+
+        color = style->bg[GTK_STATE_SELECTED];
+
+        cairo_rectangle(cr, stripe_x, stripe_y, 160, stripe_height);
+
+#ifdef ENABLE_GRADIENT_LOOK
+        r = color.red   / 65535.0;
+        g = color.green / 65535.0;
+        b = color.blue  / 65535.0;
+
+        gradient = cairo_pattern_create_linear(stripe_x, 0, 160, 0);
+        cairo_pattern_add_color_stop_rgba(gradient, 0, r, g, b, 1);
+        cairo_pattern_add_color_stop_rgba(gradient, 1, r, g, b, 0);
+        cairo_set_source(cr, gradient);
+        cairo_fill(cr);
+        cairo_pattern_destroy(gradient);
+#else
+        gdk_cairo_set_source_color(cr, &color);
+        cairo_fill(cr);
+#endif
+
+        cairo_destroy(cr);
+        cairo_set_source_surface(context, surface, 0, 0);
+        cairo_paint(context);
+        cairo_surface_destroy(surface);
+        cairo_destroy(context);
 
         return FALSE;//GTK_WIDGET_CLASS(parent_class)->expose_event(widget, event);
     }
 
     private void enable_tooltip(self)
     {
-        GtkWidget *treeview = GTK_TREE_VIEW(self);
+        GtkWidget *treeview = GTK_WIDGET(self);
         GtkWidget *table = gtk_table_new(5,2, FALSE);
         GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
         GtkWidget *label;
         GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
         self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
+        GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
+        GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
+
+        if (colormap != NULL && gdk_screen_is_composited(screen))
+        {
+            gtk_widget_set_colormap(self->_priv->tooltip_window, colormap);
+        }
+
+
         gtk_widget_set_size_request(GTK_WIDGET(self->_priv->tooltip_window), 3*128,130);
 
         gtk_widget_set_app_paintable(self->_priv->tooltip_window, TRUE);
-        g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), NULL);
+        g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), self);
 
         gtk_container_add(GTK_CONTAINER(self->_priv->tooltip_window), vbox);
         self->_priv->tw_image = gmpc_metaimage_new(META_ALBUM_ART);
