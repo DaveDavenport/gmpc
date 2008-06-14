@@ -216,14 +216,18 @@ pixmaps/Makefile
 pixmaps/icons/Makefile
 pixmaps/icons/16x16/Makefile
 pixmaps/icons/16x16/actions/Makefile 
+pixmaps/icons/16x16/status/Makefile 
 pixmaps/icons/22x22/Makefile
 pixmaps/icons/22x22/actions/Makefile 
+pixmaps/icons/22x22/status/Makefile 
 pixmaps/icons/32x32/Makefile
 pixmaps/icons/32x32/actions/Makefile
+pixmaps/icons/32x32/status/Makefile
 pixmaps/icons/48x48/Makefile
 pixmaps/icons/48x48/actions/Makefile
 pixmaps/icons/scalable/Makefile
 pixmaps/icons/scalable/actions/Makefile
+pixmaps/icons/scalable/status/Makefile
 ])
 echo ""
 echo ""

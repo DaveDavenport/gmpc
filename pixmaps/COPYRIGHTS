@@ -10,12 +10,18 @@ gmpc-tray
 gmpc
 
 -Gnome Default Theme (author not in theme file dir?)
+
 -Tango project
+(http://creativecommons.org/licenses/by-sa/2.5/)
 media-artist
 media-stream
 media-repeat
 media-random
 stock_volume (renamed to gmpc-volume)
+audio-volume-muted
+audio-volume-high
+audio-volume-medium
+audio-volume-low
 
 TheSheep
 - media-playlist
