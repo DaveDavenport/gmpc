@@ -703,7 +703,11 @@ static int playlist_editor_add_go_menu(GtkWidget *menu)
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_icon_name("media-playlist", GTK_ICON_SIZE_MENU));
 
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F7, 0, GTK_ACCEL_VISIBLE);
+    gtk_widget_add_accelerator(GTK_WIDGET(item), 
+            "activate", 
+            gtk_menu_get_accel_group(GTK_MENU(menu)), 
+            GDK_F5, 0, 
+            GTK_ACCEL_VISIBLE);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", 
             G_CALLBACK(playlist_editor_activate), NULL);

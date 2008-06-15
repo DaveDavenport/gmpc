@@ -1213,7 +1213,12 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
     item = gtk_image_menu_item_new_with_label(_("File Browser"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F3, 0, GTK_ACCEL_VISIBLE);
+    gtk_widget_add_accelerator(GTK_WIDGET(item), 
+            "activate",
+            gtk_menu_get_accel_group(GTK_MENU(menu)), 
+            GDK_F2, 0,
+            GTK_ACCEL_VISIBLE);
+
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", 
             G_CALLBACK(pl3_file_browser_activate), NULL);
