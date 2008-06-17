@@ -158,5 +158,5 @@ void tray_icon2_create_tooltip(void);
 /* usefull for some stuff */
 extern GladeXML *pl3_xml;
 
-void url_start();
+void url_start(void);
 #endif

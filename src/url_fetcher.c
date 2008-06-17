@@ -170,7 +170,7 @@ static void parse_data(gmpc_easy_download_struct dld, const char *text)
         pl3_push_statusbar_message(_("Added 1 stream"));
     }
 }
-void url_start()
+void url_start(void)
 {
 	/**
 	 * Setup the Dialog
