@@ -1,0 +1,34 @@
+Gnome Music Player Client 0.16.0
+================================
+Qball Cow <Qball@Sarine.nl>
+v0.1, Jun. 2008
+
+After another long time, it's finally ready for another release: **gmpc 0.16.0: 100% gnome-dependency free**
+
+New Features
+------------
+
+* Rewritten current playlist backend. 
+* Improved playlist validation
+* Player part of the player cleaned up, including the mini-mode.
+* Better collection detection for album art. 
+* Allow reordering of the left pane by drag and drop. 
+* improved search as you type in the play queue.
+* Database and playlist search browser merged.
+* Tokenized search in search browser.
+* Improved tag browser
+** incemental filtering of columns.
+** Directly editing of column type.
+** Better art support.
+** Search as you type in the columns.
+* Metadata browser speedups.
+* On many requests, re-adding of the stop button the main interface.
+* Correctly track output state.
+
+Alot of cleanups are done, duplicate code is removed and where possible stock-widgets are used. 
+
+
+Removed Features
+----------------
+
+* Playlist queue's: This feature was removed from mpd, so gmpc follows.
