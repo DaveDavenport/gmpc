@@ -24,6 +24,7 @@ New Features
 * Metadata browser speedups.
 * On many requests, re-adding of the stop button the main interface.
 * Correctly track output state.
+* Tooltip on song list showing details about the song.
 
 Alot of cleanups are done, duplicate code is removed and where possible stock-widgets are used. 
 
