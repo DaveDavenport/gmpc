@@ -205,6 +205,7 @@ AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcur
 AC_OUTPUT([
 Makefile 
 src/Makefile 
+src/gob/Makefile
 glade/Makefile 
 data/Makefile 
 po/Makefile.in 

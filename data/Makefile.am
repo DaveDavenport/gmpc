@@ -11,5 +11,6 @@ EXTRA_DIST = 		\
 	gmpc.pc.in
 
 
-
-
+DISTCLEANFILES=\
+ 	gmpc.pc\
+	gmpc.desktop
