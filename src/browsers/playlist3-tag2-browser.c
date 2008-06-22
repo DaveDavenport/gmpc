@@ -478,6 +478,7 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
              * Update the TreeModel using the special incremental replace function.
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
+            sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
@@ -1001,13 +1002,13 @@ static void tag2_browser_selected(GtkWidget *container)
                 tag_browser *tb = node->data;
                 if(tb)
                 {
-                    GList *list;
+ /*                   GList *list;*/
                     if(tb->tag2_vbox ==NULL)
                         tag2_init_browser(tb);
                     gtk_container_add(GTK_CONTAINER(container), tb->tag2_vbox);
                     gtk_widget_show_all(container);
                     tag2_current = tb->tag2_vbox;
-
+/*
                     list = g_list_first(tb->tag_lists);
                     if(list)
                     {
@@ -1015,8 +1016,9 @@ static void tag2_browser_selected(GtkWidget *container)
                         gtk_widget_grab_focus(te->tree);
                     }
 
+  */
                     playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(
-                                gtk_tree_view_get_model(tb->tag_songlist)))); 
+                                    gtk_tree_view_get_model(tb->tag_songlist)))); 
                 }
                 else{
 
@@ -1069,9 +1071,11 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer data)
 		if(te != NULL && mpd_check_connected(connection) )
 		{
 			MpdData *data;
+
 			mpd_database_search_field_start(connection, te->type);
 			data = mpd_database_search_commit(connection);
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+
             tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree)),te);
 		}
 	}
