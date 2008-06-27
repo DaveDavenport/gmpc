@@ -840,12 +840,12 @@ static void init_stock_icons()
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default (),path);
 	q_free(path);
 
-	path = gmpc_get_full_image_path("gmpc.png");
+/*	path = gmpc_get_full_image_path("gmpc.png");
 	pb = gdk_pixbuf_new_from_file(path, NULL);
 	q_free(path);
-	gtk_window_set_default_icon(pb);
-	g_object_unref(G_OBJECT(pb));
-
+*/	gtk_window_set_default_icon_name("gmpc");
+/*	g_object_unref(G_OBJECT(pb));
+*/
 #ifdef WIN32
 	/* hack to help finding files */
 	gchar *hack = NULL;

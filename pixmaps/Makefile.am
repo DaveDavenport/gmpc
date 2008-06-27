@@ -1,6 +1,3 @@
-gmpcicondir = $(datadir)/pixmaps/
-gmpcicon_DATA = gmpc.png
-
 appicondir = $(datadir)/gmpc/
 appicon_DATA =	\
 	media-audiofile.png\
@@ -12,7 +9,6 @@ appicon_DATA =	\
 	gmpc-tray-pause.png\
 	gmpc-no-cover.png\
 	gmpc-tray-disconnected.png\
-	gmpc.png\
 	media-album.png\
 	gmpc-add-url.png\
 	mpdBrowser_case.png\
