@@ -40,21 +40,6 @@ sources=\
 gmpc_LDADD=\
 			   gob/libcwidgets.la
 
-#nodist_gmpc_SOURCES=\
-#	gob/gmpc-connection.c\
-#	gob/gmpc-metaimage.c\
-#	gob/gmpc-meta-watcher.c\
-#	gob/gmpc-meta-text-view.c\
-#	gob/gmpc-mpddata-model.c\
-#	gob/gmpc-mpddata-model-sort.c\
-#	gob/gmpc-liststore-sort.c\
-#	gob/gmpc-mpddata-model-playlist.c\
-#	gob/gmpc-mpddata-treeview.c\
-#	gob/gmpc-clicklabel.c\
-#	gob/gmpc-stats-label.c\
-#	gob/gmpc-signals.c\
-#	gob/gmpc-idle.c\
-#	gob/gmpc-profiles.c
 
 if HAVE_RC
 gmpc_SOURCES=$(sources) gmpc.rc
@@ -63,20 +48,6 @@ gmpc_SOURCES=$(sources)
 endif
 
 BUILT_SOURCES= revisiont.h
-#	gob/gmpc-connection.c\
-#	gob/gmpc-profiles.c\
-#	gob/gmpc-mpddata-model.c\
-#	gob/gmpc-mpddata-model-sort.c\
-#	gob/gmpc-liststore-sort.c\
-#	gob/gmpc-mpddata-model-playlist.c\
-#	gob/gmpc-mpddata-treeview.c\
-#	gob/gmpc-stats-label.c\
-#	gob/gmpc-clicklabel.c\
-#	gob/gmpc-meta-text-view.c\
-#	gob/gmpc-meta-watcher.c\
-#	gob/gmpc-metaimage.c\
-#	gob/gmpc-idle.c\
-#	gob/gmpc-signals.c
 
 %.c %.h %-private.h: %.gob
 	@GOB2@ -o gob/ --no-touch-headers --always-private-header $<
@@ -145,20 +116,6 @@ gmpcinclude_HEADERS = \
 		TreeSearchWidget.h \
 		playlist3-messages.h\
 		metadata.h
-
-
-
-#gob/gmpc-profiles.h\
-#gob/gmpc-mpddata-model.h\
-#gob/gmpc-mpddata-model-sort.h\
-#gob/gmpc-mpddata-treeview.h\
-#gob/gmpc-meta-watcher.h\
-#gob/gmpc-clicklabel.h\
-#gob/gmpc-metaimage.h\
-#gob/gmpc-connection.h\
-#gob/gmpc-signals.h\
-#gob/gmpc-idle.h
-
 
 gmpcincludedir =$(includedir)/gmpc/
 

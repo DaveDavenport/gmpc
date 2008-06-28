@@ -16,6 +16,21 @@ nodist_libcwidgets_la_SOURCES =\
 	gmpc-idle.c\
 	gmpc-profiles.c
 
+libcwidgetsincludedir =$(includedir)/gmpc/
+libcwidgetsinclude_HEADERS=\
+						   gmpc-profiles.h\
+						   gmpc-mpddata-model.h\
+						   gmpc-mpddata-model-sort.h\
+						   gmpc-mpddata-treeview.h\
+						   gmpc-meta-watcher.h\
+						   gmpc-clicklabel.h\
+						   gmpc-metaimage.h\
+						   gmpc-connection.h\
+						   gmpc-signals.h\
+						   gmpc-idle.h
+
+
+
 BUILT_SOURCES=\
 			  $(nodist_libcwidgets_la_SOURCES)
 
