@@ -663,9 +663,20 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
 {
     GtkTreeIter iter;
     gint song_id;
-    gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path);
-    gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_SONG_ID,&song_id, -1);
+    GtkTreeModel *model = gtk_tree_view_get_model(tree);
+    gtk_tree_model_get_iter(model, &iter, path);
+    gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ID,&song_id, -1);
     mpd_player_play_id(connection, song_id);
+
+    if(!search_keep_open && model == mod_fill)
+    {
+        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
+        gtk_widget_hide(filter_entry);
+
+        pl3_current_playlist_browser_select_current_song();
+    }
+
 }
 
 static void pl3_current_playlist_browser_show_info()
