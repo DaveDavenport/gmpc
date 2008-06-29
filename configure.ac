@@ -233,6 +233,7 @@ pixmaps/icons/48x48/apps/Makefile
 pixmaps/icons/scalable/Makefile
 pixmaps/icons/scalable/actions/Makefile
 pixmaps/icons/scalable/status/Makefile
+pixmaps/icons/scalable/apps/Makefile
 ])
 echo ""
 echo ""
