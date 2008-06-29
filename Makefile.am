@@ -5,3 +5,13 @@ SUBDIRS = src pixmaps glade data po doc pixmaps
 else
 SUBDIRS = src pixmaps glade data po doc pixmaps remote
 endif
+
+EXTRA_DIST=	intltool-extract.in\
+		intltool-update.in\
+		intltool-merge.in
+
+
+DISTCLEANFILES=\
+	       intltool-update\
+	       intltool-extract\
+	       intltool-merge

@@ -873,7 +873,7 @@ static void connection_pref_construct(GtkWidget *container)
 		iter = mult;
 		do{
 			GtkTreeIter piter;
-      gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
+			gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
 			gtk_list_store_append(store, &piter);
 			gtk_list_store_set(store, &piter, 0,iter->data, 1,value,-1);
 			if(!strcmp((char *)(iter->data), def_profile))
@@ -882,8 +882,8 @@ static void connection_pref_construct(GtkWidget *container)
 			}
 			i++;
 		}while((iter = g_list_next(iter)));
-    g_list_foreach(mult, (GFunc)g_free, NULL);
-    g_list_free(mult);
+		g_list_foreach(mult, (GFunc)g_free, NULL);
+		g_list_free(mult);
 	}
 	else{
 	/*	GtkTreeIter piter;

@@ -65,7 +65,7 @@ void setup_assistant(void)
     /**
      * Append an introduction page
      */
-    page = gtk_label_new(_("It is the first time you launch gmpc.\nThis assistant will help you configure it."));
+    page = gtk_label_new(_("It is the first time you launch gmpc.\nThis assistant will help you connect it to your mpd daemon."));
     gtk_assistant_append_page(GTK_ASSISTANT(assistant), page);
     gtk_assistant_set_page_title(GTK_ASSISTANT(assistant), page, _("Welcome to GMPC"));
     gtk_assistant_set_page_header_image(GTK_ASSISTANT(assistant), page, header_pb);
@@ -80,7 +80,10 @@ void setup_assistant(void)
     connection_plug.pref->construct(con_pref);
     gtk_widget_show (page);
     gtk_assistant_append_page (GTK_ASSISTANT (assistant), page);
+    /* set up header */
+    gtk_assistant_set_page_header_image(GTK_ASSISTANT(assistant), page, header_pb);
     gtk_assistant_set_page_title (GTK_ASSISTANT (assistant), page, _("Setup connection"));
+    /* setup page type */
     gtk_assistant_set_page_type  (GTK_ASSISTANT (assistant), page, GTK_ASSISTANT_PAGE_CONTENT);
     gtk_assistant_set_page_complete (GTK_ASSISTANT (assistant), page, FALSE);
 
