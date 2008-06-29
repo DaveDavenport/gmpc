@@ -27,6 +27,7 @@ sources=\
 	browsers/playlist3-metadata-browser.c\
 	browsers/playlist3-playlist-editor.c\
 	gmpc_easy_download.c\
+	setup-assistant.c\
 	url_fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
@@ -132,6 +133,7 @@ EXTRA_DIST=\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		bacon/bacon-message-connection.h\
+		setup-assistant.h\
 		sm.h\
 		metadata.h\
 		egg/eggcolumnchooserdialog.h\

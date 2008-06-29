@@ -39,6 +39,9 @@
 #include "misc.h"
 
 #include "gmpc_easy_download.h"
+
+#include "setup-assistant.h"
+
 /**
  * Get revision
  */
@@ -634,12 +637,23 @@ int main (int argc, char **argv)
 	 * Ask user about added/removed provider plugins 
 	 */
 	meta_data_check_plugin_changed();
-	/**
-	 * Create the main window
+
+    /**
+     * Create the main window
 	 */	
 	debug_printf(DEBUG_INFO, "Create main window\n");
 	create_playlist3();
     playlist3_message_init();
+
+
+    /**
+     * First run dialog
+     */
+    if(cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1))
+    {
+        setup_assistant();
+        cfg_set_single_value_as_int(config, "Default", "first-run", 0);
+    }
 
 	/** 
 	 * If autoconnect is enabled, tell gmpc that it's in state it should connect
@@ -834,18 +848,13 @@ static int autoconnect_callback(void)
 static void init_stock_icons()
 {
 	char *path;
-	GdkPixbuf *pb;
 
 	path = gmpc_get_full_image_path("");
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default (),path);
 	q_free(path);
 
-/*	path = gmpc_get_full_image_path("gmpc.png");
-	pb = gdk_pixbuf_new_from_file(path, NULL);
-	q_free(path);
-*/	gtk_window_set_default_icon_name("gmpc");
-/*	g_object_unref(G_OBJECT(pb));
-*/
+	gtk_window_set_default_icon_name("gmpc");
+
 #ifdef WIN32
 	/* hack to help finding files */
 	gchar *hack = NULL;

@@ -19,6 +19,7 @@ src/sm.c
 src/TreeSearchWidget.c
 src/url_fetcher.c
 src/tray-icon2.c
+src/setup-assistant.c
 
 #bacon
 src/bacon/bacon-message-connection.c
