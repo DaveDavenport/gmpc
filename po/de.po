@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-29 19:02+0200\n"
+"POT-Creation-Date: 2008-06-30 00:36+0200\n"
 "PO-Revision-Date: 2007-05-16 17:23+0200\n"
 "Last-Translator:  <(null)>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -497,28 +497,28 @@ msgstr ""
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:233 ../src/main.c:235
+#: ../src/main.c:236 ../src/main.c:238
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:241
+#: ../src/main.c:244
 msgid "--version"
 msgstr ""
 
-#: ../src/main.c:243
+#: ../src/main.c:246
 #, fuzzy, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Music Player Client"
 
-#: ../src/main.c:244 ../src/preferences.c:267
+#: ../src/main.c:247 ../src/preferences.c:267
 #, fuzzy
 msgid "Version"
 msgstr "Version:\t%s\n"
 
-#: ../src/main.c:247
+#: ../src/main.c:250
 #, fuzzy
 msgid "Revision"
 msgstr "Revision:\t%s\n"
@@ -526,39 +526,39 @@ msgstr "Revision:\t%s\n"
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:254 ../src/main.c:256
+#: ../src/main.c:257 ../src/main.c:259
 msgid "--config="
 msgstr ""
 
-#: ../src/main.c:258
+#: ../src/main.c:261
 msgid "--start-hidden"
 msgstr ""
 
-#: ../src/main.c:262
+#: ../src/main.c:265
 msgid "--clean-cover-db"
 msgstr ""
 
-#: ../src/main.c:266
+#: ../src/main.c:269
 msgid "--disable-plugins"
 msgstr ""
 
-#: ../src/main.c:270
+#: ../src/main.c:273
 #, fuzzy
 msgid "--replace"
 msgstr "Ersetzen"
 
-#: ../src/main.c:274
+#: ../src/main.c:277
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:282
+#: ../src/main.c:285
 msgid "--help"
 msgstr ""
 
-#: ../src/main.c:284
+#: ../src/main.c:287
 #, fuzzy, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -593,24 +593,24 @@ msgstr ""
 "cfg\n"
 "\t--clean-cover-db\tCleanup the cover file.\n"
 
-#: ../src/main.c:347
+#: ../src/main.c:350
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "GMPC wurde mit einer falschen Version von libmpd gestartet."
 
-#: ../src/main.c:388
+#: ../src/main.c:391
 msgid "Failed to load the configuration system"
 msgstr "Laden des Konfigurationssystems fehlgeschlagen"
 
-#: ../src/main.c:407
+#: ../src/main.c:410
 #, fuzzy
 msgid "Failed to load debug-log file."
 msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 
-#: ../src/main.c:533
+#: ../src/main.c:536
 msgid "Failed to setup libmpd"
 msgstr "Einrichten von libmpd fehlgeschlagen"
 
-#: ../src/main.c:907
+#: ../src/main.c:916
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -619,21 +619,21 @@ msgstr ""
 "Setzen des folgenden Password fehlgeschlagen: '%s'\n"
 "Bitte versuchen Sie es erneut"
 
-#: ../src/main.c:911
+#: ../src/main.c:920
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Bitte geben sie ihr Passwort für '%s' ein:"
 
-#: ../src/main.c:931
+#: ../src/main.c:940
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC hat nicht genügend Rechte am MPD-Server"
 
-#: ../src/main.c:956 ../src/main.c:980
+#: ../src/main.c:965 ../src/main.c:989
 #, fuzzy
 msgid "error code"
 msgstr "Fehlercode %i: %s"
 
-#: ../src/main.c:1050
+#: ../src/main.c:1059
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -641,26 +641,26 @@ msgstr ""
 "Gmpc ist mit einer mpd-Version kleiner als 0.12.0 verbunden.\n"
 "Dies könnte funktionieren, wird aber nicht länger unterstützt."
 
-#: ../src/main.c:1057
+#: ../src/main.c:1066
 #, fuzzy
 msgid "<b>Connected to mpd</b>"
 msgstr "Verbunden mit"
 
-#: ../src/main.c:1059
+#: ../src/main.c:1068
 #, fuzzy
 msgid "<b>Disconnected from mpd</b>"
 msgstr "Nicht verbunden"
 
-#: ../src/main.c:1094
+#: ../src/main.c:1103
 msgid "Error occured during operation"
 msgstr "Ein Fehler ist während der Anwendung aufgetreten"
 
 #. Create label
-#: ../src/main.c:1124
+#: ../src/main.c:1133
 msgid "The following error(s) occured:"
 msgstr "Folgende Fehler sind aufgetreten:"
 
-#: ../src/main.c:1140
+#: ../src/main.c:1149
 msgid "Error Message"
 msgstr "Fehlermeldung"
 
@@ -1088,6 +1088,37 @@ msgstr "<b>Gnome Music Player Client</b>"
 
 #: ../src/tray-icon2.c:716
 msgid "Notification"
+msgstr ""
+
+#. *
+#. * Append an introduction page
+#.
+#: ../src/setup-assistant.c:68
+msgid ""
+"It is the first time you launch gmpc.\n"
+"This assistant will help you configure it."
+msgstr ""
+
+#: ../src/setup-assistant.c:70
+msgid "Welcome to GMPC"
+msgstr ""
+
+#: ../src/setup-assistant.c:83
+#, fuzzy
+msgid "Setup connection"
+msgstr "Verbindung"
+
+#. *
+#. * End
+#.
+#: ../src/setup-assistant.c:91
+msgid ""
+"Gmpc is now ready for use.\n"
+"Enjoy using gmpc."
+msgstr ""
+
+#: ../src/setup-assistant.c:93
+msgid "Finish"
 msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:103

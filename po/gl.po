@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-29 19:03+0200\n"
+"POT-Creation-Date: 2008-06-30 00:37+0200\n"
 "PO-Revision-Date: 2007-03-03 18:20+0100\n"
 "Last-Translator: Johám-Luís Miguéns Vila <galiza.ceive@gmail.com>\n"
 "Language-Team: Galician\n"
@@ -491,28 +491,28 @@ msgstr ""
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:233 ../src/main.c:235
+#: ../src/main.c:236 ../src/main.c:238
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:241
+#: ../src/main.c:244
 msgid "--version"
 msgstr "--version"
 
-#: ../src/main.c:243
+#: ../src/main.c:246
 #, fuzzy, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Music Player Client"
 
-#: ../src/main.c:244 ../src/preferences.c:267
+#: ../src/main.c:247 ../src/preferences.c:267
 #, fuzzy
 msgid "Version"
 msgstr "--version"
 
-#: ../src/main.c:247
+#: ../src/main.c:250
 #, fuzzy
 msgid "Revision"
 msgstr "Revisom: %s\n"
@@ -520,39 +520,39 @@ msgstr "Revisom: %s\n"
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:254 ../src/main.c:256
+#: ../src/main.c:257 ../src/main.c:259
 msgid "--config="
 msgstr "--config="
 
-#: ../src/main.c:258
+#: ../src/main.c:261
 msgid "--start-hidden"
 msgstr ""
 
-#: ../src/main.c:262
+#: ../src/main.c:265
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
-#: ../src/main.c:266
+#: ../src/main.c:269
 msgid "--disable-plugins"
 msgstr ""
 
-#: ../src/main.c:270
+#: ../src/main.c:273
 #, fuzzy
 msgid "--replace"
 msgstr "Reemprazar"
 
-#: ../src/main.c:274
+#: ../src/main.c:277
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:282
+#: ../src/main.c:285
 msgid "--help"
 msgstr "--help"
 
-#: ../src/main.c:284
+#: ../src/main.c:287
 #, fuzzy, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -587,24 +587,24 @@ msgstr ""
 "~/.gmpc/gmpc.cfg\n"
 "        --clean-cover-db                Eliminar o ficheiro de portada.\n"
 
-#: ../src/main.c:347
+#: ../src/main.c:350
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "Estás a tentar executar o gmpc com a versom incorrecta de libmpd."
 
-#: ../src/main.c:388
+#: ../src/main.c:391
 msgid "Failed to load the configuration system"
 msgstr "Erro ao carregar o sistema de configuraçom"
 
-#: ../src/main.c:407
+#: ../src/main.c:410
 #, fuzzy
 msgid "Failed to load debug-log file."
 msgstr "Nom se puido ligar à URL: '%s'"
 
-#: ../src/main.c:533
+#: ../src/main.c:536
 msgid "Failed to setup libmpd"
 msgstr "Erro ao configurar libmpd"
 
-#: ../src/main.c:907
+#: ../src/main.c:916
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -613,21 +613,21 @@ msgstr ""
 "Nom se puido estabelecer a palavra-chave em: '%s'\n"
 "Por favor, tenta-o de novo."
 
-#: ../src/main.c:911
+#: ../src/main.c:920
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Introduz a palavra-chave para: '%s'"
 
-#: ../src/main.c:931
+#: ../src/main.c:940
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
-#: ../src/main.c:956 ../src/main.c:980
+#: ../src/main.c:965 ../src/main.c:989
 #, fuzzy
 msgid "error code"
 msgstr "código de erro %i: %s"
 
-#: ../src/main.c:1050
+#: ../src/main.c:1059
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -635,26 +635,26 @@ msgstr ""
 "O gmpc está actualmente conectado a um mpd com versom anterior à 0.12.0.\n"
 "Pode funcionar mais já nom está suportado."
 
-#: ../src/main.c:1057
+#: ../src/main.c:1066
 #, fuzzy
 msgid "<b>Connected to mpd</b>"
 msgstr "Conectado a"
 
-#: ../src/main.c:1059
+#: ../src/main.c:1068
 #, fuzzy
 msgid "<b>Disconnected from mpd</b>"
 msgstr "Desconectado"
 
-#: ../src/main.c:1094
+#: ../src/main.c:1103
 msgid "Error occured during operation"
 msgstr "Ocorreu um erro durante a operaçom"
 
 #. Create label
-#: ../src/main.c:1124
+#: ../src/main.c:1133
 msgid "The following error(s) occured:"
 msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
 
-#: ../src/main.c:1140
+#: ../src/main.c:1149
 msgid "Error Message"
 msgstr "Mensagem de erro"
 
@@ -1086,6 +1086,37 @@ msgstr "<b>Gnome Music Player Client</b>"
 
 #: ../src/tray-icon2.c:716
 msgid "Notification"
+msgstr ""
+
+#. *
+#. * Append an introduction page
+#.
+#: ../src/setup-assistant.c:68
+msgid ""
+"It is the first time you launch gmpc.\n"
+"This assistant will help you configure it."
+msgstr ""
+
+#: ../src/setup-assistant.c:70
+msgid "Welcome to GMPC"
+msgstr ""
+
+#: ../src/setup-assistant.c:83
+#, fuzzy
+msgid "Setup connection"
+msgstr "Conexom"
+
+#. *
+#. * End
+#.
+#: ../src/setup-assistant.c:91
+msgid ""
+"Gmpc is now ready for use.\n"
+"Enjoy using gmpc."
+msgstr ""
+
+#: ../src/setup-assistant.c:93
+msgid "Finish"
 msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:103

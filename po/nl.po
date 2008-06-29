@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-29 19:03+0200\n"
+"POT-Creation-Date: 2008-06-30 00:37+0200\n"
 "PO-Revision-Date: 2006-11-02 18:24-0000\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -491,28 +491,28 @@ msgstr ""
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:233 ../src/main.c:235
+#: ../src/main.c:236 ../src/main.c:238
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:241
+#: ../src/main.c:244
 msgid "--version"
 msgstr ""
 
-#: ../src/main.c:243
+#: ../src/main.c:246
 #, fuzzy, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Music Player Client"
 
-#: ../src/main.c:244 ../src/preferences.c:267
+#: ../src/main.c:247 ../src/preferences.c:267
 #, fuzzy
 msgid "Version"
 msgstr "Versie: %s\n"
 
-#: ../src/main.c:247
+#: ../src/main.c:250
 #, fuzzy
 msgid "Revision"
 msgstr "Revisie: %s\n"
@@ -520,39 +520,39 @@ msgstr "Revisie: %s\n"
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:254 ../src/main.c:256
+#: ../src/main.c:257 ../src/main.c:259
 msgid "--config="
 msgstr ""
 
-#: ../src/main.c:258
+#: ../src/main.c:261
 msgid "--start-hidden"
 msgstr ""
 
-#: ../src/main.c:262
+#: ../src/main.c:265
 msgid "--clean-cover-db"
 msgstr ""
 
-#: ../src/main.c:266
+#: ../src/main.c:269
 msgid "--disable-plugins"
 msgstr ""
 
-#: ../src/main.c:270
+#: ../src/main.c:273
 #, fuzzy
 msgid "--replace"
 msgstr "Herhalen"
 
-#: ../src/main.c:274
+#: ../src/main.c:277
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:282
+#: ../src/main.c:285
 msgid "--help"
 msgstr ""
 
-#: ../src/main.c:284
+#: ../src/main.c:287
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -574,45 +574,45 @@ msgid ""
 "instances is disabled.\n"
 msgstr ""
 
-#: ../src/main.c:347
+#: ../src/main.c:350
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr ""
 
-#: ../src/main.c:388
+#: ../src/main.c:391
 msgid "Failed to load the configuration system"
 msgstr "Niet in geslaagd het configuratiesysteem te laden"
 
-#: ../src/main.c:407
+#: ../src/main.c:410
 #, fuzzy
 msgid "Failed to load debug-log file."
 msgstr "Niet ingeslaagd om libmpd in te stellen"
 
-#: ../src/main.c:533
+#: ../src/main.c:536
 msgid "Failed to setup libmpd"
 msgstr "Niet ingeslaagd om libmpd in te stellen"
 
-#: ../src/main.c:907
+#: ../src/main.c:916
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
 
-#: ../src/main.c:911
+#: ../src/main.c:920
 #, fuzzy, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Voer uw wachtwoord voor '<hostname>' in"
 
-#: ../src/main.c:931
+#: ../src/main.c:940
 #, fuzzy
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC heeft niet genoeg permissies op de mpd server."
 
-#: ../src/main.c:956 ../src/main.c:980
+#: ../src/main.c:965 ../src/main.c:989
 msgid "error code"
 msgstr ""
 
-#: ../src/main.c:1050
+#: ../src/main.c:1059
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -620,26 +620,26 @@ msgstr ""
 "Gmpc is momenteel verbonden met een versie van Mpd onder de 0.12.0.\n"
 "Misschien werkt het, maar het wordt niet meer ondersteund."
 
-#: ../src/main.c:1057
+#: ../src/main.c:1066
 #, fuzzy
 msgid "<b>Connected to mpd</b>"
 msgstr "Verbonden met"
 
-#: ../src/main.c:1059
+#: ../src/main.c:1068
 #, fuzzy
 msgid "<b>Disconnected from mpd</b>"
 msgstr "Niet verbonden"
 
-#: ../src/main.c:1094
+#: ../src/main.c:1103
 msgid "Error occured during operation"
 msgstr ""
 
 #. Create label
-#: ../src/main.c:1124
+#: ../src/main.c:1133
 msgid "The following error(s) occured:"
 msgstr ""
 
-#: ../src/main.c:1140
+#: ../src/main.c:1149
 #, fuzzy
 msgid "Error Message"
 msgstr "Foutbericht"
@@ -1074,6 +1074,37 @@ msgstr "Gnome Music Player Client"
 
 #: ../src/tray-icon2.c:716
 msgid "Notification"
+msgstr ""
+
+#. *
+#. * Append an introduction page
+#.
+#: ../src/setup-assistant.c:68
+msgid ""
+"It is the first time you launch gmpc.\n"
+"This assistant will help you configure it."
+msgstr ""
+
+#: ../src/setup-assistant.c:70
+msgid "Welcome to GMPC"
+msgstr ""
+
+#: ../src/setup-assistant.c:83
+#, fuzzy
+msgid "Setup connection"
+msgstr "Verbinding"
+
+#. *
+#. * End
+#.
+#: ../src/setup-assistant.c:91
+msgid ""
+"Gmpc is now ready for use.\n"
+"Enjoy using gmpc."
+msgstr ""
+
+#: ../src/setup-assistant.c:93
+msgid "Finish"
 msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:103
