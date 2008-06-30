@@ -412,8 +412,13 @@ class Gmpc:Profiles from G:Object
   set_name(self, const gchar *id (check null), const gchar *value (check null))
   {
     Profile *prof = self_get_profile(self, id);
+
     if(!prof)
       return ;                              
+	
+    if((value && prof->name &&  g_utf8_collate(value, prof->name) == 0)|| (value == NULL && prof->name == NULL))
+	return;
+
     if(prof->name)
       g_free(prof->name);
 
@@ -429,6 +434,10 @@ class Gmpc:Profiles from G:Object
     Profile *prof = self_get_profile(self, id);
     if(!prof)
       return ;                              
+
+    if((value && prof->hostname &&  g_utf8_collate(value, prof->hostname) == 0)|| (value == NULL && prof->hostname == NULL))
+	return;
+
     if(prof->hostname)
       g_free(prof->hostname);
     prof->hostname = g_strdup(value);
@@ -445,6 +454,10 @@ class Gmpc:Profiles from G:Object
     Profile *prof = self_get_profile(self, id);
     if(!prof)
       return ;                              
+
+    if((value && prof->password &&  g_utf8_collate(value, prof->password) == 0)|| (value == NULL && prof->password == NULL))
+	return;
+
     if(prof->password)
       g_free(prof->password);
     if(value)
@@ -465,6 +478,8 @@ class Gmpc:Profiles from G:Object
     Profile *prof = self_get_profile(self, id);
     if(!prof)
       return ;                              
+    if(value == prof->port)
+	    return;
     prof->port = value;
     cfg_set_single_value_as_int(self->_priv->profiles, (char *)id, "portnumber",prof->port);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PORT,id);
@@ -479,6 +494,8 @@ class Gmpc:Profiles from G:Object
     Profile *prof = self_get_profile(self, id);
     if(!prof)
       return ;                              
+    if(prof->do_auth == value)
+	    return;
     prof->do_auth = value;
     cfg_set_single_value_as_int(self->_priv->profiles,(char *)id, "useauth",prof->do_auth);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_DO_AUTH,id);
