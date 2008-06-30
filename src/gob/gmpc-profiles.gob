@@ -228,7 +228,7 @@ class Gmpc:Profiles from G:Object
    * get name  
    */
   public 
-  gchar *                                 
+  const gchar *                                 
   get_name(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
@@ -240,7 +240,7 @@ class Gmpc:Profiles from G:Object
    * get id 
    */
   public 
-  gchar *                                 
+  const gchar *                                 
   get_id(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);
