@@ -917,14 +917,12 @@ void connection_remove_profile(GtkWidget *but)
 static void destroy_profile_signal_handler(gpointer box)
 {
 	gulong *a = box;
-	printf("Disconnecting: %lu\n", *a);
 	g_signal_handler_disconnect(G_OBJECT(gmpc_profiles), *a);
 	g_free(a);
 }
 static void destroy_connection_signal_handler(gpointer box)
 {
 	gulong *a = box;
-	printf("Disconnecting c: %lu\n", *a);
 	g_signal_handler_disconnect(G_OBJECT(gmpcconn), *a);
 	g_free(a);
 }
@@ -1012,13 +1010,11 @@ static void connection_pref_construct(GtkWidget *container)
 	gulong *a = g_malloc0(sizeof(*a));
 	*a= g_signal_connect(G_OBJECT(gmpc_profiles), "changed",
 			G_CALLBACK(gmpc_profiles_changed_pref_win), connection_pref_xml);
-	printf("Connecting: %lu\n", *a);
 	g_object_set_data_full(G_OBJECT(vbox), "profile-signal-handler", a, destroy_profile_signal_handler);
 
 	a = g_malloc0(sizeof(*a));
 	*a= g_signal_connect(G_OBJECT(gmpcconn), "connection-changed",
 			G_CALLBACK(gmpc_connection_changed_pref_win), connection_pref_xml);
-	printf("Connecting: %lu\n", *a);
 	g_object_set_data_full(G_OBJECT(vbox), "conn-signal-handler", a, destroy_connection_signal_handler);
 
 }
@@ -1065,18 +1061,18 @@ char *connection_get_hostname()
 }
 int connection_get_port()
 {
-  int retv;
+	int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	retv  = gmpc_profiles_get_port(gmpc_profiles, profile);
-  q_free(profile);
+	q_free(profile);
 	return retv;
 }
 char *connection_get_password()
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_password(gmpc_profiles, profile);
-  g_free(profile);
-  return retv;
+	g_free(profile);
+	return retv;
 }
 
 /**

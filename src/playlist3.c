@@ -1055,6 +1055,11 @@ void save_possize_enable_tb(GtkToggleButton *but)
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","savepossize", bool1);
 }
+void ck_show_tooltip_enable_tb(GtkToggleButton *but)
+{
+	int bool1  = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "GmpcTreeView","show-tooltip", bool1);
+}
 
 
 void playlist_pref_destroy(GtkWidget *container)
@@ -1092,6 +1097,10 @@ void playlist_pref_construct(GtkWidget *container)
 		gtk_toggle_button_set_active(
 				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_cover_case")),      		
 				cfg_get_single_value_as_int_with_default(config,"metaimage", "addcase", FALSE));
+
+		gtk_toggle_button_set_active(
+				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_show_tooltip")),      		
+				cfg_get_single_value_as_int_with_default(config,"GmpcTreeView", "show-tooltip", TRUE));
 
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
@@ -1611,6 +1620,8 @@ void about_window()
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
 	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+
 	q_free(path);
 
 	if(strlen(revision))
