@@ -1028,7 +1028,9 @@ GtkTreeView *playlist3_get_category_tree_view()
 /****************************************************************************************
  *  PREFERENCES										*
  ****************************************************************************************/
+/* prototyping for glade */
 void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data);
+void ck_show_tooltip_enable_tb(GtkToggleButton *but);
 
 void show_cover_case_tb(GtkToggleButton *but)
 {
@@ -1756,7 +1758,7 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 		iter = mult;
 		do{
 			/** Get profile name */
-			gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
+			const gchar *value = gmpc_profiles_get_name(gmpc_profiles, (char *)iter->data); 
 			GtkWidget *item	= gtk_radio_menu_item_new_with_label(group,value);
 			/* get new group */
 			group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));	
@@ -1776,7 +1778,7 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 
 			/** Attach the uid to the handler */
 			value = g_strdup((char *)(iter->data));
-			g_object_set_data_full(G_OBJECT(item), "uid", value, g_free);
+			g_object_set_data_full(G_OBJECT(item), "uid", (gpointer)value, g_free);
 
 			items++;
 		}while((iter = g_list_next(iter)));

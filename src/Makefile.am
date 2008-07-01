@@ -98,6 +98,10 @@ AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
 	@LDFLAGS@
 
+if MAINTAINER_MODE
+MAYBE_CFLAGS=-Wall -Werror
+endif
+
 AM_CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
 	@libmpd_CFLAGS@ \
@@ -107,7 +111,10 @@ AM_CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
-	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" 
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" \
+	$(MAYBE_CFLAGS)
+
+
 
 gmpcinclude_HEADERS = \
 		plugin.h	\

@@ -201,6 +201,17 @@ fi
 AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
 AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
+# Maintainer mode
+AC_ARG_ENABLE([maintainermode],
+	[--enable-maintainermode Enable maintainer mode.],
+	[case "${enableval}" in 
+		yes) maintainer_mode=true;;
+		no)  maintainer_mode=false;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-maintainermode]);;
+	 esac],
+	[maintainer_mode=false])
+
+AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
 
 AC_OUTPUT([
 Makefile 
@@ -238,6 +249,11 @@ pixmaps/icons/scalable/apps/Makefile
 echo ""
 echo ""
 echo "-------------- Status --------------"
+if test x$maintainer_mode = xtrue; then
+	echo "Maintainer mode is:			enabled"
+else
+	echo "Maintainer mode is:			disabled"
+fi
 if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:  		enabled"
 else
