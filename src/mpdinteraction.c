@@ -789,10 +789,10 @@ void preferences_window_connect(GtkWidget *but)
 		}
 	}
 	else {
-			if(!mpd_check_connected(connection))
-			{
-				if(!connect_to_mpd());
-			}  
+		if(!mpd_check_connected(connection))
+		{
+			if(!connect_to_mpd());
+		}  
 	}
 }
 
