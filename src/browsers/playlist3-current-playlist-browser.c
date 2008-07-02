@@ -494,7 +494,7 @@ static void pl3_current_playlist_browser_delete_selected_songs ()
 
 static void pl3_current_playlist_browser_crop_selected_songs()
 {
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
 	/* grab the selection from the tree */
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
 
@@ -502,28 +502,63 @@ static void pl3_current_playlist_browser_crop_selected_songs()
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GtkTreeIter iter;
+		/* Use the walk through list and traverse it method, if done right, this can safe roundtrips to mpd */
+		int last_seen = mpd_playlist_get_playlist_length(connection);
+		int position = 0;
+		GList *node,*list = NULL;
+		printf("Crop method 2\n");
 
 
-		/* start a command list */
-		/* remove every selected song one by one */
+		/* we want to delete from back to front, so we have to transverse this list */
 		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(model), &iter))
 		{
-			do{
-				int value=0;
-				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
-				{
-					gtk_tree_model_get (GTK_TREE_MODEL(model), &iter, MPDDATA_MODEL_COL_SONG_ID, &value, -1);
-					mpd_playlist_queue_delete_id(connection, value);				
-				}
-			} while (gtk_tree_model_iter_next(GTK_TREE_MODEL(model),&iter));
-			mpd_playlist_queue_commit(connection);
+
+			if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model)){
+				/* Count my self, so we don't have to fetch any unselected row from mpd */
+				do{
+					if(gtk_tree_selection_iter_is_selected(selection, &iter))
+					{
+						/* song pos starts at 1, not a 0, compensate for that */
+						list = g_list_append(list, GINT_TO_POINTER(position));
+					}
+					position++;
+				}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter));
+			}else{
+				do{
+					if(gtk_tree_selection_iter_is_selected(selection, &iter))
+					{
+						int pos=0;
+						/* song pos starts at 1, not a 0, compensate for that */
+						gtk_tree_model_get (GTK_TREE_MODEL(model), &iter, MPDDATA_MODEL_COL_SONG_POS, &pos, -1);
+						list = g_list_append(list, GINT_TO_POINTER(pos-1));
+					}
+				}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter));
+			}
 		}
 
-	}
-	/* update everything if where still connected */
-	gtk_tree_selection_unselect_all(selection);
+		for(node = g_list_last(list);node; node = g_list_previous(node))
+		{
+			int pos = GPOINTER_TO_INT(node->data)+1;
+			while(last_seen > (pos))
+			{
+				last_seen--;
+				mpd_playlist_queue_delete_pos(connection, last_seen);
+			}
+			last_seen = pos-1; 
+		}
+		while(last_seen > 0)
+		{
+			last_seen--;
+			mpd_playlist_queue_delete_pos(connection, last_seen);
+		}
 
-	mpd_status_queue_update(connection);
+		mpd_playlist_queue_commit(connection);
+		if(list) g_list_free(list);
+		/* update everything if where still connected */
+		gtk_tree_selection_unselect_all(selection);
+
+		mpd_status_queue_update(connection);
+	}
 }
 
 static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
