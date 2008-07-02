@@ -440,20 +440,29 @@ static void pl3_current_playlist_browser_delete_selected_songs ()
 	if (gtk_tree_selection_count_selected_rows (selection) > 0)
 	{
 		GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
 		/* start a command list */
 		/* grab the selected songs */
 		list = gtk_tree_selection_get_selected_rows (selection, &model);
 		/* grab the last song that is selected */
-		llist = g_list_first (list);
+		llist = g_list_last (list);
 		/* remove every selected song one by one */
 		do{
 			GtkTreeIter iter;
 			int value;
 			gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-			gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_ID, &value, -1);
-			mpd_playlist_queue_delete_id(connection, value);			
-		} while ((llist = g_list_next (llist)));
+			//gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_ID, &value, -1);
+			/* Trick that avoids roundtrip to mpd */
+			if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model))
+			{
+				value = gmpc_mpddata_model_get_pos(GMPC_MPDDATA_MODEL(model), &iter);
+			}else{
+				/* this one allready has the pos. */
+				gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value, -1);			
+				value--;
+			}
+			mpd_playlist_queue_delete_pos(connection, value);			
+		} while ((llist = g_list_previous (llist)));
 
 		/* close the list, so it will be executed */
 		mpd_playlist_queue_commit(connection);

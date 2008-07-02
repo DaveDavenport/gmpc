@@ -1112,4 +1112,11 @@ requires 2.0.0
     {
         return self->_priv->playtime;
     }
+    public
+    gint
+    get_pos( self, GtkTreeIter *iter)
+    {
+	    g_assert(iter->stamp == self->_priv->stamp);
+	    return GPOINTER_TO_INT(iter->user_data2);
+    }
 }
