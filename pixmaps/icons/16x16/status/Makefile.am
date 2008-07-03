@@ -8,10 +8,18 @@ icons_DATA = \
 		audio-volume-high.png\
 		audio-volume-low.png\
 		audio-volume-medium.png\
-		audio-volume-muted.png
+		audio-volume-muted.png\
+		gmpc-tray-disconnected.png\
+		gmpc-tray-pause.png\
+		gmpc-tray-play.png\
+		gmpc-tray.png
 
 noinst_DATA =
 
 EXTRA_DIST = \
         $(icons_DATA)   \
         $(noinst_DATA)
+
+
+
+

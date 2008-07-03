@@ -4,11 +4,7 @@ appicon_DATA =	\
 	media-stream.png\
 	media-artist.png\
 	media-playback-start.png\
-	gmpc-tray.png\
-	gmpc-tray-play.png\
-	gmpc-tray-pause.png\
 	gmpc-no-cover.png\
-	gmpc-tray-disconnected.png\
 	media-album.png\
 	gmpc-add-url.png\
 	mpdBrowser_case.png\
