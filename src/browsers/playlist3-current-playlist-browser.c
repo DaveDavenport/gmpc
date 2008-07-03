@@ -315,6 +315,10 @@ static void  mod_fill_entry_changed(GtkWidget *entry, GtkWidget *tree)
     timeout = g_timeout_add(1000, (GSourceFunc)mod_fill_do_entry_changed, entry);
     gtk_widget_show(entry);
 }
+static void mod_fill_entry_activate(GtkWidget *entry, gpointer data)
+{
+	mod_fill_do_entry_changed(entry, data);
+}
 
 
 static void pl3_current_playlist_browser_init(void)
@@ -330,6 +334,7 @@ static void pl3_current_playlist_browser_init(void)
     filter_entry= entry;
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
     g_signal_connect(G_OBJECT(entry), "key-press-event", G_CALLBACK(mod_fill_entry_key_press_event), NULL);
+    g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(mod_fill_entry_activate), NULL);
 
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
@@ -822,17 +827,21 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         search_keep_open = TRUE;
         return TRUE;
     }
-    else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
-            ((event->keyval >= GDK_space && event->keyval <= GDK_z)))
+    else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 )/*&& 
+            ((event->keyval >= GDK_space && event->keyval <= GDK_z)))*/
     {
-        char data[2];
-        data[0] = (char)gdk_keyval_to_unicode(event->keyval);
-        data[1] = '\0';
-        gtk_widget_grab_focus(entry);      
-        gtk_entry_set_text(GTK_ENTRY(entry),data);
-        gtk_editable_set_position(GTK_EDITABLE(entry),1);
+        char data[10];
+       	gunichar uc = gdk_keyval_to_unicode(event->keyval);
+	if(uc)
+	{
+		memset(data,'\0',10);
+		g_unichar_to_utf8 (uc, data);
+		gtk_widget_grab_focus(entry);      
+		gtk_entry_set_text(GTK_ENTRY(entry),data);
+		gtk_editable_set_position(GTK_EDITABLE(entry),1);
 
-        return TRUE;
+		return TRUE;
+	}
     }
     return pl3_window_key_press_event(GTK_WIDGET(tree),event);
 }
