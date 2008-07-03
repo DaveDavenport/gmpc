@@ -67,7 +67,7 @@ revisiont.h:
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
 	fi;
 
-INCLUDES= @EXTRA_CFLAGS@ -Wall\
+INCLUDES= @EXTRA_CFLAGS@ \
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"\
@@ -99,7 +99,7 @@ AM_LDFLAGS = \
 	@LDFLAGS@
 
 if MAINTAINER_MODE
-MAYBE_CFLAGS=-Wall -Werror
+MAYBE_CFLAGS=-Wall -Werror -Wdeclaration-after-statement -Wshadow 
 endif
 
 AM_CFLAGS = @CFLAGS@\

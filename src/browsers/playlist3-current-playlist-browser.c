@@ -217,14 +217,14 @@ void pl3_current_playlist_destroy()
 		/* destroy the entry */ 
 		if(pl3_curb_tree_ref)
 		{
-			GtkTreeIter iter;
+			GtkTreeIter piter;
 			GtkTreePath *path;
 			path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref);
 			if(path)
 			{
-				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter,path))
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &piter,path))
 				{
-					gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter);
+					gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &piter);
 				}
 				gtk_tree_path_free(path);
 			}
@@ -323,12 +323,13 @@ static void mod_fill_entry_activate(GtkWidget *entry, gpointer data)
 
 static void pl3_current_playlist_browser_init(void)
 {
+	GtkWidget *entry = NULL,*tree = NULL,*sw = NULL;
 	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
-    GtkWidget *tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
+    tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
 
     /* filter */
     mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();
-    GtkWidget *entry = sexy_icon_entry_new(); 
+    entry = sexy_icon_entry_new(); 
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
     gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
     filter_entry= entry;
@@ -337,7 +338,7 @@ static void pl3_current_playlist_browser_init(void)
     g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(mod_fill_entry_activate), NULL);
 
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
-	GtkWidget *sw = gtk_scrolled_window_new(NULL, NULL);
+	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
     gtk_container_add(GTK_CONTAINER(sw), tree);

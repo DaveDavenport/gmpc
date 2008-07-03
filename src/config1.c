@@ -505,9 +505,10 @@ int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char 
 /* float */
 static float __int_cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key)
 {
+	float result = 0;
 	config_node *cur =NULL;
 	cur = cfg_get_single_value(cfg,class,key);
-	float result = 0;
+	
 	if(cur == NULL)
 	{
 		return CFG_INT_NOT_DEFINED;
@@ -901,11 +902,11 @@ static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node)
 		{
 			if(root->value == NULL || root->value[0] == '\0' || strlen(root->value) == 0 )
 			{
-				config_node *node = root;
-				root = node->prev;
+				config_node *inode = root;
+				root = inode->prev;
 				if(!root)
-					root = node->next;
-				__int_cfg_remove_node(cfg, node);
+					root = inode->next;
+				__int_cfg_remove_node(cfg,inode);
 				if(!root) return;
 			}
 		}

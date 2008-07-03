@@ -621,9 +621,9 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles *prof,const int changed,
 	}
 }
 
-static void gmpc_connection_changed_pref_win(GmpcConnection *gmpcconn, MpdObj *mi, int connect, GladeXML *xml)
+static void gmpc_connection_changed_pref_win(GmpcConnection *object, MpdObj *mi, int connected, GladeXML *xml)
 { 
-	if(!connect)
+	if(!connected)
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "bt_con"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "bt_dis"), FALSE);
@@ -882,6 +882,7 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 
 void connection_add_profile(GtkWidget *but)
 {
+	gchar *value = NULL;
 	GladeXML *xml = glade_get_widget_tree(GTK_WIDGET(but));
 	GtkWidget *vbox = glade_xml_get_widget(xml, "connection-vbox");
 	gulong *a = g_object_get_data(G_OBJECT(vbox),"profile-signal-handler"); 
@@ -890,7 +891,7 @@ void connection_add_profile(GtkWidget *but)
 	GtkTreeModel *store = gtk_combo_box_get_model(combo);
 
 	g_signal_handler_block(G_OBJECT(gmpc_profiles), *a);
-	gchar *value = gmpc_profiles_create_new_item(gmpc_profiles, NULL); /*g_strdup_printf("%u", g_random_int());*/
+	value = gmpc_profiles_create_new_item(gmpc_profiles, NULL); /*g_strdup_printf("%u", g_random_int());*/
 	gtk_list_store_append(GTK_LIST_STORE(store), &iter);
 	gtk_list_store_set(GTK_LIST_STORE(store), &iter, 0, value, 1, "Name", -1);
 	gtk_combo_box_set_active_iter(GTK_COMBO_BOX(glade_xml_get_widget(xml, "cb_profiles")),&iter);
@@ -932,6 +933,7 @@ static void destroy_connection_signal_handler(gpointer box)
 
 static void connection_pref_construct(GtkWidget *container)
 {
+	gulong *a;
 	gchar *def_profile = NULL;
 	GList *mult, *iter;
 	GtkWidget *vbox = NULL;
@@ -1007,7 +1009,7 @@ static void connection_pref_construct(GtkWidget *container)
 	glade_xml_signal_autoconnect(connection_pref_xml);
 
 
-	gulong *a = g_malloc0(sizeof(*a));
+	a = g_malloc0(sizeof(*a));
 	*a= g_signal_connect(G_OBJECT(gmpc_profiles), "changed",
 			G_CALLBACK(gmpc_profiles_changed_pref_win), connection_pref_xml);
 	g_object_set_data_full(G_OBJECT(vbox), "profile-signal-handler", a, destroy_profile_signal_handler);

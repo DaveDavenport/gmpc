@@ -215,7 +215,7 @@ static gboolean tray_icon2_tooltip_destroy(void)
 	return FALSE;	
 }
 
-static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *hbox, GdkEventButton *event, GtkWidget *vbox)
+static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *box, GdkEventButton *event, GtkWidget *vbox)
 {
     if(event->button == 3 && !has_buttons)
     {
@@ -412,14 +412,15 @@ void tray_icon2_create_tooltip(void)
 		tray_icon2_tooltip_pb = gtk_progress_bar_new();
 		/* Update the progressbar */
 		{
+			gchar *str;
 			int totalTime = mpd_status_get_total_song_time(connection);                                 		
 			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
 			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
-			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
+			str = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
 					totalTime/60,totalTime%60);
 			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
-			q_free(label);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), str);
+			q_free(str);
 		}
 
 
@@ -475,15 +476,16 @@ void tray_icon2_create_tooltip(void)
 #endif
 		if (state == TI2_AT_UPPER_LEFT) 
 		{
-			screen =gtk_widget_get_screen(pl3_win);
 			GdkRectangle rect2;
+			screen =gtk_widget_get_screen(pl3_win);
+			
 			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
-		} else if (state == TI2_AT_UPPER_RIGHT) 
-		{
-			screen =gtk_widget_get_screen(pl3_win);
+		} else if (state == TI2_AT_UPPER_RIGHT)  {
 			GdkRectangle rect2;
+			screen =gtk_widget_get_screen(pl3_win);
+			
 			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/** Set Y = 0; */
@@ -493,8 +495,9 @@ void tray_icon2_create_tooltip(void)
 			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 		} else if (state == TI2_AT_LOWER_LEFT) 
 		{
-			screen =gtk_widget_get_screen(pl3_win);
 			GdkRectangle rect2;
+			screen =gtk_widget_get_screen(pl3_win);
+
 			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/** Set Y = window height - size; */
@@ -504,8 +507,9 @@ void tray_icon2_create_tooltip(void)
 			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
 		} else 
 		{
-			screen =gtk_widget_get_screen(pl3_win);
 			GdkRectangle rect2;
+			screen =gtk_widget_get_screen(pl3_win);
+			
 			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/** Set Y = window height - size; */

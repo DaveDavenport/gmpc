@@ -125,24 +125,24 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 	tag_browser *tb;
 	gchar *group = g_strdup_printf("tag2-plugin:%s",key);
 	gchar *name = cfg_get_single_value_as_string_with_default(config, group, "name", "default");
-	GtkListStore *pl3_tree = (GtkListStore  *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
+	GtkListStore *tree = (GtkListStore  *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	gint pos = cfg_get_single_value_as_int_with_default(config, group,"position",50+g_list_length(tag2_ht));
 	g_free(group);
 	playlist3_insert_browser(&iter, pos);
-	gtk_list_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(tree, &iter, 
 			PL3_CAT_TYPE, tag2_plug.id,
 			PL3_CAT_TITLE, name,
 			PL3_CAT_INT_ID,key,
 			PL3_CAT_ICON_ID, "tag-browser",
 			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
+	path = gtk_tree_model_get_path(GTK_TREE_MODEL(tree), &iter);
 		
 	tb = g_malloc0(sizeof(*tb));
 	tb->name = name;
 	tb->key = g_strdup(key);
 	/* get a reference to the key */
-	tb->ref_iter = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree),path);
+	tb->ref_iter = gtk_tree_row_reference_new(GTK_TREE_MODEL(tree),path);
 	tag2_ht = g_list_append(tag2_ht,tb);
 	tag2_init_browser(tb);
 	gtk_tree_path_free(path);
@@ -216,14 +216,13 @@ static void tag2_destroy()
 
 static void tag2_destroy_tag(tag_element *te)
 {
-    if(te->timeout)
-        g_source_remove(te->timeout);
+	if(te->timeout)
+		g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
 
-    if(te->model)
-        g_object_unref(te->model);
+	if(te->model)
+		g_object_unref(te->model);
 	g_free(te);
-
 }
 
 
@@ -372,9 +371,10 @@ static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_ele
 
 }
 
-static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
+static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 {
-	GtkTreeIter iter;
+	int found = 0;
+	MpdData *data = NULL;
 	tag_browser *browser = te->browser;
     int not_to_update = te->index;
     GList *tel = g_list_first(browser->tag_lists);
@@ -400,7 +400,6 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
         {
             GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
             GtkTreeIter iter;
-            MpdData *data;
             GList *first = g_list_first(browser->tag_lists);
             /* only do the following query if it isn't the last one */
 
@@ -498,11 +497,11 @@ static void tag2_changed(GtkTreeSelection *sel, tag_element *te)
     }
 
     tel = g_list_first(browser->tag_lists);
-    int found = 0;
-    MpdData *data = NULL;
+    data = NULL;
     while(tel)
     {
-
+		GtkTreeSelection *sel;
+		GtkTreeIter iter;
         te = tel->data;
         sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));	
         if(gtk_tree_selection_get_selected(sel, &(te->model), &iter))
@@ -887,16 +886,16 @@ static void tag2_row_activate(GtkTreeView *tree,
 	GtkTreeIter iter;
 	if(gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path))
 	{
-		gchar *path;
-		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH, &path, -1);
-		if(path)
+		gchar *song_path;
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH, &song_path, -1);
+		if(song_path)
 		{
 			/* gcc complains that this function is declared implicit.
 			 * This is correct, but it exists in the gmpc program space
 			 */
-			play_path(path);
+			play_path(song_path);
 			/* free */
-			g_free(path);
+			g_free(song_path);
 		}
 	}
 }
@@ -1062,12 +1061,13 @@ static void tag2_save_browser(tag_browser *browser)
 	cfg_set_single_value_as_string(config, "tag2-browsers",browser->key,str->str);
 	g_string_free(str, TRUE);
 }
-static void tag2_connection_changed_foreach(tag_browser *browser, gpointer data)
+static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userdata)
 {
 	if(browser->tag2_vbox)
 	{
+		tag_element *te = NULL;
 		tag2_create_tags(browser);
-		tag_element *te = g_list_nth_data(browser->tag_lists, 0);
+		te = g_list_nth_data(browser->tag_lists, 0);
 		if(te != NULL && mpd_check_connected(connection) )
 		{
 			MpdData *data;
@@ -1173,17 +1173,18 @@ static void tag2_pref_combo_changed(GtkComboBox *box, GtkTreeModel *model2)
 
 static void tag2_pref_add_browser_clicked(GtkWidget *but, GtkComboBox *combo)
 {
-	GtkTreeView *pl3_tree = playlist3_get_category_tree_view();
+	GtkTreeView *tree = playlist3_get_category_tree_view();
 	GtkTreeIter titer;
+	GList *node;
 	GtkListStore *model = (GtkListStore *)gtk_combo_box_get_model(combo);
 	gchar *name = g_strdup_printf("%u", g_random_int());
 	cfg_set_single_value_as_string(config, "tag2-browsers",name, "");
 	
 	
 
-	tag2_browser_add_browser(GTK_WIDGET(pl3_tree),name);
+	tag2_browser_add_browser(GTK_WIDGET(tree),name);
 
-	GList *node = g_list_find_custom(tag2_ht, name, (GCompareFunc)tag2_custom_find);
+	node = g_list_find_custom(tag2_ht, name, (GCompareFunc)tag2_custom_find);
 	if(node)
 	{
 		tag_browser *tb = node->data;
@@ -1215,11 +1216,10 @@ static void tag2_pref_entry_changed(GtkWidget *entry, GtkComboBox *combo)
 	   	tb->name	= g_strdup(name);
 		if((path = gtk_tree_row_reference_get_path(tb->ref_iter)))
 		{
-			GtkTreeModel *model = gtk_tree_row_reference_get_model(tb->ref_iter);
-			GtkTreeIter iter;
-
-			gtk_tree_model_get_iter(model, &iter, path);	
-			gtk_list_store_set(GTK_LIST_STORE(model), &iter, PL3_CAT_TITLE, name, -1);
+			GtkTreeIter iter2;
+			GtkTreeModel *model2 = gtk_tree_row_reference_get_model(tb->ref_iter);
+			gtk_tree_model_get_iter(model2, &iter2, path);	
+			gtk_list_store_set(GTK_LIST_STORE(model2), &iter2, PL3_CAT_TITLE, name, -1);
 			gtk_tree_path_free(path);
 		}
 
@@ -1353,8 +1353,8 @@ static void tag2_pref_column_remove(GtkWidget *but, GtkComboBox *box)
 			i=1;
 			for(giter = g_list_first(tb->tag_lists);giter;giter = g_list_next(giter))
 			{
-				tag_element *te = giter->data;
-				te->index = i;
+				tag_element *te2 = giter->data;
+				te2->index = i;
 				i++;
 			}
 

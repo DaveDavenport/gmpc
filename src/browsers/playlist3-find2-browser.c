@@ -222,6 +222,7 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
  */
 static void pl3_find2_browser_init()
 {
+	GtkWidget *frame, *event, *vbox, *label;
     GtkWidget  *pl3_find2_sw = NULL;
     GtkWidget *hbox = NULL;
 	/* autocomplete later on */
@@ -257,10 +258,10 @@ static void pl3_find2_browser_init()
     gtk_box_pack_end(GTK_BOX(pl3_find2_vbox), pl3_find2_sw, TRUE, TRUE,0);
 
     /* pom */
-    GtkWidget *frame = gtk_frame_new(NULL);
-    GtkWidget *event = gtk_event_box_new();
-    GtkWidget *vbox = gtk_vbox_new(FALSE,6);
-    GtkWidget *label = gtk_label_new("");
+    frame = gtk_frame_new(NULL);
+    event = gtk_event_box_new();
+    vbox = gtk_vbox_new(FALSE,6);
+    label = gtk_label_new("");
     gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 
     /* Header box */
@@ -378,7 +379,6 @@ static unsigned long pl3_find2_browser_view_playlist()
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
-        int time=0;
         GList *node = NULL;
         int found = 0;
         MpdData *data = NULL, *data_t= NULL;
@@ -456,7 +456,6 @@ static unsigned long pl3_find2_browser_view_playlist()
         gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
 
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
-        return time;
     }
     return 0;
 }
@@ -464,7 +463,6 @@ static unsigned long pl3_find2_browser_view_playlist()
 
 static unsigned long pl3_find2_browser_view_database()
 {
-    int time=0;
     GList *node = NULL;
     int found = 0;
 
@@ -540,7 +538,7 @@ static unsigned long pl3_find2_browser_view_database()
     data_t = misc_mpddata_remove_duplicate_songs(data_t);
     gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
-    return time;
+    return 0;
 }
 
 /**
@@ -577,7 +575,6 @@ static void pl3_find2_browser_show_info()
             GtkTreeIter iter;
             mpd_Song *song =NULL;
             char *path;
-            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
             gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
             gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_PATH, &path,-1);
             song = mpd_database_get_fileinfo(connection, path);
@@ -850,8 +847,9 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 {
     if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j)
     {
-        pl3_find2_browser_activate();
-        crit_struct *cs;
+		crit_struct *cs;
+		pl3_find2_browser_activate();
+        
         while(criterias && g_list_length(criterias) > 1)
         {
             cs = criterias->data;

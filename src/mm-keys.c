@@ -580,12 +580,13 @@ accel_edited_callback (GtkCellRendererText *cell,
 			keycodes[i] == hardware_keycode &&
 			masks[i] == mask)
 		{
+			gchar *message;
 			gchar *rawkeysym = egg_virtual_accelerator_name (
 				XKeycodeToKeysym(GDK_DISPLAY(), hardware_keycode, 0),
 				hardware_keycode, mask);
 			gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 			q_free (rawkeysym);
-			gchar *message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
+			message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
 					"%s is already mapped to %s"),
 					keysym, _(keynames[i]) );
 			q_free (keysym);
@@ -608,12 +609,13 @@ accel_edited_callback (GtkCellRendererText *cell,
 	gtk_tree_path_free (path);
 	if( keyerror[key] )
 	{
+		gchar *message;
 		gchar *rawkeysym = egg_virtual_accelerator_name (
 			XKeycodeToKeysym(GDK_DISPLAY(), keycodes[key], 0),
 			keycodes[key], masks[key]);
 		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 		q_free (rawkeysym);
-		gchar *message = g_strdup_printf(
+		message = g_strdup_printf(
 			_("Could not grab multimedia key:\n\n"
 			"\t%s: %s\n\n"
 			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),

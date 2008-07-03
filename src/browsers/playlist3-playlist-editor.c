@@ -100,7 +100,7 @@ void playlist_editor_conn_changed(MpdObj *mi, int connect, void *userdata)
 
 void playlist_editor_browser_add(GtkWidget *cat_tree)
 {
-	GtkListStore *pl3_tree = playlist3_get_category_tree_store();
+	GtkListStore *store= playlist3_get_category_tree_store();
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "playlist-plugin","position",6);
@@ -108,9 +108,8 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 	/* Check if enabled */
 	if(!cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "enable", TRUE)) return;
 
-//	gtk_tree_store_append(pl3_tree, &iter, NULL);
 	playlist3_insert_browser(&iter, pos);
-	gtk_list_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(store, &iter, 
 			PL3_CAT_TYPE, playlist_editor_plugin.id,
 			PL3_CAT_TITLE, _("Playlist Editor"),
 			PL3_CAT_INT_ID, "",
@@ -138,7 +137,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 
 }
 
-static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, GtkTreePath *path, gpointer data)
+static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, GtkTreePath *path, gpointer userdata)
 {
 	gchar *pl_path = NULL;
 	GtkTreeIter iter;
@@ -195,7 +194,7 @@ void playlist_editor_fill_list(void)
 		}
 	}
 }
-static void playlist_editor_browser_activate_cursor_item(GtkIconView *giv, gpointer data)
+static void playlist_editor_browser_activate_cursor_item(GtkIconView *giv, gpointer userdata)
 {
 	gchar *pl_path = NULL;
 	GtkTreeIter iter;
@@ -236,9 +235,10 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 	if(pl_path)
 	{
 		MpdData *data2 = NULL;
-		GtkTreeSelection *select = gtk_tree_view_get_selection(tree);
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
 		GtkTreeModel *model = gtk_tree_view_get_model(tree);
-		GList *data,*list= gtk_tree_selection_get_selected_rows(select, &model);
+		GList *data;
+		list= gtk_tree_selection_get_selected_rows(sel, &model);
 		for(data = g_list_last(list); data; data = g_list_previous(data))
 		{
 			GtkTreePath *path = data->data;
@@ -265,9 +265,9 @@ static void playlist_editor_list_delete_songs(GtkButton *button, GtkTreeView *tr
 
 static void playlist_editor_list_add_songs(GtkButton *button, GtkTreeView *tree) 
 {
-	GtkTreeSelection *select = gtk_tree_view_get_selection(tree);
+	GtkTreeSelection *sel= gtk_tree_view_get_selection(tree);
 	GtkTreeModel *model = gtk_tree_view_get_model(tree);
-	GList *data,*list= gtk_tree_selection_get_selected_rows(select, &model);
+	GList *data,*list= gtk_tree_selection_get_selected_rows(sel, &model);
 	for(data = g_list_first(list); data; data = g_list_next(data))
 	{
 		GtkTreePath *path = data->data;
@@ -412,12 +412,12 @@ static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *
 {
 	if(button->button == 3)
 	{
-		GtkTreeSelection *select = gtk_tree_view_get_selection(tree);
+		GtkTreeSelection *sel= gtk_tree_view_get_selection(tree);
 
 
 			GtkWidget *menu = gtk_menu_new();
       GtkWidget *item = NULL;
-      if(gtk_tree_selection_count_selected_rows(select) > 0)
+      if(gtk_tree_selection_count_selected_rows(sel) > 0)
       {
         item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

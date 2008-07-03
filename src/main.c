@@ -223,7 +223,6 @@ int main (int argc, char **argv)
      */
     if(argc > 1)
     {
-        int i;
         for(i = 1; i< argc; i++)
         {
             /**
@@ -882,7 +881,7 @@ void  GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userda
 	gmpc_connection_status_changed(gmpcconn, mi, what);
 }
 /* The actual handling of the status changed signal */
-static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *mi, ChangedStatusType what, gpointer data)
+static void gmpc_status_changed_callback_real(GmpcConnection *conn, MpdObj *mi, ChangedStatusType what, gpointer data)
 {
 	int i;
 	/**
@@ -959,10 +958,11 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 	if(!mpd_check_connected(mi))
 	{
 		GtkWidget *button;
+		char *str;
 		/* no response? then we just ignore it when autoconnecting. */
 		if(error_id == 15 && autoconnect) return;
 
-		gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
+		str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
 		playlist3_show_error_message(str, ERROR_CRITICAL);
 		button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(connect_to_mpd), NULL);
@@ -996,14 +996,14 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 /**
  * handle a connection changed 
  */
-static void connection_changed(MpdObj *mi, int connect, gpointer data)
+static void connection_changed(MpdObj *mi, int connected, gpointer data)
 {
     /* propagate the signal to the connection object */
-    if(mpd_check_connected(mi) != connect)
+    if(mpd_check_connected(mi) != connected)
     {
-        debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connect, connect);
+        debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connected, connect);
     }
-    if(connect)
+    if(connected)
     {
         playlist3_close_error();
     }
@@ -1011,10 +1011,10 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data)
     gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
 }
 
-static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect, gpointer data)
+static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connected, gpointer data)
 {
     int i=0;
-    if(connect)
+    if(connected)
     {
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
@@ -1023,7 +1023,7 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
     /**
      * send password, first thing we do, if connected 
      */
-    if(connect)
+    if(connected)
     {
         if(connection_use_auth())
         {
@@ -1035,13 +1035,13 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
      * propegate signals
      */
     debug_printf(DEBUG_INFO, "Connection changed\n");
-    playlist_connection_changed(mi, connect);
+    playlist_connection_changed(mi, connected);
     for(i=0; i< num_plugins; i++)
     {
         debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
         if(plugins[i]->mpd_connection_changed!= NULL)
         {
-            plugins[i]->mpd_connection_changed(mi,connect,NULL);
+            plugins[i]->mpd_connection_changed(mi,connected,NULL);
         }
     }
 
@@ -1050,7 +1050,7 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
      */
     mpd_status_update(mi);
 
-    if(connect && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
+    if(connected && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
             mpd_check_connected(connection))
     {
         if(!mpd_server_check_version(connection, 0,12,0)) {
@@ -1061,14 +1061,14 @@ static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int con
             gtk_widget_show(GTK_WIDGET(dialog));
         }
     }
-    if(connect)
+    if(connected)
     {
         playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
     } else {
         playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
     }
 
-    if(!connect) 
+    if(!connected) 
     {
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);

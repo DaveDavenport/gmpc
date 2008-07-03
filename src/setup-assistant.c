@@ -38,7 +38,7 @@ static void cancel_assistant(GtkAssistant *assistant)
     destroy_assistant(assistant);
 }
 
-static void connection_changed_assistant(GmpcConnection *gmpcconn,MpdObj *mi, int connect, gpointer data)
+static void connection_changed_assistant(GmpcConnection *gc,MpdObj *mi, int connect, gpointer data)
 {
     GtkAssistant *assistant = GTK_ASSISTANT(data);
     if(con_pref)

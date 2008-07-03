@@ -37,7 +37,7 @@ GtkTextBuffer *buffer= NULL;
 
 void esf_reload(void);
 
-static void esf_render_example(GtkTextBuffer *buffer)
+static void esf_render_example(GtkTextBuffer *buf)
 {
 	char *filename = _("/path/to/file_name.mp3");
 	char *artist = _("Jonny Singer");

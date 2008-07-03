@@ -148,10 +148,12 @@ int  pl3_cat_get_selected_browser()
 static void pl3_initialize_tree(void)
 {
 	int i;
+	GtkTreePath *path;
+	GtkTreeSelection *sel;
 	if(pl3_xml == NULL) return;
 
-	GtkTreePath *path = gtk_tree_path_new_from_string("0");
-	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+	path = gtk_tree_path_new_from_string("0");
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
 	if(old_type >= 0)
 	{
 		GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
@@ -688,7 +690,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		gint                y,
 		GtkSelectionData   *data,
 		guint               info,
-		guint               time)
+		guint               time_recieved)
 {
 	if(info != 99)
 	{
@@ -698,7 +700,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
             gchar **url = g_uri_list_extract_uris(url_data);
             if(url)
             {
-                gtk_drag_finish(context, TRUE, FALSE, time);
+                gtk_drag_finish(context, TRUE, FALSE, time_recieved);
                 url_start_real(url[0]);
                 g_strfreev(url);
             }
@@ -733,7 +735,7 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		}
 
 		g_strfreev(stripped);
-		gtk_drag_finish(context, TRUE, FALSE, time);
+		gtk_drag_finish(context, TRUE, FALSE, time_recieved);
 	}
 }
 

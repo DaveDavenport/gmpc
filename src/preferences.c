@@ -335,9 +335,9 @@ void preferences_show_pref_window(int plugin_id)
 				gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &pos, -1); 
 				if(pos == plugin_get_pos(plugin_id))
 				{
-					GtkTreeSelection *select = gtk_tree_view_get_selection(
+					GtkTreeSelection *sel = gtk_tree_view_get_selection(
 							GTK_TREE_VIEW (glade_xml_get_widget(xml_preferences_window, "plugin_tree")));
-					gtk_tree_selection_select_iter(select, &iter);
+					gtk_tree_selection_select_iter(sel, &iter);
 					return;
 				}
 			}while(gtk_tree_model_iter_next(GTK_TREE_MODEL(plugin_store),  &iter));

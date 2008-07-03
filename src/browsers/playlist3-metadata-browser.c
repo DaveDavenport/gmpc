@@ -136,7 +136,7 @@ static void info2_start_drag(GtkWidget *event, GdkDragContext *context, gpointer
 	g_object_unref(pb);
 	g_object_unref(pb2);
 }
-static void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
+static void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint dtime, guint info,gpointer udata)
 {
 	gchar *data = g_strdup_printf("artist:%s\nalbum:%s", 
 			(gchar *)g_object_get_data(G_OBJECT(event), "artist"), 
@@ -147,7 +147,7 @@ static void info2_album_drag_data_get(GtkWidget *event, GdkDragContext *context,
 	g_free(data);
 
 }
-static void info2_artist_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint time, guint info,gpointer udata)
+static void info2_artist_drag_data_get(GtkWidget *event, GdkDragContext *context, GtkSelectionData *sel_data, guint dtime, guint info,gpointer udata)
 {
 	gchar *data = g_strdup_printf("artist:%s", 
 			(gchar *)g_object_get_data(G_OBJECT(event), "artist"));
@@ -229,9 +229,9 @@ static void info2_prepare_view()
 }
 
 
-static void as_album_clicked(GtkButton *button, gpointer data)
+static void as_album_clicked(GtkButton *button, gpointer userdata)
 {
-	int clear = GPOINTER_TO_INT(data);
+	int clear = GPOINTER_TO_INT(userdata);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
 	char *album =  g_object_get_data(G_OBJECT(button), "album");
 	if(artist)
@@ -300,9 +300,9 @@ static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 	}
 	q_free(artist);
 }
-static void as_artist_clicked(GtkButton *button, gpointer data)
+static void as_artist_clicked(GtkButton *button, gpointer userdata)
 {
-	int clear = GPOINTER_TO_INT(data);
+	int clear = GPOINTER_TO_INT(userdata);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
 	if(artist)
     {
@@ -462,6 +462,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 void info2_fill_song_view(mpd_Song *song)
 {
 	GtkWidget *expander, *gmtv,*table, *table2,*image,*ali,*button, *label,*hbox;
+	GtkWidget *event, *ali2;
 	char *markup = NULL;
 	int i = 0;
     mpd_Song *cur = mpd_playlist_get_current_song(connection);
@@ -650,7 +651,6 @@ void info2_fill_song_view(mpd_Song *song)
 	}
     if(show_current_song)
     {
-        GtkWidget *label;
         gchar *value;
         label = gtk_label_new("");
         gtk_label_set_markup(GTK_LABEL(label), _("<b>Bitrate:</b>"));
@@ -699,8 +699,8 @@ void info2_fill_song_view(mpd_Song *song)
 	gtk_misc_set_alignment(GTK_MISC(expander), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(expander), 8,0);
 
-	GtkWidget *event = gtk_event_box_new();
-	GtkWidget *ali2 = gtk_alignment_new(0,0,0.5,0);
+	event = gtk_event_box_new();
+	ali2 = gtk_alignment_new(0,0,0.5,0);
 	ali = gtk_alignment_new(0,0,0.5,0);
 	/* the lyric */
 	gmtv = gmpc_meta_text_view_new(META_SONG_TXT);
@@ -956,7 +956,7 @@ static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
 	/* when the widget is destroy, remove the handler */
 	g_signal_handler_disconnect(G_OBJECT(gmw),GPOINTER_TO_INT(id));
 }
-static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
+static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
 {
 	/* if not artist similar, we aren't interrested */
 	if(type != META_ARTIST_SIMILAR)
@@ -1081,8 +1081,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw, mpd_Song *song, M
 
 		/* add them to the table attach */
 		if(list){
-			int i = 0;
 			GList *node = g_list_first(list);
+			i = 0;
 			for(;node;node = g_list_next(node)){
 				gtk_table_attach_defaults(GTK_TABLE(vbox),node->data, i%3, (i)%3+1,i/3,i/3+1);
 				i++;
@@ -1320,7 +1320,6 @@ void info2_fill_artist_view(char *artist)
 	 */
 	if(song2 && song2->artist)
 	{
-		MpdData 	*data;
         GList *node,*list = NULL;
 		label = gtk_label_new("");
 		gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Albums:</span>"));
@@ -1351,18 +1350,18 @@ void info2_fill_artist_view(char *artist)
 	}
 	if(song2 && song2->artist)
 	{
-		GtkWidget *vbox = gtk_table_new(2,3,TRUE);
+		GtkWidget *vbox2 = gtk_table_new(2,3,TRUE);
 		char *similar = NULL; 
 		guint id = 0;
 		MetaDataResult ret;
 
 		/* Set spacing */
-		gtk_table_set_col_spacings(GTK_TABLE(vbox), 6);
-		gtk_table_set_row_spacings(GTK_TABLE(vbox), 6);
+		gtk_table_set_col_spacings(GTK_TABLE(vbox2), 6);
+		gtk_table_set_row_spacings(GTK_TABLE(vbox2), 6);
 		/* make sure the marges are correct */
-		gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
+		gtk_container_set_border_width(GTK_CONTAINER(vbox2), 8);
 		/* connect a signal handler */
-		id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox);
+		id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox2);
 		/* do a request to the meta watcher */
 		ret = gmpc_meta_watcher_get_meta_path(gmw,song2, META_ARTIST_SIMILAR, &similar);
 		/* set the label */
@@ -1372,11 +1371,11 @@ void info2_fill_artist_view(char *artist)
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
 		/* fill the list if it' s allready available */
-		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox);
+		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox2);
 		/* if destroyed disconnect the metawatcher */
-		g_signal_connect(G_OBJECT(vbox), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
+		g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
 		/* Add it to the view */
-		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox,FALSE, FALSE, 0);
+		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox2,FALSE, FALSE, 0);
 	}
 
 	mpd_freeSong(song2);
@@ -1397,6 +1396,7 @@ void info2_fill_album_view(char *artist,char *album)
 	mpd_Song *song2 	= NULL;
 	GtkWidget *label 	= NULL; 
 	char *markup 		= NULL;
+	GtkWidget *hbox, *table,*table2,*image;
 
 	/* disable the current songs thingy */
 	show_current_song = FALSE;
@@ -1469,9 +1469,8 @@ void info2_fill_album_view(char *artist,char *album)
 	/**
 	 * Set album image
 	 */
-	GtkWidget *hbox = NULL;
-	GtkWidget *table2,*table = gtk_table_new(2,2,FALSE);
-	GtkWidget *image = NULL; 
+	table = gtk_table_new(2,2,FALSE);
+	image = NULL; 
 	ali = gtk_alignment_new(0,0.5,1,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
@@ -1597,14 +1596,14 @@ void info2_fill_album_view(char *artist,char *album)
 		if(data)
 		{
 			MpdData *data2;
-			long unsigned time = 0;
+			long unsigned ttime = 0;
 			mpd_Song *song = data->song;
 			for(data2 = mpd_data_get_first(data);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)) {
 				tracks++;
-				time += data2->song->time;
+				ttime += data2->song->time;
 			}
 			tracks++;
-			time += data2->song->time;
+			ttime += data2->song->time;
 
 			if(song->date) {
 				info2_add_table_item(table2, _("<b>Date:</b>"), song->date, i,TRUE);
@@ -1616,8 +1615,8 @@ void info2_fill_album_view(char *artist,char *album)
 				q_free(str);
 				i++;
 			}
-			if(time) {
-				char *buffer = format_time_real(time,"");
+			if(ttime) {
+				char *buffer = format_time_real(ttime,"");
 				info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i,TRUE);
 				i++;                                                    	
 				q_free(buffer); 
@@ -1664,8 +1663,9 @@ void info2_fill_album_view(char *artist,char *album)
 
 static void info2_init()
 {
-	GtkWidget *vp = NULL;;
-	GtkWidget *ali/*,*event*/,*vbox;
+	GtkAdjustment *adjustment =NULL;
+	GtkWidget *vp = NULL;
+	GtkWidget *ali,*vbox;
 	/**
 	 * main widget used to pack the browser
 	 */
@@ -1722,8 +1722,7 @@ static void info2_init()
 	/**
 	 * setup the scrolled window
 	 */ 
-	GtkAdjustment *adjustment =
-		gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW
+	adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW
 				(scrolled_window));
 	g_object_set (adjustment, "step-increment", (double) 20, NULL);
 
@@ -1742,12 +1741,12 @@ static void info2_init()
 static void info2_add(GtkWidget *cat_tree)
 {
 	GtkTreePath *path = NULL;
-	GtkListStore *pl3_tree = (GtkListStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
+	GtkListStore *store = (GtkListStore *)gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));	
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "info2-plugin","position",5);
 	if(!cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1)) return;
 	playlist3_insert_browser(&iter, pos);
-	gtk_list_store_set(pl3_tree, &iter, 
+	gtk_list_store_set(store, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
 			PL3_CAT_TITLE, _("Metadata Browser"),
 			PL3_CAT_INT_ID, "/",
@@ -1879,7 +1878,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	MpdData *data2 = NULL;
 	mpd_Song *song  = NULL;
 	int tracks = 0,i=0;
-	long unsigned time = 0;
+	long unsigned ttime = 0;
 	GtkWidget *table2= NULL;
 
 	mpd_database_search_start(connection, TRUE);
@@ -1894,10 +1893,10 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	song = data2->song;
 	for(data2 = mpd_data_get_first(data2);!mpd_data_is_last(data2);data2= mpd_data_get_next(data2)){
 		tracks++;
-		time += data2->song->time;
+		ttime += data2->song->time;
 	}
 	tracks++;
-	time += data2->song->time;
+	ttime += data2->song->time;
 	/** 
 	 * Create cover art image 
 	 */
@@ -1934,8 +1933,8 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 		q_free(str);
 		i++;
 	}
-	if(time) {
-		char *buffer = format_time_real(time,"");
+	if(ttime) {
+		char *buffer = format_time_real(ttime,"");
 		info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i,FALSE);
 		i++;                                                    	
 		q_free(buffer); 
@@ -2048,8 +2047,9 @@ void info2_show_current_song(void)
 }
 void info2_disable_show_current(void)
 {
-	show_current_song = FALSE;
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
+	show_current_song = FALSE;
+
 	if(song) {
 		info2_fill_song_view(song);
 	}

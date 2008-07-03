@@ -483,7 +483,8 @@ int *split_version(const char *uri)
 
 MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data)
 {
-    int i=0;
+	int j;
+	int i=0;
     MpdData_real *node;
     MpdData_real **nodes;
     
@@ -494,7 +495,7 @@ MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_dat
     for(node = (MpdData_real*)mpd_data_get_first(data);node;node =(MpdData_real *)mpd_data_get_next_real((MpdData *)node, FALSE))i++;
 
     nodes = g_malloc0(i*sizeof(*node));
-    int j;
+    
     node = (MpdData_real *)mpd_data_get_first(data);
     for(j=0;j<i;j++)
     {
