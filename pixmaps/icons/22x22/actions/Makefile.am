@@ -1,15 +1,11 @@
-themedir = $(pkgdatadir)/hicolor
+themedir = $(pkgdatadir)/icons/hicolor
 size = 22x22
 context = actions
 
 iconsdir = $(themedir)/$(size)/$(context)
 
 icons_DATA = \
-		media-playlist.png\
-		gmpc-tray.png\
-		gmpc-tray-disconnected.png\
-		gmpc-tray-play.png\
-		gmpc-tray-pause.png
+		media-playlist.png
 
 noinst_DATA = 
 

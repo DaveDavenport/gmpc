@@ -68,7 +68,7 @@ revisiont.h:
 	fi;
 
 INCLUDES= @EXTRA_CFLAGS@ \
-	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
+	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"\
 	-DGMPC_BUILD=1\

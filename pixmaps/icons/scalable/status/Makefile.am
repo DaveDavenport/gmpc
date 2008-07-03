@@ -1,4 +1,4 @@
-themedir = $(pkgdatadir)/hicolor
+themedir = $(pkgdatadir)/icons/hicolor
 size = scalable
 context = actions
 

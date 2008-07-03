@@ -858,7 +858,7 @@ static void init_stock_icons()
 	/* hack to help finding files */
 	gchar *hack = NULL;
 	path = gmpc_get_full_image_path("");
-	hack = g_strdup_printf("%s%chicolor%c32x32%cactions",path, G_DIR_SEPARATOR,G_DIR_SEPARATOR, G_DIR_SEPARATOR);
+	hack = g_strdup_printf("%s%cicons%chicolor%c32x32%cactions",path, G_DIR_SEPARATOR,G_DIR_SEPARATOR,G_DIR_SEPARATOR, G_DIR_SEPARATOR);
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default (),hack);
 	q_free(hack);
 	q_free(path);

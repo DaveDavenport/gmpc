@@ -1,4 +1,4 @@
-appicondir = $(datadir)/gmpc/
+appicondir = $(datadir)/gmpc/icons/
 appicon_DATA =	\
 	media-audiofile.png\
 	media-stream.png\
