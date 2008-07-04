@@ -23,7 +23,7 @@ gboolean playlist3_get_active(void);
 
 
 
-enum PlaylistColums {
+typedef enum {
 	PL_COLUMN_ICON,
 	PL_COLUMN_MARKUP,
 	PL_COLUMN_ARTIST,
@@ -40,9 +40,10 @@ enum PlaylistColums {
 	PL_COLUMN_DATE,
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
-};
+}PlaylistColumns;
 
-enum {
+
+typedef enum {
 	PLAYLIST_NO_ZOOM,
 	PLAYLIST_SMALL,
 	PLAYLIST_MINI,
