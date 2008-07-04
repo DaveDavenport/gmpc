@@ -120,10 +120,12 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	void
 	font_size(self,gint size_diff)
 	{
-		self->_priv->size += size_diff*PANGO_SCALE;
-
 		PangoAttrList *attrs = NULL;
 		PangoAttribute *attr = NULL;
+		self->_priv->size += size_diff*PANGO_SCALE;
+
+		
+		
 		attrs = pango_attr_list_new ();
 		attr = pango_attr_size_new (self->_priv->size);
 		attr->start_index = 0;
@@ -146,10 +148,12 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	void
 	set_do_italic(self,gboolean toggle)
 	{
-		self->do_italic = toggle;
-
 		PangoAttrList *attrs = NULL;
 		PangoAttribute *attr = NULL;
+		self->do_italic = toggle;
+
+		
+		
 		attrs = pango_attr_list_new ();
 		attr = pango_attr_size_new (self->_priv->size);
 		attr->start_index = 0;

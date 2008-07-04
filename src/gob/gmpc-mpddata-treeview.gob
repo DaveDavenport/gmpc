@@ -421,11 +421,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     gboolean
     tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
     {
-
-
-
-
-        GtkStyle *style = gtk_widget_get_style(widget);
+		int stripe_x = 1;
+		int stripe_y = 1;
+		int stripe_height = 128; 
+		GdkColor color;
+		GtkStyle *style = gtk_widget_get_style(widget);
         GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
         cairo_t *context;
         cairo_surface_t *surface;
@@ -485,11 +485,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         cairo_set_line_width(cr, 1.0);
         cairo_rectangle(cr, 0.5, 0.5,widget->allocation.width - 0.5, widget->allocation.height - 0.5);
         cairo_stroke(cr);
-        GdkColor color;
-        int stripe_x = 0+ 1;
-        int stripe_y = 0+ 1;
-        int stripe_height = 128; 
-
+        
 
         color = style->bg[GTK_STATE_SELECTED];
 
@@ -522,14 +518,16 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private void enable_tooltip(self)
     {
+	GdkScreen *screen;
+	GdkColormap *colormap;
         GtkWidget *treeview = GTK_WIDGET(self);
         GtkWidget *table = gtk_table_new(6,2, FALSE);
         GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
         GtkWidget *label;
         GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
         self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
-        GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
-        GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
+        screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
+        colormap = gdk_screen_get_rgba_colormap(screen);
 
         if (colormap != NULL && gdk_screen_is_composited(screen))
         {

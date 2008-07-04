@@ -67,16 +67,22 @@ INCLUDES=\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"\
-	-DGMPC_BUILD=1\
-	@CFLAGS@\
-	@glib_CFLAGS@\
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" \
+	-DGMPC_BUILD=1
+if MAINTAINER_MODE
+MAYBE_CFLAGS=-Wall -Werror -Wdeclaration-after-statement -Wshadow 
+endif
+AM_CFLAGS=\
+	  @CFLAGS@\
+	  @glib_CFLAGS@\
 	@libmpd_CFLAGS@ \
 	@gobject_CFLAGS@\
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@
+	@sm_CFLAGS@\
+	$(MAYBE_CFLAGS)
 
 
 clean-local:

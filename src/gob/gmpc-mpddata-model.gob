@@ -312,11 +312,12 @@ requires 2.0.0
                 GtkTreeModel *model = gtk_tree_row_reference_get_model(ref);
                 if(path && model)
                 {
+					int n;	
                     int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                     Self *self = GMPC_MPDDATA_MODEL(model);
                     GtkTreeIter iter;
                     gtk_tree_model_get_iter(model, &iter, path);
-                    int n = GPOINTER_TO_INT(iter.user_data2) ;
+                    n = GPOINTER_TO_INT(iter.user_data2) ;
                     if(ret == META_DATA_AVAILABLE)
                     {
                         GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
@@ -584,10 +585,10 @@ requires 2.0.0
                     case MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT:
                         {
                             if(song->time >= 0) {
-                                gchar *data = g_strdup_printf("%02i:%02i",
+                                gchar *strdata = g_strdup_printf("%02i:%02i",
                                         song->time/60, song->time%60);
-                                g_value_set_string(value, data);
-                                g_free(data);
+                                g_value_set_string(value, strdata);
+                                g_free(strdata);
                             } else {
                                 g_value_set_string(value, "n/a");
                             }
@@ -659,10 +660,10 @@ requires 2.0.0
 
     interface Gtk:Tree:Model
         private GType
-        get_column_type(Gtk:Tree:Model *model(check null type), gint index (check >= 0))
+        get_column_type(Gtk:Tree:Model *model(check null type), gint ind (check >= 0))
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
-            return self->types[index];
+            return self->types[ind];
         } 
     public 
         void 
@@ -854,13 +855,13 @@ requires 2.0.0
                 gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
                 if(self->_priv->sort_column == MPDDATA_MODEL_COL_SONG_TRACK)
                 {
-                    const char *a = g_value_get_string(&va);
-                    const char *b = g_value_get_string(&vb);
-                    gint a1 = (a)?atoi(a):0;
-                    gint b1 = (b)?atoi(b):0;
+                    const char *ca = g_value_get_string(&va);
+                    const char *cb = g_value_get_string(&vb);
+                    gint ca1 = (ca)?atoi(ca):0;
+                    gint cb1 = (cb)?atoi(cb):0;
                     g_value_unset(&va);
                     g_value_unset(&vb);
-                    return fact*(a1-b1);
+                    return fact*(ca1-cb1);
                 }
                 else if(self->types[self->_priv->sort_column] == G_TYPE_INT)
                 {
@@ -868,17 +869,17 @@ requires 2.0.0
                 }
                 else if (self->types[self->_priv->sort_column] == G_TYPE_STRING)
                 {
-                    const char *a = g_value_get_string(&va);
-                    const char *b = g_value_get_string(&vb);
-                    if(a && b) {
+                    const char *ca = g_value_get_string(&va);
+                    const char *cb = g_value_get_string(&vb);
+                    if(ca && cb) {
                         gchar *aa,*bb;
-                        aa = g_utf8_strdown(a, -1);
-                        bb = g_utf8_strdown(b, -1);
+                        aa = g_utf8_strdown(ca, -1);
+                        bb = g_utf8_strdown(cb, -1);
                         val = g_utf8_collate(aa,bb);
                         g_free(aa);
                         g_free(bb);
                     } else {
-                        val = (a == NULL)?((b==NULL)?0:-1):1;
+                        val = (ca == NULL)?((cb==NULL)?0:-1):1;
                     }
                 }
                 g_value_unset(&va);

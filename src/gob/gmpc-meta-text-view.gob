@@ -86,13 +86,16 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	query_text_from_song(self, mpd_Song *song)
 	{
+		gchar *path = NULL;
+		MetaDataResult ret;
+
 		if(self->_priv->song)
 		{
 			mpd_freeSong(self->_priv->song);
 		}
 		self->_priv->song = mpd_songDup(song);
-	gchar *path = NULL;
-			MetaDataResult ret;
+		
+		
 			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &path);
 			if(ret == META_DATA_FETCHING)
 			{
@@ -168,7 +171,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 	private
 	void
-	meta_callback(GmpcMetaWatcher *gmw , mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
+	meta_callback(GmpcMetaWatcher *mw , mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
 	{
 		Self *self = data;
 		/**

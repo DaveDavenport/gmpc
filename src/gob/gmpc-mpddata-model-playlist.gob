@@ -95,8 +95,8 @@ override (G:Object)
                 if(new_length < old_length)
                 {
                     int i;
-                    MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
-                    while(data->next)data = data->next;
+                    MpdData_real *odata = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    while(odata->next)odata = odata->next;
                     /* data should be last */
 
                     for(i=old_length-1;i>=new_length;i--)
@@ -106,17 +106,17 @@ override (G:Object)
                         gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                         gtk_tree_path_free(path);
 
-                        if(data->song)
+                        if(odata->song)
                         {
                             self->_priv->loaded_songs--;
-                            if(data->song->time > 0)
+                            if(odata->song->time > 0)
                             {
-                                self->_priv->total_time -= data->song->time;
+                                self->_priv->total_time -= odata->song->time;
                                 self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
                             }
                         }
 
-                        data = (MpdData_real *)mpd_data_delete_item((MpdData *)data);
+                        odata = (MpdData_real *)mpd_data_delete_item((MpdData *)odata);
                        GMPC_MPDDATA_MODEL(self)->num_rows--;
                     }
                 }
@@ -124,17 +124,17 @@ override (G:Object)
                 else if ( new_length > old_length)
                 {
                     int i;
-                    MpdData_real *data = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
+                    MpdData_real *odata = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     /* get the last element */
-                    while(data->next) data = data->next;
+                    while(odata->next) odata = odata->next;
                     for(i=old_length; i< new_length;i++)
                     {
                        GtkTreePath *path = gtk_tree_path_new(); 
                        GtkTreeIter iter;
                        /* Append node */
-                       data = (MpdData_real *)mpd_new_data_struct_append((MpdData *)data);
-                       data->type = MPD_DATA_TYPE_SONG;
-                       data->song = NULL;
+                       odata = (MpdData_real *)mpd_new_data_struct_append((MpdData *)odata);
+                       odata->type = MPD_DATA_TYPE_SONG;
+                       odata->song = NULL;
                         /* Create iter */
                        iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
                        iter.user_data = NULL; 

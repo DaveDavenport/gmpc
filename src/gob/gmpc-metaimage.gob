@@ -184,9 +184,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		self->_priv->popup_timer_id = 0;
 		if(self->_priv->image_url && self->size < 250 )
 		{
-			self->_priv->popup_win = gtk_window_new(GTK_WINDOW_POPUP);
 			GtkWidget *image = gtk_image_new();
 			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
+
+			self->_priv->popup_win = gtk_window_new(GTK_WINDOW_POPUP);
+			
+			
 			self->_priv->popup_h = gdk_pixbuf_get_height(pb);
 			self->_priv->popup_w = gdk_pixbuf_get_width(pb);
 
@@ -294,7 +297,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	public	
 		void
-		update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gmpcconn )
+		update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gc)
 		{
 			if(self->connection && what&(MPD_CST_STATE) && self->is_visible)
 			{
