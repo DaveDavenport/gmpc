@@ -317,7 +317,10 @@ static void  mod_fill_entry_changed(GtkWidget *entry, GtkWidget *tree)
 }
 static void mod_fill_entry_activate(GtkWidget *entry, gpointer data)
 {
+    if(timeout != 0)
+        g_source_remove(timeout);
 	mod_fill_do_entry_changed(entry, data);
+    gtk_widget_grab_focus(pl3_cp_tree);
 }
 
 
