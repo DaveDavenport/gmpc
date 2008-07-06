@@ -43,6 +43,7 @@ requires 2.0.0
 		MPDDATA_MODEL_TAG_TYPE,				          /* tag type */
 		MPDDATA_MODEL_ROW_TYPE,					        /* type of the row */
         MPDDATA_MODEL_META_DATA,                        /* metadata */
+        MPDDATA_MODEL_USERDATA,
 		MPDDATA_MODEL_N_COLUMNS
 	} ;
 %}
@@ -130,6 +131,7 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_USERDATA] = G_TYPE_POINTER;
         self->types[MPDDATA_MODEL_META_DATA] = G_TYPE_OBJECT;
 
         self->_priv->markup_signal = g_signal_connect_swapped(G_OBJECT(gmpc_signals), "browser-markup-changed", G_CALLBACK(self_markup_changed), self);
@@ -430,6 +432,11 @@ requires 2.0.0
                     }
                 }
                 g_value_set_object(value, self->_priv->images[n]);
+            }
+            if(column == MPDDATA_MODEL_USERDATA)
+            {
+                g_value_set_pointer(value,data->userdata);
+
             }
             /* handle row type, this is independent of the row type */
             if(column == MPDDATA_MODEL_ROW_TYPE)
