@@ -742,6 +742,13 @@ int main (int argc, char **argv)
     gtk_tree_view_set_model(playlist3_get_category_tree_view(),NULL);
 
     
+    /**
+     * Clear metadata struct
+     */
+    meta_data_destroy();
+
+
+
 	/* time todo some destruction of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
 		if(plugins[i]->destroy) {
@@ -754,10 +761,10 @@ int main (int argc, char **argv)
     playlist3_destroy();
     g_object_unref(playlist);
 
-    /**
-     * Clear metadata struct
-     */
-    meta_data_destroy();
+
+
+
+
     g_object_unref(G_OBJECT(gmw));
 
 	/**
