@@ -17,7 +17,7 @@
    version="1.0"
    sodipodi:docname="gmpc22 - pause.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="C:\Users\Cube\Pictures\Inkscape-Files\gmpc\gmpc22 - play.png"
+   inkscape:export-filename="C:\Users\Cube\Pictures\Inkscape-Files\gmpc\gmpc22 - pause.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -295,11 +295,11 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="5.2570369"
-     inkscape:cy="16.009587"
+     inkscape:cx="7.7127317"
+     inkscape:cy="17.621231"
      inkscape:document-units="px"
-     inkscape:current-layer="g5504"
-     showgrid="true"
+     inkscape:current-layer="g5588"
+     showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="974"
      inkscape:window-x="-8"
@@ -408,14 +408,15 @@
              id="path5594" />
         </g>
         <g
-           style="display:inline"
+           style="display:inline;fill:#f57900"
            id="g5596"
            inkscape:label="Layer 1">
           <g
              transform="matrix(0.6101083,0,0,0.6234458,1.9675093,1.9449382)"
-             id="g5598">
+             id="g5598"
+             style="fill:#f57900">
             <rect
-               style="opacity:1;fill:#888a85;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               style="opacity:1;fill:#f57900;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
                id="rect5529"
                width="2.6864922"
                height="18.009459"
@@ -427,7 +428,7 @@
                height="18.009459"
                width="2.6864922"
                id="rect6301"
-               style="opacity:1;fill:#888a85;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+               style="opacity:1;fill:#f57900;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
           </g>
         </g>
       </g>
