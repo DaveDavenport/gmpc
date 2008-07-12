@@ -1,6 +1,6 @@
 themedir = $(pkgdatadir)/icons/hicolor
 size = scalable
-context = actions
+context = status
 
 iconsdir = $(themedir)/$(size)/$(context)
 
