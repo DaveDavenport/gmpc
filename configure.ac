@@ -32,37 +32,37 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
-AC_ARG_ENABLE(configdir,    
-              [  --enable-configdir		Use .config instead of .gmpc or .covers.],  
-               [ if test "x$enableval" = "xyes"; then              
-                enable_configdir=yes                           
-            else                                                   
-                enable_configdir=no                            
-            fi],                                                   
+AC_ARG_ENABLE(configdir,
+              [  --enable-configdir		Use .config instead of .gmpc or .covers.],
+               [ if test "x$enableval" = "xyes"; then
+                enable_configdir=yes
+            else
+                enable_configdir=no
+            fi],
               enable_configdir=no)
 AC_ARG_ENABLE(trayicon,
-              [  --disable-trayicon  Disable the tray icon.],         
-              [ if test "x$enableval" = "xyes"; then 
+              [  --disable-trayicon  Disable the tray icon.],
+              [ if test "x$enableval" = "xyes"; then
                enable_trayicon=yes
            else
                enable_trayicon=no
-           fi],               
+           fi],
               enable_trayicon=yes)
-AC_ARG_ENABLE(sm,		    
-              [  --disable-sm				Disable Session Support.],                 
-              [ if test "x$enableval" = "xyes"; then 
+AC_ARG_ENABLE(sm,
+              [  --disable-sm				Disable Session Support.],
+              [ if test "x$enableval" = "xyes"; then
                enable_sm=yes
            else
                enable_sm=no
-           fi],               
+           fi],
               enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,	    
-              [  --disable-mmkeys			Disable multimedia keys support.],          
-              [ if test "x$enableval" = "xyes"; then 
+AC_ARG_ENABLE(mmkeys,
+              [  --disable-mmkeys			Disable multimedia keys support.],
+              [ if test "x$enableval" = "xyes"; then
                     enable_mmkeys=yes
                 else
                     enable_mmkeys=no
-                fi],           
+                fi],
               enable_mmkeys=yes)
 
 
@@ -208,7 +208,7 @@ AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcur
 # Maintainer mode
 AC_ARG_ENABLE([maintainermode],
 	[--enable-maintainermode Enable maintainer mode.],
-	[case "${enableval}" in 
+	[case "${enableval}" in
 		yes) maintainer_mode=true;;
 		no)  maintainer_mode=false;;
 		*) AC_MSG_ERROR([bad value ${enableval} for --enable-maintainermode]);;
@@ -218,26 +218,26 @@ AC_ARG_ENABLE([maintainermode],
 AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
 
 AC_OUTPUT([
-Makefile 
-src/Makefile 
+Makefile
+src/Makefile
 src/gob/Makefile
-glade/Makefile 
-data/Makefile 
-po/Makefile.in 
-po/Makefile 
-data/gmpc.pc 
-doc/Makefile 
+glade/Makefile
+data/Makefile
+po/Makefile.in
+po/Makefile
+data/gmpc.pc
+doc/Makefile
 remote/Makefile
-pixmaps/Makefile 
+pixmaps/Makefile
 pixmaps/icons/Makefile
 pixmaps/icons/16x16/Makefile
-pixmaps/icons/16x16/actions/Makefile 
-pixmaps/icons/16x16/status/Makefile 
-pixmaps/icons/16x16/apps/Makefile 
+pixmaps/icons/16x16/actions/Makefile
+pixmaps/icons/16x16/status/Makefile
+pixmaps/icons/16x16/apps/Makefile
 pixmaps/icons/22x22/Makefile
-pixmaps/icons/22x22/actions/Makefile 
-pixmaps/icons/22x22/status/Makefile 
-pixmaps/icons/22x22/apps/Makefile 
+pixmaps/icons/22x22/actions/Makefile
+pixmaps/icons/22x22/status/Makefile
+pixmaps/icons/22x22/apps/Makefile
 pixmaps/icons/32x32/Makefile
 pixmaps/icons/32x32/actions/Makefile
 pixmaps/icons/32x32/status/Makefile
