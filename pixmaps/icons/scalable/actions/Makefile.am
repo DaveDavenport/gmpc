@@ -4,10 +4,4 @@ context = actions
 
 iconsdir = $(themedir)/$(size)/$(context)
 
-icons_DATA =
-
-noinst_DATA =
-
-EXTRA_DIST = \
-        $(icons_DATA)   \
-        $(noinst_DATA)
+dist_icons_DATA =

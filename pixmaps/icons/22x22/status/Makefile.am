@@ -4,7 +4,7 @@ context = status
 
 iconsdir = $(themedir)/$(size)/$(context)
 
-icons_DATA = \
+dist_icons_DATA = \
 		audio-volume-high.png\
 		audio-volume-low.png\
 		audio-volume-medium.png\
@@ -13,9 +13,3 @@ icons_DATA = \
 		gmpc-tray-pause.png\
 		gmpc-tray-play.png\
 		gmpc-tray.png
-
-noinst_DATA =
-
-EXTRA_DIST = \
-        $(icons_DATA)   \
-        $(noinst_DATA)

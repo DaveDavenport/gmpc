@@ -4,15 +4,10 @@ context = actions
 
 iconsdir = $(themedir)/$(size)/$(context)
 
-icons_DATA = \
+dist_icons_DATA = \
 		media-playlist.png\
 		playlist-search-browser.png\
 		playlist-browser.png\
 		media-tag.png\
 		tag-browser.png
 
-noinst_DATA = 
-
-EXTRA_DIST = \
-        $(icons_DATA)   \
-        $(noinst_DATA)

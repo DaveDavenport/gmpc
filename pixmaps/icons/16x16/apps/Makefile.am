@@ -4,11 +4,6 @@ context = apps
 
 iconsdir = $(themedir)/$(size)/$(context)
 
-icons_DATA = \
+dist_icons_DATA = \
 		gmpc.png
 
-noinst_DATA = 
-
-EXTRA_DIST = \
-        $(icons_DATA)   \
-        $(noinst_DATA)
