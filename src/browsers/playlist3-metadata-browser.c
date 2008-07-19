@@ -39,7 +39,7 @@ static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id);
 static GtkWidget *info2_create_artist_button(mpd_Song *song);
 static GtkWidget *resizer_vbox= NULL;
 static GtkWidget *info2_vbox = NULL,*title_vbox=NULL;
-static GtkWidget *title_event=NULL;
+
 static GtkWidget *scrolled_window = NULL;
 static GtkEntryCompletion *entry_completion = NULL;
 static GtkWidget *info2_entry = NULL;
@@ -164,12 +164,12 @@ static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  
 {
 	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
 }
+/*
 static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
 	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->light[GTK_STATE_SELECTED]));
 }
-
-
+*/
 
 /**
  * Helper functions that can fill and refill a table
@@ -757,10 +757,11 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 
-	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
+//	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
-	cairo_set_line_width (cr, 1.0);
+	
+/*	cairo_set_line_width (cr, 1.0);
 	cairo_rectangle(cr, 0,0,width,height);
 	cairo_close_path (cr);
 	gdk_cairo_set_source_color(cr, 	&(widget->style->mid[GTK_STATE_NORMAL]));
@@ -768,6 +769,20 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
 	cairo_stroke (cr);
 	cairo_destroy(cr);
+*/
+	gtk_paint_flat_box(widget->style, 
+					widget->window, 
+					GTK_STATE_SELECTED,
+					GTK_SHADOW_NONE,
+					NULL, 
+					NULL,
+//					"button",
+					"cell_odd",
+					0,0,
+					width,height);
+
+//	gtk_paint_focus(widget->style, widget->window, GTK_STATE_SELECTED, NULL, NULL, "cell_odd", 0,0,width,height);
+	gtk_paint_focus(widget->style, widget->window, GTK_STATE_NORMAL, NULL, NULL, "button", 0,0,width,height);
 	return FALSE;
 }
 /***
@@ -1666,6 +1681,7 @@ static void info2_init()
 	GtkAdjustment *adjustment =NULL;
 	GtkWidget *vp = NULL;
 	GtkWidget *ali,*vbox;
+	GtkWidget *title_event=NULL;
 	/**
 	 * main widget used to pack the browser
 	 */
@@ -1688,12 +1704,15 @@ static void info2_init()
 	gtk_container_set_border_width(GTK_CONTAINER(ali),8);
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
-
+/*
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
+*/
+	gtk_widget_set_app_paintable(title_event, TRUE);
+	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
 
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
 
-	gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, TRUE,0);
+	//gtk_box_pack_start(GTK_BOX(vbox), gtk_hseparator_new(), FALSE, TRUE,0);
 
 	/**
 	 * The resizer's vbox
@@ -2058,6 +2077,7 @@ void info2_enable_show_current(void)
 {
 	show_current_song = TRUE;
 }
+
 static void info2_save_myself(void)
 {
 	if(info2_ref)

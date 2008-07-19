@@ -781,7 +781,9 @@ pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 {
 	gint position = 0;
 	g_object_get(G_OBJECT(panel), "position", &position, NULL);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), position-20);
+	/* force minimum size 16 */
+	if(position -16 < 16) position = 32;
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), position-16);
 	gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
 
 }
