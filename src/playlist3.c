@@ -773,6 +773,19 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
     return FALSE;
 }
 
+/**
+ * When the position of the slider change, update the artist image
+ */
+static void
+pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
+{
+	gint position = 0;
+	g_object_get(G_OBJECT(panel), "position", &position, NULL);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), position-20);
+	gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
+
+}
+
 void create_playlist3 ()
 {
     GtkListStore *pl3_crumbs = NULL;
@@ -921,7 +934,7 @@ void create_playlist3 ()
 	gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "metaimage_album_art"),80,80);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 80);
 	/** make sure size is updated */
-	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+//	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
 	gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), TRUE);
@@ -1003,6 +1016,11 @@ void create_playlist3 ()
 		g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(playlist3_error_expose), NULL);
 	}
 
+	/* A signal that responses on change of pane position */
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml,"hpaned1")),
+									"notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
+	/* update it */
+	pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
 	/**
 	 *
 	 */

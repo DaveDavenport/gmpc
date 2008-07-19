@@ -19,10 +19,26 @@ requires 2.0.0
 
 
 
+%ph{
+/**
+ * Indicate the state
+ */
+typedef enum _GmpcMetaImageState{
+	STATE_NA,
+	STATE_FETCHING,
+	STATE_IMAGE,
+	NUM_STATES
+}GmpcMetaImageState;
+
+
+
+%}
 
 
 
 class Gmpc:MetaImage from Gtk:Event:Box{
+	private GmpcMetaImageState state = {STATE_NA};
+
 	private gulong status_signal = {0};
 	private gulong connect_signal = {0};
 	private gulong meta_id = {0};
@@ -31,6 +47,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
 
+	/* Popup */
 	private GtkWidget *popup_win = {NULL};
 	private guint popup_timer_id = {0};
     private guint gmpc_idle_id = {0};
@@ -458,6 +475,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
             GError *err = NULL;
             GdkPixbuf *pb2; 
+
+			self->_priv->state = STATE_NA;
+
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);
@@ -483,6 +503,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		set_cover_fetching(self)
 		{
 			GdkPixbuf *pb2; 
+
+			self->_priv->state = STATE_FETCHING;
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);
@@ -514,6 +536,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		set_cover_from_path(self, gchar *path)
 		{
 			GdkPixbuf *pb = NULL;
+
+			self->_priv->state = STATE_IMAGE;
+	
 			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*12,self->size-self->draw_shadow*12,TRUE,NULL);
 			if(self->_priv->image_url)
 			{
@@ -719,5 +744,31 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		} 
 		gtk_widget_destroy(fcd);
 		mpd_freeSong(song);
+	}
+
+	public
+	void
+	reload_image(self)
+	{
+		switch(self->_priv->state)
+		{
+			case STATE_NA:
+					self_set_cover_na(self);
+					break;
+			case STATE_FETCHING:
+					self_set_cover_fetching(self);
+					break;
+			case STATE_IMAGE:
+					{
+						if(self->_priv->image_url)
+						{
+							gchar *temp = g_strdup(self->_priv->image_url);
+							self_set_cover_from_path(self, temp);
+							g_free(temp);
+						}
+					}
+			default:
+					break;
+		}
 	}
 }
