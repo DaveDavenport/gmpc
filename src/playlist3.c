@@ -831,6 +831,23 @@ void create_playlist3 ()
 					"Please reinstall gmpc"), TRUE);
 		abort();
 	}
+	/** murrine hack */
+	if(cfg_get_single_value_as_int_with_default(config, "Default", "murrine-hack", FALSE))
+	{
+		GdkScreen *screen;
+		GdkColormap *colormap;
+		GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
+
+		screen   = gtk_window_get_screen (GTK_WINDOW(win));
+		colormap = gdk_screen_get_rgba_colormap (screen);
+
+		if (colormap)
+			gtk_widget_set_default_colormap (colormap);
+
+	}
+
+
+
 
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL)
