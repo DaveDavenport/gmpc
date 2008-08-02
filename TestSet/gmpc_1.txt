@@ -1,8 +1,0 @@
-Run gmpc with the supplied config, select the database browser and do a query.
-
-The Error:  
-    The sort_order and sort_column are invalid values.
-The old result: 
-    A crash tryping to get the type of column (that was invalid).
-The Right result: 
-    The values are ignored by gmpc.
