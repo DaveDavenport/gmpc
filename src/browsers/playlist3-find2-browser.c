@@ -83,7 +83,6 @@ typedef struct {
     GtkWidget *combo;
     GtkWidget  *lcombo;
     GtkWidget *entry;
-    regex_t preq;
     int tag_type; 
 }crit_struct;
 
