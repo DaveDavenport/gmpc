@@ -12,7 +12,7 @@ requires 2.0.0
 %}
 
 %h{
-#define NUM_COLS 16
+#define NUM_COLS 17
 #define MOUSE_OFFSET 10
 #define ENABLE_GRADIENT_LOOK 1
 #define BACKGROUND_OPACITY 0.92
@@ -36,7 +36,8 @@ static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_SONG_DISC,			      /* disc */
     MPDDATA_MODEL_COL_SONG_COMMENT,			    /* comment */
     MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
-    MPDDATA_MODEL_COL_SONG_POS
+    MPDDATA_MODEL_COL_SONG_POS,
+		MPDDATA_MODEL_COL_PATH_EXTENSION,				/* Extension */
 };
 static gchar *col_names[NUM_COLS] = {
     N_("Markup"),
@@ -54,7 +55,8 @@ static gchar *col_names[NUM_COLS] = {
     N_("Disc"),
     N_("Comment"),
     N_("Icon Id"),
-    N_("Position")
+    N_("Position"),
+		N_("Extension")
 }; 
 
 static gint  col_enabled[NUM_COLS] = {
@@ -73,7 +75,8 @@ static gint  col_enabled[NUM_COLS] = {
     FALSE,//"Disc",
     FALSE,//"Comment",
     TRUE,//"Icon Id"
-    FALSE//"Position"
+    FALSE,//"Position"
+		FALSE//Extension
 };
 static gint  col_position[NUM_COLS] = {
     14,//"Markup",
@@ -91,7 +94,8 @@ static gint  col_position[NUM_COLS] = {
     12,//"Disc",
     13,//"Comment",
     0,//"Icon Id"
-    15 // "Position"
+    15, // "Position"
+		16
 };
 %}
 

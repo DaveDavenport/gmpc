@@ -55,27 +55,7 @@ static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data);
 static void pl3_find2_save_myself(void);
 
 int pl3_find2_last_entry = MPD_TAG_ITEM_ANY;
-/**
- * Plugin structure
- */
-gmpcPlBrowserPlugin find2_browser_gbp = {
-	.add = pl3_find2_browser_add,
-	.selected = pl3_find2_browser_selected,
-	.unselected = pl3_find2_browser_unselected,
-	.add_go_menu = pl3_find2_browser_add_go_menu,
-	.key_press_event = pl3_find2_browser_key_press_event
-};
 
-gmpcPlugin find2_browser_plug = {
-	.name = 						"Search Browser",
-	.version = 						{1,1,1},
-	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER,
-    .destroy = 						pl3_find2_browser_destroy,
-	.browser = 						&find2_browser_gbp,
-	.mpd_status_changed = 			pl3_find2_browser_status_changed,
-	.mpd_connection_changed = 		pl3_find2_browser_connection_changed,
-	.save_yourself = 				pl3_find2_save_myself,
-};
 
 
 typedef struct {
@@ -921,4 +901,24 @@ static void pl3_find2_save_myself(void)
 		}
 	}
 }
+/**
+ * Plugin structure
+ */
+gmpcPlBrowserPlugin find2_browser_gbp = {
+	.add = pl3_find2_browser_add,
+	.selected = pl3_find2_browser_selected,
+	.unselected = pl3_find2_browser_unselected,
+	.add_go_menu = pl3_find2_browser_add_go_menu,
+	.key_press_event = pl3_find2_browser_key_press_event
+};
 
+gmpcPlugin find2_browser_plug = {
+	.name = 						"Search Browser",
+	.version = 						{1,1,1},
+	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER,
+    .destroy = 						pl3_find2_browser_destroy,
+	.browser = 						&find2_browser_gbp,
+	.mpd_status_changed = 			pl3_find2_browser_status_changed,
+	.mpd_connection_changed = 		pl3_find2_browser_connection_changed,
+	.save_yourself = 				pl3_find2_save_myself,
+};

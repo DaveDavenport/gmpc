@@ -37,13 +37,14 @@ requires 2.0.0
 		MPDDATA_MODEL_COL_SONG_DISC,			      /* disc */
 		MPDDATA_MODEL_COL_SONG_COMMENT,			    /* comment */
 		MPDDATA_MODEL_COL_SONG_POS,				      /* position */
+		MPDDATA_MODEL_COL_PATH_EXTENSION,				/* Extention */
 		MPDDATA_MODEL_COL_SONG_ID,				      /* col id */
 		MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
 		MPDDATA_MODEL_COL_SONG_LENGTH,			    /* length */
 		MPDDATA_MODEL_TAG_TYPE,				          /* tag type */
 		MPDDATA_MODEL_ROW_TYPE,					        /* type of the row */
-        MPDDATA_MODEL_META_DATA,                        /* metadata */
-        MPDDATA_MODEL_USERDATA,
+		MPDDATA_MODEL_META_DATA,                        /* metadata */
+		MPDDATA_MODEL_USERDATA,
 		MPDDATA_MODEL_N_COLUMNS
 	} ;
 %}
@@ -127,6 +128,7 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_PATH_EXTENSION] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
@@ -544,6 +546,13 @@ requires 2.0.0
                     case MPDDATA_MODEL_COL_PATH:
                         g_value_set_string(value, song->file);
                         break;
+										case MPDDATA_MODEL_COL_PATH_EXTENSION:
+												{
+													int j = strlen(song->file);
+													for(;j>0&&song->file[j] != '.';j--);
+													g_value_set_string(value, &(song->file)[j+1]);
+													break;
+												}
                     case MPDDATA_MODEL_COL_SONG_ARTIST:
                         g_value_set_string(value, song->artist);
                         break;
