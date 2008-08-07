@@ -1387,6 +1387,8 @@ void info2_fill_artist_view(char *artist)
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
 		/* fill the list if it' s allready available */
 		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox2);
+		if(similar)
+			g_free(similar);
 		/* if destroyed disconnect the metawatcher */
 		g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
 		/* Add it to the view */
