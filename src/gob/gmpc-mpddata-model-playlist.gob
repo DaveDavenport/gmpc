@@ -28,6 +28,52 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
     private unsigned long loaded_songs = {0};
     private int old_highlight = -1;
 
+		private guint update_timeout = {0};
+		private guint last_pos = {0};
+
+		private gboolean update_callback(self)
+		{
+			static const gint step_size = 100;
+			gint num_rows =  GMPC_MPDDATA_MODEL(self)->num_rows;
+			if(self->_priv->loaded_songs <num_rows)
+			{
+				int i = 0;
+				MpdData *data =  GMPC_MPDDATA_MODEL(self)->_priv->data;
+				data = mpd_data_get_first(data);
+				if(!data) return;
+				for(i=0; i < (self->_priv->last_pos);i++)
+				{
+					data = (MpdData *)mpd_data_get_next_real(data,FALSE);
+				}
+
+
+				for(i=0;i< step_size && data;i++)
+				{
+					if(data->song == NULL)
+					{ 
+						data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,i+self->_priv->last_pos);
+						if(data->song)
+						{
+							self->_priv->loaded_songs++;
+							if(data->song->time>0)
+							{
+								self->_priv->total_time += data->song->time;
+								self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+							}
+						}
+
+					}
+					data = mpd_data_get_next_real(data, FALSE);
+				}
+				self->_priv->last_pos += step_size;
+			}
+			else 
+			{
+				self->_priv->last_pos = 0;
+			} 
+			return TRUE;
+		}
+
 override (G:Object)
         void 
         finalize (G:Object *obj)
@@ -43,6 +89,11 @@ override (G:Object)
                 g_signal_handler_disconnect(G_OBJECT(gmpcconn),self->_priv->connection_changed);
                 self->_priv->connection_changed = 0;
             }
+						if(self->_priv->update_timeout > 0)
+						{
+							g_source_remove(self->_priv->update_timeout);
+							self->_priv->update_timeout  = 0;
+						}
             PARENT_HANDLER(obj);
         }
     public
@@ -53,7 +104,12 @@ override (G:Object)
             self->_priv->status_changed = g_signal_connect_swapped(G_OBJECT(conn), "status_changed", G_CALLBACK(self_status_changed), self);
             self->_priv->connection_changed = g_signal_connect_swapped(G_OBJECT(conn), "connection_changed", G_CALLBACK(self_connection_changed), self);
             self->_priv->mi = mi;
-            return self;
+						
+						if(cfg_get_single_value_as_int_with_default(config, "playlist", "background-loading", FALSE))
+						{
+							self->_priv->update_timeout  = g_timeout_add_seconds(1, (GSourceFunc)(self_update_callback), self);
+						}
+							return self;
         }
     private
     void
