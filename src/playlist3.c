@@ -2108,3 +2108,22 @@ gboolean playlist3_show_playtime(gulong playtime)
      return FALSE;
 }
 
+
+/***
+ * Help menu
+ */
+
+void url_visit_website(void);
+void url_getting_help(void);
+
+void url_visit_website(void)
+{
+	open_uri("http://gmpcwiki.sarine.nl/");
+
+
+}
+
+void url_getting_help(void)
+{
+	open_uri("http://gmpcwiki.sarine.nl/index.php/Help:Contents");
+}

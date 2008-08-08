@@ -36,7 +36,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_focus">True</property>
-                    <property name="invisible_char">●</property>
                     <property name="activates_default">True</property>
                     <property name="text" translatable="yes">&lt;enter playlist name&gt;</property>
                   </widget>
@@ -448,6 +447,44 @@
                             <property name="icon_size">1</property>
                           </widget>
                         </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="menuitem2">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem3">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Visit website</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="url_visit_website"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image25">
+													<property name="visible">True</property>
+													<property name="stock">gtk-home</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem6">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Getting help</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="url_getting_help"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image26">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-help</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="menuitem5">
+                        <property name="visible">True</property>
                       </widget>
                     </child>
                     <child>
