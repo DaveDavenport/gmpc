@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [15])
-m4_define([gmpc_micro_version], [6])
+m4_define([gmpc_micro_version], [98])
 m4_define([gmpc_version],
           [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
 
