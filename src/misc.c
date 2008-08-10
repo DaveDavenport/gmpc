@@ -119,8 +119,8 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 /**
  * Code copied from gnome-screenshot
  */
-#define BLUR_RADIUS    5
-#define SHADOW_OFFSET  (BLUR_RADIUS * 4 / 5)
+#define BLUR_RADIUS    4
+#define SHADOW_OFFSET  (BLUR_RADIUS * 3 / 5)
 #define SHADOW_OPACITY 0.5
 
 #define OUTLINE_RADIUS  1.1

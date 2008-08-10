@@ -12,6 +12,7 @@ nodist_libcwidgets_la_SOURCES =\
 	gmpc-mpddata-treeview.c\
 	gmpc-clicklabel.c\
 	gmpc-stats-label.c\
+	gmpc-mpd-async.c\
 	gmpc-signals.c\
 	gmpc-idle.c\
 	gmpc-profiles.c
@@ -52,6 +53,7 @@ EXTRA_DIST=\
 		gmpc-clicklabel.gob\
 		gmpc-stats-label.gob\
 		gmpc-signals.gob\
+		gmpc-mpd-async.gob\
 		gmpc-idle.gob
 
 INCLUDES=\

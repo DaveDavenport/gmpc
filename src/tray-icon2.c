@@ -11,16 +11,16 @@
 #define TRAY_ICON2_ID "tray-icon2"
 
 #ifdef ENABLE_TRAYICON
-GtkStatusIcon *tray_icon2_gsi = NULL;
+GtkStatusIcon 	*tray_icon2_gsi = NULL;
 #else
-GtkWidget *tray_icon2_gsi = NULL;
+GtkWidget 			*tray_icon2_gsi = NULL;
 #endif
 /**
  * Tooltip 
  */
-GtkWidget	*tray_icon2_tooltip = NULL;
-GtkWidget 	*tray_icon2_tooltip_pb = NULL;
-guint		tray_icon2_tooltip_timeout = 0;
+GtkWidget				*tray_icon2_tooltip = NULL;
+GtkWidget 			*tray_icon2_tooltip_pb = NULL;
+guint						tray_icon2_tooltip_timeout = 0;
 enum{
 	TI2_AT_TOOLTIP,
 	TI2_AT_UPPER_LEFT,
