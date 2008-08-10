@@ -1,9 +1,15 @@
 # Process this file with autoconf to produce a configure script.
+
+
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [15])
 m4_define([gmpc_micro_version], [98])
-m4_define([gmpc_version],
-          [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
+
+m4_define([gmpc_tagline], "Still 100% gnome free.")
+m4_define([gmpc_website], "http://gmpcwiki.sarine.nl")
+m4_define([gmpc_bugtracker],  "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
+
+m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
 
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
@@ -17,6 +23,9 @@ AC_DEFINE(GMPC_MAJOR_VERSION, gmpc_major_version, ["Major version of gmpc"])
 AC_DEFINE(GMPC_MINOR_VERSION, gmpc_minor_version, ["Minor version of gmpc"])
 AC_DEFINE(GMPC_MICRO_VERSION, gmpc_micro_version, ["Micro version of gmpc"])
 
+AC_DEFINE(GMPC_TAGLINE, 		gmpc_tagline, 	 ["Gmpc's tagline"])
+AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	 ["Gmpc's website"])
+AC_DEFINE(GMPC_BUGTRACKER, 	gmpc_bugtracker, ["Gmpc's bugtracker"])
 
 # Checks for programs.
 

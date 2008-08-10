@@ -788,6 +788,11 @@ pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 
 }
 
+static void about_dialog_activate(GtkWidget *dialog, const gchar *uri, gpointer data)
+{
+	open_uri(uri);
+}
+
 void create_playlist3 ()
 {
     GtkListStore *pl3_crumbs = NULL;
@@ -798,6 +803,7 @@ void create_playlist3 ()
 	GtkTreeViewColumn *column = NULL;
 	gchar *path = NULL;
 	GtkTreeIter iter;
+
 	/* indicate that the playlist is not hidden */
 	pl3_hidden = FALSE;
 
@@ -813,7 +819,8 @@ void create_playlist3 ()
 	}
 
 
-
+	/* initial, setting the url hook */
+	gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc)about_dialog_activate, NULL, NULL);
 
 
 
@@ -1656,6 +1663,9 @@ static void playlist_player_volume_changed(GtkWidget *vol_but)
 }
 
 
+
+
+
 void about_window()
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
@@ -1671,10 +1681,11 @@ void about_window()
 	}
 	else
 	{
-		path = g_strdup_printf("%s\n%s\n","while(bug_count > 0) fixBug();", VERSION);
+		path = g_strdup_printf("%s\n%s\n",VERSION, GMPC_TAGLINE);
 	}
-    gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://sarine.nl");
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), GMPC_WEBSITE);
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
+
 	q_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
@@ -2118,12 +2129,10 @@ void url_getting_help(void);
 
 void url_visit_website(void)
 {
-	open_uri("http://gmpcwiki.sarine.nl/");
-
-
+	open_uri(GMPC_WEBSITE);
 }
 
 void url_getting_help(void)
 {
-	open_uri("http://gmpcwiki.sarine.nl/index.php/Help:Contents");
+	open_uri(GMPC_BUGTRACKER);
 }
