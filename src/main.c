@@ -1024,7 +1024,7 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
 			mpd_disconnect(mi);
 			/* Give error */
 			printf("Wrong mpd version\n");
-			playlist3_show_error_message(_("<b>MPD version before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
+			playlist3_show_error_message(_("<b>MPD versions before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
 		}
     /* remove this when it does not fix it */
     gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
