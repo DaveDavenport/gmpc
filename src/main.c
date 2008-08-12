@@ -1014,6 +1014,18 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
     {
         playlist3_close_error();
     }
+		/**
+		 * Check version
+		 */
+		if(connected && !mpd_server_check_version(mi, 0,13,0))
+	  {	
+			/* disable user connect ! */
+			gmpc_connected = FALSE;
+			mpd_disconnect(mi);
+			/* Give error */
+			printf("Wrong mpd version\n");
+			playlist3_show_error_message(_("<b>MPD version before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
+		}
     /* remove this when it does not fix it */
     gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
 }
@@ -1027,6 +1039,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
             g_source_remove(autoconnect_timeout);
         autoconnect_timeout = 0;
     }
+
     /**
      * send password, first thing we do, if connected 
      */
@@ -1079,7 +1092,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     {
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
-        autoconnect_timeout = g_timeout_add (5000,(GSourceFunc)autoconnect_callback, NULL);
+        autoconnect_timeout = g_timeout_add_seconds (5,(GSourceFunc)autoconnect_callback, NULL);
 
     }
 }

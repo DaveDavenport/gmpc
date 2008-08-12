@@ -5,6 +5,7 @@
 extern int pl3_zoom;
 extern GladeXML *pl3_xml;
 static gboolean error_visible = FALSE;
+static int last_error_level = ERROR_INFO; 
 guint timeout_callback = 0;
 GtkListStore *message_list = NULL;
 void message_window_open(void);
@@ -27,8 +28,8 @@ void playlist3_message_init(void)
 	if(!message_list)
 	{
         GError *error = NULL;
-        gchar *path = gmpc_get_user_path("gmpc.log"); 
-		message_list = gtk_list_store_new(3, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING);
+				gchar *path = gmpc_get_user_path("gmpc.log"); 
+				message_list = gtk_list_store_new(3, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING);
 
         log_file = g_io_channel_new_file(path, "a", &error);
         if(error)
@@ -48,9 +49,9 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	GtkWidget *label = NULL; 
 	GtkTreeIter iter;
 	time_t t = time(NULL);
-    int level;
+	int level;
 	gchar *image_name;
-    gchar *string;
+	gchar *string;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
 	gtk_list_store_set(message_list, &iter, 0,t, 2, message,-1);
@@ -59,22 +60,13 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	lt = localtime((time_t *)&t);
 	strftime(text, 64,"%d/%m/%Y-%H:%M:%S", lt);
 
-    string = g_strdup_printf("%s:%s:%s\n",text,error_levels[el], message);
-    g_io_channel_write_chars(log_file, string, -1, NULL, NULL);
-    q_free(string);
-    g_io_channel_flush(log_file, NULL);
+	string = g_strdup_printf("%s:%s:%s\n",text,error_levels[el], message);
+	g_io_channel_write_chars(log_file, string, -1, NULL, NULL);
+	q_free(string);
+	g_io_channel_flush(log_file, NULL);
 
-	if(error_visible)
-	{
-		playlist3_close_error();
-		if(timeout_callback)
-		{
-			g_source_remove(timeout_callback);
-		}
-		timeout_callback = 0;
 
-	}
-    level = cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO);
+	level = cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO);
 	switch(el)
 	{
 		case ERROR_CRITICAL:
@@ -89,11 +81,28 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 			break;
 	}
 	gtk_list_store_set(message_list, &iter, 1, image_name,-1);
-    if(el < level)
-    {
-        return;
-    }
-    if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
+	if(el < level)
+	{
+		return;
+	}
+	if(error_visible)
+	{
+		/* higher level errors are not overwritten by lower level errors */
+		if(el < last_error_level)
+		{
+			return;
+		}
+		playlist3_close_error();
+		if(timeout_callback)
+		{
+			g_source_remove(timeout_callback);
+		}
+		timeout_callback = 0;
+
+	}
+	/* store last level */
+	last_error_level = el;
+	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
