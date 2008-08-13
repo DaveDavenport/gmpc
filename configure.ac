@@ -196,6 +196,9 @@ AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
 GOB2_CHECK(2.0.0)
+if test x${GOB2} = x""; then
+	exit 0;
+fi
 
 
 # libcurl settings
