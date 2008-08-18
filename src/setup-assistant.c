@@ -2,6 +2,7 @@
 #include "main.h"
 #include "setup-assistant.h"
 
+extern gmpcPlugin connection_plug;
 GtkWidget *con_pref = NULL;
 gulong  connect_signal = 0;
 

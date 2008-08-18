@@ -41,6 +41,50 @@
 #include "gmpc_easy_download.h"
 
 #include "setup-assistant.h"
+/* as internall plugin */
+#include "browsers/playlist3-playlist-editor.h"
+#include "browsers/playlist3-file-browser.h"
+#include "browsers/playlist3-find2-browser.h"
+#include "browsers/playlist3-tag2-browser.h"
+#include "browsers/playlist3-current-playlist-browser.h"
+
+extern gmpcPlugin connection_plug;
+/*
+extern gmpcPlugin about_plug;
+*/
+extern gmpcPlugin playlist_plug;
+
+extern gmpcPlugin cover_art_plug;
+
+extern gmpcPlugin tray_icon2_plug;
+
+extern gmpcPlugin proxyplug;
+//extern gmpcPlugin info3_plugin;
+extern gmpcPlugin metab_plugin;
+extern gmpcPlugin url_plugin; 
+/** main.c **/
+extern GladeXML *xml_main_window;
+extern MpdObj *connection;
+extern GmpcProfiles *gmpc_profiles;
+
+extern gmpcPlugin playlist_editor_plugin;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Get revision
