@@ -48,8 +48,8 @@ extern int gmpc_connected;
 extern GtkTreeModel *playlist;
 
 /* the config object */
-extern config_obj *config;
-extern config_obj *profiles;
+//extern config_obj *config;
+//extern config_obj *profiles;
 
 /* the plugin list */
 extern gmpcPlugin **plugins;
@@ -113,7 +113,7 @@ void preferences_show_pref_window(int plugin_id);
 /**
  * Help functions
  */
-#define q_free(a) g_free(a);a=NULL;
+#define q_free(a) {g_free(a);a=NULL;}
 
 /* help */
 void info2_activate(void);
