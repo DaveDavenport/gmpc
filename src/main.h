@@ -39,35 +39,18 @@
 #include "gob/gmpc-signals.h"
 #include "gob/gmpc-idle.h"
 
-extern GmpcConnection *gmpcconn;
-extern GmpcSignals *gmpc_signals;
-extern GmpcIdle *gmpc_idle;
-
-extern int gmpc_connected;
-
-extern GtkTreeModel *playlist;
-
-/* the config object */
-//extern config_obj *config;
-//extern config_obj *profiles;
+extern GmpcConnection 	*gmpcconn;
+extern GmpcSignals 		*gmpc_signals;
+extern GmpcIdle 		*gmpc_idle;
+extern int 				gmpc_connected;
+extern GtkTreeModel 	*playlist;
 
 /* the plugin list */
 extern gmpcPlugin **plugins;
 /* num of plugins */
 extern int num_plugins;
 
-/* the plugins :D */
-
-enum{
-	TIME_FORMAT_ELAPSED,
-	TIME_FORMAT_REMAINING,
-	TIME_FORMAT_PERCENTAGE
-};
-
 char * edit_song_markup(char *format);
-
-gboolean playlist_filter_func(GtkTreeModel *model, GtkTreeIter *iter);
-void playlist_changed(MpdObj *mi);
 
 void main_quit(void);
 
@@ -84,11 +67,6 @@ int plugin_get_pos(int id);
 
 void show_error_message(gchar *string, int block);
 
-/* This is over here because of it's need for xml_error_window, this should probably
- * be moved to mpdinteraction.c
- */
-void connect_callback(MpdObj *mi);
-
 /** Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
@@ -101,14 +79,13 @@ void meta_data_add_plugin(gmpcPlugin *plug);
  * TODO move this 
  */
 void url_start_real(const gchar *url);
+void url_start(void);
 
 /*
  * functions to get patch to different files.
  * This is needed to make the windows port work.
  */
 char *gmpc_get_full_image_path(char *filename);
-
-void preferences_show_pref_window(int plugin_id);
 
 /**
  * Help functions
@@ -127,5 +104,5 @@ void tray_icon2_create_tooltip(void);
 /* usefull for some stuff */
 extern GladeXML *pl3_xml;
 
-void url_start(void);
+
 #endif

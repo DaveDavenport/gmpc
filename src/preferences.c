@@ -11,7 +11,7 @@
 #include "config1.h"
 
 #define PLUGIN_STATS -200
-
+void preferences_show_pref_window(int plugin_id);
 static void plugin_stats_construct(GtkWidget *);
 static void plugin_stats_destroy(GtkWidget *);
 GladeXML *plugin_stat_xml = NULL;
