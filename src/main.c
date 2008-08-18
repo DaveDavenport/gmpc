@@ -69,23 +69,6 @@ extern GmpcProfiles *gmpc_profiles;
 
 extern gmpcPlugin playlist_editor_plugin;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Get revision
  */
@@ -213,7 +196,7 @@ static void bacon_on_message_received(const char *message, gpointer data)
             return;
         }
     }
-    /* popup, if message was not handles.*/
+    /* popup, if message was not handled.*/
    create_playlist3(); 
 }
 #endif
@@ -357,7 +340,11 @@ int main (int argc, char **argv)
          * Only init the CURL_GLOBAL_WIN32 (should only do something on win32 anyway
          * Because I don't want to load the ssl part.. (that costs me 0.5mb extra memory)
          */
+#ifdef WIN32
         if((result = curl_global_init(CURL_GLOBAL_WIN32)))
+#else
+        if((result = curl_global_init(CURL_GLOBAL_NOTHING)))
+#endif
         {
             debug_printf(DEBUG_ERROR, "cURL Global init failed: %d\n", result);
             exit(1);
@@ -375,6 +362,8 @@ int main (int argc, char **argv)
     if(!g_thread_supported())g_thread_init (NULL);
 
 #ifndef WIN32
+	/* This is incompatible with win32, however magnatune plugin requires it. */
+	/* So it is enabled for all non-win32 platforms */
     gdk_threads_init();
 #endif
     /*
@@ -393,15 +382,21 @@ int main (int argc, char **argv)
         show_error_message(_("Trying to run gmpc with a wrong libmpd version."), TRUE);
         exit(1);
     }
+	/**
+	 * 	Check if the path needed path are available, if not, create them
+	 */
     create_gmpc_paths();
 
     /* do the clean config stuff */
     if(clean_config)
     {
+		/* start the metadata system */
         meta_data_init();
         printf("Cleaning up cover file..\n");
+		/* Call the cleanup */
         meta_data_cleanup();
         printf("Done..\n");
+		/* Destroy the meta data system and exit. */
         meta_data_destroy();
         return 1;
     }
@@ -431,7 +426,8 @@ int main (int argc, char **argv)
          * Show gtk error message and quit 
          */
         debug_printf(DEBUG_ERROR,"Failed to save/load configuration:\n%s\n",url);
-        show_error_message(_("Failed to load the configuration system"), TRUE);
+        show_error_message(_("Failed to load the configuration system."), TRUE);
+		/* this is an error so bail out correctly */
         abort();
     }
     /**

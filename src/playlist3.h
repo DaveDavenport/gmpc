@@ -22,7 +22,7 @@ void playlist_connection_changed(MpdObj *mi, int connect);
 gboolean playlist3_get_active(void);
 
 
-
+/*
 typedef enum {
 	PL_COLUMN_ICON,
 	PL_COLUMN_MARKUP,
@@ -41,7 +41,7 @@ typedef enum {
 	PL_COLUMN_SONGPOS,
 	PL_COLUMN_TOTAL
 }PlaylistColumns;
-
+*/
 
 typedef enum {
 	PLAYLIST_NO_ZOOM,
@@ -49,6 +49,7 @@ typedef enum {
 	PLAYLIST_MINI,
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
+
 void playlist3_destroy(void);
 void playlist_editor_fill_list(void);
 
