@@ -119,11 +119,13 @@ static int connected_to_mpd(mpd_Connection *mpd_conn)
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
 	g_source_remove(connecting_pulse);
 	connecting_pulse = 0;
+	G_UNLOCK(connecting_lock);
+	printf("unlocking\n");
 	if(connection)
 	{
 		mpd_connect_real(connection, mpd_conn);
 	}
-    G_UNLOCK(connecting_lock);
+
 	return FALSE;
 }
 static void connection_thread(void)

@@ -947,27 +947,11 @@ static void gmpc_status_changed_callback_real(GmpcConnection *conn, MpdObj *mi, 
  * Error handling 
  * TODO: Needs to be redone/rethought
  */
-static void password_dialog(int failed)
+
+static void password_dialog_response(GtkWidget *dialog, gint response,gpointer data) 
 {
-    GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
-    gchar *path  = NULL;
-	if(xml_password_window) return;
-	path = gmpc_get_full_glade_path("gmpc.glade");
-	xml_password_window = glade_xml_new(path, "password-dialog",NULL);
-    gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
-    q_free(path);
-	if(!xml_password_window) return;
-	if(failed)
-	{
-		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),mpd_get_hostname(connection));
-	}
-	else
-	{
-		path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
-	}
-	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
-	q_free(path);
-	switch(gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
+	gchar *path;
+	switch(response)//gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
 	{
 		case GTK_RESPONSE_OK:
 			{
@@ -992,6 +976,30 @@ static void password_dialog(int failed)
 	g_object_unref(xml_password_window);
 	xml_password_window = NULL;
 }
+static void password_dialog(int failed)
+{
+    GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+    gchar *path  = NULL;
+	if(xml_password_window) return;
+	path = gmpc_get_full_glade_path("gmpc.glade");
+	xml_password_window = glade_xml_new(path, "password-dialog",NULL);
+    gtk_window_set_transient_for(GTK_WINDOW(glade_xml_get_widget(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
+    q_free(path);
+	if(!xml_password_window) return;
+	if(failed)
+	{
+		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),mpd_get_hostname(connection));
+	}
+	else
+	{
+		path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
+	}
+	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
+	q_free(path);
+
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_password_window, "password-dialog")), "response", password_dialog_response, xml_password_window);
+}
+
 
 void send_password()
 {
