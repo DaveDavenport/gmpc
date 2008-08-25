@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-10 10:47+0200\n"
-"PO-Revision-Date: 2008-08-10 02:51+0100\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2008-08-25 09:39+0200\n"
+"PO-Revision-Date: 2008-08-25 02:10+0100\n"
+"Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,7 +347,7 @@ msgstr "<span size=\"x-small\"><i>Lista odtwarzania już istnieje</i></span>"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Getting help"
-msgstr ""
+msgstr "Potrzebujesz pomocy?"
 
 #: ../glade/playlist3.glade.h:4
 msgid "MPD database is updating."
@@ -400,7 +400,7 @@ msgstr "Zatrzymaj"
 
 #: ../glade/playlist3.glade.h:15
 msgid "Visit website"
-msgstr ""
+msgstr "Odwiedź stronę domową"
 
 #: ../glade/playlist3.glade.h:16
 msgid "_Collapse Interface"
@@ -515,65 +515,65 @@ msgstr "Serwer pośredniczący HTTP"
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:235 ../src/main.c:237
+#: ../src/main.c:262 ../src/main.c:264
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:243
+#: ../src/main.c:270
 msgid "--version"
 msgstr "--version"
 
-#: ../src/main.c:245
+#: ../src/main.c:272
 #, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Music Player Client\n"
 
-#: ../src/main.c:246 ../src/preferences.c:267
+#: ../src/main.c:273 ../src/preferences.c:267
 msgid "Version"
 msgstr "Wersja"
 
-#: ../src/main.c:249
+#: ../src/main.c:276
 msgid "Revision"
 msgstr "Rewizja"
 
 #. *
 #. * Allow the user to pick another config file
 #.
-#: ../src/main.c:256 ../src/main.c:258
+#: ../src/main.c:283 ../src/main.c:285
 msgid "--config="
 msgstr "--config="
 
-#: ../src/main.c:260
+#: ../src/main.c:287
 msgid "--start-hidden"
 msgstr "--start-hidden"
 
-#: ../src/main.c:264
+#: ../src/main.c:291
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
-#: ../src/main.c:268
+#: ../src/main.c:295
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
-#: ../src/main.c:272
+#: ../src/main.c:299
 msgid "--replace"
 msgstr "--replace"
 
-#: ../src/main.c:276
+#: ../src/main.c:303
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:284
+#: ../src/main.c:311
 msgid "--help"
 msgstr "--help"
 
-#: ../src/main.c:286
+#: ../src/main.c:313
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -612,23 +612,28 @@ msgstr ""
 "\t--quit\t\t\tKończy uruchomioną sesję gmpc. Działa tylko gdy wyłączone jest "
 "wiele instancji.\n"
 
-#: ../src/main.c:349
+#: ../src/main.c:382
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "Próbujesz uruchomić GMPC ze złą wersją libmpd."
 
-#: ../src/main.c:390
-msgid "Failed to load the configuration system"
+#: ../src/main.c:429
+#, fuzzy
+msgid "Failed to load the configuration system."
 msgstr "Nie można załadować systemu konfiguracji"
 
-#: ../src/main.c:409
+#: ../src/main.c:449
 msgid "Failed to load debug-log file."
 msgstr "Nie można wczytać pliku logowania odpluskwiania."
 
-#: ../src/main.c:535
+#: ../src/main.c:575
 msgid "Failed to setup libmpd"
 msgstr "Nie można ustawić libmpd"
 
-#: ../src/main.c:922
+#: ../src/main.c:970
+msgid "GMPC has insufficient permissions on the mpd server."
+msgstr "GMPC ma niewystarczające prawa dostępu do demona mpd."
+
+#: ../src/main.c:991
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -637,20 +642,20 @@ msgstr ""
 "Nie można ustawić hasła dla: '%s'\n"
 "Spróbuj ponownie."
 
-#: ../src/main.c:926
+#: ../src/main.c:995
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Wprowadź hasło dla: '%s'"
 
-#: ../src/main.c:946
-msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "GMPC ma niewystarczające prawa dostępu do demona mpd."
-
-#: ../src/main.c:972 ../src/main.c:996
+#: ../src/main.c:1020 ../src/main.c:1044
 msgid "error code"
 msgstr "kod błędu"
 
-#: ../src/main.c:1066
+#: ../src/main.c:1075
+msgid "<b>MPD versions before 0.13.0 are not supported.</b>"
+msgstr ""
+
+#: ../src/main.c:1127
 msgid ""
 "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
 "This might work, but is no longer supported."
@@ -658,24 +663,24 @@ msgstr ""
 "GMPC jest połączony z demonem mpd w wersji niższej niż 0.12.0\n"
 "Taka konfiguracja może funkcjonować, ale nie jest już wspierana."
 
-#: ../src/main.c:1073
+#: ../src/main.c:1134
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Połączono z mpd</b>"
 
-#: ../src/main.c:1075
+#: ../src/main.c:1136
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Rozłączono z mpd</b>"
 
-#: ../src/main.c:1110
+#: ../src/main.c:1171
 msgid "Error occured during operation"
 msgstr "Napotkano błąd podczas wykonywania operacji"
 
 #. Create label
-#: ../src/main.c:1140
+#: ../src/main.c:1201
 msgid "The following error(s) occured:"
 msgstr "Napotkano następujące błędy:"
 
-#: ../src/main.c:1156
+#: ../src/main.c:1217
 msgid "Error Message"
 msgstr "Wiadomość o błędzie"
 
@@ -838,33 +843,33 @@ msgstr "Ustawienia serwera"
 msgid "Connection"
 msgstr "Połączenie"
 
-#: ../src/mpdinteraction.c:177
+#: ../src/mpdinteraction.c:179
 msgid "Connecting"
 msgstr "Łączenie"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1114
+#: ../src/mpdinteraction.c:1116
 msgid "All from album"
 msgstr "z albumu"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1126
+#: ../src/mpdinteraction.c:1128
 msgid "All from artist"
 msgstr "tego wykonawcy"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1136
+#: ../src/mpdinteraction.c:1138
 msgid "All from genre"
 msgstr "z gatunku"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1144
+#: ../src/mpdinteraction.c:1146
 msgid "All from same directory"
 msgstr "z tego samego katalogu"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1152
+#: ../src/mpdinteraction.c:1154
 msgid "Add more"
 msgstr "Dodaj więcej"
 
@@ -884,7 +889,7 @@ msgstr "<b>Mpd uaktualnia swoją bazę danych</b>"
 msgid "<b>MPD finished updating its database</b>"
 msgstr "<b>Mpd ukończył aktualizację swojej bazy danych</b>"
 
-#: ../src/playlist3.c:830
+#: ../src/playlist3.c:837
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc"
@@ -892,94 +897,94 @@ msgstr ""
 "Nie można otworzyć pliku opisu interfejsu!\n"
 "Proszę przeinstalować GMPC"
 
-#: ../src/playlist3.c:1347
+#: ../src/playlist3.c:1354
 msgid "Connected"
 msgstr "Połączony"
 
-#: ../src/playlist3.c:1356 ../src/playlist3.c:1582 ../src/playlist3.c:2027
+#: ../src/playlist3.c:1363 ../src/playlist3.c:1589 ../src/playlist3.c:2038
 msgid "Not Connected"
 msgstr "Niepołączony"
 
-#: ../src/playlist3.c:1369 ../src/playlist3.c:1378 ../src/playlist3.c:1483
+#: ../src/playlist3.c:1376 ../src/playlist3.c:1385 ../src/playlist3.c:1490
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:1370
+#: ../src/playlist3.c:1377
 msgid "Connected to"
 msgstr "Połączony z"
 
-#: ../src/playlist3.c:1379
+#: ../src/playlist3.c:1386
 msgid "Disconnected"
 msgstr "Rozłączony"
 
-#: ../src/playlist3.c:1512
+#: ../src/playlist3.c:1519
 #, c-format
 msgid "Repeat: %s"
 msgstr "Powtarzaj: %s"
 
-#: ../src/playlist3.c:1512 ../src/playlist3.c:1525
+#: ../src/playlist3.c:1519 ../src/playlist3.c:1532
 msgid "On"
 msgstr "Włączone"
 
-#: ../src/playlist3.c:1512 ../src/playlist3.c:1525
+#: ../src/playlist3.c:1519 ../src/playlist3.c:1532
 msgid "Off"
 msgstr "Wyłącz"
 
-#: ../src/playlist3.c:1525
+#: ../src/playlist3.c:1532
 #, c-format
 msgid "Random: %s"
 msgstr "Losuj: %s"
 
-#: ../src/playlist3.c:1623
+#: ../src/playlist3.c:1630
 msgid "MPD Reported the following error"
 msgstr "Mpd zwrócił następujący błąd"
 
-#: ../src/playlist3.c:1760 ../src/playlist3.c:1766
+#: ../src/playlist3.c:1771 ../src/playlist3.c:1777
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1760
+#: ../src/playlist3.c:1771
 msgid "added"
 msgstr "dodano"
 
-#: ../src/playlist3.c:1766
+#: ../src/playlist3.c:1777
 msgid "changed hostname to:"
 msgstr "zmieniona host na:"
 
 #. Update DB
-#: ../src/playlist3.c:1876
+#: ../src/playlist3.c:1887
 msgid "Update Database"
 msgstr "Zaktualizuj bazę danych"
 
-#: ../src/playlist3.c:1955
+#: ../src/playlist3.c:1966
 msgid "By"
 msgstr "przez"
 
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:1973
 msgid "From"
 msgstr "od"
 
-#: ../src/playlist3.c:2018
+#: ../src/playlist3.c:2029
 msgid "Not Playing"
 msgstr "Nie odtwarza"
 
-#: ../src/playlist3-messages.c:15
+#: ../src/playlist3-messages.c:16
 msgid "Info"
 msgstr "Informacje"
 
-#: ../src/playlist3-messages.c:16
+#: ../src/playlist3-messages.c:17
 msgid "Warning"
 msgstr "Ostrzeżenie"
 
-#: ../src/playlist3-messages.c:17
+#: ../src/playlist3-messages.c:18
 msgid "Critical"
 msgstr "Krytyczny"
 
-#: ../src/playlist3-messages.c:186
+#: ../src/playlist3-messages.c:195
 msgid "Time"
 msgstr "Czas"
 
-#: ../src/playlist3-messages.c:188
+#: ../src/playlist3-messages.c:197
 msgid "Message"
 msgstr "Wiadomość"
 
@@ -1086,26 +1091,27 @@ msgstr "Powiadamianie"
 #. *
 #. * Append an introduction page
 #.
-#: ../src/setup-assistant.c:68
+#: ../src/setup-assistant.c:69
+#, fuzzy
 msgid ""
-"It is the first time you launch gmpc.\n"
+"It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
 "Po raz pierwszy uruchomiłeś GMPC.\n"
 "Ten kreator pomoże ci połączyć GMPC z demonem mpd."
 
-#: ../src/setup-assistant.c:70
+#: ../src/setup-assistant.c:71
 msgid "Welcome to GMPC"
 msgstr "Witaj w GMPC"
 
-#: ../src/setup-assistant.c:85
+#: ../src/setup-assistant.c:86
 msgid "Setup connection"
 msgstr "Ustawienia połączenia"
 
 #. *
 #. * End
 #.
-#: ../src/setup-assistant.c:94
+#: ../src/setup-assistant.c:95
 msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
@@ -1113,7 +1119,7 @@ msgstr ""
 "GMPC jest gotowy do użytku.\n"
 "Miłego użytkowania."
 
-#: ../src/setup-assistant.c:96
+#: ../src/setup-assistant.c:97
 msgid "Finish"
 msgstr "Zakończ"
 
@@ -1579,9 +1585,8 @@ msgid "Position"
 msgstr "Położenie"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:59
-#, fuzzy
 msgid "Extension"
-msgstr "Rozszerzenie przeglądarki"
+msgstr "Rozszerzenie"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:560
 msgid "<b>Title:</b>"
