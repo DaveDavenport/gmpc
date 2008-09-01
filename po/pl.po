@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-25 09:39+0200\n"
-"PO-Revision-Date: 2008-08-25 02:10+0100\n"
+"POT-Creation-Date: 2008-09-01 17:00+0200\n"
+"PO-Revision-Date: 2008-08-29 02:01+0100\n"
 "Last-Translator: Artur Kruszewski <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -617,7 +617,6 @@ msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "Próbujesz uruchomić GMPC ze złą wersją libmpd."
 
 #: ../src/main.c:429
-#, fuzzy
 msgid "Failed to load the configuration system."
 msgstr "Nie można załadować systemu konfiguracji"
 
@@ -653,7 +652,7 @@ msgstr "kod błędu"
 
 #: ../src/main.c:1075
 msgid "<b>MPD versions before 0.13.0 are not supported.</b>"
-msgstr ""
+msgstr "<b>MPD w werjach niższych od 0.13.0 nie jest wspierane.</b>"
 
 #: ../src/main.c:1127
 msgid ""
@@ -1092,13 +1091,12 @@ msgstr "Powiadamianie"
 #. * Append an introduction page
 #.
 #: ../src/setup-assistant.c:69
-#, fuzzy
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
-"Po raz pierwszy uruchomiłeś GMPC.\n"
-"Ten kreator pomoże ci połączyć GMPC z demonem mpd."
+"Po raz pierwszy uruchomiono GMPC.\n"
+"Ten kreator pomoże Ci połączyć GMPC z demonem mpd."
 
 #: ../src/setup-assistant.c:71
 msgid "Welcome to GMPC"
@@ -1277,7 +1275,7 @@ msgstr "Szukaj"
 
 #: ../src/browsers/playlist3-metadata-browser.c:391
 #: ../src/browsers/playlist3-metadata-browser.c:607
-#: ../src/gob/gmpc-mpddata-treeview.gob:571
+#: ../src/gob/gmpc-mpddata-treeview.gob:572
 msgid "<b>Artist:</b>"
 msgstr "<b>Wykonawca:</b>"
 
@@ -1297,7 +1295,7 @@ msgstr "<b>Czas odtwarzania:</b>"
 #: ../src/browsers/playlist3-metadata-browser.c:615
 #: ../src/browsers/playlist3-metadata-browser.c:1602
 #: ../src/browsers/playlist3-metadata-browser.c:1943
-#: ../src/gob/gmpc-mpddata-treeview.gob:593
+#: ../src/gob/gmpc-mpddata-treeview.gob:594
 msgid "<b>Genre:</b>"
 msgstr "<b>Gatunek:</b>"
 
@@ -1305,7 +1303,7 @@ msgstr "<b>Gatunek:</b>"
 #: ../src/browsers/playlist3-metadata-browser.c:619
 #: ../src/browsers/playlist3-metadata-browser.c:1626
 #: ../src/browsers/playlist3-metadata-browser.c:1947
-#: ../src/gob/gmpc-mpddata-treeview.gob:603
+#: ../src/gob/gmpc-mpddata-treeview.gob:604
 msgid "<b>Date:</b>"
 msgstr "<b>Rocznik:</b>"
 
@@ -1329,7 +1327,7 @@ msgstr "<span size='xx-large' weight='bold'>Kolekcja</span>"
 #: ../src/browsers/playlist3-metadata-browser.c:611
 #: ../src/browsers/playlist3-metadata-browser.c:1586
 #: ../src/browsers/playlist3-metadata-browser.c:1939
-#: ../src/gob/gmpc-mpddata-treeview.gob:583
+#: ../src/gob/gmpc-mpddata-treeview.gob:584
 msgid "<b>Album:</b>"
 msgstr "<b>Album:</b>"
 
@@ -1588,11 +1586,11 @@ msgstr "Położenie"
 msgid "Extension"
 msgstr "Rozszerzenie"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:560
+#: ../src/gob/gmpc-mpddata-treeview.gob:561
 msgid "<b>Title:</b>"
 msgstr "<b>Tytuł:</b>"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:613
+#: ../src/gob/gmpc-mpddata-treeview.gob:614
 msgid "<b>Duration:</b>"
 msgstr "<b>Czas trwania:</b>"
 
