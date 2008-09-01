@@ -121,7 +121,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 
 		/* Error */
 		error_visible = TRUE;
-		timeout_callback = g_timeout_add(5000, (GSourceFunc)playlist3_close_error, NULL);
+		timeout_callback = g_timeout_add_seconds(5, (GSourceFunc)playlist3_close_error, NULL);
 	}else{
 		error_visible = FALSE;
 	}

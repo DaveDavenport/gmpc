@@ -10,11 +10,7 @@
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 
-#ifdef ENABLE_TRAYICON
 GtkStatusIcon 	*tray_icon2_gsi = NULL;
-#else
-GtkWidget 			*tray_icon2_gsi = NULL;
-#endif
 /**
  * Tooltip 
  */
@@ -44,14 +40,12 @@ void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data);
 
 gboolean tray_icon2_get_available(void)
 {
-#ifdef ENABLE_TRAYICON    
 	if(tray_icon2_gsi) {
 		if(gtk_status_icon_is_embedded(tray_icon2_gsi) &&
 				gtk_status_icon_get_visible(tray_icon2_gsi)) {
 			return TRUE;
 		}
 	}
-#endif
 	return FALSE;
 }
 /** 
@@ -126,7 +120,6 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
 {
-#ifdef ENABLE_TRAYICON 
     if(gtk_status_icon_is_embedded(icon))
     {
         /* the status icon just got embedded */
@@ -136,14 +129,12 @@ static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gp
         /* the widget isn't embedded anymore */
         create_playlist3();
     }
-#endif
 }
 /**
  * Initialize the tray icon 
  */
 static void tray_icon2_init(void)
 {
-#ifdef ENABLE_TRAYICON 
 
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", TRUE))
 	{
@@ -153,7 +144,6 @@ static void tray_icon2_init(void)
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
         g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
 	}
-#endif
 }
 /**
  * Destroy and cleanup 
@@ -177,7 +167,6 @@ static gboolean tray_icon2_get_enabled(void)
  */
 static void tray_icon2_set_enabled(int enabled)
 {
-#ifdef ENABLE_TRAYICON 
 	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", enabled);
 	if(enabled)	{
 		if(!tray_icon2_gsi) {
@@ -190,7 +179,6 @@ static void tray_icon2_set_enabled(int enabled)
 			gtk_status_icon_set_visible(GTK_STATUS_ICON(tray_icon2_gsi), FALSE);
 		}		
 	}
-#endif
 }
 /**
  * TOOLTIP 
@@ -225,7 +213,7 @@ static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *box, GdkEventBu
         {
             g_source_remove(tray_icon2_tooltip_timeout);
         }
-        tray_icon2_tooltip_timeout = g_timeout_add(state*2000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+        tray_icon2_tooltip_timeout = g_timeout_add_seconds(state*2, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 
         has_buttons = TRUE;
 
@@ -303,11 +291,13 @@ void tray_icon2_create_tooltip(void)
 	 * 	Creat the tootlip window 
 	 */
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
+
 	/* causes the border */
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
 	gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
+
 	/*
 	 * Tooltip exists from 2 parts..
 	 * ------------------
@@ -436,7 +426,6 @@ void tray_icon2_create_tooltip(void)
 	 * 	Position the popup
 	 */
 	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
-#ifdef ENABLE_TRAYICON 
 	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) 
 	{
 
@@ -473,7 +462,6 @@ void tray_icon2_create_tooltip(void)
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else 
-#endif
 		if (state == TI2_AT_UPPER_LEFT) 
 		{
 			GdkRectangle rect2;
@@ -526,15 +514,13 @@ void tray_icon2_create_tooltip(void)
 		 * Destroy it after 5 seconds
 		 */
 		state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
-		tray_icon2_tooltip_timeout = g_timeout_add(state*1000, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+		tray_icon2_tooltip_timeout = g_timeout_add_seconds(state, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-#ifdef ENABLE_TRAYICON
 	char buffer[256];
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
-#endif
 	if(what&(MPD_CST_SONGID))
 	{
 		/** 
@@ -550,13 +536,11 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 				tray_icon2_create_tooltip();
 			}
 		}
-#ifdef ENABLE_TRAYICON
 		if(tray_icon2_gsi)
 		{
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
 			gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
 		}
-#endif
 	}
 
 	/* update the progress bar if available */
@@ -582,30 +566,24 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	{
 		int state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY){
-#ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
 
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
 			gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-#endif
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
 			}
 		} else if(state == MPD_PLAYER_PAUSE){
-#ifdef ENABLE_TRAYICON
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
 			gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
 			}
 		} else {
-#ifdef ENABLE_TRAYICON 
 			gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
 			gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
@@ -624,9 +602,7 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
     if(connect)	{
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
-#ifdef ENABLE_TRAYICON 
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
-#endif
 	}
 }
 

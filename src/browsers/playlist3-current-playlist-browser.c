@@ -312,7 +312,7 @@ static void  mod_fill_entry_changed(GtkWidget *entry, GtkWidget *tree)
 {
     if(timeout != 0)
         g_source_remove(timeout);
-    timeout = g_timeout_add(1000, (GSourceFunc)mod_fill_do_entry_changed, entry);
+    timeout = g_timeout_add_seconds(1, (GSourceFunc)mod_fill_do_entry_changed, entry);
     gtk_widget_show(entry);
 }
 static void mod_fill_entry_activate(GtkWidget *entry, gpointer data)

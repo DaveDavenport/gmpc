@@ -252,7 +252,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			if(self->_priv->popup_timer_id == 0)
 			{
-				self->_priv->popup_timer_id = g_timeout_add(1000, (GSourceFunc) self_popup_event, self);
+				self->_priv->popup_timer_id = g_timeout_add_seconds(1, (GSourceFunc) self_popup_event, self);
 			}
 			return FALSE;
 		}

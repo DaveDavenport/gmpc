@@ -533,7 +533,7 @@ void pl3_push_statusbar_message(char *mesg)
 {
 	gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
 	/* message auto_remove after 5 sec */
-	g_timeout_add(5000,(GSourceFunc)pl3_pop_statusbar_message, GINT_TO_POINTER(id));
+	g_timeout_add_seconds(5,(GSourceFunc)pl3_pop_statusbar_message, GINT_TO_POINTER(id));
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), id,mesg);
 }
 /**

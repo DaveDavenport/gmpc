@@ -39,7 +39,6 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
 /* intergration in gmpc */
 static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
-/*static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter);*/
 static int tag2_browser_add_go_menu(GtkWidget *menu);
 
 /* One treemodel to store all possible tags, use this multiple times. */
@@ -69,7 +68,6 @@ gmpcPrefPlugin tag2_prefs = {
 gmpcPlBrowserPlugin tag2_browser_plugin ={
 	.add = tag2_browser_add,
 	.selected = tag2_browser_selected,
-	/*.cat_selection_changed = tag2_browser_selection_changed,*/
 	.unselected = tag2_browser_unselected,
 	.add_go_menu = tag2_browser_add_go_menu
 };
@@ -642,7 +640,7 @@ static void tag2_sentry_changed(SexyIconEntry *entry, tag_element *te)
     gtk_widget_show(te->sentry);
     if(te->timeout)
         g_source_remove(te->timeout);
-    te->timeout = g_timeout_add(1000, (GSourceFunc)tag2_sentry_changed_real, te);
+    te->timeout = g_timeout_add_seconds(1, (GSourceFunc)tag2_sentry_changed_real, te);
 }
 
 
@@ -1105,17 +1103,7 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
         }
     }
 }
-/*
-static void tag2_browser_selection_changed(GtkWidget *tree, GtkTreeIter *iter)
-{
-	if(tag2_current)
-	{
-		GtkWidget *container = gtk_widget_get_parent(tag2_current);
-		tag2_browser_unselected(container);
-		tag2_browser_selected(container);
-	}
-}
-*/
+
 /**
  * Preferences window
  */
