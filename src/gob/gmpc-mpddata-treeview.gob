@@ -237,7 +237,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         dispose (G:Object *obj)
         {
             Self *self = GMPC_MPDDATA_TREEVIEW(obj);
-						printf("zaun.. debug printf %s\n", self->_priv->name);
             self_save_column_setup(self);
             PARENT_HANDLER(obj);
         }
