@@ -775,14 +775,19 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
 					GTK_STATE_SELECTED,
 					GTK_SHADOW_NONE,
 					NULL, 
-					NULL,
+					widget,
 //					"button",
 					"cell_odd",
 					0,0,
 					width,height);
 
 //	gtk_paint_focus(widget->style, widget->window, GTK_STATE_SELECTED, NULL, NULL, "cell_odd", 0,0,width,height);
-	gtk_paint_focus(widget->style, widget->window, GTK_STATE_NORMAL, NULL, NULL, "button", 0,0,width,height);
+	gtk_paint_focus(widget->style, widget->window, 
+				GTK_STATE_NORMAL, 
+				NULL, 
+				widget,
+				"button",
+				0,0,width,height);
 	return FALSE;
 }
 /***
