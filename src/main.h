@@ -105,4 +105,11 @@ void tray_icon2_create_tooltip(void);
 extern GladeXML *pl3_xml;
 
 
+/**
+ * Playlist functions 
+ */
+
+/* Check if the playlist is fullscreen, this queries the _actual_ state */
+gboolean pl3_window_is_fullscreen(void);
+
 #endif

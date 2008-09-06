@@ -287,6 +287,9 @@ void tray_icon2_create_tooltip(void)
 	}
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1) == 0)
 		return;
+	/* If gmpc is fullscreen, don't show the tooltip */
+	if(pl3_window_is_fullscreen())
+		return;
 	/*
 	 * 	Creat the tootlip window 
 	 */

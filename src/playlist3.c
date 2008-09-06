@@ -383,11 +383,18 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 /**********************************************************
  * MISC
  */
+gboolean pl3_window_is_fullscreen(void)
+{
+	GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
+	GdkWindowState state  = 0;
+	if(win->window)
+		state = gdk_window_get_state(win->window);	
+	return (state&GDK_WINDOW_STATE_FULLSCREEN)? TRUE:FALSE;
+}
 void pl3_window_fullscreen(void)
 {
 	GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
-	GdkWindowState state = gdk_window_get_state(win->window);	
-	if(state&GDK_WINDOW_STATE_FULLSCREEN)
+	if(pl3_window_is_fullscreen())
 	{
 		gtk_window_unfullscreen(GTK_WINDOW(win));
 	}
