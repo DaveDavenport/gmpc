@@ -1708,7 +1708,7 @@ static void info2_init()
 	title_event = gtk_event_box_new();
 	title_vbox = gtk_hbox_new(FALSE,6);
 	ali = gtk_alignment_new(0,0.5,1,1);
-	gtk_container_set_border_width(GTK_CONTAINER(ali),8);
+	gtk_container_set_border_width(GTK_CONTAINER(ali),1);
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
 /*
