@@ -720,6 +720,52 @@ void info2_fill_song_view(mpd_Song *song)
 	gtk_container_add(GTK_CONTAINER(ali2), event);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), ali2, FALSE,FALSE,0);
 
+	/* Songs with similar name */
+	if(song->title)
+	{
+		GtkWidget *vbox = NULL;
+		gboolean seen = FALSE;
+		MpdData *data = NULL;
+		/* Do a query for the exact title  */
+		mpd_database_search_start(connection, TRUE);
+		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_TITLE, song->title);
+		data = mpd_database_search_commit(connection);
+		/* loop through results, if any */
+		while(data){
+			gchar buffer[1024];
+			mpd_Song *song_temp = data->song;
+			/* skip the current visible song */
+			if(!(song_temp->file && song->file && strcmp(song->file, song_temp->file) == 0 ) /* skip this, this is us */)
+			{
+				/* if we haven't seen a song yet, create the title */
+				if(!seen)
+				{
+					/* create "title" label */
+					label = gtk_label_new("");
+					gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
+					gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+					gtk_misc_set_padding(GTK_MISC(label), 8,3);
+					gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
+					/* create a vbox where we add the songs too */
+					vbox = gtk_vbox_new(FALSE, 6);
+					ali = gtk_alignment_new(0.0,0.0,1.0,0.0);
+					gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,14,0);
+					gtk_container_add(GTK_CONTAINER(ali), vbox);
+					gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE,FALSE,0);
+					seen = TRUE;
+				}
+				/* generate title */
+				mpd_song_markup(buffer, 1024,"* [%title% - &[%artist%] [(%album%)]]|%shortfile% (paused)", song_temp); 
+				label = gmpc_clicklabel_new(buffer);	
+				/* make clickable */
+				g_object_set_data_full(G_OBJECT(label), "file",g_strdup(song_temp->file), g_free);
+				g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
+				gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
+			}
+			/* */
+			data = mpd_data_get_next(data);
+		}
+	}
 	/* Interesting links */
 
 	if(song->artist && song->title)
