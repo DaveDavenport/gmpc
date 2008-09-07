@@ -1064,24 +1064,40 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 	if(browser->tag2_vbox)
 	{
 		tag_element *te = NULL;
-		tag2_create_tags(browser);
+		if(browser->tag_lists == NULL)
+			tag2_create_tags(browser);
 		te = g_list_nth_data(browser->tag_lists, 0);
 		if(te != NULL && mpd_check_connected(connection) )
 		{
 			MpdData *data;
+/*
+			while(te){
+				te = g_list_next(te);
+			}
+
+*/
 
 			mpd_database_search_field_start(connection, te->type);
 			data = mpd_database_search_commit(connection);
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
 
-            tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree)),te);
+			tag_element *te2 = g_malloc0(sizeof(*te2));
+			te2->index = -1;
+			te2->browser = te->browser;
+			tag2_changed(NULL, te2);
+
+			g_free(te2);
+
+			tag2_changed(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree)),te);
 		}
 	}
 }
+
+
 static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-	if(tag2_ht)
-		g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
+//	if(tag2_ht)
+//	g_list_foreach(tag2_ht,(GFunc)tag2_clean, NULL);
 	/*tag2_clear();*/
 	if(connect && tag2_ht)
 	{
@@ -1098,9 +1114,9 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
     {
         if(tag2_ht)
         {
-            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
+/*            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
             g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
-        }
+  */      }
     }
 }
 
