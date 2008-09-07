@@ -178,7 +178,7 @@ case $host in
     EXTRA_LDFLAGS="-export-all-symbols -mwindows -mms-bitfields -lregex" ;;
   *-*-cygwin*)
     win32=yes
-    EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields -lregex" ;;
+    EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 
