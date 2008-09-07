@@ -175,10 +175,10 @@ case $host in
   *-*-mingw32* | *-*-windows)
     win32=yes
     EXTRA_CFLAGS="$EXTRA_CFLAGS -mno-cygwin -mwindows -mms-bitfields"
-    EXTRA_LDFLAGS="-export-all-symbols -mwindows -mms-bitfields" ;;
+    EXTRA_LDFLAGS="-export-all-symbols -mwindows -mms-bitfields -lregex" ;;
   *-*-cygwin*)
     win32=yes
-    EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
+    EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields -lregex" ;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 
