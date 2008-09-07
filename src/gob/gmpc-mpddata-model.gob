@@ -38,6 +38,7 @@ requires 2.0.0
 		MPDDATA_MODEL_COL_SONG_COMMENT,			    /* comment */
 		MPDDATA_MODEL_COL_SONG_POS,				      /* position */
 		MPDDATA_MODEL_COL_PATH_EXTENSION,				/* Extention */
+		MPDDATA_MODEL_COL_PATH_DIRECTORY,				/* Directory */
 		MPDDATA_MODEL_COL_SONG_ID,				      /* col id */
 		MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
 		MPDDATA_MODEL_COL_SONG_LENGTH,			    /* length */
@@ -50,7 +51,7 @@ requires 2.0.0
 %}
 
  class Gmpc:MpdData:Model from G:Object
-          (interface  Gtk:Tree:Sortable)
+          (interface Gtk:Tree:Sortable)
           (interface Gtk:Tree:Model)
 {
     private gint stamp 		= {g_random_int()};
@@ -129,6 +130,7 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_POS] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_COL_PATH_EXTENSION] = G_TYPE_STRING;
+        self->types[MPDDATA_MODEL_COL_PATH_DIRECTORY] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_ID] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_COL_ICON_ID] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
@@ -551,6 +553,13 @@ requires 2.0.0
 													int j = strlen(song->file);
 													for(;j>0&&song->file[j] != '.';j--);
 													g_value_set_string(value, &(song->file)[j+1]);
+													break;
+												}
+										case MPDDATA_MODEL_COL_PATH_DIRECTORY:
+												{
+													gchar *dir = g_path_get_dirname(song->file);
+													g_value_set_string(value, dir);
+													g_free(dir);
 													break;
 												}
                     case MPDDATA_MODEL_COL_SONG_ARTIST:
