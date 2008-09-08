@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-29 19:04+0200\n"
-"PO-Revision-Date: 2008-09-05 12:54+0000\n"
+"PO-Revision-Date: 2008-09-07 23:36+0000\n"
 "Last-Translator: Dösi <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-09-06 17:28+0000\n"
+"X-Launchpad-Export-Date: 2008-09-08 09:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #, fuzzy
@@ -43,7 +43,6 @@ msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
 msgstr "<b><span size=\"x-large\">Hiba történt</span></b>"
 
 #: ../glade/gmpc.glade.h:3
-#, fuzzy
 msgid "<b>Crossfade:</b>"
 msgstr "<b>Átúszás:</b>"
 
@@ -57,7 +56,7 @@ msgstr "<b>Példa:</b>"
 
 #: ../glade/gmpc.glade.h:6
 msgid "<b>Inline messages</b>"
-msgstr ""
+msgstr "<b>Felbukkanó üzentek</b>"
 
 #: ../glade/gmpc.glade.h:7
 msgid "<b>Loaded Plugins:</b>"
@@ -124,7 +123,7 @@ msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
-"<span size=\"x-large\"><b>Modulok</b></span>\n"
+"<span size=\"x-large\"><b>Bővítmények</b></span>\n"
 "<i>Nincs kiválasztott</i>"
 
 #: ../glade/gmpc.glade.h:23
@@ -162,9 +161,8 @@ msgid "Edit Song Formatting"
 msgstr "Dal formátum szerkesztése"
 
 #: ../glade/gmpc.glade.h:33
-#, fuzzy
 msgid "Edit _Browser Markup"
-msgstr "_Böngésző jelölés szerkesztése"
+msgstr "_Böngészőben való megjelenítés szerkesztése"
 
 #: ../glade/gmpc.glade.h:34
 msgid "Enable"
@@ -476,7 +474,7 @@ msgstr ""
 
 #: ../src/edit_markup.c:44
 msgid "Sing or Swing you want"
-msgstr ""
+msgstr "Sing or Swing you want"
 
 #: ../src/edit_markup.c:45
 msgid "The kernel jazz"
@@ -621,7 +619,6 @@ msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "A gmpc-t rossz libmpd verzióval próbálta futtatni."
 
 #: ../src/main.c:388
-#, fuzzy
 msgid "Failed to load the configuration system"
 msgstr "Nem tudtam betölteni a beállítórendszert"
 
@@ -745,7 +742,6 @@ msgstr "Ablak elejtése"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:81
-#, fuzzy
 msgid "Toggle window"
 msgstr "Ablak mutatása és elrejtése"
 
@@ -870,7 +866,6 @@ msgstr "Minden a könyvtárból"
 #. Create sub menu
 #. Add
 #: ../src/mpdinteraction.c:1054
-#, fuzzy
 msgid "Add more"
 msgstr "Továbbiak hozzáadása"
 
@@ -958,7 +953,6 @@ msgid "Update Database"
 msgstr "Adatbázis frissítése"
 
 #: ../src/playlist3.c:1903
-#, fuzzy
 msgid "By"
 msgstr "Őáltala"
 
@@ -1065,16 +1059,15 @@ msgid "Enter an url"
 msgstr "Írjon be egy url-t"
 
 #: ../src/url_fetcher.c:250
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to contact url: '%s'"
-msgstr "Nem lehetett a '%s' url--hez csatlakozni"
+msgstr "Nem lehetett a '%s' url-hez csatlakozni"
 
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
 #. 
 #: ../src/url_fetcher.c:273
-#, fuzzy
 msgid "Failed to parse the playlist link"
 msgstr "Nem tudtam értelmezni a lejátszólista hivatkozást"
 
@@ -1112,9 +1105,8 @@ msgstr "Biztosan törölni kívánja a lejátszólistát?"
 
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:613
-#, fuzzy
 msgid "Crop"
-msgstr "Kivágás"
+msgstr "Levágás"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:627
@@ -1182,7 +1174,6 @@ msgstr "Csere"
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:623
 #: ../src/browsers/playlist3-file-browser.c:911
-#, fuzzy
 msgid "Update"
 msgstr "Frissítés"
 
@@ -1402,12 +1393,10 @@ msgstr "<span size=\"x-large\" weight=\"bold\">Hasonló előadók:</span>"
 #. * Album Information
 #. 
 #: ../src/browsers/playlist3-metadata-browser.c:1497
-#, fuzzy
 msgid "Album info:"
 msgstr "Album infó:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1502
-#, fuzzy
 msgid "<b>Album info:</b>"
 msgstr "<b>Album infó:</b>"
 
@@ -1479,7 +1468,6 @@ msgid "Accelerator keycode"
 msgstr "Gyorsbillentyű billentyűkódja"
 
 #: ../src/egg/eggcellrendererkeys.c:199
-#, fuzzy
 msgid "Accel Mode"
 msgstr "Gyorsítómód"
 
