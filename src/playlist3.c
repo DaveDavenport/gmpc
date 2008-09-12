@@ -962,12 +962,14 @@ void create_playlist3 ()
 		/**
 	 * Insert new custom widget
 	 */
+
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 40);
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), META_ALBUM_ART);
+	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),"gmpc"); 
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), connection);
 //	gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "metaimage_album_art"),80,80);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 70);
 	/** make sure size is updated */
-//	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
 	gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), TRUE);
@@ -981,7 +983,7 @@ void create_playlist3 ()
 
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
     /* restore the window's position and size, if the user wants this.*/
-    if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+  if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
 	{
 		/* Load values from config file */
 		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
@@ -1262,8 +1264,9 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
         gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,-1);
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 70);
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 40);
         gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
+				gtk_label_set_width_chars(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), 13);
     }
     if(pl3_old_zoom != PLAYLIST_MINI && pl3_zoom == PLAYLIST_MINI)
     {
@@ -1278,9 +1281,12 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
 
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
-        gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 52);
+        //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+				gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
+				gtk_label_set_width_chars(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), 0);
+
+				gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), 40);
         gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
     }
 
@@ -1486,8 +1492,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
-                /* Make sure it's reset correctly */
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
+				/* Make sure it's reset correctly */
+				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
 
 
 				gtk_image_set_from_stock(GTK_IMAGE(
@@ -1597,9 +1603,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
             gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
         }
         if(pl3_zoom == PLAYLIST_MINI) {
-            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+            //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+						gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
         }else{
-            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
+            //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
+						gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), string);
         }
         q_free(string);
 	}
