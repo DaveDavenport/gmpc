@@ -635,13 +635,6 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 		GtkWidget *item;
 		GtkWidget *menu = gtk_menu_new();	
 
-		if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(tree)) == 1)	
-		{
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PLAY,NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_search_activate), tree);
-		}
-
 		/* add the delete widget */
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
