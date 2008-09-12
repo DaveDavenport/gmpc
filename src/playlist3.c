@@ -1281,8 +1281,8 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
 
-        //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
-				gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
+        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+				//gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
 				gtk_label_set_width_chars(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), 0);
 
 				gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
@@ -1603,11 +1603,11 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
             gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
         }
         if(pl3_zoom == PLAYLIST_MINI) {
-            //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
-						gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
+            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+						//gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
         }else{
-            //gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
-						gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), string);
+            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
+						//gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), string);
         }
         q_free(string);
 	}
