@@ -141,7 +141,7 @@ public class Gmpc.Image : Gtk.EventBox {
 		}
 		private bool timeout_test()
 		{
-			fade -= 0.05;
+			fade -= 0.10;
 			if(fade <= 0.0){
 				this.cover = this.temp;
 				this.cover_border = this.temp_border;

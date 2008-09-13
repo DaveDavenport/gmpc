@@ -159,7 +159,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 
 static gboolean gmpc_image_timeout_test (GmpcImage* self) {
 	g_return_val_if_fail (GMPC_IS_IMAGE (self), FALSE);
-	self->priv->fade = self->priv->fade - (0.05);
+	self->priv->fade = self->priv->fade - (0.10);
 	if (self->priv->fade <= 0.0) {
 		GdkPixbuf* _tmp1;
 		GdkPixbuf* _tmp0;
