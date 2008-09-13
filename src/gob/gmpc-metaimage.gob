@@ -3,6 +3,7 @@ requires 2.0.0
 %ph{
 #include "main.h"
 #include "misc.h"
+#include "vala/gmpc_image.h"
 %}
 
 %headertop{
@@ -13,7 +14,6 @@ requires 2.0.0
 #else
 #include <gmpc/gmpc-connection.h>
 #endif
-
 #define MOUSE_DISTANCE 8
 %}
 
@@ -130,7 +130,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			export,
 			link);
 
-	private GtkWidget *image = { gtk_image_new()} ;
+	private GtkWidget *image = { gmpc_image_new()} ;
 	init (self)
 	{
 		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
@@ -150,13 +150,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 G_OBJECT(self));                            		
 
 
-		g_signal_connect(G_OBJECT(self), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), NULL);
-		g_signal_connect(G_OBJECT(self), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), NULL);
-		g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_menu_populate_callback), NULL);
-		g_signal_connect(G_OBJECT(self), "motion-notify-event" , G_CALLBACK(self_motion_notify_event), NULL);
+		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), self);
+		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), self);
+		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
+		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "motion-notify-event" , G_CALLBACK(self_motion_notify_event), self);
 
 		self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
-		gtk_widget_add_events(GTK_WIDGET(self), GDK_POINTER_MOTION_MASK);
+		gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 	}
 
@@ -214,6 +214,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				screenshot_add_border(&pb);	
 			gtk_container_add(GTK_CONTAINER(self->_priv->popup_win), image);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
+//			gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
 			/* position the thing */
 			self_popup_position(self);
 			gtk_widget_show_all(self->_priv->popup_win);
@@ -493,8 +494,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&err);
 			  if(!pb2)
 				  printf("uh owh %s\n", err->message);
-			  gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
-			  gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+			  //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
+				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 			  g_object_unref(pb2);
 			  self_image_changed(self,META_DATA_UNAVAILABLE);
 		}
@@ -517,7 +519,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->loading_cover_icon, self->size, 0,NULL);
         
-			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+//			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
 			if(self->squared)
 				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 			g_object_unref(pb2);
@@ -538,7 +541,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			GdkPixbuf *pb = NULL;
 
 			self->_priv->state = STATE_IMAGE;
-	
+			self->draw_shadow= 0;	
 			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*12,self->size-self->draw_shadow*12,TRUE,NULL);
 			if(self->_priv->image_url)
 			{
@@ -555,14 +558,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				self->_priv->image_url = g_strdup(path); 
 
                 
-				if(self->draw_border)
+/*				if(self->draw_border)
 					screenshot_add_border(&pb);	
                 if(!cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) || self->image_type != META_ALBUM_ART)
                 {
                     if(self->draw_shadow)
 					screenshot_add_shadow(&pb);
                 }
-				/** 
+	*/			/** 
 				 * Need to get pixbuf height/width before adding to image
 				 * if added to image, somehow the returned values don't match anymore
 				 */
@@ -597,8 +600,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     width += spineWidth;
 
                 }
-                gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
-                /**
+                //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
+								gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+								/**
                  * Set sizing, also set size on non-squared, so the widget resizes propperly
                  */
                 if(self->squared)

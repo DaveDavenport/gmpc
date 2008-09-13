@@ -26,6 +26,7 @@ sources=\
 	browsers/playlist3-find2-browser.c\
 	browsers/playlist3-metadata-browser.c\
 	browsers/playlist3-playlist-editor.c\
+	vala/gmpc_image.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -140,6 +141,7 @@ EXTRA_DIST=\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		bacon/bacon-message-connection.h\
+		vala/gmpc_image.h\
 		setup-assistant.h\
 		sm.h\
 		metadata.h\
