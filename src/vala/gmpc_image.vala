@@ -30,13 +30,11 @@ public class Gmpc.Image : Gtk.EventBox {
 	}
 	private void draw_curved_rectangle(Context ctx, double x0, double y0, double rect_width, double rect_height) {
 		double x1,y1;
-		double radius = rect_width/5;
+		double radius = 5;//rect_width/5;
 		x1=x0+rect_width;
 		y1=y0+rect_height;
 		if (rect_width == 0 || rect_height == 0)
 			return;
- /* We never come here */
-/*
 		if (rect_width/2<radius) {
 			if (rect_height/2<radius) {
 				ctx.move_to  (x0, (y0 + y1)/2);
@@ -53,7 +51,7 @@ public class Gmpc.Image : Gtk.EventBox {
 				ctx.curve_to ( x0, y1, x0, y1, x0, y1- radius);
 			}
 		}
-		else */
+		else 
 		{
 			if (rect_height/2<radius) {
 				ctx.move_to  ( x0, (y0 + y1)/2);
