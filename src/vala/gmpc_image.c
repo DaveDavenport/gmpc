@@ -202,6 +202,24 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 }
 
 
+void gmpc_image_clear_pixbuf (GmpcImage* self) {
+	GdkPixbuf* _tmp0;
+	GdkPixbuf* _tmp1;
+	g_return_if_fail (GMPC_IS_IMAGE (self));
+	self->priv->fade = 0.0;
+	_tmp0 = NULL;
+	self->priv->temp = (_tmp0 = NULL, (self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL))), _tmp0);
+	if (self->priv->fade_timeout > 0) {
+		g_source_remove (self->priv->fade_timeout);
+		self->priv->fade_timeout = ((guint) (0));
+	}
+	_tmp1 = NULL;
+	self->priv->cover = (_tmp1 = NULL, (self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL))), _tmp1);
+	self->priv->cover_border = FALSE;
+	gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+
 GmpcImage* gmpc_image_new (void) {
 	GmpcImage * self;
 	self = g_object_newv (GMPC_TYPE_IMAGE, 0, NULL);

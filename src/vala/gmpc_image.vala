@@ -167,4 +167,16 @@ public class Gmpc.Image : Gtk.EventBox {
 			}
 			fade_timeout = Timeout.add(50, this.timeout_test);
 		}
+		public void clear_pixbuf()
+		{
+			fade = 0.0;
+			this.temp = null;
+			if(fade_timeout>0) {
+				GLib.Source.remove(fade_timeout);
+				fade_timeout = 0;
+			}
+			this.cover = null;
+			this.cover_border = false;
+			this.queue_draw();
+		}
 	}
