@@ -32,7 +32,7 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self);
 static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, GdkEventExpose* event, gpointer self);
 static GObject * gmpc_image_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_image_parent_class = NULL;
-static void gmpc_image_finalize (GObject * obj);
+static void gmpc_image_dispose (GObject * obj);
 
 
 
@@ -252,7 +252,7 @@ static void gmpc_image_class_init (GmpcImageClass * klass) {
 	gmpc_image_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (GmpcImagePrivate));
 	G_OBJECT_CLASS (klass)->constructor = gmpc_image_constructor;
-	G_OBJECT_CLASS (klass)->finalize = gmpc_image_finalize;
+	G_OBJECT_CLASS (klass)->dispose = gmpc_image_dispose;
 }
 
 
@@ -267,7 +267,7 @@ static void gmpc_image_instance_init (GmpcImage * self) {
 }
 
 
-static void gmpc_image_finalize (GObject * obj) {
+static void gmpc_image_dispose (GObject * obj) {
 	GmpcImage * self;
 	self = GMPC_IMAGE (obj);
 	{
@@ -278,15 +278,17 @@ static void gmpc_image_finalize (GObject * obj) {
 	}
 	(self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)));
 	(self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)));
-	G_OBJECT_CLASS (gmpc_image_parent_class)->finalize (obj);
+	G_OBJECT_CLASS (gmpc_image_parent_class)->dispose (obj);
 }
 
 
 GType gmpc_image_get_type (void) {
-	static GType gmpc_image_type_id = 0;
-	if (gmpc_image_type_id == 0) {
+	static volatile gsize gmpc_image_type_id = 0;
+	if (g_once_init_enter (&gmpc_image_type_id)) {
+		GType gmpc_image_type_id_temp;
 		static const GTypeInfo g_define_type_info = { sizeof (GmpcImageClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) gmpc_image_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (GmpcImage), 0, (GInstanceInitFunc) gmpc_image_instance_init };
-		gmpc_image_type_id = g_type_register_static (GTK_TYPE_EVENT_BOX, "GmpcImage", &g_define_type_info, 0);
+		gmpc_image_type_id_temp = g_type_register_static (GTK_TYPE_EVENT_BOX, "GmpcImage", &g_define_type_info, 0);
+		g_once_init_leave (&gmpc_image_type_id, gmpc_image_type_id_temp);
 	}
 	return gmpc_image_type_id;
 }
