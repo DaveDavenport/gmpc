@@ -59,8 +59,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public int image_type = {META_ALBUM_ART};
 	public MpdObj *connection= {NULL};
 	public gboolean hide_on_na = {FALSE};
-	public gboolean draw_border = {TRUE};
-	public gboolean draw_shadow = {FALSE};
 	public gboolean squared = {TRUE};
 	public gchar *no_cover_icon = {g_strdup("gmpc-no-cover")} destroywith g_free;
 	public gchar *loading_cover_icon = {g_strdup("gmpc-loading-cover")} destroywith g_free;
@@ -111,18 +109,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = NULL,
 		export,
 		link);
-	property BOOLEAN draw_border
-		(nick = "DrawBorder",
-		 blurb = "Draw a border around the image",
-		 default_value = TRUE,
-		 export,
-		 link);
-	property BOOLEAN draw_shadow
-		(nick = "DrawShadow",
-		 blurb = "Draw a shadow under the image",
-		 default_value = FALSE,
-		export,
-		link);
+
 	property BOOLEAN squared
 		(nick = "Squared",
 			blurb = "Keep the widget squared",
@@ -130,7 +117,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			export,
 			link);
 
-	private GtkWidget *image = { gmpc_image_new()} ;
+	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
 	init (self)
 	{
 		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
@@ -210,11 +197,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			self->_priv->popup_h = gdk_pixbuf_get_height(pb);
 			self->_priv->popup_w = gdk_pixbuf_get_width(pb);
 
-			if(self->draw_border)
-				screenshot_add_border(&pb);	
+			screenshot_add_border(&pb);	
 			gtk_container_add(GTK_CONTAINER(self->_priv->popup_win), image);
 			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
-//			gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
 			/* position the thing */
 			self_popup_position(self);
 			gtk_widget_show_all(self->_priv->popup_win);
@@ -543,8 +528,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			GdkPixbuf *pb = NULL;
 
 			self->_priv->state = STATE_IMAGE;
-			self->draw_shadow= 0;	
-			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-self->draw_shadow*12,self->size-self->draw_shadow*12,TRUE,NULL);
+			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
 			if(self->_priv->image_url)
 			{
 				q_free(self->_priv->image_url);
@@ -559,56 +543,48 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				/* save url */
 				self->_priv->image_url = g_strdup(path); 
 
-                
-/*				if(self->draw_border)
-					screenshot_add_border(&pb);	
-                if(!cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) || self->image_type != META_ALBUM_ART)
-                {
-                    if(self->draw_shadow)
-					screenshot_add_shadow(&pb);
-                }
-	*/			/** 
+				/** 
 				 * Need to get pixbuf height/width before adding to image
 				 * if added to image, somehow the returned values don't match anymore
 				 */
 				width = gdk_pixbuf_get_width(pb);			
 				height = gdk_pixbuf_get_height(pb);
-                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
-                {
-                    float spineRatio = 60.0/600.0;
-                    int spineWidth = (width)*spineRatio;
-                    GdkPixbuf *pb2 = pb;
-                    GdkPixbuf *blank ;
-                    gchar *path2;
-                    /* Scale the cover to fit inside the case */
-                    pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth,height,GDK_INTERP_BILINEAR);
-                    g_object_unref(pb2);
+				if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
+				{
+					float spineRatio = 60.0/600.0;
+					int spineWidth = (width)*spineRatio;
+					GdkPixbuf *pb2 = pb;
+					GdkPixbuf *blank ;
+					gchar *path2;
+					/* Scale the cover to fit inside the case */
+					pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth,height,GDK_INTERP_BILINEAR);
+					g_object_unref(pb2);
 
-                    width = gdk_pixbuf_get_width(pb);			
-                    height = gdk_pixbuf_get_height(pb);
-                    /* load the case */
-                    path2 = gmpc_get_full_image_path("mpdBrowser_case.png"); 
-                    pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
-                    g_free(path2);
-                    /* render */
-                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width+spineWidth,height);
-                    gdk_pixbuf_fill(blank, 0x00000000);
-                    gdk_pixbuf_copy_area(pb, 0,0,width,height,blank,spineWidth,0);
-                    gdk_pixbuf_composite(pb2,blank,0,0,width+spineWidth,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
-                    
-                    g_object_unref(pb2);
-                    g_object_unref(pb);
-                    pb = blank;
-                    width += spineWidth;
+					width = gdk_pixbuf_get_width(pb);			
+					height = gdk_pixbuf_get_height(pb);
+					/* load the case */
+					path2 = gmpc_get_full_image_path("mpdBrowser_case.png"); 
+					pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
+					g_free(path2);
+					/* render */
+					blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width+spineWidth,height);
+					gdk_pixbuf_fill(blank, 0x00000000);
+					gdk_pixbuf_copy_area(pb, 0,0,width,height,blank,spineWidth,0);
+					gdk_pixbuf_composite(pb2,blank,0,0,width+spineWidth,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
 
-                }
-                //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
-								gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
-								/**
-                 * Set sizing, also set size on non-squared, so the widget resizes propperly
-                 */
-                if(self->squared)
-                {
+					g_object_unref(pb2);
+					g_object_unref(pb);
+					pb = blank;
+					width += spineWidth;
+
+				}
+				//gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
+				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+				/**
+				 * Set sizing, also set size on non-squared, so the widget resizes propperly
+				 */
+				if(self->squared)
+				{
 					gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 				}
 				else
