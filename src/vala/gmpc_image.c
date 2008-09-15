@@ -119,7 +119,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_new_path (ctx);
 		gmpc_image_draw_curved_rectangle (self, ctx, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)), ((double) (width - 2)), ((double) (height - 2)));
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
-		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)));
+		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->cover_border) {
 			cairo_clip_preserve (ctx);
 		} else {
@@ -137,7 +137,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
 		gmpc_image_draw_curved_rectangle (self, ctx, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)), ((double) (width - 2)), ((double) (height - 2)));
-		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)));
+		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->temp_border) {
 			cairo_clip_preserve (ctx);
 		} else {

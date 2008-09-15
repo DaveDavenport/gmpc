@@ -99,7 +99,7 @@ public class Gmpc.Image : Gtk.EventBox {
 				draw_curved_rectangle(ctx, x+(ww-width)/2+1,y+(wh-height)/2+1,width-2, height-2);
 
 				double fade2 = (fade <= 0)?1:fade;
-				Gdk.cairo_set_source_pixbuf(ctx, cover, x+(ww-width)/2+1,y+(wh-height)/2+1);
+				Gdk.cairo_set_source_pixbuf(ctx, cover, x+(ww-width)/2,y+(wh-height)/2);
 
 				if(cover_border)
 					ctx.clip_preserve();
@@ -121,7 +121,7 @@ public class Gmpc.Image : Gtk.EventBox {
 				height = temp.get_height();
 
 				draw_curved_rectangle(ctx, x+(ww-width)/2+1,y+(wh-height)/2+1,width-2, height-2);
-				Gdk.cairo_set_source_pixbuf(ctx, temp, x+(ww-width)/2+1,y+(wh-height)/2+1);
+				Gdk.cairo_set_source_pixbuf(ctx, temp, x+(ww-width)/2,y+(wh-height)/2);
 
 
 				if(temp_border)
