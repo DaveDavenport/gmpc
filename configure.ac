@@ -144,7 +144,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="de es fr gl hu it nl nb pl ru sv zh_CN"
+ALL_LINGUAS="bg cs de es fr gl hu it nl nb pl ru sv zh_CN"
 
 GETTEXT_PACKAGE=gmpc
 AC_SUBST(GETTEXT_PACKAGE)
