@@ -222,7 +222,7 @@ static void proxy_pref_construct(GtkWidget *container)
 
 void quit_easy_download(void)
 {
-    printf("quitting easy download\n");
+    debug_printf(DEBUG_INFO,"quitting easy download\n");
     quit = TRUE;
 }
 gmpcPrefPlugin proxyplug_pref = {

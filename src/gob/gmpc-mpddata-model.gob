@@ -169,10 +169,14 @@ requires 2.0.0
             {
                 for(i=0;i<self->num_rows;i++)
                 {
-                    if(self->_priv->images[i])
+                    if(self->_priv->images[i]) {
                         g_object_unref(self->_priv->images[i]);
+                        self->_priv->images[i] = NULL;
+                    }
                 }
                 q_free(self->_priv->images);
+                /* q_free should do it, but force it */
+                self->_priv->images = NULL;
             }
             PARENT_HANDLER(obj);
         }

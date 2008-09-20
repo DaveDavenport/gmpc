@@ -438,6 +438,7 @@ static void meta_data_retrieve_thread()
 		 */
 		
 		data = q_async_queue_pop(meta_commands);	
+        debug_printf(DEBUG_INFO, "Got a request with id: %i, this is a request of type: %i", data->type);
 		/* check if quit signal */
 		if(data->id == 0)
 		{
