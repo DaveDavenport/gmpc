@@ -125,6 +125,8 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 			}
 		}
 	}while(running && !quit);
+    if(quit)
+        debug_printf(DEBUG_INFO, "Forced quit easy_download");
 	/**
 	 * remove handler
 	 */

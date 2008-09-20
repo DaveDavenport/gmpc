@@ -677,11 +677,14 @@ void meta_data_destroy(void)
         g_free(mtd);
         debug_printf(DEBUG_INFO,"Done..");
     }
-    if(meta_commands)
+    if(meta_processing) {
         g_mutex_free(meta_processing);
-    if(meta_commands)
+        meta_processing = NULL;
+    }
+    if(meta_commands){
         q_async_queue_unref(meta_commands);
-    meta_processing = NULL;
+        meta_commands = NULL;
+    }
     /* Close the cover database  */
     cfg_close(cover_index);
 }
