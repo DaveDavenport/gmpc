@@ -270,11 +270,14 @@ int main (int argc, char **argv)
             else if (!strcasecmp(argv[i], _("--version")))
             {
                 printf(_("Gnome Music Player Client\n"));
+                printf("%s\n", GMPC_TAGLINE);
+                printf(GMPC_COPYRIGHT"\n\n");
                 printf("%s:\t%s\n",_("Version"), VERSION);
                 if(revision && revision[0] != '\0')
                 {
                     printf("%s:\t%s\n",_("Revision"),revision);
                 }
+                printf("%s:\t"GMPC_WEBSITE"\n",_("Website"));
                 exit(0);
             }
             /**

@@ -1704,6 +1704,7 @@ void about_window()
 	{
 		path = g_strdup_printf("%s\n%s\n",VERSION, GMPC_TAGLINE);
 	}
+    gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), GMPC_COPYRIGHT);
 	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), GMPC_WEBSITE);
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),path); 
 

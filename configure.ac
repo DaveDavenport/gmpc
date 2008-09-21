@@ -7,6 +7,7 @@ m4_define([gmpc_micro_version], [0])
 
 m4_define([gmpc_tagline], "Still 100% gnome free.")
 m4_define([gmpc_website], "http://gmpcwiki.sarine.nl")
+m4_define([gmpc_copyright], "Copyright 2003-2008 Qball Cow")
 m4_define([gmpc_bugtracker],  "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
 
 m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
@@ -19,14 +20,15 @@ AM_INIT_AUTOMAKE([gmpc], [gmpc_version],qball@sarine.nl)
 GMPC_MAJOR_VERSION=gmpc_major_version
 GMPC_MINOR_VERSION=gmpc_minor_version
 GMPC_MICRO_VERSION=gmpc_micro_version
+
 AC_DEFINE(GMPC_MAJOR_VERSION, gmpc_major_version, ["Major version of gmpc"])
 AC_DEFINE(GMPC_MINOR_VERSION, gmpc_minor_version, ["Minor version of gmpc"])
 AC_DEFINE(GMPC_MICRO_VERSION, gmpc_micro_version, ["Micro version of gmpc"])
 
-AC_DEFINE(GMPC_TAGLINE, 		gmpc_tagline, 	 ["Gmpc's tagline"])
-AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	 ["Gmpc's website"])
-AC_DEFINE(GMPC_BUGTRACKER, 	gmpc_bugtracker, ["Gmpc's bugtracker"])
-
+AC_DEFINE(GMPC_TAGLINE, 		gmpc_tagline, 	["Gmpc's tagline"])
+AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	["Gmpc's website"])
+AC_DEFINE(GMPC_BUGTRACKER, 	 gmpc_bugtracker,   ["Gmpc's bugtracker"])
+AC_DEFINE(GMPC_COPYRIGHT,     gmpc_copyright,   ["Gmpc's Copyright"])
 # Checks for programs.
 
 AC_PREREQ(2.59)
