@@ -21,28 +21,6 @@ void pl3_updating_changed(MpdObj *mi, int updating);
 void playlist_connection_changed(MpdObj *mi, int connect);
 gboolean playlist3_get_active(void);
 
-
-/*
-typedef enum {
-	PL_COLUMN_ICON,
-	PL_COLUMN_MARKUP,
-	PL_COLUMN_ARTIST,
-	PL_COLUMN_TRACK,
-	PL_COLUMN_TITLEFILE,
-	PL_COLUMN_FILEBASENAME,
-	PL_COLUMN_ALBUM,	
-	PL_COLUMN_GENRE,
-	PL_COLUMN_COMPOSER,
-	PL_COLUMN_PERFORMER,
-	PL_COLUMN_LENGTH,
-	PL_COLUMN_DISC,
-	PL_COLUMN_COMMENT,
-	PL_COLUMN_DATE,
-	PL_COLUMN_SONGPOS,
-	PL_COLUMN_TOTAL
-}PlaylistColumns;
-*/
-
 typedef enum {
 	PLAYLIST_NO_ZOOM,
 	PLAYLIST_SMALL,

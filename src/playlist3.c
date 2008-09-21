@@ -397,13 +397,17 @@ gboolean pl3_window_is_fullscreen(void)
 void pl3_window_fullscreen(void)
 {
 	GtkWidget *win = glade_xml_get_widget(pl3_xml, "pl3_win");
-	if(pl3_window_is_fullscreen())
-	{
-		gtk_window_unfullscreen(GTK_WINDOW(win));
-	}
-	else{
-		gtk_window_fullscreen(GTK_WINDOW(win));
-	}
+
+    if(pl3_zoom < PLAYLIST_MINI)
+    {
+        if(pl3_window_is_fullscreen())
+        {
+            gtk_window_unfullscreen(GTK_WINDOW(win));
+        }
+        else{
+            gtk_window_fullscreen(GTK_WINDOW(win));
+        }
+    }
 }
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
