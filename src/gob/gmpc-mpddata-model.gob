@@ -702,6 +702,12 @@ requires 2.0.0
                 q_free(self->_priv->req_artist);
             self->_priv->req_artist = (artist != NULL)?g_strdup(artist):NULL;
         }
+        public
+        const char *
+        get_request_artist(self)
+        {
+            return self->_priv->req_artist;
+        }
     public 
         long unsigned set_mpd_data(self, MpdData *data2)
         {
