@@ -772,7 +772,9 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 
         if(g_queue_get_length(cut_queue) > 0)
         {
-            item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
+            item = gtk_image_menu_item_new_with_label(_("Paste after"));
+            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                    gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
             g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), NULL);
         }
