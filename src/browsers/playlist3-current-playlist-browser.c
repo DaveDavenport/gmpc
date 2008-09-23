@@ -39,6 +39,10 @@
 #include "eggcolumnchooserdialog.h"
 #include "sexy-icon-entry.h"
 
+
+#include "playlist3-playlist-editor.h"
+
+
 static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
 static void pl3_current_playlist_browser_add(GtkWidget *cat_tree);

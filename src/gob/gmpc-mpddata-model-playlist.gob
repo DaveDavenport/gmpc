@@ -40,7 +40,7 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
 				int i = 0;
 				MpdData *data =  GMPC_MPDDATA_MODEL(self)->_priv->data;
 				data = mpd_data_get_first(data);
-				if(!data) return;
+				if(!data) return TRUE;
 				for(i=0; i < (self->_priv->last_pos);i++)
 				{
 					data = (MpdData *)mpd_data_get_next_real(data,FALSE);

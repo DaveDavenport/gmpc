@@ -33,6 +33,7 @@
 #include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
+#include "playlist3-playlist-editor.h"
 
 static void pl3_file_browser_edit_columns(void);
 

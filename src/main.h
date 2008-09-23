@@ -94,8 +94,8 @@ char *gmpc_get_full_image_path(char *filename);
 
 /* help */
 void info2_activate(void);
-void info2_fill_artist_view(char *);
-void info2_fill_album_view(char *, char *);
+void info2_fill_artist_view(const char *);
+void info2_fill_album_view(const char *,const char *);
 void info2_fill_song_view(mpd_Song *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
@@ -111,5 +111,6 @@ extern GladeXML *pl3_xml;
 
 /* Check if the playlist is fullscreen, this queries the _actual_ state */
 gboolean pl3_window_is_fullscreen(void);
+
 
 #endif

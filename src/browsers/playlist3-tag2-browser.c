@@ -309,10 +309,6 @@ static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
 	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));	
 	if(gtk_tree_selection_get_selected(sel, &(te->model), &iter))
 	{
-		MpdData *data;
-        GList *list = NULL;
-
-
         if(gtk_tree_selection_get_selected(sel, &(te->model), &iter))
         {
             gchar *value = NULL;
@@ -323,7 +319,7 @@ static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
                 info2_fill_artist_view(value);
 
             }else if (te->type == MPD_TAG_ITEM_ALBUM){
-                gchar *artist =  gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model));
+                const gchar *artist =  gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model));
                 if(artist) {
                     info2_activate();
                     info2_fill_album_view(artist,value);
@@ -477,9 +473,9 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
             /* TODO: This sets it many, uneeded times, fix that.. */
             if(artist){
                 if(!artist_set) {
-                    GList *first = g_list_first(browser->tag_lists);
-                    for(;first;first = first->next) {
-                        tag_element *te3 = first->data;
+                    GList *first_te = g_list_first(browser->tag_lists);
+                    for(;first_te;first_te = first_te->next) {
+                        tag_element *te3 = first_te->data;
                         gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
                     }
                     artist_set = TRUE;
@@ -1088,7 +1084,7 @@ static void tag2_browser_unselected(GtkWidget *container)
 		gtk_container_remove(GTK_CONTAINER(container), tag2_current);
 	tag2_current = NULL;
 }
-
+/*
 static void tag2_clear(tag_browser *browser)
 {
 	if(browser->tag2_vbox)
@@ -1100,6 +1096,7 @@ static void tag2_clear(tag_browser *browser)
 		browser->tag_lists = NULL;
 	}
 }
+*/
 static void tag2_save_browser(tag_browser *browser)
 {
 	GString *str = g_string_new("");
@@ -1126,6 +1123,7 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 		if(te != NULL && mpd_check_connected(connection) )
 		{
 			MpdData *data;
+            tag_element *te2 = NULL;
 /*
 			while(te){
 				te = g_list_next(te);
@@ -1137,7 +1135,7 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 			data = mpd_database_search_commit(connection);
 			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
 
-			tag_element *te2 = g_malloc0(sizeof(*te2));
+			te2 = g_malloc0(sizeof(*te2));
 			te2->index = -1;
 			te2->browser = te->browser;
 			tag2_changed(NULL, te2);

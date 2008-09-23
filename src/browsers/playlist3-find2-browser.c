@@ -34,6 +34,8 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 
+#include "playlist3-playlist-editor.h"
+
 static void pl3_find2_browser_edit_columns(void);
 static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);

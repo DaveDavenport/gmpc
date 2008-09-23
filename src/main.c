@@ -1000,7 +1000,7 @@ static void password_dialog(int failed)
 	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_password_window, "pass_label")),path);
 	q_free(path);
 
-	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_password_window, "password-dialog")), "response", password_dialog_response, xml_password_window);
+	g_signal_connect(G_OBJECT(glade_xml_get_widget(xml_password_window, "password-dialog")), "response", G_CALLBACK(password_dialog_response), xml_password_window);
 }
 
 

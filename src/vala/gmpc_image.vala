@@ -28,48 +28,48 @@ public class Gmpc.Image : Gtk.EventBox {
 		this.expose_event += this.on_expose;
 
 	}
-	private void draw_curved_rectangle(Context ctx, double x0, double y0, double rect_width, double rect_height) {
-		double x1,y1;
+	private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
+		double rect_x1,rect_y1;
 		double radius = 5;//rect_width/5;
-		x1=x0+rect_width;
-		y1=y0+rect_height;
+		rect_x1=rect_x0+rect_width;
+		rect_y1=rect_y0+rect_height;
 		if (rect_width == 0 || rect_height == 0)
 			return;
 		if (rect_width/2<radius) {
 			if (rect_height/2<radius) {
-				ctx.move_to  (x0, (y0 + y1)/2);
-				ctx.curve_to (x0 ,y0, x0, y0, (x0 + x1)/2, y0);
-				ctx.curve_to (x1, y0, x1, y0, x1, (y0 + y1)/2);
-				ctx.curve_to (x1, y1, x1, y1, (x1 + x0)/2, y1);
-				ctx.curve_to (x0, y1, x0, y1, x0, (y0 + y1)/2);
+				ctx.move_to  (rect_x0, (rect_y0 + rect_y1)/2);
+				ctx.curve_to (rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
+				ctx.curve_to (rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
+				ctx.curve_to (rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
+				ctx.curve_to (rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
 			} else {
-				ctx.move_to  ( x0, y0 + radius);
-				ctx.curve_to ( x0 ,y0, x0, y0, (x0 + x1)/2, y0);
-				ctx.curve_to ( x1, y0, x1, y0, x1, y0 + radius);
-				ctx.line_to ( x1 , y1 - radius);
-				ctx.curve_to ( x1, y1, x1, y1, (x1 + x0)/2, y1);
-				ctx.curve_to ( x0, y1, x0, y1, x0, y1- radius);
+				ctx.move_to  ( rect_x0, rect_y0 + radius);
+				ctx.curve_to ( rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
+				ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+				ctx.line_to ( rect_x1 , rect_y1 - radius);
+				ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
+				ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
 			}
 		}
 		else 
 		{
 			if (rect_height/2<radius) {
-				ctx.move_to  ( x0, (y0 + y1)/2);
-				ctx.curve_to ( x0 , y0, x0 , y0, x0 + radius, y0);
-				ctx.line_to ( x1 - radius, y0);
-				ctx.curve_to ( x1, y0, x1, y0, x1, (y0 + y1)/2);
-				ctx.curve_to ( x1, y1, x1, y1, x1 - radius, y1);
-				ctx.line_to ( x0 + radius, y1);
-				ctx.curve_to ( x0, y1, x0, y1, x0, (y0 + y1)/2);
+				ctx.move_to  ( rect_x0, (rect_y0 + rect_y1)/2);
+				ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
+				ctx.line_to ( rect_x1 - radius, rect_y0);
+				ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
+				ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+				ctx.line_to ( rect_x0 + radius, rect_y1);
+				ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
 			} else {
-				ctx.move_to  ( x0, y0 + radius);
-				ctx.curve_to ( x0 , y0, x0 , y0, x0 + radius, y0);
-				ctx.line_to ( x1 - radius, y0);
-				ctx.curve_to ( x1, y0, x1, y0, x1, y0 + radius);
-				ctx.line_to ( x1 , y1 - radius);
-				ctx.curve_to ( x1, y1, x1, y1, x1 - radius, y1);
-				ctx.line_to ( x0 + radius, y1);
-				ctx.curve_to ( x0, y1, x0, y1, x0, y1- radius);
+				ctx.move_to  ( rect_x0, rect_y0 + radius);
+				ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
+				ctx.line_to ( rect_x1 - radius, rect_y0);
+				ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+				ctx.line_to ( rect_x1 , rect_y1 - radius);
+				ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+				ctx.line_to ( rect_x0 + radius, rect_y1);
+				ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
 			}
 		}
 

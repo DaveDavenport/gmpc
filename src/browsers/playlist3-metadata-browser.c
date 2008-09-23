@@ -1178,7 +1178,7 @@ static int info2_sort_year(GtkWidget *a, GtkWidget *b)
     return 0;
 }
 
-void info2_fill_artist_view(char *artist)
+void info2_fill_artist_view(const char *artist)
 {
 	GtkWidget *expander,*hbox, *vbox,*button,*table,*table2,*gmtv,*ali,*label;
 	int i=0,items=0;
@@ -1452,7 +1452,7 @@ void info2_fill_artist_view(char *artist)
 /*****
  * View Album
  */
-void info2_fill_album_view(char *artist,char *album)
+void info2_fill_album_view(const char *artist,const char *album)
 {
 	GtkWidget *vbox 	= NULL;
 	GtkWidget *gmtv		= NULL;

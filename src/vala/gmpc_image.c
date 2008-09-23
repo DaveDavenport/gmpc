@@ -25,65 +25,65 @@ struct _GmpcImagePrivate {
 enum  {
 	GMPC_IMAGE_DUMMY_PROPERTY
 };
-static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double x0, double y0, double rect_width, double rect_height);
+static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event);
 static gboolean gmpc_image_timeout_test (GmpcImage* self);
 static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self);
 static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, GdkEventExpose* event, gpointer self);
 static GObject * gmpc_image_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_image_parent_class = NULL;
-static void gmpc_image_dispose (GObject * obj);
+static void gmpc_image_finalize (GObject * obj);
 
 
 
-static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double x0, double y0, double rect_width, double rect_height) {
-	double x1;
-	double y1;
+static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
+	double rect_x1;
+	double rect_y1;
 	double radius;
 	g_return_if_fail (GMPC_IS_IMAGE (self));
 	g_return_if_fail (ctx != NULL);
-	x1 = 0.0;
-	y1 = 0.0;
+	rect_x1 = 0.0;
+	rect_y1 = 0.0;
 	radius = ((double) (5));
 	/*rect_width/5;*/
-	x1 = x0 + rect_width;
-	y1 = y0 + rect_height;
+	rect_x1 = rect_x0 + rect_width;
+	rect_y1 = rect_y0 + rect_height;
 	if (rect_width == 0 || rect_height == 0) {
 		return;
 	}
 	if (rect_width / 2 < radius) {
 		if (rect_height / 2 < radius) {
-			cairo_move_to (ctx, x0, (y0 + y1) / 2);
-			cairo_curve_to (ctx, x0, y0, x0, y0, (x0 + x1) / 2, y0);
-			cairo_curve_to (ctx, x1, y0, x1, y0, x1, (y0 + y1) / 2);
-			cairo_curve_to (ctx, x1, y1, x1, y1, (x1 + x0) / 2, y1);
-			cairo_curve_to (ctx, x0, y1, x0, y1, x0, (y0 + y1) / 2);
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
 		} else {
-			cairo_move_to (ctx, x0, y0 + radius);
-			cairo_curve_to (ctx, x0, y0, x0, y0, (x0 + x1) / 2, y0);
-			cairo_curve_to (ctx, x1, y0, x1, y0, x1, y0 + radius);
-			cairo_line_to (ctx, x1, y1 - radius);
-			cairo_curve_to (ctx, x1, y1, x1, y1, (x1 + x0) / 2, y1);
-			cairo_curve_to (ctx, x0, y1, x0, y1, x0, y1 - radius);
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
 		}
 	} else {
 		if (rect_height / 2 < radius) {
-			cairo_move_to (ctx, x0, (y0 + y1) / 2);
-			cairo_curve_to (ctx, x0, y0, x0, y0, x0 + radius, y0);
-			cairo_line_to (ctx, x1 - radius, y0);
-			cairo_curve_to (ctx, x1, y0, x1, y0, x1, (y0 + y1) / 2);
-			cairo_curve_to (ctx, x1, y1, x1, y1, x1 - radius, y1);
-			cairo_line_to (ctx, x0 + radius, y1);
-			cairo_curve_to (ctx, x0, y1, x0, y1, x0, (y0 + y1) / 2);
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
 		} else {
-			cairo_move_to (ctx, x0, y0 + radius);
-			cairo_curve_to (ctx, x0, y0, x0, y0, x0 + radius, y0);
-			cairo_line_to (ctx, x1 - radius, y0);
-			cairo_curve_to (ctx, x1, y0, x1, y0, x1, y0 + radius);
-			cairo_line_to (ctx, x1, y1 - radius);
-			cairo_curve_to (ctx, x1, y1, x1, y1, x1 - radius, y1);
-			cairo_line_to (ctx, x0 + radius, y1);
-			cairo_curve_to (ctx, x0, y1, x0, y1, x0, y1 - radius);
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
 		}
 	}
 	cairo_close_path (ctx);
@@ -239,7 +239,6 @@ static GObject * gmpc_image_constructor (GType type, guint n_construct_propertie
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_IMAGE (obj);
 	{
-		gboolean _tmp0;
 		g_object_set (GTK_WIDGET (self), "app-paintable", TRUE, NULL);
 		gtk_event_box_set_visible_window (GTK_EVENT_BOX (self), FALSE);
 		g_signal_connect_object (GTK_WIDGET (self), "expose-event", ((GCallback) (_gmpc_image_on_expose_gtk_widget_expose_event)), self, 0);
@@ -252,7 +251,7 @@ static void gmpc_image_class_init (GmpcImageClass * klass) {
 	gmpc_image_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (GmpcImagePrivate));
 	G_OBJECT_CLASS (klass)->constructor = gmpc_image_constructor;
-	G_OBJECT_CLASS (klass)->dispose = gmpc_image_dispose;
+	G_OBJECT_CLASS (klass)->finalize = gmpc_image_finalize;
 }
 
 
@@ -267,7 +266,7 @@ static void gmpc_image_instance_init (GmpcImage * self) {
 }
 
 
-static void gmpc_image_dispose (GObject * obj) {
+static void gmpc_image_finalize (GObject * obj) {
 	GmpcImage * self;
 	self = GMPC_IMAGE (obj);
 	{
@@ -278,17 +277,15 @@ static void gmpc_image_dispose (GObject * obj) {
 	}
 	(self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)));
 	(self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)));
-	G_OBJECT_CLASS (gmpc_image_parent_class)->dispose (obj);
+	G_OBJECT_CLASS (gmpc_image_parent_class)->finalize (obj);
 }
 
 
 GType gmpc_image_get_type (void) {
-	static volatile gsize gmpc_image_type_id = 0;
-	if (g_once_init_enter (&gmpc_image_type_id)) {
-		GType gmpc_image_type_id_temp;
+	static GType gmpc_image_type_id = 0;
+	if (gmpc_image_type_id == 0) {
 		static const GTypeInfo g_define_type_info = { sizeof (GmpcImageClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) gmpc_image_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (GmpcImage), 0, (GInstanceInitFunc) gmpc_image_instance_init };
-		gmpc_image_type_id_temp = g_type_register_static (GTK_TYPE_EVENT_BOX, "GmpcImage", &g_define_type_info, 0);
-		g_once_init_leave (&gmpc_image_type_id, gmpc_image_type_id_temp);
+		gmpc_image_type_id = g_type_register_static (GTK_TYPE_EVENT_BOX, "GmpcImage", &g_define_type_info, 0);
 	}
 	return gmpc_image_type_id;
 }
