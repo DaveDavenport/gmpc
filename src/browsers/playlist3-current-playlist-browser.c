@@ -38,7 +38,7 @@
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
 #include "sexy-icon-entry.h"
-
+#include "playlist3-messages.h"
 
 #include "playlist3-playlist-editor.h"
 
@@ -76,6 +76,7 @@ GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
 static gboolean search_keep_open = FALSE;
 
+static GQueue *cut_queue = NULL;
 
 
 
@@ -134,6 +135,9 @@ static void pl3_cp_init()
     pl3_current_playlist_browser_init();
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), NULL);
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), NULL);
+
+
+    cut_queue = g_queue_new();
 
 }
 
@@ -631,6 +635,114 @@ static void pl3_current_playlist_browser_edit_columns(void)
   gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_cp_tree));
 }
 
+/** Cut/paste support */
+static void pl3_current_playlist_browser_cut_songs()
+{
+    /* grab the selection from the tree */
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
+
+    /** Clear the cut queue */
+    g_queue_foreach(cut_queue, (GFunc)g_free, NULL);
+    g_queue_clear(cut_queue);
+    /* check if where connected */
+    /* see if there is a row selected */
+    if (gtk_tree_selection_count_selected_rows (selection) > 0)
+    {
+        GList *list = NULL, *llist = NULL;
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+        /* start a command list */
+        /* grab the selected songs */
+        list = gtk_tree_selection_get_selected_rows (selection, &model);
+        /* grab the last song that is selected */
+        llist = g_list_last (list);
+        /* remove every selected song one by one */
+        do{
+            GtkTreeIter iter;
+            int value;
+            gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+            /* Trick that avoids roundtrip to mpd */
+            {
+                char *path = NULL;
+                /* this one allready has the pos. */
+                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
+                g_queue_push_head(cut_queue, path);
+                printf("Adding %s to queue\n", path);
+                value--;
+            } 
+            mpd_playlist_queue_delete_pos(connection, value);			
+        } while ((llist = g_list_previous (llist)));
+        mpd_playlist_queue_commit(connection);
+        /* free list */
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free (list);
+    }
+    /* update everything if where still connected */
+    gtk_tree_selection_unselect_all(selection);
+}
+
+static void pl3_current_playlist_browser_paste_after_songs()
+{
+    /* grab the selection from the tree */
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
+
+    int seen= 0;
+    /* check if where connected */
+    /* see if there is a row selected */
+    if (gtk_tree_selection_count_selected_rows (selection) > 0)
+    {
+        GList *list = NULL, *llist = NULL;
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+        /* start a command list */
+        /* grab the selected songs */
+        list = gtk_tree_selection_get_selected_rows (selection, &model);
+        /* grab the last song that is selected */
+        llist = g_list_last (list);
+        /* remove every selected song one by one */
+        if(llist){
+            GtkTreeIter iter;
+            gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+            /* Trick that avoids roundtrip to mpd */
+            {
+                int id;
+                char *path = NULL;
+                int length = mpd_playlist_get_playlist_length(connection);
+                while((path = g_queue_pop_tail(cut_queue)))
+                {
+                    int song_id = mpd_playlist_add_get_id(connection, path);
+                    if(song_id == -1 && seen)
+                    {
+                        playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
+                        seen = 1;
+                    }
+                    gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
+                    printf("moving %i %i\n", length, id);
+                    mpd_playlist_move_pos(connection, length, id);
+                    g_free(path);
+                    length++;
+                }
+            }
+        }
+        /* free list */
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free (list);
+    }else{
+            char *path = NULL;
+            while((path = g_queue_pop_head(cut_queue)))
+            {
+                int song_id = mpd_playlist_add_get_id(connection, path);
+                if(song_id == -1 && seen)
+                {
+                    playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
+                    seen = 1;
+                }
+                g_free(path);
+            }
+
+        }
+
+}
+
+
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 {
 	if(event->button == 3)
@@ -643,13 +755,27 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs), NULL);
-
 		/* add the delete widget */
 		item = gtk_image_menu_item_new_with_label(_("Crop"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_crop_selected_songs), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
+
+        /* Cut/Paste */
+        item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT, NULL);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_cut_songs), NULL);
+
+        if(g_queue_get_length(cut_queue) > 0)
+        {
+            item = gtk_image_menu_item_new_from_stock(GTK_STOCK_PASTE, NULL);
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), NULL);
+        }
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
 		/* add the clear widget */
