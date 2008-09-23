@@ -71,6 +71,9 @@ requires 2.0.0
 
     private gulong playtime = {0};
 
+
+    private gboolean use_images = TRUE;
+
     property BOOLEAN has_up
         (nick = "Has Up",
          blurb = "Show an 'up row",
@@ -165,7 +168,7 @@ requires 2.0.0
                 mpd_data_free(self->_priv->data);
                 self->_priv->data = NULL;
             }
-            if(self->_priv->images)
+            if(self->_priv->images && self->_priv->use_images)
             {
                 for(i=0;i<self->num_rows;i++)
                 {
@@ -326,6 +329,9 @@ requires 2.0.0
                     int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                     Self *self = GMPC_MPDDATA_MODEL(model);
                     GtkTreeIter iter;
+
+                    g_assert(self->_priv->use_images == TRUE);
+
                     gtk_tree_model_get_iter(model, &iter, path);
                     n = GPOINTER_TO_INT(iter.user_data2) ;
                     if(ret == META_DATA_AVAILABLE)
@@ -400,46 +406,51 @@ requires 2.0.0
 
             if(column == MPDDATA_MODEL_META_DATA)
             {
-                if(self->_priv->images[n] == NULL)
+                if(self->_priv->use_images)
                 {
-                    int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
-                    if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
+                    if(self->_priv->images[n] == NULL)
                     {
-                        mpd_Song *song;
-                        GtkTreePath *path;
-                        GtkTreeRowReference *ref;
-                        self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
-                        song = mpd_newSong();
-                        song->artist = g_strdup(data->tag);
-                        song->album = NULL; 
-                        path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
-                        ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
-                        gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ARTIST_ART, (MetaDataCallback)self_cover_art_fetched, (gpointer)ref);
-                        mpd_freeSong(song);	
-                        gtk_tree_path_free(path);
-                    }
+                        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
+                        if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
+                        {
+                            mpd_Song *song;
+                            GtkTreePath *path;
+                            GtkTreeRowReference *ref;
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
+                            song = mpd_newSong();
+                            song->artist = g_strdup(data->tag);
+                            song->album = NULL; 
+                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
+                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
+                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ARTIST_ART, (MetaDataCallback)self_cover_art_fetched, (gpointer)ref);
+                            mpd_freeSong(song);	
+                            gtk_tree_path_free(path);
+                        }
 
-                    else if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM && self->_priv->req_artist)
-                    {
-                        mpd_Song *song;
-                        GtkTreePath *path;
-                        GtkTreeRowReference *ref;
-                        self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
-                        song = mpd_newSong();
-                        song->artist = g_strdup(self->_priv->req_artist); 
-                        song->album = g_strdup(data->tag);
-                        path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
-                        ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
-                        gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
-                        mpd_freeSong(song);	
-                        gtk_tree_path_free(path);
+                        else if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM && self->_priv->req_artist)
+                        {
+                            mpd_Song *song;
+                            GtkTreePath *path;
+                            GtkTreeRowReference *ref;
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
+                            song = mpd_newSong();
+                            song->artist = g_strdup(self->_priv->req_artist); 
+                            song->album = g_strdup(data->tag);
+                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
+                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
+                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
+                            mpd_freeSong(song);	
+                            gtk_tree_path_free(path);
+                        }
+                        else 
+                        {
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", size, 0,NULL);
+                        }
                     }
-                    else 
-                    {
-                        self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", size, 0,NULL);
-                    }
+                    g_value_set_object(value, self->_priv->images[n]);
+                }else{
+                    g_value_set_object(value,NULL); 
                 }
-                g_value_set_object(value, self->_priv->images[n]);
             }
             if(column == MPDDATA_MODEL_USERDATA)
             {
@@ -739,7 +750,7 @@ requires 2.0.0
             self->num_rows =0;
 
             /* Free possible stored images */
-            if(self->_priv->images)
+            if(self->_priv->images && self->_priv->use_images)
             {
                 for(i=0;i<self->num_rows;i++)
                 {
@@ -795,7 +806,10 @@ requires 2.0.0
                         retval+= data2->song->time;
                 }
             }
-            self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
+            if(self->_priv->use_images)
+            {
+                self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
+            }
 
             self->_priv->playtime = retval;
             self_playtime_changed(self, self->_priv->playtime);
@@ -988,7 +1002,7 @@ requires 2.0.0
             GtkTreeIter iter;
 
             /* Free possible stored images */
-            if(self->_priv->images)
+            if(self->_priv->images && self->_priv->use_images)
             {
                 for(i=0;i<self->num_rows;i++)
                 {
@@ -1128,7 +1142,8 @@ requires 2.0.0
             if(data2)
                 g_assert(self->_priv->data != NULL);
 
-            self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
+            if(self->_priv->use_images)
+                self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
             if(data2)
                 mpd_data_free(data2);
             g_assert(items == self->num_rows);
@@ -1154,5 +1169,13 @@ requires 2.0.0
     {
 	    g_assert(iter->stamp == self->_priv->stamp);
 	    return GPOINTER_TO_INT(iter->user_data2);
+    }
+
+    public
+    void
+    disable_image(self)
+    {
+        g_assert(self->_priv->data == NULL);
+        self->_priv->use_images = FALSE;
     }
 }
