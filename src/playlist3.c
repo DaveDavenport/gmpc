@@ -644,11 +644,11 @@ int pl3_hide()
 void pl3_updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = _("MPD database is updating");
+    printf("update changed callback %i %p\n",updating, pl3_xml );
 	if(pl3_xml != NULL)
 	{
 		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
-		updating_id = 0;
 		if(updating >0)
 		{
 			updating_id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
@@ -657,11 +657,11 @@ void pl3_updating_changed(MpdObj *mi, int updating)
 
 			playlist3_show_error_message(_("<b>MPD is updating its database</b>"), ERROR_INFO);
 		}
-		else if(updating_id != 0)
+		else if(updating_id > 0) 
 		{
 			playlist3_show_error_message(_("<b>MPD finished updating its database</b>"), ERROR_INFO);
-
-		}
+            updating_id = 0;
+        }
 	}
 }
 
@@ -1431,7 +1431,7 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	/**
 	 * Make sure the updating is actually in the right state
 	 */
-	pl3_updating_changed(connection,-1);
+//	pl3_updating_changed(connection,-1);
 }
 /**
  * Update the window to status changes in mpd
