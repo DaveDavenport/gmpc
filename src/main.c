@@ -117,7 +117,7 @@ static void connection_changed(MpdObj *mi, int connect, gpointer data);
 
 
 /** Error callback */
-static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
+static int error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data);
 
 /** init stock icons */
 static void init_stock_icons(void);
@@ -970,7 +970,7 @@ static void password_dialog_response(GtkWidget *dialog, gint response,gpointer d
 		default:
 			if(mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
 			{
-				show_error_message(_("GMPC has insufficient permissions on the mpd server."),FALSE);
+				playlist3_show_error_message(_("GMPC has insufficient permissions on the mpd server."),ERROR_CRITICAL);
 				mpd_disconnect(connection);
 			}
 			break;
@@ -1009,7 +1009,7 @@ void send_password()
 	password_dialog(FALSE);
 }
 
-static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
+static int error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer data)
 {
 	int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT);
 	/* if we are not connected we show a reconnect */
@@ -1018,7 +1018,7 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 		GtkWidget *button;
 		char *str;
 		/* no response? then we just ignore it when autoconnecting. */
-		if(error_id == 15 && autoconnect) return;
+		if(error_id == 15 && autoconnect) return FALSE;
 
 		str = g_markup_printf_escaped("<b>%s %i: %s</b>",_("error code"), error_id, error_msg);
 		playlist3_show_error_message(str, ERROR_CRITICAL);
@@ -1035,7 +1035,15 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 			return;
 		}
 		else */
-            if(error_id == MPD_ACK_ERROR_PASSWORD)
+
+        if(setup_assistant_is_running() && (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD))
+        {
+			gchar *str = g_markup_printf_escaped("<b>%s</b>",_("Insufficient permission to connect to mpd. Check password") );
+            setup_assistant_set_error(str);
+            q_free(str);
+            return TRUE;
+        }
+        if(error_id == MPD_ACK_ERROR_PASSWORD)
 		{
 			password_dialog(TRUE);
 		}
@@ -1049,6 +1057,7 @@ static void error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer d
 			g_free(str);
 		}
 	}
+    return FALSE;
 }
 
 /**
@@ -1068,29 +1077,22 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
 		/**
 		 * Check version
 		 */
-		if(connected && !mpd_server_check_version(mi, 0,13,0))
-	  {	
-			/* disable user connect ! */
-			gmpc_connected = FALSE;
-			mpd_disconnect(mi);
-			/* Give error */
-			printf("Wrong mpd version\n");
-			playlist3_show_error_message(_("<b>MPD versions before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
-		}
-    /* remove this when it does not fix it */
-    gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
-}
-
-static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connected, gpointer data)
-{
-    int i=0;
+    if(connected && !mpd_server_check_version(mi, 0,13,0))
+    {	
+        /* disable user connect ! */
+        gmpc_connected = FALSE;
+        mpd_disconnect(mi);
+        /* Give error */
+        printf("Wrong mpd version\n");
+        playlist3_show_error_message(_("<b>MPD versions before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
+    }
+    /* Remove timeout */
     if(connected)
     {
         if(autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
         autoconnect_timeout = 0;
     }
-
     /**
      * send password, first thing we do, if connected 
      */
@@ -1103,9 +1105,31 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     }	
 
     /**
+     * force an update of status, to check password
+     */
+    if(connected)
+    {
+        mpd_status_update(mi);
+        if(connected != mpd_check_connected(mi)){
+            debug_printf(DEBUG_ERROR, "State differs, exit");
+            /* Probly disconnected when getting status..   exiting */
+            return;
+        }
+    }
+
+    /* remove this when it does not fix it */
+    gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
+}
+
+static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connected, gpointer data)
+{
+    int i=0;
+
+
+    /**
      * propegate signals
      */
-    debug_printf(DEBUG_INFO, "Connection changed\n");
+    debug_printf(DEBUG_INFO, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
     playlist_connection_changed(mi, connected);
     for(i=0; i< num_plugins; i++)
     {
@@ -1113,14 +1137,17 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
         if(plugins[i]->mpd_connection_changed!= NULL)
         {
             plugins[i]->mpd_connection_changed(mi,connected,NULL);
+
         }
+    
     }
 
     /**
      * force an update of status
      */
-    mpd_status_update(mi);
-
+    if(connected)
+        mpd_status_update(mi);
+/*
     if(connected && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
             mpd_check_connected(connection))
     {
@@ -1132,6 +1159,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
             gtk_widget_show(GTK_WIDGET(dialog));
         }
     }
+    */
     if(connected)
     {
         playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);

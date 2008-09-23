@@ -625,6 +625,8 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles *prof,const int changed,
 
 static void gmpc_connection_changed_pref_win(GmpcConnection *object, MpdObj *mi, int connected, GladeXML *xml)
 { 
+    debug_printf(DEBUG_INFO, "set buttons %i", connected);
+    if(connected != mpd_check_connected(mi)) return;
 	if(!connected)
 	{
 		gtk_widget_set_sensitive(glade_xml_get_widget(xml, "bt_con"), TRUE);

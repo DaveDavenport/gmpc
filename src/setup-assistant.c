@@ -3,8 +3,23 @@
 #include "setup-assistant.h"
 
 extern gmpcPlugin connection_plug;
-GtkWidget *con_pref = NULL;
+GtkWidget *con_pref = NULL, *error_label = NULL;
 gulong  connect_signal = 0;
+
+gboolean sa_running  = FALSE;
+
+gboolean setup_assistant_is_running(void)
+{
+    return sa_running;
+}
+
+void setup_assistant_set_error(char *error)
+{
+    if(error_label)
+    {
+        gtk_label_set_markup(GTK_LABEL(error_label), error);
+    }
+}
 
 static void destroy_assistant(GtkAssistant *assistant)
 {
@@ -22,6 +37,8 @@ static void destroy_assistant(GtkAssistant *assistant)
         g_signal_handler_disconnect(G_OBJECT(gmpcconn), connect_signal);
         connect_signal = 0;
     }
+    error_label = NULL;
+    sa_running = FALSE;
 }
 
 
@@ -44,8 +61,14 @@ static void connection_changed_assistant(GmpcConnection *gc,MpdObj *mi, int conn
     GtkAssistant *assistant = GTK_ASSISTANT(data);
     if(con_pref)
     {
-        gtk_assistant_set_page_complete (GTK_ASSISTANT (assistant), con_pref, connect);
-
+        gtk_assistant_set_page_complete (GTK_ASSISTANT (assistant), gtk_widget_get_parent(con_pref), mpd_check_connected(mi));
+        if(mpd_check_connected(mi))
+        {
+            if(error_label)
+            {
+                gtk_label_set_text(GTK_LABEL(error_label), "");
+            }
+        }
     }
 }
 
@@ -57,6 +80,8 @@ void setup_assistant(void)
     GtkWidget *assistant = gtk_assistant_new();
 
     gtk_window_set_default_size (GTK_WINDOW (assistant), 400, 300);
+
+    sa_running = TRUE;
 
     /**
      * Header image
@@ -76,10 +101,14 @@ void setup_assistant(void)
     /**
      * Add a configure page
      */
-    page = con_pref = gtk_event_box_new(); 
+    page = gtk_vbox_new(FALSE, 6);
+    con_pref = gtk_event_box_new(); 
+    error_label = gtk_label_new("");
     gtk_container_set_border_width(GTK_CONTAINER(page), 8);
     connection_plug.pref->construct(con_pref);
-    gtk_widget_show (page);
+    gtk_box_pack_start(GTK_BOX(page), con_pref, TRUE, TRUE,0);
+    gtk_box_pack_start(GTK_BOX(page), error_label, FALSE, FALSE,0);
+    gtk_widget_show_all (page);
     gtk_assistant_append_page (GTK_ASSISTANT (assistant), page);
     /* set up header */
     gtk_assistant_set_page_header_image(GTK_ASSISTANT(assistant), page, header_pb);
