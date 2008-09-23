@@ -746,6 +746,7 @@ static void pl3_current_playlist_browser_paste_after_songs()
                 int id;
                 char *path = NULL;
                 int length = mpd_playlist_get_playlist_length(connection);
+                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
                 while((path = g_queue_pop_tail(cut_queue)))
                 {
                     int song_id = mpd_playlist_add_get_id(connection, path);
@@ -754,9 +755,71 @@ static void pl3_current_playlist_browser_paste_after_songs()
                         playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
                         seen = 1;
                     }
-                    gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
                     mpd_playlist_move_pos(connection, length, id);
                     g_free(path);
+                    length++;
+                }
+            }
+        }
+        /* free list */
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free (list);
+    }else{
+            char *path = NULL;
+            while((path = g_queue_pop_head(cut_queue)))
+            {
+                int song_id = mpd_playlist_add_get_id(connection, path);
+                if(song_id == -1 && seen)
+                {
+                    playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
+                    seen = 1;
+                }
+                g_free(path);
+            }
+
+        }
+
+}
+static void pl3_current_playlist_browser_paste_before_songs()
+{
+    /* grab the selection from the tree */
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
+
+    int seen= 0;
+    /* check if where connected */
+    /* see if there is a row selected */
+    if (gtk_tree_selection_count_selected_rows (selection) > 0)
+    {
+        GList *list = NULL, *llist = NULL;
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
+        /* start a command list */
+        /* grab the selected songs */
+        list = gtk_tree_selection_get_selected_rows (selection, &model);
+        /* grab the last song that is selected */
+        llist = g_list_last (list);
+        /* remove every selected song one by one */
+        if(llist){
+            GtkTreeIter iter;
+            gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+            /* Trick that avoids roundtrip to mpd */
+            {
+                int id;
+                char *path = NULL;
+                int length = mpd_playlist_get_playlist_length(connection);
+                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
+                while((path = g_queue_pop_head(cut_queue)))
+                {
+                    int song_id = mpd_playlist_add_get_id(connection, path);
+                    if(song_id == -1 && seen)
+                    {
+                        playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
+                        seen = 1;
+                    }
+                    mpd_playlist_move_pos(connection, length, id-1);
+                    g_free(path);
+                    /* The song is now one lower */
+                    id++;
+                    /* length one longer */
                     length++;
                 }
             }
@@ -815,6 +878,12 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 
         if(g_queue_get_length(cut_queue) > 0)
         {
+            item = gtk_image_menu_item_new_with_label(_("Paste before"));
+            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                    gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), NULL);
+
             item = gtk_image_menu_item_new_with_label(_("Paste after"));
             gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                     gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
