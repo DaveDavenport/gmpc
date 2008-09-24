@@ -3,7 +3,7 @@
 
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [16])
-m4_define([gmpc_micro_version], [0])
+m4_define([gmpc_micro_version], [1])
 
 m4_define([gmpc_tagline], "Still 100% gnome free.")
 m4_define([gmpc_website], "http://gmpcwiki.sarine.nl")
