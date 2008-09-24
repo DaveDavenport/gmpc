@@ -223,6 +223,10 @@ int main (int argc, char **argv)
      */
     gchar *url = NULL;
 
+
+    INIT_TIC_TAC()
+
+
     /* *
      * Set the debug level
      */
@@ -245,6 +249,8 @@ int main (int argc, char **argv)
 
 #endif
     gtk_set_locale();
+
+    TEC("Setting up locale")
     /**
      * Parse Command line options
      */
@@ -335,6 +341,7 @@ int main (int argc, char **argv)
         }
 
     }
+    TEC("Parsing command line options")
     /** Init before threads are active.. */
     debug_printf(DEBUG_INFO, "Initialize curl_global_init");
     {
@@ -355,6 +362,8 @@ int main (int argc, char **argv)
 
     }	
 
+    TEC("Initializing libcurl")
+
     /**
      *  initialize threading 
      */
@@ -369,11 +378,14 @@ int main (int argc, char **argv)
 	/* So it is enabled for all non-win32 platforms */
     gdk_threads_init();
 #endif
+    TEC("Initializing threading")
     /*
      * initialize gtk
      */
     debug_printf(DEBUG_INFO, "Initializing gtk ");
     gtk_init (&argc, &argv);
+
+    TEC("Initializing gtk")
     /** 
      * Check libmpd version runtime
      */
@@ -389,6 +401,7 @@ int main (int argc, char **argv)
 	 * 	Check if the path needed path are available, if not, create them
 	 */
     create_gmpc_paths();
+    TEC("Check version and create paths")
 
     /* do the clean config stuff */
     if(clean_config)
@@ -401,6 +414,7 @@ int main (int argc, char **argv)
         printf("Done..\n");
 		/* Destroy the meta data system and exit. */
         meta_data_destroy();
+        TEC("Database cleanup")
         return 1;
     }
 
@@ -433,10 +447,12 @@ int main (int argc, char **argv)
 		/* this is an error so bail out correctly */
         abort();
     }
+    TEC("Opening config file: %s", url)
     /**
      * cleanup 
      */
     q_free(url);
+
     /** 
      * If requested, output debug info to file 
      */
@@ -458,6 +474,7 @@ int main (int argc, char **argv)
             debug_set_level(DEBUG_INFO);
             debug_printf(DEBUG_INFO,"***** Opened debug log file\n");
             q_free(url);
+            TEC("Enabled Debug log")
         }
     }
 	/**
@@ -497,7 +514,7 @@ int main (int argc, char **argv)
 	if(url){
 		q_free(url);
 	}
-
+    TEC("New version check")
 
 
 #ifndef WIN32
@@ -523,6 +540,7 @@ int main (int argc, char **argv)
                     bacon_message_connection_free (bacon_connection);
                     cfg_close(config);
                     config = NULL;
+                    TEC("IPC setup and quitting")
                     exit(0);
                 }
             }
@@ -541,30 +559,34 @@ int main (int argc, char **argv)
             exit(0);
         }
     }
+    TEC("IPC setup")
 #endif
     /**
      * Setup session support
      */
 #ifdef ENABLE_SM
     smc_connect(argc, argv);
+    TEC("Session manager setup")
 #endif	
     gmpc_idle = gmpc_idle_new();
     /** Signals */
     gmpc_signals = gmpc_signals_new();
 
     gmpc_profiles = gmpc_profiles_new();
+    TEC("Setting up gmpc idle,signals and profiles")
     /**
      * Initialize the new metadata subsystem.
      * (Will spawn a new thread, so have to be after the init threading 
      */
     meta_data_init();
+    TEC("Initializing metadata system")
 
     /**
      * stock icons
      */
     debug_printf(DEBUG_INFO, "Loading stock icons");
     init_stock_icons ();
-
+    TEC("Init stock icons")
     /**
      * Create connection object 
      */
@@ -578,7 +600,7 @@ int main (int argc, char **argv)
         show_error_message(_("Failed to setup libmpd"), TRUE);
         abort();
     }
-
+    TEC("Setting up mpd connection object")
     /**
      * Connect signals to the connection object
      */
@@ -591,11 +613,13 @@ int main (int argc, char **argv)
     gmpcconn = (GmpcConnection *)gmpc_connection_new();
     g_signal_connect(G_OBJECT(gmpcconn), "connection_changed", G_CALLBACK(connection_changed_real),NULL);
     g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(gmpc_status_changed_callback_real), NULL);
+
+    TEC("Setting up mpd object signal system")
 	/**
 	 * New Metadata object 
 	 */
 	gmw = gmpc_meta_watcher_new();
-
+    TEC("Initializing metadata watcher")
 
 
 
@@ -630,7 +654,7 @@ int main (int argc, char **argv)
 	plugin_add(&playlist_editor_plugin,0);
 
 	plugin_add(&proxyplug,0);
-
+    TEC("Loading internal plugins")
 
     /**
      *  load dynamic plugins 
@@ -638,18 +662,18 @@ int main (int argc, char **argv)
     if(load_plugins)
     {
 #ifdef WIN32
-	packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-    url = g_build_filename(packagedir, "data", "plugins", NULL);
-	q_free(packagedir);
+        packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+        debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+        url = g_build_filename(packagedir, "data", "plugins", NULL);
+        q_free(packagedir);
 
-    plugin_load_dir(url);
-    q_free(url);
+        plugin_load_dir(url);
+        q_free(url);
 #else
-    /* This is the right location to load gmpc plugins */
-    url = g_build_path(G_DIR_SEPARATOR_S,PACKAGE_LIB_DIR, "plugins",NULL);
-    plugin_load_dir(url);
-    q_free(url);
+        /* This is the right location to load gmpc plugins */
+        url = g_build_path(G_DIR_SEPARATOR_S,PACKAGE_LIB_DIR, "plugins",NULL);
+        plugin_load_dir(url);
+        q_free(url);
 #endif
     }
 	/* user space dynamic plugins */
@@ -663,6 +687,7 @@ int main (int argc, char **argv)
         if(load_plugins)
             plugin_load_dir(url);
 	}
+    TEC("Loading plugins from %s", url)
 	q_free(url);
 
 
@@ -672,6 +697,7 @@ int main (int argc, char **argv)
 		if(plugins[i]->init)
 		{
 			plugins[i]->init();
+            TEC("Initializing plugin: %s", plugins[i]->name)
 		}
 	}
 
@@ -679,6 +705,7 @@ int main (int argc, char **argv)
 	 * Ask user about added/removed provider plugins 
 	 */
 	meta_data_check_plugin_changed();
+    TEC("Metadata plugin changed check")
 
     /**
      * Create the main window
@@ -686,6 +713,7 @@ int main (int argc, char **argv)
 	debug_printf(DEBUG_INFO, "Create main window\n");
 	create_playlist3();
     playlist3_message_init();
+    TEC("Creating playlist window")
 
 
     /**
@@ -695,6 +723,7 @@ int main (int argc, char **argv)
     {
         setup_assistant();
         cfg_set_single_value_as_int(config, "Default", "first-run", 0);
+        TEC("Setup first run assistant")
     }
 
 	/** 
@@ -725,6 +754,7 @@ int main (int argc, char **argv)
     {
         gtk_init_add((GSourceFunc)pl3_hide, NULL);
     }
+    TEC("Setting up timers")
 
 #ifdef ENABLE_MMKEYS
 	/**
@@ -751,7 +781,7 @@ int main (int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_volume_up",    G_CALLBACK(volume_up), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_volume_down",  G_CALLBACK(volume_down), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_icon2_create_tooltip), NULL );
-
+    TEC("Setting up multimedia keys")
 
 #endif
 
@@ -1124,7 +1154,7 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
 static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connected, gpointer data)
 {
     int i=0;
-
+    INIT_TIC_TAC()
 
     /**
      * propegate signals
@@ -1137,7 +1167,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
         if(plugins[i]->mpd_connection_changed!= NULL)
         {
             plugins[i]->mpd_connection_changed(mi,connected,NULL);
-
+            TEC("Connection changed plugin: %s", plugins[i]->name)
         }
     
     }

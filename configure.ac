@@ -68,7 +68,19 @@ AC_ARG_ENABLE(mmkeys,
                 fi],
               enable_mmkeys=yes)
 
-
+# Maintainer mode
+AC_ARG_ENABLE([timing],
+	[--enable-timing Print timing debug output.],
+	[case "${enableval}" in
+		yes) enable_timing=true;;
+		no)  enable_timing=false;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-timing]);;
+	 esac],
+	[enable_timing=false])
+if test x${enable_timing} = xtrue;
+then
+    AC_DEFINE(DEBUG_TIMING, 1, [Enable timing output])
+fi
 # Checks for libraries.
 
 # Checks for header files.
@@ -254,24 +266,29 @@ echo ""
 echo ""
 echo "-------------- Status --------------"
 if test x$maintainer_mode = xtrue; then
-	echo "Maintainer mode is:			enabled"
+	echo "Maintainer mode is:               enabled"
 else
-	echo "Maintainer mode is:			disabled"
+	echo "Maintainer mode is:               disabled"
+fi
+if test x$enable_timing = xtrue; then
+	echo "Debug timing output is:           enabled"
+else
+	echo "Debug timing output is:           disabled"
 fi
 if test x${enable_mmkeys} = xyes; then
-	echo "Multimedia keys support is:  		enabled"
+	echo "Multimedia keys support is:       enabled"
 else
-	echo "Multimedia keys support is:  		disabled"
+	echo "Multimedia keys support is:       disabled"
 fi
 if test x${enable_sm} = xyes; then
-	echo "Session Manager support is:		enabled"
+	echo "Session Manager support is:       enabled"
 else
-	echo "Session Manager support is:		disabled"
+	echo "Session Manager support is:       disabled"
 fi
 if test x${enable_configdir} = xyes; then
-	echo "Use ~/.config/ for config files:	enabled"
+	echo "Use ~/.config/ for config files:  enabled"
 else
-	echo "Use ~/.config/ for config files:	disabled"
+	echo "Use ~/.config/ for config files:  disabled"
 fi
 
 

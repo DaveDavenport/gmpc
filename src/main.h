@@ -113,4 +113,33 @@ extern GladeXML *pl3_xml;
 gboolean pl3_window_is_fullscreen(void);
 
 
+#ifdef DEBUG_TIMING
+/* Tic Tac system */
+#define TIMER_SUB(start,stop,diff)  diff.tv_usec = stop.tv_usec - start.tv_usec;\
+        diff.tv_sec = stop.tv_sec - start.tv_sec;\
+        if(diff.tv_usec < 0) {\
+            diff.tv_sec -= 1; \
+            diff.tv_usec += G_USEC_PER_SEC; \
+        }
+
+#define INIT_TIC_TAC() GTimeVal start123, stop123,diff123;\
+    g_get_current_time(&start123);
+
+#define TAC(a,ARGS...) g_get_current_time(&stop123);\
+    TIMER_SUB(start123, stop123, diff123);\
+    printf(a": %lu s, %lu us\n",##ARGS, (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec));    
+
+#define TOC(a, ARGS...) TAC(a,ARGS...);\
+    start123 = stop123;
+
+#else // DEBUG_TIMING
+
+
+#define INIT_TIC_TAC() ;
+#define TAC(a, ARGS...) ;
+#define TOC(a, ARGS...) ;
+
+#endif // DEBUG_TIMING
+#define TEC(a, ARGS...) TAC(a, ##ARGS)
+
 #endif
