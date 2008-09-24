@@ -677,7 +677,8 @@ static void pl3_show_and_position_window()
 				pl3_wsize.y);
 	}
 	if(pl3_wsize.height>0 && pl3_wsize.width>0) {
-		gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+        debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
+        gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
 				pl3_wsize.width,
 				pl3_wsize.height);
 	}
@@ -1006,7 +1007,8 @@ void create_playlist3 ()
 					pl3_wsize.y);
 		}
 		if(pl3_wsize.height>0 && pl3_wsize.width>0) {
-			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+            debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
+            gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
 					pl3_wsize.width,
 					pl3_wsize.height);
 		}
