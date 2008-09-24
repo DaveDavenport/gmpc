@@ -14,6 +14,7 @@
 #  endif
 #else 
 #define _(String) String
+#define N_(String) String
 #endif
 
 #include "config-defaults.h"
