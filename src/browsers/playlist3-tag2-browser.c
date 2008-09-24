@@ -1133,7 +1133,7 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 
 			mpd_database_search_field_start(connection, te->type);
 			data = mpd_database_search_commit(connection);
-			gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+			gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
 
 			te2 = g_malloc0(sizeof(*te2));
 			te2->index = -1;
@@ -1168,7 +1168,8 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
     {
         if(tag2_ht)
         {
-/*            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
+            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
+            /*            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
             g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
   */      }
     }
