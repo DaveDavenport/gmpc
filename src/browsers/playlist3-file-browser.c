@@ -166,6 +166,7 @@ static void pl3_file_browser_init()
     int pos;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
+    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(pl3_fb_store2));
     g_signal_connect(G_OBJECT(pl3_fb_store2), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 

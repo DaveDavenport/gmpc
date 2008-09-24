@@ -210,6 +210,7 @@ static void pl3_find2_browser_init()
 	pl3_find2_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
 	pl3_find2_store2 = gmpc_mpddata_model_new();
+    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(pl3_find2_store2));
     g_signal_connect(G_OBJECT(pl3_find2_store2), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 

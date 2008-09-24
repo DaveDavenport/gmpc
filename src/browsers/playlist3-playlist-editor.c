@@ -578,6 +578,7 @@ static void playlist_editor_browser_init()
 
 
     playlist_editor_list_store= gmpc_mpddata_model_sort_new();
+    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist_editor_list_store));
     g_signal_connect(G_OBJECT(playlist_editor_list_store), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 

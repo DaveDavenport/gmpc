@@ -1000,6 +1000,7 @@ static void tag2_init_browser(tag_browser *browser) {
 	/** Create Songs list view */
 	/* create the treeview model, this is a GmpcMpdData model */
 	model = gmpc_mpddata_model_new();
+    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(model));
     g_signal_connect(G_OBJECT(model), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 	/* create scrolled window to make the treeview scrollable */
 	sw = gtk_scrolled_window_new(NULL,NULL);
