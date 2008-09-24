@@ -1064,6 +1064,26 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         pl3_current_playlist_browser_select_current_song();
         return TRUE;			
     }
+    else if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
+    {
+        pl3_current_playlist_browser_copy_songs();
+        return TRUE;
+    }
+    else if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
+    {
+        pl3_current_playlist_browser_cut_songs();
+        return TRUE;
+    }
+    else if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
+    {
+        pl3_current_playlist_browser_paste_after_songs();
+        return TRUE;
+    }
+    else if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
+    {
+        pl3_current_playlist_browser_paste_before_songs();
+        return TRUE;
+    }
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
         mod_fill_entry_changed(entry, NULL);

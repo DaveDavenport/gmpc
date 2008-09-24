@@ -1051,21 +1051,13 @@ static void tag2_browser_selected(GtkWidget *container)
                 tag_browser *tb = node->data;
                 if(tb)
                 {
- /*                   GList *list;*/
+
                     if(tb->tag2_vbox ==NULL)
                         tag2_init_browser(tb);
                     gtk_container_add(GTK_CONTAINER(container), tb->tag2_vbox);
                     gtk_widget_show_all(container);
                     tag2_current = tb->tag2_vbox;
-/*
-                    list = g_list_first(tb->tag_lists);
-                    if(list)
-                    {
-                        tag_element *te= list->data;
-                        gtk_widget_grab_focus(te->tree);
-                    }
 
-  */
                     playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(
                                     gtk_tree_view_get_model(tb->tag_songlist)))); 
                 }
@@ -1084,19 +1076,7 @@ static void tag2_browser_unselected(GtkWidget *container)
 		gtk_container_remove(GTK_CONTAINER(container), tag2_current);
 	tag2_current = NULL;
 }
-/*
-static void tag2_clear(tag_browser *browser)
-{
-	if(browser->tag2_vbox)
-	{
-		GtkTreeModel *model  = gtk_tree_view_get_model(GTK_TREE_VIEW(browser->tag_songlist));
-		gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(model), NULL);
-		g_list_foreach(browser->tag_lists, (GFunc)tag2_destroy_tag, NULL);
-		g_list_free(browser->tag_lists);
-		browser->tag_lists = NULL;
-	}
-}
-*/
+
 static void tag2_save_browser(tag_browser *browser)
 {
 	GString *str = g_string_new("");
@@ -1124,13 +1104,6 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 		{
 			MpdData *data;
             tag_element *te2 = NULL;
-/*
-			while(te){
-				te = g_list_next(te);
-			}
-
-*/
-
 			mpd_database_search_field_start(connection, te->type);
 			data = mpd_database_search_commit(connection);
 			gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
@@ -1150,16 +1123,11 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 
 static void tag2_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-//	if(tag2_ht)
-//	g_list_foreach(tag2_ht,(GFunc)tag2_clean, NULL);
-	/*tag2_clear();*/
 	if(connect && tag2_ht)
 	{
 		/* create tags */
 		g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
-
 	}
-
 }
 
 static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer data)
@@ -1169,9 +1137,7 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
         if(tag2_ht)
         {
             g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
-            /*            g_list_foreach(tag2_ht,(GFunc)tag2_clear, NULL);
-            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
-  */      }
+        }
     }
 }
 
