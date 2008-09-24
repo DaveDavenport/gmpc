@@ -568,7 +568,7 @@ gboolean pl3_close()
 	if(pl3_xml != NULL)
 	{
 		gtk_window_get_position(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.x, &pl3_wsize.y);
-		gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
+
 
 		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
 		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
@@ -576,6 +576,7 @@ gboolean pl3_close()
 
 		if(pl3_zoom <= PLAYLIST_SMALL)
 		{
+            gtk_window_get_size(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), &pl3_wsize.width, &pl3_wsize.height);
 			debug_printf(DEBUG_INFO,"pl3_close: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
