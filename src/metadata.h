@@ -35,4 +35,9 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 
 void meta_data_cleanup(void);
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data);
+
+
+#define METADATA_DIR ".covers"
+gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *extention);
+
 #endif
