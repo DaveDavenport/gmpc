@@ -1,6 +1,7 @@
 #ifndef __CONFIG_1_H__
 #define __CONFIG_1_H__
 #include <gtk/gtk.h>
+#include <libmpd/debug_printf.h>
 #define CFG_INT_NOT_DEFINED -65536
 
 typedef struct _config_obj config_obj;
@@ -66,6 +67,8 @@ void cfg_free_string(char *string);
 void cfg_remove_class(config_obj *cfg, char *class);
 
 void cfg_do_special_cleanup(config_obj *cfg);
+
+
 
 #define cfg_free_string(a)  g_free(a);a=NULL;
 #endif

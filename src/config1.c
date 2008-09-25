@@ -61,13 +61,14 @@ typedef struct _config_obj
 } _config_obj;
 
 static void __int_cfg_set_single_value_as_string(config_obj *, char *, char *, char *);
-static void cfg_save(config_obj *);
+static void cfg_save_real(config_obj *);
 static void __int_cfg_remove_node(config_obj *, config_node *);
 
 static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node);
 static config_node *cfg_add_class(config_obj *, char *);
 static config_node *cfg_new_node(void);
 static void cfg_add_child(config_node *, config_node *);
+#define cfg_save(a) debug_printf(DEBUG_INFO, "Save triggered");cfg_save_real(a)
 
 static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 {
@@ -306,6 +307,7 @@ void cfg_add_child(config_node *parent, config_node *child)
 static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 {
 	config_node *temp = NULL;
+
 	if(node == NULL)return;
 	/* find the first */
 	while(node->prev != NULL) node = node->prev;
@@ -346,12 +348,13 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	}
 }
 
-static void cfg_save(config_obj *cfgo)
+static void cfg_save_real(config_obj *cfgo)
 {
 	if(cfgo == NULL)
 	{
 		return;
 	}
+    debug_printf(DEBUG_INFO,"Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
 	if(cfgo->root != NULL)
 	{
 		FILE *fp = fopen(cfgo->url, "w");
