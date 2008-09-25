@@ -835,7 +835,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     gchar *retv= NULL;
     /* home dir */
     const gchar *homedir = g_get_home_dir();
-    g_assert(type >= META_QUERY_DATA_TYPES); 
+    g_assert(type < META_QUERY_DATA_TYPES); 
     {
         gchar *filename = NULL, *dirname = NULL;
         gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
@@ -851,31 +851,32 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
                 abort();
             }
         }
-        if(g_file_test(retv, G_FILE_TEST_IS_DIR)) {
+        if(!g_file_test(retv, G_FILE_TEST_IS_DIR)) {
             g_error("File exists but is not a directory: %s\n", retv);
             abort();
         }
         g_free(retv);
         if(type&(META_ALBUM_ART|META_ALBUM_TXT)) {
             gchar *temp ;
-            g_assert(song->album == NULL);
+            g_assert(song->album != NULL);
             temp =g_filename_from_utf8(song->album,-1,NULL,NULL,NULL); 
             filename = g_strdup_printf("%s.%s", temp,extention);
             g_free(temp);
         }else if(type&META_ARTIST_ART){
-            filename = g_strdup_printf("image.%s", extention);
+            filename = g_strdup_printf("artist_IMAGE.%s", extention);
         }else if (type&META_ARTIST_TXT){
-            filename = g_strdup_printf("BIOGRAPHY.%s", extention);
+            filename = g_strdup_printf("artist_BIOGRAPHY.%s", extention);
         }else if (type&META_SONG_TXT) {
             gchar *temp ;
-            g_assert(song->title == NULL);
+            g_assert(song->title != NULL);
             temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
-            filename = g_strdup_printf("%s.%s", temp,extention);
+            filename = g_strdup_printf("%s_LYRIC.%s", temp,extention);
             g_free(temp);
         }
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,filename,NULL);
         g_free(filename);
         g_free(dirname);
     }
+    printf("Returning: %s\n", retv);
     return retv;
 }
