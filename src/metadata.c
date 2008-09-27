@@ -438,7 +438,7 @@ static void meta_data_retrieve_thread()
 		 */
 		
 		data = q_async_queue_pop(meta_commands);	
-        debug_printf(DEBUG_INFO, "Got a request with id: %i, this is a request of type: %i", data->type);
+        debug_printf(DEBUG_INFO, "Got a request with id: %i, this is a request of type: %i",data->id, data->type);
 		/* check if quit signal */
 		if(data->id == 0)
 		{
@@ -495,6 +495,7 @@ static void meta_data_retrieve_thread()
 				 */
 				if(meta_plugins[i]->get_enabled())
 				{
+                    debug_printf(DEBUG_INFO, "Query plugin: '%s'", meta_plugins[i]->name);
 					data->result = meta_plugins[i]->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
