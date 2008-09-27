@@ -135,6 +135,51 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         g_strfreev(str);
         debug_printf(DEBUG_INFO, "string converted to: '%s'", edited->artist);
     }
+
+    /**
+     * Sanitize album name and so (remove () (
+     */
+     if(cfg_get_single_value_as_int_with_default(config, "metadata", "sanitize", TRUE))
+     {
+        if(edited->album)
+        {
+            int i,j=0,depth=0;
+            char *album = edited->album;
+            edited->album = g_malloc0((strlen(album)+1)*sizeof(char)); 
+            for(i=0;i< strlen(album);i++)
+            {
+                if(album[i] == '(') depth++;
+                else if (album[i] == ')')depth--;
+                else if (depth  == 0) {
+                    edited->album[j] = album[i];
+                    j++;
+                }
+            }
+            g_free(album);
+            /* Remove trailing  and leading spaces */
+            edited->album = g_strstrip(edited->album);
+        }
+        if(edited->title)
+        {
+            int i,j=0,depth=0;
+            char *title = edited->title;
+            edited->title = g_malloc0((strlen(title)+1)*sizeof(char)); 
+            for(i=0;i< strlen(title);i++)
+            {
+                if(title[i] == '(') depth++;
+                else if (title[i] == ')')depth--;
+                else if (depth  == 0) {
+                    edited->title[j] = title[i];
+                    j++;
+                }
+            }
+            g_free(title);
+            /* Remove trailing  and leading spaces */
+            edited->title = g_strstrip(edited->title);
+        }
+
+
+     }
     return edited;
 }
 
