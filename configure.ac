@@ -1,52 +1,62 @@
 # Process this file with autoconf to produce a configure script.
 
 
+#Define the version
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [16])
 m4_define([gmpc_micro_version], [2])
-
-m4_define([gmpc_tagline], "Still 100% gnome free.")
-m4_define([gmpc_website], "http://gmpcwiki.sarine.nl")
-m4_define([gmpc_copyright], "Copyright 2003-2008 Qball Cow")
-m4_define([gmpc_bugtracker],  "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
-
 m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
+
+
+#Define variable
+m4_define([gmpc_tagline],       "Still 100% gnome free.")
+m4_define([gmpc_website],       "http://gmpcwiki.sarine.nl")
+m4_define([gmpc_copyright],     "Copyright 2003-2008 Qball Cow")
+m4_define([gmpc_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
+
+
 
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([gmpc], [gmpc_version],qball@sarine.nl)
 
 
-GMPC_MAJOR_VERSION=gmpc_major_version
-GMPC_MINOR_VERSION=gmpc_minor_version
-GMPC_MICRO_VERSION=gmpc_micro_version
+#Make version and variables available in config.h
+AC_DEFINE(GMPC_MAJOR_VERSION,   gmpc_major_version, ["Major version of gmpc"])
+AC_DEFINE(GMPC_MINOR_VERSION,   gmpc_minor_version, ["Minor version of gmpc"])
+AC_DEFINE(GMPC_MICRO_VERSION,   gmpc_micro_version, ["Micro version of gmpc"])
+AC_DEFINE(GMPC_TAGLINE,         gmpc_tagline, 	    ["Gmpc's tagline"])
+AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	    ["Gmpc's website"])
+AC_DEFINE(GMPC_BUGTRACKER,      gmpc_bugtracker,    ["Gmpc's bugtracker"])
+AC_DEFINE(GMPC_COPYRIGHT,       gmpc_copyright,     ["Gmpc's Copyright"])
 
-AC_DEFINE(GMPC_MAJOR_VERSION, gmpc_major_version, ["Major version of gmpc"])
-AC_DEFINE(GMPC_MINOR_VERSION, gmpc_minor_version, ["Minor version of gmpc"])
-AC_DEFINE(GMPC_MICRO_VERSION, gmpc_micro_version, ["Micro version of gmpc"])
-
-AC_DEFINE(GMPC_TAGLINE, 		gmpc_tagline, 	["Gmpc's tagline"])
-AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	["Gmpc's website"])
-AC_DEFINE(GMPC_BUGTRACKER, 	 gmpc_bugtracker,   ["Gmpc's bugtracker"])
-AC_DEFINE(GMPC_COPYRIGHT,     gmpc_copyright,   ["Gmpc's Copyright"])
-# Checks for programs.
 
 AC_PREREQ(2.59)
 
+# Remove the check for c++ and fortran compiler
 m4_defun([_LT_AC_LANG_CXX_CONFIG], [:])
 m4_defun([_LT_AC_LANG_F77_CONFIG], [:])
 
 
+#intltool, libtool. Check for CC compiler
 AC_PROG_INTLTOOL([0.21])
+
+# Check for intltool version, needed for make dist. 
+AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT} -ge 4000])
+
 AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_LIBTOOL_RC
 
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
 
-
-AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT} -ge 4000])
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
 
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
+
 
 AC_ARG_ENABLE(configdir,
               [  --enable-configdir		Use .config instead of .gmpc or .covers.],
@@ -84,17 +94,24 @@ AC_ARG_ENABLE([timing],
 	[enable_timing=false])
 if test x${enable_timing} = xtrue;
 then
+# Add DEBUG_ENABLE define to config.h
     AC_DEFINE(DEBUG_TIMING, 1, [Enable timing output])
 fi
+
+# Maintainer mode
+AC_ARG_ENABLE([maintainermode],
+	[--enable-maintainermode Enable maintainer mode.],
+	[case "${enableval}" in
+		yes) maintainer_mode=true;;
+		no)  maintainer_mode=false;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-maintainermode]);;
+	 esac],
+	[maintainer_mode=false])
+
+AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
+
+
 # Checks for libraries.
-
-# Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
-
 AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
 
@@ -203,7 +220,10 @@ AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
+
+
 GOB2_CHECK(2.0.0)
+# Make the gob2 check fatal
 if test x${GOB2} = x""; then
 	exit 0;
 fi
@@ -223,17 +243,7 @@ fi
 AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
 AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
-# Maintainer mode
-AC_ARG_ENABLE([maintainermode],
-	[--enable-maintainermode Enable maintainer mode.],
-	[case "${enableval}" in
-		yes) maintainer_mode=true;;
-		no)  maintainer_mode=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-maintainermode]);;
-	 esac],
-	[maintainer_mode=false])
 
-AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
 
 AC_OUTPUT([
 Makefile
