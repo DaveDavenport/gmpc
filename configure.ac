@@ -47,6 +47,8 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_LIBTOOL_RC
+PKG_PROG_PKG_CONFIG
+
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -58,42 +60,71 @@ AC_C_CONST
 AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
 
 
+# Checks for libraries.
+AC_SUBST(GLIB_REQUIRED)
+AC_SUBST(GTK_REQUIRED)
+
+##
+# User params 
+##
+
+# Config dir support
 AC_ARG_ENABLE(configdir,
-              [  --enable-configdir		Use .config instead of .gmpc or .covers.],
-               [ if test "x$enableval" = "xyes"; then
-                enable_configdir=yes
-            else
-                enable_configdir=no
-            fi],
-              enable_configdir=no)
+        [  --enable-configdir		Use .config instead of .gmpc or .covers.],
+        [ case "${enableval}" in
+            yes)    enable_configdir=yes;;
+             no)    enable_configdir=no;;
+              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-configdir]);;
+          esac],
+        [enable_configdir=no])
+
+if test x${enable_configdir} = xyes; then
+	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
+fi
+
+# Session support             
 AC_ARG_ENABLE(sm,
               [  --disable-sm				Disable Session Support.],
-              [ if test "x$enableval" = "xyes"; then
-               enable_sm=yes
-           else
-               enable_sm=no
-           fi],
-              enable_sm=yes)
-AC_ARG_ENABLE(mmkeys,
+              [ case "${enableval}" in
+                    yes)    enable_sm=yes;;
+                     no)    enable_sm=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
+                esac],
+              [enable_sm=yes])
+
+# sm
+if test x${enable_sm} = xyes; then
+	PKG_CHECK_MODULES([sm], sm)
+	AC_SUBST(sm_LIBS)
+	AC_SUBST(sm_CFLAGS)
+	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
+
+fi
+# Multimedia keys
+AC_ARG_ENABLE([mmkeys],
               [  --disable-mmkeys			Disable multimedia keys support.],
-              [ if test "x$enableval" = "xyes"; then
-                    enable_mmkeys=yes
-                else
-                    enable_mmkeys=no
-                fi],
-              enable_mmkeys=yes)
+              [ case "${enableval}" in
+                    yes)    enable_mmkeys=yes;;
+                     no)    enable_mmkeys=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
+                esac],
+              [enable_mmkeys=yes])
+if test x${enable_mmkeys} = xyes; then
+	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
+fi
+
 
 # Maintainer mode
 AC_ARG_ENABLE([timing],
-	[--enable-timing Print timing debug output.],
-	[case "${enableval}" in
-		yes) enable_timing=true;;
-		no)  enable_timing=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-timing]);;
-	 esac],
-	[enable_timing=false])
-if test x${enable_timing} = xtrue;
-then
+              [--enable-timing Print timing debug output.],
+	          [case "${enableval}" in
+		            yes)    enable_timing=true;;
+		             no)    enable_timing=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-timing]);;
+               esac],
+               [enable_timing=false])
+
+if test x${enable_timing} = xtrue; then
 # Add DEBUG_ENABLE define to config.h
     AC_DEFINE(DEBUG_TIMING, 1, [Enable timing output])
 fi
@@ -110,10 +141,6 @@ AC_ARG_ENABLE([maintainermode],
 
 AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
 
-
-# Checks for libraries.
-AC_SUBST(GLIB_REQUIRED)
-AC_SUBST(GTK_REQUIRED)
 
 # Split this out, because pkgconfig macro doesn't return nicely what is missing
 
@@ -153,21 +180,6 @@ AC_SUBST(gthread_LIBS)
 AC_SUBST(gthread_CFLAGS)
 
 
-# sm
-if test x${enable_sm} = xyes; then
-	PKG_CHECK_MODULES([sm], sm)
-	AC_SUBST(sm_LIBS)
-	AC_SUBST(sm_CFLAGS)
-	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
-
-fi
-
-if test x${enable_mmkeys} = xyes; then
-	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
-fi
-if test x${enable_configdir} = xyes; then
-	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
-fi
 # installation paths
 AC_MSG_CHECKING(prefix)
 
@@ -198,6 +210,8 @@ AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 
 
+#Win32 compile support
+
 EXTRA_CFLAGS=
 EXTRA_LDFLAGS=
 case "$CC" in
@@ -221,7 +235,7 @@ AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
 
-
+# Check for gob2
 GOB2_CHECK(2.0.0)
 # Make the gob2 check fatal
 if test x${GOB2} = x""; then
@@ -279,7 +293,7 @@ pixmaps/icons/scalable/apps/Makefile
 ])
 echo ""
 echo ""
-echo "-------------- Status --------------"
+echo "------------------ Status ------------------"
 if test x$maintainer_mode = xtrue; then
 	echo "Maintainer mode is:               enabled"
 else
