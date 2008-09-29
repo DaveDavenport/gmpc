@@ -54,8 +54,8 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         {
             MpdData *data2 = NULL;
             mpd_database_search_start(connection, TRUE);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, (tsong->artist)?tsong->artist:"");
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  (tsong->album)?tsong->album:""); 
             data2 = mpd_database_search_commit(connection);
             if(data2)
             {
@@ -68,7 +68,7 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         {
             MpdData *data2 = NULL;
             mpd_database_search_start(connection, TRUE);
-            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, tsong->artist);
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, (tsong->artist)?tsong->artist:"");
             data2 = mpd_database_search_commit(connection);
             if(data2)
             {
@@ -128,7 +128,7 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
     {
         gchar **str = g_strsplit(edited->artist, ",", 2);
 
-        if(str[1]) {
+        if(str[0] && str[1]) {
             g_free(edited->artist);
             edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
         }

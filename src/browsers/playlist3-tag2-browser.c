@@ -282,7 +282,7 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
 			{	
 				gchar *value;
 				gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-				mpd_database_search_add_constraint(connection, te3->type, value);
+				mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
 				g_free(value);
 			}
             list = list->next;
@@ -453,7 +453,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                     {	
                         gchar *value;
                         gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-                        mpd_database_search_add_constraint(connection, te3->type, value);
+                        mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
                         if(te3->index < (te->index) && !artist_seen)
                         {           
                             if(te3->type == MPD_TAG_ITEM_ARTIST)
@@ -563,7 +563,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                 found=1;
             }
             gtk_tree_model_get(te->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-            mpd_database_search_add_constraint(connection, te->type, value);
+            mpd_database_search_add_constraint(connection, te->type, (value)?value:"");
             g_free(value);
         }
         tel = tel->next;
