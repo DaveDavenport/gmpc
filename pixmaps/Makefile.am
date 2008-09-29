@@ -14,7 +14,7 @@ dist_appicon_DATA =	\
 SUBDIRS = icons
 
 
-gtk_update_icon_cache = gtk-update-icon-cache -f -t $(datadir)/icons/hicolor
+gtk_update_icon_cache = gtk-update-icon-cache -f -t $(DESTDIR)$(datadir)/icons/hicolor
 install-data-hook: update-icon-cache
 uninstall-hook: update-icon-cache
 update-icon-cache:

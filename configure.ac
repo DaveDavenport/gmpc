@@ -32,6 +32,11 @@ AC_DEFINE(GMPC_COPYRIGHT,     gmpc_copyright,   ["Gmpc's Copyright"])
 # Checks for programs.
 
 AC_PREREQ(2.59)
+
+m4_defun([_LT_AC_LANG_CXX_CONFIG], [:])
+m4_defun([_LT_AC_LANG_F77_CONFIG], [:])
+
+
 AC_PROG_INTLTOOL([0.21])
 AC_PROG_LIBTOOL
 AC_PROG_CC
