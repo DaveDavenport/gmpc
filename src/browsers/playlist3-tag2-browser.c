@@ -1390,18 +1390,21 @@ static void tag2_pref_column_remove(GtkWidget *but, GtkComboBox *box)
 			 * Refill the complete browser.
 			 * TODO: Only refill the part that is needed 
 			 */
+             /*
 			giter = g_list_first(te->browser->tag_lists);
 			if(giter)
 			{
 				MpdData *data;
 				tag_element *te2 = giter->data;
-				/* update the content */	
+                */
+				/* update the content */	/*
 				mpd_database_search_field_start(connection, te2->type);
 				data = mpd_database_search_commit(connection);
 				gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
 
 			}
-
+            */
+            tag2_connection_changed_foreach(te->browser, NULL);
 
 			/* save the browsers content */
 			tag2_save_browser(tb);
