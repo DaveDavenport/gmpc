@@ -40,6 +40,7 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
 static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
 static int tag2_browser_add_go_menu(GtkWidget *menu);
+static void tag2_pref_combo_changed(GtkComboBox *box, GtkTreeModel *model2);
 
 /* One treemodel to store all possible tags, use this multiple times. */
 static GtkTreeModel *tags_store = NULL;
@@ -51,7 +52,7 @@ static void tag2_pref_construct(GtkWidget *container);
 static void tag2_pref_destroy(GtkWidget *container);
 static GtkWidget *pref_vbox = NULL;
 static GtkWidget *pref_entry = NULL;
-
+static GtkWidget *pref_combo = NULL;
 /** 
  * Preferences structure 
  */
@@ -669,6 +670,16 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     }
 
     tag2_save_browser(te->browser);
+    /* Hack to make pref window update */
+    if(pref_combo)
+    {
+        GtkTreeIter iter;
+        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pref_combo), &iter))
+        {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(pref_combo),-1);
+            gtk_combo_box_set_active_iter(GTK_COMBO_BOX(pref_combo), &iter);
+        }
+    }
 }
 
 static gboolean tag2_sentry_changed_real(tag_element *te)
@@ -1148,6 +1159,9 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
 void tag2_pref_destroy(GtkWidget *container)
 {
 	gtk_container_remove(GTK_CONTAINER(container), pref_vbox);
+    pref_vbox = NULL;
+    pref_combo = NULL;
+    pref_entry = NULL;
 }
 /**
  * Browser selector changed
@@ -1429,7 +1443,7 @@ void tag2_pref_construct(GtkWidget *container)
 	/* select browser to edit */
 	hbox = gtk_hbox_new(FALSE, 6);
 	model = (GtkTreeModel *)gtk_list_store_new(3, G_TYPE_STRING,G_TYPE_STRING, G_TYPE_POINTER); 
-	combo = gtk_combo_box_new_with_model(model);
+	pref_combo = combo = gtk_combo_box_new_with_model(model);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, TRUE);
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", 1,NULL);
