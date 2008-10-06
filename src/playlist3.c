@@ -37,6 +37,7 @@
 
 #define KB_GLOBAL "keybindings-keycode-global"
 #define MK_GLOBAL "keybindings-mask-global"
+#define AC_GLOBAL "keybindings-action"
 typedef enum _Keybind{
     KB_PLAY,
     KB_NEXT,
@@ -44,19 +45,58 @@ typedef enum _Keybind{
     KB_STOP,
     KB_CLEAR_PLAYLIST,
     KB_FULL_ADD_PLAYLIST,
+    KB_INTERFACE_COLLAPSE,
+    KB_INTERFACE_EXPAND,
+    KB_INTERFACE_COLLAPSE_KP,
+    KB_INTERFACE_EXPAND_KP,
+    KB_QUIT,
+    KB_CLOSE,
+    KB_FULLSCREEN,
     KB_NUM
 }Keybind;
-
-char *Keybindname[KB_NUM] = {"Play","Next", "Previous", "Stop", "Clear Playlist", "Full Add Playlist"};
-int KeybindingDefault[KB_NUM][2] = {
-        {GDK_Up,    GDK_CONTROL_MASK}, /* KB_PLAY */ 
-        {GDK_Right, GDK_CONTROL_MASK}, /* KB_NEXT */
-        {GDK_Left,  GDK_CONTROL_MASK}, /* KB_PREV */
-        {GDK_Down,  GDK_CONTROL_MASK}, /* KB_NEXT */
-        {GDK_Delete, GDK_CONTROL_MASK|GDK_SHIFT_MASK}, /* KB_CLEAR_PLAYLIST */
-        {GDK_Insert, GDK_CONTROL_MASK|GDK_SHIFT_MASK}  /* KB_FULL_ADD_PLAYLIST */
+typedef enum _KeybindAction{
+    KB_ACTION_PLAY,
+    KB_ACTION_NEXT,
+    KB_ACTION_PREV,
+    KB_ACTION_STOP,
+    KB_ACTION_CLEAR_PLAYLIST,
+    KB_ACTION_FULL_ADD_PLAYLIST,
+    KB_ACTION_INTERFACE_COLLAPSE,
+    KB_ACTION_INTERFACE_EXPAND,
+    KB_ACTION_CLOSE,
+    KB_ACTION_QUIT,
+    KB_ACTION_FULLSCREEN
+}KeybindAction;
+char *Keybindname[KB_NUM] = {
+        "Play",
+        "Next",
+        "Previous",
+        "Stop",
+        "Clear Playlist",
+        "Full Add Playlist",
+        "Interface Collapse",
+        "Interface Expand",
+        "Interface Collapse Keypad",
+        "Interface Expand Keypad",
+        "Close",
+        "Quit",
+        "Fullscreen"
         };
-
+int KeybindingDefault[KB_NUM][3] = {
+        {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
+        {GDK_Right,         GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
+        {GDK_Left,          GDK_CONTROL_MASK,                   KB_ACTION_PREV},
+        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
+        {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},
+        {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},
+        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
+        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},
+        {GDK_KP_Subtract,   0,                                  KB_ACTION_INTERFACE_COLLAPSE},
+        {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},
+        {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},
+        {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},
+        {GDK_F12,           0,                                  KB_FULLSCREEN}
+};
 #define ALBUM_SIZE_SMALL 40
 #define ALBUM_SIZE_LARGE 70
 /* Drag and drop Target table */
@@ -436,84 +476,73 @@ void pl3_window_fullscreen(void)
 }
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
-	int i=0;
+    int i=0;
     int found = 0;
     gint type = pl3_cat_get_selected_browser();
-	/**
-	 * Handle Zoom In Key
-	 * (Ctrl-+)
-	 */
-	if((event->keyval == GDK_plus && event->state&GDK_CONTROL_MASK) || event->keyval == GDK_KP_Add)
-	{
-		playlist_zoom_in();
-		return TRUE;
-	}
-	/**
-	 * Handle Zoom Out Key
-	 * (Ctrl--)
-	 */
-	if((event->keyval == GDK_minus && event->state&GDK_CONTROL_MASK) || event->keyval == GDK_KP_Subtract) 	
-	{
-		playlist_zoom_out();
-		return TRUE;
-	}                                                          	
-	/**
-	 * Fullscreen 
-	 */
-	if(event->keyval == GDK_F12)
-	{
-		pl3_window_fullscreen();
-		return TRUE;
-	}
-	/**
-	 * Close the window on ctrl-w
-	 * or Ctrl Q
-	 */
-	if (event->keyval == GDK_q && event->state == GDK_CONTROL_MASK)
-	{
-		main_quit();
-		return TRUE;
-	}
-	if (event->keyval == GDK_w && event->state == GDK_CONTROL_MASK)
-	{
-		pl3_close();
-		return TRUE;                                           	
-	}
-	/**
-	 * Following key's are only valid when connected
-	 */
-	if(!mpd_check_connected(connection))
-	{
-		return FALSE;
-	}
+    /**
+     * Following key's are only valid when connected
+     */
+    if(!mpd_check_connected(connection))
+    {
+        return FALSE;
+    }
 
-	for(i=0; i< num_plugins;i++) 
-	{
-		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) 
-		{
-			if(plugins[i]->browser && plugins[i]->browser->key_press_event) 
-			{
-				if((plugins[i]->browser->key_press_event(mw, event, type))) return TRUE;
-			}                                                                           	
-		}
-	}
-
-    
-    for(i=0;i<KB_NUM;i++) {
-        int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
-        int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
-
-        if(keycode >= 0 && (event->state == keymask) && (keycode == event->keyval))
+    for(i=0; i< num_plugins;i++) 
+    {
+        if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) 
         {
-            found = 1;
-            /* Play control */
-            if(i == KB_PLAY) play_song(); 
-            else if(i == KB_NEXT) next_song();
-            else if(i == KB_PREV) prev_song();
-            else if(i == KB_STOP) stop_song();
-            /* Other actions */
-            else if(i == KB_CLEAR_PLAYLIST) mpd_playlist_clear(connection);
-            else if(i == KB_FULL_ADD_PLAYLIST) mpd_playlist_add(connection, "/");
+            if(plugins[i]->browser && plugins[i]->browser->key_press_event) 
+            {
+                if((plugins[i]->browser->key_press_event(mw, event, type))) return TRUE;
+            }                                                                           	
+        }
+    }
+
+    printf("%i-%i\n", event->state, event->keyval); 
+    conf_mult_obj *list = cfg_get_key_list(config, KB_GLOBAL);
+    /* If no keybindings are found, add the default ones */
+    if(list == NULL)
+    {
+        for(i=0;i<KB_NUM;i++)
+        {
+            cfg_set_single_value_as_int(config, KB_GLOBAL,Keybindname[i], KeybindingDefault[i][0]);
+            cfg_set_single_value_as_int(config, MK_GLOBAL,Keybindname[i], KeybindingDefault[i][1]);
+            cfg_set_single_value_as_int(config, AC_GLOBAL,Keybindname[i],KeybindingDefault[i][2]);
+        }
+        list = cfg_get_key_list(config, KB_GLOBAL);
+    }
+    /* Walk through the keybinding list */
+    if(list)
+    {
+        conf_mult_obj *iter;
+        for(iter = list;iter;iter = iter->next) {
+            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,iter->key,-1);
+            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,iter->key,0);
+
+            if(keycode >= 0 && (event->state == keymask) && (keycode == event->keyval))
+            {
+                int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
+                found = 1;
+                /* Play control */
+                if(action == KB_ACTION_PLAY) play_song(); 
+                else if(action == KB_ACTION_NEXT) next_song();
+                else if(action == KB_ACTION_PREV) prev_song();
+                else if(action == KB_ACTION_STOP) stop_song();
+                /* Other actions */
+                else if(action == KB_ACTION_CLEAR_PLAYLIST) mpd_playlist_clear(connection);
+                else if(action == KB_ACTION_FULL_ADD_PLAYLIST) mpd_playlist_add(connection, "/");
+                /* View control */
+                else if(action == KB_ACTION_INTERFACE_COLLAPSE) playlist_zoom_out();
+                else if(action == KB_ACTION_INTERFACE_EXPAND) playlist_zoom_in();
+                else if(action == KB_ACTION_FULLSCREEN) pl3_window_fullscreen();
+                /* Program control */
+                else if(action == KB_ACTION_QUIT) main_quit(); 
+                else if(action == KB_ACTION_CLOSE) pl3_close();
+                else {
+                    debug_printf(DEBUG_ERROR, "Keybinding action (%i) for: %i %i is invalid\n", action,event->state, event->keyval);
+
+                }
+            }
         }
     }
 	if(!found){
