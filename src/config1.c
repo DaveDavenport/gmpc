@@ -74,12 +74,18 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 {
 	char buffer[1024];
 	int len = 0;
-	int c;
+	int c,version = 0;
 	config_node *cur = NULL;
 	config_node *multiple = NULL;
+    int firstchar = 0;
 	while((c = fgetc(fp)) != EOF)
 	{
-		if(c == '[')
+        if(c == '2' && !firstchar)
+        {
+            version = 2;
+        }
+        firstchar = 1; 
+        if(c == '[')
 		{
 			len =0;
 			c = fgetc(fp);
@@ -92,10 +98,11 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			if(len > 0 && len < 256)
 			{
                 printf("add class: %s -> %s\n", buffer, (cur )?cur->name:"");
-				cur = cfg_add_class(cfgo, cur, buffer);
+				cur = cfg_add_class(cfgo, (version <2)?NULL:cur, buffer);
 			}
             else if (len == 0) {
-                cur = cur->parent;
+                if(version < 2) { cur = NULL; }
+                else { cur = cur->parent; }
             }
 			/* seek end of line */
 			while(c != EOF && c != '\n') c = fgetc(fp);
@@ -197,6 +204,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			while(c != EOF && c != '\n') c = fgetc(fp);			
 		}
 		else while(c != EOF && c != '\n') c = fgetc(fp);			
+    
 	}
 }
 
@@ -384,6 +392,7 @@ static void cfg_save_real(config_obj *cfgo)
 	{
 		FILE *fp = fopen(cfgo->url, "w");
 		if(!fp) return;
+        fputs("2\n", fp);
 		cfg_save_category(cfgo,cfgo->root, fp);	
 		fclose(fp);
 #ifndef WIN32
