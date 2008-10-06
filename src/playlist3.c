@@ -38,6 +38,21 @@
 #define KB_GLOBAL "keybindings-keycode-global"
 #define MK_GLOBAL "keybindings-mask-global"
 #define AC_GLOBAL "keybindings-action"
+
+typedef enum _KeybindAction{
+    KB_ACTION_PLAY,
+    KB_ACTION_NEXT,
+    KB_ACTION_PREV,
+    KB_ACTION_STOP,
+    KB_ACTION_CLEAR_PLAYLIST,
+    KB_ACTION_FULL_ADD_PLAYLIST,
+    KB_ACTION_INTERFACE_COLLAPSE,
+    KB_ACTION_INTERFACE_EXPAND,
+    KB_ACTION_CLOSE,
+    KB_ACTION_QUIT,
+    KB_ACTION_FULLSCREEN
+}KeybindAction;
+/** Some default keybindings */
 typedef enum _Keybind{
     KB_PLAY,
     KB_NEXT,
@@ -54,19 +69,8 @@ typedef enum _Keybind{
     KB_FULLSCREEN,
     KB_NUM
 }Keybind;
-typedef enum _KeybindAction{
-    KB_ACTION_PLAY,
-    KB_ACTION_NEXT,
-    KB_ACTION_PREV,
-    KB_ACTION_STOP,
-    KB_ACTION_CLEAR_PLAYLIST,
-    KB_ACTION_FULL_ADD_PLAYLIST,
-    KB_ACTION_INTERFACE_COLLAPSE,
-    KB_ACTION_INTERFACE_EXPAND,
-    KB_ACTION_CLOSE,
-    KB_ACTION_QUIT,
-    KB_ACTION_FULLSCREEN
-}KeybindAction;
+
+
 char *Keybindname[KB_NUM] = {
         "Play",
         "Next",
@@ -523,6 +527,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
             {
                 int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
                 found = 1;
+                printf("Doing action: %i\n",action);
                 /* Play control */
                 if(action == KB_ACTION_PLAY) play_song(); 
                 else if(action == KB_ACTION_NEXT) next_song();
