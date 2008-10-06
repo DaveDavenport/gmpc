@@ -518,7 +518,27 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
     /* Walk through the keybinding list */
     if(list)
     {
-        conf_mult_obj *iter;
+        int edited=0;
+        conf_mult_obj *iter = NULL;
+        /* Sort list on name. so chains can be defined */
+        do{
+            edited = 0;
+            iter = list;
+            do{
+                if(iter->next){
+                    if(strcmp(iter->key, iter->next->key) > 0)
+                    {
+                        char *temp = iter->key;
+                        iter->key = iter->next->key;
+                        iter->next->key = temp;
+                        edited = 1;
+                    }
+                }
+                iter = iter->next;
+            } while(iter);
+        }while(edited);
+
+
         for(iter = list;iter;iter = iter->next) {
             int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,iter->key,-1);
             int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,iter->key,0);

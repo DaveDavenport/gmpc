@@ -111,6 +111,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 				config_node *child = cfg_new_node();
 				child->type = TYPE_ITEM_MULTIPLE;
 				child->name = g_strndup(buffer, len);
+                child->parent = cur;
 				child->children = NULL;
 				cfg_add_child(cur, child);
 				multiple = child;
