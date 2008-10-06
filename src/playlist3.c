@@ -482,6 +482,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
     int i=0;
     int found = 0;
+    conf_mult_obj *list;
     gint type = pl3_cat_get_selected_browser();
     /**
      * Following key's are only valid when connected
@@ -503,7 +504,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
     }
 
     printf("%i-%i\n", event->state, event->keyval); 
-    conf_mult_obj *list = cfg_get_key_list(config, KB_GLOBAL);
+    list = cfg_get_key_list(config, KB_GLOBAL);
     /* If no keybindings are found, add the default ones */
     if(list == NULL)
     {
