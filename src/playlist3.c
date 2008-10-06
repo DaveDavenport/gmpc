@@ -31,6 +31,31 @@
 #include "gmpc-clicklabel.h"
 #include <gmpc-liststore-sort.h>
 
+/**
+ * Keybindings
+ */
+
+#define KB_GLOBAL "keybindings-keycode-global"
+#define MK_GLOBAL "keybindings-mask-global"
+typedef enum _Keybind{
+    KB_PLAY,
+    KB_NEXT,
+    KB_PREV,
+    KB_STOP,
+    KB_CLEAR_PLAYLIST,
+    KB_FULL_ADD_PLAYLIST,
+    KB_NUM
+}Keybind;
+
+char *Keybindname[KB_NUM] = {"Play","Next", "Previous", "Stop", "Clear Playlist", "Full Add Playlist"};
+int KeybindingDefault[KB_NUM][2] = {
+        {GDK_Up,    GDK_CONTROL_MASK}, /* KB_PLAY */ 
+        {GDK_Right, GDK_CONTROL_MASK}, /* KB_NEXT */
+        {GDK_Left,  GDK_CONTROL_MASK}, /* KB_PREV */
+        {GDK_Down,  GDK_CONTROL_MASK}, /* KB_NEXT */
+        {GDK_Delete, GDK_CONTROL_MASK|GDK_SHIFT_MASK}, /* KB_CLEAR_PLAYLIST */
+        {GDK_Insert, GDK_CONTROL_MASK|GDK_SHIFT_MASK}  /* KB_FULL_ADD_PLAYLIST */
+        };
 
 #define ALBUM_SIZE_SMALL 40
 #define ALBUM_SIZE_LARGE 70
@@ -412,7 +437,8 @@ void pl3_window_fullscreen(void)
 int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 {
 	int i=0;
-	gint type = pl3_cat_get_selected_browser();
+    int found = 0;
+    gint type = pl3_cat_get_selected_browser();
 	/**
 	 * Handle Zoom In Key
 	 * (Ctrl-+)
@@ -472,29 +498,25 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 		}
 	}
 
-	/* default gmpc key's*/
-	if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Left) || event->keyval == GDK_KP_4)
-	{
-		prev_song();
-	}
-	else if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Up) ||event->keyval == GDK_KP_8)
-	{
-		play_song();
-	}
-	else if ((event->state&GDK_CONTROL_MASK && event->keyval ==GDK_Down) || event->keyval == GDK_KP_5)
-	{
-		stop_song();
-	}
-	else if ((event->state&GDK_CONTROL_MASK && event->keyval == GDK_Right) || event->keyval == GDK_KP_6)
-	{
-		next_song();
-	}
-	else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_Delete)
-	{
-		mpd_playlist_clear(connection);
-	}
-	else
-	{
+    
+    for(i=0;i<KB_NUM;i++) {
+        int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
+        int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
+
+        if(keycode >= 0 && (event->state == keymask) && (keycode == event->keyval))
+        {
+            found = 1;
+            /* Play control */
+            if(i == KB_PLAY) play_song(); 
+            else if(i == KB_NEXT) next_song();
+            else if(i == KB_PREV) prev_song();
+            else if(i == KB_STOP) stop_song();
+            /* Other actions */
+            else if(i == KB_CLEAR_PLAYLIST) mpd_playlist_clear(connection);
+            else if(i == KB_FULL_ADD_PLAYLIST) mpd_playlist_add(connection, "/");
+        }
+    }
+	if(!found){
 		return FALSE;
 	}
 
