@@ -90,7 +90,7 @@ int KeybindingDefault[KB_NUM][3] = {
         {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
         {GDK_Right,         GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
         {GDK_Left,          GDK_CONTROL_MASK,                   KB_ACTION_PREV},
-        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
+        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_STOP},
         {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},
         {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},
         {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
