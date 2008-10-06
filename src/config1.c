@@ -65,7 +65,7 @@ static void cfg_save_real(config_obj *);
 static void __int_cfg_remove_node(config_obj *, config_node *);
 
 static void __int_cfg_do_special_cleanup(config_obj *cfg, config_node *node);
-static config_node *cfg_add_class(config_obj *, char *);
+static config_node *cfg_add_class(config_obj *, config_node *,char *);
 static config_node *cfg_new_node(void);
 static void cfg_add_child(config_node *, config_node *);
 #define cfg_save(a) debug_printf(DEBUG_INFO, "Save triggered");cfg_save_real(a)
@@ -91,8 +91,12 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			buffer[len] = '\0';
 			if(len > 0 && len < 256)
 			{
-				cur = cfg_add_class(cfgo, buffer);
+                printf("add class: %s -> %s\n", buffer, (cur )?cur->name:"");
+				cur = cfg_add_class(cfgo, cur, buffer);
 			}
+            else if (len == 0) {
+                cur = cur->parent;
+            }
 			/* seek end of line */
 			while(c != EOF && c != '\n') c = fgetc(fp);
 		}
@@ -144,6 +148,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 
 				/* write key name */
 				new = cfg_new_node();
+                new->parent = cur;
 				new->type = TYPE_ITEM;
 				new->name = g_strndup(buffer, len);	
 				cfgo->total_size+= len+sizeof(config_node);
@@ -263,25 +268,42 @@ static config_node *cfg_new_node()
 	newnode->value = NULL;
 	return newnode;
 }
-static config_node *cfg_add_class(config_obj *cfg, char *class)
+static config_node *cfg_add_class(config_obj *cfg,config_node *parent, char *class)
 {
 	config_node *newnode = cfg_new_node();
 	newnode->type = TYPE_CATEGORY;
 	newnode->name = g_strdup(class);
 	newnode->value = NULL;
+    newnode->parent = parent;
 	newnode->children  = NULL;
 	cfg->total_size += sizeof(config_node)+strlen(class);
-	if(cfg->root == NULL)
-	{
-		cfg->root = newnode;		
-	}
-	else
-	{
-		config_node *temp = cfg->root;
-		while(temp->next != NULL) temp = temp->next;
-		temp->next = newnode;
-		newnode->prev = temp;
-	}
+    if(!parent)
+    {
+        if(cfg->root == NULL)
+        {
+            cfg->root = newnode;		
+        }
+        else
+        {
+            config_node *temp = cfg->root;
+            while(temp->next != NULL) temp = temp->next;
+            temp->next = newnode;
+            newnode->prev = temp;
+        }
+    }
+    else 
+    {
+        if(parent->children == NULL) {
+            parent->children = newnode;
+        }else{
+            config_node *temp = parent->children;              
+            /* get last node */
+            while(temp->next != NULL) temp = temp->next;
+            temp->next = newnode;
+            newnode->prev = temp;	
+        }
+    }
+
 	return newnode;
 }
 void cfg_add_child(config_node *parent, config_node *child)
@@ -312,12 +334,14 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	if(node == NULL)return;
 	/* find the first */
 	while(node->prev != NULL) node = node->prev;
+    printf("node->name: %s\n", node->name);
 	/* save some stuff */
 	for(temp = node;temp != NULL; temp = temp->next){
 		if(temp->type == TYPE_CATEGORY)
 		{
-			fprintf(fp, "\n[%s]\n\n",temp->name);
+			fprintf(fp, "\n[%s]\n",temp->name);
 			cfg_save_category(cfg,temp->children,fp);
+            fprintf(fp, "[]\n");
 		}
 		if(temp->type == TYPE_ITEM_MULTIPLE)
 		{
@@ -648,7 +672,7 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 		config_node *node = cfg_get_class(cfg, class);
 		if(node == NULL)
 		{
-			node = cfg_add_class(cfg, class);	
+			node = cfg_add_class(cfg,NULL, class);	
 			if(node == NULL) return;
 		}
 		newnode = cfg_new_node();
@@ -746,7 +770,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 			node = cfg_get_class(cfg,class);
 			if(node == NULL)
 			{
-				node = cfg_add_class(cfg,class);
+				node = cfg_add_class(cfg,NULL,class);
 			}
 			cur = cfg_new_node();
 			cur->name = g_strdup(key);
