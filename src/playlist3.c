@@ -503,7 +503,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
         }
     }
 
-    printf("%i-%i\n", event->state, event->keyval); 
+//    printf("%i-%i\n", event->state, event->keyval); 
     list = cfg_get_key_list(config, KB_GLOBAL);
     /* If no keybindings are found, add the default ones */
     if(list == NULL)
@@ -548,7 +548,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
             {
                 int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
                 found = 1;
-                printf("Doing action: %i\n",action);
+//                printf("Doing action: %i\n",action);
                 /* Play control */
                 if(action == KB_ACTION_PLAY) play_song(); 
                 else if(action == KB_ACTION_NEXT) next_song();

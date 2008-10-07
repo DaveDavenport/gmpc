@@ -97,12 +97,12 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 			buffer[len] = '\0';
 			if(len > 0 && len < 256)
 			{
-                printf("add class: %s -> %s\n", buffer, (cur )?cur->name:"");
+//                printf("add class: %s -> %s\n", buffer, (cur )?cur->name:"");
 				cur = cfg_add_class(cfgo, (version <2)?NULL:cur, buffer);
 			}
             else if (len == 0) {
                 if(version < 2) { cur = NULL; }
-                else { cur = cur->parent; }
+                else if(cur){ cur = cur->parent; }
             }
 			/* seek end of line */
 			while(c != EOF && c != '\n') c = fgetc(fp);
@@ -342,7 +342,7 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	if(node == NULL)return;
 	/* find the first */
 	while(node->prev != NULL) node = node->prev;
-    printf("node->name: %s\n", node->name);
+//    printf("node->name: %s\n", node->name);
 	/* save some stuff */
 	for(temp = node;temp != NULL; temp = temp->next){
 		if(temp->type == TYPE_CATEGORY)
