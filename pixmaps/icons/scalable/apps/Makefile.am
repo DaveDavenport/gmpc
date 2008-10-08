@@ -1,4 +1,4 @@
-themedir = $(datadir)/icons/hicolor
+themedir = $(pkgdatadir)/icons/hicolor
 size = scalable
 context = apps
 
