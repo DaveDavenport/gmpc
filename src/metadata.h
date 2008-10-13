@@ -10,6 +10,7 @@ typedef enum {
 	META_ARTIST_TXT 		= 8, 		/* Artist biography 	*/
 	META_SONG_TXT			= 16,		/* Lyrics 		*/
 	META_ARTIST_SIMILAR 	= 32,		/* Similar artists */
+    META_SONG_SIMILAR       = 64,       /* Similar songs */
 	META_QUERY_DATA_TYPES  	= 127, 		/* Bitmask for getting the metadata types only */
 	META_QUERY_NO_CACHE 	= 128		/* Do the query withouth checking the cache first */
 }MetaDataType;
