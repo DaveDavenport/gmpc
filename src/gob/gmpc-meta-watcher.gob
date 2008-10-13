@@ -61,6 +61,7 @@ class Gmpc:Meta:Watcher from  G:Object {
 				if(song1->file && song2->file && !strcmp(song1->file, song2->file))
 					return TRUE;
 				return FALSE;
+
 			case META_ALBUM_TXT:
 			case META_ALBUM_ART:
 				if(song1->album == NULL || song2->album == NULL || strcmp(song1->album, song2->album))
@@ -82,7 +83,23 @@ class Gmpc:Meta:Watcher from  G:Object {
                     return TRUE;
                 }
                 break;
-			default:
+            case META_SONG_SIMILAR:
+                if(song1->title == NULL || song2->title == NULL || strcmp(song1->title, song2->title))
+                {
+                    return FALSE;
+                }
+				if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
+				{
+
+					return TRUE;
+				}
+                /* if we rewrite the artist, to be various (collection) also "see that" */
+                if((song1->artist && !strcmp(song1->artist, "Various Artists")) ||
+                        (song2->artist && !strcmp(song2->artist, "Various Artists")))
+                {
+                    return TRUE;
+                }
+            default:
 				break;
 		}
 		return FALSE;
