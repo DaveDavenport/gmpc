@@ -569,6 +569,15 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
     }
     if(a->type == MPD_DATA_TYPE_SONG && b->type == MPD_DATA_TYPE_SONG)
     {
+        if(a->song->date == NULL && b->song->date != NULL)
+            return -1;
+        else if(b->song->date == NULL && a->song->date != NULL)
+            return 1;
+        else if (a->song->date  && b->song->date)
+        {
+            int compv = atoi(a->song->date)-atoi(b->song->date); 
+            return compv;
+        }
         if(a->song->artist == NULL && b->song->artist != NULL)
             return -1;
         else if(b->song->artist == NULL && a->song->artist != NULL)
@@ -717,50 +726,3 @@ gchar ** tokenize_string(const gchar *string)
 	}
 	return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
