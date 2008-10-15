@@ -8,7 +8,8 @@
 
 #include "gob/gmpc-clicklabel.h"
 #include "gob/gmpc-stats-label.h"
-
+#include "gmpc-mpddata-treeview.h"
+#include "gmpc-mpddata-model.h"
 #include "gmpc-meta-text-view.h"
 
 /**
@@ -1558,6 +1559,169 @@ void info2_fill_artist_view(const char *artist)
 /*****
  * View Album
  */
+static void album_view_song_list_edit_columns(GtkMenuItem *item, GtkWidget *tree)
+{
+	gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(tree));
+}
+static void album_view_songlist_row_activated(GtkTreeView *tree, 
+			GtkTreePath *path,
+			GtkTreeViewColumn *column,
+			gpointer data)
+{
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path))
+	{
+        mpd_Song *song;
+		gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+        if(song) info2_fill_song_view(song);
+    }
+}
+/**
+ * Handles right mouse release on song list
+ */
+static gboolean album_view_songlist_button_press_event(GtkWidget *but, GdkEventButton *event)
+{
+	GtkTreePath *path = NULL;
+	if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
+	{	
+		GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(but));
+		if(gtk_tree_selection_path_is_selected(sel, path))
+		{
+            gtk_tree_path_free(path);
+            return TRUE;
+
+		}
+	}
+	if(path) {
+		gtk_tree_path_free(path);
+	}
+	return FALSE;
+}
+
+static void album_view_songlist_open_selected_songs(GtkWidget *item, GtkTreeView *tree)
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	GtkTreeModel *model = gtk_tree_view_get_model(tree);
+	/* get a list of selected paths */
+	GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
+	if(list)
+	{
+		GtkTreeIter piter;
+		GList *iter = g_list_first(list);
+		/* iterate over all the selected rows */
+        if(iter){
+			/* get iter from path */
+			if(gtk_tree_model_get_iter(model, &piter, iter->data))
+			{
+			    mpd_Song *song;	
+				gtk_tree_model_get(model, &piter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                if(song) info2_fill_song_view(song);
+			}			
+		}
+		mpd_playlist_queue_commit(connection);
+		/* cleanup */
+		g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+		g_list_free(list);
+
+	}
+
+
+
+}
+
+static void album_view_songlist_add_selected_songs(GtkWidget *item, GtkTreeView *tree)
+{
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(tree);
+	GtkTreeModel *model = gtk_tree_view_get_model(tree);
+	/* get a list of selected paths */
+	GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
+	if(list)
+	{
+		GtkTreeIter piter;
+		GList *iter = g_list_first(list);
+		/* iterate over all the selected rows */
+		for(;iter;iter = g_list_next(iter))
+		{
+			/* get iter from path */
+			if(gtk_tree_model_get_iter(model, &piter, iter->data))
+			{
+				gchar *path;
+				gtk_tree_model_get(model, &piter, MPDDATA_MODEL_COL_PATH, &path, -1);
+				mpd_playlist_queue_add(connection, path);
+				g_free(path);
+			}			
+		}
+		mpd_playlist_queue_commit(connection);
+		/* cleanup */
+		g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+		g_list_free(list);
+	}
+}
+
+static void album_view_songlist_replace_selected_songs(GtkWidget *item, GtkTreeView *tree)
+{
+	mpd_playlist_clear(connection);
+    if(mpd_check_connected(connection))
+    {
+    	album_view_songlist_add_selected_songs(item, tree);
+        mpd_player_play(connection);
+    }
+}
+static gboolean album_view_song_list_button_release_event(GtkTreeView *tree, 
+		GdkEventButton *event, 
+		gpointer data)
+{
+	/* only on right mouse click */
+	if(event->button == 3)
+	{
+		GtkWidget *menu, *item;
+		GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
+		int count = gtk_tree_selection_count_selected_rows(selection);
+		
+		/* create menu to popup */
+		menu = gtk_menu_new();
+		/* only show when soething is selected */
+		if(count >0)
+		{
+            if(count == 1) {
+                item = gtk_image_menu_item_new_from_stock(GTK_STOCK_OPEN, NULL);
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(album_view_songlist_open_selected_songs), tree);
+            }
+
+			/* add the add widget */
+			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(album_view_songlist_add_selected_songs), tree);
+			/* add the replace widget */
+			item = gtk_image_menu_item_new_with_label("Replace");
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(album_view_songlist_replace_selected_songs), tree);
+
+			/* Separator */	
+			item = gtk_separator_menu_item_new();
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		}
+		/* Edit columns */
+		item = gtk_image_menu_item_new_with_label(("Edit Columns"));
+		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+				gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate",
+				G_CALLBACK(album_view_song_list_edit_columns), tree);
+
+
+		/* popup */
+		gtk_widget_show_all(GTK_WIDGET(menu));
+		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
+		return TRUE;
+
+	}
+	return FALSE;
+}
+
 void info2_fill_album_view(const char *artist,const char *album)
 {
 	GtkWidget *vbox 	= NULL;
@@ -1807,24 +1971,19 @@ void info2_fill_album_view(const char *artist,const char *album)
 		gtk_table_set_col_spacings(GTK_TABLE(table2), 0);
 		gtk_table_set_row_spacings(GTK_TABLE(table2), 0);
 		i=1;
-		cursong = mpd_playlist_get_current_song(connection);
-		for(data = mpd_data_get_first(data);data;data = mpd_data_get_next(data))
-		{
-			markup =  g_strdup_printf("%02i: %s",i, data->song->title);
-			label = gmpc_clicklabel_new(markup);
-			if(cursong && strcmp(data->song->file,cursong->file) == 0)
-			{
-				gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(label), TRUE);
-			}	
-			g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data->song->file), g_free);
-			g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-			gtk_table_attach(GTK_TABLE(table2), label, 0,1,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-			q_free(markup);
-			i++;
-		}
-		ali = gtk_alignment_new(0,0.5,1,0);
+        label = gtk_scrolled_window_new(NULL,NULL);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(label), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
+        table2 = gmpc_mpddata_treeview_new("metadata-album-view", FALSE, gmpc_mpddata_model_new());
+        gmpc_mpddata_model_set_mpd_data(gtk_tree_view_get_model(GTK_TREE_VIEW(table2)), data);
+
+        g_signal_connect(G_OBJECT(table2), "button-release-event", G_CALLBACK(album_view_song_list_button_release_event), NULL);
+        g_signal_connect(G_OBJECT(table2), "button-press-event", G_CALLBACK(album_view_songlist_button_press_event), NULL);
+        g_signal_connect(G_OBJECT(table2), "row-activated", G_CALLBACK(album_view_songlist_row_activated), NULL);
+
+        ali = gtk_alignment_new(0,0.5,0.8,0);
 		gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,10,0);
-		gtk_container_add(GTK_CONTAINER(ali), table2);
+        gtk_container_add(GTK_CONTAINER(label), table2);
+		gtk_container_add(GTK_CONTAINER(ali), label);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
 
 	}
