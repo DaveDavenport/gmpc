@@ -52,7 +52,6 @@ static void pl3_file_browser_save_myself(void);
 static int pl3_file_browser_add_go_menu(GtkWidget *menu);
 static void pl3_file_browser_activate(void);
 static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
-static gboolean pl3_file_browser_button_press_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp);
 static void pl3_file_browser_add_selected(void);
 static void pl3_file_browser_replace_selected(void);
@@ -212,11 +211,10 @@ static void pl3_file_browser_init()
     
 	/* set up the tree */
 	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser",TRUE, GTK_TREE_MODEL(pl3_fb_store2));
-
+    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
   /* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event), NULL);
-	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-press-event", G_CALLBACK(pl3_file_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "key-press-event", G_CALLBACK(pl3_file_browser_playlist_key_press), NULL);
 
 	/* set up the scrolled window */
@@ -845,23 +843,6 @@ static void pl3_file_browser_add_to_playlist(GtkWidget *menu)
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
         g_list_free (list);
     }
-}
-static gboolean pl3_file_browser_button_press_event(GtkWidget *but, GdkEventButton *event)
-{
-    GtkTreePath *path = NULL;
-    if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
-    {	
-        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(but));
-        if(gtk_tree_selection_path_is_selected(sel, path))
-        {
-            gtk_tree_path_free(path);
-            return TRUE;
-        }
-    }
-    if(path) {
-        gtk_tree_path_free(path);
-    }
-    return FALSE;
 }
 static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {

@@ -639,4 +639,39 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(self->_priv->tooltip_window));
         gtk_widget_show_all(vbox);
     }
+
+
+
+
+
+    /** 
+     * Right mouse click behaviour fix 
+     */
+    private 
+    gboolean click_fix (GtkWidget *but, GdkEventButton *event)
+    {
+        GtkTreePath *path = NULL;
+        if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y,&path,NULL,NULL,NULL))
+        {	
+            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(but));
+            if(gtk_tree_selection_path_is_selected(sel, path))
+            {
+                gtk_tree_path_free(path);
+                return TRUE;
+
+            }
+        }
+        if(path) {
+            gtk_tree_path_free(path);
+        }
+        return FALSE;
+    }
+
+    public
+    void
+    enable_click_fix(self)
+    {
+        g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
+    }
+
 }

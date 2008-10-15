@@ -1975,9 +1975,9 @@ void info2_fill_album_view(const char *artist,const char *album)
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(label), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
         table2 = gmpc_mpddata_treeview_new("metadata-album-view", FALSE, gmpc_mpddata_model_new());
         gmpc_mpddata_model_set_mpd_data(gtk_tree_view_get_model(GTK_TREE_VIEW(table2)), data);
+        gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(table2));
 
         g_signal_connect(G_OBJECT(table2), "button-release-event", G_CALLBACK(album_view_song_list_button_release_event), NULL);
-        g_signal_connect(G_OBJECT(table2), "button-press-event", G_CALLBACK(album_view_songlist_button_press_event), NULL);
         g_signal_connect(G_OBJECT(table2), "row-activated", G_CALLBACK(album_view_songlist_row_activated), NULL);
 
         ali = gtk_alignment_new(0,0.5,0.8,0);
