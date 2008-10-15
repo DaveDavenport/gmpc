@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
-/*#include <math.h>*/
 #include "main.h"
 #include "misc.h"
 
@@ -186,12 +185,6 @@ static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  
 {
 	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
 }
-/*
-static void pl3_metabrowser_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
-{
-	gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->light[GTK_STATE_SELECTED]));
-}
-*/
 
 /**
  * Helper functions that can fill and refill a table
@@ -266,17 +259,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                     data2 = mpd_database_search_commit(connection);
                     if(data2)
                     {
-                    /*
-                        gchar *markup;
-                        GtkWidget *label;
-                        markup =  g_strdup_printf("* %s: %s",data2->song->artist, data2->song->title);
-                        label = gmpc_clicklabel_new(markup);
-                        g_object_set_data_full(G_OBJECT(label), "file",g_strdup(data2->song->file), g_free);
-                        g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-                        gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE,0);
-                        q_free(markup);
-                        mpd_data_free(data2);
-                        */
                         data = mpd_data_concatenate(data, data2);
                         found++;
                     }
@@ -1017,45 +999,7 @@ void info2_fill_song_view(mpd_Song *song)
             data = NULL;
         }
         if(data) {mpd_data_free(data);data=NULL;}
-		/* loop through 
-         * results, if any */
-/*        
-		while(data){
-			gchar buffer[1024];
-			mpd_Song *song_temp = data->song;
-*/
-			/* skip the current visible song */
-/*			if(!(song_temp->file && song->file && strcmp(song->file, song_temp->file) == 0 )*/ /* skip this, this is us *//*)*/
-/*			{
-*/				/* if we haven't seen a song yet, create the title */
-/*				if(!seen)
-				{
-*/					/* create "title" label */
-/*					label = gtk_label_new("");
-					gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
-					gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-					gtk_misc_set_padding(GTK_MISC(label), 8,3);
-					gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
-*/					/* create a vbox where we add the songs too */
-/*					vbox = gtk_vbox_new(FALSE, 6);
-					ali = gtk_alignment_new(0.0,0.0,1.0,0.0);
-					gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,14,0);
-					gtk_container_add(GTK_CONTAINER(ali), vbox);
-					gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE,FALSE,0);
-					seen = TRUE;
-				}
-*/				/* generate title */
-/*				mpd_song_markup(buffer, 1024,"* [%title% - &[%artist%] [(%album%)]]|%shortfile% (paused)", song_temp); 
-				label = gmpc_clicklabel_new(buffer);	
-*/				/* make clickable */
-/*				g_object_set_data_full(G_OBJECT(label), "file",g_strdup(song_temp->file), g_free);
-				g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
-				gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
-			}
-
-			data = mpd_data_get_next(data);
-		}
-*/	}
+	}
 
     /* Similar songs */
 
@@ -1127,31 +1071,19 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 
-//	cairo_t *cr= gdk_cairo_create(GTK_WIDGET(widget)->window);
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
 	
-/*	cairo_set_line_width (cr, 1.0);
-	cairo_rectangle(cr, 0,0,width,height);
-	cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->mid[GTK_STATE_NORMAL]));
-	cairo_fill_preserve(cr);
-	gdk_cairo_set_source_color(cr, 	&(widget->style->dark[GTK_STATE_NORMAL]));
-	cairo_stroke (cr);
-	cairo_destroy(cr);
-*/
 	gtk_paint_flat_box(widget->style, 
 					widget->window, 
 					GTK_STATE_SELECTED,
 					GTK_SHADOW_NONE,
 					NULL, 
 					widget,
-//					"button",
 					"cell_odd",
 					0,0,
 					width,height);
 
-//	gtk_paint_focus(widget->style, widget->window, GTK_STATE_SELECTED, NULL, NULL, "cell_odd", 0,0,width,height);
 	gtk_paint_focus(widget->style, widget->window, 
 				GTK_STATE_NORMAL, 
 				NULL, 
