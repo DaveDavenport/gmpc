@@ -987,42 +987,75 @@ void info2_fill_song_view(mpd_Song *song)
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_TITLE, song->title);
 		data = mpd_database_search_commit(connection);
-		/* loop through results, if any */
+        if(data && !mpd_data_is_last(data)) {
+
+            GtkWidget *ali;
+            GtkWidget *sw = gtk_scrolled_window_new(NULL,NULL);
+
+            GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-same-title-view",
+                    FALSE, 
+                    (GtkTreeModel *)gmpc_mpddata_model_new());
+
+            label = gtk_label_new("");
+            gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
+            gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+            gtk_misc_set_padding(GTK_MISC(label), 8,3);
+            gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
+
+            gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
+            gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
+
+            g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(album_view_song_list_button_release_event), NULL);
+            g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(songlist_row_activated), NULL);
+
+            ali = gtk_alignment_new(0,0.5,0.8,0);
+            gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,10,0);
+            gtk_container_add(GTK_CONTAINER(sw), tree);
+            gtk_container_add(GTK_CONTAINER(ali), sw);
+            gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
+            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tree))), data);                      
+            data = NULL;
+        }
+        if(data) {mpd_data_free(data);data=NULL;}
+		/* loop through 
+         * results, if any */
+/*        
 		while(data){
 			gchar buffer[1024];
 			mpd_Song *song_temp = data->song;
+*/
 			/* skip the current visible song */
-			if(!(song_temp->file && song->file && strcmp(song->file, song_temp->file) == 0 ) /* skip this, this is us */)
-			{
-				/* if we haven't seen a song yet, create the title */
-				if(!seen)
+/*			if(!(song_temp->file && song->file && strcmp(song->file, song_temp->file) == 0 )*/ /* skip this, this is us *//*)*/
+/*			{
+*/				/* if we haven't seen a song yet, create the title */
+/*				if(!seen)
 				{
-					/* create "title" label */
-					label = gtk_label_new("");
+*/					/* create "title" label */
+/*					label = gtk_label_new("");
 					gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
 					gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 					gtk_misc_set_padding(GTK_MISC(label), 8,3);
 					gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
-					/* create a vbox where we add the songs too */
-					vbox = gtk_vbox_new(FALSE, 6);
+*/					/* create a vbox where we add the songs too */
+/*					vbox = gtk_vbox_new(FALSE, 6);
 					ali = gtk_alignment_new(0.0,0.0,1.0,0.0);
 					gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,14,0);
 					gtk_container_add(GTK_CONTAINER(ali), vbox);
 					gtk_box_pack_start(GTK_BOX(resizer_vbox), ali, FALSE,FALSE,0);
 					seen = TRUE;
 				}
-				/* generate title */
-				mpd_song_markup(buffer, 1024,"* [%title% - &[%artist%] [(%album%)]]|%shortfile% (paused)", song_temp); 
+*/				/* generate title */
+/*				mpd_song_markup(buffer, 1024,"* [%title% - &[%artist%] [(%album%)]]|%shortfile% (paused)", song_temp); 
 				label = gmpc_clicklabel_new(buffer);	
-				/* make clickable */
-				g_object_set_data_full(G_OBJECT(label), "file",g_strdup(song_temp->file), g_free);
+*/				/* make clickable */
+/*				g_object_set_data_full(G_OBJECT(label), "file",g_strdup(song_temp->file), g_free);
 				g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(as_song_viewed_clicked), GINT_TO_POINTER(1));
 				gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 			}
-			/* */
+
 			data = mpd_data_get_next(data);
 		}
-	}
+*/	}
 
     /* Similar songs */
 
