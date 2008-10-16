@@ -232,7 +232,13 @@ static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
 }
 static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
 {
-    if(type == META_SONG_SIMILAR)
+    mpd_Song *song = g_object_get_data(G_OBJECT(vbox), "song");
+    if(!song) return;
+
+    if(!gmpc_meta_watcher_match_data(type, song,fsong)) {
+        return;
+    }
+    if(type == META_SONG_SIMILAR )
     {
 
         /* clear the view, so if it's updated the old data is gone */
@@ -1022,12 +1028,14 @@ void info2_fill_song_view(mpd_Song *song)
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
 		/* fill the list if it' s allready available */
-		info2_fill_new_meta_callback(gmw, song, META_SONG_SIMILAR, ret, similar, vbox2);
+        g_object_set_data_full(G_OBJECT(vbox2), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
+        info2_fill_new_meta_callback(gmw, song, META_SONG_SIMILAR, ret, similar, vbox2);
 		if(similar)
 			g_free(similar);
 		/* if destroyed disconnect the metawatcher */
 		g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
-		/* Add it to the view */
+        
+        /* Add it to the view */
         gtk_alignment_set_padding(GTK_ALIGNMENT(misc), 0,0,12,0);
         gtk_container_add(GTK_CONTAINER(misc), vbox2);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),misc,FALSE, FALSE, 0);
@@ -1540,6 +1548,7 @@ void info2_fill_artist_view(const char *artist)
 		/* connect a signal handler */
 		id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox2);
 		/* do a request to the meta watcher */
+        g_object_set_data_full(G_OBJECT(vbox2), "song", (gpointer)mpd_songDup(song2), (GDestroyNotify)mpd_freeSong);
 		ret = gmpc_meta_watcher_get_meta_path(gmw,song2, META_ARTIST_SIMILAR, &similar);
 		/* set the label */
 		label = gtk_label_new("");
