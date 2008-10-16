@@ -1021,6 +1021,7 @@ static void tag2_init_browser(tag_browser *browser) {
 	/* create the actual treeview, use the GmpcTreeview type, so all the handling is done automatic */
 
 	browser->tag_songlist = (GtkTreeView *)gmpc_mpddata_treeview_new(key,TRUE,GTK_TREE_MODEL(model));
+    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(browser->tag_songlist));
 	g_free(key);
 	/* add the treeview to the scrolled window */
 	gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(browser->tag_songlist));
@@ -1028,7 +1029,6 @@ static void tag2_init_browser(tag_browser *browser) {
 	gtk_paned_add2(GTK_PANED(browser->tag2_vbox),sw);
 	/* connect some of the signals */
 	g_signal_connect(G_OBJECT(browser->tag_songlist), "row-activated", G_CALLBACK(tag2_row_activate), browser);
-	g_signal_connect(G_OBJECT(browser->tag_songlist), "button-press-event", G_CALLBACK(tag2_song_list_button_press_event), browser);
 	g_signal_connect(G_OBJECT(browser->tag_songlist), "button-release-event", G_CALLBACK(tag2_song_list_button_release_event), browser);
 	/* Create an extra reference to the paned window containing everything, this way
 	 * I can add/remove it from gmpc's container withouth it being destroyed by gtk
