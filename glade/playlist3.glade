@@ -258,7 +258,6 @@
                         <property name="label" translatable="yes">Play/Pause</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="play_song"/>
-                        <accelerator key="Up" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image17">
                             <property name="visible">True</property>
@@ -274,7 +273,6 @@
                         <property name="label" translatable="yes">Stop</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="stop_song"/>
-                        <accelerator key="Down" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image18">
                             <property name="visible">True</property>
@@ -295,7 +293,6 @@
                         <property name="label" translatable="yes">Next</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="next_song"/>
-                        <accelerator key="Right" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image19">
                             <property name="visible">True</property>
@@ -311,7 +308,6 @@
                         <property name="label" translatable="yes">Previous</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="prev_song"/>
-                        <accelerator key="Left" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image20">
                             <property name="visible">True</property>
@@ -332,7 +328,6 @@
                         <property name="label" translatable="yes">Repeat</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="playlist_menu_repeat_changed"/>
-                        <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
                     <child>
@@ -341,7 +336,6 @@
                         <property name="label" translatable="yes">Random</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="playlist_menu_random_changed"/>
-                        <accelerator key="s" modifiers="GDK_CONTROL_MASK" signal="activate"/>
                       </widget>
                     </child>
                   </widget>
@@ -391,7 +385,6 @@
                         <property name="label" translatable="yes">_Fullscreen</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="pl3_window_fullscreen"/>
-                        <accelerator key="F11" modifiers="" signal="activate"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image23">
                             <property name="visible">True</property>

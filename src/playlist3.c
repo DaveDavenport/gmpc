@@ -50,7 +50,9 @@ typedef enum _KeybindAction{
     KB_ACTION_INTERFACE_EXPAND,
     KB_ACTION_CLOSE,
     KB_ACTION_QUIT,
-    KB_ACTION_FULLSCREEN
+    KB_ACTION_FULLSCREEN,
+    KB_ACTION_REPEAT,
+    KB_ACTION_RANDOM
 }KeybindAction;
 /** Some default keybindings */
 typedef enum _Keybind{
@@ -67,6 +69,8 @@ typedef enum _Keybind{
     KB_QUIT,
     KB_CLOSE,
     KB_FULLSCREEN,
+    KB_REPEAT,
+    KB_RANDOM,
     KB_NUM
 }Keybind;
 
@@ -84,7 +88,9 @@ char *Keybindname[KB_NUM] = {
         "Interface Expand Keypad",
         "Close",
         "Quit",
-        "Fullscreen"
+        "Fullscreen",
+        "Repeat",
+        "Random"
         };
 int KeybindingDefault[KB_NUM][3] = {
         {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
@@ -99,7 +105,9 @@ int KeybindingDefault[KB_NUM][3] = {
         {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},
         {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},
         {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},
-        {GDK_F12,           0,                                  KB_FULLSCREEN}
+        {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},
+        {GDK_r,             GDK_CONTROL_MASK,                   KB_ACTION_REPEAT},
+        {GDK_s,             GDK_CONTROL_MASK,                   KB_ACTION_RANDOM}
 };
 #define ALBUM_SIZE_SMALL 40
 #define ALBUM_SIZE_LARGE 70
@@ -564,12 +572,15 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
                 /* Program control */
                 else if(action == KB_ACTION_QUIT) main_quit(); 
                 else if(action == KB_ACTION_CLOSE) pl3_close();
+                else if(action == KB_ACTION_REPEAT) mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection)); 
+                else if(action == KB_ACTION_RANDOM) mpd_player_set_random(connection, !mpd_player_get_random(connection)); 
                 else {
                     debug_printf(DEBUG_ERROR, "Keybinding action (%i) for: %i %i is invalid\n", action,event->state, event->keyval);
-
+                    found = 0;
                 }
             }
         }
+        cfg_free_multiple(list);
     }
 	if(!found){
 		return FALSE;
@@ -1147,6 +1158,85 @@ void create_playlist3 ()
 	 *
 	 */
 	playlist_connection_changed(connection, FALSE);
+    /**
+     * Update keybindings 
+     */
+    conf_mult_obj *list = cfg_get_key_list(config, KB_GLOBAL);
+    /* If no keybindings are found, add the default ones */
+    if(list == NULL)
+    {
+        int i;
+        for(i=0;i<KB_NUM;i++)
+        {
+            cfg_set_single_value_as_int(config, KB_GLOBAL,Keybindname[i], KeybindingDefault[i][0]);
+            cfg_set_single_value_as_int(config, MK_GLOBAL,Keybindname[i], KeybindingDefault[i][1]);
+            cfg_set_single_value_as_int(config, AC_GLOBAL,Keybindname[i],KeybindingDefault[i][2]);
+        }
+        list = cfg_get_key_list(config, KB_GLOBAL);
+    }
+    if(list) {
+        GtkAccelGroup *ac= gtk_accel_group_new();
+        int action_seen = 0;
+            //        GtkAccelGroup *ac = gtk_menu_get_accel_group(glade_xml_get_widget(pl3_xml, "menuitem_control_menu"));
+        conf_mult_obj *iter = list;
+        gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
+        while(iter){
+            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
+            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,iter->key,-1);
+            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,iter->key,0);
+            if(keycode >=0 && action >= 0)
+            {
+                int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
+                action_seen |= (1<<action);
+
+                if(action == KB_ACTION_PLAY) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_play"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                } else 
+                if(action == KB_ACTION_STOP) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_stop"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                } else
+                if(action == KB_ACTION_NEXT) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_next"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                } else
+                if(action == KB_ACTION_PREV) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_prev"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                }
+                if(action == KB_ACTION_FULLSCREEN) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"fullscreen2"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                } else 
+                if(action == KB_ACTION_INTERFACE_EXPAND) {
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                } else
+               if(action == KB_ACTION_INTERFACE_COLLAPSE) {
+                   GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
+                   gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+               } else 
+               if(action == KB_ACTION_REPEAT) {
+                   GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_repeat"); 
+                   gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+               } else
+               if(action == KB_ACTION_RANDOM) {
+                   GtkWidget *item = glade_xml_get_widget(pl3_xml,"menu_random"); 
+                   gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+               }
+
+
+
+
+            }
+            iter = iter->next;
+        }
+        cfg_free_multiple(list);
+    }
+
+
+
 }
 
 /**
