@@ -287,10 +287,9 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(songlist_row_activated), NULL);
 
                 ali = gtk_alignment_new(0,0.5,0.8,0);
-                gtk_alignment_set_padding(GTK_ALIGNMENT(ali), 0,0,10,0);
                 gtk_container_add(GTK_CONTAINER(sw), tree);
                 gtk_container_add(GTK_CONTAINER(ali), sw);
-                gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
+                gtk_box_pack_start(GTK_BOX(vbox),ali,FALSE, TRUE, 0);
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tree))), data);
             }
 
@@ -1032,6 +1031,7 @@ void info2_fill_song_view(mpd_Song *song)
         gtk_alignment_set_padding(GTK_ALIGNMENT(misc), 0,0,12,0);
         gtk_container_add(GTK_CONTAINER(misc), vbox2);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),misc,FALSE, FALSE, 0);
+        gtk_widget_show(misc);
 
     }
 	/* Interesting links */
