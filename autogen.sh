@@ -128,19 +128,8 @@ fi
 
 if test -z "$INTLTOOLIZE"
 then
-	DIE="$DIE libtoolize(libtool)"
+	DIE="$DIE intltoolize (intltool)"
 fi
-
-
-
-
-
-
-
-
-
-
-
 
 if test -n "$DIE"
 then
