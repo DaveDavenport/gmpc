@@ -576,7 +576,8 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
         else if (a->song->date  && b->song->date)
         {
             int compv = atoi(a->song->date)-atoi(b->song->date); 
-            return compv;
+            if(compv != 0)
+                return compv;
         }
         if(a->song->artist == NULL && b->song->artist != NULL)
             return -1;
