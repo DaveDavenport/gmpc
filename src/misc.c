@@ -579,6 +579,7 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
             if(compv != 0)
                 return compv;
         }
+        /*
         if(a->song->artist == NULL && b->song->artist != NULL)
             return -1;
         else if(b->song->artist == NULL && a->song->artist != NULL)
@@ -591,6 +592,7 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
                 return compv;
             }
         }
+        */
         if(a->song->album == NULL && b->song->album != NULL)
             return -1;
         else if(b->song->album == NULL && a->song->album != NULL)
