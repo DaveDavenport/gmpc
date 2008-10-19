@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 #include <libmpd/libmpd.h>
+#include <string.h>
 #include "main.h"
 #include "plugin.h"
 #include "gmpc-clicklabel.h"
@@ -432,7 +433,7 @@ void tray_icon2_create_tooltip(void)
 		}
 
 
-        g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),mpd_freeSong); 
+        g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),(GDestroyNotify)mpd_freeSong); 
 		gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE,FALSE,0);
 	} else {
 		label = gtk_label_new("");

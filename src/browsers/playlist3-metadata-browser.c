@@ -52,7 +52,7 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data);
 static gboolean as_artist_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data);
 
 
-static void as_song_viewed_clicked(GtkButton *button, gpointer data);
+//static void as_song_viewed_clicked(GtkButton *button, gpointer data);
 
 int show_current_song = FALSE;
 
@@ -316,9 +316,9 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
         if(ret == META_DATA_AVAILABLE)
         {
             char **str = g_strsplit(path, "\n", 0);
-            mpd_Song *song = mpd_newSong();
             GList *list = NULL;
             int i=0;
+            song = mpd_newSong();
             for(;str && str[i]&& i<20 ;i++)
             {
                 MpdData *data = NULL;
@@ -524,6 +524,7 @@ static gboolean as_album_viewed_clicked_event(GtkButton *button, GdkEventButton 
 	}
 	return FALSE;
 }
+/*
 static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 {
 	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
@@ -536,6 +537,7 @@ static void as_song_viewed_clicked(GtkButton *button, gpointer data)
 	}
 	q_free(artist);
 }
+*/
 static void as_artist_clicked(GtkButton *button, gpointer userdata)
 {
 	int clear = GPOINTER_TO_INT(userdata);
@@ -956,16 +958,12 @@ void info2_fill_song_view(mpd_Song *song)
 	/* Songs with similar name */
 	if(song->title)
 	{
-		GtkWidget *vbox = NULL;
-		gboolean seen = FALSE;
 		MpdData *data = NULL;
 		/* Do a query for the exact title  */
 		mpd_database_search_start(connection, TRUE);
 		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_TITLE, song->title);
 		data = mpd_database_search_commit(connection);
         if(data && !mpd_data_is_last(data)) {
-
-            GtkWidget *ali;
             GtkWidget *sw = gtk_scrolled_window_new(NULL,NULL);
 
             GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-same-title-view",
@@ -1874,7 +1872,6 @@ void info2_fill_album_view(const char *artist,const char *album)
 	{
 		MpdData *data = NULL;
 		GString *string = NULL;
-		mpd_Song *cursong = NULL;
 		int i=1;
 		int tracks = 0;
 		/** Album name */

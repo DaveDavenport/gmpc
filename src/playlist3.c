@@ -900,8 +900,8 @@ static void about_dialog_activate(GtkWidget *dialog, const gchar *uri, gpointer 
 void create_playlist3 ()
 {
     GtkListStore *pl3_crumbs = NULL;
-
-	GtkCellRenderer *renderer;
+    conf_mult_obj *list = NULL;
+    GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
@@ -1161,7 +1161,7 @@ void create_playlist3 ()
     /**
      * Update keybindings 
      */
-    conf_mult_obj *list = cfg_get_key_list(config, KB_GLOBAL);
+    list = cfg_get_key_list(config, KB_GLOBAL);
     /* If no keybindings are found, add the default ones */
     if(list == NULL)
     {
@@ -1178,12 +1178,12 @@ void create_playlist3 ()
         GtkAccelGroup *ac= gtk_accel_group_new();
         int action_seen = 0;
             //        GtkAccelGroup *ac = gtk_menu_get_accel_group(glade_xml_get_widget(pl3_xml, "menuitem_control_menu"));
-        conf_mult_obj *iter = list;
+        conf_mult_obj *conf_iter = list;
         gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
-        while(iter){
-            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
-            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,iter->key,-1);
-            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,iter->key,0);
+        while(conf_iter){
+            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,conf_iter->key,-1);
+            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,conf_iter->key,-1);
+            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,conf_iter->key,0);
             if(keycode >=0 && action >= 0)
             {
                 int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
@@ -1230,7 +1230,7 @@ void create_playlist3 ()
 
 
             }
-            iter = iter->next;
+            conf_iter = conf_iter->next;
         }
         cfg_free_multiple(list);
     }
@@ -1554,10 +1554,10 @@ void playlist_connection_changed(MpdObj *mi, int connect)
     /** Set back to the current borwser, and update window title */
 	if(connect){
 		gchar *string = NULL;
-		GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+        GtkTreeIter iter;
+        GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
 				glade_xml_get_widget (pl3_xml, "cat_tree"));
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);                      		
-		GtkTreeIter iter;
 		if(gtk_tree_model_get_iter_first(model, &iter)){
 			gtk_tree_selection_select_iter(selec, &iter);
 		}

@@ -43,7 +43,6 @@
 #include "playlist3-playlist-editor.h"
 
 
-static int pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
 static void pl3_current_playlist_browser_add(GtkWidget *cat_tree);
 
@@ -59,7 +58,6 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 /* just for here */
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
 static int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
-static int  pl3_current_playlist_browser_button_press_event(GtkTreeView *tree, GdkEventButton *event);
 static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, GdkEventKey *event,GtkWidget *entry);
 static void pl3_current_playlist_browser_show_info(void);
 static void pl3_current_playlist_save_playlist(void);

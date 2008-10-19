@@ -6,7 +6,9 @@
 #include "config1.h"
 #include "mpdinteraction.h"
 
-G_LOCK_DEFINE (connecting_lock);
+//G_LOCK_DEFINE (connecting_lock);
+
+static GMutex *connecting_lock = NULL;//g_mutex_new();//G_STATIC_MUTEX_INIT;
 
 /* Server Settings plugin */
 static void server_pref_construct(GtkWidget *);
@@ -119,8 +121,9 @@ static int connected_to_mpd(mpd_Connection *mpd_conn)
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
 	g_source_remove(connecting_pulse);
 	connecting_pulse = 0;
-	G_UNLOCK(connecting_lock);
-	printf("unlocking\n");
+//	G_UNLOCK(connecting_lock);
+    g_mutex_unlock(connecting_lock);
+    printf("unlocking\n");
 	if(connection)
 	{
 		mpd_connect_real(connection, mpd_conn);
@@ -139,7 +142,10 @@ static void connection_thread(void)
 int connect_to_mpd()
 {
 	char *string = NULL;
-    if(!G_TRYLOCK(connecting_lock))
+    if(connecting_lock == NULL){
+        connecting_lock = g_mutex_new();
+    }
+    if(!/*G_TRYLOCK*/g_mutex_trylock(connecting_lock))
     {
         debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
         return FALSE;
