@@ -273,16 +273,32 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *event = NULL;
 	GtkWidget *coverimg = NULL;
 	mpd_Song *song = NULL;
-	int state;
+    int tooltip_timeout = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+	int state = 0; 
 	int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
 	int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
 
 
+	song = mpd_playlist_get_current_song(connection);
 	/**
 	 * if the tooltip still exists destroy it... 
 	 */
 	if(tray_icon2_tooltip)
 	{
+        /* Do a check to avoid ugly redraws */
+        mpd_Song *song2 = g_object_get_data(G_OBJECT(tray_icon2_tooltip), "song");
+        if(song2 && song ){
+            if(song->file && song2->file && strcmp(song2->file, song->file) == 0)
+            {
+                if(tray_icon2_tooltip_timeout)
+                {
+                    g_source_remove(tray_icon2_tooltip_timeout);
+                }
+                tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+                printf("not closing tooltip\n");
+                return;
+            }
+        }
 		tray_icon2_tooltip_destroy();
 	}
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1) == 0)
@@ -358,7 +374,6 @@ void tray_icon2_create_tooltip(void)
 	/**
 	 * If there is a song, show show song info
 	 */
-	song = mpd_playlist_get_current_song(connection);
 	if(song)
 	{
 		int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
@@ -417,6 +432,7 @@ void tray_icon2_create_tooltip(void)
 		}
 
 
+        g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),mpd_freeSong); 
 		gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE,FALSE,0);
 	} else {
 		label = gtk_label_new("");
@@ -516,8 +532,7 @@ void tray_icon2_create_tooltip(void)
 		/**
 		 * Destroy it after 5 seconds
 		 */
-		state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
-		tray_icon2_tooltip_timeout = g_timeout_add_seconds(state, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+		tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)

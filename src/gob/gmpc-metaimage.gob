@@ -315,6 +315,20 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					mpd_Song *song = mpd_playlist_get_current_song(self->connection);
 					if(song)
 					{
+                        if(self->_priv->song && 
+                            self->_priv->song->artist && 
+                            song->artist && 
+                            strcmp(song->artist, self->_priv->song->artist) == 0)
+                        {
+                            /* If we are artist iamge, don't update, same artist */
+                            if(self->image_type == META_ARTIST_ART ) return;
+                            /* If we are album, check if album matches too */
+                            else if(self->image_type == META_ALBUM_ART && 
+                                self->_priv->song->album && song->album &&
+                                strcmp(self->_priv->song->album, song->album) == 0){
+                                return;
+                            }
+                        }
 						self_update_cover_from_song(self, song);
 					}
 					else
