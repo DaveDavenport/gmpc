@@ -674,7 +674,6 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
 
 static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, void *data)
 {
-    printf("status changed\n");
     if(what&MPD_CST_STORED_PLAYLIST)
     {
         printf("Failed list\n");

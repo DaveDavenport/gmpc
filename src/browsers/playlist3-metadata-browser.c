@@ -273,10 +273,12 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 GtkWidget *ali;
                 GtkWidget *sw = gtk_scrolled_window_new(NULL,NULL);
 
+
                 GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-similar-artist-view",
                                 FALSE, 
                                 (GtkTreeModel *)gmpc_mpddata_model_new());
                 gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
+                gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
                 gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
 
                 g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(song_list_button_release_event), NULL);
@@ -969,7 +971,7 @@ void info2_fill_song_view(mpd_Song *song)
             GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-same-title-view",
                     FALSE, 
                     (GtkTreeModel *)gmpc_mpddata_model_new());
-
+            gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
             label = gtk_label_new("");
             gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
@@ -1948,7 +1950,7 @@ void info2_fill_album_view(const char *artist,const char *album)
         table2 = gmpc_mpddata_treeview_new("metadata-album-view", FALSE,(GtkTreeModel *) gmpc_mpddata_model_new());
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(table2))), data);
         gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(table2));
-
+        gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(label), GTK_SHADOW_ETCHED_IN);
         g_signal_connect(G_OBJECT(table2), "button-release-event", G_CALLBACK(song_list_button_release_event), NULL);
         g_signal_connect(G_OBJECT(table2), "row-activated", G_CALLBACK(song_list_row_activated), NULL);
 
