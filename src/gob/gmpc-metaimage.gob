@@ -303,7 +303,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gc)
 		{
 
-			if(self->connection && what&(MPD_CST_STATE) && self->is_visible)
+			if(self->connection && what&(MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_SONGPOS|MPD_CST_PLAYLIST) && self->is_visible)
 			{
 				int state = mpd_player_get_state(self->connection);
 				if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
@@ -338,6 +338,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				}
 
 			}
+            /*
 			else if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS|MPD_CST_PLAYLIST) && self->is_visible)
 			{
 				mpd_Song *song = mpd_playlist_get_current_song(self->connection);
@@ -350,7 +351,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					self_update_cover_from_song(self, song);
 				}
 			}
-
+*/
 		}
 	public 
 		void
