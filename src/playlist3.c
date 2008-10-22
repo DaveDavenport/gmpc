@@ -801,13 +801,25 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		const gchar *url_data = (gchar *)data->data; 
         if(url_data)
         {
+            int i =0;
             gchar **url = g_uri_list_extract_uris(url_data);
-            if(url)
+            for(i=0; url && url[i]; i++)
+//            if(url)
             {
-                gtk_drag_finish(context, TRUE, FALSE, time_recieved);
-                url_start_real(url[0]);
-                g_strfreev(url);
+                printf("%s\n", url[i]);
+                if(strncmp(url[i], "file://", 7) == 0){
+                    char *uri = g_uri_unescape_string(url[i], "");
+                    mpd_playlist_add(connection, uri);
+                    g_free(uri);
+                }
+                else
+                {
+                    gtk_drag_finish(context, TRUE, FALSE, time_recieved);
+                    url_start_real(url[i]);
+            
+                }
             }
+            if(url)g_strfreev(url);
         }
 	} else {
 		MpdData * mdata ;
