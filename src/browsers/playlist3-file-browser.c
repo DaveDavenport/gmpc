@@ -859,82 +859,83 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
      */
     if(gtk_tree_selection_count_selected_rows(sel) == 1)
     {
-	mpd_Song *song = NULL;
+        mpd_Song *song = NULL;
         GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
         GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
         if(list != NULL)
-	{
-		GtkTreeIter iter;
-		int row_type;
-		char *path;
-		GtkTreePath *tree_path;
-		list = g_list_first(list);
-		gtk_tree_model_get_iter(model, &iter, list->data);
-		gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_PATH,&path,MPDDATA_MODEL_ROW_TYPE, &row_type, -1); 
-		if(row_type == MPD_DATA_TYPE_SONG)
-		{
-			if(mpd_server_check_version(connection,0,12,0))
-			{
-				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-				g_signal_connect(G_OBJECT(item), "activate",
-						G_CALLBACK(pl3_file_browser_show_info), NULL);
-				has_item = 1;
-			}
-		}
-		else if(row_type == MPD_DATA_TYPE_PLAYLIST)
-		{
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), NULL);
-			has_item = 1;
-		}
-		else if(row_type == MPD_DATA_TYPE_DIRECTORY)
-		{
-			item = gtk_image_menu_item_new_with_label(_("Update"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate",
-					G_CALLBACK(pl3_file_browser_update_folder_left_pane), NULL);
-			has_item = 1;
-		}
-		g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
-		g_list_free (list);
-		q_free(path);
-		if(row_type != -1)
-		{
-			/* replace the replace widget */
-			item = gtk_image_menu_item_new_with_label(_("Replace"));
-			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-			gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
+        {
+            GtkTreeIter iter;
+            int row_type;
+            char *path;
+            GtkTreePath *tree_path;
+            list = g_list_first(list);
+            gtk_tree_model_get_iter(model, &iter, list->data);
+            gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_PATH,&path,MPDDATA_MODEL_ROW_TYPE, &row_type, -1); 
+            if(row_type == MPD_DATA_TYPE_SONG)
+            {
+                if(mpd_server_check_version(connection,0,12,0))
+                {
+                    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO,NULL);
+                    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                    g_signal_connect(G_OBJECT(item), "activate",
+                            G_CALLBACK(pl3_file_browser_show_info), NULL);
+                    has_item = 1;
+                }
+            }
+            else if(row_type == MPD_DATA_TYPE_PLAYLIST)
+            {
+                item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), NULL);
+                has_item = 1;
+            }
+            else if(row_type == MPD_DATA_TYPE_DIRECTORY)
+            {
+                item = gtk_image_menu_item_new_with_label(_("Update"));
+                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                        gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                g_signal_connect(G_OBJECT(item), "activate",
+                        G_CALLBACK(pl3_file_browser_update_folder_left_pane), NULL);
+                has_item = 1;
+            }
+            if(row_type != -1)
+            {
+                /* replace the replace widget */
+                item = gtk_image_menu_item_new_with_label(_("Replace"));
+                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                        gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+                gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+                g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
 
-			/* add the delete widget */
-			item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
-			gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
-			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
+                /* add the delete widget */
+                item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
+                gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+                g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
 
 
-			playlist_editor_right_mouse(menu,pl3_file_browser_add_to_playlist);
-			has_item = 1;
-		}
+                playlist_editor_right_mouse(menu,pl3_file_browser_add_to_playlist);
+                has_item = 1;
+            }
 
-		model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_fb_tree));
-		list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree)),&model);
-		tree_path = list->data;
-		if(tree_path && gtk_tree_model_get_iter(model, &iter, tree_path)) {
-			gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-			if(song)
-			{
-				submenu_for_song(menu, song);
-			}
+///            model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_fb_tree));
+  //          list = gtk_tree_selection_get_selected_rows(sel,&model);
+    //        if(list)
+                tree_path = list->data;
+                if(tree_path && gtk_tree_model_get_iter(model, &iter, tree_path)) {
+                    gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                    if(song)
+                    {
+                        submenu_for_song(menu, song);
+                    }
 
-		}
-		g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
-		g_list_free(list);
-	}
+                }
+            //    g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
+              //  g_list_free(list);
+            g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
+            g_list_free (list);
+            q_free(path);
+        }
     }
     else
     {
