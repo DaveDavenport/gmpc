@@ -803,30 +803,44 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 {
 	if(info != 99)
 	{
+        int found =0;
 		const gchar *url_data = (gchar *)data->data; 
+        /* Hack, move this too libmpd? */
+        char ** handlers = mpd_server_get_url_handlers(connection);
+        int has_http = FALSE, has_file = FALSE;
+        int i =0;
+        for(i=0; handlers && handlers[i] ; i++)
+        {
+            if(strcmp(handlers[i], "http://") == 0){
+                has_http = TRUE;
+            }else if (strcmp(handlers[i], "file://") == 0) {
+                has_file = TRUE;
+            }
+        }
+        if(handlers) g_strfreev(handlers);
         if(url_data)
         {
-            int i =0;
+           
             gchar **url = g_uri_list_extract_uris(url_data);
             for(i=0; url && url[i]; i++)
-//            if(url)
             {
-                printf("%s\n", url[i]);
-                if(strncmp(url[i], "file://", 7) == 0){
+                if( has_file && strncmp(url[i], "file://", 7) == 0){
                     char *uri = g_uri_unescape_string(url[i], "");
                     mpd_playlist_add(connection, uri);
                     g_free(uri);
+                    found = 1;
                 }
-                else
+                else if(has_http && strncmp(url[i], "http://", 7) == 0)
                 {
-                    gtk_drag_finish(context, TRUE, FALSE, time_recieved);
                     url_start_real(url[i]);
-            
+                    found = 1;           
                 }
             }
             if(url)g_strfreev(url);
         }
-	} else {
+
+        gtk_drag_finish(context, found, FALSE, time_recieved);
+    } else {
 		MpdData * mdata ;
 		gchar **stripped;
 		int i;
