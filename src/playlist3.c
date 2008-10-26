@@ -62,10 +62,10 @@ typedef enum _Keybind{
     KB_STOP,
     KB_CLEAR_PLAYLIST,
     KB_FULL_ADD_PLAYLIST,
-    KB_INTERFACE_COLLAPSE,
-    KB_INTERFACE_EXPAND,
     KB_INTERFACE_COLLAPSE_KP,
     KB_INTERFACE_EXPAND_KP,
+    KB_INTERFACE_COLLAPSE,
+    KB_INTERFACE_EXPAND,
     KB_QUIT,
     KB_CLOSE,
     KB_FULLSCREEN,
@@ -82,10 +82,10 @@ char *Keybindname[KB_NUM] = {
         "Stop",
         "Clear Playlist",
         "Full Add Playlist",
-        "Interface Collapse",
-        "Interface Expand",
         "Interface Collapse Keypad",
         "Interface Expand Keypad",
+        "Interface Collapse",
+        "Interface Expand",
         "Close",
         "Quit",
         "Fullscreen",
@@ -99,10 +99,10 @@ int KeybindingDefault[KB_NUM][3] = {
         {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_STOP},
         {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},
         {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},
-        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
-        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},
         {GDK_KP_Subtract,   0,                                  KB_ACTION_INTERFACE_COLLAPSE},
         {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},
+        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
+        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},
         {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},
         {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},
         {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},
@@ -1222,11 +1222,11 @@ void create_playlist3 ()
                     gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
                 } else 
                 if(action == KB_ACTION_INTERFACE_EXPAND) {
-                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
+                    GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
                     gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
                 } else
                if(action == KB_ACTION_INTERFACE_COLLAPSE) {
-                   GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
+                   GtkWidget *item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
                } else 
                if(action == KB_ACTION_REPEAT) {
