@@ -64,6 +64,7 @@ enum {
 	MM_VOLUME_UP,
 	MM_VOLUME_DOWN,
 	MM_SHOW_NOTIFICATION,
+    MM_TOGGLE_MUTE,
 	LAST_SIGNAL
 };
 
@@ -82,6 +83,7 @@ char *keynames[LAST_SIGNAL] = {
 	N_("Volume Up"),	/** MM_VOLUME_UP */
 	N_("Volume Down"),	/** MM_VOLUME_DOWN */
 	N_("Show song"),	/** MM_SHOW_NOTIFICATION */
+    N_("Toggle Mute"),  /** MM_TOGGLE_MUTE */
 };	
 
 static GObjectClass *parent_class;
@@ -235,6 +237,17 @@ static void mmkeys_class_init (MmKeysClass *klass)
 				NULL, NULL,
 				g_cclosure_marshal_VOID__INT,	
 				G_TYPE_NONE, 1, G_TYPE_INT); 	
+	signals[MM_TOGGLE_MUTE] = 
+		g_signal_new ("mm_toggle_mute",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				0,
+				NULL, NULL,
+				g_cclosure_marshal_VOID__INT,	
+				G_TYPE_NONE, 1, G_TYPE_INT); 	
+
+
+
 }
 
 static void mmkeys_finalize (GObject *object)

@@ -16,6 +16,9 @@ void song_fastforward(void);
 void song_fastbackward(void);
 void volume_up(void);
 void volume_down(void);
+void volume_mute(void);
+void volume_unmute(void);
+void volume_toggle_mute(void);
 int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;

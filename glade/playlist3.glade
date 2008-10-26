@@ -318,6 +318,25 @@
                       </widget>
                     </child>
                     <child>
+                      <widget class="GtkSeparatorMenuItem" id="menuitem7">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_mute_toggle">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Mute</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="volume_toggle_mute"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image27">
+                            <property name="visible">True</property>
+                            <property name="icon_name">stock_volume-mute</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="separator3">
                         <property name="visible">True</property>
                       </widget>
@@ -646,7 +665,6 @@
                                     <property name="visible">True</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                     <property name="pulse_step">0.10000000149</property>
-                                    <property name="text" translatable="yes"></property>
                                     <signal name="button_press_event" handler="pl3_pb_button_press_event"/>
                                     <signal name="scroll_event" handler="pl3_pb_scroll_event"/>
                                   </widget>

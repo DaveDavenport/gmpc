@@ -8,6 +8,8 @@
 
 //G_LOCK_DEFINE (connecting_lock);
 
+static int current_volume = 0;
+
 static GMutex *connecting_lock = NULL;//g_mutex_new();//G_STATIC_MUTEX_INIT;
 
 /* Server Settings plugin */
@@ -289,6 +291,29 @@ void volume_down()
 {
 	mpd_status_set_volume(connection, mpd_status_get_volume(connection)-5);
 }
+
+
+void volume_mute()
+{
+    mpd_status_set_volume(connection, 0);
+}
+
+void volume_unmute()
+{
+    if(mpd_status_get_volume(connection) == 0)
+        mpd_status_set_volume(connection, current_volume);
+}
+
+void volume_toggle_mute()
+{
+    if(current_volume > 0 && mpd_status_get_volume(connection) == 0)
+    {
+        mpd_status_set_volume(connection, current_volume);
+    }else {
+        mpd_status_set_volume(connection, 0);
+    }
+}
+
 /*****************************************************************
  * Preferences
  */
@@ -522,6 +547,13 @@ void add_directory(const gchar *path)
 
 void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
+    if(what&MPD_CST_VOLUME)
+    {
+        int volume = mpd_status_get_volume(connection);
+        if(volume)
+            current_volume =  volume;
+    }
+
 	if(!server_pref_xml)return;
 	if(what&MPD_CST_CROSSFADE)
 	{
