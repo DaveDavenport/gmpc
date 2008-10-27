@@ -10,8 +10,9 @@ long unsigned num_queries = 0;
 
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
+GMutex *meta_plugins_lock = NULL;
 gmpcPlugin **meta_plugins = NULL;
-
+static void meta_data_sort_plugins(void);
 GThread *meta_thread = NULL;
 /**
  * This is queue is used to send commands to the retrieval queue
@@ -572,13 +573,23 @@ static void meta_data_retrieve_thread()
 			 */
 			for(i=0;i<(meta_num_plugins) && data->result != META_DATA_AVAILABLE;i++)
 			{
-				/* *
+                gmpcPlugin *plug =  NULL;
+                /* This is locked when sorting, because entry might be invalid 
+                 * plug is always valid once obtained
+                 */
+                if(!meta_plugins_lock){
+                    meta_plugins_lock = g_mutex_new();
+                }
+                g_mutex_lock(meta_plugins_lock);
+                plug = meta_plugins[i];
+                g_mutex_unlock(meta_plugins_lock);
+                /* *
 				 * Get image function is only allowed to return META_DATA_AVAILABLE or META_DATA_UNAVAILABLE
 				 */
-				if(meta_plugins[i]->get_enabled())
+				if(plug->get_enabled())
 				{
-                    debug_printf(DEBUG_INFO, "Query plugin: '%s'", meta_plugins[i]->name);
-					data->result = meta_plugins[i]->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
+                    debug_printf(DEBUG_INFO, "Query plugin: '%s'", plug->name);
+					data->result = plug->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
 			}
@@ -682,13 +693,26 @@ void meta_data_init()
 
 void meta_data_add_plugin(gmpcPlugin *plug)
 {
-    int i=0;
-    int changed = FALSE;	
+    if(!meta_plugins_lock){
+        meta_plugins_lock = g_mutex_new();
+    }
+    g_mutex_lock(meta_plugins_lock);
     meta_num_plugins++;
     meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPlugin **));
     meta_plugins[meta_num_plugins-1] = plug;
     meta_plugins[meta_num_plugins] = NULL;
+    g_mutex_unlock(meta_plugins_lock);
+    meta_data_sort_plugins();
+}
 
+static void meta_data_sort_plugins(void)
+{
+    int i;
+    int changed = FALSE;	
+    if(!meta_plugins_lock){
+        meta_plugins_lock = g_mutex_new();
+    }
+    g_mutex_lock(meta_plugins_lock);
     do{	
         changed=0;
         for(i=0; i< (meta_num_plugins-1);i++)
@@ -702,6 +726,7 @@ void meta_data_add_plugin(gmpcPlugin *plug)
             }
         }
     }while(changed);
+    g_mutex_unlock(meta_plugins_lock);
 }
 
 void meta_data_cleanup(void)
@@ -963,3 +988,108 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     printf("Returning: %s\n", retv);
     return retv;
 }
+static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path, char *new_text, GtkListStore *store)
+{
+    GtkTreeIter iter;
+    if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
+    {
+        gmpcPlugin *plug;
+        gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
+        if(plug)
+        {
+            plug->metadata->set_priority((gint)g_ascii_strtoull(new_text, NULL, 0));
+            gtk_list_store_set(GTK_LIST_STORE(store), &iter, 2, plug->metadata->get_priority(),-1);
+            meta_data_sort_plugins();
+        }
+    }
+}
+static void metadata_construct_pref_pane(GtkWidget *container)
+{
+    GtkObject *adjustment;
+    int i = 0;
+    GtkCellRenderer *renderer;
+    GtkWidget *vbox, *sw;
+    GtkWidget *treeview;
+    GtkWidget *label = NULL;
+    GtkListStore *store = gtk_list_store_new(3, 
+            G_TYPE_POINTER, /* The GmpcPlugin */
+            G_TYPE_STRING, /* Name */
+            G_TYPE_INT /* The priority */
+            );
+    gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store),
+            2, GTK_SORT_ASCENDING);
+
+
+    /* Create vbox */
+    vbox = gtk_vbox_new(FALSE, 6);
+    /* tree + container */
+    sw = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+    gtk_container_add(GTK_CONTAINER(sw), treeview);
+
+    /* Build the columns */
+    renderer = gtk_cell_renderer_text_new();
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview),
+                    -1,
+                    "Name",
+                    renderer,
+                    "text", 1,
+                    NULL);
+    renderer = gtk_cell_renderer_spin_new();
+
+    adjustment = gtk_adjustment_new (0, 0, 100, 1, 0, 0);
+    g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
+    g_object_set (renderer, "adjustment", adjustment, NULL);
+    g_signal_connect(G_OBJECT(renderer), "edited", G_CALLBACK(metadata_pref_priority_changed), store);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview),
+                    -1,
+                    "Priority",
+                    renderer,
+                    "text", 2,
+                    NULL);
+
+
+    /* Add the list to the vbox */
+    gtk_box_pack_start(GTK_BOX(vbox), sw, TRUE, TRUE, 0);
+
+    gtk_container_add(GTK_CONTAINER(container), vbox);
+    /* add plugins to list */
+    for(i=0; i< meta_num_plugins;i++)
+    {
+        GtkTreeIter iter;
+        gtk_list_store_insert_with_values(store, &iter, -1, 
+            0, meta_plugins[i],
+            1, meta_plugins[i]->name,
+            2, meta_plugins[i]->metadata->get_priority(),
+            -1);
+
+    }
+
+    label = gtk_label_new("Plugins are evaluated from low priority to high");
+    gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+    gtk_widget_show_all(container);
+}
+static void metadata_destroy_pref_pane(GtkWidget *container)
+{
+    GtkWidget *child = gtk_bin_get_child(GTK_BIN(container));
+    if(child)
+    {
+        gtk_widget_destroy(child);
+    }
+}
+
+
+gmpcPrefPlugin metadata_pref_plug = {
+    .construct      = metadata_construct_pref_pane,
+    .destroy        =  metadata_destroy_pref_pane
+};
+gmpcPlugin metadata_plug = {
+    .name           = N_("Metadata Handler"),
+    .version        = {1,1,1},
+    .plugin_type    = GMPC_INTERNALL,
+    .pref           = &metadata_pref_plug
+};
+

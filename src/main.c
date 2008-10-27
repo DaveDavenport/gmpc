@@ -49,6 +49,7 @@
 #include "browsers/playlist3-current-playlist-browser.h"
 
 extern gmpcPlugin connection_plug;
+extern gmpcPlugin metadata_plug;
 /*
 extern gmpcPlugin about_plug;
 */
@@ -628,6 +629,7 @@ int main (int argc, char **argv)
      */
     /** current playlist */
     plugin_add(&current_playlist_plug, 0);
+
     /** file browser */
     plugin_add(&file_browser_plug, 0);
     /** Find Browser */
@@ -653,7 +655,9 @@ int main (int argc, char **argv)
 	/* Playlist editor */
 	plugin_add(&playlist_editor_plugin,0);
 
-	plugin_add(&proxyplug,0);
+    plugin_add(&metadata_plug,0);   
+    plugin_add(&proxyplug,0);
+
     TEC("Loading internal plugins")
 
     /**
