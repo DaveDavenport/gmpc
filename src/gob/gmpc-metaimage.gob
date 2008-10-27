@@ -17,6 +17,18 @@ requires 2.0.0
 #define MOUSE_DISTANCE 8
 %}
 
+%{
+static int num_drag_targets = 4; /* skip hyperlinks for now */
+static GtkTargetEntry data_image_drag_target[] = 
+{
+    { "image/jpeg", 0, 0 },
+    { "image/png",  0, 1 },
+    { "image/gif",  0, 2 },
+	{ "text/uri-list", 0, 3},
+    { "_NETSCAPE_URL", 0,4},
+    { "x-url/http", 0,5}
+};
+%}
 
 
 %ph{
@@ -289,12 +301,58 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			PARENT_HANDLER(obj);
 		}
+    private 
+        void 
+        drag_data_recieved (self,
+                GdkDragContext     *context,
+                gint                x,
+                gint                y,
+                GtkSelectionData   *data,
+                guint               info,
+                guint               dnd_time,
+                GtkWidget          *widget
+                )
+        {
+            int found = FALSE;
+            if(self->_priv->song)
+            {
+                if(info < num_drag_targets)
+                {
+                    gchar **uri =  gtk_selection_data_get_uris(data);   
+                    /* Only one uri is interresting */
+                    if(uri && uri[0])
+                    {
+                        gchar *path = g_filename_from_uri(uri[0], NULL, NULL);
 
+                        /* try to open it */
+                        if(path && gdk_pixbuf_get_file_info(path, NULL,NULL))
+                        {
+                            mpd_Song *song = mpd_songDup(self->_priv->song);
+                            meta_data_set_cache(song,self->image_type, META_DATA_AVAILABLE, path); 
+                            gmpc_meta_watcher_data_changed(gmw, song, self->image_type, META_DATA_AVAILABLE, path);
+                            found = TRUE;
+                            mpd_freeSong(song);
+                        }
+                        g_free(path);
+                    }
+                    g_strfreev(uri);
+                }
+            }
+
+            gtk_drag_finish(context, found, FALSE, dnd_time);
+        }
 	public 
 		GtkWidget * new (int type)
 		{
 			Self *gmi =  GET_NEW;
 			gmi->image_type = type;
+            
+            gtk_drag_dest_set(GTK_WIDGET(gmi),
+                    GTK_DEST_DEFAULT_ALL,
+                data_image_drag_target, num_drag_targets,
+                GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+        g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
+                GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
 			return (GtkWidget *)gmi;
 		}
 
