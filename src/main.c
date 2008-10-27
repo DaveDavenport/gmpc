@@ -1103,7 +1103,7 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
     }
     if(connected)
     {
-        playlist3_close_error();
+//        playlist3_close_error();
     }
 		/**
 		 * Check version

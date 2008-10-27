@@ -69,15 +69,24 @@ typedef struct {
 	int  (*key_press_event)			(GtkWidget *mw, GdkEventKey *event, int type);
 } gmpcPlBrowserPlugin;
 
+/**
+ * Metadata fetching plugin.
+ * All fields required
+ */
 typedef struct {
+    /* Set and get priority */
 	int (*get_priority)				(void);
+    void (*set_priority)            (int priority);
 	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
 } gmpcMetaDataPlugin;
 
-/* Unique number */
-/* 16 == 0.14 release */
-/* 17 == 0.15.5 release */
-#define PLUGIN_API_VERSION 19
+/* Unique number                */
+/* 16 == 0.14 release           */
+/* 17 == 0.15.5 release         */
+/* 18 ==       16 december      */
+/* 19 == 0.16*  24 december     */
+/* 20 == 0.16.5 release         */ 
+#define PLUGIN_API_VERSION 20
 
 /* sturcture */
 typedef struct {

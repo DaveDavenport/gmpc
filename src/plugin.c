@@ -32,7 +32,6 @@ static int plugin_validate(gmpcPlugin *plug)
         debug_printf(DEBUG_ERROR, "Plugin has no name.");
         return FALSE;
     }
-    /* check if plugin with same name is allready loaded */
     for(i=0;i<num_plugins;i++)
     {
         if(strcmp(plugins[i]->name, plug->name) == 0)
@@ -64,6 +63,11 @@ static int plugin_validate(gmpcPlugin *plug)
         if(plug->metadata->get_priority == NULL)
         {   
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_priority != NULL Failed",plug->name);
+            return FALSE;                                                                                             
+        }
+        if(plug->metadata->set_priority == NULL)
+        {
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->get_image == NULL)
@@ -146,8 +150,9 @@ static int plugin_load(char *path, const char *file)
 				file, *api_version, PLUGIN_API_VERSION);
 		debug_printf(DEBUG_ERROR, "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
 			       file, *api_version, PLUGIN_API_VERSION);
-		show_error_message(message,FALSE);
-		q_free(string);
+	//	show_error_message(message,FALSE);
+        playlist3_show_error_message(message, ERROR_WARNING);
+        q_free(string);
 		q_free(message);
 		g_module_close(handle);
 		return 1;
@@ -156,8 +161,9 @@ static int plugin_load(char *path, const char *file)
 	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
-		show_error_message(message,FALSE);
-		q_free(string);
+//		show_error_message(message,FALSE);
+        playlist3_show_error_message(message, ERROR_CRITICAL);
+        q_free(string);
 		q_free(message);
 		g_module_close(handle);
 		return 1;
@@ -180,10 +186,16 @@ static int plugin_load(char *path, const char *file)
     plugin_add(plug,1);
     return 0;
 }
+static gboolean __show_plugin_load_error(gpointer data)
+{
+    playlist3_show_error_message(_("One or more plugins failed to load, see help->messages for more information"), ERROR_CRITICAL);
+    return FALSE;
+}
 
 void plugin_load_dir(gchar *path)
 {
     GDir *dir = g_dir_open(path, 0, NULL);
+    int failure = 0;
     if(dir)
     {
         const gchar *dirname = NULL;
@@ -195,6 +207,7 @@ void plugin_load_dir(gchar *path)
             {
                 if(plugin_load(path,dirname))
                 {
+                    failure = 1;
                     debug_printf(DEBUG_ERROR, "Failed to load plugin: %s\n", dirname);
                 }
             }
@@ -205,5 +218,9 @@ void plugin_load_dir(gchar *path)
             q_free(full_path);
         }
         g_dir_close(dir);
+    }
+    if(failure)
+    {
+        gtk_init_add(__show_plugin_load_error, NULL);
     }
 }
