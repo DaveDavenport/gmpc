@@ -1033,6 +1033,7 @@ void create_playlist3 ()
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer, "markup", PL3_CAT_NUM_ITEMS, NULL);
+    g_object_set(renderer, "xalign", 1.0, NULL);
     /* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 
