@@ -369,10 +369,11 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 		else if (temp->type == TYPE_ITEM)
 		{
 			int i= 0;
+            int length = strlen(temp->value);
             fputs(temp->name, fp);
             fputs("=\"", fp);
 //			fprintf(fp, "%s=\"", temp->name);
-			for(i=0;i<strlen(temp->value);i++)
+			for(i=0;i<length;i++)
 			{
 				if(temp->value[i] == '"'){
 					fputs("\\\"",fp);
@@ -384,7 +385,7 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 					fputs("\\n",fp);
 				}
 				else{
-					fputc(temp->value[i],fp);
+					putc(temp->value[i],fp);
 				}
 			}
 			fputs("\"\n",fp);
