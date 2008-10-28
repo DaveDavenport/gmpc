@@ -348,20 +348,30 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	for(temp = node;temp != NULL; temp = temp->next){
 		if(temp->type == TYPE_CATEGORY)
 		{
-			fprintf(fp, "\n[%s]\n",temp->name);
+//			fprintf(fp, "\n[%s]\n",temp->name);
+            fputs("\n[", fp);
+            fputs(temp->name, fp);
+            fputs("]\n",fp);
 			cfg_save_category(cfg,temp->children,fp);
-            fprintf(fp, "[]\n");
+//            fprintf(fp, "[]\n");
+            fputs("[]\n",fp);
 		}
 		if(temp->type == TYPE_ITEM_MULTIPLE)
 		{
-			fprintf(fp, "\n{%s}\n",temp->name);
+//			fprintf(fp, "\n{%s}\n",temp->name);
+            fputs("\n{", fp);
+            fputs(temp->name, fp);
+            fputs("}\n",fp);
 			cfg_save_category(cfg,temp->children,fp);
-			fprintf(fp, "{}\n\n");
-		}                                                		
+			//fprintf(fp, "{}\n\n");
+            fputs("{}\n\n",fp);
+        }                                                		
 		else if (temp->type == TYPE_ITEM)
 		{
 			int i= 0;
-			fprintf(fp, "%s=\"", temp->name);
+            fputs(temp->name, fp);
+            fputs("=\"", fp);
+//			fprintf(fp, "%s=\"", temp->name);
 			for(i=0;i<strlen(temp->value);i++)
 			{
 				if(temp->value[i] == '"'){
