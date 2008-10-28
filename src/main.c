@@ -848,7 +848,9 @@ int main (int argc, char **argv)
 	/**
 	 * Close the config file
 	 */
+    TOC("Starting save config")
 	cfg_close(config);
+    TOC("Saved config")
     g_object_unref(gmpc_idle);
     g_object_unref(gmpc_signals);
 	g_object_unref(gmpc_profiles);

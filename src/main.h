@@ -130,7 +130,7 @@ gboolean pl3_window_is_fullscreen(void);
     TIMER_SUB(start123, stop123, diff123);\
     printf(a": %lu s, %lu us\n",##ARGS, (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec));    
 
-#define TOC(a, ARGS...) TAC(a,ARGS...);\
+#define TOC(a,ARGS...) TAC(a,##ARGS);\
     start123 = stop123;
 
 #else // DEBUG_TIMING

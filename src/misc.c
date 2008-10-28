@@ -494,7 +494,7 @@ MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_dat
 
     for(node = (MpdData_real*)mpd_data_get_first(data);node;node =(MpdData_real *)mpd_data_get_next_real((MpdData *)node, FALSE))i++;
 
-    nodes = g_malloc0(i*sizeof(*node));
+    nodes = g_malloc0(i*sizeof(MpdData_real *));
     
     node = (MpdData_real *)mpd_data_get_first(data);
     for(j=0;j<i;j++)
@@ -502,7 +502,7 @@ MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_dat
         nodes[j] = node;
         node =(MpdData_real *) mpd_data_get_next_real((MpdData *)node, FALSE);
     }
-    g_qsort_with_data(nodes, i, sizeof(MpdData_real *), func,user_data);
+    g_qsort_with_data(nodes, i, sizeof(*nodes), func,user_data);
     nodes[0]->prev = NULL;
     nodes[0]->next= NULL;
     nodes[0]->first=nodes[0];

@@ -761,6 +761,8 @@ void meta_data_check_plugin_changed()
 void meta_data_destroy(void)
 {
     meta_thread_data *mtd = NULL;
+    INIT_TIC_TAC();
+    
 
     if(meta_thread)
     {
@@ -795,7 +797,9 @@ void meta_data_destroy(void)
         meta_commands = NULL;
     }
     /* Close the cover database  */
+    TOC("test")
     cfg_close(cover_index);
+    TOC("Config saved")
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 {

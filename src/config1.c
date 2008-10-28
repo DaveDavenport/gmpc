@@ -250,6 +250,7 @@ void cfg_close(config_obj *cfgo)
 	{
 		return;
 	}
+    cfg_save(cfgo);
 	debug_printf(DEBUG_INFO,"Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
 	g_mutex_lock(cfgo->lock);
 	if(cfgo->url != NULL)
@@ -654,7 +655,7 @@ void cfg_del_single_value(config_obj *cfg, char *class, char *key)
 	if(node != NULL)
 	{
 		__int_cfg_remove_node(cfg,node);
-		cfg_save(cfg);
+		//cfg_save(cfg);
 	}
 	g_mutex_unlock(cfg->lock);
 }
@@ -670,7 +671,7 @@ void cfg_remove_class(config_obj *cfg, char *class)
 	{
 		__int_cfg_remove_node(cfg, node);
 	}
-	cfg_save(cfg);
+	//cfg_save(cfg);
 	g_mutex_unlock(cfg->lock);
 }
 static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
@@ -702,7 +703,7 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, char *class, c
 	}
 	newnode->value = g_strdup(value);	
 	cfg->total_size += strlen(value);
-	cfg_save(cfg);
+	//cfg_save(cfg);
 }
 
 void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value)
@@ -748,7 +749,7 @@ void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id)
 	if(cur != NULL)
 	{
 		__int_cfg_remove_node(cfg,cur);
-		cfg_save(cfg);
+		//cfg_save(cfg);
 	}
 	g_mutex_unlock(cfg->lock);
 }
@@ -771,7 +772,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 
 		cur->value = g_strdup(value);
 		cfg->total_size += strlen(cur->value);
-		cfg_save(cfg);
+		//cfg_save(cfg);
 	}
 	else {
 		config_node *node = cfg_get_single_value(cfg,class,key);
@@ -795,7 +796,7 @@ void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, c
 		cur->value = g_strdup(value);
 		cfg->total_size+=sizeof(config_node)+strlen(id)+strlen(value);;
 		cfg_add_child(node,cur);
-		cfg_save(cfg);
+		//cfg_save(cfg);
 	}
 	g_mutex_unlock(cfg->lock);
 }
