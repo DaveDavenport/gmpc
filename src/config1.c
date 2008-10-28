@@ -343,27 +343,22 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 	if(node == NULL)return;
 	/* find the first */
 	while(node->prev != NULL) node = node->prev;
-//    printf("node->name: %s\n", node->name);
 	/* save some stuff */
 	for(temp = node;temp != NULL; temp = temp->next){
 		if(temp->type == TYPE_CATEGORY)
 		{
-//			fprintf(fp, "\n[%s]\n",temp->name);
             fputs("\n[", fp);
             fputs(temp->name, fp);
             fputs("]\n",fp);
 			cfg_save_category(cfg,temp->children,fp);
-//            fprintf(fp, "[]\n");
             fputs("[]\n",fp);
 		}
 		if(temp->type == TYPE_ITEM_MULTIPLE)
 		{
-//			fprintf(fp, "\n{%s}\n",temp->name);
             fputs("\n{", fp);
             fputs(temp->name, fp);
             fputs("}\n",fp);
 			cfg_save_category(cfg,temp->children,fp);
-			//fprintf(fp, "{}\n\n");
             fputs("{}\n\n",fp);
         }                                                		
 		else if (temp->type == TYPE_ITEM)
@@ -372,7 +367,6 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
             int length = strlen(temp->value);
             fputs(temp->name, fp);
             fputs("=\"", fp);
-//			fprintf(fp, "%s=\"", temp->name);
 			for(i=0;i<length;i++)
 			{
 				if(temp->value[i] == '"'){
