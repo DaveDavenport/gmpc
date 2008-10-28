@@ -1055,6 +1055,12 @@ void create_playlist3 ()
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
 			"text", PL3_CAT_TITLE);
 
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_end(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), renderer, FALSE);
+	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), renderer, "markup", PL3_CAT_NUM_ITEMS);
+    g_object_set(renderer, "xalign", 1.0, NULL);
+
+
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
 			"changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
 	/* initialize the category view */ 
