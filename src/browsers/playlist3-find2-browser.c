@@ -435,8 +435,26 @@ static unsigned long pl3_find2_browser_view_playlist()
         data_t = misc_mpddata_remove_duplicate_songs(data_t);
         data_t = misc_sort_mpddata(data_t,(GCompareDataFunc)__position_sort,NULL); 
         gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
-
+        
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
+        if(pl3_find2_ref) {
+            GtkTreeIter iter;
+            GtkTreePath *path;
+			path = gtk_tree_row_reference_get_path(pl3_find2_ref);
+			if(path)
+			{
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
+				{
+                    gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", 
+                            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl3_find2_store2),NULL));
+                    gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,
+                        PL3_CAT_NUM_ITEMS, title, -1);
+                    g_free(title);
+                }
+				gtk_tree_path_free(path);
+			}
+        }
+
     }
     return 0;
 }
@@ -519,6 +537,23 @@ static unsigned long pl3_find2_browser_view_database()
     data_t = misc_mpddata_remove_duplicate_songs(data_t);
     gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
+    if(pl3_find2_ref) {
+        GtkTreeIter iter;
+        GtkTreePath *path;
+        path = gtk_tree_row_reference_get_path(pl3_find2_ref);
+        if(path)
+        {
+            if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
+            {
+                gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", 
+                        gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl3_find2_store2),NULL));
+                gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,
+                        PL3_CAT_NUM_ITEMS, title, -1);
+                g_free(title);
+            }
+            gtk_tree_path_free(path);
+        }
+    }
     return 0;
 }
 
