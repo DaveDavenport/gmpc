@@ -1003,7 +1003,8 @@ void create_playlist3 ()
 				G_TYPE_BOOLEAN,  /* cat proc */
 				G_TYPE_UINT,  /* icon size */
 				G_TYPE_STRING, /* browser markup */
-				G_TYPE_INT 		/* ordering */
+				G_TYPE_INT, 		/* ordering */
+                G_TYPE_STRING   /* Num items */
 				);
 	}
 
@@ -1023,12 +1024,16 @@ void create_playlist3 ()
 	/* insert the column in the tree */
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes (column, renderer, "text", 1, NULL);
+    g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
 	sel_changed_handler_id = g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
-	/* Make sure the scroll bars get removed when folding in the folders again */
+    renderer = gtk_cell_renderer_text_new();
+    gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	gtk_tree_view_column_set_attributes (column, renderer, "markup", PL3_CAT_NUM_ITEMS, NULL);
+    /* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 
 

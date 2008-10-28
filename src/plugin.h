@@ -35,6 +35,7 @@ typedef enum
 	PL3_CAT_ICON_SIZE, /** icon size */
 	PL3_CAT_BROWSE_FORMAT, /** string, added for tag browser */
 	PL3_CAT_ORDER, /* int for sorting the list */
+    PL3_CAT_NUM_ITEMS,
 	PL3_CAT_NROWS
 } pl3_cat_store;
 

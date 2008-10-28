@@ -1187,7 +1187,23 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
     if(what&MPD_CST_PLAYLIST)
     {
         mod_fill_do_entry_changed(filter_entry, NULL);
+        if(pl3_curb_tree_ref) {
+            GtkTreeIter iter;
+            GtkTreePath *path;
+			path = gtk_tree_row_reference_get_path(pl3_curb_tree_ref);
+			if(path)
+			{
+				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter,path))
+				{
+                    gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", mpd_playlist_get_playlist_length(connection));
+                    gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_curb_tree_ref)), &iter,
+                        PL3_CAT_NUM_ITEMS, title, -1);
+                    g_free(title);
+                }
+				gtk_tree_path_free(path);
+			}
 
+        }
     }
 }
 
