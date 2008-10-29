@@ -50,7 +50,7 @@ typedef enum _GmpcMetaImageState{
 
 class Gmpc:MetaImage from Gtk:Event:Box{
 	private GmpcMetaImageState state = {STATE_NA};
-
+    private int refresh = FALSE;
 	private gulong status_signal = {0};
 	private gulong connect_signal = {0};
 	private gulong meta_id = {0};
@@ -366,14 +366,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				int state = mpd_player_get_state(self->connection);
 				if(state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
 				{
-
+                    self->_priv->refresh = TRUE;
 					self_set_cover_na(self);
 				}
 				else {
 					mpd_Song *song = mpd_playlist_get_current_song(self->connection);
 					if(song)
 					{
-                        if(self->_priv->song && 
+                        if( self->_priv->refresh == FALSE && 
+                            self->_priv->song && 
                             self->_priv->song->artist && 
                             song->artist && 
                             strcmp(song->artist, self->_priv->song->artist) == 0)
@@ -393,6 +394,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					{
 						self_set_cover_na(self);
 					}
+                    self->_priv->refresh = FALSE;
 				}
 
 			}
