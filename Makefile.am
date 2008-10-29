@@ -1,9 +1,9 @@
 AUTOMAKE_OPTIONS = foreign 1.6
 
 if WIN32
-SUBDIRS = src pixmaps glade data po pixmaps
+SUBDIRS = src pixmaps glade data po pixmaps doc
 else
-SUBDIRS = src pixmaps glade data po pixmaps remote
+SUBDIRS = src pixmaps glade data po pixmaps doc remote
 endif
 
 if INTLTOOL_HIGHER_04000

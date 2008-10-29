@@ -269,6 +269,7 @@ po/Makefile.in
 po/Makefile
 data/gmpc.pc
 remote/Makefile
+doc/Makefile
 pixmaps/Makefile
 pixmaps/icons/Makefile
 pixmaps/icons/16x16/Makefile
