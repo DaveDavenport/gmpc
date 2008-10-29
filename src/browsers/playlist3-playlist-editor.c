@@ -300,16 +300,16 @@ loop:
             valid = gtk_list_store_remove(playlist_editor_store, &iter);
         }
         if(playlist_editor_browser_ref) {
-            GtkTreeIter iter;
+            GtkTreeIter piter;
             GtkTreePath *path;
             path = gtk_tree_row_reference_get_path(playlist_editor_browser_ref);
             if(path)
             {
-                if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &iter,path))
+                if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &piter,path))
                 {
                     gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", 
                             gtk_tree_model_iter_n_children(GTK_TREE_MODEL(playlist_editor_store),NULL));
-                    gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &iter,
+                    gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &piter,
                             PL3_CAT_NUM_ITEMS, title, -1);
                     g_free(title);
                 }
