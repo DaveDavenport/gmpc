@@ -664,19 +664,20 @@ requires 2.0.0
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
             int i;
-            MpdData *data = NULL;
+            MpdData_real *data = NULL;
             if(parent)
                 return FALSE;
             if (n >= self->num_rows || n < 0)
                 return FALSE; 
 
-            data = (MpdData *)self->_priv->data;
+            data = (MpdData_real *)self->_priv->data;
             i=0;
             if(self->has_up)
                 i=1;
             for(; i < (n);i++)
             {
-                data = mpd_data_get_next_real(data, FALSE);
+                data = data->next;//mpd_data_get_next_real(data, FALSE);
+                g_assert(data != NULL);
             }
 
             if(self->has_up && n == 0)

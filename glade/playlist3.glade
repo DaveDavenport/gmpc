@@ -661,13 +661,7 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <widget class="GtkProgressBar" id="pp_pb">
-                                    <property name="visible">True</property>
-                                    <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                                    <property name="pulse_step">0.10000000149</property>
-                                    <signal name="button_press_event" handler="pl3_pb_button_press_event"/>
-                                    <signal name="scroll_event" handler="pl3_pb_scroll_event"/>
-                                  </widget>
+                                  <placeholder/>
                                 </child>
                               </widget>
                               <packing>

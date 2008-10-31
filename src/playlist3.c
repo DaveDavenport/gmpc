@@ -30,6 +30,7 @@
 #include "revision.h"
 #include "gmpc-clicklabel.h"
 #include <gmpc-liststore-sort.h>
+#include "vala/gmpc-progress.h"
 
 /**
  * Keybindings
@@ -132,7 +133,7 @@ static GtkTargetEntry target_table[] =
 
 guint sel_changed_handler_id = 0;
 
-
+GtkWidget *new_pb = NULL;
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
@@ -1069,6 +1070,23 @@ void create_playlist3 ()
 
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 
+
+
+
+    {
+        GtkWidget *pb = (GtkWidget *)gmpc_progress_new();
+        gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
+        gtk_widget_show(pb);
+        g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
+        g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
+        new_pb = pb;
+    }
+
+
+
+
+
+
 	/* Add volume slider. */
 	volume_slider = gtk_volume_button_new();
 	gtk_button_set_relief(GTK_BUTTON(volume_slider), GTK_RELIEF_NORMAL);
@@ -1087,6 +1105,8 @@ void create_playlist3 ()
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect (pl3_xml);
 
+
+
 	if(mpd_status_db_is_updating(connection))
 	{
 		pl3_updating_changed(connection, 1);
@@ -1097,6 +1117,12 @@ void create_playlist3 ()
 	{
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
+
+
+
+
+
+
 
 
 		/**
@@ -1195,6 +1221,14 @@ void create_playlist3 ()
 	/* A signal that responses on change of pane position */
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml,"hpaned1")),
 									"notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
+
+
+
+    
+
+
+
+
 	/* update it */
 	pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
 	/**
@@ -1481,7 +1515,8 @@ static void playlist_zoom_level_changed()
         /* release my reference */
         g_object_unref(box);
         gtk_widget_show(box);
-        gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,-1);
+        gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), FALSE);
+//        gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,-1);
         gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), ALBUM_SIZE_LARGE);
 				gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
         //gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
@@ -1499,9 +1534,11 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
 
-        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
 
-				gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
+//        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
+        gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), TRUE);
+
+//				gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
         gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),ALBUM_SIZE_SMALL);
 				gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
        // gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
@@ -1710,8 +1747,8 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
 				/* Make sure it's reset correctly */
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
-
+//				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
+                gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0); 
 
 				gtk_image_set_from_stock(GTK_IMAGE(
 							glade_xml_get_widget(pl3_xml, "pp_but_play_img")),
@@ -1732,10 +1769,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 		{
 			playlist_player_set_song(mi);
 		}
-
-
-
-
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE,NULL);
 	}
@@ -1769,64 +1802,17 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}                                                                                                        	
 	if(what&MPD_CST_ELAPSED_TIME)
 	{
-		char *string = NULL;
 		if(mpd_check_connected(connection))
         {
             int totalTime = mpd_status_get_total_song_time(connection);
             int elapsedTime = mpd_status_get_elapsed_song_time(connection);			
-        
-            if(totalTime>0)
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),RANGE(0.0,1.0,(elapsedTime/(float)totalTime)));
-            else
-                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
-            if(totalTime == 0)
-            {
-                if(elapsedTime/60 >99 )
-                {
-                    string = g_strdup_printf("%02i:%02i",
-                            (elapsedTime/3600),
-                            (elapsedTime/60)%60
-                            );
-                }
-                else{
-                    string = g_strdup_printf("%02i:%02i",
-                            (elapsedTime/60),
-                            elapsedTime%60
-                            );
-                }
-
-            }
-            else if(elapsedTime/60 >99 || totalTime/60 > 99)
-            {
-                string = g_strdup_printf("%02i:%02i - %02i:%02i",
-                        (elapsedTime/3600),
-                        (elapsedTime/60)%60,
-                        (totalTime/3600),
-                        (totalTime/60)%60
-                        );
-            }
-            else{
-                string = g_strdup_printf("%02i:%02i - %02i:%02i",
-                        (elapsedTime/60),
-                        elapsedTime%60,
-                        (totalTime/60),
-                        (totalTime%60)
-                        );
-            }
+            gmpc_progress_set_time(GMPC_PROGRESS(new_pb), totalTime, elapsedTime); 
         }
 		else
 		{
-			string = g_strdup(_("Not Connected"));
-            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
+
+            gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0); 
         }
-        if(pl3_zoom == PLAYLIST_MINI) {
-            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
-						//gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), "");
-        }else{
-            gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),string);
-						//gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(pl3_xml, "time_label")), string);
-        }
-        q_free(string);
 	}
 	if(what&MPD_CST_VOLUME)
 	{
