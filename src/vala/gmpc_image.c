@@ -44,7 +44,7 @@ static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, dou
 	g_return_if_fail (ctx != NULL);
 	rect_x1 = 0.0;
 	rect_y1 = 0.0;
-	radius = ((double) (5));
+	radius = ((double) (15));
 	/*rect_width/5;*/
 	rect_x1 = rect_x0 + rect_width;
 	rect_y1 = rect_y0 + rect_height;
@@ -117,7 +117,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 		/* Make the path*/
 		cairo_new_path (ctx);
-		gmpc_image_draw_curved_rectangle (self, ctx, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)), ((double) (width - 2)), ((double) (height - 2)));
+		gmpc_image_draw_curved_rectangle (self, ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 2)), ((double) (height - 2)));
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->cover_border) {
@@ -136,7 +136,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
-		gmpc_image_draw_curved_rectangle (self, ctx, ((double) (x + (ww - width) / 2 + 1)), ((double) (y + (wh - height) / 2 + 1)), ((double) (width - 2)), ((double) (height - 2)));
+		gmpc_image_draw_curved_rectangle (self, ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 2)), ((double) (height - 2)));
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->temp_border) {
 			cairo_clip_preserve (ctx);
