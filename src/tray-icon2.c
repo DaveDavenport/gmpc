@@ -5,6 +5,7 @@
 #include "main.h"
 #include "plugin.h"
 #include "gmpc-clicklabel.h"
+#include "vala/gmpc-progress.h"
 #include "misc.h"
 
 
@@ -418,19 +419,11 @@ void tray_icon2_create_tooltip(void)
 			gtk_label_set_markup(GTK_LABEL(label), buffer);
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
-		tray_icon2_tooltip_pb = gtk_progress_bar_new();
+		tray_icon2_tooltip_pb = (GtkWidget *) gmpc_progress_new();
 		/* Update the progressbar */
-		{
-			gchar *str;
-			int totalTime = mpd_status_get_total_song_time(connection);                                 		
-			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
-			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
-			str = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
-					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), str);
-			q_free(str);
-		}
+        gmpc_progress_set_time(GMPC_PROGRESS(tray_icon2_tooltip_pb), 
+                mpd_status_get_total_song_time(connection),
+                mpd_status_get_elapsed_song_time(connection));
 
 
         g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),(GDestroyNotify)mpd_freeSong); 
@@ -567,15 +560,10 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	{
 		if(tray_icon2_tooltip && tray_icon2_tooltip_pb)
 		{
-			int totalTime = mpd_status_get_total_song_time(connection);                                 		
-			int elapsedTime = mpd_status_get_elapsed_song_time(connection);	
-			gdouble progress = elapsedTime/(gdouble)MAX(totalTime,1);
-			gchar*label = g_strdup_printf("%02i:%02i/%02i:%02i", elapsedTime/60, elapsedTime%60,
-					totalTime/60,totalTime%60);
-			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), RANGE(0,1,progress));
-			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(tray_icon2_tooltip_pb), label);
-			q_free(label);
-		}
+            gmpc_progress_set_time(GMPC_PROGRESS(tray_icon2_tooltip_pb),
+                    mpd_status_get_total_song_time(connection),                                 		
+                    mpd_status_get_elapsed_song_time(connection));	
+        }
 	}
 	if(tray_icon2_gsi == NULL)
 		return;
