@@ -4,10 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gdk/gdk.h>
 #include <cairo.h>
 #include <float.h>
 #include <math.h>
+#include <gdk/gdk.h>
 #include <pango/pangocairo.h>
 
 
@@ -25,6 +25,7 @@ enum  {
 	GMPC_PROGRESS_HIDE_TEXT
 };
 static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* requisition);
+static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
 static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event);
 static gboolean _gmpc_progress_on_expose_gtk_widget_expose_event (GmpcProgress* _sender, GdkEventExpose* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -57,6 +58,60 @@ static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* re
 }
 
 
+static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
+	double rect_x1;
+	double rect_y1;
+	double radius;
+	g_return_if_fail (GMPC_IS_PROGRESS (self));
+	g_return_if_fail (ctx != NULL);
+	rect_x1 = 0.0;
+	rect_y1 = 0.0;
+	radius = ((double) (15));
+	/*rect_width/5;*/
+	rect_x1 = rect_x0 + rect_width;
+	rect_y1 = rect_y0 + rect_height;
+	if (rect_width == 0 || rect_height == 0) {
+		return;
+	}
+	if (rect_width / 2 < radius) {
+		if (rect_height / 2 < radius) {
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
+		} else {
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
+		}
+	} else {
+		if (rect_height / 2 < radius) {
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
+		} else {
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
+		}
+	}
+	cairo_close_path (ctx);
+}
+
+
 static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
@@ -85,14 +140,16 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		}
 		cairo_new_path (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp0));
-		cairo_rectangle (ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
+		/*ctx.rectangle(1.5,1.5,pwidth, height);*/
+		gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
 		cairo_fill_preserve (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp1));
 		cairo_stroke (ctx);
 	}
 	cairo_new_path (ctx);
 	gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp2));
-	cairo_rectangle (ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
+	/*        ctx.rectangle(1.5,1.5,width, height);*/
+	gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
 	cairo_stroke (ctx);
 	/**
 	         * Draw text
