@@ -87,11 +87,11 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp0));
 		cairo_rectangle (ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
 		cairo_fill_preserve (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp1));
+		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp1));
 		cairo_stroke (ctx);
 	}
 	cairo_new_path (ctx);
-	gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp2));
+	gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp2));
 	cairo_rectangle (ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
 	cairo_stroke (ctx);
 	/**

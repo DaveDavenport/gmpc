@@ -73,11 +73,11 @@ public class Gmpc.Progress : Gtk.EventBox {
             Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.SELECTED]);
             ctx.rectangle(1.5,1.5,pwidth, height);
             ctx.fill_preserve ();
-            Gdk.cairo_set_source_color(ctx, pb.style.fg[(int)Gtk.StateType.NORMAL]);
+            Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
             ctx.stroke ();
         }
         ctx.new_path();
-        Gdk.cairo_set_source_color(ctx, pb.style.fg[(int)Gtk.StateType.NORMAL]);
+        Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
         ctx.rectangle(1.5,1.5,width, height);
         ctx.stroke ();
 
