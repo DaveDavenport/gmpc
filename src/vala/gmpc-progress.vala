@@ -108,7 +108,10 @@ public class Gmpc.Progress : Gtk.EventBox {
         ctx.set_tolerance ( 0.2 );
         ctx.set_line_join (LineJoin.ROUND);
 
-      
+
+        Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.NORMAL]);
+        ctx.paint();
+
         if(this.total > 0)
         {
             double step_size = width/(double)this.total;
