@@ -966,7 +966,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
         g_free(filename);
         g_free(dirname);
     }
-    printf("Returning: %s\n", retv);
     return retv;
 }
 static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path, char *new_text, GtkListStore *store)
