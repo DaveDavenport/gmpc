@@ -71,4 +71,24 @@ void cfg_do_special_cleanup(config_obj *cfg);
 
 
 #define cfg_free_string(a)  g_free(a);a=NULL;
+
+
+
+
+void cfg_del_single_value_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key);
+void cfg_set_single_value_as_int_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key, int value);
+int cfg_get_single_value_as_int_with_default_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key, int def);
+float cfg_get_single_value_as_float_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key);
+/* String */
+void cfg_set_single_value_as_string_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key, char *value);
+char * cfg_get_single_value_as_string_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key);
+char * cfg_get_single_value_as_string_with_default_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key , char *def);
+
+
+
+
+
+
+
+
 #endif
