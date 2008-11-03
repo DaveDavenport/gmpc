@@ -7,22 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-19 21:15+0200\n"
-"PO-Revision-Date: 2008-09-07 23:36+0000\n"
+"POT-Creation-Date: 2008-10-29 20:58+0100\n"
+"PO-Revision-Date: 2008-10-31 23:55+0000\n"
 "Last-Translator: Dösi <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-09-19 13:20+0000\n"
+"X-Launchpad-Export-Date: 2008-11-03 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Gnome felület az mpd démonhoz"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:582 ../src/tray-icon2.c:589
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:598 ../src/tray-icon2.c:605
 msgid "Gnome Music Player Client"
 msgstr "Gnome Zenelejátszó Kliens"
 
@@ -184,8 +184,8 @@ msgstr "Elrejtés bezáráskor"
 msgid "Host:"
 msgstr "Kiszolgáló:"
 
-#: ../glade/gmpc.glade.h:41 ../src/browsers/playlist3-playlist-editor.c:337
-#: ../src/browsers/playlist3-playlist-editor.c:376
+#: ../glade/gmpc.glade.h:41 ../src/browsers/playlist3-playlist-editor.c:462
+#: ../src/browsers/playlist3-playlist-editor.c:501
 msgid "Name:"
 msgstr "Név:"
 
@@ -226,7 +226,7 @@ msgid "Password:"
 msgstr "Jelszó:"
 
 #. label
-#: ../glade/gmpc.glade.h:56 ../src/gmpc_easy_download.c:207
+#: ../glade/gmpc.glade.h:56 ../src/gmpc_easy_download.c:209
 msgid "Port:"
 msgstr "Port:"
 
@@ -243,9 +243,8 @@ msgid "Show severity"
 msgstr "Súlyosság mutatása"
 
 #: ../glade/gmpc.glade.h:60
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Dal mutatása"
+msgstr "Lejátszólista gyorstipp mutatása"
 
 #: ../glade/gmpc.glade.h:61
 msgid "Stop playing on exit"
@@ -279,7 +278,7 @@ msgstr "_Automatikus csatlakozás"
 msgid "_Date"
 msgstr "_Dátum"
 
-#: ../glade/gmpc.glade.h:69 ../glade/playlist3.glade.h:19
+#: ../glade/gmpc.glade.h:69 ../glade/playlist3.glade.h:20
 msgid "_Disconnect"
 msgstr "_Kapcsolat bontása"
 
@@ -340,7 +339,12 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Dösi https://launchpad.net/~erdosib\n"
-"  Polesz https://launchpad.net/~polesz-nedudu"
+"  Polesz https://launchpad.net/~polesz-nedudu\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Dösi https://launchpad.net/~erdosib\n"
+"  Polesz https://launchpad.net/~polesz-nedudu\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/playlist3.glade.h:1
 msgid "<enter playlist name>"
@@ -352,7 +356,7 @@ msgstr "<span size=\"x-small\"><i>A lejátszólista már létezik.</i></span>"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Getting help"
-msgstr ""
+msgstr "Segítségkérés"
 
 #: ../glade/playlist3.glade.h:4
 msgid "MPD database is updating."
@@ -362,108 +366,112 @@ msgstr "MPD adatbázis frissítve."
 msgid "Messages"
 msgstr "Üzenetek"
 
+#: ../glade/playlist3.glade.h:6
+msgid "Mute"
+msgstr "Elnémítás"
+
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:72
+#: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:73
 msgid "Next"
 msgstr "Következő"
 
-#: ../glade/playlist3.glade.h:7
+#: ../glade/playlist3.glade.h:8
 msgid "Play/Pause"
 msgstr "Lejátszás/Szünet"
 
 #. * MM_NEXT
-#: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:73
+#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:74
 msgid "Previous"
 msgstr "Előző"
 
-#: ../glade/playlist3.glade.h:9
+#: ../glade/playlist3.glade.h:10
 msgid "Profiles"
 msgstr "Profilok"
 
 #. * MM_REPEAT
-#: ../glade/playlist3.glade.h:10 ../src/mm-keys.c:78
+#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:79
 msgid "Random"
 msgstr "Véletlenszerű"
 
 #. * MM_FASTBACKWARD
-#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:77
+#: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:78
 msgid "Repeat"
 msgstr "Ismétlés"
 
-#: ../glade/playlist3.glade.h:12
+#: ../glade/playlist3.glade.h:13
 msgid "Save Playlist"
 msgstr "A lejátszólista mentése"
 
-#: ../glade/playlist3.glade.h:13
+#: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "Üzenetek mutatása"
 
 #. * MM_PREV
-#: ../glade/playlist3.glade.h:14 ../src/mm-keys.c:74
+#: ../glade/playlist3.glade.h:15 ../src/mm-keys.c:75
 msgid "Stop"
 msgstr "Leállítás"
 
-#: ../glade/playlist3.glade.h:15
-msgid "Visit website"
-msgstr ""
-
 #: ../glade/playlist3.glade.h:16
+msgid "Visit website"
+msgstr "Weblap meglátogatása"
+
+#: ../glade/playlist3.glade.h:17
 msgid "_Collapse Interface"
 msgstr "Interfész ö_sszecsukása"
 
-#: ../glade/playlist3.glade.h:17
+#: ../glade/playlist3.glade.h:18
 msgid "_Connect"
 msgstr "Kap_csolódás"
 
-#: ../glade/playlist3.glade.h:18
+#: ../glade/playlist3.glade.h:19
 msgid "_Control"
 msgstr "_Vezérlés"
 
-#: ../glade/playlist3.glade.h:20
+#: ../glade/playlist3.glade.h:21
 msgid "_Expand Interface"
 msgstr "Interfész _kibővítése"
 
-#: ../glade/playlist3.glade.h:21
+#: ../glade/playlist3.glade.h:22
 msgid "_Fullscreen"
 msgstr "_Teljes képernyő"
 
-#: ../glade/playlist3.glade.h:22
+#: ../glade/playlist3.glade.h:23
 msgid "_Go"
 msgstr "_Ugrás"
 
-#: ../glade/playlist3.glade.h:23
+#: ../glade/playlist3.glade.h:24
 msgid "_Help"
 msgstr "_Súgó"
 
-#: ../glade/playlist3.glade.h:24
+#: ../glade/playlist3.glade.h:25
 msgid "_Music"
 msgstr "_Zene"
 
-#: ../glade/playlist3.glade.h:25
+#: ../glade/playlist3.glade.h:26
 msgid "_Option"
 msgstr "_Opció"
 
-#: ../glade/playlist3.glade.h:26
+#: ../glade/playlist3.glade.h:27
 msgid "_Send Password"
 msgstr "Jel_szó küldése"
 
-#: ../glade/playlist3.glade.h:27
+#: ../glade/playlist3.glade.h:28
 msgid "_Server"
 msgstr "_Kiszolgáló"
 
-#: ../glade/playlist3.glade.h:28
+#: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
 msgstr "Előadó képének mutatá_sa"
 
-#: ../glade/playlist3.glade.h:29
+#: ../glade/playlist3.glade.h:30
 msgid "_View"
 msgstr "_Nézet"
 
-#: ../glade/playlist3.glade.h:30
+#: ../glade/playlist3.glade.h:31
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Lejátszólista Kezelő"
 
-#: ../glade/playlist3.glade.h:31
+#: ../glade/playlist3.glade.h:32
 msgid "name:"
 msgstr "név:"
 
@@ -495,21 +503,21 @@ msgstr "2 Feb 2006"
 msgid "MPD's Streaming server"
 msgstr "MPD Streaming szerver"
 
-#: ../src/gmpc_easy_download.c:177 ../src/gmpc_easy_download.c:231
+#: ../src/gmpc_easy_download.c:179 ../src/gmpc_easy_download.c:233
 msgid "Proxy"
 msgstr "Proxy"
 
-#: ../src/gmpc_easy_download.c:178
+#: ../src/gmpc_easy_download.c:180
 msgid "<b>Proxy</b>"
 msgstr "<b>Proxy</b>"
 
 #. enable/disable
-#: ../src/gmpc_easy_download.c:186
+#: ../src/gmpc_easy_download.c:188
 msgid "Use a proxy for internet connectivity"
 msgstr "Proxy használata az internet kapcsolathoz"
 
 #. label
-#: ../src/gmpc_easy_download.c:195
+#: ../src/gmpc_easy_download.c:197
 msgid "HTTP Proxy:"
 msgstr "HTTP Proxy:"
 
@@ -519,66 +527,70 @@ msgstr "HTTP Proxy:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
-#: ../src/main.c:262 ../src/main.c:264
+#. 
+#: ../src/main.c:269 ../src/main.c:271
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
-#: ../src/main.c:270
+#. 
+#: ../src/main.c:277
 msgid "--version"
 msgstr "--version"
 
-#: ../src/main.c:272
+#: ../src/main.c:279
 #, c-format
 msgid "Gnome Music Player Client\n"
 msgstr "Gnome Zenelejátszó Kliens\n"
 
-#: ../src/main.c:273 ../src/preferences.c:267
+#: ../src/main.c:282 ../src/preferences.c:267
 msgid "Version"
 msgstr "Verzió"
 
-#: ../src/main.c:276
+#: ../src/main.c:285
 msgid "Revision"
 msgstr "Revízió"
 
+#: ../src/main.c:287
+msgid "Website"
+msgstr "Weblap"
+
 #. *
 #. * Allow the user to pick another config file
-#.
-#: ../src/main.c:283 ../src/main.c:285
+#. 
+#: ../src/main.c:293 ../src/main.c:295
 msgid "--config="
 msgstr "--config="
 
-#: ../src/main.c:287
+#: ../src/main.c:297
 msgid "--start-hidden"
 msgstr "--start-hidden"
 
-#: ../src/main.c:291
+#: ../src/main.c:301
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
-#: ../src/main.c:295
+#: ../src/main.c:305
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
-#: ../src/main.c:299
+#: ../src/main.c:309
 msgid "--replace"
 msgstr "--replace"
 
-#: ../src/main.c:303
+#: ../src/main.c:313
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Print out help message
-#.
-#: ../src/main.c:311
+#. 
+#: ../src/main.c:321
 msgid "--help"
 msgstr "--help"
 
-#: ../src/main.c:313
+#: ../src/main.c:323
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -617,28 +629,28 @@ msgstr ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 
-#: ../src/main.c:382
+#: ../src/main.c:398
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "A gmpc-t rossz libmpd verzióval próbálta futtatni."
 
-#: ../src/main.c:429
-#, fuzzy
+#: ../src/main.c:447
 msgid "Failed to load the configuration system."
-msgstr "Nem tudtam betölteni a beállítórendszert"
+msgstr "Nem sikerült betölteni a konfigurációs rendszert."
 
-#: ../src/main.c:449
+#: ../src/main.c:469
 msgid "Failed to load debug-log file."
 msgstr "Nem tudtam betölteni a debug-load fájlt."
 
-#: ../src/main.c:575
+#: ../src/main.c:601
 msgid "Failed to setup libmpd"
 msgstr "Nem tudtam beállítani a libmpd-t"
 
-#: ../src/main.c:970
+#: ../src/main.c:1010
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
+msgstr ""
+"A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
 
-#: ../src/main.c:991
+#: ../src/main.c:1031
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -647,56 +659,53 @@ msgstr ""
 "Nem tudtam beállítani a jelszót a '%s' helyen\n"
 "Kérem próbálja újra"
 
-#: ../src/main.c:995
+#: ../src/main.c:1035
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Kérem írja be a jelszavát a '%s' helyhez"
 
-#: ../src/main.c:1020 ../src/main.c:1044
+#: ../src/main.c:1060 ../src/main.c:1092
 msgid "error code"
 msgstr "Hibakód"
 
-#: ../src/main.c:1075
+#: ../src/main.c:1078
+msgid "Insufficient permission to connect to mpd. Check password"
+msgstr "Nincs jogosultságod az mpd-hez csatlakozni. Ellenőrizd a jelszót."
+
+#: ../src/main.c:1124
 msgid "<b>MPD versions before 0.13.0 are not supported.</b>"
-msgstr ""
+msgstr "<b>A 0.13.0 előtti MPD verziók nem támogatottak.</b>"
 
-#: ../src/main.c:1127
-msgid ""
-"Gmpc is currently connected to mpd version lower then 0.12.0.\n"
-"This might work, but is no longer supported."
-msgstr ""
-"A gmpc éppen 0.12.0-ás verziónál régebbi mpd-hez kapcsolódik.\n"
-"Ez működhet, de már nem támogatott."
-
-#: ../src/main.c:1134
+#: ../src/main.c:1202
 msgid "<b>Connected to mpd</b>"
 msgstr "<b>Kapcsolódtam az mpd-hez</b>"
 
-#: ../src/main.c:1136
+#: ../src/main.c:1204
 msgid "<b>Disconnected from mpd</b>"
 msgstr "<b>Lekapcsolódtam az mpd-ről</b>"
 
-#: ../src/main.c:1171
+#: ../src/main.c:1239
 msgid "Error occured during operation"
 msgstr "A működés közben hiba lépett fel"
 
 #. Create label
-#: ../src/main.c:1201
+#: ../src/main.c:1269
 msgid "The following error(s) occured:"
 msgstr "A következő hibák léptek fel:"
 
-#: ../src/main.c:1217
+#: ../src/main.c:1285
 msgid "Error Message"
 msgstr "Hibaüzenet"
 
-#: ../src/metadata.c:629
-#, fuzzy
+#: ../src/metadata.c:738
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
-"Új metaadat-bővítmény lett hozzáadva, a gmpc most kitakarítja az összes "
-"hiányzó metaadatot a gyorsítótárból"
+
+#: ../src/metadata.c:1094
+msgid "Metadata Handler"
+msgstr "Metaadat kezelő"
 
 #: ../src/misc.c:39
 msgid " Total time: "
@@ -724,51 +733,56 @@ msgstr[1] "perc"
 msgid "Failed to execute"
 msgstr "Nem tudtam végrehajtani"
 
-#: ../src/mm-keys.c:71
+#: ../src/mm-keys.c:72
 msgid "PlayPause"
 msgstr "Lejátszás/Megállítás"
 
 #. * MM_STOP
-#: ../src/mm-keys.c:75
+#: ../src/mm-keys.c:76
 msgid "Fast Forward"
 msgstr "Gyorsan előre"
 
 #. * MM_FASTFORWARD
-#: ../src/mm-keys.c:76
+#: ../src/mm-keys.c:77
 msgid "Fast Backward"
 msgstr "Gyorsan visszafele"
 
 #. * MM_RANDOM
-#: ../src/mm-keys.c:79
+#: ../src/mm-keys.c:80
 msgid "Raise window"
 msgstr "Ablak előrehozása"
 
 #. * MM_RAISE
-#: ../src/mm-keys.c:80
+#: ../src/mm-keys.c:81
 msgid "Hide window"
 msgstr "Ablak elejtése"
 
 #. * MM_HIDE
-#: ../src/mm-keys.c:81
+#: ../src/mm-keys.c:82
 msgid "Toggle window"
 msgstr "Ablak mutatása és elrejtése"
 
 #. * MM_TOGGLE_HIDDEN
-#: ../src/mm-keys.c:82
+#: ../src/mm-keys.c:83
 msgid "Volume Up"
 msgstr "Felhangosít"
 
 #. * MM_VOLUME_UP
-#: ../src/mm-keys.c:83
+#: ../src/mm-keys.c:84
 msgid "Volume Down"
 msgstr "Lehalkít"
 
 #. * MM_VOLUME_DOWN
-#: ../src/mm-keys.c:84
+#: ../src/mm-keys.c:85
 msgid "Show song"
 msgstr "Dal mutatása"
 
-#: ../src/mm-keys.c:323
+#. * MM_SHOW_NOTIFICATION
+#: ../src/mm-keys.c:86
+msgid "Toggle Mute"
+msgstr "Némítás"
+
+#: ../src/mm-keys.c:336
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
@@ -776,7 +790,7 @@ msgstr ""
 "Nem tudtam érzékelni a következő multimédia gombokat:\n"
 "\n"
 
-#: ../src/mm-keys.c:340
+#: ../src/mm-keys.c:353
 msgid ""
 "\n"
 "Ensure that your window manager (or other applications) have not already "
@@ -787,7 +801,7 @@ msgstr ""
 "foglalta-e már le ezt a billentyűt valami más funkcióhoz, majd indítsa újra "
 "a gmpc-t."
 
-#: ../src/mm-keys.c:347
+#: ../src/mm-keys.c:360
 msgid ""
 "Duplicate mapping(s) detected\n"
 "\n"
@@ -799,11 +813,11 @@ msgstr ""
 "Néhány helyen kétszer lett hozzárendelve egy multimédia gomb, ezeket "
 "letiltottam. Kérem ellenőrizze újra a beállításokat, és javítsa ki a hibát."
 
-#: ../src/mm-keys.c:525
+#: ../src/mm-keys.c:538
 msgid "Multimedia Keys"
 msgstr "Multimédia billentyűk"
 
-#: ../src/mm-keys.c:589
+#: ../src/mm-keys.c:602
 #, c-format
 msgid ""
 "<b>Duplicate mapping detected</b>\n"
@@ -814,7 +828,7 @@ msgstr ""
 "\n"
 "%s már hozzá lett rendelve ehhez: %s"
 
-#: ../src/mm-keys.c:619
+#: ../src/mm-keys.c:632
 #, c-format
 msgid ""
 "Could not grab multimedia key:\n"
@@ -831,69 +845,69 @@ msgstr ""
 "Ellenőrizze, hogy az ablakkezelője (vagy valamilyen egyéb alkalmazás) nem "
 "használja-e már ezt a billentyűt valami másra, majd indítsa újra a gmpc-t."
 
-#: ../src/mm-keys.c:672
+#: ../src/mm-keys.c:685
 msgid "Action"
 msgstr "Művelet"
 
-#: ../src/mm-keys.c:693
+#: ../src/mm-keys.c:706
 msgid "Shortcut"
 msgstr "Gyorsbillentyű"
 
-#: ../src/mpdinteraction.c:49
+#: ../src/mpdinteraction.c:53
 msgid "Server Settings"
 msgstr "Szerverbeállítások"
 
-#: ../src/mpdinteraction.c:79
+#: ../src/mpdinteraction.c:83
 msgid "Connection"
 msgstr "Kapcsolat"
 
-#: ../src/mpdinteraction.c:179
+#: ../src/mpdinteraction.c:187
 msgid "Connecting"
 msgstr "Csatlakozás"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1116
+#: ../src/mpdinteraction.c:1156
 msgid "All from album"
 msgstr "Minden az albumról"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1128
+#: ../src/mpdinteraction.c:1168
 msgid "All from artist"
 msgstr "Minden az előadótól"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1138
+#: ../src/mpdinteraction.c:1178
 msgid "All from genre"
 msgstr "Minden a műfajból"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1146
+#: ../src/mpdinteraction.c:1186
 msgid "All from same directory"
 msgstr "Minden a könyvtárból"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1154
+#: ../src/mpdinteraction.c:1194
 msgid "Add more"
 msgstr "Továbbiak hozzáadása"
 
-#: ../src/playlist3.c:132
+#: ../src/playlist3.c:213
 msgid "Interface"
 msgstr "Felület"
 
-#: ../src/playlist3.c:642
+#: ../src/playlist3.c:740
 msgid "MPD database is updating"
 msgstr "Az MPD adatbázisa frissül"
 
-#: ../src/playlist3.c:654
+#: ../src/playlist3.c:752
 msgid "<b>MPD is updating its database</b>"
 msgstr "<b>Az MPD frissíti adatbázisát</b>"
 
-#: ../src/playlist3.c:658
+#: ../src/playlist3.c:756
 msgid "<b>MPD finished updating its database</b>"
 msgstr "<b>Az MPD befejezte adatbázisának frissítését</b>"
 
-#: ../src/playlist3.c:847
+#: ../src/playlist3.c:972
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc"
@@ -901,74 +915,74 @@ msgstr ""
 "Nem tudtam megnyitni a felületleíró fájlt!\n"
 "Kérem telepítse újra a gmpc-t"
 
-#: ../src/playlist3.c:1369
+#: ../src/playlist3.c:1584
 msgid "Connected"
 msgstr "Kapcsolódva"
 
-#: ../src/playlist3.c:1378 ../src/playlist3.c:1604 ../src/playlist3.c:2055
+#: ../src/playlist3.c:1593 ../src/playlist3.c:1819 ../src/playlist3.c:2271
 msgid "Not Connected"
 msgstr "Nincs kapcsolat"
 
-#: ../src/playlist3.c:1391 ../src/playlist3.c:1400 ../src/playlist3.c:1505
+#: ../src/playlist3.c:1606 ../src/playlist3.c:1615 ../src/playlist3.c:1720
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:1392
+#: ../src/playlist3.c:1607
 msgid "Connected to"
 msgstr "Kapcsolódva ehhez:"
 
-#: ../src/playlist3.c:1401
+#: ../src/playlist3.c:1616
 msgid "Disconnected"
 msgstr "Bontva"
 
-#: ../src/playlist3.c:1534
+#: ../src/playlist3.c:1749
 #, c-format
 msgid "Repeat: %s"
 msgstr "Ismétlés: %s"
 
-#: ../src/playlist3.c:1534 ../src/playlist3.c:1547
+#: ../src/playlist3.c:1749 ../src/playlist3.c:1762
 msgid "On"
 msgstr "Be"
 
-#: ../src/playlist3.c:1534 ../src/playlist3.c:1547
+#: ../src/playlist3.c:1749 ../src/playlist3.c:1762
 msgid "Off"
 msgstr "Ki"
 
-#: ../src/playlist3.c:1547
+#: ../src/playlist3.c:1762
 #, c-format
 msgid "Random: %s"
 msgstr "Véletlenszerű: %s"
 
-#: ../src/playlist3.c:1647
+#: ../src/playlist3.c:1862
 msgid "MPD Reported the following error"
 msgstr "Az MPD a következő hibát jelezte"
 
-#: ../src/playlist3.c:1788 ../src/playlist3.c:1794
+#: ../src/playlist3.c:2004 ../src/playlist3.c:2010
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1788
+#: ../src/playlist3.c:2004
 msgid "added"
 msgstr "hozzáadva"
 
-#: ../src/playlist3.c:1794
+#: ../src/playlist3.c:2010
 msgid "changed hostname to:"
 msgstr "hostname megváltozott erre:"
 
 #. Update DB
-#: ../src/playlist3.c:1904
+#: ../src/playlist3.c:2120
 msgid "Update Database"
 msgstr "Adatbázis frissítése"
 
-#: ../src/playlist3.c:1983
+#: ../src/playlist3.c:2199
 msgid "By"
-msgstr "Őáltala"
+msgstr "Szerző"
 
-#: ../src/playlist3.c:1990
+#: ../src/playlist3.c:2206
 msgid "From"
-msgstr "Feladó"
+msgstr "erről az albumról:"
 
-#: ../src/playlist3.c:2046
+#: ../src/playlist3.c:2262
 msgid "Not Playing"
 msgstr "Nincs lejátszás"
 
@@ -991,6 +1005,13 @@ msgstr "Idő"
 #: ../src/playlist3-messages.c:197
 msgid "Message"
 msgstr "Üzenet"
+
+#: ../src/plugin.c:191
+msgid ""
+"One or more plugins failed to load, see help->messages for more information"
+msgstr ""
+"Egy vagy több bővítményt nem lehetett betölteni, a segítség->üzenetek "
+"pontban több információt találsz"
 
 #: ../src/preferences.c:82
 msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
@@ -1061,7 +1082,7 @@ msgstr "1 folyam hozzáadva"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:206
 msgid "Enter an url"
 msgstr "Írjon be egy url-t"
@@ -1074,97 +1095,115 @@ msgstr "Nem lehetett a '%s' url-hez csatlakozni"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:273
 msgid "Failed to parse the playlist link"
 msgstr "Nem tudtam értelmezni a lejátszólista hivatkozást"
 
-#: ../src/tray-icon2.c:104
+#: ../src/tray-icon2.c:105
 msgid "Pla_ylist"
 msgstr "Leját_szólista"
 
-#: ../src/tray-icon2.c:423
+#: ../src/tray-icon2.c:440
 msgid "<span size='large'>Gnome Music Player Client</span>"
 msgstr "<span size='large'>Gnome Music Player Client</span>"
 
-#: ../src/tray-icon2.c:699
+#: ../src/tray-icon2.c:715
 msgid "Notification"
 msgstr "Értesítés"
 
 #. *
 #. * Append an introduction page
-#.
-#: ../src/setup-assistant.c:69
+#. 
+#: ../src/setup-assistant.c:94
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"Első alkalommal indítod a gmpc-t.\n"
+"Ez a segéd végigvezet az mpd démonhoz való kapcoslódás lépésein."
 
-#: ../src/setup-assistant.c:71
+#: ../src/setup-assistant.c:96
 msgid "Welcome to GMPC"
-msgstr ""
+msgstr "Üdvözöllek a GMPC-ben"
 
-#: ../src/setup-assistant.c:86
-#, fuzzy
+#: ../src/setup-assistant.c:115
 msgid "Setup connection"
-msgstr "Ú_jracsatlakozás"
+msgstr "Kapcsolat beállítása"
 
 #. *
 #. * End
-#.
-#: ../src/setup-assistant.c:95
+#. 
+#: ../src/setup-assistant.c:124
 msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
+"A Gmpc használatra kész.\n"
+"Kellemes zenehallgatást!"
 
-#: ../src/setup-assistant.c:97
+#: ../src/setup-assistant.c:126
 msgid "Finish"
-msgstr ""
+msgstr "Befejezés"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:103
+#: ../src/browsers/playlist3-current-playlist-browser.c:106
 msgid "item"
 msgid_plural "items"
 msgstr[0] "tétel"
 msgstr[1] "tétel"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:104
+#: ../src/browsers/playlist3-current-playlist-browser.c:107
 msgid "(Estimation)"
 msgstr "(Becslés)"
 
 #. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:420
-#: ../src/browsers/playlist3-current-playlist-browser.c:967
+#: ../src/browsers/playlist3-current-playlist-browser.c:428
+#: ../src/browsers/playlist3-current-playlist-browser.c:1229
 msgid "Play Queue"
 msgstr "Lejátszási sor"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:492
+#: ../src/browsers/playlist3-current-playlist-browser.c:500
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Biztosan törölni kívánja a lejátszólistát?"
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:737
+#: ../src/browsers/playlist3-current-playlist-browser.c:756
+#: ../src/browsers/playlist3-current-playlist-browser.c:797
+#: ../src/browsers/playlist3-current-playlist-browser.c:819
+msgid "Your mpd has a broken 'addid', pasting will fail."
+msgstr ""
+
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:644
+#: ../src/browsers/playlist3-current-playlist-browser.c:843
 msgid "Crop"
 msgstr "Levágás"
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:863
+msgid "Paste before"
+msgstr "Beszúrás elé"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:869
+msgid "Paste after"
+msgstr "Beszúrás utána"
+
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:658
+#: ../src/browsers/playlist3-current-playlist-browser.c:884
 msgid "Shuffle"
 msgstr "Kevert"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:673
-#: ../src/browsers/playlist3-file-browser.c:973
-#: ../src/browsers/playlist3-find2-browser.c:775
-#: ../src/browsers/playlist3-playlist-editor.c:432
+#: ../src/browsers/playlist3-current-playlist-browser.c:899
+#: ../src/browsers/playlist3-file-browser.c:957
+#: ../src/browsers/playlist3-find2-browser.c:795
+#: ../src/browsers/playlist3-playlist-editor.c:557
 msgid "Edit Columns"
 msgstr "Oszlopok szerkesztése"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:796
+#: ../src/browsers/playlist3-current-playlist-browser.c:1022
 msgid "Add URL"
 msgstr "URL hozzáadása"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:884
+#: ../src/browsers/playlist3-current-playlist-browser.c:1130
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1173,17 +1212,17 @@ msgstr ""
 "<i>A <b>\"%s\"</b> lejátszólista már létezik.\n"
 "Felülírja?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:908
+#: ../src/browsers/playlist3-current-playlist-browser.c:1154
 msgid "Failed to save the playlist file."
 msgstr "Nem tudtam menteni a lejátszólista fájlt."
 
 #: ../src/browsers/playlist3-file-browser.c:105
 #: ../src/browsers/playlist3-file-browser.c:348
-#: ../src/browsers/playlist3-file-browser.c:1207
+#: ../src/browsers/playlist3-file-browser.c:1191
 msgid "File Browser"
 msgstr "Fájlböngésző"
 
-#: ../src/browsers/playlist3-file-browser.c:187
+#: ../src/browsers/playlist3-file-browser.c:188
 msgid "Directories"
 msgstr "Könyvtárak"
 
@@ -1198,21 +1237,21 @@ msgstr "A '%s' könyvtárt rekurzívan hozzáadtam"
 #. Play button
 #. replace
 #: ../src/browsers/playlist3-file-browser.c:598
-#: ../src/browsers/playlist3-file-browser.c:925
-#: ../src/browsers/playlist3-file-browser.c:959
-#: ../src/browsers/playlist3-find2-browser.c:758
-#: ../src/browsers/playlist3-metadata-browser.c:417
-#: ../src/browsers/playlist3-metadata-browser.c:671
-#: ../src/browsers/playlist3-metadata-browser.c:1330
-#: ../src/browsers/playlist3-metadata-browser.c:1580
-#: ../src/browsers/playlist3-metadata-browser.c:2022
-#: ../src/browsers/playlist3-playlist-editor.c:490
+#: ../src/browsers/playlist3-file-browser.c:905
+#: ../src/browsers/playlist3-file-browser.c:943
+#: ../src/browsers/playlist3-find2-browser.c:778
+#: ../src/browsers/playlist3-metadata-browser.c:653
+#: ../src/browsers/playlist3-metadata-browser.c:907
+#: ../src/browsers/playlist3-metadata-browser.c:1435
+#: ../src/browsers/playlist3-metadata-browser.c:1826
+#: ../src/browsers/playlist3-metadata-browser.c:2238
+#: ../src/browsers/playlist3-playlist-editor.c:615
 msgid "Replace"
 msgstr "Csere"
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:623
-#: ../src/browsers/playlist3-file-browser.c:911
+#: ../src/browsers/playlist3-file-browser.c:894
 msgid "Update"
 msgstr "Frissítés"
 
@@ -1220,190 +1259,202 @@ msgstr "Frissítés"
 msgid "Loaded playlist"
 msgstr "Betöltött lejátszólista"
 
-#: ../src/browsers/playlist3-file-browser.c:1039
+#: ../src/browsers/playlist3-file-browser.c:1023
 msgid "Added"
 msgstr "Hozzáadva"
 
-#: ../src/browsers/playlist3-file-browser.c:1041
+#: ../src/browsers/playlist3-file-browser.c:1025
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "dal"
 msgstr[1] "dal"
 
-#: ../src/browsers/playlist3-file-browser.c:1043
+#: ../src/browsers/playlist3-file-browser.c:1027
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "könyvtár"
 msgstr[1] "könyvtár"
 
-#: ../src/browsers/playlist3-file-browser.c:1045
+#: ../src/browsers/playlist3-file-browser.c:1029
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "lejátszólista"
 msgstr[1] "lejátszólista"
 
-#: ../src/browsers/playlist3-file-browser.c:1068
-#: ../src/browsers/playlist3-file-browser.c:1118
+#: ../src/browsers/playlist3-file-browser.c:1052
+#: ../src/browsers/playlist3-file-browser.c:1102
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Biztos törölni kívánja a kiválasztott lejátszólistát?"
 
-#: ../src/browsers/playlist3-find2-browser.c:141
+#: ../src/browsers/playlist3-find2-browser.c:142
 msgid "And"
 msgstr "És"
 
-#: ../src/browsers/playlist3-find2-browser.c:142
+#: ../src/browsers/playlist3-find2-browser.c:143
 msgid "Or"
 msgstr "Vagy"
 
 #. browser label
-#: ../src/browsers/playlist3-find2-browser.c:250
+#: ../src/browsers/playlist3-find2-browser.c:252
 msgid "<span size='xx-large' weight='bold'>Search</span>"
 msgstr "<span size='xx-large' weight='bold'>Keresés</span>"
 
 #. search in playlist
-#: ../src/browsers/playlist3-find2-browser.c:254
+#: ../src/browsers/playlist3-find2-browser.c:256
 msgid "Search in current _play queue"
 msgstr "Keresls az aktuális lejátszólistában"
 
-#: ../src/browsers/playlist3-find2-browser.c:323
-#: ../src/browsers/playlist3-find2-browser.c:834
+#: ../src/browsers/playlist3-find2-browser.c:325
+#: ../src/browsers/playlist3-find2-browser.c:854
 msgid "Search"
 msgstr "Keresés"
 
-#: ../src/browsers/playlist3-metadata-browser.c:391
-#: ../src/browsers/playlist3-metadata-browser.c:606
+#: ../src/browsers/playlist3-metadata-browser.c:267
+#: ../src/browsers/playlist3-metadata-browser.c:303
+msgid "Unavailable"
+msgstr "Nem elérhető"
+
+#: ../src/browsers/playlist3-metadata-browser.c:297
+msgid "Fetching..."
+msgstr "Letöltés..."
+
+#. View
+#. *
+#. * View Button
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:406
+#: ../src/browsers/playlist3-metadata-browser.c:670
+#: ../src/browsers/playlist3-metadata-browser.c:2261
+msgid "View"
+msgstr "Nézet"
+
+#: ../src/browsers/playlist3-metadata-browser.c:628
+#: ../src/browsers/playlist3-metadata-browser.c:842
 #: ../src/gob/gmpc-mpddata-treeview.gob:576
 msgid "<b>Artist:</b>"
 msgstr "<b>Előadó:</b>"
 
 #. *
 #. * Songs list
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:400
-#: ../src/browsers/playlist3-metadata-browser.c:1313
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:636
+#: ../src/browsers/playlist3-metadata-browser.c:1418
 msgid "<b>Songs:</b>"
 msgstr "<b>Dalok:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:402
+#: ../src/browsers/playlist3-metadata-browser.c:638
 msgid "<b>PlayTime:</b>"
 msgstr "<b>Lejátszási idő:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:405
-#: ../src/browsers/playlist3-metadata-browser.c:614
-#: ../src/browsers/playlist3-metadata-browser.c:1650
-#: ../src/browsers/playlist3-metadata-browser.c:1991
+#: ../src/browsers/playlist3-metadata-browser.c:641
+#: ../src/browsers/playlist3-metadata-browser.c:850
+#: ../src/browsers/playlist3-metadata-browser.c:1895
+#: ../src/browsers/playlist3-metadata-browser.c:2207
 #: ../src/gob/gmpc-mpddata-treeview.gob:598
 msgid "<b>Genre:</b>"
 msgstr "<b>Műfaj:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:407
-#: ../src/browsers/playlist3-metadata-browser.c:618
-#: ../src/browsers/playlist3-metadata-browser.c:1674
-#: ../src/browsers/playlist3-metadata-browser.c:1995
+#: ../src/browsers/playlist3-metadata-browser.c:643
+#: ../src/browsers/playlist3-metadata-browser.c:854
+#: ../src/browsers/playlist3-metadata-browser.c:1919
+#: ../src/browsers/playlist3-metadata-browser.c:2211
 #: ../src/gob/gmpc-mpddata-treeview.gob:608
 msgid "<b>Date:</b>"
 msgstr "<b>Dátum:</b>"
 
-#. View
-#. *
-#. * View Button
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:434
-#: ../src/browsers/playlist3-metadata-browser.c:1123
-#: ../src/browsers/playlist3-metadata-browser.c:2045
-msgid "View"
-msgstr "Nézet"
-
-#: ../src/browsers/playlist3-metadata-browser.c:500
-#: ../src/browsers/playlist3-metadata-browser.c:958
-#: ../src/browsers/playlist3-metadata-browser.c:1213
-#: ../src/browsers/playlist3-metadata-browser.c:1484
+#: ../src/browsers/playlist3-metadata-browser.c:736
+#: ../src/browsers/playlist3-metadata-browser.c:1207
+#: ../src/browsers/playlist3-metadata-browser.c:1318
+#: ../src/browsers/playlist3-metadata-browser.c:1730
 msgid "<span size='xx-large' weight='bold'>Collection</span>"
 msgstr "<span size='xx-large' weight='bold'>Gyűjtemény</span>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:610
-#: ../src/browsers/playlist3-metadata-browser.c:1634
-#: ../src/browsers/playlist3-metadata-browser.c:1987
+#: ../src/browsers/playlist3-metadata-browser.c:846
+#: ../src/browsers/playlist3-metadata-browser.c:1879
+#: ../src/browsers/playlist3-metadata-browser.c:2203
 #: ../src/gob/gmpc-mpddata-treeview.gob:588
 msgid "<b>Album:</b>"
 msgstr "<b>Album:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:622
+#: ../src/browsers/playlist3-metadata-browser.c:858
 msgid "<b>Track:</b>"
 msgstr "<b>Szám:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:626
+#: ../src/browsers/playlist3-metadata-browser.c:862
 msgid "<b>Composer:</b>"
 msgstr "<b>Szerző:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:630
+#: ../src/browsers/playlist3-metadata-browser.c:866
 msgid "<b>Performer:</b>"
 msgstr "<b>Előadó:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:637
+#: ../src/browsers/playlist3-metadata-browser.c:873
 msgid "<b>Dirname:</b>"
 msgstr "<b>Könyvtár:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:647
+#: ../src/browsers/playlist3-metadata-browser.c:883
 msgid "<b>Extension:</b>"
 msgstr "<b>Kiterjesztés:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:655
+#: ../src/browsers/playlist3-metadata-browser.c:891
 msgid "<b>Bitrate:</b>"
 msgstr "<b>Bitráta:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:658
-#: ../src/browsers/playlist3-metadata-browser.c:2099
+#: ../src/browsers/playlist3-metadata-browser.c:894
+#: ../src/browsers/playlist3-metadata-browser.c:2311
 msgid "kbit/sec"
 msgstr "kbit/sec"
 
-#.
+#. 
 #. * Lyrics
-#.
+#. 
 #. label
-#: ../src/browsers/playlist3-metadata-browser.c:696
+#: ../src/browsers/playlist3-metadata-browser.c:932
 msgid "Lyric:"
 msgstr "Dalszöveg:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:697
+#: ../src/browsers/playlist3-metadata-browser.c:933
 msgid "<b>Lyric:</b>"
 msgstr "<b>Dalszöveg:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:744
-#, fuzzy
+#: ../src/browsers/playlist3-metadata-browser.c:974
 msgid "<span  weight='bold'>Songs with same title</span>"
-msgstr "<span weight='bold'>Linkek</span>"
+msgstr "<span weight='bold'>Azonos című számok</span>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:773
+#: ../src/browsers/playlist3-metadata-browser.c:1013
+msgid "<span weight=\"bold\">Similar Songs:</span>"
+msgstr "span weight=\"bold\">Hasonló számok:</span>"
+
+#: ../src/browsers/playlist3-metadata-browser.c:1037
 msgid "<span  weight='bold'>Links</span>"
 msgstr "<span weight='bold'>Linkek</span>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:910
+#: ../src/browsers/playlist3-metadata-browser.c:1159
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
 msgstr ""
 "Csak az első %i találatot mutatom, kérem pontosítsa a keresési kifejezést"
 
 #. The label
-#: ../src/browsers/playlist3-metadata-browser.c:972
+#: ../src/browsers/playlist3-metadata-browser.c:1221
 msgid "Find Artist:"
 msgstr "Előadó keresése:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1282
+#: ../src/browsers/playlist3-metadata-browser.c:1387
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
 msgstr[0] "Műfaj:"
 msgstr[1] "Műfajok:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1297
+#: ../src/browsers/playlist3-metadata-browser.c:1402
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
 msgstr[0] "Dátum:"
 msgstr[1] "Dátumok:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1318
-#: ../src/browsers/playlist3-metadata-browser.c:1685
-#: ../src/browsers/playlist3-metadata-browser.c:2007
+#: ../src/browsers/playlist3-metadata-browser.c:1423
+#: ../src/browsers/playlist3-metadata-browser.c:1930
+#: ../src/browsers/playlist3-metadata-browser.c:2223
 msgid "<b>Playtime:</b>"
 msgstr "<b>Lejátszási idő:</b>"
 
@@ -1416,82 +1467,88 @@ msgstr "<b>Lejátszási idő:</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:1361
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:1466
 msgid "Artist info:"
 msgstr "Előadó infó:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1366
+#: ../src/browsers/playlist3-metadata-browser.c:1471
 msgid "<b>Artist info:</b>"
 msgstr "<b>Előadó infó:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1389
+#: ../src/browsers/playlist3-metadata-browser.c:1494
 msgid "<span size=\"x-large\" weight=\"bold\">Albums:</span>"
 msgstr "<span size=\"x-large\" weight=\"bold\">Albumok:</span>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1433
+#: ../src/browsers/playlist3-metadata-browser.c:1539
 msgid "<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>"
 msgstr "<span size=\"x-large\" weight=\"bold\">Hasonló előadók:</span>"
 
 #. *
 #. * Album Information
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:1561
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:1807
 msgid "Album info:"
 msgstr "Album infó:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1566
+#: ../src/browsers/playlist3-metadata-browser.c:1812
 msgid "<b>Album info:</b>"
 msgstr "<b>Album infó:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1618
+#: ../src/browsers/playlist3-metadata-browser.c:1864
 msgid "<span size=\"x-large\" weight=\"bold\">Songs:</span>"
 msgstr "<span size=\"x-large\" weight=\"bold\">Dalok:</span>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1679
-#: ../src/browsers/playlist3-metadata-browser.c:2001
+#: ../src/browsers/playlist3-metadata-browser.c:1924
+#: ../src/browsers/playlist3-metadata-browser.c:2217
 msgid "<b>Tracks:</b>"
 msgstr "<b>Számok:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1691
-#: ../src/browsers/playlist3-metadata-browser.c:2013
+#: ../src/browsers/playlist3-metadata-browser.c:1936
+#: ../src/browsers/playlist3-metadata-browser.c:2229
 msgid "<b>Directory:</b>"
 msgstr "<b>Könyvtár:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1820
-#: ../src/browsers/playlist3-metadata-browser.c:1901
+#. *
+#. * Metadata browser link
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:2117
+#: ../src/browsers/playlist3-metadata-browser.c:2395
 msgid "Metadata Browser"
 msgstr "Metaadat-böngésző"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1913
+#. *
+#. * Show current song entry
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:2133
 msgid "Show Current Song"
 msgstr "Aktuális szám mutatása"
 
-#: ../src/browsers/playlist3-playlist-editor.c:114
-#: ../src/browsers/playlist3-playlist-editor.c:702
+#: ../src/browsers/playlist3-playlist-editor.c:115
+#: ../src/browsers/playlist3-playlist-editor.c:829
 msgid "Playlist Editor"
 msgstr "Lejátszólista szerkesztő"
 
-#: ../src/browsers/playlist3-playlist-editor.c:332
+#: ../src/browsers/playlist3-playlist-editor.c:457
 msgid "New playlist"
 msgstr "Új lejátszólista"
 
-#: ../src/browsers/playlist3-playlist-editor.c:371
+#: ../src/browsers/playlist3-playlist-editor.c:496
 msgid "Rename Playlist"
 msgstr "Lejátszólista átnevezése"
 
 #. delete
-#: ../src/browsers/playlist3-playlist-editor.c:378
-#: ../src/browsers/playlist3-playlist-editor.c:510
+#: ../src/browsers/playlist3-playlist-editor.c:503
+#: ../src/browsers/playlist3-playlist-editor.c:635
 msgid "Rename"
 msgstr "Átnevezés"
 
 #. Add
-#: ../src/browsers/playlist3-playlist-editor.c:666
+#: ../src/browsers/playlist3-playlist-editor.c:792
 msgid "Add to playlist"
 msgstr "Hozzáadás a lejátszólistához"
 
-#: ../src/browsers/playlist3-tag2-browser.c:76
+#: ../src/browsers/playlist3-tag2-browser.c:77
 msgid "Tag based browser"
 msgstr "Címke alapú böngésző"
 
@@ -1584,14 +1641,12 @@ msgid "Position"
 msgstr "Pozíció"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:60
-#, fuzzy
 msgid "Extension"
-msgstr "Verzió"
+msgstr "Bővítmény"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:61
-#, fuzzy
 msgid "Directory"
-msgstr "könyvtár"
+msgstr "Könyvtár"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:565
 msgid "<b>Title:</b>"
@@ -1609,11 +1664,11 @@ msgstr "Hozzáadott profil"
 msgid "Removed profile"
 msgstr "Törölt profil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:43 ../src/gob/gmpc-metaimage.gob:661
+#: ../src/gob/gmpc-meta-text-view.gob:43 ../src/gob/gmpc-metaimage.gob:734
 msgid "Refetch"
 msgstr "Ismételt letöltés"
 
-#: ../src/gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-metaimage.gob:666
+#: ../src/gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-metaimage.gob:739
 msgid "Select file"
 msgstr "Válassz egy fájlt"
 
@@ -1641,7 +1696,7 @@ msgstr "Album-információ letöltése"
 msgid "Not Available"
 msgstr "Nem elérhető"
 
-#: ../src/gob/gmpc-meta-text-view.gob:229 ../src/gob/gmpc-metaimage.gob:697
+#: ../src/gob/gmpc-meta-text-view.gob:229 ../src/gob/gmpc-metaimage.gob:770
 msgid "Select File"
 msgstr "Válassz egy fájlt"
 
@@ -1649,14 +1704,21 @@ msgstr "Válassz egy fájlt"
 msgid "Text Document"
 msgstr "Szöveges dokumentum"
 
-#: ../src/gob/gmpc-meta-text-view.gob:238 ../src/gob/gmpc-metaimage.gob:707
+#: ../src/gob/gmpc-meta-text-view.gob:238 ../src/gob/gmpc-metaimage.gob:780
 msgid "All"
 msgstr "Mind"
 
-#: ../src/gob/gmpc-metaimage.gob:702
+#: ../src/gob/gmpc-metaimage.gob:775
 msgid "Images"
 msgstr "Képek"
 
 #: ../src/gob/gmpc-stats-label.gob:125
 msgid "<i>Loading</i>"
 msgstr "<i>Töltés</i>"
+
+#~ msgid ""
+#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
+#~ "This might work, but is no longer supported."
+#~ msgstr ""
+#~ "A gmpc éppen 0.12.0-ás verziónál régebbi mpd-hez kapcsolódik.\n"
+#~ "Ez működhet, de már nem támogatott."
