@@ -113,7 +113,6 @@ public class Gmpc.Progress : Gtk.EventBox {
         ctx.paint();
         ctx.new_path();
         Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
-//        ctx.rectangle(1.5,1.5,width, height);
         draw_curved_rectangle(ctx, 1.5,1.5,width, height);
         ctx.stroke_preserve ();
         ctx.clip();
@@ -127,12 +126,19 @@ public class Gmpc.Progress : Gtk.EventBox {
                 pwidth = width;
             }
             ctx.new_path();
-            Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.SELECTED]);
+
+            var pattern =  new Pattern.linear(0.0,0.0, 0.0, height);
+            var start = pb.style.bg[(int)Gtk.StateType.SELECTED];
+            var stop = pb.style.dark[(int)Gtk.StateType.SELECTED];
+           
+            pattern.add_color_stop_rgb(0.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0));
+            pattern.add_color_stop_rgb(0.5,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0));
+            pattern.add_color_stop_rgb(1.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0));
+            ctx.set_source(pattern);
             ctx.rectangle(1.5,1.5,pwidth, height);
-            //draw_curved_rectangle(ctx, 1.5,1.5,pwidth, height);
+            
             ctx.fill ();
-//            Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
-//            ctx.stroke ();
+
         }
 
         ctx.reset_clip();
