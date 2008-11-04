@@ -150,8 +150,8 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		}
 		cairo_new_path (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp2));
-		/*ctx.rectangle(1.5,1.5,pwidth, height);*/
-		gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
+		cairo_rectangle (ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
+		/*draw_curved_rectangle(ctx, 1.5,1.5,pwidth, height);*/
 		cairo_fill_preserve (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp3 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp3));
 		cairo_stroke (ctx);

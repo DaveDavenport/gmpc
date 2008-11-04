@@ -128,8 +128,8 @@ public class Gmpc.Progress : Gtk.EventBox {
             }
             ctx.new_path();
             Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.SELECTED]);
-            //ctx.rectangle(1.5,1.5,pwidth, height);
-            draw_curved_rectangle(ctx, 1.5,1.5,pwidth, height);
+            ctx.rectangle(1.5,1.5,pwidth, height);
+            //draw_curved_rectangle(ctx, 1.5,1.5,pwidth, height);
             ctx.fill_preserve ();
             Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
             ctx.stroke ();
