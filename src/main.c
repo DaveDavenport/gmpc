@@ -715,6 +715,7 @@ int main (int argc, char **argv)
      * Create the main window
 	 */	
 	debug_printf(DEBUG_INFO, "Create main window\n");
+    //gdk_window_set_debug_updates(TRUE);
 	create_playlist3();
     playlist3_message_init();
     TEC("Creating playlist window")

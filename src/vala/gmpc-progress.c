@@ -117,7 +117,7 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 	gint width;
 	gint height;
 	GdkColor _tmp0 = {0};
-	GdkColor _tmp3 = {0};
+	GdkColor _tmp1 = {0};
 	gboolean _tmp11;
 	g_return_val_if_fail (GMPC_IS_PROGRESS (self), FALSE);
 	g_return_val_if_fail (GMPC_IS_PROGRESS (pb), FALSE);
@@ -128,13 +128,20 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 	cairo_set_line_width (ctx, 1.0);
 	cairo_set_tolerance (ctx, 0.2);
 	cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
+	/*paint background*/
 	gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_NORMAL))], &_tmp0));
 	cairo_paint (ctx);
+	cairo_new_path (ctx);
+	gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp1));
+	/*        ctx.rectangle(1.5,1.5,width, height);*/
+	gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
+	cairo_stroke_preserve (ctx);
+	cairo_clip (ctx);
 	if (self->priv->total > 0) {
 		double step_size;
 		gint pwidth;
-		GdkColor _tmp1 = {0};
 		GdkColor _tmp2 = {0};
+		GdkColor _tmp3 = {0};
 		step_size = width / ((double) (self->priv->total));
 		pwidth = ((gint) ((step_size * self->priv->current)));
 		/* don't allow more then 100% */
@@ -142,18 +149,14 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 			pwidth = width;
 		}
 		cairo_new_path (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp1));
+		gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp2));
 		/*ctx.rectangle(1.5,1.5,pwidth, height);*/
 		gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
 		cairo_fill_preserve (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp2));
+		gdk_cairo_set_source_color (ctx, (_tmp3 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp3));
 		cairo_stroke (ctx);
 	}
-	cairo_new_path (ctx);
-	gdk_cairo_set_source_color (ctx, (_tmp3 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp3));
-	/*        ctx.rectangle(1.5,1.5,width, height);*/
-	gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
-	cairo_stroke (ctx);
+	cairo_reset_clip (ctx);
 	/**
 	         * Draw text
 	         */

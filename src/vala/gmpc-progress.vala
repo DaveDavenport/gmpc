@@ -108,9 +108,15 @@ public class Gmpc.Progress : Gtk.EventBox {
         ctx.set_tolerance ( 0.2 );
         ctx.set_line_join (LineJoin.ROUND);
 
-
+        //paint background
         Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.NORMAL]);
         ctx.paint();
+        ctx.new_path();
+        Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
+//        ctx.rectangle(1.5,1.5,width, height);
+        draw_curved_rectangle(ctx, 1.5,1.5,width, height);
+        ctx.stroke_preserve ();
+        ctx.clip();
 
         if(this.total > 0)
         {
@@ -128,11 +134,11 @@ public class Gmpc.Progress : Gtk.EventBox {
             Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
             ctx.stroke ();
         }
-        ctx.new_path();
-        Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
-//        ctx.rectangle(1.5,1.5,width, height);
-        draw_curved_rectangle(ctx, 1.5,1.5,width, height);
-        ctx.stroke ();
+
+        ctx.reset_clip();
+
+
+
 
 
         /**
