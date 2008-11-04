@@ -196,6 +196,11 @@ static void bacon_on_message_received(const char *message, gpointer data)
             stop_song();
             return;
         }
+        else if (strncmp(message, "STREAM ", 7) == 0)
+        {
+            url_start_real(&message[7]);
+            return;
+        }
     }
     /* popup, if message was not handled.*/
    create_playlist3(); 

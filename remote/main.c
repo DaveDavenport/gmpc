@@ -51,6 +51,7 @@ int main ( int argc, char **argv )
             gboolean prev=FALSE;
             gboolean next=FALSE;
             gboolean stop=FALSE;
+            gchar *stream = NULL;
 
             GOptionEntry entries[] = {
                 {
@@ -81,10 +82,11 @@ int main ( int argc, char **argv )
                     "stop",     'x', 0, G_OPTION_ARG_NONE, &stop,
                     "Give the running gmpc the stop command", NULL
                 },
-
-
-
-
+                {
+                
+                    "stream",     's', 0, G_OPTION_ARG_STRING, &stream,
+                    "Give the running gmpc a stream to play", NULL
+                },
                 {NULL}
             };
 
@@ -120,6 +122,13 @@ int main ( int argc, char **argv )
             {
                 printf("send stop\n");
                 bacon_message_connection_send(bacon_connection, "STOP");
+            }
+            if(stream)
+            {
+                gchar *str = g_strdup_printf("STREAM %s", stream);
+                printf("Send stream: %s\n", stream);
+                bacon_message_connection_send(bacon_connection, str);
+                g_free(str);
             }
 
 
