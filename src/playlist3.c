@@ -1816,8 +1816,13 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 	}
 	if(what&MPD_CST_VOLUME)
 	{
-		gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_slider),
-			mpd_status_get_volume(connection)/100.0);
+        int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_slider))*100;
+        /* don't do anything if nothing is changed */
+        if(mpd_status_get_volume(connection) != volume)
+        {
+            gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_slider),
+                    mpd_status_get_volume(connection)/100.0);
+        }
 
 	}
 	if(what&MPD_CST_PERMISSION)
