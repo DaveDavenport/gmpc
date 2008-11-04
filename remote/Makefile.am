@@ -1,4 +1,7 @@
 bin_PROGRAMS=gmpc-remote
+
+bin_SCRIPTS=gmpc-remote-stream
+
 gmpc_remote_SOURCES=\
 		main.c\
 		bacon-message-connection.c
@@ -27,4 +30,5 @@ AM_CFLAGS = @CFLAGS@\
 
 
 EXTRA_DIST = \
-		bacon-message-connection.h
+			 gmpc-remote-stream\
+			 bacon-message-connection.h
