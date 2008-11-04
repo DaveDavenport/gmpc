@@ -516,6 +516,12 @@ int main (int argc, char **argv)
 
 
             }
+            if (!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 2))
+            {
+                /* update old key */
+                printf("** Update of db set, because of new version\n");
+                import_old_db = TRUE;
+            }
             q_free(old_version);
         }
 		/* set new */
@@ -593,6 +599,7 @@ int main (int argc, char **argv)
     if(import_old_db){
         /* import an db*/
         char *old_url = gmpc_get_covers_path("covers.db");
+        printf("Importing old metadata db\n");
         if(g_file_test(old_url, G_FILE_TEST_EXISTS)){
             metadata_import_old_db(old_url);
         }
