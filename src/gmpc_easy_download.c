@@ -51,6 +51,20 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	 * Make sure it's clean
 	 */
 	gmpc_easy_download_clean(dld);
+
+    /** Check for local url */
+    if(g_file_test(url, G_FILE_TEST_EXISTS))
+    {
+        gsize size;
+        if(g_file_get_contents(url, &(dld->data),&(size), NULL))
+        {
+            dld->size = (int)size;
+            return 1;
+        }
+        return 0;
+    }
+
+
 	/* initialize curl */
 	curl = curl_easy_init();
 	if(!curl) return 0;
