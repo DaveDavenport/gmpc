@@ -53,7 +53,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	gmpc_easy_download_clean(dld);
 
     /** Check for local url */
-    if(g_file_test(url, G_FILE_TEST_EXISTS))
+    if(strncmp(url, "http://", 7) && g_file_test(url, G_FILE_TEST_EXISTS))
     {
         gsize size;
         if(g_file_get_contents(url, &(dld->data),&(size), NULL))
