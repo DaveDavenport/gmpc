@@ -217,6 +217,7 @@ int main (int argc, char **argv)
     int load_plugins = TRUE;
     int replace = FALSE;
     int quit = FALSE;
+    int import_old_db = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
@@ -318,6 +319,10 @@ int main (int argc, char **argv)
             else if (!strncasecmp(argv[i], _("--quit"), strlen(_("--quit"))))
             {
                 quit = TRUE;
+            }
+            else if (!strncasecmp(argv[i], _("--import-old-db"), strlen(_("--import-old-db"))))
+            {
+                import_old_db = TRUE;
             }
 
             /**
@@ -585,6 +590,14 @@ int main (int argc, char **argv)
      * (Will spawn a new thread, so have to be after the init threading 
      */
     meta_data_init();
+    if(import_old_db){
+        /* import an db*/
+        char *old_url = gmpc_get_covers_path("covers.db");
+        if(g_file_test(old_url, G_FILE_TEST_EXISTS)){
+            metadata_import_old_db(old_url);
+        }
+        g_free(old_url);
+    }
     TEC("Initializing metadata system")
 
     /**

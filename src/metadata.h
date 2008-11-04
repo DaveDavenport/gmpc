@@ -23,6 +23,8 @@ typedef enum {
 
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 
+void metadata_import_old_db(char *url);
+
 #include "gmpc-meta-watcher.h"
 extern GmpcMetaWatcher *gmw;
 

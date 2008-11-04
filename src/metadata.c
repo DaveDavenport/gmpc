@@ -1062,6 +1062,88 @@ static void metadata_destroy_pref_pane(GtkWidget *container)
 }
 
 
+
+void metadata_import_old_db(char *url)
+{
+    config_obj *old = cfg_open(url);
+    if(old)
+    {
+        conf_mult_obj *mult, *iter;
+
+        mult = cfg_get_class_list(old);
+        for(iter = mult; iter; iter = iter->next)
+        {
+            char *artist = iter->key;
+            if(artist)
+            {
+                mpd_Song *song = mpd_newSong();
+                conf_mult_obj *cm , *citer;
+                cm = cfg_get_key_list(old, artist);
+                song->artist = artist;
+                for(citer = cm; citer; citer = citer->next)
+                {
+                    /* Artist only */
+                    if(strcmp(citer->key, "image") == 0)
+                    {
+                        meta_data_set_cache_real(song, 
+                                META_ARTIST_ART, 
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }else if (strcmp(citer->key, "similar") == 0)
+                    {
+                        meta_data_set_cache_real(song, 
+                                META_ARTIST_SIMILAR, 
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }else if (strcmp(citer->key, "biography") == 0)
+                    {
+                        meta_data_set_cache_real(song, 
+                                META_ARTIST_TXT, 
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }
+                    /* Album */
+                    else if(strncmp(citer->key, "album:",6) == 0)
+                    {
+                        song->album = &((citer->key)[6]);
+                        meta_data_set_cache_real(song, 
+                                META_ALBUM_ART, 
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }
+                    else if (strncmp(citer->key, "albumtxt:", 9) == 0)
+                    {
+                        song->album = &((citer->key)[9]);
+                        meta_data_set_cache_real(song, 
+                                META_ALBUM_TXT, 
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }
+                    /* song */
+                    else if (strncmp(citer->key, "lyrics:",7) == 0) 
+                    {
+                        song->title = &((citer->key)[7]);
+                        meta_data_set_cache_real(song, 
+                                META_SONG_TXT,
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }else if (strncmp(citer->key, "similar:", 8) == 0)
+                    {
+                        song->title = &((citer->key)[8]);
+                        meta_data_set_cache_real(song, 
+                                META_SONG_SIMILAR,
+                                (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
+                    }
+
+                    song->album = NULL;
+                    song->title = NULL;
+                }
+                song->artist = NULL;
+                mpd_freeSong(song);
+                cfg_free_multiple(cm);
+            }
+        }
+        if(mult)
+            cfg_free_multiple(mult);
+        cfg_close(old); 
+    }
+}
+
+
 gmpcPrefPlugin metadata_pref_plug = {
     .construct      = metadata_construct_pref_pane,
     .destroy        =  metadata_destroy_pref_pane
@@ -1072,4 +1154,6 @@ gmpcPlugin metadata_plug = {
     .plugin_type    = GMPC_INTERNALL,
     .pref           = &metadata_pref_plug
 };
+
+
 
