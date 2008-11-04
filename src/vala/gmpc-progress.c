@@ -118,7 +118,7 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 	gint height;
 	GdkColor _tmp0 = {0};
 	GdkColor _tmp1 = {0};
-	gboolean _tmp11;
+	gboolean _tmp10;
 	g_return_val_if_fail (GMPC_IS_PROGRESS (self), FALSE);
 	g_return_val_if_fail (GMPC_IS_PROGRESS (pb), FALSE);
 	ctx = gdk_cairo_create (GDK_DRAWABLE (GTK_WIDGET (pb)->window));
@@ -141,7 +141,6 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		double step_size;
 		gint pwidth;
 		GdkColor _tmp2 = {0};
-		GdkColor _tmp3 = {0};
 		step_size = width / ((double) (self->priv->total));
 		pwidth = ((gint) ((step_size * self->priv->current)));
 		/* don't allow more then 100% */
@@ -152,10 +151,10 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		gdk_cairo_set_source_color (ctx, (_tmp2 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp2));
 		cairo_rectangle (ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));
 		/*draw_curved_rectangle(ctx, 1.5,1.5,pwidth, height);*/
-		cairo_fill_preserve (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp3 = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_NORMAL))], &_tmp3));
-		cairo_stroke (ctx);
+		cairo_fill (ctx);
 	}
+	/*            Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
+	            ctx.stroke ();*/
 	cairo_reset_clip (ctx);
 	/**
 	         * Draw text
@@ -169,13 +168,13 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 			char* a;
 			a = NULL;
 			if (self->priv->current / 60 > 99) {
+				char* _tmp3;
+				_tmp3 = NULL;
+				a = (_tmp3 = g_strdup_printf ("%02i:%02i", ((gint) (self->priv->current)) / 3600, ((gint) ((self->priv->current))) % 60), (a = (g_free (a), NULL)), _tmp3);
+			} else {
 				char* _tmp4;
 				_tmp4 = NULL;
-				a = (_tmp4 = g_strdup_printf ("%02i:%02i", ((gint) (self->priv->current)) / 3600, ((gint) ((self->priv->current))) % 60), (a = (g_free (a), NULL)), _tmp4);
-			} else {
-				char* _tmp5;
-				_tmp5 = NULL;
-				a = (_tmp5 = g_strdup_printf ("%02i:%02i", ((gint) (self->priv->current)) / 60, ((gint) ((self->priv->current))) % 60), (a = (g_free (a), NULL)), _tmp5);
+				a = (_tmp4 = g_strdup_printf ("%02i:%02i", ((gint) (self->priv->current)) / 60, ((gint) ((self->priv->current))) % 60), (a = (g_free (a), NULL)), _tmp4);
 			}
 			pango_layout_set_text (self->priv->_layout, a, -1);
 			a = (g_free (a), NULL);
@@ -183,13 +182,13 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 			char* a;
 			a = NULL;
 			if (self->priv->current / 60 > 99) {
+				char* _tmp5;
+				_tmp5 = NULL;
+				a = (_tmp5 = g_strdup_printf ("%02u:%02u - %02u:%02u", self->priv->current / 3600, (self->priv->current) % 60, self->priv->total / 3600, (self->priv->total) % 60), (a = (g_free (a), NULL)), _tmp5);
+			} else {
 				char* _tmp6;
 				_tmp6 = NULL;
-				a = (_tmp6 = g_strdup_printf ("%02u:%02u - %02u:%02u", self->priv->current / 3600, (self->priv->current) % 60, self->priv->total / 3600, (self->priv->total) % 60), (a = (g_free (a), NULL)), _tmp6);
-			} else {
-				char* _tmp7;
-				_tmp7 = NULL;
-				a = (_tmp7 = g_strdup_printf ("%02u:%02u - %02u:%02u", self->priv->current / 60, (self->priv->current) % 60, self->priv->total / 60, (self->priv->total) % 60), (a = (g_free (a), NULL)), _tmp7);
+				a = (_tmp6 = g_strdup_printf ("%02u:%02u - %02u:%02u", self->priv->current / 60, (self->priv->current) % 60, self->priv->total / 60, (self->priv->total) % 60), (a = (g_free (a), NULL)), _tmp6);
 			}
 			pango_layout_set_text (self->priv->_layout, a, -1);
 			a = (g_free (a), NULL);
@@ -202,18 +201,18 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 			step_size = width / ((double) (self->priv->total));
 			pwidth = ((gint) ((step_size * self->priv->current)));
 			if (pwidth >= ((width - fontw) / 2 + 1)) {
-				GdkColor _tmp8 = {0};
+				GdkColor _tmp7 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp8));
+				gdk_cairo_set_source_color (ctx, (_tmp7 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp7));
 				cairo_rectangle (ctx, ((double) (1)), ((double) (1)), ((double) (pwidth)), ((double) (height)));
 				cairo_clip (ctx);
 				cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
 				pango_cairo_show_layout (ctx, self->priv->_layout);
 			}
 			if (pwidth < ((width - fontw) / 2 + 1 + fontw)) {
-				GdkColor _tmp9 = {0};
+				GdkColor _tmp8 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp9 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp9));
+				gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp8));
 				cairo_reset_clip (ctx);
 				cairo_rectangle (ctx, ((double) (pwidth + 1)), ((double) (1)), ((double) (width)), ((double) (height)));
 				cairo_clip (ctx);
@@ -221,14 +220,14 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 				pango_cairo_show_layout (ctx, self->priv->_layout);
 			}
 		} else {
-			GdkColor _tmp10 = {0};
+			GdkColor _tmp9 = {0};
 			cairo_new_path (ctx);
-			gdk_cairo_set_source_color (ctx, (_tmp10 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp10));
+			gdk_cairo_set_source_color (ctx, (_tmp9 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp9));
 			cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
 			pango_cairo_show_layout (ctx, self->priv->_layout);
 		}
 	}
-	return (_tmp11 = TRUE, (ctx == NULL ? NULL : (ctx = (cairo_destroy (ctx), NULL))), _tmp11);
+	return (_tmp10 = TRUE, (ctx == NULL ? NULL : (ctx = (cairo_destroy (ctx), NULL))), _tmp10);
 }
 
 
