@@ -153,7 +153,7 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, G
 		start = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))];
 		stop = gtk_widget_get_style (GTK_WIDGET (pb))->dark[((gint) (GTK_STATE_SELECTED))];
 		cairo_pattern_add_color_stop_rgb (pattern, 0.0, start.red / (65536.0), start.green / (65536.0), start.blue / (65536.0));
-		cairo_pattern_add_color_stop_rgb (pattern, 0.5, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0));
+		cairo_pattern_add_color_stop_rgb (pattern, 0.7, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0));
 		cairo_pattern_add_color_stop_rgb (pattern, 1.0, start.red / (65536.0), start.green / (65536.0), start.blue / (65536.0));
 		cairo_set_source (ctx, pattern);
 		cairo_rectangle (ctx, 1.5, 1.5, ((double) (pwidth)), ((double) (height)));

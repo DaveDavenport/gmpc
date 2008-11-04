@@ -132,7 +132,7 @@ public class Gmpc.Progress : Gtk.EventBox {
             var stop = pb.style.dark[(int)Gtk.StateType.SELECTED];
            
             pattern.add_color_stop_rgb(0.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0));
-            pattern.add_color_stop_rgb(0.5,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0));
+            pattern.add_color_stop_rgb(0.7,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0));
             pattern.add_color_stop_rgb(1.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0));
             ctx.set_source(pattern);
             ctx.rectangle(1.5,1.5,pwidth, height);
