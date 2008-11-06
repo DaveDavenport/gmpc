@@ -9,7 +9,7 @@ m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_vers
 
 
 #Define variable
-m4_define([gmpc_tagline],       "Still 100% gnome free.")
+m4_define([gmpc_tagline],       "♯♪ + ♭♪ = ☺")
 m4_define([gmpc_website],       "http://gmpcwiki.sarine.nl")
 m4_define([gmpc_copyright],     "Copyright 2003-2008 Qball Cow")
 m4_define([gmpc_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
