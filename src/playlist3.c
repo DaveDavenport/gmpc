@@ -913,8 +913,9 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
         }
         else if (event->button == 3)
         {
-            gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
-                    !gmpc_progress_get_do_countdown(GMPC_PROGRESS(pb)));
+            gboolean a = !gmpc_progress_get_do_countdown(GMPC_PROGRESS(pb));
+            gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb), a);
+            cfg_set_single_value_as_int(config, "playlist", "progressbar-countdown", a);
         }
     }
     /* propagate the signal */
@@ -1092,6 +1093,9 @@ void create_playlist3 ()
         g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
         g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
         new_pb = pb;
+
+        gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
+                cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
     }
 
 
