@@ -899,11 +899,23 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
 {
     gint width;
     gdouble pos;
-    if(event->window)
+    if(event->type == GDK_BUTTON_PRESS)
     {
-        gdk_drawable_get_size(event->window, &width, NULL);
-        pos = (gdouble)event->x/(gdouble)width;
-        mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
+        if(event->button == 1)
+        {
+            if(event->window)
+            {
+
+                gdk_drawable_get_size(event->window, &width, NULL);
+                pos = (gdouble)event->x/(gdouble)width;
+                mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
+            }
+        }
+        else if (event->button == 3)
+        {
+            gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
+                    !gmpc_progress_get_do_countdown(GMPC_PROGRESS(pb)));
+        }
     }
     /* propagate the signal */
     return FALSE;
@@ -912,7 +924,7 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
 /**
  * When the position of the slider change, update the artist image
  */
-static void
+    static void
 pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 {
 	gint position = 0;
