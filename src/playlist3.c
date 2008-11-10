@@ -51,11 +51,6 @@ static GtkTargetEntry target_table[] =
 };
 
 
-
-
-
-guint sel_changed_handler_id = 0;
-
 GtkWidget *new_pb = NULL;
 GtkWidget *header_labels[5];
 void playlist3_new_header(void);
@@ -236,12 +231,15 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
  */
 void pl3_cat_sel_changed()
 {
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
+    GtkTreeView *tree = (GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree");
+	GtkTreeModel *model = gtk_tree_view_get_model(tree); 
 	GtkTreeIter iter;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree"));
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(tree);
 	/*GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");*/
 
 	GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
+    if(!model)
+        return;
 
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
@@ -965,7 +963,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
-	sel_changed_handler_id = g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
+	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start (column, renderer, FALSE);
