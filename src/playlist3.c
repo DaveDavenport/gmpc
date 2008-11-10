@@ -1199,14 +1199,14 @@ void create_playlist3 ()
 
 
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-		/*pl3_old_zoom = */pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
-		playlist_zoom_level_changed();
+
 	}
 	else
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
-
+    /*pl3_old_zoom = */pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
+    playlist_zoom_level_changed();
 
 	pl3_update_go_menu();	
 	/* make it update itself */
