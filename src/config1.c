@@ -89,7 +89,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 		{
 			len =0;
 			c = fgetc(fp);
-			while(c != ']' && c != EOF && len < 1024){
+			while(c != ']' && c != EOF && len < 1023){
 				buffer[len] = c;
 				len++;
 				c = fgetc(fp);
@@ -111,7 +111,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 		{
 			len =0;                                    		
 			c = fgetc(fp);
-			while(c != '}' && c != EOF && len < 1024){
+			while(c != '}' && c != EOF && len < 1023){
 				buffer[len] = c;
 				len++;
 				c = fgetc(fp);
@@ -191,7 +191,7 @@ static void cfg_open_parse_file(config_obj *cfgo, FILE *fp)
 						len++;
 					}
 					c = fgetc(fp);
-				}while((c != '\n' || quote) && c != EOF && quote >= 0 && len < 1024);
+				}while((c != '\n' || quote) && c != EOF && quote >= 0 && len < 1023);
 				new->value = g_strndup(buffer, len);
 				cfgo->total_size+= len;
 				if(multiple){
