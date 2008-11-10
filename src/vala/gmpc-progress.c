@@ -1,13 +1,12 @@
 
 #include "gmpc-progress.h"
 #include <pango/pango.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <cairo.h>
 #include <float.h>
 #include <math.h>
 #include <gdk/gdk.h>
+#include <stdlib.h>
+#include <string.h>
 #include <pango/pangocairo.h>
 
 
@@ -46,7 +45,6 @@ static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* re
 	self = GMPC_PROGRESS (base);
 	width = 0;
 	height = 0;
-	fprintf (stdout, "size request\n");
 	/* In this case, we say that we want to be as big as the
 	 text is, plus a little border around it.*/
 	if (gmpc_progress_get_hide_text (self)) {

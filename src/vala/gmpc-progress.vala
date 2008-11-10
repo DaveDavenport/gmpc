@@ -44,7 +44,6 @@ public class Gmpc.Progress : Gtk.EventBox {
     public override void size_request (Gtk.Requisition requisition)
     {
         int width, height;
-        stdout.printf("size request\n");
         // In this case, we say that we want to be as big as the
         // text is, plus a little border around it.
         if(this.hide_text)
