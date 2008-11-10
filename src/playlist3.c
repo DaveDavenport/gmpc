@@ -33,87 +33,10 @@
 #include "vala/gmpc-progress.h"
 
 /**
- * Keybindings
+ * Default keybinding settings are defined here:
  */
+#include "playlist3-keybindings.h"
 
-#define KB_GLOBAL "keybindings-keycode-global"
-#define MK_GLOBAL "keybindings-mask-global"
-#define AC_GLOBAL "keybindings-action"
-
-typedef enum _KeybindAction{
-    KB_ACTION_PLAY,
-    KB_ACTION_NEXT,
-    KB_ACTION_PREV,
-    KB_ACTION_STOP,
-    KB_ACTION_CLEAR_PLAYLIST,
-    KB_ACTION_FULL_ADD_PLAYLIST,
-    KB_ACTION_INTERFACE_COLLAPSE,
-    KB_ACTION_INTERFACE_EXPAND,
-    KB_ACTION_CLOSE,
-    KB_ACTION_QUIT,
-    KB_ACTION_FULLSCREEN,
-    KB_ACTION_REPEAT,
-    KB_ACTION_RANDOM,
-    KB_ACTION_TOGGLE_MUTE
-}KeybindAction;
-/** Some default keybindings */
-typedef enum _Keybind{
-    KB_PLAY,
-    KB_NEXT,
-    KB_PREV,
-    KB_STOP,
-    KB_CLEAR_PLAYLIST,
-    KB_FULL_ADD_PLAYLIST,
-    KB_INTERFACE_COLLAPSE_KP,
-    KB_INTERFACE_EXPAND_KP,
-    KB_INTERFACE_COLLAPSE,
-    KB_INTERFACE_EXPAND,
-    KB_QUIT,
-    KB_CLOSE,
-    KB_FULLSCREEN,
-    KB_REPEAT,
-    KB_RANDOM,
-    KB_TOGGLE_MUTE,
-    KB_NUM
-}Keybind;
-
-
-char *Keybindname[KB_NUM] = {
-        "Play",
-        "Next",
-        "Previous",
-        "Stop",
-        "Clear Playlist",
-        "Full Add Playlist",
-        "Interface Collapse Keypad",
-        "Interface Expand Keypad",
-        "Interface Collapse",
-        "Interface Expand",
-        "Close",
-        "Quit",
-        "Fullscreen",
-        "Repeat",
-        "Random",
-        "Mute"
-        };
-int KeybindingDefault[KB_NUM][3] = {
-        {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
-        {GDK_Right,         GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
-        {GDK_Left,          GDK_CONTROL_MASK,                   KB_ACTION_PREV},
-        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_STOP},
-        {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},
-        {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},
-        {GDK_KP_Subtract,   0,                                  KB_ACTION_INTERFACE_COLLAPSE},
-        {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},
-        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
-        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},
-        {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},
-        {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},
-        {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},
-        {GDK_r,             GDK_CONTROL_MASK,                   KB_ACTION_REPEAT},
-        {GDK_s,             GDK_CONTROL_MASK,                   KB_ACTION_RANDOM},
-        {GDK_m,             GDK_CONTROL_MASK,                   KB_ACTION_TOGGLE_MUTE}
-};
 #define ALBUM_SIZE_SMALL 40
 #define ALBUM_SIZE_LARGE 70
 /* Drag and drop Target table */
@@ -1205,7 +1128,7 @@ void create_playlist3 ()
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
-    /*pl3_old_zoom = */pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
+    pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
     playlist_zoom_level_changed();
 
 	pl3_update_go_menu();	
@@ -1317,9 +1240,6 @@ void create_playlist3 ()
                if(item){
                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
                }
-
-
-
             }
             conf_iter = conf_iter->next;
         }
@@ -1532,10 +1452,10 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), FALSE);
-//        gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,-1);
+
         gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), ALBUM_SIZE_LARGE);
-				gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
-        //gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+
     }
     if(pl3_old_zoom != PLAYLIST_MINI && pl3_zoom == PLAYLIST_MINI)
     {
@@ -1550,14 +1470,10 @@ static void playlist_zoom_level_changed()
         g_object_unref(box);
         gtk_widget_show(box);
 
-
-//        gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),NULL);
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), TRUE);
-
-//				gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "pp_pb"), -1,8);
         gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),ALBUM_SIZE_SMALL);
-				gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
-       // gmpc_metaimage_update_cover(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), NULL,MPD_CST_SONGID,NULL);  
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+
     }
 
 	/* Show full view */
@@ -1692,10 +1608,6 @@ void playlist_connection_changed(MpdObj *mi, int connect)
 	 */
 	pl3_plugin_changed_interface();
 
-	/**
-	 * Make sure the updating is actually in the right state
-	 */
-//	pl3_updating_changed(connection,-1);
 }
 /**
  * Update the window to status changes in mpd
@@ -1763,7 +1675,6 @@ void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
 				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
 				/* Make sure it's reset correctly */
-//				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pp_pb")),0.0);
                 gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0); 
 
 				gtk_image_set_from_stock(GTK_IMAGE(

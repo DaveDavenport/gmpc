@@ -131,6 +131,7 @@ gmpcincludedir =$(includedir)/gmpc/
 
 EXTRA_DIST=\
 		playlist3.h\
+		playlist3-keybindings.h\
 		main.h\
 		mm-keys.h\
 		misc.h\
