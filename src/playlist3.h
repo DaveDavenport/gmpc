@@ -16,8 +16,6 @@ void pl3_push_rsb_message(gchar *string);
 int pl3_hide(void);
 int pl3_cat_get_selected_browser(void);
 
-gboolean playlist3_get_active(void);
-
 typedef enum {
 	PLAYLIST_NO_ZOOM,
 	PLAYLIST_SMALL,
@@ -26,7 +24,7 @@ typedef enum {
 }PlaylistZoom;
 
 void playlist3_destroy(void);
-void playlist_editor_fill_list(void);
-
 gboolean playlist3_show_playtime(gulong playtime);
+void playlist_editor_fill_list(void);
+int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 #endif

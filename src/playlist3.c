@@ -57,7 +57,6 @@ void playlist3_new_header(void);
 void playlist3_update_header(void);
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
-static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
@@ -76,8 +75,6 @@ int pl3_old_zoom = PLAYLIST_NO_ZOOM;
 void about_window(void);
 int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
 int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
-int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
-int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 void playlist_zoom_in(void);
 void playlist_zoom_out(void);
 int pl3_cat_key_press_event(GtkWidget *, GdkEventKey *);
@@ -124,19 +121,7 @@ static GtkWidget *volume_slider = NULL;
 
 static guint updating_id = 0;
 
-gmpcPrefPlugin playlist_gpp = {
-	.construct					= playlist_pref_construct,
-	.destroy  					= playlist_pref_destroy
-};
 
-gmpcPlugin playlist_plug = {
-	.name 						= N_("Interface"),
-	.version 					= {1,1,1},
-	.plugin_type 				= GMPC_INTERNALL,
-	.mpd_status_changed 		= &playlist_status_changed,
-    .mpd_connection_changed     = &playlist_connection_changed,
-	.pref 						= &playlist_gpp,
-};
 
 /* Get the type of the selected row..
  * -1 means no row selected
@@ -436,7 +421,6 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
         }
     }
 
-//    printf("%i-%i\n", event->state, event->keyval); 
     list = cfg_get_key_list(config, KB_GLOBAL);
     /* If no keybindings are found, add the default ones */
     if(list == NULL)
@@ -481,7 +465,6 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
             {
                 int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
                 found = 1;
-//                printf("Doing action: %i\n",action);
                 /* Play control */
                 if(action == KB_ACTION_PLAY) play_song(); 
                 else if(action == KB_ACTION_NEXT) next_song();
@@ -794,15 +777,12 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 		gtk_drag_finish(context, TRUE, FALSE, time_recieved);
 	}
 }
-
-
-
-
-
-
-
+/**
+ * Progresbar 
+ */
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data)
 {
+    /* Seeking when scrolled on the pb */
     if(event->direction == GDK_SCROLL_UP)
     {
         seek_ps(5);
@@ -857,13 +837,90 @@ pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 
 }
 
-static void about_dialog_activate(GtkWidget *dialog, const gchar *uri, gpointer data)
-{
+static void about_dialog_activate(GtkWidget *dialog, const gchar *uri, gpointer data) {
 	open_uri(uri);
+}
+
+/***
+ * Handle a connect/Disconnect
+ */
+static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
+{
+	/* Set menu items */
+	if(connect) {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), TRUE);
+
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), TRUE);
+
+
+		pl3_push_rsb_message(_("Connected"));	
+	} else {
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), FALSE);             		
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), TRUE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"),FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), FALSE);
+		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
+		pl3_push_rsb_message(_("Not Connected"));
+	}
+    /** Set back to the current borwser, and update window title */
+	if(connect){
+		gchar *string = NULL;
+        GtkTreeIter iter;
+        GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
+				glade_xml_get_widget (pl3_xml, "cat_tree"));
+		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);                      		
+		if(gtk_tree_model_get_iter_first(model, &iter)){
+			gtk_tree_selection_select_iter(selec, &iter);
+		}
+		string = g_strdup_printf("%s - %s %s",
+				_("GMPC"), 
+				_("Connected to"),
+				mpd_get_hostname(mi));
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);
+		q_free(string);
+	}
+	else{
+		gchar *string = NULL;
+		string = g_strdup_printf("%s - %s",
+				_("GMPC"), 
+				_("Disconnected"));
+		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);		
+		q_free(string);                                                                    	
+	}
+
+	/*
+	 * make the playlist update itself
+	 */	
+	playlist_status_changed(connection, 
+			MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,
+			NULL);
+
+
+	/**
+	 * Also need updating
+	 */
+	pl3_option_menu_activate();
+
+	playlist3_fill_server_menu();
+
+	/**
+	 * update interface
+	 * items that are caused by the plugin.
+	 */
+	pl3_plugin_changed_interface();
+
 }
 
 void create_playlist3 ()
 {
+    GtkWidget *pb;
     GtkListStore *pl3_crumbs = NULL;
     conf_mult_obj *list = NULL;
     GtkCellRenderer *renderer;
@@ -1004,24 +1061,18 @@ void create_playlist3 ()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 
 
+    /**
+     * The new progress bar 
+     */
+    pb = (GtkWidget *)gmpc_progress_new();
+    gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
+    gtk_widget_show(pb);
+    g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
+    g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
+    new_pb = pb;
 
-
-    {
-        GtkWidget *pb = (GtkWidget *)gmpc_progress_new();
-        gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
-        gtk_widget_show(pb);
-        g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
-        g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
-        new_pb = pb;
-
-        gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
-                cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
-    }
-
-
-
-
-
+    gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
+            cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
 
 	/* Add volume slider. */
 	volume_slider = gtk_volume_button_new();
@@ -1054,14 +1105,7 @@ void create_playlist3 ()
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
 
-
-
-
-
-
-
-
-		/**
+    /*
 	 * Insert new custom widget
 	 */
 
@@ -1069,7 +1113,6 @@ void create_playlist3 ()
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), META_ALBUM_ART);
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),"gmpc"); 
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), connection);
-//	gtk_widget_set_size_request(glade_xml_get_widget(pl3_xml, "metaimage_album_art"),80,80);
 	/** make sure size is updated */
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
 
@@ -1085,42 +1128,42 @@ void create_playlist3 ()
 
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
     /* restore the window's position and size, if the user wants this.*/
-  if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
-	{
-		/* Load values from config file */
-		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
-		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
-		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
-		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
-		/* restore location + position */
-		/*pl3_show_and_position_window();*/
+    if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+    {
+        /* Load values from config file */
+        pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
+        pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
+        pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
+        pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+        /* restore location + position */
+        /*pl3_show_and_position_window();*/
 
-		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
-			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.x,
-					pl3_wsize.y);
-		}
-		if(pl3_wsize.height>0 && pl3_wsize.width>0) {
+        if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
+            gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+                    pl3_wsize.x,
+                    pl3_wsize.y);
+        }
+        if(pl3_wsize.height>0 && pl3_wsize.width>0) {
             debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
             gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-					pl3_wsize.width,
-					pl3_wsize.height);
-		}
-		/* restore pane position */
-		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
-		{
+                    pl3_wsize.width,
+                    pl3_wsize.height);
+        }
+        /* restore pane position */
+        if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
+        {
 
-			gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
-					cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-		}
-		/**
-		 * restore zoom level
-		 */
+            gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
+                    cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
+        }
+        /**
+         * restore zoom level
+         */
 
 
-		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+        gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
-	}
+    }
 	else
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
@@ -1235,26 +1278,19 @@ void create_playlist3 ()
         }
         cfg_free_multiple(list);
     }
-
-
-
 }
 
 /**
  * Helper functions
  */
-gboolean playlist3_get_active()
-{
-	return (pl3_xml != NULL);
-}
 GtkListStore *playlist3_get_category_tree_store()
 {
-	if(!playlist3_get_active()) return NULL;
+    if(pl3_xml == NULL) return NULL;
 	return GTK_LIST_STORE(pl3_tree);
 }
 GtkTreeView *playlist3_get_category_tree_view()
 {
-	if(!playlist3_get_active()) return NULL;
+    if(pl3_xml == NULL) return NULL;
 	return (GtkTreeView *)glade_xml_get_widget(pl3_xml, "cat_tree");
 } 
 
@@ -1523,86 +1559,10 @@ static void playlist_zoom_level_changed()
 	cfg_set_single_value_as_int(config, "playlist","zoomlevel",pl3_zoom);
 }
 
-/***
- * Handle a connect/Disconnect
- */
-static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
-{
-	/* Set menu items */
-	if(connect) {
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), TRUE);
-
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), TRUE);
-
-
-		pl3_push_rsb_message(_("Connected"));	
-	} else {
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "hpaned1"), FALSE);             		
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_connect"), TRUE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_disconnect"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"),FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), FALSE);
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), FALSE);
-		pl3_push_rsb_message(_("Not Connected"));
-	}
-    /** Set back to the current borwser, and update window title */
-	if(connect){
-		gchar *string = NULL;
-        GtkTreeIter iter;
-        GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
-				glade_xml_get_widget (pl3_xml, "cat_tree"));
-		GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);                      		
-		if(gtk_tree_model_get_iter_first(model, &iter)){
-			gtk_tree_selection_select_iter(selec, &iter);
-		}
-		string = g_strdup_printf("%s - %s %s",
-				_("GMPC"), 
-				_("Connected to"),
-				mpd_get_hostname(mi));
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);
-		q_free(string);
-	}
-	else{
-		gchar *string = NULL;
-		string = g_strdup_printf("%s - %s",
-				_("GMPC"), 
-				_("Disconnected"));
-		gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), string);		
-		q_free(string);                                                                    	
-	}
-
-	/*
-	 * make the playlist update itself
-	 */	
-	playlist_status_changed(connection, 
-			MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,
-			NULL);
-
-
-	/**
-	 * Also need updating
-	 */
-	pl3_option_menu_activate();
-
-	playlist3_fill_server_menu();
-
-	/**
-	 * update interface
-	 * items that are caused by the plugin.
-	 */
-	pl3_plugin_changed_interface();
-
-}
 /**
  * Update the window to status changes in mpd
  */
-void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
+static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
 	char buffer[1024];
 	GtkWidget *image = NULL;
@@ -2264,7 +2224,7 @@ gboolean playlist3_show_playtime(gulong playtime)
 /***
  * Help menu
  */
-
+/* Make glade happy */
 void url_visit_website(void);
 void url_getting_help(void);
 
@@ -2277,3 +2237,17 @@ void url_getting_help(void)
 {
 	open_uri(GMPC_BUGTRACKER);
 }
+
+gmpcPrefPlugin playlist_gpp = {
+	.construct					= playlist_pref_construct,
+	.destroy  					= playlist_pref_destroy
+};
+
+gmpcPlugin playlist_plug = {
+	.name 						= N_("Interface"),
+	.version 					= {1,1,1},
+	.plugin_type 				= GMPC_INTERNALL,
+	.mpd_status_changed 		= &playlist_status_changed,
+    .mpd_connection_changed     = &playlist_connection_changed,
+	.pref 						= &playlist_gpp,
+};
