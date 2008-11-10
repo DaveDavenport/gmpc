@@ -1189,7 +1189,6 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
      * propegate signals
      */
     debug_printf(DEBUG_INFO, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
-    playlist_connection_changed(mi, connected);
     for(i=0; i< num_plugins; i++)
     {
         debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);

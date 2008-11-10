@@ -57,6 +57,7 @@ void playlist3_new_header(void);
 void playlist3_update_header(void);
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
+static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
@@ -133,6 +134,7 @@ gmpcPlugin playlist_plug = {
 	.version 					= {1,1,1},
 	.plugin_type 				= GMPC_INTERNALL,
 	.mpd_status_changed 		= &playlist_status_changed,
+    .mpd_connection_changed     = &playlist_connection_changed,
 	.pref 						= &playlist_gpp,
 };
 
@@ -229,14 +231,11 @@ static void pl3_cat_combo_changed(GtkComboBox *box)
 /**
  * Function to handle a change in category.
  */
-void pl3_cat_sel_changed()
+static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 {
     GtkTreeView *tree = (GtkTreeView *)glade_xml_get_widget (pl3_xml, "cat_tree");
 	GtkTreeModel *model = gtk_tree_view_get_model(tree); 
 	GtkTreeIter iter;
-	GtkTreeSelection *selec = gtk_tree_view_get_selection(tree);
-	/*GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget (pl3_xml, "cat_tree");*/
-
 	GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
     if(!model)
         return;
@@ -657,7 +656,7 @@ int pl3_hide()
 
 
 
-void pl3_updating_changed(MpdObj *mi, int updating)
+static void pl3_updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = _("MPD database is updating");
     printf("update changed callback %i %p\n",updating, pl3_xml );
@@ -1159,19 +1158,12 @@ void create_playlist3 ()
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml,"hpaned1")),
 									"notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
 
-
-
-    
-
-
-
-
-	/* update it */
-	pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
+    /* update it */
+    pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
 	/**
 	 *
 	 */
-	playlist_connection_changed(connection, FALSE);
+	playlist_connection_changed(connection, FALSE,NULL);
     /**
      * Update keybindings 
      */
@@ -1534,7 +1526,7 @@ static void playlist_zoom_level_changed()
 /***
  * Handle a connect/Disconnect
  */
-void playlist_connection_changed(MpdObj *mi, int connect)
+static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
 	/* Set menu items */
 	if(connect) {
