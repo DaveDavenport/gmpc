@@ -4,7 +4,7 @@
 #Define the version
 m4_define([gmpc_major_version], [0])
 m4_define([gmpc_minor_version], [16])
-m4_define([gmpc_micro_version], [2])
+m4_define([gmpc_micro_version], [5])
 m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
 
 
