@@ -595,7 +595,7 @@ Lower Right Corner</property>
                       <widget class="GtkSpinButton" id="popup_timeout">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="adjustment">5 1 60 1 10 10</property>
+                        <property name="adjustment">5 1 60 1 10 0</property>
                         <property name="climb_rate">1</property>
                         <property name="snap_to_ticks">True</property>
                         <property name="numeric">True</property>
@@ -991,7 +991,7 @@ none</property>
                   <widget class="GtkSpinButton" id="sb_fade_time">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="adjustment">5 1 15 1 10 10</property>
+                    <property name="adjustment">5 1 15 1 10 0</property>
                     <property name="climb_rate">1</property>
                     <property name="snap_to_ticks">True</property>
                     <property name="numeric">True</property>
@@ -1301,7 +1301,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
                       <widget class="GtkSpinButton" id="port_spin">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="adjustment">2100 1 65536 1 10 10</property>
+                        <property name="adjustment">2100 1 65536 1 10 0</property>
                         <property name="climb_rate">1</property>
                         <property name="snap_to_ticks">True</property>
                         <property name="numeric">True</property>
@@ -1537,7 +1537,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
           <widget class="GtkSpinButton" id="timeout_spin">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="adjustment">1.0499999523200001 0.050000000745099998 60 0.050000000745099998 10 10</property>
+            <property name="adjustment">1.0499999523200001 0.050000000745099998 60 0.050000000745099998 10 0</property>
             <property name="climb_rate">1</property>
             <property name="digits">2</property>
             <signal name="value_changed" handler="update_preferences_information"/>
