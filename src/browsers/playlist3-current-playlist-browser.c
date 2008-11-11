@@ -303,6 +303,8 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
         if(event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
         {
             search_keep_open = FALSE;
+            gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
             gtk_widget_hide(entry);
             gtk_widget_grab_focus(pl3_cp_tree);
             return TRUE;
