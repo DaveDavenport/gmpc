@@ -11,7 +11,9 @@ int num_plugins = 0;
 
 gmpcPlugin * plugin_get_from_id(int id)
 {
-	return plugins[plugin_get_pos(id)];
+    int pos = plugin_get_pos(id);
+    g_assert_cmpint(pos, >, num_plugins);
+	return plugins[pos];
 }
 
 

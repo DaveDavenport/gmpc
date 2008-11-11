@@ -11,6 +11,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	public gint do_italic = {FALSE};
 	public gint do_bold = {TRUE};
 	public GtkWidget *label = {NULL};
+    private GdkCursor *hand_cursor = {gdk_cursor_new(GDK_HAND2)} destroywith gdk_cursor_unref;
 
 	property INT do_bold
 		(nick = "Bold when mouse over",
@@ -66,8 +67,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 
 		gtk_label_set_attributes(GTK_LABEL(self->label), attrs);
 		pango_attr_list_unref (attrs);
-
-		gdk_window_set_cursor(GTK_WIDGET(self)->window, gdk_cursor_new(GDK_HAND2));
+		gdk_window_set_cursor(GTK_WIDGET(self)->window, self->_priv->hand_cursor);
 		return TRUE;
 	}
 	private
