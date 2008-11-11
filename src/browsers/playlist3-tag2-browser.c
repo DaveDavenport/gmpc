@@ -409,6 +409,7 @@ static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_ele
 
 static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 {
+    int nfilter = cfg_get_single_value_as_int_with_default(config, "tag2-plugin", "don't filter", 0);
 	int found = 0;
 	MpdData *data = NULL;
 	tag_browser *browser = te->browser;
@@ -454,7 +455,8 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                     {	
                         gchar *value;
                         gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-                        mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
+                        if(!nfilter || te3->index < te->index)
+                            mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
                         if(te3->index < (te->index) && !artist_seen)
                         {           
                             if(te3->type == MPD_TAG_ITEM_ARTIST)
