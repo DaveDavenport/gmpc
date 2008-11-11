@@ -215,6 +215,7 @@ int main (int argc, char **argv)
     int replace = FALSE;
     int quit = FALSE;
     int import_old_db = FALSE;
+    int do_debug_updates = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
@@ -320,6 +321,10 @@ int main (int argc, char **argv)
             else if (!strncasecmp(argv[i], _("--import-old-db"), strlen(_("--import-old-db"))))
             {
                 import_old_db = TRUE;
+            }
+            else if (!strncasecmp(argv[i], _("--debug-updates"), strlen(_("--debug-updates"))))
+            {
+                do_debug_updates = TRUE;
             }
 
             /**
@@ -737,8 +742,8 @@ int main (int argc, char **argv)
      * Create the main window
 	 */	
 	debug_printf(DEBUG_INFO, "Create main window\n");
-    //gdk_window_set_debug_updates(TRUE);
-	create_playlist3();
+    gdk_window_set_debug_updates(do_debug_updates);
+    create_playlist3();
     playlist3_message_init();
     TEC("Creating playlist window")
 

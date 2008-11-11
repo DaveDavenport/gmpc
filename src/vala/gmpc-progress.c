@@ -383,9 +383,11 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 */
 void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 	g_return_if_fail (GMPC_IS_PROGRESS (self));
-	self->priv->total = total;
-	self->priv->current = current;
-	gtk_widget_queue_draw (GTK_WIDGET (self));
+	if (self->priv->total != total || self->priv->current != current) {
+		self->priv->total = total;
+		self->priv->current = current;
+		gtk_widget_queue_draw (GTK_WIDGET (self));
+	}
 }
 
 

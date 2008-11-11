@@ -382,9 +382,12 @@ public class Gmpc.Progress : Gtk.EventBox {
 */
     public void set_time(uint total, uint current)
     {
-        this.total = total;
-        this.current = current;
-        this.queue_draw();
+        if(this.total != total || this.current != current)
+        {
+            this.total = total;
+            this.current = current;
+            this.queue_draw();
+        }
     }
 }
 
