@@ -331,7 +331,7 @@
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image27">
                             <property name="visible">True</property>
-                            <property name="icon_name">stock_volume-mute</property>
+                            <property name="icon_name">audio-volume-muted</property>
                           </widget>
                         </child>
                       </widget>
