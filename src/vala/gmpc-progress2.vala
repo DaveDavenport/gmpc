@@ -4,12 +4,13 @@ using Gdk;
 using Cairo;
 
 
-public class Gmpc.Progress : Gtk.ProgressBar
+public class Gmpc.Progress : Gtk.EventBox
 {
     private uint total              = 0;
     private uint current            = 0;
     private bool _do_countdown      = false;
     public bool _hide_text          = false;
+    private ProgressBar bar = new ProgressBar();
 
     public bool hide_text {
         get { 
