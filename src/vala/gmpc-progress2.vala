@@ -18,7 +18,7 @@ public class Gmpc.Progress : Gtk.EventBox
         set {
             if(value){
                 this.set_size_request(-1, 10);        
-                this.set_text("");
+                this.bar.set_text("");
             }
             else
                 this.set_size_request(-1, -1);        
@@ -37,8 +37,9 @@ public class Gmpc.Progress : Gtk.EventBox
 
     /* Construct function */
     construct {
-        
-           }
+        this.add(this.bar);
+        this.show_all(); 
+    }
     // The size_request method Gtk+ is calling on a widget to ask
     // it the widget how large it wishes to be. It's not guaranteed
     // that gtk+ will actually give this size to the widget
@@ -66,11 +67,11 @@ public class Gmpc.Progress : Gtk.EventBox
             this.current = current;
             if(this.total > 0)
             {
-                this.set_fraction((double)this.current/(double)this.total);
+                this.bar.set_fraction((double)this.current/(double)this.total);
             }
             else
             {
-                this.set_fraction(0.0);
+                this.bar.set_fraction(0.0);
             }
             /**
              * Draw text
@@ -90,7 +91,7 @@ public class Gmpc.Progress : Gtk.EventBox
                                 (int)this.current/60,
                                 (int)(this.current)%60);
                     }
-                    this.set_text(a);
+                    this.bar.set_text(a);
                 } else {
                     string a;
                     uint p = this.current;
@@ -114,10 +115,10 @@ public class Gmpc.Progress : Gtk.EventBox
                                 (this.total)%60 
                                 );
                     }                                       
-                    this.set_text(a);
+                    this.bar.set_text(a);
                 }
             } else {
-                this.set_text(" ");
+                this.bar.set_text(" ");
             }
         }
     }

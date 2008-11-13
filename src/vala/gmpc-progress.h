@@ -21,13 +21,13 @@ typedef struct _GmpcProgressClass GmpcProgressClass;
 typedef struct _GmpcProgressPrivate GmpcProgressPrivate;
 
 struct _GmpcProgress {
-	GtkProgressBar parent_instance;
+	GtkEventBox parent_instance;
 	GmpcProgressPrivate * priv;
 	gboolean _hide_text;
 };
 
 struct _GmpcProgressClass {
-	GtkProgressBarClass parent_class;
+	GtkEventBoxClass parent_class;
 };
 
 
