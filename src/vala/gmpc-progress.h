@@ -1,6 +1,6 @@
 
-#ifndef __GMPC_PROGRESS_H__
-#define __GMPC_PROGRESS_H__
+#ifndef __GMPC_PROGRESS2_H__
+#define __GMPC_PROGRESS2_H__
 
 #include <glib.h>
 #include <glib-object.h>
@@ -21,13 +21,13 @@ typedef struct _GmpcProgressClass GmpcProgressClass;
 typedef struct _GmpcProgressPrivate GmpcProgressPrivate;
 
 struct _GmpcProgress {
-	GtkEventBox parent_instance;
+	GtkProgressBar parent_instance;
 	GmpcProgressPrivate * priv;
 	gboolean _hide_text;
 };
 
 struct _GmpcProgressClass {
-	GtkEventBoxClass parent_class;
+	GtkProgressBarClass parent_class;
 };
 
 
