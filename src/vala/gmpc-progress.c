@@ -27,6 +27,7 @@ enum  {
 };
 static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* requisition);
 static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
+static void gmpc_progress_redraw (GmpcProgress* self);
 static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event);
 static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, GdkEventExpose* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -112,10 +113,19 @@ static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ct
 }
 
 
+static void gmpc_progress_redraw (GmpcProgress* self) {
+	g_return_if_fail (GMPC_IS_PROGRESS (self));
+	if (GTK_WIDGET (self)->window != NULL) {
+		gdk_window_process_updates (GTK_WIDGET (self)->window, FALSE);
+	}
+}
+
+
 static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
 	gint height;
+	gint pwidth;
 	GdkColor _tmp0 = {0};
 	cairo_pattern_t* pattern;
 	GdkColor start;
@@ -123,41 +133,40 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	gboolean _tmp9;
 	g_return_val_if_fail (GMPC_IS_PROGRESS (self), FALSE);
 	g_return_val_if_fail (GMPC_IS_PROGRESS (pb), FALSE);
-	ctx = gdk_cairo_create (GDK_DRAWABLE (GTK_WIDGET (pb)->window));
-	width = GTK_WIDGET (pb)->allocation.width - 3;
-	height = GTK_WIDGET (pb)->allocation.height - 3;
+	ctx = gdk_cairo_create (GDK_DRAWABLE (GTK_WIDGET (self)->window));
+	width = GTK_WIDGET (self)->allocation.width - 3;
+	height = GTK_WIDGET (self)->allocation.height - 3;
+	pwidth = ((gint) (((self->priv->current * (width - 3)) / ((double) (self->priv->total)))));
 	/* Draw border */
 	cairo_set_line_width (ctx, 1.0);
 	cairo_set_tolerance (ctx, 0.2);
 	cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 	/*paint background*/
-	gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_NORMAL))], &_tmp0));
+	gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (self))->bg[((gint) (GTK_STATE_NORMAL))], &_tmp0));
 	cairo_paint (ctx);
 	cairo_new_path (ctx);
 	/* Stroke a white line, and clip on that */
-	gdk_cairo_set_source_color (ctx, &gtk_widget_get_style (GTK_WIDGET (pb))->white);
+	gdk_cairo_set_source_color (ctx, &gtk_widget_get_style (GTK_WIDGET (self))->white);
 	gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
 	cairo_stroke_preserve (ctx);
 	/* Make a clip */
 	cairo_clip (ctx);
 	if (self->priv->total > 0) {
-		gint pwidth;
 		GdkColor _tmp1 = {0};
-		pwidth = ((gint) (((self->priv->current * (width - 3)) / ((double) (self->priv->total)))));
 		/* don't allow more then 100% */
 		if (pwidth > width) {
 			pwidth = width;
 		}
 		cairo_new_path (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp1));
+		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (self))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp1));
 		gmpc_progress_draw_curved_rectangle (self, ctx, 1.5 + 2, 1.5 + 2, ((double) (pwidth)), ((double) ((height - 4))));
 		cairo_fill (ctx);
 	}
 	/* Paint nice reflection layer on top */
 	cairo_new_path (ctx);
 	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, ((double) (height)));
-	start = gtk_widget_get_style (GTK_WIDGET (pb))->white;
-	stop = gtk_widget_get_style (GTK_WIDGET (pb))->white;
+	start = gtk_widget_get_style (GTK_WIDGET (self))->light[((gint) (GTK_STATE_NORMAL))];
+	stop = gtk_widget_get_style (GTK_WIDGET (self))->white;
 	cairo_pattern_add_color_stop_rgba (pattern, 0.0, start.red / (65536.0), start.green / (65536.0), start.blue / (65536.0), 0.6);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.55, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.2);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.551, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.0);
@@ -210,12 +219,10 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		pango_cairo_update_layout (ctx, self->priv->_layout);
 		pango_layout_get_pixel_size (self->priv->_layout, &fontw, &fonth);
 		if (self->priv->total > 0) {
-			gint pwidth;
-			pwidth = ((gint) (((self->priv->current * (width - 3)) / ((double) (self->priv->total)))));
 			if (pwidth >= ((width - fontw) / 2 + 1)) {
 				GdkColor _tmp6 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp6 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp6));
+				gdk_cairo_set_source_color (ctx, (_tmp6 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp6));
 				cairo_rectangle (ctx, 3.5, 1.5, ((double) (pwidth)), ((double) (height)));
 				cairo_clip (ctx);
 				cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
@@ -225,7 +232,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 			if (pwidth < ((width - fontw) / 2 + 1 + fontw)) {
 				GdkColor _tmp7 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp7 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp7));
+				gdk_cairo_set_source_color (ctx, (_tmp7 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp7));
 				cairo_rectangle (ctx, pwidth + 3.5, 1.5, ((double) (width)), ((double) (height)));
 				cairo_clip (ctx);
 				cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
@@ -234,7 +241,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		} else {
 			GdkColor _tmp8 = {0};
 			cairo_new_path (ctx);
-			gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp8));
+			gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp8));
 			cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
 			pango_cairo_show_layout (ctx, self->priv->_layout);
 		}
@@ -269,7 +276,7 @@ gboolean gmpc_progress_get_hide_text (GmpcProgress* self) {
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value) {
 	g_return_if_fail (GMPC_IS_PROGRESS (self));
 	self->_hide_text = value;
-	gtk_widget_queue_resize (GTK_WIDGET (self));
+	gmpc_progress_redraw (self);
 	g_object_notify (((GObject *) (self)), "hide-text");
 }
 
@@ -283,7 +290,7 @@ gboolean gmpc_progress_get_do_countdown (GmpcProgress* self) {
 void gmpc_progress_set_do_countdown (GmpcProgress* self, gboolean value) {
 	g_return_if_fail (GMPC_IS_PROGRESS (self));
 	self->priv->_do_countdown = value;
-	gtk_widget_queue_resize (GTK_WIDGET (self));
+	gmpc_progress_redraw (self);
 	g_object_notify (((GObject *) (self)), "do-countdown");
 }
 
@@ -304,13 +311,15 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PROGRESS (obj);
 	{
+		gboolean _tmp0;
+		PangoLayout* _tmp2;
 		PangoLayout* _tmp1;
-		PangoLayout* _tmp0;
+		g_object_set (GTK_WIDGET (self), "app-paintable", TRUE, NULL);
 		g_signal_connect_object (GTK_WIDGET (self), "expose-event", ((GCallback) (_gmpc_progress_on_expose2_gtk_widget_expose_event)), self, 0);
 		/* Set a string so we can get height */
+		_tmp2 = NULL;
 		_tmp1 = NULL;
-		_tmp0 = NULL;
-		self->priv->_layout = (_tmp1 = (_tmp0 = gtk_widget_create_pango_layout (GTK_WIDGET (self), " "), (_tmp0 == NULL ? NULL : g_object_ref (_tmp0))), (self->priv->_layout == NULL ? NULL : (self->priv->_layout = (g_object_unref (self->priv->_layout), NULL))), _tmp1);
+		self->priv->_layout = (_tmp2 = (_tmp1 = gtk_widget_create_pango_layout (GTK_WIDGET (self), " "), (_tmp1 == NULL ? NULL : g_object_ref (_tmp1))), (self->priv->_layout == NULL ? NULL : (self->priv->_layout = (g_object_unref (self->priv->_layout), NULL))), _tmp2);
 	}
 	return obj;
 }
