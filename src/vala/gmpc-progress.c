@@ -116,11 +116,12 @@ static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ct
 static void gmpc_progress_redraw (GmpcProgress* self) {
 	g_return_if_fail (GMPC_IS_PROGRESS (self));
 	if (GTK_WIDGET (self)->window != NULL) {
-		gdk_window_process_updates (GTK_WIDGET (self)->window, FALSE);
+		gtk_widget_queue_draw (GTK_WIDGET (self));
 	}
 }
 
 
+/*window.process_updates(false);*/
 static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
