@@ -143,11 +143,11 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	cairo_set_tolerance (ctx, 0.2);
 	cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 	/*paint background*/
-	gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (self))->bg[((gint) (GTK_STATE_NORMAL))], &_tmp0));
+	gdk_cairo_set_source_color (ctx, (_tmp0 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_NORMAL))], &_tmp0));
 	cairo_paint (ctx);
 	cairo_new_path (ctx);
 	/* Stroke a white line, and clip on that */
-	gdk_cairo_set_source_color (ctx, &gtk_widget_get_style (GTK_WIDGET (self))->white);
+	gdk_cairo_set_source_color (ctx, &gtk_widget_get_style (GTK_WIDGET (pb))->white);
 	gmpc_progress_draw_curved_rectangle (self, ctx, 1.5, 1.5, ((double) (width)), ((double) (height)));
 	cairo_stroke_preserve (ctx);
 	/* Make a clip */
@@ -159,15 +159,15 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 			pwidth = width;
 		}
 		cairo_new_path (ctx);
-		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (self))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp1));
+		gdk_cairo_set_source_color (ctx, (_tmp1 = gtk_widget_get_style (GTK_WIDGET (pb))->bg[((gint) (GTK_STATE_SELECTED))], &_tmp1));
 		gmpc_progress_draw_curved_rectangle (self, ctx, 1.5 + 2, 1.5 + 2, ((double) (pwidth)), ((double) ((height - 4))));
 		cairo_fill (ctx);
 	}
 	/* Paint nice reflection layer on top */
 	cairo_new_path (ctx);
 	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, ((double) (height)));
-	start = gtk_widget_get_style (GTK_WIDGET (self))->light[((gint) (GTK_STATE_NORMAL))];
-	stop = gtk_widget_get_style (GTK_WIDGET (self))->white;
+	start = gtk_widget_get_style (GTK_WIDGET (pb))->light[((gint) (GTK_STATE_NORMAL))];
+	stop = gtk_widget_get_style (GTK_WIDGET (pb))->white;
 	cairo_pattern_add_color_stop_rgba (pattern, 0.0, start.red / (65536.0), start.green / (65536.0), start.blue / (65536.0), 0.6);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.55, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.2);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.551, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.0);
@@ -223,7 +223,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 			if (pwidth >= ((width - fontw) / 2 + 1)) {
 				GdkColor _tmp6 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp6 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp6));
+				gdk_cairo_set_source_color (ctx, (_tmp6 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_SELECTED))], &_tmp6));
 				cairo_rectangle (ctx, 3.5, 1.5, ((double) (pwidth)), ((double) (height)));
 				cairo_clip (ctx);
 				cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
@@ -233,7 +233,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 			if (pwidth < ((width - fontw) / 2 + 1 + fontw)) {
 				GdkColor _tmp7 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp7 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp7));
+				gdk_cairo_set_source_color (ctx, (_tmp7 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp7));
 				cairo_rectangle (ctx, pwidth + 3.5, 1.5, ((double) (width)), ((double) (height)));
 				cairo_clip (ctx);
 				cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
@@ -242,7 +242,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		} else {
 			GdkColor _tmp8 = {0};
 			cairo_new_path (ctx);
-			gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (self))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp8));
+			gdk_cairo_set_source_color (ctx, (_tmp8 = gtk_widget_get_style (GTK_WIDGET (pb))->fg[((gint) (GTK_STATE_NORMAL))], &_tmp8));
 			cairo_move_to (ctx, (width - fontw) / 2 + 1.5, (height - fonth) / 2 + 1.5);
 			pango_cairo_show_layout (ctx, self->priv->_layout);
 		}
