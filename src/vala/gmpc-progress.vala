@@ -130,7 +130,7 @@ public class Gmpc.Progress : Gtk.EventBox
 
         ctx.new_path();
         /* Stroke a white line, and clip on that */
-        Gdk.cairo_set_source_color(ctx, pb.style.white);
+        Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
         draw_curved_rectangle(ctx, 1.5,1.5,width, height);
         ctx.stroke_preserve ();
         /* Make a clip */
@@ -154,11 +154,11 @@ public class Gmpc.Progress : Gtk.EventBox
         /* Paint nice reflection layer on top */
         ctx.new_path();
         var pattern =  new Pattern.linear(0.0,0.0, 0.0, height);
-        var start = pb.style.light[(int)Gtk.StateType.NORMAL];
-        var stop = pb.style.white;
+        var start = pb.style.dark[(int)Gtk.StateType.NORMAL];
+        var stop = pb.style.light[(int)Gtk.StateType.NORMAL];
 
         pattern.add_color_stop_rgba(0.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0),   0.6);
-        pattern.add_color_stop_rgba(0.55,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),      0.2);
+        pattern.add_color_stop_rgba(0.40,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),      0.2);
         pattern.add_color_stop_rgba(0.551,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),   0.0);
         ctx.set_source(pattern);
         ctx.rectangle(1.5,1.5,width, height);
