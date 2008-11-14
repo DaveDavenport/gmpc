@@ -18,7 +18,7 @@ public class Gmpc.Progress : Gtk.EventBox
         set {
         
             _hide_text = value; 
-            this.redraw();
+            this.queue_resize();
         }
     }
 

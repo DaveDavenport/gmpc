@@ -277,7 +277,7 @@ gboolean gmpc_progress_get_hide_text (GmpcProgress* self) {
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value) {
 	g_return_if_fail (GMPC_IS_PROGRESS (self));
 	self->_hide_text = value;
-	gmpc_progress_redraw (self);
+	gtk_widget_queue_resize (GTK_WIDGET (self));
 	g_object_notify (((GObject *) (self)), "hide-text");
 }
 
