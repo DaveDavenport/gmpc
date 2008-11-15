@@ -108,7 +108,8 @@ public class Gmpc.Progress : Gtk.EventBox
     {
         if(this.window  != null)
         {
-            this.queue_draw();//window.process_updates(false);
+//            this.queue_draw();
+            this.window.process_updates(false);
         }
     }
 
