@@ -19,6 +19,7 @@
 #include "gmpc-mpddata-model.h"
 #include "sexy-icon-entry.h"
 #include <libmpd/libmpd-internal.h>
+#include "playlist3-playlist-editor.h"
 
 /**
  * dirty hack to workaround single parameter for now 
@@ -378,7 +379,6 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
             g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_browser_header_information), te);
         } 
-
 
 		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));
@@ -916,6 +916,28 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_songlist_replace_selected_songs), browser);
+            /* */
+            if(count == 1)	
+            {
+                mpd_Song *song;
+                GtkTreeIter iter;
+                GtkTreePath *path;
+                GtkTreeModel *model = gtk_tree_view_get_model(tree);
+                GList *list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), &model);
+                path = list->data;
+                /* free result */
+                g_list_free(list);
+                if(path && gtk_tree_model_get_iter(model, &iter, path)) {
+                    gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                    if(song)
+                    {
+                        submenu_for_song(menu, song);
+                    }
+                    if(path)                                                                
+                        gtk_tree_path_free(path);                                               
+                }
+
+            }
 
 			/* Separator */	
 			item = gtk_separator_menu_item_new();
@@ -928,9 +950,7 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate",
 				G_CALLBACK(tag2_song_list_edit_columns), browser);
-
-
-		/* popup */
+     		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
 		return TRUE;
