@@ -131,7 +131,14 @@ int  pl3_cat_get_selected_browser()
 	return old_type;
 }
 
+/**
+ * THV
+ */
 
+void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);
+void thv_row_changed_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);
+void thv_row_deleted_signal ( GtkTreeModel *model, GtkTreePath *path, gpointer data);
+void thv_row_reordered_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer arg3, gpointer data);
 /**************************************************
  * Category Tree
  */
@@ -1000,8 +1007,14 @@ void create_playlist3 ()
 				);
 	}
 
+    g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
+    g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
+    g_signal_connect(G_OBJECT(pl3_tree), "row_deleted", G_CALLBACK(thv_row_deleted_signal), NULL);
+    g_signal_connect(G_OBJECT(pl3_tree), "rows_reordered", G_CALLBACK(thv_row_reordered_signal), NULL);
+
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
+
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
@@ -2252,3 +2265,149 @@ gmpcPlugin playlist_plug = {
     .mpd_connection_changed     = &playlist_connection_changed,
 	.pref 						= &playlist_gpp,
 };
+
+
+
+/***
+ * Tabbed view hooks 
+ */
+GList *thv_list = NULL;
+typedef struct _TabButton{
+    GtkButton *button;
+    GtkImage *image;
+    GtkLabel *label;
+    gint pos;
+}TabButton;
+void thv_row_changed_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+    gint *ind = gtk_tree_path_get_indices(path);
+    TabButton *tb = g_list_nth_data(thv_list,ind[0]);
+    if(tb)
+    {
+        gchar *title, *image;
+        gtk_tree_model_get(model, iter,3, &image, 1, &title, -1); 
+        if ( title ) {
+            gtk_label_set_text(tb->label, title);
+        }
+        if ( image ) {
+            gtk_image_set_from_icon_name(tb->image, image, GTK_ICON_SIZE_MENU);
+        }
+
+        if(title)g_free(title);
+        if(image)g_free(image);
+    }
+    printf("Row Changed\n");
+}
+
+void thv_row_deleted_signal ( GtkTreeModel *model, GtkTreePath *path, gpointer data)
+{
+    gint *ind = gtk_tree_path_get_indices(path);
+    TabButton *tb = g_list_nth_data(thv_list,ind[0]);
+    thv_list = g_list_remove(thv_list, tb);
+    gtk_widget_destroy(GTK_WIDGET(tb->button));
+    g_free(tb);
+    printf("Row Removed\n");
+}
+static int thv_sort_func(gconstpointer a, gconstpointer b)
+{
+    TabButton *tb1 = (TabButton *)a;
+    TabButton *tb2 = (TabButton *)b;
+    return tb1->pos-tb2->pos;
+}
+void thv_row_reordered_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *titer, gpointer arg3, gpointer data)
+{
+    gint *r = arg3;
+    int length = gtk_tree_model_iter_n_children(model, NULL);
+    int i;
+    GList *iter = NULL;//g_list_first(thv_list);
+    for(i=0; i < length;i++)
+    {
+        TabButton *tb = g_list_nth_data(thv_list, r[i]);
+        tb->pos = i;
+        gtk_container_remove(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "box_tab_bar")), GTK_WIDGET(tb->button));
+    }
+    /* build the list in new order */
+    thv_list = g_list_sort(thv_list, thv_sort_func);
+    for(iter = g_list_first(thv_list);iter; iter = g_list_next(iter))
+    {
+        TabButton *tb = iter->data;
+        gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "box_tab_bar")),GTK_WIDGET(tb->button), FALSE, TRUE, 0);   
+    }
+    printf("Row reordered\n");
+}
+static void thv_button_clicked ( GtkButton *button, TabButton *tb  )
+{
+    GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+    GtkTreePath *path = gtk_tree_path_new_from_indices(tb->pos/*g_list_index(thv_list, tb)*/, -1);
+    gtk_tree_selection_select_path(selec, path);
+    gtk_tree_path_free(path);
+}
+
+void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+    TabButton *tb;
+    GtkButton *button = (GtkButton *) gtk_button_new();
+    GtkHBox *box = (GtkHBox *)gtk_hbox_new(FALSE, 6);
+    gchar *title, *image;
+    gtk_tree_model_get(model, iter,3, &image, 1, &title, -1); 
+
+    tb = g_malloc0(sizeof(*tb));
+    tb->button = button;
+    
+    /* Change button loook */
+    gtk_button_set_relief(button, GTK_RELIEF_HALF);
+
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(thv_button_clicked), tb);
+
+    {
+        /* Create image for in button at menu size */
+        GtkImage *imagew = (GtkImage *)gtk_image_new();
+        if ( image ) 
+        {
+            gtk_image_set_from_icon_name(imagew, image, GTK_ICON_SIZE_MENU);
+        }
+        tb->image = imagew;
+        /* Add it */
+        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(imagew), FALSE, TRUE, 0);
+    }
+    {
+        GtkLabel *label = (GtkLabel *)gtk_label_new(title?"":title);
+        tb->label = label;
+        /* Ellipsize the label */
+        gtk_label_set_ellipsize(label, PANGO_ELLIPSIZE_END);
+        /* Align the label to the right */
+        gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+        /* Add it to the button */
+        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(label), TRUE, TRUE, 0);
+    }
+    /* Add the content to the button */
+    gtk_container_add(GTK_CONTAINER(button), GTK_WIDGET(box));
+
+    /* Show everything */
+    gtk_widget_show_all(GTK_WIDGET(button));
+
+    /* Add it to the above view */
+    g_object_ref(G_OBJECT(button));
+    gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "box_tab_bar")),GTK_WIDGET(button), FALSE, TRUE, 0);
+
+    {
+        gint *in = gtk_tree_path_get_indices(path);
+        tb->pos = in[0];
+    }
+    /* Add this button to the list */
+    thv_list = g_list_insert(thv_list, tb,tb->pos);
+    /* hack to fix numbering */
+    {
+        int i = 0;
+        GList *si = g_list_first(thv_list);
+        for(;si;si = g_list_next(si)) {
+            ((TabButton *)(si->data))->pos = i;
+            i++;
+        }
+    }
+    gtk_box_reorder_child(GTK_BOX(glade_xml_get_widget(pl3_xml, "box_tab_bar")), GTK_WIDGET(button), tb->pos);
+
+    if(title)g_free(title);
+    if(image)g_free(image);
+}
+
