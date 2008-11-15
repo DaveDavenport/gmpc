@@ -146,7 +146,7 @@ public class Gmpc.Image : Gtk.EventBox {
 				this.temp = null;
 
 				this.queue_draw();
-				fade_timeout = 0;
+                fade_timeout = 0;
 				return false;
 			}
 
@@ -159,7 +159,6 @@ public class Gmpc.Image : Gtk.EventBox {
 			this.temp= buf;
 			this.temp_border = border;
 			this.queue_draw();
-
 			if(fade_timeout>0) {
 				GLib.Source.remove(fade_timeout);
 			}
