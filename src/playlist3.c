@@ -1562,7 +1562,7 @@ static void playlist_zoom_level_changed()
 
 		case PLAYLIST_SMALL:
 			gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
-			gtk_widget_show(glade_xml_get_widget(pl3_xml, "bread_crumb"));
+//			gtk_widget_show(glade_xml_get_widget(pl3_xml, "bread_crumb"));
 
 			gtk_widget_grab_focus(glade_xml_get_widget(pl3_xml, "pl3_win"));
 		default:
@@ -2288,6 +2288,7 @@ void thv_row_changed_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIte
         gtk_tree_model_get(model, iter,3, &image, 1, &title, -1); 
         if ( title ) {
             gtk_label_set_text(tb->label, title);
+            gtk_widget_set_tooltip_text(GTK_WIDGET(tb->label), title);
         }
         if ( image ) {
             gtk_image_set_from_icon_name(tb->image, image, GTK_ICON_SIZE_MENU);
@@ -2373,6 +2374,9 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
     {
         GtkLabel *label = (GtkLabel *)gtk_label_new(title?"":title);
         tb->label = label;
+        if(title){
+            gtk_widget_set_tooltip_text(GTK_WIDGET(label), title);
+        }
         /* Ellipsize the label */
         gtk_label_set_ellipsize(label, PANGO_ELLIPSIZE_END);
         /* Align the label to the right */
