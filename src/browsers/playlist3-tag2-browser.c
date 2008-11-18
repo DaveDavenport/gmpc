@@ -716,11 +716,20 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
         playlist3_show_playtime(playtime);
     }
 }
-
+static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browser)
+{
+    GList *iter = g_list_first(browser->tag_lists);
+    for(;iter;iter = g_list_next(iter))
+    {
+        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(((tag_element *)iter->data)->tree));
+        gtk_tree_selection_unselect_all(sel);
+    }
+}
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+    int first = (browser->tag_lists == NULL);
 	tag_element *te = g_malloc0(sizeof(*te));
 
 	browser->tag_lists = g_list_append(browser->tag_lists, te);
@@ -734,13 +743,24 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
 	te->browser = browser;
-
+    if(first)
+    {
+        GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
+        GtkWidget *clearbutton = gtk_button_new();
+        gtk_container_add(GTK_CONTAINER(clearbutton), gtk_image_new_from_stock(GTK_STOCK_CLEAR, GTK_ICON_SIZE_BUTTON));
+        gtk_box_pack_start(GTK_BOX(hbox), clearbutton, FALSE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(hbox), te->combo, TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(te->vbox),hbox, FALSE, TRUE, 0);
+        gtk_widget_set_tooltip_text(clearbutton, _("Clear all selections"));
+        g_signal_connect(G_OBJECT(clearbutton), "clicked", G_CALLBACK(tag2_songlist_clear_selection), browser);
+    }else {
+        gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
+    }
 
     /* setup combo box */
 	renderer = gtk_cell_renderer_text_new();
 	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(te->combo), renderer, TRUE);
 	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(te->combo), renderer, "text", 2,NULL);
-    gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
     gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), te->type);
     g_signal_connect(G_OBJECT(te->combo), "changed", G_CALLBACK(tag2_songlist_combo_box_changed), te);
 
