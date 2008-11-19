@@ -42,7 +42,8 @@ static void tag2_browser_selected(GtkWidget *container);
 static void tag2_browser_unselected(GtkWidget *container);
 static int tag2_browser_add_go_menu(GtkWidget *menu);
 static void tag2_pref_combo_changed(GtkComboBox *box, GtkTreeModel *model2);
-
+static int tag2_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
+static int tag2_browser_key_press_event ( GtkWidget *mw, GdkEventKey *event, int type );
 /* One treemodel to store all possible tags, use this multiple times. */
 static GtkTreeModel *tags_store = NULL;
 
@@ -71,7 +72,9 @@ gmpcPlBrowserPlugin tag2_browser_plugin ={
 	.add = tag2_browser_add,
 	.selected = tag2_browser_selected,
 	.unselected = tag2_browser_unselected,
-	.add_go_menu = tag2_browser_add_go_menu
+	.add_go_menu = tag2_browser_add_go_menu,
+    .cat_right_mouse_menu = tag2_browser_right_mouse_menu,
+    .key_press_event = tag2_browser_key_press_event
 };
 
 gmpcPlugin tag2_plug = {
@@ -721,7 +724,12 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
     GList *iter = g_list_first(browser->tag_lists);
     for(;iter;iter = g_list_next(iter))
     {
-        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(((tag_element *)iter->data)->tree));
+        tag_element *te = iter->data;
+        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
+        g_signal_handlers_block_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
+        gtk_entry_set_text(GTK_ENTRY(te->sentry), "");
+        gtk_widget_hide(te->sentry);
+        g_signal_handlers_unblock_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
         gtk_tree_selection_unselect_all(sel);
     }
 }
@@ -729,7 +737,6 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
-    int first = (browser->tag_lists == NULL);
 	tag_element *te = g_malloc0(sizeof(*te));
 
 	browser->tag_lists = g_list_append(browser->tag_lists, te);
@@ -743,19 +750,8 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
 	te->browser = browser;
-    if(first)
-    {
-        GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
-        GtkWidget *clearbutton = gtk_button_new();
-        gtk_container_add(GTK_CONTAINER(clearbutton), gtk_image_new_from_stock(GTK_STOCK_CLEAR, GTK_ICON_SIZE_BUTTON));
-        gtk_box_pack_start(GTK_BOX(hbox), clearbutton, FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(hbox), te->combo, TRUE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(te->vbox),hbox, FALSE, TRUE, 0);
-        gtk_widget_set_tooltip_text(clearbutton, _("Clear all selections"));
-        g_signal_connect(G_OBJECT(clearbutton), "clicked", G_CALLBACK(tag2_songlist_clear_selection), browser);
-    }else {
-        gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
-    }
+
+    gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
 
     /* setup combo box */
 	renderer = gtk_cell_renderer_text_new();
@@ -1645,4 +1641,75 @@ static void tag2_save_myself(void)
 			iter = g_list_next(iter);
 		}	
 	}
+}
+
+static int tag2_browser_right_mouse_menu(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
+{
+    int retv= 0;   
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+	GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	GtkTreeIter iter;
+    if(type != tag2_plug.id)  return 0;
+	if(gtk_tree_selection_get_selected(sel, &model, &iter))
+	{
+
+        gchar *key;
+		gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &key, -1);
+		if(key)
+        {
+            GList *node = g_list_find_custom(tag2_ht, key, (GCompareFunc)tag2_custom_find);
+            if(node)
+            {
+                tag_browser *tb = node->data;
+                if(tb)
+                {
+                    GtkWidget *item = gtk_image_menu_item_new_with_label(_("Reset browser"));
+                    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_CLEAR, GTK_ICON_SIZE_MENU));
+                    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);                                                    
+                    g_signal_connect(G_OBJECT(item), "activate",G_CALLBACK(tag2_songlist_clear_selection),tb); 
+                    retv++;
+                }
+                g_free(key);
+            }
+        }
+	}
+
+
+    return retv;
+}
+
+static int tag2_browser_key_press_event ( GtkWidget *mw, GdkEventKey *event, int type )
+{
+    if(type != tag2_plug.id) return 0;
+    if(event->keyval == GDK_r && event->state&GDK_MOD1_MASK) 
+    {
+        GtkTreeView *tree = playlist3_get_category_tree_view();
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+        GtkTreeIter iter;
+        if(type != tag2_plug.id)  return 0;
+        if(gtk_tree_selection_get_selected(sel, &model, &iter))
+        {
+
+            gchar *key;
+            gtk_tree_model_get(model, &iter, PL3_CAT_INT_ID, &key, -1);
+            if(key)
+            {
+                GList *node = g_list_find_custom(tag2_ht, key, (GCompareFunc)tag2_custom_find);
+                if(node)
+                {
+                    tag_browser *tb = node->data;
+                    if(tb)
+                    {
+                        tag2_songlist_clear_selection(NULL,tb); 
+                        g_free(key);
+                        return 1;
+                    }
+                    g_free(key);
+                }
+            }
+        }
+    }
+
+    return 0;
 }

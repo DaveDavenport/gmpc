@@ -314,8 +314,6 @@ void pl3_option_menu_activate(void)
 
 	if(!mpd_check_connected(connection) || type == -1) return;
 
-    printf("%i\n", type&(PLUGIN_ID_MARK-1));
-
 	menu = gtk_menu_new();
 
 	for(i=0; i< num_plugins;i++)
