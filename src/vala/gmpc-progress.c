@@ -126,6 +126,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	cairo_t* ctx;
 	gint width;
 	gint height;
+	gint pw;
 	gint pwidth;
 	GdkColor _tmp0 = {0};
 	GdkColor _tmp1 = {0};
@@ -138,7 +139,11 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	ctx = gdk_cairo_create (GDK_DRAWABLE (GTK_WIDGET (self)->window));
 	width = GTK_WIDGET (self)->allocation.width - 3;
 	height = GTK_WIDGET (self)->allocation.height - 3;
-	pwidth = ((gint) (((self->priv->current * (width - 3)) / ((double) (self->priv->total)))));
+	pw = width - 3;
+	pwidth = ((gint) (((self->priv->current * pw) / ((double) (self->priv->total)))));
+	if (pwidth > pw) {
+		pwidth = pw;
+	}
 	/* Draw border */
 	cairo_set_line_width (ctx, 1.0);
 	cairo_set_tolerance (ctx, 0.2);
@@ -313,6 +318,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PROGRESS (obj);
 	{
+		gboolean _tmp0;
 		PangoLayout* _tmp2;
 		PangoLayout* _tmp1;
 		g_object_set (GTK_WIDGET (self), "app-paintable", TRUE, NULL);

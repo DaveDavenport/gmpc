@@ -118,7 +118,12 @@ public class Gmpc.Progress : Gtk.EventBox
         var ctx = Gdk.cairo_create(this.window); 
         int width = this.allocation.width-3;
         int height = this.allocation.height-3;
-        int pwidth = (int)((this.current*(width-3))/(double)this.total);
+        int pw = width-3;
+        int pwidth = (int)((this.current*pw)/(double)this.total);
+        if(pwidth > pw)
+        {
+            pwidth = pw;
+        }
         /* Draw border */
         ctx.set_line_width ( 1.0 );
         ctx.set_tolerance ( 0.2 );
