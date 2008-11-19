@@ -524,6 +524,11 @@ int main (int argc, char **argv)
                 printf("** Update of db set, because of new version\n");
                 import_old_db = TRUE;
             }
+            /* Make sure old sizes are updated */
+            if(!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 6))
+            {
+                cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 64);
+            }
             q_free(old_version);
         }
 		/* set new */
