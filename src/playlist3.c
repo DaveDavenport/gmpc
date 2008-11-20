@@ -1763,6 +1763,17 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 	{
 		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
 	}
+    if(what&MPD_CST_DATABASE)
+    {
+        char date_buffer[128];
+        struct tm *tm;
+        time_t up = (time_t) mpd_server_get_database_update_time(connection);
+        tm = localtime(&up);
+        if(strftime(date_buffer, 128,_("<b>MPD Database refreshed at:</b> %c"),tm))
+        {
+              playlist3_show_error_message(date_buffer, ERROR_INFO);
+        }
+    }
     if(what&MPD_CST_SERVER_ERROR)
     {
         gchar *error = mpd_status_get_mpd_error(mi);
