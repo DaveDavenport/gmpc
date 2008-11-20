@@ -141,4 +141,5 @@ GtkTreeView *	playlist3_get_category_tree_view(void);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
+void pl3_update_go_menu();
 #endif
