@@ -38,5 +38,9 @@ namespace Gmpc {
         public abstract Gtk.Widget pref_destroy ();
 
     }
+    public interface SongList : Plugin {
+        public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
+
+    }
 
 }
