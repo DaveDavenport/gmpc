@@ -51,8 +51,8 @@ typedef struct {
 	void (*destroy)(GtkWidget *container);
     /* Padding */
     void (*padding1)                (void);
-    void (*padding1)                (void);
-    void (*padding1)                (void);
+    void (*padding2)                (void);
+    void (*padding3)                (void);
 } gmpcPrefPlugin;
 
 /** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser
@@ -80,8 +80,8 @@ typedef struct {
     int (*song_list_option_menu)    (GmpcMpdDataTreeview *tree, GtkMenu *menu);
     /* Padding */
     void (*padding1)                (void);
-    void (*padding1)                (void);
-    void (*padding1)                (void);
+    void (*padding2)                (void);
+    void (*padding3)                (void);
 } gmpcPlBrowserPlugin;
 
 /**
@@ -95,8 +95,8 @@ typedef struct {
 	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
     /* Padding */
     void (*padding1)                (void);
-    void (*padding1)                (void);
-    void (*padding1)                (void);
+    void (*padding2)                (void);
+    void (*padding3)                (void);
 } gmpcMetaDataPlugin;
 
 /* Unique number                */
@@ -150,8 +150,8 @@ typedef struct {
 
     /* Padding */
     void (*padding1)                (void);
-    void (*padding1)                (void);
-    void (*padding1)                (void);
+    void (*padding2)                (void);
+    void (*padding3)                (void);
 } gmpcPlugin;
 
 /** plugin functions */
