@@ -727,6 +727,7 @@ requires 2.0.0
             long unsigned retval = 0;
             GtkTreeIter iter;
             GtkTreePath *path = NULL;
+            int old_num_rows = self->num_rows;
             /* Do some cleanup, like removing rows, and so */
             /* loop and remove */
             while ( self->num_rows > 0 ) {
@@ -749,11 +750,10 @@ requires 2.0.0
             if(self->num_rows != 0)
                 debug_printf(DEBUG_ERROR,"not every row cleared %i\n",self->num_rows);
             self->num_rows =0;
-
             /* Free possible stored images */
             if(self->_priv->images && self->_priv->use_images)
             {
-                for(i=0;i<self->num_rows;i++)
+                for(i=0;i< old_num_rows;i++)
                 {
                     if(self->_priv->images[i])
                         g_object_unref(self->_priv->images[i]);
@@ -1178,5 +1178,39 @@ requires 2.0.0
     {
         g_assert(self->_priv->data == NULL);
         self->_priv->use_images = FALSE;
+    }
+
+    public
+    MpdData * 
+    steal_mpd_data(self)
+    {
+        GtkTreePath *path;
+        int i;
+        int old_num_rows = self->num_rows;
+        MpdData *data = self->_priv->data; 
+        /* Clear */
+        self->_priv->data = NULL;
+        while ( self->num_rows > 0 ) {
+            path = gtk_tree_path_new();
+            gtk_tree_path_append_index(path, self->num_rows - 1 );
+            /* propegate change */
+            gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
+            gtk_tree_path_free(path);
+            self->num_rows--;
+        }
+        /* Free possible stored images */
+        if(self->_priv->images && self->_priv->use_images)
+        {
+            for(i=0;i<  old_num_rows;i++)
+            {
+                if(self->_priv->images[i])
+                    g_object_unref(self->_priv->images[i]);
+            }
+            q_free(self->_priv->images);
+        }
+        self->_priv->playtime = 0;
+        self_playtime_changed(self, self->_priv->playtime);
+
+        return data;
     }
 }
