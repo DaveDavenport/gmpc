@@ -2,6 +2,8 @@
 #include <libmpd/libmpd.h>
 #include "metadata.h"
 #include "gmpc-profiles.h"
+#include "gmpc-mpddata-model.h"
+#include "gmpc-mpddata-treeview.h"
 
 #ifndef __GMPC_PLUGIN_H__
 #define __GMPC_PLUGIN_H__
@@ -47,6 +49,10 @@ typedef enum
 typedef struct {
 	void (*construct)(GtkWidget *container);
 	void (*destroy)(GtkWidget *container);
+    /* Padding */
+    void (*padding1)                (void);
+    void (*padding1)                (void);
+    void (*padding1)                (void);
 } gmpcPrefPlugin;
 
 /** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser
@@ -68,6 +74,14 @@ typedef struct {
 	int  (*add_go_menu)				(GtkWidget *menu); 
 	/****** Key presses (in the whole window) **/
 	int  (*key_press_event)			(GtkWidget *mw, GdkEventKey *event, int type);
+    /** Song list right mouse menu intergration.
+     * This is only called (And allowed to be called) if the treeview is a GmpcMpdDataTreeview with songs 
+     */
+    int (*song_list_option_menu)    (GmpcMpdDataTreeview *tree, GtkMenu *menu);
+    /* Padding */
+    void (*padding1)                (void);
+    void (*padding1)                (void);
+    void (*padding1)                (void);
 } gmpcPlBrowserPlugin;
 
 /**
@@ -79,6 +93,10 @@ typedef struct {
 	int (*get_priority)				(void);
     void (*set_priority)            (int priority);
 	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
+    /* Padding */
+    void (*padding1)                (void);
+    void (*padding1)                (void);
+    void (*padding1)                (void);
 } gmpcMetaDataPlugin;
 
 /* Unique number                */
@@ -87,7 +105,8 @@ typedef struct {
 /* 18 ==       16 december      */
 /* 19 == 0.16*  24 december     */
 /* 20 == 0.16.5 release         */ 
-#define PLUGIN_API_VERSION 20
+/* 21 == 0.17.0 release -> adding padding so abi wont break next time */
+#define PLUGIN_API_VERSION 21
 
 /* sturcture */
 typedef struct {
@@ -128,6 +147,11 @@ typedef struct {
 	 * This is the place if you want to save settings
 	 */
 	void							(*save_yourself)(void);
+
+    /* Padding */
+    void (*padding1)                (void);
+    void (*padding1)                (void);
+    void (*padding1)                (void);
 } gmpcPlugin;
 
 /** plugin functions */
