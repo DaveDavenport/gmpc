@@ -952,6 +952,7 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
         has_item = 1;
     }
+    gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree), GTK_MENU(menu));
     /*	if(has_item)*/
     {
         item = gtk_image_menu_item_new_with_label(_("Edit Columns"));

@@ -959,7 +959,9 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 			item = gtk_separator_menu_item_new();
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
-		/* Edit columns */
+
+        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
+        /* Edit columns */
 		item = gtk_image_menu_item_new_with_label(("Edit Columns"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));

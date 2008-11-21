@@ -926,8 +926,9 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 					gtk_tree_path_free(path);                                               
 			}
 		}
-
+        
 		playlist_editor_right_mouse(menu,pl3_current_playlist_editor_add_to_playlist);
+        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL,0, event->time);	

@@ -674,4 +674,35 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
     }
 
+    
+    public
+    int 
+    right_mouse_intergration(self, GtkMenu *menu)
+    {
+        int retv = 0;
+        int i;
+        GtkWidget *submenu = gtk_menu_new();
+        for(i=0; i< num_plugins;i++)
+        {
+            if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
+            {
+                if(plugins[i]->get_enabled == NULL || plugins[i]->get_enabled() == TRUE)
+                {
+                    if(plugins[i]->browser && plugins[i]->browser->song_list_option_menu)
+                    {
+                        retv += plugins[i]->browser->song_list_option_menu(self, GTK_MENU(submenu));
+                    }
+                }
+            }
+        }
+        if(!retv) gtk_widget_destroy(submenu);
+        else{
+            /* Add */
+            GtkWidget *item = gtk_menu_item_new_with_label(_("Tools"));
+            gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        }
+
+        return retv;
+    }
 }
