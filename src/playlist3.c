@@ -1032,7 +1032,7 @@ void create_playlist3 ()
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
-	g_signal_connect(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
+	g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start (column, renderer, FALSE);
