@@ -64,6 +64,7 @@ typedef struct {
     GtkWidget *combo;
     GtkWidget  *lcombo;
     GtkWidget *entry;
+    GtkWidget *rmbut;
     int tag_type; 
 }crit_struct;
 
@@ -120,6 +121,12 @@ static void pl3_find2_browser_remove_crit(GtkWidget *button,crit_struct *cs)
     }
     pl3_find2_browser_search();
     gtk_widget_set_sensitive(pl3_find2_critaddbut, TRUE);
+
+    if(g_list_length(criterias) == 1) {
+        crit_struct *cs1 = criterias->data;
+        gtk_widget_hide(cs1->rmbut); 
+    }
+
 }
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
 {
@@ -167,16 +174,24 @@ static void pl3_find2_browser_add_crit()
     g_signal_connect(G_OBJECT(cs->entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
     gtk_box_pack_start(GTK_BOX(cs->hbox), cs->entry, TRUE, TRUE, 0);
 
-    removebut = gtk_button_new();
+    cs->rmbut = removebut = gtk_button_new();
     gtk_button_set_image(GTK_BUTTON(removebut), gtk_image_new_from_stock(GTK_STOCK_REMOVE, GTK_ICON_SIZE_BUTTON));
     gtk_box_pack_end(GTK_BOX(cs->hbox), removebut, FALSE, TRUE, 0);
     g_signal_connect(G_OBJECT(removebut), "clicked", G_CALLBACK(pl3_find2_browser_remove_crit),cs);
 
     gtk_box_pack_start(GTK_BOX(pl3_find2_crit_vbox), cs->hbox, FALSE, TRUE,0);
+    gtk_widget_show_all(pl3_find2_vbox);
+    if(!criterias){
+        gtk_widget_hide(cs->rmbut);
+    }
+    else if(g_list_length(criterias) == 1) {
+        crit_struct *cs1 = criterias->data;
+        gtk_widget_show(cs1->rmbut); 
+    }
 
     criterias = g_list_append(criterias, cs);
 
-    gtk_widget_show_all(pl3_find2_vbox);
+
     /** This causes some weird crashes when adding a default crit */
    /* gtk_widget_grab_focus(cs->combo);*/
     gtk_widget_set_sensitive(pl3_find2_findbut, TRUE);
