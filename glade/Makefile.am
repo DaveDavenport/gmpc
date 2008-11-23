@@ -1,14 +1,6 @@
 appgladedir = $(datadir)/gmpc/
-
-
-builder_data=\
-	gmpc-aboutdialog.ui
-
 appglade_DATA =	gmpc.glade \
-		playlist3.glade\
-		$(builder_data)
-
+		playlist3.glade
 
 EXTRA_DIST = gmpc.glade \
-		playlist3.glade\
-		$(builder_data)
+		playlist3.glade
