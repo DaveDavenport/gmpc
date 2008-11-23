@@ -115,7 +115,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 /* Playlist "Plugin" */
 static void playlist_pref_construct(GtkWidget *container);
 static void playlist_pref_destroy(GtkWidget *container);
-GladeXML *playlist_pref_xml = NULL;
+GtkBuilder *playlist_pref_xml = NULL;
 
 static GtkWidget *volume_slider = NULL;
 
@@ -1370,7 +1370,8 @@ void playlist_pref_destroy(GtkWidget *container)
 {
 	if(playlist_pref_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
+		GtkWidget *vbox = (GtkWidget *)gtk_builder_get_object(playlist_pref_xml, "playlist-vbox");
+        //glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(playlist_pref_xml);
 		playlist_pref_xml = NULL;
@@ -1378,41 +1379,51 @@ void playlist_pref_destroy(GtkWidget *container)
 }
 void playlist_pref_construct(GtkWidget *container)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	playlist_pref_xml = glade_xml_new(path, "playlist-vbox",NULL);
+    GError *error = NULL;
+	gchar *path = gmpc_get_full_glade_path("gmpc-playlist-preferences.ui");
+    playlist_pref_xml = gtk_builder_new();
+    gtk_builder_add_from_file(playlist_pref_xml, path, &error);
+	//playlist_pref_xml = glade_xml_new(path, "playlist-vbox",NULL);
+    if(error) {
+        playlist3_show_error_message(error->message, ERROR_WARNING);
+        g_error_free(error);
+        return;
+    }
 
-	if(playlist_pref_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
+		GtkWidget *vbox = (GtkWidget *)gtk_builder_get_object(playlist_pref_xml, "playlist-vbox");
+        printf("box: %p\n", vbox);
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_ps")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_ps")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "st_cur_song", 0));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_possize")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_hide_on_close")),      		
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_hide_on_close")),      		
 				cfg_get_single_value_as_int_with_default(config,"playlist", "hide-on-close", 0));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_stop_on_exit")),      		
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_stop_on_exit")),      		
 				cfg_get_single_value_as_int_with_default(config,"connection","stop-on-exit", 0));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_cover_case")),      		
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_cover_case")),      		
 				cfg_get_single_value_as_int_with_default(config,"metaimage", "addcase", FALSE));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_show_tooltip")),      		
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_show_tooltip")),      		
 				cfg_get_single_value_as_int_with_default(config,"GmpcTreeView", "show-tooltip", TRUE));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_show_tabbed_heading")),      		
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_show_tabbed_heading")),      		
                 cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE)
                 );
 
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
-		glade_xml_signal_autoconnect(playlist_pref_xml);
+        gtk_widget_show(vbox);
+        gtk_builder_connect_signals(playlist_pref_xml, NULL);
+//		glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
 	q_free(path);
 }
