@@ -1820,9 +1820,19 @@ static void playlist_player_volume_changed(GtkWidget *vol_but)
 
 void about_window()
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
-	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
+    GtkBuilder *builder =gtk_builder_new();
+	gchar *path = gmpc_get_full_glade_path("gmpc-aboutdialog.ui");
+	GtkWidget *dialog = NULL;
+    GError *error = NULL;
+
+    gtk_builder_add_from_file(builder, path, &error);
+    if(error) {
+        playlist3_show_error_message(error->message, ERROR_WARNING);
+        g_error_free(error);
+        return;
+    }
+    
+    dialog = (GtkWidget *)gtk_builder_get_object(builder, "aboutdialog");
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
 
 	q_free(path);
@@ -1842,7 +1852,7 @@ void about_window()
 	q_free(path);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
-	g_object_unref(diagxml);
+	g_object_unref(builder);
 }
 
 
