@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-10 18:30+0100\n"
-"PO-Revision-Date: 2008-09-03 21:36+0000\n"
+"PO-Revision-Date: 2008-11-24 13:32+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2008-09-06 17:28+0000\n"
+"X-Launchpad-Export-Date: 2008-11-24 14:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -24,7 +24,7 @@ msgstr ""
 
 #: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:586 ../src/tray-icon2.c:593
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "Gnome 音乐播放器客户端"
 
 #: ../glade/gmpc.glade.h:1
 msgid "/"
@@ -32,7 +32,7 @@ msgstr "/"
 
 #: ../glade/gmpc.glade.h:2
 msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
-msgstr ""
+msgstr "<b><span size=\"x-large\">发生错误</span></b>"
 
 #: ../glade/gmpc.glade.h:3
 msgid "<b>Crossfade:</b>"
@@ -44,7 +44,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:5
 msgid "<b>Example:</b>"
-msgstr ""
+msgstr "<b>例子:</b>"
 
 #: ../glade/gmpc.glade.h:6
 msgid "<b>Inline messages</b>"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:7
 msgid "<b>Loaded Plugins:</b>"
-msgstr ""
+msgstr "<b>载入的插件：</b>"
 
 #: ../glade/gmpc.glade.h:8
 msgid "<b>Main:</b>"
@@ -64,23 +64,23 @@ msgstr "<b>名称：</b>"
 
 #: ../glade/gmpc.glade.h:10
 msgid "<b>Notification Area Icon</b>"
-msgstr ""
+msgstr "<b>通知区域图标</b>"
 
 #: ../glade/gmpc.glade.h:11
 msgid "<b>Output Devices:</b>"
-msgstr ""
+msgstr "<b>输出设备：</b>"
 
 #: ../glade/gmpc.glade.h:12
 msgid "<b>Playlist:</b>"
-msgstr ""
+msgstr "<b>播放列表：</b>"
 
 #: ../glade/gmpc.glade.h:13
 msgid "<b>PopUp</b>"
-msgstr ""
+msgstr "<b>弹出</b>"
 
 #: ../glade/gmpc.glade.h:14
 msgid "<b>Profile:</b>"
-msgstr ""
+msgstr "<b>配置：</b>"
 
 #: ../glade/gmpc.glade.h:15
 msgid "<b>Song Markup</b>"
@@ -88,7 +88,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:16
 msgid "<b>Sort by:</b>"
-msgstr ""
+msgstr "<b>排列方式：</b>"
 
 #: ../glade/gmpc.glade.h:17
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
@@ -114,7 +114,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:23
 msgid "A_lbum"
-msgstr "专辑"
+msgstr "专辑(_L)"
 
 #: ../glade/gmpc.glade.h:24
 msgid ""
@@ -124,6 +124,11 @@ msgid ""
 "Lower Left Corner\n"
 "Lower Right Corner"
 msgstr ""
+"通知区域图标处\n"
+"屏幕左上角\n"
+"屏幕右上角\n"
+"屏幕左下角\n"
+"屏幕右下角"
 
 #: ../glade/gmpc.glade.h:29
 msgid "Center playing song"
@@ -131,11 +136,11 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:30
 msgid "Conn_ect"
-msgstr ""
+msgstr "连接(_E)"
 
 #: ../glade/gmpc.glade.h:31
 msgid "Copyright 2003-2007 Qball Cow"
-msgstr ""
+msgstr "Copyright 2003-2007 Qball Cow"
 
 #: ../glade/gmpc.glade.h:32
 msgid "Edit Song Formatting"
@@ -155,7 +160,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:36
 msgid "Enter your password for: '<hostname>'"
-msgstr ""
+msgstr "输入主机密码: '<hostname>'"
 
 #: ../glade/gmpc.glade.h:37
 msgid "Error Dialog"
@@ -193,6 +198,18 @@ msgid ""
 "Comment\n"
 "Disc"
 msgstr ""
+"无\n"
+"艺术家\n"
+"专辑\n"
+"标题\n"
+"音轨\n"
+"Name\n"
+"流派\n"
+"日期\n"
+"Composer\n"
+"Performer\n"
+"备注\n"
+"Disc"
 
 #: ../glade/gmpc.glade.h:54
 msgid "Password"
@@ -205,7 +222,7 @@ msgstr "密码："
 #. label
 #: ../glade/gmpc.glade.h:56 ../src/gmpc_easy_download.c:223
 msgid "Port:"
-msgstr "端口:"
+msgstr "端口："
 
 #: ../glade/gmpc.glade.h:57
 msgid "Position:"
@@ -225,7 +242,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:61
 msgid "Stop playing on exit"
-msgstr ""
+msgstr "退出时停止播放"
 
 #: ../glade/gmpc.glade.h:62
 msgid "Stylize album covers"
@@ -249,15 +266,15 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:67
 msgid "_Autoconnect"
-msgstr ""
+msgstr "自动连接(_A)"
 
 #: ../glade/gmpc.glade.h:68
 msgid "_Date"
-msgstr "日期"
+msgstr "日期(_D)"
 
 #: ../glade/gmpc.glade.h:69 ../glade/playlist3.glade.h:20
 msgid "_Disconnect"
-msgstr "断开连接"
+msgstr "断开连接(_D)"
 
 #: ../glade/gmpc.glade.h:70
 msgid "_Reconnect"
@@ -265,7 +282,7 @@ msgstr "重新连接"
 
 #: ../glade/gmpc.glade.h:71
 msgid "_Save password"
-msgstr ""
+msgstr "保存密码(_S)"
 
 #: ../glade/gmpc.glade.h:72
 msgid "_Stream name"
@@ -285,7 +302,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:76
 msgid "fade time (s):"
-msgstr "淡化时长（以秒计）："
+msgstr "淡入淡出时长(以秒计)："
 
 #: ../glade/gmpc.glade.h:77
 msgid "gmpc - Configuration"
@@ -313,6 +330,12 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Aron Xu https://launchpad.net/~cnfavor\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  rainofchaos https://launchpad.net/~rainofchaos\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Aron Xu https://launchpad.net/~cnfavor\n"
+"  Jonathan Ye https://launchpad.net/~microjo\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  rainofchaos https://launchpad.net/~rainofchaos"
 
 #: ../glade/playlist3.glade.h:1
@@ -321,15 +344,15 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr ""
+msgstr "<span size=\"x-small\"><i>播放列表已存在。</i></span>"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Getting help"
-msgstr ""
+msgstr "获取帮助"
 
 #: ../glade/playlist3.glade.h:4
 msgid "MPD database is updating."
-msgstr ""
+msgstr "正在更新MPD数据库"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Messages"
@@ -337,7 +360,7 @@ msgstr "消息"
 
 #: ../glade/playlist3.glade.h:6
 msgid "Mute"
-msgstr ""
+msgstr "静音"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:73
@@ -382,7 +405,7 @@ msgstr "停止"
 
 #: ../glade/playlist3.glade.h:16
 msgid "Visit website"
-msgstr ""
+msgstr "访问网站"
 
 #: ../glade/playlist3.glade.h:17
 msgid "_Collapse Interface"
@@ -410,31 +433,31 @@ msgstr "转到"
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Help"
-msgstr "帮助"
+msgstr "帮助(_H)"
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Music"
-msgstr "音乐"
+msgstr "音乐(_M)"
 
 #: ../glade/playlist3.glade.h:26
 msgid "_Option"
-msgstr "选项"
+msgstr "选项(_O)"
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Send Password"
-msgstr "发送密码"
+msgstr "发送密码(_S)"
 
 #: ../glade/playlist3.glade.h:28
 msgid "_Server"
-msgstr "服务器"
+msgstr "服务器(_S)"
 
 #: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
-msgstr "显示艺术家图片"
+msgstr "显示艺术家图片(_S)"
 
 #: ../glade/playlist3.glade.h:30
 msgid "_View"
-msgstr "查看(_V)"
+msgstr "视图(_V)"
 
 #: ../glade/playlist3.glade.h:31
 msgid "gmpc - Playlist Manager"
@@ -474,21 +497,21 @@ msgstr ""
 
 #: ../src/gmpc_easy_download.c:193 ../src/gmpc_easy_download.c:247
 msgid "Proxy"
-msgstr ""
+msgstr "代理"
 
 #: ../src/gmpc_easy_download.c:194
 msgid "<b>Proxy</b>"
-msgstr ""
+msgstr "<b>代理</b>"
 
 #. enable/disable
 #: ../src/gmpc_easy_download.c:202
 msgid "Use a proxy for internet connectivity"
-msgstr ""
+msgstr "通过代理访问英特网"
 
 #. label
 #: ../src/gmpc_easy_download.c:211
 msgid "HTTP Proxy:"
-msgstr ""
+msgstr "HTTP 代理："
 
 #. *
 #. * Set debug level, options are
@@ -496,14 +519,14 @@ msgstr ""
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:272 ../src/main.c:274
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:280
 msgid "--version"
 msgstr ""
@@ -527,7 +550,7 @@ msgstr ""
 
 #. *
 #. * Allow the user to pick another config file
-#.
+#. 
 #: ../src/main.c:296 ../src/main.c:298
 msgid "--config="
 msgstr ""
@@ -558,7 +581,7 @@ msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:328
 msgid "--help"
 msgstr ""
@@ -587,7 +610,7 @@ msgstr ""
 
 #: ../src/main.c:405
 msgid "Trying to run gmpc with a wrong libmpd version."
-msgstr ""
+msgstr "试图使用错误的libmpd版本运行gmpc"
 
 #: ../src/main.c:454
 msgid "Failed to load the configuration system."
@@ -595,11 +618,11 @@ msgstr ""
 
 #: ../src/main.c:476
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "加载debug日志文件时出现错误。"
 
 #: ../src/main.c:623
 msgid "Failed to setup libmpd"
-msgstr ""
+msgstr "设置libmpd时出现错误"
 
 #: ../src/main.c:1032
 msgid "GMPC has insufficient permissions on the mpd server."
@@ -619,7 +642,7 @@ msgstr ""
 
 #: ../src/main.c:1082 ../src/main.c:1114
 msgid "error code"
-msgstr ""
+msgstr "错误代码"
 
 #: ../src/main.c:1100
 msgid "Insufficient permission to connect to mpd. Check password"
@@ -631,20 +654,20 @@ msgstr ""
 
 #: ../src/main.c:1223
 msgid "<b>Connected to mpd</b>"
-msgstr ""
+msgstr "<b>已经连接到mpd</b>"
 
 #: ../src/main.c:1225
 msgid "<b>Disconnected from mpd</b>"
-msgstr ""
+msgstr "<b>已经与mpd断开连接</b>"
 
 #: ../src/main.c:1260
 msgid "Error occured during operation"
-msgstr ""
+msgstr "操作时出现错误"
 
 #. Create label
 #: ../src/main.c:1290
 msgid "The following error(s) occured:"
-msgstr ""
+msgstr "出现如下错误："
 
 #: ../src/main.c:1306
 msgid "Error Message"
@@ -667,20 +690,17 @@ msgstr ""
 #: ../src/misc.c:56
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "天"
 
 #: ../src/misc.c:60
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "小时"
 
 #: ../src/misc.c:64
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "分钟"
 
 #: ../src/misc.c:463
 msgid "Failed to execute"
@@ -693,12 +713,12 @@ msgstr ""
 #. * MM_STOP
 #: ../src/mm-keys.c:76
 msgid "Fast Forward"
-msgstr ""
+msgstr "快进"
 
 #. * MM_FASTFORWARD
 #: ../src/mm-keys.c:77
 msgid "Fast Backward"
-msgstr ""
+msgstr "快退"
 
 #. * MM_RANDOM
 #: ../src/mm-keys.c:80
@@ -758,7 +778,7 @@ msgstr ""
 
 #: ../src/mm-keys.c:538
 msgid "Multimedia Keys"
-msgstr ""
+msgstr "快捷键"
 
 #: ../src/mm-keys.c:602
 #, c-format
@@ -781,23 +801,23 @@ msgstr ""
 
 #: ../src/mm-keys.c:685
 msgid "Action"
-msgstr ""
+msgstr "操作"
 
 #: ../src/mm-keys.c:706
 msgid "Shortcut"
-msgstr ""
+msgstr "快捷键"
 
 #: ../src/mpdinteraction.c:53
 msgid "Server Settings"
-msgstr ""
+msgstr "服务器设置"
 
 #: ../src/mpdinteraction.c:83
 msgid "Connection"
-msgstr ""
+msgstr "连接"
 
 #: ../src/mpdinteraction.c:187
 msgid "Connecting"
-msgstr ""
+msgstr "正在连接"
 
 #. Add all from album
 #: ../src/mpdinteraction.c:1156
@@ -839,11 +859,11 @@ msgstr ""
 
 #: ../src/playlist3.c:861
 msgid "Connected"
-msgstr ""
+msgstr "已连接"
 
 #: ../src/playlist3.c:870 ../src/playlist3.c:2139
 msgid "Not Connected"
-msgstr ""
+msgstr "未连接"
 
 #: ../src/playlist3.c:883 ../src/playlist3.c:892 ../src/playlist3.c:1634
 msgid "GMPC"
@@ -851,11 +871,11 @@ msgstr ""
 
 #: ../src/playlist3.c:884
 msgid "Connected to"
-msgstr ""
+msgstr "连接到"
 
 #: ../src/playlist3.c:893
 msgid "Disconnected"
-msgstr ""
+msgstr "断开连接"
 
 #: ../src/playlist3.c:963
 msgid ""
@@ -887,7 +907,7 @@ msgstr ""
 
 #: ../src/playlist3.c:1872 ../src/playlist3.c:1878
 msgid "Profile"
-msgstr ""
+msgstr "配置文件"
 
 #: ../src/playlist3.c:1872
 msgid "added"
@@ -920,15 +940,15 @@ msgstr ""
 
 #: ../src/playlist3-messages.c:16
 msgid "Info"
-msgstr ""
+msgstr "信息"
 
 #: ../src/playlist3-messages.c:17
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: ../src/playlist3-messages.c:18
 msgid "Critical"
-msgstr ""
+msgstr "严重"
 
 #: ../src/playlist3-messages.c:195
 msgid "Time"
@@ -945,27 +965,27 @@ msgstr ""
 
 #: ../src/preferences.c:82
 msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
-msgstr ""
+msgstr "<span size=\"xx-large\"><b>插件</b></span>"
 
 #: ../src/preferences.c:135
 msgid "Plugins:"
-msgstr ""
+msgstr "插件："
 
 #: ../src/preferences.c:175
 msgid "<b>Plugins:</b>"
-msgstr ""
+msgstr "<b>插件：</b>"
 
 #: ../src/preferences.c:260
 msgid "Enabled"
-msgstr ""
+msgstr "启用"
 
 #: ../src/preferences.c:263 ../src/gob/gmpc-mpddata-treeview.gob:51
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #: ../src/preferences.c:265
 msgid "Function"
-msgstr ""
+msgstr "功能类别"
 
 #: ../src/preferences.c:283
 msgid "Dummy"
@@ -1012,7 +1032,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:206
 msgid "Enter an url"
 msgstr ""
@@ -1025,14 +1045,14 @@ msgstr ""
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:274
 msgid "Failed to parse the playlist link"
 msgstr ""
 
 #: ../src/tray-icon2.c:106
 msgid "Pla_ylist"
-msgstr ""
+msgstr "播放列表(_Y)"
 
 #: ../src/tray-icon2.c:433
 msgid "<span size='large'>Gnome Music Player Client</span>"
@@ -1040,11 +1060,11 @@ msgstr ""
 
 #: ../src/tray-icon2.c:703
 msgid "Notification"
-msgstr ""
+msgstr "提示"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:94
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1056,13 +1076,12 @@ msgid "Welcome to GMPC"
 msgstr ""
 
 #: ../src/setup-assistant.c:115
-#, fuzzy
 msgid "Setup connection"
-msgstr "重新连接"
+msgstr "连接设置"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:124
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1087,7 +1106,7 @@ msgstr ""
 #: ../src/browsers/playlist3-current-playlist-browser.c:428
 #: ../src/browsers/playlist3-current-playlist-browser.c:1229
 msgid "Play Queue"
-msgstr ""
+msgstr "播放队列"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:500
 msgid "Are you sure you want to clear the playlist?"
@@ -1246,7 +1265,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:406
 #: ../src/browsers/playlist3-metadata-browser.c:670
 #: ../src/browsers/playlist3-metadata-browser.c:2261
@@ -1261,7 +1280,7 @@ msgstr ""
 
 #. *
 #. * Songs list
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:636
 #: ../src/browsers/playlist3-metadata-browser.c:1418
 msgid "<b>Songs:</b>"
@@ -1330,9 +1349,9 @@ msgstr ""
 msgid "kbit/sec"
 msgstr ""
 
-#.
+#. 
 #. * Lyrics
-#.
+#. 
 #. label
 #: ../src/browsers/playlist3-metadata-browser.c:932
 msgid "Lyric:"
@@ -1391,7 +1410,7 @@ msgstr ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1466
 msgid "Artist info:"
 msgstr ""
@@ -1410,7 +1429,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1807
 msgid "Album info:"
 msgstr ""
@@ -1435,7 +1454,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2117
 #: ../src/browsers/playlist3-metadata-browser.c:2395
 msgid "Metadata Browser"
@@ -1443,7 +1462,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2133
 msgid "Show Current Song"
 msgstr ""
