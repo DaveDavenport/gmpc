@@ -154,7 +154,7 @@ void create_preferences_window()
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, plugin_get_pos(plugins[i]->id)/*^PLUGIN_ID_MARK*/,
-						1, _(plugins[i]->name), -1);
+						1, _(gmpc_plugin_get_name(plugins[i])), -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
 				{
@@ -180,7 +180,7 @@ void create_preferences_window()
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, plugin_get_pos(plugins[i]->id),
-						1, plugins[i]->name,
+						1, gmpc_plugin_get_name(plugins[i]),
 						-1);
 			}
 		}
@@ -271,7 +271,7 @@ static void plugin_stats_construct(GtkWidget *container)
 			{
                 gchar *version = g_strdup_printf("%i.%i.%i",plugins[i]->version[0], plugins[i]->version[1],plugins[i]->version[2]);
 				gtk_list_store_append(store, &iter);
-				gtk_list_store_set(store, &iter, 0,TRUE,1, plugins[i]->name,3,(plugins[i]),4,version, -1);
+				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
                 g_free(version);
 				if(plugins[i]->get_enabled != NULL)
 				{

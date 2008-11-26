@@ -1041,7 +1041,7 @@ static void metadata_construct_pref_pane(GtkWidget *container)
         GtkTreeIter iter;
         gtk_list_store_insert_with_values(store, &iter, -1, 
             0, meta_plugins[i],
-            1, meta_plugins[i]->name,
+            1, gmpc_plugin_get_name(meta_plugins[i]),
             2, meta_plugins[i]->metadata->get_priority(),
             -1);
 

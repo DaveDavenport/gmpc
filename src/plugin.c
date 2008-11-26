@@ -36,7 +36,7 @@ static int plugin_validate(gmpcPlugin *plug)
     }
     for(i=0;i<num_plugins;i++)
     {
-        if(strcmp(plugins[i]->name, plug->name) == 0)
+        if(strcmp(gmpc_plugin_get_name(plugins[i]), plug->name) == 0)
         {
             debug_printf(DEBUG_ERROR, "Plugin with same name allready exists.");
             return FALSE;
