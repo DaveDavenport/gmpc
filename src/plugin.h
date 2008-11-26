@@ -174,6 +174,8 @@ void            gmpc_plugin_init                (gmpcPlugin *plug);
 void            gmpc_plugin_destroy             (gmpcPlugin *plug);
 void            gmpc_plugin_save_yourself       (gmpcPlugin *plug);
 
+gboolean        gmpc_plugin_get_enabled         (gmpcPlugin *plug);           
+
 const char *    gmpc_plugin_get_name            (gmpcPlugin *plug);
 void            gmpc_plugin_status_changed      (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
 #endif

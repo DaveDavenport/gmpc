@@ -264,3 +264,11 @@ void gmpc_plugin_save_yourself(gmpcPlugin *plug)
         plug->save_yourself();
     }
 }
+gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
+{
+    if(plug->get_enabled)
+    {
+        return plug->get_enabled();
+    }
+    return TRUE;
+}

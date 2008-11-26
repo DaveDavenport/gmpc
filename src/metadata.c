@@ -563,7 +563,7 @@ static void meta_data_retrieve_thread()
                 /* *
 				 * Get image function is only allowed to return META_DATA_AVAILABLE or META_DATA_UNAVAILABLE
 				 */
-				if(plug->get_enabled())
+				if(gmpc_plugin_get_enabled(plug))
 				{
                     debug_printf(DEBUG_INFO, "Query plugin: '%s'", plug->name);
 					data->result = plug->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
