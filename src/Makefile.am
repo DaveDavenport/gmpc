@@ -65,9 +65,11 @@ BUILT_SOURCES= revisiont.h
 revisiont.h:
 	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
 		echo "Writing new Makefile.config file";\
-		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
 	fi;
+
+revision.h:
+		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;
 
 INCLUDES= @EXTRA_CFLAGS@ \
 	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
