@@ -50,7 +50,9 @@ else
 gmpc_SOURCES=$(sources)
 endif
 
-BUILT_SOURCES= revisiont.h
+BUILT_SOURCES=\
+		revisiont.h\
+		revision.h
 
 %.c %.h %-private.h: %.gob
 	@GOB2@ -o gob/ --no-touch-headers --always-private-header $<
