@@ -166,4 +166,14 @@ gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
 void pl3_update_go_menu();
+
+/**
+ * Plugin functions
+ */
+void            gmpc_plugin_init                (gmpcPlugin *plug);
+void            gmpc_plugin_destroy             (gmpcPlugin *plug);
+void            gmpc_plugin_save_yourself       (gmpcPlugin *plug);
+
+const char *    gmpc_plugin_get_name            (gmpcPlugin *plug);
+void            gmpc_plugin_status_changed      (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
 #endif

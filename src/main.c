@@ -733,11 +733,8 @@ int main (int argc, char **argv)
 	/* time todo some initialisation of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
 	{
-		if(plugins[i]->init)
-		{
-			plugins[i]->init();
-            TEC("Initializing plugin: %s", plugins[i]->name)
-		}
+        TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i])) 
+        gmpc_plugin_init(plugins[i]);
 	}
 
 	/**
@@ -807,37 +804,35 @@ int main (int argc, char **argv)
 	/**
 	 * Connect the wanted key's
 	 */
-	g_signal_connect(G_OBJECT(keys), "mm_playpause",    G_CALLBACK(play_song), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_next",         G_CALLBACK(next_song), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_prev",         G_CALLBACK(prev_song), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_stop",         G_CALLBACK(stop_song), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_fastforward",  G_CALLBACK(song_fastforward), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_repeat",       G_CALLBACK(repeat_toggle), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_random",       G_CALLBACK(random_toggle), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_raise",        G_CALLBACK(create_playlist3), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_hide",         G_CALLBACK(pl3_hide), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden",G_CALLBACK(pl3_toggle_hidden), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_volume_up",    G_CALLBACK(volume_up), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_volume_down",  G_CALLBACK(volume_down), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_toggle_mute",  G_CALLBACK(volume_toggle_mute), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_icon2_create_tooltip), NULL );
+	g_signal_connect(G_OBJECT(keys), "mm_playpause",        G_CALLBACK(play_song),                  NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_next",             G_CALLBACK(next_song),                  NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_prev",             G_CALLBACK(prev_song),                  NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_stop",             G_CALLBACK(stop_song),                  NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_fastforward",      G_CALLBACK(song_fastforward),           NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_fastbackward",     G_CALLBACK(song_fastbackward),          NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_repeat",           G_CALLBACK(repeat_toggle),              NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_random",           G_CALLBACK(random_toggle),              NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_raise",            G_CALLBACK(create_playlist3),           NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_hide",             G_CALLBACK(pl3_hide),                   NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden",    G_CALLBACK(pl3_toggle_hidden),          NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_up",        G_CALLBACK(volume_up),                  NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_volume_down",      G_CALLBACK(volume_down),                NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_toggle_mute",      G_CALLBACK(volume_toggle_mute),         NULL);
+	g_signal_connect(G_OBJECT(keys), "mm_show_notification",G_CALLBACK(tray_icon2_create_tooltip),  NULL);
     TEC("Setting up multimedia keys")
 
 #endif
-
-
 	/*
 	 * run the main loop
 	 */
 	gtk_main ();
 
 	/**
+     * Shutting Down
 	 *  cleaning up. 
 	 */
 #ifndef WIN32
-	if(bacon_connection)
-	{
+	if(bacon_connection) {
 		bacon_message_connection_free (bacon_connection);
 	}
 #endif	
@@ -846,28 +841,21 @@ int main (int argc, char **argv)
 
     /* tell the plugins to save themself. */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
-		if(plugins[i]->save_yourself) {
-			debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", plugins[i]->name);
-			plugins[i]->save_yourself();
-		}
+			debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
+	        gmpc_plugin_save_yourself(plugins[i]);
 	}
     /* Should fix some possible crashes */
     gtk_tree_view_set_model(playlist3_get_category_tree_view(),NULL);
 
-    
     /**
      * Clear metadata struct
      */
     meta_data_destroy();
 
-
-
 	/* time todo some destruction of plugins */
 	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
-		if(plugins[i]->destroy) {
-			debug_printf(DEBUG_INFO,"Telling '%s' to destroy itself\n", plugins[i]->name);
-			plugins[i]->destroy();
-		}
+        debug_printf(DEBUG_INFO,"Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
+        gmpc_plugin_destroy(plugins[i]);
 	}
 
     playlist3_message_destroy();
@@ -1010,10 +998,8 @@ static void gmpc_status_changed_callback_real(GmpcConnection *conn, MpdObj *mi, 
 	 * Make the plugins recieve the signals 
 	 */
 	for(i=0; i< num_plugins; i++) {
-		if(plugins[i]->mpd_status_changed!= NULL) {
-			plugins[i]->mpd_status_changed(mi,what,NULL);
-		}
-	}
+        gmpc_plugin_status_changed(plugins[i], mi,what);
+    }
 
 }
 
@@ -1204,11 +1190,11 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     debug_printf(DEBUG_INFO, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
     for(i=0; i< num_plugins; i++)
     {
-        debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", plugins[i]->name);
+        debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
         if(plugins[i]->mpd_connection_changed!= NULL)
         {
             plugins[i]->mpd_connection_changed(mi,connected,NULL);
-            TEC("Connection changed plugin: %s", plugins[i]->name)
+            TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]))
         }
     
     }

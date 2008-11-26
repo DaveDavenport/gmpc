@@ -226,3 +226,41 @@ void plugin_load_dir(gchar *path)
         gtk_init_add(__show_plugin_load_error, NULL);
     }
 }
+
+/**
+ * gmpcPlugin
+ */
+
+void gmpc_plugin_destroy(gmpcPlugin *plug)
+{
+    if(plug->destroy)
+    {
+        plug->destroy();
+    }
+}
+void gmpc_plugin_init(gmpcPlugin *plug)
+{
+    if(plug->init)
+    {
+        plug->init();
+    }
+}
+void gmpc_plugin_status_changed(gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what)
+{
+    if(plug->mpd_status_changed)
+    {
+        plug->mpd_status_changed(mi,what,NULL);
+    }
+}
+const char *gmpc_plugin_get_name(gmpcPlugin *plug)
+{
+    g_assert(plug->name != NULL);
+    return plug->name;
+}
+void gmpc_plugin_save_yourself(gmpcPlugin *plug)
+{
+    if(plug->save_yourself)
+    {
+        plug->save_yourself();
+    }
+}
