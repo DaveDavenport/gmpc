@@ -207,20 +207,22 @@ static void bacon_on_message_received(const char *message, gpointer data)
 int main (int argc, char **argv)
 {
     int i;
-    int clean_config = FALSE;
-    char *config_path = NULL;
+
+
     /* config keys */
-    int start_hidden = FALSE;
-    int load_plugins = TRUE;
-    int replace = FALSE;
-    int quit = FALSE;
-    int import_old_db = FALSE;
-    int do_debug_updates = FALSE;
+    int     clean_config        = FALSE;
+    char    *config_path        = NULL;
+    int     start_hidden        = FALSE;
+    int     load_plugins        = TRUE;
+    int     replace             = FALSE;
+    int     quit                = FALSE;
+    int     import_old_db       = FALSE;
+    int     do_debug_updates    = FALSE;
 #ifdef WIN32
-	gchar *packagedir;
+	gchar   *packagedir;
 #endif
 #ifdef ENABLE_MMKEYS
-    MmKeys *keys = NULL;
+    MmKeys  *keys               = NULL;
 #endif
 
     /**
@@ -294,35 +296,36 @@ int main (int argc, char **argv)
             /**
              * Allow the user to pick another config file 
              */
-            else if (!strncasecmp(argv[i], _("--config="), strlen(_("--config="))))
+#define check_key(a) (!strncasecmp(argv[i], a, strlen(a)))            
+            else if (check_key(_("--config=")))
             {
                 config_path = g_strdup(&argv[i][strlen(_("--config="))]);
             }
-            else if (!strncasecmp(argv[i], _("--start-hidden"), strlen(_("--start-hidden"))))
+            else if (check_key(_("--start-hidden")))
             {
                 start_hidden = TRUE;
             }
-            else if (!strncasecmp(argv[i], _("--clean-cover-db"), strlen(_("--clean-cover-db"))))
+            else if (check_key(_("--clean-cover-db")))
             {
                 clean_config = TRUE;
             }
-            else if (!strncasecmp(argv[i], _("--disable-plugins"), strlen(_("--disable-plugins"))))
+            else if (check_key(_("--disable-plugins")))
             {
                 load_plugins = FALSE;
             }
-            else if (!strncasecmp(argv[i], _("--replace"), strlen(_("--replace"))))
+            else if (check_key(_("--replace")))
             {
                 replace = TRUE;
             }
-            else if (!strncasecmp(argv[i], _("--quit"), strlen(_("--quit"))))
+            else if (check_key(_("--quit")))
             {
                 quit = TRUE;
             }
-            else if (!strncasecmp(argv[i], _("--import-old-db"), strlen(_("--import-old-db"))))
+            else if (check_key( _("--import-old-db")))
             {
                 import_old_db = TRUE;
             }
-            else if (!strncasecmp(argv[i], _("--debug-updates"), strlen(_("--debug-updates"))))
+            else if (check_key( _("--debug-updates")))
             {
                 do_debug_updates = TRUE;
             }
@@ -330,7 +333,7 @@ int main (int argc, char **argv)
             /**
              * Print out help message
              */
-            else if (!strncasecmp(argv[i], _("--help"),strlen(_("--help"))))
+            else if (check_key( _("--help")))
             {
                 printf(_("Gnome Music Player Client\n"\
                             "Options:\n"\
