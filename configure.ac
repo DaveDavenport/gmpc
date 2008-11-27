@@ -1,34 +1,31 @@
-# Process this file with autoconf to produce a configure script.
-
-
 #Define the version
-m4_define([gmpc_major_version], [0])
-m4_define([gmpc_minor_version], [16])
-m4_define([gmpc_micro_version], [5])
-m4_define([gmpc_version], [gmpc_major_version.gmpc_minor_version.gmpc_micro_version])
+m4_define([package_major_version], [0])
+m4_define([package_minor_version], [16])
+m4_define([package_micro_version], [5])
+m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
 
 #Define variable
-m4_define([gmpc_tagline],       "♯♪ + ♭♪ = ☺")
-m4_define([gmpc_website],       "http://gmpcwiki.sarine.nl")
-m4_define([gmpc_copyright],     "Copyright 2003-2008 Qball Cow")
-m4_define([gmpc_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
+m4_define([package_tagline],       "♯♪ + ♭♪ = ☺")
+m4_define([package_website],       "http://gmpcwiki.sarine.nl")
+m4_define([package_copyright],     "Copyright 2003-2008 Qball Cow")
+m4_define([package_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
 
 
 
 AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [gmpc_version],qball@sarine.nl)
+AM_INIT_AUTOMAKE([gmpc], [package_version],qball@sarine.nl)
 
 
 #Make version and variables available in config.h
-AC_DEFINE(GMPC_MAJOR_VERSION,   gmpc_major_version, ["Major version of gmpc"])
-AC_DEFINE(GMPC_MINOR_VERSION,   gmpc_minor_version, ["Minor version of gmpc"])
-AC_DEFINE(GMPC_MICRO_VERSION,   gmpc_micro_version, ["Micro version of gmpc"])
-AC_DEFINE(GMPC_TAGLINE,         gmpc_tagline, 	    ["Gmpc's tagline"])
-AC_DEFINE(GMPC_WEBSITE,			gmpc_website, 	    ["Gmpc's website"])
-AC_DEFINE(GMPC_BUGTRACKER,      gmpc_bugtracker,    ["Gmpc's bugtracker"])
-AC_DEFINE(GMPC_COPYRIGHT,       gmpc_copyright,     ["Gmpc's Copyright"])
+AC_DEFINE(GMPC_MAJOR_VERSION,   package_major_version,	["Major version of gmpc"])
+AC_DEFINE(GMPC_MINOR_VERSION,   package_minor_version,	["Minor version of gmpc"])
+AC_DEFINE(GMPC_MICRO_VERSION,   package_micro_version,	["Micro version of gmpc"])
+AC_DEFINE(GMPC_TAGLINE,         package_tagline,	["Gmpc's tagline"])
+AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
+AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
+AC_DEFINE(GMPC_COPYRIGHT,       package_copyright,	["Gmpc's Copyright"])
 
 
 AC_PREREQ(2.59)
