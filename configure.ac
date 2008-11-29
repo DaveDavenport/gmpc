@@ -1,7 +1,8 @@
+AC_INIT([gmpc], [package_version], [qball@sarine.nl])
 #Define the version
 m4_define([package_major_version], [0])
 m4_define([package_minor_version], [16])
-m4_define([package_micro_version], [5])
+m4_define([package_micro_version], [95])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
 
@@ -13,9 +14,8 @@ m4_define([package_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Con
 
 
 
-AC_INIT(src)
 AM_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE([gmpc], [package_version],qball@sarine.nl)
+AM_INIT_AUTOMAKE
 
 
 #Make version and variables available in config.h
