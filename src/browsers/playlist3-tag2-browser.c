@@ -118,6 +118,7 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data);
 static void tag2_connection_changed_foreach(tag_browser *browser, gpointer data);
 static void tag2_init_browser(tag_browser *browser);
 
+
 /**
  * Adds a browser to gmpc's category browser
  */
@@ -725,12 +726,30 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
     for(;iter;iter = g_list_next(iter))
     {
         tag_element *te = iter->data;
-        GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
         g_signal_handlers_block_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
+        g_signal_handlers_block_by_func(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), tag2_changed, te);
         gtk_entry_set_text(GTK_ENTRY(te->sentry), "");
         gtk_widget_hide(te->sentry);
+    }
+    for(iter = g_list_first(browser->tag_lists); iter; iter = g_list_next(iter))
+    {
+        MpdData *data;
+        tag_element *te = iter->data;
+        mpd_database_search_field_start(connection, te->type);
+        
+        data = mpd_database_search_commit(connection);
+        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
+        gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+    }
+                                    		
+    gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(browser->tag_songlist)), NULL);     
+
+
+    for(iter = g_list_first(browser->tag_lists); iter; iter = g_list_next(iter))
+    {
+        tag_element *te = iter->data;
+        g_signal_handlers_unblock_by_func(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), tag2_changed, te);
         g_signal_handlers_unblock_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
-        gtk_tree_selection_unselect_all(sel);
     }
 }
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)

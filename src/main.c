@@ -528,9 +528,9 @@ int main (int argc, char **argv)
                 import_old_db = TRUE;
             }
             /* Make sure old sizes are updated */
-            if(!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 6))
+            if(!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 95))
             {
-                cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 64);
+                cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 32);
             }
             q_free(old_version);
         }
