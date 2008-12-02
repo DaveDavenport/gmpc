@@ -903,7 +903,6 @@
     </child>
   </widget>
   <widget class="GtkWindow" id="message_window">
-    <property name="visible">True</property>
     <property name="title" translatable="yes">Messages</property>
     <property name="default_width">650</property>
     <property name="default_height">150</property>

@@ -187,6 +187,7 @@ void message_window_open(void)
     /* set transient */
     win = glade_xml_get_widget(xml, "message_window");
     gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
+    gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	tree= glade_xml_get_widget(xml, "message_tree");
 	renderer = gtk_cell_renderer_pixbuf_new();
@@ -196,7 +197,8 @@ void message_window_open(void)
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1,_("Message"), renderer, "markup", 2,NULL);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(message_list));
-	
+
+    gtk_widget_show(win);
 	glade_xml_signal_autoconnect(xml);
 }
 
