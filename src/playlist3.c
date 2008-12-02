@@ -835,11 +835,19 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
 pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 {
 	gint position = 0;
-	g_object_get(G_OBJECT(panel), "position", &position, NULL);
+    gint max_size = cfg_get_single_value_as_int_with_default(config, "playlist", "artist-size", 300);
+    gint size;
+    g_object_get(G_OBJECT(panel), "position", &position, NULL);
+    position -= 16;
 	/* force minimum size 16 */
-	if(position -16 < 16) position = 32;
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), position-16);
-	gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
+	if(position < 16) position = 16;
+    size = ((position) > max_size)?max_size:(position);
+
+    if(gmpc_metaimage_get_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"))) != size)
+    {
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),size);
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
+    }
 
 }
 
