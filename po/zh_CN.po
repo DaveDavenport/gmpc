@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-10 18:30+0100\n"
-"PO-Revision-Date: 2008-11-24 13:32+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"PO-Revision-Date: 2008-12-03 12:34+0000\n"
+"Last-Translator: Jonathan Ye <hyqianli@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2008-11-24 14:01+0000\n"
+"X-Launchpad-Export-Date: 2008-12-03 21:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -36,7 +36,7 @@ msgstr "<b><span size=\"x-large\">发生错误</span></b>"
 
 #: ../glade/gmpc.glade.h:3
 msgid "<b>Crossfade:</b>"
-msgstr ""
+msgstr "<b>声音淡入淡出：</b>"
 
 #: ../glade/gmpc.glade.h:4
 msgid "<b>Enable Field:</b>"
@@ -105,12 +105,16 @@ msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
 msgstr ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
 
 #: ../glade/gmpc.glade.h:21
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
+"<span size=\"x-large\"><b>插件</b></span>\n"
+"<i>没有一个被选中</i>"
 
 #: ../glade/gmpc.glade.h:23
 msgid "A_lbum"
@@ -132,7 +136,7 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:29
 msgid "Center playing song"
-msgstr ""
+msgstr "在播放队列居中显示当前播放的歌曲"
 
 #: ../glade/gmpc.glade.h:30
 msgid "Conn_ect"
@@ -156,7 +160,7 @@ msgstr "启用"
 
 #: ../glade/gmpc.glade.h:35
 msgid "Enable crossfade"
-msgstr ""
+msgstr "启用"
 
 #: ../glade/gmpc.glade.h:36
 msgid "Enter your password for: '<hostname>'"
@@ -168,7 +172,7 @@ msgstr "错误对话框"
 
 #: ../glade/gmpc.glade.h:38
 msgid "Error msg"
-msgstr ""
+msgstr "错误消息"
 
 #: ../glade/gmpc.glade.h:39
 msgid "Hide on close"
@@ -203,13 +207,13 @@ msgstr ""
 "专辑\n"
 "标题\n"
 "音轨\n"
-"Name\n"
+"名称\n"
 "流派\n"
 "日期\n"
-"Composer\n"
-"Performer\n"
+"作曲\n"
+"表演者\n"
 "备注\n"
-"Disc"
+"光盘编号"
 
 #: ../glade/gmpc.glade.h:54
 msgid "Password"
@@ -250,11 +254,11 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:63
 msgid "T_rack"
-msgstr ""
+msgstr "音轨(_R)"
 
 #: ../glade/gmpc.glade.h:64
 msgid "Timeout (s):"
-msgstr ""
+msgstr "超时秒数："
 
 #: ../glade/gmpc.glade.h:65
 msgid "Timeout:"
@@ -262,7 +266,7 @@ msgstr "超时："
 
 #: ../glade/gmpc.glade.h:66
 msgid "_Artist"
-msgstr ""
+msgstr "艺术家(_A)"
 
 #: ../glade/gmpc.glade.h:67
 msgid "_Autoconnect"
@@ -290,11 +294,11 @@ msgstr ""
 
 #: ../glade/gmpc.glade.h:73
 msgid "_Title"
-msgstr "标题"
+msgstr "标题(_T)"
 
 #: ../glade/gmpc.glade.h:74
 msgid "_Use Authentication"
-msgstr ""
+msgstr "使用密码验证(_U)"
 
 #: ../glade/gmpc.glade.h:75
 msgid "example"
@@ -340,7 +344,7 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:1
 msgid "<enter playlist name>"
-msgstr ""
+msgstr "<输入播放列表名>"
 
 #: ../glade/playlist3.glade.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
@@ -352,7 +356,7 @@ msgstr "获取帮助"
 
 #: ../glade/playlist3.glade.h:4
 msgid "MPD database is updating."
-msgstr "正在更新MPD数据库"
+msgstr "正在更新MPD媒体库。"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Messages"
@@ -417,7 +421,7 @@ msgstr "连接"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Control"
-msgstr "控制"
+msgstr "控制(_C)"
 
 #: ../glade/playlist3.glade.h:21
 msgid "_Expand Interface"
@@ -429,7 +433,7 @@ msgstr "全屏"
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Go"
-msgstr "转到"
+msgstr "转到(_G)"
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Help"
@@ -538,7 +542,7 @@ msgstr ""
 
 #: ../src/main.c:285 ../src/preferences.c:267
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
 #: ../src/main.c:288
 msgid "Revision"
@@ -708,7 +712,7 @@ msgstr ""
 
 #: ../src/mm-keys.c:72
 msgid "PlayPause"
-msgstr ""
+msgstr "播放/暂停"
 
 #. * MM_STOP
 #: ../src/mm-keys.c:76
@@ -723,37 +727,37 @@ msgstr "快退"
 #. * MM_RANDOM
 #: ../src/mm-keys.c:80
 msgid "Raise window"
-msgstr ""
+msgstr "显示窗口"
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:81
 msgid "Hide window"
-msgstr ""
+msgstr "隐藏窗口"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:82
 msgid "Toggle window"
-msgstr ""
+msgstr "切换窗口"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:83
 msgid "Volume Up"
-msgstr ""
+msgstr "调高音量"
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:84
 msgid "Volume Down"
-msgstr ""
+msgstr "调低音量"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:85
 msgid "Show song"
-msgstr ""
+msgstr "显示提示"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:86
 msgid "Toggle Mute"
-msgstr ""
+msgstr "切换静音"
 
 #: ../src/mm-keys.c:336
 msgid ""
@@ -822,40 +826,40 @@ msgstr "正在连接"
 #. Add all from album
 #: ../src/mpdinteraction.c:1156
 msgid "All from album"
-msgstr ""
+msgstr "此专辑的所有歌曲"
 
 #. Add all from artist
 #: ../src/mpdinteraction.c:1168
 msgid "All from artist"
-msgstr ""
+msgstr "此艺术家的所有歌曲"
 
 #. Add all from genre
 #: ../src/mpdinteraction.c:1178
 msgid "All from genre"
-msgstr ""
+msgstr "此流派的所有歌曲"
 
 #. Add all from file
 #: ../src/mpdinteraction.c:1186
 msgid "All from same directory"
-msgstr ""
+msgstr "此歌曲相同目录下的所有歌曲"
 
 #. Create sub menu
 #. Add
 #: ../src/mpdinteraction.c:1194
 msgid "Add more"
-msgstr ""
+msgstr "添加更多"
 
 #: ../src/playlist3.c:644
 msgid "MPD database is updating"
-msgstr ""
+msgstr "正在更新MPD媒体库。"
 
 #: ../src/playlist3.c:656
 msgid "<b>MPD is updating its database</b>"
-msgstr ""
+msgstr "<b>MPD正在更新媒体库</b>"
 
 #: ../src/playlist3.c:660
 msgid "<b>MPD finished updating its database</b>"
-msgstr ""
+msgstr "<b>MPD更新媒体库完毕</b>"
 
 #: ../src/playlist3.c:861
 msgid "Connected"
@@ -890,11 +894,11 @@ msgstr ""
 
 #: ../src/playlist3.c:1659 ../src/playlist3.c:1672
 msgid "On"
-msgstr ""
+msgstr "打开"
 
 #: ../src/playlist3.c:1659 ../src/playlist3.c:1672
 msgid "Off"
-msgstr ""
+msgstr "关闭"
 
 #: ../src/playlist3.c:1672
 #, c-format
@@ -915,12 +919,12 @@ msgstr ""
 
 #: ../src/playlist3.c:1878
 msgid "changed hostname to:"
-msgstr ""
+msgstr "将主机名称修改为："
 
 #. Update DB
 #: ../src/playlist3.c:1988
 msgid "Update Database"
-msgstr ""
+msgstr "更新媒体库"
 
 #: ../src/playlist3.c:2067
 msgid "By"
@@ -936,7 +940,7 @@ msgstr ""
 
 #: ../src/playlist3.c:2247
 msgid "Interface"
-msgstr ""
+msgstr "界面"
 
 #: ../src/playlist3-messages.c:16
 msgid "Info"
@@ -952,11 +956,11 @@ msgstr "严重"
 
 #: ../src/playlist3-messages.c:195
 msgid "Time"
-msgstr ""
+msgstr "时间"
 
 #: ../src/playlist3-messages.c:197
 msgid "Message"
-msgstr ""
+msgstr "消息"
 
 #: ../src/plugin.c:191
 msgid ""
@@ -1048,7 +1052,7 @@ msgstr ""
 #. 
 #: ../src/url_fetcher.c:274
 msgid "Failed to parse the playlist link"
-msgstr ""
+msgstr "分析播放列表的链接出现错误"
 
 #: ../src/tray-icon2.c:106
 msgid "Pla_ylist"
@@ -1090,7 +1094,7 @@ msgstr ""
 
 #: ../src/setup-assistant.c:126
 msgid "Finish"
-msgstr ""
+msgstr "完成"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:106
 msgid "item"
@@ -1110,7 +1114,7 @@ msgstr "播放队列"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:500
 msgid "Are you sure you want to clear the playlist?"
-msgstr ""
+msgstr "是否确定清空播放列表？"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:737
 #: ../src/browsers/playlist3-current-playlist-browser.c:756
@@ -1122,20 +1126,20 @@ msgstr ""
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:843
 msgid "Crop"
-msgstr ""
+msgstr "Crop"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:863
 msgid "Paste before"
-msgstr ""
+msgstr "粘贴在前面"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:869
 msgid "Paste after"
-msgstr ""
+msgstr "粘贴在后面"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:884
 msgid "Shuffle"
-msgstr ""
+msgstr "打乱顺序"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:899
@@ -1155,10 +1159,12 @@ msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
+"<i>播放列表 <b>“%s”</b> 已存在\n"
+"是否覆盖？</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1154
 msgid "Failed to save the playlist file."
-msgstr ""
+msgstr "保存播放列表失败。"
 
 #: ../src/browsers/playlist3-file-browser.c:105
 #: ../src/browsers/playlist3-file-browser.c:348
@@ -1168,7 +1174,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:188
 msgid "Directories"
-msgstr ""
+msgstr "目录"
 
 #: ../src/browsers/playlist3-file-browser.c:259
 #, c-format
@@ -1197,11 +1203,11 @@ msgstr ""
 #: ../src/browsers/playlist3-file-browser.c:623
 #: ../src/browsers/playlist3-file-browser.c:894
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: ../src/browsers/playlist3-file-browser.c:744
 msgid "Loaded playlist"
-msgstr ""
+msgstr "播放列表已加载"
 
 #: ../src/browsers/playlist3-file-browser.c:1023
 msgid "Added"
@@ -1210,57 +1216,54 @@ msgstr ""
 #: ../src/browsers/playlist3-file-browser.c:1025
 msgid "song"
 msgid_plural "songs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "歌曲"
 
 #: ../src/browsers/playlist3-file-browser.c:1027
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "目录"
 
 #: ../src/browsers/playlist3-file-browser.c:1029
 msgid "playlist"
 msgid_plural "playlists"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "播放列表"
 
 #: ../src/browsers/playlist3-file-browser.c:1052
 #: ../src/browsers/playlist3-file-browser.c:1102
 msgid "Are you sure you want to clear the selected playlist?"
-msgstr ""
+msgstr "是否确定清空选中的播放列表？"
 
 #: ../src/browsers/playlist3-find2-browser.c:142
 msgid "And"
-msgstr ""
+msgstr "与"
 
 #: ../src/browsers/playlist3-find2-browser.c:143
 msgid "Or"
-msgstr ""
+msgstr "或"
 
 #. browser label
 #: ../src/browsers/playlist3-find2-browser.c:252
 msgid "<span size='xx-large' weight='bold'>Search</span>"
-msgstr ""
+msgstr "<span size='xx-large' weight='bold'>搜索</span>"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:256
 msgid "Search in current _play queue"
-msgstr ""
+msgstr "在当前播放队列中搜索(_P)"
 
 #: ../src/browsers/playlist3-find2-browser.c:325
 #: ../src/browsers/playlist3-find2-browser.c:854
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: ../src/browsers/playlist3-metadata-browser.c:267
 #: ../src/browsers/playlist3-metadata-browser.c:303
 msgid "Unavailable"
-msgstr ""
+msgstr "不可用"
 
 #: ../src/browsers/playlist3-metadata-browser.c:297
 msgid "Fetching..."
-msgstr ""
+msgstr "正在获取..."
 
 #. View
 #. *
@@ -1276,7 +1279,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:842
 #: ../src/gob/gmpc-mpddata-treeview.gob:576
 msgid "<b>Artist:</b>"
-msgstr ""
+msgstr "<b>艺术家：</b>"
 
 #. *
 #. * Songs list
@@ -1284,11 +1287,11 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:636
 #: ../src/browsers/playlist3-metadata-browser.c:1418
 msgid "<b>Songs:</b>"
-msgstr ""
+msgstr "<b>歌曲列表：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:638
 msgid "<b>PlayTime:</b>"
-msgstr ""
+msgstr "<b>播放时长：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:641
 #: ../src/browsers/playlist3-metadata-browser.c:850
@@ -1296,7 +1299,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2207
 #: ../src/gob/gmpc-mpddata-treeview.gob:598
 msgid "<b>Genre:</b>"
-msgstr ""
+msgstr "<b>流派：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:643
 #: ../src/browsers/playlist3-metadata-browser.c:854
@@ -1304,7 +1307,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2211
 #: ../src/gob/gmpc-mpddata-treeview.gob:608
 msgid "<b>Date:</b>"
-msgstr ""
+msgstr "<b>日期：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:736
 #: ../src/browsers/playlist3-metadata-browser.c:1207
@@ -1318,31 +1321,31 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2203
 #: ../src/gob/gmpc-mpddata-treeview.gob:588
 msgid "<b>Album:</b>"
-msgstr ""
+msgstr "<b>专辑：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:858
 msgid "<b>Track:</b>"
-msgstr ""
+msgstr "<b>音轨：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:862
 msgid "<b>Composer:</b>"
-msgstr ""
+msgstr "<b>作曲：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:866
 msgid "<b>Performer:</b>"
-msgstr ""
+msgstr "<b>表演者：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:873
 msgid "<b>Dirname:</b>"
-msgstr ""
+msgstr "<b>位置：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:883
 msgid "<b>Extension:</b>"
-msgstr ""
+msgstr "<b>扩展名：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:891
 msgid "<b>Bitrate:</b>"
-msgstr ""
+msgstr "<b>比特率：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:894
 #: ../src/browsers/playlist3-metadata-browser.c:2311
@@ -1355,19 +1358,19 @@ msgstr ""
 #. label
 #: ../src/browsers/playlist3-metadata-browser.c:932
 msgid "Lyric:"
-msgstr ""
+msgstr "歌词："
 
 #: ../src/browsers/playlist3-metadata-browser.c:933
 msgid "<b>Lyric:</b>"
-msgstr ""
+msgstr "<b>歌词：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:974
 msgid "<span  weight='bold'>Songs with same title</span>"
-msgstr ""
+msgstr "<span  weight='bold'>相同标题的歌曲：</span>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1013
 msgid "<span weight=\"bold\">Similar Songs:</span>"
-msgstr ""
+msgstr "<span weight=\"bold\">相似歌曲：</span>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1037
 msgid "<span  weight='bold'>Links</span>"
@@ -1376,30 +1379,28 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:1159
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
-msgstr ""
+msgstr "仅显示前 %i 个结果，请改进你的搜索条件"
 
 #. The label
 #: ../src/browsers/playlist3-metadata-browser.c:1221
 msgid "Find Artist:"
-msgstr ""
+msgstr "搜索艺术家："
 
 #: ../src/browsers/playlist3-metadata-browser.c:1387
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>流派：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1402
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>日期：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1423
 #: ../src/browsers/playlist3-metadata-browser.c:1930
 #: ../src/browsers/playlist3-metadata-browser.c:2223
 msgid "<b>Playtime:</b>"
-msgstr ""
+msgstr "<b>播放时长：</b>"
 
 #. *
 #. * Artist Information Text view
@@ -1413,44 +1414,44 @@ msgstr ""
 #. 
 #: ../src/browsers/playlist3-metadata-browser.c:1466
 msgid "Artist info:"
-msgstr ""
+msgstr "艺术家简介："
 
 #: ../src/browsers/playlist3-metadata-browser.c:1471
 msgid "<b>Artist info:</b>"
-msgstr ""
+msgstr "<b>艺术家简介：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1494
 msgid "<span size=\"x-large\" weight=\"bold\">Albums:</span>"
-msgstr ""
+msgstr "<span size=\"x-large\" weight=\"bold\">专辑列表：</span>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1539
 msgid "<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>"
-msgstr ""
+msgstr "<span size=\"x-large\" weight=\"bold\">相似艺术家：</span>"
 
 #. *
 #. * Album Information
 #. 
 #: ../src/browsers/playlist3-metadata-browser.c:1807
 msgid "Album info:"
-msgstr ""
+msgstr "专辑介绍："
 
 #: ../src/browsers/playlist3-metadata-browser.c:1812
 msgid "<b>Album info:</b>"
-msgstr ""
+msgstr "<b>专辑介绍：</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1864
 msgid "<span size=\"x-large\" weight=\"bold\">Songs:</span>"
-msgstr ""
+msgstr "<span size=\"x-large\" weight=\"bold\">歌曲列表：</span>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1924
 #: ../src/browsers/playlist3-metadata-browser.c:2217
 msgid "<b>Tracks:</b>"
-msgstr ""
+msgstr "<b>音轨数:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1936
 #: ../src/browsers/playlist3-metadata-browser.c:2229
 msgid "<b>Directory:</b>"
-msgstr ""
+msgstr "<b>目录：</b>"
 
 #. *
 #. * Metadata browser link
@@ -1470,26 +1471,26 @@ msgstr ""
 #: ../src/browsers/playlist3-playlist-editor.c:115
 #: ../src/browsers/playlist3-playlist-editor.c:829
 msgid "Playlist Editor"
-msgstr ""
+msgstr "播放列表编辑器"
 
 #: ../src/browsers/playlist3-playlist-editor.c:457
 msgid "New playlist"
-msgstr ""
+msgstr "新建播放列表"
 
 #: ../src/browsers/playlist3-playlist-editor.c:496
 msgid "Rename Playlist"
-msgstr ""
+msgstr "重命名播放列表"
 
 #. delete
 #: ../src/browsers/playlist3-playlist-editor.c:503
 #: ../src/browsers/playlist3-playlist-editor.c:635
 msgid "Rename"
-msgstr ""
+msgstr "重命名"
 
 #. Add
 #: ../src/browsers/playlist3-playlist-editor.c:792
 msgid "Add to playlist"
-msgstr ""
+msgstr "添加到播放列表"
 
 #: ../src/browsers/playlist3-tag2-browser.c:77
 msgid "Tag based browser"
@@ -1497,11 +1498,11 @@ msgstr ""
 
 #: ../src/egg/eggcellrendererkeys.c:27
 msgid "New accelerator..."
-msgstr ""
+msgstr "新快捷键..."
 
 #: ../src/egg/eggcellrendererkeys.c:169 ../src/egg/eggcellrendererkeys.c:170
 msgid "Accelerator key"
-msgstr ""
+msgstr "快捷键"
 
 #: ../src/egg/eggcellrendererkeys.c:179 ../src/egg/eggcellrendererkeys.c:180
 msgid "Accelerator modifiers"
@@ -1509,7 +1510,7 @@ msgstr ""
 
 #: ../src/egg/eggcellrendererkeys.c:188 ../src/egg/eggcellrendererkeys.c:189
 msgid "Accelerator keycode"
-msgstr ""
+msgstr "快捷键值"
 
 #: ../src/egg/eggcellrendererkeys.c:199
 msgid "Accel Mode"
@@ -1517,11 +1518,11 @@ msgstr ""
 
 #: ../src/egg/eggcellrendererkeys.c:200
 msgid "The type of accelerator."
-msgstr ""
+msgstr "快捷键类型。"
 
 #: ../src/egg/eggcellrendererkeys.c:248
 msgid "Disabled"
-msgstr ""
+msgstr "禁用"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:44
 msgid "Markup"
@@ -1529,51 +1530,51 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:45
 msgid "Artist"
-msgstr ""
+msgstr "艺术家"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:46
 msgid "Album"
-msgstr ""
+msgstr "专辑"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:47
 msgid "Title"
-msgstr ""
+msgstr "标题"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:48
 msgid "File"
-msgstr ""
+msgstr "文件"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:49
 msgid "Genre"
-msgstr ""
+msgstr "流派"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:50
 msgid "Track"
-msgstr ""
+msgstr "音轨"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:52
 msgid "Composer"
-msgstr ""
+msgstr "作曲"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:53
 msgid "Performer"
-msgstr ""
+msgstr "表演者"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:54
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:55
 msgid "Duration"
-msgstr ""
+msgstr "时长"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:56
 msgid "Disc"
-msgstr ""
+msgstr "光盘编号"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:57
 msgid "Comment"
-msgstr ""
+msgstr "备注"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:58
 msgid "Icon Id"
@@ -1581,23 +1582,23 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:59
 msgid "Position"
-msgstr ""
+msgstr "位置"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:60
 msgid "Extension"
-msgstr ""
+msgstr "扩展名"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:61
 msgid "Directory"
-msgstr ""
+msgstr "目录"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:565
 msgid "<b>Title:</b>"
-msgstr ""
+msgstr "<b>标题：</b>"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:618
 msgid "<b>Duration:</b>"
-msgstr ""
+msgstr "<b>时长：</b>"
 
 #: ../src/gob/gmpc-profiles.gob:53
 msgid "Added profile"
@@ -1609,52 +1610,52 @@ msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:43 ../src/gob/gmpc-metaimage.gob:736
 msgid "Refetch"
-msgstr ""
+msgstr "重新获取"
 
 #: ../src/gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-metaimage.gob:741
 msgid "Select file"
-msgstr ""
+msgstr "选择文件"
 
 #: ../src/gob/gmpc-meta-text-view.gob:138
 msgid "Failed to open file:"
-msgstr ""
+msgstr "打开文件失败："
 
 #: ../src/gob/gmpc-meta-text-view.gob:138
 msgid "because of encoding issues"
-msgstr ""
+msgstr "由于编码问题"
 
 #: ../src/gob/gmpc-meta-text-view.gob:153
 msgid "Fetching Lyric"
-msgstr ""
+msgstr "正在获取歌词"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Fetching Artist Info"
-msgstr ""
+msgstr "正在获取艺术家简介"
 
 #: ../src/gob/gmpc-meta-text-view.gob:161
 msgid "Fetching Album Info"
-msgstr ""
+msgstr "正在获取专辑介绍"
 
 #: ../src/gob/gmpc-meta-text-view.gob:169
 msgid "Not Available"
-msgstr ""
+msgstr "不可用"
 
 #: ../src/gob/gmpc-meta-text-view.gob:229 ../src/gob/gmpc-metaimage.gob:772
 msgid "Select File"
-msgstr ""
+msgstr "选择文件"
 
 #: ../src/gob/gmpc-meta-text-view.gob:234
 msgid "Text Document"
-msgstr ""
+msgstr "文本文档"
 
 #: ../src/gob/gmpc-meta-text-view.gob:238 ../src/gob/gmpc-metaimage.gob:782
 msgid "All"
-msgstr ""
+msgstr "所有文件"
 
 #: ../src/gob/gmpc-metaimage.gob:777
 msgid "Images"
-msgstr ""
+msgstr "图像文件"
 
 #: ../src/gob/gmpc-stats-label.gob:125
 msgid "<i>Loading</i>"
-msgstr ""
+msgstr "<i>载入中</i>"

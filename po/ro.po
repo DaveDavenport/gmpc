@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-10 18:30+0100\n"
-"PO-Revision-Date: 2008-10-18 09:48+0000\n"
-"Last-Translator: Alexandru Szasz <Unknown>\n"
+"PO-Revision-Date: 2008-11-24 13:31+0000\n"
+"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2008-10-19 20:40+0000\n"
+"X-Launchpad-Export-Date: 2008-12-03 21:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -244,9 +244,8 @@ msgid "Show severity"
 msgstr "Arată severitatea"
 
 #: ../glade/gmpc.glade.h:60
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Arată melodia"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:61
 msgid "Stop playing on exit"
@@ -337,7 +336,11 @@ msgstr "localhost"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Alexandru Szasz https://launchpad.net/~alexxed"
+"  Alexandru Szasz https://launchpad.net/~alexxed\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Alexandru Szasz https://launchpad.net/~alexxed\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/playlist3.glade.h:1
 msgid "<enter playlist name>"
@@ -360,9 +363,8 @@ msgid "Messages"
 msgstr "Mesaje"
 
 #: ../glade/playlist3.glade.h:6
-#, fuzzy
 msgid "Mute"
-msgstr "minut"
+msgstr ""
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:73
@@ -521,14 +523,14 @@ msgstr "Proxy HTTP:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:272 ../src/main.c:274
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:280
 msgid "--version"
 msgstr "--version"
@@ -552,7 +554,7 @@ msgstr ""
 
 #. *
 #. * Allow the user to pick another config file
-#.
+#. 
 #: ../src/main.c:296 ../src/main.c:298
 msgid "--config="
 msgstr "--config="
@@ -583,7 +585,7 @@ msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:328
 msgid "--help"
 msgstr "--help"
@@ -620,8 +622,8 @@ msgstr ""
 "\t\t\t\t\t2 Erori și avertismente\n"
 "\t\t\t\t\t3 Toate mesajele\n"
 "\t--version\t\tAfișează versiunea și revizia svn\n"
-"\t--config=<file>\t\tSetează calea către configurație, implicit ~/.gmpc/gmpc."
-"cfg\n"
+"\t--config=<file>\t\tSetează calea către configurație, implicit "
+"~/.gmpc/gmpc.cfg\n"
 "\t--clean-cover-db\tCurăță fișierul de coperți.\n"
 "\t--disable-plugins\tNu încărca niciun modul.\n"
 "\t--replace\t\tÎnlocuiește sesiunea care rulează cu cea curentă\n"
@@ -633,9 +635,8 @@ msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "Încercați să rulați gmpc cu o versiune incompatibilă de libmpd."
 
 #: ../src/main.c:454
-#, fuzzy
 msgid "Failed to load the configuration system."
-msgstr "Eșec la încărcarea sistemului de configurare"
+msgstr ""
 
 #: ../src/main.c:476
 msgid "Failed to load debug-log file."
@@ -666,9 +667,8 @@ msgid "error code"
 msgstr "cod de eroare"
 
 #: ../src/main.c:1100
-#, fuzzy
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "GMPC are permisiuni insuficiente pentru serverul mpd."
+msgstr ""
 
 #: ../src/main.c:1146
 msgid "<b>MPD versions before 0.13.0 are not supported.</b>"
@@ -696,18 +696,14 @@ msgid "Error Message"
 msgstr "Mesaj de eroare"
 
 #: ../src/metadata.c:715
-#, fuzzy
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
-"S-a adăugat un modul de metadate, gmpc va curăța toate metadatele lipsă din "
-"cache"
 
 #: ../src/metadata.c:1152
-#, fuzzy
 msgid "Metadata Handler"
-msgstr "Furnizor de metadate"
+msgstr ""
 
 #: ../src/misc.c:39
 msgid " Total time: "
@@ -1086,7 +1082,7 @@ msgstr "S-a adăugat un flux"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:206
 msgid "Enter an url"
 msgstr "Introduceți o adresă"
@@ -1099,7 +1095,7 @@ msgstr "Eșec la deschiderea adresei: „%s”"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:274
 msgid "Failed to parse the playlist link"
 msgstr "Eșec la analiza legăturii către lista de redare"
@@ -1118,7 +1114,7 @@ msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:94
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1130,13 +1126,12 @@ msgid "Welcome to GMPC"
 msgstr ""
 
 #: ../src/setup-assistant.c:115
-#, fuzzy
 msgid "Setup connection"
-msgstr "Conexiune"
+msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:124
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1316,19 +1311,17 @@ msgstr "Caută"
 
 #: ../src/browsers/playlist3-metadata-browser.c:267
 #: ../src/browsers/playlist3-metadata-browser.c:303
-#, fuzzy
 msgid "Unavailable"
-msgstr "Nu sunt disponibile"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:297
-#, fuzzy
 msgid "Fetching..."
-msgstr "Se obțin versurile"
+msgstr ""
 
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:406
 #: ../src/browsers/playlist3-metadata-browser.c:670
 #: ../src/browsers/playlist3-metadata-browser.c:2261
@@ -1343,7 +1336,7 @@ msgstr "<b>Artist:</b>"
 
 #. *
 #. * Songs list
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:636
 #: ../src/browsers/playlist3-metadata-browser.c:1418
 msgid "<b>Songs:</b>"
@@ -1412,9 +1405,9 @@ msgstr "<b>Rată de biți:</b>"
 msgid "kbit/sec"
 msgstr "kbit/sec"
 
-#.
+#. 
 #. * Lyrics
-#.
+#. 
 #. label
 #: ../src/browsers/playlist3-metadata-browser.c:932
 msgid "Lyric:"
@@ -1425,14 +1418,12 @@ msgid "<b>Lyric:</b>"
 msgstr "<b>Versuri:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:974
-#, fuzzy
 msgid "<span  weight='bold'>Songs with same title</span>"
-msgstr "<span  weight='bold'>Legături</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1013
-#, fuzzy
 msgid "<span weight=\"bold\">Similar Songs:</span>"
-msgstr "<span  weight='bold'>Legături</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1037
 msgid "<span  weight='bold'>Links</span>"
@@ -1479,7 +1470,7 @@ msgstr "<b>Timp de redare:</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1466
 msgid "Artist info:"
 msgstr "Despre artist:"
@@ -1498,7 +1489,7 @@ msgstr "<span size=\"x-large\" weight=\"bold\">Artiști similari:</span>"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1807
 msgid "Album info:"
 msgstr "Despre album:"
@@ -1523,7 +1514,7 @@ msgstr "<b>Dosar:</b>"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2117
 #: ../src/browsers/playlist3-metadata-browser.c:2395
 msgid "Metadata Browser"
@@ -1531,7 +1522,7 @@ msgstr "Navigator de metadate"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2133
 msgid "Show Current Song"
 msgstr "Arată melodia curentă"
@@ -1653,14 +1644,12 @@ msgid "Position"
 msgstr "Poziție"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:60
-#, fuzzy
 msgid "Extension"
-msgstr "Extensie de navigator"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:61
-#, fuzzy
 msgid "Directory"
-msgstr "dosar"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:565
 msgid "<b>Title:</b>"

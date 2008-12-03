@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-11-10 18:30+0100\n"
-"PO-Revision-Date: 2008-09-03 21:18+0000\n"
+"PO-Revision-Date: 2008-11-24 13:47+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-09-06 17:28+0000\n"
+"X-Launchpad-Export-Date: 2008-12-03 21:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -56,9 +56,8 @@ msgid "<b>Loaded Plugins:</b>"
 msgstr "<b>Geladene Plugins:</b>"
 
 #: ../glade/gmpc.glade.h:8
-#, fuzzy
 msgid "<b>Main:</b>"
-msgstr "<b>Main:</b>"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:9
 msgid "<b>Name:</b>"
@@ -81,9 +80,8 @@ msgid "<b>PopUp</b>"
 msgstr "<b>Popup</b>"
 
 #: ../glade/gmpc.glade.h:14
-#, fuzzy
 msgid "<b>Profile:</b>"
-msgstr "<b>Titel:</b>"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:15
 msgid "<b>Song Markup</b>"
@@ -94,9 +92,8 @@ msgid "<b>Sort by:</b>"
 msgstr "<b>Sortiere nach:</b>"
 
 #: ../glade/gmpc.glade.h:17
-#, fuzzy
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr "<span size=\"large\"><b>Format Regel:</b></span>"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:18
 msgid ""
@@ -127,7 +124,6 @@ msgid "A_lbum"
 msgstr "A_lbum"
 
 #: ../glade/gmpc.glade.h:24
-#, fuzzy
 msgid ""
 "At the notification area icon\n"
 "Upper Left Corner\n"
@@ -135,11 +131,6 @@ msgid ""
 "Lower Left Corner\n"
 "Lower Right Corner"
 msgstr ""
-"Beim Benachrichtigungs-Symbol\n"
-"Oberes linkes Eck\n"
-"Oberes rechtes Eck\n"
-"Unteres linkes Eck\n"
-"Unteres rechtes Eck"
 
 #: ../glade/gmpc.glade.h:29
 msgid "Center playing song"
@@ -154,9 +145,8 @@ msgid "Copyright 2003-2007 Qball Cow"
 msgstr "Copyright 2003-2007 Qball Cow"
 
 #: ../glade/gmpc.glade.h:32
-#, fuzzy
 msgid "Edit Song Formatting"
-msgstr "Lied-Formatierung bearbeiten"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:33
 msgid "Edit _Browser Markup"
@@ -249,9 +239,8 @@ msgid "Show severity"
 msgstr "Anzeigegenauigkeit"
 
 #: ../glade/gmpc.glade.h:60
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Song"
+msgstr ""
 
 #: ../glade/gmpc.glade.h:61
 msgid "Stop playing on exit"
@@ -351,6 +340,11 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
 "  hendrik https://launchpad.net/~hendrik-patchworklady"
 
 #: ../glade/playlist3.glade.h:1
@@ -371,14 +365,12 @@ msgid "MPD database is updating."
 msgstr "MPD database wird aktualisiert."
 
 #: ../glade/playlist3.glade.h:5
-#, fuzzy
 msgid "Messages"
-msgstr "Fehlermeldung"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:6
-#, fuzzy
 msgid "Mute"
-msgstr "Minute"
+msgstr ""
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:73
@@ -413,9 +405,8 @@ msgid "Save Playlist"
 msgstr "Wiedergabeliste speichern"
 
 #: ../glade/playlist3.glade.h:14
-#, fuzzy
 msgid "Show Messages"
-msgstr "Fehlermeldung"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:15 ../src/mm-keys.c:75
@@ -459,9 +450,8 @@ msgid "_Music"
 msgstr "_Musik"
 
 #: ../glade/playlist3.glade.h:26
-#, fuzzy
 msgid "_Option"
-msgstr "_Optionen"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Send Password"
@@ -500,9 +490,8 @@ msgid "Sing or Swing you want"
 msgstr "Singen und Swingen wollt ihr"
 
 #: ../src/edit_markup.c:45
-#, fuzzy
 msgid "The kernel jazz"
-msgstr "Der Kernel-Jazz"
+msgstr ""
 
 #: ../src/edit_markup.c:46
 msgid "01/24"
@@ -540,32 +529,30 @@ msgstr "HTTP-Proxy:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:272 ../src/main.c:274
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:280
 msgid "--version"
 msgstr ""
 
 #: ../src/main.c:282
-#, fuzzy, c-format
+#, c-format
 msgid "Gnome Music Player Client\n"
-msgstr "Gnome Music Player Client\n"
+msgstr ""
 
 #: ../src/main.c:285 ../src/preferences.c:267
-#, fuzzy
 msgid "Version"
-msgstr "Version:\t%s"
+msgstr ""
 
 #: ../src/main.c:288
-#, fuzzy
 msgid "Revision"
-msgstr "Revision:\t%s"
+msgstr ""
 
 #: ../src/main.c:290
 msgid "Website"
@@ -573,7 +560,7 @@ msgstr ""
 
 #. *
 #. * Allow the user to pick another config file
-#.
+#. 
 #: ../src/main.c:296 ../src/main.c:298
 msgid "--config="
 msgstr ""
@@ -591,9 +578,8 @@ msgid "--disable-plugins"
 msgstr ""
 
 #: ../src/main.c:312
-#, fuzzy
 msgid "--replace"
-msgstr "Ersetzen"
+msgstr ""
 
 #: ../src/main.c:316
 msgid "--quit"
@@ -605,13 +591,13 @@ msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:328
 msgid "--help"
 msgstr ""
 
 #: ../src/main.c:330
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -631,33 +617,18 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
-"Gnome Music Player Client\n"
-"Optionen:\n"
-"\t--help:\t\t\tDiese Hilfenachricht.\n"
-"\t--debug-level=<Level>\tDebuginformationen für gmpc.\n"
-"\t\t\t\tLevel:\n"
-"\t\t\t\t\t0: Keine Ausgabe\n"
-"\t\t\t\t\t1: Fehlermeldungen\n"
-"\t\t\t\t\t2: Fehler- + Warnmeldungen\n"
-"\t\t\t\t\t3: Alle Meldungen\n"
-"\t--version:\t\tZeigt die version und die svn-Revision\n"
-"\t--config=<Datei>\t\tKonfigurationsdatei angeben, standard  ~/.gmpc/gmpc."
-"cfg\n"
-"\t--clean-cover-db\tCleanup the cover file.\n"
 
 #: ../src/main.c:405
 msgid "Trying to run gmpc with a wrong libmpd version."
 msgstr "GMPC wurde mit einer falschen Version von libmpd gestartet."
 
 #: ../src/main.c:454
-#, fuzzy
 msgid "Failed to load the configuration system."
-msgstr "Laden des Konfigurationssystems fehlgeschlagen"
+msgstr ""
 
 #: ../src/main.c:476
-#, fuzzy
 msgid "Failed to load debug-log file."
-msgstr "Laden der Debug-Datei fehlgeschlagen"
+msgstr ""
 
 #: ../src/main.c:623
 msgid "Failed to setup libmpd"
@@ -682,28 +653,24 @@ msgid "Please enter your password for: '%s'"
 msgstr "Bitte geben sie ihr Passwort für '%s' ein:"
 
 #: ../src/main.c:1082 ../src/main.c:1114
-#, fuzzy
 msgid "error code"
-msgstr "Fehlercode %i: %s"
+msgstr ""
 
 #: ../src/main.c:1100
-#, fuzzy
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "GMPC hat nicht genügend Rechte am MPD-Server"
+msgstr ""
 
 #: ../src/main.c:1146
 msgid "<b>MPD versions before 0.13.0 are not supported.</b>"
 msgstr ""
 
 #: ../src/main.c:1223
-#, fuzzy
 msgid "<b>Connected to mpd</b>"
-msgstr "<b>Verbunden mit mpd</b>"
+msgstr ""
 
 #: ../src/main.c:1225
-#, fuzzy
 msgid "<b>Disconnected from mpd</b>"
-msgstr "<b>Verbindung zu mpd getrennt</b>"
+msgstr ""
 
 #: ../src/main.c:1260
 msgid "Error occured during operation"
@@ -719,18 +686,14 @@ msgid "Error Message"
 msgstr "Fehlermeldung"
 
 #: ../src/metadata.c:715
-#, fuzzy
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
-"Ein neues Metadaten-Plugin wurde hinzugefügt, gmpc wird nun alle fehlenden "
-"Metadatenaus dem Cache eliminieren"
 
 #: ../src/metadata.c:1152
-#, fuzzy
 msgid "Metadata Handler"
-msgstr "Metadaten-Anbieter"
+msgstr ""
 
 #: ../src/misc.c:39
 msgid " Total time: "
@@ -749,21 +712,18 @@ msgstr[0] "Stunde"
 msgstr[1] "Stunden"
 
 #: ../src/misc.c:64
-#, fuzzy
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "Minute"
-msgstr[1] "Minuten"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/misc.c:463
-#, fuzzy
 msgid "Failed to execute"
-msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
+msgstr ""
 
 #: ../src/mm-keys.c:72
-#, fuzzy
 msgid "PlayPause"
-msgstr "Play/Pause"
+msgstr ""
 
 #. * MM_STOP
 #: ../src/mm-keys.c:76
@@ -777,9 +737,8 @@ msgstr "Schnelles Zurückspulen"
 
 #. * MM_RANDOM
 #: ../src/mm-keys.c:80
-#, fuzzy
 msgid "Raise window"
-msgstr "Künstlerinformation"
+msgstr ""
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:81
@@ -803,9 +762,8 @@ msgstr "Lautstärke verringern"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:85
-#, fuzzy
 msgid "Show song"
-msgstr "Song"
+msgstr ""
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:86
@@ -924,9 +882,8 @@ msgid "Add more"
 msgstr "Mehr hinzufügen"
 
 #: ../src/playlist3.c:644
-#, fuzzy
 msgid "MPD database is updating"
-msgstr "MPD database wird aktualisiert."
+msgstr ""
 
 #: ../src/playlist3.c:656
 msgid "<b>MPD is updating its database</b>"
@@ -1008,9 +965,8 @@ msgid "By"
 msgstr ""
 
 #: ../src/playlist3.c:2074
-#, fuzzy
 msgid "From"
-msgstr "Format"
+msgstr ""
 
 #: ../src/playlist3.c:2130
 msgid "Not Playing"
@@ -1021,9 +977,8 @@ msgid "Interface"
 msgstr "Oberfläche"
 
 #: ../src/playlist3-messages.c:16
-#, fuzzy
 msgid "Info"
-msgstr "_ID3 Informationen"
+msgstr ""
 
 #: ../src/playlist3-messages.c:17
 msgid "Warning"
@@ -1034,14 +989,12 @@ msgid "Critical"
 msgstr "Kritisch"
 
 #: ../src/playlist3-messages.c:195
-#, fuzzy
 msgid "Time"
-msgstr "Zeitüberschreitung:"
+msgstr ""
 
 #: ../src/playlist3-messages.c:197
-#, fuzzy
 msgid "Message"
-msgstr "Fehlermeldung"
+msgstr ""
 
 #: ../src/plugin.c:191
 msgid ""
@@ -1057,9 +1010,8 @@ msgid "Plugins:"
 msgstr "Plugins:"
 
 #: ../src/preferences.c:175
-#, fuzzy
 msgid "<b>Plugins:</b>"
-msgstr "<b>Geladene Plugins:</b>"
+msgstr ""
 
 #: ../src/preferences.c:260
 msgid "Enabled"
@@ -1078,28 +1030,24 @@ msgid "Dummy"
 msgstr "Dummy"
 
 #: ../src/preferences.c:286
-#, fuzzy
 msgid "Browser Extension"
-msgstr "Browsererweiterung"
+msgstr ""
 
 #: ../src/preferences.c:289
-#, fuzzy
 msgid "Metadata Provider"
-msgstr "Metadaten-Anbieter"
+msgstr ""
 
 #: ../src/preferences.c:292
-#, fuzzy
 msgid "Metadata Provider and Browser Extension"
-msgstr "Metadaten-Anbieter und Browser-Erweiterung"
+msgstr ""
 
 #: ../src/preferences.c:295
 msgid "Misc."
 msgstr "Sonstiges"
 
 #: ../src/preferences.c:299
-#, fuzzy
 msgid "Unknown"
-msgstr "Unbekannt"
+msgstr ""
 
 #: ../src/TreeSearchWidget.c:250
 msgid "Find:"
@@ -1111,11 +1059,10 @@ msgid "Added %i %s"
 msgstr "%i %s hinzugefügt"
 
 #: ../src/url_fetcher.c:52 ../src/url_fetcher.c:81
-#, fuzzy
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] "stream"
-msgstr[1] "stream"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/url_fetcher.c:145 ../src/url_fetcher.c:170
 msgid "Added 1 stream"
@@ -1123,7 +1070,7 @@ msgstr "Einen Stream hinzugefügt"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:206
 msgid "Enter an url"
 msgstr "Geben sie eine URL ein"
@@ -1136,20 +1083,18 @@ msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:274
-#, fuzzy
 msgid "Failed to parse the playlist link"
-msgstr "Einrichten von libmpd fehlgeschlagen"
+msgstr ""
 
 #: ../src/tray-icon2.c:106
 msgid "Pla_ylist"
 msgstr "_Wiedergabeliste"
 
 #: ../src/tray-icon2.c:433
-#, fuzzy
 msgid "<span size='large'>Gnome Music Player Client</span>"
-msgstr "<b>Gnome Music Player Client</b>"
+msgstr ""
 
 #: ../src/tray-icon2.c:703
 msgid "Notification"
@@ -1157,7 +1102,7 @@ msgstr "Benachrichtigung"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:94
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1169,13 +1114,12 @@ msgid "Welcome to GMPC"
 msgstr ""
 
 #: ../src/setup-assistant.c:115
-#, fuzzy
 msgid "Setup connection"
-msgstr "Verbindung"
+msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:124
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1187,11 +1131,10 @@ msgid "Finish"
 msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:106
-#, fuzzy
 msgid "item"
 msgid_plural "items"
-msgstr[0] "Titel"
-msgstr[1] "Titel"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:107
 msgid "(Estimation)"
@@ -1200,9 +1143,8 @@ msgstr "(Einschätzung)"
 #. PL3_CURRENT_PLAYLIST,
 #: ../src/browsers/playlist3-current-playlist-browser.c:428
 #: ../src/browsers/playlist3-current-playlist-browser.c:1229
-#, fuzzy
 msgid "Play Queue"
-msgstr "Play/Pause"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:500
 msgid "Are you sure you want to clear the playlist?"
@@ -1255,9 +1197,8 @@ msgstr ""
 "Überschreiben?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1154
-#, fuzzy
 msgid "Failed to save the playlist file."
-msgstr "Einrichten von libmpd fehlgeschlagen"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:105
 #: ../src/browsers/playlist3-file-browser.c:348
@@ -1266,9 +1207,8 @@ msgid "File Browser"
 msgstr "Dateibrowser"
 
 #: ../src/browsers/playlist3-file-browser.c:188
-#, fuzzy
 msgid "Directories"
-msgstr "Verzeichnisse"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:259
 #, c-format
@@ -1290,16 +1230,14 @@ msgstr "Versichnis '%s' rekusriv hinzugefügt"
 #: ../src/browsers/playlist3-metadata-browser.c:1826
 #: ../src/browsers/playlist3-metadata-browser.c:2238
 #: ../src/browsers/playlist3-playlist-editor.c:615
-#, fuzzy
 msgid "Replace"
-msgstr "Ersetzen"
+msgstr ""
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:623
 #: ../src/browsers/playlist3-file-browser.c:894
-#, fuzzy
 msgid "Update"
-msgstr "Aktualisieren"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:744
 msgid "Loaded playlist"
@@ -1310,25 +1248,22 @@ msgid "Added"
 msgstr "Hinzugefügt"
 
 #: ../src/browsers/playlist3-file-browser.c:1025
-#, fuzzy
 msgid "song"
 msgid_plural "songs"
-msgstr[0] "Song"
-msgstr[1] "Song"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1027
-#, fuzzy
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] "Verzeichnis"
-msgstr[1] "Verzeichnis"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1029
-#, fuzzy
 msgid "playlist"
 msgid_plural "playlists"
-msgstr[0] "Wiedergabeliste"
-msgstr[1] "Wiedergabeliste"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1052
 #: ../src/browsers/playlist3-file-browser.c:1102
@@ -1346,9 +1281,8 @@ msgstr "Oder"
 
 #. browser label
 #: ../src/browsers/playlist3-find2-browser.c:252
-#, fuzzy
 msgid "<span size='xx-large' weight='bold'>Search</span>"
-msgstr "<span size='xx-large' weight='bold'>Datenbank durchsuchen</span>"
+msgstr ""
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:256
@@ -1362,25 +1296,22 @@ msgstr "Suche"
 
 #: ../src/browsers/playlist3-metadata-browser.c:267
 #: ../src/browsers/playlist3-metadata-browser.c:303
-#, fuzzy
 msgid "Unavailable"
-msgstr "Nicht verfügbar"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:297
-#, fuzzy
 msgid "Fetching..."
-msgstr "<i>%s wird abgerufen</i>"
+msgstr ""
 
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:406
 #: ../src/browsers/playlist3-metadata-browser.c:670
 #: ../src/browsers/playlist3-metadata-browser.c:2261
-#, fuzzy
 msgid "View"
-msgstr "_Ansicht"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:628
 #: ../src/browsers/playlist3-metadata-browser.c:842
@@ -1390,17 +1321,15 @@ msgstr "<b>Künstler:</b>"
 
 #. *
 #. * Songs list
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:636
 #: ../src/browsers/playlist3-metadata-browser.c:1418
-#, fuzzy
 msgid "<b>Songs:</b>"
-msgstr "<i>Songs:</i>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:638
-#, fuzzy
 msgid "<b>PlayTime:</b>"
-msgstr "<i>Abspielzeit:</i>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:641
 #: ../src/browsers/playlist3-metadata-browser.c:850
@@ -1422,9 +1351,8 @@ msgstr "<b>Datum:</b>"
 #: ../src/browsers/playlist3-metadata-browser.c:1207
 #: ../src/browsers/playlist3-metadata-browser.c:1318
 #: ../src/browsers/playlist3-metadata-browser.c:1730
-#, fuzzy
 msgid "<span size='xx-large' weight='bold'>Collection</span>"
-msgstr "<span size='xx-large' weight='bold'>Wiedergabeliste durchsuchen</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:846
 #: ../src/browsers/playlist3-metadata-browser.c:1879
@@ -1442,18 +1370,16 @@ msgid "<b>Composer:</b>"
 msgstr "<b>Komponist:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:866
-#, fuzzy
 msgid "<b>Performer:</b>"
-msgstr "<b>Aufgefürt von:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:873
 msgid "<b>Dirname:</b>"
 msgstr "<b>Verzeichnisiname:</b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:883
-#, fuzzy
 msgid "<b>Extension:</b>"
-msgstr "<b>Location:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:891
 msgid "<b>Bitrate:</b>"
@@ -1464,34 +1390,29 @@ msgstr "<b>Bitrate:</b>"
 msgid "kbit/sec"
 msgstr "kbit/Sek"
 
-#.
+#. 
 #. * Lyrics
-#.
+#. 
 #. label
 #: ../src/browsers/playlist3-metadata-browser.c:932
-#, fuzzy
 msgid "Lyric:"
-msgstr "_Liedtext"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:933
-#, fuzzy
 msgid "<b>Lyric:</b>"
-msgstr "<b>Disk:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:974
-#, fuzzy
 msgid "<span  weight='bold'>Songs with same title</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1013
-#, fuzzy
 msgid "<span weight=\"bold\">Similar Songs:</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1037
-#, fuzzy
 msgid "<span  weight='bold'>Links</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1159
 #, c-format
@@ -1502,30 +1423,26 @@ msgstr ""
 
 #. The label
 #: ../src/browsers/playlist3-metadata-browser.c:1221
-#, fuzzy
 msgid "Find Artist:"
-msgstr "Künstler"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1387
-#, fuzzy
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
-msgstr[0] "<b>Genre:</b>"
-msgstr[1] "<b>Genre:</b>"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1402
-#, fuzzy
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
-msgstr[0] "<b>Datum:</b>"
-msgstr[1] "<b>Datum:</b>"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1423
 #: ../src/browsers/playlist3-metadata-browser.c:1930
 #: ../src/browsers/playlist3-metadata-browser.c:2223
-#, fuzzy
 msgid "<b>Playtime:</b>"
-msgstr "<i>Abspielzeit:</i>"
+msgstr ""
 
 #. *
 #. * Artist Information Text view
@@ -1536,44 +1453,37 @@ msgstr "<i>Abspielzeit:</i>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1466
-#, fuzzy
 msgid "Artist info:"
-msgstr "Künstlerinformation"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1471
-#, fuzzy
 msgid "<b>Artist info:</b>"
-msgstr "<b>Künstler:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1494
-#, fuzzy
 msgid "<span size=\"x-large\" weight=\"bold\">Albums:</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1539
-#, fuzzy
 msgid "<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1807
-#, fuzzy
 msgid "Album info:"
-msgstr "Albuminformation"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1812
-#, fuzzy
 msgid "<b>Album info:</b>"
-msgstr "<b>Album:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1864
-#, fuzzy
 msgid "<span size=\"x-large\" weight=\"bold\">Songs:</span>"
-msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1924
 #: ../src/browsers/playlist3-metadata-browser.c:2217
@@ -1587,7 +1497,7 @@ msgstr "<b>Verzeichnis:</b>"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2117
 #: ../src/browsers/playlist3-metadata-browser.c:2395
 msgid "Metadata Browser"
@@ -1595,44 +1505,38 @@ msgstr "Metadatenbrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2133
 msgid "Show Current Song"
 msgstr "Zeige aktuelles Lied"
 
 #: ../src/browsers/playlist3-playlist-editor.c:115
 #: ../src/browsers/playlist3-playlist-editor.c:829
-#, fuzzy
 msgid "Playlist Editor"
-msgstr "_Wiedergabeliste"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:457
-#, fuzzy
 msgid "New playlist"
-msgstr "Wiedergabeliste"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:496
-#, fuzzy
 msgid "Rename Playlist"
-msgstr "Wiedergabeliste speichern"
+msgstr ""
 
 #. delete
 #: ../src/browsers/playlist3-playlist-editor.c:503
 #: ../src/browsers/playlist3-playlist-editor.c:635
-#, fuzzy
 msgid "Rename"
-msgstr "Name:"
+msgstr ""
 
 #. Add
 #: ../src/browsers/playlist3-playlist-editor.c:792
-#, fuzzy
 msgid "Add to playlist"
-msgstr "Wiedergabeliste geladen"
+msgstr ""
 
 #: ../src/browsers/playlist3-tag2-browser.c:77
-#, fuzzy
 msgid "Tag based browser"
-msgstr "Tag-Browser"
+msgstr ""
 
 #: ../src/egg/eggcellrendererkeys.c:27
 msgid "New accelerator..."
@@ -1679,9 +1583,8 @@ msgid "Title"
 msgstr "Titel"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:48
-#, fuzzy
 msgid "File"
-msgstr "Titel"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:49
 msgid "Genre"
@@ -1696,18 +1599,16 @@ msgid "Composer"
 msgstr "Komponist"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:53
-#, fuzzy
 msgid "Performer"
-msgstr "Aufgeführt von"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:54
 msgid "Date"
 msgstr "Datum"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:55
-#, fuzzy
 msgid "Duration"
-msgstr "Ausrichtung"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:56
 msgid "Disc"
@@ -1722,67 +1623,56 @@ msgid "Icon Id"
 msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:59
-#, fuzzy
 msgid "Position"
-msgstr "Position:"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:60
-#, fuzzy
 msgid "Extension"
-msgstr "Browsererweiterung"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:61
-#, fuzzy
 msgid "Directory"
-msgstr "Verzeichnis"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:565
-#, fuzzy
 msgid "<b>Title:</b>"
-msgstr "<b>Datum:</b>"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:618
-#, fuzzy
 msgid "<b>Duration:</b>"
-msgstr "<b>Main:</b>"
+msgstr ""
 
 #: ../src/gob/gmpc-profiles.gob:53
-#, fuzzy
 msgid "Added profile"
-msgstr "Profil"
+msgstr ""
 
 #: ../src/gob/gmpc-profiles.gob:61
 msgid "Removed profile"
 msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:43 ../src/gob/gmpc-metaimage.gob:736
-#, fuzzy
 msgid "Refetch"
-msgstr "Erneuern"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:48 ../src/gob/gmpc-metaimage.gob:741
-#, fuzzy
 msgid "Select file"
-msgstr "Wählen Sie eine Datei aus"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:138
-#, fuzzy
 msgid "Failed to open file:"
-msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:138
 msgid "because of encoding issues"
 msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:153
-#, fuzzy
 msgid "Fetching Lyric"
-msgstr "<i>%s wird abgerufen</i>"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
-#, fuzzy
 msgid "Fetching Artist Info"
-msgstr "Künstlerinformation"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:161
 msgid "Fetching Album Info"
@@ -1793,9 +1683,8 @@ msgid "Not Available"
 msgstr "Nicht verfügbar"
 
 #: ../src/gob/gmpc-meta-text-view.gob:229 ../src/gob/gmpc-metaimage.gob:772
-#, fuzzy
 msgid "Select File"
-msgstr "Wählen Sie eine Datei aus"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:234
 msgid "Text Document"
@@ -1806,14 +1695,19 @@ msgid "All"
 msgstr "Alle"
 
 #: ../src/gob/gmpc-metaimage.gob:777
-#, fuzzy
 msgid "Images"
-msgstr "Bild-Typ"
+msgstr ""
 
 #: ../src/gob/gmpc-stats-label.gob:125
-#, fuzzy
 msgid "<i>Loading</i>"
-msgstr "<b>Main:</b>"
+msgstr ""
+
+#~ msgid ""
+#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
+#~ "This might work, but is no longer supported."
+#~ msgstr ""
+#~ "Gmpc ist mit einer mpd-Version kleiner als 0.12.0 verbunden.\n"
+#~ "Dies könnte funktionieren, wird aber nicht länger unterstützt."
 
 #~ msgid "Center opened folder"
 #~ msgstr "Geöffneten Ordner zentrieren"
@@ -1827,27 +1721,11 @@ msgstr "<b>Main:</b>"
 #~ msgid "<span size=\"large\" weight=\"bold\">Not Playing</span>"
 #~ msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
 
-#, fuzzy
-#~ msgid "MPD Server"
-#~ msgstr "MPD's Streaming-Server"
-
-#, fuzzy
-#~ msgid "MPD Version"
-#~ msgstr "Version:\t%s"
-
 #~ msgid "N/A"
 #~ msgstr "nicht verfügbar"
 
-#, fuzzy
-#~ msgid "Metadata"
-#~ msgstr "Metadatenbrowser"
-
 #~ msgid "Current Playlist"
 #~ msgstr "Aktuelle Wiedergabeliste"
-
-#, fuzzy
-#~ msgid "Add to Queue"
-#~ msgstr "Mehr hinzufügen"
 
 #~ msgid "Database Search"
 #~ msgstr "Datenbank durchsuchen"
@@ -1859,26 +1737,6 @@ msgstr "<b>Main:</b>"
 #~ msgid "Playlist Search"
 #~ msgstr "Wiedergabeliste durchsuchen"
 
-#, fuzzy
-#~ msgid "Advanced"
-#~ msgstr "Hinzugefügt"
-
-#, fuzzy
-#~ msgid "The current playlist name"
-#~ msgstr "<geben Sie den Namen der Wiedergabeliste ein>"
-
-#, fuzzy
-#~ msgid "Loading Cover Icon"
-#~ msgstr "Cover-Symbol wird geladen"
-
-#, fuzzy
-#~ msgid "No Cover Icon"
-#~ msgstr "Kein Cover-Symbol"
-
-#, fuzzy
-#~ msgid "Image type"
-#~ msgstr "Bild-Typ"
-
 #~ msgid "Size"
 #~ msgstr "Größe"
 
@@ -1887,10 +1745,6 @@ msgstr "<b>Main:</b>"
 
 #~ msgid "HideOnNA"
 #~ msgstr "VersteckenBeiNA"
-
-#, fuzzy
-#~ msgid "Hide the image when not available"
-#~ msgstr "Bild verstecken, wenn nicht verfügbar"
 
 #~ msgid "DrawBorder"
 #~ msgstr "RahmenZeichnen"
@@ -1907,22 +1761,6 @@ msgstr "<b>Main:</b>"
 #~ msgid "Artist Browser"
 #~ msgstr "Künstlerbrowser"
 
-#, fuzzy
-#~ msgid "artist"
-#~ msgid_plural "artists"
-#~ msgstr[0] "Künstler"
-#~ msgstr[1] "Künstler"
-
-#, fuzzy
-#~ msgid "album"
-#~ msgid_plural "albums"
-#~ msgstr[0] "Album"
-#~ msgstr[1] "Album"
-
-#, fuzzy
-#~ msgid "<span size=\"large\" weight=\"bold\">Paused</span>"
-#~ msgstr "<span size=\"large\" weight=\"bold\">Keine Wiedergabe</span>"
-
 #~ msgid "Filename"
 #~ msgstr "Dateiname"
 
@@ -1932,15 +1770,10 @@ msgstr "<b>Main:</b>"
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Veränderungen sind erst nach einem Reconnect "
 #~ "aktiv</i></span>"
-
-#, fuzzy
-#~ msgid "_Current Song Information"
-#~ msgstr "_Momentane LiedInfomationen"
 
 #~ msgid "Configure tag browsers"
 #~ msgstr "Tag-Browser konfigurieren"
@@ -2032,14 +1865,6 @@ msgstr "<b>Main:</b>"
 #~ msgid "Song Information"
 #~ msgstr "Titel Information"
 
-#, fuzzy
-#~ msgid "Album Info:"
-#~ msgstr "Albuminformation"
-
-#, fuzzy
-#~ msgid "<b>Album Info:</b>"
-#~ msgstr "<b>Album:</b>"
-
 #~ msgid "<b>Album tracks:</b>"
 #~ msgstr "<b>Album-Stücke:</b>"
 
@@ -2082,10 +1907,6 @@ msgstr "<b>Main:</b>"
 #~ msgid "_Previous"
 #~ msgstr "Vo_rige"
 
-#, fuzzy
-#~ msgid "Search in playlist"
-#~ msgstr "In Playlist suchen"
-
 #~ msgid "<b>Statistics:</b>"
 #~ msgstr "<b>Statistiken:</b>"
 
@@ -2113,24 +1934,5 @@ msgstr "<b>Main:</b>"
 #~ msgid "Url:"
 #~ msgstr "URL:"
 
-#, fuzzy
-#~ msgid "%i %s %02i %s %02i %s"
-#~ msgstr "%i Tag%s %02i Stunde%s %02i Minute%s"
-
 #~ msgid "<b>Playlist interface:</b>"
 #~ msgstr "<b>Playlist Interface:</b>"
-
-#~ msgid ""
-#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
-#~ "This might work, but is no longer supported."
-#~ msgstr ""
-#~ "Gmpc ist mit einer mpd-Version kleiner als 0.12.0 verbunden.\n"
-#~ "Dies könnte funktionieren, wird aber nicht länger unterstützt."
-
-#, fuzzy
-#~ msgid ""
-#~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
-#~ "from the cache"
-#~ msgstr ""
-#~ "Ein neues Metadaten-Plugin wurde hinzugefügt, gmpc wird nun alle "
-#~ "fehlenden Metadatenaus dem Cache eliminieren"
