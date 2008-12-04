@@ -399,6 +399,16 @@ int main (int argc, char **argv)
      * initialize gtk
      */
     debug_printf(DEBUG_INFO, "Initializing gtk ");
+
+#ifdef WIN32    
+    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+    url = g_build_filename(packagedir, "data", "gmpc-gtk-win32.rc", NULL);
+    q_free(packagedir);
+    gtk_rc_add_default_file(url);
+    g_free(url);
+#endif
+
     gtk_init (&argc, &argv);
 
     TEC("Initializing gtk")

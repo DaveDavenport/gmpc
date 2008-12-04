@@ -8,6 +8,7 @@ pkgconfig_DATA = gmpc.pc
 
 EXTRA_DIST = 		\
 	gmpc.desktop.in 	\
+	gmpc-gtk-win32.rc\
 	gmpc.pc.in
 
 
