@@ -8,6 +8,8 @@ bin_PROGRAMS=gmpc
 if EGGTRAYICON
 eggtrayicon_SOURCE=egg/eggtrayicon.c
 eggtrayicon_HEADER=egg/eggtrayicon.h
+else 
+eggtrayicon_HEADER=egg/eggtrayicon.h egg/eggtrayicon.c
 endif
 sources=\
 	main.c\
@@ -136,7 +138,7 @@ gmpcinclude_HEADERS = \
 
 gmpcincludedir =$(includedir)/gmpc/
 
-EXTRA_DIST=\
+EXTRA_DIST=$(eggtrayicon_HEADER)\
 		playlist3.h\
 		playlist3-keybindings.h\
 		main.h\
@@ -157,11 +159,12 @@ EXTRA_DIST=\
 		metadata.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
+		egg/eggaccelerators.h\
 		revision.h\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
-		egg/eggcellrendererkeys.h\
-		egg/eggtrayicon.h $(eggtrayicon_HEADER)
+		egg/eggcellrendererkeys.h
+	
 
 DISTCLEANFILES=\
 			   revision.h\

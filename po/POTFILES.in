@@ -37,6 +37,7 @@ src/egg/eggcolumnmodel.c
 src/egg/eggcolumnchooserdialog.c
 src/egg/eggcellrendererkeys.c
 src/egg/eggaccelerators.c
+src/egg/eggtrayicon.c
 
 
 # Gob files
