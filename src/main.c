@@ -902,6 +902,7 @@ int main (int argc, char **argv)
 
     
     
+     xmlCleanupParser();
 	/* cleanup curl */
 	curl_global_cleanup();
 
