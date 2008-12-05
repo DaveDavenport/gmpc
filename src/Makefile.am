@@ -153,7 +153,8 @@ EXTRA_DIST=\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
 		egg/eggcellrendererkeys.h\
-		egg/eggaccelerators.h
+		egg/eggaccelerators.h\
+		gmpc-win32.rc
 
 DISTCLEANFILES=\
 			   revision.h\
