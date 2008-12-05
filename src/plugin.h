@@ -178,4 +178,6 @@ gboolean        gmpc_plugin_get_enabled         (gmpcPlugin *plug);
 
 const char *    gmpc_plugin_get_name            (gmpcPlugin *plug);
 void            gmpc_plugin_status_changed      (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
+gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug);
+
 #endif
