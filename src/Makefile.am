@@ -45,7 +45,7 @@ gmpc_LDADD=\
 
 
 if HAVE_RC
-gmpc_SOURCES=$(sources) gmpc.rc
+gmpc_SOURCES=$(sources) gmpc-win32.rc
 else
 gmpc_SOURCES=$(sources)
 endif
