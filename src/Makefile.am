@@ -5,7 +5,10 @@ CONF_VERSION=0
 SUBDIRS=gob
 
 bin_PROGRAMS=gmpc
-
+if EGGTRAYICON
+eggtrayicon_SOURCE=egg/eggtrayicon.c
+eggtrayicon_HEADER=egg/eggtrayicon.h
+endif
 sources=\
 	main.c\
 	plugin.c\
@@ -38,7 +41,7 @@ sources=\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
 	sexy-icon-entry.c\
-	edit_markup.c
+	edit_markup.c $(eggtrayicon_SOURCE)
 
 gmpc_LDADD=\
 			   gob/libcwidgets.la
@@ -158,7 +161,7 @@ EXTRA_DIST=\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
 		egg/eggcellrendererkeys.h\
-		egg/eggaccelerators.h
+		egg/eggtrayicon.h $(eggtrayicon_HEADER)
 
 DISTCLEANFILES=\
 			   revision.h\
