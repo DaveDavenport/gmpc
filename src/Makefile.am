@@ -6,7 +6,7 @@ SUBDIRS=gob
 
 bin_PROGRAMS=gmpc
 
-sources=\
+gmpc_SOURCES=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -44,10 +44,8 @@ gmpc_LDADD=\
 			   gob/libcwidgets.la
 
 
-if HAVE_RC
-gmpc_SOURCES=$(sources) gmpc-win32.rc
-else
-gmpc_SOURCES=$(sources)
+if WIN32 
+gmpc_LDADD += gmpc-win32.o
 endif
 
 BUILT_SOURCES=\
@@ -59,9 +57,6 @@ BUILT_SOURCES=\
 	@touch $@
 
 %.o: %.rc
-	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
-
-%.rc.o:
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 revisiont.h:
