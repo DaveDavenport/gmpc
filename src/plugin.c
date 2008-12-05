@@ -276,6 +276,7 @@ gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
 gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {
 #ifdef WIN32
+    debug_printf(DEBUG_INFO, "path: %s\n", plug->path);
     return g_strdup(plug->path);
 #else
     gchar *url = NULL;
@@ -300,7 +301,7 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
         url = g_strdup(plug->path);
     }
     g_strfreev(items);
-    printf("Found url: %s\n", url);
+    debug_printf(DEBUG_INFO, "path: %s\n",url);
     return url;
 #endif
 }
