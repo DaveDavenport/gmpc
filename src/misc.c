@@ -691,8 +691,10 @@ gchar ** tokenize_string(const gchar *string)
 	int bpos = 0;		/* begin position of the cur. token 	*/
     int bstop = 0;
 	int tokens=0;
+    int length = 0;
 	if(string == NULL) return NULL;
-	for(i=0; i <= strlen(string);i++)
+    length = strlen(string);
+	for(i=0; i <= length;i++)
 	{
 		/* check for opening  [( */
 		if((br !=0 || bpos == i) && (string[i] == '(' || string[i] == '[' || string[i] == '{')){

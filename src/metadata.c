@@ -145,9 +145,11 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         if(edited->album)
         {
             int i,j=0,depth=0;
+            int length;
             char *album = edited->album;
             edited->album = g_malloc0((strlen(album)+1)*sizeof(char)); 
-            for(i=0;i< strlen(album);i++)
+            length = strlen(album);
+            for(i=0;i< length;i++)
             {
                 if(album[i] == '(') depth++;
                 else if (album[i] == ')')depth--;
@@ -164,8 +166,10 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         {
             int i,j=0,depth=0;
             char *title = edited->title;
+            int length;
             edited->title = g_malloc0((strlen(title)+1)*sizeof(char)); 
-            for(i=0;i< strlen(title);i++)
+            length = strlen(title);
+            for(i=0;i< length;i++)
             {
                 if(title[i] == '(') depth++;
                 else if (title[i] == ')')depth--;
