@@ -76,7 +76,7 @@ static gboolean search_keep_open = FALSE;
 
 static GQueue *cut_queue = NULL;
 
-GRegex *search_regex = NULL;
+static GRegex *search_regex = NULL;
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
@@ -260,6 +260,7 @@ void pl3_current_playlist_destroy()
 		pl3_cp_tree =  NULL;
 	}
     if(search_regex) g_regex_unref(search_regex);
+    search_regex = NULL;
 }
 
 

@@ -58,7 +58,7 @@ static void pl3_find2_save_myself(void);
 int pl3_find2_last_entry = MPD_TAG_ITEM_ANY;
 
 
-
+static GRegex *search_regex = NULL;
 typedef struct {
     GtkWidget *hbox;
     GtkWidget *combo;
@@ -88,6 +88,7 @@ static GtkListStore 		*pl3_find2_autocomplete = NULL;
 static GList 				*criterias 				= NULL;
 static GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
 
+#define QUERY_ENTRY MPD_TAG_NUM_OF_ITEM_TYPES
 static void pl3_find2_fill_combo()
 {
 	GtkTreeIter iter;
@@ -103,6 +104,8 @@ static void pl3_find2_fill_combo()
 		gtk_list_store_append(pl3_find2_combo_store, &iter);
 		gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
 	}
+    gtk_list_store_append(pl3_find2_combo_store, &iter);
+    gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
 }
 
 static void pl3_find2_browser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
@@ -217,6 +220,8 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
  */
 static void pl3_find2_browser_init()
 {
+    int i=0;
+    GString *string = NULL;
 	GtkWidget *frame, *event, *vbox, *label;
     GtkWidget  *pl3_find2_sw = NULL;
     GtkWidget *hbox = NULL;
@@ -304,6 +309,19 @@ static void pl3_find2_browser_init()
 
     /** Add a default item */
     pl3_find2_browser_add_crit();
+
+
+    string = g_string_new("(");
+    for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES;i++)
+    {
+        g_string_append(string, mpdTagItemKeys[i]);
+        if(i< (MPD_TAG_NUM_OF_ITEM_TYPES-1))
+            g_string_append(string,"|");
+    }
+    g_string_append(string, ")[ ]*[=:][ ]*");
+    printf("regex search string: %s\n", string->str);
+    search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
+    g_string_free(string, TRUE);
 }
 
 static void pl3_find2_browser_selected(GtkWidget *container)
@@ -392,24 +410,63 @@ static unsigned long pl3_find2_browser_view_playlist()
             if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
             {
                 int num_field;
-                gchar **splitted = NULL;
-                int i =0;
-                splitted = tokenize_string(name);// g_strsplit(name, " ",0);
-                for(i=0;splitted && splitted[i];i++)
-                {                                                          
-                    if(!found)
+
+                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
+                if(num_field == QUERY_ENTRY)
+                {
+                    gchar **text = g_regex_split(search_regex, name, 0);
+                    int i= 0;
+                    for(i=0; text && text[i] ;i++)
                     {
-                        mpd_playlist_search_start(connection, FALSE);
-                        found = TRUE;
+                        int type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
+                        if(type != MPD_TAG_NOT_FOUND && text[i+1])
+                        {
+                            gchar **split = tokenize_string(text[i+1]);
+                            int j;
+                            for(j=0;split && split[j];j++)
+                            {
+                                if(!found){
+                                    mpd_playlist_search_start(connection, FALSE);
+                                    found= 1;
+                                }
+                                mpd_playlist_search_add_constraint(connection, type,split[j]);
+                            }
+                            if(split)g_strfreev(split);
+
+                        }
+                        else 
+                        {
+                            gchar **split = tokenize_string(text[i]);
+                            int j;
+                            for(j=0;split && split[j];j++)
+                            {
+                                if(!found){
+                                    mpd_playlist_search_start(connection, FALSE);
+                                    found = 1;
+                                }
+                                mpd_playlist_search_add_constraint(connection,MPD_TAG_ITEM_ANY,split[j]);
+                            }
+                            if(split)g_strfreev(split);
+                        }
                     }
-                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
-
-                    mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+                }else{
+                    gchar ** splitted = tokenize_string(name);
+                    int i =0;
+                    for(i=0;splitted && splitted[i];i++)
+                    {                                                          
+                        if(!found)
+                        {
+                            mpd_playlist_search_start(connection, FALSE);
+                            found = TRUE;
+                        }
+                        mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+                    }
+                    if(splitted)
+                        g_strfreev(splitted);
                 }
-
                 //mpd_playlist_search_add_constraint(connection, num_field, name);
-                if(splitted)
-                    g_strfreev(splitted);
+
+
                 {
                     GtkTreeIter iter;
                     gboolean found2 = FALSE;
@@ -496,23 +553,58 @@ static unsigned long pl3_find2_browser_view_database()
         const gchar *name = gtk_entry_get_text(GTK_ENTRY(cs->entry));
         if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(cs->combo), &cc_iter) && name && name[0] != '\0')
         {
-            gchar **splitted = NULL;
             int i =0;
-
             gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
-
-            splitted = tokenize_string(name);//g_strsplit(name, " ",0);
-            for(i=0;splitted && splitted[i];i++)
+            if(num_field == QUERY_ENTRY)
             {
-                if(!found)
+                gchar **text = g_regex_split(search_regex, name, 0);
+                for(i=0; text && text[i] ;i++)
                 {
-                    mpd_database_search_start(connection, FALSE);
-                    found = TRUE;
+                    int type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
+                    if(type != MPD_TAG_NOT_FOUND && text[i+1])
+                    {
+                        gchar **split = tokenize_string(text[i+1]);
+                        int j;
+                        for(j=0;split && split[j];j++)
+                        {
+                            if(!found){
+                                mpd_playlist_search_start(connection, FALSE);
+                                found= 1;
+                            }
+                            mpd_playlist_search_add_constraint(connection, type,split[j]);
+                        }
+                        if(split)g_strfreev(split);
+                    }
+                    else 
+                    {
+                        gchar **split = tokenize_string(text[i]);
+                        int j;
+                        for(j=0;split && split[j];j++)
+                        {
+                            if(!found){
+                                mpd_playlist_search_start(connection, FALSE);
+                                found = 1;
+                            }
+                            mpd_playlist_search_add_constraint(connection,MPD_TAG_ITEM_ANY,split[j]);
+                        }
+                        if(split)g_strfreev(split);
+                    }
                 }
-                mpd_database_search_add_constraint(connection, num_field, splitted[i]);
+            }else{
+                gchar **splitted = NULL;
+                splitted = tokenize_string(name);
+                for(i=0;splitted && splitted[i];i++)
+                {
+                    if(!found)
+                    {
+                        mpd_database_search_start(connection, FALSE);
+                        found = TRUE;
+                    }
+                    mpd_database_search_add_constraint(connection, num_field, splitted[i]);
+                }
+                if(splitted)
+                    g_strfreev(splitted);
             }
-            if(splitted)
-                g_strfreev(splitted);
             /* hack to correctly update the autocompletion. damn I must write something that does this more efficient */
             {
                 GtkTreeIter iter;
@@ -949,6 +1041,8 @@ static void pl3_find2_browser_destroy(void)
     g_object_unref(pl3_find2_store2);
     pl3_find2_store2 = NULL;
   }
+  if(search_regex) g_regex_unref(search_regex);
+  search_regex = NULL;
 }
 
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
