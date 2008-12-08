@@ -272,3 +272,36 @@ gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
     }
     return TRUE;
 }
+
+gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
+{
+#ifdef WIN32
+    debug_printf(DEBUG_INFO, "path: %s\n", plug->path);
+    return g_strdup(plug->path);
+#else
+    gchar *url = NULL;
+    gchar **items = g_strsplit(plug->path, G_DIR_SEPARATOR_S, -1);
+    int i = 0;
+    int has_lib = 0;
+    /* count number of items, and check for the lib entry */
+    for(i = 0; items && items[i];i++) {
+        if(strcmp(items[i], "lib")==0) {
+            g_free(items[i]);
+            items[i] = g_strdup("share");
+            has_lib = 1;
+        }
+    }
+    printf("path items: %i\n", i);
+    if(has_lib == 1) {
+        gchar *temp = g_build_pathv(G_DIR_SEPARATOR_S, items); 
+        url = g_strdup_printf("%c%s%c", G_DIR_SEPARATOR, temp, G_DIR_SEPARATOR);
+        g_free(temp);
+    }else {
+        /* Ok it is a homedir */
+        url = g_strdup(plug->path);
+    }
+    g_strfreev(items);
+    debug_printf(DEBUG_INFO, "path: %s\n",url);
+    return url;
+#endif
+}

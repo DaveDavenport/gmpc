@@ -11,7 +11,8 @@ eggtrayicon_HEADER=egg/eggtrayicon.h
 else 
 eggtrayicon_HEADER=egg/eggtrayicon.h egg/eggtrayicon.c
 endif
-sources=\
+
+gmpc_SOURCES=\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -49,10 +50,8 @@ gmpc_LDADD=\
 			   gob/libcwidgets.la
 
 
-if HAVE_RC
-gmpc_SOURCES=$(sources) gmpc.rc
-else
-gmpc_SOURCES=$(sources)
+if WIN32 
+gmpc_LDADD += gmpc-win32.o
 endif
 
 BUILT_SOURCES=\
@@ -64,9 +63,6 @@ BUILT_SOURCES=\
 	@touch $@
 
 %.o: %.rc
-	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
-
-%.rc.o:
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 revisiont.h:
@@ -164,7 +160,8 @@ EXTRA_DIST=$(eggtrayicon_HEADER)\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
 		egg/eggcellrendererkeys.h
-	
+		egg/eggaccelerators.h\
+		gmpc-win32.rc
 
 DISTCLEANFILES=\
 			   revision.h\

@@ -145,9 +145,11 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         if(edited->album)
         {
             int i,j=0,depth=0;
+            int length;
             char *album = edited->album;
             edited->album = g_malloc0((strlen(album)+1)*sizeof(char)); 
-            for(i=0;i< strlen(album);i++)
+            length = strlen(album);
+            for(i=0;i< length;i++)
             {
                 if(album[i] == '(') depth++;
                 else if (album[i] == ')')depth--;
@@ -164,8 +166,10 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
         {
             int i,j=0,depth=0;
             char *title = edited->title;
+            int length;
             edited->title = g_malloc0((strlen(title)+1)*sizeof(char)); 
-            for(i=0;i< strlen(title);i++)
+            length = strlen(title);
+            for(i=0;i< length;i++)
             {
                 if(title[i] == '(') depth++;
                 else if (title[i] == ')')depth--;
@@ -916,6 +920,33 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 
     return ret;
 }
+
+static gchar * strip_invalid_chars(gchar *input)
+{
+    int i = 0;
+    int length = strlen(input);
+    if(input == NULL) return NULL;
+    for(i=0;i<length;i++)
+    {
+        switch(input[i])
+        {
+            case ':':
+            case '\\':
+            case '/':
+            case ';':
+            case '*':
+            case '?':
+            case '\"':
+            case '<':
+            case '>':
+            case '|':
+                input[i] = ' ';
+            default:
+                break;
+        }
+    }
+    return input;
+}
  /**
   * Helper function for storing metadata
   */
@@ -933,6 +964,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
         /* Convert it so the filesystem likes it */
         /* TODO: Add error checking */
         dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,NULL); 
+        dirname = strip_invalid_chars(dirname);
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,NULL);
         if(g_file_test(retv, G_FILE_TEST_EXISTS) == FALSE) {
             if(g_mkdir_with_parents(retv, 0755) < 0) {
@@ -962,6 +994,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
             filename = g_strdup_printf("%s_LYRIC.%s", temp,extention);
             g_free(temp);
         }
+        filename = strip_invalid_chars(filename);
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,filename,NULL);
         g_free(filename);
         g_free(dirname);

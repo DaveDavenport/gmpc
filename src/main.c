@@ -24,6 +24,7 @@
 #include <strings.h>
 
 #include <curl/curl.h>
+#include <libxml/parser.h>
 
 /** Gtk/glib glade stuff */
 #include <gtk/gtk.h>
@@ -385,6 +386,11 @@ int main (int argc, char **argv)
      */
     debug_printf(DEBUG_INFO,"Initializing threading");
 
+    /**
+     * Init threads
+     */
+    xmlInitParser();
+
     /** Check if threading is supported. */	
     /** initialize it */
     if(!g_thread_supported())g_thread_init (NULL);
@@ -408,6 +414,7 @@ int main (int argc, char **argv)
     gtk_rc_add_default_file(url);
     g_free(url);
 #endif
+
 
     gtk_init (&argc, &argv);
 
@@ -895,6 +902,7 @@ int main (int argc, char **argv)
 
     
     
+     xmlCleanupParser();
 	/* cleanup curl */
 	curl_global_cleanup();
 

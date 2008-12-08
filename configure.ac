@@ -43,6 +43,8 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 
 AC_PROG_LIBTOOL
 AC_PROG_CC
+LT_AC_PROG_RC
+AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_RC
 PKG_PROG_PKG_CONFIG
 
@@ -53,9 +55,6 @@ AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-
-AM_CONDITIONAL(HAVE_RC, test "x$RC" != "xno")
-
 
 # Checks for libraries.
 AC_SUBST(GLIB_REQUIRED)
