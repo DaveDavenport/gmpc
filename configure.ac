@@ -79,36 +79,6 @@ if test x${enable_configdir} = xyes; then
 	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
 fi
 
-# Session support             
-AC_ARG_ENABLE(sm,
-              [  --disable-sm				Disable Session Support.],
-              [ case "${enableval}" in
-                    yes)    enable_sm=yes;;
-                     no)    enable_sm=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
-                esac],
-              [enable_sm=yes])
-
-# sm
-if test x${enable_sm} = xyes; then
-	PKG_CHECK_MODULES([sm], sm)
-	AC_SUBST(sm_LIBS)
-	AC_SUBST(sm_CFLAGS)
-	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
-
-fi
-# Multimedia keys
-AC_ARG_ENABLE([mmkeys],
-              [  --disable-mmkeys			Disable multimedia keys support.],
-              [ case "${enableval}" in
-                    yes)    enable_mmkeys=yes;;
-                     no)    enable_mmkeys=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
-                esac],
-              [enable_mmkeys=yes])
-if test x${enable_mmkeys} = xyes; then
-	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
-fi
 
 
 # Maintainer mode
@@ -239,6 +209,45 @@ AC_SUBST(macint_CFLAGS)
 AC_SUBST(macint_LIBS)
 fi
 
+##
+# These depend on if we are or are not on windows or osX
+##
+# Session support             
+if test x$macosx = xno && test x$win32 = xno ; then
+AC_ARG_ENABLE(sm,
+              [  --disable-sm				Disable Session Support.],
+              [ case "${enableval}" in
+                    yes)    enable_sm=yes;;
+                     no)    enable_sm=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
+                esac],
+              [enable_sm=yes])
+
+# sm
+if test x${enable_sm} = xyes; then
+	PKG_CHECK_MODULES([sm], sm)
+	AC_SUBST(sm_LIBS)
+	AC_SUBST(sm_CFLAGS)
+	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
+
+fi
+# Multimedia keys
+AC_ARG_ENABLE([mmkeys],
+              [  --disable-mmkeys			Disable multimedia keys support.],
+              [ case "${enableval}" in
+                    yes)    enable_mmkeys=yes;;
+                     no)    enable_mmkeys=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
+                esac],
+              [enable_mmkeys=yes])
+if test x${enable_mmkeys} = xyes; then
+	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
+fi
+else
+# force them off
+enable_mmkeys=no;
+enable_sm=no;
+fi
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
 
