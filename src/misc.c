@@ -454,7 +454,11 @@ void open_uri(const gchar *uri)
 {
 	int result;
 	gchar *command;
+#ifdef WIN32
+	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "start '%s'");
+#else
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
+#endif
 	command	= g_strdup_printf(browser_command, uri);
 	result = g_spawn_command_line_async (command, NULL);
 	if(!result)
