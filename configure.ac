@@ -218,6 +218,7 @@ case "$CC" in
 esac
 
 win32=no
+macosx=no
 case $host in
   *-*-mingw32* | *-*-windows)
     win32=yes
@@ -226,8 +227,17 @@ case $host in
   *-*-cygwin*)
     win32=yes
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
+  *-apple-darwin*)
+    macosx=yes;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
+AM_CONDITIONAL(OSX, test x$macosx = xyes)
+if test x$macosx = xyes; then
+# mac integration 
+PKG_CHECK_MODULES([macint],ige-mac-integration)
+AC_SUBST(macint_CFLAGS)
+AC_SUBST(macint_LIBS)
+fi
 
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)

@@ -31,6 +31,11 @@
 #include "gmpc-clicklabel.h"
 #include <gmpc-liststore-sort.h>
 #include "vala/gmpc-progress.h"
+#ifdef OSX
+#include "ige-mac-menu.h"
+#include "ige-mac-dock.h"
+#include "ige-mac-bundle.h"
+#endif
 
 /**
  * Default keybinding settings are defined here:
@@ -993,6 +998,43 @@ void create_playlist3 ()
 
 	}
 
+#ifdef OSX
+	{
+		GdkPixbuf *pb = NULL;
+		IgeMacDock      *dock;
+		IgeMacMenuGroup *group;
+		//ige_mac_menu_install_key_handler (); 
+		ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (glade_xml_get_widget(pl3_xml,"menubar1")));
+		gtk_widget_hide(GTK_WIDGET (glade_xml_get_widget(pl3_xml,"menubar1")));
+		gtk_widget_set_no_show_all(GTK_WIDGET (glade_xml_get_widget(pl3_xml,"menubar1")),TRUE);
+
+		group = ige_mac_menu_add_app_menu_group ();
+		ige_mac_menu_add_app_menu_item  (group,
+				GTK_MENU_ITEM (glade_xml_get_widget(pl3_xml, "about1")),
+				NULL);
+
+		group = ige_mac_menu_add_app_menu_group ();
+		ige_mac_menu_add_app_menu_item  (group,
+				GTK_MENU_ITEM (glade_xml_get_widget(pl3_xml,"save1")),
+				NULL);
+		dock = ige_mac_dock_get_default ();// ige_mac_dock_new ();
+	
+		   g_signal_connect (dock,
+		   "clicked",
+		   G_CALLBACK (pl3_toggle_hidden),
+		   NULL);
+
+		g_signal_connect (dock,
+				"quit-activate",
+				G_CALLBACK (main_quit),
+				NULL);
+		pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc", 64, 0,NULL);
+		if(pb)
+		{
+			ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+		}
+	}
+#endif
 
 
 
@@ -1552,8 +1594,9 @@ static void playlist_zoom_level_changed()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "header_box"));
 	/** Menu Bar */
+/*
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
-	/** BUTTON BOX */
+*/	/** BUTTON BOX */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
@@ -1625,6 +1668,10 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 	 */
 	if(what&MPD_CST_STATE)
 	{
+#ifdef OSX
+		IgeMacDock      *dock = ige_mac_dock_get_default();
+		GdkPixbuf *pb;
+#endif
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_PLAYER_PLAY:
@@ -1654,8 +1701,18 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
                     gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 
                     g_free(markup);
-                    break;
-                }
+
+
+#ifdef OSX
+		    pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-play", 64, 0,NULL);
+		    if(pb){
+			    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+		    }else {
+			printf("failed to get icon\n");
+			}	
+#endif
+		    break;
+		}
 			case MPD_PLAYER_PAUSE:
 				/** Update menu and button images */
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
@@ -1669,6 +1726,15 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 				 */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
+#ifdef OSX
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-pause", 64, 0,NULL);
+				if(pb){
+					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+				}else {
+					printf("failed to get icon\n");
+				}
+#endif
+
 				break;
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
@@ -1681,6 +1747,15 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
+#ifdef OSX
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc", 64, 0,NULL);
+				if(pb){
+					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+				}else {
+					printf("failed to get icon\n");
+				}
+#endif
+
 		}
 		playlist3_update_header();
 	}
