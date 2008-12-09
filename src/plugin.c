@@ -291,7 +291,6 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
             has_lib = 1;
         }
     }
-    printf("path items: %i\n", i);
     if(has_lib == 1) {
         gchar *temp = g_build_pathv(G_DIR_SEPARATOR_S, items); 
         url = g_strdup_printf("%c%s%c", G_DIR_SEPARATOR, temp, G_DIR_SEPARATOR);

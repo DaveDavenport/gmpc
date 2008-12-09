@@ -653,7 +653,6 @@ int pl3_hide()
 static void pl3_updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = _("MPD database is updating");
-    printf("update changed callback %i %p\n",updating, pl3_xml );
 	if(pl3_xml != NULL)
 	{
 		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);

@@ -297,7 +297,6 @@ void tray_icon2_create_tooltip(void)
                     g_source_remove(tray_icon2_tooltip_timeout);
                 }
                 tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
-                printf("not closing tooltip\n");
                 return;
             }
         }

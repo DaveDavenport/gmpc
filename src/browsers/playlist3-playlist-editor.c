@@ -147,7 +147,6 @@ static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, G
 	{
 		MpdData *data ;
 		gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), &iter, PL_NAME, &pl_path, -1);
-        printf("grabbing %s\n", pl_path);
         if(pl_path){
             data = mpd_database_get_playlist_content(connection, pl_path); 
             gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data);		
@@ -193,7 +192,6 @@ void playlist_editor_fill_list(void)
 {
     if(!mpd_server_has_idle(connection))
     {
-        printf("has no idle\n");
         playlist_editor_fill_list_real();
     }
 }
@@ -223,17 +221,13 @@ loop:
                         gchar *mtime = NULL;
                         gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), &iter, PL_MTIME, &mtime, -1);
                         gtk_list_store_set(playlist_editor_store, &iter, PL_MTIME, data->playlist->mtime, -1);
-                        printf("compare %s-%s\n", name,data->playlist->path);
                         /* do nothing */
                         path = gtk_tree_model_get_path(GTK_TREE_MODEL(playlist_editor_store), &iter);
                         valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(playlist_editor_store), &iter);
                         if(path) {
-                            printf("path\n");
                             if(gtk_icon_view_path_is_selected(GTK_ICON_VIEW(playlist_editor_icon_view), path))
                             {
-                                printf("is selected: %s\n",name);
                                 if(mtime == NULL || data->playlist->mtime == NULL || strcmp(mtime, data->playlist->mtime) == 0) {
-                                    printf("playlist updated\n");
                                     /* update view */
                                     playlist_editor_browser_playlist_editor_changed(playlist_editor_icon_view, NULL);
                                 }
@@ -245,14 +239,12 @@ loop:
                     else if (val > 0) {
                         GtkTreeIter niter;
                         GdkPixbuf *pb = NULL; 
-                        printf("add-before %s-%s\n", name,data->playlist->path);
                         pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "media-playlist", 64, 0,NULL);
                         gtk_list_store_insert_before(playlist_editor_store,&niter, &iter);
                         gtk_list_store_set(playlist_editor_store, &niter,PL_NAME, data->playlist->path, PL_MTIME, data->playlist->mtime, PL_IMAGE, pb, -1);
                         if(pb)
                             g_object_unref(pb);
                     }else{
-                        printf("remove: %s\n", name);
                     /*
                         GtkTreeIter niter;
                         GdkPixbuf *pb = NULL; 
@@ -801,7 +793,6 @@ static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, v
 {
     if(what&MPD_CST_STORED_PLAYLIST)
     {
-        printf("Failed list\n");
         playlist_editor_fill_list_real();
     }
 }

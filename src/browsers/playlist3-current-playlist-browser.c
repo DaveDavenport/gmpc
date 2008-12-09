@@ -146,7 +146,6 @@ static void pl3_cp_init()
             g_string_append(string,"|");
     }
     g_string_append(string, ")[ ]*[=:][ ]*");
-    printf("regex search string: %s\n", string->str);
     search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
     g_string_free(string, TRUE);
 }

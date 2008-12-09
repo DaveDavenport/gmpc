@@ -52,7 +52,6 @@ class Gmpc:Idle from G:Object
             if(gs->id == id)
             {
                 self->_priv->signals = g_list_delete_link(self->_priv->signals, first);
-                printf("remove signal: %i\n", id);
                 g_free(gs);
                 return;
             }
