@@ -1320,38 +1320,29 @@ void create_playlist3 ()
 
 				if(action == KB_ACTION_PLAY) {
 					item = glade_xml_get_widget(pl3_xml,"menu_play"); 
-				} else 
-					if(action == KB_ACTION_STOP) {
+				} else if(action == KB_ACTION_STOP) {
 						item = glade_xml_get_widget(pl3_xml,"menu_stop"); 
-					} else
-						if(action == KB_ACTION_NEXT) {
-							item = glade_xml_get_widget(pl3_xml,"menu_next"); 
-						} else
-							if(action == KB_ACTION_PREV) {
-								item = glade_xml_get_widget(pl3_xml,"menu_prev"); 
-							}
-						if(action == KB_ACTION_FULLSCREEN) {
-							item = glade_xml_get_widget(pl3_xml,"fullscreen2"); 
-						} else 
-							if(action == KB_ACTION_INTERFACE_EXPAND) {
-								item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
-							} else
-								if(action == KB_ACTION_INTERFACE_COLLAPSE) {
-									item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
-								} else 
-									if(action == KB_ACTION_REPEAT) {
-										item = glade_xml_get_widget(pl3_xml,"menu_repeat"); 
-									} else
-										if(action == KB_ACTION_RANDOM) {
-											item = glade_xml_get_widget(pl3_xml,"menu_random"); 
+				} else if(action == KB_ACTION_NEXT) {
+					item = glade_xml_get_widget(pl3_xml,"menu_next"); 
+				} else if(action == KB_ACTION_PREV) {
+					item = glade_xml_get_widget(pl3_xml,"menu_prev"); 
+				} else if(action == KB_ACTION_FULLSCREEN) {
+					item = glade_xml_get_widget(pl3_xml,"fullscreen2"); 
+				} else if(action == KB_ACTION_INTERFACE_EXPAND) {
+					item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
+				} else if(action == KB_ACTION_INTERFACE_COLLAPSE) {
+					item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
+				} else if(action == KB_ACTION_REPEAT) {
+					item = glade_xml_get_widget(pl3_xml,"menu_repeat"); 
+				} else if(action == KB_ACTION_RANDOM) {
+					item = glade_xml_get_widget(pl3_xml,"menu_random"); 
+				} else if (action == KB_ACTION_TOGGLE_MUTE) {
+					item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle"); 
+				}
 
-										} else 
-											if (action == KB_ACTION_TOGGLE_MUTE) {
-												item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle"); 
-											}
-										if(item){
-											gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
-										}
+				if(item){
+					gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+				}
 			}
 			conf_iter = conf_iter->next;
 		}
