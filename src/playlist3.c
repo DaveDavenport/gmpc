@@ -1020,7 +1020,7 @@ void create_playlist3 ()
 	
 		   g_signal_connect (dock,
 		   "clicked",
-		   G_CALLBACK (pl3_toggle_hidden),
+		   G_CALLBACK (create_playlist3),
 		   NULL);
 
 		g_signal_connect (dock,
@@ -1707,8 +1707,8 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 		    if(pb){
 			    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 		    }else {
-			printf("failed to get icon\n");
-			}	
+			debug_printf(DEBUG_ERROR,"failed to get icon\n");
+		    }	
 #endif
 		    break;
 		}
@@ -1730,7 +1730,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 				if(pb){
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 				}else {
-					printf("failed to get icon\n");
+					debug_printf(DEBUG_ERROR,"failed to get icon\n");
 				}
 #endif
 
@@ -1751,7 +1751,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 				if(pb){
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 				}else {
-					printf("failed to get icon\n");
+					debug_printf(DEBUG_ERROR,"failed to get icon\n");
 				}
 #endif
 
