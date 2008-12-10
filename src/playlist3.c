@@ -663,11 +663,11 @@ static void pl3_updating_changed(MpdObj *mi, int updating)
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id,mesg);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
 
-			playlist3_show_error_message(_("<b>MPD is updating its database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("MPD is updating its database"), ERROR_INFO);
 		}
 		else if(updating_id > 0) 
 		{
-			playlist3_show_error_message(_("<b>MPD finished updating its database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("MPD finished updating its database"), ERROR_INFO);
             updating_id = 0;
         }
 	}
@@ -1851,7 +1851,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
         struct tm *tm;
         time_t up = (time_t) mpd_server_get_database_update_time(connection);
         tm = localtime(&up);
-        if(strftime(date_buffer, 128,_("<b>MPD Database refreshed at:</b> %c"),tm))
+        if(strftime(date_buffer, 128,_("MPD Database refreshed at: %c"),tm))
         {
               playlist3_show_error_message(date_buffer, ERROR_INFO);
         }

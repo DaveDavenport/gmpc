@@ -1155,13 +1155,14 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
 		 */
     if(connected && !mpd_server_check_version(mi, 0,13,0))
     {	
+		gchar *value = g_markup_printf_escaped("<b>%s</b>", _("MPD versions before 0.13.0 are not supported"));
         /* disable user connect ! */
         gmpc_connected = FALSE;
         mpd_disconnect(mi);
         /* Give error */
-        printf("Wrong mpd version\n");
-        playlist3_show_error_message(_("<b>MPD versions before 0.13.0 are not supported.</b>"), ERROR_CRITICAL);
-    }
+        playlist3_show_error_message(value, ERROR_CRITICAL);
+		g_free(value);
+	}
     /* Remove timeout */
     if(connected)
     {
@@ -1237,9 +1238,9 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     */
     if(connected)
     {
-        playlist3_show_error_message(_("<b>Connected to mpd</b>"), ERROR_INFO);
+        playlist3_show_error_message(_("Connected to mpd"), ERROR_INFO);
     } else {
-        playlist3_show_error_message(_("<b>Disconnected from mpd</b>"), ERROR_INFO);
+        playlist3_show_error_message(_("Disconnected from mpd"), ERROR_INFO);
     }
 
     if(!connected) 

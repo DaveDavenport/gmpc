@@ -59,13 +59,13 @@ static void pref_plugin_changed(void)
 				if(plugins[id]->plugin_type != GMPC_INTERNALL && !(plugins[id]->id&PLUGIN_ID_INTERNALL))
 				{
 					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
-							plugins[id]->name,
+							N_(plugins[id]->name),
 							plugins[id]->version[0],plugins[id]->version[1], plugins[id]->version[2]);
 				}
 				else
 				{
 					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
-							_(plugins[id]->name));
+							N_(plugins[id]->name));
 				}
 
 				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
@@ -77,9 +77,11 @@ static void pref_plugin_changed(void)
 		}
 		else if(id == PLUGIN_STATS)
 		{
+			gchar *value = g_markup_printf_escaped("<span size=\"xx-large\" weight=\"bold\">%s</span>", _("Plugins"));
 			gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, 
 						"plugin_label")),
-					_("<span size=\"xx-large\"><b>Plugins</b></span>"));
+						value);
+			g_free(value);
 
 			plugin_stats_construct(glade_xml_get_widget(xml_preferences_window,
 						"plugin_container"));
@@ -171,8 +173,12 @@ void create_preferences_window()
 	/* plugins */
 	{
 		GtkTreeIter iter;
+		gchar *value = g_markup_printf_escaped("<b>%s:</b>", _("Plugins"));
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0,PLUGIN_STATS, 1, _("<b>Plugins:</b>"), -1);
+		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 
+				0,PLUGIN_STATS, 
+				1, value, -1);
+		g_free(value);
 		for(i=0; i< num_plugins; i++)
 		{
 			if(plugins[i]->pref != NULL && plugins[i]->id&PLUGIN_ID_MARK)
