@@ -599,6 +599,7 @@ static void info2_add_table_item_widget(GtkWidget *table,char *name, GtkWidget *
 
 static GtkWidget *info2_create_artist_button(mpd_Song *song)
 {
+	gchar *markup;
 	GtkWidget *metaimage,*vbox,*ali,*label,*button,*event,*table;
 	int i = 0;
 
@@ -625,22 +626,33 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	 *  Artist 
 	 */
 	if(song->artist) {
-		info2_add_table_item(table,_("<b>Artist:</b>"),song->artist,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>",_("Artist"));
+		info2_add_table_item(table,markup,song->artist,i,FALSE);
+		g_free(markup);
 		i++;
 	}
 	if(mpd_server_check_version(connection, 0,13,0) && song->artist)
     {
+		markup = g_markup_printf_escaped("<b>%s:</b>",_("Songs"));
+
         /**
          * Songs list 
          */
-        info2_add_table_item_widget(table,_("<b>Songs:</b>"),gmpc_stats_label_new(ARTIST_NUM_SONGS,song),i);
+        info2_add_table_item_widget(table,markup,gmpc_stats_label_new(ARTIST_NUM_SONGS,song),i);
         i++;
-        info2_add_table_item_widget(table,_("<b>PlayTime:</b>"),gmpc_stats_label_new(ARTIST_PLAYTIME_SONGS,song),i);
+		g_free(markup);
+		markup = g_markup_printf_escaped("<b>%s:</b>",_("Playtime"));
+		info2_add_table_item_widget(table,markup,gmpc_stats_label_new(ARTIST_PLAYTIME_SONGS,song),i);
+		g_free(markup);
         i++;
     }
-    info2_add_table_item_widget(table,_("<b>Genre:</b>"),gmpc_stats_label_new(ARTIST_GENRES_SONGS,song),i);
+	markup = g_markup_printf_escaped("<b>%s:</b>",_("Genre"));
+    info2_add_table_item_widget(table,markup,gmpc_stats_label_new(ARTIST_GENRES_SONGS,song),i);
+	g_free(markup);
     i++;
-    info2_add_table_item_widget(table,_("<b>Date:</b>"),gmpc_stats_label_new(ARTIST_DATES_SONGS,song),i);
+	markup = g_markup_printf_escaped("<b>%s:</b>",_("Date"));
+    info2_add_table_item_widget(table,markup,gmpc_stats_label_new(ARTIST_DATES_SONGS,song),i);
+	g_free(markup);
     i++;
 
 	gtk_box_pack_start(GTK_BOX(vbox), table, TRUE,TRUE,0);
@@ -733,7 +745,9 @@ void info2_fill_song_view(mpd_Song *song)
 	{
 		button = gtk_button_new();
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
+		markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Collection"));
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
@@ -839,38 +853,54 @@ void info2_fill_song_view(mpd_Song *song)
 	gtk_table_set_col_spacings(GTK_TABLE(table2), 6);
 	gtk_table_attach(GTK_TABLE(table), table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_EXPAND|GTK_FILL,0,0);
 	if(song->artist) {
-		info2_add_table_item(table2,_("<b>Artist:</b>"),song->artist,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Artist"));
+		info2_add_table_item(table2,markup,song->artist,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->album) {
-		info2_add_table_item(table2,_("<b>Album:</b>"),song->album,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
+		info2_add_table_item(table2,markup,song->album,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->genre) {
-		info2_add_table_item(table2,_("<b>Genre:</b>"),song->genre,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
+		info2_add_table_item(table2,markup,song->genre,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->date) {
-		info2_add_table_item(table2,_("<b>Date:</b>"),song->date,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
+		info2_add_table_item(table2,markup,song->date,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->track) {
-		info2_add_table_item(table2,_("<b>Track:</b>"),song->track,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Track"));
+		info2_add_table_item(table2,markup,song->track,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->composer) {
-		info2_add_table_item(table2,_("<b>Composer:</b>"),song->composer,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Composer"));
+		info2_add_table_item(table2,markup,song->composer,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 	if(song->performer) {
-		info2_add_table_item(table2,_("<b>Performer:</b>"),song->performer,i,TRUE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Performer"));
+		info2_add_table_item(table2,markup,song->performer,i,TRUE);
+		g_free(markup);
 		i++;
 	}
 
 	if(song->file) {
 		/*** Dirname */		
 		char *dirname = g_path_get_dirname(song->file);
-		info2_add_table_item(table2,_("<b>Dirname:</b>"),dirname,i,TRUE);
+		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
+		info2_add_table_item(table2,markup,dirname,i,TRUE);
+		g_free(markup);	
 		i++;
 		q_free(dirname);
 	}
@@ -878,9 +908,12 @@ void info2_fill_song_view(mpd_Song *song)
 	if(song->file &&  strncmp(song->file, "http://",7)) {
 		char *ext = NULL;
 		int j = strlen(song->file);
+		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Extension"));
+
 		for(;j>0&&song->file[j] != '.';j--);
 		ext= g_strdup(&(song->file)[j+1]);
-		info2_add_table_item(table2,_("<b>Extension:</b>"),ext,i,TRUE);
+		info2_add_table_item(table2,markup,ext,i,TRUE);
+		g_free(markup);
 		i++;
 		q_free(ext);
 	}
@@ -888,7 +921,9 @@ void info2_fill_song_view(mpd_Song *song)
     {
         gchar *value;
         label = gtk_label_new("");
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Bitrate:</b>"));
+		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Bitrate"));
+        gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
         value = g_strdup_printf("%i %s",mpd_status_get_bitrate(connection),_("kbit/sec"));
@@ -929,8 +964,10 @@ void info2_fill_song_view(mpd_Song *song)
 	 * Lyrics
 	 */
 	/* label */
-	expander= gtk_label_new(_("Lyric:"));
-	gtk_label_set_markup(GTK_LABEL(expander), _("<b>Lyric:</b>"));
+	expander= gtk_label_new("");
+	markup = g_markup_printf_escaped("<b>%s:</b>", _("Lyrics"));
+	gtk_label_set_markup(GTK_LABEL(expander), markup);
+	g_free(markup);
 	gtk_misc_set_alignment(GTK_MISC(expander), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(expander), 8,0);
 
@@ -971,7 +1008,9 @@ void info2_fill_song_view(mpd_Song *song)
                     (GtkTreeModel *)gmpc_mpddata_model_new());
             gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
             label = gtk_label_new("");
-            gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Songs with same title</span>"));
+			markup = g_markup_printf_escaped("<span  weight='bold'>%s:</span>", _("Songs with same title"));
+            gtk_label_set_markup(GTK_LABEL(label),markup);
+			g_free(markup);
             gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
             gtk_misc_set_padding(GTK_MISC(label), 8,3);
             gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
@@ -1010,7 +1049,9 @@ void info2_fill_song_view(mpd_Song *song)
 		ret = gmpc_meta_watcher_get_meta_path(gmw,song, META_SONG_SIMILAR, &similar);
 		/* set the label */
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), _("<span weight=\"bold\">Similar Songs:</span>"));
+		markup = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Similar songs"));
+		gtk_label_set_markup(GTK_LABEL(label),markup); 
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
@@ -1034,7 +1075,9 @@ void info2_fill_song_view(mpd_Song *song)
 	if(song->artist && song->title)
 	{
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label),_("<span  weight='bold'>Links</span>"));
+		markup = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Links"));
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label), 8,3);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
@@ -1191,6 +1234,7 @@ static void info2_fill_view()
 {
 	GtkWidget *hbox, *label, *button;
 	GtkWidget *artist_table = NULL;
+	gchar *markup;
 	/* disable the current songs thingy */
 	show_current_song = FALSE;
 	info2_prepare_view();
@@ -1204,7 +1248,9 @@ static void info2_fill_view()
 	/** add buttons */
 	button = gtk_button_new();
 	label = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
+	markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Collection"));
+	gtk_label_set_markup(GTK_LABEL(label),markup);
+	g_free(markup);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
@@ -1285,6 +1331,7 @@ static int info2_sort_year(GtkWidget *a, GtkWidget *b)
 
 void info2_fill_artist_view(const char *artist)
 {
+	gchar *markup;
 	GtkWidget *expander,*hbox, *vbox,*button,*table,*table2,*gmtv,*ali,*label;
 	int i=0,items=0;
 	GString *string = NULL;
@@ -1315,7 +1362,9 @@ void info2_fill_artist_view(const char *artist)
 		/* collections button */
 		button = gtk_button_new();
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
+		markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Collection"));
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
@@ -1415,12 +1464,16 @@ void info2_fill_artist_view(const char *artist)
 		if(stats)
 		{
 			buffer = g_strdup_printf("%i", stats->numberOfSongs);
-			info2_add_table_item(table2,_("<b>Songs:</b>"),buffer,i,TRUE);
+			markup = g_markup_printf_escaped("<b>%s:</b>", _("Songs"));
+			info2_add_table_item(table2,markup,buffer,i,TRUE);
+			g_free(markup);
 			i++;
 			q_free(buffer); 
 			/* Playtime */
 			buffer = format_time_real(stats->playTime,"");
-			info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i,TRUE);
+			markup = g_markup_printf_escaped("<b>%s:</b>", _("Playtime"));
+			info2_add_table_item(table2,markup,buffer,i,TRUE);
+			g_free(markup);
 			i++;                                                    	
 			q_free(buffer); 
 			mpd_database_search_free_stats(stats);
@@ -1468,7 +1521,9 @@ void info2_fill_artist_view(const char *artist)
 	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
 	/* expander */
 	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
-	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Artist info:</b>"));
+	markup = g_markup_printf_escaped("<b>%s:</b>", _("Artist information"));
+	gtk_expander_set_label(GTK_EXPANDER(expander), markup);
+	g_free(markup);
 	/* query */
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song2);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
@@ -1491,7 +1546,9 @@ void info2_fill_artist_view(const char *artist)
 	{
         GList *node,*list = NULL;
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Albums:</span>"));
+		markup = g_markup_printf_escaped("<span size=\"x-large\" weight=\"bold\">%s:</span>", _("Albums"));
+		gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label),8,8);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE, FALSE,0);
@@ -1536,7 +1593,9 @@ void info2_fill_artist_view(const char *artist)
 		ret = gmpc_meta_watcher_get_meta_path(gmw,song2, META_ARTIST_SIMILAR, &similar);
 		/* set the label */
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Similar Artists:</span>"));
+		markup = g_markup_printf_escaped("<span size=\"x-large\" weight=\"bold\">%s:</span>", _("Similar Artists"));
+		gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
@@ -1727,7 +1786,9 @@ void info2_fill_album_view(const char *artist,const char *album)
 	button = gtk_button_new();
 	label = gtk_label_new("");
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-	gtk_label_set_markup(GTK_LABEL(label),_("<span size='xx-large' weight='bold'>Collection</span>"));
+	markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Collection"));
+	gtk_label_set_markup(GTK_LABEL(label),markup);
+	g_free(markup);
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(info2_fill_view), NULL);
 	gtk_container_add(GTK_CONTAINER(button),label);
@@ -1809,7 +1870,9 @@ void info2_fill_album_view(const char *artist,const char *album)
 	gtk_text_view_set_left_margin(GTK_TEXT_VIEW(gmtv), 12);
 	/* expander */
 	gtk_expander_set_use_markup(GTK_EXPANDER(expander),TRUE);
-	gtk_expander_set_label(GTK_EXPANDER(expander), _("<b>Album info:</b>"));
+	markup = g_markup_printf_escaped("<b>%s:</b>", _("Album information"));
+	gtk_expander_set_label(GTK_EXPANDER(expander), markup);
+	g_free(markup);
 	/* query */
 	gmpc_meta_text_view_query_text_from_song(GMPC_META_TEXT_VIEW(gmtv), song2);
 	gtk_container_add(GTK_CONTAINER(expander), gmtv);
@@ -1861,7 +1924,9 @@ void info2_fill_album_view(const char *artist,const char *album)
 	 * label
 	 */
 	label= gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(label), _("<span size=\"x-large\" weight=\"bold\">Songs:</span>"));
+	markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s:</span>",_("Songs"));
+	gtk_label_set_markup(GTK_LABEL(label), markup);
+	g_free(markup);
 
 	gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 	gtk_misc_set_padding(GTK_MISC(label),8,8);
@@ -1876,7 +1941,9 @@ void info2_fill_album_view(const char *artist,const char *album)
 		int tracks = 0;
 		/** Album name */
 		if(song2->album){
-			info2_add_table_item(table2, _("<b>Album:</b>"), song2->album, i,TRUE);
+			markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
+			info2_add_table_item(table2, markup, song2->album, i,TRUE);
+			g_free(markup);
 			i++;
 		}
 		/**
@@ -1892,7 +1959,9 @@ void info2_fill_album_view(const char *artist,const char *album)
 		}
 		if(string->len >0)
 		{
-			info2_add_table_item(table2, _("<b>Genre:</b>"), string->str, i,TRUE);
+			markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
+			info2_add_table_item(table2, markup, string->str, i,TRUE);
+			g_free(markup);
 			i++;
 		}
 		g_string_free(string, TRUE);
@@ -1916,24 +1985,32 @@ void info2_fill_album_view(const char *artist,const char *album)
 			ttime += data2->song->time;
 
 			if(song->date) {
-				info2_add_table_item(table2, _("<b>Date:</b>"), song->date, i,TRUE);
+				markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
+				info2_add_table_item(table2, markup, song->date, i,TRUE);
+				g_free(markup);
 				i++;
 			}
 			if(tracks) {
 				char *str = g_strdup_printf("%i", tracks);
-				info2_add_table_item(table2, _("<b>Tracks:</b>"), str, i,TRUE);
+				markup = g_markup_printf_escaped("<b>%s:</b>", _("Tracks"));
+				info2_add_table_item(table2, markup, str, i,TRUE);
+				g_free(markup);
 				q_free(str);
 				i++;
 			}
 			if(ttime) {
 				char *buffer = format_time_real(ttime,"");
-				info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i,TRUE);
+				markup = g_markup_printf_escaped("<b>%s:</b>", _("Playtime"));
+				info2_add_table_item(table2,markup,buffer,i,TRUE);
+				g_free(markup);
 				i++;                                                    	
 				q_free(buffer); 
 			}
 			if(song->file) {
 				char *filename = g_path_get_dirname(song->file);
-				info2_add_table_item(table2, _("<b>Directory:</b>"), filename, i,TRUE);
+				markup = g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
+				info2_add_table_item(table2, markup, filename, i,TRUE);
+				g_free(markup);
 				q_free(filename);
 				i++;
 			}
@@ -2165,6 +2242,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	int tracks = 0,i=0;
 	long unsigned ttime = 0;
 	GtkWidget *table2= NULL;
+	gchar *markup;
 
 	mpd_database_search_start(connection, TRUE);
 	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
@@ -2200,33 +2278,45 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	gtk_table_set_col_spacings(GTK_TABLE(table2),6);
 	i=0;
 	if(song->album) {
-		info2_add_table_item(table2,_("<b>Album:</b>"), song->album,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
+		info2_add_table_item(table2,markup, song->album,i,FALSE);
+		g_free(markup);
 		i++;
 	}
 	if(song->genre) {
-		info2_add_table_item(table2, _("<b>Genre:</b>"), song->genre,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
+		info2_add_table_item(table2, markup, song->genre,i,FALSE);
+		g_free(markup);
 		i++;
 	}
 	if(song->date) {
-		info2_add_table_item(table2, _("<b>Date:</b>"), song->date,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
+		info2_add_table_item(table2, markup, song->date,i,FALSE);
+		g_free(markup);
 		i++;
         g_object_set_data_full(G_OBJECT(event), "date", g_strdup(song->date),g_free);
 	}
 	if(tracks) {
 		char *str = g_strdup_printf("%i", tracks);
-		info2_add_table_item(table2, _("<b>Tracks:</b>"), str,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Tracks"));
+		info2_add_table_item(table2, markup, str,i,FALSE);
+		g_free(markup);
 		q_free(str);
 		i++;
 	}
 	if(ttime) {
 		char *buffer = format_time_real(ttime,"");
-		info2_add_table_item(table2,_("<b>Playtime:</b>"),buffer,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Playtime"));
+		info2_add_table_item(table2,markup,buffer,i,FALSE);
+		g_free(markup);
 		i++;                                                    	
 		q_free(buffer); 
 	}
 	if(song->file) {
 		gchar *dirname = g_path_get_dirname(song->file);
-		info2_add_table_item(table2,_("<b>Directory:</b>"),dirname,i,FALSE);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
+		info2_add_table_item(table2,markup,dirname,i,FALSE);
+		g_free(markup);
 		i++;
 		q_free(dirname);
 	}

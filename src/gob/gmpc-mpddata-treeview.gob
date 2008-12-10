@@ -527,8 +527,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private void enable_tooltip(self)
     {
-	GdkScreen *screen;
-	GdkColormap *colormap;
+		gchar *markup = NULL;
+		GdkScreen *screen;
+		GdkColormap *colormap;
         GtkWidget *treeview = GTK_WIDGET(self);
         GtkWidget *table = gtk_table_new(6,2, FALSE);
         GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
@@ -562,8 +563,10 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Title:</b>"));
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Title"));
+        gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,0,1,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_title = gtk_label_new("n/a");
         gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_title), 0.0,0.5);
@@ -573,7 +576,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Artist:</b>"));
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Artist"));
+		gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,1,2,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_artist = gtk_label_new("n/a");
@@ -585,7 +590,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Album:</b>"));
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
+        gtk_label_set_markup(GTK_LABEL(label),markup);
+		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,2,3,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_album = gtk_label_new("n/a");
@@ -595,8 +602,10 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Genre:</b>"));
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
+        gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_genre = gtk_label_new("n/a"); 
         gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_genre), 0.0,0.5);
@@ -605,7 +614,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Date:</b>"));
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
+		gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_date = gtk_label_new("n/a"); 
@@ -615,7 +626,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
         label = gtk_label_new("");
         gtk_size_group_add_widget(group, label);
-        gtk_label_set_markup(GTK_LABEL(label), _("<b>Duration:</b>"));
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Duration"));
+        gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
         gtk_table_attach(GTK_TABLE(table), label, 0,1,5,6,GTK_FILL, GTK_FILL,0,0);
         self->_priv->tw_length = gtk_label_new("n/a"); 
