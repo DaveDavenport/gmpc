@@ -155,52 +155,75 @@ static void create_gmpc_paths(void);
 
 #ifndef WIN32
 /**
- * Handle incoming (IPC) messages. this allows for a basic: "gmpc-remote" application.
- * See source tarball
+ * Handle incoming (IPC) messages.
+ * GMPC ships a utility called "gmpc-remote" that uses this interface. 
  */
 static void bacon_on_message_received(const char *message, gpointer data)
 {
     debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
     if(message)
     {
-        if(strcmp(message,"QUIT") == 0)
+	    /**
+	     * Makes mpd quit.
+	     */
+	    if(strcmp(message,"QUIT") == 0)
         {
             printf("I've been told to quit, doing this now\n");
             main_quit();
             return;
         }
+		/**
+		 * Gives play command
+		 */
         else if(strcmp(message, "PLAY") == 0)
         {
             play_song();
             return;
         }
+		/** 
+		 * Give pause command
+		 */
         else if (strcmp(message, "PAUSE") == 0)
         {
             play_song();
             return;
         }
+		/**
+		 * Give next command
+		 */
         else if (strcmp(message, "NEXT") == 0)
         {
             next_song();
             return;
         }
+		/**
+		 * Give previous command
+		 */
         else if (strcmp(message, "PREV") == 0)
         {
             prev_song();
             return;
         }
+		/** 
+		 * Stop playback
+		 */
         else if (strcmp(message, "STOP") == 0)
         {
             stop_song();
             return;
         }
+		/**
+		 * pass gmpc an url to parse with the url_parser.
+		 */
         else if (strncmp(message, "STREAM ", 7) == 0)
         {
             url_start_real(&message[7]);
             return;
         }
     }
-    /* popup, if message was not handled.*/
+    /**
+	 * Bring gmpc to front, as default action.
+	 */
    create_playlist3(); 
 }
 #endif
@@ -208,7 +231,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
 int main (int argc, char **argv)
 {
     int i;
-
 
     /* config keys */
     int     clean_config        = FALSE;
@@ -236,7 +258,8 @@ int main (int argc, char **argv)
 
 
     /* *
-     * Set the debug level
+     * Set the default debug level
+	 * Depending if it is a git build or not
      */
 	if(revision && revision[0] != '\0') {
 		/* We run a svn version, so we want more default debug output */
@@ -254,7 +277,6 @@ int main (int argc, char **argv)
     bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     textdomain (GETTEXT_PACKAGE);
-
 #endif
     gtk_set_locale();
 
@@ -302,30 +324,52 @@ int main (int argc, char **argv)
             {
                 config_path = g_strdup(&argv[i][strlen(_("--config="))]);
             }
+			/**
+			 * Starts gmpc hidden. Either tray or task-bar
+			 */
             else if (check_key(_("--start-hidden")))
             {
                 start_hidden = TRUE;
             }
+			/**
+			 * Cleans all failed hits from the cover database.
+			 * then exits.
+			 */
             else if (check_key(_("--clean-cover-db")))
             {
                 clean_config = TRUE;
             }
+			/**
+			 * Start gmpc withouth loading any external plugins
+			 */
             else if (check_key(_("--disable-plugins")))
             {
                 load_plugins = FALSE;
             }
+			/**
+			 * Tries to replace the running gmpc session with a new (this) one.
+			 */
             else if (check_key(_("--replace")))
             {
                 replace = TRUE;
             }
+			/**
+			 * Quit any running gmpc session
+			 */
             else if (check_key(_("--quit")))
             {
                 quit = TRUE;
             }
+			/**
+			 * Imports the cover db in the old format.
+			 */
             else if (check_key( _("--import-old-db")))
             {
                 import_old_db = TRUE;
             }
+			/**
+			 * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
+			 */
             else if (check_key( _("--debug-updates")))
             {
                 do_debug_updates = TRUE;
@@ -374,7 +418,7 @@ int main (int argc, char **argv)
 #endif
         {
             debug_printf(DEBUG_ERROR, "cURL Global init failed: %d\n", result);
-            exit(1);
+            abort();
         }	
 
     }	
@@ -387,18 +431,27 @@ int main (int argc, char **argv)
     debug_printf(DEBUG_INFO,"Initializing threading");
 
     /**
-     * Init threads
+     * Init libxml.
+	 * Libxml is not used (directly) by gmpc.
+	 * But via glade and several plugins use it.
+	 * I need to initialize it before the threading is started.
+	 * So moved to gmpc.
+	 *
+	 * This fixes the plugin crasher bug on windows.
      */
     xmlInitParser();
 
-    /** Check if threading is supported. */	
-    /** initialize it */
+	/**
+	 * Check if threading is supported, if so, start it.
+	 * Don't fail here, stuff like can cause that it is allready initialized.
+	 */
     if(!g_thread_supported())g_thread_init (NULL);
 
 #ifndef WIN32
 	/* This is incompatible with win32, however magnatune plugin requires it. */
 	/* So it is enabled for all non-win32 platforms */
-    gdk_threads_init();
+	/* Magnatune is "tweaked" to not use this anymore.*/
+	/*    gdk_threads_init();*/
 #endif
     TEC("Initializing threading")
     /*
@@ -407,6 +460,10 @@ int main (int argc, char **argv)
     debug_printf(DEBUG_INFO, "Initializing gtk ");
 
 #ifdef WIN32    
+	/**
+	 * This loads an extra gtk rc file on windows.
+	 * This is used to re-enable rule-hint in the treeview. (this is forced off on windows).
+	 */
     packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
     url = g_build_filename(packagedir, "data", "gmpc-gtk-win32.rc", NULL);
@@ -415,7 +472,7 @@ int main (int argc, char **argv)
     g_free(url);
 #endif
 
-
+	/* initialize gtk */
     gtk_init (&argc, &argv);
 
     TEC("Initializing gtk")
@@ -424,19 +481,25 @@ int main (int argc, char **argv)
      */
     if(strcmp(libmpd_version, LIBMPD_VERSION))
     {
-        debug_printf(DEBUG_ERROR, "Trying to run gmpc compiled against libmpd version '%s' with version '%s'", 
-                LIBMPD_VERSION, libmpd_version);	
+		gchar *error_msg = g_strdup_printf( _("Trying to run gmpc compiled against libmpd version '%s' with version libmpd '%s'"), LIBMPD_VERSION, libmpd_version);	
+        debug_printf(DEBUG_ERROR,error_msg);
 
-        show_error_message(_("Trying to run gmpc with a wrong libmpd version."), TRUE);
-        exit(1);
+		/* Popup an error dialog. and quit */
+        show_error_message(error_msg, TRUE);
+		g_free(error_msg);
+       	abort(); 
     }
 	/**
-	 * 	Check if the path needed path are available, if not, create them
+	 * Call create_gmpc_paths();
+	 * 	This function checks if the path needed path are available, if not, create them
 	 */
     create_gmpc_paths();
     TEC("Check version and create paths")
 
-    /* do the clean config stuff */
+	/** 
+	 * COMMANDLINE_OPTION:
+     * Cleanup the metadata database and quit. 
+	 */
     if(clean_config)
     {
 		/* start the metadata system */
@@ -522,6 +585,7 @@ int main (int argc, char **argv)
             int *old_version = split_version((const char *)url);
             debug_printf(DEBUG_INFO,"Welcome to a new version of gmpc.\n");
             /* Do possible cleanup of config files and stuff */
+			/* old version older then 0.1.15.4.98 */
             if(!(old_version[0] >= 0 && old_version[1] >= 15 && old_version[2] >= 4 && old_version[3] >= 98))
             {
                 conf_mult_obj *iter,*cmo = cfg_get_class_list(config);
@@ -538,13 +602,14 @@ int main (int argc, char **argv)
 
 
             }
+			/* old version older then 0.16.2 */
             if (!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 2))
             {
                 /* update old key */
                 printf("** Update of db set, because of new version\n");
                 import_old_db = TRUE;
             }
-            /* Make sure old sizes are updated */
+            /* old version older then 0.17.0-beta1 */ 
             if(!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 95))
             {
                 cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 32);
@@ -562,7 +627,9 @@ int main (int argc, char **argv)
 
 
 #ifndef WIN32
-
+	/**
+	 * Start IPC system.
+	 */
     if(cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple",FALSE) == FALSE)
     {
         /**
@@ -592,7 +659,7 @@ int main (int argc, char **argv)
                     bacon_on_message_received,
                     NULL);
         }
-
+		/* If user requested a quit, quit */
         if(quit)
         {
             cfg_close(config);
