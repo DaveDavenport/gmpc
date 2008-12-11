@@ -16,7 +16,6 @@ gchar * format_time_real(unsigned long seconds, const gchar *data);
 void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song);
 
 
-void screenshot_add_shadow (GdkPixbuf **src);
 void screenshot_add_border (GdkPixbuf **src);
 
 gchar *escape_single_quotes (const gchar * string);
