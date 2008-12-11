@@ -61,7 +61,6 @@ extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin tray_icon2_plug;
 
 extern gmpcPlugin proxyplug;
-//extern gmpcPlugin info3_plugin;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin url_plugin; 
 /** main.c **/
@@ -1097,7 +1096,7 @@ static void gmpc_status_changed_callback_real(GmpcConnection *conn, MpdObj *mi, 
 static void password_dialog_response(GtkWidget *dialog, gint response,gpointer data) 
 {
 	gchar *path;
-	switch(response)//gtk_dialog_run(GTK_DIALOG(glade_xml_get_widget(xml_password_window, "password-dialog"))))
+	switch(response)
 	{
 		case GTK_RESPONSE_OK:
 			{
@@ -1172,13 +1171,6 @@ static int error_callback(MpdObj *mi, int error_id, char *error_msg, gpointer da
 	}
 	else
 	{
-        /*
-		if(error_id == MPD_ACK_ERROR_NO_EXIST)
-		{
-			return;
-		}
-		else */
-
         if(setup_assistant_is_running() && (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD))
         {
 			gchar *str = g_markup_printf_escaped("<b>%s</b>",_("Insufficient permission to connect to mpd. Check password") );
@@ -1213,14 +1205,10 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
     {
         debug_printf(DEBUG_ERROR, "Connection state differs from actual state: act: %i connect: %i\n", !connected, connect);
     }
-    if(connected)
-    {
-//        playlist3_close_error();
-    }
-		/**
-		 * Check version
-		 */
-    if(connected && !mpd_server_check_version(mi, 0,13,0))
+	/**
+	 * Check version
+	 */
+	if(connected && !mpd_server_check_version(mi, 0,13,0))
     {	
 		gchar *value = g_markup_printf_escaped("<b>%s</b>", _("MPD versions before 0.13.0 are not supported"));
         /* disable user connect ! */
@@ -1406,7 +1394,6 @@ void show_error_message(gchar *string, int block)
 	{
 		gtk_widget_show(error_dialog);
 	}
-
 }
 
 static void create_gmpc_paths(void)
