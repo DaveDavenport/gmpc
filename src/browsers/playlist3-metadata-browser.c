@@ -98,15 +98,15 @@ static void info2_lookup_secondhandsongs(GtkWidget *label)
 				temp = g_strdup(song->artist);
 			}	
 			g_strfreev(str);
-			artist = escape_single_quotes (temp);
+			artist = g_uri_escape_string (temp,"",TRUE);
 			g_free(temp);
 		}		
 		else{
-			artist = escape_single_quotes (song->artist);
+			artist = g_uri_escape_string (song->artist,"",TRUE);
 		}
 
 		/* escape quotes */
-		title = escape_single_quotes (song->title);
+		title = g_uri_escape_string(song->title,"",TRUE);
 		/* create full uri */
 		command	= g_strconcat ( "http://www.secondhandsongs.com/cgi/cluster.php?title=",title,"&performer=",artist,"&search=Search", NULL);
 		/* open uri */

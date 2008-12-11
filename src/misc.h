@@ -9,16 +9,14 @@
 
 gchar * format_time(unsigned long seconds);
 gchar * format_time_real(unsigned long seconds, const gchar *data);
+
+void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song);
+
 /**
  * this draws a 1 pixel border around a pixbuf.
  * It doesn't work for all color depths (I think)
  */
-void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song);
-
-
 void screenshot_add_border (GdkPixbuf **src);
-
-gchar *escape_single_quotes (const gchar * string);
 
 void open_uri(const gchar *uri);
 int *split_version(const char *uri);

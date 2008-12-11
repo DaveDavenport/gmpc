@@ -244,42 +244,6 @@ char *gmpc_get_full_glade_path(char *filename)
     return path;
 }
 
-static gint
-count_of_char_in_string (const gchar * string,
-			 const gchar c)
-{
-	int cnt = 0;
-	for(; *string; string++) {
-		if (*string == c) cnt++;
-	}
-	return cnt;
-}
-
-gchar *
-escape_single_quotes (const gchar * string)
-{
-	GString * gs;
-
-	if (string == NULL) {
-		return NULL;
-	}
-
-	if (count_of_char_in_string (string, '\'') == 0) {
-		return g_strdup(string);
-	}
-	gs = g_string_new ("");
-	for(; *string; string++) {
-		if (*string == '\'') {
-			g_string_append(gs, "'\\''");
-		}
-		else {
-			g_string_append_c(gs, *string);
-		}
-	}
-	return g_string_free (gs, FALSE);
-}
-
-
 void open_uri(const gchar *uri)
 {
 	int result;
