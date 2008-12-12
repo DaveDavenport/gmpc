@@ -250,6 +250,8 @@ void open_uri(const gchar *uri)
 	gchar *command;
 #ifdef WIN32
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser-win32", "cmd /c start %s");
+#elif OSX
+	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser-osx", "open '%s'");
 #else
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
 #endif
