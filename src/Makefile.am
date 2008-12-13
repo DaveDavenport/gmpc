@@ -5,12 +5,11 @@ CONF_VERSION=0
 SUBDIRS=gob
 
 bin_PROGRAMS=gmpc
-if EGGTRAYICON
-eggtrayicon_SOURCE=egg/eggtrayicon.c
-eggtrayicon_HEADER=egg/eggtrayicon.h
-else 
-eggtrayicon_HEADER=egg/eggtrayicon.h egg/eggtrayicon.c
-endif
+
+
+
+
+
 
 gmpc_SOURCES=\
 	main.c\
@@ -43,7 +42,11 @@ gmpc_SOURCES=\
 	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
-	edit_markup.c $(eggtrayicon_SOURCE)
+	edit_markup.c 
+
+if EGGTRAYICON
+gmpc_SOURCES+=egg/eggtrayicon.c
+endif
 
 if !USE_SYSTEM_LIBSEXY
 gmpc_SOURCES+=sexy-icon-entry.c
@@ -75,13 +78,9 @@ revisiont.h:
 	fi;
 
 revision.h:
-		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;
-if OSX
-OSX_MAYBE=-DOSX=1
-OSX_LIBS=@macint_LIBS@
-OSX_CFLAGS=@macint_CFLAGS@
-endif
-INCLUDES= @EXTRA_CFLAGS@ \
+	echo "static char *revision = \"$(REVISION)""\"; " > revision.h
+
+INCLUDES=\
 	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"\
@@ -95,7 +94,9 @@ INCLUDES= @EXTRA_CFLAGS@ \
 	-I$(top_srcdir)/src/gob\
 	-I$(top_builddir)/src/gob\
 	-I$(top_srcdir)/src/bacon\
-	-I$(top_builddir)/src/bacon $(OSX_MAYBE)
+	-I$(top_builddir)/src/bacon
+
+
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
@@ -105,10 +106,14 @@ LIBS= \
 	@gmodule_LIBS@\
 	@libglade_LIBS@\
 	@gthread_LIBS@\
-	@sm_LIBS@ $(OSX_LIBS)
+	@sm_LIBS@ 
 
 if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
+endif
+
+if OSX
+LIBS+=@macint_LIBS@
 endif
 
 
@@ -117,9 +122,7 @@ AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
 	@LDFLAGS@
 
-if MAINTAINER_MODE
-MAYBE_CFLAGS=-Wall -Werror -Wdeclaration-after-statement -Wshadow 
-endif
+
 
 AM_CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
@@ -130,13 +133,21 @@ AM_CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
-	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" \
-	$(MAYBE_CFLAGS) $(OSX_CFLAGS)
+	@EXTRA_CFLAGS@\
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" 
 
 if USE_SYSTEM_LIBSEXY
 AM_CFLAGS += @libsexy_CFLAGS@
 endif
 
+if OSX
+AM_CFLAGS+=@macint_CFLAGS@
+INCLUDES+=-DOSX=1
+endif
+
+if MAINTAINER_MODE
+AM_CFLAGS+=-Wall -Werror -Wdeclaration-after-statement -Wshadow 
+endif
 
 gmpcinclude_HEADERS = \
 		plugin.h	\
@@ -149,7 +160,7 @@ gmpcinclude_HEADERS = \
 
 gmpcincludedir =$(includedir)/gmpc/
 
-EXTRA_DIST=$(eggtrayicon_HEADER)\
+EXTRA_DIST=\
 		playlist3.h\
 		playlist3-keybindings.h\
 		main.h\
@@ -174,13 +185,21 @@ EXTRA_DIST=$(eggtrayicon_HEADER)\
 		revision.h\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
-		egg/eggcellrendererkeys.h
+		egg/eggcellrendererkeys.h\
 		egg/eggaccelerators.h\
 		gmpc-win32.rc
 
 if USE_SYSTEM_LIBSEXY
 EXTRA_DIST+=sexy-icon-entry.c
 endif
+
+if EGGTRAYICON
+EXTRA_DIST+=egg/eggtrayicon.h
+else 
+EXTRA_DIST+=egg/eggtrayicon.h egg/eggtrayicon.c
+endif
+
+
 
 DISTCLEANFILES=\
 			   revision.h\
