@@ -43,8 +43,11 @@ gmpc_SOURCES=\
 	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
-	sexy-icon-entry.c\
 	edit_markup.c $(eggtrayicon_SOURCE)
+
+if !USE_SYSTEM_LIBSEXY
+gmpc_SOURCES+=sexy-icon-entry.c
+endif
 
 gmpc_LDADD=\
 			   gob/libcwidgets.la
@@ -104,6 +107,11 @@ LIBS= \
 	@gthread_LIBS@\
 	@sm_LIBS@ $(OSX_LIBS)
 
+if USE_SYSTEM_LIBSEXY
+LIBS += @libsexy_LIBS@
+endif
+
+
 
 AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
@@ -125,6 +133,9 @@ AM_CFLAGS = @CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" \
 	$(MAYBE_CFLAGS) $(OSX_CFLAGS)
 
+if USE_SYSTEM_LIBSEXY
+AM_CFLAGS += @libsexy_CFLAGS@
+endif
 
 
 gmpcinclude_HEADERS = \
@@ -166,6 +177,10 @@ EXTRA_DIST=$(eggtrayicon_HEADER)\
 		egg/eggcellrendererkeys.h
 		egg/eggaccelerators.h\
 		gmpc-win32.rc
+
+if USE_SYSTEM_LIBSEXY
+EXTRA_DIST+=sexy-icon-entry.c
+endif
 
 DISTCLEANFILES=\
 			   revision.h\

@@ -37,7 +37,11 @@
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
+#ifdef USE_SYSTEM_LIBSEXY
+#include <sexy-icon-entry.h>
+#else
 #include "sexy-icon-entry.h"
+#endif
 #include "playlist3-messages.h"
 
 #include "playlist3-playlist-editor.h"

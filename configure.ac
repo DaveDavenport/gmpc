@@ -163,6 +163,22 @@ PKG_CHECK_MODULES([gthread], gthread-2.0)
 AC_SUBST(gthread_LIBS)
 AC_SUBST(gthread_CFLAGS)
 
+AC_ARG_ENABLE([system-libsexy],
+              [--enable-system-libsexy Use system libsexy instead of bundles.], 
+	          [case "${enableval}" in
+		            yes)    system_libsexy=true;;
+		             no)    system_libsexy=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-system-libsexy]);;
+               esac],
+               [system_libsexy=false])
+if test "x$system_libsexy" = "xtrue"; then
+	PKG_CHECK_MODULES([libsexy], libsexy)
+	AC_SUBST(libsexy_LIBS)
+	AC_SUBST(libsexy_CFLAGS)
+	AC_DEFINE([USE_SYSTEM_LIBSEXY], 1, [Use system libsexy instead of bundled])
+fi
+
+AM_CONDITIONAL(USE_SYSTEM_LIBSEXY, [test x$system_libsexy = xtrue])
 
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -358,6 +374,10 @@ if test x${enable_configdir} = xyes; then
 else
 	echo "Use ~/.config/ for config files:  disabled"
 fi
-
+if test "x$system_libsexy" = "xtrue"; then 
+	echo "Use system libsexy:               enabled"
+else
+	echo "Use system libsexy:               disabled"
+fi
 
 echo "Now type make to build"
