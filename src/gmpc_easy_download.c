@@ -191,7 +191,9 @@ static void proxy_pref_construct(GtkWidget *container)
 	/* Create frame and create a widget with markup for the frame */
 	proxy_pref_frame = gtk_frame_new("");
 	temp = gtk_label_new(_("Proxy"));
-	gtk_label_set_markup(GTK_LABEL(temp), _("<b>Proxy</b>"));
+	value = g_markup_printf_escaped("<b>%s</b>", _("Proxy"));
+	gtk_label_set_markup(GTK_LABEL(temp),value); 
+	g_free(value);
 	gtk_frame_set_label_widget(GTK_FRAME(proxy_pref_frame), temp);
 	gtk_frame_set_shadow_type(GTK_FRAME(proxy_pref_frame), GTK_SHADOW_NONE);
 	/* setup vbox for inside the frame */

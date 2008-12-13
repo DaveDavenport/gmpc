@@ -41,11 +41,12 @@ AC_PROG_INTLTOOL([0.21])
 # Check for intltool version, needed for make dist. 
 AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT} -ge 4000])
 
-AC_PROG_LIBTOOL
+
 AC_PROG_CC
 LT_AC_PROG_RC
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_RC
+AC_PROG_LIBTOOL
 PKG_PROG_PKG_CONFIG
 
 
@@ -78,36 +79,6 @@ if test x${enable_configdir} = xyes; then
 	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
 fi
 
-# Session support             
-AC_ARG_ENABLE(sm,
-              [  --disable-sm				Disable Session Support.],
-              [ case "${enableval}" in
-                    yes)    enable_sm=yes;;
-                     no)    enable_sm=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
-                esac],
-              [enable_sm=yes])
-
-# sm
-if test x${enable_sm} = xyes; then
-	PKG_CHECK_MODULES([sm], sm)
-	AC_SUBST(sm_LIBS)
-	AC_SUBST(sm_CFLAGS)
-	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
-
-fi
-# Multimedia keys
-AC_ARG_ENABLE([mmkeys],
-              [  --disable-mmkeys			Disable multimedia keys support.],
-              [ case "${enableval}" in
-                    yes)    enable_mmkeys=yes;;
-                     no)    enable_mmkeys=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
-                esac],
-              [enable_mmkeys=yes])
-if test x${enable_mmkeys} = xyes; then
-	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
-fi
 
 
 # Maintainer mode
@@ -234,6 +205,7 @@ case "$CC" in
 esac
 
 win32=no
+macosx=no
 case $host in
   *-*-mingw32* | *-*-windows)
     win32=yes
@@ -242,9 +214,57 @@ case $host in
   *-*-cygwin*)
     win32=yes
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
+  *-apple-darwin*)
+    macosx=yes;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
+AM_CONDITIONAL(OSX, test x$macosx = xyes)
+if test x$macosx = xyes; then
+# mac integration 
+PKG_CHECK_MODULES([macint],ige-mac-integration)
+AC_SUBST(macint_CFLAGS)
+AC_SUBST(macint_LIBS)
+fi
 
+##
+# These depend on if we are or are not on windows or osX
+##
+# Session support             
+if test x$macosx = xno && test x$win32 = xno ; then
+AC_ARG_ENABLE(sm,
+              [  --disable-sm				Disable Session Support.],
+              [ case "${enableval}" in
+                    yes)    enable_sm=yes;;
+                     no)    enable_sm=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
+                esac],
+              [enable_sm=yes])
+
+# sm
+if test x${enable_sm} = xyes; then
+	PKG_CHECK_MODULES([sm], sm)
+	AC_SUBST(sm_LIBS)
+	AC_SUBST(sm_CFLAGS)
+	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
+
+fi
+# Multimedia keys
+AC_ARG_ENABLE([mmkeys],
+              [  --disable-mmkeys			Disable multimedia keys support.],
+              [ case "${enableval}" in
+                    yes)    enable_mmkeys=yes;;
+                     no)    enable_mmkeys=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
+                esac],
+              [enable_mmkeys=yes])
+if test x${enable_mmkeys} = xyes; then
+	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
+fi
+else
+# force them off
+enable_mmkeys=no;
+enable_sm=no;
+fi
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
 

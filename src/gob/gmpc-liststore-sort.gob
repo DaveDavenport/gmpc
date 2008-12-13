@@ -62,7 +62,6 @@ class Gmpc:ListStore:Sort from Gtk:List:Store
                 else
                     gtk_list_store_move_before(GTK_LIST_STORE(model), &sourcei, NULL);
 
-                    printf("moving\n");
 			}
 			gtk_tree_path_free(path);
 			return TRUE;

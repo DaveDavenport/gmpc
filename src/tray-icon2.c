@@ -495,11 +495,12 @@ void tray_icon2_create_tooltip(void)
         g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),(GDestroyNotify)mpd_freeSong); 
 		gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE,FALSE,0);
 	} else {
+		gchar *value = g_markup_printf_escaped("<span size='large'>%s</span>", _("Gnome Music Player Client"));
 		label = gtk_label_new("");
-		gtk_label_set_markup(GTK_LABEL(label), _("<span size='large'>Gnome Music Player Client</span>"));
+		gtk_label_set_markup(GTK_LABEL(label),value);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start(GTK_BOX(vbox), label, TRUE,TRUE,0);
-
+		g_free(value);
 	}
 	/**
 	 * 	Position the popup

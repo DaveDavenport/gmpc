@@ -31,6 +31,11 @@
 #include "gmpc-clicklabel.h"
 #include <gmpc-liststore-sort.h>
 #include "vala/gmpc-progress.h"
+#ifdef OSX
+#include "ige-mac-menu.h"
+#include "ige-mac-dock.h"
+#include "ige-mac-bundle.h"
+#endif
 
 /**
  * Default keybinding settings are defined here:
@@ -50,11 +55,27 @@ static GtkTargetEntry target_table[] =
 	{ "internal-drop",0,99}
 };
 
+/**
+ * Widgets used in the header.
+ * and the new progresbar
+ */
+static GtkWidget *new_pb = NULL;
+static GtkWidget *header_labels[5];
 
-GtkWidget *new_pb = NULL;
-GtkWidget *header_labels[5];
 void playlist3_new_header(void);
 void playlist3_update_header(void);
+
+
+/**
+ * Indicates the zoom level and the previous zoom level.
+ */
+int pl3_zoom = PLAYLIST_NO_ZOOM;
+int pl3_old_zoom = PLAYLIST_NO_ZOOM;
+
+static void playlist_zoom_level_changed(void);
+void playlist_zoom_in(void);
+void playlist_zoom_out(void);
+
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
 
@@ -63,20 +84,20 @@ gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer us
 
 void set_browser_format(void);
 void set_playlist_format(void);
-static void playlist_zoom_level_changed(void);
+
 static void playlist_player_volume_changed(GtkWidget *vol_but);
 void pl3_option_menu_activate(void);
 static void pl3_plugin_changed_interface(void);
 
-int pl3_zoom = PLAYLIST_NO_ZOOM;
-int pl3_old_zoom = PLAYLIST_NO_ZOOM;
+
+
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
 int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
 int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
-void playlist_zoom_in(void);
-void playlist_zoom_out(void);
+
+
 int pl3_cat_key_press_event(GtkWidget *, GdkEventKey *);
 void cur_song_center_enable_tb(GtkToggleButton *);
 void show_cover_case_tb(GtkToggleButton *but);
@@ -107,17 +128,18 @@ GtkTreeModel *pl3_tree = NULL;
 
 
 /* size */
-GtkAllocation pl3_wsize = {0,0,0,0};
-int pl3_hidden = TRUE;
+static GtkAllocation pl3_wsize = {0,0,0,0};
+static int pl3_hidden = TRUE;
 
 static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 /* Playlist "Plugin" */
 static void playlist_pref_construct(GtkWidget *container);
 static void playlist_pref_destroy(GtkWidget *container);
-GladeXML *playlist_pref_xml = NULL;
 
-static GtkWidget *volume_slider = NULL;
+static GladeXML *playlist_pref_xml = NULL;
+
+static GtkWidget *volume_button = NULL;
 
 static guint updating_id = 0;
 
@@ -648,7 +670,6 @@ int pl3_hide()
 static void pl3_updating_changed(MpdObj *mi, int updating)
 {
 	char *mesg = _("MPD database is updating");
-    printf("update changed callback %i %p\n",updating, pl3_xml );
 	if(pl3_xml != NULL)
 	{
 		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);
@@ -659,11 +680,11 @@ static void pl3_updating_changed(MpdObj *mi, int updating)
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id,mesg);
 			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
 
-			playlist3_show_error_message(_("<b>MPD is updating its database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("MPD is updating its database"), ERROR_INFO);
 		}
 		else if(updating_id > 0) 
 		{
-			playlist3_show_error_message(_("<b>MPD finished updating its database</b>"), ERROR_INFO);
+			playlist3_show_error_message(_("MPD finished updating its database"), ERROR_INFO);
             updating_id = 0;
         }
 	}
@@ -934,10 +955,10 @@ static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 
 void create_playlist3 ()
 {
-    GtkWidget *pb;
-    GtkListStore *pl3_crumbs = NULL;
-    conf_mult_obj *list = NULL;
-    GtkCellRenderer *renderer;
+	GtkWidget *pb;
+	GtkListStore *pl3_crumbs = NULL;
+	conf_mult_obj *list = NULL;
+	GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	GtkTreeSelection *sel;
 	GtkTreeViewColumn *column = NULL;
@@ -993,6 +1014,43 @@ void create_playlist3 ()
 
 	}
 
+#ifdef OSX
+	{
+		GdkPixbuf *pb = NULL;
+		IgeMacDock      *dock;
+		IgeMacMenuGroup *group;
+		//ige_mac_menu_install_key_handler (); 
+		ige_mac_menu_set_menu_bar (GTK_MENU_SHELL (glade_xml_get_widget(pl3_xml,"menubar1")));
+		gtk_widget_hide(GTK_WIDGET (glade_xml_get_widget(pl3_xml,"menubar1")));
+		gtk_widget_set_no_show_all(GTK_WIDGET (glade_xml_get_widget(pl3_xml,"menubar1")),TRUE);
+
+		group = ige_mac_menu_add_app_menu_group ();
+		ige_mac_menu_add_app_menu_item  (group,
+				GTK_MENU_ITEM (glade_xml_get_widget(pl3_xml, "about1")),
+				NULL);
+
+		group = ige_mac_menu_add_app_menu_group ();
+		ige_mac_menu_add_app_menu_item  (group,
+				GTK_MENU_ITEM (glade_xml_get_widget(pl3_xml,"save1")),
+				NULL);
+		dock = ige_mac_dock_get_default ();// ige_mac_dock_new ();
+
+		g_signal_connect (dock,
+				"clicked",
+				G_CALLBACK (create_playlist3),
+				NULL);
+
+		g_signal_connect (dock,
+				"quit-activate",
+				G_CALLBACK (main_quit),
+				NULL);
+		pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc", 64, 0,NULL);
+		if(pb)
+		{
+			ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+		}
+	}
+#endif
 
 
 
@@ -1009,23 +1067,23 @@ void create_playlist3 ()
 				G_TYPE_UINT,  /* icon size */
 				G_TYPE_STRING, /* browser markup */
 				G_TYPE_INT, 		/* ordering */
-                G_TYPE_STRING   /* Num items */
+				G_TYPE_STRING   /* Num items */
 				);
 	}
-//    if(cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
-//    {
-        g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
-        g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
-        g_signal_connect(G_OBJECT(pl3_tree), "row_deleted", G_CALLBACK(thv_row_deleted_signal), NULL);
-        g_signal_connect(G_OBJECT(pl3_tree), "rows_reordered", G_CALLBACK(thv_row_reordered_signal), NULL);
-//    }
+	//    if(cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
+	//    {
+	g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
+	g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
+	g_signal_connect(G_OBJECT(pl3_tree), "row_deleted", G_CALLBACK(thv_row_deleted_signal), NULL);
+	g_signal_connect(G_OBJECT(pl3_tree), "rows_reordered", G_CALLBACK(thv_row_reordered_signal), NULL);
+	//    }
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (tree), GTK_TREE_MODEL (pl3_tree));
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
-    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
+	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	column = gtk_tree_view_column_new ();
@@ -1036,17 +1094,17 @@ void create_playlist3 ()
 	/* insert the column in the tree */
 	gtk_tree_view_column_pack_start (column, renderer, TRUE);
 	gtk_tree_view_column_set_attributes (column, renderer, "text", 1, NULL);
-    g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
 
 	g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
-    renderer = gtk_cell_renderer_text_new();
-    gtk_tree_view_column_pack_start (column, renderer, FALSE);
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_column_pack_start (column, renderer, FALSE);
 	gtk_tree_view_column_set_attributes (column, renderer, "markup", PL3_CAT_NUM_ITEMS, NULL);
-    g_object_set(renderer, "xalign", 1.0, NULL);
-    /* Make sure the scroll bars get removed when folding in the folders again */
+	g_object_set(renderer, "xalign", 1.0, NULL);
+	/* Make sure the scroll bars get removed when folding in the folders again */
 	gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 
 
@@ -1067,10 +1125,10 @@ void create_playlist3 ()
 	gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),renderer,
 			"text", PL3_CAT_TITLE);
 
-    renderer = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_end(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), renderer, FALSE);
+	renderer = gtk_cell_renderer_text_new();
+	gtk_cell_layout_pack_end(GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), renderer, FALSE);
 	gtk_cell_layout_add_attribute (GTK_CELL_LAYOUT(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), renderer, "markup", PL3_CAT_NUM_ITEMS);
-    g_object_set(renderer, "xalign", 1.0, NULL);
+	g_object_set(renderer, "xalign", 1.0, NULL);
 
 
 	g_signal_connect(glade_xml_get_widget(pl3_xml, "cb_cat_selector"),
@@ -1082,26 +1140,26 @@ void create_playlist3 ()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"));
 
 
-    /**
-     * The new progress bar 
-     */
-    pb = (GtkWidget *)gmpc_progress_new();
-    gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
-    gtk_widget_show(pb);
-    g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
-    g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
-    new_pb = pb;
+	/**
+	 * The new progress bar 
+	 */
+	pb = (GtkWidget *)gmpc_progress_new();
+	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
+	gtk_widget_show(pb);
+	g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
+	g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
+	new_pb = pb;
 
-    gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
-            cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
+	gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
+			cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
 
 	/* Add volume slider. */
-	volume_slider = gtk_volume_button_new();
-	gtk_button_set_relief(GTK_BUTTON(volume_slider), GTK_RELIEF_NORMAL);
-	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_slider, FALSE, FALSE, 0);
-	gtk_widget_show_all(volume_slider);
+	volume_button = gtk_volume_button_new();
+	gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
+	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12"/*playlist_player"*/)), volume_button, FALSE, FALSE, 0);
+	gtk_widget_show_all(volume_button);
 	playlist_status_changed(connection, MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,NULL);
-	g_signal_connect(G_OBJECT(volume_slider), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
+	g_signal_connect(G_OBJECT(volume_button), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 	/* Restore values from config */
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_check_cover_image")),
@@ -1126,7 +1184,7 @@ void create_playlist3 ()
 		gtk_tree_selection_select_iter(sel, &iter);
 	}
 
-    /*
+	/*
 	 * Insert new custom widget
 	 */
 
@@ -1148,49 +1206,49 @@ void create_playlist3 ()
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
 
 	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
-    /* restore the window's position and size, if the user wants this.*/
-    if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
-    {
-        /* Load values from config file */
-        pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
-        pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
-        pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
-        pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
-        /* restore location + position */
-        /*pl3_show_and_position_window();*/
+	/* restore the window's position and size, if the user wants this.*/
+	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+	{
+		/* Load values from config file */
+		pl3_wsize.x =	cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
+		pl3_wsize.y =	cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
+		pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
+		pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+		/* restore location + position */
+		/*pl3_show_and_position_window();*/
 
-        if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
-            gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-                    pl3_wsize.x,
-                    pl3_wsize.y);
-        }
-        if(pl3_wsize.height>0 && pl3_wsize.width>0) {
-            debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
-            gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
-                    pl3_wsize.width,
-                    pl3_wsize.height);
-        }
-        /* restore pane position */
-        if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
-        {
+		if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
+			gtk_window_move(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.x,
+					pl3_wsize.y);
+		}
+		if(pl3_wsize.height>0 && pl3_wsize.width>0) {
+			debug_printf(DEBUG_INFO,"restore size %i %i\n",pl3_wsize.width, pl3_wsize.height);
+			gtk_window_resize(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+					pl3_wsize.width,
+					pl3_wsize.height);
+		}
+		/* restore pane position */
+		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
+		{
 
-            gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
-                    cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-        }
-        /**
-         * restore zoom level
-         */
+			gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
+					cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
+		}
+		/**
+		 * restore zoom level
+		 */
 
 
-        gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
+		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 
-    }
+	}
 	else
 	{
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
 	}
-    pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
-    playlist_zoom_level_changed();
+	pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist","zoomlevel",PLAYLIST_NO_ZOOM);
+	playlist_zoom_level_changed();
 
 	pl3_update_go_menu();	
 	/* make it update itself */
@@ -1220,85 +1278,76 @@ void create_playlist3 ()
 
 	/* A signal that responses on change of pane position */
 	g_signal_connect(G_OBJECT(glade_xml_get_widget(pl3_xml,"hpaned1")),
-									"notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
+			"notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
 
-    /* update it */
-    pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
+	/* update it */
+	pl3_win_pane_changed(glade_xml_get_widget(pl3_xml,"hpaned1"), NULL, NULL);
 	/**
 	 *
 	 */
 	playlist_connection_changed(connection, FALSE,NULL);
-    /**
-     * Update keybindings 
-     */
-    list = cfg_get_key_list(config, KB_GLOBAL);
-    /* If no keybindings are found, add the default ones */
-    if(list == NULL)
-    {
-        int i;
-        for(i=0;i<KB_NUM;i++)
-        {
-            cfg_set_single_value_as_int(config, KB_GLOBAL,Keybindname[i], KeybindingDefault[i][0]);
-            cfg_set_single_value_as_int(config, MK_GLOBAL,Keybindname[i], KeybindingDefault[i][1]);
-            cfg_set_single_value_as_int(config, AC_GLOBAL,Keybindname[i],KeybindingDefault[i][2]);
-        }
-        list = cfg_get_key_list(config, KB_GLOBAL);
-    }
-    if(list) {
-        GtkAccelGroup *ac= gtk_accel_group_new();
-        int action_seen = 0;
-            //        GtkAccelGroup *ac = gtk_menu_get_accel_group(glade_xml_get_widget(pl3_xml, "menuitem_control_menu"));
-        conf_mult_obj *conf_iter = list;
-        gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
-        while(conf_iter){
-            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,conf_iter->key,-1);
-            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,conf_iter->key,-1);
-            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,conf_iter->key,0);
-            if(keycode >=0 && action >= 0)
-            {
-                GtkWidget *item = NULL;
-                int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
-                action_seen |= (1<<action);
+	/**
+	 * Update keybindings 
+	 */
+	list = cfg_get_key_list(config, KB_GLOBAL);
+	/* If no keybindings are found, add the default ones */
+	if(list == NULL)
+	{
+		int i;
+		for(i=0;i<KB_NUM;i++)
+		{
+			cfg_set_single_value_as_int(config, KB_GLOBAL,Keybindname[i], KeybindingDefault[i][0]);
+			cfg_set_single_value_as_int(config, MK_GLOBAL,Keybindname[i], KeybindingDefault[i][1]);
+			cfg_set_single_value_as_int(config, AC_GLOBAL,Keybindname[i],KeybindingDefault[i][2]);
+		}
+		list = cfg_get_key_list(config, KB_GLOBAL);
+	}
+	if(list) {
+		GtkAccelGroup *ac= gtk_accel_group_new();
+		int action_seen = 0;
+		//        GtkAccelGroup *ac = gtk_menu_get_accel_group(glade_xml_get_widget(pl3_xml, "menuitem_control_menu"));
+		conf_mult_obj *conf_iter = list;
+		gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
+		while(conf_iter){
+			int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,conf_iter->key,-1);
+			int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,conf_iter->key,-1);
+			int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,conf_iter->key,0);
+			if(keycode >=0 && action >= 0)
+			{
+				GtkWidget *item = NULL;
+				int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
+				action_seen |= (1<<action);
 
-                if(action == KB_ACTION_PLAY) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_play"); 
-                } else 
-                if(action == KB_ACTION_STOP) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_stop"); 
-                } else
-                if(action == KB_ACTION_NEXT) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_next"); 
-                } else
-                if(action == KB_ACTION_PREV) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_prev"); 
-                }
-                if(action == KB_ACTION_FULLSCREEN) {
-                   item = glade_xml_get_widget(pl3_xml,"fullscreen2"); 
-                } else 
-                if(action == KB_ACTION_INTERFACE_EXPAND) {
-                   item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
-                } else
-               if(action == KB_ACTION_INTERFACE_COLLAPSE) {
-                   item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
-               } else 
-               if(action == KB_ACTION_REPEAT) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_repeat"); 
-               } else
-               if(action == KB_ACTION_RANDOM) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_random"); 
-               
-               } else 
-               if (action == KB_ACTION_TOGGLE_MUTE) {
-                   item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle"); 
-               }
-               if(item){
-                   gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
-               }
-            }
-            conf_iter = conf_iter->next;
-        }
-        cfg_free_multiple(list);
-    }
+				if(action == KB_ACTION_PLAY) {
+					item = glade_xml_get_widget(pl3_xml,"menu_play"); 
+				} else if(action == KB_ACTION_STOP) {
+						item = glade_xml_get_widget(pl3_xml,"menu_stop"); 
+				} else if(action == KB_ACTION_NEXT) {
+					item = glade_xml_get_widget(pl3_xml,"menu_next"); 
+				} else if(action == KB_ACTION_PREV) {
+					item = glade_xml_get_widget(pl3_xml,"menu_prev"); 
+				} else if(action == KB_ACTION_FULLSCREEN) {
+					item = glade_xml_get_widget(pl3_xml,"fullscreen2"); 
+				} else if(action == KB_ACTION_INTERFACE_EXPAND) {
+					item = glade_xml_get_widget(pl3_xml,"zoom_in2"); 
+				} else if(action == KB_ACTION_INTERFACE_COLLAPSE) {
+					item = glade_xml_get_widget(pl3_xml,"zoom_out2"); 
+				} else if(action == KB_ACTION_REPEAT) {
+					item = glade_xml_get_widget(pl3_xml,"menu_repeat"); 
+				} else if(action == KB_ACTION_RANDOM) {
+					item = glade_xml_get_widget(pl3_xml,"menu_random"); 
+				} else if (action == KB_ACTION_TOGGLE_MUTE) {
+					item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle"); 
+				}
+
+				if(item){
+					gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+				}
+			}
+			conf_iter = conf_iter->next;
+		}
+		cfg_free_multiple(list);
+	}
 }
 
 /**
@@ -1552,8 +1601,9 @@ static void playlist_zoom_level_changed()
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "header_box"));
 	/** Menu Bar */
+/*
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
-	/** BUTTON BOX */
+*/	/** BUTTON BOX */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
@@ -1625,6 +1675,10 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 	 */
 	if(what&MPD_CST_STATE)
 	{
+#ifdef OSX
+		IgeMacDock      *dock = ige_mac_dock_get_default();
+		GdkPixbuf *pb;
+#endif
 		int state = mpd_player_get_state(mi);
 		switch(state){
 			case MPD_PLAYER_PLAY:
@@ -1654,8 +1708,18 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
                     gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
 
                     g_free(markup);
-                    break;
-                }
+
+
+#ifdef OSX
+		    pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-play", 64, 0,NULL);
+		    if(pb){
+			    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+		    }else {
+			debug_printf(DEBUG_ERROR,"failed to get icon\n");
+		    }	
+#endif
+		    break;
+		}
 			case MPD_PLAYER_PAUSE:
 				/** Update menu and button images */
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
@@ -1669,6 +1733,15 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 				 */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);		
+#ifdef OSX
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-pause", 64, 0,NULL);
+				if(pb){
+					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+				}else {
+					debug_printf(DEBUG_ERROR,"failed to get icon\n");
+				}
+#endif
+
 				break;
 			default:
 				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
@@ -1681,6 +1754,15 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));		
+#ifdef OSX
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc", 64, 0,NULL);
+				if(pb){
+					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+				}else {
+					debug_printf(DEBUG_ERROR,"failed to get icon\n");
+				}
+#endif
+
 		}
 		playlist3_update_header();
 	}
@@ -1742,11 +1824,11 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 	}
 	if(what&MPD_CST_VOLUME)
 	{
-        int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_slider))*100;
+        int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button))*100;
         /* don't do anything if nothing is changed */
         if(mpd_status_get_volume(connection) != volume)
         {
-            gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_slider),
+            gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button),
                     mpd_status_get_volume(connection)/100.0);
         }
 
@@ -1777,7 +1859,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
         struct tm *tm;
         time_t up = (time_t) mpd_server_get_database_update_time(connection);
         tm = localtime(&up);
-        if(strftime(date_buffer, 128,_("<b>MPD Database refreshed at:</b> %c"),tm))
+        if(strftime(date_buffer, 128,_("MPD Database refreshed at: %c"),tm))
         {
               playlist3_show_error_message(date_buffer, ERROR_INFO);
         }

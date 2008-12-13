@@ -221,6 +221,7 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
 static void pl3_find2_browser_init()
 {
     int i=0;
+	gchar *markup;
     GString *string = NULL;
 	GtkWidget *frame, *event, *vbox, *label;
     GtkWidget  *pl3_find2_sw = NULL;
@@ -269,7 +270,9 @@ static void pl3_find2_browser_init()
     hbox = gtk_hbox_new(FALSE,0);
 
     /* browser label */
-    gtk_label_set_markup(GTK_LABEL(label), _("<span size='xx-large' weight='bold'>Search</span>"));
+	markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>", _("Search"));
+    gtk_label_set_markup(GTK_LABEL(label), markup);
+	g_free(markup);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE,0);
 
     /* search in playlist */
@@ -319,7 +322,6 @@ static void pl3_find2_browser_init()
             g_string_append(string,"|");
     }
     g_string_append(string, ")[ ]*[=:][ ]*");
-    printf("regex search string: %s\n", string->str);
     search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
     g_string_free(string, TRUE);
 }

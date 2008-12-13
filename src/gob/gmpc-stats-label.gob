@@ -116,13 +116,15 @@ class Gmpc:Stats:Label from Gtk:Label
     new(LabelType ltype, mpd_Song *song)
     {
         Self *self = GET_NEW;
+		gchar *string = g_markup_printf_escaped("<i>%s</i>", _("Loading"));
 
         self->_priv->song = mpd_songDup(song);
         self->_priv->ltype = ltype;
 
         self->_priv->idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_idle_handler, self);
 
-        gtk_label_set_markup(GTK_LABEL(self),_("<i>Loading</i>"));
+        gtk_label_set_markup(GTK_LABEL(self),string);
+		g_free(string);
         return (GtkWidget *)self;
     }
     override (G:Object)

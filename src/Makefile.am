@@ -73,7 +73,11 @@ revisiont.h:
 
 revision.h:
 		echo "static char *revision = \"$(REVISION)""\"; "> revision.h;
-
+if OSX
+OSX_MAYBE=-DOSX=1
+OSX_LIBS=@macint_LIBS@
+OSX_CFLAGS=@macint_CFLAGS@
+endif
 INCLUDES= @EXTRA_CFLAGS@ \
 	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
@@ -88,7 +92,7 @@ INCLUDES= @EXTRA_CFLAGS@ \
 	-I$(top_srcdir)/src/gob\
 	-I$(top_builddir)/src/gob\
 	-I$(top_srcdir)/src/bacon\
-	-I$(top_builddir)/src/bacon
+	-I$(top_builddir)/src/bacon $(OSX_MAYBE)
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
@@ -98,7 +102,7 @@ LIBS= \
 	@gmodule_LIBS@\
 	@libglade_LIBS@\
 	@gthread_LIBS@\
-	@sm_LIBS@
+	@sm_LIBS@ $(OSX_LIBS)
 
 
 AM_LDFLAGS = \
@@ -119,7 +123,7 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" \
-	$(MAYBE_CFLAGS)
+	$(MAYBE_CFLAGS) $(OSX_CFLAGS)
 
 
 
