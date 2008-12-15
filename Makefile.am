@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = foreign 1.6
+AUTOMAKE_OPTIONS = foreign 1.7
 
 if WIN32
 SUBDIRS = src pixmaps glade data po pixmaps doc
