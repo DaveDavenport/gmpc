@@ -85,6 +85,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_easy_setopt(curl, CURLOPT_AUTOREFERER ,1);
 	/* set NO SIGNAL */
 	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
+    curl_easy_setopt(curl,CURLOPT_ENCODING ,"");
 
 	if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
 	{
