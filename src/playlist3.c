@@ -2301,9 +2301,9 @@ static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gp
 	cairo_set_line_width (cr, 1.0);
 	cairo_rectangle(cr, 0,0,width,height);
 	cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr, 	&(wid->style->mid[GTK_STATE_NORMAL]));
+	gdk_cairo_set_source_color(cr,&(wid->style->mid[GTK_STATE_NORMAL]));
 	cairo_fill_preserve(cr);
-	gdk_cairo_set_source_color(cr, 	&(wid->style->black));
+	gdk_cairo_set_source_color(cr,&(wid->style->black));
 	cairo_stroke (cr);
 	cairo_destroy(cr);
 	return FALSE;

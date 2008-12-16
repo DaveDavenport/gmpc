@@ -1,11 +1,11 @@
 #include <gtk/gtk.h>
 #include <time.h>
-#include "main.h" 
+#include "main.h"
 
 extern int pl3_zoom;
 extern GladeXML *pl3_xml;
 static gboolean error_visible = FALSE;
-static int last_error_level = ERROR_INFO; 
+static int last_error_level = ERROR_INFO;
 guint timeout_callback = 0;
 GtkListStore *message_list = NULL;
 void message_window_open(void);
@@ -28,7 +28,7 @@ void playlist3_message_init(void)
 	if(!message_list)
 	{
         GError *error = NULL;
-				gchar *path = gmpc_get_user_path("gmpc.log"); 
+				gchar *path = gmpc_get_user_path("gmpc.log");
 				message_list = gtk_list_store_new(3, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING);
 
         log_file = g_io_channel_new_file(path, "a", &error);
@@ -46,7 +46,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	gchar text[64];
 	struct tm *lt;
 	GtkWidget *event;
-	GtkWidget *label = NULL; 
+	GtkWidget *label = NULL;
 	GtkTreeIter iter;
 	time_t t = time(NULL);
 	int level;
@@ -106,7 +106,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	{
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
-		event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+		event = glade_xml_get_widget(pl3_xml, "error_hbox");
 		/* right image */
 
 		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
@@ -125,12 +125,12 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	}else{
 		error_visible = FALSE;
 	}
-}	
+}
 
 void playlist3_error_add_widget(GtkWidget *widget)
 {
-	GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
-	gtk_box_pack_end(GTK_BOX(event), widget, FALSE, TRUE, 0);	
+	GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_hbox");
+	gtk_box_pack_end(GTK_BOX(event), widget, FALSE, TRUE, 0);
 	gtk_widget_show_all(event);
 }
 
@@ -140,13 +140,13 @@ gboolean playlist3_close_error(void)
 	{
 		error_visible = FALSE;
 		g_source_remove(timeout_callback);
-		
+
 
 		if(pl3_xml)
 		{
 			GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
 			gtk_widget_hide(event);
-			event = glade_xml_get_widget(pl3_xml, "error_hbox"); 
+			event = glade_xml_get_widget(pl3_xml, "error_hbox");
 			gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback)(gtk_widget_destroy), NULL);
 		}
 	}
@@ -179,11 +179,11 @@ void message_window_open(void)
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	gchar *path;
- 	path = gmpc_get_full_glade_path("playlist3.glade");
- 	xml = glade_xml_new (path, "message_window", NULL);
- 	q_free(path);
+	path = gmpc_get_full_glade_path("playlist3.glade");
+	xml = glade_xml_new (path, "message_window", NULL);
+	q_free(path);
 	playlist3_message_init();
-    
+
     /* set transient */
     win = glade_xml_get_widget(xml, "message_window");
     gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
