@@ -239,7 +239,6 @@ static GObject * gmpc_image_constructor (GType type, guint n_construct_propertie
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_IMAGE (obj);
 	{
-		gboolean _tmp0;
 		g_object_set (GTK_WIDGET (self), "app-paintable", TRUE, NULL);
 		gtk_event_box_set_visible_window (GTK_EVENT_BOX (self), FALSE);
 		g_signal_connect_object (GTK_WIDGET (self), "expose-event", ((GCallback) (_gmpc_image_on_expose_gtk_widget_expose_event)), self, 0);
