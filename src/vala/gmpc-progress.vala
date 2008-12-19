@@ -38,6 +38,10 @@ public class Gmpc.Progress : Gtk.EventBox
         /* Set a string so we can get height */
         this._layout = this.create_pango_layout (" ");
     }
+
+    ~Progress() {
+        _layout.unref();
+    }
     // The size_request method Gtk+ is calling on a widget to ask
     // it the widget how large it wishes to be. It's not guaranteed
     // that gtk+ will actually give this size to the widget

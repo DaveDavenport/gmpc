@@ -318,6 +318,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PROGRESS (obj);
 	{
+		gboolean _tmp0;
 		PangoLayout* _tmp2;
 		PangoLayout* _tmp1;
 		g_object_set (GTK_WIDGET (self), "app-paintable", TRUE, NULL);
@@ -391,6 +392,9 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 static void gmpc_progress_finalize (GObject * obj) {
 	GmpcProgress * self;
 	self = GMPC_PROGRESS (obj);
+	{
+		g_object_unref (G_OBJECT (self->priv->_layout));
+	}
 	(self->priv->_layout == NULL ? NULL : (self->priv->_layout = (g_object_unref (self->priv->_layout), NULL)));
 	G_OBJECT_CLASS (gmpc_progress_parent_class)->finalize (obj);
 }
