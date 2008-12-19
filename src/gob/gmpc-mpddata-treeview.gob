@@ -639,7 +639,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 
 
-
+        g_object_unref(group);
 
         gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
 
