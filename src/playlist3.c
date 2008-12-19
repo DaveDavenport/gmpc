@@ -1958,7 +1958,6 @@ void pl3_update_go_menu()
 	 */
 	menu = gtk_menu_new();
     gtk_menu_set_accel_group(GTK_MENU(menu), group);
-	g_object_unref(group);
     gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
 	if(mpd_check_connected(connection)) {
 		for(i=0; i< num_plugins;i++) {
@@ -2446,7 +2445,9 @@ void thv_row_deleted_signal ( GtkTreeModel *model, GtkTreePath *path, gpointer d
     /* Remove from the thv_list */
     thv_list = g_list_remove(thv_list, tb);
     /* Remove from the top bar and also destroy/free the widgets */
-    g_object_unref(GTK_WIDGET(tb->button));
+    /* remove the extra ref we added */
+    g_object_unref(tb->button);
+    gtk_widget_destroy(GTK_WIDGET(tb->button));
     /* Free the TabButton structure */
     g_free(tb);
 }
