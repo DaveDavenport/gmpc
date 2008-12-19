@@ -355,9 +355,10 @@ void pl3_option_menu_activate(void)
 	    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
 	}
 	else{
-		gtk_widget_destroy(menu);
-    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
-  }
+        g_object_ref_sink(menu);
+		g_object_unref(menu);
+        gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
+    }
 
 }
 int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
@@ -392,7 +393,8 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 	}
 	else
 	{
-		gtk_widget_destroy(menu);
+        g_object_ref_sink(menu);
+		g_object_unref(menu);
 	}
 	return TRUE;
 }
@@ -1978,7 +1980,8 @@ void pl3_update_go_menu()
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_go"), TRUE);
 	} else {
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_go"), FALSE);
-		gtk_widget_destroy(menu);
+        g_object_ref_sink(menu);
+		g_object_unref(menu);
 	}
 }
 
@@ -2093,7 +2096,8 @@ static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_profiles"), TRUE);
 	} else {
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_profiles"), FALSE);
-		gtk_widget_destroy(menu);
+        g_object_ref_sink(menu);
+		g_object_unref(menu);
 	}
 	g_free(current);
 }
@@ -2442,7 +2446,7 @@ void thv_row_deleted_signal ( GtkTreeModel *model, GtkTreePath *path, gpointer d
     /* Remove from the thv_list */
     thv_list = g_list_remove(thv_list, tb);
     /* Remove from the top bar and also destroy/free the widgets */
-    gtk_widget_destroy(GTK_WIDGET(tb->button));
+    g_object_unref(GTK_WIDGET(tb->button));
     /* Free the TabButton structure */
     g_free(tb);
 }
