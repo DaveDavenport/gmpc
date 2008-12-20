@@ -350,6 +350,7 @@ void tray_icon2_create_tooltip(void)
 	GtkWidget *label = NULL;
 	GtkWidget *event = NULL;
 	GtkWidget *coverimg = NULL;
+    GdkColormap *colormap;
 	mpd_Song *song = NULL;
     int tooltip_timeout = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
 	int state = 0; 
@@ -387,8 +388,19 @@ void tray_icon2_create_tooltip(void)
 	 * 	Creat the tootlip window 
 	 */
 	tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
+    screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
 
-	/* causes the border */
+
+    if (gdk_screen_is_composited(screen))
+    {
+        colormap = gdk_screen_get_rgba_colormap(screen);
+        if(colormap)
+            gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
+        gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0.9);
+    }
+
+
+    /* causes the border */
 	gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
 	gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip),1);
 	gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300,-1);
