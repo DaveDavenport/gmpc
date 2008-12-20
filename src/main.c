@@ -586,7 +586,7 @@ int main (int argc, char **argv)
             debug_printf(DEBUG_INFO,"Welcome to a new version of gmpc.\n");
             /* Do possible cleanup of config files and stuff */
 			/* old version older then 0.1.15.4.98 */
-            if(!(old_version[0] >= 0 && old_version[1] >= 15 && old_version[2] >= 4 && old_version[3] >= 98))
+            if((old_version[0] <= 0 && old_version[1] <= 15 && old_version[2] <= 4 && old_version[3] <= 98))
             {
                 conf_mult_obj *iter,*cmo = cfg_get_class_list(config);
                 debug_printf(DEBUG_INFO,"Purging old keys from the config file.\n");
@@ -603,15 +603,16 @@ int main (int argc, char **argv)
 
             }
 			/* old version older then 0.16.2 */
-            if (!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 2))
+            if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 2))
             {
                 /* update old key */
                 printf("** Update of db set, because of new version\n");
                 import_old_db = TRUE;
             }
             /* old version older then 0.17.0-beta1 */
-            if(!(old_version[0] >= 0 && old_version[1] >= 16 && old_version[2] >= 95))
+            if((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95))
             {
+                printf("** Correct icon-size\n");
                 cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 32);
             }
             q_free(old_version);
