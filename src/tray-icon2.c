@@ -179,6 +179,13 @@ static int tray_icon2_button_scroll_event(GtkWidget *tray, GdkEventScroll *event
     }
     return TRUE;
 }
+
+static int tray_icon2_button_enter_notify_event(GtkWidget *tray, GdkEventCrossing *event, gpointer data)
+{
+
+    tray_icon2_create_tooltip();
+    return FALSE;
+}
 #endif
 static void tray_icon2_init(void)
 {
@@ -192,6 +199,8 @@ static void tray_icon2_init(void)
         gtk_widget_add_events(tray_icon2_gsi, GDK_SCROLL_MASK);
         g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
         g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
+
+        g_signal_connect(G_OBJECT(tray_icon2_gsi), "enter-notify-event", G_CALLBACK(tray_icon2_button_enter_notify_event), NULL);
 #else
 		tray_icon2_gsi = gtk_status_icon_new_from_icon_name ("gmpc-tray-disconnected");
 
