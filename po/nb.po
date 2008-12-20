@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-10 17:13+0100\n"
-"PO-Revision-Date: 2008-11-24 13:29+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"POT-Creation-Date: 2008-12-10 17:15+0100\n"
+"PO-Revision-Date: 2008-12-20 11:39+0000\n"
+"Last-Translator: joki <Unknown>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-12-03 21:08+0000\n"
+"X-Launchpad-Export-Date: 2008-12-20 19:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -25,7 +25,7 @@ msgstr "En gnome frontende for mpd nissen"
 #: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:431 ../src/tray-icon2.c:586
 #: ../src/tray-icon2.c:593
 msgid "Gnome Music Player Client"
-msgstr "Gnome Musikk Player Client"
+msgstr "Gnome musikkavspiller klient"
 
 #: ../glade/gmpc.glade.h:1
 msgid "/"
@@ -81,7 +81,7 @@ msgstr "<b>Sprettopp</b>"
 
 #: ../glade/gmpc.glade.h:14
 msgid "<b>Profile:</b>"
-msgstr ""
+msgstr "<b>Profil:</b>"
 
 #: ../glade/gmpc.glade.h:15
 msgid "<b>Song Markup</b>"
@@ -329,7 +329,11 @@ msgstr ""
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "\n"
 "Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  joki https://launchpad.net/~kyler2k"
 
 #: ../glade/playlist3.glade.h:1
 msgid "<enter playlist name>"
@@ -509,14 +513,14 @@ msgstr ""
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:276 ../src/main.c:278
 msgid "--debug-level="
 msgstr "--debug-niv="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:284
 msgid "--version"
 msgstr "--versjon"
@@ -567,13 +571,12 @@ msgid "--import-old-db"
 msgstr ""
 
 #: ../src/main.c:329
-#, fuzzy
 msgid "--debug-updates"
-msgstr "--debug-niv="
+msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:337
 msgid "--help"
 msgstr "--hjelp"
@@ -647,14 +650,12 @@ msgid "MPD versions before 0.13.0 are not supported"
 msgstr ""
 
 #: ../src/main.c:1241
-#, fuzzy
 msgid "Connected to mpd"
-msgstr "Koblet til"
+msgstr ""
 
 #: ../src/main.c:1243
-#, fuzzy
 msgid "Disconnected from mpd"
-msgstr "Frakoblet"
+msgstr ""
 
 #: ../src/main.c:1278
 msgid "Error occured during operation"
@@ -989,9 +990,8 @@ msgid ""
 msgstr ""
 
 #: ../src/preferences.c:80 ../src/preferences.c:176
-#, fuzzy
 msgid "Plugins"
-msgstr "Tillegg:"
+msgstr ""
 
 #: ../src/preferences.c:137
 msgid "Plugins:"
@@ -1054,7 +1054,7 @@ msgstr "Legg til en strm"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:206
 msgid "Enter an url"
 msgstr "Fyll inn enn lenke"
@@ -1067,7 +1067,7 @@ msgstr "Klarte ikke  kontakte lenke: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:274
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -1082,7 +1082,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:94
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1099,7 +1099,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:124
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1286,7 +1286,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:406
 #: ../src/browsers/playlist3-metadata-browser.c:682
 #: ../src/browsers/playlist3-metadata-browser.c:2351
@@ -1303,17 +1303,15 @@ msgstr "Artist"
 #: ../src/browsers/playlist3-metadata-browser.c:636
 #: ../src/browsers/playlist3-metadata-browser.c:1467
 #: ../src/browsers/playlist3-metadata-browser.c:1927
-#, fuzzy
 msgid "Songs"
-msgstr "sanger"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:644
 #: ../src/browsers/playlist3-metadata-browser.c:1474
 #: ../src/browsers/playlist3-metadata-browser.c:2003
 #: ../src/browsers/playlist3-metadata-browser.c:2309
-#, fuzzy
 msgid "Playtime"
-msgstr "<b>Spilletid:</b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:649
 #: ../src/browsers/playlist3-metadata-browser.c:868
@@ -1337,9 +1335,8 @@ msgstr "dato"
 #: ../src/browsers/playlist3-metadata-browser.c:1251
 #: ../src/browsers/playlist3-metadata-browser.c:1365
 #: ../src/browsers/playlist3-metadata-browser.c:1789
-#, fuzzy
 msgid "Collection"
-msgstr "Tilkobling"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:862
 #: ../src/browsers/playlist3-metadata-browser.c:1944
@@ -1377,9 +1374,8 @@ msgid "Extension"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:924
-#, fuzzy
 msgid "Bitrate"
-msgstr "<b>Bithastighet: </b>"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:929
 #: ../src/browsers/playlist3-metadata-browser.c:2401
@@ -1387,9 +1383,8 @@ msgid "kbit/sec"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:968
-#, fuzzy
 msgid "Lyrics"
-msgstr "Tekst:"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1011
 msgid "Songs with same title"
@@ -1434,47 +1429,42 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1519
 msgid "Artist info:"
 msgstr "Artist info:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1524
-#, fuzzy
 msgid "Artist information"
-msgstr "Artist info:"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1549
-#, fuzzy
 msgid "Albums"
-msgstr "Album"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1596
-#, fuzzy
 msgid "Similar Artists"
-msgstr "artister"
+msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1868
 msgid "Album info:"
 msgstr "Album info:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1873
-#, fuzzy
 msgid "Album information"
-msgstr "Album info:"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1995
 #: ../src/browsers/playlist3-metadata-browser.c:2301
-#, fuzzy
 msgid "Tracks"
-msgstr "Spor"
+msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2194
 #: ../src/browsers/playlist3-metadata-browser.c:2485
 msgid "Metadata Browser"
@@ -1482,7 +1472,7 @@ msgstr "Metadata Utforsker"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2210
 msgid "Show Current Song"
 msgstr ""
@@ -1516,9 +1506,8 @@ msgid "Tag based browser"
 msgstr ""
 
 #: ../src/browsers/playlist3-tag2-browser.c:1687
-#, fuzzy
 msgid "Reset browser"
-msgstr "Artist Utforsker"
+msgstr ""
 
 #: ../src/egg/eggcellrendererkeys.c:27
 msgid "New accelerator..."
@@ -1647,6 +1636,26 @@ msgstr "Bilder"
 msgid "Loading"
 msgstr ""
 
+#~ msgid ""
+#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
+#~ "This might work, but is no longer supported."
+#~ msgstr ""
+#~ "Gmpc er p dette tidspunktet koblet til en mpd versjon lavere enn 0.12.0\n"
+#~ "Dette vil kansje fungere, men er ikke lenger offisielt stttet"
+
+#~ msgid ""
+#~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
+#~ "from the cache"
+#~ msgstr ""
+#~ "Et ny metadata tillegg har blitt lagt til, gmpc vil n fylle ut alle "
+#~ "manglende metadata fra lageret"
+
+#~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
+#~ msgstr "<span size=\"xx-large\"><b>Tillegg</b></span>"
+
+#~ msgid "<span size='large'>Gnome Music Player Client</span>"
+#~ msgstr "<span size='large'>Gnome Music Player Client</span>"
+
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Artist:</b>"
 
@@ -1691,26 +1700,6 @@ msgstr ""
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Mapper:</b>"
-
-#~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
-#~ msgstr "<span size=\"xx-large\"><b>Tillegg</b></span>"
-
-#~ msgid "<span size='large'>Gnome Music Player Client</span>"
-#~ msgstr "<span size='large'>Gnome Music Player Client</span>"
-
-#~ msgid ""
-#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
-#~ "This might work, but is no longer supported."
-#~ msgstr ""
-#~ "Gmpc er p dette tidspunktet koblet til en mpd versjon lavere enn 0.12.0\n"
-#~ "Dette vil kansje fungere, men er ikke lenger offisielt stttet"
-
-#~ msgid ""
-#~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
-#~ "from the cache"
-#~ msgstr ""
-#~ "Et ny metadata tillegg har blitt lagt til, gmpc vil n fylle ut alle "
-#~ "manglende metadata fra lageret"
 
 #~ msgid "Center opened folder"
 #~ msgstr "Sentrer pnede mapper"
@@ -1781,8 +1770,7 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Forandringene blir sltt p etter  ha koblet til p "
 #~ "nytt</i></span>"
