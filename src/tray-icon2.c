@@ -523,7 +523,11 @@ void tray_icon2_create_tooltip(void)
 #ifdef EGGTRAYICON
         GdkWindow *w = NULL;
         gtk_widget_realize(tray_icon2_gsi);
+#if GTK_CHECK_VERSION(2,14,0)        
         w = gtk_widget_get_window(tray_icon2_gsi);
+#else
+        w = GTK_WIDGET(tray_icon2_gsi)->window;
+#endif
         screen = gtk_widget_get_screen(tray_icon2_gsi);
         orientation = egg_tray_icon_get_orientation((EggTrayIcon *)tray_icon2_gsi);
         rect.width = tray_icon2_gsi->allocation.width; 
