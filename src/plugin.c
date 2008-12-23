@@ -285,7 +285,7 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     int has_lib = 0;
     /* count number of items, and check for the lib entry */
     for(i = 0; items && items[i];i++) {
-        if(strcmp(items[i], "lib")==0) {
+        if(strcmp(items[i], "lib")==0 ||strcmp(items[i], "lib64")==0  ) {
             g_free(items[i]);
             items[i] = g_strdup("share");
             has_lib = 1;
