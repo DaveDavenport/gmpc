@@ -310,6 +310,8 @@ loop:
         }
 
 	}
+    if(playlist_editor_icon_view)
+    gtk_icon_view_selected_foreach(GTK_ICON_VIEW(playlist_editor_icon_view), playlist_editor_browser_playlist_editor_selected, NULL);
 }
 static void playlist_editor_browser_activate_cursor_item(GtkIconView *giv, gpointer userdata)
 {
@@ -793,6 +795,7 @@ static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, v
 {
     if(what&MPD_CST_STORED_PLAYLIST)
     {
+        printf("stoed playlist changed\n");
         playlist_editor_fill_list_real();
     }
 }
