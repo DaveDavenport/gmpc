@@ -102,8 +102,6 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	y = GTK_WIDGET (img)->allocation.y;
 	ww = GTK_WIDGET (img)->allocation.width;
 	wh = GTK_WIDGET (img)->allocation.height;
-	cairo_set_source_rgba (ctx, ((double) (0)), ((double) (0)), ((double) (0)), ((double) (0)));
-	cairo_fill (ctx);
 	cairo_set_line_width (ctx, 0.8);
 	cairo_set_tolerance (ctx, 0.1);
 	if (self->priv->cover != NULL) {

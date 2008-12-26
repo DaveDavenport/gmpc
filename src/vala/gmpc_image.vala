@@ -86,9 +86,6 @@ public class Gmpc.Image : Gtk.EventBox {
 			int ww = img.allocation.width;
 			int wh = img.allocation.height;
 
-            ctx.set_source_rgba(0,0,0,0);
-            ctx.fill();
-
             ctx.set_line_width ( 0.8);
 			ctx.set_tolerance (0.1);
 			if(cover != null)

@@ -353,7 +353,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
             g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                     GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
-            self_set_cover_na(gmi);
+//            self_set_cover_na(gmi);
             return (GtkWidget *)gmi;
         }
 	public 
@@ -368,7 +368,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
         g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                 GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
-            self_set_cover_na(gmi);
+//            self_set_cover_na(gmi);
 			return (GtkWidget *)gmi;
 		}
 
@@ -502,7 +502,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->song)
                 mpd_freeSong(self->_priv->song);
-
+            self_set_cover_na(self);
             self->_priv->song = mpd_songDup(song);
             self->_priv->gmpc_idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_update_cover_from_song_delayed_real,self);
 

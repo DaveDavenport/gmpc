@@ -363,8 +363,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 
                 gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,50);
 
-
-
                 /* make the background paintable, and paint the background */
                 event = gtk_event_box_new();
                 gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
