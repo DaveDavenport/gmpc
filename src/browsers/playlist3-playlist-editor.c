@@ -664,14 +664,18 @@ static void playlist_editor_browser_init()
 {
     GtkWidget *tree = NULL;
     GtkWidget *sw = NULL;
+    int pos = 0;
     /* */
     playlist_editor_browser = gtk_vpaned_new();
     /** browser */
     sw = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
-    gtk_widget_set_size_request(sw, -1, 100);	
+
+    pos = cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "pane-pos",100);
     gtk_paned_add1(GTK_PANED(playlist_editor_browser), sw);
+
+    gtk_paned_set_position(GTK_PANED(playlist_editor_browser), pos);
 
     /* icon view*/
     playlist_editor_store = gtk_list_store_new(PL_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING,GDK_TYPE_PIXBUF);
@@ -847,6 +851,10 @@ static void playlist_editor_save_myself(void)
             cfg_set_single_value_as_int(config, "playlist-plugin","position",indices[0]);
             gtk_tree_path_free(path);
         }
+    }
+    if(playlist_editor_browser) {
+        int pos = gtk_paned_get_position(GTK_PANED(playlist_editor_browser));
+        cfg_set_single_value_as_int(config, "playlist-plugin", "pane-pos", pos);
     }
 }
 
