@@ -86,7 +86,10 @@ public class Gmpc.Image : Gtk.EventBox {
 			int ww = img.allocation.width;
 			int wh = img.allocation.height;
 
-			ctx.set_line_width ( 0.8);
+            ctx.set_source_rgba(0,0,0,0);
+            ctx.fill();
+
+            ctx.set_line_width ( 0.8);
 			ctx.set_tolerance (0.1);
 			if(cover != null)
 			{
@@ -158,6 +161,12 @@ public class Gmpc.Image : Gtk.EventBox {
 		}
 		public void set_pixbuf(Gdk.Pixbuf buf, bool border)
 		{
+            if(this.temp == null && this.cover == null) {
+                this.cover_border = border;
+                this.cover = buf;
+                this.queue_draw();
+                return;
+            }
 			fade = 1.0;
 			this.temp= buf;
 			this.temp_border = border;

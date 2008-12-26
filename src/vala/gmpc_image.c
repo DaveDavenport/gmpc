@@ -102,6 +102,8 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	y = GTK_WIDGET (img)->allocation.y;
 	ww = GTK_WIDGET (img)->allocation.width;
 	wh = GTK_WIDGET (img)->allocation.height;
+	cairo_set_source_rgba (ctx, ((double) (0)), ((double) (0)), ((double) (0)), ((double) (0)));
+	cairo_fill (ctx);
 	cairo_set_line_width (ctx, 0.8);
 	cairo_set_tolerance (ctx, 0.1);
 	if (self->priv->cover != NULL) {
@@ -178,14 +180,24 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self) {
 
 
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
-	GdkPixbuf* _tmp1;
-	GdkPixbuf* _tmp0;
+	GdkPixbuf* _tmp3;
+	GdkPixbuf* _tmp2;
 	g_return_if_fail (GMPC_IS_IMAGE (self));
 	g_return_if_fail (GDK_IS_PIXBUF (buf));
+	if (self->priv->temp == NULL && self->priv->cover == NULL) {
+		GdkPixbuf* _tmp1;
+		GdkPixbuf* _tmp0;
+		self->priv->cover_border = border;
+		_tmp1 = NULL;
+		_tmp0 = NULL;
+		self->priv->cover = (_tmp1 = (_tmp0 = buf, (_tmp0 == NULL ? NULL : g_object_ref (_tmp0))), (self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL))), _tmp1);
+		gtk_widget_queue_draw (GTK_WIDGET (self));
+		return;
+	}
 	self->priv->fade = 1.0;
-	_tmp1 = NULL;
-	_tmp0 = NULL;
-	self->priv->temp = (_tmp1 = (_tmp0 = buf, (_tmp0 == NULL ? NULL : g_object_ref (_tmp0))), (self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL))), _tmp1);
+	_tmp3 = NULL;
+	_tmp2 = NULL;
+	self->priv->temp = (_tmp3 = (_tmp2 = buf, (_tmp2 == NULL ? NULL : g_object_ref (_tmp2))), (self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL))), _tmp3);
 	self->priv->temp_border = border;
 	gtk_widget_queue_draw (GTK_WIDGET (self));
 	if (self->priv->fade_timeout > 0) {

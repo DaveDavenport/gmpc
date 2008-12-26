@@ -361,7 +361,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 if (!data && cfg_get_single_value_as_int_with_default(config, "metadata","onlyownsimilar",FALSE))
                     continue;
 
-                gmtv = gmpc_metaimage_new(META_ARTIST_ART);
+                gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,50);
 
 
 
@@ -381,9 +381,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                     song->artist = data->tag;
                 }else
                     song->artist = str[i];
-                gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 50);
                 gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song);
-                gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,FALSE,0);
+                gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,TRUE,0);
                 song->artist = NULL;
                 /**
                  * Label
@@ -614,10 +613,9 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),4);
 
 	/** Create artist image */	
-	metaimage = gmpc_metaimage_new(META_ARTIST_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage), 100);
+	metaimage = gmpc_metaimage_new_size(META_ARTIST_ART,100);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(metaimage), song);
-	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, TRUE,0);
 
 	/** Create table */
 	table = gtk_table_new(1,1,FALSE); 
@@ -842,11 +840,10 @@ void info2_fill_song_view(mpd_Song *song)
 
 	table = gtk_table_new(2,2,FALSE);
 	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
-	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
+	image = gmpc_metaimage_new_size(META_ALBUM_ART,150);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
 	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-	gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE, TRUE,0);
 
 	table2 = gtk_table_new(2,2,0);
 	gtk_container_set_border_width(GTK_CONTAINER(table2), 8);
@@ -1409,8 +1406,7 @@ void info2_fill_artist_view(const char *artist)
 
 
 	/* Artist image */
-	gmtv = gmpc_metaimage_new(META_ARTIST_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(gmtv), 150);
+	gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,150);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song2);
 
 	gtk_table_attach(GTK_TABLE(table), gmtv, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -1847,8 +1843,7 @@ void info2_fill_album_view(const char *artist,const char *album)
 	ali = gtk_alignment_new(0,0.5,1,0);
 	gtk_container_set_border_width(GTK_CONTAINER(ali), 8);
 
-	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 150);
+	image = gmpc_metaimage_new_size(META_ALBUM_ART,150);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song2);
 
 
@@ -2265,8 +2260,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	 */
 	table = gtk_hbox_new(FALSE, 6); 
 
-	image = gmpc_metaimage_new(META_ALBUM_ART);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(image), 100);
+	image = gmpc_metaimage_new_size(META_ALBUM_ART,100);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
 
 	gtk_container_set_border_width(GTK_CONTAINER(table), 8);

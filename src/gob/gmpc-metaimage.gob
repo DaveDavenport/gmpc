@@ -136,7 +136,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
 		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 		gtk_widget_show_all(GTK_WIDGET(self));
-		self_set_cover_na(self);
+	//	self_set_cover_na(self);
 		
         self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
                 "status_changed",
@@ -341,6 +341,21 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             gtk_drag_finish(context, found, FALSE, dnd_time);
         }
+        public
+        GtkWidget *new_size(int type, int size)
+        {
+            Self *gmi =  GET_NEW;
+            gmi->image_type = type;
+            gmi->size = size;
+            gtk_drag_dest_set(GTK_WIDGET(gmi),
+                    GTK_DEST_DEFAULT_ALL,
+                    data_image_drag_target, num_drag_targets,
+                    GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+            g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
+                    GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
+            self_set_cover_na(gmi);
+            return (GtkWidget *)gmi;
+        }
 	public 
 		GtkWidget * new (int type)
 		{
@@ -353,6 +368,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
         g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                 GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
+            self_set_cover_na(gmi);
 			return (GtkWidget *)gmi;
 		}
 
@@ -535,33 +551,34 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public 
 		void
 		set_cover_na(self)
-		{
+        {
             GError *err = NULL;
             GdkPixbuf *pb2; 
 
-			self->_priv->state = STATE_NA;
+            self->_priv->state = STATE_NA;
 
-			if(self->_priv->image_url)
-			{
-				q_free(self->_priv->image_url);
-				self->_priv->image_url = NULL;
-			}
-			self_popup_destroy(self);
-			if(self->hide_on_na)
-			{		
-				gtk_widget_hide(GTK_WIDGET(self));
-				return;
-			}
+            if(self->_priv->image_url)
+            {
+                q_free(self->_priv->image_url);
+                self->_priv->image_url = NULL;
+            }
+            self_popup_destroy(self);
+            if(self->hide_on_na)
+            {		
+                gtk_widget_hide(GTK_WIDGET(self));
+                return;
+            }
 
-			  pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&err);
-			  if(!pb2)
-				  printf("uh owh %s\n", err->message);
-			  //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
-				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
-				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-			  g_object_unref(pb2);
-			  self_image_changed(self,META_DATA_UNAVAILABLE);
-		}
+            pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&err);
+            if(!pb2)
+                printf("uh owh %s\n", err->message);
+
+            //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
+            gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
+            gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+            g_object_unref(pb2);
+            self_image_changed(self,META_DATA_UNAVAILABLE);
+        }
 	public 
 		void
 		set_cover_fetching(self)
@@ -583,89 +600,90 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         
 //			gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image), pb2);
 				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
-			if(self->squared)
-				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-			g_object_unref(pb2);
-			self_image_changed(self,META_DATA_FETCHING);
-		}
+			if(self->squared) {
+                gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+            }
+            g_object_unref(pb2);
+            self_image_changed(self,META_DATA_FETCHING);
+        }
 
-	signal last NONE (INT) 
-		void 
-		image_changed(self, int type)
-		{
-			/* do nothing */
-		}
+    signal last NONE (INT) 
+        void 
+        image_changed(self, int type)
+        {
+            /* do nothing */
+        }
 
-	public	
-		void
-		set_cover_from_path(self, gchar *path)
-		{
-			GdkPixbuf *pb = NULL;
+    public	
+        void
+        set_cover_from_path(self, gchar *path)
+        {
+            GdkPixbuf *pb = NULL;
 
-			self->_priv->state = STATE_IMAGE;
-			pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
-			if(self->_priv->image_url)
-			{
-				q_free(self->_priv->image_url);
-				self->_priv->image_url = NULL;
-			}
-			self_popup_destroy(self);
+            self->_priv->state = STATE_IMAGE;
+            pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
+            if(self->_priv->image_url)
+            {
+                q_free(self->_priv->image_url);
+                self->_priv->image_url = NULL;
+            }
+            self_popup_destroy(self);
 
-			if(pb)
-			{
-				int width = 0; 
-				int height = 0;
-				/* save url */
-				self->_priv->image_url = g_strdup(path); 
+            if(pb)
+            {
+                int width = 0; 
+                int height = 0;
+                /* save url */
+                self->_priv->image_url = g_strdup(path); 
 
-				/** 
-				 * Need to get pixbuf height/width before adding to image
-				 * if added to image, somehow the returned values don't match anymore
-				 */
-				width = gdk_pixbuf_get_width(pb);			
-				height = gdk_pixbuf_get_height(pb);
-				if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
-				{
-					float spineRatio = 60.0/600.0;
-					int spineWidth = (width)*spineRatio;
-					GdkPixbuf *pb2 = pb;
-					GdkPixbuf *blank ;
-					gchar *path2;
-					/* Scale the cover to fit inside the case */
-					pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth,height,GDK_INTERP_BILINEAR);
-					g_object_unref(pb2);
+                /** 
+                 * Need to get pixbuf height/width before adding to image
+                 * if added to image, somehow the returned values don't match anymore
+                 */
+                width = gdk_pixbuf_get_width(pb);			
+                height = gdk_pixbuf_get_height(pb);
+                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
+                {
+                    float spineRatio = 60.0/600.0;
+                    int spineWidth = (width)*spineRatio;
+                    GdkPixbuf *pb2 = pb;
+                    GdkPixbuf *blank ;
+                    gchar *path2;
+                    /* Scale the cover to fit inside the case */
+                    pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth,height,GDK_INTERP_BILINEAR);
+                    g_object_unref(pb2);
 
-					width = gdk_pixbuf_get_width(pb);			
-					height = gdk_pixbuf_get_height(pb);
-					/* load the case */
-					path2 = gmpc_get_full_image_path("mpdBrowser_case.png"); 
-					pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
-					g_free(path2);
-					/* render */
-					blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width+spineWidth,height);
-					gdk_pixbuf_fill(blank, 0x00000000);
-					gdk_pixbuf_copy_area(pb, 0,0,width,height,blank,spineWidth,0);
-					gdk_pixbuf_composite(pb2,blank,0,0,width+spineWidth,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
+                    width = gdk_pixbuf_get_width(pb);			
+                    height = gdk_pixbuf_get_height(pb);
+                    /* load the case */
+                    path2 = gmpc_get_full_image_path("mpdBrowser_case.png"); 
+                    pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
+                    g_free(path2);
+                    /* render */
+                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width+spineWidth,height);
+                    gdk_pixbuf_fill(blank, 0x00000000);
+                    gdk_pixbuf_copy_area(pb, 0,0,width,height,blank,spineWidth,0);
+                    gdk_pixbuf_composite(pb2,blank,0,0,width+spineWidth,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
 
-					g_object_unref(pb2);
-					g_object_unref(pb);
-					pb = blank;
-					width += spineWidth;
+                    g_object_unref(pb2);
+                    g_object_unref(pb);
+                    pb = blank;
+                    width += spineWidth;
 
-				}
-				//gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
-				gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
-				/**
-				 * Set sizing, also set size on non-squared, so the widget resizes propperly
-				 */
-				if(self->squared)
-				{
-					gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-				}
+                }
+                //gtk_image_set_from_pixbuf(GTK_IMAGE(self->_priv->image),pb);
+                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+                /**
+                 * Set sizing, also set size on non-squared, so the widget resizes propperly
+                 */
+                if(self->squared)
+                {
+                    gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+                }
 				else
-				{
-					gtk_widget_set_size_request(GTK_WIDGET(self), width+2, height+2);
-				}
+                {
+                    gtk_widget_set_size_request(GTK_WIDGET(self), width+2, height+2);
+                }
 				g_object_unref(pb);
 			}
 			if(self->is_visible)
