@@ -636,19 +636,22 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     /* clear the list, makes changing the tree layout better.*/
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
     /* clear all settings */
-    gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
-    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+    if(te->image_renderer)
     {
-        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
-	    gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
-        gtk_cell_renderer_set_fixed_size(te->image_renderer, size,size);
-    }
-    else
-    {
-        int width, height;
-        gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
-        gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
-	    gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+        gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
+        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+        {
+            int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
+            gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
+            gtk_cell_renderer_set_fixed_size(te->image_renderer, size,size);
+        }
+        else
+        {
+            int width, height;
+            gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
+            gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
+            gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+        }
     }
 
     /* index starts at 1 */
@@ -806,26 +809,29 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	te->column = column = gtk_tree_view_column_new();
 	
 	gtk_tree_view_column_set_title(column, name);
-
-	te->image_renderer = renderer = gtk_cell_renderer_pixbuf_new();
-
-    gtk_tree_view_column_pack_start(column, renderer, FALSE);
-    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+    te->image_renderer = NULL;
+    if(cfg_get_single_value_as_int_with_default(config, "tag2-plugin","show-image-column", 1))
     {
-        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
+        te->image_renderer = renderer = gtk_cell_renderer_pixbuf_new();
 
-        gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
-        gtk_cell_renderer_set_fixed_size(renderer, size,size);
-        gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_column_pack_start(column, renderer, FALSE);
+        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+        {
+            int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
+
+            gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
+            gtk_cell_renderer_set_fixed_size(renderer, size,size);
+        }
+        else
+        {
+            int width, height;
+            gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
+            gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
+            gtk_tree_view_column_add_attribute(column, renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+        }
     }
-    else
-    {
-        int width, height;
-        gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
-        gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
-	    gtk_tree_view_column_add_attribute(column, renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
-        gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
-    }
+
+    gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
     gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), TRUE);
     renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
