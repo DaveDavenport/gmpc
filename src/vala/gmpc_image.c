@@ -6,8 +6,8 @@
 #include "gmpc_image.h"
 #include <float.h>
 #include <math.h>
-#include <gdk/gdk.h>
 #include <cairo.h>
+#include <gdk/gdk.h>
 
 
 
@@ -19,12 +19,15 @@ struct _GmpcImagePrivate {
 	gboolean temp_border;
 	double fade;
 	guint fade_timeout;
+	gboolean cover_round_corners;
+	gboolean temp_round_corners;
 };
 
 #define GMPC_IMAGE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_IMAGE, GmpcImagePrivate))
 enum  {
 	GMPC_IMAGE_DUMMY_PROPERTY
 };
+static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event);
 static gboolean gmpc_image_timeout_test (GmpcImage* self);
 static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self);
@@ -35,55 +38,60 @@ static void gmpc_image_finalize (GObject * obj);
 
 
 
-/*
-private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
-double rect_x1,rect_y1;
-double radius = 15;//rect_width/5;
-rect_x1=rect_x0+rect_width;
-rect_y1=rect_y0+rect_height;
-if (rect_width == 0 || rect_height == 0)
-return;
-if (rect_width/2<radius) {
-if (rect_height/2<radius) {
-ctx.move_to  (rect_x0, (rect_y0 + rect_y1)/2);
-ctx.curve_to (rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
-ctx.curve_to (rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
-ctx.curve_to (rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
-ctx.curve_to (rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
-} else {
-ctx.move_to  ( rect_x0, rect_y0 + radius);
-ctx.curve_to ( rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
-ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-ctx.line_to ( rect_x1 , rect_y1 - radius);
-ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
-ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
-}
-}
-else 
-{
-if (rect_height/2<radius) {
-ctx.move_to  ( rect_x0, (rect_y0 + rect_y1)/2);
-ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
-ctx.line_to ( rect_x1 - radius, rect_y0);
-ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
-ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-ctx.line_to ( rect_x0 + radius, rect_y1);
-ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
-} else {
-ctx.move_to  ( rect_x0, rect_y0 + radius);
-ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
-ctx.line_to ( rect_x1 - radius, rect_y0);
-ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-ctx.line_to ( rect_x1 , rect_y1 - radius);
-ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-ctx.line_to ( rect_x0 + radius, rect_y1);
-ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
-}
+static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
+	double rect_x1;
+	double rect_y1;
+	double radius;
+	g_return_if_fail (GMPC_IS_IMAGE (self));
+	g_return_if_fail (ctx != NULL);
+	rect_x1 = 0.0;
+	rect_y1 = 0.0;
+	radius = ((double) (15));
+	/*rect_width/5;*/
+	rect_x1 = rect_x0 + rect_width;
+	rect_y1 = rect_y0 + rect_height;
+	if (rect_width == 0 || rect_height == 0) {
+		return;
+	}
+	if (rect_width / 2 < radius) {
+		if (rect_height / 2 < radius) {
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
+		} else {
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
+		}
+	} else {
+		if (rect_height / 2 < radius) {
+			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
+		} else {
+			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
+			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
+			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
+			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
+			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
+			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
+			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
+			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
+		}
+	}
+	cairo_close_path (ctx);
 }
 
-ctx.close_path();
-}
-*/
+
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
@@ -111,8 +119,11 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 		/* Make the path*/
 		cairo_new_path (ctx);
-		/*draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);*/
-		cairo_rectangle (ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 2)), ((double) (height - 2)));
+		if (self->priv->cover_round_corners) {
+			gmpc_image_draw_curved_rectangle (self, ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 1)), ((double) (height - 1)));
+		} else {
+			cairo_rectangle (ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 1)), ((double) (height - 1)));
+		}
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->cover_border) {
@@ -131,8 +142,11 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
-		/*draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);*/
-		cairo_rectangle (ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 2)), ((double) (height - 2)));
+		if (self->priv->temp_round_corners) {
+			gmpc_image_draw_curved_rectangle (self, ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 1)), ((double) (height - 1)));
+		} else {
+			cairo_rectangle (ctx, x + (ww - width) / 2 + 0.5, y + (wh - height) / 2 + 0.5, ((double) (width - 1)), ((double) (height - 1)));
+		}
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
 		if (self->priv->temp_border) {
 			cairo_clip_preserve (ctx);
@@ -161,6 +175,7 @@ static gboolean gmpc_image_timeout_test (GmpcImage* self) {
 		_tmp0 = NULL;
 		self->priv->cover = (_tmp1 = (_tmp0 = self->priv->temp, (_tmp0 == NULL ? NULL : g_object_ref (_tmp0))), (self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL))), _tmp1);
 		self->priv->cover_border = self->priv->temp_border;
+		self->priv->cover_round_corners = self->priv->temp_round_corners;
 		_tmp2 = NULL;
 		self->priv->temp = (_tmp2 = NULL, (self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL))), _tmp2);
 		gtk_widget_queue_draw (GTK_WIDGET (self));
@@ -177,7 +192,7 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self) {
 }
 
 
-void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
+void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border, gboolean round) {
 	GdkPixbuf* _tmp3;
 	GdkPixbuf* _tmp2;
 	g_return_if_fail (GMPC_IS_IMAGE (self));
@@ -189,6 +204,7 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 		_tmp1 = NULL;
 		_tmp0 = NULL;
 		self->priv->cover = (_tmp1 = (_tmp0 = buf, (_tmp0 == NULL ? NULL : g_object_ref (_tmp0))), (self->priv->cover == NULL ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL))), _tmp1);
+		self->priv->cover_round_corners = round;
 		gtk_widget_queue_draw (GTK_WIDGET (self));
 		return;
 	}
@@ -197,6 +213,7 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 	_tmp2 = NULL;
 	self->priv->temp = (_tmp3 = (_tmp2 = buf, (_tmp2 == NULL ? NULL : g_object_ref (_tmp2))), (self->priv->temp == NULL ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL))), _tmp3);
 	self->priv->temp_border = border;
+	self->priv->temp_round_corners = round;
 	gtk_widget_queue_draw (GTK_WIDGET (self));
 	if (self->priv->fade_timeout > 0) {
 		g_source_remove (self->priv->fade_timeout);
@@ -269,6 +286,8 @@ static void gmpc_image_instance_init (GmpcImage * self) {
 	self->priv->temp_border = TRUE;
 	self->priv->fade = 0.0;
 	self->priv->fade_timeout = ((guint) (0));
+	self->priv->cover_round_corners = ((gboolean) (1));
+	self->priv->temp_round_corners = ((gboolean) (1));
 }
 
 

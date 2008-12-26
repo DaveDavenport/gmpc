@@ -15,6 +15,9 @@ public class Gmpc.Image : Gtk.EventBox {
 	private double fade = 0.0;
 	private uint fade_timeout = 0;
 
+    private bool cover_round_corners = 1;
+    private bool temp_round_corners = 1;
+
 	~Image() {
 		if(fade_timeout > 0)
 		{
@@ -28,7 +31,7 @@ public class Gmpc.Image : Gtk.EventBox {
 		this.expose_event += this.on_expose;
 
 	}
-    /*
+  
 	private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
 		double rect_x1,rect_y1;
 		double radius = 15;//rect_width/5;
@@ -76,7 +79,7 @@ public class Gmpc.Image : Gtk.EventBox {
 
 		ctx.close_path();
 	}
-*/
+
 		private bool on_expose (Image img, Gdk.EventExpose event) {
 			var ctx = Gdk.cairo_create(img.window);
 			int width=0;
@@ -97,10 +100,13 @@ public class Gmpc.Image : Gtk.EventBox {
 
 				// Make the path
 				ctx.new_path();
-				//draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);
-                ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);
+                if(this.cover_round_corners){
+                    draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                } else {
+                    ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                }
 
-				double fade2 = (fade <= 0)?1:fade;
+                double fade2 = (fade <= 0)?1:fade;
 				Gdk.cairo_set_source_pixbuf(ctx, cover, x+(ww-width)/2,y+(wh-height)/2);
 
 				if(cover_border)
@@ -122,8 +128,12 @@ public class Gmpc.Image : Gtk.EventBox {
 				width = temp.get_width();
 				height = temp.get_height();
 
-				//draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);
-                ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-2, height-2);
+
+                if(temp_round_corners){
+                    draw_curved_rectangle(ctx, x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                }else{
+                    ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                }
                 Gdk.cairo_set_source_pixbuf(ctx, temp, x+(ww-width)/2,y+(wh-height)/2);
 
 
@@ -146,6 +156,7 @@ public class Gmpc.Image : Gtk.EventBox {
 			if(fade <= 0.0){
 				this.cover = this.temp;
 				this.cover_border = this.temp_border;
+                this.cover_round_corners = this.temp_round_corners;
 				this.temp = null;
 
 				this.queue_draw();
@@ -156,18 +167,20 @@ public class Gmpc.Image : Gtk.EventBox {
 			this.queue_draw();
 			return true;
 		}
-		public void set_pixbuf(Gdk.Pixbuf buf, bool border)
+		public void set_pixbuf(Gdk.Pixbuf buf, bool border, bool round)
 		{
             if(this.temp == null && this.cover == null) {
                 this.cover_border = border;
                 this.cover = buf;
+                this.cover_round_corners = round;
                 this.queue_draw();
                 return;
             }
 			fade = 1.0;
 			this.temp= buf;
 			this.temp_border = border;
-			this.queue_draw();
+            this.temp_round_corners = round;
+                this.queue_draw();
 			if(fade_timeout>0) {
 				GLib.Source.remove(fade_timeout);
 			}
