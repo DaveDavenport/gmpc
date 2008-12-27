@@ -318,6 +318,9 @@ int main (int argc, char **argv)
                 {
                     printf("%-25s: %s\n",_("Revision"),revision);
                 }
+		printf("%-25s: %s\n", _("Libmpd version"), LIBMPD_VERSION);
+		printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
+		printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);
 		printf("%-25s: %s\n\n", _("Platform"),
 #ifdef WIN32
 			_("Windows")
