@@ -372,6 +372,13 @@ int main (int argc, char **argv)
 			_("Disabled")
 #endif
 		);
+		printf("%-25s: %s\n", _("Mac integration library"),
+#ifdef ENABLE_IGE 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
 
 		printf("%-25s: %s\n", _("Use ~/.config/ dir"),
 #ifdef USE_CONFIG_DIR

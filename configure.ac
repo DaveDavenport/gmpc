@@ -394,5 +394,9 @@ if test "x$system_libsexy" = "xtrue"; then
 else
 	echo "Use system libsexy:               disabled"
 fi
-
+if test "x$macige" = "xyes"; then 
+	echo "Use mac integration library:      enabled"
+else
+	echo "Use mac integration library:      disabled"
+fi
 echo "Now type make to build"
