@@ -107,7 +107,9 @@ AC_ARG_ENABLE([maintainermode],
 	[maintainer_mode=false])
 
 AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
-
+if test x$maintainer_mode = xtrue; then
+    AC_DEFINE(MAINTAINER_MODE, 1, [Enable maintainer mode])
+fi
 
 
 # Egg Status Icon 

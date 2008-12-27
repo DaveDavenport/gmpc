@@ -68,6 +68,7 @@ cb_smc_shutdown_cancelled(SmcConn smc_conn, SmPointer client_data)
 cb_ice_connection_messages(IceConn ice_connection, gint source,
 		GdkInputCondition condition)
 {
+	debug_printf(DEBUG_INFO, "Ice connection");
 	IceProcessMessages(ice_connection, NULL, NULL);
 }
 

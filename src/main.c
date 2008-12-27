@@ -49,6 +49,10 @@
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 
+
+#define RESET "\x1b[0m"
+#define BOLD "\x1b[1m"
+
 extern gmpcPlugin connection_plug;
 extern gmpcPlugin metadata_plug;
 /*
@@ -305,19 +309,97 @@ int main (int argc, char **argv)
              */
             else if (!strcasecmp(argv[i], _("--version")))
             {
-                printf(_("Gnome Music Player Client\n"));
-                printf("%s\n", GMPC_TAGLINE);
-                printf(GMPC_COPYRIGHT"\n\n");
-                printf("%s:\t%s\n",_("Version"), VERSION);
+                printf(BOLD"%s\n",_("Gnome Music Player Client"));
+
+                printf(GMPC_COPYRIGHT"\n\n"RESET);
+                printf("%-25s: %s\n",_("Tagline"), GMPC_TAGLINE);
+                printf("%-25s: %s\n",_("Version"), VERSION);
                 if(revision && revision[0] != '\0')
                 {
-                    printf("%s:\t%s\n",_("Revision"),revision);
+                    printf("%-25s: %s\n",_("Revision"),revision);
                 }
-                printf("%s:\t"GMPC_WEBSITE"\n",_("Website"));
+		printf("%-25s: %s\n\n", _("Platform"),
+#ifdef WIN32
+			_("Windows")
+#elif OSX
+			_("Mac OsX")
+#else
+			_("*nix")
+#endif
+		);
+                printf("%-25s: "GMPC_WEBSITE"\n",_("Website"));
+                printf("%-25s: "GMPC_BUGTRACKER"\n",_("Getting help"));
+		printf(BOLD"\n%s:\n"RESET,_("Options enabled"));
+		printf("%-25s: %s\n",
+			_("X session management"),
+#ifdef ENABLE_SM
+			_("Enabled")
+#else
+ 			_("Disabled")
+#endif
+		);	
+		printf("%-25s: %s\n", _("NLS Support"),
+#ifdef ENABLE_NLS
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("Multimedia Keys"),
+#ifdef ENABLE_MMKEYS 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("Libegg's trayicon"),
+#ifdef EGGTRAYICON 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("System libsexy"),
+#ifdef USE_SYSTEM_LIBSEXY 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("Use ~/.config/ dir"),
+#ifdef USE_CONFIG_DIR
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("Debug timing"),
+#ifdef DEBUG_TIMING 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+		printf("%-25s: %s\n", _("Maintainer mode"),
+#ifdef MAINTAINER_MODE 
+			_("Enabled")
+#else
+			_("Disabled")
+#endif
+		);
+
+
                 exit(0);
             }
             /**
-             * Allow the user to pick another config file
+             * Allow the use
+r to pick another config file
              */
 #define check_key(a) (!strncasecmp(argv[i], a, strlen(a)))
             else if (check_key(_("--config=")))
