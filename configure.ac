@@ -224,6 +224,7 @@ esac
 
 win32=no
 macosx=no
+macige=no
 case $host in
   *-*-mingw32* | *-*-windows)
     win32=yes
@@ -237,11 +238,23 @@ case $host in
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AM_CONDITIONAL(OSX, test x$macosx = xyes)
-if test x$macosx = xyes; then
+
+
+AC_ARG_ENABLE(macige,
+              [  --enable-macige      Enable Mac integration on mac.],
+              [ case "${enableval}" in
+                    yes)    macige=yes;;
+                     no)    macige=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --enable-macige]);;
+                esac],
+              [macige=no])
+
+if test x$macosx = xyes && test x$macige = xyes; then
 # mac integration 
 PKG_CHECK_MODULES([macint],ige-mac-integration)
 AC_SUBST(macint_CFLAGS)
 AC_SUBST(macint_LIBS)
+AC_DEFINE(ENABLE_IGE, 1, [Enable Mac integration Support])
 fi
 
 ##

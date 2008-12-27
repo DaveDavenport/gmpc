@@ -31,7 +31,7 @@
 #include "gmpc-clicklabel.h"
 #include <gmpc-liststore-sort.h>
 #include "vala/gmpc-progress.h"
-#ifdef OSX
+#ifdef ENABLE_IGE 
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
 #include "ige-mac-bundle.h"
@@ -1016,7 +1016,7 @@ void create_playlist3 ()
 
 	}
 
-#ifdef OSX
+#ifdef ENABLE_IGE 
 	{
 		GdkPixbuf *pb = NULL;
 		IgeMacDock      *dock;
@@ -1677,7 +1677,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 	 */
 	if(what&MPD_CST_STATE)
 	{
-#ifdef OSX
+#ifdef ENABLE_IGE 
 		IgeMacDock      *dock = ige_mac_dock_get_default();
 		GdkPixbuf *pb;
 #endif
@@ -1712,7 +1712,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
                     g_free(markup);
 
 
-#ifdef OSX
+#ifdef ENABLE_IGE 
 		    pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-play", 64, 0,NULL);
 		    if(pb){
 			    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
@@ -1735,7 +1735,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 				 */
 				mpd_song_markup(buffer, 1024,"[%title% - &[%artist%] (paused)]|%shortfile% (paused)", mpd_playlist_get_current_song(connection));
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), buffer);
-#ifdef OSX
+#ifdef ENABLE_IGE 
 				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc-tray-pause", 64, 0,NULL);
 				if(pb){
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
@@ -1756,7 +1756,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 						"gtk-media-play",GTK_ICON_SIZE_BUTTON);
 
 				gtk_window_set_title(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), _("GMPC"));
-#ifdef OSX
+#ifdef ENABLE_IGE 
 				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),"gmpc", 64, 0,NULL);
 				if(pb){
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
