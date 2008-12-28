@@ -2233,6 +2233,7 @@ void playlist3_new_header(void)
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE,0);
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE,  TRUE,0);
 
+
 		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
 		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
 		g_signal_connect(G_OBJECT(header_labels[4]), "button-press-event", G_CALLBACK(playlist3_header_album), NULL);
@@ -2252,7 +2253,6 @@ void playlist3_update_header(void)
 			mpd_Song *song = mpd_playlist_get_current_song(connection);
 			/** Set new header */
 			if(mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song){
-
 				mpd_song_markup(buffer, 1024,"[%title%|%shortfile%][ (%name%)]",song);
 				gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]),buffer);
 				if(song->artist) {
@@ -2266,7 +2266,16 @@ void playlist3_update_header(void)
 				if(song->album) {
 					gtk_widget_show(header_labels[3]);
 					gtk_widget_show(header_labels[4]);
-					gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),song->album);
+                    if(song->date) {
+                        gchar *text = g_strdup_printf("%s (%s)",song->album, song->date);
+                        gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),text);
+                        g_free(text);
+                    }
+                    else
+                    {
+                        gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]),song->album);
+                    }
+
 				} else {
 					gtk_widget_hide(header_labels[3]);
 					gtk_widget_hide(header_labels[4]);

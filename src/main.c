@@ -48,42 +48,31 @@
 #include "browsers/playlist3-find2-browser.h"
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
-
+/**
+ * Get revision
+ */
+#include "revision.h"
+#ifdef ENABLE_MMKEYS
+    #include "mm-keys.h"
+#endif
 
 #define RESET "\x1b[0m"
 #define BOLD "\x1b[1m"
 
 extern gmpcPlugin connection_plug;
 extern gmpcPlugin metadata_plug;
-/*
-extern gmpcPlugin about_plug;
-*/
 extern gmpcPlugin playlist_plug;
-
 extern gmpcPlugin cover_art_plug;
-
 extern gmpcPlugin tray_icon2_plug;
-
 extern gmpcPlugin proxyplug;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin url_plugin;
-
-/** main.c **/
-extern GladeXML *xml_main_window;
-
 extern gmpcPlugin playlist_editor_plugin;
 
-/**
- * Get revision
- */
-#include "revision.h"
 
-#ifdef ENABLE_MMKEYS
-    #include "mm-keys.h"
-#endif
 
 /**
- * blub
+ *  Bacon
  */
 #ifndef WIN32
     #include "bacon/bacon-message-connection.h"
@@ -103,6 +92,8 @@ GmpcIdle *gmpc_idle = NULL;
 GmpcMetaWatcher *gmw = NULL;
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
 int gmpc_connected = FALSE;
+
+
 static void connection_changed_real(GmpcConnection *gmpcconn,MpdObj *mi, int connect,gpointer data);
 static void gmpc_status_changed_callback_real(GmpcConnection *gmpcconn, MpdObj *mi, ChangedStatusType what, gpointer data);
 
