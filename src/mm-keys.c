@@ -68,7 +68,7 @@ enum {
 	LAST_SIGNAL
 };
 
-char *keynames[LAST_SIGNAL] = {
+const char *keynames[LAST_SIGNAL] = {
 	N_("PlayPause"),	/** MM_PLAYPAUSE */
 	N_("Next"),	 	/** MM_NEXT*/
 	N_("Previous"),		/** MM_PREV */
@@ -260,7 +260,7 @@ static void mmkeys_init (MmKeys *object)
 	GdkDisplay *display;
 	GdkScreen *screen;
 	GdkWindow *root;
-	guint i, j;
+	gint i, j;
 	int keycode = 0;
 	int anyKeybindsFailed = FALSE;
 	int anyDuplicatesFound = FALSE;
@@ -415,7 +415,7 @@ static int grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
 
 static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpointer data)
 {
-	int i;
+	unsigned int i;
 	XEvent *xev;
 	XKeyEvent *key;
 	unsigned int keystate;
@@ -429,7 +429,7 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 	keystate = key->state & ~(Mod2Mask | Mod5Mask | LockMask);
 	for(i=0; i < LAST_SIGNAL;i++)
 	{
-		if(keycodes[i] == key->keycode && masks[i] == keystate )
+		if(keycodes[i] == (int)(key->keycode) && masks[i] == keystate )
 		{
 			g_signal_emit (data, signals[i], 0, 0);
 			debug_printf(DEBUG_INFO, "%s pressed", keynames[i]);
@@ -483,7 +483,7 @@ void grab_key(int key, int keycode, unsigned int mask)
 	GdkDisplay *display;
 	GdkScreen *screen;
 	GdkWindow *root;
-	guint i;
+	gint i;
 	display = gdk_display_get_default ();
 
 	/* remove old key */
@@ -590,7 +590,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 		if (i == key)
 			continue;
 		if (hardware_keycode != 0 &&
-			keycodes[i] == hardware_keycode &&
+			keycodes[i] == (int)hardware_keycode &&
 			masks[i] == mask)
 		{
 			gchar *message;

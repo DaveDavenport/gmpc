@@ -52,7 +52,7 @@ struct _MmKeysClass
 MmKeys *mmkeys_new      (void);
 
 void grab_key(int key, int keycode, unsigned int mask);
-gmpcPlugin mmkeys_plug;
+extern gmpcPlugin mmkeys_plug;
 #endif /* __MM_KEYS_H */
 
 

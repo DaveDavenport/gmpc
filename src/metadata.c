@@ -490,7 +490,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char 
 	return META_DATA_FETCHING;	
 }
 
-static void meta_data_retrieve_thread()
+static void meta_data_retrieve_thread(void)
 {
 	meta_thread_data *data = NULL;
 	/**
@@ -642,7 +642,7 @@ static gboolean meta_data_handle_results(void)
 /**
  * Initialize
  */
-void meta_data_init()
+void meta_data_init(void)
 {
     gchar *url = gmpc_get_covers_path(NULL); 
     if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
@@ -719,18 +719,12 @@ static gboolean meta_data_check_plugin_changed_message(gpointer data)
 	playlist3_show_error_message(_("A new metadata plugin was added, gmpc has purged all failed hits from the cache"), ERROR_INFO);
 	return FALSE;
 }
-void meta_data_check_plugin_changed()
+void meta_data_check_plugin_changed(void)
 {
     int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
     if(old_amount < meta_num_plugins)
     {
-/*
-        GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-                _("A new metadata plugin was added, gmpc will now purge all missing metadata from the cache"));
-        g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-        gtk_widget_show_all(GTK_WIDGET(dialog));
-*/
-	gtk_init_add(meta_data_check_plugin_changed_message, NULL);
+        gtk_init_add(meta_data_check_plugin_changed_message, NULL);
         meta_data_cleanup();
     }
     if(old_amount != meta_num_plugins)
@@ -958,7 +952,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     g_assert(type < META_QUERY_DATA_TYPES); 
     {
         gchar *filename = NULL, *dirname = NULL;
-        gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
+        const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
         g_assert(song->artist != NULL);
 
         /* Convert it so the filesystem likes it */

@@ -127,7 +127,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 
     public 
-        GtkWidget * new (char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
+        GtkWidget * new (const char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
         {
             Self *self = GET_NEW;
             self->_priv->name = g_strdup(name);

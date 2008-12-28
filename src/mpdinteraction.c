@@ -96,7 +96,6 @@ gmpcPlugin connection_plug = {
 	NULL                    /* set_enabled */
 };
 
-extern GladeXML *pl3_xml;
 guint connecting_pulse = 0;
 gboolean connecting_pulse_callback(void);
 gboolean connecting_pulse_callback(void)
@@ -110,7 +109,7 @@ gboolean connecting_pulse_callback(void)
 }
 /* this function doesnt use the start/stop_mpd_action because it the user doesnt want to see that */
 
-int update_mpd_status()
+int update_mpd_status(void)
 {
 	if(!mpd_check_connected(connection)) return TRUE;
 	mpd_status_update(connection);
@@ -139,7 +138,7 @@ static void connection_thread(void)
 }
 
 /* the functiont that connects to mpd */
-int connect_to_mpd()
+int connect_to_mpd(void)
 {
 	char *string = NULL;
     if(connecting_lock == NULL){
@@ -202,7 +201,7 @@ int connect_to_mpd()
 
 /* the normal play functions, stop, play, next, prev */
 /* returns FALSE when everything went ok */
-int next_song()
+int next_song(void)
 {
 	if(mpd_server_check_command_allowed(connection, "next") == MPD_SERVER_COMMAND_ALLOWED)
 	{
@@ -211,21 +210,21 @@ int next_song()
 	return FALSE;
 }
 
-int prev_song()
+int prev_song(void)
 {
 	if(mpd_server_check_command_allowed(connection, "previous") == MPD_SERVER_COMMAND_ALLOWED)
 	mpd_player_prev(connection);
 	return FALSE;
 }
 
-int stop_song()
+int stop_song(void)
 {
 	if(mpd_server_check_command_allowed(connection, "stop") == MPD_SERVER_COMMAND_ALLOWED)
 		mpd_player_stop(connection);
 	return FALSE;
 }
 
-int play_song()
+int play_song(void)
 {
 	int state = mpd_player_get_state(connection);
 	if(state == MPD_PLAYER_STOP)
@@ -265,44 +264,44 @@ int seek_ns(int n)
 	return seek_ps(-n);
 }
 
-void song_fastforward()
+void song_fastforward(void)
 {
 	seek_ps(1);
 }
-void song_fastbackward()
+void song_fastbackward(void)
 {
 	seek_ps(-1);
 }
-void repeat_toggle()
+void repeat_toggle(void)
 {
 	mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 }
-void random_toggle()
+void random_toggle(void)
 {
 	mpd_player_set_random(connection, !mpd_player_get_random(connection));
 }
-void volume_up()
+void volume_up(void)
 {
 	mpd_status_set_volume(connection, mpd_status_get_volume(connection)+5);
 }
-void volume_down()
+void volume_down(void)
 {
 	mpd_status_set_volume(connection, mpd_status_get_volume(connection)-5);
 }
 
 
-void volume_mute()
+void volume_mute(void)
 {
     mpd_status_set_volume(connection, 0);
 }
 
-void volume_unmute()
+void volume_unmute(void)
 {
     if(mpd_status_get_volume(connection) == 0)
         mpd_status_set_volume(connection, current_volume);
 }
 
-void volume_toggle_mute()
+void volume_toggle_mute(void)
 {
     if(current_volume > 0 && mpd_status_get_volume(connection) == 0)
     {
@@ -822,7 +821,7 @@ void preferences_window_connect(GtkWidget *but)
 				connection_set_current_profile(uid);
 				if(!mpd_check_connected(connection))
 				{
-					if(!connect_to_mpd());
+					connect_to_mpd();
 				}
 				q_free(uid);
 			}
@@ -831,7 +830,7 @@ void preferences_window_connect(GtkWidget *but)
 	else {
 		if(!mpd_check_connected(connection))
 		{
-			if(!connect_to_mpd());
+			connect_to_mpd();
 		}  
 	}
 }
@@ -1084,7 +1083,7 @@ void connection_set_password(char *password)
 	q_free(profile);
 }
 
-int connection_use_auth()
+int connection_use_auth(void)
 {
   int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
@@ -1093,7 +1092,7 @@ int connection_use_auth()
   return retv;
 }
 
-char *connection_get_hostname()
+char *connection_get_hostname(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_hostname(gmpc_profiles, profile);
@@ -1101,7 +1100,7 @@ char *connection_get_hostname()
 
 	return retv;
 }
-int connection_get_port()
+int connection_get_port(void)
 {
 	int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
@@ -1109,7 +1108,7 @@ int connection_get_port()
 	q_free(profile);
 	return retv;
 }
-char *connection_get_password()
+char *connection_get_password(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_password(gmpc_profiles, profile);

@@ -284,7 +284,7 @@ egg_column_model_row_drop_possible (GtkTreeDragDest  *drag_dest,
 
   indices = gtk_tree_path_get_indices (dest_path);
 
-  if (indices[0] <= g_list_length (((EggColumnModel *)drag_dest)->columns))
+  if ((guint)indices[0] <= g_list_length (((EggColumnModel *)drag_dest)->columns))
     return TRUE;
   else
     return FALSE;

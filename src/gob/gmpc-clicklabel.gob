@@ -172,7 +172,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	}
 
 	public
-		GtkWidget *new(gchar *value (check null))
+		GtkWidget *new(const gchar *value (check null))
 		{
 			PangoContext *pc = NULL;
 			PangoFontDescription *pfd = NULL;

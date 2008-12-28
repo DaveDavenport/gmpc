@@ -23,7 +23,9 @@ typedef enum {
 	GMPC_PLUGIN_NO_GUI		= 4,
 	GMPC_INTERNALL			= 8,
 	GMPC_DEPRECATED			= 16,
-	GMPC_PLUGIN_META_DATA	= 32
+	GMPC_PLUGIN_META_DATA	= 32,
+    /* Make compiler happy about GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_METADATA */
+    GMPC_BROWSER_META       = 34
 } PluginType;
 
 /* the gtk_tree_store row's */
@@ -111,9 +113,9 @@ typedef struct {
 /* sturcture */
 typedef struct {
 	/* Name of the plugin */
-	char							*name;		
+	const char						*name;		
 	/* Version number */
-	int								version[3];	
+	const int						version[3];	
 	/* Type of Plugin */
 	PluginType						plugin_type;	
 	/* unique plugin id */
@@ -165,7 +167,8 @@ GtkTreeView *	playlist3_get_category_tree_view(void);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
-void pl3_update_go_menu();
+/* Tell mpd to reload the go menu */
+void            pl3_update_go_menu(void);
 
 /**
  * Plugin functions

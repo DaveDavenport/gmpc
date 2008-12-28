@@ -5,11 +5,11 @@
 #include <libmpd/debug_printf.h>
 #include  "plugin.h"
 #include "main.h"
+#include "playlist3.h"
 #include "gmpc_easy_download.h"
 
 /** in gmpc */
 void pl3_option_menu_activate(); 
-void pl3_push_statusbar_message(char *mesg);	
 
 
 

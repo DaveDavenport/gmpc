@@ -70,8 +70,6 @@ extern gmpcPlugin url_plugin;
 
 /** main.c **/
 extern GladeXML *xml_main_window;
-extern MpdObj *connection;
-extern GmpcProfiles *gmpc_profiles;
 
 extern gmpcPlugin playlist_editor_plugin;
 
@@ -92,7 +90,6 @@ extern gmpcPlugin playlist_editor_plugin;
     static BaconMessageConnection *bacon_connection = NULL;
 #endif
 
-extern GladeXML *pl3_xml;
 /**
  * Global objects that give signals
  */
@@ -164,17 +161,17 @@ static void create_gmpc_paths(void);
  */
 static void bacon_on_message_received(const char *message, gpointer data)
 {
-    debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
+  
     if(message)
     {
-	    /**
+        debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
+        /**
 	     * Makes mpd quit.
 	     */
 	    if(strcmp(message,"QUIT") == 0)
         {
             printf("I've been told to quit, doing this now\n");
             main_quit();
-            return;
         }
 		/**
 		 * Gives play command
@@ -182,7 +179,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if(strcmp(message, "PLAY") == 0)
         {
             play_song();
-            return;
         }
 		/**
 		 * Give pause command
@@ -190,7 +186,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if (strcmp(message, "PAUSE") == 0)
         {
             play_song();
-            return;
         }
 		/**
 		 * Give next command
@@ -198,7 +193,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if (strcmp(message, "NEXT") == 0)
         {
             next_song();
-            return;
         }
 		/**
 		 * Give previous command
@@ -206,7 +200,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if (strcmp(message, "PREV") == 0)
         {
             prev_song();
-            return;
         }
 		/**
 		 * Stop playback
@@ -214,7 +207,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if (strcmp(message, "STOP") == 0)
         {
             stop_song();
-            return;
         }
 		/**
 		 * pass gmpc an url to parse with the url_parser.
@@ -222,13 +214,15 @@ static void bacon_on_message_received(const char *message, gpointer data)
         else if (strncmp(message, "STREAM ", 7) == 0)
         {
             url_start_real(&message[7]);
-            return;
+        }
+        else {
+            create_playlist3();
         }
     }
     /**
 	 * Bring gmpc to front, as default action.
 	 */
-   create_playlist3();
+
 }
 #endif
 
@@ -324,10 +318,12 @@ int main (int argc, char **argv)
 		printf("%-25s: %s\n\n", _("Platform"),
 #ifdef WIN32
 			_("Windows")
-#elif OSX
+#else
+#ifdef OSX
 			_("Mac OsX")
 #else
 			_("*nix")
+#endif
 #endif
 		);
                 printf("%-25s: "GMPC_WEBSITE"\n",_("Website"));
@@ -571,7 +567,7 @@ r to pick another config file
     /**
      * Check libmpd version runtime
      */
-    if(strcmp(libmpd_version, LIBMPD_VERSION))
+    if(strcmp(libmpd_version, LIBMPD_VERSION)!=0)
     {
 		gchar *error_msg = g_strdup_printf( _("Trying to run gmpc compiled against libmpd version '%s' with version libmpd '%s'"), LIBMPD_VERSION, libmpd_version);
         debug_printf(DEBUG_ERROR,error_msg);
@@ -1073,7 +1069,7 @@ r to pick another config file
 /**
  * Function to quiet the program
  */
-void main_quit()
+void main_quit(void)
 {
 	debug_printf(DEBUG_INFO, "Quiting gmpc....");
 	/**
@@ -1132,7 +1128,7 @@ static int autoconnect_callback(void)
 	return TRUE;
 }
 
-static void init_stock_icons()
+static void init_stock_icons(void)
 {
 	char *path;
 
@@ -1240,7 +1236,7 @@ static void password_dialog(int failed)
 }
 
 
-void send_password()
+void send_password(void)
 {
 	password_dialog(FALSE);
 }
@@ -1412,7 +1408,7 @@ static void error_message_destroy(void)
 	error_dialog = NULL;
 	gtk_list_store_clear(error_list_store);
 }
-void show_error_message(gchar *string, int block)
+void show_error_message(const gchar *string,const int block)
 {
 	GtkTreeIter iter;
 	GtkWidget *label = NULL;

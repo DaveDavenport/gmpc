@@ -426,7 +426,7 @@ void tray_icon2_create_tooltip(void)
 
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(coverimg), 80);
-	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg),"gmpc"); 
+	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg),(char *)"gmpc"); 
 	/**
 	 * Force an update if mpd is playing
 	 */

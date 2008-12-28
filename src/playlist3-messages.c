@@ -3,16 +3,15 @@
 #include "main.h"
 
 extern int pl3_zoom;
-extern GladeXML *pl3_xml;
 static gboolean error_visible = FALSE;
-static int last_error_level = ERROR_INFO;
+static ErrorLevel last_error_level = ERROR_INFO;
 guint timeout_callback = 0;
 GtkListStore *message_list = NULL;
 void message_window_open(void);
 void message_window_destroy(GtkWidget *win);
 static GIOChannel *log_file = NULL;
 
-static char *error_levels[3] = {
+static const char *error_levels[3] = {
     N_("Info"),
     N_("Warning"),
     N_("Critical")
@@ -49,8 +48,8 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	GtkWidget *label = NULL;
 	GtkTreeIter iter;
 	time_t t = time(NULL);
-	int level;
-	gchar *image_name;
+	ErrorLevel level;
+	const gchar *image_name;
 	gchar *string;
 	playlist3_message_init();
 	gtk_list_store_prepend(message_list, &iter);
@@ -71,12 +70,12 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	{
 		case ERROR_CRITICAL:
 			image_name = GTK_STOCK_DIALOG_ERROR;
-
 			break;
 		case ERROR_WARNING:
 			image_name = GTK_STOCK_DIALOG_WARNING;
 			break;
-		default:
+        case ERROR_INFO:
+        default:
 			image_name = GTK_STOCK_DIALOG_INFO;
 			break;
 	}

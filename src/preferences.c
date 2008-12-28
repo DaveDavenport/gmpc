@@ -93,7 +93,7 @@ static void pref_plugin_changed(void)
 			"<span size=\"xx-large\"><b>Nothing Selected</b></span>");
 }
 
-void create_preferences_window()
+void create_preferences_window(void)
 {
 	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
 	GtkWidget *dialog;
@@ -203,7 +203,7 @@ void create_preferences_window()
 }
 
 /* destory the preferences window */
-void preferences_window_destroy()
+void preferences_window_destroy(void)
 {
 	GtkWidget *dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	if(plugin_last >= 0)
@@ -296,13 +296,14 @@ static void plugin_stats_construct(GtkWidget *container)
 					case GMPC_PLUGIN_META_DATA:
 						gtk_list_store_set(store, &iter, 2, _("Metadata Provider"),-1);
 						break;
-          case GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_META_DATA:
-						gtk_list_store_set(store, &iter, 2, _("Metadata Provider and Browser Extension"),-1);
-            break;
-					case GMPC_PLUGIN_NO_GUI:
+                    case GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_META_DATA:
+                        gtk_list_store_set(store, &iter, 2, _("Metadata Provider and Browser Extension"),-1);
+                        break;
+                    case GMPC_PLUGIN_NO_GUI:
 						gtk_list_store_set(store, &iter, 2, _("Misc."),-1);
 						break;                                                         					
-
+                    case GMPC_INTERNALL:
+                    case GMPC_DEPRECATED:
 					default:
 						gtk_list_store_set(store, &iter, 2, _("Unknown"),-1);
 						break;
@@ -311,6 +312,7 @@ static void plugin_stats_construct(GtkWidget *container)
 			}
 
 		}
+
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 	}
 

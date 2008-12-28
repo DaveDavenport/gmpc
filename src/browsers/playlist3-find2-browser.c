@@ -50,7 +50,6 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
-extern GladeXML *pl3_xml;
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data);
 
 static void pl3_find2_save_myself(void);
@@ -73,9 +72,6 @@ typedef struct {
 /* Playlist window row reference */
 static GtkTreeRowReference *pl3_find2_ref = NULL;
 
-
-extern GladeXML *pl3_xml;
-
 /* internal */
 static GtkWidget            *pl3_find2_curpl        = NULL;
 static GtkWidget 			*pl3_find2_tree 		= NULL;
@@ -89,7 +85,7 @@ static GList 				*criterias 				= NULL;
 static GtkWidget 			*pl3_find2_crit_vbox 	= NULL;
 
 #define QUERY_ENTRY MPD_TAG_NUM_OF_ITEM_TYPES
-static void pl3_find2_fill_combo()
+static void pl3_find2_fill_combo(void)
 {
 	GtkTreeIter iter;
 	int i=0, max = 3;
@@ -139,7 +135,7 @@ static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
 /**
  * Add a criteria 
  */
-static void pl3_find2_browser_add_crit()
+static void pl3_find2_browser_add_crit(void)
 {
     crit_struct *cs = g_malloc0(sizeof(*cs));
     GtkWidget *removebut = NULL;
@@ -218,7 +214,7 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
 /**
  * Construct the browser 
  */
-static void pl3_find2_browser_init()
+static void pl3_find2_browser_init(void)
 {
     int i=0;
 	gchar *markup;
@@ -390,7 +386,7 @@ static gint __position_sort(gpointer aa, gpointer bb, gpointer data)
     MpdData_real *b = *(MpdData_real **)bb;
     return a->song->pos - b->song->pos;         
 }
-static unsigned long pl3_find2_browser_view_playlist()
+static unsigned long pl3_find2_browser_view_playlist(void)
 {
 	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
@@ -534,7 +530,7 @@ static unsigned long pl3_find2_browser_view_playlist()
 }
 
 
-static unsigned long pl3_find2_browser_view_database()
+static unsigned long pl3_find2_browser_view_database(void)
 {
     GList *node = NULL;
     int found = 0;
@@ -669,7 +665,7 @@ static unsigned long pl3_find2_browser_view_database()
 /**
  * Search 
  */
-static void pl3_find2_browser_search()
+static void pl3_find2_browser_search(void)
 {
     if(pl3_find2_vbox == NULL)
         return;
@@ -682,7 +678,7 @@ static void pl3_find2_browser_search()
 }
 
 
-static void pl3_find2_browser_show_info()
+static void pl3_find2_browser_show_info(void)
 {
     GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_find2_tree));
     GtkTreeSelection *selection =gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find2_tree));
@@ -730,7 +726,7 @@ static void pl3_find2_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
     q_free(song_id);
 }
 
-static void pl3_find2_browser_replace_selected()
+static void pl3_find2_browser_replace_selected(void)
 {
     mpd_playlist_clear(connection);
     if(mpd_check_connected(connection))
@@ -763,7 +759,7 @@ static int pl3_find2_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *ev
 
 
 
-static void pl3_find2_browser_add_selected()
+static void pl3_find2_browser_add_selected(void)
 {
     GtkTreeIter iter;
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find2_tree));
@@ -939,12 +935,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
     return FALSE;
 }
 
-static void pl3_find2_browser_disconnect()
-{
-}
-
-
-static void pl3_find2_browser_activate()
+static void pl3_find2_browser_activate(void)
 {
     GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
             glade_xml_get_widget (pl3_xml, "cat_tree"));
@@ -978,10 +969,6 @@ static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
 
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-    if(!connect)
-    {
-        pl3_find2_browser_disconnect();
-    }
 }
 
 /**

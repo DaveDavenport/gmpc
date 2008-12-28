@@ -30,41 +30,41 @@ void cfg_close(config_obj *cfgo);
  * Get a single config value as a string.
  * It returns NULL when the value is not availible
  */
-char * cfg_get_single_value_as_string(config_obj *cfg, char *class, char *key);
+char * cfg_get_single_value_as_string(config_obj *cfg, const char *class, const char *key);
 /**
  * set single value 
  */
-void cfg_set_single_value_as_string(config_obj *cfg, char *class, char *key, char *value);
+void cfg_set_single_value_as_string(config_obj *cfg, const char *class, const char *key, const char *value);
 /**
  * get with default 
  */
-char * cfg_get_single_value_as_string_with_default(config_obj *cfg, char *class, char *key , char *def);
+char * cfg_get_single_value_as_string_with_default(config_obj *cfg, const char *class, const char *key , const char *def);
 
-int cfg_get_single_value_as_int(config_obj *cfg, char *class, char *key);
-void cfg_set_single_value_as_int(config_obj *cfg, char *class, char *key, int value);
-int cfg_get_single_value_as_int_with_default(config_obj *cfg, char *class, char *key, int def);
+int cfg_get_single_value_as_int(config_obj *cfg, const char *class, const char *key);
+void cfg_set_single_value_as_int(config_obj *cfg, const char *class, const char *key, int value);
+int cfg_get_single_value_as_int_with_default(config_obj *cfg, const char *class, const char *key, int def);
 
 /* float */
-float cfg_get_single_value_as_float(config_obj *cfg, char *class, char *key);
-void cfg_set_single_value_as_float(config_obj *cfg, char *class, char *key, float value);
-float cfg_get_single_value_as_float_with_default(config_obj *cfg, char *class, char *key, float def);
+float cfg_get_single_value_as_float(config_obj *cfg, const char *class, const char *key);
+void cfg_set_single_value_as_float(config_obj *cfg, const char *class, const char *key, float value);
+float cfg_get_single_value_as_float_with_default(config_obj *cfg, const char *class, const char *key, float def);
 
 /* del */
-void cfg_del_single_value(config_obj *cfg, char *class, char *key);
+void cfg_del_single_value(config_obj *cfg, const char *class, const char *key);
 
 
 conf_mult_obj *cfg_get_class_list(config_obj *data);
-conf_mult_obj *cfg_get_key_list(config_obj *data,char *class);
+conf_mult_obj *cfg_get_key_list(config_obj *data, const char *class);
 
 /* multiple */
 void cfg_free_multiple(conf_mult_obj *data);
-conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, char *class, char *key);
-void cfg_set_multiple_value_as_string(config_obj *cfg, char *class, char *key, char *id, char *value);
-void cfg_del_multiple_value(config_obj *cfg, char *class, char *key,char *id);
+conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, const char *class, const char *key);
+void cfg_set_multiple_value_as_string(config_obj *cfg, const char *class, const char *key, const char *id, const char *value);
+void cfg_del_multiple_value(config_obj *cfg, const char *class, const char *key, const char *id);
 void cfg_free_string(char *string);
 
 
-void cfg_remove_class(config_obj *cfg, char *class);
+void cfg_remove_class(config_obj *cfg, const char *class);
 
 void cfg_do_special_cleanup(config_obj *cfg);
 
@@ -75,14 +75,14 @@ void cfg_do_special_cleanup(config_obj *cfg);
 
 
 
-void cfg_del_single_value_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key);
-void cfg_set_single_value_as_int_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key, int value);
-int cfg_get_single_value_as_int_with_default_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key, int def);
-float cfg_get_single_value_as_float_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key);
+void cfg_del_single_value_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
+void cfg_set_single_value_as_int_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, int value);
+int cfg_get_single_value_as_int_with_default_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, int def);
+float cfg_get_single_value_as_float_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
 /* String */
-void cfg_set_single_value_as_string_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key, char *value);
-char * cfg_get_single_value_as_string_mm(config_obj *cfg, char *class,char *sclass, char *ssclass, char *key);
-char * cfg_get_single_value_as_string_with_default_mm(config_obj *cfg, char *class, char *sclass, char *ssclass, char *key , char *def);
+void cfg_set_single_value_as_string_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, const char *value);
+char * cfg_get_single_value_as_string_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
+char * cfg_get_single_value_as_string_with_default_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key , const char *def);
 
 
 

@@ -26,6 +26,7 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
+#include "plugin.h"
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
@@ -47,12 +48,12 @@
 /* Drag and drop Target table */
 static GtkTargetEntry target_table[] =
 {
-    { "x-url/http", 0, 0 },
-	{ "_NETSCAPE_URL", 0, 1},
-	{ "text/uri-list", 0, 2},
-    { "audio/*",0,3},
-    { "audio/x-scpls", 0,4},
-	{ "internal-drop",0,99}
+    { (gchar*)"x-url/http", 0, 0 },
+	{ (gchar*)"_NETSCAPE_URL", 0, 1},
+	{ (gchar*)"text/uri-list", 0, 2},
+    { (gchar*)"audio/*",0,3},
+    { (gchar*)"audio/x-scpls", 0,4},
+	{ (gchar*)"internal-drop",0,99}
 };
 
 /**
@@ -148,7 +149,7 @@ static guint updating_id = 0;
 /* Get the type of the selected row..
  * -1 means no row selected
  */
-int  pl3_cat_get_selected_browser()
+int  pl3_cat_get_selected_browser(void)
 {
 	return old_type;
 }
@@ -491,7 +492,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
             int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,iter->key,-1);
             int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,iter->key,0);
 
-            if(keycode >= 0 && (event->state == keymask) && (keycode == event->keyval))
+            if(keycode >= 0 && (event->state == (unsigned)keymask) && ((unsigned)keycode == event->keyval))
             {
                 int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,iter->key,-1);
                 found = 1;
@@ -570,7 +571,7 @@ static int pl3_pop_statusbar_message(gpointer data)
  * Put message on status bar
  * This will be removed after 5 seconds
  */
-void pl3_push_statusbar_message(char *mesg)
+void pl3_push_statusbar_message(const char *mesg)
 {
 	gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
 	/* message auto_remove after 5 sec */
@@ -581,7 +582,7 @@ void pl3_push_statusbar_message(char *mesg)
  * Push message to 2nd status bar
  * Message overwrites the previous message
  */
-void pl3_push_rsb_message(gchar *string)
+void pl3_push_rsb_message(const char *string)
 {
 	gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar2")),0, string);
 }
@@ -589,7 +590,7 @@ void pl3_push_rsb_message(gchar *string)
 /**
  * Close the playlist and save position/size
  */
-gboolean pl3_close()
+gboolean pl3_close(void)
 {
 	/* only save when window is PLAYLIST_SMALL or NO ZOOM */
 	if(pl3_xml != NULL)
@@ -636,7 +637,7 @@ gboolean pl3_close()
  * Hide the playlist.
  * Before hiding save current size and position
  */
-int pl3_hide()
+int pl3_hide(void)
 {
 	if(!tray_icon2_get_available())
 	{
@@ -695,7 +696,7 @@ static void pl3_updating_changed(MpdObj *mi, int updating)
 /* create the playlist view
  * This is done only once, for the rest its hidden, but still there
  */
-static void pl3_show_and_position_window()
+static void pl3_show_and_position_window(void)
 {
 	if(!pl3_xml) return;
 	if(pl3_wsize.x  >0 || pl3_wsize.y>0) {
@@ -714,7 +715,7 @@ static void pl3_show_and_position_window()
 
 }
 
-void pl3_toggle_hidden()
+void pl3_toggle_hidden(void)
 {
 	if(pl3_hidden)
 	{
@@ -955,7 +956,7 @@ static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 
 }
 
-void create_playlist3 ()
+void create_playlist3 (void)
 {
 	GtkWidget *pb;
 	GtkListStore *pl3_crumbs = NULL;
@@ -1192,7 +1193,7 @@ void create_playlist3 ()
 
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), ALBUM_SIZE_LARGE);
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), META_ALBUM_ART);
-	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),"gmpc");
+	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),(char *)"gmpc");
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), connection);
 	/** make sure size is updated */
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
@@ -1355,12 +1356,12 @@ void create_playlist3 ()
 /**
  * Helper functions
  */
-GtkListStore *playlist3_get_category_tree_store()
+GtkListStore *playlist3_get_category_tree_store(void)
 {
     if(pl3_xml == NULL) return NULL;
 	return GTK_LIST_STORE(pl3_tree);
 }
-GtkTreeView *playlist3_get_category_tree_view()
+GtkTreeView *playlist3_get_category_tree_view(void)
 {
     if(pl3_xml == NULL) return NULL;
 	return (GtkTreeView *)glade_xml_get_widget(pl3_xml, "cat_tree");
@@ -1533,14 +1534,14 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 /***
  * Zooming functions
  */
-void playlist_zoom_out()
+void playlist_zoom_out(void)
 {
 	if((pl3_zoom+1) >= PLAYLIST_ZOOM_LEVELS) return;
 	pl3_old_zoom = pl3_zoom;
 	pl3_zoom++;
 	playlist_zoom_level_changed();
 }
-void playlist_zoom_in()
+void playlist_zoom_in(void)
 {
 	if(pl3_zoom <= PLAYLIST_NO_ZOOM) return;
 	pl3_old_zoom = pl3_zoom;
@@ -1551,7 +1552,7 @@ void playlist_zoom_in()
 /**
  * FIXME: Needs propper grouping and cleaning up
  */
-static void playlist_zoom_level_changed()
+static void playlist_zoom_level_changed(void)
 {
 	if(pl3_old_zoom <= PLAYLIST_SMALL)
 	{
@@ -1910,7 +1911,7 @@ static void playlist_player_volume_changed(GtkWidget *vol_but)
 
 
 
-void about_window()
+void about_window(void)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
 	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
@@ -1943,7 +1944,7 @@ void about_window()
 /****************************************************
  * Interface stuff
  */
-void pl3_update_go_menu()
+void pl3_update_go_menu(void)
 {
 	int i=0;
 	int items = 0;
@@ -1987,7 +1988,7 @@ void pl3_update_go_menu()
 /**
  * This function should be called by a plugin when something in the interface changed.
  */
-static void pl3_plugin_changed_interface()
+static void pl3_plugin_changed_interface(void)
 {
 	/**
 	 * Call this at the end, to update the menu

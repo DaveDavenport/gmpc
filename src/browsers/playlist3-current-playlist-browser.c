@@ -131,7 +131,7 @@ static void pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned
     }
 }
 
-static void pl3_cp_init()
+static void pl3_cp_init(void)
 {
     GString *string = g_string_new("(");
     int i;
@@ -176,10 +176,6 @@ gmpcPlugin current_playlist_plug = {
 	.save_yourself = 					pl3_current_playlist_save_myself
 };
 
-
-/* external objects */
-extern GladeXML *pl3_xml;
-
 /* internal */
 
 static GtkWidget *pl3_cp_sw = NULL;
@@ -219,7 +215,7 @@ static void pl3_current_playlist_column_changed(GtkTreeView *tree)
 	g_list_free(cols);
 }
 
-void pl3_current_playlist_destroy()
+void pl3_current_playlist_destroy(void)
 {
 	if(pl3_cp_tree)
 	{
@@ -427,7 +423,7 @@ static void pl3_current_playlist_browser_init(void)
 	g_object_ref(G_OBJECT(pl3_cp_vbox));
 }
 
-static void pl3_current_playlist_browser_select_current_song()
+static void pl3_current_playlist_browser_select_current_song(void)
 {
 	if(pl3_cp_tree == NULL|| !GTK_WIDGET_REALIZED(pl3_cp_tree)) return;
 	/* scroll to the playing song */
@@ -442,7 +438,7 @@ static void pl3_current_playlist_browser_select_current_song()
 	}      
 }
 
-static void pl3_current_playlist_browser_scroll_to_current_song()
+static void pl3_current_playlist_browser_scroll_to_current_song(void)
 {
 	if(pl3_cp_tree == NULL || !GTK_WIDGET_REALIZED(pl3_cp_tree)) return;
 	/* scroll to the playing song */
@@ -493,7 +489,7 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 /* delete all selected songs,
  * if no songs select ask the user if he want's to clear the list 
  */
-static void pl3_current_playlist_browser_delete_selected_songs ()
+static void pl3_current_playlist_browser_delete_selected_songs (void)
 {
 	/* grab the selection from the tree */
 	GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -554,6 +550,8 @@ static void pl3_current_playlist_browser_delete_selected_songs ()
 			case GTK_RESPONSE_OK:
 				/* check if where still connected */
 				mpd_playlist_clear(connection);
+            default:
+                break;
 		}
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
@@ -563,7 +561,7 @@ static void pl3_current_playlist_browser_delete_selected_songs ()
 	mpd_status_queue_update(connection);
 }
 
-static void pl3_current_playlist_browser_crop_selected_songs()
+static void pl3_current_playlist_browser_crop_selected_songs(void)
 {
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
 	/* grab the selection from the tree */
@@ -664,7 +662,7 @@ static void pl3_current_playlist_browser_edit_columns(void)
 /**
  * Cut, Copy Paste support
  */
-static void pl3_current_playlist_browser_cut_songs()
+static void pl3_current_playlist_browser_cut_songs(void)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -706,7 +704,7 @@ static void pl3_current_playlist_browser_cut_songs()
     /* update everything if where still connected */
     gtk_tree_selection_unselect_all(selection);
 }
-static void pl3_current_playlist_browser_copy_songs()
+static void pl3_current_playlist_browser_copy_songs(void)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -747,7 +745,7 @@ static void pl3_current_playlist_browser_copy_songs()
     gtk_tree_selection_unselect_all(selection);
 }
 
-static void pl3_current_playlist_browser_paste_after_songs()
+static void pl3_current_playlist_browser_paste_after_songs(void)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -807,7 +805,7 @@ static void pl3_current_playlist_browser_paste_after_songs()
         }
 
 }
-static void pl3_current_playlist_browser_paste_before_songs()
+static void pl3_current_playlist_browser_paste_before_songs(void)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -1000,7 +998,7 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
 
 }
 
-static void pl3_current_playlist_browser_show_info()
+static void pl3_current_playlist_browser_show_info(void)
 {
 
     GtkTreeModel *model = gtk_tree_view_get_model (GTK_TREE_VIEW(pl3_cp_tree));
@@ -1139,7 +1137,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 }
 
 /* create a dialog that allows the user to save the current playlist */
-static void pl3_current_playlist_save_playlist ()
+static void pl3_current_playlist_save_playlist (void)
 {
     gchar *str;
     GladeXML *xml = NULL;
@@ -1216,12 +1214,12 @@ static void pl3_current_playlist_save_playlist ()
     g_object_unref (xml);
 }
 
-static void pl3_current_playlist_browser_clear_playlist()
+static void pl3_current_playlist_browser_clear_playlist(void)
 {
     mpd_playlist_clear(connection);
 }
 
-static void pl3_current_playlist_browser_shuffle_playlist()
+static void pl3_current_playlist_browser_shuffle_playlist(void)
 {
     mpd_playlist_shuffle(connection);
 }
@@ -1253,7 +1251,7 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
     }
 }
 
-static void pl3_current_playlist_browser_activate()
+static void pl3_current_playlist_browser_activate(void)
 {
     GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *)
             glade_xml_get_widget (pl3_xml, "cat_tree"));

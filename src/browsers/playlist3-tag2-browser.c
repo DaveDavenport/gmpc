@@ -196,7 +196,7 @@ typedef struct _tag_element{
 /**
  * Get/Set enabled
  */
-int tag2_get_enabled()
+int tag2_get_enabled(void)
 {
 	return cfg_get_single_value_as_int_with_default(config, "tag2-plugin", "enable", TRUE);
 }
@@ -214,7 +214,7 @@ static void tag2_set_enabled(int enabled)
 /* 
  * Destroy the browser
  */
-static void tag2_destroy()
+static void tag2_destroy(void)
 {
 	/* clear all the browsers */	
 	g_list_foreach(tag2_ht, (GFunc)tag2_destroy_browser, NULL);

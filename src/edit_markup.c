@@ -118,6 +118,8 @@ char * edit_song_markup(char *format)
 				gtk_text_buffer_get_end_iter(buffer, &stop_iter);
 				str_format = g_strdup(gtk_text_buffer_get_text(buffer,&start_iter, &stop_iter, FALSE));
 			}
+        default:
+            break;
 	}
 
 	gtk_widget_destroy(dialog);

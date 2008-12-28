@@ -58,15 +58,16 @@ void main_quit(void);
 /*
  * functions to get patch to different files.
  * This is needed to make the windows port work.
+ * (misc.c)
  */
-char *gmpc_get_full_glade_path(char *filename);
+char *gmpc_get_full_glade_path(const char *filename);
 
 /* plugin */
 void plugin_load_dir(gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin);
 int plugin_get_pos(int id);
 
-void show_error_message(gchar *string, int block);
+void show_error_message(const gchar *string,const int block);
 
 /** Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
@@ -85,8 +86,9 @@ void url_start(void);
 /*
  * functions to get patch to different files.
  * This is needed to make the windows port work.
+ * (misc.c)
  */
-char *gmpc_get_full_image_path(char *filename);
+char *gmpc_get_full_image_path(const char *filename);
 
 /**
  * Help functions
@@ -101,10 +103,6 @@ void info2_fill_song_view(mpd_Song *);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);
-
-/* usefull for some stuff */
-extern GladeXML *pl3_xml;
-
 
 /**
  * Playlist functions 

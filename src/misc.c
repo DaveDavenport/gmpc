@@ -29,7 +29,6 @@
 #define __USE_BSD
 #endif
 #include <math.h>
-extern GladeXML *pl3_xml;
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
@@ -203,7 +202,7 @@ gchar * gmpc_get_covers_path(const gchar *filename)
  * While this is compile time on linux, windows
  * needs to determine it run-time.
  */
-char *gmpc_get_full_image_path(char *filename)
+char *gmpc_get_full_image_path(const char *filename)
 {
     gchar *path;
 #ifdef WIN32
@@ -226,7 +225,7 @@ char *gmpc_get_full_image_path(char *filename)
  * While this is compile time on linux, windows 
  * needs to determine it run-time
  */
-char *gmpc_get_full_glade_path(char *filename)
+char *gmpc_get_full_glade_path(const char *filename)
 {
     gchar *path;
 #ifdef WIN32
@@ -250,10 +249,12 @@ void open_uri(const gchar *uri)
 	gchar *command;
 #ifdef WIN32
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser-win32", "cmd /c start %s");
-#elif OSX
+#else
+#ifdef OSX
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser-osx", "open '%s'");
 #else
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
+#endif
 #endif
 	command	= g_strdup_printf(browser_command, uri);
 	result = g_spawn_command_line_async (command, NULL);

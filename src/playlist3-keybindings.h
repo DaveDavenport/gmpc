@@ -46,7 +46,7 @@ typedef enum _Keybind{
 }Keybind;
 
 
-char *Keybindname[KB_NUM] = {
+const char *Keybindname[KB_NUM] = {
         "Play",
         "Next",
         "Previous",

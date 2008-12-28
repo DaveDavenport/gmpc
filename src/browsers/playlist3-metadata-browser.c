@@ -15,13 +15,12 @@
  * Dragging 
  */
 static GtkTargetEntry target_table[] = {
-	{ "internal-drop",GTK_TARGET_SAME_APP,99}
+	{ (char*)"internal-drop",GTK_TARGET_SAME_APP,99}
 };
 
 
 static int info2_get_enabled(void);
 
-extern GladeXML *pl3_xml;
 void info2_disable_show_current(void);
 void info2_enable_show_current(void);
 void info2_show_current_song(void);
@@ -231,12 +230,13 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                     if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
                         gchar *string = NULL;
                         int length = strlen(str2[0]); 
+                        int li = strlen(str[i]);
                         string = g_malloc0((length+4)*sizeof(char ));
 
 
                         for(; length >= 0 && str2[0][length] != ' ';length--);
 
-                        if(length > 0 && length < strlen(str[i]))
+                        if(length > 0 && length < li) 
                         {
                             int id = strlen(str2[0])-length-1;
                             strncat(string, &(str2[0][length+1]),id);
@@ -332,11 +332,11 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 
                 if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
                     gchar *string = NULL;
-                    int length = strlen(str[i]); 
+                    size_t length = strlen(str[i]); 
                     string = g_malloc0((length+4)*sizeof(char ));
 
 
-                    for(; length >= 0 && str[i][length] != ' ';length--);
+                    for(; length > 0 && str[i][length] != ' ';length--);
 
                     if(length > 0 && length < strlen(str[i]))
                     {
@@ -446,7 +446,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 /**
  * Resets the view
  */
-static void info2_prepare_view()
+static void info2_prepare_view(void)
 {
 	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
 	/** Clear widget pointer */
@@ -1225,7 +1225,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     gtk_widget_show_all(resizer_vbox);
   }
 
-static void info2_fill_view()
+static void info2_fill_view(void)
 {
 	GtkWidget *hbox, *label, *button;
 	GtkWidget *artist_table = NULL;
@@ -2032,7 +2032,7 @@ void info2_fill_album_view(const char *artist,const char *album)
 	gtk_widget_show_all(info2_vbox);
 }
 
-static void info2_init()
+static void info2_init(void)
 {
 	GtkAdjustment *adjustment =NULL;
 	GtkWidget *vp = NULL;

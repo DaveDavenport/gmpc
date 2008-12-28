@@ -660,7 +660,7 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
 }
 
 
-static void playlist_editor_browser_init()
+static void playlist_editor_browser_init(void)
 {
     GtkWidget *tree = NULL;
     GtkWidget *sw = NULL;
