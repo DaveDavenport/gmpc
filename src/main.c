@@ -201,6 +201,10 @@ static void bacon_on_message_received(const char *message, gpointer data)
         {
             stop_song();
         }
+        else if (strcmp(message, "TOGGLE_VIEW") == 0)
+        {
+            pl3_toggle_hidden();
+        }
 		/**
 		 * pass gmpc an url to parse with the url_parser.
 		 */
