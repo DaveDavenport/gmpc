@@ -75,6 +75,27 @@ static void song_list_replace_selected_songs(GtkWidget *, GtkTreeView *);
 static gboolean song_list_button_release_event(GtkTreeView *, GdkEventButton *, gpointer );
 static void song_list_edit_columns(GtkMenuItem *, GtkWidget *);
 
+static void info2_button_back(void);
+static void info2_button_forward(void);
+static void info2_clear_history(void);
+
+/****
+ * Go back history
+ */
+typedef enum {
+    HISTORY_SONG = 0,
+    HISTORY_ALBUM = 1,
+    HISTORY_ARTIST = 2,
+    HISTORY_BASE_VIEW =3
+} HistoryType;
+
+typedef struct _History{
+    mpd_Song    *song;
+    HistoryType type;
+} History;
+
+
+static GList *history_current = NULL;
 /**
  *
  */
@@ -460,6 +481,41 @@ static void info2_prepare_view(void)
 	if(resizer_vbox && GTK_WIDGET(resizer_vbox)->window) {
 		gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
 	}
+
+	/**
+	 * Clear header
+	 */
+	info2_widget_clear_children(title_vbox);
+
+    //if(go_back_queue)
+    {
+        GtkWidget *button;
+
+        /*if(g_list_next(go_back_queue)) */{
+            button = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+            gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
+            gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+            gtk_widget_show(button);
+            if(history_current && history_current->prev){
+                gtk_widget_set_sensitive(button, TRUE);
+            }else {
+                gtk_widget_set_sensitive(button, FALSE);
+            }
+            g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_forward), NULL);
+        }
+        /*if(g_list_previous(go_back_queue)) */{
+            button = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
+            gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
+            gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+            gtk_widget_show(button);
+            if(history_current && history_current->next ){
+                gtk_widget_set_sensitive(button, TRUE);
+            }else {
+                gtk_widget_set_sensitive(button, FALSE);
+            }
+            g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_back), NULL);
+        }
+    }
 }
 
 
@@ -521,20 +577,7 @@ static gboolean as_album_viewed_clicked_event(GtkButton *button, GdkEventButton 
 	}
 	return FALSE;
 }
-/*
-static void as_song_viewed_clicked(GtkButton *button, gpointer data)
-{
-	char *artist = g_strdup(g_object_get_data(G_OBJECT(button), "file"));
-	if(artist == NULL) {
-		printf("CRAP NO PATH\n");
-	} else {
-		mpd_Song *song = mpd_database_get_fileinfo(connection, artist);
-		info2_fill_song_view(song);
-		mpd_freeSong(song);
-	}
-	q_free(artist);
-}
-*/
+
 static void as_artist_clicked(GtkButton *button, gpointer userdata)
 {
 	int clear = GPOINTER_TO_INT(userdata);
@@ -703,7 +746,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 /** 
  * Song View 
  */
-void info2_fill_song_view(mpd_Song *song)
+static void info2_fill_song_view_real(mpd_Song *song)
 {
 	GtkWidget *expander, *gmtv,*table, *table2,*image,*ali,*button, *label,*hbox;
 	GtkWidget *event, *ali2;
@@ -725,10 +768,7 @@ void info2_fill_song_view(mpd_Song *song)
         show_current_song = FALSE;
     }
 
-	/**
-	 * Clear header
-	 */
-	info2_widget_clear_children(title_vbox);
+
 
 	/** 
 	 * Create Header
@@ -1214,10 +1254,6 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
             diff.tv_sec -= 1;
             diff.tv_sec += G_USEC_PER_SEC;
         }
-        printf("time elapsed until loaded: %lu s, %lu us\n",(unsigned long)( diff.tv_sec),(unsigned long)( diff.tv_usec));    
-
-
-
 
         regfree(&regt);
         mpd_freeSong(song);
@@ -1225,7 +1261,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     gtk_widget_show_all(resizer_vbox);
   }
 
-static void info2_fill_view(void)
+static void info2_fill_view_real(void)
 {
 	GtkWidget *hbox, *label, *button;
 	GtkWidget *artist_table = NULL;
@@ -1235,11 +1271,6 @@ static void info2_fill_view(void)
 	info2_prepare_view();
 	/** Nothing is selected so we are in the basic view
 	*/
-	/**
-	 * setup the title 
-	 */
-
-	info2_widget_clear_children(title_vbox);
 	/** add buttons */
 	button = gtk_button_new();
 	label = gtk_label_new("");
@@ -1324,7 +1355,7 @@ static int info2_sort_year(GtkWidget *a, GtkWidget *b)
     return 0;
 }
 
-void info2_fill_artist_view(const char *artist)
+static void info2_fill_artist_view_real(mpd_Song *song2)
 {
 	gchar *markup;
 	GtkWidget *expander,*hbox, *vbox,*button,*table,*table2,*gmtv,*ali,*label;
@@ -1332,7 +1363,6 @@ void info2_fill_artist_view(const char *artist)
 	GString *string = NULL;
 	gchar *buffer = NULL;
 	MpdData *data = NULL;
-	mpd_Song *song2 = NULL;
 	/* disable the current songs thingy */
 	show_current_song = FALSE;
 	/** 
@@ -1340,20 +1370,12 @@ void info2_fill_artist_view(const char *artist)
 	 */
 	info2_prepare_view();
 	/** 
-	 * Create a song to use for metadata widgets
-	 */
-	song2 = mpd_newSong();
-	song2->artist = g_strdup(artist);
-
-	/** 
 	 * Draw the header box
 	 * +--------------------+
 	 * |Collection/<artist> |  <--
 	 * +--------------------+
 	 */
 	{
-		/* clear the old "header" */
-		info2_widget_clear_children(title_vbox);
 		/* collections button */
 		button = gtk_button_new();
 		label = gtk_label_new("");
@@ -1481,7 +1503,7 @@ void info2_fill_artist_view(const char *artist)
 	hbox = gtk_hbox_new(FALSE,6);
 	button = gtk_button_new_with_label(_("Replace"));
 	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
+	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -1489,7 +1511,7 @@ void info2_fill_artist_view(const char *artist)
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
 	/* Add Button */
 	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
+	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_artist_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -1603,7 +1625,6 @@ void info2_fill_artist_view(const char *artist)
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox2,FALSE, FALSE, 0);
 	}
 
-	mpd_freeSong(song2);
 	gtk_widget_show_all(info2_vbox);
 }
 
@@ -1751,14 +1772,13 @@ static gboolean song_list_button_release_event(GtkTreeView *tree,
 	return FALSE;
 }
 
-void info2_fill_album_view(const char *artist,const char *album)
+static void info2_fill_album_view_real(mpd_Song *song2)
 {
 	GtkWidget *vbox 	= NULL;
 	GtkWidget *gmtv		= NULL;
 	GtkWidget *expander = NULL;
 	GtkWidget *button	= NULL;
 	GtkWidget *ali 		= NULL;
-	mpd_Song *song2 	= NULL;
 	GtkWidget *label 	= NULL; 
 	char *markup 		= NULL;
 	GtkWidget *hbox, *table,*table2,*image;
@@ -1767,12 +1787,6 @@ void info2_fill_album_view(const char *artist,const char *album)
 	show_current_song = FALSE;
 
 	info2_prepare_view();
-	song2 = mpd_newSong();
-	song2->artist = g_strdup(artist);
-	song2->album = g_strdup(album);
-
-	info2_widget_clear_children(title_vbox);
-
 
 	/**
 	 * Collection 
@@ -1881,8 +1895,8 @@ void info2_fill_album_view(const char *artist,const char *album)
 	hbox = gtk_hbox_new(FALSE,0);
 	button = gtk_button_new_with_label(_("Replace"));
 	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
-	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
+	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song2->album), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -1892,8 +1906,8 @@ void info2_fill_album_view(const char *artist,const char *album)
 	 * Add Button 
 	 */
 	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
-	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(artist), g_free);
-	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
+	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song2->album), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_album_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -2028,7 +2042,6 @@ void info2_fill_album_view(const char *artist,const char *album)
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
 
 	}
-	mpd_freeSong(song2);
 	gtk_widget_show_all(info2_vbox);
 }
 
@@ -2444,6 +2457,18 @@ static int info2_get_enabled(void)
 {
 	return 	cfg_get_single_value_as_int_with_default(config, "info2-plugin", "enable", 1);
 }
+
+static void info2_connection_changed(MpdObj *mi, int connect, void *userdata)
+{
+    if(connect)
+    {
+        if(info2_vbox)
+        {
+            info2_clear_history();
+            info2_fill_view();
+        }
+    }
+}
 /* Needed plugin_wp stuff */
 gmpcPlBrowserPlugin info2_gbp = {
 	.add                    = info2_add,		/** add */
@@ -2459,6 +2484,7 @@ gmpcPlugin metab_plugin = {
 	.plugin_type            = GMPC_PLUGIN_PL_BROWSER,
 	.browser                = &info2_gbp, 
 	.mpd_status_changed     = info2_status_changed,
+    .mpd_connection_changed = info2_connection_changed,
 	.get_enabled            = info2_get_enabled,
 	.set_enabled            = info2_set_enabled,
 	.save_yourself          = info2_save_myself
@@ -2504,4 +2530,130 @@ static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
 
 	}  
 	return FALSE;
+}
+
+
+
+/************************************************************************************************/
+static void info2_update_from_history(History *hs)
+{
+    switch(hs->type) {
+        case HISTORY_SONG:
+            info2_fill_song_view_real(hs->song);
+            break;
+        case HISTORY_ALBUM:
+            info2_fill_album_view_real(hs->song);
+            break;
+        case HISTORY_ARTIST:
+            info2_fill_artist_view_real(hs->song);
+            break;
+        case HISTORY_BASE_VIEW:
+            info2_fill_view_real();
+            break;
+        default:
+            break;
+    }; 
+}
+static void info2_free_history(History *hs)
+{
+    if(hs->song) mpd_freeSong(hs->song);
+    g_free(hs);
+}
+
+static void info2_clear_history(void)
+{
+    if(history_current) {
+        g_list_foreach(history_current,(GFunc) info2_free_history,NULL);
+        g_list_free(history_current);
+        history_current = NULL;
+    }
+}
+
+void info2_button_forward(void)
+{
+    GList *iter  = g_list_previous(history_current);
+    if(iter) {
+        History *hs = iter->data;
+        history_current = iter;
+        info2_update_from_history(hs);
+    }
+
+}
+void info2_button_back(void)
+{
+    GList *iter  = g_list_next(history_current);
+    if(iter) {
+        History *hs = iter->data;
+        history_current = iter;
+        info2_update_from_history(hs);
+    }
+}
+void info2_fill_song_view(mpd_Song *song)
+{
+    History *hs = g_malloc0(sizeof(*hs));    
+    hs->song = mpd_songDup(song);
+    hs->type = HISTORY_SONG;
+
+    
+    if(history_current) {
+        GList *temp;
+        while(history_current->prev) { 
+            info2_free_history((History *)history_current->prev->data); 
+            temp = g_list_delete_link(history_current, history_current->prev); 
+        }
+    }
+    history_current = g_list_prepend(history_current, hs);
+    info2_fill_song_view_real(song);
+}
+
+void info2_fill_album_view(const char *artist,const char *album)
+{
+    History *hs = g_malloc0(sizeof(*hs));    
+    hs->song = mpd_newSong();
+    hs->type = HISTORY_ALBUM;
+    hs->song->artist = g_strdup(artist);
+    hs->song->album = g_strdup(album);
+
+    if(history_current) {
+        GList *temp;
+        while(history_current->prev) { 
+            info2_free_history((History *)history_current->prev->data); 
+            temp = g_list_delete_link(history_current, history_current->prev); 
+        }
+    }
+    history_current = g_list_prepend(history_current, hs);
+    info2_fill_album_view_real(hs->song);
+}
+void info2_fill_artist_view(const char *artist)
+{
+    History *hs = g_malloc0(sizeof(*hs));    
+    hs->song = mpd_newSong();
+    hs->type = HISTORY_ARTIST;
+    hs->song->artist = g_strdup(artist);
+
+    if(history_current){
+        GList *temp;
+        while(history_current->prev) { 
+            info2_free_history((History *)history_current->prev->data);
+            temp = g_list_delete_link(history_current, history_current->prev); 
+        }
+    }
+    history_current = g_list_prepend(history_current, hs);
+    info2_fill_artist_view_real(hs->song);
+}
+
+void info2_fill_view(void)
+{
+    History *hs = g_malloc0(sizeof(*hs));    
+    hs->song = NULL; 
+    hs->type = HISTORY_BASE_VIEW; 
+    if(history_current) {
+        GList *temp;
+        while(history_current->prev) { 
+            info2_free_history((History *)history_current->prev->data);
+            temp = g_list_delete_link(history_current, history_current->prev); 
+        }
+    }
+    history_current = g_list_prepend(history_current, hs);
+    info2_fill_view_real();
 }
