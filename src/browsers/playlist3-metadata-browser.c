@@ -296,7 +296,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 
 
                 GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-similar-artist-view",
-                                FALSE, 
+                                TRUE, 
                                 (GtkTreeModel *)gmpc_mpddata_model_new());
                 gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
                 gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
@@ -1039,7 +1039,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
             GtkWidget *sw = gtk_scrolled_window_new(NULL,NULL);
 
             GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-same-title-view",
-                    FALSE, 
+                    TRUE, 
                     (GtkTreeModel *)gmpc_mpddata_model_new());
             gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
             label = gtk_label_new("");
@@ -2028,7 +2028,7 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 		 */
         label = gtk_scrolled_window_new(NULL,NULL);
         gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(label), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
-        table2 = gmpc_mpddata_treeview_new("metadata-album-view", FALSE,(GtkTreeModel *) gmpc_mpddata_model_new());
+        table2 = gmpc_mpddata_treeview_new("metadata-album-view", TRUE,(GtkTreeModel *) gmpc_mpddata_model_new());
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(table2))), data);
         gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(table2));
         gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(label), GTK_SHADOW_ETCHED_IN);
