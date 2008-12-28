@@ -205,6 +205,14 @@ static void bacon_on_message_received(const char *message, gpointer data)
         {
             pl3_toggle_hidden();
         }
+        else if (strcmp(message, "HIDE_VIEW") == 0)
+        {
+            pl3_hide();
+        }
+        else if (strcmp(message, "SHOW_VIEW") == 0)
+        {
+            create_playlist3();
+        }
 		/**
 		 * pass gmpc an url to parse with the url_parser.
 		 */

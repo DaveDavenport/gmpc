@@ -25,8 +25,12 @@ typedef enum {
 
 void playlist3_destroy(void);
 gboolean playlist3_show_playtime(gulong playtime);
+
+
 void playlist_editor_fill_list(void);
+
 int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
+
 
 extern GladeXML *pl3_xml;
 #endif

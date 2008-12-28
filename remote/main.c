@@ -52,6 +52,8 @@ int main ( int argc, char **argv )
             gboolean next=FALSE;
             gboolean stop=FALSE;
             gboolean toggle_view = FALSE;
+            gboolean hide_view = FALSE;
+            gboolean show_view = FALSE;
             gchar *stream = NULL;
 
             GOptionEntry entries[] = {
@@ -93,8 +95,16 @@ int main ( int argc, char **argv )
                     "toggle-view", 't', 0, G_OPTION_ARG_NONE, &toggle_view,
                     "Give the running gmpc the command to toggle the window visibility", NULL
                 },
+                {
 
-               {NULL}
+                    "hide-view", 'h', 0, G_OPTION_ARG_NONE, &hide_view,
+                    "Give the running gmpc the command to hide the window.", NULL
+                },
+                {
+                    "show-view", 'k', 0, G_OPTION_ARG_NONE, &show_view,
+                    "Give the running gmpc the command to show the window.", NULL
+                },  
+                {NULL}
             };
 
             /*Create the commandline option parser */
@@ -134,6 +144,16 @@ int main ( int argc, char **argv )
             {
                 printf("send toggle view\n");
                 bacon_message_connection_send(bacon_connection, "TOGGLE_VIEW");
+            }
+            if(hide_view)
+            {
+                printf("send hide view\n");
+                bacon_message_connection_send(bacon_connection, "HIDE_VIEW");
+            }
+            if(show_view)
+            {
+                printf("send show view\n");
+                bacon_message_connection_send(bacon_connection, "SHOW_VIEW");
             }
             if(stream)
             {
