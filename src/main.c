@@ -154,6 +154,8 @@ void send_password(void);
  */
 static void create_gmpc_paths(void);
 
+
+void print_version ( void );
 #ifndef WIN32
 /**
  * Handle incoming (IPC) messages.
@@ -303,109 +305,11 @@ int main (int argc, char **argv)
              */
             else if (!strcasecmp(argv[i], _("--version")))
             {
-                printf(BOLD"%s\n",_("Gnome Music Player Client"));
-
-                printf(GMPC_COPYRIGHT"\n\n"RESET);
-                printf("%-25s: %s\n",_("Tagline"), GMPC_TAGLINE);
-                printf("%-25s: %s\n",_("Version"), VERSION);
-                if(revision && revision[0] != '\0')
-                {
-                    printf("%-25s: %s\n",_("Revision"),revision);
-                }
-		printf("%-25s: %s\n", _("Libmpd version"), LIBMPD_VERSION);
-		printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
-		printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);
-		printf("%-25s: %s\n\n", _("Platform"),
-#ifdef WIN32
-			_("Windows")
-#else
-#ifdef OSX
-			_("Mac OsX")
-#else
-			_("*nix")
-#endif
-#endif
-		);
-                printf("%-25s: "GMPC_WEBSITE"\n",_("Website"));
-                printf("%-25s: "GMPC_BUGTRACKER"\n",_("Getting help"));
-		printf(BOLD"\n%s:\n"RESET,_("Options enabled"));
-		printf("%-25s: %s\n",
-			_("X session management"),
-#ifdef ENABLE_SM
-			_("Enabled")
-#else
- 			_("Disabled")
-#endif
-		);	
-		printf("%-25s: %s\n", _("NLS Support"),
-#ifdef ENABLE_NLS
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("Multimedia Keys"),
-#ifdef ENABLE_MMKEYS 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("Libegg's trayicon"),
-#ifdef EGGTRAYICON 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("System libsexy"),
-#ifdef USE_SYSTEM_LIBSEXY 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-		printf("%-25s: %s\n", _("Mac integration library"),
-#ifdef ENABLE_IGE 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("Use ~/.config/ dir"),
-#ifdef USE_CONFIG_DIR
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("Debug timing"),
-#ifdef DEBUG_TIMING 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-		printf("%-25s: %s\n", _("Maintainer mode"),
-#ifdef MAINTAINER_MODE 
-			_("Enabled")
-#else
-			_("Disabled")
-#endif
-		);
-
-
+                print_version();
                 exit(0);
             }
             /**
-             * Allow the use
-r to pick another config file
+             * Allow the user to pick another config file
              */
 #define check_key(a) (!strncasecmp(argv[i], a, strlen(a)))
             else if (check_key(_("--config=")))
@@ -478,7 +382,7 @@ r to pick another config file
                             "\t\t\t\t\t1 Error Messages\n"\
                             "\t\t\t\t\t2 Error + Warning Messages\n"\
                             "\t\t\t\t\t3 All messages\n"\
-                            "\t--version\t\tPrint version and svn revision\n"\
+                            "\t--version\t\tPrint version and git revision\n"\
                             "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
                             "\t--clean-cover-db\tCleanup the cover file.\n"\
                             "\t--disable-plugins\tDon't load any plugins.\n"\
@@ -535,12 +439,6 @@ r to pick another config file
 	 */
     if(!g_thread_supported())g_thread_init (NULL);
 
-#ifndef WIN32
-	/* This is incompatible with win32, however magnatune plugin requires it. */
-	/* So it is enabled for all non-win32 platforms */
-	/* Magnatune is "tweaked" to not use this anymore.*/
-	/*    gdk_threads_init();*/
-#endif
     TEC("Initializing threading")
     /*
      * initialize gtk
@@ -1368,19 +1266,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
      */
     if(connected)
         mpd_status_update(mi);
-/*
-    if(connected && cfg_get_single_value_as_int_with_default(config, "connection", "warning", TRUE) &&
-            mpd_check_connected(connection))
-    {
-        if(!mpd_server_check_version(connection, 0,12,0)) {
-            GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-                    GTK_MESSAGE_WARNING,GTK_BUTTONS_CLOSE,
-                    _("Gmpc is currently connected to mpd version lower then 0.12.0.\nThis might work, but is no longer supported."));
-            g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
-            gtk_widget_show(GTK_WIDGET(dialog));
-        }
-    }
-    */
+
     if(connected)
     {
         playlist3_show_error_message(_("Connected to mpd"), ERROR_INFO);
@@ -1516,5 +1402,107 @@ static void create_gmpc_paths(void)
 		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
 	}
 	/* Free the path */
-	q_free(url);
+    q_free(url);
+}
+
+
+
+void print_version ( void )
+{
+    printf(BOLD"%s\n",_("Gnome Music Player Client"));
+
+    printf(GMPC_COPYRIGHT"\n\n"RESET);
+    printf("%-25s: %s\n",_("Tagline"), GMPC_TAGLINE);
+    printf("%-25s: %s\n",_("Version"), VERSION);
+    if(revision && revision[0] != '\0')
+    {
+        printf("%-25s: %s\n",_("Revision"),revision);
+    }
+    printf("%-25s: %s\n", _("Libmpd version"), LIBMPD_VERSION);
+    printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
+    printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);
+    printf("%-25s: %s\n\n", _("Platform"),
+#ifdef WIN32
+            _("Windows")
+#else
+#ifdef OSX
+            _("Mac OsX")
+#else
+            _("*nix")
+#endif
+#endif
+          );
+    printf("%-25s: "GMPC_WEBSITE"\n",_("Website"));
+    printf("%-25s: "GMPC_BUGTRACKER"\n",_("Getting help"));
+    printf(BOLD"\n%s:\n"RESET,_("Options enabled"));
+    printf("%-25s: %s\n",
+            _("X session management"),
+#ifdef ENABLE_SM
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );	
+    printf("%-25s: %s\n", _("NLS Support"),
+#ifdef ENABLE_NLS
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("Multimedia Keys"),
+#ifdef ENABLE_MMKEYS 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("Libegg's trayicon"),
+#ifdef EGGTRAYICON 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("System libsexy"),
+#ifdef USE_SYSTEM_LIBSEXY 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+    printf("%-25s: %s\n", _("Mac integration library"),
+#ifdef ENABLE_IGE 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("Use ~/.config/ dir"),
+#ifdef USE_CONFIG_DIR
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("Debug timing"),
+#ifdef DEBUG_TIMING 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
+    printf("%-25s: %s\n", _("Maintainer mode"),
+#ifdef MAINTAINER_MODE 
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
 }
