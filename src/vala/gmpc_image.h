@@ -37,6 +37,7 @@ struct _GmpcImageClass {
 
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border, gboolean round);
 void gmpc_image_clear_pixbuf (GmpcImage* self);
+GmpcImage* gmpc_image_construct (GType object_type);
 GmpcImage* gmpc_image_new (void);
 GType gmpc_image_get_type (void);
 

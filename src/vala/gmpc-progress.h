@@ -32,6 +32,7 @@ struct _GmpcProgressClass {
 
 
 void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current);
+GmpcProgress* gmpc_progress_construct (GType object_type);
 GmpcProgress* gmpc_progress_new (void);
 gboolean gmpc_progress_get_hide_text (GmpcProgress* self);
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value);

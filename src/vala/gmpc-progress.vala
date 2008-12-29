@@ -45,7 +45,7 @@ public class Gmpc.Progress : Gtk.EventBox
     // The size_request method Gtk+ is calling on a widget to ask
     // it the widget how large it wishes to be. It's not guaranteed
     // that gtk+ will actually give this size to the widget
-    public override void size_request (Gtk.Requisition requisition)
+    public override void size_request (out Gtk.Requisition requisition)
     {
         int width, height;
         // In this case, we say that we want to be as big as the
