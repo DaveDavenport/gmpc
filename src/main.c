@@ -1043,9 +1043,6 @@ static void init_stock_icons(void)
 	/* The Windows gtkrc sets this to 0, so images don't work on buttons */
 	gtk_settings_set_long_property(gtk_settings_get_default(),
 			"gtk-button-images", TRUE, "main");
-	gtk_settings_set_long_property(gtk_settings_get_default(),
-			"rules-hint", TRUE, "main");
-
 #endif
 
 	return;
