@@ -274,16 +274,16 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 		/**
 		 * Start switching side view (if type changed )
 		 */
-        if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected != NULL)
+        if(old_type != -1) 
         {
-            plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+                gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
         }
         old_type = -1;
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
-		if((old_type != type) && (plugins[plugin_get_pos(type)]->browser->selected != NULL))
+		if((old_type != type))
 		{
-			plugins[plugin_get_pos(type)]->browser->selected(container);
+            gmpc_plugin_browser_selected(plugins[plugin_get_pos(type)], container);
 		}
 		/**
 		 * update old value, so get_selected_category is correct before calling selection_changed
@@ -293,9 +293,9 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 	}
 	else
 	{
-		if(old_type != -1 && plugins[plugin_get_pos(old_type)]->browser->unselected)
+		if(old_type != -1) 
 		{
-			plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+            gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
 		}
 		old_type = -1;
 		gtk_tree_model_get_iter_first(model, &iter);
@@ -338,7 +338,7 @@ void pl3_option_menu_activate(void)
 
 	for(i=0; i< num_plugins;i++)
 	{
-		if(plugins[i]->browser != NULL)
+		if(gmpc_plugin_is_browser(plugins[i]))
 		{
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
@@ -375,7 +375,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView *tree, GdkEventButton *event)
 
 	for(i=0; i< num_plugins;i++)
 	{
-		if(plugins[i]->browser != NULL)
+		if(gmpc_plugin_is_browser(plugins[i]))
 		{
 			if(plugins[i]->browser->cat_right_mouse_menu != NULL)
 			{
@@ -440,7 +440,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
 
     for(i=0; i< num_plugins;i++)
     {
-        if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
+        if(gmpc_plugin_is_browser(plugins[i]))
         {
             if(plugins[i]->browser && plugins[i]->browser->key_press_event)
             {
@@ -540,7 +540,7 @@ int pl3_cat_key_press_event(GtkWidget *mw, GdkEventKey *event)
 
 	for(i=0; i< num_plugins;i++)
 	{
-		if(plugins[i]->browser != NULL)
+		if(gmpc_plugin_is_browser(plugins[i]))
 		{
 			if(plugins[i]->browser->cat_key_press != NULL)
 			{
@@ -1960,7 +1960,7 @@ void pl3_update_go_menu(void)
     gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
 	if(mpd_check_connected(connection)) {
 		for(i=0; i< num_plugins;i++) {
-			if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER) {
+			if(gmpc_plugin_is_browser(plugins[i])) {
 				if(plugins[i]->browser && plugins[i]->browser->add_go_menu) {
 					items += plugins[i]->browser->add_go_menu(menu);
 				}

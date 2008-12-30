@@ -326,11 +326,18 @@ void gmpc_plugin_browser_unselected(gmpcPlugin *plug, GtkWidget *container)
         plug->browser->unselected(container);
     }
 }
+void gmpc_plugin_browser_selected(gmpcPlugin *plug, GtkWidget *container)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->browser != NULL);
+        g_assert(plug->browser->selected != NULL);
+        plug->browser->selected(container);
+    }
+}
 
 void gmpc_plugin_browser_add(gmpcPlugin *plug, GtkWidget *cat_tree)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        printf("%s\n", gmpc_plugin_get_name(plug));
         g_assert(plug->browser != NULL);
         if(plug->browser->add)
         {
