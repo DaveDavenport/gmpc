@@ -54,6 +54,10 @@ static int plugin_validate(gmpcPlugin *plug)
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed",plug->name);
             return FALSE;
         }
+        if(plug->browser->cat_key_press != NULL)
+        {
+            debug_printf(DEBUG_ERROR, "Plugin %s implements a cat_key_press event handler that is deprecated", plug->name);
+        }
     }
     if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
     {
@@ -344,4 +348,39 @@ void gmpc_plugin_browser_add(gmpcPlugin *plug, GtkWidget *cat_tree)
             plug->browser->add(cat_tree);
         }
     }
+}
+
+int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPlugin *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->browser != NULL);
+        if(plug->browser->cat_right_mouse_menu != NULL)
+        {
+            return plug->browser->cat_right_mouse_menu(menu,type,tree,event);
+        }
+    }
+}
+
+int gmpc_plugin_browser_key_press_event(gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->browser != NULL);
+        if(plug->browser->key_press_event != NULL)
+        {
+            return plug->browser->key_press_event(mw,event,type);
+        }
+    }
+    return 0;
+}
+
+int gmpc_plugin_browser_add_go_menu(gmpcPlugin *plug, GtkWidget *menu)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->browser != NULL);
+        if(plug->browser->add_go_menu != NULL)
+        {
+            return plug->browser->add_go_menu(menu);
+        }
+    }
+    return 0;
 }
