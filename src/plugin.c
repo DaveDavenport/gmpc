@@ -304,3 +304,12 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     return url;
 #endif
 }
+
+void gmpc_plugin_mpd_connection_changed(gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data)
+{
+    g_assert(plug != NULL);
+    if(plug->mpd_connection_changed != NULL)
+    {
+        plug->mpd_connection_changed(mi,connected,data);
+    }
+}

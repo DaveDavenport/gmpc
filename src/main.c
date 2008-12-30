@@ -849,8 +849,8 @@ int main (int argc, char **argv)
 	 * get the status every 1/2 second should be enough, but it's configurable.
 	 */
 	g_timeout_add (cfg_get_single_value_as_int_with_default(config,
-				"connection","mpd-update-speed",500),
-			(GSourceFunc)update_mpd_status, NULL);
+                "connection","mpd-update-speed",500),
+            (GSourceFunc)update_mpd_status, NULL);
 	/**
 	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
 	 * if you are still connected, and reconnects you if not.
@@ -936,10 +936,6 @@ int main (int argc, char **argv)
     playlist3_destroy();
     g_object_unref(playlist);
 
-
-
-
-
     g_object_unref(G_OBJECT(gmw));
 
 	/**
@@ -957,9 +953,7 @@ int main (int argc, char **argv)
 	 */
 	mpd_free(connection);
 
-
-
-     xmlCleanupParser();
+    xmlCleanupParser();
 	/* cleanup curl */
 	curl_global_cleanup();
 
@@ -1248,11 +1242,8 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     for(i=0; i< num_plugins; i++)
     {
         debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
-        if(plugins[i]->mpd_connection_changed!= NULL)
-        {
-            plugins[i]->mpd_connection_changed(mi,connected,NULL);
-            TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]))
-        }
+        gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
+        TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]))
 
     }
 
@@ -1383,7 +1374,7 @@ static void create_gmpc_paths(void)
 	if(!g_file_test(url, G_FILE_TEST_EXISTS)) {
 		if(g_mkdir_with_parents(url,0700) < 0) {
 			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
-			show_error_message("Failed to create ~/.gmpc/.", TRUE);
+			show_error_message("Failed to create config directory.",TRUE);
 			abort();
 		}
 	}
@@ -1391,7 +1382,7 @@ static void create_gmpc_paths(void)
 	 * if it exists, check if it's a directory
 	 */
 	if (!g_file_test(url, G_FILE_TEST_IS_DIR)) {
-		show_error_message("~/.gmpc/ isn't a directory.", TRUE);
+		show_error_message("The config directory is not a directory.", TRUE);
 		abort();
 	} else {
 		debug_printf(DEBUG_INFO, "%s exist and is directory",url);
