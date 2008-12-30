@@ -55,6 +55,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	private gulong connect_signal = {0};
 	private gulong meta_id = {0};
 
+    private gulong metadata_force_reload = {0};
+
 	private gchar *image_url = {NULL};
 
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
@@ -282,6 +284,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
 				self->_priv->meta_id =  0;
 			}
+            if(self->_priv->metadata_force_reload)
+            {
+                g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->metadata_force_reload);
+                self->_priv->metadata_force_reload =  0;
+            }
 			if(self->_priv->popup_timer_id)
 			{
 				g_source_remove(self->_priv->popup_timer_id);
@@ -354,6 +361,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                     GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
 //            self_set_cover_na(gmi);
+            gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
             return (GtkWidget *)gmi;
         }
 	public 
@@ -369,7 +377,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                 GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
 //            self_set_cover_na(gmi);
-			return (GtkWidget *)gmi;
+            gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
+            return (GtkWidget *)gmi;
 		}
 
 	public	

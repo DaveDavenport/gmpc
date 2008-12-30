@@ -1379,6 +1379,7 @@ void show_cover_case_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "metaimage","addcase", bool1);
+    gmpc_meta_watcher_force_reload(gmw);
 }
 void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data)
 {

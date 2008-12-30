@@ -49,6 +49,19 @@ class Gmpc:Meta:Watcher from  G:Object {
 
     }
 
+    /**
+     * This signal forces metadata widgets to re-display itself
+     * F.e. because stylized is enabled/disabled
+     */
+    signal last NONE (NONE)
+    void
+    force_reload(self)
+    {
+
+    }
+
+
+
     public
     gboolean
     match_data(MetaDataType type, mpd_Song *song1, mpd_Song *song2)

@@ -20,6 +20,7 @@ class Gmpc:Signals from G:Object{
 		debug_printf(DEBUG_INFO, "Markup Changed fired\n");
         cfg_set_single_value_as_string(config, "playlist", "browser_markup",markup);
     } 
+
     public 
     char * 
     get_browser_markup(self)
