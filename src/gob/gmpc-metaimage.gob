@@ -644,7 +644,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 height = gdk_pixbuf_get_height(pb);
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
                 {
-                    float spineRatio = 60.0/600.0;
+                    float spineRatio = 21.0/300.0;
                     int spineWidth = (width)*spineRatio;
                     GdkPixbuf *pb2 = pb;
                     GdkPixbuf *blank ;
@@ -656,7 +656,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     width = gdk_pixbuf_get_width(pb);			
                     height = gdk_pixbuf_get_height(pb);
                     /* load the case */
-                    path2 = gmpc_get_full_image_path("mpdBrowser_case.png"); 
+                    path2 = gmpc_get_full_image_path("mpdBrowser_case.svg"); 
                     pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
                     g_free(path2);
                     /* render */

@@ -8,6 +8,7 @@ dist_appicon_DATA =	\
 	media-album.png\
 	gmpc-add-url.png\
 	mpdBrowser_case.png\
+	mpdBrowser_case.svg\
 	gmpc-loading-cover.png
 
 
