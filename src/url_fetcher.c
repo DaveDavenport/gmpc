@@ -11,13 +11,6 @@
 /** in gmpc */
 void pl3_option_menu_activate(); 
 
-
-
-gmpcPlugin url_plugin = {
-	.name = "Url Parser Plugin",
-	.version = {0,0,3},
-	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
-};
 /***
  * Parse PLS files:
  */

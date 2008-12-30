@@ -184,4 +184,6 @@ void            gmpc_plugin_status_changed              (gmpcPlugin *plug, MpdOb
 gchar *         gmpc_plugin_get_data_path               (gmpcPlugin *plug);
 void            gmpc_plugin_mpd_connection_changed      (gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data);
 
+gboolean        gmpc_plugin_is_browser                  (gmpcPlugin *plug);
+void            gmpc_plugin_browser_unselected          (gmpcPlugin *plug, GtkWidget *container);
 #endif

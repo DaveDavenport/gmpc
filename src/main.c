@@ -66,7 +66,6 @@ extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin tray_icon2_plug;
 extern gmpcPlugin proxyplug;
 extern gmpcPlugin metab_plugin;
-extern gmpcPlugin url_plugin;
 extern gmpcPlugin playlist_editor_plugin;
 
 
@@ -754,7 +753,6 @@ int main (int argc, char **argv)
 #ifdef ENABLE_MMKEYS
     plugin_add(&mmkeys_plug,0);
 #endif
-    plugin_add(&url_plugin,0);
     /* the tray icon */
     plugin_add(&tray_icon2_plug,0);
 

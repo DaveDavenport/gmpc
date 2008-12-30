@@ -177,7 +177,7 @@ static void pl3_initialize_tree(void)
 	if(old_type >= 0)
 	{
 		GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
-		plugins[plugin_get_pos(old_type)]->browser->unselected(container);
+        gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
 		old_type = -1;
 	}
 
@@ -185,14 +185,11 @@ static void pl3_initialize_tree(void)
 
 	for(i=0; i< num_plugins;i++)
 	{
-		if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
+		if(gmpc_plugin_is_browser(plugins[i]))
 		{
-			if(!(plugins[i]->get_enabled && plugins[i]->get_enabled() == FALSE))
+			if(gmpc_plugin_get_enabled(plugins[i]))
 			{
-				if(plugins[i]->browser && plugins[i]->browser->add)
-				{
-					plugins[i]->browser->add(glade_xml_get_widget(pl3_xml, "cat_tree"));
-				}
+                gmpc_plugin_browser_add(plugins[i], glade_xml_get_widget(pl3_xml, "cat_tree"));
 			}
 		}
 	}

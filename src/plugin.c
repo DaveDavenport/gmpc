@@ -313,3 +313,28 @@ void gmpc_plugin_mpd_connection_changed(gmpcPlugin *plug, MpdObj *mi, int connec
         plug->mpd_connection_changed(mi,connected,data);
     }
 }
+
+gboolean gmpc_plugin_is_browser(gmpcPlugin *plug)
+{
+    return ((plug->plugin_type&GMPC_PLUGIN_PL_BROWSER) != 0);
+}
+void gmpc_plugin_browser_unselected(gmpcPlugin *plug, GtkWidget *container)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->browser != NULL);
+        g_assert(plug->browser->unselected != NULL);
+        plug->browser->unselected(container);
+    }
+}
+
+void gmpc_plugin_browser_add(gmpcPlugin *plug, GtkWidget *cat_tree)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        printf("%s\n", gmpc_plugin_get_name(plug));
+        g_assert(plug->browser != NULL);
+        if(plug->browser->add)
+        {
+            plug->browser->add(cat_tree);
+        }
+    }
+}
