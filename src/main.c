@@ -1040,17 +1040,12 @@ static void init_stock_icons(void)
 	gtk_window_set_default_icon_name("gmpc");
 
 #ifdef WIN32
-	/* hack to help finding files */
-	gchar *hack = NULL;
-	path = gmpc_get_full_image_path("");
-	hack = g_strdup_printf("%s%cicons%chicolor%c32x32%cactions",path, G_DIR_SEPARATOR,G_DIR_SEPARATOR,G_DIR_SEPARATOR, G_DIR_SEPARATOR);
-	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default (),hack);
-	q_free(hack);
-	q_free(path);
-
 	/* The Windows gtkrc sets this to 0, so images don't work on buttons */
 	gtk_settings_set_long_property(gtk_settings_get_default(),
 			"gtk-button-images", TRUE, "main");
+	gtk_settings_set_long_property(gtk_settings_get_default(),
+			"rules-hist", TRUE, "main");
+
 #endif
 
 	return;
@@ -1508,4 +1503,5 @@ void print_version ( void )
             _("Disabled")
 #endif
           );
+
 }
