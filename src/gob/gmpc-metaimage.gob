@@ -650,25 +650,25 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     GdkPixbuf *blank ;
                     gchar *path2;
                     /* Scale the cover to fit inside the case */
-                    pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth,height,GDK_INTERP_BILINEAR);
+                    pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth-2,(height*(width-spineWidth))/((gdouble)width)-2,GDK_INTERP_BILINEAR);
                     g_object_unref(pb2);
 
-                    width = gdk_pixbuf_get_width(pb);			
-                    height = gdk_pixbuf_get_height(pb);
+                    width = gdk_pixbuf_get_width(pb)+spineWidth+2;			
+                    height = gdk_pixbuf_get_height(pb)+2;
                     /* load the case */
                     path2 = gmpc_get_full_image_path("mpdBrowser_case.svg"); 
-                    pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width+spineWidth,height,FALSE,NULL);
+                    pb2 = gdk_pixbuf_new_from_file_at_scale(path2,width,height,FALSE,NULL);
                     g_free(path2);
                     /* render */
-                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width+spineWidth,height);
+                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x00000000);
-                    gdk_pixbuf_copy_area(pb, 0,0,width,height,blank,spineWidth,0);
-                    gdk_pixbuf_composite(pb2,blank,0,0,width+spineWidth,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
+                    gdk_pixbuf_copy_area(pb, 0,0,width-spineWidth-2,height-2,blank,spineWidth+1,1);
+                    gdk_pixbuf_composite(pb2,blank,0,0,width,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
 
                     g_object_unref(pb2);
                     g_object_unref(pb);
                     pb = blank;
-                    width += spineWidth;
+//                    width += spineWidth;
 
 
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE,FALSE);
