@@ -1044,7 +1044,7 @@ static void init_stock_icons(void)
 	gtk_settings_set_long_property(gtk_settings_get_default(),
 			"gtk-button-images", TRUE, "main");
 	gtk_settings_set_long_property(gtk_settings_get_default(),
-			"rules-hist", TRUE, "main");
+			"rules-hint", TRUE, "main");
 
 #endif
 
