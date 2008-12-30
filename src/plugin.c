@@ -384,3 +384,49 @@ int gmpc_plugin_browser_add_go_menu(gmpcPlugin *plug, GtkWidget *menu)
     }
     return 0;
 }
+
+gboolean gmpc_plugin_has_preferences(gmpcPlugin *plug)
+{
+    return (plug->pref != NULL);
+}
+
+void gmpc_plugin_preferences_construct(gmpcPlugin *plug,GtkWidget *wid)
+{
+    if(gmpc_plugin_has_preferences(plug))
+    {
+        g_assert(plug->pref != NULL);
+        g_assert(plug->pref->construct);
+        plug->pref->construct(wid);
+    }
+}
+
+void gmpc_plugin_preferences_destroy(gmpcPlugin *plug,GtkWidget *wid)
+{
+    if(gmpc_plugin_has_preferences(plug))
+    {
+        g_assert(plug->pref != NULL);
+        g_assert(plug->pref->destroy);
+        plug->pref->destroy(wid);
+    }
+}
+
+
+gboolean gmpc_plugin_is_internal(gmpcPlugin *plug)
+{
+    return ((plug->plugin_type&GMPC_INTERNALL) != 0);
+}
+
+int * gmpc_plugin_get_version(gmpcPlugin *plug)
+{
+    return (int *)plug->version;
+}
+
+int gmpc_plugin_get_type(gmpcPlugin *plug)
+{
+    return plug->plugin_type;
+}
+
+int gmpc_plugin_get_id(gmpcPlugin *plug)
+{
+    return plug->id;
+}

@@ -193,4 +193,15 @@ int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPlugin *plug, G
 
 int             gmpc_plugin_browser_key_press_event         (gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type);
 int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, GtkWidget *menu);
+
+
+gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
+void            gmpc_plugin_preferences_construct           (gmpcPlugin *plug,GtkWidget *wid);
+void            gmpc_plugin_preferences_destroy             (gmpcPlugin *plug,GtkWidget *wid);
+
+int             gmpc_plugin_get_type(gmpcPlugin *plug);
+int *           gmpc_plugin_get_version                     (gmpcPlugin *plug);
+gboolean        gmpc_plugin_is_internal                     (gmpcPlugin *plug);
+
+
 #endif

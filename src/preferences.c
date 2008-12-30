@@ -40,7 +40,7 @@ static void pref_plugin_changed(void)
 	int id = 0;
 	if(plugin_last >= 0)
 	{
-		plugins[plugin_last]->pref->destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+        gmpc_plugin_preferences_destroy(plugins[plugin_last],glade_xml_get_widget(xml_preferences_window, "plugin_container"));
 		plugin_last = -1;
 
 	}
@@ -51,30 +51,28 @@ static void pref_plugin_changed(void)
 	if(gtk_tree_selection_get_selected(sel, &model, &iter))
 	{
 		gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &iter, 0, &id, -1);
-		if(id >= 0 && plugins[id]->pref)
-		{
-			if(plugins[id]->pref->construct)
-			{
-				char *buf = NULL;
-				if(plugins[id]->plugin_type != GMPC_INTERNALL && !(plugins[id]->id&PLUGIN_ID_INTERNALL))
-				{
-					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
-							N_(plugins[id]->name),
-							plugins[id]->version[0],plugins[id]->version[1], plugins[id]->version[2]);
-				}
-				else
-				{
-					buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
-							N_(plugins[id]->name));
-				}
+		if(id >= 0 && gmpc_plugin_has_preferences(plugins[id])) 
+        {
+            char *buf = NULL;
+            if(!gmpc_plugin_is_internal(plugins[id]))
+            {
+                int *version = gmpc_plugin_get_version(plugins[id]);
+                buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
+                        N_(gmpc_plugin_get_name(plugins[id])),
+                        version[0],version[1], version[2]);
+            }
+            else
+            {
+                buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
+                        N_(gmpc_plugin_get_name(plugins[id])));
+            }
 
-				plugins[id]->pref->construct(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
-				plugin_last = id;
-				gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),buf);
-				q_free(buf);
-				return;
-			}
-		}
+            gmpc_plugin_preferences_construct(plugins[id],glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+            plugin_last = id;
+            gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml_preferences_window, "plugin_label")),buf);
+            q_free(buf);
+            return;
+        }
 		else if(id == PLUGIN_STATS)
 		{
 			gchar *value = g_markup_printf_escaped("<span size=\"xx-large\" weight=\"bold\">%s</span>", _("Plugins"));
@@ -148,14 +146,14 @@ void create_preferences_window(void)
 	/* internals */
 	for(i=0; i< num_plugins; i++)
 	{
-		if(plugins[i]->pref != NULL)
+		if(gmpc_plugin_has_preferences(plugins[i]))
 		{
-			if(plugins[i]->id&PLUGIN_ID_INTERNALL)
+			if(gmpc_plugin_is_internal(plugins[i]))
 			{
 				GtkTreeIter iter;
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
-						0, plugin_get_pos(plugins[i]->id)/*^PLUGIN_ID_MARK*/,
+						0, i,
 						1, _(gmpc_plugin_get_name(plugins[i])), -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(glade_xml_get_widget(xml_preferences_window, "plugin_tree")))) == 0)
@@ -181,11 +179,11 @@ void create_preferences_window(void)
 		g_free(value);
 		for(i=0; i< num_plugins; i++)
 		{
-			if(plugins[i]->pref != NULL && plugins[i]->id&PLUGIN_ID_MARK)
+			if(gmpc_plugin_has_preferences(plugins[i]) && ! gmpc_plugin_is_internal(plugins[i]))
 			{
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
-						0, plugin_get_pos(plugins[i]->id),
+						0, i,
 						1, gmpc_plugin_get_name(plugins[i]),
 						-1);
 			}
@@ -208,7 +206,7 @@ void preferences_window_destroy(void)
 	GtkWidget *dialog = glade_xml_get_widget(xml_preferences_window, "preferences_window");
 	if(plugin_last >= 0)
 	{
-		plugins[plugin_last]->pref->destroy(glade_xml_get_widget(xml_preferences_window, "plugin_container"));
+        gmpc_plugin_preferences_destroy(plugins[plugin_last],glade_xml_get_widget(xml_preferences_window, "plugin_container"));
 		plugin_last = -1;
 
 	}	                                                                                                     	
@@ -275,17 +273,20 @@ static void plugin_stats_construct(GtkWidget *container)
 		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW(tree), -1,_("Version"), renderer, "text", 4,NULL);
 		for(i=0;i<num_plugins;i++)
 		{
-			if(plugins[i]->id&PLUGIN_ID_MARK)
+			if(!gmpc_plugin_is_internal(plugins[i]))
 			{
-                gchar *version = g_strdup_printf("%i.%i.%i",plugins[i]->version[0], plugins[i]->version[1],plugins[i]->version[2]);
+                int *ver = gmpc_plugin_get_version(plugins[i]);
+                gchar *version = g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]);
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
                 g_free(version);
-				if(plugins[i]->get_enabled != NULL)
+				if(gmpc_plugin_get_enabled(plugins[i])) 
 				{
-					gtk_list_store_set(store, &iter, 0,plugins[i]->get_enabled(),-1);
+					gtk_list_store_set(store, &iter, 0,TRUE,-1);
 				}
-				switch(plugins[i]->plugin_type)
+                else 
+                    gtk_list_store_set(store, &iter, 0,FALSE,-1);
+                switch(gmpc_plugin_get_type(plugins[i]))
 				{
 					case GMPC_PLUGIN_DUMMY:
 						gtk_list_store_set(store, &iter, 2, _("Dummy"),-1);
