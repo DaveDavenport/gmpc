@@ -430,3 +430,35 @@ int gmpc_plugin_get_id(gmpcPlugin *plug)
 {
     return plug->id;
 }
+
+gboolean gmpc_plugin_is_metadata(gmpcPlugin *plug)
+{
+    return (plug->metadata != NULL);
+}
+
+int gmpc_plugin_metadata_get_priority(gmpcPlugin *plug)
+{
+    if(gmpc_plugin_is_metadata(plug))
+    {
+        return plug->metadata->get_priority();
+    }
+    return 100;
+}
+
+void gmpc_plugin_metadata_set_priority(gmpcPlugin *plug, int priority)
+{
+    if(gmpc_plugin_is_metadata(plug))
+    {
+        return plug->metadata->set_priority(priority);
+    }
+}
+
+int gmpc_plugin_metadata_get_image(gmpcPlugin *plug, mpd_Song *song, MetaDataType type, char **path)
+{
+    *path = NULL;
+    if(gmpc_plugin_is_metadata(plug))
+    {
+        return plug->metadata->get_image(song, type, path);
+    }
+    return META_DATA_UNAVAILABLE;
+}

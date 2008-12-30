@@ -203,5 +203,9 @@ int             gmpc_plugin_get_type(gmpcPlugin *plug);
 int *           gmpc_plugin_get_version                     (gmpcPlugin *plug);
 gboolean        gmpc_plugin_is_internal                     (gmpcPlugin *plug);
 
-
+/* metadata */
+gboolean        gmpc_plugin_is_metadata                     (gmpcPlugin *plug);
+int             gmpc_plugin_metadata_get_priority           (gmpcPlugin *plug);
+void            gmpc_plugin_metadata_set_priority           (gmpcPlugin *plug, int priority);
+int             gmpc_plugin_metadata_get_image              (gmpcPlugin *plug, mpd_Song *song, MetaDataType type, char **path);
 #endif

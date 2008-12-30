@@ -570,7 +570,7 @@ static void meta_data_retrieve_thread(void)
 				if(gmpc_plugin_get_enabled(plug))
 				{
                     debug_printf(DEBUG_INFO, "Query plugin: '%s'", plug->name);
-					data->result = plug->metadata->get_image(data->edited, data->type&META_QUERY_DATA_TYPES, &path);
+					data->result = gmpc_plugin_metadata_get_image(plug,data->edited, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
 			}
@@ -698,7 +698,7 @@ static void meta_data_sort_plugins(void)
         changed=0;
         for(i=0; i< (meta_num_plugins-1);i++)
         {
-            if(meta_plugins[i]->metadata->get_priority() > meta_plugins[i+1]->metadata->get_priority())
+            if(gmpc_plugin_metadata_get_priority(meta_plugins[i]) > gmpc_plugin_metadata_get_priority(meta_plugins[i+1]))
             {
                 gmpcPlugin *temp = meta_plugins[i];
                 changed=1;
@@ -1004,8 +1004,8 @@ static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path
         gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
         if(plug)
         {
-            plug->metadata->set_priority((gint)g_ascii_strtoull(new_text, NULL, 0));
-            gtk_list_store_set(GTK_LIST_STORE(store), &iter, 2, plug->metadata->get_priority(),-1);
+            gmpc_plugin_metadata_set_priority(plug,(gint)g_ascii_strtoull(new_text, NULL, 0));
+            gtk_list_store_set(GTK_LIST_STORE(store), &iter, 2, gmpc_plugin_metadata_get_priority(plug),-1);
             meta_data_sort_plugins();
         }
     }
@@ -1069,7 +1069,7 @@ static void metadata_construct_pref_pane(GtkWidget *container)
         gtk_list_store_insert_with_values(store, &iter, -1, 
             0, meta_plugins[i],
             1, gmpc_plugin_get_name(meta_plugins[i]),
-            2, meta_plugins[i]->metadata->get_priority(),
+            2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
             -1);
 
     }
