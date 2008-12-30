@@ -277,7 +277,7 @@ gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
     return TRUE;
 }
 
-gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
+const gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {
 #ifdef WIN32
     debug_printf(DEBUG_INFO, "path: %s\n", plug->path);
@@ -385,6 +385,15 @@ int gmpc_plugin_browser_add_go_menu(gmpcPlugin *plug, GtkWidget *menu)
     return 0;
 }
 
+int gmpc_plugin_browser_song_list_option_menu(gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu) 
+{
+    if(gmpc_plugin_is_browser(plug))
+    {
+        return plug->browser->song_list_option_menu(tree, menu);
+    }
+    return 0;
+}
+
 gboolean gmpc_plugin_has_preferences(gmpcPlugin *plug)
 {
     return (plug->pref != NULL);
@@ -416,7 +425,7 @@ gboolean gmpc_plugin_is_internal(gmpcPlugin *plug)
     return ((plug->plugin_type&GMPC_INTERNALL) != 0);
 }
 
-int * gmpc_plugin_get_version(gmpcPlugin *plug)
+const int * gmpc_plugin_get_version(gmpcPlugin *plug)
 {
     return (int *)plug->version;
 }

@@ -181,18 +181,17 @@ gboolean        gmpc_plugin_get_enabled                     (gmpcPlugin *plug);
 
 const char *    gmpc_plugin_get_name                        (gmpcPlugin *plug);
 void            gmpc_plugin_status_changed                  (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
-gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
+const gchar *   gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
 void            gmpc_plugin_mpd_connection_changed          (gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data);
 
 gboolean        gmpc_plugin_is_browser                      (gmpcPlugin *plug);
 void            gmpc_plugin_browser_unselected              (gmpcPlugin *plug, GtkWidget *container);
 void            gmpc_plugin_browser_selected                (gmpcPlugin *plug, GtkWidget *container);
 void            gmpc_plugin_browser_add                     (gmpcPlugin *plug, GtkWidget *cat_tree);
-
 int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPlugin *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
-
 int             gmpc_plugin_browser_key_press_event         (gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type);
 int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, GtkWidget *menu);
+int             gmpc_plugin_browser_song_list_option_menu   (gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
 
 
 gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
@@ -200,7 +199,7 @@ void            gmpc_plugin_preferences_construct           (gmpcPlugin *plug,Gt
 void            gmpc_plugin_preferences_destroy             (gmpcPlugin *plug,GtkWidget *wid);
 
 int             gmpc_plugin_get_type(gmpcPlugin *plug);
-int *           gmpc_plugin_get_version                     (gmpcPlugin *plug);
+const int *     gmpc_plugin_get_version                     (gmpcPlugin *plug);
 gboolean        gmpc_plugin_is_internal                     (gmpcPlugin *plug);
 
 /* metadata */

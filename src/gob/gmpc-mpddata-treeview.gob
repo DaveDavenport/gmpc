@@ -697,14 +697,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         GtkWidget *submenu = gtk_menu_new();
         for(i=0; i< num_plugins;i++)
         {
-            if(plugins[i]->plugin_type&GMPC_PLUGIN_PL_BROWSER)
+            if(gmpc_plugin_is_browser(plugins[i]))
             {
-                if(plugins[i]->get_enabled == NULL || plugins[i]->get_enabled() == TRUE)
+                if(gmpc_plugin_get_enabled(plugins[i]))
                 {
-                    if(plugins[i]->browser && plugins[i]->browser->song_list_option_menu)
-                    {
-                        retv += plugins[i]->browser->song_list_option_menu(self, GTK_MENU(submenu));
-                    }
+                    retv += gmpc_plugin_browser_song_list_option_menu(plugins[i],self, GTK_MENU(submenu));
                 }
             }
         }
