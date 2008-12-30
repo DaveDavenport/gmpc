@@ -618,10 +618,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         void
         set_cover_from_path(self, gchar *path)
         {
+            int width = 0; 
+            int height = 0;
             GdkPixbuf *pb = NULL;
 
             self->_priv->state = STATE_IMAGE;
-            pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
+      //      pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
             if(self->_priv->image_url)
             {
                 q_free(self->_priv->image_url);
@@ -629,29 +631,32 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
             self_popup_destroy(self);
 
-            if(pb)
+            if(gdk_pixbuf_get_file_info(path,&width, &height))
             {
-                int width = 0; 
-                int height = 0;
+               
+               
                 /* save url */
                 self->_priv->image_url = g_strdup(path); 
 
-                /** 
-                 * Need to get pixbuf height/width before adding to image
-                 * if added to image, somehow the returned values don't match anymore
-                 */
-                width = gdk_pixbuf_get_width(pb);			
-                height = gdk_pixbuf_get_height(pb);
+                /* calculate it */
+                if(width > height) {
+                    height = (height*self->size)/((gdouble)width);
+                    width = self->size;
+                }
+                else {
+                    width = (width*self->size)/((gdouble)height);
+                    height = self->size;
+                }
+                
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
                 {
                     float spineRatio = 21.0/300.0;
                     int spineWidth = (width)*spineRatio;
-                    GdkPixbuf *pb2 = pb;
-                    GdkPixbuf *blank ;
+                    GdkPixbuf *blank,*pb2 ;
                     gchar *path2;
                     /* Scale the cover to fit inside the case */
-                    pb = gdk_pixbuf_scale_simple(pb2,width-spineWidth-2,(height*(width-spineWidth))/((gdouble)width)-2,GDK_INTERP_BILINEAR);
-                    g_object_unref(pb2);
+                    pb = gdk_pixbuf_new_from_file_at_scale(path,width-spineWidth-2, (height*(width-spineWidth))/((gdouble)width),TRUE,NULL);
+
 
                     width = gdk_pixbuf_get_width(pb)+spineWidth+2;			
                     height = gdk_pixbuf_get_height(pb)+2;
@@ -668,14 +673,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb2);
                     g_object_unref(pb);
                     pb = blank;
-//                    width += spineWidth;
-
 
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE,FALSE);
-
+                    g_object_unref(pb);
                 }
-                else
+                else {
+                    pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE,TRUE);
+                    g_object_unref(pb);
+                }
                 /**
                  * Set sizing, also set size on non-squared, so the widget resizes propperly
                  */
@@ -687,7 +693,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 {
                     gtk_widget_set_size_request(GTK_WIDGET(self), width+2, height+2);
                 }
-				g_object_unref(pb);
 			}
 			if(self->is_visible)
 			{
