@@ -139,7 +139,7 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_TAG_TYPE] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_USERDATA] = G_TYPE_POINTER;
-        self->types[MPDDATA_MODEL_META_DATA] = G_TYPE_OBJECT;
+        self->types[MPDDATA_MODEL_META_DATA] = GDK_TYPE_PIXBUF;
 
         self->_priv->markup_signal = g_signal_connect_swapped(G_OBJECT(gmpc_signals), "browser-markup-changed", G_CALLBACK(self_markup_changed), self);
     }
