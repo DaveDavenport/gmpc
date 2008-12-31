@@ -142,7 +142,7 @@ static void pl3_find2_browser_add_crit(void)
     GtkCellRenderer *renderer = NULL;
 	GtkEntryCompletion *ent_comp = NULL;
 
-    cs->hbox = gtk_hbox_new(FALSE, 6);
+    cs->hbox = gtk_hbox_new(FALSE, 0);
 
     cs->lcombo = gtk_combo_box_new_text();
     gtk_combo_box_append_text(GTK_COMBO_BOX(cs->lcombo), _("And"));

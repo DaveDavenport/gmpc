@@ -86,7 +86,6 @@ GmpcConnection *gmpcconn = NULL;
 /* Implements, and gives signals on profiles */
 GmpcProfiles *gmpc_profiles = NULL;
 GmpcSignals *gmpc_signals =NULL;
-GmpcIdle *gmpc_idle = NULL;
 /* Implements, and gives signals on meta_data*/
 GmpcMetaWatcher *gmw = NULL;
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
@@ -668,7 +667,6 @@ int main (int argc, char **argv)
     smc_connect(argc, argv);
     TEC("Session manager setup")
 #endif	
-    gmpc_idle = gmpc_idle_new();
     /** Signals */
     gmpc_signals = gmpc_signals_new();
 
@@ -942,7 +940,6 @@ int main (int argc, char **argv)
     TOC("Starting save config")
 	cfg_close(config);
     TOC("Saved config")
-    g_object_unref(gmpc_idle);
     g_object_unref(gmpc_signals);
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);

@@ -23,7 +23,7 @@ class Gmpc:Stats:Label from Gtk:Label
 {
     private LabelType ltype = ARTIST_NUM_SONGS; 
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
-    private guint idle_id = 0;
+    private gulong ll_signal = 0;
 
     private 
     gboolean
@@ -105,38 +105,41 @@ class Gmpc:Stats:Label from Gtk:Label
             g_string_free(string, TRUE);
         }
 
-        self->_priv->idle_id = 0;
         return FALSE;
     }
 
 
+    private
+    gboolean
+    expose_event(self, GdkEventExpose *event, gpointer data)
+    {
+        gchar *string = g_markup_printf_escaped("<i>%s</i>", _("Loading"));
+        gtk_label_set_markup(GTK_LABEL(self),string);
+        g_free(string);
+        printf("expose\n");
+        self_idle_handler(self);
+        if(self->_priv->ll_signal) {
+            g_signal_handler_disconnect(self, self->_priv->ll_signal);
+            self->_priv->ll_signal = 0;
+        }
+        return FALSE;
+    }
     /* Constructor */
     public
     GtkWidget *
     new(LabelType ltype, mpd_Song *song)
     {
         Self *self = GET_NEW;
-		gchar *string = g_markup_printf_escaped("<i>%s</i>", _("Loading"));
-
         self->_priv->song = mpd_songDup(song);
         self->_priv->ltype = ltype;
 
-        self->_priv->idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_idle_handler, self);
-
-        gtk_label_set_markup(GTK_LABEL(self),string);
-		g_free(string);
+        self->_priv->ll_signal = g_signal_connect(G_OBJECT(self), "expose-event", G_CALLBACK(self_expose_event), NULL);
         return (GtkWidget *)self;
     }
     override (G:Object)
     void
     finalize(G:Object *obj)
     {
-        Self *self = SELF(obj);
-        if(self->_priv->idle_id)
-        {
-            gmpc_idle_source_remove(gmpc_idle,self->_priv->idle_id);
-            self->_priv->idle_id = 0;
-        }
         PARENT_HANDLER(obj);
     }
 

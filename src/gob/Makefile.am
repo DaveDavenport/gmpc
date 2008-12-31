@@ -13,7 +13,6 @@ nodist_libcwidgets_la_SOURCES =\
 	gmpc-clicklabel.c\
 	gmpc-stats-label.c\
 	gmpc-signals.c\
-	gmpc-idle.c\
 	gmpc-profiles.c
 
 libcwidgetsincludedir =$(includedir)/gmpc/
@@ -26,8 +25,7 @@ libcwidgetsinclude_HEADERS=\
 						   gmpc-clicklabel.h\
 						   gmpc-metaimage.h\
 						   gmpc-connection.h\
-						   gmpc-signals.h\
-						   gmpc-idle.h
+						   gmpc-signals.h
 
 
 
@@ -51,8 +49,7 @@ EXTRA_DIST=\
 		gmpc-mpddata-treeview.gob\
 		gmpc-clicklabel.gob\
 		gmpc-stats-label.gob\
-		gmpc-signals.gob\
-		gmpc-idle.gob
+		gmpc-signals.gob
 
 INCLUDES=\
 	@EXTRA_CFLAGS@\

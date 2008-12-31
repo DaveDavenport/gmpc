@@ -38,11 +38,9 @@
 #include "gob/gmpc-connection.h"
 #include "gob/gmpc-metaimage.h"
 #include "gob/gmpc-signals.h"
-#include "gob/gmpc-idle.h"
 
 extern GmpcConnection 	*gmpcconn;
 extern GmpcSignals 		*gmpc_signals;
-extern GmpcIdle 		*gmpc_idle;
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
 

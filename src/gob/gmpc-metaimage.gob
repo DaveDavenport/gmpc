@@ -64,7 +64,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	/* Popup */
 	private GtkWidget *popup_win = {NULL};
 	private guint popup_timer_id = {0};
-    private guint gmpc_idle_id = {0};
 	private int popup_w = {0};
 	private int popup_h = {0};
 	/** Public */
@@ -281,11 +280,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		dispose(G:Object *obj)
 		{
 			Self *self = GMPC_METAIMAGE(obj); 
-            if(self->_priv->gmpc_idle_id)
-            {
-                gmpc_idle_source_remove(gmpc_idle,self->_priv->gmpc_idle_id);
-                self->_priv->gmpc_idle_id = 0;
-            }
             if(self->_priv->meta_id)
 			{
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
@@ -523,7 +517,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 q_free(path);
             }
 
-            self->_priv->gmpc_idle_id = 0;
             return FALSE;
         }
 	public 
