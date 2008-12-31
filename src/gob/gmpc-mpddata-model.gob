@@ -60,6 +60,7 @@ requires 2.0.0
     public gint num_rows = 0;
     private GdkPixbuf **images = NULL;
     private gchar *req_artist = {NULL} destroywith g_free;
+    public gint icon_size = {cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64)};
 
     /* sorting */
     private GtkSortType sort_order = GTK_SORT_ASCENDING;
@@ -326,7 +327,6 @@ requires 2.0.0
                 if(path && model)
                 {
 					int n;	
-                    int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                     Self *self = GMPC_MPDDATA_MODEL(model);
                     GtkTreeIter iter;
 
@@ -336,7 +336,7 @@ requires 2.0.0
                     n = GPOINTER_TO_INT(iter.user_data2) ;
                     if(ret == META_DATA_AVAILABLE)
                     {
-                        GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,size,size,NULL);
+                        GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
                         screenshot_add_border(&pb);
                         if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                         self->_priv->images[n] = pb;
@@ -344,7 +344,7 @@ requires 2.0.0
                     else   if(ret == META_DATA_UNAVAILABLE)
                     {
                         GdkPixbuf *pb2;
-                        pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", size, 0,NULL);
+                        pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
                         if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                         self->_priv->images[n] = pb2;
                     }
@@ -410,13 +410,12 @@ requires 2.0.0
                 {
                     if(self->_priv->images[n] == NULL)
                     {
-                        int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 64);
                         if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
                         {
                             mpd_Song *song;
                             GtkTreePath *path;
                             GtkTreeRowReference *ref;
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
                             song = mpd_newSong();
                             song->artist = g_strdup(data->tag);
                             song->album = NULL; 
@@ -432,7 +431,7 @@ requires 2.0.0
                             mpd_Song *song;
                             GtkTreePath *path;
                             GtkTreeRowReference *ref;
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", size, 0,NULL);
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
                             song = mpd_newSong();
                             song->artist = g_strdup(self->_priv->req_artist); 
                             song->album = g_strdup(data->tag);
@@ -444,7 +443,7 @@ requires 2.0.0
                         }
                         else 
                         {
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", size, 0,NULL);
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
                         }
                     }
                     g_value_set_object(value, self->_priv->images[n]);

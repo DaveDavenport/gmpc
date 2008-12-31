@@ -76,6 +76,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gboolean squared = {TRUE};
 	public gchar *no_cover_icon = {g_strdup("gmpc-no-cover")} destroywith g_free;
 	public gchar *loading_cover_icon = {g_strdup("gmpc-loading-cover")} destroywith g_free;
+
+    private gulong expose_id = {0};
+
 	/**
 	 * I want fully set/get control,so I don't use property stuff,
 	 * is there a way around this?
@@ -348,20 +351,36 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             gtk_drag_finish(context, found, FALSE, dnd_time);
         }
+        /* hack to make the "delayed" image load when it gets visible"
+         */
+        private 
+        gboolean 
+        expose_event(self, GdkEventExpose *event, gpointer data)
+        {
+            g_signal_handler_disconnect(G_OBJECT(self), self->_priv->expose_id);
+            self->_priv->expose_id = 0;
+            printf("expose\n");
+            self_update_cover_from_song_delayed_real(self);
+            return FALSE;
+        }
+
         public
         GtkWidget *new_size(int type, int size)
         {
             Self *gmi =  GET_NEW;
             gmi->image_type = type;
             gmi->size = size;
+
             gtk_drag_dest_set(GTK_WIDGET(gmi),
                     GTK_DEST_DEFAULT_ALL,
                     data_image_drag_target, num_drag_targets,
                     GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
+
             g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                     GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
-//            self_set_cover_na(gmi);
+
             gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
+
             return (GtkWidget *)gmi;
         }
 	public 
@@ -376,7 +395,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
         g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
                 GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
-//            self_set_cover_na(gmi);
             gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
             return (GtkWidget *)gmi;
 		}
@@ -511,10 +529,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->song)
                 mpd_freeSong(self->_priv->song);
-            self_set_cover_na(self);
+            //self_set_cover_na(self);
+            gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             self->_priv->song = mpd_songDup(song);
-            self->_priv->gmpc_idle_id = gmpc_idle_add(gmpc_idle,(GSourceFunc)self_update_cover_from_song_delayed_real,self);
-
+            /* hack to make it load when it gets visible */
+            self->_priv->expose_id = g_signal_connect(G_OBJECT(self), "expose-event", G_CALLBACK(self_expose_event) , NULL);
         }
 		
 	private
