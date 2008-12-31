@@ -120,29 +120,25 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = FALSE,
 		export,
 		link);
+        /*
 	property POINTER connection
 		(nick = "Connection",
 		blurb = "A mpdObj to check on",
 		default_value = NULL,
 		export,
 		link);
-
+*/
 	property BOOLEAN squared
 		(nick = "Squared",
 			blurb = "Keep the widget squared",
 			default_value = TRUE,
 			export,
 			link);
-
-	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
-	init (self)
-	{
-		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
-		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
-		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
-		gtk_widget_show_all(GTK_WIDGET(self));
-	//	self_set_cover_na(self);
-		
+    public void set_connection(self, MpdObj *conn)
+    {
+        self->connection = conn;
+        if(conn)
+        {
         self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
                 "status_changed",
                 G_CALLBACK(self_update_cover),
@@ -152,7 +148,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 "connection_changed",
                 G_CALLBACK(self_connection_changed),
                 G_OBJECT(self));                            		
-
+        }
+    }
+	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
+	init (self)
+	{
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
+		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
+		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
+		gtk_widget_show_all(GTK_WIDGET(self));
 
 		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), self);
 		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), self);
@@ -359,7 +363,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             g_signal_handler_disconnect(G_OBJECT(self), self->_priv->expose_id);
             self->_priv->expose_id = 0;
-            printf("expose\n");
             self_update_cover_from_song_delayed_real(self);
             return FALSE;
         }
