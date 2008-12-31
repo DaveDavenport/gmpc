@@ -17,8 +17,6 @@ public class Gmpc.Image : Gtk.EventBox {
 
     private bool cover_round_corners = 1;
     private bool temp_round_corners = 1;
-    static int items = 0;
-    private int item = 0;
 
 	~Image() {
 		if(fade_timeout > 0)
@@ -31,7 +29,6 @@ public class Gmpc.Image : Gtk.EventBox {
 		this.app_paintable = true;
 		this.visible_window = false;
 		this.expose_event += this.on_expose;
-        this.item = items++;
 	}
   
 	private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
@@ -90,7 +87,6 @@ public class Gmpc.Image : Gtk.EventBox {
 			int y = img.allocation.y;
 			int ww = img.allocation.width;
 			int wh = img.allocation.height;
-            stdout.printf("expose %i\n", item);
             ctx.set_line_width ( 0.8);
 			ctx.set_tolerance (0.1);
 			if(cover != null)

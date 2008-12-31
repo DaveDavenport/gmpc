@@ -8,9 +8,6 @@
 #include <math.h>
 #include <cairo.h>
 #include <gdk/gdk.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 
@@ -24,14 +21,12 @@ struct _GmpcImagePrivate {
 	guint fade_timeout;
 	gboolean cover_round_corners;
 	gboolean temp_round_corners;
-	gint item;
 };
 
 #define GMPC_IMAGE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_IMAGE, GmpcImagePrivate))
 enum  {
 	GMPC_IMAGE_DUMMY_PROPERTY
 };
-static gint gmpc_image_items = 0;
 static void gmpc_image_draw_curved_rectangle (GmpcImage* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event);
 static gboolean gmpc_image_timeout_test (GmpcImage* self);
@@ -122,7 +117,6 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	y = ((GtkWidget*) img)->allocation.y;
 	ww = ((GtkWidget*) img)->allocation.width;
 	wh = ((GtkWidget*) img)->allocation.height;
-	fprintf (stdout, "expose %i\n", self->priv->item);
 	cairo_set_line_width (ctx, 0.8);
 	cairo_set_tolerance (ctx, 0.1);
 	if (self->priv->cover != NULL) {
@@ -297,7 +291,6 @@ static GObject * gmpc_image_constructor (GType type, guint n_construct_propertie
 		g_object_set ((GtkWidget*) self, "app-paintable", TRUE, NULL);
 		gtk_event_box_set_visible_window ((GtkEventBox*) self, FALSE);
 		g_signal_connect_object ((GtkWidget*) self, "expose-event", (GCallback) _gmpc_image_on_expose_gtk_widget_expose_event, self, 0);
-		self->priv->item = gmpc_image_items++;
 	}
 	return obj;
 }
@@ -321,7 +314,6 @@ static void gmpc_image_instance_init (GmpcImage * self) {
 	self->priv->fade_timeout = (guint) 0;
 	self->priv->cover_round_corners = (gboolean) 1;
 	self->priv->temp_round_corners = (gboolean) 1;
-	self->priv->item = 0;
 }
 
 

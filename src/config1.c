@@ -275,16 +275,15 @@ static config_node *cfg_new_node(void)
 	newnode->prev = NULL;                                 
 	newnode->parent = NULL;
 	newnode->value = NULL;
-	return newnode;
+    newnode->children  = NULL;
+    return newnode;
 }
 static config_node *cfg_add_class(config_obj *cfg,config_node *parent, const char *class)
 {
 	config_node *newnode = cfg_new_node();
 	newnode->type = TYPE_CATEGORY;
 	newnode->name = g_strdup(class);
-	newnode->value = NULL;
     newnode->parent = parent;
-	newnode->children  = NULL;
 	cfg->total_size += sizeof(config_node)+strlen(class);
     if(!parent)
     {
