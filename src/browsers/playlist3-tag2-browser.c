@@ -747,6 +747,7 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
         data = mpd_database_search_commit(connection);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
         gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+        gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te->model), NULL);
     }
                                     		
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(browser->tag_songlist)), NULL);     
