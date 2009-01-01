@@ -107,7 +107,10 @@ typedef struct _History{
     HistoryType type;
 } History;
 
-
+/**
+ * This points to the current displayed History
+ * and contains a reversed list with pages.
+ */
 static GList *history_current = NULL;
 /**
  *

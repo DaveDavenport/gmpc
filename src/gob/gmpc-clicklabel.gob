@@ -87,7 +87,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 		gtk_label_set_attributes(GTK_LABEL(self->label), attrs);
 		pango_attr_list_unref (attrs);
 		gdk_window_set_cursor(GTK_WIDGET(self)->window, self->_priv->hand_cursor);
-		return TRUE;
+		return FALSE;
 	}
 	private
 	gboolean focus_out_event(self, GdkEventFocus *event, gpointer data)
@@ -113,7 +113,7 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 		gtk_label_set_attributes(GTK_LABEL(self->label), attrs);
 		pango_attr_list_unref(attrs);
 		gdk_window_set_cursor(GTK_WIDGET(self)->window,NULL); 
-		return TRUE;
+		return FALSE;
 	}
 
 	/* clicked signal */

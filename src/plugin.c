@@ -378,6 +378,7 @@ int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPlugin *plug, GtkWidget *menu, 
             return plug->browser->cat_right_mouse_menu(menu,type,tree,event);
         }
     }
+    return 0;
 }
 
 int gmpc_plugin_browser_key_press_event(gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type)
