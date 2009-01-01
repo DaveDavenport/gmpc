@@ -492,16 +492,16 @@ static void info2_prepare_view(void)
     button = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
     gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
     gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-    gtk_widget_show(button);
     gtk_widget_set_sensitive(button, (history_current && history_current->prev));
     g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_forward), NULL);
+    gtk_widget_show(button);
 
     button = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
     gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
     gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-    gtk_widget_show(button);
     gtk_widget_set_sensitive(button, (history_current && history_current->next));
     g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_back), NULL);
+    gtk_widget_show(button);
 }
 
 
@@ -940,16 +940,13 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	}
     if(show_current_song)
     {
-        gchar *value;
         label = gtk_label_new("");
 		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Bitrate"));
         gtk_label_set_markup(GTK_LABEL(label),markup);
 		g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-        value = g_strdup_printf("%i %s",mpd_status_get_bitrate(connection),_("kbit/sec"));
-        bitrate_label = label = gtk_label_new(value);
-        q_free(value);
+        bitrate_label = label = gtk_label_new(_("n/a"));
         gtk_label_set_selectable(GTK_LABEL(label), TRUE);
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
@@ -962,7 +959,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
         g_free(markup);
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-        samplerate_label = label = gtk_label_new("n/a");
+        samplerate_label = label = gtk_label_new(_("n/a"));
         gtk_label_set_selectable(GTK_LABEL(label), TRUE);
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
