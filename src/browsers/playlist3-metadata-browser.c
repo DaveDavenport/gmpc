@@ -488,53 +488,42 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
  */
 static void info2_prepare_view(void)
 {
-	GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
-	/** Clear widget pointer */
-	info2_entry = NULL;
+    GtkWidget *button;
+    GtkAdjustment *h = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(scrolled_window));
+    /** Clear widget pointer */
+    info2_entry = NULL;
     bitrate_label = NULL;
-	info2_widget_clear_children(resizer_vbox);
-	gtk_adjustment_set_value(h, 0.0);
-	/**
-	 * Make sure that if there is still a custom cursor it's cleared
-	 */
-	if(resizer_vbox && GTK_WIDGET(resizer_vbox)->window) {
-		gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
-	}
-
-	/**
-	 * Clear header
-	 */
-	info2_widget_clear_children(title_vbox);
-
-    //if(go_back_queue)
-    {
-        GtkWidget *button;
-
-        /*if(g_list_next(go_back_queue)) */{
-            button = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
-            gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
-            gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-            gtk_widget_show(button);
-            if(history_current && history_current->prev){
-                gtk_widget_set_sensitive(button, TRUE);
-            }else {
-                gtk_widget_set_sensitive(button, FALSE);
-            }
-            g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_forward), NULL);
-        }
-        /*if(g_list_previous(go_back_queue)) */{
-            button = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
-            gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
-            gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-            gtk_widget_show(button);
-            if(history_current && history_current->next ){
-                gtk_widget_set_sensitive(button, TRUE);
-            }else {
-                gtk_widget_set_sensitive(button, FALSE);
-            }
-            g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_back), NULL);
-        }
+    info2_widget_clear_children(resizer_vbox);
+    gtk_adjustment_set_value(h, 0.0);
+    /**
+     * Make sure that if there is still a custom cursor it's cleared
+     */
+    if(resizer_vbox && GTK_WIDGET(resizer_vbox)->window) {
+        gdk_window_set_cursor(GTK_WIDGET(resizer_vbox)->window,NULL); 
     }
+
+    /**
+     * Clear header
+     */
+    info2_widget_clear_children(title_vbox);
+
+    /** 
+     * Go back, go forward buttons 
+     */
+
+    button = gtk_button_new_from_stock(GTK_STOCK_GO_FORWARD);
+    gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
+    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+    gtk_widget_show(button);
+    gtk_widget_set_sensitive(button, (history_current && history_current->prev));
+    g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_forward), NULL);
+
+    button = gtk_button_new_from_stock(GTK_STOCK_GO_BACK);
+    gtk_box_pack_end(GTK_BOX(title_vbox), button, FALSE, TRUE, 0);
+    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+    gtk_widget_show(button);
+    gtk_widget_set_sensitive(button, (history_current && history_current->next));
+    g_signal_connect(GTK_WIDGET(button), "clicked", G_CALLBACK(info2_button_back), NULL);
 }
 
 
