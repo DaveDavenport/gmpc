@@ -8,6 +8,9 @@ requires 2.0.0
 %h{
 #include "gmpc-mpddata-model-private.h" 
 %}
+%{
+#define BLOCK_SIZE 200
+%}
 /**
  * This is a Special version of Gmpc:MpdData:Model that is made to show the current playlist, and keep in sync with it.
  * This is to replace the old playlist-lis backend.
@@ -338,16 +341,34 @@ override (G:Object)
         int n = GPOINTER_TO_INT(iter->user_data2);
         if(data->song == NULL)
         {
-            data->song = mpd_playlist_get_song_from_pos(self->_priv->mi,n);
-            if(data->song)
-            {
-                self->_priv->loaded_songs++;
-                if(data->song->time>0)
+            int rs = n - n%BLOCK_SIZE;
+            int end = ((rs+(BLOCK_SIZE-1)) >= GMPC_MPDDATA_MODEL(self)->num_rows)? GMPC_MPDDATA_MODEL(self)->num_rows-1:rs+(BLOCK_SIZE-1);
+
+            MpdData_real *edit =(MpdData_real *) data;
+            MpdData_real *miter,*data2 = (MpdData_real *)mpd_playlist_get_song_from_pos_range(self->_priv->mi,rs, end); 
+
+            /* rewind to start block */
+            while(n>rs){ edit = edit->prev; rs++;}
+
+            data2 =(MpdData_real *) mpd_data_get_first((MpdData *)data2);
+            miter =data2;
+            while(data2){
+                if(edit->song == NULL)
                 {
-                    self->_priv->total_time += data->song->time;
-                    self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                    edit->song = data2->song;
+                    data2->song = NULL;
+                    self->_priv->loaded_songs++;
+                    if(edit->song->time>0)
+                    {
+                        self->_priv->total_time += edit->song->time;
+                    }
                 }
+                edit = edit->next;
+                data2  = data2->next;
             }
+            mpd_data_free((MpdData *)miter);
+
+            self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
         }
         /**
          * If the fetch failed, return an empty value, otherwise we will get crashes
