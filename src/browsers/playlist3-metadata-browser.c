@@ -2597,7 +2597,7 @@ void info2_fill_song_view(mpd_Song *song)
         }
     }
     history_current = g_list_prepend(history_current, hs);
-    info2_fill_song_view_real(song);
+    info2_update_from_history(hs);
 }
 
 void info2_fill_album_view(const char *artist,const char *album)
@@ -2627,7 +2627,7 @@ void info2_fill_album_view(const char *artist,const char *album)
         }
     }
     history_current = g_list_prepend(history_current, hs);
-    info2_fill_album_view_real(hs->song);
+    info2_update_from_history(hs);
 }
 void info2_fill_artist_view(const char *artist)
 {
@@ -2656,7 +2656,7 @@ void info2_fill_artist_view(const char *artist)
         }
     }
     history_current = g_list_prepend(history_current, hs);
-    info2_fill_artist_view_real(hs->song);
+    info2_update_from_history(hs);
 }
 
 void info2_fill_view(void)
@@ -2679,5 +2679,5 @@ void info2_fill_view(void)
         }
     }
     history_current = g_list_prepend(history_current, hs);
-    info2_fill_view_real();
+    info2_update_from_history(hs);
 }
