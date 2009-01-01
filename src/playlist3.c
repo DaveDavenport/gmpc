@@ -2147,7 +2147,9 @@ static void playlist3_header_artist(void)
 	}
 }
 static GtkWidget *artist_header_popup = NULL;
-static  gboolean playlist3_header_artist_enter_event(GtkWidget *label, GdkEventCrossing *event, gpointer data)
+guint ahp_timeout = 0;
+
+static gboolean playlist3_header_artist_popup(GtkWidget *label) 
 {
     mpd_Song *song = mpd_playlist_get_current_song(connection);
     if(song)
@@ -2173,9 +2175,19 @@ static  gboolean playlist3_header_artist_enter_event(GtkWidget *label, GdkEventC
     }
     return FALSE;
 }
-
+static  gboolean playlist3_header_artist_enter_event(GtkWidget *label, GdkEventCrossing *event, gpointer data)
+{
+    if(ahp_timeout == 0) {
+        ahp_timeout = g_timeout_add(400, playlist3_header_artist_popup,label);
+    }    
+    return FALSE;
+}
 static  gboolean playlist3_header_artist_leave_event(GtkWidget *label, GdkEventCrossing *event, gpointer data)
 {
+    if(ahp_timeout) {
+        g_source_remove(ahp_timeout);
+        ahp_timeout = 0;
+    }
     if(artist_header_popup) {
         gtk_widget_destroy(artist_header_popup);
         artist_header_popup = NULL;
