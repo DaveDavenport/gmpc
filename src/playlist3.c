@@ -2154,6 +2154,7 @@ static gboolean playlist3_header_artist_popup(GtkWidget *label)
     mpd_Song *song = mpd_playlist_get_current_song(connection);
     if(song)
     {
+        int x,y,xm,ym,xd,yd;
         GtkWidget * item = (GtkWidget *)gmpc_metaimage_new_size(META_ARTIST_ART, 200);
         gmpc_metaimage_set_squared(GMPC_METAIMAGE(item), FALSE);
         gmpc_metaimage_set_connection(GMPC_METAIMAGE(item), connection);
@@ -2161,13 +2162,12 @@ static gboolean playlist3_header_artist_popup(GtkWidget *label)
         gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(item), song);
         artist_header_popup = gtk_window_new(GTK_WINDOW_POPUP);
         gtk_window_set_resizable(GTK_WINDOW(artist_header_popup), FALSE);
-        {
-            int x,y,xm,ym,xd,yd;
-            gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(label))->window, &x,&y);
-            gdk_window_get_position(GTK_WIDGET(label)->window, &xm,&ym);
-            gdk_drawable_get_size(GTK_WIDGET(label)->window, &xd, &yd);
-            gtk_window_move(GTK_WINDOW(artist_header_popup),x+xm,y+ym+yd);
-        }
+        
+        gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(label))->window, &x,&y);
+        gdk_window_get_position(GTK_WIDGET(label)->window, &xm,&ym);
+        gdk_drawable_get_size(GTK_WIDGET(label)->window, &xd, &yd);
+        gtk_window_move(GTK_WINDOW(artist_header_popup),x+xm,y+ym+yd);
+
 
         gtk_container_add(GTK_CONTAINER(artist_header_popup),item);
         gtk_widget_show_all(artist_header_popup);
