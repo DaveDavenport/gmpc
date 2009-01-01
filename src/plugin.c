@@ -389,7 +389,11 @@ int gmpc_plugin_browser_song_list_option_menu(gmpcPlugin *plug, GmpcMpdDataTreev
 {
     if(gmpc_plugin_is_browser(plug))
     {
-        return plug->browser->song_list_option_menu(tree, menu);
+        g_assert(plug->browser != NULL);
+        if(plug->browser->song_list_option_menu)
+        {
+            return plug->browser->song_list_option_menu(tree, menu);
+        }
     }
     return 0;
 }
