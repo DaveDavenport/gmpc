@@ -75,6 +75,7 @@ int show_current_song = FALSE;
  * this label is used to show the bitrate.
  */
 static GtkWidget *bitrate_label= NULL;
+static GtkWidget *samplerate_label= NULL;
 
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
@@ -468,6 +469,7 @@ static void info2_prepare_view(void)
     /** Clear widget pointer */
     info2_entry = NULL;
     bitrate_label = NULL;
+    samplerate_label= NULL;
     remove_container_entries(resizer_vbox);
     gtk_adjustment_set_value(h, 0.0);
     /**
@@ -952,7 +954,20 @@ static void info2_fill_song_view_real(mpd_Song *song)
         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
         gtk_table_attach(GTK_TABLE(table2),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
         gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+        i++;
 
+        label = gtk_label_new("");
+        markup =  g_markup_printf_escaped("<b>%s:</b>", _("Audio format"));
+        gtk_label_set_markup(GTK_LABEL(label),markup);
+        g_free(markup);
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        samplerate_label = label = gtk_label_new("n/a");
+        gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_table_attach(GTK_TABLE(table2),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+        i++;
     }
 	/**
 	 * Play Button 
@@ -2389,6 +2404,14 @@ static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userd
             if(bitrate_label) {
                 gchar *value = g_strdup_printf("%i %s",mpd_status_get_bitrate(connection),_("kbit/sec"));
                 gtk_label_set_text(GTK_LABEL(bitrate_label), value);
+                q_free(value);
+            }
+            if(samplerate_label) {
+                gchar *value = g_strdup_printf("%.2f %s,  %i %s, %i %s.",
+                        mpd_status_get_samplerate(connection)/1000.0,_("kHz"),
+                        mpd_status_get_bits(connection), _("bits"),
+                        mpd_status_get_channels(connection), _("channels"));
+                gtk_label_set_text(GTK_LABEL(samplerate_label), value);
                 q_free(value);
             }
         }
