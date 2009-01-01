@@ -49,7 +49,6 @@ static void info2_unselected(GtkWidget *);
 static int info2_add_go_menu(GtkWidget *);
 
 
-static void remove_container_entries(GtkContainer *);
 static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
@@ -70,8 +69,6 @@ static void as_artist_viewed_clicked(GtkButton *button, gpointer data);
 static gboolean as_artist_viewed_clicked_event(GtkButton *button, GdkEventButton *event,gpointer data);
 
 
-//static void as_song_viewed_clicked(GtkButton *button, gpointer data);
-
 int show_current_song = FALSE;
 
 /* 
@@ -81,10 +78,6 @@ static GtkWidget *bitrate_label= NULL;
 
 /* Playlist window row reference */
 static GtkTreeRowReference *info2_ref = NULL;
-
-
-
-
 
 /* Song list functions */
 static void song_list_row_activated(GtkTreeView *,GtkTreePath *, GtkTreeViewColumn *,gpointer );
@@ -200,40 +193,22 @@ static void pl3_metabrowser_bg_style_changed(GtkWidget *vbox, GtkStyle *style,  
  * Helper functions that can fill and refill a table
  */
 
-static void remove_container_entries (GtkContainer * widget)
+static void remove_container_entries (GtkWidget * widget)
 {
-	GList *children, *node; 
-	children = node = gtk_container_get_children (widget);
-	if (children == NULL)
-		return;
-
-	do {
-		GtkWidget *child = GTK_WIDGET (children->data);
-		gtk_container_remove (GTK_CONTAINER (widget), GTK_WIDGET (child));
-	} while (NULL != (children = g_list_next (children)));
-	g_list_free(node);
-}
-
-
-/**
- * Clears the content
- */
-static void info2_widget_clear_children(GtkWidget *wid)
-{
-	GList *list, *node;
-	/**
-	 * Remove all the remaining widgets in the view
-	 */
-	list = gtk_container_get_children(GTK_CONTAINER(wid));
+	GList *list, *node; 
+	list = gtk_container_get_children(GTK_CONTAINER(widget));
 	if(list)
 	{
 		for(node = g_list_first(list); node; node = g_list_next(node))
 		{
-			gtk_container_remove(GTK_CONTAINER(wid), node->data);
+			gtk_container_remove(GTK_CONTAINER(widget), node->data);
 		}
 		g_list_free(list);
 	}
+
 }
+
+
 /* Misc */
 static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id)
 {
@@ -252,7 +227,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
     {
 
         /* clear the view, so if it's updated the old data is gone */
-        info2_widget_clear_children(vbox);	
+        remove_container_entries(vbox);
 
         if(ret == META_DATA_AVAILABLE)
         {
@@ -350,7 +325,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 	else if(type == META_ARTIST_SIMILAR)
     {
         /* clear the view, so if it's updated the old data is gone */
-        info2_widget_clear_children(vbox);	
+        remove_container_entries(vbox);
 
         /* if there is metadata, we always assume it's for us */
         if(ret == META_DATA_AVAILABLE)
@@ -493,7 +468,7 @@ static void info2_prepare_view(void)
     /** Clear widget pointer */
     info2_entry = NULL;
     bitrate_label = NULL;
-    info2_widget_clear_children(resizer_vbox);
+    remove_container_entries(resizer_vbox);
     gtk_adjustment_set_value(h, 0.0);
     /**
      * Make sure that if there is still a custom cursor it's cleared
@@ -505,7 +480,8 @@ static void info2_prepare_view(void)
     /**
      * Clear header
      */
-    info2_widget_clear_children(title_vbox);
+
+    remove_container_entries(title_vbox);
 
     /** 
      * Go back, go forward buttons 
@@ -1184,7 +1160,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     /**
      * Remove all the remaining widgets in the view
      */
-    remove_container_entries(GTK_CONTAINER(table));
+    remove_container_entries(table);
 
 
     /** get text
