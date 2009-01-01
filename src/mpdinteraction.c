@@ -1,4 +1,4 @@
-/* Gnome Music Player (GMPC)
+/* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpcwiki.sarine.nl/
  

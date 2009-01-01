@@ -1,4 +1,4 @@
-/* Gnome Music Player (GMPC)
+/* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpcwiki.sarine.nl/
  
@@ -16,11 +16,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
-/**
- * Widget that shows a pixbuf by nicely fadeing in and out.
- * Draws a nice border.
- */
 
 #ifndef __GMPC_IMAGE_H__
 #define __GMPC_IMAGE_H__
@@ -44,6 +39,10 @@ typedef struct _GmpcImage GmpcImage;
 typedef struct _GmpcImageClass GmpcImageClass;
 typedef struct _GmpcImagePrivate GmpcImagePrivate;
 
+/**
+ * Widget that shows a pixbuf by nicely fadeing in and out.
+ * Draws a nice border.
+ */
 struct _GmpcImage {
 	GtkEventBox parent_instance;
 	GmpcImagePrivate * priv;

@@ -1,4 +1,4 @@
-/* Gnome Music Player (GMPC)
+/* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpcwiki.sarine.nl/
  
@@ -16,11 +16,6 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
-/**
- * Widget that shows a pixbuf by nicely fadeing in and out.
- * Draws a nice border.
- */
 
 #include "gmpc_image.h"
 #include <float.h>
@@ -280,6 +275,10 @@ void gmpc_image_clear_pixbuf (GmpcImage* self) {
 }
 
 
+/**
+ * Widget that shows a pixbuf by nicely fadeing in and out.
+ * Draws a nice border.
+ */
 GmpcImage* gmpc_image_construct (GType object_type) {
 	GmpcImage * self;
 	self = g_object_newv (object_type, 0, NULL);
