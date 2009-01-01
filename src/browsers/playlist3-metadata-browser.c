@@ -2609,7 +2609,17 @@ void info2_button_back(void)
 }
 void info2_fill_song_view(mpd_Song *song)
 {
-    History *hs = g_malloc0(sizeof(*hs));    
+    History *hs;
+    /* if current is same page, don't reload.  */
+    if(history_current) {
+        hs = history_current->data;
+        if(hs->type == HISTORY_SONG){
+            if(strcmp(hs->song->file, song->file) == 0) {
+                return;
+            }
+        }
+    }
+    hs = g_malloc0(sizeof(*hs));    
     hs->song = mpd_songDup(song);
     hs->type = HISTORY_SONG;
 
@@ -2627,7 +2637,18 @@ void info2_fill_song_view(mpd_Song *song)
 
 void info2_fill_album_view(const char *artist,const char *album)
 {
-    History *hs = g_malloc0(sizeof(*hs));    
+    History *hs;
+    /* if current is same page, don't reload.  */
+    if(history_current) {
+        hs = history_current->data;
+        if(hs->type == HISTORY_ALBUM){
+            if(strcmp(hs->song->artist, artist) == 0 && 
+                    strcmp(hs->song->artist, artist) == 0) {
+                return;
+            }
+        }
+    }
+    hs = g_malloc0(sizeof(*hs));    
     hs->song = mpd_newSong();
     hs->type = HISTORY_ALBUM;
     hs->song->artist = g_strdup(artist);
@@ -2645,7 +2666,19 @@ void info2_fill_album_view(const char *artist,const char *album)
 }
 void info2_fill_artist_view(const char *artist)
 {
-    History *hs = g_malloc0(sizeof(*hs));    
+    History *hs;
+    /* if current is same page, don't reload.  */
+    if(history_current) {
+        hs = history_current->data;
+        if(hs->type == HISTORY_ARTIST){
+            if(strcmp(hs->song->artist, artist) == 0) {
+                return;
+            }
+        }
+    }
+    
+    
+    hs =g_malloc0(sizeof(*hs));    
     hs->song = mpd_newSong();
     hs->type = HISTORY_ARTIST;
     hs->song->artist = g_strdup(artist);
@@ -2663,7 +2696,14 @@ void info2_fill_artist_view(const char *artist)
 
 void info2_fill_view(void)
 {
-    History *hs = g_malloc0(sizeof(*hs));    
+    History *hs;
+    /* if current is same page, don't reload.  */
+    if(history_current) {
+        hs = history_current->data;
+        if(hs->type == HISTORY_BASE_VIEW) return;
+    }
+
+    hs = g_malloc0(sizeof(*hs));    
     hs->song = NULL; 
     hs->type = HISTORY_BASE_VIEW; 
     if(history_current) {
