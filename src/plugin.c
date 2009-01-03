@@ -295,6 +295,13 @@ gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
     }
     return TRUE;
 }
+void gmpc_plugin_set_enabled(gmpcPlugin *plug, gboolean enabled)
+{
+    if(plug->set_enabled)
+    {
+        plug->set_enabled(enabled);
+    }
+}
 
 const gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {

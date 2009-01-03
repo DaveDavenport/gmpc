@@ -87,7 +87,6 @@ static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ct
 	rect_x1 = 0.0;
 	rect_y1 = 0.0;
 	radius = (double) 10;
-	/*rect_width/5;*/
 	rect_x1 = rect_x0 + rect_width;
 	rect_y1 = rect_y0 + rect_height;
 	_tmp0 = FALSE;
@@ -141,7 +140,6 @@ static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ct
 static void gmpc_progress_redraw (GmpcProgress* self) {
 	g_return_if_fail (self != NULL);
 	if (((GtkWidget*) self)->window != NULL) {
-		/*            this.queue_draw();*/
 		gdk_window_process_updates (((GtkWidget*) self)->window, FALSE);
 	}
 }
@@ -212,105 +210,77 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	if (gmpc_progress_get_hide_text (self) == FALSE) {
 		gint fontw;
 		gint fonth;
+		gint e_hour;
+		gint e_minutes;
+		gint e_seconds;
+		gint t_hour;
+		gint t_minutes;
+		gint t_seconds;
+		char* a;
+		guint p;
+		char* _tmp8;
+		char* _tmp7;
 		fontw = 0;
 		fonth = 0;
-		/*
-		            if(this.total == 0) {
-		                int e_hour = (int) this.current / 3600;
-		                int e_minutes = (int) this.current%3600/60;
-		                int e_seconds = (int) this.current%60;
-		
-		                string a = "";
-		                if(e_hour>0) {
-		                    a += "%02i".printf(e_hour);
-		                    if(e_minutes > 0) {
-		                        a+=":";
-		                    }
-		                }
-		                if(e_minutes>0) {
-		                    a += "%02i".printf(e_minutes);
-		                    if(e_seconds > 0) {
-		                        a+=":";
-		                    }
-		                }
-		                if(e_seconds>0) {
-		                    a += "%02i".printf(e_seconds);
-		                }
-		                
-		                this._layout.set_text(a,-1);
-		            } else*/
-		{
-			gint e_hour;
-			gint e_minutes;
-			gint e_seconds;
-			gint t_hour;
-			gint t_minutes;
-			gint t_seconds;
-			char* a;
-			guint p;
-			char* _tmp8;
-			char* _tmp7;
-			e_hour = 0;
-			e_minutes = 0;
-			e_seconds = 0;
-			t_hour = ((gint) self->priv->total) / 3600;
-			t_minutes = (((gint) self->priv->total) % 3600) / 60;
-			t_seconds = ((gint) self->priv->total) % 60;
-			a = g_strdup ("");
-			p = self->priv->current;
-			if (gmpc_progress_get_do_countdown (self)) {
-				char* _tmp3;
-				p = self->priv->total - self->priv->current;
-				_tmp3 = NULL;
-				a = (_tmp3 = g_strconcat (a, ("-"), NULL), a = (g_free (a), NULL), _tmp3);
-			}
-			e_hour = ((gint) p) / 3600;
-			e_minutes = ((gint) (p % 3600)) / 60;
-			e_seconds = (gint) (p % 60);
-			if (e_hour > 0) {
-				char* _tmp5;
-				char* _tmp4;
-				_tmp5 = NULL;
-				_tmp4 = NULL;
-				a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp5);
-				_tmp4 = (g_free (_tmp4), NULL);
-				if (e_minutes > 0) {
-					char* _tmp6;
-					_tmp6 = NULL;
-					a = (_tmp6 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp6);
-				}
-			}
-			_tmp8 = NULL;
-			_tmp7 = NULL;
-			a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp8);
-			_tmp7 = (g_free (_tmp7), NULL);
-			if (self->priv->total > 0) {
-				char* _tmp9;
-				char* _tmp14;
-				char* _tmp13;
-				_tmp9 = NULL;
-				a = (_tmp9 = g_strconcat (a, (" -  "), NULL), a = (g_free (a), NULL), _tmp9);
-				if (t_hour > 0) {
-					char* _tmp11;
-					char* _tmp10;
-					_tmp11 = NULL;
-					_tmp10 = NULL;
-					a = (_tmp11 = g_strconcat (a, _tmp10 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp11);
-					_tmp10 = (g_free (_tmp10), NULL);
-					if (t_minutes > 0) {
-						char* _tmp12;
-						_tmp12 = NULL;
-						a = (_tmp12 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp12);
-					}
-				}
-				_tmp14 = NULL;
-				_tmp13 = NULL;
-				a = (_tmp14 = g_strconcat (a, _tmp13 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp14);
-				_tmp13 = (g_free (_tmp13), NULL);
-			}
-			pango_layout_set_text (self->priv->_layout, a, -1);
-			a = (g_free (a), NULL);
+		e_hour = 0;
+		e_minutes = 0;
+		e_seconds = 0;
+		t_hour = ((gint) self->priv->total) / 3600;
+		t_minutes = (((gint) self->priv->total) % 3600) / 60;
+		t_seconds = ((gint) self->priv->total) % 60;
+		a = g_strdup ("");
+		p = self->priv->current;
+		if (gmpc_progress_get_do_countdown (self)) {
+			char* _tmp3;
+			p = self->priv->total - self->priv->current;
+			_tmp3 = NULL;
+			a = (_tmp3 = g_strconcat (a, ("-"), NULL), a = (g_free (a), NULL), _tmp3);
 		}
+		e_hour = ((gint) p) / 3600;
+		e_minutes = ((gint) (p % 3600)) / 60;
+		e_seconds = (gint) (p % 60);
+		if (e_hour > 0) {
+			char* _tmp5;
+			char* _tmp4;
+			_tmp5 = NULL;
+			_tmp4 = NULL;
+			a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp5);
+			_tmp4 = (g_free (_tmp4), NULL);
+			if (e_minutes > 0) {
+				char* _tmp6;
+				_tmp6 = NULL;
+				a = (_tmp6 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp6);
+			}
+		}
+		_tmp8 = NULL;
+		_tmp7 = NULL;
+		a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp8);
+		_tmp7 = (g_free (_tmp7), NULL);
+		if (self->priv->total > 0) {
+			char* _tmp9;
+			char* _tmp14;
+			char* _tmp13;
+			_tmp9 = NULL;
+			a = (_tmp9 = g_strconcat (a, (" -  "), NULL), a = (g_free (a), NULL), _tmp9);
+			if (t_hour > 0) {
+				char* _tmp11;
+				char* _tmp10;
+				_tmp11 = NULL;
+				_tmp10 = NULL;
+				a = (_tmp11 = g_strconcat (a, _tmp10 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp11);
+				_tmp10 = (g_free (_tmp10), NULL);
+				if (t_minutes > 0) {
+					char* _tmp12;
+					_tmp12 = NULL;
+					a = (_tmp12 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp12);
+				}
+			}
+			_tmp14 = NULL;
+			_tmp13 = NULL;
+			a = (_tmp14 = g_strconcat (a, _tmp13 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp14);
+			_tmp13 = (g_free (_tmp13), NULL);
+		}
+		pango_layout_set_text (self->priv->_layout, a, -1);
 		pango_cairo_update_layout (ctx, self->priv->_layout);
 		pango_layout_get_pixel_size (self->priv->_layout, &fontw, &fonth);
 		if (self->priv->total > 0) {
@@ -340,6 +310,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 			cairo_move_to (ctx, ((width - fontw) / 2) + 1.5, ((height - fonth) / 2) + 1.5);
 			pango_cairo_show_layout (ctx, self->priv->_layout);
 		}
+		a = (g_free (a), NULL);
 	}
 	return (_tmp18 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), (pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL)), _tmp18);
 }

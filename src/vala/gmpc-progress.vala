@@ -35,7 +35,6 @@ public class Gmpc.Progress : Gtk.EventBox
         get { 
         return _hide_text; }
         set {
-        
             _hide_text = value; 
             this.queue_resize();
         }
@@ -70,11 +69,10 @@ public class Gmpc.Progress : Gtk.EventBox
         int width, height;
         // In this case, we say that we want to be as big as the
         // text is, plus a little border around it.
-        if(this.hide_text)
-        {
+        if(this.hide_text) {
             requisition.width = 40;
             requisition.height = 10;
-        }else{
+        } else {
             this._layout.get_size (out width, out height);
             requisition.width = width / Pango.SCALE + 6;
             requisition.height = height / Pango.SCALE + 6;
@@ -83,7 +81,7 @@ public class Gmpc.Progress : Gtk.EventBox
     private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) 
     {
         double rect_x1,rect_y1;
-        double radius = 10;//rect_width/5;
+        double radius = 10;
         rect_x1=rect_x0+rect_width;
         rect_y1=rect_y0+rect_height;
         if (rect_width == 0 || rect_height == 0)
@@ -132,7 +130,6 @@ public class Gmpc.Progress : Gtk.EventBox
     {
         if(this.window  != null)
         {
-//            this.queue_draw();
             this.window.process_updates(false);
         }
     }
@@ -166,11 +163,8 @@ public class Gmpc.Progress : Gtk.EventBox
         /* Make a clip */
         ctx.clip();
 
-
-
         if(this.total > 0)
         {
-
             /* don't allow more then 100% */
             if( pwidth > width ) {
                 pwidth = width;
@@ -202,74 +196,45 @@ public class Gmpc.Progress : Gtk.EventBox
         {
 
             int fontw, fonth;
-            /*
-            if(this.total == 0) {
-                int e_hour = (int) this.current / 3600;
-                int e_minutes = (int) this.current%3600/60;
-                int e_seconds = (int) this.current%60;
-
-                string a = "";
-                if(e_hour>0) {
-                    a += "%02i".printf(e_hour);
-                    if(e_minutes > 0) {
-                        a+=":";
-                    }
-                }
-                if(e_minutes>0) {
-                    a += "%02i".printf(e_minutes);
-                    if(e_seconds > 0) {
-                        a+=":";
-                    }
-                }
-                if(e_seconds>0) {
-                    a += "%02i".printf(e_seconds);
-                }
-                
-                this._layout.set_text(a,-1);
-            } else*/ {
-                int e_hour, e_minutes, e_seconds;
-                int t_hour = (int) this.total / 3600;
-                int t_minutes = (int) this.total%3600/60;
-                int t_seconds = (int) this.total%60;
-                string a = "";
-                uint p = this.current;
-                if(this.do_countdown){
-                    p = this.total-this.current;
-                    a += "-";
-                }
-
-                e_hour = (int) p/3600;
-                e_minutes = (int) (p%3600)/60;
-                e_seconds = (int) (p%60);
-                if(e_hour>0) {
-                    a += "%02i".printf(e_hour);
-                    if(e_minutes > 0) {
-                        a+=":";
-                    }
-                }
-                a += "%02i:%02i".printf(e_minutes, e_seconds);
-                if(this.total > 0)
-                {
-                    a += " -  ";
-                    if(t_hour>0) {
-                        a += "%02i".printf(t_hour);
-                        if(t_minutes > 0) {
-                            a+=":";
-                        }
-                    }
-                    a += "%02i:%02i".printf(t_minutes,t_seconds);
-                }
-
-                                               
-                this._layout.set_text(a,-1);
+            int e_hour, e_minutes, e_seconds;
+            int t_hour =    (int) this.total / 3600;
+            int t_minutes = (int) this.total%3600/60;
+            int t_seconds = (int) this.total%60;
+            string a = "";
+            uint p = this.current;
+            if(this.do_countdown){
+                p = this.total-this.current;
+                a += "-";
             }
+            e_hour = (int) p/3600;
+            e_minutes = (int) (p%3600)/60;
+            e_seconds = (int) (p%60);
+            if(e_hour>0) {
+                a += "%02i".printf(e_hour);
+                if(e_minutes > 0) {
+                    a+=":";
+                }
+            }
+            a += "%02i:%02i".printf(e_minutes, e_seconds);
+            if(this.total > 0)
+            {
+                a += " -  ";
+                if(t_hour>0) {
+                    a += "%02i".printf(t_hour);
+                    if(t_minutes > 0) {
+                        a+=":";
+                    }
+                }
+                a += "%02i:%02i".printf(t_minutes,t_seconds);
+            }
+
+            this._layout.set_text(a,-1);
 
             Pango.cairo_update_layout (ctx, this._layout);
             this._layout.get_pixel_size (out fontw, out fonth);
 
             if(this.total > 0)
             {
-
                 if(pwidth >= ((width-fontw)/2+1))
                 {
                     ctx.new_path();
@@ -291,7 +256,6 @@ public class Gmpc.Progress : Gtk.EventBox
                             (height - fonth)/2+1.5);
                     Pango.cairo_show_layout ( ctx, this._layout);
                 }
-
             }
             else
             {

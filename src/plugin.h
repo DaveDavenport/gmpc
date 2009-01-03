@@ -197,6 +197,7 @@ void            gmpc_plugin_destroy                         (gmpcPlugin *plug);
 void            gmpc_plugin_save_yourself                   (gmpcPlugin *plug);
 
 gboolean        gmpc_plugin_get_enabled                     (gmpcPlugin *plug);           
+void            gmpc_plugin_set_enabled                     (gmpcPlugin *plug, gboolean enabled);
 
 const char *    gmpc_plugin_get_name                        (gmpcPlugin *plug);
 void            gmpc_plugin_status_changed                  (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
