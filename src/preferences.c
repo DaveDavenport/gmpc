@@ -252,24 +252,26 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 		{
             gmpc_plugin_set_enabled(plug,!toggled);
 			gtk_list_store_set(store, &iter, 0,gmpc_plugin_get_enabled(plug),-1);
-
-            if(!toggled) {
-                gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
-                gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
-						0, plugin_get_pos(gmpc_plugin_get_id(plug)),
-						1, gmpc_plugin_get_name(plug),
-						-1);
-            }else{
-                GtkTreeIter piter;
-                if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plugin_store), &piter)){
-                    do{
-                        int i;
-                        gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &piter, 0,&i, -1);
-                        if(i == plugin_get_pos(gmpc_plugin_get_id(plug))) {
-                            gtk_list_store_remove(plugin_store, &piter);
-                            return;
-                        }
-                    }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(plugin_store), &piter));
+            if(gmpc_plugin_has_preferences(plug))
+            {
+                if(!toggled) {
+                    gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
+                    gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
+                            0, plugin_get_pos(gmpc_plugin_get_id(plug)),
+                            1, gmpc_plugin_get_name(plug),
+                            -1);
+                }else{
+                    GtkTreeIter piter;
+                    if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(plugin_store), &piter)){
+                        do{
+                            int i;
+                            gtk_tree_model_get(GTK_TREE_MODEL(plugin_store), &piter, 0,&i, -1);
+                            if(i == plugin_get_pos(gmpc_plugin_get_id(plug))) {
+                                gtk_list_store_remove(plugin_store, &piter);
+                                return;
+                            }
+                        }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(plugin_store), &piter));
+                    }
                 }
             }
 		}
@@ -313,6 +315,7 @@ static void plugin_stats_construct(GtkWidget *container)
 			{
                 int *ver = gmpc_plugin_get_version(plugins[i]);
                 gchar *version = g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]);
+                printf("%i %s\n", gmpc_plugin_is_internal(plugins[i]), gmpc_plugin_get_name(plugins[i]));
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
                 g_free(version);

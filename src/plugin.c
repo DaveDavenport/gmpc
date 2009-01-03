@@ -453,7 +453,7 @@ void gmpc_plugin_preferences_destroy(gmpcPlugin *plug,GtkWidget *wid)
 
 gboolean gmpc_plugin_is_internal(gmpcPlugin *plug)
 {
-    return ((plug->plugin_type&GMPC_INTERNALL) != 0);
+    return (((plug->plugin_type)&GMPC_INTERNALL) != 0);
 }
 
 const int * gmpc_plugin_get_version(gmpcPlugin *plug)

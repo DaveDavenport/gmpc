@@ -192,6 +192,8 @@ void            pl3_update_go_menu(void);
 /**
  * Plugin functions
  */
+
+int             gmpc_plugin_get_id                          (gmpcPlugin *plug);
 void            gmpc_plugin_init                            (gmpcPlugin *plug);
 void            gmpc_plugin_destroy                         (gmpcPlugin *plug);
 void            gmpc_plugin_save_yourself                   (gmpcPlugin *plug);
