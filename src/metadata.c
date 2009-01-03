@@ -1085,12 +1085,14 @@ static void metadata_construct_pref_pane(GtkWidget *container)
     for(i=0; i< meta_num_plugins;i++)
     {
         GtkTreeIter iter;
-        gtk_list_store_insert_with_values(store, &iter, -1, 
-            0, meta_plugins[i],
-            1, gmpc_plugin_get_name(meta_plugins[i]),
-            2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
-            -1);
-
+        if(gmpc_plugin_get_enabled(meta_plugins[i]))
+        {
+            gtk_list_store_insert_with_values(store, &iter, -1, 
+                    0, meta_plugins[i],
+                    1, gmpc_plugin_get_name(meta_plugins[i]),
+                    2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
+                    -1);
+        }
     }
 
     label = gtk_label_new("Plugins are evaluated from low priority to high");
