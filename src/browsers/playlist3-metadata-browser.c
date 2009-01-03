@@ -1095,6 +1095,8 @@ static void info2_fill_song_view_real(mpd_Song *song)
             gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
             gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tree))), data);                      
             data = NULL;
+            gtk_widget_show_all(label);
+            gtk_widget_show_all(ali);
         }
         if(data) {mpd_data_free(data);data=NULL;}
 	}
@@ -1103,21 +1105,14 @@ static void info2_fill_song_view_real(mpd_Song *song)
 
     if(song->artist && song->title)
     {
-
-
-
 		/* set the label */
 		label = gtk_expander_new("");
 		markup = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Similar songs"));
         gtk_expander_set_use_markup(GTK_EXPANDER(label),TRUE);
 		gtk_expander_set_label(GTK_EXPANDER(label),markup);
 		g_free(markup);
-		//gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		//gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
-
         g_object_set_data_full(G_OBJECT(label), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
-
         g_signal_connect(G_OBJECT(label), "activate", G_CALLBACK(info2_fill_song_view_sim_song_activate), NULL);
     }
 	/* Interesting links */
@@ -2438,8 +2433,18 @@ void info2_show_current_song(void)
 
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(song) {
+        History *hs;
 		info2_activate();
 		info2_enable_show_current();
+        if(history_current) {
+            hs = history_current->data;
+            if(hs->type == HISTORY_SONG){
+                if(strcmp(hs->song->file, song->file) == 0) {
+                    info2_fill_song_view_real(hs->song);
+                    return;
+                }
+            }
+        }
 		info2_fill_song_view(song);
 	}
 }
@@ -2449,7 +2454,7 @@ void info2_disable_show_current(void)
 	show_current_song = FALSE;
 
 	if(song) {
-		info2_fill_song_view(song);
+		info2_fill_song_view_real(song);
 	}
 }
 void info2_enable_show_current(void)
