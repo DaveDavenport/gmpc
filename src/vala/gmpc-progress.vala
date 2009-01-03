@@ -43,7 +43,8 @@ public class Gmpc.Progress : Gtk.EventBox
 
     public bool do_countdown {
         get { 
-            return _do_countdown; }
+            return _do_countdown; 
+        }
         set {
             _do_countdown = value; 
             this.redraw();
@@ -201,41 +202,65 @@ public class Gmpc.Progress : Gtk.EventBox
         {
 
             int fontw, fonth;
+            /*
             if(this.total == 0) {
-                string a;
-                if(this.current/60 > 99 ) {
-                    a = "%02i:%02i".printf(
-                            (int)this.current/3600,
-                            (int)(this.current)%60);
-                } else {
-                    a = "%02i:%02i".printf( 
-                            (int)this.current/60,
-                            (int)(this.current)%60);
+                int e_hour = (int) this.current / 3600;
+                int e_minutes = (int) this.current%3600/60;
+                int e_seconds = (int) this.current%60;
+
+                string a = "";
+                if(e_hour>0) {
+                    a += "%02i".printf(e_hour);
+                    if(e_minutes > 0) {
+                        a+=":";
+                    }
                 }
+                if(e_minutes>0) {
+                    a += "%02i".printf(e_minutes);
+                    if(e_seconds > 0) {
+                        a+=":";
+                    }
+                }
+                if(e_seconds>0) {
+                    a += "%02i".printf(e_seconds);
+                }
+                
                 this._layout.set_text(a,-1);
-            } else {
-                string a;
+            } else*/ {
+                int e_hour, e_minutes, e_seconds;
+                int t_hour = (int) this.total / 3600;
+                int t_minutes = (int) this.total%3600/60;
+                int t_seconds = (int) this.total%60;
+                string a = "";
                 uint p = this.current;
                 if(this.do_countdown){
                     p = this.total-this.current;
+                    a += "-";
                 }
-                if(this.current/60 > 99 ) {
-                    a  = "%c%02u:%02u - %02u:%02u".printf( 
-                            (this.do_countdown)?'-':' ',
-                            p/3600,
-                            (p)%60,
-                            this.total/3600,
-                            (this.total)%60 
-                            );
-                } else {
-                    a = "%c%02u:%02u - %02u:%02u".printf( 
-                            (this.do_countdown)?'-':' ',
-                            p/60,
-                            (p)%60,
-                            this.total/60,
-                            (this.total)%60 
-                            );
-                }                                       
+
+                e_hour = (int) p/3600;
+                e_minutes = (int) (p%3600)/60;
+                e_seconds = (int) (p%60);
+                if(e_hour>0) {
+                    a += "%02i".printf(e_hour);
+                    if(e_minutes > 0) {
+                        a+=":";
+                    }
+                }
+                a += "%02i:%02i".printf(e_minutes, e_seconds);
+                if(this.total > 0)
+                {
+                    a += " -  ";
+                    if(t_hour>0) {
+                        a += "%02i".printf(t_hour);
+                        if(t_minutes > 0) {
+                            a+=":";
+                        }
+                    }
+                    a += "%02i:%02i".printf(t_minutes,t_seconds);
+                }
+
+                                               
                 this._layout.set_text(a,-1);
             }
 

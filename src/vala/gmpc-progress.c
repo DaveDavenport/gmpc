@@ -158,7 +158,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	cairo_pattern_t* pattern;
 	GdkColor start;
 	GdkColor stop;
-	gboolean _tmp12;
+	gboolean _tmp18;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (pb != NULL, FALSE);
 	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) self)->window);
@@ -214,50 +214,99 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		gint fonth;
 		fontw = 0;
 		fonth = 0;
-		if (self->priv->total == 0) {
-			char* a;
-			a = NULL;
-			if ((self->priv->current / 60) > 99) {
-				char* _tmp3;
-				_tmp3 = NULL;
-				a = (_tmp3 = g_strdup_printf ("%02i:%02i", ((gint) self->priv->current) / 3600, ((gint) (self->priv->current)) % 60), a = (g_free (a), NULL), _tmp3);
-			} else {
-				char* _tmp4;
-				_tmp4 = NULL;
-				a = (_tmp4 = g_strdup_printf ("%02i:%02i", ((gint) self->priv->current) / 60, ((gint) (self->priv->current)) % 60), a = (g_free (a), NULL), _tmp4);
-			}
-			pango_layout_set_text (self->priv->_layout, a, -1);
-			a = (g_free (a), NULL);
-		} else {
+		/*
+		            if(this.total == 0) {
+		                int e_hour = (int) this.current / 3600;
+		                int e_minutes = (int) this.current%3600/60;
+		                int e_seconds = (int) this.current%60;
+		
+		                string a = "";
+		                if(e_hour>0) {
+		                    a += "%02i".printf(e_hour);
+		                    if(e_minutes > 0) {
+		                        a+=":";
+		                    }
+		                }
+		                if(e_minutes>0) {
+		                    a += "%02i".printf(e_minutes);
+		                    if(e_seconds > 0) {
+		                        a+=":";
+		                    }
+		                }
+		                if(e_seconds>0) {
+		                    a += "%02i".printf(e_seconds);
+		                }
+		                
+		                this._layout.set_text(a,-1);
+		            } else*/
+		{
+			gint e_hour;
+			gint e_minutes;
+			gint e_seconds;
+			gint t_hour;
+			gint t_minutes;
+			gint t_seconds;
 			char* a;
 			guint p;
-			a = NULL;
+			char* _tmp8;
+			char* _tmp7;
+			e_hour = 0;
+			e_minutes = 0;
+			e_seconds = 0;
+			t_hour = ((gint) self->priv->total) / 3600;
+			t_minutes = (((gint) self->priv->total) % 3600) / 60;
+			t_seconds = ((gint) self->priv->total) % 60;
+			a = g_strdup ("");
 			p = self->priv->current;
 			if (gmpc_progress_get_do_countdown (self)) {
+				char* _tmp3;
 				p = self->priv->total - self->priv->current;
+				_tmp3 = NULL;
+				a = (_tmp3 = g_strconcat (a, ("-"), NULL), a = (g_free (a), NULL), _tmp3);
 			}
-			if ((self->priv->current / 60) > 99) {
-				gchar _tmp5;
-				char* _tmp6;
-				_tmp5 = '\0';
-				if ((gmpc_progress_get_do_countdown (self))) {
-					_tmp5 = '-';
-				} else {
-					_tmp5 = ' ';
+			e_hour = ((gint) p) / 3600;
+			e_minutes = ((gint) (p % 3600)) / 60;
+			e_seconds = (gint) (p % 60);
+			if (e_hour > 0) {
+				char* _tmp5;
+				char* _tmp4;
+				_tmp5 = NULL;
+				_tmp4 = NULL;
+				a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp5);
+				_tmp4 = (g_free (_tmp4), NULL);
+				if (e_minutes > 0) {
+					char* _tmp6;
+					_tmp6 = NULL;
+					a = (_tmp6 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp6);
 				}
-				_tmp6 = NULL;
-				a = (_tmp6 = g_strdup_printf ("%c%02u:%02u - %02u:%02u", (gint) _tmp5, p / 3600, (p) % 60, self->priv->total / 3600, (self->priv->total) % 60), a = (g_free (a), NULL), _tmp6);
-			} else {
-				gchar _tmp7;
-				char* _tmp8;
-				_tmp7 = '\0';
-				if ((gmpc_progress_get_do_countdown (self))) {
-					_tmp7 = '-';
-				} else {
-					_tmp7 = ' ';
+			}
+			_tmp8 = NULL;
+			_tmp7 = NULL;
+			a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp8);
+			_tmp7 = (g_free (_tmp7), NULL);
+			if (self->priv->total > 0) {
+				char* _tmp9;
+				char* _tmp14;
+				char* _tmp13;
+				_tmp9 = NULL;
+				a = (_tmp9 = g_strconcat (a, (" -  "), NULL), a = (g_free (a), NULL), _tmp9);
+				if (t_hour > 0) {
+					char* _tmp11;
+					char* _tmp10;
+					_tmp11 = NULL;
+					_tmp10 = NULL;
+					a = (_tmp11 = g_strconcat (a, _tmp10 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp11);
+					_tmp10 = (g_free (_tmp10), NULL);
+					if (t_minutes > 0) {
+						char* _tmp12;
+						_tmp12 = NULL;
+						a = (_tmp12 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp12);
+					}
 				}
-				_tmp8 = NULL;
-				a = (_tmp8 = g_strdup_printf ("%c%02u:%02u - %02u:%02u", (gint) _tmp7, p / 60, (p) % 60, self->priv->total / 60, (self->priv->total) % 60), a = (g_free (a), NULL), _tmp8);
+				_tmp14 = NULL;
+				_tmp13 = NULL;
+				a = (_tmp14 = g_strconcat (a, _tmp13 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp14);
+				_tmp13 = (g_free (_tmp13), NULL);
 			}
 			pango_layout_set_text (self->priv->_layout, a, -1);
 			a = (g_free (a), NULL);
@@ -266,9 +315,9 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		pango_layout_get_pixel_size (self->priv->_layout, &fontw, &fonth);
 		if (self->priv->total > 0) {
 			if (pwidth >= (((width - fontw) / 2) + 1)) {
-				GdkColor _tmp9 = {0};
+				GdkColor _tmp15 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp9 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_SELECTED], &_tmp9));
+				gdk_cairo_set_source_color (ctx, (_tmp15 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_SELECTED], &_tmp15));
 				cairo_rectangle (ctx, 3.5, 1.5, (double) pwidth, (double) height);
 				cairo_clip (ctx);
 				cairo_move_to (ctx, ((width - fontw) / 2) + 1.5, ((height - fonth) / 2) + 1.5);
@@ -276,23 +325,23 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 				cairo_reset_clip (ctx);
 			}
 			if (pwidth < ((((width - fontw) / 2) + 1) + fontw)) {
-				GdkColor _tmp10 = {0};
+				GdkColor _tmp16 = {0};
 				cairo_new_path (ctx);
-				gdk_cairo_set_source_color (ctx, (_tmp10 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_NORMAL], &_tmp10));
+				gdk_cairo_set_source_color (ctx, (_tmp16 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_NORMAL], &_tmp16));
 				cairo_rectangle (ctx, pwidth + 3.5, 1.5, (double) width, (double) height);
 				cairo_clip (ctx);
 				cairo_move_to (ctx, ((width - fontw) / 2) + 1.5, ((height - fonth) / 2) + 1.5);
 				pango_cairo_show_layout (ctx, self->priv->_layout);
 			}
 		} else {
-			GdkColor _tmp11 = {0};
+			GdkColor _tmp17 = {0};
 			cairo_new_path (ctx);
-			gdk_cairo_set_source_color (ctx, (_tmp11 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_NORMAL], &_tmp11));
+			gdk_cairo_set_source_color (ctx, (_tmp17 = gtk_widget_get_style ((GtkWidget*) pb)->fg[(gint) GTK_STATE_NORMAL], &_tmp17));
 			cairo_move_to (ctx, ((width - fontw) / 2) + 1.5, ((height - fonth) / 2) + 1.5);
 			pango_cairo_show_layout (ctx, self->priv->_layout);
 		}
 	}
-	return (_tmp12 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), (pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL)), _tmp12);
+	return (_tmp18 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), (pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL)), _tmp18);
 }
 
 
