@@ -735,6 +735,39 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 /** 
  * Song View 
  */
+/* herlper function */
+static void info2_fill_song_view_sim_song_activate(GtkExpander *exp,gpointer data)
+{
+        if(gtk_bin_get_child(GTK_BIN(exp)) == NULL)
+        {
+            GtkWidget *misc = gtk_alignment_new(0,0.5,1,0);
+            GtkWidget *vbox2 = gtk_vbox_new(FALSE, 6);
+            char *similar = NULL; 
+            guint id = 0;
+            mpd_Song *song = g_object_get_data(G_OBJECT(exp), "song");
+            MetaDataResult ret;
+
+            /* connect a signal handler */
+            id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox2);
+            /* do a request to the meta watcher */
+            ret = gmpc_meta_watcher_get_meta_path(gmw,song, META_SONG_SIMILAR, &similar);
+
+            g_object_set_data(G_OBJECT(vbox2), "song", (gpointer)song);
+            /* fill the list if it' s allready available */
+            info2_fill_new_meta_callback(gmw, song, META_SONG_SIMILAR, ret, similar, vbox2);
+            if(similar)
+                g_free(similar);
+            /* if destroyed disconnect the metawatcher */
+            g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
+
+            /* Add it to the view */
+            gtk_alignment_set_padding(GTK_ALIGNMENT(misc), 0,0,12,0);
+            gtk_container_add(GTK_CONTAINER(misc), vbox2);
+            //gtk_box_pack_start(GTK_BOX(resizer_vbox),misc,FALSE, FALSE, 0);
+            gtk_container_add(GTK_CONTAINER(exp), misc);
+            gtk_widget_show(misc);
+        }
+}
 static void info2_fill_song_view_real(mpd_Song *song)
 {
 	GtkWidget *expander, *gmtv,*table, *table2,*image,*ali,*button, *label,*hbox;
@@ -1070,39 +1103,22 @@ static void info2_fill_song_view_real(mpd_Song *song)
 
     if(song->artist && song->title)
     {
-        GtkWidget *misc = gtk_alignment_new(0,0.5,1,0);
-		GtkWidget *vbox2 = gtk_vbox_new(FALSE, 6);
-		char *similar = NULL; 
-		guint id = 0;
 
 
-		MetaDataResult ret;
-		/* connect a signal handler */
-		id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(info2_fill_new_meta_callback), vbox2);
-        /* do a request to the meta watcher */
-		ret = gmpc_meta_watcher_get_meta_path(gmw,song, META_SONG_SIMILAR, &similar);
+
 		/* set the label */
-		label = gtk_label_new("");
+		label = gtk_expander_new("");
 		markup = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Similar songs"));
-		gtk_label_set_markup(GTK_LABEL(label),markup); 
+        gtk_expander_set_use_markup(GTK_EXPANDER(label),TRUE);
+		gtk_expander_set_label(GTK_EXPANDER(label),markup);
 		g_free(markup);
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_misc_set_padding(GTK_MISC(label), 8,0);
+		//gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+		//gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
-		/* fill the list if it' s allready available */
-        g_object_set_data_full(G_OBJECT(vbox2), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
-        info2_fill_new_meta_callback(gmw, song, META_SONG_SIMILAR, ret, similar, vbox2);
-		if(similar)
-			g_free(similar);
-		/* if destroyed disconnect the metawatcher */
-		g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
-        
-        /* Add it to the view */
-        gtk_alignment_set_padding(GTK_ALIGNMENT(misc), 0,0,12,0);
-        gtk_container_add(GTK_CONTAINER(misc), vbox2);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox),misc,FALSE, FALSE, 0);
-        gtk_widget_show(misc);
 
+        g_object_set_data_full(G_OBJECT(label), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
+
+        g_signal_connect(G_OBJECT(label), "activate", G_CALLBACK(info2_fill_song_view_sim_song_activate), NULL);
     }
 	/* Interesting links */
 
