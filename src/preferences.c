@@ -315,7 +315,6 @@ static void plugin_stats_construct(GtkWidget *container)
 			{
                 int *ver = gmpc_plugin_get_version(plugins[i]);
                 gchar *version = g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]);
-                printf("%i %s\n", gmpc_plugin_is_internal(plugins[i]), gmpc_plugin_get_name(plugins[i]));
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
                 g_free(version);
