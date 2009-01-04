@@ -23,6 +23,7 @@
 #include <string.h>
 #include "main.h"
 #include "config1.h"
+#include "playlist3.h"
 #include "mpdinteraction.h"
 
 //G_LOCK_DEFINE (connecting_lock);

@@ -20,6 +20,7 @@
 #include <gtk/gtk.h>
 #include <time.h>
 #include "main.h"
+#include "playlist3.h"
 
 extern int pl3_zoom;
 static gboolean error_visible = FALSE;

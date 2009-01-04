@@ -24,7 +24,7 @@
 #include <config.h>
 #include "main.h"
 #include "plugin.h"
-#include "gmpc-clicklabel.h"
+#include "playlist3.h"
 #include "vala/gmpc-progress.h"
 #include "gob/gmpc-metaimage.h"
 #include "misc.h"

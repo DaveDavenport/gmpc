@@ -23,17 +23,7 @@
 #include <config.h>
 
 #ifdef ENABLE_NLS
-#include <libintl.h>
-#include <locale.h>
-#define _(String) gettext (String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else 
-#define _(String) String
-#define N_(String) String
+#include <glib/gi18n.h>
 #endif
 
 #include "config-defaults.h"
@@ -43,8 +33,6 @@
 #include <glade/glade.h>
 #include "config1.h"
 #include "plugin.h"
-#include "metadata.h"
-#include "playlist3.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 

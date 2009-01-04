@@ -33,6 +33,7 @@
 /* header files */
 #include "plugin.h"
 #include "main.h"
+#include "playlist3.h"
 
 /** session support */
 #include "sm.h"

@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 #include "main.h"
+#include "playlist3.h"
 #include "setup-assistant.h"
 
 extern gmpcPlugin connection_plug;
