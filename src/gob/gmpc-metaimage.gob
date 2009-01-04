@@ -693,7 +693,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
                 {
-                    float spineRatio = 21.0/300.0;
+                    float spineRatio = 31.0/343.0;
                     int spineWidth = (width)*spineRatio;
                     GdkPixbuf *blank,*pb2 ;
                     gchar *path2;
