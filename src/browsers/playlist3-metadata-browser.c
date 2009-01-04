@@ -20,7 +20,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <string.h>
-#include <regex.h>
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
@@ -1178,7 +1177,6 @@ static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event,
  */
 static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
 {
-    regex_t regt;
     const char *text = NULL;
     GtkTreeModel *model =gtk_entry_completion_get_model(GTK_ENTRY_COMPLETION(entry_completion));
     GtkTreeIter iter;
@@ -1193,8 +1191,10 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     /** get text
     */
     text = gtk_entry_get_text(entry);
-    if(strlen(text) && !regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB))
+    if(strlen(text) > 0); 
     {
+        GError *error = NULL;
+        GRegex *reg; 
         int skip = 0;
         int num_cols = 2;
         int songs = 0;
@@ -1202,9 +1202,22 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         int overflow = cfg_get_single_value_as_int_with_default(config, "metadata", "overflow-amount", 50);
         MpdData *data = NULL;
         mpd_Song *song;
+        reg = g_regex_new(text, G_REGEX_CASELESS|G_REGEX_OPTIMIZE, 0, &error);
 
-
-
+        if(error) {
+            GtkWidget *label = gtk_label_new("");
+            gchar *errmsg = g_markup_printf_escaped("<b>%s</b>: <i>%s</i>", _("Invalid search"), error->message);
+            gtk_label_set_markup(GTK_LABEL(label), errmsg);
+            gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+            gtk_box_pack_start(GTK_BOX(table), label, FALSE, FALSE,0);
+            debug_printf(DEBUG_ERROR, "Error compiling regex: %s -> %s", text, error->message);
+            gtk_widget_show_all(table);
+            g_error_free(error);
+            if(reg)
+                g_regex_unref(reg);
+            g_free(errmsg);
+            return;
+        }
         /**
          * 		update completion
          */
@@ -1230,7 +1243,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
         song = mpd_newSong();
         for(;data;data = mpd_data_get_next(data))
         {
-            if(songs < overflow && !regexec(&regt,data->tag, 0,NULL,0))
+            if(songs < overflow && g_regex_match(reg, data->tag, 0, NULL))
             {
                 GtkWidget *button;
                 song->artist = data->tag;
@@ -1266,7 +1279,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
             diff.tv_sec += G_USEC_PER_SEC;
         }
 
-        regfree(&regt);
+        g_regex_unref(reg);
         mpd_freeSong(song);
     }
     gtk_widget_show_all(resizer_vbox);
