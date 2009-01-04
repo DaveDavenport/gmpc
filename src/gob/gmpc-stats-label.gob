@@ -135,7 +135,6 @@ class Gmpc:Stats:Label from Gtk:Label
         gchar *string = g_markup_printf_escaped("<i>%s</i>", _("Loading"));
         gtk_label_set_markup(GTK_LABEL(self),string);
         g_free(string);
-        printf("expose\n");
         self_idle_handler(self);
         if(self->_priv->ll_signal) {
             g_signal_handler_disconnect(self, self->_priv->ll_signal);
