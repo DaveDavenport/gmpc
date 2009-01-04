@@ -24,9 +24,10 @@
 #include "main.h"
 #include "misc.h"
 
-#include "gob/gmpc-clicklabel.h"
-#include "gob/gmpc-stats-label.h"
+#include "gmpc-clicklabel.h"
+#include "gmpc-stats-label.h"
 #include "gmpc-mpddata-treeview.h"
+#include "gmpc-metaimage.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-meta-text-view.h"
 

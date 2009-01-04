@@ -28,9 +28,11 @@ requires 2.0.0
 #include "gmpc-mpddata-model.h"
 #include "eggcolumnchooserdialog.h"
 #include "gmpc-mpddata-model-playlist.h"
+#include "gmpc-metaimage.h"
 %}
 
 %h{
+
 #define NUM_COLS 18
 #define MOUSE_OFFSET 10
 #define ENABLE_GRADIENT_LOOK 1

@@ -30,7 +30,8 @@
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
-#include <gmpc-liststore-sort.h>
+#include "gmpc-liststore-sort.h"
+#include "gmpc-metaimage.h"
 #include "vala/gmpc-progress.h"
 #ifdef ENABLE_IGE 
 #include "ige-mac-menu.h"

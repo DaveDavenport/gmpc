@@ -26,6 +26,7 @@
 #include "plugin.h"
 #include "gmpc-clicklabel.h"
 #include "vala/gmpc-progress.h"
+#include "gob/gmpc-metaimage.h"
 #include "misc.h"
 
 

@@ -55,7 +55,6 @@
  */
 #include "gob/gmpc-profiles.h"
 #include "gob/gmpc-connection.h"
-#include "gob/gmpc-metaimage.h"
 #include "gob/gmpc-signals.h"
 
 extern GmpcConnection 	*gmpcconn;
