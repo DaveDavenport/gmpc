@@ -23,7 +23,7 @@
 #include <regex.h>
 #include "main.h"
 #include "misc.h"
-
+#include "playlist3.h"
 #include "gmpc-clicklabel.h"
 #include "gmpc-stats-label.h"
 #include "gmpc-mpddata-treeview.h"

@@ -23,15 +23,11 @@
 #include <string.h>
 #include <glade/glade.h>
 #include <config.h>
-#include <regex.h>
-
-#include "plugin.h"
 
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
-#include "config1.h"
 #include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-model-playlist.h"

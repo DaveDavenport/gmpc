@@ -31,7 +31,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <libmpd/debug_printf.h>
-#include "plugin.h"
 #include "main.h"
 #include "misc.h"
 #include "gmpc-mpddata-treeview.h"
@@ -42,6 +41,7 @@
 #include "sexy-icon-entry.h"
 #endif
 #include <libmpd/libmpd-internal.h>
+#include "playlist3.h"
 #include "playlist3-playlist-editor.h"
 
 /**

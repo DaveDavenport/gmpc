@@ -23,7 +23,6 @@
 #include <string.h>
 #include <config.h>
 #include "main.h"
-#include "plugin.h"
 #include "playlist3.h"
 #include "vala/gmpc-progress.h"
 #include "gob/gmpc-metaimage.h"

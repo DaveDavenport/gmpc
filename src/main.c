@@ -31,7 +31,6 @@
 #include <glade/glade.h>
 
 /* header files */
-#include "plugin.h"
 #include "main.h"
 #include "playlist3.h"
 

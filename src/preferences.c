@@ -22,12 +22,8 @@
 #include <string.h>
 #include <time.h>
 #include <config.h>
-
-#include "plugin.h"
-
 #include "main.h"
 #include "playlist3.h"
-#include "config1.h"
 
 #define PLUGIN_STATS -200
 void preferences_show_pref_window(int plugin_id);
@@ -75,7 +71,7 @@ static void pref_plugin_changed(void)
             char *buf = NULL;
             if(!gmpc_plugin_is_internal(plugins[id]))
             {
-                int *version = gmpc_plugin_get_version(plugins[id]);
+                const int *version = gmpc_plugin_get_version(plugins[id]);
                 buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
                         N_(gmpc_plugin_get_name(plugins[id])),
                         version[0],version[1], version[2]);
@@ -313,7 +309,7 @@ static void plugin_stats_construct(GtkWidget *container)
 		{
 			if(!gmpc_plugin_is_internal(plugins[i]))
 			{
-                int *ver = gmpc_plugin_get_version(plugins[i]);
+                const int *ver = gmpc_plugin_get_version(plugins[i]);
                 gchar *version = g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]);
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);

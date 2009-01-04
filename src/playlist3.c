@@ -26,7 +26,6 @@
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
-#include "plugin.h"
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
@@ -2150,8 +2149,9 @@ static void playlist3_header_artist(void)
 static GtkWidget *artist_header_popup = NULL;
 guint ahp_timeout = 0;
 
-static gboolean playlist3_header_artist_popup(GtkWidget *label) 
+static gboolean playlist3_header_artist_popup(gpointer data) 
 {
+    GtkWidget *label = data;
     mpd_Song *song = mpd_playlist_get_current_song(connection);
     if(song)
     {

@@ -22,15 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glade/glade.h>
-
-#include "plugin.h"
-
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-find2-browser.h"
-#include "config1.h"
-
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 

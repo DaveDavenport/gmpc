@@ -22,14 +22,11 @@
 #include <gdk/gdkkeysyms.h>
 #include <libmpd/libmpd.h>
 #include <string.h>
-
-#include "plugin.h"
-
+#include "main.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model-sort.h"
 #include "browsers/playlist3-playlist-editor.h"
-#include "main.h"
 
 #define DEFAULT_MARKUP_BROWSER 	"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
 

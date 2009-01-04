@@ -22,7 +22,6 @@
 #include <glade/glade.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/debug_printf.h>
-#include  "plugin.h"
 #include "main.h"
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
