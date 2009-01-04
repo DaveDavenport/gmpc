@@ -3,10 +3,8 @@ dist_appicon_DATA =	\
 	media-audiofile.png\
 	media-stream.png\
 	media-artist.png\
-	media-playback-start.png\
 	gmpc-no-cover.png\
 	media-album.png\
-	gmpc-add-url.png\
 	mpdBrowser_case.png\
 	mpdBrowser_case.svg\
 	gmpc-loading-cover.png

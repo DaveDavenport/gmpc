@@ -9,4 +9,5 @@ dist_icons_DATA = \
 		media-playlist.png\
 		playlist-search-browser.png\
 		playlist-browser.png\
+		add-url.png\
 		tag-browser.png

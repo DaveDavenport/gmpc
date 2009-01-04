@@ -1061,7 +1061,7 @@ static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type
 
     item = gtk_image_menu_item_new_with_label(_("Add URL"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-		    gtk_image_new_from_icon_name("gmpc-add-url", GTK_ICON_SIZE_MENU));
+		    gtk_image_new_from_icon_name("add-url", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(url_start), NULL);
 
