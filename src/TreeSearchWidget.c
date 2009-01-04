@@ -20,7 +20,6 @@
 #include <gtk/gtk.h>
 #include <gtk/gtksignal.h>
 #include <gdk/gdkkeysyms.h>
-#include <regex.h>
 #include "main.h"
 #include "TreeSearchWidget.h"
 static void treesearch_class_init          (TreeSearchClass *klass);
@@ -95,9 +94,12 @@ void treesearch_start(TreeSearch *ts)
 static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter) {
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(ts->treeview));
 	const char *text = gtk_entry_get_text(GTK_ENTRY(ts->entry));
-	regex_t regt;
-	if(regcomp(&regt, text, REG_EXTENDED|REG_ICASE|REG_NOSUB)) {
-		regfree(&regt);
+    GError *error = NULL;
+    GRegex *reg = g_regex_new(text, G_REGEX_CASELESS, 0, &error);
+	if(error){
+        debug_printf(DEBUG_ERROR, "Failed to create search: %s\n", error->message);
+        g_error_free(error);
+        if(reg) g_regex_unref(reg);
 		return FALSE;
 	}
 
@@ -105,10 +107,10 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 		char *title;
 		GtkTreeIter child;
 		gtk_tree_model_get(model, iter,ts->search_row, &title, -1); 
-		if(title && !regexec(&regt, title, 0,NULL,0))
+		if(title && g_regex_match(reg, title, 0,NULL)) 
 		{
 			q_free(title);
-			regfree(&regt);
+            g_regex_unref(reg);
 			return TRUE;
 		}
 		else if(gtk_tree_model_iter_children(model,&child, iter))
@@ -117,7 +119,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 			if(treesearch_search_from_iter_forward(ts, &child))
 			{
 				*iter = child;
-				regfree(&regt);
+                g_regex_unref(reg);
 				q_free(title);
 				return TRUE;
 			}
@@ -125,7 +127,7 @@ static int treesearch_search_from_iter_forward(TreeSearch *ts,GtkTreeIter *iter)
 		}
 		q_free(title);
 	} while(gtk_tree_model_iter_next(model,  iter));
-	regfree(&regt);
+    g_regex_unref(reg);
 	return FALSE;
 }
 static void treesearch_search_next(GtkButton *but,TreeSearch *ts){
