@@ -12,4 +12,5 @@ dist_icons_DATA = \
 		gmpc-tray.svg\
 		gmpc-tray-disconnected.svg\
 		gmpc-tray-play.svg\
-		gmpc-tray-pause.svg
+		gmpc-tray-pause.svg\
+		no-artist.svg

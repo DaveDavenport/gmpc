@@ -1,1 +1,1 @@
-SUBDIRS = actions apps
+SUBDIRS = actions apps status
