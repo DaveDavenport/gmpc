@@ -30,6 +30,7 @@ public class Gmpc.Progress : Gtk.EventBox
     private bool _do_countdown      = false;
     private Pango.Layout _layout    = null;
     public bool _hide_text          = false;
+    private Style my_style = null;
 
     public bool hide_text {
         get { 
@@ -56,11 +57,23 @@ public class Gmpc.Progress : Gtk.EventBox
         this.expose_event += this.on_expose2;
         /* Set a string so we can get height */
         this._layout = this.create_pango_layout (" ");
+
     }
 
     ~Progress() {
         _layout.unref();
+        this.my_style.detach();
     }
+    
+    public override void style_set (Gtk.Style old_style)
+    {
+        /* Reset it, so it gets reloaded on redraw */
+        if(this.my_style != null) {
+            this.my_style.detach();
+        }
+        this.my_style = null;
+    }
+
     // The size_request method Gtk+ is calling on a widget to ask
     // it the widget how large it wishes to be. It's not guaranteed
     // that gtk+ will actually give this size to the widget
@@ -137,10 +150,16 @@ public class Gmpc.Progress : Gtk.EventBox
     private bool on_expose2 (Progress pb, Gdk.EventExpose event) 
     {
         var ctx = Gdk.cairo_create(this.window); 
-        int width = this.allocation.width-3;
-        int height = this.allocation.height-3;
+        int width = this.allocation.width-1;
+        int height = this.allocation.height-1;
         int pw = width-3;
         int pwidth = (int)((this.current*pw)/(double)this.total);
+
+        if(this.my_style == null){
+            this.my_style = Gtk.rc_get_style_by_paths(this.get_settings(), null, null, typeof(ProgressBar));
+            this.my_style = this.my_style.attach(this.window);
+        }
+
         if(pwidth > pw)
         {
             pwidth = pw;
@@ -157,9 +176,12 @@ public class Gmpc.Progress : Gtk.EventBox
 
         ctx.new_path();
         /* Stroke a white line, and clip on that */
-        Gdk.cairo_set_source_color(ctx, pb.style.dark[(int)Gtk.StateType.NORMAL]);
-        draw_curved_rectangle(ctx, 1.5,1.5,width, height);
+        Gdk.cairo_set_source_color(ctx, pb.my_style.dark[(int)Gtk.StateType.NORMAL]);
+        draw_curved_rectangle(ctx,0.5,0.5,width, height);
         ctx.stroke_preserve ();
+
+        Gdk.cairo_set_source_color(ctx, pb.my_style.bg[(int)Gtk.StateType.NORMAL]);
+        ctx.fill_preserve();
         /* Make a clip */
         ctx.clip();
 
@@ -170,16 +192,16 @@ public class Gmpc.Progress : Gtk.EventBox
                 pwidth = width;
             }
             ctx.new_path();
-            Gdk.cairo_set_source_color(ctx, pb.style.bg[(int)Gtk.StateType.SELECTED]);
-            draw_curved_rectangle(ctx,1.5+2,1.5+2,pwidth, (height-4));
+            Gdk.cairo_set_source_color(ctx, pb.my_style.bg[(int)Gtk.StateType.SELECTED]);
+            draw_curved_rectangle(ctx,0.5+2,0.5+2,pwidth, (height-4));
             ctx.fill ();
 
         }
         /* Paint nice reflection layer on top */
         ctx.new_path();
         var pattern =  new Pattern.linear(0.0,0.0, 0.0, height);
-        var start = pb.style.dark[(int)Gtk.StateType.NORMAL];
-        var stop = pb.style.light[(int)Gtk.StateType.NORMAL];
+        var start = pb.my_style.dark[(int)Gtk.StateType.NORMAL];
+        var stop = pb.my_style.light[(int)Gtk.StateType.NORMAL];
 
         pattern.add_color_stop_rgba(0.0,start.red/(65536.0), start.green/(65536.0), start.blue/(65536.0),   0.6);
         pattern.add_color_stop_rgba(0.40,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),      0.2);
@@ -238,31 +260,31 @@ public class Gmpc.Progress : Gtk.EventBox
                 if(pwidth >= ((width-fontw)/2+1))
                 {
                     ctx.new_path();
-                    Gdk.cairo_set_source_color(ctx, pb.style.fg[(int)Gtk.StateType.SELECTED]);
-                    ctx.rectangle(3.5, 1.5,pwidth, height);
+                    Gdk.cairo_set_source_color(ctx, pb.my_style.fg[(int)Gtk.StateType.SELECTED]);
+                    ctx.rectangle(3.5, 0.5,pwidth, height);
                     ctx.clip();
-                    ctx.move_to ((width - fontw)/2+1.5,
-                            (height - fonth)/2+1.5);
+                    ctx.move_to ((width - fontw)/2+0.5,
+                            (height - fonth)/2+0.5);
                     Pango.cairo_show_layout ( ctx, this._layout);
                     ctx.reset_clip();
                 }
                 if(pwidth < ((width-fontw)/2+1+fontw))
                 {
                     ctx.new_path();
-                    Gdk.cairo_set_source_color(ctx, pb.style.fg[(int)Gtk.StateType.NORMAL]);
-                    ctx.rectangle(pwidth+3.5, 1.5,width, height);
+                    Gdk.cairo_set_source_color(ctx, pb.my_style.fg[(int)Gtk.StateType.NORMAL]);
+                    ctx.rectangle(pwidth+3.5, 0.5,width, height);
                     ctx.clip();
-                    ctx.move_to ((width - fontw)/2+1.5,
-                            (height - fonth)/2+1.5);
+                    ctx.move_to ((width - fontw)/2+0.5,
+                            (height - fonth)/2+0.5);
                     Pango.cairo_show_layout ( ctx, this._layout);
                 }
             }
             else
             {
                 ctx.new_path();
-                Gdk.cairo_set_source_color(ctx, pb.style.fg[(int)Gtk.StateType.NORMAL]);
-                ctx.move_to ((width - fontw)/2+1.5,
-                        (height - fonth)/2+1.5);
+                Gdk.cairo_set_source_color(ctx, pb.my_style.fg[(int)Gtk.StateType.NORMAL]);
+                ctx.move_to ((width - fontw)/2+0.5,
+                        (height - fonth)/2+0.5);
                 Pango.cairo_show_layout ( ctx, this._layout);
             }
         }
