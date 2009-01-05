@@ -151,8 +151,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		(nick = "Squared",
 			blurb = "Keep the widget squared",
 			default_value = TRUE,
-			export,
 			link);
+    public void set_squared (self, gboolean item)
+    {
+        self->squared = item;
+    }
     public void set_connection(self, MpdObj *conn)
     {
         self->connection = conn;
@@ -172,7 +175,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
 	init (self)
 	{
-		gtk_event_box_set_visible_window(GTK_EVENT_BOX(self), FALSE);
+
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
 		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 		gtk_widget_show_all(GTK_WIDGET(self));
@@ -388,7 +391,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             gmi->image_type = type;
             gmi->size = size;
 
-            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), TRUE);
+
+            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), FALSE);
             gtk_drag_dest_set(GTK_WIDGET(gmi),
                     GTK_DEST_DEFAULT_ALL,
                     data_image_drag_target, num_drag_targets,
@@ -406,7 +410,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			Self *gmi =  GET_NEW;
 			gmi->image_type = type;
-            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), TRUE);
+
+            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), FALSE);
             gtk_drag_dest_set(GTK_WIDGET(gmi),
                     GTK_DEST_DEFAULT_ALL,
                 data_image_drag_target, num_drag_targets,
