@@ -747,9 +747,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     /* load the case */
                     path2 = gmpc_get_full_image_path("stylized-cover.svg"); 
                     blank = gdk_pixbuf_new_from_file(path2,NULL);
-		    pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
-		    gdk_pixbuf_unref(blank);
-		    g_free(path2);
+                    pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
+                    g_object_unref(blank);
+                    g_free(path2);
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
