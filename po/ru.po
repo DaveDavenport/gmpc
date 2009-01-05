@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-12-20 20:31+0100\n"
-"PO-Revision-Date: 2008-12-24 19:29+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"PO-Revision-Date: 2009-01-04 16:08+0000\n"
+"Last-Translator: MarfeuS <matrix83@inbox.ru>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-01 22:16+0000\n"
+"X-Launchpad-Export-Date: 2009-01-05 22:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -358,6 +358,7 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Andrew V. Sichevoi https://launchpad.net/~a-sichevoi+ubuntu\n"
+"  MarfeuS https://launchpad.net/~matrix83\n"
 "  MaxStotsky https://launchpad.net/~maxstotsky\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  ivvmm https://launchpad.net/~unachievable"
@@ -746,7 +747,7 @@ msgstr[2] "дней"
 #: ../src/misc.c:60
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] "час"
+msgstr[0] "час."
 msgstr[1] "часа"
 msgstr[2] "часов"
 
@@ -798,7 +799,7 @@ msgstr "Увеличить громкость"
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:84
 msgid "Volume Down"
-msgstr "Понизить громкость"
+msgstr "Уменьшить громкость"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:85
@@ -933,7 +934,7 @@ msgstr ""
 
 #: ../src/playlist3.c:898
 msgid "Connected"
-msgstr "Подключено"
+msgstr "Соединено"
 
 #: ../src/playlist3.c:907 ../src/playlist3.c:2286
 msgid "Not Connected"
@@ -1021,7 +1022,7 @@ msgstr "Интерфейс"
 
 #: ../src/playlist3-messages.c:16
 msgid "Info"
-msgstr ""
+msgstr "Информация"
 
 #: ../src/playlist3-messages.c:17
 msgid "Warning"
@@ -1029,7 +1030,7 @@ msgstr ""
 
 #: ../src/playlist3-messages.c:18
 msgid "Critical"
-msgstr ""
+msgstr "Критическая ошибка"
 
 #: ../src/playlist3-messages.c:196
 msgid "Time"
@@ -1046,7 +1047,7 @@ msgstr ""
 
 #: ../src/preferences.c:80 ../src/preferences.c:176
 msgid "Plugins"
-msgstr ""
+msgstr "Плагины"
 
 #: ../src/preferences.c:137
 msgid "Plugins:"
@@ -1054,11 +1055,11 @@ msgstr "Плагины:"
 
 #: ../src/preferences.c:268
 msgid "Enabled"
-msgstr "Активирован"
+msgstr "Включено"
 
 #: ../src/preferences.c:271 ../src/gob/gmpc-mpddata-treeview.gob:51
 msgid "Name"
-msgstr "Имя"
+msgstr "Name"
 
 #: ../src/preferences.c:273
 msgid "Function"
@@ -1082,7 +1083,7 @@ msgstr "Поставщик метаданных и расширение брау
 
 #: ../src/preferences.c:303
 msgid "Misc."
-msgstr "Разное"
+msgstr "Прочее"
 
 #: ../src/preferences.c:307
 msgid "Unknown"
@@ -1118,7 +1119,7 @@ msgstr "Введите URL"
 #: ../src/url_fetcher.c:251
 #, c-format
 msgid "Failed to contact url: '%s'"
-msgstr "Не удалось связаться с узлом: '%s'"
+msgstr "Не удалось связаться с URL: '%s'"
 
 #. *
 #. * Failed to contact %s
@@ -1134,7 +1135,7 @@ msgstr "Плей_лист"
 
 #: ../src/tray-icon2.c:832
 msgid "Notification"
-msgstr "Уведомления"
+msgstr "Уведомление"
 
 #. *
 #. * Append an introduction page
@@ -1169,7 +1170,7 @@ msgstr ""
 #: ../src/browsers/playlist3-current-playlist-browser.c:110
 msgid "item"
 msgid_plural "items"
-msgstr[0] "элемент"
+msgstr[0] "пункт"
 msgstr[1] "элемента"
 msgstr[2] "элементов"
 
@@ -1181,7 +1182,7 @@ msgstr "(Приблизительно)"
 #: ../src/browsers/playlist3-current-playlist-browser.c:473
 #: ../src/browsers/playlist3-current-playlist-browser.c:1275
 msgid "Play Queue"
-msgstr ""
+msgstr "Очередь воспроизведения"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:545
 msgid "Are you sure you want to clear the playlist?"
@@ -1294,9 +1295,9 @@ msgstr[2] "звуковых дорожек"
 #: ../src/browsers/playlist3-file-browser.c:1028
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] "каталог"
+msgstr[0] "Каталог"
 msgstr[1] "каталога"
-msgstr[2] "каталогов"
+msgstr[2] "каталоги"
 
 #: ../src/browsers/playlist3-file-browser.c:1030
 msgid "playlist"
@@ -1312,7 +1313,7 @@ msgstr "Вы уверены, что хотите очистить выбранн
 
 #: ../src/browsers/playlist3-find2-browser.c:108
 msgid "Query"
-msgstr ""
+msgstr "Запрос"
 
 #: ../src/browsers/playlist3-find2-browser.c:152
 msgid "And"
@@ -1327,7 +1328,7 @@ msgstr "ИЛИ"
 #: ../src/browsers/playlist3-find2-browser.c:360
 #: ../src/browsers/playlist3-find2-browser.c:964
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:279
@@ -1337,11 +1338,11 @@ msgstr "Искать в текущей очереди _воспроизведе�
 #: ../src/browsers/playlist3-metadata-browser.c:267
 #: ../src/browsers/playlist3-metadata-browser.c:303
 msgid "Unavailable"
-msgstr ""
+msgstr "Недоступно"
 
 #: ../src/browsers/playlist3-metadata-browser.c:297
 msgid "Fetching..."
-msgstr ""
+msgstr "Загрузка..."
 
 #. View
 #. *
@@ -1351,7 +1352,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:682
 #: ../src/browsers/playlist3-metadata-browser.c:2351
 msgid "View"
-msgstr ""
+msgstr "Вид"
 
 #: ../src/browsers/playlist3-metadata-browser.c:629
 #: ../src/browsers/playlist3-metadata-browser.c:856
@@ -1364,7 +1365,7 @@ msgstr "Исполнитель"
 #: ../src/browsers/playlist3-metadata-browser.c:1467
 #: ../src/browsers/playlist3-metadata-browser.c:1927
 msgid "Songs"
-msgstr ""
+msgstr "Композиций"
 
 #: ../src/browsers/playlist3-metadata-browser.c:644
 #: ../src/browsers/playlist3-metadata-browser.c:1474
@@ -1396,7 +1397,7 @@ msgstr "Дата"
 #: ../src/browsers/playlist3-metadata-browser.c:1365
 #: ../src/browsers/playlist3-metadata-browser.c:1789
 msgid "Collection"
-msgstr ""
+msgstr "Коллекция"
 
 #: ../src/browsers/playlist3-metadata-browser.c:862
 #: ../src/browsers/playlist3-metadata-browser.c:1944
@@ -1426,16 +1427,16 @@ msgstr "Оригинальный исполнитель"
 #: ../src/browsers/playlist3-metadata-browser.c:2317
 #: ../src/gob/gmpc-mpddata-treeview.gob:61
 msgid "Directory"
-msgstr ""
+msgstr "Директория"
 
 #: ../src/browsers/playlist3-metadata-browser.c:911
 #: ../src/gob/gmpc-mpddata-treeview.gob:60
 msgid "Extension"
-msgstr ""
+msgstr "Расширение"
 
 #: ../src/browsers/playlist3-metadata-browser.c:924
 msgid "Bitrate"
-msgstr ""
+msgstr "Битовый поток"
 
 #: ../src/browsers/playlist3-metadata-browser.c:929
 #: ../src/browsers/playlist3-metadata-browser.c:2401
@@ -1502,7 +1503,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1549
 msgid "Albums"
-msgstr ""
+msgstr "Альбомы"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1596
 msgid "Similar Artists"
@@ -1517,7 +1518,7 @@ msgstr "Информация об альбоме:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1873
 msgid "Album information"
-msgstr ""
+msgstr "Информация об альбоме:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1995
 #: ../src/browsers/playlist3-metadata-browser.c:2301
@@ -1605,7 +1606,7 @@ msgstr ""
 
 #: ../src/egg/eggtrayicon.c:134
 msgid "The orientation of the tray."
-msgstr ""
+msgstr "Расположение лотка."
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:44
 msgid "Markup"
@@ -1618,12 +1619,12 @@ msgstr "Заголовок"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:48
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:55
 #: ../src/gob/gmpc-mpddata-treeview.gob:629
 msgid "Duration"
-msgstr "Длительность"
+msgstr "Продолжительность"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:56
 msgid "Disc"
@@ -1639,7 +1640,7 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:59
 msgid "Position"
-msgstr ""
+msgstr "Позиция"
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:714
@@ -1676,7 +1677,7 @@ msgstr "Получение текста"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Fetching Artist Info"
-msgstr "Загрузка информации об исполнителях"
+msgstr "Загрузка информации об исполнителе"
 
 #: ../src/gob/gmpc-meta-text-view.gob:161
 msgid "Fetching Album Info"
@@ -1688,15 +1689,15 @@ msgstr "Недоступно"
 
 #: ../src/gob/gmpc-meta-text-view.gob:229 ../src/gob/gmpc-metaimage.gob:772
 msgid "Select File"
-msgstr "Выберите файл"
+msgstr "Выбрать файл"
 
 #: ../src/gob/gmpc-meta-text-view.gob:234
 msgid "Text Document"
-msgstr ""
+msgstr "Текстовый документ"
 
 #: ../src/gob/gmpc-meta-text-view.gob:238 ../src/gob/gmpc-metaimage.gob:782
 msgid "All"
-msgstr "Все"
+msgstr "Всё"
 
 #: ../src/gob/gmpc-metaimage.gob:777
 msgid "Images"
@@ -1704,7 +1705,7 @@ msgstr "Изображения"
 
 #: ../src/gob/gmpc-stats-label.gob:119
 msgid "Loading"
-msgstr ""
+msgstr "Загрузка"
 
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Прокси</b>"
