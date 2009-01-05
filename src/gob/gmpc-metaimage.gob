@@ -388,6 +388,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             gmi->image_type = type;
             gmi->size = size;
 
+            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), TRUE);
             gtk_drag_dest_set(GTK_WIDGET(gmi),
                     GTK_DEST_DEFAULT_ALL,
                     data_image_drag_target, num_drag_targets,
@@ -405,7 +406,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			Self *gmi =  GET_NEW;
 			gmi->image_type = type;
-            
+            gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), TRUE);
             gtk_drag_dest_set(GTK_WIDGET(gmi),
                     GTK_DEST_DEFAULT_ALL,
                 data_image_drag_target, num_drag_targets,
@@ -639,6 +640,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
             else{
                 gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
+                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
             }
 
             gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
@@ -684,6 +686,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
             else{
                 gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
+                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
             }
             gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
 
@@ -760,11 +763,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb);
                     pb = blank;
 
+                    if(!self->squared) 
+                        gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE,FALSE);
                     g_object_unref(pb);
                 }
                 else {
                     pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
+                    if(!self->squared) 
+                        gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE,TRUE);
                     g_object_unref(pb);
                 }
