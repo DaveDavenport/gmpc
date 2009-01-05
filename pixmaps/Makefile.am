@@ -9,6 +9,7 @@ dist_appicon_DATA =	\
 	stylized-cover.svg\
 	stylized-no-cover.svg\
 	stylized-fetching-cover.svg\
+	no-artist.svg\
 	gmpc-loading-cover.png
 
 
