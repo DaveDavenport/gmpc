@@ -742,14 +742,26 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     width = gdk_pixbuf_get_width(pb)+spineWidth+0;			
                     height = gdk_pixbuf_get_height(pb)+0;
                     /* load the case */
-                    path2 = gmpc_get_full_image_path("stylized-cover.svg"); 
-                    blank = gdk_pixbuf_new_from_file(path2,NULL);
-                    if(blank)
+//                    path2 = gmpc_get_full_image_path("stylized-cover.svg"); 
+  //                  blank = gdk_pixbuf_new_from_file(path2,NULL);
+    //                if(blank)
                     {
-                        pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
-                        g_object_unref(blank);
+                        GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),"stylized-cover", (width> height)? width:height, 0);
+                        if(ii){
+                            path2 = gtk_icon_info_get_filename(ii);
+                            printf("path2: %s\n", path2);
+                            if(path2){
+                                blank = gdk_pixbuf_new_from_file(path2,NULL);
+                                if(blank)
+                                {
+                                    pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
+                                    g_object_unref(blank);
+                                }
+                            }
+                            gtk_icon_info_free(ii);
+                        }
                     }
-                    g_free(path2);
+                    //g_free(path2);
                 
                     //pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), , self->size, 0,NULL);
 

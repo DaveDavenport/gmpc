@@ -13,4 +13,7 @@ dist_icons_DATA = \
 		gmpc-tray-disconnected.svg\
 		gmpc-tray-play.svg\
 		gmpc-tray-pause.svg\
+		stylized-cover.svg\
+		stylized-no-cover.svg\
+		stylized-fetching-cover.svg\
 		no-artist.svg

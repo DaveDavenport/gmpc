@@ -6,9 +6,6 @@ dist_appicon_DATA =	\
 	gmpc-no-cover.png\
 	media-album.png\
 	mpdBrowser_case.png\
-	stylized-cover.svg\
-	stylized-no-cover.svg\
-	stylized-fetching-cover.svg\
 	gmpc-loading-cover.png
 
 
