@@ -517,7 +517,7 @@ int main (int argc, char **argv)
         url = gmpc_get_user_path("debug-info.log");
         if(url)
         {
-            FILE *fp = fopen(url, "a");
+            FILE *fp = g_fopen(url, "a");
             if(!fp)
             {
                 debug_printf(DEBUG_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
