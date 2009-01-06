@@ -749,7 +749,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                         GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),"stylized-cover", (width> height)? width:height, 0);
                         if(ii){
                             path2 = gtk_icon_info_get_filename(ii);
-                            printf("path2: %s\n", path2);
                             if(path2){
                                 blank = gdk_pixbuf_new_from_file(path2,NULL);
                                 if(blank)
