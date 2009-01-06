@@ -380,7 +380,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 if (!data && cfg_get_single_value_as_int_with_default(config, "metadata","onlyownsimilar",FALSE))
                     continue;
 
-                gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,50);
+                gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,48);
                 gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
 
                 /* make the background paintable, and paint the background */
@@ -644,7 +644,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),4);
 
 	/** Create artist image */	
-	metaimage = gmpc_metaimage_new_size(META_ARTIST_ART,100);
+	metaimage = gmpc_metaimage_new_size(META_ARTIST_ART,96);
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage), "no-artist");
     gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(metaimage), song);
 	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, TRUE,0);
@@ -2298,7 +2298,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	 */
 	table = gtk_hbox_new(FALSE, 6); 
 
-	image = gmpc_metaimage_new_size(META_ALBUM_ART,100);
+	image = gmpc_metaimage_new_size(META_ALBUM_ART,96);
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
 
 	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
