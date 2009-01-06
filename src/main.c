@@ -145,7 +145,7 @@ void print_version ( void );
 
 
 #ifdef USE_UNIQUE
-static UniqueResponse unique_message_recieved (UniqueApp *unique, gint command, UniqueMessageData *message_data, guint time, gpointer user_data)
+static UniqueResponse unique_message_recieved (UniqueApp *unique, gint command, UniqueMessageData *message_data, guint _time, gpointer user_data)
 {
     switch(command)
     {
@@ -607,7 +607,7 @@ int main (int argc, char **argv)
                 cfg_close(config);
                 config = NULL;
                 TEC("IPC setup and quitting")
-                return;
+                return EXIT_SUCCESS;
             }
 
             g_signal_connect(G_OBJECT(unique), "message-received", G_CALLBACK(unique_message_recieved), NULL); 
