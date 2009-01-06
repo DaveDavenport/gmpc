@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <glib/gstdio.h>
 #ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -231,7 +232,7 @@ config_obj *cfg_open(gchar *url)
 
 	if(g_file_test(cfgo->url, G_FILE_TEST_EXISTS))
 	{
-		FILE *fp = fopen(cfgo->url, "r");
+		FILE *fp = g_fopen(cfgo->url, "r");
 		if(fp)
 		{
 			cfg_open_parse_file(cfgo, fp);
@@ -395,7 +396,7 @@ static void cfg_save_real(config_obj *cfgo)
     debug_printf(DEBUG_INFO,"Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
 	if(cfgo->root != NULL)
 	{
-		FILE *fp = fopen(cfgo->url, "w");
+		FILE *fp = g_fopen(cfgo->url, "w");
 		if(!fp) return;
         fputs("2\n", fp);
 		cfg_save_category(cfgo,cfgo->root, fp);	
