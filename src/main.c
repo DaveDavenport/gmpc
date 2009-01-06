@@ -465,16 +465,18 @@ int main (int argc, char **argv)
     /**
      * Check libmpd version runtime
      */
+    /*
     if(strcmp(libmpd_version, LIBMPD_VERSION)!=0)
     {
 		gchar *error_msg = g_strdup_printf( _("Trying to run gmpc compiled against libmpd version '%s' with version libmpd '%s'"), LIBMPD_VERSION, libmpd_version);
         debug_printf(DEBUG_ERROR,error_msg);
 
-		/* Popup an error dialog. and quit */
-        show_error_message(error_msg, TRUE);
+	*/	/* Popup an error dialog. and quit */
+      /*  show_error_message(error_msg, TRUE);
 		g_free(error_msg);
         abort();
     }
+    */
 	/**
 	 * Call create_gmpc_paths();
 	 * This function checks if the path needed path are available, if not, create them
