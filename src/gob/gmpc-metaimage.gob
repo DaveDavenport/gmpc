@@ -733,7 +733,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 {
                     float spineRatio = 31.0/343.0;
                     int spineWidth = (width)*spineRatio;
-                    GdkPixbuf *blank,*pb2 ;
+                    GdkPixbuf *blank=NULL,*pb2=NULL;
                     gchar *path2;
                     /* Scale the cover to fit inside the case */
                     pb = gdk_pixbuf_new_from_file_at_scale(path,width-spineWidth, (height*(width-spineWidth))/((gdouble)width),TRUE,NULL);
@@ -744,16 +744,25 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     /* load the case */
                     path2 = gmpc_get_full_image_path("stylized-cover.svg"); 
                     blank = gdk_pixbuf_new_from_file(path2,NULL);
-                    pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
-                    g_object_unref(blank);
+                    if(blank)
+                    {
+                        pb2 = gdk_pixbuf_scale_simple(blank, width,height, GDK_INTERP_HYPER);
+                        g_object_unref(blank);
+                    }
                     g_free(path2);
+                
+                    //pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), , self->size, 0,NULL);
+
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
                     gdk_pixbuf_copy_area(pb, 0,0,width-spineWidth-0,height-0,blank,spineWidth+0,0);
-                    gdk_pixbuf_composite(pb2,blank,0,0,width,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
 
-                    g_object_unref(pb2);
+                    if(pb2)
+                    {
+                        gdk_pixbuf_composite(pb2,blank,0,0,width,height,0,0,1,1,GDK_INTERP_BILINEAR,250);
+                        g_object_unref(pb2);
+                    }
                     g_object_unref(pb);
                     pb = blank;
 
