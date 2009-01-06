@@ -24,7 +24,6 @@ gmpc_SOURCES=\
 	config1.c\
 	sm.c\
 	metadata.c\
-	bacon/bacon-message-connection.c\
 	browsers/playlist3-tag2-browser.c\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
@@ -92,9 +91,7 @@ INCLUDES=\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
 	-I$(top_srcdir)/src/gob\
-	-I$(top_builddir)/src/gob\
-	-I$(top_srcdir)/src/bacon\
-	-I$(top_builddir)/src/bacon
+	-I$(top_builddir)/src/gob
 
 
 
@@ -107,6 +104,10 @@ LIBS= \
 	@libglade_LIBS@\
 	@gthread_LIBS@\
 	@sm_LIBS@ 
+
+if USE_UNIQUE
+LIBS += @unique_LIBS@
+endif
 
 if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
@@ -135,6 +136,10 @@ AM_CFLAGS = @CFLAGS@\
 	@sm_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" 
+
+if USE_UNIQUE
+AM_CFLAGS += @unique_CFLAGS@
+endif
 
 if USE_SYSTEM_LIBSEXY
 AM_CFLAGS += @libsexy_CFLAGS@
@@ -174,7 +179,6 @@ EXTRA_DIST=\
 		browsers/playlist3-current-playlist-browser.h\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
-		bacon/bacon-message-connection.h\
 		vala/gmpc_image.h\
 		vala/gmpc-progress.h\
 		setup-assistant.h\

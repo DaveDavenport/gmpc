@@ -21,22 +21,21 @@
 #include <string.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include "bacon-message-connection.h"
-
+#include <unique/unique.h>
+#include "gmpc_unique.h"
 
 int main ( int argc, char **argv )
 {
-    BaconMessageConnection *bacon_connection = NULL;
+    UniqueApp *unique;
 
     gtk_init(&argc, &argv);
 
 
+    unique = unique_app_new("nl.Sarine.gmpc", NULL);
 
-
-    bacon_connection = bacon_message_connection_new("gmpc");
-    if(bacon_connection != NULL)
+    if(unique)
     {
-        if (!bacon_message_connection_get_is_server (bacon_connection)) 
+        if (unique_app_is_running(unique))
         {
             GError *error = NULL;
             GOptionContext *context;
@@ -106,6 +105,20 @@ int main ( int argc, char **argv )
                 {NULL}
             };
 
+            unique_app_add_command(unique,  "present",  COMMAND_PRESENT);
+            unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
+            unique_app_add_command(unique,  "play",  COMMAND_PLAYER_PLAY);
+            unique_app_add_command(unique,  "stop",  COMMAND_PLAYER_STOP);
+            unique_app_add_command(unique,  "next",  COMMAND_PLAYER_NEXT);
+            unique_app_add_command(unique,  "prev",  COMMAND_PLAYER_PREV);
+            unique_app_add_command(unique,  "pause",  COMMAND_PLAYER_PAUSE);
+
+            unique_app_add_command(unique,  "viewtoggle",   COMMAND_VIEW_TOGGLE);
+            unique_app_add_command(unique,  "viewshow",     COMMAND_VIEW_SHOW);
+            unique_app_add_command(unique,  "viewprev",     COMMAND_VIEW_HIDE);
+
+
+            unique_app_add_command(unique,  "addstream",    COMMAND_PLAYLIST_ADD_STREAM);
             /*Create the commandline option parser */
             context = g_option_context_new("GMPC remote program");
             g_option_context_add_main_entries(context, entries, NULL);
@@ -117,60 +130,69 @@ int main ( int argc, char **argv )
             if(quit)
             {
                 printf("send quit\n");
-                bacon_message_connection_send(bacon_connection, "QUIT");
+                unique_app_send_message(unique, COMMAND_QUIT, NULL);
             }
             if(play || pause)
             {
                 printf("send play\n");
-                bacon_message_connection_send(bacon_connection, "PLAY");
+                unique_app_send_message(unique, COMMAND_PLAYER_PLAY, NULL);
             }
             if(prev)
             {
                 printf("send prev\n");
-                bacon_message_connection_send(bacon_connection, "PREV");
+                unique_app_send_message(unique, COMMAND_PLAYER_PREV, NULL);
             }
             if(next)
             {
                 printf("send next\n");
-                bacon_message_connection_send(bacon_connection, "NEXT");
+                unique_app_send_message(unique, COMMAND_PLAYER_NEXT, NULL);
             }
             if(stop)
             {
                 printf("send stop\n");
-                bacon_message_connection_send(bacon_connection, "STOP");
+                unique_app_send_message(unique, COMMAND_PLAYER_STOP, NULL);
             }
             if(toggle_view)
             {
                 printf("send toggle view\n");
-                bacon_message_connection_send(bacon_connection, "TOGGLE_VIEW");
+                unique_app_send_message(unique, COMMAND_VIEW_TOGGLE, NULL);
             }
             if(hide_view)
             {
                 printf("send hide view\n");
-                bacon_message_connection_send(bacon_connection, "HIDE_VIEW");
+                unique_app_send_message(unique, COMMAND_VIEW_HIDE, NULL);
             }
             if(show_view)
             {
                 printf("send show view\n");
-                bacon_message_connection_send(bacon_connection, "SHOW_VIEW");
+                unique_app_send_message(unique, COMMAND_VIEW_SHOW, NULL);
             }
             if(stream)
             {
-                gchar *str = g_strdup_printf("STREAM %s", stream);
+                UniqueMessageData *umd = unique_message_data_new();
+                gchar **uris = g_malloc0(2*sizeof(gchar *));
                 printf("Send stream: %s\n", stream);
-                bacon_message_connection_send(bacon_connection, str);
-                g_free(str);
+                uris[0] = stream;
+
+                unique_message_data_set_uris(umd, uris); 
+                unique_app_send_message(unique, COMMAND_PLAYLIST_ADD_STREAM, umd);
+
+                unique_message_data_free(umd);
+
+                uris[0] = NULL;
+                g_free(uris);
             }
 
 
         }
         else {
             printf("GMPC is not running\n");
-            bacon_message_connection_free (bacon_connection);
+            g_object_unref(unique);
             return EXIT_FAILURE;
         }
-
+        g_object_unref(unique);
         return EXIT_SUCCESS;
     }
+    
     return EXIT_FAILURE;
 }
