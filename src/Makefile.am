@@ -192,6 +192,7 @@ EXTRA_DIST=\
 		sexy-icon-entry.h\
 		egg/eggcellrendererkeys.h\
 		egg/eggaccelerators.h\
+		gmpc_unique.h\
 		gmpc-win32.rc
 
 if USE_SYSTEM_LIBSEXY
