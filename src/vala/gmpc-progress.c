@@ -496,8 +496,9 @@ static void gmpc_progress_finalize (GObject* obj) {
 	self = GMPC_PROGRESS (obj);
 	{
 		g_object_unref ((GObject*) self->priv->_layout);
-		if(self->priv->my_style != NULL)
+		if (self->priv->my_style != NULL) {
 			gtk_style_detach (self->priv->my_style);
+		}
 	}
 	(self->priv->_layout == NULL) ? NULL : (self->priv->_layout = (g_object_unref (self->priv->_layout), NULL));
 	(self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL));
