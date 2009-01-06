@@ -62,7 +62,8 @@ public class Gmpc.Progress : Gtk.EventBox
 
     ~Progress() {
         _layout.unref();
-        this.my_style.detach();
+	if(this.my_style != null)
+		this.my_style.detach();
     }
     
     public override void style_set (Gtk.Style old_style)

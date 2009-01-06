@@ -650,7 +650,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
             g_object_unref(pb2);
-            self_image_changed(self,META_DATA_UNAVAILABLE);
         }
 	public 
 		void
@@ -696,14 +695,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
 
             g_object_unref(pb2);
-            self_image_changed(self,META_DATA_FETCHING);
-        }
-
-    signal last NONE (INT) 
-        void 
-        image_changed(self, int type)
-        {
-            /* do nothing */
         }
 
     public	
@@ -796,7 +787,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				gtk_widget_show(GTK_WIDGET(self));
 			}
-			self_image_changed(self,META_DATA_AVAILABLE);
 		}
 
 	public 
