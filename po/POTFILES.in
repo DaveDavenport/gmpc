@@ -21,9 +21,6 @@ src/url_fetcher.c
 src/tray-icon2.c
 src/setup-assistant.c
 
-#bacon
-src/bacon/bacon-message-connection.c
-
 # Browsers
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
