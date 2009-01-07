@@ -6,11 +6,6 @@ SUBDIRS=gob
 
 bin_PROGRAMS=gmpc
 
-
-
-
-
-
 gmpc_SOURCES=\
 	main.c\
 	plugin.c\
@@ -135,7 +130,9 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
 	@EXTRA_CFLAGS@\
-	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\" 
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\ 
+	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"\ 
+	-DPACKAGE_DATA_PREFIX=\""$(prefix)"\" 
 
 if USE_UNIQUE
 AM_CFLAGS += @unique_CFLAGS@
