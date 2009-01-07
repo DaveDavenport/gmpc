@@ -646,6 +646,10 @@ int main (int argc, char **argv)
     }
     TEC("IPC setup")
 #endif
+    if(quit) {
+        cfg_close(config);
+        return EXIT_SUCCESS;
+    }
     /**
      * Setup session support
      */
