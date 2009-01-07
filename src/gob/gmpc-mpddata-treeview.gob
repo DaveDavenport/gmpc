@@ -171,6 +171,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                 int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
                 col = self_add_column(self,col_names[i],col_ids[i],conf_pos);
                 g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
+                g_signal_connect_swapped(G_OBJECT(col), "notify::width", G_CALLBACK(self_column_width), self);
             }
             q_free(conf_opt);
             conf_opt = g_strdup_printf("%s-colshow", self->_priv->name);
@@ -239,8 +240,8 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                 cfg_set_single_value_as_int(config, conf_pos, col_names[id], i);
                 cfg_set_single_value_as_int(config, conf_show, col_names[id], gtk_tree_view_column_get_visible(column));
                 /* only save width on > 0 columns */
-                if(gtk_tree_view_column_get_width(column) > 0)
-                    cfg_set_single_value_as_int(config, conf_size, col_names[id], gtk_tree_view_column_get_width(column));
+                //if(gtk_tree_view_column_get_width(column) > 0)
+                //    cfg_set_single_value_as_int(config, conf_size, col_names[id], gtk_tree_view_column_get_width(column));
                 i++;
             }
             q_free(conf_pos);
@@ -280,6 +281,16 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             else
                 g_object_set(G_OBJECT(cell), "weight", 400,NULL);
 
+        }
+        private 
+        void
+        column_width(self, GParamSpec *argc, GtkTreeViewColumn *column)
+        {
+            int width = gtk_tree_view_column_get_width(column);
+            int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
+            gchar *conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
+            cfg_set_single_value_as_int(config, conf_size, col_names[id],width); 
+            q_free(conf_size);
         }
 
     private
