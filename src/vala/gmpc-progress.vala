@@ -92,54 +92,7 @@ public class Gmpc.Progress : Gtk.EventBox
             requisition.height = height / Pango.SCALE + 6;
         }
     }
-    private void draw_curved_rectangle(Context ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) 
-    {
-        double rect_x1,rect_y1;
-        double radius = 10;
-        rect_x1=rect_x0+rect_width;
-        rect_y1=rect_y0+rect_height;
-        if (rect_width == 0 || rect_height == 0)
-            return;
-        if (rect_width/2<radius) {
-            if (rect_height/2<radius) {
-                ctx.move_to  (rect_x0, (rect_y0 + rect_y1)/2);
-                ctx.curve_to (rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
-                ctx.curve_to (rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
-                ctx.curve_to (rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
-                ctx.curve_to (rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
-            } else {
-                ctx.move_to  ( rect_x0, rect_y0 + radius);
-                ctx.curve_to ( rect_x0 ,rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1)/2, rect_y0);
-                ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-                ctx.line_to ( rect_x1 , rect_y1 - radius);
-                ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0)/2, rect_y1);
-                ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
-            }
-        }
-        else 
-        {
-            if (rect_height/2<radius) {
-                ctx.move_to  ( rect_x0, (rect_y0 + rect_y1)/2);
-                ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
-                ctx.line_to ( rect_x1 - radius, rect_y0);
-                ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1)/2);
-                ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-                ctx.line_to ( rect_x0 + radius, rect_y1);
-                ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1)/2);
-            } else {
-                ctx.move_to  ( rect_x0, rect_y0 + radius);
-                ctx.curve_to ( rect_x0 , rect_y0, rect_x0 , rect_y0, rect_x0 + radius, rect_y0);
-                ctx.line_to ( rect_x1 - radius, rect_y0);
-                ctx.curve_to ( rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-                ctx.line_to ( rect_x1 , rect_y1 - radius);
-                ctx.curve_to ( rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-                ctx.line_to ( rect_x0 + radius, rect_y1);
-                ctx.curve_to ( rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1- radius);
-            }
-        }
 
-        ctx.close_path();
-    }
     private void redraw ()
     {
         if(this.window  != null)

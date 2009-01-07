@@ -111,8 +111,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		export,
 		link);
 
-
-
 	property STRING no_cover_icon
 		(nick = "No Cover Icon",
 		blurb = "Stock icon to use when no cover is present",
@@ -139,14 +137,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = FALSE,
 		export,
 		link);
-        /*
-	property POINTER connection
-		(nick = "Connection",
-		blurb = "A mpdObj to check on",
-		default_value = NULL,
-		export,
-		link);
-*/
+
 	property BOOLEAN squared
 		(nick = "Squared",
 			blurb = "Keep the widget squared",
@@ -464,20 +455,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				}
 
 			}
-            /*
-			else if(self->connection && what&(MPD_CST_SONGID|MPD_CST_SONGPOS|MPD_CST_PLAYLIST) && self->is_visible)
-			{
-				mpd_Song *song = mpd_playlist_get_current_song(self->connection);
-				if(!song)
-				{
-					self_set_cover_na(self);
-				}
-				else
-				{
-					self_update_cover_from_song(self, song);
-				}
-			}
-*/
 		}
 	public 
 		void
@@ -624,7 +601,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 return;
             }
 
-            if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART){
+            if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART){
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stylized-no-cover", self->size, 0,&error);
                 if(error) {
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
@@ -642,7 +619,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
+                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
                 g_object_unref(pb2);
             } else {
                 /* If failed to load an image, clear it */
@@ -670,7 +647,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
 
-            if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART){
+            if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART){
                 GError *error = NULL;
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stylized-fetching-cover", self->size, 0,&error);
                 if(error) {
@@ -689,7 +666,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE,FALSE);
+                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
                 g_object_unref(pb2);
             } else {
                 /* If failed to load an image, clear it */
@@ -699,7 +676,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
     public	
         void
-        set_cover_from_path(self, gchar *path)
+        set_cover_from_path(self, const gchar *path)
         {
             int width = 0; 
             int height = 0;
@@ -728,7 +705,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     height = self->size;
                 }
                 
-                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",FALSE) && self->image_type == META_ALBUM_ART)
+                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART)
                 {
                     float spineRatio = 31.0/343.0;
                     int spineWidth = (width)*spineRatio;
@@ -778,14 +755,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE,FALSE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
                     g_object_unref(pb);
                 }
                 else {
                     pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE,FALSE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
                     g_object_unref(pb);
                 }
                 /**
