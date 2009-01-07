@@ -617,8 +617,12 @@ int main (int argc, char **argv)
                 }
                 else
                 {
+                    if(quit)
+                        unique_app_send_message(unique, COMMAND_QUIT, NULL);
+                    else
+                        unique_app_send_message(unique, COMMAND_PRESENT, NULL);
+
                     printf("%s\n",_("GMPC allready running, quitting"));
-                    unique_app_send_message(unique, COMMAND_PRESENT, NULL);
                     cfg_close(config);
                     config = NULL;
                     TEC("IPC setup and quitting")
