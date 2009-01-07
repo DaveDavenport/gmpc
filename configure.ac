@@ -411,6 +411,11 @@ if test x${enable_mmkeys} = xyes; then
 else
 	echo "Multimedia keys support is:       disabled"
 fi
+if test x${use_unique} = xtrue; then
+	echo "Unique support is:                enabled"
+else
+	echo "Unique support is:                disabled"
+fi
 if test x${enable_sm} = xyes; then
 	echo "Session Manager support is:       enabled"
 else

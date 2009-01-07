@@ -1443,6 +1443,15 @@ void print_version ( void )
             _("Disabled")
 #endif
           );
+
+    printf("%-25s: %s\n", _("Unique"),
+#ifdef USE_UNIQUE
+            _("Enabled")
+#else
+            _("Disabled")
+#endif
+          );
+
     printf("%-25s: %s\n", _("Mac integration library"),
 #ifdef ENABLE_IGE 
             _("Enabled")
@@ -1474,5 +1483,6 @@ void print_version ( void )
             _("Disabled")
 #endif
           );
+
 
 }
