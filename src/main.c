@@ -596,22 +596,37 @@ int main (int argc, char **argv)
             unique = unique_app_new("nl.Sarine.gmpc", NULL);
 
             /**
-             * Add miniman command
+             * Add minimum command
              */
             unique_app_add_command(unique,  "present",  COMMAND_PRESENT);
+            unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
 
             if(unique_app_is_running(unique))
             {
-                printf("%s\n",_("GMPC allready running, quitting"));
-                unique_app_send_message(unique, COMMAND_PRESENT, NULL);
-                cfg_close(config);
-                config = NULL;
-                TEC("IPC setup and quitting")
-                return EXIT_SUCCESS;
+                if(replace) {
+                    unique_app_send_message(unique, COMMAND_QUIT, NULL);
+                    while(unique_app_is_running(unique))
+                    {
+                        printf("spawning new instance\n");
+                        g_usleep(G_USEC_PER_SEC);
+                        g_spawn_async(NULL, argv, NULL, 0,NULL, NULL,NULL, NULL);
+                        cfg_close(config);
+                        printf("Exiting\n");
+                        return EXIT_SUCCESS;
+                    }
+                }
+                else
+                {
+                    printf("%s\n",_("GMPC allready running, quitting"));
+                    unique_app_send_message(unique, COMMAND_PRESENT, NULL);
+                    cfg_close(config);
+                    config = NULL;
+                    TEC("IPC setup and quitting")
+                        return EXIT_SUCCESS;
+                }
             }
 
             g_signal_connect(G_OBJECT(unique), "message-received", G_CALLBACK(unique_message_recieved), NULL); 
-            unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
             unique_app_add_command(unique,  "play",  COMMAND_PLAYER_PLAY);
             unique_app_add_command(unique,  "stop",  COMMAND_PLAYER_STOP);
             unique_app_add_command(unique,  "next",  COMMAND_PLAYER_NEXT);
