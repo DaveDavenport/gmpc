@@ -131,8 +131,7 @@ AM_CFLAGS = @CFLAGS@\
 	@sm_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\ 
-	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"\ 
-	-DPACKAGE_DATA_PREFIX=\""$(prefix)"\" 
+	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 
 if USE_UNIQUE
 AM_CFLAGS += @unique_CFLAGS@
