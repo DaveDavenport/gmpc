@@ -1565,7 +1565,7 @@ static void playlist_zoom_level_changed(void)
 	/* Show full view */
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hpaned1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "header_box"));
+	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox10"));
 	/** Menu Bar */
 /*
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
@@ -2148,56 +2148,11 @@ static void playlist3_header_artist(void)
 		info2_fill_artist_view(song->artist);
 	}
 }
-static GtkWidget *artist_header_popup = NULL;
-guint ahp_timeout = 0;
-
-static gboolean playlist3_header_artist_popup(gpointer data) 
+static gboolean playlist3_header_artist_tooltip(GtkWidget *label, gint x, gint y,gboolean keyboard_mode, GtkTooltip *tip, gpointer data)
 {
-    GtkWidget *label = data;
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-    if(song)
-    {
-        int x,y,xm,ym,xd,yd;
-        GtkWidget * item = (GtkWidget *)gmpc_metaimage_new_size(META_ARTIST_ART, 200);
-        gmpc_metaimage_set_squared(GMPC_METAIMAGE(item), FALSE);
-        gmpc_metaimage_set_connection(GMPC_METAIMAGE(item), connection);
-        gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(item), TRUE);
-        gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(item), song);
-        artist_header_popup = gtk_window_new(GTK_WINDOW_POPUP);
-        gtk_window_set_resizable(GTK_WINDOW(artist_header_popup), FALSE);
-        
-        gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(label))->window, &x,&y);
-        gdk_window_get_position(GTK_WIDGET(label)->window, &xm,&ym);
-        gdk_drawable_get_size(GTK_WIDGET(label)->window, &xd, &yd);
-        gtk_window_move(GTK_WINDOW(artist_header_popup),x+xm,y+ym+yd);
-
-
-        gtk_container_add(GTK_CONTAINER(artist_header_popup),item);
-        gtk_widget_show_all(artist_header_popup);
-
-    }
-    return FALSE;
+    return TRUE;
 }
-static  gboolean playlist3_header_artist_enter_event(GtkWidget *label, GdkEventCrossing *event, gpointer data)
-{
-    if(ahp_timeout == 0) {
-        ahp_timeout = g_timeout_add(400, playlist3_header_artist_popup,label);
-    }    
-    return FALSE;
-}
-static  gboolean playlist3_header_artist_leave_event(GtkWidget *label, GdkEventCrossing *event, gpointer data)
-{
-    if(ahp_timeout) {
-        g_source_remove(ahp_timeout);
-        ahp_timeout = 0;
-    }
-    if(artist_header_popup) {
-        gtk_widget_destroy(artist_header_popup);
-        artist_header_popup = NULL;
-    }
 
-    return FALSE;
-}
 static void playlist3_header_album(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
@@ -2211,7 +2166,7 @@ static void playlist3_header_album(void)
 
 void playlist3_new_header(void)
 {
-	GtkWidget *hbox10 = glade_xml_get_widget(pl3_xml, "header_box");
+	GtkWidget *hbox10 = glade_xml_get_widget(pl3_xml, "hbox10");
 	if(hbox10)
 	{
 		GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
@@ -2248,11 +2203,21 @@ void playlist3_new_header(void)
 		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
 		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
 		g_signal_connect(G_OBJECT(header_labels[4]), "button-press-event", G_CALLBACK(playlist3_header_album), NULL);
-        /** hoover image */
-        g_signal_connect(G_OBJECT(header_labels[2]), "enter-notify-event", G_CALLBACK(playlist3_header_artist_enter_event), NULL);
-        g_signal_connect(G_OBJECT(header_labels[2]), "leave-notify-event", G_CALLBACK(playlist3_header_artist_leave_event), NULL);
-
-		gtk_container_add(GTK_CONTAINER(hbox10), vbox);
+        /* Create tooltip */
+        {
+            GtkWidget *win,* item = (GtkWidget *)gmpc_metaimage_new_size(META_ARTIST_ART, 200);
+            gmpc_metaimage_set_squared(GMPC_METAIMAGE(item), FALSE);
+            gmpc_metaimage_set_connection(GMPC_METAIMAGE(item), connection);
+            gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(item), TRUE);
+            win = gtk_window_new(GTK_WINDOW_POPUP);
+            gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
+            gtk_container_add(GTK_CONTAINER(win),item);
+            gtk_widget_set_has_tooltip(GTK_WIDGET(header_labels[2]), TRUE);
+            gtk_widget_show_all(item);
+            gtk_widget_set_tooltip_window(GTK_WIDGET(header_labels[2]), GTK_WINDOW(win));
+            g_signal_connect(G_OBJECT(header_labels[2]), "query-tooltip", G_CALLBACK(playlist3_header_artist_tooltip), NULL);
+        }
+        gtk_box_pack_start(GTK_BOX(hbox10), vbox, TRUE, TRUE, 0);
 		gtk_widget_show_all(hbox10);
 	}
 }

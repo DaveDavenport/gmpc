@@ -553,14 +553,6 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
-                                  <widget class="GtkEventBox" id="header_box">
-                                    <property name="visible">True</property>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                  </widget>
-                                </child>
-                                <child>
                                   <widget class="GtkAlignment" id="pl3_button_control_box">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
