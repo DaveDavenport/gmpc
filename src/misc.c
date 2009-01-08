@@ -51,7 +51,6 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	str = g_string_new(data);
 	if(days != 0)
 	{
-		
 		g_string_append_printf(str, "%i %s ", days, ngettext("day", "days", days));
 	}	
 	if(hours != 0)
@@ -107,9 +106,9 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 	if(song2->file) {
 		song->file = g_markup_escape_text(song2->file, -1);
 	}                                                      	
-	song->id = song2->id;
-	song->pos = song2->pos;
-	song->time = song2->time;
+	song->id    = song2->id;
+	song->pos   = song2->pos;
+	song->time  = song2->time;
 
 	mpd_song_markup(buffer, size, markup, song);
 	mpd_freeSong(song);

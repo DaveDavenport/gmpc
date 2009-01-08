@@ -254,28 +254,23 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 	if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
+        int *ind;
+        GtkTreePath *path;
+
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
 
 		/**
 		 * Reposition the breadcrumb
 		 */
-		{
-			int *ind;
-			GtkTreePath *path;
-			path = gtk_tree_model_get_path(model, &iter);
-			ind = gtk_tree_path_get_indices(path);
-			gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")),
-					ind[0]);
-
-			gtk_tree_path_free(path);
-
-		}
+        path = gtk_tree_model_get_path(model, &iter);
+        ind = gtk_tree_path_get_indices(path);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), ind[0]);
+        gtk_tree_path_free(path);
 		/**
 		 * Start switching side view (if type changed )
 		 */
-        if(old_type != -1) 
-        {
-                gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
+        if(old_type != -1) {
+            gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
         }
         old_type = -1;
 		pl3_push_rsb_message("");
@@ -289,17 +284,13 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 		 */
 		old_type = type;
 
-	}
-	else
-	{
-		if(old_type != -1) 
-		{
+	} else {
+        if(old_type != -1) {
             gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
 		}
 		old_type = -1;
 		gtk_tree_model_get_iter_first(model, &iter);
 		gtk_tree_selection_select_iter(selec, &iter);
-
 	}
 	pl3_option_menu_activate();
 }
@@ -342,13 +333,11 @@ void pl3_option_menu_activate(void)
             menu_items += gmpc_plugin_browser_cat_right_mouse_menu(plugins[i], menu, type, tree, event);
         }
 	}
-	if(menu_items)
-	{
+	if(menu_items) {
 		gtk_widget_show_all(menu);
     	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_option")), menu);
 	    gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),TRUE);
-	}
-	else{
+	} else {
         g_object_ref_sink(menu);
 		g_object_unref(menu);
         gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_option")),FALSE);
@@ -1033,13 +1022,10 @@ void create_playlist3 (void)
 				G_TYPE_STRING   /* Num items */
 				);
 	}
-	//    if(cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
-	//    {
 	g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
 	g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
 	g_signal_connect(G_OBJECT(pl3_tree), "row_deleted", G_CALLBACK(thv_row_deleted_signal), NULL);
 	g_signal_connect(G_OBJECT(pl3_tree), "rows_reordered", G_CALLBACK(thv_row_reordered_signal), NULL);
-	//    }
 
 	tree = glade_xml_get_widget (pl3_xml, "cat_tree");
 
@@ -1195,17 +1181,13 @@ void create_playlist3 (void)
 		/* restore pane position */
 		if(cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED )
 		{
-
 			gtk_paned_set_position(GTK_PANED(glade_xml_get_widget(pl3_xml, "hpaned1")),
 					cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
 		}
 		/**
 		 * restore zoom level
 		 */
-
-
 		gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_win"));
-
 	}
 	else
 	{
@@ -1265,53 +1247,51 @@ void create_playlist3 (void)
 			cfg_set_single_value_as_int(config, AC_GLOBAL,Keybindname[i],KeybindingDefault[i][2]);
 		}
 		list = cfg_get_key_list(config, KB_GLOBAL);
-	}
-	if(list) {
-		GtkAccelGroup *ac= gtk_accel_group_new();
-		int action_seen = 0;
-		//        GtkAccelGroup *ac = gtk_menu_get_accel_group(glade_xml_get_widget(pl3_xml, "menuitem_control_menu"));
-		conf_mult_obj *conf_iter = list;
-		gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
-		while(conf_iter){
-			int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,conf_iter->key,-1);
-			int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,conf_iter->key,-1);
-			int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,conf_iter->key,0);
-			if(keycode >=0 && action >= 0)
-			{
-				GtkWidget *item = NULL;
-				int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
-				action_seen |= (1<<action);
+	} else {
+        GtkAccelGroup *ac= gtk_accel_group_new();
+        int action_seen = 0;
+        conf_mult_obj *conf_iter = list;
+        gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), ac);
+        while(conf_iter){
+            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,conf_iter->key,-1);
+            int keycode =  cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,conf_iter->key,-1);
+            int keymask =  cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,conf_iter->key,0);
+            if(keycode >=0 && action >= 0)
+            {
+                GtkWidget *item = NULL;
+                int state = (((action_seen)&(1<<action)) == 0)?GTK_ACCEL_VISIBLE:0;
+                action_seen |= (1<<action);
 
-				if(action == KB_ACTION_PLAY) {
-					item = glade_xml_get_widget(pl3_xml,"menu_play");
-				} else if(action == KB_ACTION_STOP) {
-						item = glade_xml_get_widget(pl3_xml,"menu_stop");
-				} else if(action == KB_ACTION_NEXT) {
-					item = glade_xml_get_widget(pl3_xml,"menu_next");
-				} else if(action == KB_ACTION_PREV) {
-					item = glade_xml_get_widget(pl3_xml,"menu_prev");
-				} else if(action == KB_ACTION_FULLSCREEN) {
-					item = glade_xml_get_widget(pl3_xml,"fullscreen2");
-				} else if(action == KB_ACTION_INTERFACE_EXPAND) {
-					item = glade_xml_get_widget(pl3_xml,"zoom_in2");
-				} else if(action == KB_ACTION_INTERFACE_COLLAPSE) {
-					item = glade_xml_get_widget(pl3_xml,"zoom_out2");
-				} else if(action == KB_ACTION_REPEAT) {
-					item = glade_xml_get_widget(pl3_xml,"menu_repeat");
-				} else if(action == KB_ACTION_RANDOM) {
-					item = glade_xml_get_widget(pl3_xml,"menu_random");
-				} else if (action == KB_ACTION_TOGGLE_MUTE) {
-					item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle");
-				}
+                if(action == KB_ACTION_PLAY) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_play");
+                } else if(action == KB_ACTION_STOP) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_stop");
+                } else if(action == KB_ACTION_NEXT) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_next");
+                } else if(action == KB_ACTION_PREV) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_prev");
+                } else if(action == KB_ACTION_FULLSCREEN) {
+                    item = glade_xml_get_widget(pl3_xml,"fullscreen2");
+                } else if(action == KB_ACTION_INTERFACE_EXPAND) {
+                    item = glade_xml_get_widget(pl3_xml,"zoom_in2");
+                } else if(action == KB_ACTION_INTERFACE_COLLAPSE) {
+                    item = glade_xml_get_widget(pl3_xml,"zoom_out2");
+                } else if(action == KB_ACTION_REPEAT) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_repeat");
+                } else if(action == KB_ACTION_RANDOM) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_random");
+                } else if (action == KB_ACTION_TOGGLE_MUTE) {
+                    item = glade_xml_get_widget(pl3_xml,"menu_mute_toggle");
+                }
 
-				if(item){
-					gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
-				}
-			}
-			conf_iter = conf_iter->next;
-		}
-		cfg_free_multiple(list);
-	}
+                if(item){
+                    gtk_widget_add_accelerator(item, "activate", ac, keycode, keymask, state);
+                }
+            }
+            conf_iter = conf_iter->next;
+        }
+        cfg_free_multiple(list);
+    }
 }
 
 /**
@@ -1567,10 +1547,8 @@ static void playlist_zoom_level_changed(void)
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox1"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "hbox10"));
 	/** Menu Bar */
-/*
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "menubar1"));
-*/	/** BUTTON BOX */
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
+    /** BUTTON BOX */
+    gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"));
 
 	gtk_window_set_resizable(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), TRUE);
 	if(pl3_wsize.width > 0 && pl3_wsize.height >0 && pl3_old_zoom == PLAYLIST_MINI)
@@ -1870,10 +1848,6 @@ static void playlist_player_volume_changed(GtkWidget *vol_but)
 	}
 }
 
-
-
-
-
 void about_window(void)
 {
 	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
@@ -1983,10 +1957,14 @@ static void pl3_profiles_changed(GmpcProfiles *prof,const int changed, const int
 	}
 	else if(changed == PROFILE_COL_CHANGED && col == PROFILE_COL_HOSTNAME)
 	{
-		gchar *message = g_strdup_printf("%s '%s' %s %s", _("Profile"), gmpc_profiles_get_name(prof,id), _("changed hostname to:"), gmpc_profiles_get_hostname(prof,id));
-		pl3_push_statusbar_message(message);
-		g_free(message);
-	}
+		gchar *message = g_strdup_printf("%s '%s' %s %s", 
+                _("Profile"),
+                gmpc_profiles_get_name(prof,id),
+                _("changed hostname to:"),
+                gmpc_profiles_get_hostname(prof,id));
+        pl3_push_statusbar_message(message);
+        g_free(message);
+    }
 
 }
 static void pl3_update_profiles_menu(GmpcProfiles *prof,const int changed, const int col, const gchar *id)
@@ -2072,7 +2050,6 @@ static void playlist3_server_output_changed(GtkWidget *item, gpointer data)
 }
 static void playlist3_server_update_db(void)
 {
-
 	mpd_database_update_dir(connection, "/");
 }
 
@@ -2308,7 +2285,6 @@ void playlist3_insert_browser(GtkTreeIter *iter, gint position)
 	GtkTreeModel *model = GTK_TREE_MODEL(pl3_tree);
 	if(gtk_tree_model_get_iter_first(model, &it))
 	{
-
 		do{
 			gtk_tree_model_get(model, &it, PL3_CAT_ORDER, &pos, -1);
 			if(position <= pos)
@@ -2387,8 +2363,6 @@ gmpcPlugin playlist_plug = {
     .mpd_connection_changed     = &playlist_connection_changed,
 	.pref                       = &playlist_gpp,
 };
-
-
 
 /***
  * Tabbed view hooks
@@ -2488,6 +2462,9 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
     GtkButton *button = (GtkButton *) gtk_button_new();
     GtkHBox *box = (GtkHBox *)gtk_hbox_new(FALSE, 6);
     gchar *title, *image;
+    GtkImage *imagew = (GtkImage *)gtk_image_new();
+    GtkLabel *label = (GtkLabel *)gtk_label_new(title?"":title);
+
     gtk_tree_model_get(model, iter,3, &image, 1, &title, -1);
 
     /* Create new tabbed-button object */
@@ -2499,31 +2476,27 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
 
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(thv_button_clicked), tb);
 
+    /* Create image for in button at menu size */
+    if ( image )
     {
-        /* Create image for in button at menu size */
-        GtkImage *imagew = (GtkImage *)gtk_image_new();
-        if ( image )
-        {
-            gtk_image_set_from_icon_name(imagew, image, GTK_ICON_SIZE_MENU);
-        }
-        tb->image = imagew;
-        /* Add it */
-        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(imagew), FALSE, TRUE, 0);
+        gtk_image_set_from_icon_name(imagew, image, GTK_ICON_SIZE_MENU);
     }
-    {
-        GtkLabel *label = (GtkLabel *)gtk_label_new(title?"":title);
-        tb->label = label;
-        /* Set tooltip on the widget, if there is a title */
-        if ( title ) {
-            gtk_widget_set_tooltip_text(GTK_WIDGET(label), title);
-        }
-        /* Ellipsize the label */
-        gtk_label_set_ellipsize(label, PANGO_ELLIPSIZE_END);
-        /* Align the label to the right */
-        gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-        /* Add it to the button */
-        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(label), TRUE, TRUE, 0);
+    tb->image = imagew;
+    /* Add it */
+    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(imagew), FALSE, TRUE, 0);
+    
+    tb->label = label;
+    /* Set tooltip on the widget, if there is a title */
+    if ( title ) {
+        gtk_widget_set_tooltip_text(GTK_WIDGET(label), title);
     }
+    /* Ellipsize the label */
+    gtk_label_set_ellipsize(label, PANGO_ELLIPSIZE_END);
+    /* Align the label to the right */
+    gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+    /* Add it to the button */
+    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(label), TRUE, TRUE, 0);
+
     /* Add the content to the button */
     gtk_container_add(GTK_CONTAINER(button), GTK_WIDGET(box));
 
@@ -2563,4 +2536,3 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
     if(title)g_free(title);
     if(image)g_free(image);
 }
-

@@ -147,15 +147,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         self->connection = conn;
         if(conn)
         {
-        self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
-                "status_changed",
-                G_CALLBACK(self_update_cover),
-                G_OBJECT(self));
+            self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
+                    "status_changed",
+                    G_CALLBACK(self_update_cover),
+                    G_OBJECT(self));
 
-		self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
-                "connection_changed",
-                G_CALLBACK(self_connection_changed),
-                G_OBJECT(self));                            		
+            self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
+                    "connection_changed",
+                    G_CALLBACK(self_connection_changed),
+                    G_OBJECT(self));                            		
         }
     }
 	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
@@ -197,13 +197,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         }
         return FALSE;
     }
-
-	override (G:Object)
-	void
-	finalize (G:Object *obj)
-	{
-		PARENT_HANDLER(obj);
-	}
 
 	override (G:Object)
 		void 
@@ -366,7 +359,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 			}
 		}
-	public 
+	private
 		void
 		connection_changed(self,MpdObj *mi, int connect, GmpcConnection *gmpconn)
 		{
@@ -446,43 +439,43 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         }
 		
 	private
-		void
-		meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path,gpointer data)
-		{
-			Self *self = data;
-			if(!song || !self || !self->_priv || !self->_priv->song)
-				return;
+	void
+	meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path,gpointer data)
+    {
+        Self *self = data;
+        if(!song || !self || !self->_priv || !self->_priv->song)
+            return;
 
-			
-			/**
-			 * Check for fields
-			 */
-			if(self->image_type != type)
-				return;
 
-			if(!gmpc_meta_watcher_match_data(self->image_type, self->_priv->song, song))
-			{
-				return;
-			}
+        /**
+         * Check for fields
+         */
+        if(self->image_type != type)
+            return;
 
-			/**
-			 * If mpd is stopped before the result is back, set the cover to na, and ignore the result
-			 */
-			if(self->connection && mpd_player_get_state(self->connection) == MPD_PLAYER_STOP)
-			{
-				self_set_cover_na(self);
-			}
-			else
-			{
-				if(ret == META_DATA_AVAILABLE) {
-					self_set_cover_from_path(self,path); 
-				} else if (ret == META_DATA_FETCHING) {
-					self_set_cover_fetching(self);
-				} else {
-					self_set_cover_na(self);
-				}
-			}
-		}
+        if(!gmpc_meta_watcher_match_data(self->image_type, self->_priv->song, song))
+        {
+            return;
+        }
+
+        /**
+         * If mpd is stopped before the result is back, set the cover to na, and ignore the result
+         */
+        if(self->connection && mpd_player_get_state(self->connection) == MPD_PLAYER_STOP)
+        {
+            self_set_cover_na(self);
+        }
+        else
+        {
+            if(ret == META_DATA_AVAILABLE) {
+                self_set_cover_from_path(self,path); 
+            } else if (ret == META_DATA_FETCHING) {
+                self_set_cover_fetching(self);
+            } else {
+                self_set_cover_na(self);
+            }
+        }
+    }
 
 
 	public 
@@ -495,8 +488,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             if(self->_priv->state == STATE_NA) {
                 return;
             }
-
-
             self->_priv->state = STATE_NA;
 
             if(self->_priv->image_url)
@@ -518,6 +509,10 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 }
             }else{
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&error);
+                if(error) {
+                    debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
+                    g_error_free(error);
+                }
             }
 
             if(self->squared) {
@@ -539,6 +534,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		set_cover_fetching(self)
         {
+            GError *error = NULL;
             GdkPixbuf *pb2 = NULL;
             if(self->_priv->state == STATE_FETCHING) {
                 return;
@@ -556,14 +552,18 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 
             if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART){
-                GError *error = NULL;
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stylized-fetching-cover", self->size, 0,&error);
                 if(error) {
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
                     g_error_free(error);
                 }
             }else{
-                pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->loading_cover_icon, self->size, 0,NULL);
+                pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->loading_cover_icon, self->size, 0,&error);
+                if(error) {
+                    debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
+                    g_error_free(error);
+                }
+
             }
 
             if(self->squared) {
@@ -625,9 +625,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     width = gdk_pixbuf_get_width(pb)+spineWidth+0;			
                     height = gdk_pixbuf_get_height(pb)+0;
                     /* load the case */
-//                    path2 = gmpc_get_full_image_path("stylized-cover.svg"); 
-  //                  blank = gdk_pixbuf_new_from_file(path2,NULL);
-    //                if(blank)
                     {
                         GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),"stylized-cover", (width> height)? width:height, 0);
                         if(ii){
@@ -643,10 +640,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                             gtk_icon_info_free(ii);
                         }
                     }
-                    //g_free(path2);
-                
-                    //pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), , self->size, 0,NULL);
-
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
@@ -703,17 +696,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				{
 					self_update_cover(self,self->connection, MPD_CST_STATE, NULL);
 				}
-			} 
-			else
-			{
+			} else {
 				gtk_widget_hide(GTK_WIDGET(self));
 			}
 		}
-	public
-		gboolean get_is_visible(self)
-		{
-			return self->is_visible;
-		}
+
 	public 
 	void
 	query_refetch(self)
@@ -770,14 +757,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		return FALSE;
 	}
 
-
-	public 
+	private
 	void
 	clear_entry(self)
 	{
 		meta_data_set_cache(self->_priv->song,self->image_type, META_DATA_UNAVAILABLE, NULL); 
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->image_type, META_DATA_UNAVAILABLE, NULL);
 	}
+
 	public
 	void
 	select_file(self)
@@ -804,12 +791,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		{
 			case GTK_RESPONSE_ACCEPT:
 				{	
-		
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
-
 					meta_data_set_cache(song,type, META_DATA_AVAILABLE, filename); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
-
 					g_free(filename);
 				}
 			default:
@@ -835,14 +819,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					self_set_cover_fetching(self);
 					break;
 			case STATE_IMAGE:
-					{
-						if(self->_priv->image_url)
-						{
-							gchar *temp = g_strdup(self->_priv->image_url);
-							self_set_cover_from_path(self, temp);
-							g_free(temp);
-						}
-					}
+                    if(self->_priv->image_url)
+                    {
+                        gchar *temp = g_strdup(self->_priv->image_url);
+                        self_set_cover_from_path(self, temp);
+                        g_free(temp);
+                    }
 			default:
 					break;
 		}
