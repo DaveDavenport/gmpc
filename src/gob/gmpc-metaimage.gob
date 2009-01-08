@@ -81,11 +81,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	private mpd_Song *song = {NULL} destroywith mpd_freeSong;
 
-	/* Popup */
-	private GtkWidget *popup_win = {NULL};
-	private guint popup_timer_id = {0};
-	private int popup_w = {0};
-	private int popup_h = {0};
 	/** Public */
 
 	public int size = {64};
@@ -166,126 +161,44 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	private GtkWidget *image = { (GtkWidget *)gmpc_image_new()} ;
 	init (self)
 	{
-
+        GtkWidget *win = NULL;
 		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
 		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 		gtk_widget_show_all(GTK_WIDGET(self));
 
-		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "leave-notify-event" , G_CALLBACK(self_leave_notify_event), self);
-		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "enter-notify-event" , G_CALLBACK(self_enter_notify_event), self);
 		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
-		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "motion-notify-event" , G_CALLBACK(self_motion_notify_event), self);
 
 		self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 		gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
-	}
 
-	private
-	void
-	popup_destroy(self)
-	{
-		if(self->_priv->popup_win)
-		{
-			gtk_widget_destroy(self->_priv->popup_win);
-			self->_priv->popup_win = NULL;
-		}
-	}
-
-	private
-	void
-	popup_position(self)
-	{
-		int x,y,xm,ym;
-		GdkRectangle rect;
-		int monitor;
-		gdk_window_get_position(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &x,&y);
-		gdk_window_get_pointer(gtk_widget_get_toplevel(GTK_WIDGET(self))->window, &xm,&ym,NULL);
-		monitor = gdk_screen_get_monitor_at_point(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),x+xm,y+ym);
-		gdk_screen_get_monitor_geometry(gtk_window_get_screen(GTK_WINDOW(self->_priv->popup_win)),monitor, &rect);
-		/* if it falls of the monitor, reposition */
-		if((rect.y +y+ym+self->_priv->popup_h+MOUSE_DISTANCE) > (rect.height+rect.y))	{
-			y-= self->_priv->popup_h+2*MOUSE_DISTANCE;
-		}
-		if((x+xm+self->_priv->popup_w+MOUSE_DISTANCE) > (rect.width+rect.x)) {
-			x-= self->_priv->popup_w+2*MOUSE_DISTANCE;
-		}
-		gtk_window_move(GTK_WINDOW(self->_priv->popup_win),x+xm+MOUSE_DISTANCE,y+ym+MOUSE_DISTANCE);
-
-
-
-	}
-	private 
-	gboolean
-	popup_event(self)
-	{
-		self->_priv->popup_timer_id = 0;
-		if(self->_priv->image_url && self->size < 250 )
-		{
-			GtkWidget *image = gtk_image_new();
-			GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
-
-			self->_priv->popup_win = gtk_window_new(GTK_WINDOW_POPUP);
-			
-			
-			self->_priv->popup_h = gdk_pixbuf_get_height(pb);
-			self->_priv->popup_w = gdk_pixbuf_get_width(pb);
-
-			screenshot_add_border(&pb);	
-			gtk_container_add(GTK_CONTAINER(self->_priv->popup_win), image);
-			gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
-			/* position the thing */
-			self_popup_position(self);
-			gtk_widget_show_all(self->_priv->popup_win);
-			g_object_unref(pb);
-		}
-		return FALSE;
-	}
-
-	private 
-		gboolean
-		motion_notify_event(self, GdkEventMotion *event, gpointer data)	
-	{
-		if(self->_priv->popup_win)
-		{
-			self_popup_position(self);
-		}
-
-		return TRUE;
-	}
-
-	private 
-
-		gboolean
-		leave_notify_event(self, GdkEventCrossing *event, gpointer data)
-		{
-			if(self->_priv->popup_timer_id)
-				g_source_remove(self->_priv->popup_timer_id);
-			self->_priv->popup_timer_id = 0;
-			self_popup_destroy(self);
-			return FALSE;
-		}
-
-	private 
-		gboolean
-		enter_notify_event(self, GdkEventCrossing *event, gpointer data)
-		{
-			if(self->_priv->popup_timer_id == 0)
-			{
-				self->_priv->popup_timer_id = g_timeout_add_seconds(1, (GSourceFunc) self_popup_event, self);
-			}
-			return FALSE;
-		}
+        win = gtk_window_new(GTK_WINDOW_POPUP); 
+        gtk_container_add(GTK_CONTAINER(win), gtk_image_new());
+        gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
+        g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
+    }
+    private 
+    gboolean tooltip_query(self, gint x, gint y,gboolean keyboard_mode, GtkTooltip *tip, GtkWidget *win)
+    {
+        if(self->_priv->state == STATE_IMAGE)
+        {
+            if(self->_priv->image_url)
+            {
+                GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
+                GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
+                gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
+                gtk_widget_show(image);
+                g_object_unref(pb);
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
 
 	override (G:Object)
 	void
 	finalize (G:Object *obj)
 	{
-        
-        
-        
-        
-        
 		PARENT_HANDLER(obj);
 	}
 
@@ -304,15 +217,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->metadata_force_reload);
                 self->_priv->metadata_force_reload =  0;
             }
-			if(self->_priv->popup_timer_id)
-			{
-				g_source_remove(self->_priv->popup_timer_id);
-				self->_priv->popup_timer_id=0;
-			}
 			if(self->_priv->image_url) {
 				q_free(self->_priv->image_url);
 			}
-			self_popup_destroy(self);
 			if(self->_priv->status_signal){
 				g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->_priv->status_signal);
 				self->_priv->status_signal =0;
@@ -594,7 +501,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 q_free(self->_priv->image_url);
                 self->_priv->image_url = NULL;
             }
-            self_popup_destroy(self);
             if(self->hide_on_na)
             {		
                 gtk_widget_hide(GTK_WIDGET(self));
@@ -640,7 +546,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 q_free(self->_priv->image_url);
                 self->_priv->image_url = NULL;
             }
-            self_popup_destroy(self);
             if(self->hide_on_na)
             {		
                 gtk_widget_hide(GTK_WIDGET(self));
@@ -688,7 +593,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 q_free(self->_priv->image_url);
                 self->_priv->image_url = NULL;
             }
-            self_popup_destroy(self);
 
             if(gdk_pixbuf_get_file_info(path,&width, &height))
             {
