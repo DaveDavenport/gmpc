@@ -173,7 +173,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 
         win = gtk_window_new(GTK_WINDOW_POPUP); 
+        gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
         gtk_container_add(GTK_CONTAINER(win), gtk_image_new());
+
         gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
         g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
     }
@@ -186,6 +188,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
                 GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
+                screenshot_add_border(&pb);
                 gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
                 gtk_widget_show(image);
                 g_object_unref(pb);
