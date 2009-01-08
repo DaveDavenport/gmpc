@@ -666,12 +666,9 @@ static void pl3_show_and_position_window(void)
 
 void pl3_toggle_hidden(void)
 {
-	if(pl3_hidden)
-	{
+	if(pl3_hidden) {
 		create_playlist3();
-	}
-	else
-	{
+	} else {
 		pl3_hide();
 	}
 }
@@ -784,7 +781,6 @@ gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpoint
         {
             if(event->window)
             {
-
                 gdk_drawable_get_size(event->window, &width, NULL);
                 pos = (gdouble)event->x/(gdouble)width;
                 mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
@@ -843,8 +839,6 @@ static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_sendpassword"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "view1"), TRUE);
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_option"), TRUE);
-
-
 		pl3_push_rsb_message(_("Connected"));
 	} else {
 		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "vbox_playlist_player"), FALSE);
@@ -889,7 +883,6 @@ static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 			MPD_CST_STATE|MPD_CST_SONGID|MPD_CST_ELAPSED_TIME|MPD_CST_VOLUME|MPD_CST_REPEAT|MPD_CST_RANDOM|MPD_CST_PERMISSION,
 			NULL);
 
-
 	/**
 	 * Also need updating
 	 */
@@ -930,12 +923,8 @@ void create_playlist3 (void)
 		pl3_show_and_position_window();
 		return;
 	}
-
-
 	/* initial, setting the url hook */
 	gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc)about_dialog_activate, NULL, NULL);
-
-
 
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
@@ -963,7 +952,6 @@ void create_playlist3 (void)
 
 		if (colormap)
 			gtk_widget_set_default_colormap (colormap);
-
 	}
 
 #ifdef ENABLE_IGE 
@@ -1003,9 +991,6 @@ void create_playlist3 (void)
 		}
 	}
 #endif
-
-
-
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL)
 	{
@@ -1145,7 +1130,6 @@ void create_playlist3 (void)
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
-//	gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), TRUE);
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),(char *)"no-artist");
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
 	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
@@ -1155,7 +1139,6 @@ void create_playlist3 (void)
 	gmpc_metaimage_set_squared(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
 
-//	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
 	/* restore the window's position and size, if the user wants this.*/
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
 	{
