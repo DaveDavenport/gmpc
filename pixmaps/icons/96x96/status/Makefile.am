@@ -6,4 +6,7 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
 		stylized-fetching-cover.png\
-		stylized-no-cover.png
+		stylized-no-cover.png\
+		no-artist.png\
+		frame-artist.png\
+		fetching-artist.png

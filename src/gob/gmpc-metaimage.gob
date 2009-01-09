@@ -612,7 +612,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     height = self->size;
                 }
                 
-                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART)
+                if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART) 
                 {
                     float spineRatio = 31.0/343.0;
                     int spineWidth = (width)*spineRatio;
@@ -626,7 +626,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     height = gdk_pixbuf_get_height(pb)+0;
                     /* load the case */
                     {
-                        GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),"stylized-cover", (width> height)? width:height, 0);
+                        GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
+                                    "stylized-cover", 
+                                    (width> height)? width:height, 0);
                         if(ii){
                             path2 = gtk_icon_info_get_filename(ii);
                             if(path2){
@@ -655,7 +657,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
                     g_object_unref(pb);
                 }
                 else {

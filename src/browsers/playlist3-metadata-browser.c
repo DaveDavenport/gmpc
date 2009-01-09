@@ -382,6 +382,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 
                 gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,48);
                 gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
+                gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
 
                 /* make the background paintable, and paint the background */
                 event = gtk_event_box_new();

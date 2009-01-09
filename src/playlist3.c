@@ -1131,6 +1131,7 @@ void create_playlist3 (void)
 
 	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),(char *)"no-artist");
+	gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),(char *)"fetching-artist");
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
 	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
 	{
