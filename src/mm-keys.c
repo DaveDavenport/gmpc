@@ -24,7 +24,6 @@
 
 #include <stdio.h>
 #include "mm-keys.h"
-#include "eggcellrendererkeys.h"
 
 static void mmkeys_class_init (MmKeysClass *klass);
 static void mmkeys_init       (MmKeys      *object);
@@ -686,12 +685,13 @@ void mmkeys_pref_construct(GtkWidget *container)
 		gtk_tree_view_column_set_title(column, _("Action"));
 		gtk_tree_view_append_column(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
 
-		rend =  egg_cell_renderer_keys_new ();
+		rend =  gtk_cell_renderer_accel_new();
 		column = gtk_tree_view_column_new ();
 
-		/*		g_object_set (G_OBJECT (rend), "accel_mode", EGG_CELL_RENDERER_KEYS_MODE_X);*/
-		egg_cell_renderer_keys_set_accel_mode(EGG_CELL_RENDERER_KEYS(rend), EGG_CELL_RENDERER_KEYS_MODE_GTK);
-		g_object_set (G_OBJECT (rend), "editable", TRUE, NULL);
+		g_object_set (G_OBJECT (rend),
+                "editable", TRUE,
+                "accel-mode", GTK_CELL_RENDERER_ACCEL_MODE_OTHER,
+                NULL);
 
 		g_signal_connect (G_OBJECT (rend),
 				"accel_edited",
@@ -707,7 +707,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 		gtk_tree_view_column_set_title(column, _("Shortcut"));
 		gtk_tree_view_column_set_attributes (column, rend,
 				"keycode",	MM_STORE_KEYCODE,
-				"accel_mask",	MM_STORE_MASK,
+				"accel_mods",	MM_STORE_MASK,
 				"accel_key",	MM_STORE_KEYVAL,
 				"foreground",	MM_STORE_FOREGROUND,
 				NULL);
