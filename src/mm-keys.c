@@ -255,6 +255,26 @@ static void mmkeys_finalize (GObject *object)
 	parent_class->finalize (G_OBJECT(object));
 }
 
+static gchar *  convert_keysym_state_to_string (
+        guint keysym,
+        GdkModifierType mask,
+        guint keycode)
+{
+    gchar *name;
+
+    name = gtk_accelerator_name (keysym, mask);
+    if (keysym == 0)
+    {
+        gchar *tmp;
+
+        tmp = name;
+        name = g_strdup_printf ("%s0x%02x", tmp, keycode);
+        g_free (tmp);
+    }
+
+    return name;
+} 
+
 static void mmkeys_init (MmKeys *object)
 {
 	GdkDisplay *display;
@@ -338,12 +358,9 @@ static void mmkeys_init (MmKeys *object)
 		{
 			if (keyerror[i] && keycodes[i] != 0)
 			{
-				gchar *rawkeysym = gtk_accelerator_get_label(keycodes[i], masks[i]);
-                /*egg_virtual_accelerator_name (
+				gchar *keysym = convert_keysym_state_to_string(
 					XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0),
-					keycodes[i], masks[i]);*/
-				gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-				q_free (rawkeysym);
+					masks[i],keycodes[i] );
 				g_string_append_printf( message,
 					"\t%s: %s\n",
 					_(keynames[i]), keysym );
@@ -595,13 +612,10 @@ accel_edited_callback (GtkCellRendererText *cell,
 			masks[i] == mask)
 		{
 			gchar *message;
-			gchar *rawkeysym = gtk_accelerator_get_label(hardware_keycode,mask);/*egg_virtual_accelerator_name (
+			gchar *keysym =  convert_keysym_state_to_string (
 				XKeycodeToKeysym(GDK_DISPLAY(), hardware_keycode, 0),
-				hardware_keycode, mask);*/
-
-			gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-			q_free (rawkeysym);
-			message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
+				mask,hardware_keycode);
+			message = g_strdup_printf( _("Duplicate mapping detected\n\n"
 					"%s is already mapped to %s"),
 					keysym, _(keynames[i]) );
 			q_free (keysym);
@@ -625,13 +639,10 @@ accel_edited_callback (GtkCellRendererText *cell,
 	if( keyerror[key] )
 	{
 		gchar *message;
-		gchar *rawkeysym = gtk_accelerator_get_label(keycodes[key], masks[key]);
-        /*egg_virtual_accelerator_name (
+		gchar *keysym = convert_keysym_state_to_string (
 			XKeycodeToKeysym(GDK_DISPLAY(), keycodes[key], 0),
-			keycodes[key], masks[key]);
-            */
-		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
-		q_free (rawkeysym);
+			masks[key],keycodes[key] );
+
 		message = g_strdup_printf(
 			_("Could not grab multimedia key:\n\n"
 			"\t%s: %s\n\n"
