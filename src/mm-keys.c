@@ -338,9 +338,10 @@ static void mmkeys_init (MmKeys *object)
 		{
 			if (keyerror[i] && keycodes[i] != 0)
 			{
-				gchar *rawkeysym = egg_virtual_accelerator_name (
+				gchar *rawkeysym = gtk_accelerator_get_label(keycodes[i], masks[i]);
+                /*egg_virtual_accelerator_name (
 					XKeycodeToKeysym(GDK_DISPLAY(), keycodes[i], 0),
-					keycodes[i], masks[i]);
+					keycodes[i], masks[i]);*/
 				gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 				q_free (rawkeysym);
 				g_string_append_printf( message,
@@ -594,9 +595,10 @@ accel_edited_callback (GtkCellRendererText *cell,
 			masks[i] == mask)
 		{
 			gchar *message;
-			gchar *rawkeysym = egg_virtual_accelerator_name (
+			gchar *rawkeysym = gtk_accelerator_get_label(hardware_keycode,mask);/*egg_virtual_accelerator_name (
 				XKeycodeToKeysym(GDK_DISPLAY(), hardware_keycode, 0),
-				hardware_keycode, mask);
+				hardware_keycode, mask);*/
+
 			gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 			q_free (rawkeysym);
 			message = g_strdup_printf( _("<b>Duplicate mapping detected</b>\n\n"
@@ -623,9 +625,11 @@ accel_edited_callback (GtkCellRendererText *cell,
 	if( keyerror[key] )
 	{
 		gchar *message;
-		gchar *rawkeysym = egg_virtual_accelerator_name (
+		gchar *rawkeysym = gtk_accelerator_get_label(keycodes[key], masks[key]);
+        /*egg_virtual_accelerator_name (
 			XKeycodeToKeysym(GDK_DISPLAY(), keycodes[key], 0),
 			keycodes[key], masks[key]);
+            */
 		gchar *keysym = g_markup_escape_text(rawkeysym, -1);
 		q_free (rawkeysym);
 		message = g_strdup_printf(
