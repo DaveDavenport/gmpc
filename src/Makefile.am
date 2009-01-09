@@ -32,7 +32,6 @@ gmpc_SOURCES=\
 	url_fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
-	egg/eggaccelerators.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
 	edit_markup.c 
@@ -181,11 +180,9 @@ EXTRA_DIST=\
 		metadata.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
-		egg/eggaccelerators.h\
 		revision.h\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
-		egg/eggaccelerators.h\
 		gmpc_unique.h\
 		gmpc-win32.rc
 
