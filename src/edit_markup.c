@@ -98,7 +98,13 @@ char * edit_song_markup(char *format)
     GError *error = NULL;
 	char *path = gmpc_get_full_glade_path("preferences-esf-dialog.ui");
 	xml_esf= gtk_builder_new();
-    gtk_builder_add_from_file(xml_esf, path, NULL);
+    printf("ui path: %s\n", path);
+    gtk_builder_add_from_file(xml_esf, path, &error);
+    if(error) {
+        debug_printf(DEBUG_ERROR, error->message);
+        g_error_free(error);
+        error = NULL;
+    }
 	q_free(path);
 	dialog = (GtkWidget *) gtk_builder_get_object(xml_esf, "esf_dialog");
 	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(gtk_builder_get_object(xml_esf, "textview_markup")));
