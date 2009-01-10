@@ -133,7 +133,7 @@ static void playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *us
 static void playlist_pref_construct(GtkWidget *container);
 static void playlist_pref_destroy(GtkWidget *container);
 
-static GladeXML *playlist_pref_xml = NULL;
+static GtkBuilder *playlist_pref_xml = NULL;
 
 static GtkWidget *volume_button = NULL;
 
@@ -1296,38 +1296,38 @@ void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data);
 void ck_show_tooltip_enable_tb(GtkToggleButton *but);
 void ck_show_tabbed_heading_enable_cb(GtkToggleButton *but);
 
-void show_cover_case_tb(GtkToggleButton *but)
+G_MODULE_EXPORT void show_cover_case_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "metaimage","addcase", bool1);
     gmpc_meta_watcher_force_reload(gmw);
 }
-void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data)
+G_MODULE_EXPORT void ck_stop_on_exit_toggled_cb(GtkToggleButton *but, gpointer data)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "connection","stop-on-exit", bool1);
 }
-void hide_on_close_enable_tb(GtkToggleButton *but)
+G_MODULE_EXPORT void hide_on_close_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","hide-on-close", bool1);
 }
-void cur_song_center_enable_tb(GtkToggleButton *but)
+G_MODULE_EXPORT void cur_song_center_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","st_cur_song", bool1);
 }
-void save_possize_enable_tb(GtkToggleButton *but)
+G_MODULE_EXPORT void save_possize_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "playlist","savepossize", bool1);
 }
-void ck_show_tooltip_enable_tb(GtkToggleButton *but)
+G_MODULE_EXPORT void ck_show_tooltip_enable_tb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
 	cfg_set_single_value_as_int(config, "GmpcTreeView","show-tooltip", bool1);
 }
-void ck_show_tabbed_heading_enable_cb(GtkToggleButton *but)
+G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton *but)
 {
 	int bool1  = gtk_toggle_button_get_active(but);
     int old =  cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE);
@@ -1348,11 +1348,11 @@ void ck_show_tabbed_heading_enable_cb(GtkToggleButton *but)
     cfg_set_single_value_as_int(config, "playlist", "button-heading",bool1);
 }
 
-void playlist_pref_destroy(GtkWidget *container)
+G_MODULE_EXPORT void playlist_pref_destroy(GtkWidget *container)
 {
 	if(playlist_pref_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
+		GtkWidget *vbox = (GtkWidget *)gtk_builder_get_object(playlist_pref_xml, "playlist-vbox");
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(playlist_pref_xml);
 		playlist_pref_xml = NULL;
@@ -1360,41 +1360,44 @@ void playlist_pref_destroy(GtkWidget *container)
 }
 void playlist_pref_construct(GtkWidget *container)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	playlist_pref_xml = glade_xml_new(path, "playlist-vbox",NULL);
+	gchar *path = gmpc_get_full_glade_path("preferences-playlist.ui");
+	playlist_pref_xml = gtk_builder_new();// glade_xml_new(path, "playlist-vbox",NULL);
+
+    gtk_builder_add_from_file(playlist_pref_xml, path, NULL);
 
 	if(playlist_pref_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(playlist_pref_xml, "playlist-vbox");
+		GtkWidget *vbox = (GtkWidget *)gtk_builder_get_object(playlist_pref_xml, "playlist-vbox");
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_ps")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_ps")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "st_cur_song", 0));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_possize")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_possize")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "savepossize", 0));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_hide_on_close")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_hide_on_close")),
 				cfg_get_single_value_as_int_with_default(config,"playlist", "hide-on-close", 0));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_stop_on_exit")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_stop_on_exit")),
 				cfg_get_single_value_as_int_with_default(config,"connection","stop-on-exit", 0));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_cover_case")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_cover_case")),
 				cfg_get_single_value_as_int_with_default(config,"metaimage", "addcase", TRUE));
 
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_show_tooltip")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_show_tooltip")),
 				cfg_get_single_value_as_int_with_default(config,"GmpcTreeView", "show-tooltip", TRUE));
 		gtk_toggle_button_set_active(
-				GTK_TOGGLE_BUTTON(glade_xml_get_widget(playlist_pref_xml, "ck_show_tabbed_heading")),
+				GTK_TOGGLE_BUTTON(gtk_builder_get_object(playlist_pref_xml, "ck_show_tabbed_heading")),
                 cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE)
                 );
 
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
-		glade_xml_signal_autoconnect(playlist_pref_xml);
+        gtk_builder_connect_signals(playlist_pref_xml,NULL);
+		//glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
 	q_free(path);
 }
