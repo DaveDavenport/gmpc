@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<!--*- mode: xml -*-->
 <interface>
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkDialog" id="esf_dialog">
     <property name="visible">True</property>
     <property name="border_width">3</property>
     <property name="title" translatable="yes">Edit Song Formatting</property>
     <property name="default_width">600</property>
     <property name="default_height">400</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox3">
         <property name="visible">True</property>
@@ -26,20 +26,21 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow3">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                <property name="shadow_type">GTK_SHADOW_IN</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTextView" id="textview_markup">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="wrap_mode">GTK_WRAP_CHAR</property>
+                    <property name="wrap_mode">char</property>
                     <property name="accepts_tab">False</property>
                   </object>
                 </child>
@@ -66,6 +67,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
@@ -76,9 +78,9 @@
                           <object class="GtkFrame" id="frame11">
                             <property name="visible">True</property>
                             <property name="label_xalign">0</property>
-                            <property name="shadow_type">GTK_SHADOW_IN</property>
+                            <property name="shadow_type">in</property>
                             <child>
-                              <object class="GtkAlignment" id="alignment24">
+                              <object class="GtkAlignment" id="alignment1">
                                 <property name="visible">True</property>
                                 <property name="border_width">2</property>
                                 <child>
@@ -101,6 +103,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
@@ -120,16 +123,18 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_title">
+                        <property name="label" translatable="yes">_Title</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_Title</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -139,12 +144,13 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_artist">
+                        <property name="label" translatable="yes">_Artist</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_Artist</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -154,12 +160,13 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_album">
+                        <property name="label" translatable="yes">A_lbum</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">A_lbum</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -169,12 +176,13 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_track">
+                        <property name="label" translatable="yes">T_rack</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">T_rack</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -184,12 +192,13 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_date">
+                        <property name="label" translatable="yes">_Date</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_Date</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -199,12 +208,13 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="ck_stream">
+                        <property name="label" translatable="yes">_Stream name</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">_Stream name</property>
+                        <property name="receives_default">False</property>
                         <property name="use_underline">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal handler="esf_reload" name="toggled"/>
+                        <signal name="toggled" handler="esf_reload"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -215,7 +225,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="pack_type">GTK_PACK_END</property>
+                    <property name="pack_type">end</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -233,22 +243,27 @@
         <child internal-child="action_area">
           <object class="GtkHButtonBox" id="dialog-action_area3">
             <property name="visible">True</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="cancelbutton1">
+                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
-                <property name="label">gtk-cancel</property>
+                <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
               </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkButton" id="okbutton1">
+                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
-                <property name="label">gtk-ok</property>
+                <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -258,18 +273,13 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">ck_title</action-widget>
-      <action-widget response="0">ck_artist</action-widget>
-      <action-widget response="0">ck_album</action-widget>
-      <action-widget response="0">ck_track</action-widget>
-      <action-widget response="0">ck_date</action-widget>
-      <action-widget response="0">ck_stream</action-widget>
       <action-widget response="-6">cancelbutton1</action-widget>
       <action-widget response="-5">okbutton1</action-widget>
     </action-widgets>
