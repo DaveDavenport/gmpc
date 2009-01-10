@@ -132,7 +132,7 @@ void create_preferences_window(void)
 	}
 	plugin_last = -1;
 	string = gmpc_get_full_glade_path("preferences.ui");
-	xml_preferences_window = gtk_builder_new();// glade_xml_new(string, "preferences_window", NULL);
+	xml_preferences_window = gtk_builder_new();
     gtk_builder_add_from_file(xml_preferences_window, string,&error);
 	q_free(string);
     if(error) {
@@ -216,7 +216,6 @@ void create_preferences_window(void)
 	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &dialog->style->fg[GTK_STATE_SELECTED]);
 */	
     gtk_widget_show(dialog);
-//    glade_xml_signal_autoconnect(xml_preferences_window);	
     gtk_builder_connect_signals(xml_preferences_window, NULL);
 }
 
@@ -282,7 +281,7 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 static void plugin_stats_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-plugins.ui");
-	plugin_stat_xml = gtk_builder_new();//glade_xml_new(path, "plugin_stats_vbox",NULL);
+	plugin_stat_xml = gtk_builder_new();
     gtk_builder_add_from_file(plugin_stat_xml, path, NULL);
 	q_free(path);
 	if(plugin_stat_xml)
