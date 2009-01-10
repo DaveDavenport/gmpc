@@ -945,8 +945,6 @@ void main_quit(void)
 	if(autoconnect_timeout)
         g_source_remove(autoconnect_timeout);
 
-
-
 	/**
 	 * Call the connection changed.
 	 * so it saves the playlist pos
@@ -1468,6 +1466,4 @@ void print_version ( void )
             _("Disabled")
 #endif
           );
-
-
 }

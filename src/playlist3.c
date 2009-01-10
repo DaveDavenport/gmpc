@@ -88,10 +88,6 @@ void set_playlist_format(void);
 
 static void playlist_player_volume_changed(GtkWidget *vol_but);
 void pl3_option_menu_activate(void);
-static void pl3_plugin_changed_interface(void);
-
-
-
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -894,7 +890,7 @@ static void playlist_connection_changed(MpdObj *mi, int connect, gpointer data)
 	 * update interface
 	 * items that are caused by the plugin.
 	 */
-	pl3_plugin_changed_interface();
+	pl3_update_go_menu();
 
 }
 
@@ -1423,8 +1419,6 @@ static void playlist_player_set_song(MpdObj *mi)
 	}
 }
 
-
-
 /**
  * Menu Callback functions
  */
@@ -1834,9 +1828,11 @@ static void playlist_player_volume_changed(GtkWidget *vol_but)
 
 void about_window(void)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	GladeXML *diagxml = glade_xml_new(path, "aboutdialog",NULL);
-	GtkWidget *dialog = glade_xml_get_widget(diagxml, "aboutdialog");
+	gchar *path = gmpc_get_full_glade_path("aboutdialog.ui");
+    GtkBuilder *xml = gtk_builder_new();
+	GtkWidget *dialog = NULL;
+    gtk_builder_add_from_file(xml, path, NULL);
+    dialog = (GtkWidget *)gtk_builder_get_object(xml, "aboutdialog");
 
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
@@ -1858,7 +1854,7 @@ void about_window(void)
     gtk_widget_show(dialog);
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
-	g_object_unref(diagxml);
+	g_object_unref(xml);
 }
 
 
@@ -1904,16 +1900,6 @@ void pl3_update_go_menu(void)
 	}
 }
 
-/**
- * This function should be called by a plugin when something in the interface changed.
- */
-static void pl3_plugin_changed_interface(void)
-{
-	/**
-	 * Call this at the end, to update the menu
-	 */
-	pl3_update_go_menu();
-}
 static void pl3_profile_selected(GtkRadioMenuItem *radio,gpointer data)
 {
 	if(gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(radio)))
@@ -2044,43 +2030,43 @@ static void playlist3_fill_server_menu(void)
 
 	/* if connected fill with items */
 	if(mpd_check_connected(connection))
-	{
-		GtkWidget *menu = gtk_menu_new();
-  	GtkWidget *menu_item = NULL;
-    GtkAccelGroup *group = gtk_accel_group_new();
-    int i = 0;
-		MpdData *data= NULL;
-    gtk_menu_set_accel_group(GTK_MENU(menu), group);
-    /* todo, does this needs to be removed, or does that go automatically when the accell group get destroyed?  */
-    gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
+    {
+        GtkWidget *menu = gtk_menu_new();
+        GtkWidget *menu_item = NULL;
+        GtkAccelGroup *group = gtk_accel_group_new();
+        int i = 0;
+        MpdData *data= NULL;
+        gtk_menu_set_accel_group(GTK_MENU(menu), group);
+        /* todo, does this needs to be removed, or does that go automatically when the accell group get destroyed?  */
+        gtk_window_add_accel_group(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")), group);
 
-		/* Update DB */
-		menu_item = gtk_image_menu_item_new_with_label(_("Update Database"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-							gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(playlist3_server_update_db), NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        /* Update DB */
+        menu_item = gtk_image_menu_item_new_with_label(_("Update Database"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+                gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(playlist3_server_update_db), NULL);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 
-		menu_item = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        menu_item = gtk_separator_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 
-		data = mpd_server_get_output_devices(connection);
-		for(;data;data = mpd_data_get_next(data))
-		{
-			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
-			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
-			gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+        data = mpd_server_get_output_devices(connection);
+        for(;data;data = mpd_data_get_next(data))
+        {
+            menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled?TRUE:FALSE);
+            gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1+i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
-			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-      i++;
-		}
-		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")),menu);
-		gtk_widget_show_all(menu);
-		/* Server Menu Item */
-		gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_server"), TRUE);
-	}
+            g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed),NULL);
+            g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+            i++;
+        }
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menuitem_server")),menu);
+        gtk_widget_show_all(menu);
+        /* Server Menu Item */
+        gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menuitem_server"), TRUE);
+    }
 	else
 	{
 		/* Server Menu Item */
@@ -2352,7 +2338,7 @@ gmpcPlugin playlist_plug = {
  * Tabbed view hooks
  */
 /* List keeping track of all the button */
-GList *thv_list = NULL;
+static GList *thv_list = NULL;
 /* Tab button structure */
 typedef struct _TabButton{
     GtkButton *button;
