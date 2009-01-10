@@ -7,6 +7,8 @@ appglade_DATA =	gmpc.glade \
 		preferences-trayicon.ui\
 		preferences-mmkeys.ui\
 		preferences-esf-dialog.ui\
+		preferences-server.ui\
+		preferences-connection.ui\
 		password-dialog.ui\
 		playlist3.glade
 
