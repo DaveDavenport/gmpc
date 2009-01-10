@@ -1194,7 +1194,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
     /** get text
     */
     text = gtk_entry_get_text(entry);
-    if(strlen(text) > 0); 
+    if(strlen(text) > 0) 
     {
         GError *error = NULL;
         GRegex *reg; 

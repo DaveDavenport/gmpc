@@ -33,7 +33,6 @@ requires 2.0.0
 #else
 #include <gmpc/gmpc-connection.h>
 #endif
-#define MOUSE_DISTANCE 8
 %}
 
 %{
@@ -99,19 +98,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	 */
 	public gboolean is_visible = {TRUE};
 
-	property STRING loading_cover_icon
-		(nick = "Loading Cover Icon",
-		blurb = "Stock icon to use when loading a cover",
-		default_value = "media-loading-cover",
-		export,
-		link);
-
-	property STRING no_cover_icon
-		(nick = "No Cover Icon",
-		blurb = "Stock icon to use when no cover is present",
-		default_value = "media-no-cover",
-		export,
-		link);
 	property INT image_type 
 		(nick = "Image type",
 		blurb = "Type of the image, like artist art",
@@ -138,7 +124,21 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			blurb = "Keep the widget squared",
 			default_value = TRUE,
 			link);
-    public void set_squared (self, gboolean item)
+    public void set_no_cover_icon (self, const gchar *name)
+    {
+        if(self->no_cover_icon) {
+            q_free(self->no_cover_icon);
+        }
+        self->no_cover_icon = g_strdup(name);
+    }
+    public void set_loading_cover_icon (self, const gchar *name)
+    {
+        if(self->loading_cover_icon) {
+            q_free(self->loading_cover_icon);
+        }
+        self->loading_cover_icon = g_strdup(name);
+    }
+    public void set_squared (self, const gboolean item)
     {
         self->squared = item;
     }
@@ -431,7 +431,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->song)
                 mpd_freeSong(self->_priv->song);
-            //self_set_cover_na(self);
+
             gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             self->_priv->song = mpd_songDup(song);
             /* hack to make it load when it gets visible */
@@ -657,7 +657,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
                     g_object_unref(pb);
                 }
                 else {
