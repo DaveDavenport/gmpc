@@ -56,6 +56,9 @@ static GtkTargetEntry target_table[] =
 	{ (gchar*)"internal-drop",0,99}
 };
 
+
+GtkWidget *metaimage_album_art  = NULL;
+GtkWidget *metaimage_artist_art = NULL;
 /**
  * Widgets used in the header.
  * and the new progresbar
@@ -808,10 +811,10 @@ pl3_win_pane_changed(GtkWidget *panel, GParamSpec *arg1, gpointer data)
 	if(position < 6) position = 6;
     size = ((position) > max_size)?max_size:(position);
 
-    if(gmpc_metaimage_get_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"))) != size)
+    if(gmpc_metaimage_get_size(GMPC_METAIMAGE(metaimage_artist_art)) != size)
     {
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),size);
-        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")));
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art),size);
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_artist_art));
     }
 
 }
@@ -1117,24 +1120,26 @@ void create_playlist3 (void)
 	/*
 	 * Insert new custom widget
 	 */
+    metaimage_album_art = gmpc_metaimage_new(META_ALBUM_ART); 
+    gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_playlist_player")),metaimage_album_art, FALSE,TRUE,0);
+    metaimage_artist_art = gmpc_metaimage_new(META_ARTIST_ART);
+    gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "vbox5")),metaimage_artist_art, FALSE,TRUE,0);
 
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), ALBUM_SIZE_LARGE);
-	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), META_ALBUM_ART);
-	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),(char *)"gmpc");
-	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), connection);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
+	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_album_art),(char *)"gmpc");
+	gmpc_metaimage_set_connection(GMPC_METAIMAGE(metaimage_album_art), connection);
 	/** make sure size is updated */
-	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(metaimage_album_art));
 
-	gmpc_metaimage_set_image_type(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), META_ARTIST_ART);
-	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),(char *)"no-artist");
-	gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")),(char *)"fetching-artist");
-	gmpc_metaimage_set_connection(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), connection);
+	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_artist_art),(char *)"no-artist");
+	gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(metaimage_artist_art),(char *)"fetching-artist");
+	gmpc_metaimage_set_connection(GMPC_METAIMAGE(metaimage_artist_art), connection);
 	if(!cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
 	{
-		gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
+		gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
 	}
-	gmpc_metaimage_set_squared(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), FALSE);
-	gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), 200);
+	gmpc_metaimage_set_squared(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
+	gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art), 200);
 
 	/* restore the window's position and size, if the user wants this.*/
 	if(cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
@@ -1451,8 +1456,8 @@ void playlist_menu_cover_image_changed(GtkCheckMenuItem *menu)
 	int active = gtk_check_menu_item_get_active(menu);
 	cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
 
-	gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_artist_art")), active);
-    if(active) gtk_widget_show(glade_xml_get_widget(pl3_xml, "metaimage_artist_art"));
+	gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), active);
+    if(active) gtk_widget_show(metaimage_artist_art);
 }
 
 /***
@@ -1500,8 +1505,8 @@ static void playlist_zoom_level_changed(void)
         gtk_widget_show(box);
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), FALSE);
 
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")), ALBUM_SIZE_LARGE);
-        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
 
     }
     if(pl3_old_zoom != PLAYLIST_MINI && pl3_zoom == PLAYLIST_MINI)
@@ -1518,8 +1523,8 @@ static void playlist_zoom_level_changed(void)
         gtk_widget_show(box);
 
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), TRUE);
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")),ALBUM_SIZE_SMALL);
-        gmpc_metaimage_reload_image(GMPC_METAIMAGE(glade_xml_get_widget(pl3_xml, "metaimage_album_art")));
+        gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art),ALBUM_SIZE_SMALL);
+        gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
 
     }
 

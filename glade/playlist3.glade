@@ -2,124 +2,6 @@
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
 <!--*- mode: xml -*-->
 <glade-interface>
-  <widget class="GtkDialog" id="save_pl">
-    <property name="visible">True</property>
-    <property name="border_width">5</property>
-    <property name="title" translatable="yes">Save Playlist</property>
-    <property name="resizable">False</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
-    <property name="has_separator">False</property>
-    <child internal-child="vbox">
-      <widget class="GtkVBox" id="dialog-vbox1">
-        <property name="visible">True</property>
-        <child>
-          <widget class="GtkVBox" id="vbox2">
-            <property name="visible">True</property>
-            <property name="border_width">6</property>
-            <property name="spacing">6</property>
-            <child>
-              <widget class="GtkHBox" id="hbox6">
-                <property name="visible">True</property>
-                <property name="spacing">6</property>
-                <child>
-                  <widget class="GtkLabel" id="label5">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">name:</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="pl-entry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_focus">True</property>
-                    <property name="activates_default">True</property>
-                    <property name="text" translatable="yes">&lt;enter playlist name&gt;</property>
-                  </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkHBox" id="hbox5">
-                <property name="spacing">6</property>
-                <child>
-                  <widget class="GtkImage" id="image4">
-                    <property name="visible">True</property>
-                    <property name="stock">gtk-dialog-warning</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label_error">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;span size="x-small"&gt;&lt;i&gt;Playlist already exists.&lt;/i&gt;&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="dialog-action_area1">
-            <property name="visible">True</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
-            <child>
-              <widget class="GtkButton" id="but_cancel">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="label">gtk-cancel</property>
-                <property name="use_stock">True</property>
-                <property name="response_id">-6</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkButton" id="but_save">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="can_default">True</property>
-                <property name="has_default">True</property>
-                <property name="label">gtk-save</property>
-                <property name="use_stock">True</property>
-                <property name="response_id">-5</property>
-              </widget>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </widget>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
-          </packing>
-        </child>
-      </widget>
-    </child>
-  </widget>
   <widget class="GtkWindow" id="pl3_win">
     <property name="title" translatable="yes">gmpc - Playlist Manager</property>
     <property name="default_width">600</property>
@@ -536,15 +418,6 @@
                         <property name="border_width">1</property>
                         <property name="spacing">6</property>
                         <child>
-                          <widget class="Custom" id="metaimage_album_art">
-                            <property name="creation_function">gmpc_metaimage_new</property>
-                            <property name="int1">1</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                          </packing>
-                        </child>
-                        <child>
                           <widget class="GtkVBox" id="vbox6">
                             <property name="visible">True</property>
                             <property name="spacing">3</property>
@@ -663,6 +536,7 @@
                             </child>
                           </widget>
                           <packing>
+                            <property name="pack_type">GTK_PACK_END</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -754,16 +628,6 @@
                           </widget>
                         </child>
                       </widget>
-                    </child>
-                    <child>
-                      <widget class="Custom" id="metaimage_artist_art">
-                        <property name="creation_function">gmpc_metaimage_new</property>
-                        <property name="int1">2</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </widget>
                   <packing>
@@ -889,33 +753,6 @@
             <property name="expand">False</property>
             <property name="position">2</property>
           </packing>
-        </child>
-      </widget>
-    </child>
-  </widget>
-  <widget class="GtkWindow" id="message_window">
-    <property name="title" translatable="yes">Messages</property>
-    <property name="default_width">650</property>
-    <property name="default_height">150</property>
-    <signal name="delete_event" handler="message_window_destroy"/>
-    <child>
-      <widget class="GtkVBox" id="vbox8">
-        <property name="visible">True</property>
-        <child>
-          <widget class="GtkScrolledWindow" id="scrolledwindow3">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-            <child>
-              <widget class="GtkTreeView" id="message_tree">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="rules_hint">True</property>
-              </widget>
-            </child>
-          </widget>
         </child>
       </widget>
     </child>
