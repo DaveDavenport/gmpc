@@ -544,7 +544,7 @@ void grab_key(int key, int keycode, unsigned int mask)
  */
 void mmkeys_pref_destroy(GtkWidget *container);
 void mmkeys_pref_construct(GtkWidget *container);
-GladeXML *mmkeys_pref_xml = NULL;
+static GtkBuilder *mmkeys_pref_xml = NULL;
 
 gmpcPrefPlugin mmkeys_gpp = {
 	.construct      = mmkeys_pref_construct,
@@ -665,7 +665,7 @@ void mmkeys_pref_destroy(GtkWidget *container)
 {
 	if(mmkeys_pref_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
+		GtkWidget *vbox = (GtkWidget *)gtk_builder_get_object(mmkeys_pref_xml, "mmkeys-vbox");
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(mmkeys_pref_xml);
 		mmkeys_pref_xml = NULL;
@@ -674,13 +674,14 @@ void mmkeys_pref_destroy(GtkWidget *container)
 
 void mmkeys_pref_construct(GtkWidget *container)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	mmkeys_pref_xml = glade_xml_new(path, "mmkeys-vbox",NULL);
+	gchar *path = gmpc_get_full_glade_path("preferences-mmkeys.ui");
+	mmkeys_pref_xml = gtk_builder_new();//glade_xml_new(path, "mmkeys-vbox",NULL);
+    gtk_builder_add_from_file(mmkeys_pref_xml, path, NULL);
 	q_free(path);
 	if(mmkeys_pref_xml)
 	{
 		int i=0;
-		GtkWidget *vbox = glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-vbox");
+		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(mmkeys_pref_xml, "mmkeys-vbox");
 		GtkTreeViewColumn *column = NULL;
 		GtkListStore *store = gtk_list_store_new(MM_STORE_COUNT,
 			G_TYPE_STRING,	/* MM_STORE_KEYNAME	*/
@@ -691,14 +692,14 @@ void mmkeys_pref_construct(GtkWidget *container)
 			G_TYPE_STRING	/* MM_STORE_FOREGROUND	*/
 			);
 		GtkCellRenderer *rend =gtk_cell_renderer_text_new();
-		gtk_tree_view_set_model(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
+		gtk_tree_view_set_model(GTK_TREE_VIEW (gtk_builder_get_object(mmkeys_pref_xml, "mmkeys-tree")), GTK_TREE_MODEL(store));
 
 		column = gtk_tree_view_column_new();
 		gtk_tree_view_column_pack_start(column, rend, TRUE);
 		gtk_tree_view_column_add_attribute(column, rend,
 			"text", MM_STORE_KEYNAME);
 		gtk_tree_view_column_set_title(column, _("Action"));
-		gtk_tree_view_append_column(GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
+		gtk_tree_view_append_column(GTK_TREE_VIEW (gtk_builder_get_object(mmkeys_pref_xml, "mmkeys-tree")), column);
 
 		rend =  gtk_cell_renderer_accel_new();
 		column = gtk_tree_view_column_new ();
@@ -726,7 +727,7 @@ void mmkeys_pref_construct(GtkWidget *container)
 				"accel_key",	MM_STORE_KEYVAL,
 				"foreground",	MM_STORE_FOREGROUND,
 				NULL);
-		gtk_tree_view_append_column (GTK_TREE_VIEW (glade_xml_get_widget(mmkeys_pref_xml, "mmkeys-tree")), column);
+		gtk_tree_view_append_column (GTK_TREE_VIEW (gtk_builder_get_object(mmkeys_pref_xml, "mmkeys-tree")), column);
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		for(i=0;i< LAST_SIGNAL;i++)
