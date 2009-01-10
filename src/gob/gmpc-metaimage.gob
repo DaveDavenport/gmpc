@@ -642,7 +642,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
-                    printf("%i %i %i\n", gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2),spineWidth);
                     gdk_pixbuf_copy_area(pb, 0,0,gdk_pixbuf_get_width(pb2)-spineWidth,gdk_pixbuf_get_height(pb2),blank,spineWidth,0);
 
                     if(pb2)
