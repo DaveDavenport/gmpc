@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-30 17:42+0000\n"
-"Last-Translator: Klaus Simon <Unknown>\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:09+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -358,6 +358,12 @@ msgstr ""
 "  Dante Díaz https://launchpad.net/~dante\n"
 "  Javier García Díaz https://launchpad.net/~shortname\n"
 "  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Dante Díaz https://launchpad.net/~dante\n"
+"  Javier García Díaz https://launchpad.net/~shortname\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/playlist3.glade.h:1
@@ -367,8 +373,8 @@ msgstr "<ingresar el nombre de la lista de reproducción>"
 #: ../glade/playlist3.glade.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
 msgstr ""
-"<span size=\"x-small\"><i>La lista de reproducción existe actualmente.</i></"
-"span>"
+"<span size=\"x-small\"><i>La lista de reproducción existe "
+"actualmente.</i></span>"
 
 #: ../glade/playlist3.glade.h:3 ../src/main.c:1405
 msgid "Getting help"
@@ -540,14 +546,14 @@ msgstr "Proxy HTTP:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr "--versión"
@@ -558,7 +564,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -566,55 +572,55 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--help"
 
 #: ../src/main.c:347
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -634,24 +640,6 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
-"Cliente de Reproducción de Música de Gnome\n"
-"Opciones\n"
-"\t--start-hidden\t\tArrancar ocultado\n"
-"\t--help\t\t\tEste mensaje de ayuda.\n"
-"\t--debug-level=<level>\tHacer que gmpc muestre información debug.\n"
-"\t\t\t\tNivel:\n"
-"\t\t\t\t\t0 Sin información\n"
-"\t\t\t\t\t1 Mensajes de Error\n"
-"\t\t\t\t\t2 Mensajes de Error y Advertencias.\n"
-"\t\t\t\t\t3 Todos los mensajes\n"
-"\t--version\t\tMostrar versión y revisión svn\n"
-"\t--config=<file>\t\tAsignar ruta del fichero de la configuración, "
-"predeterminado ~/.gmpc/gmpc.cfg\n"
-"\t--clean-cover-db\tLimpieza del fichero de las carátulas.\n"
-"\t--disable-plugins\tNo cargar ninguna extensión.\n"
-"\t--replace\t\tReemplazar la sesión con la activa\n"
-"\t--quit\t\t\tTerminar la sesión gmpc activa. Solo funciona si sesiones "
-"múltiples están deshabilitadas.\n"
 
 #: ../src/main.c:502
 msgid "Failed to load the configuration system."
@@ -693,7 +681,8 @@ msgstr "código de error"
 
 #: ../src/main.c:1136
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
+msgstr ""
+"Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
 
 #: ../src/main.c:1173
 msgid "MPD versions before 0.13.0 are not supported"
@@ -733,23 +722,20 @@ msgid "Revision"
 msgstr "Revisión"
 
 #: ../src/main.c:1390
-#, fuzzy
 msgid "Libmpd version"
-msgstr "--versión"
+msgstr ""
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "--versión"
+msgstr ""
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
 msgstr ""
 
 #: ../src/main.c:1393
-#, fuzzy
 msgid "Platform"
-msgstr "Tiempo de reproducción"
+msgstr ""
 
 #: ../src/main.c:1395
 msgid "Windows"
@@ -768,9 +754,8 @@ msgid "Website"
 msgstr "Sitio web"
 
 #: ../src/main.c:1406
-#, fuzzy
 msgid "Options enabled"
-msgstr "Desactivado"
+msgstr ""
 
 #: ../src/main.c:1408
 msgid "X session management"
@@ -1200,7 +1185,7 @@ msgstr "Añadido 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr "Ingrese una url"
@@ -1213,7 +1198,7 @@ msgstr "Fallo al contactar la url: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr "Fallo al procesar vinculo de la lista de reproduccion"
@@ -1228,7 +1213,7 @@ msgstr "Notificación"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1247,7 +1232,7 @@ msgstr "Editar conexión"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1435,7 +1420,7 @@ msgstr "Descargando..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1532,9 +1517,8 @@ msgid "n/a"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:995
-#, fuzzy
 msgid "Audio format"
-msgstr "Información del Album"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1037
 msgid "Lyrics"
@@ -1588,7 +1572,7 @@ msgstr[1] "<b>Fechas: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
 msgstr "Información del Artista:"
@@ -1607,7 +1591,7 @@ msgstr "Artistas similares"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr "Información del Álbum"
@@ -1623,7 +1607,7 @@ msgstr "Pistas"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1631,7 +1615,7 @@ msgstr "Examinador de Metadatos"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr "Mostrar la Canción Actual"
@@ -1645,9 +1629,8 @@ msgid "kHz"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2440
-#, fuzzy
 msgid "bits"
-msgstr "kbit/seg"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2441
 msgid "channels"
@@ -1816,18 +1799,12 @@ msgstr "Imágenes"
 msgid "Loading"
 msgstr "Cargando"
 
-#~ msgid "Gnome Music Player Client\n"
-#~ msgstr "Cliente de Reproducción de Música de Gnome\n"
-
-#~ msgid ""
-#~ "Trying to run gmpc compiled against libmpd version '%s' with version "
-#~ "libmpd '%s'"
-#~ msgstr ""
-#~ "Intentando de arrancar gmpc compilado con la versión libmpd '%s' con la "
-#~ "versión libmpd '%s'"
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
+
+#, c-format
+#~ msgid "Gnome Music Player Client\n"
+#~ msgstr "Cliente de Reproducción de Música de Gnome\n"
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Tratando de ejecutar gmpc con una versión de libmpd errónea."
@@ -1850,8 +1827,7 @@ msgstr "Cargando"
 #~ msgstr "<b>Plugins:</b>"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
-#~ msgstr ""
-#~ "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
+#~ msgstr "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
 
 #~ msgid "<span size='xx-large' weight='bold'>Search</span>"
 #~ msgstr "<span size='xx-large' weight='bold'>Buscar</span>"
@@ -1921,3 +1897,11 @@ msgstr "Cargando"
 
 #~ msgid "<b>Duration:</b>"
 #~ msgstr "<b>Duración:</b>"
+
+#, c-format
+#~ msgid ""
+#~ "Trying to run gmpc compiled against libmpd version '%s' with version libmpd "
+#~ "'%s'"
+#~ msgstr ""
+#~ "Intentando de arrancar gmpc compilado con la versión libmpd '%s' con la "
+#~ "versión libmpd '%s'"

@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-30 22:17+0000\n"
-"Last-Translator: Klaus Simon <Unknown>\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-08 10:00+0000\n"
+"Last-Translator: Huber Florian <itshorty@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:09+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -372,6 +372,16 @@ msgstr ""
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
 "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Huber Florian https://launchpad.net/~itshorty\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
 "  hendrik https://launchpad.net/~hendrik-patchworklady"
 
 #: ../glade/playlist3.glade.h:1
@@ -553,14 +563,14 @@ msgstr "HTTP-Proxy:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr "--nivel-debugging="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr "--Version"
@@ -571,7 +581,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr ""
@@ -579,49 +589,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr "--cover-db-reinigen"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr "--plugins-deaktivieren"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr "--ersetzen"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr "--beenden"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr "--alte-Db-importieren"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr "--debug-aktualizationen"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--hilfe"
@@ -684,7 +694,7 @@ msgstr "Bitte geben sie ihr Passwort für '%s' ein:"
 
 #: ../src/main.c:1125 ../src/main.c:1150
 msgid "error code"
-msgstr ""
+msgstr "Fehlernummer"
 
 #: ../src/main.c:1136
 msgid "Insufficient permission to connect to mpd. Check password"
@@ -730,44 +740,40 @@ msgid "Revision"
 msgstr "Letzte Bearbeitung"
 
 #: ../src/main.c:1390
-#, fuzzy
 msgid "Libmpd version"
-msgstr "--Version"
+msgstr "Libmpd Version"
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "--Version"
+msgstr "GTK+ Version"
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
-msgstr ""
+msgstr "Libcurl Version"
 
 #: ../src/main.c:1393
-#, fuzzy
 msgid "Platform"
-msgstr "Laufzeit"
+msgstr "Architektur"
 
 #: ../src/main.c:1395
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: ../src/main.c:1398
 msgid "Mac OsX"
-msgstr ""
+msgstr "Mac OsX"
 
 #: ../src/main.c:1400
 msgid "*nix"
-msgstr ""
+msgstr "*nix"
 
 #: ../src/main.c:1404
 msgid "Website"
 msgstr "Webseite"
 
 #: ../src/main.c:1406
-#, fuzzy
 msgid "Options enabled"
-msgstr "Ausgeschaltet"
+msgstr ""
 
 #: ../src/main.c:1408
 msgid "X session management"
@@ -787,7 +793,7 @@ msgstr "Ausgeschaltet"
 
 #: ../src/main.c:1415
 msgid "NLS Support"
-msgstr ""
+msgstr "NSL Unterstützung"
 
 #: ../src/main.c:1423 ../src/mm-keys.c:539
 msgid "Multimedia Keys"
@@ -803,7 +809,7 @@ msgstr ""
 
 #: ../src/main.c:1447
 msgid "Unique"
-msgstr ""
+msgstr "Einmalig"
 
 #: ../src/main.c:1455
 msgid "Mac integration library"
@@ -811,7 +817,7 @@ msgstr ""
 
 #: ../src/main.c:1463
 msgid "Use ~/.config/ dir"
-msgstr ""
+msgstr "Benutze ~/.config/ Verzeichniss"
 
 #: ../src/main.c:1471
 msgid "Debug timing"
@@ -859,7 +865,7 @@ msgstr "Fehler beim ausführen"
 
 #: ../src/mm-keys.c:73
 msgid "PlayPause"
-msgstr ""
+msgstr "PlayPause"
 
 #. * MM_STOP
 #: ../src/mm-keys.c:77
@@ -1099,7 +1105,7 @@ msgstr "Aktualisiere Datenbank"
 
 #: ../src/playlist3.c:2181
 msgid "By"
-msgstr ""
+msgstr "Von"
 
 #: ../src/playlist3.c:2188
 msgid "From"
@@ -1127,7 +1133,7 @@ msgstr "Kritisch"
 
 #: ../src/playlist3-messages.c:215
 msgid "Time"
-msgstr ""
+msgstr "Zeit"
 
 #: ../src/playlist3-messages.c:217
 msgid "Message"
@@ -1142,7 +1148,7 @@ msgstr ""
 
 #: ../src/preferences.c:93 ../src/preferences.c:189
 msgid "Plugins"
-msgstr ""
+msgstr "Erweiterungen"
 
 #: ../src/preferences.c:150
 msgid "Plugins:"
@@ -1192,7 +1198,7 @@ msgstr "%i %s hinzugefügt"
 #: ../src/url_fetcher.c:63 ../src/url_fetcher.c:92
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] ""
+msgstr[0] "Stream"
 msgstr[1] "Streams"
 
 #: ../src/url_fetcher.c:156 ../src/url_fetcher.c:181
@@ -1201,7 +1207,7 @@ msgstr "Einen Stream hinzugefügt"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr "Geben sie eine URL ein"
@@ -1214,7 +1220,7 @@ msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr "Der link der Wiedergabeliste konnte nicht analysiert werden"
@@ -1229,7 +1235,7 @@ msgstr "Benachrichtigung"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1242,11 +1248,11 @@ msgstr "Wilkommen bei GMPC"
 
 #: ../src/setup-assistant.c:135
 msgid "Setup connection"
-msgstr ""
+msgstr "Verbindungs Einstellungen"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1293,11 +1299,11 @@ msgstr "Abschneiden"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:902
 msgid "Paste before"
-msgstr ""
+msgstr "Vorher einfügen"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:908
 msgid "Paste after"
-msgstr ""
+msgstr "Nachher einfügen"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:923
@@ -1436,7 +1442,7 @@ msgstr "Abrufen..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1530,12 +1536,11 @@ msgstr "Bitrate"
 #: ../src/browsers/playlist3-metadata-browser.c:987
 #: ../src/browsers/playlist3-metadata-browser.c:1000
 msgid "n/a"
-msgstr ""
+msgstr "Nicht verfügbar"
 
 #: ../src/browsers/playlist3-metadata-browser.c:995
-#, fuzzy
 msgid "Audio format"
-msgstr "Album Information"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1037
 msgid "Lyrics"
@@ -1554,9 +1559,8 @@ msgid "Links"
 msgstr "Links"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1211
-#, fuzzy
 msgid "Invalid search"
-msgstr "Wiedergabeliste durchsuchen"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1263
 #, c-format
@@ -1573,14 +1577,13 @@ msgstr "Finde Künstler"
 #: ../src/browsers/playlist3-metadata-browser.c:1479
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>Genre: </b>"
+msgstr[1] "<b>Genre: </b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1494
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>Datum: </b>"
 
 #. *
 #. * Artist Information Text view
@@ -1591,10 +1594,10 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
-msgstr ""
+msgstr "Künstler informationen:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1567
 msgid "Artist information"
@@ -1610,7 +1613,7 @@ msgstr "Ähnliche Künstler"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr "Album Information:"
@@ -1626,7 +1629,7 @@ msgstr "Titel"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1634,7 +1637,7 @@ msgstr "Metadatenbrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr "Zeige aktuelles Lied"
@@ -1645,16 +1648,15 @@ msgstr "kbit/Sek"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2439
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2440
-#, fuzzy
 msgid "bits"
-msgstr "kbit/Sek"
+msgstr "bits"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2441
 msgid "channels"
-msgstr ""
+msgstr "Kanäle"
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:843
@@ -1690,11 +1692,11 @@ msgstr "Browser zurücksetzen"
 
 #: ../src/egg/eggcellrendererkeys.c:27
 msgid "New accelerator..."
-msgstr ""
+msgstr "Neue Tastenkombination…"
 
 #: ../src/egg/eggcellrendererkeys.c:169 ../src/egg/eggcellrendererkeys.c:170
 msgid "Accelerator key"
-msgstr ""
+msgstr "Tastenkombination"
 
 #: ../src/egg/eggcellrendererkeys.c:179 ../src/egg/eggcellrendererkeys.c:180
 msgid "Accelerator modifiers"
@@ -1752,7 +1754,7 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:80
 msgid "Position"
-msgstr ""
+msgstr "Position"
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:743
@@ -1761,11 +1763,11 @@ msgstr "Werkzeuge"
 
 #: ../src/gob/gmpc-profiles.gob:72
 msgid "Added profile"
-msgstr ""
+msgstr "Hinzugefügtes Profil"
 
 #: ../src/gob/gmpc-profiles.gob:80
 msgid "Removed profile"
-msgstr ""
+msgstr "Entferntes Profil"
 
 #: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:845
 msgid "Refetch"
@@ -1785,7 +1787,7 @@ msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:172
 msgid "Fetching Lyric"
-msgstr ""
+msgstr "Hohle Liedtexte"
 
 #: ../src/gob/gmpc-meta-text-view.gob:176
 msgid "Fetching Artist Info"
@@ -1917,8 +1919,7 @@ msgstr "Wird geladen"
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Veränderungen sind erst nach einem Reconnect "
 #~ "aktiv</i></span>"

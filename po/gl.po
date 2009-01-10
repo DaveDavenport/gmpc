@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-24 19:16+0000\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-07 19:09+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Galician\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:09+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -341,6 +341,10 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Johám-Luís Miguéns Vila https://launchpad.net/~galiza-ceive\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Johám-Luís Miguéns Vila https://launchpad.net/~galiza-ceive\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/playlist3.glade.h:1
@@ -349,7 +353,8 @@ msgstr "<introduz o nome da lista>"
 
 #: ../glade/playlist3.glade.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>A lista de reproduçom já existe.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>A lista de reproduçom já existe.</i></span>"
 
 #: ../glade/playlist3.glade.h:3 ../src/main.c:1405
 msgid "Getting help"
@@ -521,14 +526,14 @@ msgstr ""
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr "--version"
@@ -539,7 +544,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr ""
@@ -547,49 +552,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--help"
@@ -634,7 +639,8 @@ msgstr "Erro ao configurar libmpd"
 
 #: ../src/main.c:1075
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
+msgstr ""
+"O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
 #: ../src/main.c:1096
 #, c-format
@@ -696,14 +702,12 @@ msgid "Revision"
 msgstr ""
 
 #: ../src/main.c:1390
-#, fuzzy
 msgid "Libmpd version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
@@ -730,9 +734,8 @@ msgid "Website"
 msgstr ""
 
 #: ../src/main.c:1406
-#, fuzzy
 msgid "Options enabled"
-msgstr "Deshabilitado"
+msgstr ""
 
 #: ../src/main.c:1408
 msgid "X session management"
@@ -1149,7 +1152,7 @@ msgstr "1 stream engadido"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr "Introduzir umha URL"
@@ -1162,7 +1165,7 @@ msgstr "Nom se puido ligar à URL: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -1177,7 +1180,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1194,7 +1197,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1381,7 +1384,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1498,9 +1501,8 @@ msgid "Links"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1211
-#, fuzzy
 msgid "Invalid search"
-msgstr "Procurar na lista"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1263
 #, c-format
@@ -1533,7 +1535,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
 msgstr ""
@@ -1552,7 +1554,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr ""
@@ -1568,7 +1570,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1576,7 +1578,7 @@ msgstr "Navegador de metadatos"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr ""
@@ -1870,8 +1872,7 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Posiçom"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>As mudanças activarám-se ao reconectar</i></span>"
 
@@ -2050,16 +2051,16 @@ msgstr ""
 #~ msgstr "*"
 
 #~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
+#~ "<span size=\"x-small\"><i>Enter a local or remote stream or "
+#~ "playlist</i></span>"
 #~ msgstr ""
-#~ "<span size=\"x-small\"><i>Introduz um stream local ou remoto ou umha "
-#~ "lista de reproduçom</i></span>\""
+#~ "<span size=\"x-small\"><i>Introduz um stream local ou remoto ou umha lista "
+#~ "de reproduçom</i></span>\""
 
 #~ msgid "You can drop a link or file directly from a browser on this window."
 #~ msgstr ""
-#~ "Podes arrastar um enlace ou ficheiro directamente dende un navegador "
-#~ "nesta janela."
+#~ "Podes arrastar um enlace ou ficheiro directamente dende un navegador nesta "
+#~ "janela."
 
 #~ msgid "Add Online Stream list"
 #~ msgstr "Engadir umha lista de streaming online"

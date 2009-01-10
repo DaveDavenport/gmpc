@@ -7,26 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-29 20:36+0000\n"
-"Last-Translator: zeugma <Unknown>\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-07 19:14+0000\n"
+"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:08+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "mpd süreci için bir gnome önyüzü"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:1381 ../src/tray-icon2.c:538
 #: ../src/tray-icon2.c:720 ../src/tray-icon2.c:723 ../src/tray-icon2.c:733
 #: ../src/tray-icon2.c:736
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "Gnome Müzikçalar İstemcisi"
 
 #: ../glade/gmpc.glade.h:1
 msgid "/"
@@ -34,15 +34,15 @@ msgstr "/"
 
 #: ../glade/gmpc.glade.h:2
 msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
-msgstr ""
+msgstr "<b><span size=\"x-large\">Bir hata oldu</span></b>"
 
 #: ../glade/gmpc.glade.h:3
 msgid "<b>Crossfade:</b>"
-msgstr ""
+msgstr "<b>Yumuşak Geçiş:</b>"
 
 #: ../glade/gmpc.glade.h:4
 msgid "<b>Enable Field:</b>"
-msgstr ""
+msgstr "<b>Alanı Etkinleştir:</b>"
 
 #: ../glade/gmpc.glade.h:5
 msgid "<b>Example:</b>"
@@ -50,15 +50,15 @@ msgstr "<b>Örnek:</b>"
 
 #: ../glade/gmpc.glade.h:6
 msgid "<b>Inline messages</b>"
-msgstr ""
+msgstr "<b>Satıriçi iletiler</b>"
 
 #: ../glade/gmpc.glade.h:7
 msgid "<b>Loaded Plugins:</b>"
-msgstr ""
+msgstr "<b>Yüklenmiş Eklentiler:</b>"
 
 #: ../glade/gmpc.glade.h:8
 msgid "<b>Main:</b>"
-msgstr ""
+msgstr "<b>Ana:</b>"
 
 #: ../glade/gmpc.glade.h:9
 msgid "<b>Name:</b>"
@@ -66,7 +66,7 @@ msgstr "<b>İsim:</b>"
 
 #: ../glade/gmpc.glade.h:10
 msgid "<b>Notification Area Icon</b>"
-msgstr ""
+msgstr "<b>Bildiri Alanı Simgesi</b>"
 
 #: ../glade/gmpc.glade.h:11
 msgid "<b>Output Devices:</b>"
@@ -318,6 +318,11 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  zeugma https://launchpad.net/~sunder67\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  XceptN https://launchpad.net/~oyuksel153\n"
 "  zeugma https://launchpad.net/~sunder67"
 
 #: ../glade/playlist3.glade.h:1
@@ -498,14 +503,14 @@ msgstr ""
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr ""
@@ -516,7 +521,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr ""
@@ -524,49 +529,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--yardım"
@@ -675,18 +680,16 @@ msgid "Libmpd version"
 msgstr ""
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "Sürüm"
+msgstr ""
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
 msgstr ""
 
 #: ../src/main.c:1393
-#, fuzzy
 msgid "Platform"
-msgstr "Oynatma süresi"
+msgstr ""
 
 #: ../src/main.c:1395
 msgid "Windows"
@@ -1112,7 +1115,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr ""
@@ -1125,7 +1128,7 @@ msgstr ""
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -1140,7 +1143,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1157,7 +1160,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1340,7 +1343,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1490,7 +1493,7 @@ msgstr[0] "<b>Tarih: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
 msgstr ""
@@ -1509,7 +1512,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr "Albüm bilgisi:"
@@ -1525,7 +1528,7 @@ msgstr "Parçalar"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1533,7 +1536,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr ""
@@ -1547,9 +1550,8 @@ msgid "kHz"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2440
-#, fuzzy
 msgid "bits"
-msgstr "kbit/sn"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2441
 msgid "channels"

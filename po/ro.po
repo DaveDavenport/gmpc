@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-24 19:29+0000\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-07 19:27+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:08+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -356,6 +356,11 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Alexandru Szasz https://launchpad.net/~alexxed\n"
 "  Licaon https://launchpad.net/~licaon\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Alexandru Szasz https://launchpad.net/~alexxed\n"
+"  Licaon https://launchpad.net/~licaon\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/playlist3.glade.h:1
@@ -536,14 +541,14 @@ msgstr "Proxy HTTP:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr "--version"
@@ -554,7 +559,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -562,55 +567,55 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--help"
 
 #: ../src/main.c:347
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -630,24 +635,6 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
-"Clientul Gnome de ascultat muzică\n"
-"Opțiuni:\n"
-"\t--start-hidden\t\tPornește ascuns.\n"
-"\t--help\t\t\tMesajul acesta de ajutor.\n"
-"\t--debug-level=<level>\tgmpc va afișa informații de depanare.\n"
-"\t\t\t\tNivel:\n"
-"\t\t\t\t\t0 Nimic\n"
-"\t\t\t\t\t1 Mesaje de eroare\n"
-"\t\t\t\t\t2 Erori și avertismente\n"
-"\t\t\t\t\t3 Toate mesajele\n"
-"\t--version\t\tAfișează versiunea și revizia svn\n"
-"\t--config=<file>\t\tSetează calea către configurație, implicit ~/.gmpc/gmpc."
-"cfg\n"
-"\t--clean-cover-db\tCurăță fișierul de coperți.\n"
-"\t--disable-plugins\tNu încărca niciun modul.\n"
-"\t--replace\t\tÎnlocuiește sesiunea care rulează cu cea curentă\n"
-"\t--quit\t\t\tÎnchide sesiunea curentă de gmpc. Funcționează numai dacă sunt "
-"permise instanțe multiple.\n"
 
 #: ../src/main.c:502
 msgid "Failed to load the configuration system."
@@ -727,23 +714,20 @@ msgid "Revision"
 msgstr "Revizia"
 
 #: ../src/main.c:1390
-#, fuzzy
 msgid "Libmpd version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
 msgstr ""
 
 #: ../src/main.c:1393
-#, fuzzy
 msgid "Platform"
-msgstr "Adaugă înainte"
+msgstr ""
 
 #: ../src/main.c:1395
 msgid "Windows"
@@ -762,9 +746,8 @@ msgid "Website"
 msgstr "Pagina de internet"
 
 #: ../src/main.c:1406
-#, fuzzy
 msgid "Options enabled"
-msgstr "Dezactivat"
+msgstr ""
 
 #: ../src/main.c:1408
 msgid "X session management"
@@ -1200,7 +1183,7 @@ msgstr "S-a adăugat un flux"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr "Introduceți o adresă"
@@ -1213,7 +1196,7 @@ msgstr "Eșec la deschiderea adresei: „%s”"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr "Eșec la analiza legăturii către lista de redare"
@@ -1228,7 +1211,7 @@ msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1247,7 +1230,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1440,7 +1423,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1595,7 +1578,7 @@ msgstr[2] "<b>Date: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
 msgstr "Despre artist:"
@@ -1614,7 +1597,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr "Despre album:"
@@ -1630,7 +1613,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1638,7 +1621,7 @@ msgstr "Navigator de metadate"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr "Arată melodia curentă"
@@ -1652,9 +1635,8 @@ msgid "kHz"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2440
-#, fuzzy
 msgid "bits"
-msgstr "kbit/sec"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2441
 msgid "channels"
@@ -1823,11 +1805,12 @@ msgstr "Imagini"
 msgid "Loading"
 msgstr ""
 
-#~ msgid "Gnome Music Player Client\n"
-#~ msgstr "Clientul Gnome de ascultat muzică\n"
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
+
+#, c-format
+#~ msgid "Gnome Music Player Client\n"
+#~ msgstr "Clientul Gnome de ascultat muzică\n"
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Încercați să rulați gmpc cu o versiune incompatibilă de libmpd."

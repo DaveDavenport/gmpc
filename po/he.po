@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-07 19:48+0100\n"
-"PO-Revision-Date: 2008-12-24 19:22+0000\n"
+"POT-Creation-Date: 2009-01-07 19:47+0100\n"
+"PO-Revision-Date: 2009-01-07 19:27+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-05 22:09+0000\n"
+"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -347,6 +347,9 @@ msgstr ""
 "  Yaron https://launchpad.net/~sh-yaron\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Yaron https://launchpad.net/~sh-yaron\n"
+"\n"
+"Launchpad Contributions:\n"
 "  Yaron https://launchpad.net/~sh-yaron"
 
 #: ../glade/playlist3.glade.h:1
@@ -527,14 +530,14 @@ msgstr "מתווך HTTP:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:270 ../src/main.c:272
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:278
 msgid "--version"
 msgstr "--version"
@@ -545,7 +548,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:294
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -553,55 +556,55 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:302
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:309
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:316
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:323
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:345
 msgid "--help"
 msgstr "--help"
 
 #: ../src/main.c:347
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Gnome Music Player Client\n"
 "Options:\n"
@@ -621,23 +624,6 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
-"לקוח נגן המוסיקה של GNOME\n"
-"אפשרויות:\n"
-"\t--start-hidden\t\tהתחל ממוזער\n"
-"\t--help\t\t\tהודעת עזרה זו.\n"
-"\t--debug-level=<level>\tגורם ל־gmpc להציג נתוני ניפוי שגיאות.\n"
-"\t\t\t\tרמה:\n"
-"\t\t\t\t\t0 ללא פלא\n"
-"\t\t\t\t\t1 הודעות שגיאה\n"
-"\t\t\t\t\t2 הודעות שגיאה + אזהרה\n"
-"\t\t\t\t\t3 כל ההודעות\n"
-"\t--version\t\tהדפסת גירסה ומהדורת svn\n"
-"\t--config=<file>\t\tהגדר את נתיב קובץ התצורה, ברירת מחדל ~/.gmpc/gmpc.cfg\n"
-"\t--clean-cover-db\tנקה את קובץ העטיפה.\n"
-"\t--disable-plugins\tאל תטען תוספים.\n"
-"\t--replace\t\tהחלף את המופע שרץ במופע הקיים\n"
-"\t--quit\t\t\tצא מהמופע הפעיל של gmpc. פועל רק אם בוטלה האפשרות לריבוי "
-"מנשקים.\n"
 
 #: ../src/main.c:502
 msgid "Failed to load the configuration system."
@@ -719,23 +705,20 @@ msgid "Revision"
 msgstr "מהדורה"
 
 #: ../src/main.c:1390
-#, fuzzy
 msgid "Libmpd version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1391
-#, fuzzy
 msgid "GTK+ version"
-msgstr "--version"
+msgstr ""
 
 #: ../src/main.c:1392
 msgid "Libcurl version"
 msgstr ""
 
 #: ../src/main.c:1393
-#, fuzzy
 msgid "Platform"
-msgstr "הדבקה לפני"
+msgstr ""
 
 #: ../src/main.c:1395
 msgid "Windows"
@@ -1184,7 +1167,7 @@ msgstr "נוסף תזרים 1"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:217
 msgid "Enter an url"
 msgstr "הזן כתובת"
@@ -1197,7 +1180,7 @@ msgstr "כשל ביצירת קשר עם הכתובת: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:285
 msgid "Failed to parse the playlist link"
 msgstr "כשל בניתוח הקישור אל רשימת ההשמעה"
@@ -1212,7 +1195,7 @@ msgstr "דיווחים"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1231,7 +1214,7 @@ msgstr "הגדרת חיבור"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1420,7 +1403,7 @@ msgstr "מאחזר..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:423
 #: ../src/browsers/playlist3-metadata-browser.c:712
 #: ../src/browsers/playlist3-metadata-browser.c:2383
@@ -1571,7 +1554,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1562
 msgid "Artist info:"
 msgstr ""
@@ -1590,7 +1573,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1902
 msgid "Album info:"
 msgstr ""
@@ -1606,7 +1589,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2227
 #: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "Metadata Browser"
@@ -1614,7 +1597,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2243
 msgid "Show Current Song"
 msgstr ""
@@ -1798,11 +1781,12 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#~ msgid "Gnome Music Player Client\n"
-#~ msgstr "לקוח נגן המוסיקה של GNOME\n"
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>מתווך</b>"
+
+#, c-format
+#~ msgid "Gnome Music Player Client\n"
+#~ msgstr "לקוח נגן המוסיקה של GNOME\n"
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "מנסה להריץ את gmpc עם גירסה שגויה של libmpd"
