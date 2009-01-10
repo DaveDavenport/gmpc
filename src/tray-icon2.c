@@ -57,7 +57,7 @@ enum{
 /**
  * Preferences
  */
-static GladeXML *tray_icon2_preferences_xml = NULL;
+static GtkBuilder *tray_icon2_preferences_xml = NULL;
 void popup_timeout_changed(void);
 void popup_position_changed(GtkComboBox *om);
 void popup_enable_toggled(GtkToggleButton *but);
@@ -363,7 +363,7 @@ void tray_icon2_create_tooltip(void)
 {
 	int x=0,y=0,monitor;
 	GdkScreen *screen;
-	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+	GtkWidget *pl3_win = playlist3_get_window(); 
 	GtkWidget *hbox = NULL;
 	GtkWidget *vbox = NULL;
 	GtkWidget *label = NULL;
@@ -781,7 +781,7 @@ void tray_enable_toggled(GtkToggleButton *but)
 static void tray_update_settings(void)
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_tray_enable"), 
+			gtk_builder_get_object(tray_icon2_preferences_xml, "ck_tray_enable"), 
 			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", DEFAULT_TRAY_ICON_ENABLE));
 }
 
@@ -799,24 +799,24 @@ void popup_position_changed(GtkComboBox *om)
 void popup_timeout_changed(void)
 {
 	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "tooltip-timeout",
-			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_icon2_preferences_xml, "popup_timeout"))));
+			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(gtk_builder_get_object(tray_icon2_preferences_xml, "popup_timeout"))));
 }
 
 static void update_popup_settings(void)
 {
 	gtk_toggle_button_set_active((GtkToggleButton *)
-			glade_xml_get_widget(tray_icon2_preferences_xml, "ck_popup_enable"),
+			gtk_builder_get_object(tray_icon2_preferences_xml, "ck_popup_enable"),
 			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1));
-	gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tray_icon2_preferences_xml, "om_popup_position")),
+	gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(tray_icon2_preferences_xml, "om_popup_position")),
 			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-position", 0));
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(glade_xml_get_widget(tray_icon2_preferences_xml, "popup_timeout")),
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(tray_icon2_preferences_xml, "popup_timeout")),
 			cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5));
 }
 
 static void tray_icon2_preferences_destroy(GtkWidget *container)
 {
 	if(tray_icon2_preferences_xml) {
-		GtkWidget *vbox = glade_xml_get_widget(tray_icon2_preferences_xml, "tray-pref-vbox");
+		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(tray_icon2_preferences_xml, "tray-pref-vbox");
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		g_object_unref(tray_icon2_preferences_xml);
 		tray_icon2_preferences_xml = NULL;
@@ -829,17 +829,19 @@ void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data)
 }
 static void tray_icon2_preferences_construct(GtkWidget *container)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	tray_icon2_preferences_xml = glade_xml_new(path, "tray-pref-vbox",NULL);
+	gchar *path = gmpc_get_full_glade_path("preferences-trayicon.ui");
+	tray_icon2_preferences_xml = gtk_builder_new();
+    gtk_builder_add_from_file(tray_icon2_preferences_xml, path, NULL);
+    q_free(path);
 
 	if(tray_icon2_preferences_xml) {
-		GtkWidget *vbox = glade_xml_get_widget(tray_icon2_preferences_xml, "tray-pref-vbox");
+		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(tray_icon2_preferences_xml, "tray-pref-vbox");
 		gtk_container_add(GTK_CONTAINER(container),vbox);
 		tray_update_settings();
 		update_popup_settings();
-		glade_xml_signal_autoconnect(tray_icon2_preferences_xml);
+        gtk_builder_connect_signals(tray_icon2_preferences_xml, NULL);
 	}
-    gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(tray_icon2_preferences_xml, "pm-combo")),
+    gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(tray_icon2_preferences_xml, "pm-combo")),
         cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO));
 }
 gmpcPrefPlugin tray_icon2_preferences = {

@@ -4,6 +4,7 @@ appglade_DATA =	gmpc.glade \
 		preferences.ui\
 		preferences-playlist.ui\
 		preferences-plugins.ui\
+		preferences-trayicon.ui\
 		playlist3.glade
 
 EXTRA_DIST = ${appglade_DATA} 

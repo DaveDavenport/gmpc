@@ -2305,7 +2305,10 @@ gboolean playlist3_show_playtime(gulong playtime)
      return FALSE;
 }
 
-
+GtkWidget * playlist3_get_window(void)
+{
+	return glade_xml_get_widget(pl3_xml, "pl3_win");
+}
 /***
  * Help menu
  */
