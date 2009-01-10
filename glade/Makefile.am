@@ -6,6 +6,7 @@ appglade_DATA =	gmpc.glade \
 		preferences-plugins.ui\
 		preferences-trayicon.ui\
 		preferences-mmkeys.ui\
+		preferences-esf-dialog.ui\
 		playlist3.glade
 
 EXTRA_DIST = ${appglade_DATA} 

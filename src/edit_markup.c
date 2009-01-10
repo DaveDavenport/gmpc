@@ -30,7 +30,7 @@
 
 
 
-GladeXML *xml_esf  = NULL;
+static GtkBuilder *xml_esf  = NULL;
 GtkTextBuffer *buffer= NULL;
 
 void esf_reload(void);
@@ -52,27 +52,27 @@ static void esf_render_example(GtkTextBuffer *buf)
 	song->file = g_strdup(filename);
 	song->time = song_time;
 
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_artist"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_artist"))))
 	{
 		song->artist = g_strdup(artist);
 	}
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_album"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_album"))))
 	{
 		song->album = g_strdup(album);
 	}
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_title"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_title"))))
 	{
 		song->title = g_strdup(title);
 	}
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_track"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_track"))))
 	{
 		song->track = g_strdup(track);
 	}
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_date"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_date"))))
 	{
 		song->date = g_strdup(date);
 	}
-	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(glade_xml_get_widget(xml_esf, "ck_stream"))))
+	if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_esf, "ck_stream"))))
 	{
 		song->name = g_strdup(stream_name);
 	}
@@ -83,7 +83,7 @@ static void esf_render_example(GtkTextBuffer *buf)
 	format = gtk_text_buffer_get_text(buffer,&start_iter, &stop_iter, FALSE);
 	mpd_song_markup((char *)result_buffer, 1024,format, song);
 
-	gtk_label_set_text(GTK_LABEL(glade_xml_get_widget(xml_esf, "label_example")), (const char *)result_buffer);
+	gtk_label_set_text(GTK_LABEL(gtk_builder_get_object(xml_esf, "label_example")), (const char *)result_buffer);
 	mpd_freeSong(song);
 }
 void esf_reload(void)
@@ -95,12 +95,14 @@ char * edit_song_markup(char *format)
 	char *str_format = NULL;
 	GtkTextIter start_iter, stop_iter;
 	GtkWidget *dialog;
-	char *path = gmpc_get_full_glade_path("gmpc.glade");
-	xml_esf= glade_xml_new(path, "esf_dialog",NULL);
+    GError *error = NULL;
+	char *path = gmpc_get_full_glade_path("preferences-esf-dialog.ui");
+	xml_esf= gtk_builder_new();
+    gtk_builder_add_from_file(xml_esf, path, NULL);
 	q_free(path);
-	dialog = glade_xml_get_widget(xml_esf, "esf_dialog");
-	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(glade_xml_get_widget(xml_esf, "textview_markup")));
-	glade_xml_signal_autoconnect (xml_esf);
+	dialog = (GtkWidget *) gtk_builder_get_object(xml_esf, "esf_dialog");
+	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(gtk_builder_get_object(xml_esf, "textview_markup")));
+    gtk_builder_connect_signals(xml_esf, NULL);	
 	g_signal_connect(G_OBJECT(buffer), "changed", G_CALLBACK(esf_render_example), NULL);
 	if(format != NULL)
 	{
