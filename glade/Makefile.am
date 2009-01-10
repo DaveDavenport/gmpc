@@ -1,5 +1,5 @@
 appgladedir = $(datadir)/gmpc/
-appglade_DATA =	gmpc.glade \
+appglade_DATA =\	
 		aboutdialog.ui\
 		preferences.ui\
 		preferences-playlist.ui\

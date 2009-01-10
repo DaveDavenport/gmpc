@@ -1,7 +1,6 @@
 # files added by intltool-prepare
 [encoding: UTF-8]
 data/gmpc.desktop.in
-glade/gmpc.glade
 glade/playlist3.glade
 src/config1.c
 src/edit_markup.c
@@ -21,6 +20,17 @@ src/url_fetcher.c
 src/tray-icon2.c
 src/setup-assistant.c
 
+# Ui files
+glade/aboutdialog.ui
+glade/password-dialog.ui
+glade/preferences-connection.ui
+glade/preferences-esf-dialog.ui
+glade/preferences-playlist.ui
+glade/preferences-plugins.ui
+glade/preferences-server.ui
+glade/preferences-trayicon.ui
+glade/preferences.ui
+
 # Browsers
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
@@ -32,8 +42,6 @@ src/browsers/playlist3-tag2-browser.c
 # Egg files
 src/egg/eggcolumnmodel.c
 src/egg/eggcolumnchooserdialog.c
-src/egg/eggcellrendererkeys.c
-src/egg/eggaccelerators.c
 src/egg/eggtrayicon.c
 
 
