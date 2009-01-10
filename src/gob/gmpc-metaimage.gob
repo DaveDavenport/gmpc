@@ -602,16 +602,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 /* save url */
                 self->_priv->image_url = g_strdup(path); 
 
-                /* calculate it 
-                if(width > height) {
-                    height = (height*self->size)/((gdouble)width);
-                    width = self->size;
-                }
-                else {
-                    width = (width*self->size)/((gdouble)height);
-                    height = self->size;
-                }
-               */ 
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART) 
                 {
                     float spineRatio = 31.0/343.0;
@@ -625,8 +615,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     }else{
                         pb = gdk_pixbuf_new_from_file_at_scale(path,-1,self->size,TRUE,NULL);
                     }
-                    width = gdk_pixbuf_get_width(pb)+spineWidth+0;			
-                    height = gdk_pixbuf_get_height(pb)+0;
                     /* load the case */
                     {
                         GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
@@ -647,8 +635,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                             gtk_icon_info_free(ii);
                         }
                     }
+
+                    width = gdk_pixbuf_get_width(pb2);
+                    height = gdk_pixbuf_get_height(pb2);
+
                     /* render */
-                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,gdk_pixbuf_get_width(pb2),gdk_pixbuf_get_height(pb2));
+                    blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
                     printf("%i %i %i\n", gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2),spineWidth);
                     gdk_pixbuf_copy_area(pb, 0,0,gdk_pixbuf_get_width(pb2)-spineWidth,gdk_pixbuf_get_height(pb2),blank,spineWidth,0);
@@ -667,6 +659,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb);
                 }
                 else {
+                    /* calculate it */
+                    if(width > height) {
+                        height = (height*self->size)/((gdouble)width);
+                        width = self->size;
+                    }
+                    else {
+                        width = (width*self->size)/((gdouble)height);
+                        height = self->size;
+                    }
                     pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
