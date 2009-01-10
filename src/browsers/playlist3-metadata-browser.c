@@ -647,6 +647,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/** Create artist image */	
 	metaimage = gmpc_metaimage_new_size(META_ARTIST_ART,96);
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage), "no-artist");
+    gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(metaimage),(char *)"fetching-artist");
     gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(metaimage), song);
 	gtk_box_pack_start(GTK_BOX(vbox), metaimage, FALSE, TRUE,0);
 
@@ -1455,6 +1456,7 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 	/* Artist image */
 	gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,150);
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
+    gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
 	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song2);
 
 	gtk_table_attach(GTK_TABLE(table), gmtv, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
