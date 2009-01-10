@@ -529,8 +529,7 @@ static void pl3_current_playlist_browser_delete_selected_songs (void)
 		/* create a warning message dialog */
 		GtkWidget *dialog =
 			gtk_message_dialog_new (GTK_WINDOW
-					(glade_xml_get_widget
-					 (pl3_xml, "pl3_win")),
+					(playlist3_get_window()),
 					GTK_DIALOG_MODAL,
 					GTK_MESSAGE_WARNING,
 					GTK_BUTTONS_NONE,
@@ -1136,7 +1135,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
 static void pl3_current_playlist_save_playlist (void)
 {
     gchar *str;
-    GladeXML *xml = NULL;
+    GtkBuilder *xml = NULL;
     int run = TRUE;
     /* check if the connection is up */
     if (!mpd_check_connected(connection))
@@ -1144,21 +1143,22 @@ static void pl3_current_playlist_save_playlist (void)
         return;
     }
     /* create the interface */
-    str = gmpc_get_full_glade_path("playlist3.glade");
-    xml = glade_xml_new (str, "save_pl", NULL);
+    str = gmpc_get_full_glade_path("playlist-save-dialog.ui");
+    xml = gtk_builder_new();
+    gtk_builder_add_from_file(xml, str, NULL);
     q_free(str);
 
     /* run the interface */
     do
     {
-        switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+        switch (gtk_dialog_run (GTK_DIALOG ((GtkWidget *) gtk_builder_get_object (xml, "save_pl"))))
         {
             case GTK_RESPONSE_OK:
                 run = FALSE;
                 /* if the users agrees do the following: */
                 /* get the song-name */
                 str = (gchar *)	gtk_entry_get_text (GTK_ENTRY
-                        (glade_xml_get_widget (xml, "pl-entry")));
+                        ((GtkWidget *) gtk_builder_get_object (xml, "pl-entry")));
                 /* check if the user entered a name, we can't do withouth */
                 /* TODO: disable ok button when nothing is entered */
                 /* also check if there is a connection */
@@ -1168,11 +1168,11 @@ static void pl3_current_playlist_save_playlist (void)
                     if(retv == MPD_DATABASE_PLAYLIST_EXIST )
                     {
                         gchar *errormsg = g_markup_printf_escaped(_("<i>Playlist <b>\"%s\"</b> already exists\nOverwrite?</i>"), str);
-                        gtk_label_set_markup(GTK_LABEL(glade_xml_get_widget(xml, "label_error")), errormsg);
-                        gtk_widget_show(glade_xml_get_widget(xml, "hbox5"));
+                        gtk_label_set_markup(GTK_LABEL((GtkWidget *) gtk_builder_get_object(xml, "label_error")), errormsg);
+                        gtk_widget_show((GtkWidget *)gtk_builder_get_object(xml, "hbox5"));
                         /* ask to replace */
-                        gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), FALSE);
-                        switch (gtk_dialog_run (GTK_DIALOG (glade_xml_get_widget (xml, "save_pl"))))
+                        gtk_widget_set_sensitive(GTK_WIDGET((GtkWidget *) gtk_builder_get_object(xml, "pl-entry")), FALSE);
+                        switch (gtk_dialog_run (GTK_DIALOG ((GtkWidget *) gtk_builder_get_object (xml, "save_pl"))))
                         {
                             case GTK_RESPONSE_OK:
                                 run = FALSE;
@@ -1184,8 +1184,8 @@ static void pl3_current_playlist_save_playlist (void)
                                 run = TRUE;
                         }
                         /* return to stare */
-                        gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(xml, "pl-entry")), TRUE);
-                        gtk_widget_hide(glade_xml_get_widget(xml, "hbox5"));
+                        gtk_widget_set_sensitive(GTK_WIDGET((GtkWidget *) gtk_builder_get_object(xml, "pl-entry")), TRUE);
+                        gtk_widget_hide((GtkWidget *) gtk_builder_get_object(xml, "hbox5"));
 
                         q_free(errormsg);
                     }
@@ -1204,7 +1204,7 @@ static void pl3_current_playlist_save_playlist (void)
         }
     }while(run);
     /* destroy the window */
-    gtk_widget_destroy (glade_xml_get_widget (xml, "save_pl"));
+    gtk_widget_destroy ((GtkWidget *) gtk_builder_get_object (xml, "save_pl"));
 
     /* unref the gui description */
     g_object_unref (xml);

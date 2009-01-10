@@ -10,6 +10,7 @@ appglade_DATA =\
 		preferences-server.ui\
 		preferences-connection.ui\
 		password-dialog.ui\
+		playlist-save-dialog.ui\
 		playlist3.glade
 
 EXTRA_DIST = ${appglade_DATA} 
