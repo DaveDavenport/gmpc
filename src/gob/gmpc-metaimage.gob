@@ -608,32 +608,22 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     int spineWidth = (self->size)*spineRatio;
                     GdkPixbuf *blank=NULL,*pb2=NULL;
                     const gchar *path2;
+                    GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
+                            "stylized-cover", 
+                            self->size, 0);
                     /* Scale the cover to fit inside the case */
-//                    pb = gdk_pixbuf_new_from_file_at_scale(path,width-spineWidth, (height*(width-spineWidth))/((gdouble)width),TRUE,NULL);
                     if(width < height){
                         pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-spineWidth, -1,TRUE,NULL);
                     }else{
                         pb = gdk_pixbuf_new_from_file_at_scale(path,-1,self->size,TRUE,NULL);
                     }
                     /* load the case */
-                    {
-                        GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
-                                    "stylized-cover", 
-                                    /*(width> height)? width:height*/self->size, 0);
-                        if(ii){
-                            path2 = gtk_icon_info_get_filename(ii);
-                            if(path2){
-                                pb2 = gdk_pixbuf_new_from_file_at_size(path2,self->size, self->size,NULL);
-                                /*
-                                if(blank)
-                                {
-                                    pb2 = gdk_pixbuf_scale_simple(blank, /self->size, self->size, GDK_INTERP_HYPER);
-                                    g_object_unref(blank);
-                                }
-                                */
-                            }
-                            gtk_icon_info_free(ii);
+                    if(ii){
+                        path2 = gtk_icon_info_get_filename(ii);
+                        if(path2){
+                            pb2 = gdk_pixbuf_new_from_file_at_size(path2,self->size, self->size,NULL);
                         }
+                        gtk_icon_info_free(ii);
                     }
 
                     width = gdk_pixbuf_get_width(pb2);
