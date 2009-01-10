@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--*- mode: xml -*-->
+<interface>
+  <object class="GtkVBox" id="plugin_stats_vbox">
+    <property name="visible">True</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkLabel" id="label160">
+        <property name="visible">True</property>
+        <property name="xalign">0</property>
+        <property name="label" translatable="yes">&lt;b&gt;Loaded Plugins:&lt;/b&gt;</property>
+        <property name="use_markup">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">False</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolledwindow10">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+        <property name="shadow_type">GTK_SHADOW_IN</property>
+        <child>
+          <object class="GtkTreeView" id="plugin_stats_tree">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="rules_hint">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+</interface>

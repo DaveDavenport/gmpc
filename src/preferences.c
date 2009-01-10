@@ -29,7 +29,7 @@
 void preferences_show_pref_window(int plugin_id);
 static void plugin_stats_construct(GtkWidget *);
 static void plugin_stats_destroy(GtkWidget *);
-GladeXML *plugin_stat_xml = NULL;
+GtkBuilder *plugin_stat_xml = NULL;
 /* About "plugin" */
 
 /* End About */
@@ -136,7 +136,7 @@ void create_preferences_window(void)
     gtk_builder_add_from_file(xml_preferences_window, string,&error);
 	q_free(string);
     if(error) {
-        g_error(error->message);
+        debug_printf(DEBUG_ERROR, error->message); 
         g_error_free(error);
     }
 	/* check for errors and axit when there is no gui file */
@@ -281,17 +281,18 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 
 static void plugin_stats_construct(GtkWidget *container)
 {
-	gchar *path = gmpc_get_full_glade_path("gmpc.glade");
-	plugin_stat_xml = glade_xml_new(path, "plugin_stats_vbox",NULL);
+	gchar *path = gmpc_get_full_glade_path("preferences-plugins.ui");
+	plugin_stat_xml = gtk_builder_new();//glade_xml_new(path, "plugin_stats_vbox",NULL);
+    gtk_builder_add_from_file(plugin_stat_xml, path, NULL);
 	q_free(path);
 	if(plugin_stat_xml)
 	{
-		GtkWidget *tree = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_tree");
+		GtkWidget *tree = (GtkWidget *)gtk_builder_get_object(plugin_stat_xml, "plugin_stats_tree");
 		GtkListStore *store = NULL;
 		GtkTreeIter iter;
 		GtkCellRenderer *renderer = NULL;
 		int i=0;
-		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_vbox");
+		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(plugin_stat_xml, "plugin_stats_vbox");
 
 
 		/**
@@ -361,8 +362,8 @@ static void plugin_stats_destroy(GtkWidget *container)
 {
 	if(plugin_stat_xml)
 	{
-		GtkWidget *vbox = glade_xml_get_widget(plugin_stat_xml, "plugin_stats_vbox");
-		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(glade_xml_get_widget(plugin_stat_xml, "plugin_stats_tree")));
+		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(plugin_stat_xml, "plugin_stats_vbox");
+		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(gtk_builder_get_object(plugin_stat_xml, "plugin_stats_tree")));
 		gtk_container_remove(GTK_CONTAINER(container),vbox);
 		if(model)g_object_unref(model);
 		g_object_unref(plugin_stat_xml);
