@@ -193,7 +193,93 @@ static UniqueResponse unique_message_recieved (UniqueApp *unique, gint command, 
     }
     return UNIQUE_RESPONSE_OK;
 }
+#endif
+#ifndef USE_UNIQUE
+#ifndef WIN32
+#include "bacon/bacon-message-connection.h"
+static BaconMessageConnection *bacon_connection = NULL;
+/**
+ * Handle incoming (IPC) messages.
+ * GMPC ships a utility called "gmpc-remote" that uses this interface.
+ */
+static void bacon_on_message_received(const char *message, gpointer data)
+{
+  
+    if(message)
+    {
+        debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
+        /**
+	     * Makes mpd quit.
+	     */
+	    if(strcmp(message,"QUIT") == 0)
+        {
+            printf("I've been told to quit, doing this now\n");
+            main_quit();
+        }
+		/**
+		 * Gives play command
+		 */
+        else if(strcmp(message, "PLAY") == 0)
+        {
+            play_song();
+        }
+		/**
+		 * Give pause command
+		 */
+        else if (strcmp(message, "PAUSE") == 0)
+        {
+            play_song();
+        }
+		/**
+		 * Give next command
+		 */
+        else if (strcmp(message, "NEXT") == 0)
+        {
+            next_song();
+        }
+		/**
+		 * Give previous command
+		 */
+        else if (strcmp(message, "PREV") == 0)
+        {
+            prev_song();
+        }
+		/**
+		 * Stop playback
+		 */
+        else if (strcmp(message, "STOP") == 0)
+        {
+            stop_song();
+        }
+        else if (strcmp(message, "TOGGLE_VIEW") == 0)
+        {
+            pl3_toggle_hidden();
+        }
+        else if (strcmp(message, "HIDE_VIEW") == 0)
+        {
+            pl3_hide();
+        }
+        else if (strcmp(message, "SHOW_VIEW") == 0)
+        {
+            create_playlist3();
+        }
+		/**
+		 * pass gmpc an url to parse with the url_parser.
+		 */
+        else if (strncmp(message, "STREAM ", 7) == 0)
+        {
+            url_start_real(&message[7]);
+        }
+        else {
+            create_playlist3();
+        }
+    }
+    /**
+	 * Bring gmpc to front, as default action.
+	 */
 
+}
+#endif
 #endif
 
 
@@ -630,6 +716,53 @@ int main (int argc, char **argv)
             unique_app_add_command(unique,  "addstream",    COMMAND_PLAYLIST_ADD_STREAM);
     }
     TEC("IPC setup")
+#else
+#ifndef WIN32
+	/**
+	 * Start IPC system.
+	 */
+    if(cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple",FALSE) == FALSE)
+    {
+        /**
+         * bacon here we come
+         */
+        bacon_connection = bacon_message_connection_new("gmpc");
+        if(bacon_connection != NULL)
+        {
+            if (!bacon_message_connection_get_is_server (bacon_connection))
+            {
+                if(replace || quit)
+                {
+                    bacon_message_connection_send(bacon_connection, "QUIT");
+                }
+                else
+                {
+                    debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+                    bacon_message_connection_send(bacon_connection, "PRESENT");
+                    bacon_message_connection_free (bacon_connection);
+                    cfg_close(config);
+                    config = NULL;
+                    TEC("IPC setup and quitting")
+                    exit(0);
+                }
+            }
+            bacon_message_connection_set_callback (bacon_connection,
+                    bacon_on_message_received,
+                    NULL);
+        }
+		/* If user requested a quit, quit */
+        if(quit)
+        {
+            cfg_close(config);
+            config = NULL;
+            if(bacon_connection)
+                bacon_message_connection_free (bacon_connection);
+
+            exit(0);
+        }
+    }
+    TEC("IPC setup")
+#endif
 #endif
     if(quit) {
         cfg_close(config);
@@ -879,6 +1012,15 @@ int main (int argc, char **argv)
 #ifdef USE_UNIQUE
     g_object_unref(unique);
 #endif
+
+#ifndef WIN32
+#ifndef USE_UNIQUE
+	if(bacon_connection) {
+		bacon_message_connection_free (bacon_connection);
+        bacon_connection = NULL;
+	}
+#endif
+#endif	
     /* Quit _all_ downloads */
     quit_easy_download();
 

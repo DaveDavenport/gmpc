@@ -5,6 +5,12 @@ bin_SCRIPTS=gmpc-remote-stream
 gmpc_remote_SOURCES=\
 		main.c
 
+if USE_UNIQUE
+else
+gmpc_remote_SOURCES +=bacon-message-connection.c
+endif
+
+
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DVERSION=\"@VERSION@\"\

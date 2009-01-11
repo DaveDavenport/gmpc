@@ -21,21 +21,36 @@
 #include <string.h>
 #include <stdlib.h>
 #include <gtk/gtk.h>
+#include <config.h>
+#ifdef USE_UNIQUE
 #include <unique/unique.h>
 #include "gmpc_unique.h"
-
+#else
+#include "bacon-message-connection.h"
+#endif
 int main ( int argc, char **argv )
 {
+#ifdef USE_UNIQUE
     UniqueApp *unique;
+#else
+    BaconMessageConnection *bacon_connection = NULL;
+#endif
 
     gtk_init(&argc, &argv);
 
 
+#ifdef USE_UNIQUE
     unique = unique_app_new("nl.Sarine.gmpc", NULL);
-
     if(unique)
     {
         if (unique_app_is_running(unique))
+#else
+
+    bacon_connection = bacon_message_connection_new("gmpc");
+    if(bacon_connection)
+    {
+        if (!bacon_message_connection_get_is_server (bacon_connection)) 
+#endif
         {
             GError *error = NULL;
             GOptionContext *context;
@@ -105,6 +120,15 @@ int main ( int argc, char **argv )
                 {NULL}
             };
 
+            /*Create the commandline option parser */
+            context = g_option_context_new("GMPC remote program");
+            g_option_context_add_main_entries(context, entries, NULL);
+
+            /*Time to parse the options */
+            g_option_context_parse(context, &argc, &argv, &error);
+            g_option_context_free(context);
+
+#if USE_UNIQUE
             unique_app_add_command(unique,  "present",  COMMAND_PRESENT);
             unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
             unique_app_add_command(unique,  "play",  COMMAND_PLAYER_PLAY);
@@ -119,14 +143,6 @@ int main ( int argc, char **argv )
 
 
             unique_app_add_command(unique,  "addstream",    COMMAND_PLAYLIST_ADD_STREAM);
-            /*Create the commandline option parser */
-            context = g_option_context_new("GMPC remote program");
-            g_option_context_add_main_entries(context, entries, NULL);
-
-            /*Time to parse the options */
-            g_option_context_parse(context, &argc, &argv, &error);
-            g_option_context_free(context);
-
             if(quit)
             {
                 printf("send quit\n");
@@ -192,7 +208,67 @@ int main ( int argc, char **argv )
         }
         g_object_unref(unique);
         return EXIT_SUCCESS;
+#else
+            if(quit)
+            {
+                printf("send quit\n");
+                bacon_message_connection_send(bacon_connection, "QUIT");
+            }
+            if(play || pause)
+            {
+                printf("send play\n");
+                bacon_message_connection_send(bacon_connection, "PLAY");
+            }
+            if(prev)
+            {
+                printf("send prev\n");
+                bacon_message_connection_send(bacon_connection, "PREV");
+            }
+            if(next)
+            {
+                printf("send next\n");
+                bacon_message_connection_send(bacon_connection, "NEXT");
+            }
+            if(stop)
+            {
+                printf("send stop\n");
+                bacon_message_connection_send(bacon_connection, "STOP");
+            }
+            if(toggle_view)
+            {
+                printf("send toggle view\n");
+                bacon_message_connection_send(bacon_connection, "TOGGLE_VIEW");
+            }
+            if(hide_view)
+            {
+                printf("send hide view\n");
+                bacon_message_connection_send(bacon_connection, "HIDE_VIEW");
+            }
+            if(show_view)
+            {
+                printf("send show view\n");
+                bacon_message_connection_send(bacon_connection, "SHOW_VIEW");
+            }
+            if(stream)
+            {
+                gchar *str = g_strdup_printf("STREAM %s", stream);
+                printf("Send stream: %s\n", stream);
+                bacon_message_connection_send(bacon_connection, str);
+                g_free(str);
+            }
+
+
+        }
+        else {
+            printf("GMPC is not running\n");
+            bacon_message_connection_free (bacon_connection);
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+#endif
     }
+
     
     return EXIT_FAILURE;
 }

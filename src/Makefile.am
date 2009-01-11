@@ -34,6 +34,7 @@ gmpc_SOURCES=\
 	egg/eggcolumnmodel.c\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
+	bacon/bacon-message-connection.c\
 	edit_markup.c 
 
 if EGGTRAYICON
@@ -128,7 +129,7 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
 	@EXTRA_CFLAGS@\
-	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\ 
+	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 
 if USE_UNIQUE
@@ -184,6 +185,7 @@ EXTRA_DIST=\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
 		gmpc_unique.h\
+		bacon/bacon-message-connection.h\
 		gmpc-win32.rc
 
 if USE_SYSTEM_LIBSEXY
