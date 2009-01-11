@@ -18,7 +18,6 @@
 */
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <string.h>
 #include <time.h>
 #include <config.h>
@@ -108,7 +107,7 @@ static void pref_plugin_changed(void)
 void create_preferences_window(void)
 {
     GError *error = NULL;
-	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+	GtkWidget *pl3_win = playlist3_get_window(); 
 	GtkWidget *dialog;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;

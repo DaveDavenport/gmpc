@@ -158,7 +158,7 @@ void setup_assistant(void)
      */
 
     gtk_window_set_transient_for(GTK_WINDOW(assistant),
-            GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")));
+            GTK_WINDOW(playlist3_get_window()));
     gtk_window_set_modal(GTK_WINDOW(assistant),TRUE);
     gtk_window_set_position(GTK_WINDOW(assistant),  GTK_WIN_POS_CENTER_ON_PARENT); 
     gtk_widget_show_all(GTK_WIDGET(assistant));

@@ -194,7 +194,7 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 static GtkBuilder *message_xml = NULL;
 void message_window_open(void)
 {
-	GtkWidget *win,*pl3_win = (GtkWidget *) glade_xml_get_widget(pl3_xml, "pl3_win");
+	GtkWidget *win,*pl3_win = playlist3_get_window(); 
 	GtkBuilder *xml;
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;

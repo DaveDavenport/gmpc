@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <glade/glade.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/debug_printf.h>
 #include "main.h"
@@ -187,7 +186,7 @@ void url_start(void)
 	 * Setup the Dialog
 	 */
 	GtkWidget *vbox = NULL, *label = NULL, *entry=NULL,*ali = NULL, *progress = NULL;
-	GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+	GtkWidget *pl3_win = playlist3_get_window(); 
 	GtkWidget *add_button = NULL;
 	GtkWidget *dialog = gtk_dialog_new_with_buttons
 		("Open URL", NULL,

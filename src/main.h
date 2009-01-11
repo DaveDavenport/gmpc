@@ -30,7 +30,6 @@
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
 #include <libmpd/debug_printf.h>
-#include <glade/glade.h>
 #include "config1.h"
 #include "plugin.h"
 #include "mpdinteraction.h"

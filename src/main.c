@@ -1088,7 +1088,7 @@ static void password_dialog_response(GtkWidget *dialog, gint response,gpointer d
 }
 static void password_dialog(int failed)
 {
-    GtkWidget *pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+    GtkWidget *pl3_win = playlist3_get_window(); 
     gchar *path  = NULL;
 	if(xml_password_window) return;
 	path = gmpc_get_full_glade_path("password-dialog.ui");
@@ -1289,7 +1289,7 @@ void show_error_message(const gchar *string,const int block)
 				NULL);
          if(pl3_xml)
          {
-             pl3_win = glade_xml_get_widget(pl3_xml, "pl3_win");
+             pl3_win = playlist3_get_window(); 
              gtk_window_set_transient_for(GTK_WINDOW(error_dialog), GTK_WINDOW(pl3_win));
          }
         /** create list store */
