@@ -251,7 +251,6 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 	GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
     if(!model)
         return;
-    printf("sel changed\n");
     thv_set_button_state(-1);
     if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
@@ -2357,7 +2356,7 @@ gmpcPlugin playlist_plug = {
 static GList *thv_list = NULL;
 /* Tab button structure */
 typedef struct _TabButton{
-    GtkButton *button;
+    GtkToggleButton *button;
     GtkImage *image;
     GtkLabel *label;
     gint pos;
@@ -2466,7 +2465,7 @@ void thv_row_reordered_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeI
 /**
  * If the button is clicked, trigger an update by calling a select on the sidebar
  */
-static void thv_button_clicked ( GtkButton *button, TabButton *tb  )
+static void thv_button_clicked ( GtkToggleButton *button, TabButton *tb  )
 {
     if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button)))
     {
@@ -2474,14 +2473,18 @@ static void thv_button_clicked ( GtkButton *button, TabButton *tb  )
         GtkTreePath *path = gtk_tree_path_new_from_indices(tb->pos, -1);
         gtk_tree_selection_select_path(selec, path);
         gtk_tree_path_free(path);
-        printf("button toggled\n");
+    }
+    else{
+        g_signal_handler_block(G_OBJECT(tb->button), tb->handler);
+        gtk_toggle_button_set_active(button,TRUE);
+        g_signal_handler_unblock(G_OBJECT(tb->button), tb->handler);
     }
 }
 
 void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
     TabButton *tb;
-    GtkButton *button = (GtkButton *) gtk_toggle_button_new();
+    GtkToggleButton *button = (GtkToggleButton *) gtk_toggle_button_new();
     GtkHBox *box = (GtkHBox *)gtk_hbox_new(FALSE, 6);
     gchar *title, *image;
     GtkImage *imagew = (GtkImage *)gtk_image_new();
@@ -2492,9 +2495,6 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
     /* Create new tabbed-button object */
     tb = g_malloc0(sizeof(*tb));
     tb->button = button;
-
-    /* Change button loook */
-    gtk_button_set_relief(button, GTK_RELIEF_HALF);
 
     tb->handler = g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(thv_button_clicked), tb);
 
