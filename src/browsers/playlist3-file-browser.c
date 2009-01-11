@@ -21,7 +21,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glade/glade.h>
 #include "main.h"
 #include "misc.h"
 #include "playlist3.h"

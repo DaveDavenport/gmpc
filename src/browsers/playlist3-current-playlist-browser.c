@@ -21,7 +21,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glade/glade.h>
 #include <config.h>
 
 #include "main.h"
