@@ -18,7 +18,6 @@
 */
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <libmpd/libmpd.h>
 #include <string.h>
 #include <config.h>

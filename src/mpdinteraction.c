@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <gtk/gtk.h>
-#include <glade/glade.h>
 #include <string.h>
 #include "main.h"
 #include "config1.h"

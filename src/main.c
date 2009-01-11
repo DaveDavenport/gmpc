@@ -28,8 +28,6 @@
 /** Gtk/glib glade stuff */
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
-#include <glade/glade.h>
-
 
 /* header files */
 #include "main.h"
