@@ -195,12 +195,12 @@ static GtkBuilder *message_xml = NULL;
 void message_window_open(void)
 {
 	GtkWidget *win,*pl3_win = (GtkWidget *) glade_xml_get_widget(pl3_xml, "pl3_win");
-	GladeXML *xml;
+	GtkBuilder *xml;
 	GtkCellRenderer *renderer;
 	GtkWidget *tree;
 	gchar *path;
 	path = gmpc_get_full_glade_path("playlist-message-window.ui");
-	message_xml = xml = gtk_builder_new();//glade_xml_new (path, "message_window", NULL);
+	message_xml = xml = gtk_builder_new();
     gtk_builder_add_from_file(xml, path, NULL);
 	q_free(path);
 	playlist3_message_init();
