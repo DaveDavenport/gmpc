@@ -1353,7 +1353,7 @@ G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton *but)
     cfg_set_single_value_as_int(config, "playlist", "button-heading",bool1);
 }
 
-G_MODULE_EXPORT void playlist_pref_destroy(GtkWidget *container)
+static void playlist_pref_destroy(GtkWidget *container)
 {
 	if(playlist_pref_xml)
 	{
