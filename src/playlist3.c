@@ -160,6 +160,8 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
 void thv_row_changed_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);
 void thv_row_deleted_signal ( GtkTreeModel *model, GtkTreePath *path, gpointer data);
 void thv_row_reordered_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer arg3, gpointer data);
+
+void thv_set_button_state ( int button);
 /**************************************************
  * Category Tree
  */
@@ -249,11 +251,12 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
 	GtkWidget *container = glade_xml_get_widget(pl3_xml, "browser_container");
     if(!model)
         return;
-
-	if(gtk_tree_selection_get_selected(selec,&model, &iter))
+    printf("sel changed\n");
+    thv_set_button_state(-1);
+    if(gtk_tree_selection_get_selected(selec,&model, &iter))
 	{
 		gint type;
-        int *ind;
+        gint *ind;
         GtkTreePath *path;
 
 		gtk_tree_model_get(model, &iter, 0, &type, -1);
@@ -264,7 +267,10 @@ static void pl3_cat_sel_changed(GtkTreeSelection *selec, gpointer *userdata)
         path = gtk_tree_model_get_path(model, &iter);
         ind = gtk_tree_path_get_indices(path);
         gtk_combo_box_set_active(GTK_COMBO_BOX(glade_xml_get_widget(pl3_xml, "cb_cat_selector")), ind[0]);
+
+        thv_set_button_state(ind[0]);
         gtk_tree_path_free(path);
+
 		/**
 		 * Start switching side view (if type changed )
 		 */
@@ -2355,8 +2361,40 @@ typedef struct _TabButton{
     GtkImage *image;
     GtkLabel *label;
     gint pos;
+    guint handler;
 }TabButton;
 
+int last_button = -1;
+void thv_set_button_state ( int button)
+{
+    TabButton *tb = NULL;
+    if(button >= 0)
+    {
+        tb = g_list_nth_data(thv_list,button);
+        if(tb)
+        {
+            g_signal_handler_block(G_OBJECT(tb->button), tb->handler);
+            if(!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb->button)))
+                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb->button), TRUE);
+            g_signal_handler_unblock(G_OBJECT(tb->button), tb->handler);
+
+            last_button = button;
+        }
+    }else{
+        if(last_button >= 0){
+            tb = g_list_nth_data(thv_list,last_button);
+            if(tb) {
+
+                g_signal_handler_block(G_OBJECT(tb->button), tb->handler);
+                if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb->button)))
+                    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb->button), FALSE);
+
+                g_signal_handler_unblock(G_OBJECT(tb->button), tb->handler);
+            }
+            last_button = -1;
+        }
+    }
+}
 /* if a row in the sidebar changed (f.e. title or icon) update the button accordingly */
 void thv_row_changed_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
@@ -2430,16 +2468,20 @@ void thv_row_reordered_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeI
  */
 static void thv_button_clicked ( GtkButton *button, TabButton *tb  )
 {
-    GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
-    GtkTreePath *path = gtk_tree_path_new_from_indices(tb->pos, -1);
-    gtk_tree_selection_select_path(selec, path);
-    gtk_tree_path_free(path);
+    if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button)))
+    {
+        GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(glade_xml_get_widget(pl3_xml, "cat_tree")));
+        GtkTreePath *path = gtk_tree_path_new_from_indices(tb->pos, -1);
+        gtk_tree_selection_select_path(selec, path);
+        gtk_tree_path_free(path);
+        printf("button toggled\n");
+    }
 }
 
 void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
     TabButton *tb;
-    GtkButton *button = (GtkButton *) gtk_button_new();
+    GtkButton *button = (GtkButton *) gtk_toggle_button_new();
     GtkHBox *box = (GtkHBox *)gtk_hbox_new(FALSE, 6);
     gchar *title, *image;
     GtkImage *imagew = (GtkImage *)gtk_image_new();
@@ -2454,7 +2496,7 @@ void thv_row_inserted_signal ( GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
     /* Change button loook */
     gtk_button_set_relief(button, GTK_RELIEF_HALF);
 
-    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(thv_button_clicked), tb);
+    tb->handler = g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(thv_button_clicked), tb);
 
     /* Create image for in button at menu size */
     if ( image )
