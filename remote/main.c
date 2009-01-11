@@ -22,35 +22,26 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <config.h>
-#ifdef USE_UNIQUE
-#include <unique/unique.h>
-#include "gmpc_unique.h"
-#else
 #include "bacon-message-connection.h"
-#endif
+
 int main ( int argc, char **argv )
 {
-#ifdef USE_UNIQUE
-    UniqueApp *unique;
-#else
     BaconMessageConnection *bacon_connection = NULL;
-#endif
 
     gtk_init(&argc, &argv);
 
 
-#ifdef USE_UNIQUE
-    unique = unique_app_new("nl.Sarine.gmpc", NULL);
-    if(unique)
-    {
-        if (unique_app_is_running(unique))
-#else
+
+
+
+
+
+
 
     bacon_connection = bacon_message_connection_new("gmpc");
     if(bacon_connection)
     {
         if (!bacon_message_connection_get_is_server (bacon_connection)) 
-#endif
         {
             GError *error = NULL;
             GOptionContext *context;
@@ -127,88 +118,6 @@ int main ( int argc, char **argv )
             /*Time to parse the options */
             g_option_context_parse(context, &argc, &argv, &error);
             g_option_context_free(context);
-
-#if USE_UNIQUE
-            unique_app_add_command(unique,  "present",  COMMAND_PRESENT);
-            unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
-            unique_app_add_command(unique,  "play",  COMMAND_PLAYER_PLAY);
-            unique_app_add_command(unique,  "stop",  COMMAND_PLAYER_STOP);
-            unique_app_add_command(unique,  "next",  COMMAND_PLAYER_NEXT);
-            unique_app_add_command(unique,  "prev",  COMMAND_PLAYER_PREV);
-            unique_app_add_command(unique,  "pause",  COMMAND_PLAYER_PAUSE);
-
-            unique_app_add_command(unique,  "viewtoggle",   COMMAND_VIEW_TOGGLE);
-            unique_app_add_command(unique,  "viewshow",     COMMAND_VIEW_SHOW);
-            unique_app_add_command(unique,  "viewprev",     COMMAND_VIEW_HIDE);
-
-
-            unique_app_add_command(unique,  "addstream",    COMMAND_PLAYLIST_ADD_STREAM);
-            if(quit)
-            {
-                printf("send quit\n");
-                unique_app_send_message(unique, COMMAND_QUIT, NULL);
-            }
-            if(play || pause)
-            {
-                printf("send play\n");
-                unique_app_send_message(unique, COMMAND_PLAYER_PLAY, NULL);
-            }
-            if(prev)
-            {
-                printf("send prev\n");
-                unique_app_send_message(unique, COMMAND_PLAYER_PREV, NULL);
-            }
-            if(next)
-            {
-                printf("send next\n");
-                unique_app_send_message(unique, COMMAND_PLAYER_NEXT, NULL);
-            }
-            if(stop)
-            {
-                printf("send stop\n");
-                unique_app_send_message(unique, COMMAND_PLAYER_STOP, NULL);
-            }
-            if(toggle_view)
-            {
-                printf("send toggle view\n");
-                unique_app_send_message(unique, COMMAND_VIEW_TOGGLE, NULL);
-            }
-            if(hide_view)
-            {
-                printf("send hide view\n");
-                unique_app_send_message(unique, COMMAND_VIEW_HIDE, NULL);
-            }
-            if(show_view)
-            {
-                printf("send show view\n");
-                unique_app_send_message(unique, COMMAND_VIEW_SHOW, NULL);
-            }
-            if(stream)
-            {
-                UniqueMessageData *umd = unique_message_data_new();
-                gchar **uris = g_malloc0(2*sizeof(gchar *));
-                printf("Send stream: %s\n", stream);
-                uris[0] = stream;
-
-                unique_message_data_set_uris(umd, uris); 
-                unique_app_send_message(unique, COMMAND_PLAYLIST_ADD_STREAM, umd);
-
-                unique_message_data_free(umd);
-
-                uris[0] = NULL;
-                g_free(uris);
-            }
-
-
-        }
-        else {
-            printf("GMPC is not running\n");
-            g_object_unref(unique);
-            return EXIT_FAILURE;
-        }
-        g_object_unref(unique);
-        return EXIT_SUCCESS;
-#else
             if(quit)
             {
                 printf("send quit\n");
@@ -266,9 +175,6 @@ int main ( int argc, char **argv )
         }
 
         return EXIT_SUCCESS;
-#endif
     }
-
-    
     return EXIT_FAILURE;
 }

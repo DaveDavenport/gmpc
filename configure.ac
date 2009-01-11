@@ -261,30 +261,30 @@ fi
 ##
 # These depend on if we are or are not on windows or osX
 
-if test "x$win32" = "xno" ; then
+#if test "x$win32" = "xno" ; then
 # unique
-AC_ARG_ENABLE([unique],
-              [--enable-unique Use unique to run only one session.], 
-	          [case "${enableval}" in
-		            yes)    use_unique=true;;
-		             no)    use_unique=false;;
-		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-unique]);;
-               esac],
-               [use_unique=true])
-if test "x$use_unique" = "xtrue"; then
-	PKG_CHECK_MODULES([unique], unique-1.0, use_unique=true,use_unique=false)
-fi
-if test "x$use_unique" = "xtrue"; then
-	AC_SUBST(unique_LIBS)
-	AC_SUBST(unique_CFLAGS)
-	AC_DEFINE([USE_UNIQUE], 1, [Use unique to run only one gmpc])
-fi
+#AC_ARG_ENABLE([unique],
+#              [--enable-unique Use unique to run only one session.], 
+#	          [case "${enableval}" in
+#		            yes)    use_unique=true;;
+#		             no)    use_unique=false;;
+#		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-unique]);;
+#               esac],
+#               [use_unique=true])
+#if test "x$use_unique" = "xtrue"; then
+#	PKG_CHECK_MODULES([unique], unique-1.0, use_unique=true,use_unique=false)
+#fi
+#if test "x$use_unique" = "xtrue"; then
+#	AC_SUBST(unique_LIBS)
+#	AC_SUBST(unique_CFLAGS)
+#	AC_DEFINE([USE_UNIQUE], 1, [Use unique to run only one gmpc])
+#fi
+#
+#else
+#use_unique=false;
+#fi
 
-else
-use_unique=false;
-fi
-
-AM_CONDITIONAL(USE_UNIQUE, [test x$use_unique = xtrue])
+#AM_CONDITIONAL(USE_UNIQUE, [test x$use_unique = xtrue])
 
 ##
 # Session support             
@@ -413,11 +413,11 @@ if test x${enable_mmkeys} = xyes; then
 else
 	echo "Multimedia keys support is:       disabled"
 fi
-if test x${use_unique} = xtrue; then
-	echo "Unique support is:                enabled"
-else
-	echo "Unique support is:                disabled"
-fi
+#if test x${use_unique} = xtrue; then
+#	echo "Unique support is:                enabled"
+#else
+#	echo "Unique support is:                disabled"
+#fi
 if test x${enable_sm} = xyes; then
 	echo "Session Manager support is:       enabled"
 else

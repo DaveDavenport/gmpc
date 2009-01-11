@@ -3,12 +3,8 @@ bin_PROGRAMS=gmpc-remote
 bin_SCRIPTS=gmpc-remote-stream
 
 gmpc_remote_SOURCES=\
-		main.c
-
-if USE_UNIQUE
-else
-gmpc_remote_SOURCES +=bacon-message-connection.c
-endif
+		main.c\
+		bacon-message-connection.c
 
 
 
@@ -21,7 +17,6 @@ LIBS= \
 	@glib_LIBS@ @LIBS@ \
 	@gobject_LIBS@\
 	@gtk_LIBS@\
-	@unique_LIBS@\
 	@gmodule_LIBS@
 
 
@@ -33,7 +28,6 @@ AM_CFLAGS = @CFLAGS@\
 	@glib_CFLAGS@\
 	@gobject_CFLAGS@\
 	@gtk_CFLAGS@\
-	@unique_CFLAGS@\
 	@gmodule_CFLAGS@
 
 

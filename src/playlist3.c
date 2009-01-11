@@ -1366,7 +1366,7 @@ static void playlist_pref_destroy(GtkWidget *container)
 void playlist_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-playlist.ui");
-	playlist_pref_xml = gtk_builder_new();// glade_xml_new(path, "playlist-vbox",NULL);
+	playlist_pref_xml = gtk_builder_new();
 
     gtk_builder_add_from_file(playlist_pref_xml, path, NULL);
 
@@ -1402,7 +1402,6 @@ void playlist_pref_construct(GtkWidget *container)
 
 		gtk_container_add(GTK_CONTAINER(container),vbox);
         gtk_builder_connect_signals(playlist_pref_xml,NULL);
-		//glade_xml_signal_autoconnect(playlist_pref_xml);
 	}
 	q_free(path);
 }

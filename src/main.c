@@ -49,12 +49,6 @@
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 
-#ifdef USE_UNIQUE
-/* unique */
-#include <unique/unique.h>
-#include "gmpc_unique.h"
-#endif
-
 /**
  * Get revision
  */
@@ -144,57 +138,6 @@ static void create_gmpc_paths(void);
 void print_version ( void );
 
 
-#ifdef USE_UNIQUE
-static UniqueResponse unique_message_recieved (UniqueApp *unique, gint command, UniqueMessageData *message_data, guint _time, gpointer user_data)
-{
-    switch(command)
-    {
-        case COMMAND_QUIT:
-            main_quit();
-            break;
-        case COMMAND_VIEW_SHOW:
-        case COMMAND_PRESENT:
-            create_playlist3();
-            break;
-        case COMMAND_PLAYER_PAUSE:
-        case COMMAND_PLAYER_PLAY:
-            play_song();
-            break;
-        case COMMAND_PLAYER_NEXT:
-            next_song();
-            break;
-        case COMMAND_PLAYER_PREV:
-            prev_song();
-            break;
-        case COMMAND_PLAYER_STOP:
-            stop_song();
-            break;
-        case COMMAND_VIEW_TOGGLE:
-            pl3_toggle_hidden();
-            break;
-        case COMMAND_VIEW_HIDE:
-            pl3_hide();
-            break;
-        case COMMAND_PLAYLIST_ADD_STREAM:
-            {
-                gchar **uris = unique_message_data_get_uris(message_data);
-                if(uris) {
-                    int i=0;
-                    for(i=0;uris[i];i++) {
-                        url_start_real(uris[i]);
-                    }
-                    g_strfreev(uris);
-                }
-                break;
-            }
-        default:
-            return UNIQUE_RESPONSE_FAIL;
-            break;
-    }
-    return UNIQUE_RESPONSE_OK;
-}
-#endif
-#ifndef USE_UNIQUE
 #ifndef WIN32
 #include "bacon/bacon-message-connection.h"
 static BaconMessageConnection *bacon_connection = NULL;
@@ -280,14 +223,10 @@ static void bacon_on_message_received(const char *message, gpointer data)
 
 }
 #endif
-#endif
 
 
 int main (int argc, char **argv)
 {
-#ifdef USE_UNIQUE
-    UniqueApp *unique = NULL;
-#endif    
     int i;
 
     /* config keys */
@@ -658,65 +597,6 @@ int main (int argc, char **argv)
     TEC("New version check")
 
 
-#ifdef USE_UNIQUE
-        /**
-         * Start IPC system.
-         */
-        if(cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple",FALSE) == FALSE)
-        {
-            unique = unique_app_new("nl.Sarine.gmpc", NULL);
-
-            /**
-             * Add minimum command
-             */
-            unique_app_add_command(unique,  "present",  COMMAND_PRESENT);
-            unique_app_add_command(unique,  "quit",  COMMAND_QUIT); 
-
-            if(unique_app_is_running(unique))
-            {
-                if(replace) {
-                    unique_app_send_message(unique, COMMAND_QUIT, NULL);
-                    while(unique_app_is_running(unique))
-                    {
-                        printf("spawning new instance\n");
-                        g_usleep(G_USEC_PER_SEC);
-                        g_spawn_async(NULL, argv, NULL, 0,NULL, NULL,NULL, NULL);
-                        cfg_close(config);
-                        printf("Exiting\n");
-                        return EXIT_SUCCESS;
-                    }
-                }
-                else
-                {
-                    if(quit)
-                        unique_app_send_message(unique, COMMAND_QUIT, NULL);
-                    else
-                        unique_app_send_message(unique, COMMAND_PRESENT, NULL);
-
-                    printf("%s\n",_("GMPC allready running, quitting"));
-                    cfg_close(config);
-                    config = NULL;
-                    TEC("IPC setup and quitting")
-                        return EXIT_SUCCESS;
-                }
-            }
-
-            g_signal_connect(G_OBJECT(unique), "message-received", G_CALLBACK(unique_message_recieved), NULL); 
-            unique_app_add_command(unique,  "play",  COMMAND_PLAYER_PLAY);
-            unique_app_add_command(unique,  "stop",  COMMAND_PLAYER_STOP);
-            unique_app_add_command(unique,  "next",  COMMAND_PLAYER_NEXT);
-            unique_app_add_command(unique,  "prev",  COMMAND_PLAYER_PREV);
-            unique_app_add_command(unique,  "pause",  COMMAND_PLAYER_PAUSE);
-
-            unique_app_add_command(unique,  "viewtoggle",   COMMAND_VIEW_TOGGLE);
-            unique_app_add_command(unique,  "viewshow",     COMMAND_VIEW_SHOW);
-            unique_app_add_command(unique,  "viewprev",     COMMAND_VIEW_HIDE);
-
-
-            unique_app_add_command(unique,  "addstream",    COMMAND_PLAYLIST_ADD_STREAM);
-    }
-    TEC("IPC setup")
-#else
 #ifndef WIN32
 	/**
 	 * Start IPC system.
@@ -768,7 +648,6 @@ int main (int argc, char **argv)
         }
     }
     TEC("IPC setup")
-#endif
 #endif
     if(quit) {
         cfg_close(config);
@@ -1015,17 +894,12 @@ int main (int argc, char **argv)
      * Shutting Down
 	 *  cleaning up.
 	 */
-#ifdef USE_UNIQUE
-    g_object_unref(unique);
-#endif
 
 #ifndef WIN32
-#ifndef USE_UNIQUE
 	if(bacon_connection) {
 		bacon_message_connection_free (bacon_connection);
         bacon_connection = NULL;
 	}
-#endif
 #endif	
     /* Quit _all_ downloads */
     quit_easy_download();
@@ -1570,14 +1444,6 @@ void print_version ( void )
 
     printf("%-25s: %s\n", _("System libsexy"),
 #ifdef USE_SYSTEM_LIBSEXY 
-            _("Enabled")
-#else
-            _("Disabled")
-#endif
-          );
-
-    printf("%-25s: %s\n", _("Unique"),
-#ifdef USE_UNIQUE
             _("Enabled")
 #else
             _("Disabled")

@@ -99,10 +99,6 @@ LIBS= \
 	@gthread_LIBS@\
 	@sm_LIBS@ 
 
-if USE_UNIQUE
-LIBS += @unique_LIBS@
-endif
-
 if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
 endif
@@ -131,10 +127,6 @@ AM_CFLAGS = @CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
-
-if USE_UNIQUE
-AM_CFLAGS += @unique_CFLAGS@
-endif
 
 if USE_SYSTEM_LIBSEXY
 AM_CFLAGS += @libsexy_CFLAGS@
@@ -184,7 +176,6 @@ EXTRA_DIST=\
 		revision.h\
 		qlib/qasyncqueue.h\
 		sexy-icon-entry.h\
-		gmpc_unique.h\
 		bacon/bacon-message-connection.h\
 		gmpc-win32.rc
 
