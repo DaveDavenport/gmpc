@@ -654,7 +654,6 @@ static gboolean meta_data_handle_results(void)
     test = g_mutex_trylock(meta_processing);
     if(test)
         g_mutex_unlock(meta_processing);
-    gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
     return FALSE;
 }
 
@@ -925,7 +924,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     test = g_mutex_trylock(meta_processing);
     if(test)
         g_mutex_unlock(meta_processing);
-    gmpc_meta_watcher_queue_size_changed(gmw, q_async_queue_true_length(meta_commands)+!test, num_queries);
 
     q_async_queue_push(meta_commands, mtd);
     /** clean reference to pointer, it's now to the other thread */
