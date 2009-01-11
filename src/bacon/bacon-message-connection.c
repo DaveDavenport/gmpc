@@ -28,7 +28,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <errno.h>
-#include "main.h"
 #include "bacon-message-connection.h"
 
 #ifndef UNIX_PATH_MAX
@@ -156,7 +155,7 @@ server_cb (GIOChannel *source, GIOCondition condition, gpointer data)
 		conn->chan = NULL;
 		close (conn->fd);
 		conn->fd = -1;
-		q_free (message);
+		g_free (message);
 		conn->conn_id = 0;
 
 		return FALSE;
@@ -176,7 +175,7 @@ server_cb (GIOChannel *source, GIOCondition condition, gpointer data)
 			finished = TRUE;
 	}
 
-	q_free (message);
+	g_free (message);
 
 	return TRUE;
 }
@@ -209,7 +208,7 @@ find_file_with_pattern (const char *dir, const char *pattern)
 			char *tmp = g_build_filename (dir, filename, NULL);
 			if (is_owned_by_user_and_socket (tmp))
 				found_filename = g_strdup (filename);
-			q_free (tmp);
+			g_free (tmp);
 		}
 
 		if (found_filename != NULL)
@@ -239,13 +238,13 @@ socket_filename (const char *prefix)
 		newfile = g_strdup_printf ("%s.%s.%s.%u",display, prefix,
 				g_get_user_name (), g_random_int ());
 		path = g_build_filename (tmpdir, newfile, NULL);
-		q_free (newfile);
+		g_free (newfile);
 	} else {
 		path = g_build_filename (tmpdir, filename, NULL);
-		q_free (filename);
+		g_free (filename);
 	}
-	q_free(display);
-	q_free (pattern);
+	g_free(display);
+	g_free (pattern);
 	return path;
 }
 
@@ -362,8 +361,8 @@ bacon_message_connection_free (BaconMessageConnection *conn)
 		close (conn->fd);
 	}
 
-	q_free (conn->path);
-	q_free (conn);
+	g_free (conn->path);
+	g_free (conn);
 }
 
 void

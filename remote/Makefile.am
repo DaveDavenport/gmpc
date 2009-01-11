@@ -4,14 +4,15 @@ bin_SCRIPTS=gmpc-remote-stream
 
 gmpc_remote_SOURCES=\
 		main.c\
-		bacon-message-connection.c
+		$(top_srcdir)/src/bacon/bacon-message-connection.c
 
 
 
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DVERSION=\"@VERSION@\"\
 	-DGMPC_BUILD=1\
-	-I../src/
+	-I../src/\
+	-I../src/bacon/
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
