@@ -37,8 +37,6 @@
 #include "gmpc-mpddata-model.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <sexy-icon-entry.h>
-#else
-#include "sexy-icon-entry.h"
 #endif
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
@@ -730,7 +728,7 @@ static gboolean tag2_sentry_changed_real(tag_element *te)
     return FALSE;
 }
 
-static void tag2_sentry_changed(SexyIconEntry *entry, tag_element *te)
+static void tag2_sentry_changed(GtkWidget *entry, tag_element *te)
 {
     gtk_widget_show(te->sentry);
     if(te->timeout)
@@ -791,8 +789,13 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	te->index 	= g_list_length(browser->tag_lists);
 	te->model 	= (GtkTreeModel *) gmpc_mpddata_model_new();
 	te->combo   = gtk_combo_box_new_with_model(tags_store);
+
+#ifdef USE_SYSTEM_LIBSEXY
     te->sentry  = sexy_icon_entry_new(); 
-	te->sw 		= gtk_scrolled_window_new(NULL,NULL);
+#else
+    te->sentry  = gtk_entry_new();
+#endif
+    te->sw 		= gtk_scrolled_window_new(NULL,NULL);
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
 	te->browser = browser;
@@ -809,7 +812,11 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     /* entry */
     gtk_widget_set_no_show_all(te->sentry, TRUE);
     gtk_widget_hide(te->sentry);
+
+#ifdef USE_SYSTEM_LIBSEXY
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(te->sentry));
+#endif
+
     g_signal_connect(G_OBJECT(te->sentry), "changed", G_CALLBACK(tag2_sentry_changed), te);
     gtk_box_pack_start(GTK_BOX(te->vbox), te->sentry,FALSE, TRUE, 0);
 

@@ -34,8 +34,6 @@
 #include "eggcolumnchooserdialog.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <sexy-icon-entry.h>
-#else
-#include "sexy-icon-entry.h"
 #endif
 #include "playlist3-messages.h"
 
@@ -375,8 +373,12 @@ static void pl3_current_playlist_browser_init(void)
 
     /* filter */
     mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();
+#ifdef USE_SYSTEM_LIBSEXY
     entry = sexy_icon_entry_new(); 
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
+#else
+    entry = gtk_entry_new();
+#endif    
     gtk_box_pack_start(GTK_BOX(pl3_cp_vbox), entry, FALSE, TRUE,0);
     filter_entry= entry;
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), tree);
@@ -1306,6 +1308,3 @@ static void pl3_current_playlist_save_myself(void)
         }
     }
 }
-
-
-

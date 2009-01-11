@@ -173,7 +173,10 @@ AC_ARG_ENABLE([system-libsexy],
 		             no)    system_libsexy=false;;
 		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-system-libsexy]);;
                esac],
-               [system_libsexy=false])
+               [system_libsexy=detect])
+if test "x$system_libsexy" = "xdetect"; then
+	PKG_CHECK_MODULES([libsexy], libsexy, system_libsexy=true, system_libsexy=false)
+fi
 if test "x$system_libsexy" = "xtrue"; then
 	PKG_CHECK_MODULES([libsexy], libsexy)
 	AC_SUBST(libsexy_LIBS)

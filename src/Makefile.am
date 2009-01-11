@@ -41,10 +41,6 @@ if EGGTRAYICON
 gmpc_SOURCES+=egg/eggtrayicon.c
 endif
 
-if !USE_SYSTEM_LIBSEXY
-gmpc_SOURCES+=sexy-icon-entry.c
-endif
-
 gmpc_LDADD=\
 			   gob/libcwidgets.la
 
@@ -175,13 +171,8 @@ EXTRA_DIST=\
 		egg/eggcolumnmodel.h\
 		revision.h\
 		qlib/qasyncqueue.h\
-		sexy-icon-entry.h\
 		bacon/bacon-message-connection.h\
 		gmpc-win32.rc
-
-if USE_SYSTEM_LIBSEXY
-EXTRA_DIST+=sexy-icon-entry.c
-endif
 
 if EGGTRAYICON
 EXTRA_DIST+=egg/eggtrayicon.h

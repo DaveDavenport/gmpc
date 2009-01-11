@@ -910,20 +910,14 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
                 has_item = 1;
             }
 
-///            model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_fb_tree));
-  //          list = gtk_tree_selection_get_selected_rows(sel,&model);
-    //        if(list)
-                tree_path = list->data;
-                if(tree_path && gtk_tree_model_get_iter(model, &iter, tree_path)) {
-                    gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-                    if(song)
-                    {
-                        submenu_for_song(menu, song);
-                    }
-
+            tree_path = list->data;
+            if(tree_path && gtk_tree_model_get_iter(model, &iter, tree_path)) {
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                if(song)
+                {
+                    submenu_for_song(menu, song);
                 }
-            //    g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
-              //  g_list_free(list);
+            }
             g_list_foreach (list,(GFunc) gtk_tree_path_free, NULL);
             g_list_free (list);
             q_free(path);

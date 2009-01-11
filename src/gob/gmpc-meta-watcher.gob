@@ -32,7 +32,6 @@ class Gmpc:Meta:Watcher from  G:Object {
     public int queued_requests = 0;
     init(self)
     {
-
     }
     public
     int
