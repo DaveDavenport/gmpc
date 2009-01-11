@@ -17,7 +17,6 @@
  *
  */
 #include <config.h>
-#ifndef USE_UNIQUE
 #ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -398,5 +397,4 @@ bacon_message_connection_get_is_server (BaconMessageConnection *conn)
 
 	return conn->is_server;
 }
-#endif
 #endif
