@@ -35,6 +35,7 @@ gmpc_SOURCES=\
 	TreeSearchWidget.c\
 	qlib/qasyncqueue.c\
 	bacon/bacon-message-connection.c\
+	advanced_search.c\
 	edit_markup.c 
 
 if EGGTRAYICON
@@ -172,6 +173,7 @@ EXTRA_DIST=\
 		revision.h\
 		qlib/qasyncqueue.h\
 		bacon/bacon-message-connection.h\
+		advanced_search.h\
 		gmpc-win32.rc
 
 if EGGTRAYICON

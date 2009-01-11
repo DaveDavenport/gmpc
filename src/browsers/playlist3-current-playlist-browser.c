@@ -32,6 +32,7 @@
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
+#include "advanced_search.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <libsexy/sexy-icon-entry.h>
 #endif
@@ -73,7 +74,6 @@ static gboolean search_keep_open = FALSE;
 
 static GQueue *cut_queue = NULL;
 
-static GRegex *search_regex = NULL;
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
@@ -126,8 +126,6 @@ static void pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned
 
 static void pl3_cp_init(void)
 {
-    GString *string = g_string_new("(");
-    int i;
     playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
     pl3_current_playlist_browser_init();
@@ -136,15 +134,6 @@ static void pl3_cp_init(void)
 
 
     cut_queue = g_queue_new();
-    for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES;i++)
-    {
-        g_string_append(string, mpdTagItemKeys[i]);
-        if(i< (MPD_TAG_NUM_OF_ITEM_TYPES-1))
-            g_string_append(string,"|");
-    }
-    g_string_append(string, ")[ ]*[=:][ ]*");
-    search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
-    g_string_free(string, TRUE);
 }
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
@@ -251,8 +240,6 @@ void pl3_current_playlist_destroy(void)
 		}
 		pl3_cp_tree =  NULL;
 	}
-    if(search_regex) g_regex_unref(search_regex);
-    search_regex = NULL;
 }
 
 
@@ -268,46 +255,9 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
     
     if(strlen(text2) > 0)
     {
+    
         MpdData *data = NULL;
-        gchar **text = g_regex_split(search_regex, text2, 0);// g_strsplit(text2, "=", 0);
-        int i= 0;
-        int searched = 0;
-        for(i=0; text && text[i] ;i++)
-        {
-            int type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
-            if(type != MPD_TAG_NOT_FOUND && text[i+1])
-            {
-                gchar **split = tokenize_string(text[i+1]);
-                int j;
-                for(j=0;split && split[j];j++)
-                {
-                    if(!searched){
-                        mpd_playlist_search_start(connection, FALSE);
-                        searched = 1;
-                    }
-                    mpd_playlist_search_add_constraint(connection, type,split[j]);
-                }
-                if(split)g_strfreev(split);
-
-            }
-            else 
-            {
-                gchar **split = tokenize_string(text[i]);
-                int j;
-                for(j=0;split && split[j];j++)
-                {
-                    if(!searched){
-                        mpd_playlist_search_start(connection, FALSE);
-                        searched = 1;
-                    }
-                    mpd_playlist_search_add_constraint(connection,MPD_TAG_ITEM_ANY,split[j]);
-                }
-                if(split)g_strfreev(split);
-            }
-        }
-        if(text)g_strfreev(text);
-        if(searched)
-            data = mpd_playlist_search_commit(connection);
+        data = advanced_search(text2, TRUE);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), data);
 
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), mod_fill);

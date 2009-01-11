@@ -36,7 +36,7 @@
 /** session support */
 #include "sm.h"
 #include "misc.h"
-
+#include "advanced_search.h"
 #include "gmpc_easy_download.h"
 
 #include "setup-assistant.h"
@@ -457,6 +457,9 @@ int main (int argc, char **argv)
     gtk_init (&argc, &argv);
 
     TEC("Initializing gtk")
+
+    advanced_search_init();
+    TEC("Init advanced search");
         /**
          * Call create_gmpc_paths();
          * This function checks if the path needed path are available, if not, create them
@@ -936,6 +939,9 @@ int main (int argc, char **argv)
     g_object_unref(gmpc_signals);
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);
+
+
+    advanced_search_destroy();
 	/**
 	 * Destroy the connection object
 	 */
