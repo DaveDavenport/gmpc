@@ -734,6 +734,12 @@ int main (int argc, char **argv)
                 if(replace || quit)
                 {
                     bacon_message_connection_send(bacon_connection, "QUIT");
+                    while(!bacon_message_connection_get_is_server(bacon_connection)){
+                        bacon_message_connection_free (bacon_connection);
+                        bacon_connection = bacon_message_connection_new("gmpc");
+                        printf("Waiting te become master\n");
+                        g_usleep(G_USEC_PER_SEC);
+                    }
                 }
                 else
                 {
