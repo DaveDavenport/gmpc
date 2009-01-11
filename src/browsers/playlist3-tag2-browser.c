@@ -36,7 +36,7 @@
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model.h"
 #ifdef USE_SYSTEM_LIBSEXY
-#include <sexy-icon-entry.h>
+#include <libsexy/sexy-icon-entry.h>
 #endif
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"

@@ -33,7 +33,7 @@
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
 #ifdef USE_SYSTEM_LIBSEXY
-#include <sexy-icon-entry.h>
+#include <libsexy/sexy-icon-entry.h>
 #endif
 #include "playlist3-messages.h"
 
