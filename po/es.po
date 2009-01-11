@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-10 17:28+0100\n"
+"POT-Creation-Date: 2009-01-11 14:17+0100\n"
 "PO-Revision-Date: 2009-01-07 19:27+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -28,140 +28,118 @@ msgstr "Una interfaz GNOME para el demonio MPD"
 msgid "Gnome Music Player Client"
 msgstr "Cliente de reproducción de música de GNOME"
 
-#: ../glade/playlist3.glade.h:1
-msgid "<enter playlist name>"
-msgstr "<ingresar el nombre de la lista de reproducción>"
-
-#: ../glade/playlist3.glade.h:2
-msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr ""
-"<span size=\"x-small\"><i>La lista de reproducción existe actualmente.</i></"
-"span>"
-
-#: ../glade/playlist3.glade.h:3 ../src/main.c:1389
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1389
 msgid "Getting help"
 msgstr "Obtener ayuda"
 
-#: ../glade/playlist3.glade.h:4
+#: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
 msgstr "La base de datos MPD se está actualizando"
 
-#: ../glade/playlist3.glade.h:5
-msgid "Messages"
-msgstr "Mensajes"
-
-#: ../glade/playlist3.glade.h:6
+#: ../glade/playlist3.glade.h:3
 msgid "Mute"
 msgstr "SIlenciar"
 
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:73
+#: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:73
 msgid "Next"
 msgstr "Siguiente"
 
-#: ../glade/playlist3.glade.h:8
+#: ../glade/playlist3.glade.h:5
 msgid "Play/Pause"
 msgstr "Reproducir/Pausa"
 
 #. * MM_NEXT
-#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:74
+#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74
 msgid "Previous"
 msgstr "Anterior"
 
-#: ../glade/playlist3.glade.h:10
+#: ../glade/playlist3.glade.h:7
 msgid "Profiles"
 msgstr "Perfiles"
 
 #. * MM_REPEAT
-#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:79
+#: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:79
 msgid "Random"
 msgstr "Aleatorio"
 
 #. * MM_FASTBACKWARD
-#: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:78
+#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:78
 msgid "Repeat"
 msgstr "Repetir"
 
-#: ../glade/playlist3.glade.h:13
-msgid "Save Playlist"
-msgstr "Guardar Lista de Reproducción"
-
-#: ../glade/playlist3.glade.h:14
+#: ../glade/playlist3.glade.h:10
 msgid "Show Messages"
 msgstr "Mostrar Mensajes"
 
 #. * MM_PREV
-#: ../glade/playlist3.glade.h:15 ../src/mm-keys.c:75
+#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:75
 msgid "Stop"
 msgstr "Detener"
 
-#: ../glade/playlist3.glade.h:16
+#: ../glade/playlist3.glade.h:12
 msgid "Visit website"
 msgstr "Visita la página web"
 
-#: ../glade/playlist3.glade.h:17
+#: ../glade/playlist3.glade.h:13
 msgid "_Collapse Interface"
 msgstr "_Collapsar Interfaz"
 
-#: ../glade/playlist3.glade.h:18
+#: ../glade/playlist3.glade.h:14
 msgid "_Connect"
 msgstr "_Conectar"
 
-#: ../glade/playlist3.glade.h:19
+#: ../glade/playlist3.glade.h:15
 msgid "_Control"
 msgstr "_Control"
 
-#: ../glade/playlist3.glade.h:20
+#: ../glade/playlist3.glade.h:16
 msgid "_Disconnect"
 msgstr "_Desconectar"
 
-#: ../glade/playlist3.glade.h:21
+#: ../glade/playlist3.glade.h:17
 msgid "_Expand Interface"
 msgstr "_Expandir Interfaz"
 
-#: ../glade/playlist3.glade.h:22
+#: ../glade/playlist3.glade.h:18
 msgid "_Fullscreen"
 msgstr "_Pantalla completa"
 
-#: ../glade/playlist3.glade.h:23
+#: ../glade/playlist3.glade.h:19
 msgid "_Go"
 msgstr "_Ir"
 
-#: ../glade/playlist3.glade.h:24
+#: ../glade/playlist3.glade.h:20
 msgid "_Help"
 msgstr "_Ayuda"
 
-#: ../glade/playlist3.glade.h:25
+#: ../glade/playlist3.glade.h:21
 msgid "_Music"
 msgstr "_Música"
 
-#: ../glade/playlist3.glade.h:26
+#: ../glade/playlist3.glade.h:22
 msgid "_Option"
 msgstr "_Opción"
 
-#: ../glade/playlist3.glade.h:27
+#: ../glade/playlist3.glade.h:23
 msgid "_Send Password"
 msgstr "_Enviar Contraseña"
 
-#: ../glade/playlist3.glade.h:28
+#: ../glade/playlist3.glade.h:24
 msgid "_Server"
 msgstr "_Servidor"
 
-#: ../glade/playlist3.glade.h:29
+#: ../glade/playlist3.glade.h:25
 msgid "_Show Artist Image"
 msgstr "_Mostrar Imagen del Artista"
 
-#: ../glade/playlist3.glade.h:30
+#: ../glade/playlist3.glade.h:26
 msgid "_View"
 msgstr "_Vista"
 
-#: ../glade/playlist3.glade.h:31
+#: ../glade/playlist3.glade.h:27
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Administrador de Lista de Reproducción"
-
-#: ../glade/playlist3.glade.h:32
-msgid "name:"
-msgstr "nombre:"
 
 #: ../src/edit_markup.c:40
 msgid "/path/to/file_name.mp3"
@@ -667,39 +645,39 @@ msgstr "Todo del mismo directorio"
 msgid "Add more"
 msgstr "Añadir más"
 
-#: ../src/playlist3.c:620
+#: ../src/playlist3.c:623
 msgid "MPD database is updating"
 msgstr "base de datos MPD está actualizándose"
 
-#: ../src/playlist3.c:631
+#: ../src/playlist3.c:634
 msgid "MPD is updating its database"
 msgstr "MPD esta actualizando la base de datos"
 
-#: ../src/playlist3.c:635
+#: ../src/playlist3.c:638
 msgid "MPD finished updating its database"
 msgstr "Actualizacion de base de datos terminada"
 
-#: ../src/playlist3.c:838
+#: ../src/playlist3.c:841
 msgid "Connected"
 msgstr "Conectado"
 
-#: ../src/playlist3.c:847 ../src/playlist3.c:2225
+#: ../src/playlist3.c:850 ../src/playlist3.c:2230
 msgid "Not Connected"
 msgstr "No conectado"
 
-#: ../src/playlist3.c:860 ../src/playlist3.c:869 ../src/playlist3.c:1681
+#: ../src/playlist3.c:863 ../src/playlist3.c:872 ../src/playlist3.c:1686
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:861
+#: ../src/playlist3.c:864
 msgid "Connected to"
 msgstr "Conectado a"
 
-#: ../src/playlist3.c:870
+#: ../src/playlist3.c:873
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: ../src/playlist3.c:935
+#: ../src/playlist3.c:938
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc"
@@ -707,63 +685,63 @@ msgstr ""
 "Falló al abrir el archivo de descripción de la interfaz!\n"
 "Por favor reinstale gmpc"
 
-#: ../src/playlist3.c:1715
+#: ../src/playlist3.c:1720
 #, c-format
 msgid "Repeat: %s"
 msgstr "Repetir: %s"
 
-#: ../src/playlist3.c:1715 ../src/playlist3.c:1728
+#: ../src/playlist3.c:1720 ../src/playlist3.c:1733
 msgid "On"
 msgstr "Activado"
 
-#: ../src/playlist3.c:1715 ../src/playlist3.c:1728
+#: ../src/playlist3.c:1720 ../src/playlist3.c:1733
 msgid "Off"
 msgstr "Desactivado"
 
-#: ../src/playlist3.c:1728
+#: ../src/playlist3.c:1733
 #, c-format
 msgid "Random: %s"
 msgstr "Aleatorio: %s"
 
-#: ../src/playlist3.c:1787
+#: ../src/playlist3.c:1792
 #, c-format
 msgid "MPD Database refreshed at: %c"
 msgstr "Base de datos MPD recargado en %c"
 
-#: ../src/playlist3.c:1797
+#: ../src/playlist3.c:1802
 msgid "MPD Reported the following error"
 msgstr "MPD Reportó el siguiente error"
 
-#: ../src/playlist3.c:1927 ../src/playlist3.c:1934
+#: ../src/playlist3.c:1932 ../src/playlist3.c:1939
 msgid "Profile"
 msgstr "Perfil"
 
-#: ../src/playlist3.c:1927
+#: ../src/playlist3.c:1932
 msgid "added"
 msgstr "añadido"
 
-#: ../src/playlist3.c:1936
+#: ../src/playlist3.c:1941
 msgid "changed hostname to:"
 msgstr "hostname cambiado a:"
 
 #. Update DB
-#: ../src/playlist3.c:2047
+#: ../src/playlist3.c:2052
 msgid "Update Database"
 msgstr "Actualizar Base de datos"
 
-#: ../src/playlist3.c:2131
+#: ../src/playlist3.c:2136
 msgid "By"
 msgstr "Por"
 
-#: ../src/playlist3.c:2138
+#: ../src/playlist3.c:2143
 msgid "From"
 msgstr "Desde"
 
-#: ../src/playlist3.c:2216
+#: ../src/playlist3.c:2221
 msgid "Not Playing"
 msgstr "No Reproduciendo"
 
-#: ../src/playlist3.c:2335
+#: ../src/playlist3.c:2340
 msgid "Interface"
 msgstr "Interfaz"
 
@@ -779,11 +757,11 @@ msgstr "Advertencia"
 msgid "Critical"
 msgstr "Crítico"
 
-#: ../src/playlist3-messages.c:215
+#: ../src/playlist3-messages.c:217
 msgid "Time"
 msgstr "Hora"
 
-#: ../src/playlist3-messages.c:217
+#: ../src/playlist3-messages.c:219
 msgid "Message"
 msgstr "Mensaje"
 
@@ -929,44 +907,44 @@ msgstr "(Estimación)"
 msgid "Play Queue"
 msgstr "Cola de reproducción"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:537
+#: ../src/browsers/playlist3-current-playlist-browser.c:536
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Está seguro de querer limpiar la lista de reproducción"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:776
-#: ../src/browsers/playlist3-current-playlist-browser.c:795
-#: ../src/browsers/playlist3-current-playlist-browser.c:836
-#: ../src/browsers/playlist3-current-playlist-browser.c:858
+#: ../src/browsers/playlist3-current-playlist-browser.c:775
+#: ../src/browsers/playlist3-current-playlist-browser.c:794
+#: ../src/browsers/playlist3-current-playlist-browser.c:835
+#: ../src/browsers/playlist3-current-playlist-browser.c:857
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "El 'addid' se su mpd esta erroneo, pegar fallara."
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:882
+#: ../src/browsers/playlist3-current-playlist-browser.c:881
 msgid "Crop"
 msgstr "Recortar"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:902
+#: ../src/browsers/playlist3-current-playlist-browser.c:901
 msgid "Paste before"
 msgstr "Pegar antes"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:908
+#: ../src/browsers/playlist3-current-playlist-browser.c:907
 msgid "Paste after"
 msgstr "Pegar despues"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:923
+#: ../src/browsers/playlist3-current-playlist-browser.c:922
 msgid "Shuffle"
 msgstr "Aleatorio"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:938
+#: ../src/browsers/playlist3-current-playlist-browser.c:937
 #: ../src/browsers/playlist3-file-browser.c:951
 #: ../src/browsers/playlist3-find2-browser.c:895
 #: ../src/browsers/playlist3-playlist-editor.c:567
 msgid "Edit Columns"
 msgstr "Editar Columnas"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1062
+#: ../src/browsers/playlist3-current-playlist-browser.c:1061
 msgid "Add URL"
 msgstr "Añadir URL"
 
@@ -1398,11 +1376,11 @@ msgstr "Perfil añadido"
 msgid "Removed profile"
 msgstr "Perfil removido"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:741
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:737
 msgid "Refetch"
 msgstr "Recargar"
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:746
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:742
 msgid "Select file"
 msgstr "Seleccionar archivo"
 
@@ -1430,7 +1408,7 @@ msgstr "Obteniendo Información del Álbum"
 msgid "Not Available"
 msgstr "No Disponible"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:777
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:773
 msgid "Select File"
 msgstr "Seleccionar Archivo"
 
@@ -1438,17 +1416,34 @@ msgstr "Seleccionar Archivo"
 msgid "Text Document"
 msgstr "Documento de Texto"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:787
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:783
 msgid "All"
 msgstr "Todos"
 
-#: ../src/gob/gmpc-metaimage.gob:782
+#: ../src/gob/gmpc-metaimage.gob:778
 msgid "Images"
 msgstr "Imágenes"
 
 #: ../src/gob/gmpc-stats-label.gob:135
 msgid "Loading"
 msgstr "Cargando"
+
+#~ msgid "<enter playlist name>"
+#~ msgstr "<ingresar el nombre de la lista de reproducción>"
+
+#~ msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+#~ msgstr ""
+#~ "<span size=\"x-small\"><i>La lista de reproducción existe actualmente.</"
+#~ "i></span>"
+
+#~ msgid "Messages"
+#~ msgstr "Mensajes"
+
+#~ msgid "Save Playlist"
+#~ msgstr "Guardar Lista de Reproducción"
+
+#~ msgid "name:"
+#~ msgstr "nombre:"
 
 #~ msgid "/"
 #~ msgstr "/"

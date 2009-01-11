@@ -30,6 +30,9 @@ glade/preferences-plugins.ui
 glade/preferences-server.ui
 glade/preferences-trayicon.ui
 glade/preferences.ui
+glade/playlist-message-window.ui
+glade/playlist-save-dialog.ui
+
 
 # Browsers
 src/browsers/playlist3-current-playlist-browser.c
