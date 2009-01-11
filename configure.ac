@@ -272,7 +272,9 @@ AC_ARG_ENABLE([unique],
                esac],
                [use_unique=true])
 if test "x$use_unique" = "xtrue"; then
-	PKG_CHECK_MODULES([unique], unique-1.0)
+	PKG_CHECK_MODULES([unique], unique-1.0, use_unique=true,use_unique=false)
+fi
+if test "x$use_unique" = "xtrue"; then
 	AC_SUBST(unique_LIBS)
 	AC_SUBST(unique_CFLAGS)
 	AC_DEFINE([USE_UNIQUE], 1, [Use unique to run only one gmpc])
