@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-11 14:17+0100\n"
+"POT-Creation-Date: 2009-01-12 03:08+0100\n"
 "PO-Revision-Date: 2009-01-08 10:00+0000\n"
 "Last-Translator: Huber Florian <itshorty@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -23,13 +23,13 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Ein Gnome-Front-End für den Music Player Daemon"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1365 ../src/tray-icon2.c:538
-#: ../src/tray-icon2.c:720 ../src/tray-icon2.c:723 ../src/tray-icon2.c:733
-#: ../src/tray-icon2.c:736
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1391 ../src/tray-icon2.c:537
+#: ../src/tray-icon2.c:719 ../src/tray-icon2.c:722 ../src/tray-icon2.c:732
+#: ../src/tray-icon2.c:735
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1389
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1415
 msgid "Getting help"
 msgstr "Hilfe"
 
@@ -94,7 +94,7 @@ msgstr "Ver_binden"
 msgid "_Control"
 msgstr "_Steuerung"
 
-#: ../glade/playlist3.glade.h:16
+#: ../glade/playlist3.glade.h:16 ../glade/preferences-connection.ui.h:9
 msgid "_Disconnect"
 msgstr "Verbindung _trennen"
 
@@ -142,31 +142,31 @@ msgstr "_Ansicht"
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Wiedergabelisten-Manager"
 
-#: ../src/edit_markup.c:40
+#: ../src/edit_markup.c:39
 msgid "/path/to/file_name.mp3"
 msgstr "/Pfad/zu/Dateiname.mp3"
 
-#: ../src/edit_markup.c:41
+#: ../src/edit_markup.c:40
 msgid "Jonny Singer"
 msgstr "Jonny Singer"
 
-#: ../src/edit_markup.c:42
+#: ../src/edit_markup.c:41
 msgid "Sing or Swing you want"
 msgstr "Singen und Swingen wollt ihr"
 
-#: ../src/edit_markup.c:43
+#: ../src/edit_markup.c:42
 msgid "The kernel jazz"
 msgstr ""
 
-#: ../src/edit_markup.c:44
+#: ../src/edit_markup.c:43
 msgid "01/24"
 msgstr "01/24"
 
-#: ../src/edit_markup.c:45
+#: ../src/edit_markup.c:44
 msgid "2 Feb 2006"
 msgstr "2. Februar 2006"
 
-#: ../src/edit_markup.c:47
+#: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
 msgstr "MPD's Streaming-Server"
 
@@ -186,7 +186,7 @@ msgid "HTTP Proxy:"
 msgstr "HTTP-Proxy:"
 
 #. label
-#: ../src/gmpc_easy_download.c:245
+#: ../src/gmpc_easy_download.c:245 ../glade/preferences-connection.ui.h:6
 msgid "Port:"
 msgstr "Port:"
 
@@ -197,25 +197,25 @@ msgstr "Port:"
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:270 ../src/main.c:272
+#: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--nivel-debugging="
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:278
+#: ../src/main.c:301
 msgid "--version"
 msgstr "--Version"
 
-#: ../src/main.c:287 ../src/main.c:289
+#: ../src/main.c:310 ../src/main.c:312
 msgid "--config="
 msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
 #.
-#: ../src/main.c:294
+#: ../src/main.c:317
 msgid "--start-hidden"
 msgstr ""
 
@@ -223,53 +223,53 @@ msgstr ""
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
 #.
-#: ../src/main.c:302
+#: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--cover-db-reinigen"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
 #.
-#: ../src/main.c:309
+#: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--plugins-deaktivieren"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
 #.
-#: ../src/main.c:316
+#: ../src/main.c:339
 msgid "--replace"
 msgstr "--ersetzen"
 
 #. *
 #. * Quit any running gmpc session
 #.
-#: ../src/main.c:323
+#: ../src/main.c:346
 msgid "--quit"
 msgstr "--beenden"
 
 #. *
 #. * Imports the cover db in the old format.
 #.
-#: ../src/main.c:330
+#: ../src/main.c:353
 msgid "--import-old-db"
 msgstr "--alte-Db-importieren"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
 #.
-#: ../src/main.c:337
+#: ../src/main.c:360
 msgid "--debug-updates"
 msgstr "--debug-aktualizationen"
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:345
+#: ../src/main.c:368
 msgid "--help"
 msgstr "--hilfe"
 
-#: ../src/main.c:347
+#: ../src/main.c:370
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -291,27 +291,23 @@ msgid ""
 "instances is disabled.\n"
 msgstr ""
 
-#: ../src/main.c:487
+#: ../src/main.c:513
 msgid "Failed to load the configuration system."
 msgstr "Fehler beim Laden des Konfigurationssystems"
 
-#: ../src/main.c:509
+#: ../src/main.c:535
 msgid "Failed to load debug-log file."
 msgstr ""
 
-#: ../src/main.c:610
-msgid "GMPC allready running, quitting"
-msgstr ""
-
-#: ../src/main.c:682
+#: ../src/main.c:701
 msgid "Failed to setup libmpd"
 msgstr "Einrichten von libmpd fehlgeschlagen"
 
-#: ../src/main.c:1058
+#: ../src/main.c:1084
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC hat nicht genügend Rechte am MPD-Server"
 
-#: ../src/main.c:1080
+#: ../src/main.c:1106
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -320,153 +316,149 @@ msgstr ""
 "Setzen des folgenden Password fehlgeschlagen: '%s'\n"
 "Bitte versuchen Sie es erneut"
 
-#: ../src/main.c:1084
+#: ../src/main.c:1110
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Bitte geben sie ihr Passwort für '%s' ein:"
 
-#: ../src/main.c:1109 ../src/main.c:1134
+#: ../src/main.c:1135 ../src/main.c:1160
 msgid "error code"
 msgstr "Fehlernummer"
 
-#: ../src/main.c:1120
+#: ../src/main.c:1146
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Unzureichende Berechtigung um Verbindung mit mpd herzustellen. Bitte "
 "Passwort überprüfen"
 
-#: ../src/main.c:1157
+#: ../src/main.c:1183
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD versionen vor 0.13.0 werden nicht unterstützt"
 
-#: ../src/main.c:1225
+#: ../src/main.c:1251
 msgid "Connected to mpd"
 msgstr "mit mpd verbunden"
 
-#: ../src/main.c:1227
+#: ../src/main.c:1253
 msgid "Disconnected from mpd"
 msgstr "Verbindung von mpd getrennt"
 
-#: ../src/main.c:1262
+#: ../src/main.c:1288
 msgid "Error occured during operation"
 msgstr "Ein Fehler ist während der Anwendung aufgetreten"
 
 #. Create label
-#: ../src/main.c:1292
+#: ../src/main.c:1318
 msgid "The following error(s) occured:"
 msgstr "Folgende Fehler sind aufgetreten:"
 
-#: ../src/main.c:1308
+#: ../src/main.c:1334
 msgid "Error Message"
 msgstr "Fehlermeldung"
 
-#: ../src/main.c:1368
+#: ../src/main.c:1394
 msgid "Tagline"
 msgstr ""
 
-#: ../src/main.c:1369 ../src/preferences.c:312
+#: ../src/main.c:1395 ../src/preferences.c:311
 msgid "Version"
 msgstr "Version"
 
-#: ../src/main.c:1372
+#: ../src/main.c:1398
 msgid "Revision"
 msgstr "Letzte Bearbeitung"
 
-#: ../src/main.c:1374
+#: ../src/main.c:1400
 msgid "Libmpd version"
 msgstr "Libmpd Version"
 
-#: ../src/main.c:1375
+#: ../src/main.c:1401
 msgid "GTK+ version"
 msgstr "GTK+ Version"
 
-#: ../src/main.c:1376
+#: ../src/main.c:1402
 msgid "Libcurl version"
 msgstr "Libcurl Version"
 
-#: ../src/main.c:1377
+#: ../src/main.c:1403
 msgid "Platform"
 msgstr "Architektur"
 
-#: ../src/main.c:1379
+#: ../src/main.c:1405
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/main.c:1382
+#: ../src/main.c:1408
 msgid "Mac OsX"
 msgstr "Mac OsX"
 
-#: ../src/main.c:1384
+#: ../src/main.c:1410
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1388
+#: ../src/main.c:1414
 msgid "Website"
 msgstr "Webseite"
 
-#: ../src/main.c:1390
+#: ../src/main.c:1416
 msgid "Options enabled"
 msgstr ""
 
-#: ../src/main.c:1392
+#: ../src/main.c:1418
 msgid "X session management"
 msgstr ""
 
-#: ../src/main.c:1394 ../src/main.c:1401 ../src/main.c:1409 ../src/main.c:1417
-#: ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1441 ../src/main.c:1449
-#: ../src/main.c:1457 ../src/main.c:1465 ../src/preferences.c:305
+#: ../src/main.c:1420 ../src/main.c:1427 ../src/main.c:1435 ../src/main.c:1443
+#: ../src/main.c:1451 ../src/main.c:1459 ../src/main.c:1467 ../src/main.c:1475
+#: ../src/main.c:1483 ../src/preferences.c:304
 msgid "Enabled"
 msgstr "Eingeschaltet"
 
-#: ../src/main.c:1396 ../src/main.c:1403 ../src/main.c:1411 ../src/main.c:1419
-#: ../src/main.c:1427 ../src/main.c:1435 ../src/main.c:1443 ../src/main.c:1451
-#: ../src/main.c:1459 ../src/main.c:1467
+#: ../src/main.c:1422 ../src/main.c:1429 ../src/main.c:1437 ../src/main.c:1445
+#: ../src/main.c:1453 ../src/main.c:1461 ../src/main.c:1469 ../src/main.c:1477
+#: ../src/main.c:1485
 msgid "Disabled"
 msgstr "Ausgeschaltet"
 
-#: ../src/main.c:1399
+#: ../src/main.c:1425
 msgid "NLS Support"
 msgstr "NSL Unterstützung"
 
-#: ../src/main.c:1407 ../src/mm-keys.c:556
+#: ../src/main.c:1433 ../src/mm-keys.c:556
 msgid "Multimedia Keys"
 msgstr "Multimediatasten"
 
-#: ../src/main.c:1415
+#: ../src/main.c:1441
 msgid "Libegg's trayicon"
 msgstr ""
 
-#: ../src/main.c:1423
+#: ../src/main.c:1449
 msgid "System libsexy"
 msgstr ""
 
-#: ../src/main.c:1431
-msgid "Unique"
-msgstr "Einmalig"
-
-#: ../src/main.c:1439
+#: ../src/main.c:1457
 msgid "Mac integration library"
 msgstr ""
 
-#: ../src/main.c:1447
+#: ../src/main.c:1465
 msgid "Use ~/.config/ dir"
 msgstr "Benutze ~/.config/ Verzeichniss"
 
-#: ../src/main.c:1455
+#: ../src/main.c:1473
 msgid "Debug timing"
 msgstr ""
 
-#: ../src/main.c:1463
+#: ../src/main.c:1481
 msgid "Maintainer mode"
 msgstr ""
 
-#: ../src/metadata.c:738
+#: ../src/metadata.c:737
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
 
-#: ../src/metadata.c:1200
+#: ../src/metadata.c:1198
 msgid "Metadata Handler"
 msgstr ""
 
@@ -614,77 +606,77 @@ msgstr "Aktion"
 msgid "Shortcut"
 msgstr "Tastenkürzel"
 
-#: ../src/mpdinteraction.c:75
+#: ../src/mpdinteraction.c:74
 msgid "Server Settings"
 msgstr "Serveroptionen"
 
-#: ../src/mpdinteraction.c:105
+#: ../src/mpdinteraction.c:104
 msgid "Connection"
 msgstr "Verbindung"
 
-#: ../src/mpdinteraction.c:206
+#: ../src/mpdinteraction.c:205
 msgid "Connecting"
 msgstr "Verbinde"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1171
+#: ../src/mpdinteraction.c:1170
 msgid "All from album"
 msgstr "Alles vom Album"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1183
+#: ../src/mpdinteraction.c:1182
 msgid "All from artist"
 msgstr "Alles vom Künstler"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1193
+#: ../src/mpdinteraction.c:1192
 msgid "All from genre"
 msgstr "Alles aus dem Genre"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1201
+#: ../src/mpdinteraction.c:1200
 msgid "All from same directory"
 msgstr "Alles aus dem gleichen Verzeichnis"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1209
+#: ../src/mpdinteraction.c:1208
 msgid "Add more"
 msgstr "Mehr hinzufügen"
 
-#: ../src/playlist3.c:623
+#: ../src/playlist3.c:629
 msgid "MPD database is updating"
 msgstr "MPD Datenbank aktualisiert"
 
-#: ../src/playlist3.c:634
+#: ../src/playlist3.c:640
 msgid "MPD is updating its database"
 msgstr "MPD aktualisiert seine Datenbank"
 
-#: ../src/playlist3.c:638
+#: ../src/playlist3.c:644
 msgid "MPD finished updating its database"
 msgstr "Das Update der MPD Datenbank ist beendet"
 
-#: ../src/playlist3.c:841
+#: ../src/playlist3.c:850
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../src/playlist3.c:850 ../src/playlist3.c:2230
+#: ../src/playlist3.c:859 ../src/playlist3.c:2246
 msgid "Not Connected"
 msgstr "Nicht verbunden"
 
-#: ../src/playlist3.c:863 ../src/playlist3.c:872 ../src/playlist3.c:1686
+#: ../src/playlist3.c:872 ../src/playlist3.c:881 ../src/playlist3.c:1700
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:864
+#: ../src/playlist3.c:873
 msgid "Connected to"
 msgstr "Verbunden mit"
 
-#: ../src/playlist3.c:873
+#: ../src/playlist3.c:882
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../src/playlist3.c:938
+#: ../src/playlist3.c:947
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc"
@@ -692,63 +684,63 @@ msgstr ""
 "Öffnen der Oberflächen-Beschreibungs-Datei fehlgeschlagen!\n"
 "Bitte installieren sie gmpc neu"
 
-#: ../src/playlist3.c:1720
+#: ../src/playlist3.c:1734
 #, c-format
 msgid "Repeat: %s"
 msgstr "Wiederholung: %s"
 
-#: ../src/playlist3.c:1720 ../src/playlist3.c:1733
+#: ../src/playlist3.c:1734 ../src/playlist3.c:1747
 msgid "On"
 msgstr "An"
 
-#: ../src/playlist3.c:1720 ../src/playlist3.c:1733
+#: ../src/playlist3.c:1734 ../src/playlist3.c:1747
 msgid "Off"
 msgstr "Aus"
 
-#: ../src/playlist3.c:1733
+#: ../src/playlist3.c:1747
 #, c-format
 msgid "Random: %s"
 msgstr "Zufall: %s"
 
-#: ../src/playlist3.c:1792
+#: ../src/playlist3.c:1806
 #, c-format
 msgid "MPD Database refreshed at: %c"
 msgstr "MPD Datenbank erneuert in: %c"
 
-#: ../src/playlist3.c:1802
+#: ../src/playlist3.c:1816
 msgid "MPD Reported the following error"
 msgstr "MPD meldete folgenden Fehler"
 
-#: ../src/playlist3.c:1932 ../src/playlist3.c:1939
+#: ../src/playlist3.c:1948 ../src/playlist3.c:1955
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1932
+#: ../src/playlist3.c:1948
 msgid "added"
 msgstr "hinzugefügt"
 
-#: ../src/playlist3.c:1941
+#: ../src/playlist3.c:1957
 msgid "changed hostname to:"
 msgstr "Hostname geändert zu:"
 
 #. Update DB
-#: ../src/playlist3.c:2052
+#: ../src/playlist3.c:2068
 msgid "Update Database"
 msgstr "Aktualisiere Datenbank"
 
-#: ../src/playlist3.c:2136
+#: ../src/playlist3.c:2152
 msgid "By"
 msgstr "Von"
 
-#: ../src/playlist3.c:2143
+#: ../src/playlist3.c:2159
 msgid "From"
 msgstr "Von"
 
-#: ../src/playlist3.c:2221
+#: ../src/playlist3.c:2237
 msgid "Not Playing"
 msgstr "Keine Wiedergabe"
 
-#: ../src/playlist3.c:2340
+#: ../src/playlist3.c:2356
 msgid "Interface"
 msgstr "Oberfläche"
 
@@ -779,43 +771,43 @@ msgstr ""
 "Eines oder mehrere Plugins konnten nicht geladen werden, schauen Sie in "
 "Hilfe->Nachrichten für mehr Informationen"
 
-#: ../src/preferences.c:93 ../src/preferences.c:194
+#: ../src/preferences.c:92 ../src/preferences.c:193
 msgid "Plugins"
 msgstr "Erweiterungen"
 
-#: ../src/preferences.c:155
+#: ../src/preferences.c:154
 msgid "Plugins:"
 msgstr "Plugins:"
 
-#: ../src/preferences.c:308 ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/preferences.c:307 ../src/gob/gmpc-mpddata-treeview.gob:72
 msgid "Name"
 msgstr "Name"
 
-#: ../src/preferences.c:310
+#: ../src/preferences.c:309
 msgid "Function"
 msgstr "Funktion"
 
-#: ../src/preferences.c:331
+#: ../src/preferences.c:330
 msgid "Dummy"
 msgstr "Dummy"
 
-#: ../src/preferences.c:334
+#: ../src/preferences.c:333
 msgid "Browser Extension"
 msgstr "Browser Erweiterung"
 
-#: ../src/preferences.c:337
+#: ../src/preferences.c:336
 msgid "Metadata Provider"
 msgstr "Metadaten Anbieter"
 
-#: ../src/preferences.c:340
+#: ../src/preferences.c:339
 msgid "Metadata Provider and Browser Extension"
 msgstr "Metadaten Anbieter und Browser Erweiterung"
 
-#: ../src/preferences.c:343
+#: ../src/preferences.c:342
 msgid "Misc."
 msgstr "Sonstiges"
 
-#: ../src/preferences.c:348
+#: ../src/preferences.c:347
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -823,29 +815,29 @@ msgstr "Unbekannt"
 msgid "Find:"
 msgstr "Suche:"
 
-#: ../src/url_fetcher.c:63 ../src/url_fetcher.c:92
+#: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 #, c-format
 msgid "Added %i %s"
 msgstr "%i %s hinzugefügt"
 
-#: ../src/url_fetcher.c:63 ../src/url_fetcher.c:92
+#: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 msgid "stream"
 msgid_plural "streams"
 msgstr[0] "Stream"
 msgstr[1] "Streams"
 
-#: ../src/url_fetcher.c:156 ../src/url_fetcher.c:181
+#: ../src/url_fetcher.c:155 ../src/url_fetcher.c:180
 msgid "Added 1 stream"
 msgstr "Einen Stream hinzugefügt"
 
 #. *
 #. * Setup the label
 #.
-#: ../src/url_fetcher.c:217
+#: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Geben sie eine URL ein"
 
-#: ../src/url_fetcher.c:262
+#: ../src/url_fetcher.c:261
 #, c-format
 msgid "Failed to contact url: '%s'"
 msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
@@ -854,15 +846,15 @@ msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 #. * Failed to contact %s
 #. * Show an error dialog
 #.
-#: ../src/url_fetcher.c:285
+#: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Der link der Wiedergabeliste konnte nicht analysiert werden"
 
-#: ../src/tray-icon2.c:137
+#: ../src/tray-icon2.c:136
 msgid "Pla_ylist"
 msgstr "_Wiedergabeliste"
 
-#: ../src/tray-icon2.c:853
+#: ../src/tray-icon2.c:852
 msgid "Notification"
 msgstr "Benachrichtigung"
 
@@ -898,64 +890,342 @@ msgstr ""
 msgid "Finish"
 msgstr "Fertig"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:106
+#: ../glade/aboutdialog.ui.h:1
+msgid "Copyright 2003-2007 Qball Cow"
+msgstr "Copyright 2003-2007 Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"EneNL\n"
+"Chewi_FFM\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Huber Florian https://launchpad.net/~itshorty\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady"
+
+#: ../glade/password-dialog.ui.h:1
+msgid "Enter your password for: '<hostname>'"
+msgstr "Geben Sie Ihr Passwort für '<hostname>' ein:"
+
+#: ../glade/password-dialog.ui.h:2
+msgid "Password"
+msgstr "Passwort"
+
+#: ../glade/password-dialog.ui.h:3
+msgid "_Save password"
+msgstr "Passwort _speichern"
+
+#: ../glade/preferences-connection.ui.h:1
+msgid "<b>Profile:</b>"
+msgstr "Profil:"
+
+#: ../glade/preferences-connection.ui.h:2
+msgid "Conn_ect"
+msgstr "_Verbinden"
+
+#: ../glade/preferences-connection.ui.h:3
+msgid "Host:"
+msgstr "Host:"
+
+#: ../glade/preferences-connection.ui.h:4
+#: ../src/browsers/playlist3-playlist-editor.c:472
+#: ../src/browsers/playlist3-playlist-editor.c:511
+msgid "Name:"
+msgstr "Name:"
+
+#: ../glade/preferences-connection.ui.h:5
+msgid "Password:"
+msgstr "Passwort:"
+
+#: ../glade/preferences-connection.ui.h:7
+msgid "Timeout (s):"
+msgstr "Zeitüberschreitung (s):"
+
+#: ../glade/preferences-connection.ui.h:8
+msgid "_Autoconnect"
+msgstr "_Automatisch verbinden"
+
+#: ../glade/preferences-connection.ui.h:10
+msgid "_Use Authentication"
+msgstr "A_uthentifizierung verwenden"
+
+#: ../glade/preferences-connection.ui.h:11
+msgid "localhost"
+msgstr "localhost"
+
+#: ../glade/preferences-esf-dialog.ui.h:1
+msgid "<b>Enable Field:</b>"
+msgstr "<b>Schalte Feld ein:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>Beispiel:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:3
+msgid "<span size=\"large\"><b>Format Rule:</b></span>"
+msgstr "<span size=\"large\"><b>Regel des Formates:</b></span>"
+
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "A_lbum"
+msgstr "A_lbum"
+
+#: ../glade/preferences-esf-dialog.ui.h:5
+msgid "Edit Song Formatting"
+msgstr "Ändere Titelformatierung"
+
+#: ../glade/preferences-esf-dialog.ui.h:6
+msgid "T_rack"
+msgstr "T_rack"
+
+#: ../glade/preferences-esf-dialog.ui.h:7
+msgid "_Artist"
+msgstr "_Künstler"
+
+#: ../glade/preferences-esf-dialog.ui.h:8
+msgid "_Date"
+msgstr "_Datum"
+
+#: ../glade/preferences-esf-dialog.ui.h:9
+msgid "_Stream name"
+msgstr "_Streamname"
+
+#: ../glade/preferences-esf-dialog.ui.h:10
+msgid "_Title"
+msgstr "_Titel"
+
+#: ../glade/preferences-esf-dialog.ui.h:11
+msgid "example"
+msgstr "Beispiel"
+
+#: ../glade/preferences-playlist.ui.h:1
+#, fuzzy
+msgid "<b>Main:</b>"
+msgstr "<b>Name:</b>"
+
+#: ../glade/preferences-playlist.ui.h:2
+msgid "<b>Playlist:</b>"
+msgstr "<b>Wiedergabeliste:</b>"
+
+#: ../glade/preferences-playlist.ui.h:3
+msgid "<b>Song Markup</b>"
+msgstr "<b>Lied-Formatierung</b>"
+
+#: ../glade/preferences-playlist.ui.h:4
+msgid "Center playing song"
+msgstr "Aktuell spielenden Titel zentrieren"
+
+#: ../glade/preferences-playlist.ui.h:5
+msgid "Edit _Browser Markup"
+msgstr "_Browser-Formatierung bearbeiten"
+
+#: ../glade/preferences-playlist.ui.h:6
+msgid "Hide on close"
+msgstr "Beim Schließen verstecken"
+
+#: ../glade/preferences-playlist.ui.h:7
+msgid "Save position and size between sessions"
+msgstr "Fensterposition und Größe zwischen Sitzungen sichern"
+
+#: ../glade/preferences-playlist.ui.h:8
+msgid "Show buttons instead of dropdown in collapsed view"
+msgstr ""
+
+#: ../glade/preferences-playlist.ui.h:9
+msgid "Show songlist tooltip"
+msgstr "Zeige Tooltip in der Song-Liste"
+
+#: ../glade/preferences-playlist.ui.h:10
+msgid "Stop playing on exit"
+msgstr "Beende Wiedergabe beim Verlassen"
+
+#: ../glade/preferences-playlist.ui.h:11
+msgid "Stylize album covers"
+msgstr ""
+
+#: ../glade/preferences-plugins.ui.h:1
+msgid "<b>Loaded Plugins:</b>"
+msgstr "<b>Geladene Plugins:</b>"
+
+#: ../glade/preferences-server.ui.h:1
+msgid "<b>Crossfade:</b>"
+msgstr "<b>Crossfade:</b>"
+
+#: ../glade/preferences-server.ui.h:2
+msgid "<b>Output Devices:</b>"
+msgstr "<b>Ausgabegerät:</b>"
+
+#: ../glade/preferences-server.ui.h:3
+msgid ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
+msgstr ""
+"<span size=\"small\"><i>Sie müssen verbunden sein\n"
+"um diese Einstellungen vorzunehmen</i></span>"
+
+#: ../glade/preferences-server.ui.h:5
+msgid "Enable crossfade"
+msgstr "Schalte crossfade ein"
+
+#: ../glade/preferences-server.ui.h:6
+msgid "fade time (s):"
+msgstr "Überblendzeit (s):"
+
+#: ../glade/preferences-trayicon.ui.h:1
+msgid "<b>Inline messages</b>"
+msgstr "<b>Eingebettete Nachrichten</b>"
+
+#: ../glade/preferences-trayicon.ui.h:2
+msgid "<b>Notification Area Icon</b>"
+msgstr "<b>Anmerkungsfeld-Symbol</b>"
+
+#: ../glade/preferences-trayicon.ui.h:3
+msgid "<b>PopUp</b>"
+msgstr "<b>Popup</b>"
+
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "Enable"
+msgstr "Einschalten"
+
+#: ../glade/preferences-trayicon.ui.h:5
+msgid "Position:"
+msgstr "Position:"
+
+#: ../glade/preferences-trayicon.ui.h:6
+msgid "Show severity"
+msgstr "Anzeigegenauigkeit"
+
+#: ../glade/preferences-trayicon.ui.h:7
+msgid "Timeout:"
+msgstr "Zeitüberschreitung:"
+
+#: ../glade/preferences.ui.h:1
+msgid ""
+"<span size=\"x-large\"><b>Plugins</b></span>\n"
+"<i>None Selected</i>"
+msgstr ""
+"<span size=\"x-large\"><b>Plugins</b></span>\n"
+"<i>Keine ausgewählt</i>"
+
+#: ../glade/preferences.ui.h:3
+msgid "gmpc - Configuration"
+msgstr "gmpc - Konfiguration"
+
+#: ../glade/playlist-message-window.ui.h:1
+msgid "Messages"
+msgstr "Meldungen"
+
+#: ../glade/playlist-save-dialog.ui.h:1
+msgid "<enter playlist name>"
+msgstr "<geben Sie den Namen der Wiedergabeliste ein>"
+
+#: ../glade/playlist-save-dialog.ui.h:2
+msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>Wiedergabeliste existiert bereits.</i></span>"
+
+#: ../glade/playlist-save-dialog.ui.h:3
+msgid "Save Playlist"
+msgstr "Wiedergabeliste speichern"
+
+#: ../glade/playlist-save-dialog.ui.h:4
+msgid "name:"
+msgstr "Name:"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:103
 msgid "item"
 msgid_plural "items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:107
+#: ../src/browsers/playlist3-current-playlist-browser.c:104
 msgid "(Estimation)"
 msgstr "(Einschätzung)"
 
 #. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:465
-#: ../src/browsers/playlist3-current-playlist-browser.c:1269
+#: ../src/browsers/playlist3-current-playlist-browser.c:416
+#: ../src/browsers/playlist3-current-playlist-browser.c:1220
 msgid "Play Queue"
 msgstr "Wiedergabe-Warteschlange"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:536
+#: ../src/browsers/playlist3-current-playlist-browser.c:487
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Sind sie sicher, dass sie die Wiedergabeliste löschen wollen?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:775
-#: ../src/browsers/playlist3-current-playlist-browser.c:794
-#: ../src/browsers/playlist3-current-playlist-browser.c:835
-#: ../src/browsers/playlist3-current-playlist-browser.c:857
+#: ../src/browsers/playlist3-current-playlist-browser.c:726
+#: ../src/browsers/playlist3-current-playlist-browser.c:745
+#: ../src/browsers/playlist3-current-playlist-browser.c:786
+#: ../src/browsers/playlist3-current-playlist-browser.c:808
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr ""
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:881
+#: ../src/browsers/playlist3-current-playlist-browser.c:832
 msgid "Crop"
 msgstr "Abschneiden"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:901
+#: ../src/browsers/playlist3-current-playlist-browser.c:852
 msgid "Paste before"
 msgstr "Vorher einfügen"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:907
+#: ../src/browsers/playlist3-current-playlist-browser.c:858
 msgid "Paste after"
 msgstr "Nachher einfügen"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:922
+#: ../src/browsers/playlist3-current-playlist-browser.c:873
 msgid "Shuffle"
 msgstr "Zufällig"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:937
-#: ../src/browsers/playlist3-file-browser.c:951
-#: ../src/browsers/playlist3-find2-browser.c:895
+#: ../src/browsers/playlist3-current-playlist-browser.c:888
+#: ../src/browsers/playlist3-file-browser.c:944
+#: ../src/browsers/playlist3-find2-browser.c:565
 #: ../src/browsers/playlist3-playlist-editor.c:567
 msgid "Edit Columns"
 msgstr "Spalten bearbeiten"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1061
+#: ../src/browsers/playlist3-current-playlist-browser.c:1012
 msgid "Add URL"
 msgstr "URL hinzufügen"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1170
+#: ../src/browsers/playlist3-current-playlist-browser.c:1121
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -964,21 +1234,21 @@ msgstr ""
 "<i>Wiedergabeliste <b>\"%s\"</b> existiert bereits\n"
 "Überschreiben?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1194
+#: ../src/browsers/playlist3-current-playlist-browser.c:1145
 msgid "Failed to save the playlist file."
 msgstr "Die Wiedergabeliste konnte nicht gespeichert werden."
 
-#: ../src/browsers/playlist3-file-browser.c:101
-#: ../src/browsers/playlist3-file-browser.c:341
-#: ../src/browsers/playlist3-file-browser.c:1185
+#: ../src/browsers/playlist3-file-browser.c:100
+#: ../src/browsers/playlist3-file-browser.c:340
+#: ../src/browsers/playlist3-file-browser.c:1178
 msgid "File Browser"
 msgstr "Dateibrowser"
 
-#: ../src/browsers/playlist3-file-browser.c:181
+#: ../src/browsers/playlist3-file-browser.c:180
 msgid "Directories"
 msgstr "Verzeichnisse"
 
-#: ../src/browsers/playlist3-file-browser.c:252
+#: ../src/browsers/playlist3-file-browser.c:251
 #, c-format
 msgid "Added folder '%s' recursively"
 msgstr "Versichnis '%s' rekusriv hinzugefügt"
@@ -988,10 +1258,10 @@ msgstr "Versichnis '%s' rekusriv hinzugefügt"
 #. add the replace widget
 #. Play button
 #. replace
-#: ../src/browsers/playlist3-file-browser.c:591
-#: ../src/browsers/playlist3-file-browser.c:898
-#: ../src/browsers/playlist3-file-browser.c:936
-#: ../src/browsers/playlist3-find2-browser.c:878
+#: ../src/browsers/playlist3-file-browser.c:590
+#: ../src/browsers/playlist3-file-browser.c:897
+#: ../src/browsers/playlist3-file-browser.c:929
+#: ../src/browsers/playlist3-find2-browser.c:548
 #: ../src/browsers/playlist3-metadata-browser.c:697
 #: ../src/browsers/playlist3-metadata-browser.c:1013
 #: ../src/browsers/playlist3-metadata-browser.c:1534
@@ -1002,66 +1272,62 @@ msgid "Replace"
 msgstr "Ersetzen"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:616
-#: ../src/browsers/playlist3-file-browser.c:887
+#: ../src/browsers/playlist3-file-browser.c:615
+#: ../src/browsers/playlist3-file-browser.c:886
 msgid "Update"
 msgstr "Aktualisiere"
 
-#: ../src/browsers/playlist3-file-browser.c:737
+#: ../src/browsers/playlist3-file-browser.c:736
 msgid "Loaded playlist"
 msgstr "Wiedergabeliste geladen"
 
-#: ../src/browsers/playlist3-file-browser.c:1017
+#: ../src/browsers/playlist3-file-browser.c:1010
 msgid "Added"
 msgstr "Hinzugefügt"
 
-#: ../src/browsers/playlist3-file-browser.c:1019
+#: ../src/browsers/playlist3-file-browser.c:1012
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "Lied"
 msgstr[1] "Lieder"
 
-#: ../src/browsers/playlist3-file-browser.c:1021
+#: ../src/browsers/playlist3-file-browser.c:1014
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "Verzeichnis"
 msgstr[1] "Verzeichnisse"
 
-#: ../src/browsers/playlist3-file-browser.c:1023
+#: ../src/browsers/playlist3-file-browser.c:1016
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "Wiedergabeliste"
 msgstr[1] "Wiedergabelisten"
 
-#: ../src/browsers/playlist3-file-browser.c:1046
-#: ../src/browsers/playlist3-file-browser.c:1096
+#: ../src/browsers/playlist3-file-browser.c:1039
+#: ../src/browsers/playlist3-file-browser.c:1089
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr ""
 "Sind Sie sicher, dass sie die ausgewählten Wiedergabeliste löschen wollen?"
 
-#: ../src/browsers/playlist3-find2-browser.c:99
+#: ../src/browsers/playlist3-find2-browser.c:85
 msgid "Query"
 msgstr "Suche"
 
-#: ../src/browsers/playlist3-find2-browser.c:143
-msgid "And"
-msgstr "Und"
+#. search in playlist
+#: ../src/browsers/playlist3-find2-browser.c:171
+#, fuzzy
+msgid "in _play queue"
+msgstr "Wiedergabe-Warteschlange"
 
-#: ../src/browsers/playlist3-find2-browser.c:144
-msgid "Or"
-msgstr "Oder"
-
-#. browser label
-#: ../src/browsers/playlist3-find2-browser.c:264
-#: ../src/browsers/playlist3-find2-browser.c:351
-#: ../src/browsers/playlist3-find2-browser.c:950
+#: ../src/browsers/playlist3-find2-browser.c:219
+#: ../src/browsers/playlist3-find2-browser.c:620
 msgid "Search"
 msgstr "Suche"
 
-#. search in playlist
-#: ../src/browsers/playlist3-find2-browser.c:270
-msgid "Search in current _play queue"
-msgstr "Suche in derzeitiger Warteschlange"
+#: ../src/browsers/playlist3-find2-browser.c:719
+#, fuzzy
+msgid "Search Browser"
+msgstr "Dateibrowser"
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1300,11 +1566,6 @@ msgstr "Wiedergabelisten Editor"
 msgid "New playlist"
 msgstr "Neue Wiedergabeliste"
 
-#: ../src/browsers/playlist3-playlist-editor.c:472
-#: ../src/browsers/playlist3-playlist-editor.c:511
-msgid "Name:"
-msgstr "Name:"
-
 #: ../src/browsers/playlist3-playlist-editor.c:506
 msgid "Rename Playlist"
 msgstr "Wiedergabeliste umbenennen"
@@ -1320,11 +1581,11 @@ msgstr "Umbenennen"
 msgid "Add to playlist"
 msgstr "Zur Wiedergabeliste hinzufügen"
 
-#: ../src/browsers/playlist3-tag2-browser.c:104
+#: ../src/browsers/playlist3-tag2-browser.c:102
 msgid "Tag based browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-tag2-browser.c:1717
+#: ../src/browsers/playlist3-tag2-browser.c:1724
 msgid "Reset browser"
 msgstr "Browser zurücksetzen"
 
@@ -1435,21 +1696,17 @@ msgstr "Bilder"
 msgid "Loading"
 msgstr "Wird geladen"
 
-#~ msgid "<enter playlist name>"
-#~ msgstr "<geben Sie den Namen der Wiedergabeliste ein>"
+#~ msgid "Unique"
+#~ msgstr "Einmalig"
 
-#~ msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-#~ msgstr ""
-#~ "<span size=\"x-small\"><i>Wiedergabeliste existiert bereits.</i></span>"
+#~ msgid "And"
+#~ msgstr "Und"
 
-#~ msgid "Messages"
-#~ msgstr "Meldungen"
+#~ msgid "Or"
+#~ msgstr "Oder"
 
-#~ msgid "Save Playlist"
-#~ msgstr "Wiedergabeliste speichern"
-
-#~ msgid "name:"
-#~ msgstr "Name:"
+#~ msgid "Search in current _play queue"
+#~ msgstr "Suche in derzeitiger Warteschlange"
 
 #~ msgid "/"
 #~ msgstr "/"
@@ -1457,47 +1714,8 @@ msgstr "Wird geladen"
 #~ msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
 #~ msgstr "<b><span size=\"x-large\">Ein Fehler ist aufgetreten</span></b>"
 
-#~ msgid "<b>Crossfade:</b>"
-#~ msgstr "<b>Crossfade:</b>"
-
-#~ msgid "<b>Enable Field:</b>"
-#~ msgstr "<b>Schalte Feld ein:</b>"
-
-#~ msgid "<b>Example:</b>"
-#~ msgstr "<b>Beispiel:</b>"
-
-#~ msgid "<b>Inline messages</b>"
-#~ msgstr "<b>Eingebettete Nachrichten</b>"
-
-#~ msgid "<b>Loaded Plugins:</b>"
-#~ msgstr "<b>Geladene Plugins:</b>"
-
-#~ msgid "<b>Name:</b>"
-#~ msgstr "<b>Name:</b>"
-
-#~ msgid "<b>Notification Area Icon</b>"
-#~ msgstr "<b>Anmerkungsfeld-Symbol</b>"
-
-#~ msgid "<b>Output Devices:</b>"
-#~ msgstr "<b>Ausgabegerät:</b>"
-
-#~ msgid "<b>Playlist:</b>"
-#~ msgstr "<b>Wiedergabeliste:</b>"
-
-#~ msgid "<b>PopUp</b>"
-#~ msgstr "<b>Popup</b>"
-
-#~ msgid "<b>Profile:</b>"
-#~ msgstr "Profil:"
-
-#~ msgid "<b>Song Markup</b>"
-#~ msgstr "<b>Lied-Formatierung</b>"
-
 #~ msgid "<b>Sort by:</b>"
 #~ msgstr "<b>Sortiere nach:</b>"
-
-#~ msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-#~ msgstr "<span size=\"large\"><b>Regel des Formates:</b></span>"
 
 #~ msgid ""
 #~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
@@ -1505,23 +1723,6 @@ msgstr "Wird geladen"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Der Konfigurierte Tag-Browser wird nur ab Version "
 #~ "0.12 des mpd angezeigt.</i></span>"
-
-#~ msgid ""
-#~ "<span size=\"small\"><i>You need to be connected\n"
-#~ "in order to change these settings</i></span>"
-#~ msgstr ""
-#~ "<span size=\"small\"><i>Sie müssen verbunden sein\n"
-#~ "um diese Einstellungen vorzunehmen</i></span>"
-
-#~ msgid ""
-#~ "<span size=\"x-large\"><b>Plugins</b></span>\n"
-#~ "<i>None Selected</i>"
-#~ msgstr ""
-#~ "<span size=\"x-large\"><b>Plugins</b></span>\n"
-#~ "<i>Keine ausgewählt</i>"
-
-#~ msgid "A_lbum"
-#~ msgstr "A_lbum"
 
 #~ msgid ""
 #~ "At the notification area icon\n"
@@ -1536,41 +1737,11 @@ msgstr "Wird geladen"
 #~ "Linke untere Ecke\n"
 #~ "Rechte untere Ecke"
 
-#~ msgid "Center playing song"
-#~ msgstr "Aktuell spielenden Titel zentrieren"
-
-#~ msgid "Conn_ect"
-#~ msgstr "_Verbinden"
-
-#~ msgid "Copyright 2003-2007 Qball Cow"
-#~ msgstr "Copyright 2003-2007 Qball Cow"
-
-#~ msgid "Edit Song Formatting"
-#~ msgstr "Ändere Titelformatierung"
-
-#~ msgid "Edit _Browser Markup"
-#~ msgstr "_Browser-Formatierung bearbeiten"
-
-#~ msgid "Enable"
-#~ msgstr "Einschalten"
-
-#~ msgid "Enable crossfade"
-#~ msgstr "Schalte crossfade ein"
-
-#~ msgid "Enter your password for: '<hostname>'"
-#~ msgstr "Geben Sie Ihr Passwort für '<hostname>' ein:"
-
 #~ msgid "Error Dialog"
 #~ msgstr "Fehlermeldung"
 
 #~ msgid "Error msg"
 #~ msgstr "Fehlermeldung"
-
-#~ msgid "Hide on close"
-#~ msgstr "Beim Schließen verstecken"
-
-#~ msgid "Host:"
-#~ msgstr "Host:"
 
 #~ msgid ""
 #~ "None\n"
@@ -1599,68 +1770,8 @@ msgstr "Wird geladen"
 #~ "Kommentar\n"
 #~ "CD"
 
-#~ msgid "Password"
-#~ msgstr "Passwort"
-
-#~ msgid "Password:"
-#~ msgstr "Passwort:"
-
-#~ msgid "Position:"
-#~ msgstr "Position:"
-
-#~ msgid "Save position and size between sessions"
-#~ msgstr "Fensterposition und Größe zwischen Sitzungen sichern"
-
-#~ msgid "Show severity"
-#~ msgstr "Anzeigegenauigkeit"
-
-#~ msgid "Show songlist tooltip"
-#~ msgstr "Zeige Tooltip in der Song-Liste"
-
-#~ msgid "Stop playing on exit"
-#~ msgstr "Beende Wiedergabe beim Verlassen"
-
-#~ msgid "T_rack"
-#~ msgstr "T_rack"
-
-#~ msgid "Timeout (s):"
-#~ msgstr "Zeitüberschreitung (s):"
-
-#~ msgid "Timeout:"
-#~ msgstr "Zeitüberschreitung:"
-
-#~ msgid "_Artist"
-#~ msgstr "_Künstler"
-
-#~ msgid "_Autoconnect"
-#~ msgstr "_Automatisch verbinden"
-
-#~ msgid "_Date"
-#~ msgstr "_Datum"
-
 #~ msgid "_Reconnect"
 #~ msgstr "_Wiederverbinden"
-
-#~ msgid "_Save password"
-#~ msgstr "Passwort _speichern"
-
-#~ msgid "_Stream name"
-#~ msgstr "_Streamname"
-
-#~ msgid "_Title"
-#~ msgstr "_Titel"
-
-#~ msgid "_Use Authentication"
-#~ msgstr "A_uthentifizierung verwenden"
-
-#~ msgid "example"
-#~ msgstr "Beispiel"
-
-#~ msgid "fade time (s):"
-#~ msgstr "Überblendzeit (s):"
-
-#~ msgid "gmpc - Configuration"
-#~ msgstr "gmpc - Konfiguration"
 
 #~ msgid ""
 #~ "information and up\n"
@@ -1672,54 +1783,6 @@ msgstr "Wird geladen"
 #~ "Warnungen und Serververbindung\n"
 #~ "Fehler\n"
 #~ "Keine"
-
-#~ msgid "localhost"
-#~ msgstr "localhost"
-
-#~ msgid "translator-credits"
-#~ msgstr ""
-#~ "EneNL\n"
-#~ "Chewi_FFM\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Hans Christof https://launchpad.net/~hans-christof\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
-#~ "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
-#~ "  Hans Christof https://launchpad.net/~hans-christof\n"
-#~ "  Klaus Simon https://launchpad.net/~simon-klaus\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
-#~ "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady\n"
-#~ "\n"
-#~ "Launchpad Contributions:\n"
-#~ "  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
-#~ "  Hans Christof https://launchpad.net/~hans-christof\n"
-#~ "  Huber Florian https://launchpad.net/~itshorty\n"
-#~ "  Klaus Simon https://launchpad.net/~simon-klaus\n"
-#~ "  Qball Cow https://launchpad.net/~qball-qballcow\n"
-#~ "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
-#~ "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
-#~ "  hendrik https://launchpad.net/~hendrik-patchworklady"
 
 #~ msgid "New accelerator..."
 #~ msgstr "Neue Tastenkombination…"

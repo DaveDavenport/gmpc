@@ -21,17 +21,17 @@ src/tray-icon2.c
 src/setup-assistant.c
 
 # Ui files
-glade/aboutdialog.ui
-glade/password-dialog.ui
-glade/preferences-connection.ui
-glade/preferences-esf-dialog.ui
-glade/preferences-playlist.ui
-glade/preferences-plugins.ui
-glade/preferences-server.ui
-glade/preferences-trayicon.ui
-glade/preferences.ui
-glade/playlist-message-window.ui
-glade/playlist-save-dialog.ui
+[type: gettext/glade]glade/aboutdialog.ui
+[type: gettext/glade]glade/password-dialog.ui
+[type: gettext/glade]glade/preferences-connection.ui
+[type: gettext/glade]glade/preferences-esf-dialog.ui
+[type: gettext/glade]glade/preferences-playlist.ui
+[type: gettext/glade]glade/preferences-plugins.ui
+[type: gettext/glade]glade/preferences-server.ui
+[type: gettext/glade]glade/preferences-trayicon.ui
+[type: gettext/glade]glade/preferences.ui
+[type: gettext/glade]glade/playlist-message-window.ui
+[type: gettext/glade]glade/playlist-save-dialog.ui
 
 
 # Browsers
