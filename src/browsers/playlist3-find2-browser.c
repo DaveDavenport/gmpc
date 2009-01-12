@@ -56,6 +56,7 @@ static GtkTreeRowReference *pl3_find2_ref = NULL;
 
 /* internal */
 static GtkWidget            *pl3_find2_curpl        = NULL;
+static GtkListStore         *pl3_find2_curpl_model  = NULL;
 static GtkWidget 			*pl3_find2_tree 		= NULL;
 static GmpcMpdDataModel 	*pl3_find2_store2 		= NULL;
 static GtkWidget 			*pl3_find2_vbox 		= NULL;
@@ -108,6 +109,7 @@ static void pl3_find2_browser_init(void)
     GtkWidget *hbox = NULL;
     GtkCellRenderer *renderer;
     GtkEntryCompletion *entrcomp;
+    int i;
 	/* autocomplete later on */
 	pl3_find2_autocomplete = gtk_list_store_new(1, G_TYPE_STRING);
 
@@ -168,8 +170,34 @@ static void pl3_find2_browser_init(void)
     gtk_box_pack_start(GTK_BOX(hbox), search_entry, TRUE, TRUE, 0);
 
     /* search in playlist */
-    pl3_find2_curpl = gtk_check_button_new_with_mnemonic(_("in _play queue"));
-    g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
+    pl3_find2_curpl_model = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
+    pl3_find2_curpl = gtk_combo_box_new_with_model(GTK_TREE_MODEL(pl3_find2_curpl_model));
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(pl3_find2_curpl), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(pl3_find2_curpl), renderer, "text", 0, NULL);
+
+    gtk_list_store_insert_with_values(GTK_LIST_STORE(pl3_find2_curpl_model), NULL, 0, 0, _("Database"),1,1,-1);
+    gtk_list_store_insert_with_values(GTK_LIST_STORE(pl3_find2_curpl_model), NULL, 1, 0, _("Playlist"),1,2,-1);
+    for(i=0;i< num_plugins;i++){
+        if(gmpc_plugin_get_enabled(plugins[i])){
+            if(gmpc_plugin_is_browser(plugins[i])){
+                if(gmpc_plugin_browser_has_integrate_search(plugins[i])){
+                    GtkTreeIter titer;
+                    gtk_list_store_append(GTK_LIST_STORE(pl3_find2_curpl_model),&titer);
+                    gtk_list_store_set(GTK_LIST_STORE(pl3_find2_curpl_model), &titer,
+                                0, gmpc_plugin_get_name(plugins[i]),
+                                1,0,
+                                2, plugins[i],
+                                -1);
+                }
+            }
+        }
+    }
+
+    gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
+
+    //gtk_check_button_new_with_mnemonic(_("in _play queue"));
+//    g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
     gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_curpl, FALSE, TRUE,0);
 
     /* find button */
@@ -234,23 +262,16 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
     }
 }
 
-static unsigned long pl3_find2_browser_view(gint search_playlist)
+static MpdData * pl3_find2_browser_view(const gint num_field, const gchar *name, gint search_playlist)
 {
-	if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
+    MpdData *data_t= NULL;
+    if(mpd_server_check_command_allowed(connection, "playlistsearch")== MPD_SERVER_COMMAND_ALLOWED && 
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
         int found = 0;
-        MpdData *data_t= NULL;
         GtkTreeIter cc_iter;
-        const gchar *name = gtk_entry_get_text(GTK_ENTRY(search_entry));
-        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
         if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter) && name && name[0] != '\0')
         {
-            GtkTreeIter iter;
-            gboolean found2 = FALSE;
-            int num_field;
-
-            gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
             if(num_field == QUERY_ENTRY)
             {
                 data_t = advanced_search(name, search_playlist);
@@ -282,48 +303,9 @@ static unsigned long pl3_find2_browser_view(gint search_playlist)
                         data_t = mpd_database_search_commit(connection);
                 }
             }
-
-
-            for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
-                    gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found2;
-                    gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
-            {
-                gchar *entry;
-                gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
-                if(strcmp(entry, name) == 0)
-                {
-                    found2 = TRUE;
-                }
-                g_free(entry);
-            }
-            if(!found2) {
-                gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
-            }					
         }
-//        data_t = misc_sort_mpddata(data_t,(GCompareDataFunc)__position_sort,NULL); 
-        gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
-
-        gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
-        if(pl3_find2_ref) {
-            GtkTreeIter iter;
-            GtkTreePath *path;
-            path = gtk_tree_row_reference_get_path(pl3_find2_ref);
-            if(path)
-            {
-                if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
-                {
-                    gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", 
-                            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl3_find2_store2),NULL));
-                    gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,
-                            PL3_CAT_NUM_ITEMS, title, -1);
-                    g_free(title);
-                }
-                gtk_tree_path_free(path);
-            }
-        }
-
     }
-    return 0;
+    return data_t;
 }
 
 /**
@@ -331,14 +313,78 @@ static unsigned long pl3_find2_browser_view(gint search_playlist)
  */
 static void pl3_find2_browser_search(void)
 {
+    GtkTreeIter iter,cc_iter;
     if(pl3_find2_vbox == NULL)
         return;
-    if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl)))
-    {
-        pl3_find2_browser_view(TRUE);
-    }else{
-        pl3_find2_browser_view(FALSE);
-        //pl3_find2_browser_view_database();
+
+    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), NULL);
+    if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_find2_curpl), &iter)){
+        int type;
+        int num_field;
+        gmpcPlugin *plug = NULL;
+        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_curpl_model), &iter, 1, &type, 2, &plug,-1);
+
+        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter))
+        {
+            MpdData *data_t = NULL;
+            const gchar *name = gtk_entry_get_text(GTK_ENTRY(search_entry));
+            gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
+            if(type == 1) {
+                data_t = pl3_find2_browser_view(num_field,name,FALSE);
+            }
+            else if (type == 2) {
+                data_t = pl3_find2_browser_view(num_field,name,TRUE);
+            }else if (type == 0) {
+                GError *error = NULL;
+                if(plug)
+                    data_t = gmpc_plugin_browser_integrate_search(plug,num_field, name,&error); 
+                if(error){
+                    gchar *mes = g_markup_printf_escaped("<b>%s</b> %s: %s",gmpc_plugin_get_name(plug),_("Search failed"), error->message);
+                    playlist3_show_error_message(mes, ERROR_WARNING);
+                    g_free(mes);
+                    g_error_free(error);
+                    error = NULL;
+                }
+            }
+            gmpc_mpddata_model_set_mpd_data(pl3_find2_store2, data_t);
+            /* update autocompletion */
+            if(data_t) {
+                int found2 = 0;
+                for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter);
+                        gtk_list_store_iter_is_valid(pl3_find2_autocomplete, &iter) && !found2;
+                        gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter))
+                {
+                    gchar *entry;
+                    gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_autocomplete), &iter, 0,&entry,-1);
+                    if(strcmp(entry, name) == 0)
+                    {
+                        found2 = TRUE;
+                    }
+                    g_free(entry);
+                }
+                if(!found2) {
+                    gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
+                }					
+            }
+        }
+    }
+    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
+    /* Update the row counter */
+    if(pl3_find2_ref) {
+        GtkTreePath *path;
+        path = gtk_tree_row_reference_get_path(pl3_find2_ref);
+        if(path)
+        {
+            if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,path))
+            {
+                gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>", 
+                        gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl3_find2_store2),NULL));
+                gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,
+                        PL3_CAT_NUM_ITEMS, title, -1);
+                g_free(title);
+            }
+            gtk_tree_path_free(path);
+        }
     }
 }
 
@@ -646,7 +692,8 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 		pl3_find2_browser_activate();
         gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
         gtk_widget_grab_focus(search_entry);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl), TRUE);
+//        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl), TRUE);
+        gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
         return TRUE;
     }
 

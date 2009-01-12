@@ -413,6 +413,20 @@ int gmpc_plugin_browser_song_list_option_menu(gmpcPlugin *plug, GmpcMpdDataTreev
     return 0;
 }
 
+gboolean gmpc_plugin_browser_has_integrate_search(gmpcPlugin *plug)
+{
+    if(gmpc_plugin_is_browser(plug))
+    {
+        return plug->browser->integrate_search != NULL;
+    }
+    return FALSE;
+}
+MpdData *gmpc_plugin_browser_integrate_search(gmpcPlugin *plug, const int search_field, const gchar * query, GError **error)
+{
+    if(!gmpc_plugin_browser_has_integrate_search(plug)) return NULL;
+    return plug->browser->integrate_search(search_field,query,error); 
+}
+
 gboolean gmpc_plugin_has_preferences(gmpcPlugin *plug)
 {
     return (plug->pref != NULL);
@@ -490,3 +504,4 @@ int gmpc_plugin_metadata_get_image(gmpcPlugin *plug, mpd_Song *song, MetaDataTyp
     }
     return META_DATA_UNAVAILABLE;
 }
+
