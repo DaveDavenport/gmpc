@@ -611,12 +611,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
                             "stylized-cover", 
                             self->size, 0);
-                    /* Scale the cover to fit inside the case */
-                    if(width < height){
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,self->size-spineWidth, -1,TRUE,NULL);
-                    }else{
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,self->size,TRUE,NULL);
-                    }
                     /* load the case */
                     if(ii){
                         path2 = gtk_icon_info_get_filename(ii);
@@ -624,6 +618,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                             pb2 = gdk_pixbuf_new_from_file_at_size(path2,self->size, self->size,NULL);
                         }
                         gtk_icon_info_free(ii);
+                    }
+
+                    /* Scale the cover to fit inside the case */
+                    if(width < height){
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,gdk_pixbuf_get_width(pb2)-spineWidth, -1,TRUE,NULL);
+                    }else{
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,gdk_pixbuf_get_height(pb2),TRUE,NULL);
                     }
 
                     width = gdk_pixbuf_get_width(pb2);
