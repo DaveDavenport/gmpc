@@ -203,7 +203,7 @@ void            gmpc_plugin_set_enabled                     (gmpcPlugin *plug, g
 
 const char *    gmpc_plugin_get_name                        (gmpcPlugin *plug);
 void            gmpc_plugin_status_changed                  (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
-const gchar *   gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
+gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
 void            gmpc_plugin_mpd_connection_changed          (gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data);
 
 gboolean        gmpc_plugin_is_browser                      (gmpcPlugin *plug);

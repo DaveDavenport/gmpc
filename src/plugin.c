@@ -303,7 +303,7 @@ void gmpc_plugin_set_enabled(gmpcPlugin *plug, gboolean enabled)
     }
 }
 
-const gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
+gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {
 #ifdef WIN32
     debug_printf(DEBUG_INFO, "path: %s\n", plug->path);
