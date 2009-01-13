@@ -248,7 +248,7 @@ void pl3_current_playlist_destroy(void)
 static GtkTreeModel *mod_fill = NULL;
 static GtkWidget *filter_entry = NULL;
 static guint timeout=0;
-
+static int quick_search = 0;
 static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
 {
     const gchar *text2 = gtk_entry_get_text(GTK_ENTRY(entry));
@@ -259,15 +259,20 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
         MpdData *data = NULL;
         data = advanced_search(text2, TRUE);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), data);
-
+        quick_search = TRUE;
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), mod_fill);
+        printf("Set mod_fill 1\n");
+        gtk_widget_show(entry);
     }
     else
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+
+        printf("Set playlist 1\n");
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
         if(!search_keep_open)
         {
+            quick_search = 0;
             gtk_widget_hide(entry);
             gtk_widget_grab_focus(pl3_cp_tree);
         }
@@ -286,7 +291,10 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
         {
             search_keep_open = FALSE;
             gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+
+            printf("Set playlist 2\n");
             gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
+            quick_search = 0;
             gtk_widget_hide(entry);
             gtk_widget_grab_focus(pl3_cp_tree);
             return TRUE;
@@ -936,7 +944,10 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
     if(!search_keep_open && model == mod_fill)
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
+
+        printf("Set playlist 3\n");
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
+        quick_search = 0;
         gtk_widget_hide(filter_entry);
 
         pl3_current_playlist_browser_select_current_song();
@@ -1177,7 +1188,9 @@ static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType wh
         return;
     if(what&MPD_CST_PLAYLIST)
     {
-        mod_fill_do_entry_changed(filter_entry, NULL);
+
+        if(quick_search)
+            mod_fill_do_entry_changed(filter_entry, NULL);
         if(pl3_curb_tree_ref) {
             GtkTreeIter iter;
             GtkTreePath *path;
