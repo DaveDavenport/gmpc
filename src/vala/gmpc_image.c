@@ -150,7 +150,8 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self) {
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 	gboolean _tmp0;
 	GdkPixbuf* _tmp4;
-	GdkPixbuf* _tmp3;
+	GdkPixbuf* _tmp6;
+	GdkPixbuf* _tmp5;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (buf != NULL);
 	_tmp0 = FALSE;
@@ -160,19 +161,24 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 		_tmp0 = FALSE;
 	}
 	if (_tmp0) {
-		GdkPixbuf* _tmp2;
 		GdkPixbuf* _tmp1;
+		GdkPixbuf* _tmp3;
+		GdkPixbuf* _tmp2;
 		self->priv->cover_border = border;
-		_tmp2 = NULL;
 		_tmp1 = NULL;
-		self->priv->cover = (_tmp2 = (_tmp1 = buf, (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1)), (self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)), _tmp2);
+		self->priv->cover = (_tmp1 = NULL, (self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)), _tmp1);
+		_tmp3 = NULL;
+		_tmp2 = NULL;
+		self->priv->cover = (_tmp3 = (_tmp2 = buf, (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2)), (self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)), _tmp3);
 		gtk_widget_queue_draw ((GtkWidget*) self);
 		return;
 	}
 	self->priv->fade = 1.0;
 	_tmp4 = NULL;
-	_tmp3 = NULL;
-	self->priv->temp = (_tmp4 = (_tmp3 = buf, (_tmp3 == NULL) ? NULL : g_object_ref (_tmp3)), (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp4);
+	self->priv->temp = (_tmp4 = NULL, (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp4);
+	_tmp6 = NULL;
+	_tmp5 = NULL;
+	self->priv->temp = (_tmp6 = (_tmp5 = buf, (_tmp5 == NULL) ? NULL : g_object_ref (_tmp5)), (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp6);
 	self->priv->temp_border = border;
 	gtk_widget_queue_draw ((GtkWidget*) self);
 	if (self->priv->fade_timeout > 0) {

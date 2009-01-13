@@ -126,11 +126,13 @@ public class Gmpc.Image : Gtk.EventBox {
 		{
             if(this.temp == null && this.cover == null) {
                 this.cover_border = border;
+                this.cover = null;
                 this.cover = buf;
                 this.queue_draw();
                 return;
             }
 			fade = 1.0;
+            this.temp = null;
 			this.temp= buf;
 			this.temp_border = border;
                 this.queue_draw();

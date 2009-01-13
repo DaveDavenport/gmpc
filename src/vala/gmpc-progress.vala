@@ -131,7 +131,7 @@ public class Gmpc.Progress : Gtk.EventBox
         ctx.new_path();
         /* Stroke a white line, and clip on that */
         Gdk.cairo_set_source_color(ctx, pb.my_style.dark[(int)Gtk.StateType.NORMAL]);
-        draw_curved_rectangle(ctx,0.5,0.5,width, height);
+        ctx.rectangle(0.5,0.5,width, height);
         ctx.stroke_preserve ();
 
         Gdk.cairo_set_source_color(ctx, pb.my_style.bg[(int)Gtk.StateType.NORMAL]);
@@ -147,7 +147,7 @@ public class Gmpc.Progress : Gtk.EventBox
             }
             ctx.new_path();
             Gdk.cairo_set_source_color(ctx, pb.my_style.bg[(int)Gtk.StateType.SELECTED]);
-            draw_curved_rectangle(ctx,0.5+2,0.5+2,pwidth, (height-4));
+            ctx.rectangle(0.5+2,0.5+2,pwidth, (height-4));
             ctx.fill ();
 
         }

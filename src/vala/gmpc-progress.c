@@ -19,10 +19,10 @@
 
 #include "gmpc-progress.h"
 #include <pango/pango.h>
+#include <gdk/gdk.h>
 #include <cairo.h>
 #include <float.h>
 #include <math.h>
-#include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pango/pangocairo.h>
@@ -46,7 +46,6 @@ enum  {
 };
 static void gmpc_progress_real_style_set (GtkWidget* base, GtkStyle* old_style);
 static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* requisition);
-static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height);
 static void gmpc_progress_redraw (GmpcProgress* self);
 static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event);
 static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, GdkEventExpose* event, gpointer self);
@@ -60,6 +59,7 @@ static void gmpc_progress_real_style_set (GtkWidget* base, GtkStyle* old_style) 
 	GmpcProgress * self;
 	GtkStyle* _tmp0;
 	self = (GmpcProgress*) base;
+	
 	/* Reset it, so it gets reloaded on redraw */
 	if (self->priv->my_style != NULL) {
 		gtk_style_detach (self->priv->my_style);
@@ -89,66 +89,6 @@ static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* re
 		(*requisition).width = (width / PANGO_SCALE) + 6;
 		(*requisition).height = (height / PANGO_SCALE) + 6;
 	}
-}
-
-
-static void gmpc_progress_draw_curved_rectangle (GmpcProgress* self, cairo_t* ctx, double rect_x0, double rect_y0, double rect_width, double rect_height) {
-	double rect_x1;
-	double rect_y1;
-	double radius;
-	gboolean _tmp0;
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (ctx != NULL);
-	rect_x1 = 0.0;
-	rect_y1 = 0.0;
-	radius = (double) 10;
-	rect_x1 = rect_x0 + rect_width;
-	rect_y1 = rect_y0 + rect_height;
-	_tmp0 = FALSE;
-	if (rect_width == 0) {
-		_tmp0 = TRUE;
-	} else {
-		_tmp0 = rect_height == 0;
-	}
-	if (_tmp0) {
-		return;
-	}
-	if ((rect_width / 2) < radius) {
-		if ((rect_height / 2) < radius) {
-			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
-			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
-			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
-			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
-			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
-		} else {
-			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
-			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, (rect_x0 + rect_x1) / 2, rect_y0);
-			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
-			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, (rect_x1 + rect_x0) / 2, rect_y1);
-			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
-		}
-	} else {
-		if ((rect_height / 2) < radius) {
-			cairo_move_to (ctx, rect_x0, (rect_y0 + rect_y1) / 2);
-			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
-			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
-			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, (rect_y0 + rect_y1) / 2);
-			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
-			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, (rect_y0 + rect_y1) / 2);
-		} else {
-			cairo_move_to (ctx, rect_x0, rect_y0 + radius);
-			cairo_curve_to (ctx, rect_x0, rect_y0, rect_x0, rect_y0, rect_x0 + radius, rect_y0);
-			cairo_line_to (ctx, rect_x1 - radius, rect_y0);
-			cairo_curve_to (ctx, rect_x1, rect_y0, rect_x1, rect_y0, rect_x1, rect_y0 + radius);
-			cairo_line_to (ctx, rect_x1, rect_y1 - radius);
-			cairo_curve_to (ctx, rect_x1, rect_y1, rect_x1, rect_y1, rect_x1 - radius, rect_y1);
-			cairo_line_to (ctx, rect_x0 + radius, rect_y1);
-			cairo_curve_to (ctx, rect_x0, rect_y1, rect_x0, rect_y1, rect_x0, rect_y1 - radius);
-		}
-	}
-	cairo_close_path (ctx);
 }
 
 
@@ -205,7 +145,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	cairo_new_path (ctx);
 	/* Stroke a white line, and clip on that */
 	gdk_cairo_set_source_color (ctx, (_tmp5 = pb->priv->my_style->dark[(gint) GTK_STATE_NORMAL], &_tmp5));
-	gmpc_progress_draw_curved_rectangle (self, ctx, 0.5, 0.5, (double) width, (double) height);
+	cairo_rectangle (ctx, 0.5, 0.5, (double) width, (double) height);
 	cairo_stroke_preserve (ctx);
 	gdk_cairo_set_source_color (ctx, (_tmp6 = pb->priv->my_style->bg[(gint) GTK_STATE_NORMAL], &_tmp6));
 	cairo_fill_preserve (ctx);
@@ -219,7 +159,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		}
 		cairo_new_path (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp7 = pb->priv->my_style->bg[(gint) GTK_STATE_SELECTED], &_tmp7));
-		gmpc_progress_draw_curved_rectangle (self, ctx, 0.5 + 2, 0.5 + 2, (double) pwidth, (double) (height - 4));
+		cairo_rectangle (ctx, 0.5 + 2, 0.5 + 2, (double) pwidth, (double) (height - 4));
 		cairo_fill (ctx);
 	}
 	/* Paint nice reflection layer on top */
