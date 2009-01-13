@@ -130,7 +130,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	curl_multi_add_handle(curlm, curl);
 	do{
 		curl_multi_perform(curlm, &running);
-		g_usleep(100000);
+		g_usleep(10000);
 		if(dld->callback)
 		{
 			if(!(total_size > 0 ))
