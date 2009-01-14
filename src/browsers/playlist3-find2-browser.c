@@ -490,10 +490,14 @@ static void pl3_find2_browser_add_selected(void)
             /* does this bitmask thingy works ok? I think it hsould */
             if(type == MPD_DATA_TYPE_SONG)
             {
+                if((songs&16383)==16383){
+                    mpd_playlist_queue_commit(connection);
+                    printf("pre-commit %i\n",songs);
+                }
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);
+                songs++;
             }
-            songs++;
             q_free(name);
         }while((node = g_list_next(node)) != NULL);
     }
@@ -526,10 +530,14 @@ static void pl3_find2_browser_add_all(void)
             /* does this bitmask thingy works ok? I think it hsould */
             if(type == MPD_DATA_TYPE_SONG)
             {
+                if((songs&16383)==16383){
+                    mpd_playlist_queue_commit(connection);
+                    printf("pre-commit %i\n",songs);
+                }
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);
+                songs++;
             }
-            songs++;
             q_free(name);
         }while(gtk_tree_model_iter_next(model, &iter));
     }
