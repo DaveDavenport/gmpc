@@ -509,6 +509,39 @@ static void pl3_find2_browser_add_selected(void)
     g_list_foreach (rows, (GFunc) gtk_tree_path_free, NULL);
     g_list_free (rows);
 }
+
+static void pl3_find2_browser_add_all(void)
+{
+    GtkTreeIter iter;
+    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find2_tree));
+    GtkTreeModel *model = GTK_TREE_MODEL (pl3_find2_store2);
+    int songs=0;
+    if(gtk_tree_model_get_iter_first(model, &iter))
+    {
+        gchar *name;
+        gint type;
+        do
+        {
+            gtk_tree_model_get (model, &iter,MPDDATA_MODEL_COL_PATH,&name,MPDDATA_MODEL_ROW_TYPE, &type, -1);	  
+            /* does this bitmask thingy works ok? I think it hsould */
+            if(type == MPD_DATA_TYPE_SONG)
+            {
+                /* add them to the add list */
+                mpd_playlist_queue_add(connection, name);
+            }
+            songs++;
+            q_free(name);
+        }while(gtk_tree_model_iter_next(model, &iter));
+    }
+    /* if there are items in the add list add them to the playlist */
+    mpd_playlist_queue_commit(connection);
+    if(songs != 0)
+    {
+        gchar * message = g_strdup_printf("Added %i song%s", songs, (songs != 1)? "s":"");
+        pl3_push_statusbar_message(message);
+        q_free(message);
+    }
+}
 static void pl3_find2_browser_edit_columns(void)
 {
   gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree));
@@ -588,6 +621,13 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "activate",
           G_CALLBACK(pl3_find2_browser_add_selected), NULL);
+      gtk_widget_show(item);
+
+      item = gtk_image_menu_item_new_with_label(_("Add all"));
+      gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_ADD, GTK_ICON_SIZE_MENU));
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+      g_signal_connect(G_OBJECT(item), "activate",
+          G_CALLBACK(pl3_find2_browser_add_all), NULL);
       gtk_widget_show(item);
 
            /* add the replace widget */
