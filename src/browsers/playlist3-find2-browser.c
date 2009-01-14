@@ -517,7 +517,6 @@ static void pl3_find2_browser_add_selected(void)
 static void pl3_find2_browser_add_all(void)
 {
     GtkTreeIter iter;
-    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_find2_tree));
     GtkTreeModel *model = GTK_TREE_MODEL (pl3_find2_store2);
     int songs=0;
     if(gtk_tree_model_get_iter_first(model, &iter))

@@ -214,7 +214,7 @@ int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPlugin *plug, G
 int             gmpc_plugin_browser_key_press_event         (gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type);
 int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, GtkWidget *menu);
 int             gmpc_plugin_browser_song_list_option_menu   (gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
-gboolean        gmpc_plugin_browser_has_integerate_search   (gmpcPlugin *plug);
+gboolean        gmpc_plugin_browser_has_integrate_search    (gmpcPlugin *plug);
 MpdData *       gmpc_plugin_browser_integrate_search        (gmpcPlugin *plug, const int search_field, const gchar * query, GError **error);
 
 gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
