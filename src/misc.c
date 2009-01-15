@@ -379,27 +379,25 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
             if(compv != 0)
                 return compv;
         }
-        /*
-        if(a->song->artist == NULL && b->song->artist != NULL)
+        if(a->song->albumartist == NULL && b->song->albumartist != NULL)
             return -1;
-        else if(b->song->artist == NULL && a->song->artist != NULL)
+        else if(b->song->albumartist == NULL && a->song->albumartist != NULL)
             return 1;
-        else if (a->song->artist  && b->song->artist)
+        else if (a->song->albumartist  && b->song->albumartist)
         {
-            int compv = strcmp(a->song->artist, b->song->artist);
+            int compv = g_utf8_collate(a->song->albumartist, b->song->albumartist);
             if(compv != 0)
             {
                 return compv;
             }
         }
-        */
         if(a->song->album == NULL && b->song->album != NULL)
             return -1;
         else if(b->song->album == NULL && a->song->album != NULL)
             return 1;
         else if (a->song->album  && b->song->album)
         {
-            int compv = strcmp(a->song->album, b->song->album);
+            int compv = g_utf8_collate(a->song->album, b->song->album);
 
             if(compv != 0)
             {
@@ -412,7 +410,7 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
             return 1;
         else if (a->song->disc  && b->song->disc)
         {
-            int compv = strcmp(a->song->disc, b->song->disc);
+            int compv = g_utf8_collate(a->song->disc, b->song->disc);
             if(compv != 0)
             {
                 return compv;

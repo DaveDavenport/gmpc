@@ -515,17 +515,26 @@ static void as_album_clicked(GtkButton *button, gpointer userdata)
 	int clear = GPOINTER_TO_INT(userdata);
 	char *artist = g_object_get_data(G_OBJECT(button), "artist");
 	char *album =  g_object_get_data(G_OBJECT(button), "album");
+    char *albumartist = g_object_get_data(G_OBJECT(button), "albumartist");
 	if(artist)
 	{
 		MpdData *data = NULL;
 		if(clear)
 			mpd_playlist_clear(connection);
-        data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE);
-            for(data = misc_sort_mpddata_by_album_disc_track(data);data;data = mpd_data_get_next(data))
-		{
+        //data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE);
+        mpd_database_search_start(connection, TRUE);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,album);
+        if(albumartist)
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST,albumartist);
+        else
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
+        data = mpd_database_search_commit(connection);
+
+        for(data = misc_sort_mpddata_by_album_disc_track(data);data;data = mpd_data_get_next(data))
+        {
 			if(data->type == MPD_DATA_TYPE_SONG)
 			{
-				if(data->song->album && !strcmp(data->song->album,album))
+			//	if(data->song->album && !strcmp(data->song->album,album))
 				{
 					mpd_playlist_queue_add(connection, data->song->file);
 				}
@@ -1818,26 +1827,6 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 
 	info2_prepare_view();
 
-    /** Start filling in album data */
-    if(!song2->albumartist){
-        MpdData *data = NULL;
-        mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
-        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
-        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, song2->album);
-        data = mpd_database_search_commit(connection);
-        while(data && song2->albumartist == NULL)
-        {
-            if(strlen(data->tag) > 0)
-            {
-                song2->albumartist = data->tag;
-                data->tag = NULL;
-                mpd_data_free(data);
-                printf("found albumartist: %s\n", song2->albumartist);
-            }
-            else
-                data = mpd_data_get_next(data);
-        }
-    }    
 	/**
 	 * Collection 
 	 */
@@ -1861,15 +1850,16 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 	gtk_label_set_markup(GTK_LABEL(label),"<span size='xx-large' weight='bold'>/</span>");
 	gtk_box_pack_start(GTK_BOX(title_vbox), label, FALSE, TRUE,0);                        		
 	button = gtk_button_new();
+    
 	if(song2->artist)
 	{
 		label = gtk_label_new("");
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		markup = g_markup_printf_escaped ("<span size=\"xx-large\" weight=\"bold\">%s</span>"
-				, song2->artist);
+				, (song2->albumartist)?song2->albumartist:song2->artist);
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-		g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
+		g_object_set_data_full(G_OBJECT(button), "artist",g_strdup((song2->albumartist)?song2->albumartist:song2->artist), g_free);
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_artist_viewed_clicked), NULL);
 		gtk_container_add(GTK_CONTAINER(button),label);
 		gtk_widget_show_all(button);
@@ -1947,6 +1937,7 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song2->album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "albumartist",g_strdup(song2->albumartist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -1958,6 +1949,7 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song2->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song2->album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "albumartist",g_strdup(song2->albumartist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_album_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -2308,9 +2300,33 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	long unsigned ttime = 0;
 	GtkWidget *table2= NULL;
 	gchar *markup;
+    gchar *albumartist = NULL;
+    /** Start filling in album data */
+    {
+        MpdData *data = NULL;
+        mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,artist);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, album);
+        data = mpd_database_search_commit(connection);
+        while(data && albumartist == NULL)
+        {
+            if(strlen(data->tag) > 0)
+            {
+                albumartist = data->tag;
+                data->tag = NULL;
+                mpd_data_free(data);
+                printf("found albumartist: %s\n", albumartist);
+            }
+            else
+                data = mpd_data_get_next(data);
+        }
+    }    
 
 	mpd_database_search_start(connection, TRUE);
-	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
+    if(albumartist)
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST, albumartist);
+    else
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
 	mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, album); 
 	data2 = mpd_database_search_commit(connection);
 
@@ -2325,6 +2341,9 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	}
 	tracks++;
 	ttime += data2->song->time;
+    if(song->albumartist == NULL) song->albumartist = albumartist;
+    else g_free(albumartist);
+
 	/** 
 	 * Create cover art image 
 	 */
@@ -2393,6 +2412,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	gtk_button_set_image(GTK_BUTTON(button),gtk_image_new_from_stock(GTK_STOCK_REDO,GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "albumartist",g_strdup(song->albumartist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(as_album_clicked), GINT_TO_POINTER(1));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -2404,6 +2424,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
+	g_object_set_data_full(G_OBJECT(button), "albumartist",g_strdup(song->albumartist), g_free);
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_album_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -2416,7 +2437,6 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
 	g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(song->artist), g_free);
 	g_object_set_data_full(G_OBJECT(button), "album",g_strdup(song->album), g_free);
-
 	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_album_viewed_clicked),GINT_TO_POINTER(0));
 	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
 	ali = gtk_alignment_new(0,0.5,0,0);
@@ -2712,6 +2732,26 @@ void info2_fill_album_view(const char *artist,const char *album)
     hs->song->artist = g_strdup(artist);
     hs->song->album = g_strdup(album);
 
+    /** Start filling in album data */
+    if(!hs->song->albumartist){
+        MpdData *data = NULL;
+        mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,hs->song->artist);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, hs->song->album);
+        data = mpd_database_search_commit(connection);
+        while(data && hs->song->albumartist == NULL)
+        {
+            if(strlen(data->tag) > 0)
+            {
+                hs->song->albumartist = data->tag;
+                data->tag = NULL;
+                mpd_data_free(data);
+                printf("found albumartist: %s\n", hs->song->albumartist);
+            }
+            else
+                data = mpd_data_get_next(data);
+        }
+    }    
     if(history_current) {
         GList *temp;
         while(history_current->prev) { 
