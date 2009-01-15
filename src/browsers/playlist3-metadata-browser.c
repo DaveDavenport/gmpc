@@ -1818,6 +1818,26 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 
 	info2_prepare_view();
 
+    /** Start filling in album data */
+    if(!song2->albumartist){
+        MpdData *data = NULL;
+        mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, song2->album);
+        data = mpd_database_search_commit(connection);
+        while(data && song2->albumartist == NULL)
+        {
+            if(strlen(data->tag) > 0)
+            {
+                song2->albumartist = data->tag;
+                data->tag = NULL;
+                mpd_data_free(data);
+                printf("found albumartist: %s\n", song2->albumartist);
+            }
+            else
+                data = mpd_data_get_next(data);
+        }
+    }    
 	/**
 	 * Collection 
 	 */
@@ -1976,6 +1996,12 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 		GString *string = NULL;
 		int i=1;
 		int tracks = 0;
+        if(song2->albumartist){
+            markup = g_markup_printf_escaped("<b>%s:</b>", _("Album artist"));
+			info2_add_table_item(table2, markup, song2->albumartist, i,TRUE);
+			g_free(markup);
+			i++;
+		}
 		/** Album name */
 		if(song2->album){
 			markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
@@ -2006,10 +2032,13 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 
 
 		mpd_database_search_start(connection, TRUE);
-		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
-		mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,song2->album);
-		data = mpd_database_search_commit(connection);
-		if(data)
+        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,song2->album);
+        if(song2->albumartist)
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST,song2->albumartist);
+        else
+            mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
+        data = mpd_database_search_commit(connection);
+        if(data)
 		{
 			MpdData *data2;
 			long unsigned ttime = 0;
