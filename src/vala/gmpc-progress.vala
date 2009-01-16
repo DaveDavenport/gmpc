@@ -66,7 +66,7 @@ public class Gmpc.Progress : Gtk.EventBox
 		this.my_style.detach();
     }
     
-    public override void style_set (Gtk.Style old_style)
+    public override void style_set (Gtk.Style? old_style)
     {
         /* Reset it, so it gets reloaded on redraw */
         if(this.my_style != null) {
@@ -106,8 +106,8 @@ public class Gmpc.Progress : Gtk.EventBox
         var ctx = Gdk.cairo_create(this.window); 
         int width = this.allocation.width-1;
         int height = this.allocation.height-1;
-        int pw = width-3;
-        int pwidth = (int)((this.current*pw)/(double)this.total);
+        double pw = width;
+        double pwidth = (int)((this.current*pw)/(double)this.total);
 
         if(this.my_style == null){
             this.my_style = Gtk.rc_get_style_by_paths(this.get_settings(), null, null, typeof(ProgressBar));
@@ -147,7 +147,7 @@ public class Gmpc.Progress : Gtk.EventBox
             }
             ctx.new_path();
             Gdk.cairo_set_source_color(ctx, pb.my_style.bg[(int)Gtk.StateType.SELECTED]);
-            ctx.rectangle(0.5+2,0.5+2,pwidth, (height-4));
+            ctx.rectangle(0.5,0.5,pwidth, (height-0.5));
             ctx.fill ();
 
         }
@@ -161,7 +161,7 @@ public class Gmpc.Progress : Gtk.EventBox
         pattern.add_color_stop_rgba(0.40,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),      0.2);
         pattern.add_color_stop_rgba(0.551,stop.red/(65536.0), stop.green/(65536.0), stop.blue/(65536.0),   0.0);
         ctx.set_source(pattern);
-        ctx.rectangle(1.5,1.5,width, height);
+        ctx.rectangle(0.5,0.5,width-0.5, height-0.5);
 
         ctx.fill();
         ctx.reset_clip();
@@ -215,7 +215,7 @@ public class Gmpc.Progress : Gtk.EventBox
                 {
                     ctx.new_path();
                     Gdk.cairo_set_source_color(ctx, pb.my_style.fg[(int)Gtk.StateType.SELECTED]);
-                    ctx.rectangle(3.5, 0.5,pwidth, height);
+                    ctx.rectangle(0.5, 0.5,pwidth, height);
                     ctx.clip();
                     ctx.move_to ((width - fontw)/2+0.5,
                             (height - fonth)/2+0.5);
@@ -226,7 +226,7 @@ public class Gmpc.Progress : Gtk.EventBox
                 {
                     ctx.new_path();
                     Gdk.cairo_set_source_color(ctx, pb.my_style.fg[(int)Gtk.StateType.NORMAL]);
-                    ctx.rectangle(pwidth+3.5, 0.5,width, height);
+                    ctx.rectangle(pwidth+0.5, 0.5,width, height);
                     ctx.clip();
                     ctx.move_to ((width - fontw)/2+0.5,
                             (height - fonth)/2+0.5);

@@ -47,8 +47,8 @@ enum  {
 static void gmpc_progress_real_style_set (GtkWidget* base, GtkStyle* old_style);
 static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* requisition);
 static void gmpc_progress_redraw (GmpcProgress* self);
-static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event);
-static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, GdkEventExpose* event, gpointer self);
+static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, const GdkEventExpose* event);
+static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, const GdkEventExpose* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_progress_parent_class = NULL;
 static void gmpc_progress_finalize (GObject* obj);
@@ -59,7 +59,6 @@ static void gmpc_progress_real_style_set (GtkWidget* base, GtkStyle* old_style) 
 	GmpcProgress * self;
 	GtkStyle* _tmp0;
 	self = (GmpcProgress*) base;
-	
 	/* Reset it, so it gets reloaded on redraw */
 	if (self->priv->my_style != NULL) {
 		gtk_style_detach (self->priv->my_style);
@@ -100,12 +99,12 @@ static void gmpc_progress_redraw (GmpcProgress* self) {
 }
 
 
-static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, GdkEventExpose* event) {
+static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, const GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
 	gint height;
-	gint pw;
-	gint pwidth;
+	double pw;
+	double pwidth;
 	GdkColor _tmp4 = {0};
 	GdkColor _tmp5 = {0};
 	GdkColor _tmp6 = {0};
@@ -118,8 +117,8 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) self)->window);
 	width = ((GtkWidget*) self)->allocation.width - 1;
 	height = ((GtkWidget*) self)->allocation.height - 1;
-	pw = width - 3;
-	pwidth = (gint) ((self->priv->current * pw) / ((double) self->priv->total));
+	pw = (double) width;
+	pwidth = (double) ((gint) ((self->priv->current * pw) / ((double) self->priv->total)));
 	if (self->priv->my_style == NULL) {
 		GtkStyle* _tmp1;
 		GtkStyle* _tmp0;
@@ -155,11 +154,11 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 		GdkColor _tmp7 = {0};
 		/* don't allow more then 100% */
 		if (pwidth > width) {
-			pwidth = width;
+			pwidth = (double) width;
 		}
 		cairo_new_path (ctx);
 		gdk_cairo_set_source_color (ctx, (_tmp7 = pb->priv->my_style->bg[(gint) GTK_STATE_SELECTED], &_tmp7));
-		cairo_rectangle (ctx, 0.5 + 2, 0.5 + 2, (double) pwidth, (double) (height - 4));
+		cairo_rectangle (ctx, 0.5, 0.5, pwidth, (height - 0.5));
 		cairo_fill (ctx);
 	}
 	/* Paint nice reflection layer on top */
@@ -171,7 +170,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 	cairo_pattern_add_color_stop_rgba (pattern, 0.40, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.2);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.551, stop.red / (65536.0), stop.green / (65536.0), stop.blue / (65536.0), 0.0);
 	cairo_set_source (ctx, pattern);
-	cairo_rectangle (ctx, 1.5, 1.5, (double) width, (double) height);
+	cairo_rectangle (ctx, 0.5, 0.5, width - 0.5, height - 0.5);
 	cairo_fill (ctx);
 	cairo_reset_clip (ctx);
 	/**
@@ -258,7 +257,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 				GdkColor _tmp20 = {0};
 				cairo_new_path (ctx);
 				gdk_cairo_set_source_color (ctx, (_tmp20 = pb->priv->my_style->fg[(gint) GTK_STATE_SELECTED], &_tmp20));
-				cairo_rectangle (ctx, 3.5, 0.5, (double) pwidth, (double) height);
+				cairo_rectangle (ctx, 0.5, 0.5, pwidth, (double) height);
 				cairo_clip (ctx);
 				cairo_move_to (ctx, ((width - fontw) / 2) + 0.5, ((height - fonth) / 2) + 0.5);
 				pango_cairo_show_layout (ctx, self->priv->_layout);
@@ -268,7 +267,7 @@ static gboolean gmpc_progress_on_expose2 (GmpcProgress* self, GmpcProgress* pb, 
 				GdkColor _tmp21 = {0};
 				cairo_new_path (ctx);
 				gdk_cairo_set_source_color (ctx, (_tmp21 = pb->priv->my_style->fg[(gint) GTK_STATE_NORMAL], &_tmp21));
-				cairo_rectangle (ctx, pwidth + 3.5, 0.5, (double) width, (double) height);
+				cairo_rectangle (ctx, pwidth + 0.5, 0.5, (double) width, (double) height);
 				cairo_clip (ctx);
 				cairo_move_to (ctx, ((width - fontw) / 2) + 0.5, ((height - fonth) / 2) + 0.5);
 				pango_cairo_show_layout (ctx, self->priv->_layout);
@@ -343,7 +342,7 @@ void gmpc_progress_set_do_countdown (GmpcProgress* self, gboolean value) {
 }
 
 
-static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, GdkEventExpose* event, gpointer self) {
+static gboolean _gmpc_progress_on_expose2_gtk_widget_expose_event (GmpcProgress* _sender, const GdkEventExpose* event, gpointer self) {
 	return gmpc_progress_on_expose2 (self, _sender, event);
 }
 
