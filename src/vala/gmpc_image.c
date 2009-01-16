@@ -39,17 +39,17 @@ struct _GmpcImagePrivate {
 enum  {
 	GMPC_IMAGE_DUMMY_PROPERTY
 };
-static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event);
+static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const GdkEventExpose* event);
 static gboolean gmpc_image_timeout_test (GmpcImage* self);
 static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self);
-static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, GdkEventExpose* event, gpointer self);
+static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, const GdkEventExpose* event, gpointer self);
 static GObject * gmpc_image_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_image_parent_class = NULL;
 static void gmpc_image_finalize (GObject* obj);
 
 
 
-static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventExpose* event) {
+static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
 	gint height;
@@ -127,6 +127,7 @@ static gboolean gmpc_image_timeout_test (GmpcImage* self) {
 		GdkPixbuf* _tmp1;
 		GdkPixbuf* _tmp0;
 		GdkPixbuf* _tmp2;
+		self->priv->fade = (double) 0;
 		_tmp1 = NULL;
 		_tmp0 = NULL;
 		self->priv->cover = (_tmp1 = (_tmp0 = self->priv->temp, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)), _tmp1);
@@ -149,9 +150,9 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self) {
 
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 	gboolean _tmp0;
-	GdkPixbuf* _tmp4;
 	GdkPixbuf* _tmp6;
-	GdkPixbuf* _tmp5;
+	GdkPixbuf* _tmp8;
+	GdkPixbuf* _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (buf != NULL);
 	_tmp0 = FALSE;
@@ -173,12 +174,19 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 		gtk_widget_queue_draw ((GtkWidget*) self);
 		return;
 	}
-	self->priv->fade = 1.0;
-	_tmp4 = NULL;
-	self->priv->temp = (_tmp4 = NULL, (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp4);
+	self->priv->fade = 1.0 - self->priv->fade;
+	if (self->priv->temp != NULL) {
+		GdkPixbuf* _tmp5;
+		GdkPixbuf* _tmp4;
+		_tmp5 = NULL;
+		_tmp4 = NULL;
+		self->priv->cover = (_tmp5 = (_tmp4 = self->priv->temp, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL)), _tmp5);
+	}
 	_tmp6 = NULL;
-	_tmp5 = NULL;
-	self->priv->temp = (_tmp6 = (_tmp5 = buf, (_tmp5 == NULL) ? NULL : g_object_ref (_tmp5)), (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp6);
+	self->priv->temp = (_tmp6 = NULL, (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp6);
+	_tmp8 = NULL;
+	_tmp7 = NULL;
+	self->priv->temp = (_tmp8 = (_tmp7 = buf, (_tmp7 == NULL) ? NULL : g_object_ref (_tmp7)), (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp8);
 	self->priv->temp_border = border;
 	gtk_widget_queue_draw ((GtkWidget*) self);
 	if (self->priv->fade_timeout > 0) {
@@ -222,7 +230,7 @@ GmpcImage* gmpc_image_new (void) {
 }
 
 
-static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, GdkEventExpose* event, gpointer self) {
+static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, const GdkEventExpose* event, gpointer self) {
 	return gmpc_image_on_expose (self, _sender, event);
 }
 

@@ -111,6 +111,7 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
     {
         if(edited->albumartist)
         {
+            printf("Artist: %s\n", edited->albumartist);
             if(edited->artist)
                 g_free(edited->artist);
             edited->artist = g_strdup(edited->albumartist);
@@ -126,6 +127,7 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 
             data2 = mpd_database_search_commit(connection);
+            printf("Compilation detection\n");
             if(data2)
             {
                 for(i=0;data2; data2 = mpd_data_get_next(data2))
@@ -143,6 +145,7 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
             }
             if(i >=3)
             {
+                printf("Detected compilation\n");
                 if(edited->artist)
                     g_free(edited->artist);
                 edited->artist = g_strdup("Various Artists");
@@ -289,13 +292,13 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 {
     mpd_Song *edited = rewrite_mpd_song(song, type);
     meta_data_set_cache_real(edited, type, result, path);
-    /*
+    /
     if(edited->artist)
     {
         if(strcmp(edited->artist, "Various Artists")!=0)
             meta_data_set_cache_real(song, type, result, path);
     }
-    */
+    
     mpd_freeSong(edited);
 }
 
@@ -609,13 +612,13 @@ static void meta_data_retrieve_thread(void)
 		 * update cache 
 		 */
 		meta_data_set_cache_real(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
-        /*
+        /
         if(data->edited->artist)
         {
                 if(strcmp(data->edited->artist, "Various Artists")!=0)
                     meta_data_set_cache_real(data->song, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
         }
-*/
+
 		/**
 		 * Push the result back
 		 */	
@@ -860,6 +863,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
          */
         if(ret != META_DATA_FETCHING)
         {
+            printf("from cache\n");
             return ret;	
         }
     }
@@ -884,7 +888,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         if(ret != META_DATA_FETCHING)
         {
             /* store it under the original */
-       //     meta_data_set_cache_real(tsong, type, ret, *path);
+            meta_data_set_cache_real(tsong, type, ret, *path);
+
+            printf("from cache2\n");
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             return ret;	

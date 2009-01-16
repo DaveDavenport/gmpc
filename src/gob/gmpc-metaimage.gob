@@ -591,8 +591,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             GdkPixbuf *pb = NULL;
 
             self->_priv->state = STATE_IMAGE;
+            
             if(self->_priv->image_url)
             {
+                if(strcmp(path, self->_priv->image_url) == 0)
+                {
+                    printf("ignore\n");
+                    return;
+                }
+                printf("don't ignore\n");
                 q_free(self->_priv->image_url);
                 self->_priv->image_url = NULL;
             }
