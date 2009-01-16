@@ -827,7 +827,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			case STATE_IMAGE:
                     if(self->_priv->image_url)
                     {
-                        gchar *temp = g_strdup(self->_priv->image_url);
+                        gchar *temp = self->_priv->image_url;
+                        self->_priv->image_url = NULL;
+
                         self_set_cover_from_path(self, temp);
                         g_free(temp);
                     }
