@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-12 03:08+0100\n"
-"PO-Revision-Date: 2009-01-08 10:00+0000\n"
+"POT-Creation-Date: 2009-01-12 03:09+0100\n"
+"PO-Revision-Date: 2009-01-12 02:36+0000\n"
 "Last-Translator: Huber Florian <itshorty@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -196,14 +196,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--nivel-debugging="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--Version"
@@ -214,7 +214,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr ""
@@ -222,49 +222,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--cover-db-reinigen"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--plugins-deaktivieren"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr "--ersetzen"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr "--beenden"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr "--alte-Db-importieren"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr "--debug-aktualizationen"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--hilfe"
@@ -570,15 +570,12 @@ msgstr ""
 "Einstellungen jetzt korrekt sind."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Doppelte Zuordnung entdeckt</b>\n"
-"\n"
-"%s ist bereits %s zugeordnet"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -832,7 +829,7 @@ msgstr "Einen Stream hinzugefügt"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Geben sie eine URL ein"
@@ -845,7 +842,7 @@ msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Der link der Wiedergabeliste konnte nicht analysiert werden"
@@ -860,7 +857,7 @@ msgstr "Benachrichtigung"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -877,7 +874,7 @@ msgstr "Verbindungs Einstellungen"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -924,6 +921,16 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
 "  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Huber Florian https://launchpad.net/~itshorty\n"
 "  Klaus Simon https://launchpad.net/~simon-klaus\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
@@ -1035,9 +1042,8 @@ msgid "example"
 msgstr "Beispiel"
 
 #: ../glade/preferences-playlist.ui.h:1
-#, fuzzy
 msgid "<b>Main:</b>"
-msgstr "<b>Name:</b>"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:2
 msgid "<b>Playlist:</b>"
@@ -1315,9 +1321,8 @@ msgstr "Suche"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Wiedergabe-Warteschlange"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1325,9 +1330,8 @@ msgid "Search"
 msgstr "Suche"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Dateibrowser"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1341,7 +1345,7 @@ msgstr "Abrufen..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1493,7 +1497,7 @@ msgstr[0] "<b>Datum: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr "Künstler informationen:"
@@ -1512,7 +1516,7 @@ msgstr "Ähnliche Künstler"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr "Album Information:"
@@ -1528,7 +1532,7 @@ msgstr "Titel"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1536,7 +1540,7 @@ msgstr "Metadatenbrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Zeige aktuelles Lied"
@@ -1696,18 +1700,6 @@ msgstr "Bilder"
 msgid "Loading"
 msgstr "Wird geladen"
 
-#~ msgid "Unique"
-#~ msgstr "Einmalig"
-
-#~ msgid "And"
-#~ msgstr "Und"
-
-#~ msgid "Or"
-#~ msgstr "Oder"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "Suche in derzeitiger Warteschlange"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1718,8 +1710,8 @@ msgstr "Wird geladen"
 #~ msgstr "<b>Sortiere nach:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Der Konfigurierte Tag-Browser wird nur ab Version "
 #~ "0.12 des mpd angezeigt.</i></span>"
@@ -1784,12 +1776,6 @@ msgstr "Wird geladen"
 #~ "Fehler\n"
 #~ "Keine"
 
-#~ msgid "New accelerator..."
-#~ msgstr "Neue Tastenkombination…"
-
-#~ msgid "Accelerator key"
-#~ msgstr "Tastenkombination"
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
 
@@ -1805,6 +1791,15 @@ msgstr "Wird geladen"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Plugins</b></span>"
+
+#~ msgid "And"
+#~ msgstr "Und"
+
+#~ msgid "Or"
+#~ msgstr "Oder"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "Suche in derzeitiger Warteschlange"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Künstler:</b>"
@@ -1832,6 +1827,12 @@ msgstr "Wird geladen"
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Verzeichnis:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Neue Tastenkombination…"
+
+#~ msgid "Accelerator key"
+#~ msgstr "Tastenkombination"
 
 #~ msgid "Center opened folder"
 #~ msgstr "Geöffneten Ordner zentrieren"
@@ -1888,8 +1889,7 @@ msgstr "Wird geladen"
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Veränderungen sind erst nach einem Reconnect "
 #~ "aktiv</i></span>"
@@ -2040,3 +2040,6 @@ msgstr "Wird geladen"
 
 #~ msgid "<b>Playlist interface:</b>"
 #~ msgstr "<b>Playlist Interface:</b>"
+
+#~ msgid "Unique"
+#~ msgstr "Einmalig"

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc 0.15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-12 03:09+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"PO-Revision-Date: 2009-01-10 16:57+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "Porta:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--version"
@@ -213,7 +213,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -221,49 +221,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--help"
@@ -566,15 +566,12 @@ msgstr ""
 "le tue impostazioni siano corrette."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Individuato duplicato nella mappatura</b>\n"
-"\n"
-"%s è già mappato a %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -827,7 +824,7 @@ msgstr "Aggiunto 1 flusso"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Inserisci un url"
@@ -840,7 +837,7 @@ msgstr "Fallito contatto con l'url: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Fallita analisi del collegamento della playlist"
@@ -855,7 +852,7 @@ msgstr "Notifica"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -874,7 +871,7 @@ msgstr "Impostazione connessione"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -907,6 +904,13 @@ msgstr ""
 "  Ardaking https://launchpad.net/~ardaking\n"
 "  Corrado Gizzi https://launchpad.net/~corradogizzi\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Ardaking https://launchpad.net/~ardaking\n"
+"  Corrado Gizzi https://launchpad.net/~corradogizzi\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Simona Diatto https://launchpad.net/~simona-diatto\n"
+"  obo https://launchpad.net/~simone-obo\n"
 "\n"
 "Launchpad Contributions:\n"
 "  Ardaking https://launchpad.net/~ardaking\n"
@@ -1049,9 +1053,8 @@ msgid "Show buttons instead of dropdown in collapsed view"
 msgstr "Mostra pulsanti invece del menu a discesa"
 
 #: ../glade/preferences-playlist.ui.h:9
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Mostra canzone"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stop playing on exit"
@@ -1295,9 +1298,8 @@ msgstr "Query"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Coda di riproduzione"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1305,9 +1307,8 @@ msgid "Search"
 msgstr "Cerca"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Browser dei files"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1321,7 +1322,7 @@ msgstr "Recupero..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1473,7 +1474,7 @@ msgstr[1] "<b>Date: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr "Info artista:"
@@ -1492,7 +1493,7 @@ msgstr "Artisti simili"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr "Info album:"
@@ -1508,7 +1509,7 @@ msgstr "Tracce"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1516,7 +1517,7 @@ msgstr "Browser dei metadati"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Mostra la canzone corrente"
@@ -1676,15 +1677,6 @@ msgstr "Immagini"
 msgid "Loading"
 msgstr "Caricamento"
 
-#~ msgid "And"
-#~ msgstr "E"
-
-#~ msgid "Or"
-#~ msgstr "O"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "Cerca nella coda di _riproduzione corrente"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1698,12 +1690,11 @@ msgstr "Caricamento"
 #~ msgstr "<b>Ordina per:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>I browser di etichetta configurati saranno "
-#~ "visibili solo con una versione di mpd pari o superiore alla 0.12.</i></"
-#~ "span>"
+#~ "<span size=\"small\"><i>I browser di etichetta configurati saranno visibili "
+#~ "solo con una versione di mpd pari o superiore alla 0.12.</i></span>"
 
 #~ msgid ""
 #~ "At the notification area icon\n"
@@ -1765,27 +1756,10 @@ msgstr "Caricamento"
 #~ "Errore\n"
 #~ "Nessuno"
 
-#~ msgid "New accelerator..."
-#~ msgstr "Nuovo acceleratore..."
-
-#~ msgid "Accelerator key"
-#~ msgstr "Tasto acceleratore"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Modificatori acceleratore"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Codicetasto acceleratore"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Modalità Accel"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "Il tipo di acceleratore."
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
 
@@ -1806,8 +1780,8 @@ msgstr "Caricamento"
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
 #~ "from the cache"
 #~ msgstr ""
-#~ "Un nuovo plugin per i metadati è stato aggiunto, gmpc rilascerà dalla "
-#~ "cache tutti i metadati mancanti"
+#~ "Un nuovo plugin per i metadati è stato aggiunto, gmpc rilascerà dalla cache "
+#~ "tutti i metadati mancanti"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Plugins</b></span>"
@@ -1817,6 +1791,15 @@ msgstr "Caricamento"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>Gnome Music Player Client</span>"
+
+#~ msgid "And"
+#~ msgstr "E"
+
+#~ msgid "Or"
+#~ msgstr "O"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "Cerca nella coda di _riproduzione corrente"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Artista:</b>"
@@ -1877,6 +1860,24 @@ msgstr "Caricamento"
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Cartella:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Nuovo acceleratore..."
+
+#~ msgid "Accelerator key"
+#~ msgstr "Tasto acceleratore"
+
+#~ msgid "Accelerator modifiers"
+#~ msgstr "Modificatori acceleratore"
+
+#~ msgid "Accelerator keycode"
+#~ msgstr "Codicetasto acceleratore"
+
+#~ msgid "Accel Mode"
+#~ msgstr "Modalità Accel"
+
+#~ msgid "The type of accelerator."
+#~ msgstr "Il tipo di acceleratore."
 
 #~ msgid "Center opened folder"
 #~ msgstr "Centra la cartella aperta"

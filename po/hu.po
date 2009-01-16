@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-12 03:09+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"PO-Revision-Date: 2009-01-11 19:25+0000\n"
+"Last-Translator: Norbert Illes <illesnorbi@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--version"
@@ -213,7 +213,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -221,49 +221,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--help"
@@ -304,7 +304,8 @@ msgstr "Nem tudtam beállítani a libmpd-t"
 
 #: ../src/main.c:1084
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
+msgstr ""
+"A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
 
 #: ../src/main.c:1106
 #, c-format
@@ -367,15 +368,15 @@ msgstr "Revízió"
 
 #: ../src/main.c:1400
 msgid "Libmpd version"
-msgstr ""
+msgstr "Libmpd verzió"
 
 #: ../src/main.c:1401
 msgid "GTK+ version"
-msgstr ""
+msgstr "GTK+ verzió"
 
 #: ../src/main.c:1402
 msgid "Libcurl version"
-msgstr ""
+msgstr "GTK+ verzió"
 
 #: ../src/main.c:1403
 msgid "Platform"
@@ -419,7 +420,7 @@ msgstr "Letiltva"
 
 #: ../src/main.c:1425
 msgid "NLS Support"
-msgstr ""
+msgstr "NLS támogatás"
 
 #: ../src/main.c:1433 ../src/mm-keys.c:556
 msgid "Multimedia Keys"
@@ -566,15 +567,12 @@ msgstr ""
 "letiltottam. Kérem ellenőrizze újra a beállításokat, és javítsa ki a hibát."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Kétszeres hozzárendelést találtam</b>\n"
-"\n"
-"%s már hozzá lett rendelve ehhez: %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -768,7 +766,7 @@ msgstr ""
 
 #: ../src/preferences.c:92 ../src/preferences.c:193
 msgid "Plugins"
-msgstr ""
+msgstr "Bővítmények"
 
 #: ../src/preferences.c:154
 msgid "Plugins:"
@@ -827,7 +825,7 @@ msgstr "1 folyam hozzáadva"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Írjon be egy url-t"
@@ -840,7 +838,7 @@ msgstr "Nem lehetett a '%s' url-hez csatlakozni"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Nem tudtam értelmezni a lejátszólista hivatkozást"
@@ -855,7 +853,7 @@ msgstr "Értesítés"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -874,7 +872,7 @@ msgstr "Kapcsolat beállítása"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -923,6 +921,12 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Dösi https://launchpad.net/~erdosib\n"
+"  Polesz https://launchpad.net/~polesz-nedudu\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Dösi https://launchpad.net/~erdosib\n"
+"  Norbert Illes https://launchpad.net/~illesnorbi-deactivatedaccount\n"
 "  Polesz https://launchpad.net/~polesz-nedudu\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
@@ -1298,9 +1302,8 @@ msgstr ""
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Lejátszási sor"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1308,9 +1311,8 @@ msgid "Search"
 msgstr "Keresés"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Fájlböngésző"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1324,7 +1326,7 @@ msgstr "Letöltés..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1342,7 +1344,7 @@ msgstr "Előadó"
 #: ../src/browsers/playlist3-metadata-browser.c:1513
 #: ../src/browsers/playlist3-metadata-browser.c:1964
 msgid "Songs"
-msgstr ""
+msgstr "Dalok"
 
 #: ../src/browsers/playlist3-metadata-browser.c:676
 #: ../src/browsers/playlist3-metadata-browser.c:1520
@@ -1413,7 +1415,7 @@ msgstr "Bővítmény"
 
 #: ../src/browsers/playlist3-metadata-browser.c:984
 msgid "Bitrate"
-msgstr ""
+msgstr "Bitsűrűség"
 
 #: ../src/browsers/playlist3-metadata-browser.c:989
 #: ../src/browsers/playlist3-metadata-browser.c:1002
@@ -1422,7 +1424,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:997
 msgid "Audio format"
-msgstr ""
+msgstr "Audio formátum"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1039
 msgid "Lyrics"
@@ -1438,7 +1440,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1127
 msgid "Links"
-msgstr ""
+msgstr "Linkek"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1213
 msgid "Invalid search"
@@ -1476,7 +1478,7 @@ msgstr[1] "Dátumok:"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr "Előadó infó:"
@@ -1487,15 +1489,15 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1595
 msgid "Albums"
-msgstr ""
+msgstr "Albumok"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1642
 msgid "Similar Artists"
-msgstr ""
+msgstr "Hasonló előadók"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr "Album infó:"
@@ -1511,7 +1513,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1519,7 +1521,7 @@ msgstr "Metaadat-böngésző"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Aktuális szám mutatása"
@@ -1530,7 +1532,7 @@ msgstr "kbit/sec"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2442
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2443
 msgid "bits"
@@ -1538,7 +1540,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2444
 msgid "channels"
-msgstr ""
+msgstr "Csatornák"
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:843
@@ -1679,15 +1681,6 @@ msgstr "Képek"
 msgid "Loading"
 msgstr ""
 
-#~ msgid "And"
-#~ msgstr "És"
-
-#~ msgid "Or"
-#~ msgstr "Vagy"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "Keresls az aktuális lejátszólistában"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1701,11 +1694,11 @@ msgstr ""
 #~ msgstr "<b>Rendezési sorrend:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>A beállított címkeböngészők csak az mpd 0.12-es "
-#~ "vagy újabb verzióinál jelennek meg.</i></span>"
+#~ "<span size=\"small\"><i>A beállított címkeböngészők csak az mpd 0.12-es vagy "
+#~ "újabb verzióinál jelennek meg.</i></span>"
 
 #~ msgid ""
 #~ "At the notification area icon\n"
@@ -1767,27 +1760,10 @@ msgstr ""
 #~ "hiba\n"
 #~ "semmi"
 
-#~ msgid "New accelerator..."
-#~ msgstr "Új gyorsbillentyű…"
-
-#~ msgid "Accelerator key"
-#~ msgstr "Gyorsbillentyű"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Gyorsbillentyű-módosítók"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Gyorsbillentyű billentyűkódja"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Gyorsítómód"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "A gyorsbillentyű típusa."
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Zenelejátszó Kliens\n"
 
@@ -1813,8 +1789,17 @@ msgstr ""
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>Gnome Music Player Client</span>"
 
+#~ msgid "And"
+#~ msgstr "És"
+
+#~ msgid "Or"
+#~ msgstr "Vagy"
+
 #~ msgid "<span size='xx-large' weight='bold'>Search</span>"
 #~ msgstr "<span size='xx-large' weight='bold'>Keresés</span>"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "Keresls az aktuális lejátszólistában"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Előadó:</b>"
@@ -1878,6 +1863,24 @@ msgstr ""
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Könyvtár:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Új gyorsbillentyű…"
+
+#~ msgid "Accelerator key"
+#~ msgstr "Gyorsbillentyű"
+
+#~ msgid "Accelerator modifiers"
+#~ msgstr "Gyorsbillentyű-módosítók"
+
+#~ msgid "Accelerator keycode"
+#~ msgstr "Gyorsbillentyű billentyűkódja"
+
+#~ msgid "Accel Mode"
+#~ msgstr "Gyorsítómód"
+
+#~ msgid "The type of accelerator."
+#~ msgstr "A gyorsbillentyű típusa."
 
 #~ msgid "<b>Title:</b>"
 #~ msgstr "<b>Cím:</b>"

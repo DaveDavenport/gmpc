@@ -7,163 +7,163 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-12 03:08+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"POT-Creation-Date: 2009-01-12 03:09+0100\n"
+"PO-Revision-Date: 2009-01-15 00:06+0000\n"
 "Last-Translator: Nedyalko Radev <nedyalkor@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "GNOME клиент за MPD"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:1391 ../src/tray-icon2.c:537
 #: ../src/tray-icon2.c:719 ../src/tray-icon2.c:722 ../src/tray-icon2.c:732
 #: ../src/tray-icon2.c:735
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "Gmome Music Player Client"
 
 #: ../glade/playlist3.glade.h:1 ../src/main.c:1415
 msgid "Getting help"
-msgstr ""
+msgstr "Помощ"
 
 #: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
-msgstr ""
+msgstr "Обновяване на MPD база данни"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Mute"
-msgstr ""
+msgstr "Без звук"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:73
 msgid "Next"
-msgstr ""
+msgstr "Следваща"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Play/Pause"
-msgstr ""
+msgstr "Свири/Пауза"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74
 msgid "Previous"
-msgstr ""
+msgstr "Предишна"
 
 #: ../glade/playlist3.glade.h:7
 msgid "Profiles"
-msgstr ""
+msgstr "Профили"
 
 #. * MM_REPEAT
 #: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:79
 msgid "Random"
-msgstr ""
+msgstr "Произволна"
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:78
 msgid "Repeat"
-msgstr ""
+msgstr "Повтаряне"
 
 #: ../glade/playlist3.glade.h:10
 msgid "Show Messages"
-msgstr ""
+msgstr "Покажи съобщения"
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:75
 msgid "Stop"
-msgstr ""
+msgstr "Спри"
 
 #: ../glade/playlist3.glade.h:12
 msgid "Visit website"
-msgstr ""
+msgstr "Посети уеб-сайта"
 
 #: ../glade/playlist3.glade.h:13
 msgid "_Collapse Interface"
-msgstr ""
+msgstr "_Свий интерфейс"
 
 #: ../glade/playlist3.glade.h:14
 msgid "_Connect"
-msgstr ""
+msgstr "_Свързване"
 
 #: ../glade/playlist3.glade.h:15
 msgid "_Control"
-msgstr ""
+msgstr "_Управление"
 
 #: ../glade/playlist3.glade.h:16 ../glade/preferences-connection.ui.h:9
 msgid "_Disconnect"
-msgstr ""
+msgstr "_Прекъсване на връзка"
 
 #: ../glade/playlist3.glade.h:17
 msgid "_Expand Interface"
-msgstr ""
+msgstr "_Разшири интерфейс"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_На цял екран"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Go"
-msgstr ""
+msgstr "Давай"
 
 #: ../glade/playlist3.glade.h:20
 msgid "_Help"
-msgstr ""
+msgstr "_Помощ"
 
 #: ../glade/playlist3.glade.h:21
 msgid "_Music"
-msgstr ""
+msgstr "_Музика"
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Option"
-msgstr ""
+msgstr "_Опции"
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Send Password"
-msgstr ""
+msgstr "_Изпрати парола"
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Server"
-msgstr ""
+msgstr "Сървър"
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Show Artist Image"
-msgstr ""
+msgstr "Покажи снимка на изпълнител"
 
 #: ../glade/playlist3.glade.h:26
 msgid "_View"
-msgstr ""
+msgstr "_Изглед"
 
 #: ../glade/playlist3.glade.h:27
 msgid "gmpc - Playlist Manager"
-msgstr ""
+msgstr "gmpc - Плейлист Мениджър"
 
 #: ../src/edit_markup.c:39
 msgid "/path/to/file_name.mp3"
-msgstr ""
+msgstr "/път/до/името_на_файл.mp3"
 
 #: ../src/edit_markup.c:40
 msgid "Jonny Singer"
-msgstr ""
+msgstr "Jonny Singer"
 
 #: ../src/edit_markup.c:41
 msgid "Sing or Swing you want"
-msgstr ""
+msgstr "Sing or Swing you want"
 
 #: ../src/edit_markup.c:42
 msgid "The kernel jazz"
-msgstr ""
+msgstr "The kernel jazz"
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
-msgstr ""
+msgstr "01/24"
 
 #: ../src/edit_markup.c:44
 msgid "2 Feb 2006"
-msgstr ""
+msgstr "2 Фев 2006"
 
 #: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
@@ -172,22 +172,22 @@ msgstr ""
 #: ../src/gmpc_easy_download.c:213 ../src/gmpc_easy_download.c:214
 #: ../src/gmpc_easy_download.c:269
 msgid "Proxy"
-msgstr ""
+msgstr "Прокси"
 
 #. enable/disable
 #: ../src/gmpc_easy_download.c:224
 msgid "Use a proxy for internet connectivity"
-msgstr ""
+msgstr "Използвай прокси за свързване с интернет"
 
 #. label
 #: ../src/gmpc_easy_download.c:233
 msgid "HTTP Proxy:"
-msgstr ""
+msgstr "HTTP Прокси:"
 
 #. label
 #: ../src/gmpc_easy_download.c:245 ../glade/preferences-connection.ui.h:6
 msgid "Port:"
-msgstr ""
+msgstr "Порт:"
 
 #. *
 #. * Set debug level, options are
@@ -195,78 +195,78 @@ msgstr ""
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
-msgstr ""
+msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
-msgstr ""
+msgstr "--version"
 
 #: ../src/main.c:310 ../src/main.c:312
 msgid "--config="
-msgstr ""
+msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
-msgstr ""
+msgstr "--start-hidden"
 
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
-msgstr ""
+msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
-msgstr ""
+msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
-msgstr ""
+msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
-msgstr ""
+msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
-msgstr ""
+msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
-msgstr ""
+msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
-msgstr ""
+msgstr "--help"
 
 #: ../src/main.c:370
 #, c-format
@@ -289,22 +289,38 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
+"--start-hidden\t\tСтартирай скрит\n"
+"\t--help\t\t\tПомощ\n"
+"\t--debug-level=<level>\tПусни gmpc в debug режим\n"
+"\t\t\t\tНиво:\n"
+"\t\t\t\t\t0 Не показвай нищо\n"
+"\t\t\t\t\t1 Съобщения за грешка\n"
+"\t\t\t\t\t2 Съобщения за грешка + Предупреждения\n"
+"\t\t\t\t\t3 Показвай всичко\n"
+"\t--version\t\tПокажи версия и git revision\n"
+"\t--config=<file>\t\tПосочи път до конфигурационен файл, по подразбиране се "
+"използва ~/.gmpc/gmpc.cfg\n"
+"\t--clean-cover-db\tИзтрий файл с обложки.\n"
+"\t--disable-plugins\tНе зареждай плъгини (добавки).\n"
+"\t--replace\t\tСтатирай нова сесия и затвори вече стартираната.\n"
+"\t--quit\t\t\tСпри стартираната сесия. Работи само, ако е излючена опцията "
+"за стартиране на много сесии.\n"
 
 #: ../src/main.c:513
 msgid "Failed to load the configuration system."
-msgstr ""
+msgstr "Грешка при инициализиране на конфигурацията."
 
 #: ../src/main.c:535
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "Грешка при зареждане на debug-log файла."
 
 #: ../src/main.c:701
 msgid "Failed to setup libmpd"
-msgstr ""
+msgstr "Грешка при инициализиране на libmpd."
 
 #: ../src/main.c:1084
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr ""
+msgstr "Нямате право на достъп до тази функция."
 
 #: ../src/main.c:1106
 #, c-format
@@ -312,44 +328,46 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"Грешка при установяване на парола за: '%s'\n"
+"Моля опитайте пак"
 
 #: ../src/main.c:1110
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr ""
+msgstr "Моля въведете парола за: '%s'"
 
 #: ../src/main.c:1135 ../src/main.c:1160
 msgid "error code"
-msgstr ""
+msgstr "код на грешката"
 
 #: ../src/main.c:1146
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr ""
+msgstr "Отказано свързване с MPD. Моля, проверете паролата."
 
 #: ../src/main.c:1183
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr ""
+msgstr "Версии на MPD преди 0.13.0 са несъвместими."
 
 #: ../src/main.c:1251
 msgid "Connected to mpd"
-msgstr ""
+msgstr "Успешно свързване с MPD"
 
 #: ../src/main.c:1253
 msgid "Disconnected from mpd"
-msgstr ""
+msgstr "Връзката с MPD e прекъсната."
 
 #: ../src/main.c:1288
 msgid "Error occured during operation"
-msgstr ""
+msgstr "Възникна грешка при изпълнението на"
 
 #. Create label
 #: ../src/main.c:1318
 msgid "The following error(s) occured:"
-msgstr ""
+msgstr "Грешка:"
 
 #: ../src/main.c:1334
 msgid "Error Message"
-msgstr ""
+msgstr "Съобщение за грешка"
 
 #: ../src/main.c:1394
 msgid "Tagline"
@@ -357,91 +375,91 @@ msgstr ""
 
 #: ../src/main.c:1395 ../src/preferences.c:311
 msgid "Version"
-msgstr ""
+msgstr "Версия"
 
 #: ../src/main.c:1398
 msgid "Revision"
-msgstr ""
+msgstr "Последна редакция"
 
 #: ../src/main.c:1400
 msgid "Libmpd version"
-msgstr ""
+msgstr "Libmpd версия"
 
 #: ../src/main.c:1401
 msgid "GTK+ version"
-msgstr ""
+msgstr "GTK+ версия"
 
 #: ../src/main.c:1402
 msgid "Libcurl version"
-msgstr ""
+msgstr "Libcurl версия"
 
 #: ../src/main.c:1403
 msgid "Platform"
-msgstr ""
+msgstr "Платформа"
 
 #: ../src/main.c:1405
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: ../src/main.c:1408
 msgid "Mac OsX"
-msgstr ""
+msgstr "Mac OS X"
 
 #: ../src/main.c:1410
 msgid "*nix"
-msgstr ""
+msgstr "*nix"
 
 #: ../src/main.c:1414
 msgid "Website"
-msgstr ""
+msgstr "Уебсайт"
 
 #: ../src/main.c:1416
 msgid "Options enabled"
-msgstr ""
+msgstr "Включени опции"
 
 #: ../src/main.c:1418
 msgid "X session management"
-msgstr ""
+msgstr "Управление на X сесията"
 
 #: ../src/main.c:1420 ../src/main.c:1427 ../src/main.c:1435 ../src/main.c:1443
 #: ../src/main.c:1451 ../src/main.c:1459 ../src/main.c:1467 ../src/main.c:1475
 #: ../src/main.c:1483 ../src/preferences.c:304
 msgid "Enabled"
-msgstr ""
+msgstr "Включено"
 
 #: ../src/main.c:1422 ../src/main.c:1429 ../src/main.c:1437 ../src/main.c:1445
 #: ../src/main.c:1453 ../src/main.c:1461 ../src/main.c:1469 ../src/main.c:1477
 #: ../src/main.c:1485
 msgid "Disabled"
-msgstr ""
+msgstr "Изключено"
 
 #: ../src/main.c:1425
 msgid "NLS Support"
-msgstr ""
+msgstr "NLS съвместимост"
 
 #: ../src/main.c:1433 ../src/mm-keys.c:556
 msgid "Multimedia Keys"
-msgstr ""
+msgstr "Мултимедийни клавиши"
 
 #: ../src/main.c:1441
 msgid "Libegg's trayicon"
-msgstr ""
+msgstr "Libegg трей икона"
 
 #: ../src/main.c:1449
 msgid "System libsexy"
-msgstr ""
+msgstr "Системна Libsexy biblioteka"
 
 #: ../src/main.c:1457
 msgid "Mac integration library"
-msgstr ""
+msgstr "Библиотека за интеграция с Mac"
 
 #: ../src/main.c:1465
 msgid "Use ~/.config/ dir"
-msgstr ""
+msgstr "Използвай ~/.config директория"
 
 #: ../src/main.c:1473
 msgid "Debug timing"
-msgstr ""
+msgstr "Тайминг в debug състояние"
 
 #: ../src/main.c:1481
 msgid "Maintainer mode"
@@ -452,14 +470,16 @@ msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
+"Нова добавка за метаданни беше добвен. Всички неуспешни опити бяха почистени "
+"от кеша."
 
 #: ../src/metadata.c:1198
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Управление на метаданни"
 
 #: ../src/misc.c:38
 msgid " Total time: "
-msgstr ""
+msgstr " Общо време: "
 
 #: ../src/misc.c:54
 msgid "day"
@@ -481,62 +501,64 @@ msgstr[1] "минути"
 
 #: ../src/misc.c:263
 msgid "Failed to execute"
-msgstr ""
+msgstr "Грешка при изпълнение"
 
 #: ../src/mm-keys.c:72
 msgid "PlayPause"
-msgstr ""
+msgstr "СтартПауза"
 
 #. * MM_STOP
 #: ../src/mm-keys.c:76
 msgid "Fast Forward"
-msgstr ""
+msgstr "Напред"
 
 #. * MM_FASTFORWARD
 #: ../src/mm-keys.c:77
 msgid "Fast Backward"
-msgstr ""
+msgstr "Назад"
 
 #. * MM_RANDOM
 #: ../src/mm-keys.c:80
 msgid "Raise window"
-msgstr ""
+msgstr "Активирай на прозорец"
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:81
 msgid "Hide window"
-msgstr ""
+msgstr "Скрий прозорец"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:82
 msgid "Toggle window"
-msgstr ""
+msgstr "Превключи прозорец"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:83
 msgid "Volume Up"
-msgstr ""
+msgstr "Увеличи сила на звука"
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:84
 msgid "Volume Down"
-msgstr ""
+msgstr "Намали сила на звука"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:85
 msgid "Show song"
-msgstr ""
+msgstr "Покажи информация за песен"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:86
 msgid "Toggle Mute"
-msgstr ""
+msgstr "Вкл/изкл на звука"
 
 #: ../src/mm-keys.c:356
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
+"Следните мултимедийни клавиши не можаха да бъдат активирани:\n"
+"\n"
 
 #: ../src/mm-keys.c:371
 msgid ""
@@ -544,6 +566,9 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"\n"
+"Уверете се че мултимедийните клавиши не се използват вече от Мениджърa на "
+"прозорци или друго приложение, след което рестартирайте GMPC."
 
 #: ../src/mm-keys.c:378
 msgid ""
@@ -552,6 +577,9 @@ msgid ""
 "Some duplicate multimedia key mappings were detected, and disabled.  Please "
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
+"Някои мултимедийни клавиши са настроени за повече от една функция. Моля "
+"проверете избора си и се уверете, че всеки мултимедиен клавиш е настроен "
+"само за една фунция."
 
 #: ../src/mm-keys.c:618
 #, c-format
@@ -560,6 +588,9 @@ msgid ""
 "\n"
 "%s is already mapped to %s"
 msgstr ""
+"вече има конфигурирана команда за този мултимедиен клавиш\n"
+"\n"
+"%s е вече конфигуриран за %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -571,84 +602,91 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"Мултимедийният клавиш не може да бъде конфигуриран:\n"
+"\n"
+"\t%s: %s\n"
+"\n"
+"Уверете се, че Вашият мениджър на прозорци (или друго приложение) не са "
+"конфигурирани да използват този мултимедиен клавиш, след което рестартирайте "
+"GMPC."
 
 #: ../src/mm-keys.c:694
 msgid "Action"
-msgstr ""
+msgstr "Действия"
 
 #: ../src/mm-keys.c:716
 msgid "Shortcut"
-msgstr ""
+msgstr "Бърз клавиш"
 
 #: ../src/mpdinteraction.c:74
 msgid "Server Settings"
-msgstr ""
+msgstr "Настройки на сървъра"
 
 #: ../src/mpdinteraction.c:104
 msgid "Connection"
-msgstr ""
+msgstr "Връзка"
 
 #: ../src/mpdinteraction.c:205
 msgid "Connecting"
-msgstr ""
+msgstr "Свързване"
 
 #. Add all from album
 #: ../src/mpdinteraction.c:1170
 msgid "All from album"
-msgstr ""
+msgstr "Всичко от този албум"
 
 #. Add all from artist
 #: ../src/mpdinteraction.c:1182
 msgid "All from artist"
-msgstr ""
+msgstr "Всичко от този артист"
 
 #. Add all from genre
 #: ../src/mpdinteraction.c:1192
 msgid "All from genre"
-msgstr ""
+msgstr "Всичко от този жанр"
 
 #. Add all from file
 #: ../src/mpdinteraction.c:1200
 msgid "All from same directory"
-msgstr ""
+msgstr "Всичко от директорията"
 
 #. Create sub menu
 #. Add
 #: ../src/mpdinteraction.c:1208
 msgid "Add more"
-msgstr ""
+msgstr "Добави още"
 
 #: ../src/playlist3.c:629
 msgid "MPD database is updating"
-msgstr ""
+msgstr "Базата на MPD се обновява"
 
 #: ../src/playlist3.c:640
 msgid "MPD is updating its database"
-msgstr ""
+msgstr "Базата на MPD се обновява"
 
 #: ../src/playlist3.c:644
 msgid "MPD finished updating its database"
-msgstr ""
+msgstr "Обновяване базата на MPD е завършено"
 
 #: ../src/playlist3.c:850
 msgid "Connected"
-msgstr ""
+msgstr "Свързан"
 
 #: ../src/playlist3.c:859 ../src/playlist3.c:2246
 msgid "Not Connected"
-msgstr ""
+msgstr "Няма връзка"
 
 #: ../src/playlist3.c:872 ../src/playlist3.c:881 ../src/playlist3.c:1700
 msgid "GMPC"
-msgstr ""
+msgstr "GMPC"
 
 #: ../src/playlist3.c:873
 msgid "Connected to"
-msgstr ""
+msgstr "Свързан с"
 
 #: ../src/playlist3.c:882
 msgid "Disconnected"
-msgstr ""
+msgstr "Прекъсване на връзката"
 
 #: ../src/playlist3.c:947
 msgid ""
@@ -659,183 +697,187 @@ msgstr ""
 #: ../src/playlist3.c:1734
 #, c-format
 msgid "Repeat: %s"
-msgstr ""
+msgstr "Повторение: %s"
 
 #: ../src/playlist3.c:1734 ../src/playlist3.c:1747
 msgid "On"
-msgstr ""
+msgstr "Включено"
 
 #: ../src/playlist3.c:1734 ../src/playlist3.c:1747
 msgid "Off"
-msgstr ""
+msgstr "Изключено"
 
 #: ../src/playlist3.c:1747
 #, c-format
 msgid "Random: %s"
-msgstr ""
+msgstr "Произволно: %s"
 
 #: ../src/playlist3.c:1806
 #, c-format
 msgid "MPD Database refreshed at: %c"
-msgstr ""
+msgstr "Базата с данни на MPD беше обновена на: %c"
 
 #: ../src/playlist3.c:1816
 msgid "MPD Reported the following error"
-msgstr ""
+msgstr "Следната грешка възникна при работата на MPD:"
 
 #: ../src/playlist3.c:1948 ../src/playlist3.c:1955
 msgid "Profile"
-msgstr ""
+msgstr "Профил"
 
 #: ../src/playlist3.c:1948
 msgid "added"
-msgstr ""
+msgstr "Добавен(и)"
 
 #: ../src/playlist3.c:1957
 msgid "changed hostname to:"
-msgstr ""
+msgstr "Името на сървъра беше сменено на:"
 
 #. Update DB
 #: ../src/playlist3.c:2068
 msgid "Update Database"
-msgstr ""
+msgstr "Обнови базата"
 
 #: ../src/playlist3.c:2152
 msgid "By"
-msgstr ""
+msgstr "в изпълнение на"
 
 #: ../src/playlist3.c:2159
 msgid "From"
-msgstr ""
+msgstr "от"
 
 #: ../src/playlist3.c:2237
 msgid "Not Playing"
-msgstr ""
+msgstr "Не се изпълнява нищо"
 
 #: ../src/playlist3.c:2356
 msgid "Interface"
-msgstr ""
+msgstr "Облик"
 
 #: ../src/playlist3-messages.c:35
 msgid "Info"
-msgstr ""
+msgstr "Информация"
 
 #: ../src/playlist3-messages.c:36
 msgid "Warning"
-msgstr ""
+msgstr "Внимание"
 
 #: ../src/playlist3-messages.c:37
 msgid "Critical"
-msgstr ""
+msgstr "Критично"
 
 #: ../src/playlist3-messages.c:217
 msgid "Time"
-msgstr ""
+msgstr "Време"
 
 #: ../src/playlist3-messages.c:219
 msgid "Message"
-msgstr ""
+msgstr "Съобщение"
 
 #: ../src/plugin.c:216
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
+"Някой от плъгините не бе инициализиран правилно. За повече информация вижте "
+"Помощ -> Съобщения"
 
 #: ../src/preferences.c:92 ../src/preferences.c:193
 msgid "Plugins"
-msgstr ""
+msgstr "Добавки (Plug-ins)"
 
 #: ../src/preferences.c:154
 msgid "Plugins:"
-msgstr ""
+msgstr "Добавки:"
 
 #: ../src/preferences.c:307 ../src/gob/gmpc-mpddata-treeview.gob:72
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #: ../src/preferences.c:309
 msgid "Function"
-msgstr ""
+msgstr "Функция"
 
 #: ../src/preferences.c:330
 msgid "Dummy"
-msgstr ""
+msgstr "Фиктивен"
 
 #: ../src/preferences.c:333
 msgid "Browser Extension"
-msgstr ""
+msgstr "Разширение на браузъра"
 
 #: ../src/preferences.c:336
 msgid "Metadata Provider"
-msgstr ""
+msgstr "Доставчик на данни"
 
 #: ../src/preferences.c:339
 msgid "Metadata Provider and Browser Extension"
-msgstr ""
+msgstr "Доставчик на метаданни и Разширение на браузъра"
 
 #: ../src/preferences.c:342
 msgid "Misc."
-msgstr ""
+msgstr "Разни"
 
 #: ../src/preferences.c:347
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвестно"
 
 #: ../src/TreeSearchWidget.c:271
 msgid "Find:"
-msgstr ""
+msgstr "Търсене:"
 
 #: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 #, c-format
 msgid "Added %i %s"
-msgstr ""
+msgstr "Добавен(и) %i %s"
 
 #: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "стрийм"
+msgstr[1] "стриймове"
 
 #: ../src/url_fetcher.c:155 ../src/url_fetcher.c:180
 msgid "Added 1 stream"
-msgstr ""
+msgstr "1 стрийм беше добавен"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
-msgstr ""
+msgstr "Въведете URL"
 
 #: ../src/url_fetcher.c:261
 #, c-format
 msgid "Failed to contact url: '%s'"
-msgstr ""
+msgstr "Неуспешно свързване с: '%s'"
 
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
-msgstr ""
+msgstr "* * Неуспешно свързване %s * Показване на съобщение за грешка"
 
 #: ../src/tray-icon2.c:136
 msgid "Pla_ylist"
-msgstr ""
+msgstr "Списък с песни"
 
 #: ../src/tray-icon2.c:852
 msgid "Notification"
-msgstr ""
+msgstr "Известяване"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"GMPC е стартиран за първи път.\n"
+"Помощникът ще ви помогне да свържете GMPC към MPD сървъра."
 
 #: ../src/setup-assistant.c:116
 msgid "Welcome to GMPC"
@@ -843,24 +885,27 @@ msgstr ""
 
 #: ../src/setup-assistant.c:135
 msgid "Setup connection"
-msgstr ""
+msgstr "Настройка на свързване"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
+"GMPC е успешно конфигуриран.\n"
+"Насладете се на удоволствието да слушате своята любима музика, използвайки "
+"GMPC."
 
 #: ../src/setup-assistant.c:146
 msgid "Finish"
-msgstr ""
+msgstr "Готово"
 
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
-msgstr ""
+msgstr "Copyright 2003-2007 Qball Cow"
 
 #: ../glade/aboutdialog.ui.h:2
 msgid "translator-credits"
@@ -878,47 +923,48 @@ msgstr ""
 "  Nedyalko Radev https://launchpad.net/~nedyalkor\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Nedyalko Radev https://launchpad.net/~nedyalkor\n"
+"\n"
+"Launchpad Contributions:\n"
 "  Nedyalko Radev https://launchpad.net/~nedyalkor"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
-msgstr ""
+msgstr "Въведете парола за: '<hostname>'"
 
 #: ../glade/password-dialog.ui.h:2
 msgid "Password"
-msgstr ""
+msgstr "Парола"
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
-msgstr ""
+msgstr "_Съхрани парола"
 
 #: ../glade/preferences-connection.ui.h:1
-#, fuzzy
 msgid "<b>Profile:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Профил:</b>"
 
 #: ../glade/preferences-connection.ui.h:2
-#, fuzzy
 msgid "Conn_ect"
-msgstr "_Автоматично свързване"
+msgstr "Свър_зване"
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Host:"
-msgstr ""
+msgstr "Адрес:"
 
 #: ../glade/preferences-connection.ui.h:4
 #: ../src/browsers/playlist3-playlist-editor.c:472
 #: ../src/browsers/playlist3-playlist-editor.c:511
 msgid "Name:"
-msgstr ""
+msgstr "Име:"
 
 #: ../glade/preferences-connection.ui.h:5
 msgid "Password:"
-msgstr ""
+msgstr "Парола:"
 
 #: ../glade/preferences-connection.ui.h:7
 msgid "Timeout (s):"
-msgstr ""
+msgstr "Изчакване (с):"
 
 #: ../glade/preferences-connection.ui.h:8
 msgid "_Autoconnect"
@@ -926,67 +972,63 @@ msgstr "_Автоматично свързване"
 
 #: ../glade/preferences-connection.ui.h:10
 msgid "_Use Authentication"
-msgstr ""
+msgstr "_Използвай удостоверяване"
 
 #: ../glade/preferences-connection.ui.h:11
 msgid "localhost"
-msgstr ""
+msgstr "localhost"
 
 #: ../glade/preferences-esf-dialog.ui.h:1
-#, fuzzy
 msgid "<b>Enable Field:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Разреши полето:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:2
-#, fuzzy
 msgid "<b>Example:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Пример:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr ""
+msgstr "<span size=\"large\"><b>Начин на изписване:</b></span>"
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "A_lbum"
-msgstr ""
+msgstr "А_лбум"
 
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
-msgstr ""
+msgstr "Промяна на изписване заглавието на песен"
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
-msgstr ""
+msgstr "П_есен"
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
-msgstr ""
+msgstr "_Изпълнител"
 
 #: ../glade/preferences-esf-dialog.ui.h:8
 msgid "_Date"
-msgstr ""
+msgstr "_Дата"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
-msgstr ""
+msgstr "_Име на стрийм"
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Title"
-msgstr ""
+msgstr "_Заглавие"
 
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "example"
-msgstr ""
+msgstr "пример"
 
 #: ../glade/preferences-playlist.ui.h:1
-#, fuzzy
 msgid "<b>Main:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Main:</b>"
 
 #: ../glade/preferences-playlist.ui.h:2
-#, fuzzy
 msgid "<b>Playlist:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Списък с песни:</b>"
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "<b>Song Markup</b>"
@@ -994,7 +1036,7 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Center playing song"
-msgstr ""
+msgstr "Бързс скок до просвирваната в момента песен"
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Edit _Browser Markup"
@@ -1002,74 +1044,75 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Hide on close"
-msgstr ""
+msgstr "Скрий в системния трей при затваряне на приложението"
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Save position and size between sessions"
-msgstr ""
+msgstr "Запази позиция и размер на главния прозорец между сесиите"
 
 #: ../glade/preferences-playlist.ui.h:8
 msgid "Show buttons instead of dropdown in collapsed view"
-msgstr ""
+msgstr "Показвай бутони вместо падащо меню при свит изглед"
 
 #: ../glade/preferences-playlist.ui.h:9
 msgid "Show songlist tooltip"
-msgstr ""
+msgstr "Показвай туултип в списъка с песни"
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stop playing on exit"
-msgstr ""
+msgstr "Спри изпълнение при изход от програмата"
 
 #: ../glade/preferences-playlist.ui.h:11
 msgid "Stylize album covers"
-msgstr ""
+msgstr "Стилизирай обложките на албуми"
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
-msgstr ""
+msgstr "<b>Заредени добавки:</b>"
 
 #: ../glade/preferences-server.ui.h:1
-#, fuzzy
 msgid "<b>Crossfade:</b>"
-msgstr "<b>Име:</b>"
+msgstr "<b>Смесване:</b>"
 
 #: ../glade/preferences-server.ui.h:2
 msgid "<b>Output Devices:</b>"
-msgstr ""
+msgstr "<b>Изходни устройства:</b>"
 
 #: ../glade/preferences-server.ui.h:3
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
 msgstr ""
+"<span size=\"small\"><i>Трябва да сте свързан с MPD, за да промените тези "
+"настройки</i></span>"
 
 #: ../glade/preferences-server.ui.h:5
 msgid "Enable crossfade"
-msgstr ""
+msgstr "Разреши смесване"
 
 #: ../glade/preferences-server.ui.h:6
 msgid "fade time (s):"
-msgstr ""
+msgstr "време за смесване (с):"
 
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "<b>Inline messages</b>"
-msgstr ""
+msgstr "<b>Inline съобщения</b>"
 
 #: ../glade/preferences-trayicon.ui.h:2
 msgid "<b>Notification Area Icon</b>"
-msgstr ""
+msgstr "<b>Икона в системния трей</b>"
 
 #: ../glade/preferences-trayicon.ui.h:3
 msgid "<b>PopUp</b>"
-msgstr ""
+msgstr "<b>Изкачащ прозорец</b>"
 
 #: ../glade/preferences-trayicon.ui.h:4
 msgid "Enable"
-msgstr ""
+msgstr "Включване"
 
 #: ../glade/preferences-trayicon.ui.h:5
 msgid "Position:"
-msgstr ""
+msgstr "Позиция:"
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show severity"
@@ -1077,57 +1120,59 @@ msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Timeout:"
-msgstr ""
+msgstr "Изчакване:"
 
 #: ../glade/preferences.ui.h:1
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
+"<span size=\"x-large\"><b>Добавки</b></span>\n"
+"<i>Неизбрани</i>"
 
 #: ../glade/preferences.ui.h:3
 msgid "gmpc - Configuration"
-msgstr ""
+msgstr "Настройване на gmpc"
 
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
-msgstr ""
+msgstr "Съобщения"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
-msgstr ""
+msgstr "<Въведете име на списък с песни>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr ""
+msgstr "<span size=\"x-small\"><i>Вече има такъв списък с песни.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
-msgstr ""
+msgstr "Запазване на списък с песни"
 
 #: ../glade/playlist-save-dialog.ui.h:4
 msgid "name:"
-msgstr ""
+msgstr "име:"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:103
 msgid "item"
 msgid_plural "items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "елемент"
+msgstr[1] "елементи"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:104
 msgid "(Estimation)"
-msgstr ""
+msgstr "(Преценяване)"
 
 #. PL3_CURRENT_PLAYLIST,
 #: ../src/browsers/playlist3-current-playlist-browser.c:416
 #: ../src/browsers/playlist3-current-playlist-browser.c:1220
 msgid "Play Queue"
-msgstr ""
+msgstr "Опашка"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:487
 msgid "Are you sure you want to clear the playlist?"
-msgstr ""
+msgstr "Списъкът с песни ще бъде изпразнен."
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:726
 #: ../src/browsers/playlist3-current-playlist-browser.c:745
@@ -1139,20 +1184,20 @@ msgstr ""
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:832
 msgid "Crop"
-msgstr ""
+msgstr "Изрязване"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:852
 msgid "Paste before"
-msgstr ""
+msgstr "Постави преди"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:858
 msgid "Paste after"
-msgstr ""
+msgstr "Постави след"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:873
 msgid "Shuffle"
-msgstr ""
+msgstr "Случаен ред на изпълнение"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:888
@@ -1160,11 +1205,11 @@ msgstr ""
 #: ../src/browsers/playlist3-find2-browser.c:565
 #: ../src/browsers/playlist3-playlist-editor.c:567
 msgid "Edit Columns"
-msgstr ""
+msgstr "Редактирай колони"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1012
 msgid "Add URL"
-msgstr ""
+msgstr "Добавяне на URL"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1121
 #, c-format
@@ -1172,25 +1217,27 @@ msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
+"<i>Списъкът с песни <b>\"%s\"</b> вече съществува\n"
+"Да презапиша ли?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1145
 msgid "Failed to save the playlist file."
-msgstr ""
+msgstr "Списъкът с песни не може да бъде запазен."
 
 #: ../src/browsers/playlist3-file-browser.c:100
 #: ../src/browsers/playlist3-file-browser.c:340
 #: ../src/browsers/playlist3-file-browser.c:1178
 msgid "File Browser"
-msgstr ""
+msgstr "Файлов браузър"
 
 #: ../src/browsers/playlist3-file-browser.c:180
 msgid "Directories"
-msgstr ""
+msgstr "Директории"
 
 #: ../src/browsers/playlist3-file-browser.c:251
 #, c-format
 msgid "Added folder '%s' recursively"
-msgstr ""
+msgstr "Директорията '%s' беше добавена рекурсивно"
 
 #. add the replace widget
 #. replace the replace widget
@@ -1208,101 +1255,101 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2363
 #: ../src/browsers/playlist3-playlist-editor.c:625
 msgid "Replace"
-msgstr ""
+msgstr "Заместване"
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:615
 #: ../src/browsers/playlist3-file-browser.c:886
 msgid "Update"
-msgstr ""
+msgstr "Обновяване"
 
 #: ../src/browsers/playlist3-file-browser.c:736
 msgid "Loaded playlist"
-msgstr ""
+msgstr "Списъкът с песни е зареден"
 
 #: ../src/browsers/playlist3-file-browser.c:1010
 msgid "Added"
-msgstr ""
+msgstr "Добавен"
 
 #: ../src/browsers/playlist3-file-browser.c:1012
 msgid "song"
 msgid_plural "songs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "песен"
+msgstr[1] "песни"
 
 #: ../src/browsers/playlist3-file-browser.c:1014
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "директория"
+msgstr[1] "директории"
 
 #: ../src/browsers/playlist3-file-browser.c:1016
 msgid "playlist"
 msgid_plural "playlists"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "списък с песни"
+msgstr[1] "списъците с песни"
 
 #: ../src/browsers/playlist3-file-browser.c:1039
 #: ../src/browsers/playlist3-file-browser.c:1089
 msgid "Are you sure you want to clear the selected playlist?"
-msgstr ""
+msgstr "Да премахна ли избраният списък с песни?"
 
 #: ../src/browsers/playlist3-find2-browser.c:85
 msgid "Query"
-msgstr ""
+msgstr "Заявка"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
 msgid "in _play queue"
-msgstr ""
+msgstr "в опашката"
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
 msgid "Search"
-msgstr ""
+msgstr "Търсене"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
 msgid "Search Browser"
-msgstr ""
+msgstr "Браузър за търсене"
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
 msgid "Unavailable"
-msgstr ""
+msgstr "Недостъпен"
 
 #: ../src/browsers/playlist3-metadata-browser.c:316
 msgid "Fetching..."
-msgstr ""
+msgstr "Сваляне..."
 
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
 msgid "View"
-msgstr ""
+msgstr "Преглед"
 
 #: ../src/browsers/playlist3-metadata-browser.c:661
 #: ../src/browsers/playlist3-metadata-browser.c:917
 #: ../src/gob/gmpc-mpddata-treeview.gob:66
 #: ../src/gob/gmpc-mpddata-treeview.gob:611
 msgid "Artist"
-msgstr ""
+msgstr "Изпълнител"
 
 #: ../src/browsers/playlist3-metadata-browser.c:668
 #: ../src/browsers/playlist3-metadata-browser.c:1513
 #: ../src/browsers/playlist3-metadata-browser.c:1964
 msgid "Songs"
-msgstr ""
+msgstr "Песни"
 
 #: ../src/browsers/playlist3-metadata-browser.c:676
 #: ../src/browsers/playlist3-metadata-browser.c:1520
 #: ../src/browsers/playlist3-metadata-browser.c:2040
 #: ../src/browsers/playlist3-metadata-browser.c:2344
 msgid "Playtime"
-msgstr ""
+msgstr "Време за изпълнение"
 
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:929
@@ -1311,7 +1358,7 @@ msgstr ""
 #: ../src/gob/gmpc-mpddata-treeview.gob:70
 #: ../src/gob/gmpc-mpddata-treeview.gob:637
 msgid "Genre"
-msgstr ""
+msgstr "Жанр"
 
 #: ../src/browsers/playlist3-metadata-browser.c:685
 #: ../src/browsers/playlist3-metadata-browser.c:935
@@ -1320,14 +1367,14 @@ msgstr ""
 #: ../src/gob/gmpc-mpddata-treeview.gob:75
 #: ../src/gob/gmpc-mpddata-treeview.gob:649
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: ../src/browsers/playlist3-metadata-browser.c:810
 #: ../src/browsers/playlist3-metadata-browser.c:1305
 #: ../src/browsers/playlist3-metadata-browser.c:1410
 #: ../src/browsers/playlist3-metadata-browser.c:1827
 msgid "Collection"
-msgstr ""
+msgstr "Колекция"
 
 #: ../src/browsers/playlist3-metadata-browser.c:923
 #: ../src/browsers/playlist3-metadata-browser.c:1981
@@ -1335,89 +1382,90 @@ msgstr ""
 #: ../src/gob/gmpc-mpddata-treeview.gob:67
 #: ../src/gob/gmpc-mpddata-treeview.gob:625
 msgid "Album"
-msgstr ""
+msgstr "Албум"
 
 #: ../src/browsers/playlist3-metadata-browser.c:941
 #: ../src/gob/gmpc-mpddata-treeview.gob:71
 msgid "Track"
-msgstr ""
+msgstr "Песен"
 
 #: ../src/browsers/playlist3-metadata-browser.c:947
 #: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "Composer"
-msgstr ""
+msgstr "Композитор"
 
 #: ../src/browsers/playlist3-metadata-browser.c:953
 #: ../src/gob/gmpc-mpddata-treeview.gob:74
 msgid "Performer"
-msgstr ""
+msgstr "Изпълнител"
 
 #: ../src/browsers/playlist3-metadata-browser.c:962
 #: ../src/browsers/playlist3-metadata-browser.c:2048
 #: ../src/browsers/playlist3-metadata-browser.c:2352
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "Directory"
-msgstr ""
+msgstr "Директория"
 
 #: ../src/browsers/playlist3-metadata-browser.c:972
 #: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Extension"
-msgstr ""
+msgstr "Разширение"
 
 #: ../src/browsers/playlist3-metadata-browser.c:984
 msgid "Bitrate"
-msgstr ""
+msgstr "Бит/сек"
 
 #: ../src/browsers/playlist3-metadata-browser.c:989
 #: ../src/browsers/playlist3-metadata-browser.c:1002
 msgid "n/a"
-msgstr ""
+msgstr "липсва"
 
 #: ../src/browsers/playlist3-metadata-browser.c:997
 msgid "Audio format"
-msgstr ""
+msgstr "Аудио формат"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1039
 msgid "Lyrics"
-msgstr ""
+msgstr "Текстове на песни"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1082
 msgid "Songs with same title"
-msgstr ""
+msgstr "Песни със същото име"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1114
 msgid "Similar songs"
-msgstr ""
+msgstr "Подобни песни"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1127
 msgid "Links"
-msgstr ""
+msgstr "Връзки"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1213
 msgid "Invalid search"
-msgstr ""
+msgstr "Невалидно търсене"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1265
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
 msgstr ""
+"Само първият %i резутат е показан, посочете по точно условие за търсене."
 
 #. The label
 #: ../src/browsers/playlist3-metadata-browser.c:1321
 msgid "Find Artist:"
-msgstr ""
+msgstr "Намери изпълнител:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1482
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>Жанр: </b>"
+msgstr[1] "<b>Жанрове: </b>"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1497
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<b>Дата: </b>"
+msgstr[1] "<b>Дати: </b>"
 
 #. *
 #. * Artist Information Text view
@@ -1428,192 +1476,192 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
-msgstr ""
+msgstr "Информация за изпълнител:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1570
 msgid "Artist information"
-msgstr ""
+msgstr "Информация за изпълнител"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1595
 msgid "Albums"
-msgstr ""
+msgstr "Албуми"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1642
 msgid "Similar Artists"
-msgstr ""
+msgstr "Подобни изпълнители"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
-msgstr ""
+msgstr "Информация за албум:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1910
 msgid "Album information"
-msgstr ""
+msgstr "Информация за албум"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2032
 #: ../src/browsers/playlist3-metadata-browser.c:2336
 msgid "Tracks"
-msgstr ""
+msgstr "Песни"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
-msgstr ""
+msgstr "Браузър за метаданни"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
-msgstr ""
+msgstr "Покажи песен, която се просвирва в момента"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2436
 msgid "kbit/sec"
-msgstr ""
+msgstr "кбит/сек"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2442
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2443
 msgid "bits"
-msgstr ""
+msgstr "бита"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2444
 msgid "channels"
-msgstr ""
+msgstr "канали"
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:843
 msgid "Playlist Editor"
-msgstr ""
+msgstr "Редактор на списъци с песни"
 
 #: ../src/browsers/playlist3-playlist-editor.c:467
 msgid "New playlist"
-msgstr ""
+msgstr "Нов списък с песни"
 
 #: ../src/browsers/playlist3-playlist-editor.c:506
 msgid "Rename Playlist"
-msgstr ""
+msgstr "Преименуване на списъка"
 
 #. delete
 #: ../src/browsers/playlist3-playlist-editor.c:513
 #: ../src/browsers/playlist3-playlist-editor.c:645
 msgid "Rename"
-msgstr ""
+msgstr "Преименуване"
 
 #. Add
 #: ../src/browsers/playlist3-playlist-editor.c:806
 msgid "Add to playlist"
-msgstr ""
+msgstr "Добави към списъка с песни"
 
 #: ../src/browsers/playlist3-tag2-browser.c:102
 msgid "Tag based browser"
-msgstr ""
+msgstr "Браузър за тагове"
 
 #: ../src/browsers/playlist3-tag2-browser.c:1724
 msgid "Reset browser"
-msgstr ""
+msgstr "Върни браузъра в начално състояние"
 
 #: ../src/egg/eggtrayicon.c:133
 msgid "Orientation"
-msgstr ""
+msgstr "Ориентация"
 
 #: ../src/egg/eggtrayicon.c:134
 msgid "The orientation of the tray."
-msgstr ""
+msgstr "Ориентацията на областта за уведомяване."
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:65
 msgid "Markup"
-msgstr ""
+msgstr "Маркиране"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:68
 #: ../src/gob/gmpc-mpddata-treeview.gob:598
 msgid "Title"
-msgstr ""
+msgstr "Заглавие"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:69
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:76
 #: ../src/gob/gmpc-mpddata-treeview.gob:661
 msgid "Duration"
-msgstr ""
+msgstr "Продължителност"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Disc"
-msgstr ""
+msgstr "Диск"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Comment"
-msgstr ""
+msgstr "Коментар"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:79
 msgid "Icon Id"
-msgstr ""
+msgstr "ID на икона"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:80
 msgid "Position"
-msgstr ""
+msgstr "Позиция"
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:743
 msgid "Tools"
-msgstr ""
+msgstr "Инструменти"
 
 #: ../src/gob/gmpc-profiles.gob:72
 msgid "Added profile"
-msgstr ""
+msgstr "Профилът е добавен"
 
 #: ../src/gob/gmpc-profiles.gob:80
 msgid "Removed profile"
-msgstr ""
+msgstr "Профилът е премахнат"
 
 #: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:737
 msgid "Refetch"
-msgstr ""
+msgstr "Свали отново"
 
 #: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:742
 msgid "Select file"
-msgstr ""
+msgstr "Избор на файл"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Failed to open file:"
-msgstr ""
+msgstr "Файлът не може да бъде прочетен."
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "because of encoding issues"
-msgstr ""
+msgstr "заради проблем с кодовата таблица"
 
 #: ../src/gob/gmpc-meta-text-view.gob:172
 msgid "Fetching Lyric"
-msgstr ""
+msgstr "Търсена на текст"
 
 #: ../src/gob/gmpc-meta-text-view.gob:176
 msgid "Fetching Artist Info"
-msgstr ""
+msgstr "Търсене на информация за изпълнителя"
 
 #: ../src/gob/gmpc-meta-text-view.gob:180
 msgid "Fetching Album Info"
-msgstr ""
+msgstr "Търсене на информация за албума"
 
 #: ../src/gob/gmpc-meta-text-view.gob:188
 msgid "Not Available"
-msgstr ""
+msgstr "Недостъпен"
 
 #: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:773
 msgid "Select File"
-msgstr ""
+msgstr "Избиране на файл"
 
 #: ../src/gob/gmpc-meta-text-view.gob:253
 msgid "Text Document"
@@ -1621,12 +1669,12 @@ msgstr "Текстов документ"
 
 #: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:783
 msgid "All"
-msgstr ""
+msgstr "Всичко"
 
 #: ../src/gob/gmpc-metaimage.gob:778
 msgid "Images"
-msgstr ""
+msgstr "Изображения"
 
 #: ../src/gob/gmpc-stats-label.gob:135
 msgid "Loading"
-msgstr ""
+msgstr "Зареждане"

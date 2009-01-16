@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-12 03:09+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"PO-Revision-Date: 2009-01-10 16:57+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -196,14 +196,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--version"
@@ -214,7 +214,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -222,49 +222,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--help"
@@ -568,15 +568,12 @@ msgstr ""
 "setările dumneavoastră sunt corecte."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Mapări duplicate detectate</b>\n"
-"\n"
-"%s este deja mapată pentru %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -830,7 +827,7 @@ msgstr "S-a adăugat un flux"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Introduceți o adresă"
@@ -843,7 +840,7 @@ msgstr "Eșec la deschiderea adresei: „%s”"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Eșec la analiza legăturii către lista de redare"
@@ -858,7 +855,7 @@ msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -877,7 +874,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -902,6 +899,11 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Alexandru Szasz https://launchpad.net/~alexxed\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Alexandru Szasz https://launchpad.net/~alexxed\n"
+"  Licaon https://launchpad.net/~licaon\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "\n"
 "Launchpad Contributions:\n"
@@ -1046,9 +1048,8 @@ msgid "Show buttons instead of dropdown in collapsed view"
 msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:9
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Arată melodia"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stop playing on exit"
@@ -1296,9 +1297,8 @@ msgstr ""
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Coadă de redare"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1306,9 +1306,8 @@ msgid "Search"
 msgstr "Caută"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Navigator de fișiere"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1322,7 +1321,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1477,7 +1476,7 @@ msgstr[2] "<b>Date: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr "Despre artist:"
@@ -1496,7 +1495,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr "Despre album:"
@@ -1512,7 +1511,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1520,7 +1519,7 @@ msgstr "Navigator de metadate"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Arată melodia curentă"
@@ -1680,15 +1679,6 @@ msgstr "Imagini"
 msgid "Loading"
 msgstr ""
 
-#~ msgid "And"
-#~ msgstr "Și"
-
-#~ msgid "Or"
-#~ msgstr "Sau"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "Caută în coada de _redare curentă"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1702,8 +1692,8 @@ msgstr ""
 #~ msgstr "<b>Sortează după:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Navigatoarele de etichete configurate vor apărea "
 #~ "doar cu versiunea mpd 0.12 sau mai nouă.</i></span>"
@@ -1768,27 +1758,10 @@ msgstr ""
 #~ "erori\n"
 #~ "nimic"
 
-#~ msgid "New accelerator..."
-#~ msgstr "Accelerator nou..."
-
-#~ msgid "Accelerator key"
-#~ msgstr "Combinație de taste"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Modificatori pentru combinațiile de taste"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Cod-cheie accelerator"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Mod accelerator"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "Tipul combinației de taste."
-
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Clientul Gnome de ascultat muzică\n"
 
@@ -1812,8 +1785,17 @@ msgstr ""
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>Clientul Gnome de ascultat muzică</span>"
 
+#~ msgid "And"
+#~ msgstr "Și"
+
+#~ msgid "Or"
+#~ msgstr "Sau"
+
 #~ msgid "<span size='xx-large' weight='bold'>Search</span>"
 #~ msgstr "<span size='xx-large' weight='bold'>Căutare</span>"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "Caută în coada de _redare curentă"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Artist:</b>"
@@ -1877,6 +1859,24 @@ msgstr ""
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Dosar:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Accelerator nou..."
+
+#~ msgid "Accelerator key"
+#~ msgstr "Combinație de taste"
+
+#~ msgid "Accelerator modifiers"
+#~ msgstr "Modificatori pentru combinațiile de taste"
+
+#~ msgid "Accelerator keycode"
+#~ msgstr "Cod-cheie accelerator"
+
+#~ msgid "Accel Mode"
+#~ msgstr "Mod accelerator"
+
+#~ msgid "The type of accelerator."
+#~ msgstr "Tipul combinației de taste."
 
 #~ msgid "<b>Title:</b>"
 #~ msgstr "<b>Titlu:</b>"

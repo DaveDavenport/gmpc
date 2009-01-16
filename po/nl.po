@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-12 03:09+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"PO-Revision-Date: 2009-01-10 16:57+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "Poort:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr ""
@@ -213,7 +213,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr ""
@@ -221,49 +221,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr ""
@@ -559,15 +559,12 @@ msgid ""
 msgstr ""
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Dubbele toewijzing gevonden</b>\n"
-"\n"
-"%s is already mapped to %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -813,7 +810,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Voer een url in"
@@ -826,7 +823,7 @@ msgstr "Kon geen contact krijgen met: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -841,7 +838,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -858,7 +855,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -896,6 +893,10 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/password-dialog.ui.h:1
@@ -911,9 +912,8 @@ msgid "_Save password"
 msgstr "_Sla wachtwoord op"
 
 #: ../glade/preferences-connection.ui.h:1
-#, fuzzy
 msgid "<b>Profile:</b>"
-msgstr "<b>Overvloeiing:</b>"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "Conn_ect"
@@ -958,9 +958,8 @@ msgid "<b>Example:</b>"
 msgstr "<b>Voorbeeld:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
-#, fuzzy
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr "<span size=\"xx-large\"><b>Plug-ins</b></span>"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "A_lbum"
@@ -995,14 +994,12 @@ msgid "example"
 msgstr "voorbeeld"
 
 #: ../glade/preferences-playlist.ui.h:1
-#, fuzzy
 msgid "<b>Main:</b>"
-msgstr "<b>Naam:</b>"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:2
-#, fuzzy
 msgid "<b>Playlist:</b>"
-msgstr "<b>Pad:</b>"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "<b>Song Markup</b>"
@@ -1033,9 +1030,8 @@ msgid "Show songlist tooltip"
 msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
-#, fuzzy
 msgid "Stop playing on exit"
-msgstr "Spring naar huidig afgespeelde nummer"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:11
 msgid "Stylize album covers"
@@ -1276,9 +1272,8 @@ msgstr ""
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Zoek in de huidige afs_peellijst"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1286,9 +1281,8 @@ msgid "Search"
 msgstr "Zoeken"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Bestandsbrowser"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1302,7 +1296,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1453,7 +1447,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr ""
@@ -1472,7 +1466,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr ""
@@ -1488,7 +1482,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1496,7 +1490,7 @@ msgstr "Metadatabrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Laat huidige nummer zien"
@@ -1656,12 +1650,6 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#~ msgid "And"
-#~ msgstr "En"
-
-#~ msgid "Or"
-#~ msgstr "Of"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1672,8 +1660,8 @@ msgstr ""
 #~ msgstr "<b>Sorteer op:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>De geconfigureerde tagbrowser zal alleen worden "
 #~ "gebruikt met Mpd versie 0.12 of hoger.</i></span>"
@@ -1727,24 +1715,6 @@ msgstr ""
 #~ msgid "_Reconnect"
 #~ msgstr "_Herverbinden"
 
-#~ msgid "New accelerator..."
-#~ msgstr "Nieuwe sneltoets..."
-
-#~ msgid "Accelerator key"
-#~ msgstr "Sneltoets"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Sneltoets-optietoetsen"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Sneltoets-waarde"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Sneltoetsmodus"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "Het soort sneltoets."
-
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Probeer gmpc uit te voeren met een verkeerde versie van libmpd"
 
@@ -1761,6 +1731,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Een nieuwe metadata plug-in was toegevoegd, gmpc zal nu alle missende "
 #~ "metadata van het cache leegmaken"
+
+#~ msgid "And"
+#~ msgstr "En"
+
+#~ msgid "Or"
+#~ msgstr "Of"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Artiest:</b>"
@@ -1788,6 +1764,24 @@ msgstr ""
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Folder:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Nieuwe sneltoets..."
+
+#~ msgid "Accelerator key"
+#~ msgstr "Sneltoets"
+
+#~ msgid "Accelerator modifiers"
+#~ msgstr "Sneltoets-optietoetsen"
+
+#~ msgid "Accelerator keycode"
+#~ msgstr "Sneltoets-waarde"
+
+#~ msgid "Accel Mode"
+#~ msgstr "Sneltoetsmodus"
+
+#~ msgid "The type of accelerator."
+#~ msgstr "Het soort sneltoets."
 
 #~ msgid "Center opened folder"
 #~ msgstr "Spring naar geopende folder"
@@ -1828,11 +1822,10 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>Pas nadat u herverbonden heeft, worden "
-#~ "veranderingen toegpast</i></span>"
+#~ "<span size=\"small\"><i>Pas nadat u herverbonden heeft, worden veranderingen "
+#~ "toegpast</i></span>"
 
 #~ msgid "_Current Song Information"
 #~ msgstr "_Informatie huidig nummer"
@@ -1952,16 +1945,15 @@ msgstr ""
 #~ msgstr "_Stop"
 
 #~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
+#~ "<span size=\"x-small\"><i>Enter a local or remote stream or "
+#~ "playlist</i></span>"
 #~ msgstr ""
 #~ "<span size=\"x-small\"><i>Voer een lokale of niet-lokale stream of "
 #~ "afspeellijst in</i></span>"
 
 #~ msgid "You can drop a link or file directly from a browser on this window."
 #~ msgstr ""
-#~ "U kunt een link of bestand vanuit een browser direct naar dit venster "
-#~ "slepen,"
+#~ "U kunt een link of bestand vanuit een browser direct naar dit venster slepen,"
 
 #~ msgid "Add Online Stream list"
 #~ msgstr "Voeg Online Stream lijst toe"

@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-12 03:09+0100\n"
-"PO-Revision-Date: 2009-01-07 19:21+0000\n"
-"Last-Translator: MarfeuS <matrix83@inbox.ru>\n"
+"PO-Revision-Date: 2009-01-16 17:21+0000\n"
+"Last-Translator: Max Habets <Unknown>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -79,7 +79,7 @@ msgstr "Стоп"
 
 #: ../glade/playlist3.glade.h:12
 msgid "Visit website"
-msgstr ""
+msgstr "Посетить вебсайт"
 
 #: ../glade/playlist3.glade.h:13
 msgid "_Collapse Interface"
@@ -144,11 +144,11 @@ msgstr "gmpc - Менеджер списка воспроизведения"
 
 #: ../src/edit_markup.c:39
 msgid "/path/to/file_name.mp3"
-msgstr ""
+msgstr "/path/to/file_name.mp3"
 
 #: ../src/edit_markup.c:40
 msgid "Jonny Singer"
-msgstr ""
+msgstr "Jonny Singer"
 
 #: ../src/edit_markup.c:41
 msgid "Sing or Swing you want"
@@ -168,7 +168,7 @@ msgstr "2 Февраля 2006"
 
 #: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
-msgstr ""
+msgstr "Сервер потоков MPD"
 
 #: ../src/gmpc_easy_download.c:213 ../src/gmpc_easy_download.c:214
 #: ../src/gmpc_easy_download.c:269
@@ -196,14 +196,14 @@ msgstr "Порт:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr ""
@@ -214,7 +214,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr ""
@@ -222,49 +222,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr ""
@@ -570,15 +570,12 @@ msgstr ""
 "корректны."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Обнаружено дублирующаяся связка</b>\n"
-"\n"
-"%s уже связано с %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -830,7 +827,7 @@ msgstr "Добавлен 1 поток"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Введите URL"
@@ -843,7 +840,7 @@ msgstr "Не удалось связаться с URL: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -858,7 +855,7 @@ msgstr "Уведомление"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -875,7 +872,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -928,6 +925,15 @@ msgstr ""
 "  MaxStotsky https://launchpad.net/~maxstotsky\n"
 "  Old Snake https://launchpad.net/~snoopy-rastrnet\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  ivvmm https://launchpad.net/~unachievable\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Andrew V. Sichevoi https://launchpad.net/~a-sichevoi+ubuntu\n"
+"  Max Habets https://launchpad.net/~sky3\n"
+"  MaxStotsky https://launchpad.net/~maxstotsky\n"
+"  Old Snake https://launchpad.net/~snoopy-rastrnet\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Sergei Aljoshin https://launchpad.net/~marfeus\n"
 "  ivvmm https://launchpad.net/~unachievable"
 
 #: ../glade/password-dialog.ui.h:1
@@ -1057,9 +1063,8 @@ msgid "Show buttons instead of dropdown in collapsed view"
 msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:9
-#, fuzzy
 msgid "Show songlist tooltip"
-msgstr "Показать звуковую дорожку"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stop playing on exit"
@@ -1307,9 +1312,8 @@ msgstr "Запрос"
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "Очередь воспроизведения"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1317,9 +1321,8 @@ msgid "Search"
 msgstr "Поиск"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Просмотр файлов"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1333,7 +1336,7 @@ msgstr "Загрузка..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1486,7 +1489,7 @@ msgstr[2] "<b>Даты: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr "Информация о исполнителе:"
@@ -1505,7 +1508,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr "Информация об альбоме:"
@@ -1521,7 +1524,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1529,7 +1532,7 @@ msgstr "Просмотр метаданных"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr "Показать информацию о текущей звуковой дорожке"
@@ -1689,15 +1692,6 @@ msgstr "Изображения"
 msgid "Loading"
 msgstr "Загрузка"
 
-#~ msgid "And"
-#~ msgstr "И"
-
-#~ msgid "Or"
-#~ msgstr "ИЛИ"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "Искать в текущей очереди _воспроизведения"
-
 #~ msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
 #~ msgstr "<b><span size=\"x-large\">Произвошла ошибка</span></b>"
 
@@ -1780,6 +1774,15 @@ msgstr "Загрузка"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>Gnome Music Player Client</span>"
+
+#~ msgid "And"
+#~ msgstr "И"
+
+#~ msgid "Or"
+#~ msgstr "ИЛИ"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "Искать в текущей очереди _воспроизведения"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>Исполнитель:</b>"
@@ -1899,8 +1902,7 @@ msgstr "Загрузка"
 #~ msgid "Pos"
 #~ msgstr "Поз."
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Эти изменения прийдут в силу после "
 #~ "пересоединения</i></span>"

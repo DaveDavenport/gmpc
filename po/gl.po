@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-12 03:08+0100\n"
-"PO-Revision-Date: 2009-01-07 19:09+0000\n"
+"POT-Creation-Date: 2009-01-12 03:09+0100\n"
+"PO-Revision-Date: 2009-01-10 16:57+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Galician\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -196,14 +196,14 @@ msgstr "Porto:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--version"
@@ -214,7 +214,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr ""
@@ -222,49 +222,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--help"
@@ -305,7 +305,8 @@ msgstr "Erro ao configurar libmpd"
 
 #: ../src/main.c:1084
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
+msgstr ""
+"O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
 #: ../src/main.c:1106
 #, c-format
@@ -560,15 +561,12 @@ msgid ""
 msgstr ""
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>Detectada assignaçom duplicada</b>\n"
-"\n"
-"%s já está assignada a %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -813,7 +811,7 @@ msgstr "1 stream engadido"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Introduzir umha URL"
@@ -826,7 +824,7 @@ msgstr "Nom se puido ligar à URL: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -841,7 +839,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -858,7 +856,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -895,6 +893,10 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Johám-Luís Miguéns Vila https://launchpad.net/~galiza-ceive\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Johám-Luís Miguéns Vila https://launchpad.net/~galiza-ceive\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow"
 
 #: ../glade/password-dialog.ui.h:1
@@ -910,9 +912,8 @@ msgid "_Save password"
 msgstr "_Guardar palavra-chave"
 
 #: ../glade/preferences-connection.ui.h:1
-#, fuzzy
 msgid "<b>Profile:</b>"
-msgstr "<b>Esvaecimento:</b>"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "Conn_ect"
@@ -1029,9 +1030,8 @@ msgid "Show songlist tooltip"
 msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
-#, fuzzy
 msgid "Stop playing on exit"
-msgstr "Centrar a cançom a se ouvir"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:11
 msgid "Stylize album covers"
@@ -1106,9 +1106,8 @@ msgid "gmpc - Configuration"
 msgstr "gmpc - Configuraçom"
 
 #: ../glade/playlist-message-window.ui.h:1
-#, fuzzy
 msgid "Messages"
-msgstr "Mensagem de erro"
+msgstr ""
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
@@ -1116,7 +1115,8 @@ msgstr "<introduz o nome da lista>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>A lista de reproduçom já existe.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>A lista de reproduçom já existe.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1281,9 +1281,8 @@ msgid "Search"
 msgstr "Procurar"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "Navegador de ficheiros"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1297,7 +1296,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1448,7 +1447,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr ""
@@ -1467,7 +1466,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr ""
@@ -1483,7 +1482,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1491,7 +1490,7 @@ msgstr "Navegador de metadatos"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr ""
@@ -1664,8 +1663,8 @@ msgstr ""
 #~ msgstr "<b>Ordenar por:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Os navegadores de etiquetas configurados só serám "
 #~ "\"\n"
@@ -1692,24 +1691,6 @@ msgstr ""
 
 #~ msgid "_Reconnect"
 #~ msgstr "_Reconectar"
-
-#~ msgid "New accelerator..."
-#~ msgstr "Novo atalho..."
-
-#~ msgid "Accelerator key"
-#~ msgstr "Tecla de acesso rápido"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Modificadores da tecla de acesso rápido"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Código (keycode) da tecla de acesso rápido"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Modo de acesso rápido"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "O tipo de tecla de acesso rápido."
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Estás a tentar executar o gmpc com a versom incorrecta de libmpd."
@@ -1760,6 +1741,24 @@ msgstr ""
 
 #~ msgid "<b>Directory:</b>"
 #~ msgstr "<b>Cartafol:</b>"
+
+#~ msgid "New accelerator..."
+#~ msgstr "Novo atalho..."
+
+#~ msgid "Accelerator key"
+#~ msgstr "Tecla de acesso rápido"
+
+#~ msgid "Accelerator modifiers"
+#~ msgstr "Modificadores da tecla de acesso rápido"
+
+#~ msgid "Accelerator keycode"
+#~ msgstr "Código (keycode) da tecla de acesso rápido"
+
+#~ msgid "Accel Mode"
+#~ msgstr "Modo de acesso rápido"
+
+#~ msgid "The type of accelerator."
+#~ msgstr "O tipo de tecla de acesso rápido."
 
 #~ msgid "Center opened folder"
 #~ msgstr "Centrar o cartafol aberto"
@@ -1821,8 +1820,7 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Posiçom"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>As mudanças activarám-se ao reconectar</i></span>"
 
@@ -2001,16 +1999,16 @@ msgstr ""
 #~ msgstr "*"
 
 #~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
+#~ "<span size=\"x-small\"><i>Enter a local or remote stream or "
+#~ "playlist</i></span>"
 #~ msgstr ""
-#~ "<span size=\"x-small\"><i>Introduz um stream local ou remoto ou umha "
-#~ "lista de reproduçom</i></span>\""
+#~ "<span size=\"x-small\"><i>Introduz um stream local ou remoto ou umha lista "
+#~ "de reproduçom</i></span>\""
 
 #~ msgid "You can drop a link or file directly from a browser on this window."
 #~ msgstr ""
-#~ "Podes arrastar um enlace ou ficheiro directamente dende un navegador "
-#~ "nesta janela."
+#~ "Podes arrastar um enlace ou ficheiro directamente dende un navegador nesta "
+#~ "janela."
 
 #~ msgid "Add Online Stream list"
 #~ msgstr "Engadir umha lista de streaming online"

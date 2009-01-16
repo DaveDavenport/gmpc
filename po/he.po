@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-12 03:08+0100\n"
-"PO-Revision-Date: 2009-01-07 19:27+0000\n"
+"POT-Creation-Date: 2009-01-12 03:09+0100\n"
+"PO-Revision-Date: 2009-01-10 16:57+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-10 13:12+0000\n"
+"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "פתחה:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:295
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:301
 msgid "--version"
 msgstr "--version"
@@ -213,7 +213,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:317
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -221,49 +221,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:325
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:332
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:346
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:353
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:360
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:368
 msgid "--help"
 msgstr "--help"
@@ -565,15 +565,12 @@ msgstr ""
 "שהגדרותיך נכונות כעת."
 
 #: ../src/mm-keys.c:618
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Duplicate mapping detected\n"
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"<b>זוהה מיפוי כפול</b>\n"
-"\n"
-"%s כבר ממופה אל %s"
 
 #: ../src/mm-keys.c:647
 #, c-format
@@ -824,7 +821,7 @@ msgstr "נוסף תזרים 1"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "הזן כתובת"
@@ -837,7 +834,7 @@ msgstr "כשל ביצירת קשר עם הכתובת: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "כשל בניתוח הקישור אל רשימת ההשמעה"
@@ -852,7 +849,7 @@ msgstr "דיווחים"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -871,7 +868,7 @@ msgstr "הגדרת חיבור"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -891,6 +888,9 @@ msgstr "כל הזכויות שמורות 2003-2007 Qball Cow"
 #: ../glade/aboutdialog.ui.h:2
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Yaron https://launchpad.net/~sh-yaron\n"
+"\n"
 "Launchpad Contributions:\n"
 "  Yaron https://launchpad.net/~sh-yaron\n"
 "\n"
@@ -1275,9 +1275,8 @@ msgstr ""
 
 #. search in playlist
 #: ../src/browsers/playlist3-find2-browser.c:171
-#, fuzzy
 msgid "in _play queue"
-msgstr "תור הנגינה"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:219
 #: ../src/browsers/playlist3-find2-browser.c:620
@@ -1285,9 +1284,8 @@ msgid "Search"
 msgstr "חיפוש"
 
 #: ../src/browsers/playlist3-find2-browser.c:719
-#, fuzzy
 msgid "Search Browser"
-msgstr "סייר הקבצים"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1301,7 +1299,7 @@ msgstr "מאחזר..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:714
 #: ../src/browsers/playlist3-metadata-browser.c:2386
@@ -1452,7 +1450,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist info:"
 msgstr ""
@@ -1471,7 +1469,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1905
 msgid "Album info:"
 msgstr ""
@@ -1487,7 +1485,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2230
 #: ../src/browsers/playlist3-metadata-browser.c:2551
 msgid "Metadata Browser"
@@ -1495,7 +1493,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2246
 msgid "Show Current Song"
 msgstr ""
@@ -1655,15 +1653,6 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#~ msgid "And"
-#~ msgstr "וגם"
-
-#~ msgid "Or"
-#~ msgstr "או"
-
-#~ msgid "Search in current _play queue"
-#~ msgstr "חפש בתור ה_נגינה הנוכחי"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1677,8 +1666,8 @@ msgstr ""
 #~ msgstr "<b>סידור לפי:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>תגיות העיון המוגדרות יוצגו רק עם mpd גירסה 0.12 "
 #~ "ומעלה.</i></span>"
@@ -1746,6 +1735,7 @@ msgstr ""
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>מתווך</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "לקוח נגן המוסיקה של GNOME\n"
 
@@ -1764,8 +1754,17 @@ msgstr ""
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>לקוח נגן המוסיקה של GNOME</span>"
 
+#~ msgid "And"
+#~ msgstr "וגם"
+
+#~ msgid "Or"
+#~ msgstr "או"
+
 #~ msgid "<span size='xx-large' weight='bold'>Search</span>"
 #~ msgstr "<span size='xx-large' weight='bold'>חיפוש</span>"
+
+#~ msgid "Search in current _play queue"
+#~ msgstr "חפש בתור ה_נגינה הנוכחי"
 
 #~ msgid "<b>Artist:</b>"
 #~ msgstr "<b>אמן:</b>"
