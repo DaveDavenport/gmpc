@@ -110,10 +110,10 @@ public class Gmpc.Image : Gtk.EventBox {
 		{
 			fade -= 0.10;
 			if(fade <= 0.0){
+                fade=0;
 				this.cover = this.temp;
 				this.cover_border = this.temp_border;
 				this.temp = null;
-
 				this.queue_draw();
                 fade_timeout = 0;
 				return false;
