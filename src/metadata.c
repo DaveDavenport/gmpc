@@ -292,7 +292,6 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 {
     mpd_Song *edited = rewrite_mpd_song(song, type);
     meta_data_set_cache_real(edited, type, result, path);
-    /
     if(edited->artist)
     {
         if(strcmp(edited->artist, "Various Artists")!=0)
@@ -612,7 +611,6 @@ static void meta_data_retrieve_thread(void)
 		 * update cache 
 		 */
 		meta_data_set_cache_real(data->edited, data->type&META_QUERY_DATA_TYPES, data->result, data->result_path);
-        /
         if(data->edited->artist)
         {
                 if(strcmp(data->edited->artist, "Various Artists")!=0)
