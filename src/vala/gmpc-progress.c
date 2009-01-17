@@ -176,7 +176,7 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, c
 		perc_w = w;
 	}
 	if (perc_w > 0) {
-		gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_PRELIGHT, GTK_SHADOW_IN, &(*event).area, (GtkWidget*) self->priv->bar, "bar", x, y, perc_w, h);
+		gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_PRELIGHT, GTK_SHADOW_OUT, &(*event).area, (GtkWidget*) self->priv->bar, "bar", x, y, perc_w, h);
 	}
 	if (gmpc_progress_get_hide_text (self) == FALSE) {
 		gint e_hour;
@@ -346,6 +346,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		g_object_set ((GtkWidget*) self, "app-paintable", TRUE, NULL);
 		_tmp0 = NULL;
 		self->priv->bar = (_tmp0 = g_object_ref_sink ((GtkProgressBar*) gtk_progress_bar_new ()), (self->priv->bar == NULL) ? NULL : (self->priv->bar = (g_object_unref (self->priv->bar), NULL)), _tmp0);
+		gtk_widget_set_parent ((GtkWidget*) self->priv->bar, (GtkWidget*) self);
 		g_signal_connect_object ((GtkWidget*) self, "expose-event", (GCallback) _gmpc_progress_on_expose_gtk_widget_expose_event, self, 0);
 	}
 	return obj;

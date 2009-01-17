@@ -71,6 +71,7 @@ public class Gmpc.Progress : Gtk.EventBox
         this.app_paintable = true;
 
         this.bar = new Gtk.ProgressBar();
+        this.bar.set_parent(this);
         this.expose_event += this.on_expose;
     }
     
@@ -149,7 +150,6 @@ public class Gmpc.Progress : Gtk.EventBox
                         */
         w = this.allocation.width; 
         h = this.allocation.height; 
-
         Gtk.paint_box (this.my_style,
                     event.window,
                     Gtk.StateType.NORMAL,Gtk.ShadowType.IN,
@@ -167,7 +167,7 @@ public class Gmpc.Progress : Gtk.EventBox
         if(perc_w > 0)
         {
             Gtk.paint_box (this.my_style,event.window,
-            Gtk.StateType.PRELIGHT,Gtk.ShadowType.IN,
+            Gtk.StateType.PRELIGHT,Gtk.ShadowType.OUT,
             event.area, this.bar,"bar",
             x,y,perc_w,h);
         }
