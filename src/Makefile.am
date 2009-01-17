@@ -36,6 +36,7 @@ gmpc_SOURCES=\
 	qlib/qasyncqueue.c\
 	bacon/bacon-message-connection.c\
 	advanced_search.c\
+	browsers/server-information.c\
 	edit_markup.c 
 
 if EGGTRAYICON

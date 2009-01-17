@@ -66,7 +66,7 @@ extern gmpcPlugin tray_icon2_plug;
 extern gmpcPlugin proxyplug;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin playlist_editor_plugin;
-
+extern gmpcPlugin statistics_plugin;
 /**
  * Global objects that give signals
  */
@@ -753,6 +753,8 @@ int main (int argc, char **argv)
     plugin_add(&metab_plugin,0);	
 	/* Playlist editor */
 	plugin_add(&playlist_editor_plugin,0);
+
+	plugin_add(&statistics_plugin,0);
 
     plugin_add(&metadata_plug,0);
     plugin_add(&proxyplug,0);

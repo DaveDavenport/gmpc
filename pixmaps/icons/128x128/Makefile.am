@@ -1,1 +1,1 @@
-SUBDIRS = status
+SUBDIRS = status categories

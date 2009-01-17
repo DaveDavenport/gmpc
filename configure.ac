@@ -363,10 +363,12 @@ pixmaps/icons/96x96/Makefile
 pixmaps/icons/96x96/status/Makefile
 pixmaps/icons/128x128/Makefile
 pixmaps/icons/128x128/status/Makefile
+pixmaps/icons/128x128/categories/Makefile
 pixmaps/icons/scalable/Makefile
 pixmaps/icons/scalable/actions/Makefile
 pixmaps/icons/scalable/status/Makefile
 pixmaps/icons/scalable/apps/Makefile
+pixmaps/icons/scalable/categories/Makefile
 ])
 echo ""
 echo ""
