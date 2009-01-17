@@ -23,12 +23,13 @@ using Gdk;
 using Cairo;
 
 
-public class Gmpc.Progress : Gtk.EventBox 
+public class Gmpc.Progress : Gtk.EventBox
 {
     private uint total              = 0;
     private uint current            = 0;
     private bool _do_countdown      = false;
     public bool _hide_text          = false;
+    private Style my_style = null;
 
     public bool hide_text {
         get { 
@@ -48,8 +49,23 @@ public class Gmpc.Progress : Gtk.EventBox
             this.redraw();
         }
     }
+    ~Progress() {
+        if(this.my_style != null)
+            this.my_style.detach();
+    }
+    public override void style_set (Gtk.Style? old_style)
+    {
+        /* Reset it, so it gets reloaded on redraw */
+        if(this.my_style != null) {
+            this.my_style.detach();
+        }
+        this.my_style = null;
+    }
+
+
     /* Construct function */
     construct {
+        this.add_events((int)Gdk.EventMask.EXPOSURE_MASK);
         this.app_paintable = true;
         this.expose_event += this.on_expose;
     }
@@ -71,8 +87,6 @@ public class Gmpc.Progress : Gtk.EventBox
             requisition.width = width / Pango.SCALE + 6;
             requisition.height = height / Pango.SCALE + 6;
         }
-  //      this.cell.width = requisition.width;
-    //    this.cell.height = requisition.height;
     }
 
     private void redraw ()
@@ -85,12 +99,15 @@ public class Gmpc.Progress : Gtk.EventBox
 
     private bool on_expose (Progress pb, Gdk.EventExpose event) 
     {
-        Gdk.GC gc;
         Pango.Rectangle logical_rect;
         int x, y, w, h, perc_w, pos;
         Gdk.Rectangle clip = {0,0,0,0};
 
-        gc = new Gdk.GC(event.window);
+        if(this.my_style == null){
+            this.my_style = Gtk.rc_get_style_by_paths(this.get_settings(), null, null, typeof(ProgressBar));
+            this.my_style = this.my_style.attach(this.window);
+        }
+
 
         x = 0;
         y = 0; 
@@ -98,23 +115,20 @@ public class Gmpc.Progress : Gtk.EventBox
         w = pb.allocation.width; 
         h = pb.allocation.height; 
 
-        var style = pb.style;//this.my_style;
-        gc.set_rgb_fg_color(style.fg[Gtk.StateType.NORMAL]);
 
-        Gtk.paint_box (style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"through",x,y,w,h);
+        Gtk.paint_box (this.my_style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"through",x,y,w,h);
 
-        x += style.xthickness;
-        y += style.ythickness;
-        w -= style.xthickness * 2;
-        h -= style.ythickness * 2;
-        gc.set_rgb_fg_color (style.bg[Gtk.StateType.SELECTED]);
+        x += this.my_style.xthickness;
+        y += this.my_style.ythickness;
+        w -= this.my_style.xthickness * 2;
+        h -= this.my_style.ythickness * 2;
         perc_w = 0;
         if(this.total > 0) 
             perc_w =(int) (w * (this.current/(double)this.total));
         if(perc_w > w) perc_w = w ;
         if(perc_w > 0)
         {
-            Gtk.paint_box (style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"bar",x,y,perc_w,h);
+            Gtk.paint_box (this.my_style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"bar",x,y,perc_w,h);
         }
         if(this.hide_text == false)
         {
@@ -159,7 +173,7 @@ public class Gmpc.Progress : Gtk.EventBox
             clip.width =  perc_w;
             clip.height = h; 
 
-            Gtk.paint_layout (style, window, 
+            Gtk.paint_layout (this.my_style, window, 
                     Gtk.StateType.SELECTED,
                     false, clip, pb, "progressbar",
                     x + pos, y + (h - logical_rect.height)/2,
@@ -168,7 +182,7 @@ public class Gmpc.Progress : Gtk.EventBox
             clip.x = clip.x + clip.width;
             clip.width = w - clip.width;
 
-            Gtk.paint_layout (style, window, 
+            Gtk.paint_layout (this.my_style, window, 
                     Gtk.StateType.NORMAL,
                     false, clip, pb, "progressbar",
                     x + pos, y + (h - logical_rect.height)/2,
