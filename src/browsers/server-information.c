@@ -18,6 +18,7 @@
 */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <config.h>
 #include "main.h"
 #include "plugin.h"
@@ -37,6 +38,7 @@ static void serverstats_connection_changed(MpdObj *mi, int connect,void *userdat
 static gchar * serverstats_format_time(unsigned long seconds);
 static void serverstats_browser_save_myself(void);
 static void serverstats_status_changed(MpdObj *mi, ChangedStatusType what, void *pointer);
+static int serverstats_add_go_menu(GtkWidget *menu);
 /**
  * Browser extention 
  */
@@ -48,6 +50,8 @@ gmpcPlBrowserPlugin serverstats_gbp = {
 	.selected = serverstats_selected,
 	/** unselected */
 	.unselected = serverstats_unselected,
+
+	.add_go_menu = serverstats_add_go_menu,
 };
 
 
@@ -56,9 +60,9 @@ gmpcPlBrowserPlugin serverstats_gbp = {
  */
 gmpcPlugin statistics_plugin = {
 	/* name */
-	.name = N_("Statistics"),
+	.name = N_("Information"),
 	/* version */
-	.version        = {0,1,2},
+	.version = {0,1,2},
 	/* type */
 	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
 	/* init function */
@@ -171,7 +175,7 @@ static void serverstats_add(GtkWidget *category_tree)
 	playlist3_insert_browser(&iter, pos);
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 
 			PL3_CAT_TYPE, statistics_plugin.id,
-			PL3_CAT_TITLE,"Server Statistics", 
+			PL3_CAT_TITLE,"Server Information", 
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "mpd",
 			PL3_CAT_PROC, TRUE,
@@ -435,7 +439,7 @@ static void serverstats_init()
     gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, TRUE, 0);
     label = gtk_label_new("");
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>", _("Server Statistics"));
+    markup = g_markup_printf_escaped("<span size='xx-large' weight='bold'>%s</span>", _("Server Information"));
     gtk_label_set_markup(GTK_LABEL(label),markup);
     g_free(markup);
     gtk_box_pack_start(GTK_BOX(hbox),label, FALSE, TRUE, 0);
@@ -451,7 +455,6 @@ static void serverstats_init()
     /**
      * Data list 
      */
-//    gtk_container_set_border_width(GTK_CONTAINER(serverstats_vbox), 6);
     table = gtk_table_new(SERVERSTATS_NUM_FIELDS+2, 2,FALSE);
     gtk_table_set_col_spacings(GTK_TABLE(table), 6);
     gtk_table_set_row_spacings(GTK_TABLE(table), 6);
@@ -611,10 +614,6 @@ static void serverstats_init()
             gtk_combo_box_append_text(GTK_COMBO_BOX(combo), mpdTagItemKeys[i]);
         }
 
-
-   //     gtk_box_pack_start(GTK_BOX(serverstats_vbox), combo,FALSE, TRUE,0);
-     //   gtk_widget_show_all(combo);
-        
         gtk_table_attach(GTK_TABLE(table),combo, 0,2,12,13,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
         gtk_widget_show(combo);
 
@@ -623,7 +622,6 @@ static void serverstats_init()
         g_signal_connect(G_OBJECT(cancel), "clicked", G_CALLBACK(cancel_clicked), NULL);
         gtk_box_pack_start(GTK_BOX(hbox), pb,TRUE, TRUE,0);
         gtk_box_pack_start(GTK_BOX(hbox), cancel,FALSE, TRUE,0);
-//        gtk_box_pack_start(GTK_BOX(serverstats_vbox), hbox,FALSE, TRUE,0);
 
         gtk_table_attach(GTK_TABLE(table),hbox, 0,2,13,14,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
         g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(serverstats_combo_changed), pb);
@@ -692,6 +690,8 @@ static void serverstats_unselected(GtkWidget *container)
         g_source_remove(timeout_source);
     timeout_source = 0;
     gtk_container_remove(GTK_CONTAINER(container),serverstats_sw);
+    gtk_widget_destroy(serverstats_sw);
+    serverstats_sw = NULL;
 }
 
 
@@ -733,7 +733,6 @@ static void serverstats_plugin_init(void)
 
 static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)
 {
-
     if(!connect && serverstats_tree)
     {
         GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(serverstats_tree));
@@ -746,7 +745,30 @@ static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata
 
 static void serverstats_status_changed(MpdObj *mi, ChangedStatusType what, void *pointer)
 {
-
-
 }
 
+static void serverstats_browser_activate(void)
+{
+    GtkTreeView *tree = playlist3_get_category_tree_view();
+    GtkTreePath *path = gtk_tree_row_reference_get_path(serverstats_ref); 
+    GtkTreeSelection *selec = gtk_tree_view_get_selection(tree);
+
+    if(path)
+    {
+        gtk_tree_selection_select_path(selec, path);
+        gtk_tree_path_free(path);
+    }
+}
+static int serverstats_add_go_menu(GtkWidget *menu)
+{
+    GtkWidget *item = NULL;
+
+    item = gtk_image_menu_item_new_with_label(_("Server Information"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+            gtk_image_new_from_icon_name("mpd", GTK_ICON_SIZE_MENU));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F6, 0, GTK_ACCEL_VISIBLE);
+    g_signal_connect(G_OBJECT(item), "activate", 
+            G_CALLBACK(serverstats_browser_activate), NULL);
+    return 1;
+}
