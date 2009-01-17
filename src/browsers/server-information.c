@@ -690,8 +690,6 @@ static void serverstats_unselected(GtkWidget *container)
         g_source_remove(timeout_source);
     timeout_source = 0;
     gtk_container_remove(GTK_CONTAINER(container),serverstats_sw);
-    gtk_widget_destroy(serverstats_sw);
-    serverstats_sw = NULL;
 }
 
 
