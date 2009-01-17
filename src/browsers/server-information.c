@@ -25,59 +25,7 @@
 #include "playlist3-messages.h"
 #include <libmpd/libmpd-internal.h>
 
-static void serverstats_set_enabled(int enabled);
-static int serverstats_get_enabled(void);
-static void serverstats_add(GtkWidget *category_tree);
-
-static void serverstats_selected(GtkWidget *container);
-
-static void serverstats_unselected(GtkWidget *container);
-
-static void serverstats_plugin_init(void);
-static void serverstats_connection_changed(MpdObj *mi, int connect,void *userdata);
-static gchar * serverstats_format_time(unsigned long seconds);
-static void serverstats_browser_save_myself(void);
-static void serverstats_status_changed(MpdObj *mi, ChangedStatusType what, void *pointer);
-static int serverstats_add_go_menu(GtkWidget *menu);
-/**
- * Browser extention 
- */
-
-gmpcPlBrowserPlugin serverstats_gbp = {
-	/** add */
-	.add = serverstats_add,
-	/** selected */
-	.selected = serverstats_selected,
-	/** unselected */
-	.unselected = serverstats_unselected,
-
-	.add_go_menu = serverstats_add_go_menu,
-};
-
-
-/** 
- * Define the plugin structure
- */
-gmpcPlugin statistics_plugin = {
-	/* name */
-	.name = N_("Information"),
-	/* version */
-	.version = {0,1,2},
-	/* type */
-	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
-	/* init function */
-	.init = serverstats_plugin_init,
-	/** playlist extention struct */
-	.browser = &serverstats_gbp,
-	/** Connection changed */
-	.mpd_connection_changed = serverstats_connection_changed,
-    .mpd_status_changed = serverstats_status_changed,
-	/** enable/disable */
-	.get_enabled = serverstats_get_enabled,
-	.set_enabled = serverstats_set_enabled,
-    /* Safe myself */
-    .save_yourself = serverstats_browser_save_myself
-};
+gmpcPlugin statistics_plugin;
 enum {
     SERVERSTATS_MPD_VERSION,
     SERVERSTATS_MPD_UPTIME,
@@ -90,6 +38,9 @@ enum {
     SERVERSTATS_MPD_TAG_TYPES,
     SERVERSTATS_NUM_FIELDS
 };
+
+static void serverstats_add(GtkWidget *category_tree);
+static gchar * serverstats_format_time(unsigned long seconds);
 static GtkTreeRowReference *serverstats_ref = NULL; 
 static GtkWidget *serverstats_sw= NULL, *serverstats_tree = NULL,*serverstats_combo = NULL;
 static GtkWidget *serverstats_labels[SERVERSTATS_NUM_FIELDS];
@@ -107,15 +58,11 @@ static int serverstats_get_enabled(void)
 static void serverstats_set_enabled(int enabled)
 {
 	cfg_set_single_value_as_int(config, "serverstats", "enable", enabled);
-	if(enabled)
-	{
-		if(serverstats_ref == NULL)
-		{
+	if(enabled) {
+		if(serverstats_ref == NULL) {
 			serverstats_add(GTK_WIDGET(playlist3_get_category_tree_view()));
 		}
-	}
-	else
-	{
+	} else {
 		GtkTreePath *path = gtk_tree_row_reference_get_path(serverstats_ref);
         GtkTreeModel *model = gtk_tree_row_reference_get_model(serverstats_ref);
 		if (path){
@@ -176,9 +123,7 @@ static void serverstats_add(GtkWidget *category_tree)
 	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 
 			PL3_CAT_TYPE, statistics_plugin.id,
 			PL3_CAT_TITLE,"Server Information", 
-			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "mpd",
-			PL3_CAT_PROC, TRUE,
 			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
 	/** 
 	 * remove odl reference if exists 
@@ -221,65 +166,65 @@ static void serverstats_clear()
 }
 static void serverstats_update()
 {
-  gchar **handlers = NULL;
-	gchar *value = NULL;
+    gchar **handlers = NULL;
+    gchar *value = NULL;
 
-	serverstats_clear();
-	if(!mpd_check_connected(connection))return;
-	mpd_stats_update(connection);
-	/** Version */
-	value = mpd_server_get_version(connection); 
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_VERSION]), value);
-	free(value);
-	/** Uptime  */
-	value = serverstats_format_time(mpd_stats_get_uptime(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_UPTIME]), value);
-	g_free(value);
-	/** Playtime*/
-	value = serverstats_format_time(mpd_stats_get_playtime(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_PLAYTIME]), value);
-	g_free(value);
-	/** DB Playtime*/
-	value = serverstats_format_time(mpd_stats_get_db_playtime(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_PLAYTIME]), value);
-	g_free(value);
-	/** DB ARTIST*/
-	value = g_strdup_printf("%i", mpd_stats_get_total_artists(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_ARTISTS]), value);
-	g_free(value);
-	/** DB ALBUMS*/
-	value = g_strdup_printf("%i", mpd_stats_get_total_albums(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_ALBUMS]), value);
-	g_free(value);
-	/** DB SONGS*/
-	value = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
-	gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_SONGS]), value);
-	g_free(value);
-	/** URL_HANDLERS*/
-  handlers = mpd_server_get_url_handlers(connection);
-  if(handlers)
-  {
-    value = g_strjoinv(",",handlers);
-    g_strfreev(handlers);
-    handlers = NULL;
-  }
-  else 
-    value = g_strdup("N/A");
-  gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_URLHANDLERS]), value);
-  g_free(value);
- 
-  if(mpd_server_check_version(connection, 0,13,0))
-      handlers = mpd_server_get_tag_types(connection);
-  if(handlers)
-  {
-    value = g_strjoinv(",",handlers);
-    g_strfreev(handlers);
-    handlers = NULL;
-  }
-  else 
-    value = g_strdup("N/A");
-  gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_TAG_TYPES]), value);
-  g_free(value);
+    serverstats_clear();
+    if(!mpd_check_connected(connection))return;
+    mpd_stats_update(connection);
+    /** Version */
+    value = mpd_server_get_version(connection); 
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_VERSION]), value);
+    free(value);
+    /** Uptime  */
+    value = serverstats_format_time(mpd_stats_get_uptime(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_UPTIME]), value);
+    g_free(value);
+    /** Playtime*/
+    value = serverstats_format_time(mpd_stats_get_playtime(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_PLAYTIME]), value);
+    g_free(value);
+    /** DB Playtime*/
+    value = serverstats_format_time(mpd_stats_get_db_playtime(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_PLAYTIME]), value);
+    g_free(value);
+    /** DB ARTIST*/
+    value = g_strdup_printf("%i", mpd_stats_get_total_artists(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_ARTISTS]), value);
+    g_free(value);
+    /** DB ALBUMS*/
+    value = g_strdup_printf("%i", mpd_stats_get_total_albums(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_ALBUMS]), value);
+    g_free(value);
+    /** DB SONGS*/
+    value = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_SONGS]), value);
+    g_free(value);
+    /** URL_HANDLERS*/
+    handlers = mpd_server_get_url_handlers(connection);
+    if(handlers)
+    {
+        value = g_strjoinv(",",handlers);
+        g_strfreev(handlers);
+        handlers = NULL;
+    }
+    else 
+        value = g_strdup("N/A");
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_URLHANDLERS]), value);
+    g_free(value);
+
+    if(mpd_server_check_version(connection, 0,13,0))
+        handlers = mpd_server_get_tag_types(connection);
+    if(handlers)
+    {
+        value = g_strjoinv(",",handlers);
+        g_strfreev(handlers);
+        handlers = NULL;
+    }
+    else 
+        value = g_strdup("N/A");
+    gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_TAG_TYPES]), value);
+    g_free(value);
 
 }
 typedef struct _ss_str{
@@ -330,14 +275,11 @@ static gboolean serverstats_idle_handler(ss_str *s)
     stats = mpd_database_search_stats_commit(connection);
     if(stats)
     {
-
         gtk_list_store_prepend(GTK_LIST_STORE(s->model), &iter);
         gtk_list_store_set(GTK_LIST_STORE(s->model), &iter, 0, (unsigned long)(stats->playTime), 1,s->data->tag, -1);
         s->max_i = MAX(s->max_i, stats->playTime);
 
         mpd_database_search_free_stats(stats);
-
-
     }
     /* limit the amount of updating to 0.2 % */
     if((int)((1000*s->hits)/s->total)%5 == 0)
@@ -404,6 +346,23 @@ static void cancel_clicked(GtkWidget *cancel, gpointer data)
     cancel_query = TRUE;
 }
 
+static void serverstats_add_entry(GtkWidget *table, int i,const char *name, int stats)
+{
+    char *markup;
+    GtkWidget *label;
+    /** Mpd Uptime */
+    label = gtk_label_new("");
+    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+    gtk_misc_set_padding(GTK_MISC(label), 12,0);
+    markup = g_markup_printf_escaped("<b>%s:</b>",name);
+    gtk_label_set_markup(GTK_LABEL(label), markup);
+    g_free(markup);
+    gtk_table_attach(GTK_TABLE(table),label, 0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
+    label = serverstats_labels[stats]= gtk_label_new("");
+    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+    gtk_table_attach(GTK_TABLE(table),label, 1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+}
+
 static void serverstats_init()
 {
     /** Get an allready exposed widgets to grab theme colors from. */
@@ -415,6 +374,7 @@ static void serverstats_init()
     GtkWidget *serverstats_vbox = gtk_vbox_new(FALSE, 0);
     GtkWidget *serverstats_event;
     gchar *markup = NULL;
+    int i= 0;
 
     serverstats_sw = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(serverstats_sw), GTK_SHADOW_IN);
@@ -468,42 +428,13 @@ static void serverstats_init()
     g_free(markup);
     gtk_table_attach(GTK_TABLE(table),label, 0,2,0,1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
 
+    i=1;
     /** Mpd version */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
+    serverstats_add_entry(table, i++, _("Version"), SERVERSTATS_MPD_VERSION);
+    
+    serverstats_add_entry(table, i++, _("Uptime"), SERVERSTATS_MPD_UPTIME);
+    serverstats_add_entry(table, i++, _("Time Playing"), SERVERSTATS_MPD_PLAYTIME);
 
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Version"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_VERSION]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-
-    /** Mpd Uptime */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Uptime"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,2,3,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_UPTIME]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,2,3,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
-    /** Mpd Playtime */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Time Playing"));
-    gtk_label_set_markup(GTK_LABEL(label),markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,3,4,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_PLAYTIME]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
     /** Database */
     label = gtk_label_new("");
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
@@ -511,80 +442,21 @@ static void serverstats_init()
     markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Database"));
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,2,4,5,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    gtk_table_attach(GTK_TABLE(table),label, 0,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    i++;
+
     /** Mpd Playtime */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Total playtime"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,5,6,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_DB_PLAYTIME]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,5,6,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    serverstats_add_entry(table, i++, _("Total Playtime"), SERVERSTATS_MPD_DB_PLAYTIME);
     /** Mpd Artists*/
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Number of artists"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,6,7,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_DB_ARTISTS]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,6,7,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    serverstats_add_entry(table, i++, _("Number of artists"), SERVERSTATS_MPD_DB_ARTISTS);
     /** Mpd Albums */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Number of albums"));
-    gtk_label_set_markup(GTK_LABEL(label),markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,7,8,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_DB_ALBUMS]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,7,8,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    serverstats_add_entry(table, i++, _("Number of albums"), SERVERSTATS_MPD_DB_ALBUMS);
     /** Mpd Songs */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Number of songs"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,8,9,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_DB_SONGS]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,8,9,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
+    serverstats_add_entry(table, i++, _("Number of songs"), SERVERSTATS_MPD_DB_SONGS);
     /** Mpd Songs */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("URL Handlers"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,9,10,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_URLHANDLERS]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,9,10,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
+    serverstats_add_entry(table, i++, _("URL Handlers"), SERVERSTATS_MPD_URLHANDLERS);
     /** Mpd Songs */
-    label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_misc_set_padding(GTK_MISC(label), 12,0);
-
-    markup = g_markup_printf_escaped("<b>%s:</b>", _("Tag Types"));
-    gtk_label_set_markup(GTK_LABEL(label), markup);
-    g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,1,10,11,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-    label = serverstats_labels[SERVERSTATS_MPD_TAG_TYPES]= gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table),label, 1,2,10,11,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
-
+    serverstats_add_entry(table, i++, _("Tag Types"), SERVERSTATS_MPD_TAG_TYPES);
     /** Stats */
     label = gtk_label_new("");
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
@@ -592,9 +464,8 @@ static void serverstats_init()
     markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Tag statistics"));
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table),label, 0,2,11,12,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
-
-
+    gtk_table_attach(GTK_TABLE(table),label, 0,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
+    i++;
     gtk_widget_show_all(table);
 
     /**
@@ -708,25 +579,19 @@ static gchar * serverstats_format_time(unsigned long seconds)
     str = g_string_new("");
     if(days != 0)
     {
-
-        g_string_append_printf(str, "%lu %s ", days, (days == 1)?("day"):("days"));
+        g_string_append_printf(str, "%lu %s ", days,    (days == 1)?("day"):("days"));
     }	
     if(houres != 0)
     {
-        g_string_append_printf(str, "%lu %s ", houres, (houres == 1)?("hour"):("hours"));
+        g_string_append_printf(str, "%lu %s ", houres,  (houres == 1)?("hour"):("hours"));
     }
     if(minutes != 0)
     {
-        g_string_append_printf(str, "%lu %s", minutes,(minutes==1)?("minute"):("minutes"));
+        g_string_append_printf(str, "%lu %s", minutes,  (minutes==1)?("minute"):("minutes"));
     }
     ret = str->str;
     g_string_free(str, FALSE);
     return ret;
-}
-
-
-static void serverstats_plugin_init(void)
-{
 }
 
 static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)
@@ -739,10 +604,6 @@ static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata
             gtk_list_store_clear(GTK_LIST_STORE(model));
         gtk_combo_box_set_active(GTK_COMBO_BOX(serverstats_combo), -1);
     }
-}
-
-static void serverstats_status_changed(MpdObj *mi, ChangedStatusType what, void *pointer)
-{
 }
 
 static void serverstats_browser_activate(void)
@@ -770,3 +631,41 @@ static int serverstats_add_go_menu(GtkWidget *menu)
             G_CALLBACK(serverstats_browser_activate), NULL);
     return 1;
 }
+
+
+/**
+ * Browser extention 
+ */
+
+gmpcPlBrowserPlugin serverstats_gbp = {
+	/** add */
+	.add = serverstats_add,
+	/** selected */
+	.selected = serverstats_selected,
+	/** unselected */
+	.unselected = serverstats_unselected,
+    /** add go menu */
+	.add_go_menu = serverstats_add_go_menu,
+};
+
+
+/** 
+ * Define the plugin structure
+ */
+gmpcPlugin statistics_plugin = {
+	/* name */
+	.name = N_("Information"),
+	/* version */
+	.version = {0,1,2},
+	/* type */
+	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
+	/** playlist extention struct */
+	.browser = &serverstats_gbp,
+	/** Connection changed */
+	.mpd_connection_changed = serverstats_connection_changed,
+	/** enable/disable */
+	.get_enabled = serverstats_get_enabled,
+	.set_enabled = serverstats_set_enabled,
+    /* Safe myself */
+    .save_yourself = serverstats_browser_save_myself
+};
