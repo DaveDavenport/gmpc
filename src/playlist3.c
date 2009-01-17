@@ -1857,12 +1857,9 @@ void about_window(void)
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ON_PARENT);
 	q_free(path);
 
-	if(strlen(revision))
-	{
+	if(strlen(revision)) {
 		path = g_strdup_printf("%s\nRevision: %s", VERSION, revision);
-	}
-	else
-	{
+	} else {
 		path = g_strdup_printf("%s\n%s\n",VERSION, GMPC_TAGLINE);
 	}
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), GMPC_COPYRIGHT);

@@ -235,7 +235,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             }
             conf_pos = g_strdup_printf("%s-colpos", self->_priv->name);
             conf_show = g_strdup_printf("%s-colshow", self->_priv->name);
-            conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
+//            conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
             i=0;
             for(iter = cols; iter; iter = g_list_next(iter))
             {
@@ -250,7 +250,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             }
             q_free(conf_pos);
             q_free(conf_show);
-            q_free(conf_size);
+  //          q_free(conf_size);
             g_list_free(cols);
 
             if(self->_priv->do_sort)
