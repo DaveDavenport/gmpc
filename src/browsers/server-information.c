@@ -94,9 +94,7 @@ static gboolean serverstats_expose_event(GtkWidget *widget, GdkEventExpose *even
 					NULL, 
 					widget,
 					"cell_odd",
-					0,0,
-					width,height);
-
+					0,0,width,height);
 	gtk_paint_focus(widget->style, widget->window, 
 				GTK_STATE_NORMAL, 
 				NULL, 

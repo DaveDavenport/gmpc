@@ -275,123 +275,112 @@ int main (int argc, char **argv)
 #endif
     gtk_set_locale();
 
-    TEC("Setting up locale")
-        /**
-         * Parse Command line options
-         */
-        if(argc > 1)
+    TEC("Setting up locale");
+    /**
+     * Parse Command line options
+     */
+    if(argc > 1)
+    {
+        for(i = 1; i< argc; i++)
         {
-            for(i = 1; i< argc; i++)
-            {
-                /**
-                 * Set debug level, options are
-                 * 0 = No debug
-                 * 1 = Error messages
-                 * 2 = Error + Warning messages
-                 * 3 = All messages
-                 */
-                if(!strncasecmp(argv[i], _("--debug-level="),strlen(_("--debug-level="))))
-                {
-                    int db_level = atoi(&argv[i][strlen(_("--debug-level="))]);
-                    debug_set_level(db_level);
-                }
-                /**
-                 * Print out version + svn revision
-                 */
-                else if (!strcasecmp(argv[i], _("--version")))
-                {
-                    print_version();
-                    exit(0);
-                }
-                /**
-                 * Allow the user to pick another config file
-                 */
+            /**
+             * Set debug level, options are
+             * 0 = No debug
+             * 1 = Error messages
+             * 2 = Error + Warning messages
+             * 3 = All messages
+             */
+            if(!strncasecmp(argv[i], _("--debug-level="),strlen(_("--debug-level=")))) {
+                int db_level = atoi(&argv[i][strlen(_("--debug-level="))]);
+                debug_set_level(db_level);
+            }
+            /**
+             * Print out version + svn revision
+             */
+            else if (!strcasecmp(argv[i], _("--version"))) {
+                print_version();
+                exit(0);
+            }
+            /**
+             * Allow the user to pick another config file
+             */
 #define check_key(a) (!strncasecmp(argv[i], a, strlen(a)))
-                else if (check_key(_("--config=")))
-                {
-                    config_path = g_strdup(&argv[i][strlen(_("--config="))]);
-                }
-                /**
-                 * Starts gmpc hidden. Either tray or task-bar
-                 */
-                else if (check_key(_("--start-hidden")))
-                {
-                    start_hidden = TRUE;
-                }
-                /**
-                 * Cleans all failed hits from the cover database.
-                 * then exits.
-                 */
-                else if (check_key(_("--clean-cover-db")))
-                {
-                    clean_config = TRUE;
-                }
-                /**
-                 * Start gmpc withouth loading any external plugins
-                 */
-                else if (check_key(_("--disable-plugins")))
-                {
-                    load_plugins = FALSE;
-                }
-                /**
-                 * Tries to replace the running gmpc session with a new (this) one.
-                 */
-                else if (check_key(_("--replace")))
-                {
-                    replace = TRUE;
-                }
-                /**
-                 * Quit any running gmpc session
-                 */
-                else if (check_key(_("--quit")))
-                {
-                    quit = TRUE;
-                }
-                /**
-                 * Imports the cover db in the old format.
-                 */
-                else if (check_key( _("--import-old-db")))
-                {
-                    import_old_db = TRUE;
-                }
-                /**
-                 * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-                 */
-                else if (check_key( _("--debug-updates")))
-                {
-                    do_debug_updates = TRUE;
-                }
-
-                /**
-                 * Print out help message
-                 */
-                else if (check_key( _("--help")))
-                {
-                    printf(_("Gnome Music Player Client\n"\
-                                "Options:\n"\
-                                "\t--start-hidden\t\tStart hidden\n"\
-                                "\t--help\t\t\tThis help message.\n"\
-                                "\t--debug-level=<level>\tMake gmpc print out debug information.\n"\
-                                "\t\t\t\tLevel:\n"\
-                                "\t\t\t\t\t0 No Output\n"\
-                                "\t\t\t\t\t1 Error Messages\n"\
-                                "\t\t\t\t\t2 Error + Warning Messages\n"\
-                                "\t\t\t\t\t3 All messages\n"\
-                                "\t--version\t\tPrint version and git revision\n"\
-                                "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
-                                "\t--clean-cover-db\tCleanup the cover file.\n"\
-                                "\t--disable-plugins\tDon't load any plugins.\n"\
-                                "\t--replace\t\tReplace the running session with the current\n"\
-                                "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-instances is disabled.\n"
-                            ));
-                    exit(0);
-                }
+            else if (check_key(_("--config="))) {
+                config_path = g_strdup(&argv[i][strlen(_("--config="))]);
+            }
+            /**
+             * Starts gmpc hidden. Either tray or task-bar
+             */
+            else if (check_key(_("--start-hidden"))) {
+                start_hidden = TRUE;
+            }
+            /**
+             * Cleans all failed hits from the cover database.
+             * then exits.
+             */
+            else if (check_key(_("--clean-cover-db"))) {
+                clean_config = TRUE;
+            }
+            /**
+             * Start gmpc withouth loading any external plugins
+             */
+            else if (check_key(_("--disable-plugins"))) {
+                load_plugins = FALSE;
+            }
+            /**
+             * Tries to replace the running gmpc session with a new (this) one.
+             */
+            else if (check_key(_("--replace"))) {
+                replace = TRUE;
+            }
+            /**
+             * Quit any running gmpc session
+             */
+            else if (check_key(_("--quit"))) {
+                quit = TRUE;
+            }
+            /**
+             * Imports the cover db in the old format.
+             */
+            else if (check_key( _("--import-old-db"))) {
+                import_old_db = TRUE;
+            }
+            /**
+             * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
+             */
+            else if (check_key( _("--debug-updates"))) {
+                do_debug_updates = TRUE;
             }
 
+            /**
+             * Print out help message
+             */
+            else if (check_key( _("--help"))) {
+                printf(_("Gnome Music Player Client\n"\
+                            "Options:\n"\
+                            "\t--start-hidden\t\tStart hidden\n"\
+                            "\t--help\t\t\tThis help message.\n"\
+                            "\t--debug-level=<level>\tMake gmpc print out debug information.\n"\
+                            "\t\t\t\tLevel:\n"\
+                            "\t\t\t\t\t0 No Output\n"\
+                            "\t\t\t\t\t1 Error Messages\n"\
+                            "\t\t\t\t\t2 Error + Warning Messages\n"\
+                            "\t\t\t\t\t3 All messages\n"\
+                            "\t--version\t\tPrint version and git revision\n"\
+                            "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"\
+                            "\t--clean-cover-db\tCleanup the cover file.\n"\
+                            "\t--disable-plugins\tDon't load any plugins.\n"\
+                            "\t--replace\t\tReplace the running session with the current\n"\
+                            "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-instances is disabled.\n"
+                        ));
+                exit(0);
+            }
         }
-    TEC("Parsing command line options")
-        /** Init before threads are active.. */
-        debug_printf(DEBUG_INFO, "Initialize curl_global_init");
+
+    }
+    TEC("Parsing command line options");
+    /** Init before threads are active.. */
+    debug_printf(DEBUG_INFO, "Initialize curl_global_init");
     {
         CURLcode result;
         /**
@@ -410,12 +399,12 @@ int main (int argc, char **argv)
 
     }
 
-    TEC("Initializing libcurl")
+    TEC("Initializing libcurl");
 
-        /**
-         *  initialize threading
-         */
-        debug_printf(DEBUG_INFO,"Initializing threading");
+    /**
+     *  initialize threading
+     */
+    debug_printf(DEBUG_INFO,"Initializing threading");
 
     /**
      * Init libxml.
@@ -434,11 +423,11 @@ int main (int argc, char **argv)
      */
     if(!g_thread_supported())g_thread_init (NULL);
 
-    TEC("Initializing threading")
-        /*
-         * initialize gtk
-         */
-        debug_printf(DEBUG_INFO, "Initializing gtk ");
+    TEC("Initializing threading");
+    /*
+     * initialize gtk
+     */
+    debug_printf(DEBUG_INFO, "Initializing gtk ");
 
 #ifdef WIN32
     /**
@@ -456,34 +445,34 @@ int main (int argc, char **argv)
     /* initialize gtk */
     gtk_init (&argc, &argv);
 
-    TEC("Initializing gtk")
+    TEC("Initializing gtk");
 
     advanced_search_init();
     TEC("Init advanced search");
-        /**
-         * Call create_gmpc_paths();
-         * This function checks if the path needed path are available, if not, create them
-         */
-        create_gmpc_paths();
-    TEC("Check version and create paths")
+    /**
+     * Call create_gmpc_paths();
+     * This function checks if the path needed path are available, if not, create them
+     */
+    create_gmpc_paths();
+    TEC("Check version and create paths");
 
-        /**
-         * COMMANDLINE_OPTION:
-         * Cleanup the metadata database and quit.
-         */
-        if(clean_config)
-        {
-            /* start the metadata system */
-            meta_data_init();
-            printf("Cleaning up cover file..\n");
-            /* Call the cleanup */
-            meta_data_cleanup();
-            printf("Done..\n");
-            /* Destroy the meta data system and exit. */
-            meta_data_destroy();
-            TEC("Database cleanup")
-                return 1;
-        }
+    /**
+     * COMMANDLINE_OPTION:
+     * Cleanup the metadata database and quit.
+     */
+    if(clean_config)
+    {
+        /* start the metadata system */
+        meta_data_init();
+        printf("Cleaning up cover file..\n");
+        /* Call the cleanup */
+        meta_data_cleanup();
+        printf("Done..\n");
+        /* Destroy the meta data system and exit. */
+        meta_data_destroy();
+        TEC("Database cleanup");
+        return 1;
+    }
 
     /**
      * Open the config file
@@ -514,11 +503,11 @@ int main (int argc, char **argv)
         /* this is an error so bail out correctly */
         abort();
     }
-    TEC("Opening config file: %s", url)
-        /**
-         * cleanup
-         */
-        q_free(url);
+    TEC("Opening config file: %s", url);
+    /**
+     * cleanup
+     */
+    q_free(url);
 
     /**
      * If requested, output debug info to file
@@ -541,7 +530,7 @@ int main (int argc, char **argv)
             debug_set_level(DEBUG_INFO);
             debug_printf(DEBUG_INFO,"***** Opened debug log file\n");
             q_free(url);
-            TEC("Enabled Debug log")
+            TEC("Enabled Debug log");
         }
     }
     /**
@@ -595,13 +584,13 @@ int main (int argc, char **argv)
     if(url){
         q_free(url);
     }
-    TEC("New version check")
+    TEC("New version check");
 
 
 #ifndef WIN32
-	/**
-	 * Start IPC system.
-	 */
+    /**
+     * Start IPC system.
+     */
     if(cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple",FALSE) == FALSE)
     {
         /**
@@ -629,7 +618,7 @@ int main (int argc, char **argv)
                     bacon_message_connection_free (bacon_connection);
                     cfg_close(config);
                     config = NULL;
-                    TEC("IPC setup and quitting")
+                    TEC("IPC setup and quitting");
                     exit(0);
                 }
             }
@@ -637,7 +626,7 @@ int main (int argc, char **argv)
                     bacon_on_message_received,
                     NULL);
         }
-		/* If user requested a quit, quit */
+        /* If user requested a quit, quit */
         if(quit)
         {
             cfg_close(config);
@@ -648,7 +637,7 @@ int main (int argc, char **argv)
             exit(0);
         }
     }
-    TEC("IPC setup")
+    TEC("IPC setup");
 #endif
     if(quit) {
         cfg_close(config);
@@ -659,13 +648,13 @@ int main (int argc, char **argv)
      */
 #ifdef ENABLE_SM
     smc_connect(argc, argv);
-    TEC("Session manager setup")
+    TEC("Session manager setup");
 #endif	
     /** Signals */
     gmpc_signals = gmpc_signals_new();
 
     gmpc_profiles = gmpc_profiles_new();
-    TEC("Setting up gmpc idle,signals and profiles")
+    TEC("Setting up gmpc idle,signals and profiles");
     /**
      * Initialize the new metadata subsystem.
      * (Will spawn a new thread, so have to be after the init threading
@@ -680,14 +669,14 @@ int main (int argc, char **argv)
         }
         g_free(old_url);
     }
-    TEC("Initializing metadata system")
+    TEC("Initializing metadata system");
 
     /**
      * stock icons
      */
     debug_printf(DEBUG_INFO, "Loading stock icons");
     init_stock_icons ();
-    TEC("Init stock icons")
+    TEC("Init stock icons");
     /**
      * Create connection object
      */
@@ -701,7 +690,7 @@ int main (int argc, char **argv)
         show_error_message(_("Failed to setup libmpd"), TRUE);
         abort();
     }
-    TEC("Setting up mpd connection object")
+    TEC("Setting up mpd connection object");
     /**
      * Connect signals to the connection object
      */
@@ -715,12 +704,12 @@ int main (int argc, char **argv)
     g_signal_connect(G_OBJECT(gmpcconn), "connection_changed", G_CALLBACK(connection_changed_real),NULL);
     g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(gmpc_status_changed_callback_real), NULL);
 
-    TEC("Setting up mpd object signal system")
-	/**
-	 * New Metadata object
-	 */
-	gmw = gmpc_meta_watcher_new();
-    TEC("Initializing metadata watcher")
+    TEC("Setting up mpd object signal system");
+    /**
+     * New Metadata object
+     */
+    gmw = gmpc_meta_watcher_new();
+    TEC("Initializing metadata watcher");
 
 
 
@@ -751,15 +740,15 @@ int main (int argc, char **argv)
     /* Info3 data browser */
     /* Meta data browser */
     plugin_add(&metab_plugin,0);	
-	/* Playlist editor */
-	plugin_add(&playlist_editor_plugin,0);
+    /* Playlist editor */
+    plugin_add(&playlist_editor_plugin,0);
 
-	plugin_add(&statistics_plugin,0);
+    plugin_add(&statistics_plugin,0);
 
     plugin_add(&metadata_plug,0);
     plugin_add(&proxyplug,0);
 
-    TEC("Loading internal plugins")
+    TEC("Loading internal plugins");
 
     /**
      *  load dynamic plugins
@@ -781,42 +770,42 @@ int main (int argc, char **argv)
         q_free(url);
 #endif
     }
-	/* user space dynamic plugins */
-	url = gmpc_get_user_path("plugins");
-	/**
-	 * if dir exists, try to load the plugins.
-	 */
-	if(g_file_test(url, G_FILE_TEST_IS_DIR))
-	{
-		debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
+    /* user space dynamic plugins */
+    url = gmpc_get_user_path("plugins");
+    /**
+     * if dir exists, try to load the plugins.
+     */
+    if(g_file_test(url, G_FILE_TEST_IS_DIR))
+    {
+        debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
         if(load_plugins)
             plugin_load_dir(url);
-	}
-    TEC("Loading plugins from %s", url)
-	q_free(url);
+    }
+    TEC("Loading plugins from %s", url);
+    q_free(url);
 
 
-	/* time todo some initialisation of plugins */
-	for(i=0; i< num_plugins && plugins[i] != NULL;i++)
-	{
-        TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]))
+    /* time todo some initialisation of plugins */
+    for(i=0; i< num_plugins && plugins[i] != NULL;i++)
+    {
+        TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
         gmpc_plugin_init(plugins[i]);
-	}
+    }
 
-	/**
-	 * Ask user about added/removed provider plugins
-	 */
-	meta_data_check_plugin_changed();
-    TEC("Metadata plugin changed check")
+    /**
+     * Ask user about added/removed provider plugins
+     */
+    meta_data_check_plugin_changed();
+    TEC("Metadata plugin changed check");
 
     /**
      * Create the main window
-	 */	
-	debug_printf(DEBUG_INFO, "Create main window\n");
+     */	
+    debug_printf(DEBUG_INFO, "Create main window\n");
     gdk_window_set_debug_updates(do_debug_updates);
     create_playlist3();
     playlist3_message_init();
-    TEC("Creating playlist window")
+    TEC("Creating playlist window");
 
 
     /**
@@ -826,92 +815,92 @@ int main (int argc, char **argv)
     {
         setup_assistant();
         cfg_set_single_value_as_int(config, "Default", "first-run", 0);
-        TEC("Setup first run assistant")
+        TEC("Setup first run assistant");
     }
 
-	/**
-	 * If autoconnect is enabled, tell gmpc that it's in state it should connect
-	 */	
-	if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
-	{
-		gmpc_connected = TRUE;
-	}
-	/*
-	 * create timeouts
-	 * get the status every 1/2 second should be enough, but it's configurable.
-	 */
-	g_timeout_add (cfg_get_single_value_as_int_with_default(config,
+    /**
+     * If autoconnect is enabled, tell gmpc that it's in state it should connect
+     */	
+    if(cfg_get_single_value_as_int_with_default(config, "connection","autoconnect", DEFAULT_AUTOCONNECT))
+    {
+        gmpc_connected = TRUE;
+    }
+    /*
+     * create timeouts
+     * get the status every 1/2 second should be enough, but it's configurable.
+     */
+    g_timeout_add (cfg_get_single_value_as_int_with_default(config,
                 "connection","mpd-update-speed",500),
             (GSourceFunc)update_mpd_status, NULL);
-	/**
-	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
-	 * if you are still connected, and reconnects you if not.
-	 */
+    /**
+     * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
+     * if you are still connected, and reconnects you if not.
+     */
     autoconnect_timeout = g_timeout_add_seconds (5,(GSourceFunc)autoconnect_callback, NULL);
     /**
-	 * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
-	 */
-	gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
+     * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
+     */
+    gtk_init_add((GSourceFunc)autoconnect_callback, NULL);
 
     if(cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden)
     {
         gtk_init_add((GSourceFunc)pl3_hide, NULL);
     }
-    TEC("Setting up timers")
+    TEC("Setting up timers");
 
 #ifdef ENABLE_MMKEYS
-	/**
-	 * Setup Multimedia Keys
-	 */
-	/**
-	 * Create mmkeys object
-	 */
-	keys = mmkeys_new();
-	/**
-	 * Connect the wanted key's
-	 */
-	g_signal_connect(G_OBJECT(keys), "mm_playpause",        G_CALLBACK(play_song),                  NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_next",             G_CALLBACK(next_song),                  NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_prev",             G_CALLBACK(prev_song),                  NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_stop",             G_CALLBACK(stop_song),                  NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_fastforward",      G_CALLBACK(song_fastforward),           NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_fastbackward",     G_CALLBACK(song_fastbackward),          NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_repeat",           G_CALLBACK(repeat_toggle),              NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_random",           G_CALLBACK(random_toggle),              NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_raise",            G_CALLBACK(create_playlist3),           NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_hide",             G_CALLBACK(pl3_hide),                   NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden",    G_CALLBACK(pl3_toggle_hidden),          NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_volume_up",        G_CALLBACK(volume_up),                  NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_volume_down",      G_CALLBACK(volume_down),                NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_toggle_mute",      G_CALLBACK(volume_toggle_mute),         NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_show_notification",G_CALLBACK(tray_icon2_create_tooltip),  NULL);
-    TEC("Setting up multimedia keys")
+    /**
+     * Setup Multimedia Keys
+     */
+    /**
+     * Create mmkeys object
+     */
+    keys = mmkeys_new();
+    /**
+     * Connect the wanted key's
+     */
+    g_signal_connect(G_OBJECT(keys), "mm_playpause",        G_CALLBACK(play_song),                  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_next",             G_CALLBACK(next_song),                  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_prev",             G_CALLBACK(prev_song),                  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_stop",             G_CALLBACK(stop_song),                  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_fastforward",      G_CALLBACK(song_fastforward),           NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_fastbackward",     G_CALLBACK(song_fastbackward),          NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_repeat",           G_CALLBACK(repeat_toggle),              NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_random",           G_CALLBACK(random_toggle),              NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_raise",            G_CALLBACK(create_playlist3),           NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_hide",             G_CALLBACK(pl3_hide),                   NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden",    G_CALLBACK(pl3_toggle_hidden),          NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_volume_up",        G_CALLBACK(volume_up),                  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_volume_down",      G_CALLBACK(volume_down),                NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_toggle_mute",      G_CALLBACK(volume_toggle_mute),         NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_show_notification",G_CALLBACK(tray_icon2_create_tooltip),  NULL);
+    TEC("Setting up multimedia keys");
 
 #endif
-	/*
-	 * run the main loop
-	 */
-	gtk_main ();
+    /*
+     * run the main loop
+     */
+    gtk_main ();
 
-	/**
+    /**
      * Shutting Down
-	 *  cleaning up.
-	 */
+     *  cleaning up.
+     */
 
 #ifndef WIN32
-	if(bacon_connection) {
-		bacon_message_connection_free (bacon_connection);
+    if(bacon_connection) {
+        bacon_message_connection_free (bacon_connection);
         bacon_connection = NULL;
-	}
+    }
 #endif	
     /* Quit _all_ downloads */
     quit_easy_download();
 
     /* tell the plugins to save themself. */
-	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
-			debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
-	        gmpc_plugin_save_yourself(plugins[i]);
-	}
+    for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
+        debug_printf(DEBUG_INFO,"Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
+        gmpc_plugin_save_yourself(plugins[i]);
+    }
     /* Should fix some possible crashes */
     gtk_tree_view_set_model(playlist3_get_category_tree_view(),NULL);
 
@@ -920,11 +909,11 @@ int main (int argc, char **argv)
      */
     meta_data_destroy();
 
-	/* time todo some destruction of plugins */
-	for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
+    /* time todo some destruction of plugins */
+    for(i=0; i< num_plugins && plugins[i] != NULL;i++) {
         debug_printf(DEBUG_INFO,"Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
         gmpc_plugin_destroy(plugins[i]);
-	}
+    }
 
     playlist3_message_destroy();
     playlist3_destroy();
@@ -932,29 +921,29 @@ int main (int argc, char **argv)
 
     g_object_unref(G_OBJECT(gmw));
 
-	/**
-	 * Close the config file
-	 */
-    TOC("Starting save config")
-	cfg_close(config);
-    TOC("Saved config")
+    /**
+     * Close the config file
+     */
+    TOC("Starting save config");
+    cfg_close(config);
+    TOC("Saved config");
     g_object_unref(gmpc_signals);
-	g_object_unref(gmpc_profiles);
-	g_object_unref(gmpcconn);
+    g_object_unref(gmpc_profiles);
+    g_object_unref(gmpcconn);
 
 
     advanced_search_destroy();
-	/**
-	 * Destroy the connection object
-	 */
-	mpd_free(connection);
+    /**
+     * Destroy the connection object
+     */
+    mpd_free(connection);
 
     xmlCleanupParser();
-	/* cleanup curl */
-	curl_global_cleanup();
+    /* cleanup curl */
+    curl_global_cleanup();
 
     debug_printf(DEBUG_INFO, "Quit....\n");
-	return 0;
+    return 0;
 }
 
 /**
@@ -1103,12 +1092,9 @@ static void password_dialog(int failed)
     gtk_window_set_transient_for(GTK_WINDOW(gtk_builder_get_object(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
     q_free(path);
 	if(!xml_password_window) return;
-	if(failed)
-	{
+	if(failed) {
 		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),mpd_get_hostname(connection));
-	}
-	else
-	{
+	} else 	{
 		path = g_strdup_printf(_("Please enter your password for: '%s'"),mpd_get_hostname(connection));
 	}
 	gtk_label_set_text(GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")),path);
@@ -1238,7 +1224,7 @@ static void connection_changed_real(GmpcConnection *obj,MpdObj *mi, int connecte
     {
         debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
         gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
-        TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]))
+        TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
 
     }
 
