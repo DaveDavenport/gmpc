@@ -18,9 +18,9 @@
 */
 
 #include "gmpc-progress.h"
+#include <pango/pango.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pango/pango.h>
 #include <gdk/gdk.h>
 #include <float.h>
 #include <math.h>
@@ -32,6 +32,7 @@ struct _GmpcProgressPrivate {
 	guint total;
 	guint current;
 	gboolean _do_countdown;
+	GtkProgressBar* bar;
 	GtkStyle* my_style;
 };
 
@@ -70,29 +71,54 @@ static void gmpc_progress_real_style_set (GtkWidget* base, GtkStyle* old_style) 
  that gtk+ will actually give this size to the widget*/
 static void gmpc_progress_real_size_request (GtkWidget* base, GtkRequisition* requisition) {
 	GmpcProgress * self;
+	GtkWidget* _tmp0;
+	GtkWidget* widget;
+	PangoRectangle logical_rect = {0};
 	gint width;
 	gint height;
+	gint xspacing;
+	gint yspacing;
 	self = (GmpcProgress*) base;
+	_tmp0 = NULL;
+	widget = (_tmp0 = (GtkWidget*) self, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	width = 0;
 	height = 0;
-	/* In this case, we say that we want to be as big as the
-	 text is, plus a little border around it.*/
-	if (gmpc_progress_get_hide_text (self)) {
-		(*requisition).width = 40;
-		(*requisition).height = 10;
-	} else {
-		PangoLayout* _tmp0;
+	xspacing = 0;
+	yspacing = 0;
+	gtk_widget_set_style ((GtkWidget*) self->priv->bar, self->priv->my_style);
+	gtk_widget_style_get ((GtkWidget*) self->priv->bar, "xspacing", &xspacing, "yspacing", &yspacing, NULL, NULL);
+	width = (2 * gtk_widget_get_style (widget)->xthickness) + xspacing;
+	height = (2 * gtk_widget_get_style (widget)->ythickness) + yspacing;
+	if (!gmpc_progress_get_hide_text (self)) {
+		PangoLayout* _tmp1;
 		PangoLayout* layout;
-		_tmp0 = NULL;
-		layout = (_tmp0 = gtk_widget_create_pango_layout ((GtkWidget*) self, " "), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-		pango_layout_get_size (layout, &width, &height);
-		(*requisition).width = (width / PANGO_SCALE) + 6;
-		(*requisition).height = (height / PANGO_SCALE) + 6;
+		_tmp1 = NULL;
+		layout = (_tmp1 = gtk_widget_create_pango_layout (widget, " "), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
+		pango_layout_get_pixel_extents (layout, NULL, &logical_rect);
+		width = width + (logical_rect.width);
+		height = height + (logical_rect.height);
 		(layout == NULL) ? NULL : (layout = (g_object_unref (layout), NULL));
 	}
+	(*requisition).width = width;
+	(*requisition).height = height;
+	(widget == NULL) ? NULL : (widget = (g_object_unref (widget), NULL));
 }
 
 
+/*     int width, height;
+
+        // In this case, we say that we want to be as big as the
+        // text is, plus a little border around it.
+        if(this.hide_text) {
+        requisition.width = 40;
+        requisition.height = 10;
+        } else {
+        var layout = this.create_pango_layout(" ");
+        layout.get_size (out width, out height);
+        requisition.width = width / Pango.SCALE + 6;
+        requisition.height = height / Pango.SCALE + 6;
+        }
+         */
 static void gmpc_progress_redraw (GmpcProgress* self) {
 	g_return_if_fail (self != NULL);
 	if (((GtkWidget*) self)->window != NULL) {
@@ -125,16 +151,19 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, c
 		GtkStyle* _tmp2;
 		_tmp1 = NULL;
 		_tmp0 = NULL;
-		self->priv->my_style = (_tmp1 = (_tmp0 = gtk_rc_get_style_by_paths (gtk_widget_get_settings ((GtkWidget*) self), NULL, NULL, GTK_TYPE_PROGRESS_BAR), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL)), _tmp1);
+		self->priv->my_style = (_tmp1 = (_tmp0 = gtk_rc_get_style_by_paths (gtk_widget_get_settings ((GtkWidget*) self), "GtkProgressBar", "GtkProgressBar", GTK_TYPE_PROGRESS_BAR), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL)), _tmp1);
 		_tmp3 = NULL;
 		_tmp2 = NULL;
-		self->priv->my_style = (_tmp3 = (_tmp2 = gtk_style_attach (self->priv->my_style, ((GtkWidget*) self)->window), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2)), (self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL)), _tmp3);
+		self->priv->my_style = (_tmp3 = (_tmp2 = gtk_style_attach (self->priv->my_style, (*event).window), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2)), (self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL)), _tmp3);
 	}
 	x = 0;
 	y = 0;
-	w = ((GtkWidget*) pb)->allocation.width;
-	h = ((GtkWidget*) pb)->allocation.height;
-	gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_NORMAL, GTK_SHADOW_IN, &(*event).area, (GtkWidget*) pb, "through", x, y, w, h);
+	/*  Gtk.paint_box (this.my_style, event.window, Gtk.StateType.NORMAL, Gtk.ShadowType.NONE,
+	                        null, this.bar, "", 0,0,this.allocation.width, this.allocation.height);
+	                        */
+	w = ((GtkWidget*) self)->allocation.width;
+	h = ((GtkWidget*) self)->allocation.height;
+	gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_NORMAL, GTK_SHADOW_IN, &(*event).area, (GtkWidget*) self->priv->bar, "trough", x, y, w, h);
 	x = x + (self->priv->my_style->xthickness);
 	y = y + (self->priv->my_style->ythickness);
 	w = w - (self->priv->my_style->xthickness * 2);
@@ -147,7 +176,7 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, c
 		perc_w = w;
 	}
 	if (perc_w > 0) {
-		gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_NORMAL, GTK_SHADOW_IN, &(*event).area, (GtkWidget*) pb, "bar", x, y, perc_w, h);
+		gtk_paint_box (self->priv->my_style, (*event).window, GTK_STATE_PRELIGHT, GTK_SHADOW_IN, &(*event).area, (GtkWidget*) self->priv->bar, "bar", x, y, perc_w, h);
 	}
 	if (gmpc_progress_get_hide_text (self) == FALSE) {
 		gint e_hour;
@@ -228,10 +257,10 @@ static gboolean gmpc_progress_on_expose (GmpcProgress* self, GmpcProgress* pb, c
 		clip.y = y;
 		clip.width = perc_w;
 		clip.height = h;
-		gtk_paint_layout (self->priv->my_style, ((GtkWidget*) self)->window, GTK_STATE_SELECTED, FALSE, &clip, (GtkWidget*) pb, "progressbar", x + pos, y + ((h - logical_rect.height) / 2), layout);
+		gtk_paint_layout (self->priv->my_style, ((GtkWidget*) self)->window, GTK_STATE_SELECTED, FALSE, &clip, (GtkWidget*) self->priv->bar, "progressbar", x + pos, y + ((h - logical_rect.height) / 2), layout);
 		clip.x = clip.x + clip.width;
 		clip.width = w - clip.width;
-		gtk_paint_layout (self->priv->my_style, ((GtkWidget*) self)->window, GTK_STATE_NORMAL, FALSE, &clip, (GtkWidget*) pb, "progressbar", x + pos, y + ((h - logical_rect.height) / 2), layout);
+		gtk_paint_layout (self->priv->my_style, ((GtkWidget*) self)->window, GTK_STATE_NORMAL, FALSE, &clip, (GtkWidget*) self->priv->bar, "progressbar", x + pos, y + ((h - logical_rect.height) / 2), layout);
 		a = (g_free (a), NULL);
 		(layout == NULL) ? NULL : (layout = (g_object_unref (layout), NULL));
 	}
@@ -312,8 +341,11 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PROGRESS (obj);
 	{
-		gtk_widget_add_events ((GtkWidget*) self, (gint) GDK_EXPOSURE_MASK);
+		GtkProgressBar* _tmp0;
+		/*this.add_events((int)Gdk.EventMask.EXPOSURE_MASK);*/
 		g_object_set ((GtkWidget*) self, "app-paintable", TRUE, NULL);
+		_tmp0 = NULL;
+		self->priv->bar = (_tmp0 = g_object_ref_sink ((GtkProgressBar*) gtk_progress_bar_new ()), (self->priv->bar == NULL) ? NULL : (self->priv->bar = (g_object_unref (self->priv->bar), NULL)), _tmp0);
 		g_signal_connect_object ((GtkWidget*) self, "expose-event", (GCallback) _gmpc_progress_on_expose_gtk_widget_expose_event, self, 0);
 	}
 	return obj;
@@ -374,6 +406,7 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 	self->priv->total = (guint) 0;
 	self->priv->current = (guint) 0;
 	self->priv->_do_countdown = FALSE;
+	self->priv->bar = NULL;
 	self->_hide_text = FALSE;
 	self->priv->my_style = NULL;
 }
@@ -387,6 +420,7 @@ static void gmpc_progress_finalize (GObject* obj) {
 			gtk_style_detach (self->priv->my_style);
 		}
 	}
+	(self->priv->bar == NULL) ? NULL : (self->priv->bar = (g_object_unref (self->priv->bar), NULL));
 	(self->priv->my_style == NULL) ? NULL : (self->priv->my_style = (g_object_unref (self->priv->my_style), NULL));
 	G_OBJECT_CLASS (gmpc_progress_parent_class)->finalize (obj);
 }

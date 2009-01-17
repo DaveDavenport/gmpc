@@ -28,6 +28,7 @@ public class Gmpc.Progress : Gtk.EventBox
     private uint total              = 0;
     private uint current            = 0;
     private bool _do_countdown      = false;
+    private Gtk.ProgressBar bar     = null;
     public bool _hide_text          = false;
     private Style my_style = null;
 
@@ -58,15 +59,18 @@ public class Gmpc.Progress : Gtk.EventBox
         /* Reset it, so it gets reloaded on redraw */
         if(this.my_style != null) {
             this.my_style.detach();
-        }
+      }
         this.my_style = null;
     }
 
 
     /* Construct function */
     construct {
-        this.add_events((int)Gdk.EventMask.EXPOSURE_MASK);
+        //this.add_events((int)Gdk.EventMask.EXPOSURE_MASK);
+
         this.app_paintable = true;
+
+        this.bar = new Gtk.ProgressBar();
         this.expose_event += this.on_expose;
     }
     
@@ -75,18 +79,45 @@ public class Gmpc.Progress : Gtk.EventBox
     // that gtk+ will actually give this size to the widget
     public override void size_request (out Gtk.Requisition requisition)
     {
+        Gtk.Widget widget = this;
+        Pango.Rectangle logical_rect;
         int width, height;
+        int xspacing=0, yspacing=0;
+
+        this.bar.set_style(this.my_style);
+        this.bar.style_get (
+                "xspacing", out xspacing,
+                "yspacing", out yspacing,
+                null);
+
+        width = 2 * widget.style.xthickness + xspacing;
+        height = 2 * widget.style.ythickness + yspacing;
+
+        if (!this.hide_text)
+        {
+            var layout = widget.create_pango_layout (" ");
+
+            layout.get_pixel_extents (null, out logical_rect);
+            width += logical_rect.width;
+
+            height += logical_rect.height;
+        } 
+         requisition.width = width; 
+         requisition.height = height; 
+         /*     int width, height;
+
         // In this case, we say that we want to be as big as the
         // text is, plus a little border around it.
         if(this.hide_text) {
-            requisition.width = 40;
-            requisition.height = 10;
+        requisition.width = 40;
+        requisition.height = 10;
         } else {
-            var layout = this.create_pango_layout(" ");
-            layout.get_size (out width, out height);
-            requisition.width = width / Pango.SCALE + 6;
-            requisition.height = height / Pango.SCALE + 6;
+        var layout = this.create_pango_layout(" ");
+        layout.get_size (out width, out height);
+        requisition.width = width / Pango.SCALE + 6;
+        requisition.height = height / Pango.SCALE + 6;
         }
+         */
     }
 
     private void redraw ()
@@ -104,19 +135,26 @@ public class Gmpc.Progress : Gtk.EventBox
         Gdk.Rectangle clip = {0,0,0,0};
 
         if(this.my_style == null){
-            this.my_style = Gtk.rc_get_style_by_paths(this.get_settings(), null, null, typeof(ProgressBar));
-            this.my_style = this.my_style.attach(this.window);
+            this.my_style = Gtk.rc_get_style_by_paths(this.get_settings(), 
+                        "GtkProgressBar","GtkProgressBar",
+                        typeof(Gtk.ProgressBar));
+            this.my_style = this.my_style.attach(event.window);
         }
 
 
         x = 0;
         y = 0; 
+      /*  Gtk.paint_box (this.my_style, event.window, Gtk.StateType.NORMAL, Gtk.ShadowType.NONE,
+                        null, this.bar, "", 0,0,this.allocation.width, this.allocation.height);
+                        */
+        w = this.allocation.width; 
+        h = this.allocation.height; 
 
-        w = pb.allocation.width; 
-        h = pb.allocation.height; 
-
-
-        Gtk.paint_box (this.my_style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"through",x,y,w,h);
+        Gtk.paint_box (this.my_style,
+                    event.window,
+                    Gtk.StateType.NORMAL,Gtk.ShadowType.IN,
+                    event.area, this.bar,"trough",
+                    x,y,w,h);
 
         x += this.my_style.xthickness;
         y += this.my_style.ythickness;
@@ -128,7 +166,10 @@ public class Gmpc.Progress : Gtk.EventBox
         if(perc_w > w) perc_w = w ;
         if(perc_w > 0)
         {
-            Gtk.paint_box (this.my_style,event.window,Gtk.StateType.NORMAL,Gtk.ShadowType.IN,event.area, pb,"bar",x,y,perc_w,h);
+            Gtk.paint_box (this.my_style,event.window,
+            Gtk.StateType.PRELIGHT,Gtk.ShadowType.IN,
+            event.area, this.bar,"bar",
+            x,y,perc_w,h);
         }
         if(this.hide_text == false)
         {
@@ -175,7 +216,7 @@ public class Gmpc.Progress : Gtk.EventBox
 
             Gtk.paint_layout (this.my_style, window, 
                     Gtk.StateType.SELECTED,
-                    false, clip, pb, "progressbar",
+                    false, clip, this.bar, "progressbar",
                     x + pos, y + (h - logical_rect.height)/2,
                     layout);
 
@@ -184,7 +225,7 @@ public class Gmpc.Progress : Gtk.EventBox
 
             Gtk.paint_layout (this.my_style, window, 
                     Gtk.StateType.NORMAL,
-                    false, clip, pb, "progressbar",
+                    false, clip, this.bar, "progressbar",
                     x + pos, y + (h - logical_rect.height)/2,
                     layout);
         }
