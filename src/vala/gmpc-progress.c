@@ -18,12 +18,12 @@
 */
 
 #include "gmpc-progress.h"
-#include <float.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gdk/gdk.h>
+#include <float.h>
+#include <math.h>
 
 
 
@@ -65,13 +65,17 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 	g_return_if_fail (range != NULL);
 	if (self->priv->total > 0) {
 		if (self->priv->do_countdown) {
-			if (gtk_range_get_value ((GtkRange*) range) != (1 - (self->priv->current / ((double) self->priv->total)))) {
-				fprintf (stdout, "changed\n");
+			guint seconds;
+			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
+			if (seconds != self->priv->current) {
+				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
 				g_signal_emit_by_name (self, "seek-event", (guint) ((1 - gtk_range_get_value ((GtkRange*) range)) * self->priv->total));
 			}
 		} else {
-			if (gtk_range_get_value ((GtkRange*) range) != (self->priv->current / ((double) self->priv->total))) {
-				fprintf (stdout, "changed\n");
+			guint seconds;
+			seconds = (guint) (self->priv->total * (gtk_range_get_value ((GtkRange*) range)));
+			if (seconds != self->priv->current) {
+				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
 				g_signal_emit_by_name (self, "seek-event", (guint) (gtk_range_get_value ((GtkRange*) range) * self->priv->total));
 			}
 		}
