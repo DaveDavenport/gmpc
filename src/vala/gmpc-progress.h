@@ -54,8 +54,6 @@ GmpcProgress* gmpc_progress_construct (GType object_type);
 GmpcProgress* gmpc_progress_new (void);
 gboolean gmpc_progress_get_hide_text (GmpcProgress* self);
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value);
-gboolean gmpc_progress_get_do_countdown (GmpcProgress* self);
-void gmpc_progress_set_do_countdown (GmpcProgress* self, gboolean value);
 GType gmpc_progress_get_type (void);
 
 

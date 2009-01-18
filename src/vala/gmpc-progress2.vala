@@ -20,14 +20,13 @@
 using GLib;
 using Gtk;
 using Gdk;
-using Cairo;
 
 
 public class Gmpc.Progress : Gtk.HBox
 {
     private uint total              = 0;
     private uint current            = 0;
-    private bool _do_countdown      = false;
+    private bool do_countdown      = false;
     public bool _hide_text          = false;
     private Gtk.Scale scale        = null;
     private Gtk.Label label        = null;
@@ -61,7 +60,6 @@ public class Gmpc.Progress : Gtk.HBox
         this.label = new Gtk.Label("");
         this.label.set_alignment(1.0f,0.5f);
 
-        this.label.button_press_event += button_press_event;
         this.pack_start(this.scale, true,true,0);
         this.pack_end(this.label, false,true,0);
         this.show_all();
@@ -71,11 +69,11 @@ public class Gmpc.Progress : Gtk.HBox
     signal void seek_event (uint seek_time);
 
 
-    private void value_changed (Gtk.Range range)
+    private void value_changed (Gtk.Scale range)
     {
         if(this.total > 0)
         {
-            if(this._do_countdown)
+            if(this.do_countdown)
             {
                 if(range.get_value() != (1-(this.current/(double)this.total)))
                 {
@@ -94,15 +92,15 @@ public class Gmpc.Progress : Gtk.HBox
         }
     }
 
-    private bool button_press_event (Gtk.Widget scale, Gdk.EventButton event)
+    private bool button_press_event (Gtk.Scale scale, Gdk.EventButton event)
     {
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 3)
             {
                 stdout.printf("right button press\n");
-                this._do_countdown = !this._do_countdown;
-                this.scale.inverted = this._do_countdown;
+                this.do_countdown = !this.do_countdown;
+                this.scale.inverted = this.do_countdown;
                 var cur = this.current;
                 var tot = this.total;
                 this.total=this.current = 0;
@@ -142,13 +140,13 @@ public class Gmpc.Progress : Gtk.HBox
             this.current = current;
             if(this.total > 0)
             {
-                if(this._do_countdown){
+                if(this.do_countdown){
                     this.scale.set_value(1-this.current/(double)this.total);
                 }else{
                     this.scale.set_value(this.current/(double)this.total);
                 }
 
-                }
+            }
             else
                 this.scale.set_value(0.0);
 

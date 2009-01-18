@@ -32,7 +32,7 @@ static glong string_get_length (const char* self);
 struct _GmpcProgressPrivate {
 	guint total;
 	guint current;
-	gboolean _do_countdown;
+	gboolean do_countdown;
 	GtkScale* scale;
 	GtkLabel* label;
 };
@@ -40,11 +40,10 @@ struct _GmpcProgressPrivate {
 #define GMPC_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_PROGRESS, GmpcProgressPrivate))
 enum  {
 	GMPC_PROGRESS_DUMMY_PROPERTY,
-	GMPC_PROGRESS_HIDE_TEXT,
-	GMPC_PROGRESS_DO_COUNTDOWN
+	GMPC_PROGRESS_HIDE_TEXT
 };
-static void gmpc_progress_value_changed (GmpcProgress* self, GtkRange* range);
-static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkWidget* scale, const GdkEventButton* event);
+static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range);
+static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event);
 static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event);
 static void _gmpc_progress_value_changed_gtk_range_value_changed (GtkScale* _sender, gpointer self);
 static gboolean _gmpc_progress_scroll_event_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self);
@@ -61,26 +60,26 @@ static glong string_get_length (const char* self) {
 }
 
 
-static void gmpc_progress_value_changed (GmpcProgress* self, GtkRange* range) {
+static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (range != NULL);
 	if (self->priv->total > 0) {
-		if (self->priv->_do_countdown) {
-			if (gtk_range_get_value (range) != (1 - (self->priv->current / ((double) self->priv->total)))) {
+		if (self->priv->do_countdown) {
+			if (gtk_range_get_value ((GtkRange*) range) != (1 - (self->priv->current / ((double) self->priv->total)))) {
 				fprintf (stdout, "changed\n");
-				g_signal_emit_by_name (self, "seek-event", (guint) ((1 - gtk_range_get_value (range)) * self->priv->total));
+				g_signal_emit_by_name (self, "seek-event", (guint) ((1 - gtk_range_get_value ((GtkRange*) range)) * self->priv->total));
 			}
 		} else {
-			if (gtk_range_get_value (range) != (self->priv->current / ((double) self->priv->total))) {
+			if (gtk_range_get_value ((GtkRange*) range) != (self->priv->current / ((double) self->priv->total))) {
 				fprintf (stdout, "changed\n");
-				g_signal_emit_by_name (self, "seek-event", (guint) (gtk_range_get_value (range) * self->priv->total));
+				g_signal_emit_by_name (self, "seek-event", (guint) (gtk_range_get_value ((GtkRange*) range) * self->priv->total));
 			}
 		}
 	}
 }
 
 
-static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkWidget* scale, const GdkEventButton* event) {
+static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
@@ -88,8 +87,8 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkWidget*
 			guint cur;
 			guint tot;
 			fprintf (stdout, "right button press\n");
-			self->priv->_do_countdown = !self->priv->_do_countdown;
-			gtk_range_set_inverted ((GtkRange*) self->priv->scale, self->priv->_do_countdown);
+			self->priv->do_countdown = !self->priv->do_countdown;
+			gtk_range_set_inverted ((GtkRange*) self->priv->scale, self->priv->do_countdown);
 			cur = self->priv->current;
 			tot = self->priv->total;
 			self->priv->total = self->priv->current = (guint) 0;
@@ -105,14 +104,14 @@ static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale,
 	g_return_val_if_fail (scale != NULL, FALSE);
 	fprintf (stdout, "scrolling\n");
 	if ((*event).direction == GDK_SCROLL_UP) {
-		if (gmpc_progress_get_do_countdown (self)) {
+		if (self->priv->do_countdown) {
 			gtk_range_set_value ((GtkRange*) scale, 1 - ((self->priv->current + 5) / ((double) self->priv->total)));
 		} else {
 			gtk_range_set_value ((GtkRange*) scale, (self->priv->current + 5) / ((double) self->priv->total));
 		}
 	} else {
 		if ((*event).direction == GDK_SCROLL_DOWN) {
-			if (gmpc_progress_get_do_countdown (self)) {
+			if (self->priv->do_countdown) {
 				gtk_range_set_value ((GtkRange*) scale, 1 - ((self->priv->current - 5) / ((double) self->priv->total)));
 			} else {
 				gtk_range_set_value ((GtkRange*) scale, (self->priv->current - 5) / ((double) self->priv->total));
@@ -136,7 +135,7 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 		self->priv->total = total;
 		self->priv->current = current;
 		if (self->priv->total > 0) {
-			if (self->priv->_do_countdown) {
+			if (self->priv->do_countdown) {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, 1 - (self->priv->current / ((double) self->priv->total)));
 			} else {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, self->priv->current / ((double) self->priv->total));
@@ -163,7 +162,7 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 			t_seconds = ((gint) self->priv->total) % 60;
 			a = g_strdup ("");
 			p = self->priv->current;
-			if (gmpc_progress_get_do_countdown (self)) {
+			if (self->priv->do_countdown) {
 				char* _tmp1;
 				p = self->priv->total - self->priv->current;
 				_tmp1 = NULL;
@@ -251,19 +250,6 @@ void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value) {
 }
 
 
-gboolean gmpc_progress_get_do_countdown (GmpcProgress* self) {
-	g_return_val_if_fail (self != NULL, FALSE);
-	return self->priv->_do_countdown;
-}
-
-
-void gmpc_progress_set_do_countdown (GmpcProgress* self, gboolean value) {
-	g_return_if_fail (self != NULL);
-	self->priv->_do_countdown = value;
-	g_object_notify ((GObject *) self, "do-countdown");
-}
-
-
 static void _gmpc_progress_value_changed_gtk_range_value_changed (GtkScale* _sender, gpointer self) {
 	gmpc_progress_value_changed (self, _sender);
 }
@@ -304,7 +290,6 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		_tmp1 = NULL;
 		self->priv->label = (_tmp1 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (self->priv->label == NULL) ? NULL : (self->priv->label = (g_object_unref (self->priv->label), NULL)), _tmp1);
 		gtk_misc_set_alignment ((GtkMisc*) self->priv->label, 1.0f, 0.5f);
-		g_signal_connect_object ((GtkWidget*) self->priv->label, "button-press-event", (GCallback) _gmpc_progress_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_box_pack_start ((GtkBox*) self, (GtkWidget*) self->priv->scale, TRUE, TRUE, (guint) 0);
 		gtk_box_pack_end ((GtkBox*) self, (GtkWidget*) self->priv->label, FALSE, TRUE, (guint) 0);
 		gtk_widget_show_all ((GtkWidget*) self);
@@ -321,9 +306,6 @@ static void gmpc_progress_get_property (GObject * object, guint property_id, GVa
 		case GMPC_PROGRESS_HIDE_TEXT:
 		g_value_set_boolean (value, gmpc_progress_get_hide_text (self));
 		break;
-		case GMPC_PROGRESS_DO_COUNTDOWN:
-		g_value_set_boolean (value, gmpc_progress_get_do_countdown (self));
-		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 		break;
@@ -337,9 +319,6 @@ static void gmpc_progress_set_property (GObject * object, guint property_id, con
 	switch (property_id) {
 		case GMPC_PROGRESS_HIDE_TEXT:
 		gmpc_progress_set_hide_text (self, g_value_get_boolean (value));
-		break;
-		case GMPC_PROGRESS_DO_COUNTDOWN:
-		gmpc_progress_set_do_countdown (self, g_value_get_boolean (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -356,7 +335,6 @@ static void gmpc_progress_class_init (GmpcProgressClass * klass) {
 	G_OBJECT_CLASS (klass)->constructor = gmpc_progress_constructor;
 	G_OBJECT_CLASS (klass)->finalize = gmpc_progress_finalize;
 	g_object_class_install_property (G_OBJECT_CLASS (klass), GMPC_PROGRESS_HIDE_TEXT, g_param_spec_boolean ("hide-text", "hide-text", "hide-text", FALSE, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (G_OBJECT_CLASS (klass), GMPC_PROGRESS_DO_COUNTDOWN, g_param_spec_boolean ("do-countdown", "do-countdown", "do-countdown", FALSE, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_signal_new ("seek_event", GMPC_TYPE_PROGRESS, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
 }
 
@@ -365,7 +343,7 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 	self->priv = GMPC_PROGRESS_GET_PRIVATE (self);
 	self->priv->total = (guint) 0;
 	self->priv->current = (guint) 0;
-	self->priv->_do_countdown = FALSE;
+	self->priv->do_countdown = FALSE;
 	self->_hide_text = FALSE;
 	self->priv->scale = NULL;
 	self->priv->label = NULL;
