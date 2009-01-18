@@ -184,7 +184,10 @@ public class Gmpc.Progress : Gtk.HBox
                     }
                     a += "%02i:%02i".printf(t_minutes,t_seconds);
                 }
-                this.label.width_chars = (int)a.length;
+                if(this.do_countdown)
+                    this.label.width_chars = (int)a.length;
+                else 
+                    this.label.width_chars = (int)a.length+1; 
                 this.label.set_text(a);
             }
         }

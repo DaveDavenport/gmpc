@@ -216,7 +216,11 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 				a = (_tmp12 = g_strconcat (a, _tmp11 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp12);
 				_tmp11 = (g_free (_tmp11), NULL);
 			}
-			gtk_label_set_width_chars (self->priv->label, (gint) string_get_length (a));
+			if (self->priv->do_countdown) {
+				gtk_label_set_width_chars (self->priv->label, (gint) string_get_length (a));
+			} else {
+				gtk_label_set_width_chars (self->priv->label, ((gint) string_get_length (a)) + 1);
+			}
 			gtk_label_set_text (self->priv->label, a);
 			a = (g_free (a), NULL);
 		}
