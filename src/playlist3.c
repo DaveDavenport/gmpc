@@ -83,9 +83,6 @@ void playlist_zoom_out(void);
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
 
-gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
-gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
-
 void pl3_pb_seek_event ( GtkWidget *pb, guint seek_time, gpointer user_data); 
 
 void set_browser_format(void);
@@ -765,51 +762,10 @@ static void playlist3_source_drag_data_recieved (GtkWidget          *widget,
 /**
  * Progresbar
  */
-gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data)
-{
-    /* Seeking when scrolled on the pb */
-    if(event->direction == GDK_SCROLL_UP)
-    {
-        seek_ps(5);
-    }
-    else if (event->direction == GDK_SCROLL_DOWN)
-    {
-        seek_ns(5);
-    }
-    return TRUE;
-}
-
 void pl3_pb_seek_event ( GtkWidget *pb, guint seek_time, gpointer user_data)
 {
     printf("seek to: %i\n", (int)seek_time);
     mpd_player_seek(connection, (int) seek_time);
-}
-
-
-gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data)
-{
-    gint width;
-    gdouble pos;
-    if(event->type == GDK_BUTTON_PRESS)
-    {
-        if(event->button == 1)
-        {
-            if(event->window)
-            {
-                gdk_drawable_get_size(event->window, &width, NULL);
-                pos = (gdouble)event->x/(gdouble)width;
-                mpd_player_seek(connection,(int) mpd_status_get_total_song_time(connection)*pos);
-            }
-        }
-        else if (event->button == 3)
-        {
-            gboolean a = !gmpc_progress_get_do_countdown(GMPC_PROGRESS(pb));
-            gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb), a);
-            cfg_set_single_value_as_int(config, "playlist", "progressbar-countdown", a);
-        }
-    }
-    /* propagate the signal */
-    return FALSE;
 }
 
 /**
@@ -1096,14 +1052,9 @@ void create_playlist3 (void)
 	pb = (GtkWidget *)gmpc_progress_new();
 	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
 	gtk_widget_show(pb);
-//	g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
-//	g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
 	g_signal_connect(G_OBJECT(pb), "seek-event", G_CALLBACK(pl3_pb_seek_event), NULL);
 
 	new_pb = pb;
-
-	gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),
-			cfg_get_single_value_as_int_with_default(config, "playlist", "progressbar-countdown", FALSE));
 
 	/* Add volume slider. */
 	volume_button = gtk_volume_button_new();

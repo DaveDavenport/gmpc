@@ -45,16 +45,6 @@ public class Gmpc.Progress : Gtk.HBox
         }
     }
 
-    public bool do_countdown {
-        get { 
-            return _do_countdown; 
-        }
-        set {
-            _do_countdown = value; 
-        }
-    }
-  
-
     /* Construct function */
     construct {
 

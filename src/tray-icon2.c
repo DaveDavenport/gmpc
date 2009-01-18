@@ -525,6 +525,7 @@ void tray_icon2_create_tooltip(void)
 			gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
 		}
 		tray_icon2_tooltip_pb = (GtkWidget *) gmpc_progress_new();
+        gmpc_progress_set_hide_text(GMPC_PROGRESS(tray_icon2_tooltip_pb), TRUE);
 		/* Update the progressbar */
         gmpc_progress_set_time(GMPC_PROGRESS(tray_icon2_tooltip_pb), 
                 mpd_status_get_total_song_time(connection),
