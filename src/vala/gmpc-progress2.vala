@@ -30,6 +30,7 @@ public class Gmpc.Progress : Gtk.HBox
     public bool _hide_text          = false;
     private Gtk.Scale scale        = null;
     private Gtk.Label label        = null;
+    private ulong set_value_handler = 0;
 
     public bool hide_text {
         get { 
@@ -50,7 +51,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale = new Gtk.HScale(null);
         this.scale.set_range(0.0,1.0);
         this.scale.draw_value = false;
-        this.scale.value_changed += value_changed;
+        this.set_value_handler = GLib.Signal.connect_swapped(this.scale,"value_changed",(GLib.Callback)value_changed,this);
         this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;
         this.scale.sensitive = false;
 
@@ -80,7 +81,7 @@ public class Gmpc.Progress : Gtk.HBox
                 if(seconds != this.current)
                 {
                     stdout.printf("changed: %u %u\n", seconds, this.current);
-                    seek_event((uint)((1-range.get_value())*this.total));
+                    seek_event(seconds);
                 }
 
             }else{
@@ -88,7 +89,7 @@ public class Gmpc.Progress : Gtk.HBox
                 if(seconds != this.current)
                 {
                     stdout.printf("changed: %u %u\n", seconds, this.current);
-                    seek_event((uint)(range.get_value()*this.total));
+                    seek_event(seconds);
                 }
 
             }
@@ -141,6 +142,8 @@ public class Gmpc.Progress : Gtk.HBox
         {
             this.total = total;
             this.current = current;
+
+            GLib.SignalHandler.block(this.scale, this.set_value_handler);
             if(this.total > 0) {
                 this.scale.sensitive = true;
                 if(this.do_countdown){
@@ -153,6 +156,8 @@ public class Gmpc.Progress : Gtk.HBox
                 this.scale.sensitive = false;
                 this.scale.set_value(0.0);
             }
+
+            GLib.SignalHandler.unblock(this.scale, this.set_value_handler);
 
             if(this.hide_text == false)
             {

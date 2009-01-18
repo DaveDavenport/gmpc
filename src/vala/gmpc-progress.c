@@ -35,6 +35,7 @@ struct _GmpcProgressPrivate {
 	gboolean do_countdown;
 	GtkScale* scale;
 	GtkLabel* label;
+	gulong set_value_handler;
 };
 
 #define GMPC_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_PROGRESS, GmpcProgressPrivate))
@@ -45,7 +46,6 @@ enum  {
 static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range);
 static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event);
 static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event);
-static void _gmpc_progress_value_changed_gtk_range_value_changed (GtkScale* _sender, gpointer self);
 static gboolean _gmpc_progress_scroll_event_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self);
 static gboolean _gmpc_progress_button_press_event_gtk_widget_button_press_event (GtkScale* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -69,14 +69,14 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
 			if (seconds != self->priv->current) {
 				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
-				g_signal_emit_by_name (self, "seek-event", (guint) ((1 - gtk_range_get_value ((GtkRange*) range)) * self->priv->total));
+				g_signal_emit_by_name (self, "seek-event", seconds);
 			}
 		} else {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (gtk_range_get_value ((GtkRange*) range)));
 			if (seconds != self->priv->current) {
 				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
-				g_signal_emit_by_name (self, "seek-event", (guint) (gtk_range_get_value ((GtkRange*) range) * self->priv->total));
+				g_signal_emit_by_name (self, "seek-event", seconds);
 			}
 		}
 	}
@@ -138,6 +138,7 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 	if (_tmp0) {
 		self->priv->total = total;
 		self->priv->current = current;
+		g_signal_handler_block (self->priv->scale, self->priv->set_value_handler);
 		if (self->priv->total > 0) {
 			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", TRUE, NULL);
 			if (self->priv->do_countdown) {
@@ -149,6 +150,7 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 			gtk_range_set_value ((GtkRange*) self->priv->scale, 0.0);
 		}
+		g_signal_handler_unblock (self->priv->scale, self->priv->set_value_handler);
 		if (gmpc_progress_get_hide_text (self) == FALSE) {
 			gint e_hour;
 			gint e_minutes;
@@ -256,11 +258,6 @@ void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value) {
 }
 
 
-static void _gmpc_progress_value_changed_gtk_range_value_changed (GtkScale* _sender, gpointer self) {
-	gmpc_progress_value_changed (self, _sender);
-}
-
-
 static gboolean _gmpc_progress_scroll_event_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self) {
 	return gmpc_progress_scroll_event (self, _sender, event);
 }
@@ -288,7 +285,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		self->priv->scale = (_tmp0 = (GtkScale*) g_object_ref_sink ((GtkHScale*) gtk_hscale_new (NULL)), (self->priv->scale == NULL) ? NULL : (self->priv->scale = (g_object_unref (self->priv->scale), NULL)), _tmp0);
 		gtk_range_set_range ((GtkRange*) self->priv->scale, 0.0, 1.0);
 		gtk_scale_set_draw_value (self->priv->scale, FALSE);
-		g_signal_connect_object ((GtkRange*) self->priv->scale, "value-changed", (GCallback) _gmpc_progress_value_changed_gtk_range_value_changed, self, 0);
+		self->priv->set_value_handler = g_signal_connect_swapped (self->priv->scale, "value_changed", (GCallback) gmpc_progress_value_changed, self);
 		gtk_range_set_update_policy ((GtkRange*) self->priv->scale, GTK_UPDATE_DISCONTINUOUS);
 		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_SCROLL_MASK);
@@ -354,6 +351,7 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 	self->_hide_text = FALSE;
 	self->priv->scale = NULL;
 	self->priv->label = NULL;
+	self->priv->set_value_handler = (gulong) 0;
 }
 
 
