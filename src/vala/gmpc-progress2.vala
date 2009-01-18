@@ -62,7 +62,8 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.set_range(0.0,1.0);
         this.scale.draw_value = false;
         this.scale.value_changed += value_changed;
-        
+        this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;
+
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
         this.scale.scroll_event += scroll_event;
         this.scale.button_press_event += button_press_event;
