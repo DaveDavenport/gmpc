@@ -135,12 +135,14 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 		self->priv->total = total;
 		self->priv->current = current;
 		if (self->priv->total > 0) {
+			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", TRUE, NULL);
 			if (self->priv->do_countdown) {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, 1 - (self->priv->current / ((double) self->priv->total)));
 			} else {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, self->priv->current / ((double) self->priv->total));
 			}
 		} else {
+			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 			gtk_range_set_value ((GtkRange*) self->priv->scale, 0.0);
 		}
 		if (gmpc_progress_get_hide_text (self) == FALSE) {
@@ -284,6 +286,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		gtk_scale_set_draw_value (self->priv->scale, FALSE);
 		g_signal_connect_object ((GtkRange*) self->priv->scale, "value-changed", (GCallback) _gmpc_progress_value_changed_gtk_range_value_changed, self, 0);
 		gtk_range_set_update_policy ((GtkRange*) self->priv->scale, GTK_UPDATE_DISCONTINUOUS);
+		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_SCROLL_MASK);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "scroll-event", (GCallback) _gmpc_progress_scroll_event_gtk_widget_scroll_event, self, 0);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "button-press-event", (GCallback) _gmpc_progress_button_press_event_gtk_widget_button_press_event, self, 0);

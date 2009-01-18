@@ -52,6 +52,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.draw_value = false;
         this.scale.value_changed += value_changed;
         this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;
+        this.scale.sensitive = false;
 
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
         this.scale.scroll_event += scroll_event;
@@ -138,17 +139,18 @@ public class Gmpc.Progress : Gtk.HBox
         {
             this.total = total;
             this.current = current;
-            if(this.total > 0)
-            {
+            if(this.total > 0) {
+                this.scale.sensitive = true;
                 if(this.do_countdown){
                     this.scale.set_value(1-this.current/(double)this.total);
                 }else{
                     this.scale.set_value(this.current/(double)this.total);
                 }
 
-            }
-            else
+            } else {
+                this.scale.sensitive = false;
                 this.scale.set_value(0.0);
+            }
 
             if(this.hide_text == false)
             {
