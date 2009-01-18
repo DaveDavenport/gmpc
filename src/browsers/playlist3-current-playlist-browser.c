@@ -201,18 +201,6 @@ void pl3_current_playlist_destroy(void)
 {
 	if(pl3_cp_tree)
 	{
-		GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(pl3_cp_tree));
-		for(iter = cols; iter; iter = g_list_next(iter))
-		{
-			gpointer data = g_object_get_data(G_OBJECT(iter->data), "colid");
-			int colid = GPOINTER_TO_INT(data);
-			gchar *string = g_strdup_printf("%i", colid);
-			int width = gtk_tree_view_column_get_width(GTK_TREE_VIEW_COLUMN(iter->data));
-			cfg_set_single_value_as_int(config, "current-playlist-column-width", string,width);
-			q_free(string);
-		}
-		g_list_free(cols);
-
 		/* destroy the entry */ 
 		if(pl3_curb_tree_ref)
 		{
