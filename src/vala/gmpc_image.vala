@@ -54,6 +54,11 @@ public class Gmpc.Image : Gtk.EventBox {
 			int y = img.allocation.y;
 			int ww = img.allocation.width;
 			int wh = img.allocation.height;
+
+            ctx.rectangle(event.area.x,event.area.y,event.area.width,event.area.height);
+            ctx.clip();
+            ctx.save();
+
             ctx.set_line_width ( 0.8);
 			ctx.set_tolerance (0.1);
 			if(cover != null)
@@ -75,13 +80,13 @@ public class Gmpc.Image : Gtk.EventBox {
 				else
 					ctx.clip();
 				ctx.paint_with_alpha(fade2);
-				ctx.reset_clip();
-				if(cover_border){
+                if(cover_border){
 					ctx.set_source_rgba(0,0,0,fade2);
 					ctx.stroke();
 				}
+				ctx.reset_clip();
+                ctx.restore();
 			}
-
 
 			if(temp != null)
 			{
@@ -98,12 +103,12 @@ public class Gmpc.Image : Gtk.EventBox {
 				else
 					ctx.clip();
 				ctx.paint_with_alpha(1-fade);
-				ctx.reset_clip();
 				if(temp_border){
 					ctx.set_source_rgba(0,0,0,1-fade);
 					ctx.stroke();
 				}
-			}
+                ctx.reset_clip();
+            }
 			return true;
 		}
 		private bool timeout_test()

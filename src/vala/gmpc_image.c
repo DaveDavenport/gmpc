@@ -67,6 +67,9 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	y = ((GtkWidget*) img)->allocation.y;
 	ww = ((GtkWidget*) img)->allocation.width;
 	wh = ((GtkWidget*) img)->allocation.height;
+	cairo_rectangle (ctx, (double) (*event).area.x, (double) (*event).area.y, (double) (*event).area.width, (double) (*event).area.height);
+	cairo_clip (ctx);
+	cairo_save (ctx);
 	cairo_set_line_width (ctx, 0.8);
 	cairo_set_tolerance (ctx, 0.1);
 	if (self->priv->cover != NULL) {
@@ -92,11 +95,12 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 			cairo_clip (ctx);
 		}
 		cairo_paint_with_alpha (ctx, fade2);
-		cairo_reset_clip (ctx);
 		if (self->priv->cover_border) {
 			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, fade2);
 			cairo_stroke (ctx);
 		}
+		cairo_reset_clip (ctx);
+		cairo_restore (ctx);
 	}
 	if (self->priv->temp != NULL) {
 		cairo_new_path (ctx);
@@ -110,11 +114,11 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 			cairo_clip (ctx);
 		}
 		cairo_paint_with_alpha (ctx, 1 - self->priv->fade);
-		cairo_reset_clip (ctx);
 		if (self->priv->temp_border) {
 			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, 1 - self->priv->fade);
 			cairo_stroke (ctx);
 		}
+		cairo_reset_clip (ctx);
 	}
 	return (_tmp1 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp1);
 }

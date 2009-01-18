@@ -397,10 +397,12 @@ static gboolean cfg_save_real(config_obj *cfgo)
         return FALSE;
 	}
 
-    debug_printf(DEBUG_INFO, "Save triggered:%s", cfgo->url);
     if(cfgo->save_timeout) {
         cfgo->save_timeout = 0;
+    }else {
+        return FALSE;
     }
+    debug_printf(DEBUG_INFO, "Save triggered:%s", cfgo->url);
     debug_printf(DEBUG_INFO,"Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
 	if(cfgo->root != NULL)
 	{
