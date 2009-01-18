@@ -86,6 +86,8 @@ static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gp
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data);
 gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer user_data);
 
+void pl3_pb_seek_event ( GtkWidget *pb, guint seek_time, gpointer user_data); 
+
 void set_browser_format(void);
 void set_playlist_format(void);
 
@@ -777,6 +779,12 @@ gboolean pl3_pb_scroll_event ( GtkWidget *pb, GdkEventScroll *event, gpointer us
     return TRUE;
 }
 
+void pl3_pb_seek_event ( GtkWidget *pb, guint seek_time, gpointer user_data)
+{
+    printf("seek to: %i\n", (int)seek_time);
+    mpd_player_seek(connection, (int) seek_time);
+}
+
 
 gboolean pl3_pb_button_press_event (GtkWidget *pb, GdkEventButton *event, gpointer user_data)
 {
@@ -1088,8 +1096,10 @@ void create_playlist3 (void)
 	pb = (GtkWidget *)gmpc_progress_new();
 	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
 	gtk_widget_show(pb);
-	g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
-	g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
+//	g_signal_connect(G_OBJECT(pb), "button-press-event", G_CALLBACK(pl3_pb_button_press_event), NULL);
+//	g_signal_connect(G_OBJECT(pb), "scroll-event", G_CALLBACK(pl3_pb_scroll_event), NULL);
+	g_signal_connect(G_OBJECT(pb), "seek-event", G_CALLBACK(pl3_pb_seek_event), NULL);
+
 	new_pb = pb;
 
 	gmpc_progress_set_do_countdown(GMPC_PROGRESS(pb),

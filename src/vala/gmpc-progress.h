@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __GMPC_PROGRESS_H__
-#define __GMPC_PROGRESS_H__
+#ifndef __GMPC_PROGRESS2_H__
+#define __GMPC_PROGRESS2_H__
 
 #include <glib.h>
 #include <glib-object.h>
@@ -39,13 +39,13 @@ typedef struct _GmpcProgressClass GmpcProgressClass;
 typedef struct _GmpcProgressPrivate GmpcProgressPrivate;
 
 struct _GmpcProgress {
-	GtkEventBox parent_instance;
+	GtkHBox parent_instance;
 	GmpcProgressPrivate * priv;
 	gboolean _hide_text;
 };
 
 struct _GmpcProgressClass {
-	GtkEventBoxClass parent_class;
+	GtkHBoxClass parent_class;
 };
 
 
