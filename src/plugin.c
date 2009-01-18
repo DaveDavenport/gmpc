@@ -310,7 +310,8 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     return g_strdup(plug->path);
 #else
     gchar *url = NULL;
-    if(strncmp(plug->path, g_get_home_dir(), strlen(g_get_home_dir())) == 0)
+    gchar *homedir = gmpc_get_user_path(""); 
+    if(strncmp(plug->path,homedir ,strlen(homedir)) == 0)
     {
         url = g_strdup(plug->path);
     }else{
@@ -318,7 +319,8 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
         url = g_build_path(G_DIR_SEPARATOR_S, PACKAGE_DATA_DIR, "gmpc","plugins",NULL);
     }
 
-    printf("found url: %s (%s:%s)\n", url, plug->path, g_get_home_dir());
+    printf("found url: %s (%s:%s)\n", url, plug->path, homedir);
+    g_free(homedir);
     return url;
 #endif
 }

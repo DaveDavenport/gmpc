@@ -78,20 +78,12 @@ public class Gmpc.Progress : Gtk.HBox
             if(this.do_countdown)
             {
                 uint seconds = (uint)(this.total*(1-range.get_value()));
-                if(seconds != this.current)
-                {
-                    stdout.printf("changed: %u %u\n", seconds, this.current);
-                    seek_event(seconds);
-                }
-
+                stdout.printf("changed: %u %u\n", seconds, this.current);
+                seek_event(seconds);
             }else{
                 uint seconds = (uint)(this.total*(range.get_value()));
-                if(seconds != this.current)
-                {
-                    stdout.printf("changed: %u %u\n", seconds, this.current);
-                    seek_event(seconds);
-                }
-
+                stdout.printf("changed: %u %u\n", seconds, this.current);
+                seek_event(seconds);
             }
         }
     }

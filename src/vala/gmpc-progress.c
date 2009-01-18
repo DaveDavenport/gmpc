@@ -67,17 +67,13 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 		if (self->priv->do_countdown) {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
-			if (seconds != self->priv->current) {
-				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
-				g_signal_emit_by_name (self, "seek-event", seconds);
-			}
+			fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
+			g_signal_emit_by_name (self, "seek-event", seconds);
 		} else {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (gtk_range_get_value ((GtkRange*) range)));
-			if (seconds != self->priv->current) {
-				fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
-				g_signal_emit_by_name (self, "seek-event", seconds);
-			}
+			fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
+			g_signal_emit_by_name (self, "seek-event", seconds);
 		}
 	}
 }
