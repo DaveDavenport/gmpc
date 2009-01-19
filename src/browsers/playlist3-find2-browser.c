@@ -84,8 +84,12 @@ static void pl3_find2_fill_combo(gmpcPlugin *plug)
 			gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
 		}
 	}
-    gtk_list_store_append(pl3_find2_combo_store, &iter);
-    gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
+
+		if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,QUERY_ENTRY))
+		{
+			gtk_list_store_append(pl3_find2_combo_store, &iter);
+			gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
+		}
 }
 
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
