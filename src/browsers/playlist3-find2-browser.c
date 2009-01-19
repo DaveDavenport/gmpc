@@ -48,7 +48,6 @@ static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data);
 
 static void pl3_find2_save_myself(void);
 
-int pl3_find2_last_entry = MPD_TAG_ITEM_ANY;
 
 
 /* Playlist window row reference */
@@ -67,7 +66,7 @@ static GtkWidget            *search_combo           = NULL;
 static GtkWidget            *search_entry           = NULL;
 
 #define QUERY_ENTRY MPD_TAG_NUM_OF_ITEM_TYPES
-static void pl3_find2_fill_combo(void)
+static void pl3_find2_fill_combo(gmpcPlugin *plug)
 {
 	GtkTreeIter iter;
 	int i=0, max = 3;
@@ -79,8 +78,11 @@ static void pl3_find2_fill_combo(void)
 	}
 	for(i=0;i< max;i++)
 	{
-		gtk_list_store_append(pl3_find2_combo_store, &iter);
-		gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
+		if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,i))
+		{
+			gtk_list_store_append(pl3_find2_combo_store, &iter);
+			gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
+		}
 	}
     gtk_list_store_append(pl3_find2_combo_store, &iter);
     gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
@@ -88,7 +90,6 @@ static void pl3_find2_fill_combo(void)
 
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
 {
-  pl3_find2_last_entry= gtk_combo_box_get_active(cb);
 }
 
 static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
@@ -99,6 +100,21 @@ static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
     }
 }
 
+static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer user_data)
+{
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_combo_box_get_model(box);
+	if(gtk_combo_box_get_active_iter(box, &iter))
+	{
+		gmpcPlugin *plug;
+		int type;
+
+        gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 1, &type, 2, &plug,-1);
+		pl3_find2_fill_combo(plug);
+
+	}
+	gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
+}
 /**
  * Construct the browser 
  */
@@ -120,7 +136,7 @@ static void pl3_find2_browser_init(void)
 
     pl3_find2_combo_store = gtk_list_store_new(2,G_TYPE_INT, G_TYPE_STRING);
     /** Fill the view */
-    pl3_find2_fill_combo();
+    pl3_find2_fill_combo(NULL);
 
     /* Column */
      /* set up the tree */
@@ -145,29 +161,6 @@ static void pl3_find2_browser_init(void)
 
     /** Add a default item */
     hbox = gtk_hbox_new(FALSE, 6);
-
-    search_combo= gtk_combo_box_new();
-
-    renderer = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(search_combo), renderer, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(search_combo), renderer, "text", 1, NULL);
-    gtk_combo_box_set_model(GTK_COMBO_BOX(search_combo), GTK_TREE_MODEL(pl3_find2_combo_store));
-    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), pl3_find2_last_entry);
-    gtk_box_pack_start(GTK_BOX(hbox), search_combo, FALSE, TRUE, 0);
-    g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
-
-
-    search_entry = gtk_entry_new();
-	entrcomp = gtk_entry_completion_new();
-	gtk_entry_completion_set_text_column(entrcomp, 0);
-	gtk_entry_completion_set_inline_completion(entrcomp, TRUE);
-	gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(entrcomp), GTK_TREE_MODEL(pl3_find2_autocomplete));
-	gtk_entry_completion_set_popup_completion(GTK_ENTRY_COMPLETION(entrcomp), TRUE);
-	gtk_entry_set_completion(GTK_ENTRY(search_entry), entrcomp);
-
-
-    g_signal_connect(G_OBJECT(search_entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
-    gtk_box_pack_start(GTK_BOX(hbox), search_entry, TRUE, TRUE, 0);
 
     /* search in playlist */
     pl3_find2_curpl_model = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
@@ -195,10 +188,35 @@ static void pl3_find2_browser_init(void)
     }
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
-
+	g_signal_connect(G_OBJECT(pl3_find2_curpl), "changed", G_CALLBACK(pl3_find2_browser_type_plugin_changed), NULL);
+	
     //gtk_check_button_new_with_mnemonic(_("in _play queue"));
 //    g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
     gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_curpl, FALSE, TRUE,0);
+
+	/* What tag field */
+    search_combo= gtk_combo_box_new();
+
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(search_combo), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(search_combo), renderer, "text", 1, NULL);
+    gtk_combo_box_set_model(GTK_COMBO_BOX(search_combo), GTK_TREE_MODEL(pl3_find2_combo_store));
+    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
+    gtk_box_pack_start(GTK_BOX(hbox), search_combo, FALSE, TRUE, 0);
+    g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
+
+
+    search_entry = gtk_entry_new();
+	entrcomp = gtk_entry_completion_new();
+	gtk_entry_completion_set_text_column(entrcomp, 0);
+	gtk_entry_completion_set_inline_completion(entrcomp, TRUE);
+	gtk_entry_completion_set_model(GTK_ENTRY_COMPLETION(entrcomp), GTK_TREE_MODEL(pl3_find2_autocomplete));
+	gtk_entry_completion_set_popup_completion(GTK_ENTRY_COMPLETION(entrcomp), TRUE);
+	gtk_entry_set_completion(GTK_ENTRY(search_entry), entrcomp);
+
+
+    g_signal_connect(G_OBJECT(search_entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
+    gtk_box_pack_start(GTK_BOX(hbox), search_entry, TRUE, TRUE, 0);
 
     /* find button */
     button = gtk_button_new_from_stock(GTK_STOCK_FIND);
@@ -737,10 +755,10 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
     if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j )
     {
 		pl3_find2_browser_activate();
+        gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
         gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
         gtk_widget_grab_focus(search_entry);
 //        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl), TRUE);
-        gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
         return TRUE;
     }
 
