@@ -53,4 +53,9 @@ int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 GtkWidget * playlist3_get_window(void);
 
 extern GladeXML *pl3_xml;
+/**
+ * Server information 
+ */
+
+void serverinformation_show_popup(void);
 #endif

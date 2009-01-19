@@ -2026,6 +2026,15 @@ static void playlist3_fill_server_menu(void)
 
         menu_item = gtk_separator_menu_item_new();
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        /* Server Information */
+        menu_item = gtk_image_menu_item_new_with_label(_("Server Information"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+                gtk_image_new_from_stock(GTK_STOCK_INFO, GTK_ICON_SIZE_MENU));
+        g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(serverinformation_show_popup), NULL);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+
+        menu_item = gtk_separator_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 
         data = mpd_server_get_output_devices(connection);
         for(;data;data = mpd_data_get_next(data))

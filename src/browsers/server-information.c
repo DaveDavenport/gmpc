@@ -23,6 +23,7 @@
 #include "main.h"
 #include "plugin.h"
 #include "playlist3-messages.h"
+#include "playlist3.h"
 #include <libmpd/libmpd-internal.h>
 
 gmpcPlugin statistics_plugin;
@@ -39,43 +40,10 @@ enum {
     SERVERSTATS_NUM_FIELDS
 };
 
-static void serverstats_add(GtkWidget *category_tree);
 static gchar * serverstats_format_time(unsigned long seconds);
-static GtkTreeRowReference *serverstats_ref = NULL; 
 static GtkWidget *serverstats_sw= NULL, *serverstats_tree = NULL,*serverstats_combo = NULL;
 static GtkWidget *serverstats_labels[SERVERSTATS_NUM_FIELDS];
 static gboolean cancel_query = FALSE;
-
-/**
- * Get/Set enable 
- */
-
-static int serverstats_get_enabled(void)
-{
-	return cfg_get_single_value_as_int_with_default(config, "serverstats", "enable", TRUE);
-}
-
-static void serverstats_set_enabled(int enabled)
-{
-	cfg_set_single_value_as_int(config, "serverstats", "enable", enabled);
-	if(enabled) {
-		if(serverstats_ref == NULL) {
-			serverstats_add(GTK_WIDGET(playlist3_get_category_tree_view()));
-		}
-	} else {
-		GtkTreePath *path = gtk_tree_row_reference_get_path(serverstats_ref);
-        GtkTreeModel *model = gtk_tree_row_reference_get_model(serverstats_ref);
-		if (path){
-			GtkTreeIter iter;
-			if (gtk_tree_model_get_iter(model, &iter, path)){
-				gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-			}
-			gtk_tree_path_free(path);
-			gtk_tree_row_reference_free(serverstats_ref);
-			serverstats_ref = NULL;
-		}      
-	}
-}
 
 /**
  * Playlist browser functions 
@@ -103,56 +71,7 @@ static gboolean serverstats_expose_event(GtkWidget *widget, GdkEventExpose *even
 				0,0,width,height);
 	return FALSE;
 }
-static void serverstats_add(GtkWidget *category_tree)
-{
-	GtkTreePath *path;
-	GtkTreeModel *model = GTK_TREE_MODEL(playlist3_get_category_tree_store()); 
-	GtkTreeIter iter;
-    gint pos;
-	/**
-	 * don't do anything if we are disabled
-	 */
-	if(!cfg_get_single_value_as_int_with_default(config, "serverstats", "enable", TRUE)) return;
-	/** 
-	 * Add ourslef to the list 
-	 */
-	pos = cfg_get_single_value_as_int_with_default(config, "serverstats","position",2);
-	playlist3_insert_browser(&iter, pos);
-	gtk_list_store_set(GTK_LIST_STORE(model), &iter, 
-			PL3_CAT_TYPE, statistics_plugin.id,
-			PL3_CAT_TITLE,"Server Information", 
-			PL3_CAT_ICON_ID, "mpd",
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
-	/** 
-	 * remove odl reference if exists 
-	 */
-	if (serverstats_ref) {
-		gtk_tree_row_reference_free(serverstats_ref);
-		serverstats_ref = NULL;
-	}
-	/**
-	 * create reference to ourself in the list
-	 */
-	path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
-	if (path) {
-		serverstats_ref = gtk_tree_row_reference_new(model, path);
-		gtk_tree_path_free(path);
-	}
-}
-static void serverstats_browser_save_myself(void)
-{
-	if(serverstats_ref)
-	{
-		GtkTreePath *path = gtk_tree_row_reference_get_path(serverstats_ref);
-		if(path)
-		{
-			gint *indices = gtk_tree_path_get_indices(path);
-			debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
-			cfg_set_single_value_as_int(config, "serverstats","position",indices[0]);
-			gtk_tree_path_free(path);
-		}
-	}
-}
+
 static void serverstats_clear()
 {
 	int i;
@@ -604,47 +523,54 @@ static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata
     }
 }
 
-static void serverstats_browser_activate(void)
-{
-    GtkTreeView *tree = playlist3_get_category_tree_view();
-    GtkTreePath *path = gtk_tree_row_reference_get_path(serverstats_ref); 
-    GtkTreeSelection *selec = gtk_tree_view_get_selection(tree);
-
-    if(path)
-    {
-        gtk_tree_selection_select_path(selec, path);
-        gtk_tree_path_free(path);
-    }
-}
-static int serverstats_add_go_menu(GtkWidget *menu)
-{
-    GtkWidget *item = NULL;
-
-    item = gtk_image_menu_item_new_with_label(_("Server Information"));
-    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-            gtk_image_new_from_icon_name("mpd", GTK_ICON_SIZE_MENU));
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F6, 0, GTK_ACCEL_VISIBLE);
-    g_signal_connect(G_OBJECT(item), "activate", 
-            G_CALLBACK(serverstats_browser_activate), NULL);
-    return 1;
-}
-
 
 /**
- * Browser extention 
+ * public function
  */
+static void serverinformation_popup_close(GtkWidget *dialog, gint response_id, gpointer data)
+{
+    int width, height;
+    /* Save windows size */
+    gtk_window_get_size(GTK_WINDOW(dialog), &width, &height);
+    cfg_set_single_value_as_int(config, "serverstats", "dialog-width", width);
+    cfg_set_single_value_as_int(config, "serverstats", "dialog-height", height);
 
-gmpcPlBrowserPlugin serverstats_gbp = {
-	/** add */
-	.add = serverstats_add,
-	/** selected */
-	.selected = serverstats_selected,
-	/** unselected */
-	.unselected = serverstats_unselected,
-    /** add go menu */
-	.add_go_menu = serverstats_add_go_menu,
-};
+    /* Remove info window, and keep it */
+    serverstats_unselected(GTK_DIALOG(dialog)->vbox);
+
+    /* destroy dialog */
+    gtk_widget_destroy(dialog);
+    
+    debug_printf(DEBUG_INFO,"Close dialog: %i %i",width,height);
+}
+void serverinformation_show_popup(void)
+{
+    GtkWidget *dialog = NULL;
+    if(serverstats_sw) {
+        GtkWidget *win = gtk_widget_get_parent(serverstats_sw);
+        if(win)
+        {
+            gtk_window_present(GTK_WINDOW(win));
+            return;
+        }
+    }
+
+    dialog = gtk_dialog_new_with_buttons(_("Server Information"), 
+                GTK_WINDOW(playlist3_get_window()),
+                GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                GTK_STOCK_CLOSE, GTK_RESPONSE_OK, 
+                NULL);
+    /* Add info window */                
+    serverstats_selected(GTK_DIALOG(dialog)->vbox); 
+    /* Restore size */
+    gtk_window_resize(GTK_WINDOW(dialog),
+            cfg_get_single_value_as_int_with_default(config, "serverstats", "dialog-width", 400),
+            cfg_get_single_value_as_int_with_default(config, "serverstats", "dialog-height", 400));
+    /* handle close */
+    g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(serverinformation_popup_close), NULL);
+    gtk_widget_show(dialog);
+
+}
 
 
 /** 
@@ -652,18 +578,11 @@ gmpcPlBrowserPlugin serverstats_gbp = {
  */
 gmpcPlugin statistics_plugin = {
 	/* name */
-	.name = N_("Information"),
+	.name = N_("Server Information"),
 	/* version */
 	.version = {0,1,2},
 	/* type */
-	.plugin_type = GMPC_PLUGIN_PL_BROWSER,
-	/** playlist extention struct */
-	.browser = &serverstats_gbp,
+	.plugin_type = GMPC_INTERNALL,
 	/** Connection changed */
-	.mpd_connection_changed = serverstats_connection_changed,
-	/** enable/disable */
-	.get_enabled = serverstats_get_enabled,
-	.set_enabled = serverstats_set_enabled,
-    /* Safe myself */
-    .save_yourself = serverstats_browser_save_myself
+	.mpd_connection_changed = serverstats_connection_changed
 };
