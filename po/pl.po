@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 20:03+0100\n"
-"PO-Revision-Date: 2009-01-10 16:57+0000\n"
+"POT-Creation-Date: 2009-01-19 20:04+0100\n"
+"PO-Revision-Date: 2009-01-19 19:38+0000\n"
 "Last-Translator: mazdac <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
+"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -197,14 +197,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:294
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:300
 msgid "--version"
 msgstr "--version"
@@ -215,7 +215,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:314
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -223,49 +223,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:321
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:327
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:333
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:339
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:351
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:358
 msgid "--help"
 msgstr "--help"
@@ -730,9 +730,8 @@ msgstr "Zaktualizuj bazę danych"
 
 #. Server Information
 #: ../src/playlist3.c:2030
-#, fuzzy
 msgid "Information"
-msgstr "Informacje o utworze"
+msgstr ""
 
 #: ../src/playlist3.c:2114
 msgid "By"
@@ -839,7 +838,7 @@ msgstr "Dodano 1 strumień"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Wprowadź url"
@@ -852,7 +851,7 @@ msgstr "Nie można podłączyć się do url: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Nie można przetworzyć linku listy odtwarzania"
@@ -867,7 +866,7 @@ msgstr "Powiadamianie"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -886,7 +885,7 @@ msgstr "Ustawienia połączenia"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -908,6 +907,10 @@ msgid "translator-credits"
 msgstr ""
 "Artur Kruszewski <mazdac@gmail.com>\n"
 "Tomasz Dominikowski <dominikowski@gmail.com>\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  mazdac https://launchpad.net/~mazdac\n"
 "\n"
 "Launchpad Contributions:\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
@@ -1310,14 +1313,12 @@ msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
-#, fuzzy
 msgid "Database"
-msgstr "Zaktualizuj bazę danych"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:177
-#, fuzzy
 msgid "Playlist"
-msgstr "Bieżąca lista odtwarzania"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1325,14 +1326,12 @@ msgid "Search"
 msgstr "Szukaj"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
-#, fuzzy
 msgid "Search failed"
-msgstr "Wybierz plik"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:655
-#, fuzzy
 msgid "Add all"
-msgstr "Wszystko"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
@@ -1350,7 +1349,7 @@ msgstr "Pobieranie..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:723
 #: ../src/browsers/playlist3-metadata-browser.c:2436
@@ -1503,7 +1502,7 @@ msgstr[2] "<b>Roczników: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1574
 msgid "Artist info:"
 msgstr "Informacje o wykonawcy:"
@@ -1522,7 +1521,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1915
 msgid "Album info:"
 msgstr "informacje o albumie:"
@@ -1532,9 +1531,8 @@ msgid "Album information"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1992
-#, fuzzy
 msgid "Album artist"
-msgstr "tego wykonawcy"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2384
@@ -1543,7 +1541,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2251
 #: ../src/browsers/playlist3-metadata-browser.c:2600
 msgid "Metadata Browser"
@@ -1551,7 +1549,7 @@ msgstr "Przeglądarka metadanych"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2267
 msgid "Show Current Song"
 msgstr "Pokaż aktualny utwór"
@@ -1608,30 +1606,25 @@ msgstr ""
 #: ../src/browsers/server-information.c:319
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
-#, fuzzy
 msgid "Server Information"
-msgstr "Informacje o utworze"
+msgstr ""
 
 #: ../src/browsers/server-information.c:343
-#, fuzzy
 msgid "Server"
-msgstr "_Serwer"
+msgstr ""
 
 #: ../src/browsers/server-information.c:352
-#, fuzzy
 msgid "Uptime"
-msgstr "Uaktualnij"
+msgstr ""
 
 #: ../src/browsers/server-information.c:353
-#, fuzzy
 msgid "Time Playing"
-msgstr "Nie odtwarza"
+msgstr ""
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:366
-#, fuzzy
 msgid "Total Playtime"
-msgstr " całkowity czas: "
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
@@ -1655,9 +1648,8 @@ msgstr ""
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:376
-#, fuzzy
 msgid "Tag Types"
-msgstr "Rodzaj obrazu"
+msgstr ""
 
 #: ../src/browsers/server-information.c:381
 msgid "Tag statistics"
@@ -1706,9 +1698,8 @@ msgid "Position"
 msgstr "Położenie"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
-#, fuzzy
 msgid "AlbumArtist"
-msgstr "Okł_adka albumu"
+msgstr ""
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:748
@@ -1788,8 +1779,8 @@ msgstr ""
 #~ msgstr "<b>Sortuj według:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Skonfigurowana przeglądarka znaczników będzie "
 #~ "działać tylko z mpd w wersji 0.12 lub wyższej</i></span>"
@@ -1857,6 +1848,7 @@ msgstr ""
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Serwer pośredniczący</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
 
@@ -1880,8 +1872,8 @@ msgstr ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
 #~ "from the cache"
 #~ msgstr ""
-#~ "Dodano nową wtyczkę metadancyh, GMPC oczyści pamięć podręczną ze "
-#~ "wszystkich brakujących metadanych"
+#~ "Dodano nową wtyczkę metadancyh, GMPC oczyści pamięć podręczną ze wszystkich "
+#~ "brakujących metadanych"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Wtyczki</b></span>"
@@ -2085,11 +2077,10 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Bież.poz."
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym "
-#~ "podłączeniu do demona MPD</i></span>"
+#~ "<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym podłączeniu "
+#~ "do demona MPD</i></span>"
 
 #~ msgid "_Current Song Information"
 #~ msgstr "_Informacjie o bieżącym utworze"

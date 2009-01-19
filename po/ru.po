@@ -6,31 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 20:03+0100\n"
-"PO-Revision-Date: 2009-01-16 17:21+0000\n"
-"Last-Translator: Max Habets <Unknown>\n"
+"POT-Creation-Date: 2009-01-19 20:04+0100\n"
+"PO-Revision-Date: 2009-01-19 19:45+0000\n"
+"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr "Клиент к демону MPD для среды GNOME"
+msgstr ""
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:1379 ../src/tray-icon2.c:538
 #: ../src/tray-icon2.c:720 ../src/tray-icon2.c:723 ../src/tray-icon2.c:733
 #: ../src/tray-icon2.c:736
 msgid "Gnome Music Player Client"
-msgstr "Gnome Music Player Client"
+msgstr "Клиент музыкального проигрывателя GNOME"
 
 #: ../glade/playlist3.glade.h:1 ../src/main.c:1403
 msgid "Getting help"
-msgstr "Получение помощи"
+msgstr "Справка"
 
 #: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
@@ -38,7 +38,7 @@ msgstr "База данных MPD обновляется."
 
 #: ../glade/playlist3.glade.h:3
 msgid "Mute"
-msgstr "Выключить звук"
+msgstr "Приглушить звук"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:73
@@ -47,7 +47,7 @@ msgstr "Следующая"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Play/Pause"
-msgstr "_Играть/Пауза"
+msgstr "Воспроизвести/пауза"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74
@@ -66,7 +66,7 @@ msgstr "Случайный выбор"
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:78
 msgid "Repeat"
-msgstr "Повторять"
+msgstr "Циклический повтор"
 
 #: ../glade/playlist3.glade.h:10
 msgid "Show Messages"
@@ -83,7 +83,7 @@ msgstr "Посетить вебсайт"
 
 #: ../glade/playlist3.glade.h:13
 msgid "_Collapse Interface"
-msgstr "_Сжать интерфейс"
+msgstr "Компактный вид"
 
 #: ../glade/playlist3.glade.h:14
 msgid "_Connect"
@@ -93,14 +93,13 @@ msgstr "Под_ключиться"
 msgid "_Control"
 msgstr "_Управление"
 
-# menu level 2
 #: ../glade/playlist3.glade.h:16 ../glade/preferences-connection.ui.h:9
 msgid "_Disconnect"
-msgstr "_Отсоединиться"
+msgstr "_Отключиться"
 
 #: ../glade/playlist3.glade.h:17
 msgid "_Expand Interface"
-msgstr "_Развернуть интерфейс"
+msgstr "Полный вид"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Fullscreen"
@@ -108,7 +107,7 @@ msgstr "_Во весь экран"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Go"
-msgstr "_Перейти"
+msgstr "П_ереход"
 
 #: ../glade/playlist3.glade.h:20
 msgid "_Help"
@@ -173,17 +172,17 @@ msgstr "Сервер потоков MPD"
 #: ../src/gmpc_easy_download.c:213 ../src/gmpc_easy_download.c:214
 #: ../src/gmpc_easy_download.c:269
 msgid "Proxy"
-msgstr "Прокси"
+msgstr "Прокси-сервер"
 
 #. enable/disable
 #: ../src/gmpc_easy_download.c:224
 msgid "Use a proxy for internet connectivity"
-msgstr "Использовать прокси для подключения через интернет"
+msgstr "Использовать прокси-сервер для подключения к Интернету"
 
 #. label
 #: ../src/gmpc_easy_download.c:233
 msgid "HTTP Proxy:"
-msgstr "HTTP Прокси:"
+msgstr "HTTP прокси-сервер:"
 
 #. label
 #: ../src/gmpc_easy_download.c:245 ../glade/preferences-connection.ui.h:6
@@ -196,78 +195,78 @@ msgstr "Порт:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:294
 msgid "--debug-level="
-msgstr ""
+msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:300
 msgid "--version"
-msgstr ""
+msgstr "--version"
 
 #: ../src/main.c:308 ../src/main.c:309
 msgid "--config="
-msgstr ""
+msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:314
 msgid "--start-hidden"
-msgstr ""
+msgstr "--start-hidden"
 
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:321
 msgid "--clean-cover-db"
-msgstr ""
+msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:327
 msgid "--disable-plugins"
-msgstr ""
+msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:333
 msgid "--replace"
-msgstr ""
+msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:339
 msgid "--quit"
-msgstr ""
+msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--import-old-db"
-msgstr ""
+msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:351
 msgid "--debug-updates"
-msgstr ""
+msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:358
 msgid "--help"
-msgstr ""
+msgstr "--help"
 
 #: ../src/main.c:359
 #, c-format
@@ -290,14 +289,32 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
+"Gnome Music Player Client\n"
+"Опции:\n"
+"\t--start-hidden\t\tСтартовать свёрнутым\n"
+"\t--help\t\t\tПоказать это сообщение.\n"
+"\t--debug-level=<level>\tЗаставить gmpc выводить отладочную информацию\n"
+"\t\t\t\tLevel:\n"
+"\t\t\t\t\t0 Без вывода\n"
+"\t\t\t\t\t1 Сообщения об ошибках\n"
+"\t\t\t\t\t2 Сообщения об ошибках и предупреждения\n"
+"\t\t\t\t\t3 Все сообщения\n"
+"\t--version\t\tВывести версию и ревизию git\n"
+"\t--config=<file>\t\tУстановить путь до файла с конфигурацией, по умолчанию: "
+"~/.gmpc/gmpc.cfg\n"
+"\t--clean-cover-db\tОчистить файл с обложками.\n"
+"\t--disable-plugins\tНе загружать дополнения\n"
+"\t--replace\t\tЗаменить запущенную сессию текущей\n"
+"\t--quit\t\t\tЗакрыть текущую сессию gmpc. Работает только если опция "
+"multiple-instances отключена\n"
 
 #: ../src/main.c:502
 msgid "Failed to load the configuration system."
-msgstr ""
+msgstr "Не удалось загрузить систему конфигурации"
 
 #: ../src/main.c:524
 msgid "Failed to load debug-log file."
-msgstr "Невозможно загрузить протокол с отладочной информацией"
+msgstr "Не удалось загрузить журнал с отладочной информацией."
 
 #: ../src/main.c:690
 msgid "Failed to setup libmpd"
@@ -313,8 +330,8 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
-"Неверный пароль для: '%s'\n"
-"Пожалуйста, попробуйте еще"
+"Не удалось установить пароль для: '%s'\n"
+"Пожалуйста, попробуйте снова"
 
 #: ../src/main.c:1098
 #, c-format
@@ -327,19 +344,19 @@ msgstr "код ошибки"
 
 #: ../src/main.c:1134
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr ""
+msgstr "Недостаточно прав для соединения с mpd. Проверьте пароль"
 
 #: ../src/main.c:1171
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr ""
+msgstr "MPD версии ниже 0.13.0 не поддерживается"
 
 #: ../src/main.c:1239
 msgid "Connected to mpd"
-msgstr ""
+msgstr "Соединен с mpd"
 
 #: ../src/main.c:1241
 msgid "Disconnected from mpd"
-msgstr ""
+msgstr "Отсоединен от mpd"
 
 #: ../src/main.c:1276
 msgid "Error occured during operation"
@@ -352,11 +369,11 @@ msgstr "Следующие ошибки возникли:"
 
 #: ../src/main.c:1322
 msgid "Error Message"
-msgstr "Сообщение ошибки"
+msgstr "Сообщение об ошибке"
 
 #: ../src/main.c:1382
 msgid "Tagline"
-msgstr ""
+msgstr "Строка с дополнительной информацией"
 
 #. * Mpd version
 #: ../src/main.c:1383 ../src/preferences.c:311
@@ -366,47 +383,47 @@ msgstr "Версия"
 
 #: ../src/main.c:1386
 msgid "Revision"
-msgstr ""
+msgstr "Ревизия"
 
 #: ../src/main.c:1388
 msgid "Libmpd version"
-msgstr ""
+msgstr "Версия Libmpd"
 
 #: ../src/main.c:1389
 msgid "GTK+ version"
-msgstr ""
+msgstr "Версия GTK+"
 
 #: ../src/main.c:1390
 msgid "Libcurl version"
-msgstr ""
+msgstr "Версия Libcurl"
 
 #: ../src/main.c:1391
 msgid "Platform"
-msgstr ""
+msgstr "Платформа"
 
 #: ../src/main.c:1393
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: ../src/main.c:1396
 msgid "Mac OsX"
-msgstr ""
+msgstr "Mac OS X"
 
 #: ../src/main.c:1398
 msgid "*nix"
-msgstr ""
+msgstr "*nix"
 
 #: ../src/main.c:1402
 msgid "Website"
-msgstr ""
+msgstr "Web-сайт"
 
 #: ../src/main.c:1404
 msgid "Options enabled"
-msgstr ""
+msgstr "Выбранные опции"
 
 #: ../src/main.c:1406
 msgid "X session management"
-msgstr ""
+msgstr "Управление сессиями X"
 
 #: ../src/main.c:1408 ../src/main.c:1415 ../src/main.c:1423 ../src/main.c:1431
 #: ../src/main.c:1439 ../src/main.c:1447 ../src/main.c:1455 ../src/main.c:1463
@@ -422,7 +439,7 @@ msgstr "Отключено"
 
 #: ../src/main.c:1413
 msgid "NLS Support"
-msgstr ""
+msgstr "Поддержка NLS"
 
 #: ../src/main.c:1421 ../src/mm-keys.c:556
 msgid "Multimedia Keys"
@@ -430,7 +447,7 @@ msgstr "Мультимедийные клавиши"
 
 #: ../src/main.c:1429
 msgid "Libegg's trayicon"
-msgstr ""
+msgstr "Иконка Libeggs в трее"
 
 #: ../src/main.c:1437
 msgid "System libsexy"
@@ -438,11 +455,11 @@ msgstr ""
 
 #: ../src/main.c:1445
 msgid "Mac integration library"
-msgstr ""
+msgstr "Библиотека интеграции с Mac"
 
 #: ../src/main.c:1453
 msgid "Use ~/.config/ dir"
-msgstr ""
+msgstr "Использовать папку ~/.config/"
 
 #: ../src/main.c:1461
 msgid "Debug timing"
@@ -457,10 +474,12 @@ msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
+"Новый плагин метаданных был добавлен, gmpc удалил все неудавшиеся попытки из "
+"кэша,"
 
 #: ../src/metadata.c:1216
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Заголовок метаданных"
 
 #: ../src/misc.c:38
 msgid " Total time: "
@@ -493,32 +512,32 @@ msgstr "Невозможно выполнить"
 
 #: ../src/mm-keys.c:72
 msgid "PlayPause"
-msgstr "Играть/Пауза"
+msgstr "Воспроизвести/Пауза"
 
 #. * MM_STOP
 #: ../src/mm-keys.c:76
 msgid "Fast Forward"
-msgstr "Быстро вперед"
+msgstr "Перемотать вперед"
 
 #. * MM_FASTFORWARD
 #: ../src/mm-keys.c:77
 msgid "Fast Backward"
-msgstr "Быстро назад"
+msgstr "Перемотать назад"
 
 #. * MM_RANDOM
 #: ../src/mm-keys.c:80
 msgid "Raise window"
-msgstr "Раскрыть окно"
+msgstr "Сделать окно активным"
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:81
 msgid "Hide window"
-msgstr "Спрятать окно"
+msgstr "Скрыть окно"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:82
 msgid "Toggle window"
-msgstr "Переключить видимость окна"
+msgstr "Переключить окно"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:83
@@ -538,7 +557,7 @@ msgstr "Показать звуковую дорожку"
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:86
 msgid "Toggle Mute"
-msgstr ""
+msgstr "Вкл/выкл. звук"
 
 #: ../src/mm-keys.c:356
 msgid ""
@@ -602,19 +621,19 @@ msgstr "Действие"
 
 #: ../src/mm-keys.c:716
 msgid "Shortcut"
-msgstr "Комбинация"
+msgstr "Комбинация клавиш"
 
 #: ../src/mpdinteraction.c:74
 msgid "Server Settings"
-msgstr "Настройки сервера"
+msgstr "Параметры сервера"
 
 #: ../src/mpdinteraction.c:104
 msgid "Connection"
-msgstr "Соединение"
+msgstr "Подключение"
 
 #: ../src/mpdinteraction.c:205
 msgid "Connecting"
-msgstr "Подключаюсь"
+msgstr "Подключение"
 
 #. Add all from album
 #: ../src/mpdinteraction.c:1170
@@ -640,7 +659,7 @@ msgstr "Все из того же каталога"
 #. Add
 #: ../src/mpdinteraction.c:1208
 msgid "Add more"
-msgstr ""
+msgstr "Добавить"
 
 #: ../src/playlist3.c:628
 msgid "MPD database is updating"
@@ -648,19 +667,19 @@ msgstr "База данных MPD обновляется"
 
 #: ../src/playlist3.c:639
 msgid "MPD is updating its database"
-msgstr ""
+msgstr "MPD обновляет базу данных"
 
 #: ../src/playlist3.c:643
 msgid "MPD finished updating its database"
-msgstr ""
+msgstr "MPD закончил обновление баз данных"
 
 #: ../src/playlist3.c:814
 msgid "Connected"
-msgstr "Соединено"
+msgstr "Подключено"
 
 #: ../src/playlist3.c:823 ../src/playlist3.c:2208
 msgid "Not Connected"
-msgstr "Не соединено"
+msgstr "Не подключен"
 
 #: ../src/playlist3.c:836 ../src/playlist3.c:845 ../src/playlist3.c:1658
 msgid "GMPC"
@@ -672,7 +691,7 @@ msgstr "Подключено к"
 
 #: ../src/playlist3.c:846
 msgid "Disconnected"
-msgstr "Отсоединено"
+msgstr "Соединение разорвано"
 
 #: ../src/playlist3.c:911
 msgid ""
@@ -689,11 +708,11 @@ msgstr "Повторять: %s"
 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1705
 msgid "On"
-msgstr "Вкл."
+msgstr "Включить"
 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1705
 msgid "Off"
-msgstr "Выкл."
+msgstr "Выключить"
 
 #: ../src/playlist3.c:1705
 #, c-format
@@ -703,11 +722,11 @@ msgstr "Случайный выбор: %s"
 #: ../src/playlist3.c:1764
 #, c-format
 msgid "MPD Database refreshed at: %c"
-msgstr ""
+msgstr "MPD база данных обновлена в %c"
 
 #: ../src/playlist3.c:1774
 msgid "MPD Reported the following error"
-msgstr "MPD сообщил об ошибке"
+msgstr "MPD сообщил о следующей ошибке"
 
 #: ../src/playlist3.c:1901 ../src/playlist3.c:1908
 msgid "Profile"
@@ -728,9 +747,8 @@ msgstr "Обновить базу данных"
 
 #. Server Information
 #: ../src/playlist3.c:2030
-#, fuzzy
 msgid "Information"
-msgstr "Информация об альбоме:"
+msgstr ""
 
 #: ../src/playlist3.c:2114
 msgid "By"
@@ -738,11 +756,11 @@ msgstr "исполняет"
 
 #: ../src/playlist3.c:2121
 msgid "From"
-msgstr "с альбома"
+msgstr "из альбома"
 
 #: ../src/playlist3.c:2199
 msgid "Not Playing"
-msgstr "Остановлено"
+msgstr "Ничего не воспроизводится"
 
 #: ../src/playlist3.c:2318
 msgid "Interface"
@@ -750,15 +768,15 @@ msgstr "Интерфейс"
 
 #: ../src/playlist3-messages.c:35
 msgid "Info"
-msgstr "Информация"
+msgstr "Сведения"
 
 #: ../src/playlist3-messages.c:36
 msgid "Warning"
-msgstr ""
+msgstr "Предупреждение"
 
 #: ../src/playlist3-messages.c:37
 msgid "Critical"
-msgstr "Критическая ошибка"
+msgstr "Критический"
 
 #: ../src/playlist3-messages.c:217
 msgid "Time"
@@ -772,18 +790,20 @@ msgstr "Сообщение"
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
+"Один или более плагинов не удалось загрузить, посмотрите в Помощь->Сообщения "
+"для дополнительной информации"
 
 #: ../src/preferences.c:92 ../src/preferences.c:193
 msgid "Plugins"
-msgstr "Плагины"
+msgstr "Дополнения"
 
 #: ../src/preferences.c:154
 msgid "Plugins:"
-msgstr "Плагины:"
+msgstr "Дополнения:"
 
 #: ../src/preferences.c:307 ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "Name"
-msgstr "Name"
+msgstr "Название"
 
 #: ../src/preferences.c:309
 msgid "Function"
@@ -811,11 +831,11 @@ msgstr "Прочее"
 
 #: ../src/preferences.c:347
 msgid "Unknown"
-msgstr "Неизвестно"
+msgstr "Неизвестный"
 
 #: ../src/TreeSearchWidget.c:271
 msgid "Find:"
-msgstr "Искать:"
+msgstr "Поиск:"
 
 #: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 #, c-format
@@ -835,7 +855,7 @@ msgstr "Добавлен 1 поток"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Введите URL"
@@ -848,10 +868,10 @@ msgstr "Не удалось связаться с URL: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
-msgstr ""
+msgstr "Не удалось разобрать ссылку на список воспроизведения композиций"
 
 #: ../src/tray-icon2.c:136
 msgid "Pla_ylist"
@@ -863,37 +883,41 @@ msgstr "Уведомление"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"Это первый раз, как Вы запустили gmpc.\n"
+"Этот помощник поможет Вам соединить gmpc с Вашим mpd демоном"
 
 #: ../src/setup-assistant.c:116
 msgid "Welcome to GMPC"
-msgstr ""
+msgstr "Добро пожаловать в GMPC"
 
 #: ../src/setup-assistant.c:135
 msgid "Setup connection"
-msgstr ""
+msgstr "Настройка соединения"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
+"Gmpc готов к использованию.\n"
+"Наслаждайтесь gmpc."
 
 #: ../src/setup-assistant.c:146
 msgid "Finish"
-msgstr ""
+msgstr "Готово"
 
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
-msgstr ""
+msgstr "Все права защищены 2003-2007 Qball Cow"
 
 #: ../glade/aboutdialog.ui.h:2
 msgid "translator-credits"
@@ -942,7 +966,17 @@ msgstr ""
 "  Old Snake https://launchpad.net/~snoopy-rastrnet\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Sergei Aljoshin https://launchpad.net/~marfeus\n"
-"  ivvmm https://launchpad.net/~unachievable"
+"  ivvmm https://launchpad.net/~unachievable\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Andrew V. Sichevoi https://launchpad.net/~a-sichevoi+ubuntu\n"
+"  Max Habets https://launchpad.net/~sky3\n"
+"  MaxStotsky https://launchpad.net/~maxstotsky\n"
+"  Old Snake https://launchpad.net/~snoopy-rastrnet\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Sergei Aljoshin https://launchpad.net/~marfeus\n"
+"  ivvmm https://launchpad.net/~unachievable\n"
+"  spo1ler https://launchpad.net/~splrdhc"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -950,7 +984,7 @@ msgstr "Введите свой пароль для: '<hostname>'"
 
 #: ../glade/password-dialog.ui.h:2
 msgid "Password"
-msgstr "Пароль:"
+msgstr "Пароль"
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
@@ -1032,7 +1066,7 @@ msgstr "_Имя потока:"
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Title"
-msgstr "_Заголовок:"
+msgstr "_Название"
 
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "example"
@@ -1060,7 +1094,7 @@ msgstr "Редактировать разметку _браузера"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Hide on close"
-msgstr "Спрятать при закрытии"
+msgstr "Сворачивать при закрытии"
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Save position and size between sessions"
@@ -1068,7 +1102,7 @@ msgstr "Сохранять позицию и размер между сесси�
 
 #: ../glade/preferences-playlist.ui.h:8
 msgid "Show buttons instead of dropdown in collapsed view"
-msgstr ""
+msgstr "Отображать кнопки вместо ниспадающего меню в упрощенном просмотре"
 
 #: ../glade/preferences-playlist.ui.h:9
 msgid "Show songlist tooltip"
@@ -1080,7 +1114,7 @@ msgstr "Остановить воспроизведение при выходе"
 
 #: ../glade/preferences-playlist.ui.h:11
 msgid "Stylize album covers"
-msgstr ""
+msgstr "Стилизовать обложки альбомов"
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
@@ -1099,8 +1133,8 @@ msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
 msgstr ""
-"<span size=\"small\"><i>Вы должны быть подключены, чтобы изменять эти "
-"настройки</i></span>"
+"<span size=\"small\"><i>Вы должны быть подключены,\n"
+" чтобы изменять эти настройки</i></span>"
 
 #: ../glade/preferences-server.ui.h:5
 msgid "Enable crossfade"
@@ -1112,7 +1146,7 @@ msgstr "время затухания (с):"
 
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "<b>Inline messages</b>"
-msgstr ""
+msgstr "<b>Встроенные сообщения</b>"
 
 #: ../glade/preferences-trayicon.ui.h:2
 msgid "<b>Notification Area Icon</b>"
@@ -1136,7 +1170,7 @@ msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Timeout:"
-msgstr "Ожидать:"
+msgstr "Время бездействия:"
 
 #: ../glade/preferences.ui.h:1
 msgid ""
@@ -1156,11 +1190,12 @@ msgstr "Сообщения"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
-msgstr "<ввести имя списка воспроизведения>"
+msgstr "<введите имя списка воспроизведения>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>Плейлист уже существует.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>Список воспроизведения уже существует.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1196,25 +1231,25 @@ msgstr "Вы уверены, что хотите очистить список �
 #: ../src/browsers/playlist3-current-playlist-browser.c:782
 #: ../src/browsers/playlist3-current-playlist-browser.c:804
 msgid "Your mpd has a broken 'addid', pasting will fail."
-msgstr ""
+msgstr "Ваш mpd имеет поврежденный 'addid', вставка не удалась."
 
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:828
 msgid "Crop"
-msgstr "Обрезать"
+msgstr "Вырезать"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:848
 msgid "Paste before"
-msgstr ""
+msgstr "Вставить до"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:854
 msgid "Paste after"
-msgstr ""
+msgstr "Вставить после"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:869
 msgid "Shuffle"
-msgstr "Перемешать"
+msgstr "Случайный порядок"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:884
@@ -1234,8 +1269,8 @@ msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
-"<i>Плейлист <b>\"%s\"</b> уже существует\n"
-"Переписать?</i>"
+"<i>Список воспроизведения <b>\"%s\"</b> уже существует\n"
+"Перезаписать?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1144
 msgid "Failed to save the playlist file."
@@ -1249,7 +1284,7 @@ msgstr "Просмотр файлов"
 
 #: ../src/browsers/playlist3-file-browser.c:180
 msgid "Directories"
-msgstr "Каталоги"
+msgstr "Папки"
 
 #: ../src/browsers/playlist3-file-browser.c:251
 #, c-format
@@ -1291,16 +1326,16 @@ msgstr "Добавлено"
 #: ../src/browsers/playlist3-file-browser.c:1012
 msgid "song"
 msgid_plural "songs"
-msgstr[0] "звуковая дорожка"
+msgstr[0] "песня"
 msgstr[1] "звуковые дорожки"
 msgstr[2] "звуковых дорожек"
 
 #: ../src/browsers/playlist3-file-browser.c:1014
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] "Каталог"
-msgstr[1] "каталога"
-msgstr[2] "каталоги"
+msgstr[0] "папка"
+msgstr[1] "папки"
+msgstr[2] "папки"
 
 #: ../src/browsers/playlist3-file-browser.c:1016
 msgid "playlist"
@@ -1320,14 +1355,12 @@ msgstr "Запрос"
 
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
-#, fuzzy
 msgid "Database"
-msgstr "Обновить базу данных"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:177
-#, fuzzy
 msgid "Playlist"
-msgstr "Плей_лист"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1335,14 +1368,12 @@ msgid "Search"
 msgstr "Поиск"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
-#, fuzzy
 msgid "Search failed"
-msgstr "Выберите файл"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:655
-#, fuzzy
 msgid "Add all"
-msgstr "Всё"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
@@ -1360,7 +1391,7 @@ msgstr "Загрузка..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:723
 #: ../src/browsers/playlist3-metadata-browser.c:2436
@@ -1385,7 +1416,7 @@ msgstr "Композиций"
 #: ../src/browsers/playlist3-metadata-browser.c:2061
 #: ../src/browsers/playlist3-metadata-browser.c:2392
 msgid "Playtime"
-msgstr ""
+msgstr "Время воспроизведения"
 
 #: ../src/browsers/playlist3-metadata-browser.c:690
 #: ../src/browsers/playlist3-metadata-browser.c:938
@@ -1433,14 +1464,14 @@ msgstr "Композитор"
 #: ../src/browsers/playlist3-metadata-browser.c:962
 #: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Performer"
-msgstr "Оригинальный исполнитель"
+msgstr "Исполнитель"
 
 #: ../src/browsers/playlist3-metadata-browser.c:971
 #: ../src/browsers/playlist3-metadata-browser.c:2069
 #: ../src/browsers/playlist3-metadata-browser.c:2400
 #: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Directory"
-msgstr "Директория"
+msgstr "Папка"
 
 #: ../src/browsers/playlist3-metadata-browser.c:981
 #: ../src/gob/gmpc-mpddata-treeview.gob:83
@@ -1449,46 +1480,47 @@ msgstr "Расширение"
 
 #: ../src/browsers/playlist3-metadata-browser.c:993
 msgid "Bitrate"
-msgstr "Битовый поток"
+msgstr "Битрейт"
 
 #: ../src/browsers/playlist3-metadata-browser.c:998
 #: ../src/browsers/playlist3-metadata-browser.c:1011
 msgid "n/a"
-msgstr ""
+msgstr "н/д"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1006
 msgid "Audio format"
-msgstr ""
+msgstr "формат аудио"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1048
 msgid "Lyrics"
-msgstr ""
+msgstr "Текст песни"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1091
 msgid "Songs with same title"
-msgstr ""
+msgstr "Композиции с одинаковым названием"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1123
 msgid "Similar songs"
-msgstr ""
+msgstr "Одинаковые песни"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1136
 msgid "Links"
-msgstr ""
+msgstr "Ссылки"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1222
 msgid "Invalid search"
-msgstr ""
+msgstr "Неправильный поиск"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1274
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
 msgstr ""
+"Только первый %i результат отображен, пожалуйста очистите Ваш запрос поиска"
 
 #. The label
 #: ../src/browsers/playlist3-metadata-browser.c:1330
 msgid "Find Artist:"
-msgstr ""
+msgstr "Найти исполнителя:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1491
 msgid "<b>Genre: </b>"
@@ -1513,14 +1545,14 @@ msgstr[2] "<b>Даты: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1574
 msgid "Artist info:"
-msgstr "Информация о исполнителе:"
+msgstr "Информация об исполнителе:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1579
 msgid "Artist information"
-msgstr ""
+msgstr "Информация об исполнителе"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1604
 msgid "Albums"
@@ -1528,11 +1560,11 @@ msgstr "Альбомы"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1651
 msgid "Similar Artists"
-msgstr ""
+msgstr "Похожие исполнители"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1915
 msgid "Album info:"
 msgstr "Информация об альбоме:"
@@ -1542,18 +1574,17 @@ msgid "Album information"
 msgstr "Информация об альбоме:"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1992
-#, fuzzy
 msgid "Album artist"
-msgstr "Все этого исполнителя"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2384
 msgid "Tracks"
-msgstr ""
+msgstr "Дорожки"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2251
 #: ../src/browsers/playlist3-metadata-browser.c:2600
 msgid "Metadata Browser"
@@ -1561,26 +1592,26 @@ msgstr "Просмотр метаданных"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2267
 msgid "Show Current Song"
 msgstr "Показать информацию о текущей звуковой дорожке"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2485
 msgid "kbit/sec"
-msgstr ""
+msgstr "Кбит/сек."
 
 #: ../src/browsers/playlist3-metadata-browser.c:2491
 msgid "kHz"
-msgstr ""
+msgstr "КГц"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2492
 msgid "bits"
-msgstr ""
+msgstr "битов"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2493
 msgid "channels"
-msgstr ""
+msgstr "каналы"
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:843
@@ -1608,40 +1639,35 @@ msgstr "Добавить в список воспроизведения"
 
 #: ../src/browsers/playlist3-tag2-browser.c:102
 msgid "Tag based browser"
-msgstr ""
+msgstr "Брузер с поддержкой тэгов"
 
 #: ../src/browsers/playlist3-tag2-browser.c:1724
 msgid "Reset browser"
-msgstr ""
+msgstr "Сбросить настройки браузера"
 
 #. name
 #: ../src/browsers/server-information.c:319
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
-#, fuzzy
 msgid "Server Information"
-msgstr "Информация о _текущей песне"
+msgstr ""
 
 #: ../src/browsers/server-information.c:343
-#, fuzzy
 msgid "Server"
-msgstr "_Cервер"
+msgstr ""
 
 #: ../src/browsers/server-information.c:352
-#, fuzzy
 msgid "Uptime"
-msgstr "Обновить"
+msgstr ""
 
 #: ../src/browsers/server-information.c:353
-#, fuzzy
 msgid "Time Playing"
-msgstr "Остановлено"
+msgstr ""
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:366
-#, fuzzy
 msgid "Total Playtime"
-msgstr " Общее время: "
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
@@ -1674,7 +1700,7 @@ msgstr ""
 
 #: ../src/egg/eggtrayicon.c:133
 msgid "Orientation"
-msgstr ""
+msgstr "Направление"
 
 #: ../src/egg/eggtrayicon.c:134
 msgid "The orientation of the tray."
@@ -1708,29 +1734,28 @@ msgstr "Комментарий"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:80
 msgid "Icon Id"
-msgstr ""
+msgstr "Id иконки"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Position"
 msgstr "Позиция"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
-#, fuzzy
 msgid "AlbumArtist"
-msgstr "Исполнитель"
+msgstr ""
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:748
 msgid "Tools"
-msgstr ""
+msgstr "Инструменты"
 
 #: ../src/gob/gmpc-profiles.gob:72
 msgid "Added profile"
-msgstr "Добавленный профиль"
+msgstr "Добавлен профиль"
 
 #: ../src/gob/gmpc-profiles.gob:80
 msgid "Removed profile"
-msgstr "Удаленный профиль"
+msgstr "Профиль удален"
 
 #: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:745
 msgid "Refetch"
@@ -1994,8 +2019,7 @@ msgstr "Загрузка"
 #~ msgid "Pos"
 #~ msgstr "Поз."
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Эти изменения прийдут в силу после "
 #~ "пересоединения</i></span>"
