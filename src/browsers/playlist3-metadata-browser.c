@@ -987,6 +987,17 @@ static void info2_fill_song_view_real(mpd_Song *song)
 		i++;
 		q_free(ext);
 	}
+    if(song->file)
+    {
+        char *value = mpd_sticker_song_get(connection, song->file, "rating");
+        {
+            markup =  g_markup_printf_escaped("<b>%s:</b>", _("Rating"));
+            info2_add_table_item(table2,markup,(value)?value:"",i,TRUE);
+            g_free(markup);	
+            i++;
+            g_free(value);
+        }
+    }
     if(show_current_song)
     {
         label = gtk_label_new("");
