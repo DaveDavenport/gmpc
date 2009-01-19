@@ -429,6 +429,13 @@ MpdData *gmpc_plugin_browser_integrate_search(gmpcPlugin *plug, const int search
     return plug->browser->integrate_search(search_field,query,error); 
 }
 
+gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPlugin *plug, const int search_field)
+{
+    if(!gmpc_plugin_browser_has_integrate_search(plug)) return FALSE;
+	if(plug->browser->integrate_search_field_supported == NULL) return TRUE;
+    return plug->browser->integrate_search_field_supported(search_field); 
+}
+
 gboolean gmpc_plugin_has_preferences(gmpcPlugin *plug)
 {
     return (plug->pref != NULL);

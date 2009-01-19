@@ -101,7 +101,7 @@ typedef struct {
     int (*song_list_option_menu)    (GmpcMpdDataTreeview *tree, GtkMenu *menu);
     /* Padding */
     MpdData * (*integrate_search)   (const int search_field,const gchar *search_query,GError **error);
-    void (*padding2)                (void);
+    gboolean  (*integrate_search_field_supported) (const int search_field);
     void (*padding3)                (void);
 } gmpcPlBrowserPlugin;
 
@@ -216,6 +216,7 @@ int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, G
 int             gmpc_plugin_browser_song_list_option_menu   (gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
 gboolean        gmpc_plugin_browser_has_integrate_search    (gmpcPlugin *plug);
 MpdData *       gmpc_plugin_browser_integrate_search        (gmpcPlugin *plug, const int search_field, const gchar * query, GError **error);
+gboolean        gmpc_plugin_browser_integrate_search_field_supported        (gmpcPlugin *plug, const int search_field);
 
 gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
 void            gmpc_plugin_preferences_construct           (gmpcPlugin *plug,GtkWidget *wid);
