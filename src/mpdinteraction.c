@@ -1164,6 +1164,19 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	GtkWidget *item;
 	GtkWidget *smenu;
 	smenu  = gtk_menu_new();
+    if(song->file)
+    {
+        gchar *schema = g_uri_parse_scheme(song->file);
+        printf("schema's: %s\n", schema);
+        /* If it has a schame, it isn't an mpd url */
+        if(schema) 
+        {
+            g_object_ref_sink(smenu);
+            g_object_unref(smenu);
+            g_free(schema);
+            return;
+        }        
+    }
 	if(song->artist && song->album) 
 	{
 		/* Add all from album */
