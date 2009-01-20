@@ -27,6 +27,7 @@ gmpc_SOURCES=\
 	browsers/playlist3-playlist-editor.c\
 	vala/gmpc_image.c\
 	vala/gmpc-progress.c\
+	vala/gmpc_rating.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -165,6 +166,7 @@ EXTRA_DIST=\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		vala/gmpc_image.h\
+		vala/gmpc_rating.h\
 		vala/gmpc-progress.h\
 		setup-assistant.h\
 		sm.h\
