@@ -18,12 +18,12 @@
 */
 
 #include "gmpc-progress.h"
-#include <stdio.h>
+#include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gdk/gdk.h>
 #include <float.h>
 #include <math.h>
+#include <stdio.h>
 
 
 
@@ -36,6 +36,8 @@ struct _GmpcProgressPrivate {
 	GtkScale* scale;
 	GtkLabel* label;
 	gulong set_value_handler;
+	GtkWindow* tooltip;
+	GtkLabel* tooltip_label;
 };
 
 #define GMPC_PROGRESS_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_PROGRESS, GmpcProgressPrivate))
@@ -43,11 +45,18 @@ enum  {
 	GMPC_PROGRESS_DUMMY_PROPERTY,
 	GMPC_PROGRESS_HIDE_TEXT
 };
+static gboolean gmpc_progress_tooltip_expose_event (GmpcProgress* self, GtkWindow* tooltip, const GdkEventExpose* event);
+static gboolean _gmpc_progress_tooltip_expose_event_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
+static gboolean gmpc_progress_enter_notify_event (GmpcProgress* self, GtkScale* scale, const GdkEventCrossing* event);
+static gboolean gmpc_progress_motion_notify_event (GmpcProgress* self, GtkScale* scale, const GdkEventMotion* event);
 static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range);
 static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event);
 static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event);
 static gboolean _gmpc_progress_scroll_event_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self);
 static gboolean _gmpc_progress_button_press_event_gtk_widget_button_press_event (GtkScale* _sender, const GdkEventButton* event, gpointer self);
+static gboolean _gmpc_progress_motion_notify_event_gtk_widget_motion_notify_event (GtkScale* _sender, const GdkEventMotion* event, gpointer self);
+static gboolean _gmpc_progress_enter_notify_event_gtk_widget_enter_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self);
+static gboolean _gmpc_progress_enter_notify_event_gtk_widget_leave_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_progress_parent_class = NULL;
 static void gmpc_progress_finalize (GObject* obj);
@@ -57,6 +66,135 @@ static void gmpc_progress_finalize (GObject* obj);
 static glong string_get_length (const char* self) {
 	g_return_val_if_fail (self != NULL, 0L);
 	return g_utf8_strlen (self, -1);
+}
+
+
+static gboolean gmpc_progress_tooltip_expose_event (GmpcProgress* self, GtkWindow* tooltip, const GdkEventExpose* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (tooltip != NULL, FALSE);
+	gtk_paint_box (gtk_widget_get_style ((GtkWidget*) tooltip), (*event).window, GTK_STATE_NORMAL, GTK_SHADOW_OUT, NULL, (GtkWidget*) tooltip, "tooltip", 0, 0, ((GtkWidget*) tooltip)->allocation.width, ((GtkWidget*) tooltip)->allocation.height);
+	return FALSE;
+}
+
+
+static gboolean _gmpc_progress_tooltip_expose_event_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self) {
+	return gmpc_progress_tooltip_expose_event (self, _sender, event);
+}
+
+
+static gboolean gmpc_progress_enter_notify_event (GmpcProgress* self, GtkScale* scale, const GdkEventCrossing* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (scale != NULL, FALSE);
+	if ((*event).type == GDK_ENTER_NOTIFY) {
+		GtkWindow* _tmp0;
+		GtkLabel* _tmp1;
+		_tmp0 = NULL;
+		self->priv->tooltip = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_POPUP)), (self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL)), _tmp0);
+		_tmp1 = NULL;
+		self->priv->tooltip_label = (_tmp1 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("test")), (self->priv->tooltip_label == NULL) ? NULL : (self->priv->tooltip_label = (g_object_unref (self->priv->tooltip_label), NULL)), _tmp1);
+		gtk_container_add ((GtkContainer*) self->priv->tooltip, (GtkWidget*) self->priv->tooltip_label);
+		gtk_container_set_border_width ((GtkContainer*) self->priv->tooltip, (guint) 4);
+		gtk_widget_set_app_paintable ((GtkWidget*) self->priv->tooltip, TRUE);
+		g_signal_connect_object ((GtkWidget*) self->priv->tooltip, "expose-event", (GCallback) _gmpc_progress_tooltip_expose_event_gtk_widget_expose_event, self, 0);
+	}
+	if ((*event).type == GDK_LEAVE_NOTIFY) {
+		if (self->priv->tooltip != NULL) {
+			GtkWindow* _tmp2;
+			gtk_object_destroy ((GtkObject*) self->priv->tooltip);
+			_tmp2 = NULL;
+			self->priv->tooltip = (_tmp2 = NULL, (self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL)), _tmp2);
+		}
+	}
+	return FALSE;
+}
+
+
+static gboolean gmpc_progress_motion_notify_event (GmpcProgress* self, GtkScale* scale, const GdkEventMotion* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (scale != NULL, FALSE);
+	if ((*event).type == GDK_MOTION_NOTIFY) {
+		if (self->priv->tooltip != NULL) {
+			gint e_hour;
+			gint e_minutes;
+			gint e_seconds;
+			gint t_hour;
+			gint t_minutes;
+			gint t_seconds;
+			char* a;
+			guint p;
+			char* _tmp5;
+			char* _tmp4;
+			e_hour = 0;
+			e_minutes = 0;
+			e_seconds = 0;
+			t_hour = ((gint) self->priv->total) / 3600;
+			t_minutes = (((gint) self->priv->total) % 3600) / 60;
+			t_seconds = ((gint) self->priv->total) % 60;
+			a = g_strdup ("");
+			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+			if (self->priv->do_countdown) {
+				char* _tmp0;
+				p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+				_tmp0 = NULL;
+				a = (_tmp0 = g_strconcat (a, ("-"), NULL), a = (g_free (a), NULL), _tmp0);
+			}
+			e_hour = ((gint) p) / 3600;
+			e_minutes = ((gint) (p % 3600)) / 60;
+			e_seconds = (gint) (p % 60);
+			if (e_hour > 0) {
+				char* _tmp2;
+				char* _tmp1;
+				_tmp2 = NULL;
+				_tmp1 = NULL;
+				a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp2);
+				_tmp1 = (g_free (_tmp1), NULL);
+				if (e_minutes > 0) {
+					char* _tmp3;
+					_tmp3 = NULL;
+					a = (_tmp3 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp3);
+				}
+			}
+			_tmp5 = NULL;
+			_tmp4 = NULL;
+			a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp5);
+			_tmp4 = (g_free (_tmp4), NULL);
+			if (self->priv->total > 0) {
+				char* _tmp6;
+				char* _tmp11;
+				char* _tmp10;
+				_tmp6 = NULL;
+				a = (_tmp6 = g_strconcat (a, (" - "), NULL), a = (g_free (a), NULL), _tmp6);
+				if (t_hour > 0) {
+					char* _tmp8;
+					char* _tmp7;
+					_tmp8 = NULL;
+					_tmp7 = NULL;
+					a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp8);
+					_tmp7 = (g_free (_tmp7), NULL);
+					if (t_minutes > 0) {
+						char* _tmp9;
+						_tmp9 = NULL;
+						a = (_tmp9 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp9);
+					}
+				}
+				_tmp11 = NULL;
+				_tmp10 = NULL;
+				a = (_tmp11 = g_strconcat (a, _tmp10 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp11);
+				_tmp10 = (g_free (_tmp10), NULL);
+			}
+			if (self->priv->do_countdown) {
+				gtk_label_set_width_chars (self->priv->tooltip_label, (gint) string_get_length (a));
+			} else {
+				gtk_label_set_width_chars (self->priv->tooltip_label, ((gint) string_get_length (a)) + 1);
+			}
+			gtk_label_set_text (self->priv->tooltip_label, a);
+			gtk_widget_show_all ((GtkWidget*) self->priv->tooltip);
+			gtk_widget_realize ((GtkWidget*) self->priv->tooltip);
+			gtk_window_move (self->priv->tooltip, ((gint) (*event).x_root) - (((GtkWidget*) self->priv->tooltip)->allocation.width / 2), ((gint) (*event).y_root) + ((GtkWidget*) self->priv->tooltip)->allocation.height);
+			a = (g_free (a), NULL);
+		}
+	}
+	return FALSE;
 }
 
 
@@ -94,6 +232,12 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* 
 			self->priv->total = self->priv->current = (guint) 0;
 			gmpc_progress_set_time (self, tot, cur);
 		}
+		if ((*event).button == 2) {
+			guint p;
+			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+			g_signal_emit_by_name (self, "seek-event", p);
+			return TRUE;
+		}
 	}
 	return FALSE;
 }
@@ -110,12 +254,6 @@ static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale,
 			g_signal_emit_by_name (self, "seek-event", self->priv->current - 5);
 		}
 	}
-	/*if(this.do_countdown) {
-	                scale.set_value(1-(this.current-5)/(double)this.total); 
-	            }else{
-	                scale.set_value((this.current-5)/(double)this.total); 
-	            }
-	            */
 	return FALSE;
 }
 
@@ -266,6 +404,21 @@ static gboolean _gmpc_progress_button_press_event_gtk_widget_button_press_event 
 }
 
 
+static gboolean _gmpc_progress_motion_notify_event_gtk_widget_motion_notify_event (GtkScale* _sender, const GdkEventMotion* event, gpointer self) {
+	return gmpc_progress_motion_notify_event (self, _sender, event);
+}
+
+
+static gboolean _gmpc_progress_enter_notify_event_gtk_widget_enter_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self) {
+	return gmpc_progress_enter_notify_event (self, _sender, event);
+}
+
+
+static gboolean _gmpc_progress_enter_notify_event_gtk_widget_leave_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self) {
+	return gmpc_progress_enter_notify_event (self, _sender, event);
+}
+
+
 /* Construct function */
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
@@ -287,8 +440,14 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		gtk_range_set_update_policy ((GtkRange*) self->priv->scale, GTK_UPDATE_DISCONTINUOUS);
 		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_SCROLL_MASK);
+		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_POINTER_MOTION_MASK);
+		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_ENTER_NOTIFY_MASK);
+		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_LEAVE_NOTIFY_MASK);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "scroll-event", (GCallback) _gmpc_progress_scroll_event_gtk_widget_scroll_event, self, 0);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "button-press-event", (GCallback) _gmpc_progress_button_press_event_gtk_widget_button_press_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->scale, "motion-notify-event", (GCallback) _gmpc_progress_motion_notify_event_gtk_widget_motion_notify_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->scale, "enter-notify-event", (GCallback) _gmpc_progress_enter_notify_event_gtk_widget_enter_notify_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->scale, "leave-notify-event", (GCallback) _gmpc_progress_enter_notify_event_gtk_widget_leave_notify_event, self, 0);
 		_tmp1 = NULL;
 		self->priv->label = (_tmp1 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (self->priv->label == NULL) ? NULL : (self->priv->label = (g_object_unref (self->priv->label), NULL)), _tmp1);
 		gtk_misc_set_alignment ((GtkMisc*) self->priv->label, 1.0f, 0.5f);
@@ -350,6 +509,8 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 	self->priv->scale = NULL;
 	self->priv->label = NULL;
 	self->priv->set_value_handler = (gulong) 0;
+	self->priv->tooltip = NULL;
+	self->priv->tooltip_label = NULL;
 }
 
 
@@ -358,6 +519,8 @@ static void gmpc_progress_finalize (GObject* obj) {
 	self = GMPC_PROGRESS (obj);
 	(self->priv->scale == NULL) ? NULL : (self->priv->scale = (g_object_unref (self->priv->scale), NULL));
 	(self->priv->label == NULL) ? NULL : (self->priv->label = (g_object_unref (self->priv->label), NULL));
+	(self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL));
+	(self->priv->tooltip_label == NULL) ? NULL : (self->priv->tooltip_label = (g_object_unref (self->priv->tooltip_label), NULL));
 	G_OBJECT_CLASS (gmpc_progress_parent_class)->finalize (obj);
 }
 

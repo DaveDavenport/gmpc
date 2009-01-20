@@ -31,6 +31,8 @@ public class Gmpc.Progress : Gtk.HBox
     private Gtk.Scale scale        = null;
     private Gtk.Label label        = null;
     private ulong set_value_handler = 0;
+    private Gtk.Window tooltip          = null;
+    private Gtk.Label tooltip_label = null;
 
     public bool hide_text {
         get { 
@@ -44,6 +46,90 @@ public class Gmpc.Progress : Gtk.HBox
             }
         }
     }
+    private bool tooltip_expose_event(Gtk.Window tooltip, Gdk.EventExpose event)
+    {
+        Gtk.paint_box(tooltip.style, 
+                event.window,
+                Gtk.StateType.NORMAL,
+                Gtk.ShadowType.OUT,
+                null, tooltip, 
+                "tooltip", 0,0,
+                tooltip.allocation.width, tooltip.allocation.height);
+
+        return false;
+    }
+
+    private bool enter_notify_event(Gtk.Scale scale, Gdk.EventCrossing event)
+    {
+        if (event.type == Gdk.EventType.ENTER_NOTIFY)
+        {
+            tooltip = new Gtk.Window(Gtk.WindowType.POPUP);
+            tooltip_label = new Gtk.Label("test");
+            tooltip.add(tooltip_label);
+            tooltip.border_width = 4;
+            tooltip.set_app_paintable(true);
+            tooltip.expose_event += tooltip_expose_event;
+        }
+        if (event.type == Gdk.EventType.LEAVE_NOTIFY)
+        {
+            if(tooltip != null)
+            {
+                tooltip.destroy();
+                tooltip = null;
+            }
+        }
+        return false;
+    }
+    private bool motion_notify_event(Gtk.Scale scale, Gdk.EventMotion event)
+    {
+        if(event.type == Gdk.EventType.MOTION_NOTIFY)
+        {
+            if(tooltip != null)
+            {
+                int e_hour, e_minutes, e_seconds;
+                int t_hour =    (int) this.total / 3600;
+                int t_minutes = (int) this.total%3600/60;
+                int t_seconds = (int) this.total%60;
+                string a = "";
+                uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                if(this.do_countdown){
+                    p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                    a += "-";
+                }
+                e_hour = (int) p/3600;
+                e_minutes = (int) (p%3600)/60;
+                e_seconds = (int) (p%60);
+                if(e_hour>0) {
+                    a += "%02i".printf(e_hour);
+                    if(e_minutes > 0) {
+                        a+=":";
+                    }
+                }
+                a += "%02i:%02i".printf(e_minutes, e_seconds);
+                if(this.total > 0)
+                {
+                    a += " - ";
+                    if(t_hour>0) {
+                        a += "%02i".printf(t_hour);
+                        if(t_minutes > 0) {
+                            a+=":";
+                        }
+                    }
+                    a += "%02i:%02i".printf(t_minutes,t_seconds);
+                }
+                if(this.do_countdown)
+                    this.tooltip_label.width_chars = (int)a.length;
+                else 
+                    this.tooltip_label.width_chars = (int)a.length+1; 
+                this.tooltip_label.set_text(a);
+
+                tooltip.show_all();
+                tooltip.realize();
+                tooltip.move((int)event.x_root-tooltip.allocation.width/2, (int)event.y_root+tooltip.allocation.height);
+            }
+        }
+        return false;
+    }
 
     /* Construct function */
     construct {
@@ -56,8 +142,14 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.sensitive = false;
 
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
+        this.scale.add_events((int)Gdk.EventMask.POINTER_MOTION_MASK);
+        this.scale.add_events((int)Gdk.EventMask.ENTER_NOTIFY_MASK);
+        this.scale.add_events((int)Gdk.EventMask.LEAVE_NOTIFY_MASK);
         this.scale.scroll_event += scroll_event;
         this.scale.button_press_event += button_press_event;
+        this.scale.motion_notify_event += motion_notify_event;
+        this.scale.enter_notify_event += enter_notify_event;
+        this.scale.leave_notify_event += enter_notify_event;
 
         this.label = new Gtk.Label("");
         this.label.set_alignment(1.0f,0.5f);
@@ -102,6 +194,12 @@ public class Gmpc.Progress : Gtk.HBox
                 this.total=this.current = 0;
                 set_time(tot,cur);
             }
+            if(event.button == 2)
+            {
+                uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                seek_event(p);
+                return true;
+            }
         }
         return false;
     }
@@ -112,24 +210,10 @@ public class Gmpc.Progress : Gtk.HBox
         if(event.direction == Gdk.ScrollDirection.UP)
         {
             seek_event(this.current+5); 
-        /*
-            if(this.do_countdown) {
-                scale.set_value(1-(this.current+5)/(double)this.total); 
-            }else{
-                scale.set_value((this.current+5)/(double)this.total); 
-            }
-            */
         }
         else if (event.direction == Gdk.ScrollDirection.DOWN)
         {
-
             seek_event(this.current-5); 
-            /*if(this.do_countdown) {
-                scale.set_value(1-(this.current-5)/(double)this.total); 
-            }else{
-                scale.set_value((this.current-5)/(double)this.total); 
-            }
-            */
         }
         return false;
     }
