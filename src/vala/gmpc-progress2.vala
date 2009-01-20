@@ -111,19 +111,25 @@ public class Gmpc.Progress : Gtk.HBox
         stdout.printf("scrolling\n");
         if(event.direction == Gdk.ScrollDirection.UP)
         {
+            seek_event(this.current+5); 
+        /*
             if(this.do_countdown) {
                 scale.set_value(1-(this.current+5)/(double)this.total); 
             }else{
                 scale.set_value((this.current+5)/(double)this.total); 
             }
+            */
         }
         else if (event.direction == Gdk.ScrollDirection.DOWN)
         {
-            if(this.do_countdown) {
+
+            seek_event(this.current-5); 
+            /*if(this.do_countdown) {
                 scale.set_value(1-(this.current-5)/(double)this.total); 
             }else{
                 scale.set_value((this.current-5)/(double)this.total); 
             }
+            */
         }
         return false;
     }
