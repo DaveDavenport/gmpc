@@ -2,6 +2,15 @@
 
 namespace MPD {
 
+    [CCode (cname = "MpdOb",cprefix="mpd_", cheader_filename="libmpd/libmpd.h")]
+    [Compact]
+    [Immutable]
+    public class Server {
+
+        
+        public MPD.Song playlist_get_song(int songid);
+    }
+
     [CCode (cname = "mpd_Song",
     free_function = "mpd_freeSong", 
     copy_function = "mpd_songDup", 
@@ -27,6 +36,22 @@ namespace MPD {
         public int    pos;
         public int    id;
         public unowned MPD.Song copy ();
+        [CCode (instance_pos = -1)]
+        public void markup (char[] buffer, int length, string markup);
     }
+
+}
+
+namespace Gmpc {
+    [Immutable]
+    [CCode (cname="gmpcPlugin" , cheader_filename="plugin.h",
+        has_construct_function = false
+    )]
+    public struct Plugin { 
+        public weak string name;
+        public int type;
+
+    }
+
 
 }
