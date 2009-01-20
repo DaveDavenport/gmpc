@@ -268,6 +268,9 @@ static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale,
 void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 	gboolean _tmp0;
 	g_return_if_fail (self != NULL);
+	if (self->priv->total != total) {
+		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", self->priv->total > 0, NULL);
+	}
 	_tmp0 = FALSE;
 	if (self->priv->total != total) {
 		_tmp0 = TRUE;
@@ -279,14 +282,12 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 		self->priv->current = current;
 		g_signal_handler_block (self->priv->scale, self->priv->set_value_handler);
 		if (self->priv->total > 0) {
-			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", TRUE, NULL);
 			if (self->priv->do_countdown) {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, 1 - (self->priv->current / ((double) self->priv->total)));
 			} else {
 				gtk_range_set_value ((GtkRange*) self->priv->scale, self->priv->current / ((double) self->priv->total));
 			}
 		} else {
-			g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 			gtk_range_set_value ((GtkRange*) self->priv->scale, 0.0);
 		}
 		g_signal_handler_unblock (self->priv->scale, self->priv->set_value_handler);

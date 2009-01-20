@@ -220,6 +220,11 @@ public class Gmpc.Progress : Gtk.HBox
 
     public void set_time(uint total, uint current)
     {
+        if(this.total != total)
+        {
+            this.scale.sensitive = this.total > 0;
+
+        }
         if(this.total != total || this.current != current)
         {
             this.total = total;
@@ -227,7 +232,6 @@ public class Gmpc.Progress : Gtk.HBox
 
             GLib.SignalHandler.block(this.scale, this.set_value_handler);
             if(this.total > 0) {
-                this.scale.sensitive = true;
                 if(this.do_countdown){
                     this.scale.set_value(1-this.current/(double)this.total);
                 }else{
@@ -235,7 +239,6 @@ public class Gmpc.Progress : Gtk.HBox
                 }
 
             } else {
-                this.scale.sensitive = false;
                 this.scale.set_value(0.0);
             }
 
