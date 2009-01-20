@@ -221,6 +221,7 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* 
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
+		gboolean _tmp0;
 		if ((*event).button == 3) {
 			guint cur;
 			guint tot;
@@ -232,7 +233,13 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* 
 			self->priv->total = self->priv->current = (guint) 0;
 			gmpc_progress_set_time (self, tot, cur);
 		}
+		_tmp0 = FALSE;
 		if ((*event).button == 2) {
+			_tmp0 = TRUE;
+		} else {
+			_tmp0 = (*event).button == 1;
+		}
+		if (_tmp0) {
 			guint p;
 			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
 			g_signal_emit_by_name (self, "seek-event", p);

@@ -194,7 +194,7 @@ public class Gmpc.Progress : Gtk.HBox
                 this.total=this.current = 0;
                 set_time(tot,cur);
             }
-            if(event.button == 2)
+            if(event.button == 2 || event.button == 1)
             {
                 uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
                 seek_event(p);
