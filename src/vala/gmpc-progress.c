@@ -104,20 +104,18 @@ static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale,
 	g_return_val_if_fail (scale != NULL, FALSE);
 	fprintf (stdout, "scrolling\n");
 	if ((*event).direction == GDK_SCROLL_UP) {
-		if (self->priv->do_countdown) {
-			gtk_range_set_value ((GtkRange*) scale, 1 - ((self->priv->current + 5) / ((double) self->priv->total)));
-		} else {
-			gtk_range_set_value ((GtkRange*) scale, (self->priv->current + 5) / ((double) self->priv->total));
-		}
+		g_signal_emit_by_name (self, "seek-event", self->priv->current + 5);
 	} else {
 		if ((*event).direction == GDK_SCROLL_DOWN) {
-			if (self->priv->do_countdown) {
-				gtk_range_set_value ((GtkRange*) scale, 1 - ((self->priv->current - 5) / ((double) self->priv->total)));
-			} else {
-				gtk_range_set_value ((GtkRange*) scale, (self->priv->current - 5) / ((double) self->priv->total));
-			}
+			g_signal_emit_by_name (self, "seek-event", self->priv->current - 5);
 		}
 	}
+	/*if(this.do_countdown) {
+	                scale.set_value(1-(this.current-5)/(double)this.total); 
+	            }else{
+	                scale.set_value((this.current-5)/(double)this.total); 
+	            }
+	            */
 	return FALSE;
 }
 
