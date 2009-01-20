@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 20:03+0100\n"
-"PO-Revision-Date: 2009-01-10 16:57+0000\n"
+"POT-Creation-Date: 2009-01-19 20:04+0100\n"
+"PO-Revision-Date: 2009-01-19 19:37+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
+"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "Poort:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:294
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:300
 msgid "--version"
 msgstr ""
@@ -213,7 +213,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:314
 msgid "--start-hidden"
 msgstr ""
@@ -221,49 +221,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:321
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:327
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:333
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:339
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:351
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:358
 msgid "--help"
 msgstr ""
@@ -711,9 +711,8 @@ msgstr "Database bijwerken"
 
 #. Server Information
 #: ../src/playlist3.c:2030
-#, fuzzy
 msgid "Information"
-msgstr "_Informatie huidig nummer"
+msgstr ""
 
 #: ../src/playlist3.c:2114
 msgid "By"
@@ -818,7 +817,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Voer een url in"
@@ -831,7 +830,7 @@ msgstr "Kon geen contact krijgen met: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr ""
@@ -846,7 +845,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -863,7 +862,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -882,6 +881,10 @@ msgstr "Copyright 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "EneNL\n"
+"\n"
+"Launchpad Contributions:\n"
+"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "\n"
 "Launchpad Contributions:\n"
 "  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
@@ -1280,14 +1283,12 @@ msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
-#, fuzzy
 msgid "Database"
-msgstr "Database bijwerken"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:177
-#, fuzzy
 msgid "Playlist"
-msgstr "_Afspeellijst"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1295,14 +1296,12 @@ msgid "Search"
 msgstr "Zoeken"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
-#, fuzzy
 msgid "Search failed"
-msgstr "Zoeken"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:655
-#, fuzzy
 msgid "Add all"
-msgstr "Alles"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
@@ -1320,7 +1319,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:723
 #: ../src/browsers/playlist3-metadata-browser.c:2436
@@ -1471,7 +1470,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1574
 msgid "Artist info:"
 msgstr ""
@@ -1490,7 +1489,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1915
 msgid "Album info:"
 msgstr ""
@@ -1500,9 +1499,8 @@ msgid "Album information"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1992
-#, fuzzy
 msgid "Album artist"
-msgstr "Alles van artiest"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2384
@@ -1511,7 +1509,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2251
 #: ../src/browsers/playlist3-metadata-browser.c:2600
 msgid "Metadata Browser"
@@ -1519,7 +1517,7 @@ msgstr "Metadatabrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2267
 msgid "Show Current Song"
 msgstr "Laat huidige nummer zien"
@@ -1576,30 +1574,25 @@ msgstr ""
 #: ../src/browsers/server-information.c:319
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
-#, fuzzy
 msgid "Server Information"
-msgstr "_Informatie huidig nummer"
+msgstr ""
 
 #: ../src/browsers/server-information.c:343
-#, fuzzy
 msgid "Server"
-msgstr "_Server"
+msgstr ""
 
 #: ../src/browsers/server-information.c:352
-#, fuzzy
 msgid "Uptime"
-msgstr "Bijwerken"
+msgstr ""
 
 #: ../src/browsers/server-information.c:353
-#, fuzzy
 msgid "Time Playing"
-msgstr "Niet aan het afspelen"
+msgstr ""
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:366
-#, fuzzy
 msgid "Total Playtime"
-msgstr " Totale afspeeltijd: "
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
@@ -1623,9 +1616,8 @@ msgstr ""
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:376
-#, fuzzy
 msgid "Tag Types"
-msgstr "Afbeeldingssoort"
+msgstr ""
 
 #: ../src/browsers/server-information.c:381
 msgid "Tag statistics"
@@ -1674,9 +1666,8 @@ msgid "Position"
 msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
-#, fuzzy
 msgid "AlbumArtist"
-msgstr "_Album-art"
+msgstr ""
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:748
@@ -1753,8 +1744,8 @@ msgstr ""
 #~ msgstr "<b>Sorteer op:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>De geconfigureerde tagbrowser zal alleen worden "
 #~ "gebruikt met Mpd versie 0.12 of hoger.</i></span>"
@@ -1912,11 +1903,10 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>Pas nadat u herverbonden heeft, worden "
-#~ "veranderingen toegpast</i></span>"
+#~ "<span size=\"small\"><i>Pas nadat u herverbonden heeft, worden veranderingen "
+#~ "toegpast</i></span>"
 
 #~ msgid "Format"
 #~ msgstr "Opmaak"
@@ -2030,16 +2020,15 @@ msgstr ""
 #~ msgstr "_Stop"
 
 #~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
+#~ "<span size=\"x-small\"><i>Enter a local or remote stream or "
+#~ "playlist</i></span>"
 #~ msgstr ""
 #~ "<span size=\"x-small\"><i>Voer een lokale of niet-lokale stream of "
 #~ "afspeellijst in</i></span>"
 
 #~ msgid "You can drop a link or file directly from a browser on this window."
 #~ msgstr ""
-#~ "U kunt een link of bestand vanuit een browser direct naar dit venster "
-#~ "slepen,"
+#~ "U kunt een link of bestand vanuit een browser direct naar dit venster slepen,"
 
 #~ msgid "Add Online Stream list"
 #~ msgstr "Voeg Online Stream lijst toe"

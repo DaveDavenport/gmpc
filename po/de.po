@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 20:03+0100\n"
-"PO-Revision-Date: 2009-01-12 02:36+0000\n"
+"POT-Creation-Date: 2009-01-19 20:04+0100\n"
+"PO-Revision-Date: 2009-01-19 19:55+0000\n"
 "Last-Translator: Huber Florian <itshorty@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
+"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -196,14 +196,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:294
 msgid "--debug-level="
 msgstr "--nivel-debugging="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:300
 msgid "--version"
 msgstr "--Version"
@@ -214,7 +214,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:314
 msgid "--start-hidden"
 msgstr ""
@@ -222,49 +222,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:321
 msgid "--clean-cover-db"
 msgstr "--cover-db-reinigen"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:327
 msgid "--disable-plugins"
 msgstr "--plugins-deaktivieren"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:333
 msgid "--replace"
 msgstr "--ersetzen"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:339
 msgid "--quit"
 msgstr "--beenden"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--import-old-db"
 msgstr "--alte-Db-importieren"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:351
 msgid "--debug-updates"
 msgstr "--debug-aktualizationen"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:358
 msgid "--help"
 msgstr "--hilfe"
@@ -729,9 +729,8 @@ msgstr "Aktualisiere Datenbank"
 
 #. Server Information
 #: ../src/playlist3.c:2030
-#, fuzzy
 msgid "Information"
-msgstr "Titel_information"
+msgstr ""
 
 #: ../src/playlist3.c:2114
 msgid "By"
@@ -837,7 +836,7 @@ msgstr "Einen Stream hinzugefügt"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Geben sie eine URL ein"
@@ -850,7 +849,7 @@ msgstr "Verbindung zu folgender URL fehlgeschlagen: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Der link der Wiedergabeliste konnte nicht analysiert werden"
@@ -865,7 +864,7 @@ msgstr "Benachrichtigung"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -882,7 +881,7 @@ msgstr "Verbindungs Einstellungen"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -929,6 +928,16 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
 "  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
+"  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  hendrik https://launchpad.net/~hendrik-patchworklady\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Benjamin Völkl https://launchpad.net/~benjamin-voelkl\n"
+"  Hans Christof https://launchpad.net/~hans-christof\n"
+"  Huber Florian https://launchpad.net/~itshorty\n"
 "  Klaus Simon https://launchpad.net/~simon-klaus\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
@@ -1329,14 +1338,12 @@ msgstr "Suche"
 
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
-#, fuzzy
 msgid "Database"
-msgstr "Aktualisiere Datenbank"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:177
-#, fuzzy
 msgid "Playlist"
-msgstr "_Wiedergabeliste"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1344,14 +1351,12 @@ msgid "Search"
 msgstr "Suche"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
-#, fuzzy
 msgid "Search failed"
-msgstr "Wähle Datei"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:655
-#, fuzzy
 msgid "Add all"
-msgstr "Alle"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
@@ -1369,7 +1374,7 @@ msgstr "Abrufen..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:723
 #: ../src/browsers/playlist3-metadata-browser.c:2436
@@ -1521,7 +1526,7 @@ msgstr[0] "<b>Datum: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1574
 msgid "Artist info:"
 msgstr "Künstler informationen:"
@@ -1540,7 +1545,7 @@ msgstr "Ähnliche Künstler"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1915
 msgid "Album info:"
 msgstr "Album Information:"
@@ -1550,9 +1555,8 @@ msgid "Album information"
 msgstr "Album Information"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1992
-#, fuzzy
 msgid "Album artist"
-msgstr "Alles vom Künstler"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2384
@@ -1561,7 +1565,7 @@ msgstr "Titel"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2251
 #: ../src/browsers/playlist3-metadata-browser.c:2600
 msgid "Metadata Browser"
@@ -1569,7 +1573,7 @@ msgstr "Metadatenbrowser"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2267
 msgid "Show Current Song"
 msgstr "Zeige aktuelles Lied"
@@ -1626,30 +1630,25 @@ msgstr "Browser zurücksetzen"
 #: ../src/browsers/server-information.c:319
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
-#, fuzzy
 msgid "Server Information"
-msgstr "Titel_information"
+msgstr ""
 
 #: ../src/browsers/server-information.c:343
-#, fuzzy
 msgid "Server"
-msgstr "_Server"
+msgstr ""
 
 #: ../src/browsers/server-information.c:352
-#, fuzzy
 msgid "Uptime"
-msgstr "Aktualisiere"
+msgstr ""
 
 #: ../src/browsers/server-information.c:353
-#, fuzzy
 msgid "Time Playing"
-msgstr "Keine Wiedergabe"
+msgstr ""
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:366
-#, fuzzy
 msgid "Total Playtime"
-msgstr " Gesamtzeit: "
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
@@ -1723,9 +1722,8 @@ msgid "Position"
 msgstr "Position"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
-#, fuzzy
 msgid "AlbumArtist"
-msgstr "_Album-Art"
+msgstr ""
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:748
@@ -1802,8 +1800,8 @@ msgstr "Wird geladen"
 #~ msgstr "<b>Sortiere nach:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Der Konfigurierte Tag-Browser wird nur ab Version "
 #~ "0.12 des mpd angezeigt.</i></span>"
@@ -1981,8 +1979,7 @@ msgstr "Wird geladen"
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Veränderungen sind erst nach einem Reconnect "
 #~ "aktiv</i></span>"

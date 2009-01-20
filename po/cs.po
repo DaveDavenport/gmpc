@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-19 20:03+0100\n"
-"PO-Revision-Date: 2009-01-13 12:02+0000\n"
+"POT-Creation-Date: 2009-01-19 20:04+0100\n"
+"PO-Revision-Date: 2009-01-19 19:55+0000\n"
 "Last-Translator: Vojtěch Látal <vojtech@latal.name>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-16 19:24+0000\n"
+"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -195,14 +195,14 @@ msgstr "Port:"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:293 ../src/main.c:294
 msgid "--debug-level="
 msgstr "--uroven-ladeni="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:300
 msgid "--version"
 msgstr "--verze"
@@ -213,7 +213,7 @@ msgstr "--konfig="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:314
 msgid "--start-hidden"
 msgstr "--skryt-po-spusteni"
@@ -221,49 +221,49 @@ msgstr "--skryt-po-spusteni"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:321
 msgid "--clean-cover-db"
 msgstr "--vyprazdnit-db-obalu"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:327
 msgid "--disable-plugins"
 msgstr "--zakazat-pluginy"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:333
 msgid "--replace"
 msgstr "--nahradit"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:339
 msgid "--quit"
 msgstr "--ukoncit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--import-old-db"
 msgstr "--import-stare-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:351
 msgid "--debug-updates"
 msgstr "--ladeni-aktualizaci"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:358
 msgid "--help"
 msgstr "--napoveda"
@@ -300,8 +300,8 @@ msgstr ""
 "\t\t\t\t\t2 Chybové zprávy a varování\n"
 "\t\t\t\t\t3 Všechny zprávy\n"
 "\t--verze\t\tVypíše verzi a git verzi\n"
-"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  ~/."
-"gmpc/gmpc.cfg\n"
+"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  "
+"~/.gmpc/gmpc.cfg\n"
 "\t--procistit-db-obalu\tPročistí soubor s obaly\n"
 "\t--zakazat-rozsireni\tNenačte žádné rozšíření\n"
 "\t--nahradit\t\tNahradí běžící sezení novým\n"
@@ -749,9 +749,8 @@ msgstr "Aktualizovat databázi"
 
 #. Server Information
 #: ../src/playlist3.c:2030
-#, fuzzy
 msgid "Information"
-msgstr "Informace o albu"
+msgstr ""
 
 #: ../src/playlist3.c:2114
 msgid "By"
@@ -858,7 +857,7 @@ msgstr "Přidán 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:216
 msgid "Enter an url"
 msgstr "Zadejte url"
@@ -871,7 +870,7 @@ msgstr "Nepodařilo se kontaktovat url: '%s'"
 #. *
 #. * Failed to contact %s
 #. * Show an error dialog
-#.
+#. 
 #: ../src/url_fetcher.c:284
 msgid "Failed to parse the playlist link"
 msgstr "Nepodačilo se zpracovat odkaz ze seznamu skladeb"
@@ -886,7 +885,7 @@ msgstr "Oznámení"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -905,7 +904,7 @@ msgstr "Nastavení připojení"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -925,6 +924,9 @@ msgstr "Copyright 2003-2007 Qball Cow"
 #: ../glade/aboutdialog.ui.h:2
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Vojtěch Látal https://launchpad.net/~latal\n"
+"\n"
 "Launchpad Contributions:\n"
 "  Vojtěch Látal https://launchpad.net/~latal\n"
 "\n"
@@ -1321,14 +1323,12 @@ msgstr "Dotaz"
 
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
-#, fuzzy
 msgid "Database"
-msgstr "Aktualizovat databázi"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:177
-#, fuzzy
 msgid "Playlist"
-msgstr "Se_znam skladeb"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1336,14 +1336,12 @@ msgid "Search"
 msgstr "Vyhledávání"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
-#, fuzzy
 msgid "Search failed"
-msgstr "Vyberte soubor"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:655
-#, fuzzy
 msgid "Add all"
-msgstr "Vše"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
@@ -1361,7 +1359,7 @@ msgstr "Získávám..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:424
 #: ../src/browsers/playlist3-metadata-browser.c:723
 #: ../src/browsers/playlist3-metadata-browser.c:2436
@@ -1514,7 +1512,7 @@ msgstr[2] "<b>Dat:</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1574
 msgid "Artist info:"
 msgstr "Informace o interpretovi:"
@@ -1533,7 +1531,7 @@ msgstr "Podobní interpreti"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1915
 msgid "Album info:"
 msgstr "Informace o albu:"
@@ -1543,9 +1541,8 @@ msgid "Album information"
 msgstr "Informace o albu"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1992
-#, fuzzy
 msgid "Album artist"
-msgstr "Vše od interpreta"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2384
@@ -1554,7 +1551,7 @@ msgstr "Skladby"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2251
 #: ../src/browsers/playlist3-metadata-browser.c:2600
 msgid "Metadata Browser"
@@ -1562,7 +1559,7 @@ msgstr "Prohlížeč metadat"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2267
 msgid "Show Current Song"
 msgstr "Zobrazit aktuální skladbu"
@@ -1619,30 +1616,25 @@ msgstr "Vyprázdnit prohlížeč"
 #: ../src/browsers/server-information.c:319
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
-#, fuzzy
 msgid "Server Information"
-msgstr "Informace o interpretovi"
+msgstr ""
 
 #: ../src/browsers/server-information.c:343
-#, fuzzy
 msgid "Server"
-msgstr "_Server"
+msgstr ""
 
 #: ../src/browsers/server-information.c:352
-#, fuzzy
 msgid "Uptime"
-msgstr "Aktualizovat"
+msgstr ""
 
 #: ../src/browsers/server-information.c:353
-#, fuzzy
 msgid "Time Playing"
-msgstr "Nepřehrává se"
+msgstr ""
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:366
-#, fuzzy
 msgid "Total Playtime"
-msgstr " Celkový čas: "
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
@@ -1716,9 +1708,8 @@ msgid "Position"
 msgstr "Pozice"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
-#, fuzzy
 msgid "AlbumArtist"
-msgstr "Interpret"
+msgstr ""
 
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:748
@@ -1785,9 +1776,6 @@ msgstr "Obrázky"
 msgid "Loading"
 msgstr "Načítání"
 
-#~ msgid "in _play queue"
-#~ msgstr "ve frontě"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -1801,8 +1789,8 @@ msgstr "Načítání"
 #~ msgstr "<b>Seřadit podle:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Nastavené prohlížeče tagů se zobrazí jen pokud je "
 #~ "verze mpd alespoň 0.12.</i></span>"
@@ -1870,6 +1858,7 @@ msgstr "Načítání"
 #~ msgid "<b>Proxy</b>"
 #~ msgstr "<b>Proxy</b>"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
 
@@ -1990,3 +1979,6 @@ msgstr "Načítání"
 
 #~ msgid "Unique"
 #~ msgstr "Unikátní"
+
+#~ msgid "in _play queue"
+#~ msgstr "ve frontě"
