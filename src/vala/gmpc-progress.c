@@ -269,7 +269,8 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 	gboolean _tmp0;
 	g_return_if_fail (self != NULL);
 	if (self->priv->total != total) {
-		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", self->priv->total > 0, NULL);
+		fprintf (stdout, "%u %i set off\n", total, (gint) (total > 0));
+		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", (total > 0), NULL);
 	}
 	_tmp0 = FALSE;
 	if (self->priv->total != total) {

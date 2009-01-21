@@ -222,9 +222,10 @@ public class Gmpc.Progress : Gtk.HBox
     {
         if(this.total != total)
         {
-            this.scale.sensitive = this.total > 0;
-
+            stdout.printf("%u %i set off\n",total, (int)(total > 0));
+            this.scale.sensitive = (total > 0);
         }
+
         if(this.total != total || this.current != current)
         {
             this.total = total;
