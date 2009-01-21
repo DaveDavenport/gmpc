@@ -225,7 +225,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(self));
             gchar *conf_pos = NULL;
             gchar *conf_show = NULL;
-            gchar *conf_size = NULL;
 
             i = g_list_length(cols);
 
