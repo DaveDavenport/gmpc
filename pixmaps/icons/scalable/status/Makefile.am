@@ -5,6 +5,7 @@ context = status
 iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
+		emblem-favorite.svg\
 		audio-volume-high.svg\
 		audio-volume-low.svg\
 		audio-volume-medium.svg\
