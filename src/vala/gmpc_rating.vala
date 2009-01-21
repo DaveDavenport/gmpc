@@ -32,12 +32,19 @@ public class Gmpc.Rating : Gtk.Frame
     private Gtk.Image[] rat;
     private Gtk.HBox    box;
     private Gtk.EventBox event;
-    
+
+    private ulong status_changed_id = 0;
+   
+    ~Rating() {
+        if ( GLib.SignalHandler.is_connected(gmpcconn, this.status_changed_id)) {
+            GLib.SignalHandler.disconnect(gmpcconn, this.status_changed_id);
+        }
+
+    }
     private bool button_press_event(Gtk.EventBox wid, Gdk.EventButton event)
     {
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
-            stdout.printf("button press\n");
             if(event.button == 1)
             {
                 int width = this.allocation.width;
@@ -45,8 +52,6 @@ public class Gmpc.Rating : Gtk.Frame
 
                 MPD.Sticker.Song.set(this.server, this.song.file, "rating", button.to_string());
                 this.set_rating(button);
-                this.rating_changed(button);
-                stdout.printf("set rating: %i\n", button);
             }
         }
 
@@ -55,19 +60,13 @@ public class Gmpc.Rating : Gtk.Frame
 
     private void status_changed (Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
-        stdout.printf("Status Changed\n");
-    }
-    private void connection_changed(Gmpc.Connection conn, MPD.Server server, int connect)
-    {
-        stdout.printf("Connection changed: %i\n", connect);
     }
 
     public Rating (MPD.Server server, MPD.Song song) {
         this.server = server;
         this.song = song;
         this.update();
-        gmpcconn.connection_changed += connection_changed;
-        gmpcconn.status_changed += status_changed;
+        this.status_changed_id = GLib.Signal.connect_swapped(gmpcconn, "status_changed", (GLib.Callback)status_changed, this);
     }
 
     construct {
@@ -90,14 +89,10 @@ public class Gmpc.Rating : Gtk.Frame
         this.add(this.event);
         this.event.add(this.box);
 
-//        this.add_events((int)Gdk.EventMask.BUTTON_PRESS_MASK);
         this.event.button_press_event += button_press_event;
-        //GLib.Signal.connect_swapped(this.event, "button-press-event", (GLib.Callback)this.button_press_event, this);
-       // this.button_press_event += this.button_press_event;
         this.show_all();
     }
 
-    signal void rating_changed(int rating);
 
     public void set_rating(int rating)
     {

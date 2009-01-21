@@ -1,11 +1,10 @@
 
 #include "gmpc_rating.h"
 #include <gdk/gdk.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <float.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 #include <gmpc-connection.h>
 #include <metadata.h>
 #include <main.h>
@@ -21,6 +20,7 @@ struct _GmpcRatingPrivate {
 	gint rat_size;
 	GtkHBox* box;
 	GtkEventBox* event;
+	gulong status_changed_id;
 };
 
 #define GMPC_RATING_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_RATING, GmpcRatingPrivate))
@@ -29,9 +29,6 @@ enum  {
 };
 static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
 static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
-static void gmpc_rating_connection_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, gint connect);
-static void _gmpc_rating_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
-static void _gmpc_rating_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_rating_parent_class = NULL;
@@ -44,7 +41,6 @@ static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* w
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (wid != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
-		fprintf (stdout, "button press\n");
 		if ((*event).button == 1) {
 			gint width;
 			gint button;
@@ -55,8 +51,6 @@ static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* w
 			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0 = g_strdup_printf ("%i", button));
 			_tmp0 = (g_free (_tmp0), NULL);
 			gmpc_rating_set_rating (self, button);
-			g_signal_emit_by_name (self, "rating-changed", button);
-			fprintf (stdout, "set rating: %i\n", button);
 		}
 	}
 	return FALSE;
@@ -67,25 +61,6 @@ static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
-	fprintf (stdout, "Status Changed\n");
-}
-
-
-static void gmpc_rating_connection_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, gint connect) {
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (conn != NULL);
-	g_return_if_fail (server != NULL);
-	fprintf (stdout, "Connection changed: %i\n", connect);
-}
-
-
-static void _gmpc_rating_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self) {
-	gmpc_rating_connection_changed (self, _sender, server, connect);
-}
-
-
-static void _gmpc_rating_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self) {
-	gmpc_rating_status_changed (self, _sender, server, what);
 }
 
 
@@ -101,8 +76,7 @@ GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_
 	_tmp0 = NULL;
 	self->priv->song = (_tmp1 = (_tmp0 = song, (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0)), (self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL)), _tmp1);
 	gmpc_rating_update (self);
-	g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_rating_connection_changed_gmpc_connection_connection_changed, self, 0);
-	g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_rating_status_changed_gmpc_connection_status_changed, self, 0);
+	self->priv->status_changed_id = g_signal_connect_swapped (gmpcconn, "status_changed", (GCallback) gmpc_rating_status_changed, self);
 	return self;
 }
 
@@ -182,10 +156,7 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[4], FALSE, FALSE, (guint) 0);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->event);
 		gtk_container_add ((GtkContainer*) self->priv->event, (GtkWidget*) self->priv->box);
-		/*        this.add_events((int)Gdk.EventMask.BUTTON_PRESS_MASK);*/
 		g_signal_connect_object ((GtkWidget*) self->priv->event, "button-press-event", (GCallback) _gmpc_rating_button_press_event_gtk_widget_button_press_event, self, 0);
-		/*GLib.Signal.connect_swapped(this.event, "button-press-event", (GLib.Callback)this.button_press_event, this);
-		 this.button_press_event += this.button_press_event;*/
 		gtk_widget_show_all ((GtkWidget*) self);
 	}
 	return obj;
@@ -197,7 +168,6 @@ static void gmpc_rating_class_init (GmpcRatingClass * klass) {
 	g_type_class_add_private (klass, sizeof (GmpcRatingPrivate));
 	G_OBJECT_CLASS (klass)->constructor = gmpc_rating_constructor;
 	G_OBJECT_CLASS (klass)->finalize = gmpc_rating_finalize;
-	g_signal_new ("rating_changed", GMPC_TYPE_RATING, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
 
@@ -205,12 +175,18 @@ static void gmpc_rating_instance_init (GmpcRating * self) {
 	self->priv = GMPC_RATING_GET_PRIVATE (self);
 	self->priv->server = NULL;
 	self->priv->song = NULL;
+	self->priv->status_changed_id = (gulong) 0;
 }
 
 
 static void gmpc_rating_finalize (GObject* obj) {
 	GmpcRating * self;
 	self = GMPC_RATING (obj);
+	{
+		if (g_signal_handler_is_connected (gmpcconn, self->priv->status_changed_id)) {
+			g_signal_handler_disconnect (gmpcconn, self->priv->status_changed_id);
+		}
+	}
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
 	self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL);
 	(self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL));

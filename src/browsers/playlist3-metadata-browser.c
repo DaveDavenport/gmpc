@@ -998,7 +998,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	}
     if(song->file)
     {
-//        char *value = mpd_sticker_song_get(connection, song->file, "rating");
+        if(mpd_sticker_supported(connection))
         {
             label = gtk_label_new("");
             markup =  g_markup_printf_escaped("<b>%s:</b>", _("Rating"));
@@ -1008,16 +1008,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
             gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
             ali = gtk_alignment_new(0.0,0.5,0,1);
             label = (GtkWidget *)gmpc_rating_new(connection, song);
-            /*
-            if(value)
-            {
-                gmpc_rating_set_rating(GMPC_RATING(label), atoi(value));
-            }else {
-                gmpc_rating_set_rating(GMPC_RATING(label), 0);
-            }
-            */
             gtk_container_add(GTK_CONTAINER(ali), label);
-//            g_signal_connect_data(G_OBJECT(label), "rating-changed", G_CALLBACK(pl3_metadata_rating_changed), g_strdup(song->file), g_free, 0);
             gtk_table_attach(GTK_TABLE(table2),ali,1,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
             i++;
         }
