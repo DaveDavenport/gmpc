@@ -6,11 +6,16 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <gmpc-connection.h>
+#include <metadata.h>
+#include <main.h>
 
 
 
 
 struct _GmpcRatingPrivate {
+	MpdObj* server;
+	mpd_Song* song;
 	GtkImage** rat;
 	gint rat_length1;
 	gint rat_size;
@@ -23,6 +28,10 @@ enum  {
 	GMPC_RATING_DUMMY_PROPERTY
 };
 static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
+static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
+static void gmpc_rating_connection_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, gint connect);
+static void _gmpc_rating_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
+static void _gmpc_rating_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_rating_parent_class = NULL;
@@ -39,14 +48,67 @@ static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* w
 		if ((*event).button == 1) {
 			gint width;
 			gint button;
+			char* _tmp0;
 			width = ((GtkWidget*) self)->allocation.width;
 			button = (gint) (((((*event).x) / ((double) width)) + 0.15) * 5);
+			_tmp0 = NULL;
+			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0 = g_strdup_printf ("%i", button));
+			_tmp0 = (g_free (_tmp0), NULL);
 			gmpc_rating_set_rating (self, button);
 			g_signal_emit_by_name (self, "rating-changed", button);
 			fprintf (stdout, "set rating: %i\n", button);
 		}
 	}
 	return FALSE;
+}
+
+
+static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (conn != NULL);
+	g_return_if_fail (server != NULL);
+	fprintf (stdout, "Status Changed\n");
+}
+
+
+static void gmpc_rating_connection_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, gint connect) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (conn != NULL);
+	g_return_if_fail (server != NULL);
+	fprintf (stdout, "Connection changed: %i\n", connect);
+}
+
+
+static void _gmpc_rating_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self) {
+	gmpc_rating_connection_changed (self, _sender, server, connect);
+}
+
+
+static void _gmpc_rating_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self) {
+	gmpc_rating_status_changed (self, _sender, server, what);
+}
+
+
+GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song) {
+	GmpcRating * self;
+	mpd_Song* _tmp1;
+	const mpd_Song* _tmp0;
+	g_return_val_if_fail (server != NULL, NULL);
+	g_return_val_if_fail (song != NULL, NULL);
+	self = g_object_newv (object_type, 0, NULL);
+	self->priv->server = server;
+	_tmp1 = NULL;
+	_tmp0 = NULL;
+	self->priv->song = (_tmp1 = (_tmp0 = song, (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0)), (self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL)), _tmp1);
+	gmpc_rating_update (self);
+	g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_rating_connection_changed_gmpc_connection_connection_changed, self, 0);
+	g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_rating_status_changed_gmpc_connection_status_changed, self, 0);
+	return self;
+}
+
+
+GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song) {
+	return gmpc_rating_construct (GMPC_TYPE_RATING, server, song);
 }
 
 
@@ -60,33 +122,16 @@ void gmpc_rating_set_rating (GmpcRating* self, gint rating) {
 }
 
 
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpcwiki.sarine.nl/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
-GmpcRating* gmpc_rating_construct (GType object_type) {
-	GmpcRating * self;
-	self = g_object_newv (object_type, 0, NULL);
-	return self;
-}
-
-
-GmpcRating* gmpc_rating_new (void) {
-	return gmpc_rating_construct (GMPC_TYPE_RATING);
+void gmpc_rating_update (GmpcRating* self) {
+	char* value;
+	g_return_if_fail (self != NULL);
+	value = mpd_sticker_song_get (self->priv->server, self->priv->song->file, "rating");
+	if (value == NULL) {
+		gmpc_rating_set_rating (self, 0);
+	} else {
+		gmpc_rating_set_rating (self, atoi (value));
+	}
+	value = (g_free (value), NULL);
 }
 
 
@@ -158,12 +203,15 @@ static void gmpc_rating_class_init (GmpcRatingClass * klass) {
 
 static void gmpc_rating_instance_init (GmpcRating * self) {
 	self->priv = GMPC_RATING_GET_PRIVATE (self);
+	self->priv->server = NULL;
+	self->priv->song = NULL;
 }
 
 
 static void gmpc_rating_finalize (GObject* obj) {
 	GmpcRating * self;
 	self = GMPC_RATING (obj);
+	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
 	self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL);
 	(self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL));
 	(self->priv->event == NULL) ? NULL : (self->priv->event = (g_object_unref (self->priv->event), NULL));

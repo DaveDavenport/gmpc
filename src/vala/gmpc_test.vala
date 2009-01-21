@@ -11,7 +11,6 @@ namespace Gmpc.Misc {
     public void test(MPD.Server server, MPD.Song song) {
         MPD.Song b = null;
         b = song;
-        b = server.playlist_get_song(0);
         song.artist = "test";
         stdout.printf("test: %s\n", plugin.name);
     }

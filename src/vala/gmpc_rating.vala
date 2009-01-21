@@ -22,10 +22,13 @@ using GLib;
 using Gtk;
 using Gdk;
 using Cairo;
-
+using MPD;
+using Gmpc;
 
 public class Gmpc.Rating : Gtk.Frame
 {
+    private weak MPD.Server server  = null;
+    private MPD.Song song       = null;
     private Gtk.Image[] rat;
     private Gtk.HBox    box;
     private Gtk.EventBox event;
@@ -39,6 +42,8 @@ public class Gmpc.Rating : Gtk.Frame
             {
                 int width = this.allocation.width;
                 int button = (int)((((event.x)/(double)width)+0.15)*5);
+
+                MPD.Sticker.Song.set(this.server, this.song.file, "rating", button.to_string());
                 this.set_rating(button);
                 this.rating_changed(button);
                 stdout.printf("set rating: %i\n", button);
@@ -46,6 +51,23 @@ public class Gmpc.Rating : Gtk.Frame
         }
 
         return false;
+    }
+
+    private void status_changed (Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
+    {
+        stdout.printf("Status Changed\n");
+    }
+    private void connection_changed(Gmpc.Connection conn, MPD.Server server, int connect)
+    {
+        stdout.printf("Connection changed: %i\n", connect);
+    }
+
+    public Rating (MPD.Server server, MPD.Song song) {
+        this.server = server;
+        this.song = song;
+        this.update();
+        gmpcconn.connection_changed += connection_changed;
+        gmpcconn.status_changed += status_changed;
     }
 
     construct {
@@ -85,7 +107,14 @@ public class Gmpc.Rating : Gtk.Frame
             this.rat[i].sensitive = i<rating;
         }
     }
-
-
+    public void update()
+    {
+        var value = MPD.Sticker.Song.get(this.server,this.song.file, "rating");
+        if(value == null) {
+            this.set_rating(0);            
+        } else {
+            this.set_rating(value.to_int());
+        }
+    }
 
 }
