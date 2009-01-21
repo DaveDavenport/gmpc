@@ -124,14 +124,11 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_RATING (obj);
 	{
+		gint i;
 		GtkHBox* _tmp0;
 		GtkEventBox* _tmp1;
 		GtkImage** _tmp2;
-		GtkImage* _tmp3;
-		GtkImage* _tmp4;
-		GtkImage* _tmp5;
-		GtkImage* _tmp6;
-		GtkImage* _tmp7;
+		i = 0;
 		g_object_set ((GtkFrame*) self, "shadow", GTK_SHADOW_NONE, NULL);
 		_tmp0 = NULL;
 		self->priv->box = (_tmp0 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), (self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL)), _tmp0);
@@ -140,21 +137,12 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		gtk_event_box_set_visible_window (self->priv->event, FALSE);
 		_tmp2 = NULL;
 		self->priv->rat = (_tmp2 = g_new0 (GtkImage*, 5 + 1), self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL), self->priv->rat_length1 = 5, self->priv->rat_size = self->priv->rat_length1, _tmp2);
-		_tmp3 = NULL;
-		self->priv->rat[0] = (_tmp3 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[0] == NULL) ? NULL : (self->priv->rat[0] = (g_object_unref (self->priv->rat[0]), NULL)), _tmp3);
-		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[0], FALSE, FALSE, (guint) 0);
-		_tmp4 = NULL;
-		self->priv->rat[1] = (_tmp4 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[1] == NULL) ? NULL : (self->priv->rat[1] = (g_object_unref (self->priv->rat[1]), NULL)), _tmp4);
-		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[1], FALSE, FALSE, (guint) 0);
-		_tmp5 = NULL;
-		self->priv->rat[2] = (_tmp5 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[2] == NULL) ? NULL : (self->priv->rat[2] = (g_object_unref (self->priv->rat[2]), NULL)), _tmp5);
-		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[2], FALSE, FALSE, (guint) 0);
-		_tmp6 = NULL;
-		self->priv->rat[3] = (_tmp6 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[3] == NULL) ? NULL : (self->priv->rat[3] = (g_object_unref (self->priv->rat[3]), NULL)), _tmp6);
-		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[3], FALSE, FALSE, (guint) 0);
-		_tmp7 = NULL;
-		self->priv->rat[4] = (_tmp7 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[4] == NULL) ? NULL : (self->priv->rat[4] = (g_object_unref (self->priv->rat[4]), NULL)), _tmp7);
-		gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[4], FALSE, FALSE, (guint) 0);
+		for (i = 0; i < 5; i++) {
+			GtkImage* _tmp3;
+			_tmp3 = NULL;
+			self->priv->rat[i] = (_tmp3 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp3);
+			gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
+		}
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->event);
 		gtk_container_add ((GtkContainer*) self->priv->event, (GtkWidget*) self->priv->box);
 		g_signal_connect_object ((GtkWidget*) self->priv->event, "button-press-event", (GCallback) _gmpc_rating_button_press_event_gtk_widget_button_press_event, self, 0);
