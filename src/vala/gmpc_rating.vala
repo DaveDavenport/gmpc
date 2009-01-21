@@ -75,15 +75,15 @@ public class Gmpc.Rating : Gtk.Frame
         this.event = new Gtk.EventBox();
         this.event.visible_window = false;
         this.rat = new Gtk.Image[5];
-        this.rat[0] = new Gtk.Image.from_stock(Gtk.STOCK_ABOUT, Gtk.IconSize.MENU);
+        this.rat[0] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
         this.box.pack_start(this.rat[0], false, false, 0);
-        this.rat[1] = new Gtk.Image.from_stock(Gtk.STOCK_ABOUT, Gtk.IconSize.MENU);
+        this.rat[1] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
         this.box.pack_start(this.rat[1], false, false, 0);
-        this.rat[2] = new Gtk.Image.from_stock(Gtk.STOCK_ABOUT, Gtk.IconSize.MENU);
+        this.rat[2] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
         this.box.pack_start(this.rat[2], false, false, 0);
-        this.rat[3] = new Gtk.Image.from_stock(Gtk.STOCK_ABOUT, Gtk.IconSize.MENU);
+        this.rat[3] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
         this.box.pack_start(this.rat[3], false, false, 0);
-        this.rat[4] = new Gtk.Image.from_stock(Gtk.STOCK_ABOUT, Gtk.IconSize.MENU);
+        this.rat[4] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
         this.box.pack_start(this.rat[4], false, false, 0);
 
         this.add(this.event);
