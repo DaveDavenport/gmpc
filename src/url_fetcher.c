@@ -35,7 +35,7 @@ static void url_parse_pls_file(const char *data, int size)
 {
 	int i=0;
 	int songs = 0;
-	gchar **tokens = g_strsplit(data, "\n", -1);
+	gchar **tokens = g_regex_split_simple("\n", data,G_REGEX_MULTILINE,G_REGEX_MATCH_NEWLINE_ANY); // g_strsplit(data, "\n", -1);
 	if(tokens)
 	{
 		for(i=0;tokens[i];i++)
@@ -49,7 +49,7 @@ static void url_parse_pls_file(const char *data, int size)
 				/** if delimiter is found, and the url behind it starts with http:// add it*/
 				if(tokens[i][del] == '=' && strncmp(&tokens[i][del+1], "http://", 7) == 0)
 				{
-					printf("Adding %s\n", &tokens[i][del+1]);		
+					printf("Adding '%s'\n", &tokens[i][del+1]);		
 					mpd_playlist_add(connection, &tokens[i][del+1]);	
 					songs++;
 				}
