@@ -132,6 +132,7 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		GtkImage* _tmp5;
 		GtkImage* _tmp6;
 		GtkImage* _tmp7;
+		g_object_set ((GtkFrame*) self, "shadow", GTK_SHADOW_NONE, NULL);
 		_tmp0 = NULL;
 		self->priv->box = (_tmp0 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), (self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL)), _tmp0);
 		_tmp1 = NULL;

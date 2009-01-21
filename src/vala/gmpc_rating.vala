@@ -70,7 +70,8 @@ public class Gmpc.Rating : Gtk.Frame
     }
 
     construct {
-    
+        this.shadow = Gtk.ShadowType.NONE;
+
         this.box = new Gtk.HBox(true,6);
         this.event = new Gtk.EventBox();
         this.event.visible_window = false;
