@@ -170,11 +170,9 @@ public class Gmpc.Progress : Gtk.HBox
             if(this.do_countdown)
             {
                 uint seconds = (uint)(this.total*(1-range.get_value()));
-                stdout.printf("changed: %u %u\n", seconds, this.current);
                 seek_event(seconds);
             }else{
                 uint seconds = (uint)(this.total*(range.get_value()));
-                stdout.printf("changed: %u %u\n", seconds, this.current);
                 seek_event(seconds);
             }
         }
@@ -186,7 +184,6 @@ public class Gmpc.Progress : Gtk.HBox
         {
             if(event.button == 3)
             {
-                stdout.printf("right button press\n");
                 this.do_countdown = !this.do_countdown;
                 this.scale.inverted = this.do_countdown;
                 var cur = this.current;
@@ -206,7 +203,6 @@ public class Gmpc.Progress : Gtk.HBox
 
     private bool scroll_event (Gtk.Scale scale,Gdk.EventScroll event)
     {
-        stdout.printf("scrolling\n");
         if(event.direction == Gdk.ScrollDirection.UP)
         {
             seek_event(this.current+5); 
@@ -222,7 +218,6 @@ public class Gmpc.Progress : Gtk.HBox
     {
         if(this.total != total)
         {
-            stdout.printf("%u %i set off\n",total, (int)(total > 0));
             this.scale.sensitive = (total > 0);
         }
 

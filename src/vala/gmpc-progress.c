@@ -23,7 +23,6 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include <stdio.h>
 
 
 
@@ -205,12 +204,10 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 		if (self->priv->do_countdown) {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
-			fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
 			g_signal_emit_by_name (self, "seek-event", seconds);
 		} else {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (gtk_range_get_value ((GtkRange*) range)));
-			fprintf (stdout, "changed: %u %u\n", seconds, self->priv->current);
 			g_signal_emit_by_name (self, "seek-event", seconds);
 		}
 	}
@@ -225,7 +222,6 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* 
 		if ((*event).button == 3) {
 			guint cur;
 			guint tot;
-			fprintf (stdout, "right button press\n");
 			self->priv->do_countdown = !self->priv->do_countdown;
 			gtk_range_set_inverted ((GtkRange*) self->priv->scale, self->priv->do_countdown);
 			cur = self->priv->current;
@@ -253,7 +249,6 @@ static gboolean gmpc_progress_button_press_event (GmpcProgress* self, GtkScale* 
 static gboolean gmpc_progress_scroll_event (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
-	fprintf (stdout, "scrolling\n");
 	if ((*event).direction == GDK_SCROLL_UP) {
 		g_signal_emit_by_name (self, "seek-event", self->priv->current + 5);
 	} else {
@@ -269,7 +264,6 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 	gboolean _tmp0;
 	g_return_if_fail (self != NULL);
 	if (self->priv->total != total) {
-		fprintf (stdout, "%u %i set off\n", total, (gint) (total > 0));
 		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", (total > 0), NULL);
 	}
 	_tmp0 = FALSE;
