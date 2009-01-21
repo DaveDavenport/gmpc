@@ -1,6 +1,6 @@
 namespace Gmpc {
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
-    public Connection gmpcconn; 
+    static Connection gmpcconn; 
 
     [CCode (cheader_filename="gmpc-connection.h")]
     public class Connection {
