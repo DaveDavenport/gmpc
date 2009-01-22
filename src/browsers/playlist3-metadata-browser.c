@@ -921,16 +921,37 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	 */
 
 	table = gtk_table_new(2,2,FALSE);
-	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
-	image = gmpc_metaimage_new_size(META_ALBUM_ART,150);
-	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
-	gtk_table_attach(GTK_TABLE(table), image, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), table, FALSE, TRUE,0);
 
-	table2 = gtk_table_new(2,2,0);
+	gtk_container_set_border_width(GTK_CONTAINER(table), 8);
+	image = gmpc_metaimage_new_size(META_ALBUM_ART,150);
+
+    ali = gtk_alignment_new(0.5, 0.0, 0.0,0.0);
+    gtk_container_add(GTK_CONTAINER(ali), image);
+	gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(image), song);
+	gtk_table_attach(GTK_TABLE(table), ali, 0,1,0,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+
+	table2 = gtk_table_new(2,2,FALSE);
 	gtk_container_set_border_width(GTK_CONTAINER(table2), 8);
 	gtk_table_set_col_spacings(GTK_TABLE(table2), 6);
 	gtk_table_attach(GTK_TABLE(table), table2, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_EXPAND|GTK_FILL,0,0);
+
+	if(song->title) {
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Title"));
+		info2_add_table_item(table2,markup,song->title,i,TRUE);
+		g_free(markup);
+		i++;
+	}
+    if(song->time > 0)
+    {
+		/*** Dirname */		
+		char *strtime= format_time_real(song->time, ""); 
+		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Duration"));
+		info2_add_table_item(table2,markup,strtime,i,TRUE);
+		g_free(markup);	
+		i++;
+		q_free(strtime);
+    }
 	if(song->artist) {
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Artist"));
 		info2_add_table_item(table2,markup,song->artist,i,TRUE);
@@ -943,6 +964,12 @@ static void info2_fill_song_view_real(mpd_Song *song)
 		g_free(markup);
 		i++;
 	}
+	if(song->track) {
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Track"));
+		info2_add_table_item(table2,markup,song->track,i,TRUE);
+		g_free(markup);
+		i++;
+	}
 	if(song->genre) {
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
 		info2_add_table_item(table2,markup,song->genre,i,TRUE);
@@ -952,12 +979,6 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	if(song->date) {
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
 		info2_add_table_item(table2,markup,song->date,i,TRUE);
-		g_free(markup);
-		i++;
-	}
-	if(song->track) {
-		markup = g_markup_printf_escaped("<b>%s:</b>", _("Track"));
-		info2_add_table_item(table2,markup,song->track,i,TRUE);
 		g_free(markup);
 		i++;
 	}
@@ -1013,6 +1034,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
             i++;
         }
     }
+
     if(show_current_song)
     {
         label = gtk_label_new("");

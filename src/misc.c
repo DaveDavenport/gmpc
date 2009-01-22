@@ -43,6 +43,7 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	int days = seconds/86400;
 	int hours = (seconds % 86400)/3600;
 	int minutes = (seconds % 3600)/60;
+    int sec = (seconds % 60);
 	char *ret;
 	if(seconds == 0)
 	{
@@ -59,8 +60,12 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	}
 	if(minutes != 0)
 	{
-		g_string_append_printf(str, "%i %s", minutes, ngettext("minute", "minutes", minutes));
+		g_string_append_printf(str, "%i %s ", minutes, ngettext("minute", "minutes", minutes));
 	}
+    if(seconds != 0)
+    {
+		g_string_append_printf(str, "%i %s", sec, ngettext("second", "seconds", sec));
+    }
 	ret = str->str;
 	g_string_free(str, FALSE);
 	return ret;
