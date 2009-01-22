@@ -62,7 +62,7 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	{
 		g_string_append_printf(str, "%i %s ", minutes, ngettext("minute", "minutes", minutes));
 	}
-    if(seconds != 0)
+    if(sec != 0)
     {
 		g_string_append_printf(str, "%i %s", sec, ngettext("second", "seconds", sec));
     }

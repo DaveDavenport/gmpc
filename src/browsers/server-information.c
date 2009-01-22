@@ -24,7 +24,7 @@
 #include "plugin.h"
 #include "playlist3-messages.h"
 #include "playlist3.h"
-#include <libmpd/libmpd-internal.h>
+#include "misc.h"
 
 gmpcPlugin statistics_plugin;
 enum {
@@ -40,7 +40,6 @@ enum {
     SERVERSTATS_NUM_FIELDS
 };
 
-static gchar * serverstats_format_time(unsigned long seconds);
 static GtkWidget *serverstats_sw= NULL, *serverstats_tree = NULL,*serverstats_combo = NULL;
 static GtkWidget *serverstats_labels[SERVERSTATS_NUM_FIELDS];
 static gboolean cancel_query = FALSE;
@@ -72,7 +71,7 @@ static gboolean serverstats_expose_event(GtkWidget *widget, GdkEventExpose *even
 	return FALSE;
 }
 
-static void serverstats_clear()
+static void serverstats_clear(void)
 {
 	int i;
 	for(i=0;i < SERVERSTATS_NUM_FIELDS;i++)
@@ -81,7 +80,7 @@ static void serverstats_clear()
 	}
 
 }
-static void serverstats_update()
+static void serverstats_update(void)
 {
     gchar **handlers = NULL;
     gchar *value = NULL;
@@ -94,15 +93,15 @@ static void serverstats_update()
     gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_VERSION]), value);
     free(value);
     /** Uptime  */
-    value = serverstats_format_time(mpd_stats_get_uptime(connection));
+    value = format_time_real(mpd_stats_get_uptime(connection),"");
     gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_UPTIME]), value);
     g_free(value);
     /** Playtime*/
-    value = serverstats_format_time(mpd_stats_get_playtime(connection));
+    value = format_time_real(mpd_stats_get_playtime(connection),"");
     gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_PLAYTIME]), value);
     g_free(value);
     /** DB Playtime*/
-    value = serverstats_format_time(mpd_stats_get_db_playtime(connection));
+    value = format_time_real(mpd_stats_get_db_playtime(connection),"");
     gtk_label_set_text(GTK_LABEL(serverstats_labels[SERVERSTATS_MPD_DB_PLAYTIME]), value);
     g_free(value);
     /** DB ARTIST*/
@@ -163,11 +162,13 @@ static gboolean serverstats_idle_handler(ss_str *s)
 
         if(gtk_tree_model_get_iter_first(s->model, &iter))
         {
-            do{	gulong i;
+            do{	
+                guint d;
+                gulong i;
                 gchar *value = NULL;
                 gtk_tree_model_get(s->model, &iter, 0, &i, -1);
-                guint d = (guint)100*(i/(double)s->max_i);
-                value = serverstats_format_time(i);
+                d = (guint)100*(i/(double)s->max_i);
+                value = format_time_real(i,"");
                 gtk_list_store_set(GTK_LIST_STORE(s->model), &iter, 2, d, 3,value,-1);
                 g_free(value);
             }while(gtk_tree_model_iter_next(s->model, &iter));
@@ -210,9 +211,12 @@ static gboolean serverstats_idle_handler(ss_str *s)
 
 static void serverstats_combo_changed(GtkComboBox *box, GtkWidget *pb)
 {
+    ss_str *s;
+    int hits, total;
+    gulong max_i;
+    MpdData *node, *data;
      GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(serverstats_tree));
     int tag = gtk_combo_box_get_active(box);
-    GtkTreeIter iter;
     
    if(!mpd_check_connected(connection)) 
         return;
@@ -234,13 +238,13 @@ static void serverstats_combo_changed(GtkComboBox *box, GtkWidget *pb)
 
     gtk_list_store_clear(GTK_LIST_STORE(model));
     mpd_database_search_field_start(connection, tag);
-    MpdData *node ,*data = mpd_database_search_commit(connection);
-    gulong max_i = 0;
+    data = mpd_database_search_commit(connection);
+    max_i = 0;
 
-    int hits = 0;
-    int total = 0;
+    hits = 0;
+    total = 0;
     for(node = mpd_data_get_first(data);node != NULL; node = (MpdData *)mpd_data_get_next_real(node, FALSE)) total++;
-    ss_str *s = g_malloc0(sizeof(*s));
+    s = g_malloc0(sizeof(*s));
     s->total = total;
     s->model = model;
     s->data = data;
@@ -280,7 +284,7 @@ static void serverstats_add_entry(GtkWidget *table, int i,const char *name, int 
     gtk_table_attach(GTK_TABLE(table),label, 1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
 }
 
-static void serverstats_init()
+static void serverstats_init(void)
 {
     /** Get an allready exposed widgets to grab theme colors from. */
     GtkWidget *colw = (GtkWidget *)playlist3_get_category_tree_view();
@@ -390,11 +394,9 @@ static void serverstats_init()
      */
     {
         GtkWidget *combo = NULL;
-        GtkWidget *sw = NULL,*tree = NULL,*hbox=NULL,*cancel;
+        GtkWidget *sw = NULL,*cancel;
         GtkListStore *store;
-        GtkTreeViewColumn *column;
         GtkCellRenderer *renderer;
-        int i;
         GtkWidget *pb = gtk_progress_bar_new();
         serverstats_combo = combo = gtk_combo_box_new_text();
         for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES-2;i++)
@@ -469,7 +471,7 @@ static void serverstats_selected(GtkWidget *container)
     gtk_widget_show(serverstats_sw);
     if(timeout_source)
         g_source_remove(timeout_source);
-    timeout_source = g_timeout_add(30000, (GSourceFunc)serverstats_update, NULL);
+    timeout_source = g_timeout_add_seconds(5, (GSourceFunc)serverstats_update, NULL);
 }
 
 static void serverstats_unselected(GtkWidget *container)
@@ -481,35 +483,6 @@ static void serverstats_unselected(GtkWidget *container)
 }
 
 
-
-static gchar * serverstats_format_time(unsigned long seconds)
-{
-    GString *str = NULL;
-    gulong days = seconds/86400;
-    gulong houres = (seconds % 86400)/3600;
-    gulong minutes = (seconds % 3600)/60;
-    char *ret;
-    if(seconds == 0)
-    {
-        return g_strdup("");
-    }
-    str = g_string_new("");
-    if(days != 0)
-    {
-        g_string_append_printf(str, "%lu %s ", days,    (days == 1)?("day"):("days"));
-    }	
-    if(houres != 0)
-    {
-        g_string_append_printf(str, "%lu %s ", houres,  (houres == 1)?("hour"):("hours"));
-    }
-    if(minutes != 0)
-    {
-        g_string_append_printf(str, "%lu %s", minutes,  (minutes==1)?("minute"):("minutes"));
-    }
-    ret = str->str;
-    g_string_free(str, FALSE);
-    return ret;
-}
 
 static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)
 {
