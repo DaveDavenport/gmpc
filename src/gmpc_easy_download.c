@@ -288,7 +288,7 @@ static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, 
 {
     _GEADAsyncHandler *d = data;
     printf("progress\n");
-    d->callback((GEADAsyncHandler *)d,d->uri,GEAD_PROGRESS, NULL, msg->response_body->length, d->userdata);
+    d->callback((GEADAsyncHandler *)d,GEAD_PROGRESS, d->userdata);
 }
 
 static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpointer data)
@@ -297,16 +297,16 @@ static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpo
     printf("update\n");
     if(SOUP_STATUS_IS_SUCCESSFUL (msg->status_code)){
         printf("Soup: %s done %s\n", d->uri,msg->response_body->data);
-        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_DONE, msg->response_body->data, msg->response_body->length, d->userdata);
+        d->callback((GEADAsyncHandler *)d,GEAD_DONE, d->userdata);
     }
     else if (msg->status_code == SOUP_STATUS_CANCELLED)
     {
         printf("Cancelled\n");
-        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_CANCELLED,NULL,0, d->userdata);
+        d->callback((GEADAsyncHandler *)d,GEAD_CANCELLED,d->userdata);
     }
     else {
         printf("Failed\n");
-        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_FAILED,NULL,0, d->userdata);
+        d->callback((GEADAsyncHandler *)d,GEAD_FAILED,d->userdata);
     }
 }
 
@@ -329,13 +329,28 @@ goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle)
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     return soup_message_headers_get_content_length(d->msg->response_headers);
 }
+
+const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle)
+{
+    _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    return d->uri;
+}
+
+const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length)
+{
+    _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    if(length)
+	    *length = d->msg->response_body->length; 
+    return d->msg->response_body->data;
+}
+
 void gmpc_easy_async_cancel(GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_CANCELLED);
 }
 
-GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, void (*callback)(GEADAsyncHandler *handle,const char *uri,const GEADStatus status,const char  *data,const goffset length, gpointer user_data), gpointer user_data)
+GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback callback, gpointer user_data)
 {
     SoupMessage *msg;
     _GEADAsyncHandler *d;

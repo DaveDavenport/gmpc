@@ -180,11 +180,14 @@ static void parse_data(const char *data, guint size, const char *text)
         pl3_push_statusbar_message(_("Added 1 stream"));
     }
 }
-static void url_fetcher_download_callback(GEADAsyncHandler *handle, const char *uri, const GEADStatus status, const char *data, const goffset length, gpointer user_data)
+static void url_fetcher_download_callback(GEADAsyncHandler *handle, const GEADStatus status, gpointer user_data)
 {
+    gchar *uri = gmpc_easy_handler_get_uri(handle);
     if(status == GEAD_DONE)
     {
         GtkWidget *dialog = user_data;
+	goffset length;
+	char *data = gmpc_easy_handler_get_data(handle, &length);
         parse_data(data,(guint)length,uri);
         if(dialog)
         {
@@ -206,10 +209,12 @@ static void url_fetcher_download_callback(GEADAsyncHandler *handle, const char *
     }
     else if (status == GEAD_PROGRESS)
     {
+	goffset length;
+	goffset total = gmpc_easy_handler_get_content_size(handle);
+	gmpc_easy_handler_get_data(handle, &length);
         if(user_data)
         {
             GtkWidget *progress = user_data;
-            goffset total = gmpc_easy_handler_get_content_size(handle);
             if(total > 0){
                 gdouble prog = (length/(double)total);
                 gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), prog);
