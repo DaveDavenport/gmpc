@@ -431,7 +431,7 @@ requires 2.0.0
                 {
                     if(self->_priv->images[n] == NULL)
                     {
-                        if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ARTIST)
+                        if(data->type == MPD_DATA_TYPE_TAG && (data->tag_type == MPD_TAG_ITEM_ARTIST || data->tag_type == MPD_TAG_ITEM_ALBUM_ARTIST) )
                         {
                             mpd_Song *song;
                             GtkTreePath *path;

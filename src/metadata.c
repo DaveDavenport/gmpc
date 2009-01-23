@@ -111,7 +111,6 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
     {
         if(edited->albumartist)
         {
-            printf("Artist: %s\n", edited->albumartist);
             if(edited->artist)
                 g_free(edited->artist);
             edited->artist = g_strdup(edited->albumartist);
@@ -127,7 +126,6 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 
             data2 = mpd_database_search_commit(connection);
-            printf("Compilation detection\n");
             if(data2)
             {
                 for(i=0;data2; data2 = mpd_data_get_next(data2))
@@ -145,7 +143,6 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
             }
             if(i >=3)
             {
-                printf("Detected compilation\n");
                 if(edited->artist)
                     g_free(edited->artist);
                 edited->artist = g_strdup("Various Artists");

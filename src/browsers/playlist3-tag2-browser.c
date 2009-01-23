@@ -340,7 +340,7 @@ static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
         {
             gchar *value = NULL;
             gtk_tree_model_get(te->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-            if(te->type == MPD_TAG_ITEM_ARTIST)
+            if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST)
             {
                 info2_activate();
                 info2_fill_artist_view(value);
@@ -398,7 +398,7 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_browser_replace_selected), te);
 
-        if(te->type == MPD_TAG_ITEM_ARTIST || (te->type == MPD_TAG_ITEM_ALBUM && gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model)) != NULL))
+        if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST || (te->type == MPD_TAG_ITEM_ALBUM && gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model)) != NULL))
         {
             item = gtk_image_menu_item_new_from_stock(GTK_STOCK_INFO,NULL);
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -484,7 +484,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                             mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
                         if(te3->index < (te->index) && !artist_seen)
                         {           
-                            if(te3->type == MPD_TAG_ITEM_ARTIST)
+                            if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
                             {
                                 artist = g_strdup(value);
                                 artist_seen = 1;
@@ -656,7 +656,7 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
     if(te->image_renderer)
     {
         gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
-        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+        if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
         {
             int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
             gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
@@ -842,7 +842,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
         te->image_renderer = renderer = gtk_cell_renderer_pixbuf_new();
 
         gtk_tree_view_column_pack_start(column, renderer, FALSE);
-        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+        if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
         {
             int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
 
