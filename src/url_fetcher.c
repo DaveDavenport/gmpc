@@ -209,9 +209,9 @@ static void url_fetcher_download_callback(GEADAsyncHandler *handle, const GEADSt
     }
     else if (status == GEAD_PROGRESS)
     {
-	goffset length;
-	goffset total = gmpc_easy_handler_get_content_size(handle);
-	gmpc_easy_handler_get_data(handle, &length);
+        goffset length;
+        goffset total = gmpc_easy_handler_get_content_size(handle);
+        const char *data =  gmpc_easy_handler_get_data(handle, &length);
         if(user_data)
         {
             GtkWidget *progress = user_data;
@@ -226,7 +226,7 @@ static void url_fetcher_download_callback(GEADAsyncHandler *handle, const GEADSt
         }
         if(length > 12*1024) {
             printf("Cancel to much data to handle, assume binary\n");
-            mpd_playlist_add(connection, (char *)uri);
+            parse_data(data,(guint)length,uri);
             gmpc_easy_async_cancel(handle);
             if(user_data)
                 gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(user_data))), GTK_RESPONSE_CANCEL);
