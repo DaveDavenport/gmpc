@@ -356,7 +356,24 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
     SoupMessage *msg;
     _GEADAsyncHandler *d;
     if(soup_session == NULL) {
-        soup_session = soup_session_async_new();
+        if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
+        {
+            char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+            gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+            if(value)
+            {
+                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
+                SoupURI *uri = soup_uri_new(ppath);
+                printf("ppath: %s\n", ppath);
+                soup_session = soup_session_async_new_with_options(SOUP_SESSION_PROXY_URI, uri,NULL);
+                soup_uri_free(uri);
+                g_free(ppath);
+                g_free(value);
+            }
+        }
+        if(!soup_session){
+            soup_session = soup_session_async_new();
+        }
     }
 
     msg = soup_message_new("GET", uri);
