@@ -287,14 +287,12 @@ static SoupSession *soup_session = NULL;
 static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, gpointer data)
 {
     _GEADAsyncHandler *d = data;
-    printf("progress\n");
     d->callback((GEADAsyncHandler *)d,GEAD_PROGRESS, d->userdata);
 }
 
 static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpointer data)
 {
     _GEADAsyncHandler *d = data;
-    printf("update\n");
     if(SOUP_STATUS_IS_SUCCESSFUL (msg->status_code)){
         d->callback((GEADAsyncHandler *)d,GEAD_DONE, d->userdata);
     }
@@ -364,7 +362,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
             {
                 gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
                 SoupURI *uri = soup_uri_new(ppath);
-                printf("ppath: %s\n", ppath);
                 soup_session = soup_session_async_new_with_options(SOUP_SESSION_PROXY_URI, uri,NULL);
                 soup_uri_free(uri);
                 g_free(ppath);

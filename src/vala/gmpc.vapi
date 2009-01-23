@@ -34,4 +34,25 @@ namespace Gmpc {
 
 
    }
+
+   namespace AsyncDownload {
+     [CCode (cprefix = "GEAD_", cheader_filename = "gmpc_easy_download.h")]
+        public enum Status {
+            GEAD_DONE,
+            GEAD_PROGRESS,
+            GEAD_FAILED,
+            GEAD_CANCELLED
+        }
+
+        [CCode (cname="GEADAsyncHandler", cheader_filename="gmpc_easy_download.h")]
+        [CCode (free_function = "gmpc_easy_async_handle_free")]
+        public struct Handle {
+        }
+
+        public static delegate void Callback (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status, void *data);
+
+        [CCode (cname="gmpc_easy_async_downloader", cheader_filename="gmpc_easy_dowload.h")]
+        public Gmpc.AsyncDownload.Handle download(string uri, Gmpc.AsyncDownload.Callback callback, void *data);
+
+   }
 }
