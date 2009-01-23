@@ -23,6 +23,7 @@
 #include <glib.h>
 #include <curl/curl.h>
 #include <libmpd/debug_printf.h>
+#include <libsoup/soup.h>
 #include "gmpc_easy_download.h"
 #include "main.h"
 #define CURL_TIMEOUT 10 
@@ -168,7 +169,7 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	/* cleanup */
 	curl_easy_cleanup(curl);
 	curl_multi_cleanup(curlm);
-	debug_printf(DEBUG_INFO,"Downloaded: %i\n", dld->size);
+	debug_printf(DEBUG_INFO,"_GEADAsyncHandlered: %i\n", dld->size);
 	if(success) return 1;
 	if(dld->data) q_free(dld->data);
 	dld->data = NULL;
@@ -272,3 +273,98 @@ gmpcPlugin proxyplug = {
 	.pref			= &proxyplug_pref
 };
 
+/**
+ * LIBSOUP BASED ASYNC DOWNLOADER
+ */
+typedef struct {
+    SoupMessage *msg;
+    gchar *uri;
+    GEADAsyncCallback callback; 
+    gpointer userdata;
+    
+}_GEADAsyncHandler;
+static SoupSession *soup_session = NULL;
+static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, gpointer data)
+{
+    _GEADAsyncHandler *d = data;
+    printf("progress\n");
+    d->callback((GEADAsyncHandler *)d,d->uri,GEAD_PROGRESS, NULL, msg->response_body->length, d->userdata);
+}
+
+static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpointer data)
+{
+    _GEADAsyncHandler *d = data;
+    printf("update\n");
+    if(SOUP_STATUS_IS_SUCCESSFUL (msg->status_code)){
+        printf("Soup: %s done %s\n", d->uri,msg->response_body->data);
+        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_DONE, msg->response_body->data, msg->response_body->length, d->userdata);
+    }
+    else if (msg->status_code == SOUP_STATUS_CANCELLED)
+    {
+        printf("Cancelled\n");
+        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_CANCELLED,NULL,0, d->userdata);
+    }
+    else {
+        printf("Failed\n");
+        d->callback((GEADAsyncHandler *)d,d->uri,GEAD_FAILED,NULL,0, d->userdata);
+    }
+}
+
+
+void gmpc_easy_async_free_handler(GEADAsyncHandler *handle)
+{
+    _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    /*
+    if(d->msg){
+        g_object_unref(d->msg);
+        d->msg = NULL;
+    }
+    */
+    g_free(d->uri);
+    g_free(d);
+}
+
+goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle)
+{
+    _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    return soup_message_headers_get_content_length(d->msg->response_headers);
+}
+void gmpc_easy_async_cancel(GEADAsyncHandler *handle)
+{
+    _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_CANCELLED);
+}
+
+GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, void (*callback)(GEADAsyncHandler *handle,const char *uri,const GEADStatus status,const char  *data,const goffset length, gpointer user_data), gpointer user_data)
+{
+    SoupMessage *msg;
+    _GEADAsyncHandler *d;
+    if(soup_session == NULL) {
+        soup_session = soup_session_async_new();
+    }
+
+    msg = soup_message_new("GET", uri);
+    if(!msg) return NULL;
+
+    d = g_malloc0(sizeof(*d));
+    d->msg = msg;
+    d->uri = g_strdup(uri);
+    d->callback = callback;
+    d->userdata = user_data;
+
+    g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
+    soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
+    
+    return (GEADAsyncHandler*)d;
+}
+
+
+void gmpc_easy_async_quit(void)
+{
+    if(soup_session)
+    {
+        soup_session_abort(soup_session);
+        g_object_unref(soup_session);
+        soup_session = NULL;
+    }
+}

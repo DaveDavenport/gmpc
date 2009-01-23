@@ -165,6 +165,11 @@ PKG_CHECK_MODULES([gthread], gthread-2.0)
 AC_SUBST(gthread_LIBS)
 AC_SUBST(gthread_CFLAGS)
 
+#libsoup
+PKG_CHECK_MODULES([libsoup], libsoup-2.4)
+AC_SUBST(libsoup_LIBS)
+AC_SUBST(libsoup_CFLAGS)
+
 # libsexy 
 AC_ARG_ENABLE([system-libsexy],
               [--enable-system-libsexy Use system libsexy instead of bundles.], 

@@ -96,6 +96,7 @@ LIBS= \
 	@gmodule_LIBS@\
 	@libglade_LIBS@\
 	@gthread_LIBS@\
+	@libsoup_LIBS@\
 	@sm_LIBS@ 
 
 if USE_SYSTEM_LIBSEXY
@@ -123,6 +124,7 @@ AM_CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
+	@libsoup_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"

@@ -113,7 +113,8 @@ void tray_icon2_create_tooltip(void);
 
 /* Check if the playlist is fullscreen, this queries the _actual_ state */
 gboolean pl3_window_is_fullscreen(void);
-
+/* easy download */
+void gmpc_easy_async_quit(void);
 
 #ifdef DEBUG_TIMING
 /* Tic Tac system */

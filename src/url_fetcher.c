@@ -131,7 +131,7 @@ static void url_progress_callback(int size, int total,GtkProgressBar *pb)
 	while(gtk_events_pending())
 		gtk_main_iteration();
 }
-static int url_check_binary(char *data, int size)
+static int url_check_binary(const char *data,const int size)
 {
 /*	int i=0;*/
 	int binary = FALSE;
@@ -146,31 +146,31 @@ static int url_check_binary(char *data, int size)
 	return binary;
 }
 
-static void parse_data(gmpc_easy_download_struct dld, const char *text)
+static void parse_data(const char *data, guint size, const char *text)
 {
-    if(url_check_binary(dld.data, dld.size))
+    if(url_check_binary(data, size))
     {
         debug_printf(DEBUG_INFO,"Adding url\n", text);
         mpd_playlist_add(connection, (char *)text);
         pl3_push_statusbar_message(_("Added 1 stream"));
     }
     /** pls file: */
-    else if(!strncasecmp(dld.data, "[playlist]",10))
+    else if(!strncasecmp(data, "[playlist]",10))
     {
         debug_printf(DEBUG_INFO,"Detected a PLS\n");
-        url_parse_pls_file(dld.data, dld.size);
+        url_parse_pls_file(data, size);
     }
     /** Extended M3U file */
-    else if (!strncasecmp(dld.data, "#EXTM3U", 7))
+    else if (!strncasecmp(data, "#EXTM3U", 7))
     {
         debug_printf(DEBUG_INFO,"Detected a Extended M3U\n");
-        url_parse_extm3u_file(dld.data, dld.size);
+        url_parse_extm3u_file(data, size);
     }
     /** Hack to detect most non-extended m3u files */
-    else if (!strncasecmp(dld.data, "http://", 7))
+    else if (!strncasecmp(data, "http://", 7))
     {
         debug_printf(DEBUG_INFO,"Might be a M3U, or generic list\n");
-        url_parse_extm3u_file(dld.data, dld.size);
+        url_parse_extm3u_file(data, size);
     }
     /** Assume Binary file */
     else
@@ -178,6 +178,62 @@ static void parse_data(gmpc_easy_download_struct dld, const char *text)
         debug_printf(DEBUG_INFO,"Adding url: %s\n", text);
         mpd_playlist_add(connection, (char *)text);
         pl3_push_statusbar_message(_("Added 1 stream"));
+    }
+}
+static void url_fetcher_download_callback(GEADAsyncHandler *handle, const char *uri, const GEADStatus status, const char *data, const goffset length, gpointer user_data)
+{
+    if(status == GEAD_DONE)
+    {
+        GtkWidget *dialog = user_data;
+        parse_data(data,(guint)length,uri);
+        if(dialog)
+        {
+            gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
+        }
+        gmpc_easy_async_free_handler(handle);
+    }
+    else if (status == GEAD_CANCELLED)
+    {
+        GtkWidget *dialog = user_data;
+        printf("Download cancelled\n");
+        if(dialog)
+        {
+            gtk_widget_hide(dialog);
+            gtk_widget_set_sensitive(gtk_widget_get_toplevel(dialog), TRUE);
+        }
+        gmpc_easy_async_free_handler(handle);
+
+    }
+    else if (status == GEAD_PROGRESS)
+    {
+        if(user_data)
+        {
+            GtkWidget *progress = user_data;
+            goffset total = gmpc_easy_handler_get_content_size(handle);
+            if(total > 0){
+                gdouble prog = (length/(double)total);
+                gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), prog);
+                printf("%f\n", prog);
+            }
+            else{
+                gtk_progress_bar_pulse(GTK_PROGRESS_BAR(progress));
+            }
+        }
+        if(length > 12*1024) {
+            printf("Cancel to much data to handle, assume binary\n");
+            mpd_playlist_add(connection, (char *)uri);
+            gmpc_easy_async_cancel(handle);
+            if(user_data)
+                gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(user_data))), GTK_RESPONSE_CANCEL);
+            printf("done\n");
+        }
+    }
+    else
+    {
+        GtkWidget *dialog = user_data;
+        if(user_data)
+            gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
+        gmpc_easy_async_free_handler(handle);
     }
 }
 void url_start(void)
@@ -234,36 +290,14 @@ void url_start(void)
 
 	while(gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) 
 	{
+        GEADAsyncHandler *handler;
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 		/*  In any case, don't download more then 2 kbyte */
-		gmpc_easy_download_struct dld = {NULL, 0, 4096,(ProgressCallback)url_progress_callback, progress};
 		gtk_widget_show(progress);
 		gtk_widget_set_sensitive(dialog, FALSE);
-
-		if(gmpc_easy_download(text, &dld) && dld.size)
-		{
-            parse_data(dld,text);
-            gmpc_easy_download_clean(&dld);
-			gtk_widget_destroy(dialog);
-			return;
-		} else {
-			/**
-			 * Failed to contact %s
-			 * Show an error dialog
-			 */
-			/* Make a copy so we can safely destroy the widget */
-			gchar *url = g_strdup(text);
-			/* Destroy old popup */
-			gtk_widget_destroy(dialog);
-			/* Create info dialog */
-			dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL|GTK_DIALOG_DESTROY_WITH_PARENT,
-				GTK_MESSAGE_INFO,GTK_BUTTONS_CLOSE,
-				_("Failed to contact url: '%s'"), url);
-			q_free(url);
-			/* run it */
-			gtk_dialog_run(GTK_DIALOG(dialog));
-		}
+        handler = gmpc_easy_async_downloader(text, url_fetcher_download_callback, progress);
 	}	
+
 	gtk_widget_destroy(dialog);
 }
 
@@ -271,18 +305,5 @@ void url_start(void)
 
 void url_start_real(const gchar *url)
 {
-	gmpc_easy_download_struct dld = {NULL, 0, 4096,NULL, NULL};
-	if(gmpc_easy_download(url, &dld) && dld.size)
-	{
-        parse_data(dld,url);
-        gmpc_easy_download_clean(&dld);
-	} else {
-		/**
-		 * Failed to contact %s
-		 * Show an error dialog
-		 */
-        gchar *mes = g_strdup_printf("%s: %s",_("Failed to parse the playlist link"), url);
-	    playlist3_show_error_message(mes, ERROR_CRITICAL);
-        q_free(mes);
-	}
+    gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
 }
