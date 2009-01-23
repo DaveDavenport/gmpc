@@ -74,3 +74,5 @@ void gmpc_easy_async_cancel(GEADAsyncHandler *handle);
  */
 goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle);
 const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle);
+
+const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length);

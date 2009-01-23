@@ -338,6 +338,8 @@ const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle)
 const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
+    SoupBuffer *buf = soup_message_body_flatten(d->msg->response_body);
+    soup_buffer_free(buf);
     if(length)
 	    *length = d->msg->response_body->length; 
     return d->msg->response_body->data;
@@ -366,6 +368,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
     d->callback = callback;
     d->userdata = user_data;
 
+//    soup_message_body_set_accumulate(d->msg->response_body,TRUE);
     g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
     soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
     
