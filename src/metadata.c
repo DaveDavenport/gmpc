@@ -861,7 +861,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
          */
         if(ret != META_DATA_FETCHING)
         {
-            printf("from cache\n");
             return ret;	
         }
     }
@@ -888,7 +887,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
             /* store it under the original */
             meta_data_set_cache_real(tsong, type, ret, *path);
 
-            printf("from cache2\n");
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             return ret;	

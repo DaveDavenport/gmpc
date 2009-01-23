@@ -599,7 +599,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     printf("ignore\n");
                     return;
                 }
-                printf("don't ignore\n");
                 q_free(self->_priv->image_url);
                 self->_priv->image_url = NULL;
             }
