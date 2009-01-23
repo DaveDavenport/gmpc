@@ -296,7 +296,6 @@ static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpo
     _GEADAsyncHandler *d = data;
     printf("update\n");
     if(SOUP_STATUS_IS_SUCCESSFUL (msg->status_code)){
-        printf("Soup: %s done %s\n", d->uri,msg->response_body->data);
         d->callback((GEADAsyncHandler *)d,GEAD_DONE, d->userdata);
     }
     else if (msg->status_code == SOUP_STATUS_CANCELLED)
