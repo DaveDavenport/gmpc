@@ -186,13 +186,17 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->image_url)
             {
-                GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
-                GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, 250,250, TRUE, NULL);
-                screenshot_add_border(&pb);
-                gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
-                gtk_widget_show(image);
-                g_object_unref(pb);
-                return TRUE;
+                gint width,height;
+                if(gdk_pixbuf_get_file_info(self->_priv->image_url, &width, &height))
+                {
+                    GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
+                    GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, (width > 250)?250:width,(height >250)?250:height, TRUE, NULL);
+                    screenshot_add_border(&pb);
+                    gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
+                    gtk_widget_show(image);
+                    g_object_unref(pb);
+                    return TRUE;
+                }
             }
         }
         return FALSE;
@@ -610,18 +614,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART) 
                 {
+                    int size = (self->size > MIN(width,height))? MIN(width,height):self->size; 
                     float spineRatio = 31.0/343.0;
-                    int spineWidth = (self->size)*spineRatio;
+                    int spineWidth = (size)*spineRatio;
                     GdkPixbuf *blank=NULL,*pb2=NULL;
                     const gchar *path2;
                     GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
                             "stylized-cover", 
-                            self->size, 0);
+                            size, 0);
                     /* load the case */
                     if(ii){
                         path2 = gtk_icon_info_get_filename(ii);
                         if(path2){
-                            pb2 = gdk_pixbuf_new_from_file_at_size(path2,self->size, self->size,NULL);
+                            pb2 = gdk_pixbuf_new_from_file_at_size(path2,size, size,NULL);
                         }
                         gtk_icon_info_free(ii);
                     }
@@ -655,16 +660,17 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb);
                 }
                 else {
+                    int size = (self->size > MIN(width,height))? MIN(width,height):self->size; 
                     /* calculate it */
                     if(width > height) {
-                        height = (height*self->size)/((gdouble)width);
-                        width = self->size;
+                        height = (height*size)/((gdouble)width);
+                        width = size;
                     }
                     else {
-                        width = (width*self->size)/((gdouble)height);
-                        height = self->size;
+                        width = (width*size)/((gdouble)height);
+                        height = size;
                     }
-                    pb = gdk_pixbuf_new_from_file_at_scale(path,self->size,self->size,TRUE,NULL);
+                    pb = gdk_pixbuf_new_from_file_at_scale(path,size,size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
                     gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
