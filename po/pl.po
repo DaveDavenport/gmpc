@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-19 20:04+0100\n"
-"PO-Revision-Date: 2009-01-19 19:38+0000\n"
-"Last-Translator: mazdac <mazdac@gmail.com>\n"
+"PO-Revision-Date: 2009-01-25 11:55+0000\n"
+"Last-Translator: Mateusz Szyper <mateyko5@o2.pl>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
+"X-Launchpad-Export-Date: 2009-01-25 21:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -332,7 +332,7 @@ msgstr "Niewystarczające prawa do połączenia z demonem mpd. Sprawdź hasło."
 
 #: ../src/main.c:1171
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr ""
+msgstr "Wersje MPD starsze niż 0.13.0 nie są obsługiwane."
 
 #: ../src/main.c:1239
 msgid "Connected to mpd"
@@ -371,15 +371,15 @@ msgstr "Rewizja"
 
 #: ../src/main.c:1388
 msgid "Libmpd version"
-msgstr ""
+msgstr "wersja Libmpd"
 
 #: ../src/main.c:1389
 msgid "GTK+ version"
-msgstr ""
+msgstr "wersja GTK+"
 
 #: ../src/main.c:1390
 msgid "Libcurl version"
-msgstr ""
+msgstr "wersja Libcurl"
 
 #: ../src/main.c:1391
 msgid "Platform"
@@ -403,11 +403,11 @@ msgstr "Strona WWW"
 
 #: ../src/main.c:1404
 msgid "Options enabled"
-msgstr ""
+msgstr "Opcje włączone"
 
 #: ../src/main.c:1406
 msgid "X session management"
-msgstr ""
+msgstr "Zarządzanie sesją X"
 
 #: ../src/main.c:1408 ../src/main.c:1415 ../src/main.c:1423 ../src/main.c:1431
 #: ../src/main.c:1439 ../src/main.c:1447 ../src/main.c:1455 ../src/main.c:1463
@@ -423,7 +423,7 @@ msgstr "Wyłączone"
 
 #: ../src/main.c:1413
 msgid "NLS Support"
-msgstr ""
+msgstr "Wspieranie NLS"
 
 #: ../src/main.c:1421 ../src/mm-keys.c:556
 msgid "Multimedia Keys"
@@ -431,7 +431,7 @@ msgstr "Klawisze multimedialne"
 
 #: ../src/main.c:1429
 msgid "Libegg's trayicon"
-msgstr ""
+msgstr "Ikona Libegg w trayu."
 
 #: ../src/main.c:1437
 msgid "System libsexy"
@@ -933,6 +933,7 @@ msgstr ""
 "  mazdac https://launchpad.net/~mazdac\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Mateusz Szyper https://launchpad.net/~mateyko5\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  mazdac https://launchpad.net/~mazdac"
 

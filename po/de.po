@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-19 20:04+0100\n"
-"PO-Revision-Date: 2009-01-19 19:55+0000\n"
-"Last-Translator: Huber Florian <itshorty@gmail.com>\n"
+"PO-Revision-Date: 2009-01-24 16:26+0000\n"
+"Last-Translator: Hans Christof <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-19 21:28+0000\n"
+"X-Launchpad-Export-Date: 2009-01-25 21:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -404,7 +404,7 @@ msgstr "Webseite"
 
 #: ../src/main.c:1404
 msgid "Options enabled"
-msgstr ""
+msgstr "Optionen aktiviert"
 
 #: ../src/main.c:1406
 msgid "X session management"
@@ -440,7 +440,7 @@ msgstr ""
 
 #: ../src/main.c:1445
 msgid "Mac integration library"
-msgstr ""
+msgstr "Mac integrations Bibliothek"
 
 #: ../src/main.c:1453
 msgid "Use ~/.config/ dir"
@@ -962,6 +962,7 @@ msgstr ""
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
 "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
+"  andriot https://launchpad.net/~andriot81\n"
 "  hendrik https://launchpad.net/~hendrik-patchworklady"
 
 #: ../glade/password-dialog.ui.h:1
@@ -1339,11 +1340,11 @@ msgstr "Suche"
 #: ../src/browsers/playlist3-find2-browser.c:176
 #: ../src/browsers/server-information.c:359
 msgid "Database"
-msgstr ""
+msgstr "Datenbank"
 
 #: ../src/browsers/playlist3-find2-browser.c:177
 msgid "Playlist"
-msgstr ""
+msgstr "Wiedergabeliste"
 
 #: ../src/browsers/playlist3-find2-browser.c:269
 #: ../src/browsers/playlist3-find2-browser.c:735
@@ -1352,15 +1353,15 @@ msgstr "Suche"
 
 #: ../src/browsers/playlist3-find2-browser.c:364
 msgid "Search failed"
-msgstr ""
+msgstr "Suche schlug fehl"
 
 #: ../src/browsers/playlist3-find2-browser.c:655
 msgid "Add all"
-msgstr ""
+msgstr "Füge alles hinzu"
 
 #: ../src/browsers/playlist3-find2-browser.c:835
 msgid "Search Browser"
-msgstr ""
+msgstr "Suche Browser"
 
 #: ../src/browsers/playlist3-metadata-browser.c:286
 #: ../src/browsers/playlist3-metadata-browser.c:322
@@ -1472,7 +1473,7 @@ msgstr "Nicht verfügbar"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1006
 msgid "Audio format"
-msgstr ""
+msgstr "Audio Format"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1048
 msgid "Lyrics"
@@ -1631,11 +1632,11 @@ msgstr "Browser zurücksetzen"
 #: ../src/browsers/server-information.c:558
 #: ../src/browsers/server-information.c:581
 msgid "Server Information"
-msgstr ""
+msgstr "Serverinformation"
 
 #: ../src/browsers/server-information.c:343
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #: ../src/browsers/server-information.c:352
 msgid "Uptime"
@@ -1653,17 +1654,17 @@ msgstr ""
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:368
 msgid "Number of artists"
-msgstr ""
+msgstr "Anzahl der Interpreten"
 
 #. * Mpd Albums
 #: ../src/browsers/server-information.c:370
 msgid "Number of albums"
-msgstr ""
+msgstr "Anzahl der Alben"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:372
 msgid "Number of songs"
-msgstr ""
+msgstr "Anzahl der Lieder"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:374
