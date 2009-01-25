@@ -631,9 +631,9 @@ static int pl3_file_browser_cat_popup(GtkWidget *wid, GdkEventButton *event, gpo
 
 static gboolean pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *event,gpointer data)
 {
-    if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert) {
+    if(event->state&GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)) {
         pl3_file_browser_replace_folder();
-    } else if(event->keyval == GDK_Insert) {
+    } else if(event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert) {
         pl3_file_browser_add_folder();
     }
     return FALSE;
@@ -641,12 +641,12 @@ static gboolean pl3_file_browser_cat_key_press(GtkWidget *tree, GdkEventKey *eve
 
 static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *event)
 {
-    if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_Insert)
+    if(event->state&GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert))
     {
         pl3_file_browser_replace_selected();
     } else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f) {
         treesearch_start(TREESEARCH(pl3_fb_tree_search));
-    } else if(event->keyval == GDK_Insert) {
+    } else if(event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert) {
         pl3_file_browser_add_selected();
     } else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK) {
         pl3_file_browser_show_info();

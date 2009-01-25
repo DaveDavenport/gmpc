@@ -581,7 +581,7 @@ static gboolean playlist_editor_key_pressed(GtkWidget *giv, GdkEventKey *event, 
     {
         playlist_editor_list_delete_songs(NULL, GTK_TREE_VIEW(giv)); 
     }
-    else if (event->keyval == GDK_Insert)
+    else if (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)
     {
         playlist_editor_list_add_songs(NULL, GTK_TREE_VIEW(giv)); 
     }
