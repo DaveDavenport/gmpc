@@ -171,7 +171,7 @@ static void gmpc_rating_instance_init (GmpcRating * self) {
 	self->priv = GMPC_RATING_GET_PRIVATE (self);
 	self->priv->server = NULL;
 	self->priv->song = NULL;
-	self->priv->rating = 0;
+	self->priv->rating = -1;
 	self->priv->status_changed_id = (gulong) 0;
 }
 

@@ -32,7 +32,7 @@ public class Gmpc.Rating : Gtk.Frame
     private Gtk.Image[] rat;
     private Gtk.HBox    box;
     public Gtk.EventBox event;
-    private int rating = 0;
+    private int rating = -1;
 
     private ulong status_changed_id = 0;
    
