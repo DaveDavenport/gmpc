@@ -1,10 +1,10 @@
 
 #include "gmpc_rating.h"
-#include <gdk/gdk.h>
-#include <float.h>
-#include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 #include <gmpc-connection.h>
 #include <metadata.h>
 #include <main.h>
@@ -19,7 +19,7 @@ struct _GmpcRatingPrivate {
 	gint rat_length1;
 	gint rat_size;
 	GtkHBox* box;
-	GtkEventBox* event;
+	gint rating;
 	gulong status_changed_id;
 };
 
@@ -27,7 +27,6 @@ struct _GmpcRatingPrivate {
 enum  {
 	GMPC_RATING_DUMMY_PROPERTY
 };
-static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
 static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
 static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -37,9 +36,10 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 
 
-static gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
+gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (wid != NULL, FALSE);
+	fprintf (stdout, "Rating button press event\n");
 	if ((*event).type == GDK_BUTTON_PRESS) {
 		if ((*event).button == 1) {
 			gint width;
@@ -61,6 +61,10 @@ static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
+	if (((what & MPD_CST_STICKER) != 0)) {
+		fprintf (stdout, "Sticker changed\n");
+		gmpc_rating_update (self);
+	}
 }
 
 
@@ -90,8 +94,11 @@ void gmpc_rating_set_rating (GmpcRating* self, gint rating) {
 	gint i;
 	g_return_if_fail (self != NULL);
 	i = 0;
-	for (i = 0; i < 5; i++) {
-		g_object_set ((GtkWidget*) self->priv->rat[i], "sensitive", i < rating, NULL);
+	if (rating != self->priv->rating) {
+		for (i = 0; i < 5; i++) {
+			g_object_set ((GtkWidget*) self->priv->rat[i], "sensitive", i < rating, NULL);
+		}
+		self->priv->rating = rating;
 	}
 }
 
@@ -133,8 +140,8 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		_tmp0 = NULL;
 		self->priv->box = (_tmp0 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), (self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL)), _tmp0);
 		_tmp1 = NULL;
-		self->priv->event = (_tmp1 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->event == NULL) ? NULL : (self->priv->event = (g_object_unref (self->priv->event), NULL)), _tmp1);
-		gtk_event_box_set_visible_window (self->priv->event, FALSE);
+		self->event = (_tmp1 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->event == NULL) ? NULL : (self->event = (g_object_unref (self->event), NULL)), _tmp1);
+		gtk_event_box_set_visible_window (self->event, FALSE);
 		_tmp2 = NULL;
 		self->priv->rat = (_tmp2 = g_new0 (GtkImage*, 5 + 1), self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL), self->priv->rat_length1 = 5, self->priv->rat_size = self->priv->rat_length1, _tmp2);
 		for (i = 0; i < 5; i++) {
@@ -143,9 +150,9 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 			self->priv->rat[i] = (_tmp3 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp3);
 			gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
 		}
-		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->event);
-		gtk_container_add ((GtkContainer*) self->priv->event, (GtkWidget*) self->priv->box);
-		g_signal_connect_object ((GtkWidget*) self->priv->event, "button-press-event", (GCallback) _gmpc_rating_button_press_event_gtk_widget_button_press_event, self, 0);
+		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->event);
+		gtk_container_add ((GtkContainer*) self->event, (GtkWidget*) self->priv->box);
+		g_signal_connect_object ((GtkWidget*) self->event, "button-press-event", (GCallback) _gmpc_rating_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_widget_show_all ((GtkWidget*) self);
 	}
 	return obj;
@@ -164,6 +171,7 @@ static void gmpc_rating_instance_init (GmpcRating * self) {
 	self->priv = GMPC_RATING_GET_PRIVATE (self);
 	self->priv->server = NULL;
 	self->priv->song = NULL;
+	self->priv->rating = 0;
 	self->priv->status_changed_id = (gulong) 0;
 }
 
@@ -179,7 +187,7 @@ static void gmpc_rating_finalize (GObject* obj) {
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
 	self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL);
 	(self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL));
-	(self->priv->event == NULL) ? NULL : (self->priv->event = (g_object_unref (self->priv->event), NULL));
+	(self->event == NULL) ? NULL : (self->event = (g_object_unref (self->event), NULL));
 	G_OBJECT_CLASS (gmpc_rating_parent_class)->finalize (obj);
 }
 

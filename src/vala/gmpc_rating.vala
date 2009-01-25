@@ -31,7 +31,8 @@ public class Gmpc.Rating : Gtk.Frame
     private MPD.Song song       = null;
     private Gtk.Image[] rat;
     private Gtk.HBox    box;
-    private Gtk.EventBox event;
+    public Gtk.EventBox event;
+    private int rating = 0;
 
     private ulong status_changed_id = 0;
    
@@ -41,8 +42,9 @@ public class Gmpc.Rating : Gtk.Frame
         }
 
     }
-    private bool button_press_event(Gtk.EventBox wid, Gdk.EventButton event)
+    public bool button_press_event(Gtk.EventBox wid, Gdk.EventButton event)
     {
+        stdout.printf("Rating button press event\n");
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 1)
@@ -60,6 +62,11 @@ public class Gmpc.Rating : Gtk.Frame
 
     private void status_changed (Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
+        if(((what&MPD.Status.Changed.STICKER) != 0))
+        {
+            stdout.printf("Sticker changed\n");
+            this.update();
+        }
     }
 
     public Rating (MPD.Server server, MPD.Song song) {
@@ -93,9 +100,13 @@ public class Gmpc.Rating : Gtk.Frame
     public void set_rating(int rating)
     {
         int i=0;
-        for(i=0;i<5;i++)
+        if(rating != this.rating)
         {
-            this.rat[i].sensitive = i<rating;
+            for(i=0;i<5;i++)
+            {
+                this.rat[i].sensitive = i<rating;
+            }
+            this.rating = rating;
         }
     }
     public void update()

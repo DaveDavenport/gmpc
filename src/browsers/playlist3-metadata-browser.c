@@ -1019,7 +1019,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	}
     if(song->file)
     {
-        if(cfg_get_single_value_as_int_with_default(config, "Stickers", "enabled", FALSE) && mpd_sticker_supported(connection))
+        if(mpd_sticker_supported(connection))
         {
             label = gtk_label_new("");
             markup =  g_markup_printf_escaped("<b>%s:</b>", _("Rating"));

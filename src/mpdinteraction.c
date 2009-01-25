@@ -24,6 +24,7 @@
 #include "config1.h"
 #include "playlist3.h"
 #include "mpdinteraction.h"
+#include "vala/gmpc_menu_item_rating.h"
 
 //G_LOCK_DEFINE (connecting_lock);
 
@@ -1158,6 +1159,15 @@ void submenu_dir_clicked(GtkWidget *item)
 	gchar *dir = g_object_get_data(G_OBJECT(item), "path");
 	add_directory(dir);	
 }
+
+void submenu_song_clicked(GtkWidget *item, gpointer data)
+{
+    int rating = gmpc_menu_item_rating_get_rating(GMPC_MENU_ITEM_RATING(item)); 
+    char *value = g_strdup_printf("%i", rating);
+	mpd_Song *song = g_object_get_data(G_OBJECT(item), "song");
+    mpd_sticker_song_set(connection, song->file, "rating",value); 
+    g_free(value);
+}
 void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 {
 	GtkWidget *sitem;
@@ -1223,6 +1233,76 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	gtk_widget_show(item);
 	
+
+    if(mpd_sticker_supported(connection) && song->file)
+    {
+        //char *value = mpd_sticker_song_get(connection, song->file,"rating"); 
+        smenu  = gtk_menu_new();
+
+        item = gtk_menu_item_new_with_label(_("Set Rating"));
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        gtk_widget_show(item);
+
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection,song);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+//        g_free(value);
+/*
+
+
+        item = gtk_menu_item_new_with_label(_("Set Rating"));
+        gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        gtk_widget_show(item);
+
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(-atoi(value));
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        g_free(value);
+
+        sitem = (GtkWidget *) gtk_separator_menu_item_new();
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(0);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+        sitem =(GtkWidget *)  gmpc_menu_item_rating_new(1);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+        sitem =(GtkWidget *)  gmpc_menu_item_rating_new(2);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+
+        sitem =(GtkWidget *)  gmpc_menu_item_rating_new(3);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+        sitem =(GtkWidget *)  gmpc_menu_item_rating_new(4);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+
+
+        sitem =(GtkWidget *)  gmpc_menu_item_rating_new(5);
+		g_object_set_data_full(G_OBJECT(sitem), "song", mpd_songDup(song),(GDestroyNotify) mpd_freeSong);
+		g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(submenu_song_clicked), NULL);
+		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+		gtk_widget_show(sitem);
+        */
+    }
+
+
 	gtk_widget_show(smenu);
 
 }

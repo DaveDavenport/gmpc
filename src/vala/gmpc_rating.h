@@ -5,6 +5,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
 
@@ -43,6 +44,7 @@ typedef struct _GmpcRatingPrivate GmpcRatingPrivate;
 struct _GmpcRating {
 	GtkFrame parent_instance;
 	GmpcRatingPrivate * priv;
+	GtkEventBox* event;
 };
 
 struct _GmpcRatingClass {
@@ -50,6 +52,7 @@ struct _GmpcRatingClass {
 };
 
 
+gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
 GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
 void gmpc_rating_set_rating (GmpcRating* self, gint rating);

@@ -56,7 +56,7 @@
 #endif
 
 #define RESET "\x1b[0m"
-#define BOLD "\x1b[1m"
+#define BOLD  "\x1b[1m"
 
 extern gmpcPlugin connection_plug;
 extern gmpcPlugin metadata_plug;

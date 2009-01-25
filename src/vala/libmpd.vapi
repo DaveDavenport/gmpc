@@ -84,7 +84,9 @@ namespace MPD {
                 /** server error */
                 SERVER_ERROR        = 0x40000,
                 /** output changed */
-                OUTPUT              = 0x80000
+                OUTPUT              = 0x80000,
+                /** sticker changed */
+                STICKER             = 0x100000
             }
     }
 }
