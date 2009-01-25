@@ -65,4 +65,5 @@ src/gob/gmpc-stats-label.gob
 #?
 src/qlib/qasyncqueue.c
 
-
+# Vala
+src/vala/gmpc_menu_item_rating.c

@@ -19,6 +19,7 @@
 */
 
 using GLib;
+using Config;
 using Gtk;
 using Gdk;
 using Cairo;
@@ -28,9 +29,9 @@ using Gmpc.Rating;
 
 public class Gmpc.MenuItem.Rating : Gtk.MenuItem
 {
+    private const string some_unique_name = Config.VERSION;
     public Gtk.VBox hbox = null;
     public Gmpc.Rating rating = null;
-//    private int rating = 0;
 
     public int get_rating ()
     {
@@ -43,27 +44,18 @@ public class Gmpc.MenuItem.Rating : Gtk.MenuItem
         return true;
     }
 
+    override bool button_release_event(Gdk.EventButton event)
+    {
+        return true;
+    }
+
     public Rating (MPD.Server server, MPD.Song song)
     {
-/*        int i = 0;*/
-        /*
-        if(rating < 0) {
-            this.rating = -rating;
-            this.sensitive = false;
-        }
-        this.rating = rating;
-        */
+
         this.hbox = new Gtk.VBox(false,6);
-/*
-        for(i=0;i<5;i++)
-        {
-            var image = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
-            image.sensitive = (i < rating);
-            this.hbox.pack_start(image, false, true, 0);
-        }*/
         this.rating = new Gmpc.Rating(server,song);
 
-        this.hbox.pack_start(new Gtk.Label("Rating:"),false,true,0);
+        this.hbox.pack_start(new Gtk.Label(_("Rating:")),false,true,0);
         this.hbox.pack_start(this.rating,false,true,0);
         this.add(this.hbox);
         this.show_all();

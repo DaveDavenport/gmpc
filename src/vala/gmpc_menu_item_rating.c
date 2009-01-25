@@ -1,9 +1,11 @@
 
 #include "gmpc_menu_item_rating.h"
+#include <config.h>
 #include <gdk/gdk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib/gi18n-lib.h>
 
 
 
@@ -11,13 +13,14 @@
 enum  {
 	GMPC_MENU_ITEM_RATING_DUMMY_PROPERTY
 };
+#define GMPC_MENU_ITEM_RATING_some_unique_name VERSION
 static gboolean gmpc_menu_item_rating_real_button_press_event (GtkWidget* base, const GdkEventButton* event);
+static gboolean gmpc_menu_item_rating_real_button_release_event (GtkWidget* base, const GdkEventButton* event);
 static gpointer gmpc_menu_item_rating_parent_class = NULL;
 static void gmpc_menu_item_rating_finalize (GObject* obj);
 
 
 
-/*    private int rating = 0;*/
 gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self) {
 	g_return_val_if_fail (self != NULL, 0);
 	return 0;
@@ -29,6 +32,13 @@ static gboolean gmpc_menu_item_rating_real_button_press_event (GtkWidget* base, 
 	self = (GmpcMenuItemRating*) base;
 	fprintf (stdout, "Button press event\n");
 	gmpc_rating_button_press_event (self->rating, self->rating->event, &(*event));
+	return TRUE;
+}
+
+
+static gboolean gmpc_menu_item_rating_real_button_release_event (GtkWidget* base, const GdkEventButton* event) {
+	GmpcMenuItemRating * self;
+	self = (GmpcMenuItemRating*) base;
 	return TRUE;
 }
 
@@ -46,7 +56,7 @@ GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* 
 	_tmp1 = NULL;
 	self->rating = (_tmp1 = g_object_ref_sink (gmpc_rating_new (server, song)), (self->rating == NULL) ? NULL : (self->rating = (g_object_unref (self->rating), NULL)), _tmp1);
 	_tmp2 = NULL;
-	gtk_box_pack_start ((GtkBox*) self->hbox, (GtkWidget*) (_tmp2 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Rating:"))), FALSE, TRUE, (guint) 0);
+	gtk_box_pack_start ((GtkBox*) self->hbox, (GtkWidget*) (_tmp2 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Rating:")))), FALSE, TRUE, (guint) 0);
 	(_tmp2 == NULL) ? NULL : (_tmp2 = (g_object_unref (_tmp2), NULL));
 	gtk_box_pack_start ((GtkBox*) self->hbox, (GtkWidget*) self->rating, FALSE, TRUE, (guint) 0);
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->hbox);
@@ -64,6 +74,7 @@ static void gmpc_menu_item_rating_class_init (GmpcMenuItemRatingClass * klass) {
 	gmpc_menu_item_rating_parent_class = g_type_class_peek_parent (klass);
 	G_OBJECT_CLASS (klass)->finalize = gmpc_menu_item_rating_finalize;
 	GTK_WIDGET_CLASS (klass)->button_press_event = gmpc_menu_item_rating_real_button_press_event;
+	GTK_WIDGET_CLASS (klass)->button_release_event = gmpc_menu_item_rating_real_button_release_event;
 }
 
 
