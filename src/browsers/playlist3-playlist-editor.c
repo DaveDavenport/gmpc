@@ -256,9 +256,9 @@ loop:
                         GtkTreeIter niter;
                         GdkPixbuf *pb = NULL; 
                         if(g_utf8_collate(data->playlist->path, _("Favorites"))){
-                            pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "media-playlist", 64, 0,NULL);
+                            pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "media-playlist", 32, 0,NULL);
                         }else{
-                            pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "emblem-favorite",64, 0,NULL);
+                            pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "emblem-favorite",32, 0,NULL);
                         }
                         gtk_list_store_insert_before(playlist_editor_store,&niter, &iter);
                         gtk_list_store_set(playlist_editor_store, &niter,PL_NAME, data->playlist->path, PL_MTIME, data->playlist->mtime, PL_IMAGE, pb, -1);
@@ -278,9 +278,9 @@ loop:
                     GdkPixbuf *pb = NULL; 
 
                     if(g_utf8_collate(data->playlist->path, _("Favorites"))){
-                        pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "media-playlist", 64, 0,NULL);
+                        pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "media-playlist", 32, 0,NULL);
                     }else{
-                        pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "emblem-favorite",64, 0,NULL);
+                        pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "emblem-favorite",32, 0,NULL);
                     }
                     gtk_list_store_append(playlist_editor_store, &iter);
                     gtk_list_store_set(playlist_editor_store, &iter,PL_NAME, data->playlist->path, PL_MTIME, data->playlist->mtime, PL_IMAGE, pb, -1);
