@@ -836,6 +836,7 @@ static void favorites_add_current_song(void)
   if(song->file) 
   {
       mpd_database_playlist_list_add(connection, _("Favorites"), song->file); 
+      playlist3_show_error_message(_("Added playing song to favorites list."), ERROR_INFO);
   }
   else {
     printf("no song to add\n");
