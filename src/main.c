@@ -758,7 +758,7 @@ int main (int argc, char **argv)
 #ifdef WIN32
         packagedir = g_win32_get_package_installation_directory_of_module(NULL);
         debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-        url = g_build_filename(packagedir, "lib","plugins", NULL);
+        url = g_build_filename(packagedir, "lib","gmpc","plugins", NULL);
         q_free(packagedir);
 
         plugin_load_dir(url);
