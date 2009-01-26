@@ -1,3 +1,7 @@
+rcfiledir= $(datadir)/gmpc/
+dist_rcfile_DATA=\
+	gmpc-gtk-win32.rc
+
 desktopdir 	= $(datadir)/applications
 desktop_in_files = gmpc.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -8,7 +12,6 @@ pkgconfig_DATA = gmpc.pc
 
 EXTRA_DIST = 		\
 	gmpc.desktop.in 	\
-	gmpc-gtk-win32.rc\
 	gmpc.pc.in
 
 
