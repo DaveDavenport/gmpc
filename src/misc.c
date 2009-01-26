@@ -211,10 +211,10 @@ char *gmpc_get_full_image_path(const char *filename)
     gchar *path;
 #ifdef WIN32
     gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory(NULL, NULL);
+    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
 
-    path = g_build_filename(packagedir, "data", "images", filename, NULL);
+    path = g_build_filename(packagedir, "share","gmpc","icons", filename, NULL);
 
     q_free(packagedir);
 
@@ -234,10 +234,10 @@ char *gmpc_get_full_glade_path(const char *filename)
     gchar *path;
 #ifdef WIN32
     gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory(NULL, NULL);
+    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
 
-    path = g_build_filename(packagedir, "data", "glade", filename, NULL);
+    path = g_build_filename(packagedir, "share","gmpc", filename, NULL);
 
     q_free(packagedir);
 

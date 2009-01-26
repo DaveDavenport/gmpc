@@ -306,8 +306,9 @@ void gmpc_plugin_set_enabled(gmpcPlugin *plug, gboolean enabled)
 gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {
 #ifdef WIN32
-    debug_printf(DEBUG_INFO, "path: %s\n", plug->path);
-    return g_strdup(plug->path);
+    gchar *url = g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *retv = g_build_path(G_DIR_SEPARATOR_S, url, "share", "gmpc", "plugins", NULL);
+    return retv;//g_strdup(plug->path);
 #else
     gchar *url = NULL;
     gchar *homedir = gmpc_get_user_path(""); 

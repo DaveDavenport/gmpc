@@ -434,9 +434,9 @@ int main (int argc, char **argv)
      * This loads an extra gtk rc file on windows.
      * This is used to re-enable rule-hint in the treeview. (this is forced off on windows).
      */
-    packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-    url = g_build_filename(packagedir, "data", "gmpc-gtk-win32.rc", NULL);
+    url = g_build_filename(packagedir, "share","gmpc", "gmpc-gtk-win32.rc", NULL);
     q_free(packagedir);
     gtk_rc_add_default_file(url);
     g_free(url);
@@ -756,9 +756,9 @@ int main (int argc, char **argv)
     if(load_plugins)
     {
 #ifdef WIN32
-        packagedir = g_win32_get_package_installation_directory("gmpc", NULL);
+        packagedir = g_win32_get_package_installation_directory_of_module(NULL);
         debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-        url = g_build_filename(packagedir, "data", "plugins", NULL);
+        url = g_build_filename(packagedir, "share","lib","plugins", NULL);
         q_free(packagedir);
 
         plugin_load_dir(url);
