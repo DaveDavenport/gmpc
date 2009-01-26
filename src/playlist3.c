@@ -901,17 +901,18 @@ void create_playlist3 (void)
 	/* load gui desciption */
 	path = gmpc_get_full_glade_path("playlist3.glade");
 	pl3_xml = glade_xml_new (path, "pl3_win", NULL);
-	q_free(path);
 	/*
 	 * Check if the file is loaded, if not then show an error message and abort the program
 	 */
 	if(pl3_xml == NULL)
 	{
+        char *errormsg = g_strdup_printf("%s: '%s'",_("Failed to open the interface description file!\nPlease reinstall gmpc\n"), path);
 		debug_printf(DEBUG_ERROR, "Failed to open playlist3.glade.\n");
-		show_error_message(_("Failed to open the interface description file!\n"
-					"Please reinstall gmpc"), TRUE);
+		show_error_message(errormsg, TRUE);
 		abort();
 	}
+
+	q_free(path);
 	/** murrine hack */
 	if(cfg_get_single_value_as_int_with_default(config, "Default", "murrine-hack", FALSE))
 	{
