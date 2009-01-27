@@ -76,3 +76,5 @@ goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle);
 const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle);
 
 const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length);
+
+char *gmpc_easy_download_uri_escape(const char *part);

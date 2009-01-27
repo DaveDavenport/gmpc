@@ -346,3 +346,8 @@ void gmpc_easy_async_quit(void)
         soup_session = NULL;
     }
 }
+
+char *gmpc_easy_download_uri_escape(const char *part)
+{
+    return soup_uri_encode(part, NULL);
+}
