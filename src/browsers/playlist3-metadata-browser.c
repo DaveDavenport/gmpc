@@ -135,15 +135,15 @@ static void info2_lookup_secondhandsongs(GtkWidget *label)
 				temp = g_strdup(song->artist);
 			}	
 			g_strfreev(str);
-			artist = g_uri_escape_string (temp,"",TRUE);
+			artist = gmpc_easy_download_uri_escape (temp);
 			g_free(temp);
 		}		
 		else{
-			artist = g_uri_escape_string (song->artist,"",TRUE);
+			artist = gmpc_easy_download_uri_escape (song->artist);
 		}
 
 		/* escape quotes */
-		title = g_uri_escape_string(song->title,"",TRUE);
+		title = gmpc_easy_download_uri_escape(song->title);
 		/* create full uri */
 		command	= g_strconcat ( "http://www.secondhandsongs.com/cgi/cluster.php?title=",title,"&performer=",artist,"&search=Search", NULL);
 		/* open uri */

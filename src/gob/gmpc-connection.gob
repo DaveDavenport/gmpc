@@ -41,6 +41,10 @@ class Gmpc:Connection from G:Object{
 	void
 	status_changed(self, MpdObj *mi,ChangedStatusType what)
 	{
+        if((what&MPD_CST_STICKER) != 0)
+        {
+        printf("sticker changed: %i\n", what);
+        }
 	} 
 
 	public 

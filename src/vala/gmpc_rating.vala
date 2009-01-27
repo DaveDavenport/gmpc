@@ -33,12 +33,14 @@ public class Gmpc.Rating : Gtk.Frame
     private Gtk.HBox    box;
     public Gtk.EventBox event;
     private int rating = -1;
+    static int id = id+1; 
 
     private ulong status_changed_id = 0;
    
     ~Rating() {
-        if ( GLib.SignalHandler.is_connected(gmpcconn, this.status_changed_id)) {
+        if (this.status_changed_id > 0 &&  GLib.SignalHandler.is_connected(gmpcconn, this.status_changed_id)) {
             GLib.SignalHandler.disconnect(gmpcconn, this.status_changed_id);
+            this.status_changed_id = 0;
         }
 
     }
@@ -51,7 +53,7 @@ public class Gmpc.Rating : Gtk.Frame
             {
                 int width = this.allocation.width;
                 int button = (int)((((event.x)/(double)width)+0.15)*5);
-
+                stdout.printf("Set sticker\n");
                 MPD.Sticker.Song.set(this.server, this.song.file, "rating", button.to_string());
                 this.set_rating(button);
             }
@@ -60,11 +62,11 @@ public class Gmpc.Rating : Gtk.Frame
         return false;
     }
 
-    private void status_changed (Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
+    private void status_changed ( MPD.Server server, MPD.Status.Changed what,Gmpc.Connection conn)
     {
         if(((what&MPD.Status.Changed.STICKER) != 0))
         {
-            stdout.printf("Sticker changed\n");
+            stdout.printf("Sticker changed %i:%i:%i\n",what,MPD.Status.Changed.STICKER, id);
             this.update();
         }
     }

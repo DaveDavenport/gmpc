@@ -5,8 +5,8 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include <gmpc-connection.h>
 #include <metadata.h>
+#include <gmpc-connection.h>
 #include <main.h>
 
 
@@ -27,7 +27,8 @@ struct _GmpcRatingPrivate {
 enum  {
 	GMPC_RATING_DUMMY_PROPERTY
 };
-static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
+static gint gmpc_rating_id = 0;
+static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, ChangedStatusType what, GmpcConnection* conn);
 static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_rating_parent_class = NULL;
@@ -47,6 +48,7 @@ gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, con
 			char* _tmp0;
 			width = ((GtkWidget*) self)->allocation.width;
 			button = (gint) (((((*event).x) / ((double) width)) + 0.15) * 5);
+			fprintf (stdout, "Set sticker\n");
 			_tmp0 = NULL;
 			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0 = g_strdup_printf ("%i", button));
 			_tmp0 = (g_free (_tmp0), NULL);
@@ -57,12 +59,12 @@ gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, con
 }
 
 
-static void gmpc_rating_status_changed (GmpcRating* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what) {
+static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, ChangedStatusType what, GmpcConnection* conn) {
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
+	g_return_if_fail (conn != NULL);
 	if (((what & MPD_CST_STICKER) != 0)) {
-		fprintf (stdout, "Sticker changed\n");
+		fprintf (stdout, "Sticker changed %i:%i:%i\n", (gint) what, (gint) MPD_CST_STICKER, gmpc_rating_id);
 		gmpc_rating_update (self);
 	}
 }
@@ -164,6 +166,7 @@ static void gmpc_rating_class_init (GmpcRatingClass * klass) {
 	g_type_class_add_private (klass, sizeof (GmpcRatingPrivate));
 	G_OBJECT_CLASS (klass)->constructor = gmpc_rating_constructor;
 	G_OBJECT_CLASS (klass)->finalize = gmpc_rating_finalize;
+	gmpc_rating_id = gmpc_rating_id + 1;
 }
 
 
@@ -180,8 +183,16 @@ static void gmpc_rating_finalize (GObject* obj) {
 	GmpcRating * self;
 	self = GMPC_RATING (obj);
 	{
-		if (g_signal_handler_is_connected (gmpcconn, self->priv->status_changed_id)) {
+		gboolean _tmp4;
+		_tmp4 = FALSE;
+		if (self->priv->status_changed_id > 0) {
+			_tmp4 = g_signal_handler_is_connected (gmpcconn, self->priv->status_changed_id);
+		} else {
+			_tmp4 = FALSE;
+		}
+		if (_tmp4) {
 			g_signal_handler_disconnect (gmpcconn, self->priv->status_changed_id);
+			self->priv->status_changed_id = (gulong) 0;
 		}
 	}
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
