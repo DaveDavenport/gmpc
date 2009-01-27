@@ -29,7 +29,7 @@
 #define CURL_TIMEOUT 10 
 
 static int quit = FALSE;
-
+/*
 static size_t write_data(void *buffer, size_t size, size_t nmemb,void *stream )
 {
     gmpc_easy_download_struct *dld = stream;
@@ -51,18 +51,15 @@ static size_t write_data(void *buffer, size_t size, size_t nmemb,void *stream )
 	}
 	return size*nmemb;
 }
-
+*/
 int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 {
-	int timeout = 0;
-	int running = 0;
-	int msgs_left = 0;
+
+    SoupSession *session = NULL;
+    SoupMessage *msg = NULL;
+    int status;
 	int success = FALSE;
-	CURL *curl = NULL;
-	CURLM *curlm = NULL;
-	CURLMsg *msg = NULL;
-	double total_size = 0;
-    if(quit) return 0;
+
 	/*int res;*/
 	if(!dld) return 0;
 	if(url == NULL) return 0;
@@ -84,92 +81,42 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
         return 0;
     }
 
+    if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
+    {
+            char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+            gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+            if(value)
+            {
+                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
+                SoupURI *uri = soup_uri_new(ppath);
+                session = soup_session_sync_new_with_options(SOUP_SESSION_PROXY_URI, uri,NULL);
+                soup_uri_free(uri);
+                g_free(ppath);
+                g_free(value);
+            }
+    }
+    if(!session){
+        session = soup_session_sync_new();
+    }
 
-	/* initialize curl */
-	curl = curl_easy_init();
-	if(!curl) return 0;
-	curlm = curl_multi_init();
-	if(!curlm) return 0;
+    msg = soup_message_new("GET",url);
+    status = soup_session_send_message(session, msg);
+    if(SOUP_STATUS_IS_SUCCESSFUL (status)){
+        soup_message_body_flatten(msg->response_body);
+        dld->size = msg->response_body->length;
+        dld->data = (char *)msg->response_body->data;
+        msg->response_body->data = NULL;
+        msg->response_body->length = 0;
+        success = 1;
 
-	/* set uri */
-	curl_easy_setopt(curl, CURLOPT_URL, url);
-	/* set callback data */
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, dld);
-	/* set callback function */
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
-	/* set timeout */
-	timeout = cfg_get_single_value_as_int_with_default(config, "Network Settings", "Connection Timeout", CURL_TIMEOUT);
-	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout);
-	/* set redirect */
-	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION ,1);
-	curl_easy_setopt(curl, CURLOPT_AUTOREFERER ,1);
-	/* set NO SIGNAL */
-	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
-    curl_easy_setopt(curl,CURLOPT_ENCODING ,"");
-
-	if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
-	{
-		char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
-		gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
-		if(value)
-		{
-			gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
-			debug_printf(DEBUG_INFO, "Setting proxy: %s:%i\n", value, port);
-			/* hack to make stuff work */
-			curl_easy_setopt(curl, CURLOPT_PROXY, ppath);
-			/*			curl_easy_setopt(curl, CURLOPT_PROXY, value);
-			curl_easy_setopt(curl, CURLOPT_PROXYPORT, port);
-			*/
-			q_free(ppath);
-			cfg_free_string(value);
-		}
-		else{
-			debug_printf(DEBUG_ERROR ,"Proxy enabled, but no proxy defined");
-		}
-	}
-	
-	curl_multi_add_handle(curlm, curl);
-	do{
-		curl_multi_perform(curlm, &running);
-		g_usleep(10000);
-		if(dld->callback)
-		{
-			if(!(total_size > 0 ))
-			{
-				curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &total_size); 
-			}
-			dld->callback(dld->size, (int)total_size, dld->callback_data);
-		}
-		while ((msg = curl_multi_info_read(curlm, &msgs_left))) {	
-			if (msg->msg == CURLMSG_DONE)
-			{
-				if( (!msg->data.result|| msg->data.result == 23)) {
-					success = TRUE;
-				}
-				else
-				{
-          /* don't print the can't resolve.. */
-          if(msg->data.result != 108)
-          {
-            debug_printf(DEBUG_ERROR,"Error: %i '%s' url: %s",
-                msg->data.result,
-                curl_easy_strerror(msg->data.result),
-                url);
-          }
-				}
-			}
-		}
-	}while(running && !quit);
-    if(quit)
-        debug_printf(DEBUG_INFO, "Forced quit easy_download");
-	/**
-	 * remove handler
-	 */
-	curl_multi_remove_handle(curlm, curl);
-	/* cleanup */
-	curl_easy_cleanup(curl);
-	curl_multi_cleanup(curlm);
-	debug_printf(DEBUG_INFO,"_GEADAsyncHandlered: %i\n", dld->size);
+        printf("gmpc easy download success: %s\n",url);
+    }
+    else 
+    {
+        printf("gmpc easy download fail: %s: %s\n",url, soup_status_get_phrase(status));
+        success = 0;
+    }
+    g_object_unref(session);
 	if(success) return 1;
 	if(dld->data) q_free(dld->data);
 	dld->data = NULL;
@@ -361,9 +308,9 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
             if(value)
             {
                 gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
-                SoupURI *uri = soup_uri_new(ppath);
-                soup_session = soup_session_async_new_with_options(SOUP_SESSION_PROXY_URI, uri,NULL);
-                soup_uri_free(uri);
+                SoupURI *puri = soup_uri_new(ppath);
+                soup_session = soup_session_async_new_with_options(SOUP_SESSION_PROXY_URI, puri,NULL);
+                soup_uri_free(puri);
                 g_free(ppath);
                 g_free(value);
             }
