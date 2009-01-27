@@ -29,29 +29,29 @@
 #define CURL_TIMEOUT 10 
 
 static int quit = FALSE;
-/*
-static size_t write_data(void *buffer, size_t size, size_t nmemb,void *stream )
+
+static SoupSession *soup_session = NULL;
+
+static void gmpc_easy_download_set_proxy(SoupSession *session)
 {
-    gmpc_easy_download_struct *dld = stream;
-        if(!size || !nmemb)
-		return 0;
-	if(dld->data == NULL)
-	{
-		dld->size = 0;
-	}
-	dld->data = g_realloc(dld->data,(gulong)(size*nmemb+dld->size)+1);
-
-	memset(&(dld->data)[dld->size], '\0', (size*nmemb)+1);
-	memcpy(&(dld->data)[dld->size], buffer, size*nmemb);
-
-	dld->size += size*nmemb;
-	if(dld->size >= dld->max_size && dld->max_size > 0)
-	{
-		return 0;
-	}
-	return size*nmemb;
+    if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
+    {
+            char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+            gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+            if(value)
+            {
+                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
+                SoupURI *uri = soup_uri_new(ppath);
+                g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, uri,NULL);
+                soup_uri_free(uri);
+                g_free(ppath);
+                g_free(value);
+            }
+    }else {
+        g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, NULL,NULL);
+    }
 }
-*/
+
 int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 {
 
@@ -69,6 +69,8 @@ int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld)
 	 */
 	gmpc_easy_download_clean(dld);
 
+    session = soup_session_sync_new();
+    gmpc_easy_download_set_proxy(session);
     /** Check for local url */
     if(strncmp(url, "http://", 7) && g_file_test(url, G_FILE_TEST_EXISTS))
     {
@@ -143,14 +145,17 @@ static void proxy_pref_use_proxy_toggled(GtkWidget *toggle_button)
 {
 	cfg_set_single_value_as_int(config, "Network Settings", "Use Proxy",
 			gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggle_button)));
+    gmpc_easy_download_set_proxy(soup_session);
 }
 static void proxy_pref_http_adress_changed(GtkWidget *entry)
 {
-		cfg_set_single_value_as_string(config, "Network Settings", "Proxy Address",(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+    cfg_set_single_value_as_string(config, "Network Settings", "Proxy Address",(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+    gmpc_easy_download_set_proxy(soup_session);
 }
 static void proxy_pref_http_port_changed(GtkWidget *entry)
 {
-		cfg_set_single_value_as_int(config, "Network Settings", "Proxy Port",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+    cfg_set_single_value_as_int(config, "Network Settings", "Proxy Port",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
+    gmpc_easy_download_set_proxy(soup_session);
 }
 static void proxy_pref_construct(GtkWidget *container)
 {
@@ -230,7 +235,6 @@ typedef struct {
     gpointer userdata;
     
 }_GEADAsyncHandler;
-static SoupSession *soup_session = NULL;
 static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, gpointer data)
 {
     _GEADAsyncHandler *d = data;
@@ -301,6 +305,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
     SoupMessage *msg;
     _GEADAsyncHandler *d;
     if(soup_session == NULL) {
+    /*
         if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
         {
             char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
@@ -318,6 +323,10 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
         if(!soup_session){
             soup_session = soup_session_async_new();
         }
+        */
+
+        soup_session = soup_session_async_new();
+        gmpc_easy_download_set_proxy(soup_session);
     }
 
     msg = soup_message_new("GET", uri);
