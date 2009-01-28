@@ -68,6 +68,9 @@ static glong string_get_length (const char* self) {
 }
 
 
+/**
+     * Paint a nice box around it
+     */
 static gboolean gmpc_progress_tooltip_expose_event (GmpcProgress* self, GtkWindow* tooltip, const GdkEventExpose* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tooltip != NULL, FALSE);
@@ -84,6 +87,7 @@ static gboolean _gmpc_progress_tooltip_expose_event_gtk_widget_expose_event (Gtk
 static gboolean gmpc_progress_enter_notify_event (GmpcProgress* self, GtkScale* scale, const GdkEventCrossing* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
+	/* Create tooltip if mouse enters the event window */
 	if ((*event).type == GDK_ENTER_NOTIFY) {
 		GtkWindow* _tmp0;
 		GtkLabel* _tmp1;
@@ -96,6 +100,7 @@ static gboolean gmpc_progress_enter_notify_event (GmpcProgress* self, GtkScale* 
 		gtk_widget_set_app_paintable ((GtkWidget*) self->priv->tooltip, TRUE);
 		g_signal_connect_object ((GtkWidget*) self->priv->tooltip, "expose-event", (GCallback) _gmpc_progress_tooltip_expose_event_gtk_widget_expose_event, self, 0);
 	}
+	/* Destroy tooltip if mouse leaves the event window */
 	if ((*event).type == GDK_LEAVE_NOTIFY) {
 		if (self->priv->tooltip != NULL) {
 			GtkWindow* _tmp2;
@@ -520,6 +525,15 @@ static void gmpc_progress_instance_init (GmpcProgress * self) {
 static void gmpc_progress_finalize (GObject* obj) {
 	GmpcProgress * self;
 	self = GMPC_PROGRESS (obj);
+	{
+		/* If there is a tooltip on destruction of slider, destroy it */
+		if (self->priv->tooltip != NULL) {
+			GtkWindow* _tmp2;
+			gtk_object_destroy ((GtkObject*) self->priv->tooltip);
+			_tmp2 = NULL;
+			self->priv->tooltip = (_tmp2 = NULL, (self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL)), _tmp2);
+		}
+	}
 	(self->priv->scale == NULL) ? NULL : (self->priv->scale = (g_object_unref (self->priv->scale), NULL));
 	(self->priv->label == NULL) ? NULL : (self->priv->label = (g_object_unref (self->priv->label), NULL));
 	(self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL));

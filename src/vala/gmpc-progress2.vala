@@ -34,6 +34,18 @@ public class Gmpc.Progress : Gtk.HBox
     private Gtk.Window tooltip          = null;
     private Gtk.Label tooltip_label = null;
 
+    /**
+     * Destructor
+     */
+    ~Progress() {
+        /* If there is a tooltip on destruction of slider, destroy it */
+        if(this.tooltip != null) {
+            this.tooltip.destroy();
+            this.tooltip = null;
+        }
+    }
+
+    /* Set/getter for enabling/disabling text label */
     public bool hide_text {
         get { 
         return _hide_text; }
@@ -46,6 +58,9 @@ public class Gmpc.Progress : Gtk.HBox
             }
         }
     }
+    /**
+     * Paint a nice box around it
+     */
     private bool tooltip_expose_event(Gtk.Window tooltip, Gdk.EventExpose event)
     {
         Gtk.paint_box(tooltip.style, 
@@ -61,6 +76,7 @@ public class Gmpc.Progress : Gtk.HBox
 
     private bool enter_notify_event(Gtk.Scale scale, Gdk.EventCrossing event)
     {
+        /* Create tooltip if mouse enters the event window */
         if (event.type == Gdk.EventType.ENTER_NOTIFY)
         {
             tooltip = new Gtk.Window(Gtk.WindowType.POPUP);
@@ -70,6 +86,7 @@ public class Gmpc.Progress : Gtk.HBox
             tooltip.set_app_paintable(true);
             tooltip.expose_event += tooltip_expose_event;
         }
+        /* Destroy tooltip if mouse leaves the event window */
         if (event.type == Gdk.EventType.LEAVE_NOTIFY)
         {
             if(tooltip != null)
