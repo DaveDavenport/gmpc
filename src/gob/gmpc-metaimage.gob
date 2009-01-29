@@ -167,7 +167,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_widget_show_all(GTK_WIDGET(self));
 
 		g_signal_connect_swapped(G_OBJECT(self->_priv->image), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
-
 		self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 		gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
 		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
@@ -391,8 +390,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				self_set_cover_na(self);
 				return;
 			}
-			if(self->_priv->status_signal)
-				self->_priv->song = mpd_songDup(song);
+            self->_priv->song = mpd_songDup(song);
 
 			ret = gmpc_meta_watcher_get_meta_path(gmw,song, self->image_type, &path);
 			if(ret == META_DATA_FETCHING)
@@ -449,7 +447,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         Self *self = data;
         if(!song || !self || !self->_priv || !self->_priv->song)
             return;
-
 
         /**
          * Check for fields
