@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-30 13:07+0100\n"
-"PO-Revision-Date: 2009-01-24 16:26+0000\n"
-"Last-Translator: Hans Christof <Unknown>\n"
+"POT-Creation-Date: 2009-01-30 15:36+0100\n"
+"PO-Revision-Date: 2009-01-27 11:46+0000\n"
+"Last-Translator: MartinGruen <mhr@gmx.at>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-25 21:08+0000\n"
+"X-Launchpad-Export-Date: 2009-01-30 14:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -156,7 +156,7 @@ msgstr "Singen und Swingen wollt ihr"
 
 #: ../src/edit_markup.c:42
 msgid "The kernel jazz"
-msgstr ""
+msgstr "The kernel jazz"
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
@@ -170,7 +170,7 @@ msgstr "2. Februar 2006"
 msgid "MPD's Streaming server"
 msgstr "MPD's Streaming-Server"
 
-#: ../src/gmpc_easy_download.c:278
+#: ../src/gmpc_easy_download.c:281
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -194,14 +194,14 @@ msgstr "--Version"
 
 #: ../src/main.c:308 ../src/main.c:309
 msgid "--config="
-msgstr ""
+msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
 #.
 #: ../src/main.c:314
 msgid "--start-hidden"
-msgstr ""
+msgstr "--start-hidden"
 
 #. *
 #. * Cleans all failed hits from the cover database.
@@ -274,6 +274,23 @@ msgid ""
 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
 "instances is disabled.\n"
 msgstr ""
+"Gnome Music Player Client\n"
+"Options:\n"
+"\t--start-hidden\t\tStart hidden\n"
+"\t--help\t\t\tThis help message.\n"
+"\t--debug-level=<level>\tMake gmpc print out debug information.\n"
+"\t\t\t\tLevel:\n"
+"\t\t\t\t\t0 No Output\n"
+"\t\t\t\t\t1 Error Messages\n"
+"\t\t\t\t\t2 Error + Warning Messages\n"
+"\t\t\t\t\t3 All messages\n"
+"\t--version\t\tPrint version and git revision\n"
+"\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"
+"\t--clean-cover-db\tCleanup the cover file.\n"
+"\t--disable-plugins\tDon't load any plugins.\n"
+"\t--replace\t\tReplace the running session with the current\n"
+"\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
+"instances is disabled.\n"
 
 #: ../src/main.c:502
 msgid "Failed to load the configuration system."
@@ -281,7 +298,7 @@ msgstr "Fehler beim Laden des Konfigurationssystems"
 
 #: ../src/main.c:524
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "Das Laden der Debug-Log Datein ist fehlgeschlagen."
 
 #: ../src/main.c:690
 msgid "Failed to setup libmpd"
@@ -342,7 +359,7 @@ msgstr "Fehlermeldung"
 
 #: ../src/main.c:1383
 msgid "Tagline"
-msgstr ""
+msgstr "Untertitel"
 
 #. * Mpd version
 #: ../src/main.c:1384 ../src/preferences.c:311
@@ -392,7 +409,7 @@ msgstr "Optionen aktiviert"
 
 #: ../src/main.c:1407
 msgid "X session management"
-msgstr ""
+msgstr "X-Sitzungsverwaltung"
 
 #: ../src/main.c:1409 ../src/main.c:1416 ../src/main.c:1424 ../src/main.c:1432
 #: ../src/main.c:1440 ../src/main.c:1448 ../src/main.c:1456 ../src/main.c:1464
@@ -436,7 +453,7 @@ msgstr ""
 
 #: ../src/main.c:1470
 msgid "Maintainer mode"
-msgstr ""
+msgstr "Verwalter Modus"
 
 #: ../src/metadata.c:748
 msgid ""
@@ -523,7 +540,7 @@ msgstr "Lautstärke verringern"
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:85
 msgid "Show song"
-msgstr ""
+msgstr "Zeige Titel"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:86
@@ -726,7 +743,7 @@ msgstr "Aktualisiere Datenbank"
 #. Server Information
 #: ../src/playlist3.c:2031
 msgid "Information"
-msgstr ""
+msgstr "Information"
 
 #: ../src/playlist3.c:2115
 msgid "By"
@@ -853,6 +870,8 @@ msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"Sie haben gmpc das erste mal gestartet.\n"
+"Dieser Assistent hilft ihnen gmpc mit ihrem mpd Dienst zu verbinden."
 
 #: ../src/setup-assistant.c:116
 msgid "Welcome to GMPC"
@@ -942,6 +961,7 @@ msgstr ""
 "  Hans Christof https://launchpad.net/~hans-christof\n"
 "  Huber Florian https://launchpad.net/~itshorty\n"
 "  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  MartinGruen https://launchpad.net/~mhr-gmx\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  René 'Necoro' Neumann https://launchpad.net/~necoro\n"
 "  Zaunmayrchris https://launchpad.net/~zaunmayrchris\n"
@@ -1205,8 +1225,7 @@ msgstr "Name:"
 #: ../src/browsers/playlist3-current-playlist-browser.c:103
 msgid "item"
 msgid_plural "items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Eintrag"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:104
 msgid "(Estimation)"
@@ -1522,7 +1541,7 @@ msgstr "Links"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1270
 msgid "Invalid search"
-msgstr ""
+msgstr "Suche nicht möglich"
 
 #: ../src/browsers/playlist3-metadata-browser.c:1322
 #, c-format
@@ -1586,7 +1605,7 @@ msgstr "Album Information"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2040
 msgid "Album artist"
-msgstr ""
+msgstr "Interpret"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2101
 #: ../src/browsers/playlist3-metadata-browser.c:2432
@@ -1689,12 +1708,12 @@ msgstr ""
 
 #: ../src/browsers/server-information.c:357
 msgid "Time Playing"
-msgstr ""
+msgstr "Spielzeit"
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:370
 msgid "Total Playtime"
-msgstr ""
+msgstr "Gesamte Spielzeit"
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:372

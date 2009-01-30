@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-30 13:07+0100\n"
-"PO-Revision-Date: 2009-01-19 19:38+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"POT-Creation-Date: 2009-01-30 15:37+0100\n"
+"PO-Revision-Date: 2009-01-27 14:39+0000\n"
+"Last-Translator: nitrofurano <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-25 21:08+0000\n"
+"X-Launchpad-Export-Date: 2009-01-30 14:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -30,7 +30,7 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:1 ../src/main.c:1404
 msgid "Getting help"
-msgstr ""
+msgstr "Obter ajuda"
 
 #: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
@@ -38,30 +38,30 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:3
 msgid "Mute"
-msgstr ""
+msgstr "Mudo"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:73
 msgid "Next"
-msgstr ""
+msgstr "Seguinte"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Play/Pause"
-msgstr ""
+msgstr "Tocar/Pausa"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #: ../glade/playlist3.glade.h:7
 msgid "Profiles"
-msgstr ""
+msgstr "Perfis"
 
 #. * MM_REPEAT
 #: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:79
 msgid "Random"
-msgstr ""
+msgstr "Aleatório"
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:78
@@ -169,7 +169,7 @@ msgstr ""
 msgid "MPD's Streaming server"
 msgstr ""
 
-#: ../src/gmpc_easy_download.c:278
+#: ../src/gmpc_easy_download.c:281
 msgid "Proxy"
 msgstr ""
 
@@ -866,7 +866,8 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  nitrofurano https://launchpad.net/~nitrofurano-3t"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
