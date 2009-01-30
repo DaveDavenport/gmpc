@@ -70,7 +70,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="adjustment">adjustment_http_port</property>
-                    <signal name="change_value" handler="proxy_pref_http_port_changed"/>
+                    <signal name="value_changed" handler="proxy_pref_http_port_changed"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
