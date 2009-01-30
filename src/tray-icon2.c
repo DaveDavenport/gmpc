@@ -166,10 +166,14 @@ static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gp
 /**
  * Initialize the tray icon 
  */
-#ifdef EGGTRAYICON
-static int tray_icon2_button_press_event(GtkWidget *tray, GdkEventButton *event, gpointer data)
+static int tray_icon2_button_press_event(gpointer tray, GdkEventButton *event, gpointer data)
 {
-    if(event->button == 1)
+    if(event->button == 2)
+    {
+        play_song();
+    }
+#ifdef EGGTRAYICON
+    else if(event->button == 1)
     {
         tray_icon2_activate(NULL, NULL);
     }
@@ -177,17 +181,19 @@ static int tray_icon2_button_press_event(GtkWidget *tray, GdkEventButton *event,
     {
         tray_icon2_populate_menu(NULL, event->button, event->time, NULL);
     }
-    else if (event->button == 2)
+#endif
+    else
     {
-       play_song(); 
+        return FALSE;
     }
+
     return TRUE;
 }
-static int tray_icon2_button_scroll_event(GtkWidget *tray, GdkEventScroll *event, gpointer data)
+
+static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, gpointer data)
 {
-    if(event->direction == GDK_SCROLL_UP)
-    {
-       volume_up(); 
+    if(event->direction == GDK_SCROLL_UP) {
+        volume_up(); 
     }else if (event->direction == GDK_SCROLL_DOWN) {
         volume_down();
     }else if (event->direction == GDK_SCROLL_LEFT) {
@@ -198,6 +204,7 @@ static int tray_icon2_button_scroll_event(GtkWidget *tray, GdkEventScroll *event
     return TRUE;
 }
 
+#ifdef EGGTRAYICON
 static int tray_icon2_button_enter_notify_event(GtkWidget *tray, GdkEventCrossing *event, gpointer data)
 {
 
@@ -225,7 +232,12 @@ static void tray_icon2_init(void)
 		/* connect the (sparse) signals */
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
-        g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
+		g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
+		if(gtk_check_version(2, 15, 0) == NULL)
+		{
+			g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
+			g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
+		}
 #endif
 	}
 }
