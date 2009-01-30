@@ -37,16 +37,40 @@ static void gmpc_easy_download_set_proxy(SoupSession *session)
     if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
     {
             char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+            char *username = NULL;
+            char *password = NULL;
             gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
+            if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use authentication", FALSE))
+            {
+                password = cfg_get_single_value_as_string(config, "Network Settings", "Password");
+                username = cfg_get_single_value_as_string(config, "Network Settings", "Username");
+            }
             if(value)
             {
-                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
-                SoupURI *uri = soup_uri_new(ppath);
+                SoupURI *uri = NULL; 
+                gchar *ppath = NULL;
+                if(username && username[0] != '\0' && password && password[0] != '\0')
+                {
+                    gchar *usere = gmpc_easy_download_uri_escape(username);
+                    gchar *passe = gmpc_easy_download_uri_escape(password);
+                    ppath = g_strdup_printf("http://%s:%s@%s:%i",usere, passe, value, port);
+                    g_free(usere);g_free(passe);
+                }else if (username && username[0] != '\0')
+                {
+                    gchar *usere = gmpc_easy_download_uri_escape(username);
+                    ppath = g_strdup_printf("http://%s@%s:%i",usere, value, port);
+                    g_free(usere);
+                }else{
+                    ppath = g_strdup_printf("http://%s:%i", value, port);
+                }
+                uri= soup_uri_new(ppath);
                 g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, uri,NULL);
                 soup_uri_free(uri);
                 g_free(ppath);
-                g_free(value);
             }
+            g_free(username);
+            g_free(password);
+            g_free(value);
     }else {
         g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, NULL,NULL);
     }
@@ -135,78 +159,110 @@ void gmpc_easy_download_clean(gmpc_easy_download_struct *dld)
 /***
  * preferences window
  */
-static GtkWidget *proxy_pref_frame = NULL;
+/* for gtkbuilder */
+void proxy_pref_use_proxy_toggled(GtkWidget *toggle_button);
+void proxy_pref_http_address_changed(GtkWidget *entry);
+void proxy_pref_http_port_changed(GtkWidget *entry);
+void proxy_pref_use_auth_toggled(GtkWidget *toggle_button);
+void proxy_pref_auth_username_changed(GtkWidget *entry);
+void proxy_pref_auth_password_changed(GtkWidget *entry);
+
+static GtkBuilder *proxy_pref_xml = NULL;
 static void proxy_pref_destroy(GtkWidget *container)
 {
-	gtk_container_remove(GTK_CONTAINER(container), proxy_pref_frame);
-	proxy_pref_frame = NULL;
+    GObject *temp = gtk_builder_get_object(proxy_pref_xml, "frame_proxy_settings");
+	gtk_container_remove(GTK_CONTAINER(container), GTK_WIDGET(temp));
+    g_object_unref(proxy_pref_xml);
+    proxy_pref_xml = NULL;
 }
-static void proxy_pref_use_proxy_toggled(GtkWidget *toggle_button)
+void proxy_pref_use_proxy_toggled(GtkWidget *toggle_button)
 {
 	cfg_set_single_value_as_int(config, "Network Settings", "Use Proxy",
 			gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggle_button)));
     gmpc_easy_download_set_proxy(soup_session);
 }
-static void proxy_pref_http_adress_changed(GtkWidget *entry)
+void proxy_pref_http_address_changed(GtkWidget *entry)
 {
     cfg_set_single_value_as_string(config, "Network Settings", "Proxy Address",(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
     gmpc_easy_download_set_proxy(soup_session);
 }
-static void proxy_pref_http_port_changed(GtkWidget *entry)
+void proxy_pref_http_port_changed(GtkWidget *entry)
 {
     cfg_set_single_value_as_int(config, "Network Settings", "Proxy Port",gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(entry)));
     gmpc_easy_download_set_proxy(soup_session);
 }
+void proxy_pref_use_auth_toggled(GtkWidget *toggle_button)
+{
+	cfg_set_single_value_as_int(config, "Network Settings", "Use authentication",
+			gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggle_button)));
+    gmpc_easy_download_set_proxy(soup_session);
+}
+void proxy_pref_auth_username_changed(GtkWidget *entry)
+{
+    cfg_set_single_value_as_string(config, "Network Settings", "Proxy authentication username",(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+    gmpc_easy_download_set_proxy(soup_session);
+}
+void proxy_pref_auth_password_changed(GtkWidget *entry)
+{
+    cfg_set_single_value_as_string(config, "Network Settings", "Proxy authentication password",gtk_entry_get_text(GTK_ENTRY(entry)));
+    gmpc_easy_download_set_proxy(soup_session);
+}
+
 static void proxy_pref_construct(GtkWidget *container)
 {
-	GtkWidget *temp = NULL, *vbox,*hbox;
-	gchar *value = NULL;
-	/* Create frame and create a widget with markup for the frame */
-	proxy_pref_frame = gtk_frame_new("");
-	temp = gtk_label_new(_("Proxy"));
-	value = g_markup_printf_escaped("<b>%s</b>", _("Proxy"));
-	gtk_label_set_markup(GTK_LABEL(temp),value); 
-	g_free(value);
-	gtk_frame_set_label_widget(GTK_FRAME(proxy_pref_frame), temp);
-	gtk_frame_set_shadow_type(GTK_FRAME(proxy_pref_frame), GTK_SHADOW_NONE);
-	/* setup vbox for inside the frame */
-	vbox = gtk_vbox_new(FALSE,6);
-	gtk_container_set_border_width(GTK_CONTAINER(vbox),12);
-	gtk_container_add(GTK_CONTAINER(proxy_pref_frame), vbox);
-	/* enable/disable */
-	temp = gtk_check_button_new_with_label(_("Use a proxy for internet connectivity"));
+    GObject *temp = NULL;
+    gchar *string;
+	gchar *path = gmpc_get_full_glade_path("preferences-proxy.ui");
+	proxy_pref_xml = gtk_builder_new();
+    gtk_builder_add_from_file(proxy_pref_xml, path, NULL);
+	q_free(path);
+    /* use proxy */
+    temp = gtk_builder_get_object(proxy_pref_xml, "checkbutton_use_proxy");
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(temp), 
 			cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE));
-	gtk_box_pack_start(GTK_BOX(vbox), temp,FALSE,FALSE,0);
-	g_signal_connect(G_OBJECT(temp), "toggled", G_CALLBACK(proxy_pref_use_proxy_toggled), NULL);
-	/* Add other widgets */
-	hbox= gtk_hbox_new(FALSE,6);
-	gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,FALSE,0);
-	/* label */
-	temp = gtk_label_new(_("HTTP Proxy:"));
-	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
-	/* entry (address)*/
-	temp = gtk_entry_new();
-	value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
-	if(value) {
-		gtk_entry_set_text(GTK_ENTRY(temp),value); 
-	}
-	gtk_entry_set_width_chars(GTK_ENTRY(temp), 20);
-	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
-	g_signal_connect(G_OBJECT(temp), "changed", G_CALLBACK(proxy_pref_http_adress_changed), NULL);
-	/* label */
-	temp = gtk_label_new(_("Port:"));
-	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
-	/* spinbox (port) */
-	temp = gtk_spin_button_new_with_range(1,65536,1);	
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(temp),(double)
+
+    /* hostname */
+    temp = gtk_builder_get_object(proxy_pref_xml, "entry_http_hostname");
+    string = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
+    if(string)
+    {
+        gtk_entry_set_text(GTK_ENTRY(temp),string); 
+        g_free(string);
+    }
+
+    /* port */
+    temp = gtk_builder_get_object(proxy_pref_xml, "spinbutton_http_port");
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(temp), 
 			cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080));
-	gtk_box_pack_start(GTK_BOX(hbox), temp, FALSE,FALSE,0);
-	g_signal_connect(G_OBJECT(temp), "value-changed", G_CALLBACK(proxy_pref_http_port_changed), NULL);
 
+    /* use auth*/
+    temp = gtk_builder_get_object(proxy_pref_xml, "checkbutton_use_auth");
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(temp), 
+			cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use authentication", FALSE));
 
-	gtk_widget_show_all(proxy_pref_frame);
-	gtk_container_add(GTK_CONTAINER(container), proxy_pref_frame);
+    /* username */
+    temp = gtk_builder_get_object(proxy_pref_xml, "entry_auth_username");
+    string = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication username");
+    if(string)
+    {
+        gtk_entry_set_text(GTK_ENTRY(temp),string); 
+        g_free(string);
+    }
+
+    /* username */
+    temp = gtk_builder_get_object(proxy_pref_xml, "entry_auth_password");
+    string = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication password");
+    if(string)
+    {
+        gtk_entry_set_text(GTK_ENTRY(temp),string); 
+        g_free(string);
+    }
+
+    /* signal autoconnect */
+    gtk_builder_connect_signals(proxy_pref_xml, NULL);
+    /* Add to parent */
+    temp = gtk_builder_get_object(proxy_pref_xml, "frame_proxy_settings");
+	gtk_container_add(GTK_CONTAINER(container), GTK_WIDGET(temp));
 }
 
 void quit_easy_download(void)
@@ -262,12 +318,6 @@ static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpo
 void gmpc_easy_async_free_handler(GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
-    /*
-    if(d->msg){
-        g_object_unref(d->msg);
-        d->msg = NULL;
-    }
-    */
     g_free(d->uri);
     g_free(d);
 }
@@ -305,26 +355,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
     SoupMessage *msg;
     _GEADAsyncHandler *d;
     if(soup_session == NULL) {
-    /*
-        if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
-        {
-            char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
-            gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
-            if(value)
-            {
-                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
-                SoupURI *puri = soup_uri_new(ppath);
-                soup_session = soup_session_async_new_with_options(SOUP_SESSION_PROXY_URI, puri,NULL);
-                soup_uri_free(puri);
-                g_free(ppath);
-                g_free(value);
-            }
-        }
-        if(!soup_session){
-            soup_session = soup_session_async_new();
-        }
-        */
-
         soup_session = soup_session_async_new();
         gmpc_easy_download_set_proxy(soup_session);
     }
@@ -338,7 +368,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar *uri, GEADAsyncCallback
     d->callback = callback;
     d->userdata = user_data;
 
-//    soup_message_body_set_accumulate(d->msg->response_body,TRUE);
     g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
     soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
     

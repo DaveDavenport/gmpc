@@ -9,6 +9,7 @@ appglade_DATA =\
 		preferences-esf-dialog.ui\
 		preferences-server.ui\
 		preferences-connection.ui\
+		preferences-proxy.ui\
 		password-dialog.ui\
 		playlist-save-dialog.ui\
 		playlist-message-window.ui\

@@ -29,6 +29,7 @@ src/setup-assistant.c
 [type: gettext/glade]glade/preferences-plugins.ui
 [type: gettext/glade]glade/preferences-server.ui
 [type: gettext/glade]glade/preferences-trayicon.ui
+[type: gettext/glade]glade/preferences-proxy.ui
 [type: gettext/glade]glade/preferences.ui
 [type: gettext/glade]glade/playlist-message-window.ui
 [type: gettext/glade]glade/playlist-save-dialog.ui
