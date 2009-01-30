@@ -8,9 +8,9 @@ AC_INIT([gmpc], [package_version], [qball@sarine.nl])
 
 #Define variable
 m4_define([package_tagline],       "♯♪ + ♭♪ = ☺")
-m4_define([package_website],       "http://gmpcwiki.sarine.nl")
+m4_define([package_website],       "http://gmpc.wikia.com")
 m4_define([package_copyright],     "Copyright 2003-2009 Qball Cow")
-m4_define([package_bugtracker],    "http://gmpcwiki.sarine.nl/index.php/Help:Contents")
+m4_define([package_bugtracker],    "http://gmpc.wikia.com/wiki/GMPC_HELP")
 
 
 
