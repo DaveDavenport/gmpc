@@ -34,6 +34,9 @@ static SoupSession *soup_session = NULL;
 
 static void gmpc_easy_download_set_proxy(SoupSession *session)
 {
+    if(session == NULL)
+        return;
+
     if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
     {
             char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
