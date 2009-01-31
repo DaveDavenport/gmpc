@@ -1064,7 +1064,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
         i++;
     }
 	/**
-	 * Play Button 
+	 * Replace Button
 	 */
 	hbox = gtk_hbox_new(FALSE,6);
 	button = gtk_button_new_with_label(_("Replace"));
@@ -1076,7 +1076,17 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	gtk_container_add(GTK_CONTAINER(ali), button);
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
 	/**
-	 * Add Button 
+	 * Add Button
+	 */
+	button = gtk_button_new_from_stock(GTK_STOCK_ADD);
+	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
+	g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_song_clicked),GINT_TO_POINTER(2));
+	ali = gtk_alignment_new(0,0.5,0,0);
+	gtk_container_add(GTK_CONTAINER(ali), button);
+	gtk_box_pack_start(GTK_BOX(hbox),ali,FALSE,TRUE,0);
+	/**
+	 * Play Button
 	 */
 	button = gtk_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
 	g_object_set_data_full(G_OBJECT(button), "file",g_strdup(song->file), g_free);
@@ -1199,13 +1209,18 @@ static void info2_fill_song_view_real(mpd_Song *song)
 
 static void as_song_clicked(GtkButton *button, gpointer data)
 {
-	int clear = GPOINTER_TO_INT(data);
+	int option = GPOINTER_TO_INT(data);
 	char *file = g_object_get_data(G_OBJECT(button), "file");
 	if(file)
 	{
-		if(clear)
-			mpd_playlist_clear(connection);
-		play_path(file);
+		if(option == 2)
+			mpd_playlist_add(connection, file);
+		else
+		{
+			if(option == 1)
+				mpd_playlist_clear(connection);
+			play_path(file);
+		}
 	}
 }
 
