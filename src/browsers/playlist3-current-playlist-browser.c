@@ -467,6 +467,9 @@ static void pl3_current_playlist_browser_delete_selected_songs (void)
 
 		/* close the list, so it will be executed */
 		mpd_playlist_queue_commit(connection);
+		/* unselect all if multiple songs were selected */
+		if(g_list_length(list) > 1)
+			gtk_tree_selection_unselect_all(selection);
 		/* free list */
 		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
 		g_list_free (list);
@@ -498,7 +501,6 @@ static void pl3_current_playlist_browser_delete_selected_songs (void)
 		gtk_widget_destroy (GTK_WIDGET (dialog));
 	}
 	/* update everything if where still connected */
-	gtk_tree_selection_unselect_all(selection);
 
 	mpd_status_queue_update(connection);
 }
