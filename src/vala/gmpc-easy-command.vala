@@ -33,7 +33,7 @@ public class Gmpc.Easy.Command : GLib.Object
 
 
     construct {
-        this.store = new Gtk.ListStore(4,typeof(uint), typeof(string), typeof(void *), typeof(void *));
+        this.store = new Gtk.ListStore(5,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *));
         this.completion  = new Gtk.EntryCompletion();
         this.completion.model = this.store;
         this.completion.text_column = 1;
@@ -42,14 +42,14 @@ public class Gmpc.Easy.Command : GLib.Object
     }
 
 
-    public delegate void gcallback (void *data);
+    public delegate void Callback (void *data, string param);
     public
-    uint add_entry(string name, gcallback *callback, void *userdata)
+    uint add_entry(string name, string pattern, Callback *callback, void *userdata)
     {
         Gtk.TreeIter iter;
         this.signals++;
         this.store.append(out iter);
-        this.store.set(iter, 0,this.signals,1,name,2, callback,3, userdata,-1);
+        this.store.set(iter, 0,this.signals,1,name,2,pattern,3, callback,4, userdata,-1);
         return this.signals;
     }
 
@@ -57,9 +57,10 @@ public class Gmpc.Easy.Command : GLib.Object
     void
     activate(Gtk.Entry entry)
     {
-        Gtk.TreeModel model = this.store;
+        weak Gtk.TreeModel model = this.store;
+        string value = entry.get_text();
         Gtk.TreeIter iter;
-        if(entry.get_text().length == 0)
+        if(value.length == 0)
         {
             entry.get_toplevel().destroy();
             return;
@@ -68,13 +69,16 @@ public class Gmpc.Easy.Command : GLib.Object
         if(model.get_iter_first(out iter))
         {
             do{
-                string name;
-                gcallback callback = null;
+                string name,pattern,test;
+                Callback callback = null;
                 void * data;
-                model.get(iter, 1, out name,2, out callback,3, out data, -1);
-                if(name == entry.get_text())
+                model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data, -1);
+
+                test = "%s[ ]*%s".printf(name, pattern);
+                if(GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0))
                 {
-                    callback(data);
+                    var param = value.substring(name.length, -1);
+                    callback(data, param); 
                     entry.get_toplevel().destroy();
                     return;
                 }

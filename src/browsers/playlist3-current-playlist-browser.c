@@ -134,8 +134,8 @@ static void pl3_cp_init(void)
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), NULL);
 
 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("Play Queue"),pl3_current_playlist_browser_activate, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("Clear Playlist"),pl3_current_playlist_browser_clear_playlist, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Play Queue"),"",pl3_current_playlist_browser_activate, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Clear Playlist"),"",pl3_current_playlist_browser_clear_playlist, NULL); 
 
     cut_queue = g_queue_new();
 }

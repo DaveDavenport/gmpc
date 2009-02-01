@@ -71,13 +71,35 @@ void submenu_album_clicked(GtkWidget *item);
 void submenu_genre_clicked(GtkWidget *item);
 void submenu_dir_clicked(GtkWidget *item);
 
+
+static void volume_set(gpointer data, const char *param)
+{
+    if(strlen(param) > 0)
+    {
+        int volume = atoi(param);
+        mpd_status_set_volume(connection,volume); 
+    }
+}
+static void mpd_interaction_init(void)
+{
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",(GmpcEasyCommandCallback)play_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",(GmpcEasyCommandCallback)play_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",(GmpcEasyCommandCallback)next_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",(GmpcEasyCommandCallback)prev_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",(GmpcEasyCommandCallback)stop_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"",(GmpcEasyCommandCallback)repeat_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"",(GmpcEasyCommandCallback)random_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback)volume_mute, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Volume"),"",(GmpcEasyCommandCallback)volume_set, NULL); 
+}
+
 gmpcPlugin server_plug = {
 	N_("Server Settings"), 	/** name */
 	{1,1,1},			/** Version */
 	GMPC_INTERNALL,		/** Plugin Type */
 	0,					/** Internal Id */
 	NULL,				/** path to plugin */
-	NULL,				/** init */
+	mpd_interaction_init,/** init */
         NULL,                           /** Destroy */
 	NULL,				/** browser ext */
 	ServerStatusChangedCallback,	/** status changed */

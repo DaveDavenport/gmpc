@@ -49,6 +49,7 @@ static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
 static int info2_add_go_menu(GtkWidget *);
 
+void info2_activate(void);
 
 static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static void info2_fill_view(void);
@@ -2238,6 +2239,8 @@ static void info2_init(void)
 
 	g_object_ref(G_OBJECT(info2_vbox));
 	info2_fill_view();
+
+    
 }
 
 
@@ -2629,6 +2632,10 @@ static void info2_connection_changed(MpdObj *mi, int connect, void *userdata)
         }
     }
 }
+static void info2_plugin_init(void)
+{
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Metadata Browser"),"",info2_activate, NULL); 
+}
 /* Needed plugin_wp stuff */
 gmpcPlBrowserPlugin info2_gbp = {
 	.add                    = info2_add,		/** add */
@@ -2642,6 +2649,7 @@ gmpcPlugin metab_plugin = {
 	.name                   = "Metadata Browser",
 	.version                = {0,0,1},
 	.plugin_type            = GMPC_PLUGIN_PL_BROWSER|GMPC_INTERNALL,
+    .init                   = info2_plugin_init,
 	.browser                = &info2_gbp, 
 	.mpd_status_changed     = info2_status_changed,
     .mpd_connection_changed = info2_connection_changed,

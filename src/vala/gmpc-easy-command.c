@@ -8,6 +8,7 @@
 
 
 static glong string_get_length (const char* self);
+static char* string_substring (const char* self, glong offset, glong len);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -24,7 +25,6 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
-static int _vala_strcmp0 (const char * str1, const char * str2);
 
 
 
@@ -34,58 +34,95 @@ static glong string_get_length (const char* self) {
 }
 
 
-guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, GmpcEasyCommandgcallback* callback, void* userdata) {
+static char* string_substring (const char* self, glong offset, glong len) {
+	glong string_length;
+	const char* start;
+	g_return_val_if_fail (self != NULL, NULL);
+	string_length = g_utf8_strlen (self, -1);
+	if (offset < 0) {
+		offset = string_length + offset;
+		g_return_val_if_fail (offset >= 0, NULL);
+	} else {
+		g_return_val_if_fail (offset <= string_length, NULL);
+	}
+	if (len < 0) {
+		len = string_length - offset;
+	}
+	g_return_val_if_fail ((offset + len) <= string_length, NULL);
+	start = g_utf8_offset_to_pointer (self, offset);
+	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, GmpcEasyCommandCallback* callback, void* userdata) {
 	GtkTreeIter iter = {0};
 	g_return_val_if_fail (self != NULL, 0U);
 	g_return_val_if_fail (name != NULL, 0U);
+	g_return_val_if_fail (pattern != NULL, 0U);
 	self->priv->signals++;
 	gtk_list_store_append (self->priv->store, &iter);
-	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, callback, 3, userdata, -1, -1);
+	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, -1, -1);
 	return self->priv->signals;
 }
 
 
 void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
-	GtkTreeModel* _tmp0;
 	GtkTreeModel* model;
+	const char* _tmp0;
+	char* value;
 	GtkTreeIter iter = {0};
-	char* _tmp2;
+	char* _tmp3;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
+	model = (GtkTreeModel*) self->priv->store;
 	_tmp0 = NULL;
-	model = (_tmp0 = (GtkTreeModel*) self->priv->store, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	if (string_get_length (gtk_entry_get_text (entry)) == 0) {
+	value = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	if (string_get_length (value) == 0) {
 		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		value = (g_free (value), NULL);
 		return;
 	}
 	/* ToDo: Make this nicer... maybe some fancy parsing */
 	if (gtk_tree_model_get_iter_first (model, &iter)) {
 		do {
 			char* name;
-			GmpcEasyCommandgcallback _tmp1;
+			char* pattern;
+			char* test;
+			GmpcEasyCommandCallback _tmp1;
 			void* callback_target;
-			GmpcEasyCommandgcallback callback;
+			GmpcEasyCommandCallback callback;
 			void* data;
+			char* _tmp2;
 			name = NULL;
+			pattern = NULL;
+			test = NULL;
 			callback = (_tmp1 = NULL, callback_target = NULL, _tmp1);
 			data = NULL;
-			gtk_tree_model_get (model, &iter, 1, &name, 2, &callback, 3, &data, -1, -1);
-			if (_vala_strcmp0 (name, gtk_entry_get_text (entry)) == 0) {
-				callback (data, callback_target);
+			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1, -1);
+			_tmp2 = NULL;
+			test = (_tmp2 = g_strdup_printf ("%s[ ]*%s", name, pattern), test = (g_free (test), NULL), _tmp2);
+			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
+				char* param;
+				param = string_substring (value, string_get_length (name), (glong) (-1));
+				callback (data, param, callback_target);
 				gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
+				param = (g_free (param), NULL);
 				name = (g_free (name), NULL);
-				(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+				pattern = (g_free (pattern), NULL);
+				test = (g_free (test), NULL);
+				value = (g_free (value), NULL);
 				return;
 			}
 			name = (g_free (name), NULL);
+			pattern = (g_free (pattern), NULL);
+			test = (g_free (test), NULL);
 		} while (gtk_tree_model_iter_next (model, &iter));
 	}
 	gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
-	_tmp2 = NULL;
-	playlist3_show_error_message (_tmp2 = g_strdup_printf ("Unkown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
-	_tmp2 = (g_free (_tmp2), NULL);
-	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	_tmp3 = NULL;
+	playlist3_show_error_message (_tmp3 = g_strdup_printf ("Unkown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
+	_tmp3 = (g_free (_tmp3), NULL);
+	value = (g_free (value), NULL);
 }
 
 
@@ -178,7 +215,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		GtkListStore* _tmp0;
 		GtkEntryCompletion* _tmp1;
 		_tmp0 = NULL;
-		self->priv->store = (_tmp0 = gtk_list_store_new (4, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp0);
+		self->priv->store = (_tmp0 = gtk_list_store_new (5, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp0);
 		_tmp1 = NULL;
 		self->priv->completion = (_tmp1 = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp1);
 		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
@@ -222,17 +259,6 @@ GType gmpc_easy_command_get_type (void) {
 		gmpc_easy_command_type_id = g_type_register_static (G_TYPE_OBJECT, "GmpcEasyCommand", &g_define_type_info, 0);
 	}
 	return gmpc_easy_command_type_id;
-}
-
-
-static int _vala_strcmp0 (const char * str1, const char * str2) {
-	if (str1 == NULL) {
-		return -(str1 != str2);
-	}
-	if (str2 == NULL) {
-		return str1 != str2;
-	}
-	return strcmp (str1, str2);
 }
 
 

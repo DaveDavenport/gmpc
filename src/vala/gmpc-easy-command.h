@@ -21,7 +21,7 @@ G_BEGIN_DECLS
 typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
-typedef void (*GmpcEasyCommandgcallback) (void* data, void* user_data);
+typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
@@ -51,7 +51,7 @@ struct _GmpcEasyCommandClass {
 };
 
 
-guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, GmpcEasyCommandgcallback* callback, void* userdata);
+guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, GmpcEasyCommandCallback* callback, void* userdata);
 void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
 void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win);
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
