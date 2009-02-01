@@ -47,6 +47,9 @@
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 
+/* vala */
+#include "vala/gmpc-easy-command.h"
+
 /**
  * Get revision
  */
@@ -77,6 +80,9 @@ GmpcProfiles *gmpc_profiles = NULL;
 GmpcSignals *gmpc_signals =NULL;
 /* Implements, and gives signals on meta_data*/
 GmpcMetaWatcher *gmw = NULL;
+/* Easy command */
+GmpcEasyCommand *gmpc_easy_command = NULL;
+
 /* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
 int gmpc_connected = FALSE;
 
@@ -444,8 +450,11 @@ int main (int argc, char **argv)
 
     /* initialize gtk */
     gtk_init (&argc, &argv);
-
     TEC("Initializing gtk");
+
+
+    gmpc_easy_command = g_object_new(gmpc_easy_command_get_type(),NULL);
+    TEC("Init easy command");
 
     advanced_search_init();
     TEC("Init advanced search");
@@ -931,6 +940,8 @@ int main (int argc, char **argv)
     g_object_unref(gmpc_signals);
     g_object_unref(gmpc_profiles);
     g_object_unref(gmpcconn);
+
+    g_object_unref(gmpc_easy_command);
 
 
     advanced_search_destroy();

@@ -29,6 +29,7 @@ gmpc_SOURCES=\
 	vala/gmpc-progress.c\
 	vala/gmpc_rating.c\
 	vala/gmpc_menu_item_rating.c\
+	vala/gmpc-easy-command.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -172,6 +173,7 @@ EXTRA_DIST=\
 		vala/gmpc_rating.h\
 		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
+		vala/gmpc-easy-command.h\
 		setup-assistant.h\
 		sm.h\
 		metadata.h\
