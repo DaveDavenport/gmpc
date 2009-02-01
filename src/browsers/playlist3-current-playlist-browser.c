@@ -135,6 +135,7 @@ static void pl3_cp_init(void)
 
 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("Play Queue"),pl3_current_playlist_browser_activate, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Clear Playlist"),pl3_current_playlist_browser_clear_playlist, NULL); 
 
     cut_queue = g_queue_new();
 }
