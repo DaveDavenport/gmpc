@@ -453,7 +453,12 @@ int main (int argc, char **argv)
     TEC("Initializing gtk");
 
 
-    gmpc_easy_command = g_object_new(gmpc_easy_command_get_type(),NULL);
+    gmpc_easy_command = gmpc_easy_command_new(); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),play_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"),play_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),next_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),prev_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),stop_song, NULL); 
     TEC("Init easy command");
 
     advanced_search_init();

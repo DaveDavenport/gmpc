@@ -34,6 +34,17 @@ namespace Gmpc {
 
 
    }
+   namespace Messages {
+       [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]
+       public enum Level{
+        INFO,
+        WARNING,
+        CRITICAL        
+    }
+
+    [CCode (cname = "playlist3_show_error_message", cheader_filename="playlist3-messages.h")]
+    void show(string message, Gmpc.Messages.Level level);
+   }
 
    namespace AsyncDownload {
      [CCode (cprefix = "GEAD_", cheader_filename = "gmpc_easy_download.h")]

@@ -44,6 +44,9 @@
 #include "gob/gmpc-connection.h"
 #include "gob/gmpc-signals.h"
 
+#include "vala/gmpc-easy-command.h"
+
+extern GmpcEasyCommand *gmpc_easy_command;
 extern GmpcConnection 	*gmpcconn;
 extern GmpcSignals 		*gmpc_signals;
 extern int 				gmpc_connected;

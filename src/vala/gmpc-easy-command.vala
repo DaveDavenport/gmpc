@@ -32,20 +32,70 @@ public class Gmpc.Easy.Command : GLib.Object
     private uint signals = 0;
 
 
-    Command () {
+    construct {
         this.store = new Gtk.ListStore(4,typeof(uint), typeof(string), typeof(void *), typeof(void *));
         this.completion  = new Gtk.EntryCompletion();
         this.completion.model = this.store;
+        this.completion.text_column = 1;
+        this.completion.inline_completion = true;
+        this.completion.inline_selection = true;
     }
 
 
+    public delegate void gcallback (void *data);
     public
-    uint add_entry(string name, GLib.Callback callback, void *userdata)
+    uint add_entry(string name, gcallback *callback, void *userdata)
     {
         Gtk.TreeIter iter;
         this.signals++;
         this.store.append(out iter);
-        this.store.set(iter, this.signals,  this.signals, callback, userdata);
+        this.store.set(iter, 0,this.signals,1,name,2, callback,3, userdata,-1);
         return this.signals;
+    }
+
+    public
+    void
+    activate(Gtk.Entry entry)
+    {
+        Gtk.TreeModel model = this.store;
+        Gtk.TreeIter iter;
+        /* ToDo: Make this nicer... maybe some fancy parsing */ 
+        if(model.get_iter_first(out iter))
+        {
+            do{
+                string name;
+                gcallback callback = null;
+                void * data;
+                model.get(iter, 1, out name,2, out callback,3, out data, -1);
+                if(name == entry.get_text())
+                {
+                    callback(data);
+                    entry.get_toplevel().destroy();
+                    return;
+                }
+            }while(model.iter_next(ref iter));
+        }
+        entry.get_toplevel().destroy();
+        Gmpc.Messages.show("Unkown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
+    }
+
+    public
+    void
+    popup()
+    {
+        var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
+        var entry = new Gtk.Entry();
+
+        window.decorated = false;
+        window.modal = true;
+        window.set_keep_above(true);
+
+        stdout.printf("popup\n");
+        entry.set_completion(this.completion);
+        entry.activate += this.activate;
+        window.add(entry);
+        window.show_all();
+
+        entry.grab_focus();
     }
 }

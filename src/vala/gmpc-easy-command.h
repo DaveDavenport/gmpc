@@ -6,6 +6,7 @@
 #include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -20,6 +21,7 @@ G_BEGIN_DECLS
 typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
+typedef void (*GmpcEasyCommandgcallback) (void* data, void* user_data);
 
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
@@ -49,7 +51,11 @@ struct _GmpcEasyCommandClass {
 };
 
 
-guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, GCallback callback, void* userdata);
+guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, GmpcEasyCommandgcallback* callback, void* userdata);
+void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
+void gmpc_easy_command_popup (GmpcEasyCommand* self);
+GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
+GmpcEasyCommand* gmpc_easy_command_new (void);
 GType gmpc_easy_command_get_type (void);
 
 
