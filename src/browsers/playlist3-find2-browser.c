@@ -29,6 +29,9 @@
 #include "gmpc-mpddata-treeview.h"
 #include "advanced_search.h"
 #include "playlist3-playlist-editor.h"
+#ifdef USE_SYSTEM_LIBSEXY
+#include <libsexy/sexy-icon-entry.h>
+#endif
 
 static void pl3_find2_browser_edit_columns(void);
 static void pl3_find2_browser_destroy(void);
@@ -43,6 +46,7 @@ static void pl3_find2_browser_add_selected(void);
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
+static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data);
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data);
 
@@ -211,7 +215,12 @@ static void pl3_find2_browser_init(void)
     g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
 
 
+#ifdef USE_SYSTEM_LIBSEXY
+    search_entry = sexy_icon_entry_new();
+    sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(search_entry));
+#else
     search_entry = gtk_entry_new();
+#endif
 	entrcomp = gtk_entry_completion_new();
 	gtk_entry_completion_set_text_column(entrcomp, 0);
 	gtk_entry_completion_set_inline_completion(entrcomp, TRUE);
@@ -221,6 +230,7 @@ static void pl3_find2_browser_init(void)
 
 
     g_signal_connect(G_OBJECT(search_entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
+    g_signal_connect(G_OBJECT(search_entry), "key-press-event",G_CALLBACK(pl3_find2_entry_key_press_event), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), search_entry, TRUE, TRUE, 0);
 
 
@@ -775,6 +785,14 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
     }
 
     return FALSE;
+}
+
+static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
+{
+	if(event->keyval == GDK_Escape)
+		gtk_entry_set_text(GTK_ENTRY(entry), "");
+
+	return FALSE;
 }
 
 static void pl3_find2_browser_destroy(void)
