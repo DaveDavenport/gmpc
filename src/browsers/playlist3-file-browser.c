@@ -1192,9 +1192,14 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 
 static void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
-    if(!connect) {
-        pl3_file_browser_disconnect();
-    }
+	if(connect)
+	{
+		GtkTreePath* path = gtk_tree_path_new_from_string("0");
+		gtk_tree_view_expand_to_path(GTK_TREE_VIEW(pl3_fb_dir_tree), path);
+		gtk_tree_path_free(path);
+	}
+	else
+		pl3_file_browser_disconnect();
 }
 
 static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
