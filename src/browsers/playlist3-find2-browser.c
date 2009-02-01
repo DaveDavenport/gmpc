@@ -146,7 +146,8 @@ static void pl3_find2_browser_init(void)
      /* set up the tree */
     pl3_find2_tree= gmpc_mpddata_treeview_new("find2-browser",TRUE,GTK_TREE_MODEL(pl3_find2_store2));
     gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree));
-
+    /* Disable interactive search, somewhat*/
+    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(pl3_find2_tree), FALSE);
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find2_tree), "row-activated",G_CALLBACK(pl3_find2_browser_row_activated), NULL); 
     g_signal_connect(G_OBJECT(pl3_find2_tree), "button-release-event", G_CALLBACK(pl3_find2_browser_button_release_event), NULL);
@@ -221,6 +222,7 @@ static void pl3_find2_browser_init(void)
 
     g_signal_connect(G_OBJECT(search_entry), "activate",G_CALLBACK(pl3_find2_browser_search), NULL);
     gtk_box_pack_start(GTK_BOX(hbox), search_entry, TRUE, TRUE, 0);
+
 
     /* find button */
     button = gtk_button_new_from_stock(GTK_STOCK_FIND);
@@ -482,6 +484,12 @@ static int pl3_find2_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *ev
     else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK)
     {
         pl3_find2_browser_show_info();
+    }
+    /* Make ctrl-f focus the search entry */
+    else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
+    {
+        gtk_widget_grab_focus(GTK_WIDGET(search_entry));
+        return FALSE;
     }
     else
     {
