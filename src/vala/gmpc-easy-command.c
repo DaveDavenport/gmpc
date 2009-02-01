@@ -6,6 +6,7 @@
 
 
 
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -22,6 +23,12 @@ static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
 static int _vala_strcmp0 (const char * str1, const char * str2);
 
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
 
 
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, GmpcEasyCommandgcallback* callback, void* userdata) {
@@ -44,6 +51,11 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	g_return_if_fail (entry != NULL);
 	_tmp0 = NULL;
 	model = (_tmp0 = (GtkTreeModel*) self->priv->store, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	if (string_get_length (gtk_entry_get_text (entry)) == 0) {
+		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		return;
+	}
 	/* ToDo: Make this nicer... maybe some fancy parsing */
 	if (gtk_tree_model_get_iter_first (model, &iter)) {
 		do {
@@ -79,10 +91,11 @@ static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, g
 }
 
 
-void gmpc_easy_command_popup (GmpcEasyCommand* self) {
+void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 	GtkWindow* window;
 	GtkEntry* entry;
 	g_return_if_fail (self != NULL);
+	g_return_if_fail (win != NULL);
 	window = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL));
 	entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
 	gtk_window_set_decorated (window, FALSE);
@@ -92,6 +105,8 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	gtk_entry_set_completion (entry, self->priv->completion);
 	g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
 	gtk_container_add ((GtkContainer*) window, (GtkWidget*) entry);
+	gtk_window_set_transient_for (window, GTK_WINDOW (win));
+	window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
 	gtk_widget_show_all ((GtkWidget*) window);
 	gtk_widget_grab_focus ((GtkWidget*) entry);
 	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));

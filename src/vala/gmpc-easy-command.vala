@@ -59,6 +59,11 @@ public class Gmpc.Easy.Command : GLib.Object
     {
         Gtk.TreeModel model = this.store;
         Gtk.TreeIter iter;
+        if(entry.get_text().length == 0)
+        {
+            entry.get_toplevel().destroy();
+            return;
+        }
         /* ToDo: Make this nicer... maybe some fancy parsing */ 
         if(model.get_iter_first(out iter))
         {
@@ -81,7 +86,7 @@ public class Gmpc.Easy.Command : GLib.Object
 
     public
     void
-    popup()
+    popup(Gtk.Widget win)
     {
         var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
         var entry = new Gtk.Entry();
@@ -94,8 +99,12 @@ public class Gmpc.Easy.Command : GLib.Object
         entry.set_completion(this.completion);
         entry.activate += this.activate;
         window.add(entry);
-        window.show_all();
 
+
+        window.set_transient_for((Gtk.Window)win);
+        window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
+
+        window.show_all();
         entry.grab_focus();
     }
 }

@@ -424,7 +424,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
     }
     if(event->keyval == GDK_space && event->state == GDK_CONTROL_MASK)
     {
-        gmpc_easy_command_popup(gmpc_easy_command);
+        gmpc_easy_command_popup(gmpc_easy_command, playlist3_get_window());
         return FALSE;
     }
     for(i=0; i< num_plugins;i++)
