@@ -454,7 +454,7 @@ int main (int argc, char **argv)
 
 
     gmpc_easy_command = gmpc_easy_command_new(); 
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("Quit"), "", (GmpcEasyCommandCallback *)main_quit, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "", (GmpcEasyCommandCallback *)main_quit, NULL);
 
     TEC("Init easy command");
 
