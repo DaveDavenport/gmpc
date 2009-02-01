@@ -2,7 +2,6 @@
 #include "gmpc-easy-command.h"
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
-#include <stdio.h>
 
 
 
@@ -120,7 +119,7 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	}
 	gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
 	_tmp3 = NULL;
-	playlist3_show_error_message (_tmp3 = g_strdup_printf ("Unkown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
+	playlist3_show_error_message (_tmp3 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
 	_tmp3 = (g_free (_tmp3), NULL);
 	value = (g_free (value), NULL);
 }
@@ -133,6 +132,11 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWid
 	if ((*event).keyval == 0xff1b) {
 		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel (widget));
 		return TRUE;
+	} else {
+		if ((*event).keyval == 0xff09) {
+			gtk_editable_set_position ((GTK_EDITABLE (widget)), -1);
+			return TRUE;
+		}
 	}
 	return FALSE;
 }
@@ -155,16 +159,17 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 	g_return_if_fail (win != NULL);
 	window = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL));
 	entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
+	gtk_container_add ((GtkContainer*) window, (GtkWidget*) entry);
+	/* Setup window */
 	gtk_window_set_decorated (window, FALSE);
 	gtk_window_set_modal (window, TRUE);
 	gtk_window_set_keep_above (window, TRUE);
-	fprintf (stdout, "popup\n");
+	gtk_window_set_transient_for (window, GTK_WINDOW (win));
+	window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
+	/* setup entry */
 	gtk_entry_set_completion (entry, self->priv->completion);
 	g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
 	g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
-	gtk_container_add ((GtkContainer*) window, (GtkWidget*) entry);
-	gtk_window_set_transient_for (window, GTK_WINDOW (win));
-	window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
 	gtk_widget_show_all ((GtkWidget*) window);
 	gtk_widget_grab_focus ((GtkWidget*) entry);
 	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));
@@ -222,6 +227,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
+		gtk_entry_completion_set_popup_completion (self->priv->completion, FALSE);
 	}
 	return obj;
 }

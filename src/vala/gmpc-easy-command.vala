@@ -39,6 +39,7 @@ public class Gmpc.Easy.Command : GLib.Object
         this.completion.text_column = 1;
         this.completion.inline_completion = true;
         this.completion.inline_selection = true;
+        this.completion.popup_completion = false;
     }
 
 
@@ -85,7 +86,7 @@ public class Gmpc.Easy.Command : GLib.Object
             }while(model.iter_next(ref iter));
         }
         entry.get_toplevel().destroy();
-        Gmpc.Messages.show("Unkown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
+        Gmpc.Messages.show("Unknown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
     }
     private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event)
     {
@@ -93,6 +94,12 @@ public class Gmpc.Easy.Command : GLib.Object
         if(event.keyval == 0xff1b)
         {
             widget.get_toplevel().destroy();
+            return true;
+        }
+        /* Tab key */
+        else if (event.keyval == 0xff09)
+        {
+            ((Gtk.Editable) widget).set_position(-1); 
             return true;
         }
         return false;
@@ -103,21 +110,21 @@ public class Gmpc.Easy.Command : GLib.Object
     {
         var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
         var entry = new Gtk.Entry();
+        window.add(entry);
 
+        /* Setup window */
         window.decorated = false;
         window.modal = true;
         window.set_keep_above(true);
+        window.set_transient_for((Gtk.Window)win);
+        window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
 
-        stdout.printf("popup\n");
+        /* setup entry */
         entry.set_completion(this.completion);
         entry.activate += this.activate;
         entry.key_press_event += this.key_press_event;
 
-        window.add(entry);
 
-
-        window.set_transient_for((Gtk.Window)win);
-        window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
 
         window.show_all();
         entry.grab_focus();
