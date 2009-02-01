@@ -147,7 +147,11 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(main_quit), NULL);
 	gtk_widget_show_all(menu);
+#ifdef EGGTRAYICON    
 	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, button, activate_time);
+#else
+    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, gtk_status_icon_position_menu, gsi, button, activate_time);
+#endif
 }
 #ifndef EGGTRAYICON
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
