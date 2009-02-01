@@ -459,6 +459,10 @@ int main (int argc, char **argv)
     gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),next_song, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),prev_song, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),stop_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),repeat_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),random_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),volume_mute, NULL); 
+
     TEC("Init easy command");
 
     advanced_search_init();

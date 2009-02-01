@@ -83,7 +83,16 @@ public class Gmpc.Easy.Command : GLib.Object
         entry.get_toplevel().destroy();
         Gmpc.Messages.show("Unkown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
     }
-
+    private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+    {
+        /* Escape */
+        if(event.keyval == 0xff1b)
+        {
+            widget.get_toplevel().destroy();
+            return true;
+        }
+        return false;
+    }
     public
     void
     popup(Gtk.Widget win)
@@ -98,6 +107,8 @@ public class Gmpc.Easy.Command : GLib.Object
         stdout.printf("popup\n");
         entry.set_completion(this.completion);
         entry.activate += this.activate;
+        entry.key_press_event += this.key_press_event;
+
         window.add(entry);
 
 

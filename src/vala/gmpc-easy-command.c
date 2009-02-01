@@ -1,6 +1,7 @@
 
 #include "gmpc-easy-command.h"
 #include <playlist3-messages.h>
+#include <gdk/gdk.h>
 #include <stdio.h>
 
 
@@ -17,7 +18,9 @@ struct _GmpcEasyCommandPrivate {
 enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
+static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventKey* event);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
+static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
@@ -86,8 +89,25 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 }
 
 
+static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventKey* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (widget != NULL, FALSE);
+	/* Escape */
+	if ((*event).keyval == 0xff1b) {
+		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel (widget));
+		return TRUE;
+	}
+	return FALSE;
+}
+
+
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self) {
 	gmpc_easy_command_activate (self, _sender);
+}
+
+
+static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self) {
+	return gmpc_easy_command_key_press_event (self, _sender, event);
 }
 
 
@@ -104,6 +124,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 	fprintf (stdout, "popup\n");
 	gtk_entry_set_completion (entry, self->priv->completion);
 	g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
+	g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
 	gtk_container_add ((GtkContainer*) window, (GtkWidget*) entry);
 	gtk_window_set_transient_for (window, GTK_WINDOW (win));
 	window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;

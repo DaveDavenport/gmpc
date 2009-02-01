@@ -49,6 +49,7 @@ static void pl3_current_playlist_browser_unselected(GtkWidget *container);
 
 static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
 
+static void pl3_current_playlist_browser_activate(void);
 
 static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
@@ -132,6 +133,8 @@ static void pl3_cp_init(void)
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), NULL);
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), NULL);
 
+
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Play Queue"),pl3_current_playlist_browser_activate, NULL); 
 
     cut_queue = g_queue_new();
 }
