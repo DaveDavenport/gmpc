@@ -82,15 +82,15 @@ static void volume_set(gpointer data, const char *param)
 }
 static void mpd_interaction_init(void)
 {
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",(GmpcEasyCommandCallback)play_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",(GmpcEasyCommandCallback)play_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",(GmpcEasyCommandCallback)next_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",(GmpcEasyCommandCallback)prev_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",(GmpcEasyCommandCallback)stop_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"",(GmpcEasyCommandCallback)repeat_toggle, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"",(GmpcEasyCommandCallback)random_toggle, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback)volume_mute, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("Volume"),"",(GmpcEasyCommandCallback)volume_set, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",(GmpcEasyCommandCallback *)mpd_player_play, connection); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",(GmpcEasyCommandCallback *)mpd_player_pause, connection); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",(GmpcEasyCommandCallback *)next_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",(GmpcEasyCommandCallback *)prev_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",(GmpcEasyCommandCallback *)stop_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"",(GmpcEasyCommandCallback *)repeat_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"",(GmpcEasyCommandCallback *)random_toggle, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback *)volume_mute, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Volume"),"",(GmpcEasyCommandCallback *)volume_set, NULL); 
 }
 
 gmpcPlugin server_plug = {

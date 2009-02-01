@@ -31,7 +31,6 @@ public class Gmpc.Easy.Command : GLib.Object
     private Gtk.ListStore store = null;
     private uint signals = 0;
 
-
     construct {
         this.store = new Gtk.ListStore(5,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *));
         this.completion  = new Gtk.EntryCompletion();
