@@ -122,6 +122,18 @@ static void add_command(gpointer user_data, const char *param)
     }
     mpd_playlist_queue_commit(connection);
 }
+
+static void play_command(gpointer user_data, const char *param)
+{
+    MpdData *data = advanced_search(param, TRUE);
+    if(data)
+    {
+        printf("play path: %s\n", data->song->file);
+        play_path(data->song->file);
+        mpd_data_free(data);
+    }
+}
+
 static void mpd_interaction_init(void)
 {
     /* Player control */
@@ -141,6 +153,7 @@ static void mpd_interaction_init(void)
     gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
     /* basic playlist commands */
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",(GmpcEasyCommandCallback *)play_command, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",(GmpcEasyCommandCallback *)add_command, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",(GmpcEasyCommandCallback *)replace_command, NULL); 
 }

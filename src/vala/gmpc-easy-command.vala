@@ -76,9 +76,10 @@ public class Gmpc.Easy.Command : GLib.Object
                 void * data;
                 model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data, -1);
 
-                test = "%s[ ]*%s".printf(name, pattern);
+                test = "%s[ ]*%s$".printf(name, pattern);
                 if(GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0))
                 {
+                    stdout.printf("matched: %s to %s\n", test, value);
                     var param = value.substring(name.length, -1);
                     var param_str = param.strip();
                     callback(data, param_str); 

@@ -1,5 +1,6 @@
 
 #include "gmpc-easy-command.h"
+#include <stdio.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
 
@@ -104,12 +105,13 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			data = NULL;
 			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1, -1);
 			_tmp3 = NULL;
-			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s", name, pattern), test = (g_free (test), NULL), _tmp3);
+			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s$", name, pattern), test = (g_free (test), NULL), _tmp3);
 			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
 				char* param;
 				const char* _tmp4;
 				char* param_str;
 				GtkWindow* _tmp5;
+				fprintf (stdout, "matched: %s to %s\n", test, value);
 				param = string_substring (value, string_get_length (name), (glong) (-1));
 				_tmp4 = NULL;
 				param_str = (_tmp4 = g_strstrip (param), (_tmp4 == NULL) ? NULL : g_strdup (_tmp4));
