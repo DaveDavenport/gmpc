@@ -105,20 +105,38 @@ static void set_repeat(gpointer data, const char *param)
 }
 static void replace_command(gpointer user_data, const char *param)
 {
+    gulong songs = 0;
     MpdData *data = advanced_search(param, FALSE);
     mpd_playlist_clear(connection);
     for(;data; data = mpd_data_get_next(data))
     {
-        mpd_playlist_queue_add(connection,data->song->file); 
+
+        if((songs&16383)==16383){
+            mpd_playlist_queue_commit(connection);
+            printf("pre-commit %lu\n",songs);
+        }
+        if(data->type == MPD_DATA_TYPE_SONG) {
+            mpd_playlist_queue_add(connection,data->song->file); 
+            songs++;
+        }
     }
     mpd_playlist_queue_commit(connection);
 }
 static void add_command(gpointer user_data, const char *param)
 {
+    gulong songs = 0;
     MpdData *data = advanced_search(param, FALSE);
     for(;data; data = mpd_data_get_next(data))
     {
-        mpd_playlist_queue_add(connection,data->song->file); 
+
+        if((songs&16383)==16383){
+            mpd_playlist_queue_commit(connection);
+            printf("pre-commit %lu\n",songs);
+        }
+        if(data->type == MPD_DATA_TYPE_SONG) {
+            mpd_playlist_queue_add(connection,data->song->file); 
+            songs++;
+        }
     }
     mpd_playlist_queue_commit(connection);
 }
