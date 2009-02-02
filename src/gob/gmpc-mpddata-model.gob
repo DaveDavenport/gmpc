@@ -946,8 +946,8 @@ requires 2.0.0
                     const char *cb = g_value_get_string(&vb);
                     if(ca && cb) {
                         gchar *aa,*bb;
-                        aa = g_utf8_strdown(ca, -1);
-                        bb = g_utf8_strdown(cb, -1);
+                        aa = g_utf8_normalize(ca, -1,G_NORMALIZE_ALL);
+                        bb = g_utf8_normalize(cb, -1,G_NORMALIZE_ALL);
                         val = g_utf8_collate(aa,bb);
                         g_free(aa);
                         g_free(bb);
