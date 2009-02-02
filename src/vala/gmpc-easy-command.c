@@ -6,12 +6,13 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
 	guint signals;
+	GtkWindow* window;
 };
 
 #define GMPC_EASY_COMMAND_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_EASY_TYPE_COMMAND, GmpcEasyCommandPrivate))
@@ -25,12 +26,6 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
 
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
 
 
 static char* string_substring (const char* self, glong offset, glong len) {
@@ -53,6 +48,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 }
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, GmpcEasyCommandCallback* callback, void* userdata) {
 	GtkTreeIter iter = {0};
 	g_return_val_if_fail (self != NULL, 0U);
@@ -70,14 +71,18 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	const char* _tmp0;
 	char* value;
 	GtkTreeIter iter = {0};
-	char* _tmp3;
+	GtkWindow* _tmp5;
+	char* _tmp6;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
 	model = (GtkTreeModel*) self->priv->store;
 	_tmp0 = NULL;
 	value = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
 	if (string_get_length (value) == 0) {
-		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
+		GtkWindow* _tmp1;
+		gtk_object_destroy ((GtkObject*) self->priv->window);
+		_tmp1 = NULL;
+		self->priv->window = (_tmp1 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp1);
 		value = (g_free (value), NULL);
 		return;
 	}
@@ -87,24 +92,27 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			char* name;
 			char* pattern;
 			char* test;
-			GmpcEasyCommandCallback _tmp1;
+			GmpcEasyCommandCallback _tmp2;
 			void* callback_target;
 			GmpcEasyCommandCallback callback;
 			void* data;
-			char* _tmp2;
+			char* _tmp3;
 			name = NULL;
 			pattern = NULL;
 			test = NULL;
-			callback = (_tmp1 = NULL, callback_target = NULL, _tmp1);
+			callback = (_tmp2 = NULL, callback_target = NULL, _tmp2);
 			data = NULL;
 			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1, -1);
-			_tmp2 = NULL;
-			test = (_tmp2 = g_strdup_printf ("%s[ ]*%s", name, pattern), test = (g_free (test), NULL), _tmp2);
+			_tmp3 = NULL;
+			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s", name, pattern), test = (g_free (test), NULL), _tmp3);
 			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
 				char* param;
+				GtkWindow* _tmp4;
 				param = string_substring (value, string_get_length (name), (glong) (-1));
 				callback (data, param, callback_target);
-				gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
+				gtk_object_destroy ((GtkObject*) self->priv->window);
+				_tmp4 = NULL;
+				self->priv->window = (_tmp4 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp4);
 				param = (g_free (param), NULL);
 				name = (g_free (name), NULL);
 				pattern = (g_free (pattern), NULL);
@@ -117,10 +125,12 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			test = (g_free (test), NULL);
 		} while (gtk_tree_model_iter_next (model, &iter));
 	}
-	gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel ((GtkWidget*) entry));
-	_tmp3 = NULL;
-	playlist3_show_error_message (_tmp3 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
-	_tmp3 = (g_free (_tmp3), NULL);
+	gtk_object_destroy ((GtkObject*) self->priv->window);
+	_tmp5 = NULL;
+	self->priv->window = (_tmp5 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp5);
+	_tmp6 = NULL;
+	playlist3_show_error_message (_tmp6 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
+	_tmp6 = (g_free (_tmp6), NULL);
 	value = (g_free (value), NULL);
 }
 
@@ -153,27 +163,29 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
 
 
 void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
-	GtkWindow* window;
-	GtkEntry* entry;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (win != NULL);
-	window = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL));
-	entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
-	gtk_container_add ((GtkContainer*) window, (GtkWidget*) entry);
-	/* Setup window */
-	gtk_window_set_decorated (window, FALSE);
-	gtk_window_set_modal (window, TRUE);
-	gtk_window_set_keep_above (window, TRUE);
-	gtk_window_set_transient_for (window, GTK_WINDOW (win));
-	window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
-	/* setup entry */
-	gtk_entry_set_completion (entry, self->priv->completion);
-	g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
-	g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
-	gtk_widget_show_all ((GtkWidget*) window);
-	gtk_widget_grab_focus ((GtkWidget*) entry);
-	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));
-	(entry == NULL) ? NULL : (entry = (g_object_unref (entry), NULL));
+	if (self->priv->window == NULL) {
+		GtkWindow* _tmp0;
+		GtkEntry* entry;
+		_tmp0 = NULL;
+		self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
+		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
+		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);
+		/* Setup window */
+		gtk_window_set_decorated (self->priv->window, FALSE);
+		gtk_window_set_modal (self->priv->window, TRUE);
+		gtk_window_set_keep_above (self->priv->window, TRUE);
+		gtk_window_set_transient_for (self->priv->window, GTK_WINDOW (win));
+		self->priv->window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
+		/* setup entry */
+		gtk_entry_set_completion (entry, self->priv->completion);
+		g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
+		g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
+		gtk_widget_show_all ((GtkWidget*) self->priv->window);
+		gtk_widget_grab_focus ((GtkWidget*) entry);
+		(entry == NULL) ? NULL : (entry = (g_object_unref (entry), NULL));
+	}
 }
 
 
@@ -246,6 +258,7 @@ static void gmpc_easy_command_instance_init (GmpcEasyCommand * self) {
 	self->priv->completion = NULL;
 	self->priv->store = NULL;
 	self->priv->signals = (guint) 0;
+	self->priv->window = NULL;
 }
 
 
@@ -254,6 +267,7 @@ static void gmpc_easy_command_finalize (GObject* obj) {
 	self = GMPC_EASY_COMMAND (obj);
 	(self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL));
 	(self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL));
+	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
 	G_OBJECT_CLASS (gmpc_easy_command_parent_class)->finalize (obj);
 }
 

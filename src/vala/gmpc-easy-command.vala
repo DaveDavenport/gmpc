@@ -30,6 +30,7 @@ public class Gmpc.Easy.Command : GLib.Object
     private Gtk.EntryCompletion completion = null;
     private Gtk.ListStore store = null;
     private uint signals = 0;
+    private Gtk.Window window = null;
 
     construct {
         this.store = new Gtk.ListStore(5,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *));
@@ -62,7 +63,8 @@ public class Gmpc.Easy.Command : GLib.Object
         Gtk.TreeIter iter;
         if(value.length == 0)
         {
-            entry.get_toplevel().destroy();
+            this.window.destroy();
+            this.window = null;
             return;
         }
         /* ToDo: Make this nicer... maybe some fancy parsing */ 
@@ -79,12 +81,14 @@ public class Gmpc.Easy.Command : GLib.Object
                 {
                     var param = value.substring(name.length, -1);
                     callback(data, param); 
-                    entry.get_toplevel().destroy();
+                    window.destroy();
+                    window =null;
                     return;
                 }
             }while(model.iter_next(ref iter));
         }
-        entry.get_toplevel().destroy();
+        window.destroy();
+        window = null;
         Gmpc.Messages.show("Unknown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
     }
     private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event)
@@ -107,25 +111,28 @@ public class Gmpc.Easy.Command : GLib.Object
     void
     popup(Gtk.Widget win)
     {
-        var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
-        var entry = new Gtk.Entry();
-        window.add(entry);
+        if(this.window == null)
+        {
+            this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
+            var entry = new Gtk.Entry();
+            window.add(entry);
 
-        /* Setup window */
-        window.decorated = false;
-        window.modal = true;
-        window.set_keep_above(true);
-        window.set_transient_for((Gtk.Window)win);
-        window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
+            /* Setup window */
+            window.decorated = false;
+            window.modal = true;
+            window.set_keep_above(true);
+            window.set_transient_for((Gtk.Window)win);
+            window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
 
-        /* setup entry */
-        entry.set_completion(this.completion);
-        entry.activate += this.activate;
-        entry.key_press_event += this.key_press_event;
+            /* setup entry */
+            entry.set_completion(this.completion);
+            entry.activate += this.activate;
+            entry.key_press_event += this.key_press_event;
 
 
 
-        window.show_all();
-        entry.grab_focus();
+            window.show_all();
+            entry.grab_focus();
+        }
     }
 }
