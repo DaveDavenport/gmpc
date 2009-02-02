@@ -848,6 +848,7 @@ int main (int argc, char **argv)
      * if you are still connected, and reconnects you if not.
      */
     autoconnect_timeout = g_timeout_add_seconds (5,(GSourceFunc)autoconnect_callback, NULL);
+
     /**
      * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
      */

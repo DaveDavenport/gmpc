@@ -45,7 +45,7 @@ namespace MPD {
 
     }
     namespace Status {
-        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", cheader_filename = "metadata.h")]
+        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", cheader_filename = "libmpd/libmpd.h")]
             public enum Changed {
                 /** The playlist has changed */
                 PLAYLIST      = 0x0001,
@@ -87,6 +87,17 @@ namespace MPD {
                 OUTPUT              = 0x80000,
                 /** sticker changed */
                 STICKER             = 0x100000
+            }
+    }
+    namespace Data{
+        [CCode (cname="MpdDataType", cprefix = "MPD_DATA_TYPE", cheader_filename = "libmpd.h")]
+            public enum Type {
+                NONE,
+                TAG,
+                DIRECTORY,
+                SONG,
+                PLAYLIST,
+                OUTPUT_DEV
             }
     }
 }

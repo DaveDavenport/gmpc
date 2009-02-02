@@ -5,7 +5,6 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include <metadata.h>
 #include <gmpc-connection.h>
 #include <main.h>
 

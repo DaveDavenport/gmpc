@@ -1,5 +1,6 @@
 rcfiledir= $(datadir)/gmpc/
 dist_rcfile_DATA=\
+	weblinks.list\
 	gmpc-gtk-win32.rc
 
 desktopdir 	= $(datadir)/applications

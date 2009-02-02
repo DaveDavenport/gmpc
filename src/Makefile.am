@@ -30,6 +30,7 @@ gmpc_SOURCES=\
 	vala/gmpc_rating.c\
 	vala/gmpc_menu_item_rating.c\
 	vala/gmpc-easy-command.c\
+	vala/gmpc-song-links.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -174,6 +175,7 @@ EXTRA_DIST=\
 		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\
+		vala/gmpc-song-links.h\
 		setup-assistant.h\
 		sm.h\
 		metadata.h\

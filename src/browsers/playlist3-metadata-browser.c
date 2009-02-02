@@ -30,6 +30,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-meta-text-view.h"
 #include "vala/gmpc_rating.h"
+#include "vala/gmpc-song-links.h"
 
 /**
  * Dragging 
@@ -114,47 +115,6 @@ typedef struct _History{
  * and contains a reversed list with pages.
  */
 static GList *history_current = NULL;
-/**
- *
- */
-static void info2_lookup_secondhandsongs(GtkWidget *label)
-{
-	mpd_Song *song = g_object_get_data(G_OBJECT(label), "song");
-	if(song)
-	{
-		gchar *artist, *title;
-		gchar *command;
-
-		/* rename artist is req. */
-		if(cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
-		{
-			gchar *temp;
-			gchar **str = g_strsplit(song->artist, ",", 2);
-			if(str[1]) {
-				temp = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
-			}else{
-				temp = g_strdup(song->artist);
-			}	
-			g_strfreev(str);
-			artist = gmpc_easy_download_uri_escape (temp);
-			g_free(temp);
-		}		
-		else{
-			artist = gmpc_easy_download_uri_escape (song->artist);
-		}
-
-		/* escape quotes */
-		title = gmpc_easy_download_uri_escape(song->title);
-		/* create full uri */
-		command	= g_strconcat ( "http://www.secondhandsongs.com/cgi/cluster.php?title=",title,"&performer=",artist,"&search=Search", NULL);
-		/* open uri */
-		open_uri(command);
-		/* cleanup */
-		g_free (command);
-		g_free(artist);
-		g_free(title);
-	}
-}
 /**
  * Dragging code 
  */
@@ -1187,24 +1147,11 @@ static void info2_fill_song_view_real(mpd_Song *song)
         g_object_set_data_full(G_OBJECT(label), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
         g_signal_connect(G_OBJECT(label), "activate", G_CALLBACK(info2_fill_song_view_sim_song_activate), NULL);
     }
-	/* Interesting links */
 
-	if(song->artist && song->title)
-	{
-		label = gtk_label_new("");
-		markup = g_markup_printf_escaped("<span weight='bold'>%s:</span>", _("Links"));
-		gtk_label_set_markup(GTK_LABEL(label),markup);
-		g_free(markup);
-		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
-		gtk_misc_set_padding(GTK_MISC(label), 8,3);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
-		label = gmpc_clicklabel_new("Lookup this song on secondhandsongs.com");
-		gmpc_clicklabel_set_padding(GMPC_CLICKLABEL(label), 8,0);
-		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
-		g_object_set_data_full(G_OBJECT(label), "song", (gpointer)mpd_songDup(song), (GDestroyNotify)mpd_freeSong);
-		g_signal_connect(G_OBJECT(label), "clicked", G_CALLBACK(info2_lookup_secondhandsongs), NULL);
-	}
-	gtk_widget_show_all(info2_vbox);
+    label = (GtkWidget *)gmpc_song_links_new(GMPC_SONG_LINKS_TYPE_SONG,song);
+    gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
+
+    gtk_widget_show_all(info2_vbox);
 }
 
 
@@ -1728,6 +1675,8 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),vbox2,FALSE, FALSE, 0);
 	}
 
+    label = (GtkWidget *)gmpc_song_links_new(GMPC_SONG_LINKS_TYPE_ARTIST,song2);
+    gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
 	gtk_widget_show_all(info2_vbox);
 }
 
@@ -2157,6 +2106,9 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 		gtk_box_pack_start(GTK_BOX(resizer_vbox),ali,FALSE, TRUE, 0);
 
 	}
+
+    label = (GtkWidget *)gmpc_song_links_new(GMPC_SONG_LINKS_TYPE_ALBUM,song2);
+    gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);
 	gtk_widget_show_all(info2_vbox);
 }
 
