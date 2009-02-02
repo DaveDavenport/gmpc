@@ -110,6 +110,43 @@ public class Gmpc.Easy.Command : GLib.Object
         }
         return false;
     }
+
+    private
+    bool
+    popup_expose_handler(Gtk.Widget widget, Gdk.EventExpose event)
+    {
+        var ctx =  Gdk.cairo_create(widget.window);
+        int width = widget.allocation.width;
+        int height = widget.allocation.height;
+
+
+        if(widget.is_composited())
+        {
+            ctx.set_operator(Cairo.Operator.SOURCE);
+            ctx.set_source_rgba(1.0,1.0,1.0,0.0);
+        }
+        else{
+            ctx.set_source_rgb(1.0,1.0,1.0);
+        }
+
+        ctx.paint();
+        /* */
+
+        ctx.rectangle(0.0,0.0,width,height);
+        var pattern = new Cairo.Pattern.linear(0.0,0.0,0.0, height);
+
+        pattern.add_color_stop_rgba(0.0,0.0,0.0,0.0,0.5);
+        pattern.add_color_stop_rgba(0.5,0.0,0.0,0.0,1.0);
+        pattern.add_color_stop_rgba(1.0,0.0,0.0,0.0,0.5);
+        ctx.set_source(pattern);
+     
+//        ctx.set_source_rgba(0.0,0.0,0.0,0.5);
+        ctx.fill_preserve();
+
+        ctx.set_source_rgba(0.0,0.0,0.0,1.0);
+        ctx.stroke();
+        return false;
+    }
     public
     void
     popup(Gtk.Widget win)
@@ -118,7 +155,21 @@ public class Gmpc.Easy.Command : GLib.Object
         {
             this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
             var entry = new Gtk.Entry();
+
+            window.border_width=16;
+            entry.width_chars = 30;
+
             window.add(entry);
+
+
+            /* Composite */
+            if(window.is_composited()) {
+                var screen = window.get_screen();
+                var colormap = screen.get_rgba_colormap();
+                window.set_colormap(colormap);
+            }
+            window.app_paintable = true;
+            window.expose_event += popup_expose_handler;
 
             /* Setup window */
             window.decorated = false;

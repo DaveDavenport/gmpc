@@ -3,12 +3,15 @@
 #include <stdio.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
+#include <cairo.h>
+#include <float.h>
+#include <math.h>
 
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -21,18 +24,14 @@ enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
 static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventKey* event);
+static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventExpose* event);
+static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
 
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
 
 
 static char* string_substring (const char* self, glong offset, glong len) {
@@ -52,6 +51,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -162,6 +167,44 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWid
 }
 
 
+static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventExpose* event) {
+	cairo_t* ctx;
+	gint width;
+	gint height;
+	cairo_pattern_t* pattern;
+	gboolean _tmp0;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (widget != NULL, FALSE);
+	ctx = gdk_cairo_create ((GdkDrawable*) widget->window);
+	width = widget->allocation.width;
+	height = widget->allocation.height;
+	if (gtk_widget_is_composited (widget)) {
+		cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
+		cairo_set_source_rgba (ctx, 1.0, 1.0, 1.0, 0.0);
+	} else {
+		cairo_set_source_rgb (ctx, 1.0, 1.0, 1.0);
+	}
+	cairo_paint (ctx);
+	/* */
+	cairo_rectangle (ctx, 0.0, 0.0, (double) width, (double) height);
+	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, (double) height);
+	cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0.0, 0.0, 0.0, 0.5);
+	cairo_pattern_add_color_stop_rgba (pattern, 0.5, 0.0, 0.0, 0.0, 1.0);
+	cairo_pattern_add_color_stop_rgba (pattern, 1.0, 0.0, 0.0, 0.0, 0.5);
+	cairo_set_source (ctx, pattern);
+	/*        ctx.set_source_rgba(0.0,0.0,0.0,0.5);*/
+	cairo_fill_preserve (ctx);
+	cairo_set_source_rgba (ctx, 0.0, 0.0, 0.0, 1.0);
+	cairo_stroke (ctx);
+	return (_tmp0 = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), (pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL)), _tmp0);
+}
+
+
+static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self) {
+	return gmpc_easy_command_popup_expose_handler (self, _sender, event);
+}
+
+
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self) {
 	gmpc_easy_command_activate (self, _sender);
 }
@@ -181,7 +224,25 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 		_tmp0 = NULL;
 		self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
 		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
+		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 16);
+		gtk_entry_set_width_chars (entry, 30);
 		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);
+		/* Composite */
+		if (gtk_widget_is_composited ((GtkWidget*) self->priv->window)) {
+			GdkScreen* _tmp1;
+			GdkScreen* screen;
+			GdkColormap* _tmp2;
+			GdkColormap* colormap;
+			_tmp1 = NULL;
+			screen = (_tmp1 = gtk_window_get_screen (self->priv->window), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
+			_tmp2 = NULL;
+			colormap = (_tmp2 = gdk_screen_get_rgba_colormap (screen), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2));
+			gtk_widget_set_colormap ((GtkWidget*) self->priv->window, colormap);
+			(screen == NULL) ? NULL : (screen = (g_object_unref (screen), NULL));
+			(colormap == NULL) ? NULL : (colormap = (g_object_unref (colormap), NULL));
+		}
+		g_object_set ((GtkWidget*) self->priv->window, "app-paintable", TRUE, NULL);
+		g_signal_connect_object ((GtkWidget*) self->priv->window, "expose-event", (GCallback) _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event, self, 0);
 		/* Setup window */
 		gtk_window_set_decorated (self->priv->window, FALSE);
 		gtk_window_set_modal (self->priv->window, TRUE);
