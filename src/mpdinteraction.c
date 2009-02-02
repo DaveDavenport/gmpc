@@ -90,7 +90,10 @@ static void mpd_interaction_init(void)
     gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"",(GmpcEasyCommandCallback *)repeat_toggle, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"",(GmpcEasyCommandCallback *)random_toggle, NULL); 
     gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback *)volume_mute, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"",(GmpcEasyCommandCallback *)volume_set, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",(GmpcEasyCommandCallback *)volume_set, NULL); 
+
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume +"),"",(GmpcEasyCommandCallback *)volume_up, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"",(GmpcEasyCommandCallback *)volume_down, NULL); 
 }
 
 gmpcPlugin server_plug = {
