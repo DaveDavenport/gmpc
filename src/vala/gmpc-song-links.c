@@ -446,11 +446,9 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 					}
 					type = 0;
 					_tmp11 = NULL;
-					static GQuark _tmp12_label0 = 0;
-					static GQuark _tmp12_label1 = 0;
 					_tmp11 = typestr;
 					_tmp12 = (NULL == _tmp11) ? 0 : g_quark_from_string (_tmp11);
-					if (_tmp12 == ((0 != _tmp12_label0) ? _tmp12_label0 : (_tmp12_label0 = g_quark_from_static_string ("artist"))))
+					if (_tmp12 == g_quark_from_string (_ ("artist")))
 					do {
 						type = GMPC_SONG_LINKS_TYPE_ARTIST;
 						if (self->priv->song->artist != NULL) {
@@ -459,7 +457,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 							uri = (_tmp5 = string_replace (uri, "%ARTIST%", self->priv->song->artist), uri = (g_free (uri), NULL), _tmp5);
 						}
 						break;
-					} while (0); else if (_tmp12 == ((0 != _tmp12_label1) ? _tmp12_label1 : (_tmp12_label1 = g_quark_from_static_string ("album"))))
+					} while (0); else if (_tmp12 == g_quark_from_string (_ ("album")))
 					do {
 						type = GMPC_SONG_LINKS_TYPE_ALBUM;
 						if (self->priv->song->album != NULL) {
@@ -498,7 +496,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 						char* _tmp13;
 						label = g_object_ref_sink ((GtkLinkButton*) gtk_link_button_new (uri));
 						_tmp13 = NULL;
-						gtk_button_set_label ((GtkButton*) label, _tmp13 = g_strdup_printf (_ ("Lookup %s in %s"), typestr, entry));
+						gtk_button_set_label ((GtkButton*) label, _tmp13 = g_strdup_printf (_ ("Lookup %s on %s"), _ (typestr), entry));
 						_tmp13 = (g_free (_tmp13), NULL);
 						gtk_button_set_alignment ((GtkButton*) label, 0.0f, 0.5f);
 						gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) label, FALSE, TRUE, (guint) 0);

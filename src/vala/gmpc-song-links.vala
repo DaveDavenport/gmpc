@@ -173,12 +173,12 @@ public class Gmpc.Song.Links: Gtk.Frame
                 string  uri = file.get_string(entry, "url");
                 Type type;
                 switch(typestr) {
-                    case "artist":
+                    case _("artist"):
                         type = Type.ARTIST;
                         if(this.song.artist != null)
                             uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
-                    case "album":
+                    case _("album"):
                         type = Type.ALBUM;
 
                         if(this.song.album != null)
@@ -187,6 +187,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                         if(this.song.artist != null)
                             uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
+                    case _("song"):
                     default:
                         type = Type.SONG;
 
@@ -197,13 +198,13 @@ public class Gmpc.Song.Links: Gtk.Frame
                             uri = uri.replace("%ALBUM%", this.song.album);
 
                         if(this.song.artist != null)
-                        uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
                 }
                 if((int)type <= (int)this.type)
                 {
                     var label = new Gtk.LinkButton(uri);
-                    label.set_label(_("Lookup %s in %s").printf(typestr,entry));
+                    label.set_label(_("Lookup %s on %s").printf(_(typestr),entry));
                     label.set_alignment(0.0f, 0.5f);
                     vbox.pack_start(label, false, true, 0);
                     label.clicked += open_uri;
