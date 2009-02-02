@@ -894,15 +894,16 @@ requires 2.0.0
                 int val=0;
                 GtkTreeIter iter;
                 GValue va = {0,},vb = {0,};
+                /* Get values from tree view, so we don't have to replicate code to sort the right entries */
+                iter.user_data = a;
+                iter.user_data2 = GPOINTER_TO_INT(0);
+                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
+                iter.user_data = b;
+                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
                 /* if the type is a directory or a tag, always sort on the title column */
                 if(a->type == MPD_DATA_TYPE_DIRECTORY || b->type == MPD_DATA_TYPE_TAG)
                 {
                     const char *ca,*cb;
-                    iter.user_data = a;
-                    iter.user_data2 = GPOINTER_TO_INT(0);
-                    gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &va);
-                    iter.user_data = b;
-                    gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, MPDDATA_MODEL_COL_SONG_TITLE, &vb);
                     ca = g_value_get_string(&va);
                     cb = g_value_get_string(&vb);
                     if(ca && cb) {
@@ -920,12 +921,6 @@ requires 2.0.0
                     /* return */
                     return val*fact;
                 }
-                /* Get values from tree view, so we don't have to replicate code to sort the right entries */
-                iter.user_data = a;
-                iter.user_data2 = GPOINTER_TO_INT(0);
-                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &va);
-                iter.user_data = b;
-                gtk_tree_model_get_value(GTK_TREE_MODEL(self), &iter, self->_priv->sort_column, &vb);
                 if(self->_priv->sort_column == MPDDATA_MODEL_COL_SONG_TRACK)
                 {
                     const char *ca = g_value_get_string(&va);
