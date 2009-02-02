@@ -39,7 +39,7 @@ public class Gmpc.Easy.Command : GLib.Object
         this.completion.text_column = 1;
         this.completion.inline_completion = true;
         this.completion.inline_selection = true;
-        this.completion.popup_completion = false;
+        this.completion.popup_completion = true;
     }
 
 
@@ -96,7 +96,8 @@ public class Gmpc.Easy.Command : GLib.Object
         /* Escape */
         if(event.keyval == 0xff1b)
         {
-            widget.get_toplevel().destroy();
+            this.window.destroy();
+            this.window = null;
             return true;
         }
         /* Tab key */

@@ -140,7 +140,10 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWid
 	g_return_val_if_fail (widget != NULL, FALSE);
 	/* Escape */
 	if ((*event).keyval == 0xff1b) {
-		gtk_object_destroy ((GtkObject*) gtk_widget_get_toplevel (widget));
+		GtkWindow* _tmp0;
+		gtk_object_destroy ((GtkObject*) self->priv->window);
+		_tmp0 = NULL;
+		self->priv->window = (_tmp0 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
 		return TRUE;
 	} else {
 		if ((*event).keyval == 0xff09) {
@@ -239,7 +242,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
-		gtk_entry_completion_set_popup_completion (self->priv->completion, FALSE);
+		gtk_entry_completion_set_popup_completion (self->priv->completion, TRUE);
 	}
 	return obj;
 }
