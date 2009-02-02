@@ -80,7 +80,8 @@ public class Gmpc.Easy.Command : GLib.Object
                 if(GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0))
                 {
                     var param = value.substring(name.length, -1);
-                    callback(data, param); 
+                    var param_str = param.strip();
+                    callback(data, param_str); 
                     window.destroy();
                     window =null;
                     return;

@@ -71,8 +71,8 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	const char* _tmp0;
 	char* value;
 	GtkTreeIter iter = {0};
-	GtkWindow* _tmp5;
-	char* _tmp6;
+	GtkWindow* _tmp6;
+	char* _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
 	model = (GtkTreeModel*) self->priv->store;
@@ -107,13 +107,18 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s", name, pattern), test = (g_free (test), NULL), _tmp3);
 			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
 				char* param;
-				GtkWindow* _tmp4;
+				const char* _tmp4;
+				char* param_str;
+				GtkWindow* _tmp5;
 				param = string_substring (value, string_get_length (name), (glong) (-1));
-				callback (data, param, callback_target);
-				gtk_object_destroy ((GtkObject*) self->priv->window);
 				_tmp4 = NULL;
-				self->priv->window = (_tmp4 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp4);
+				param_str = (_tmp4 = g_strstrip (param), (_tmp4 == NULL) ? NULL : g_strdup (_tmp4));
+				callback (data, param_str, callback_target);
+				gtk_object_destroy ((GtkObject*) self->priv->window);
+				_tmp5 = NULL;
+				self->priv->window = (_tmp5 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp5);
 				param = (g_free (param), NULL);
+				param_str = (g_free (param_str), NULL);
 				name = (g_free (name), NULL);
 				pattern = (g_free (pattern), NULL);
 				test = (g_free (test), NULL);
@@ -126,11 +131,11 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 		} while (gtk_tree_model_iter_next (model, &iter));
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->window);
-	_tmp5 = NULL;
-	self->priv->window = (_tmp5 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp5);
 	_tmp6 = NULL;
-	playlist3_show_error_message (_tmp6 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
-	_tmp6 = (g_free (_tmp6), NULL);
+	self->priv->window = (_tmp6 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp6);
+	_tmp7 = NULL;
+	playlist3_show_error_message (_tmp7 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
+	_tmp7 = (g_free (_tmp7), NULL);
 	value = (g_free (value), NULL);
 }
 
