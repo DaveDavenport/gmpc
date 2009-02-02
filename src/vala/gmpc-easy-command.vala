@@ -132,19 +132,22 @@ public class Gmpc.Easy.Command : GLib.Object
         ctx.paint();
         /* */
 
-        ctx.rectangle(0.0,0.0,width,height);
+        ctx.rectangle(1.0,1.0,width-2,height-2);
         var pattern = new Cairo.Pattern.linear(0.0,0.0,0.0, height);
 
         pattern.add_color_stop_rgba(0.0,0.0,0.0,0.0,0.5);
         pattern.add_color_stop_rgba(0.5,0.0,0.0,0.0,1.0);
         pattern.add_color_stop_rgba(1.0,0.0,0.0,0.0,0.5);
         ctx.set_source(pattern);
-     
-//        ctx.set_source_rgba(0.0,0.0,0.0,0.5);
         ctx.fill_preserve();
+        ctx.set_source_rgba(1.0,1.0,1.0,1.0);
+        ctx.stroke();
 
+        ctx.rectangle(0.0,0.0,width,height);
         ctx.set_source_rgba(0.0,0.0,0.0,1.0);
         ctx.stroke();
+
+
         return false;
     }
     public

@@ -10,8 +10,8 @@
 
 
 
-static char* string_substring (const char* self, glong offset, glong len);
 static glong string_get_length (const char* self);
+static char* string_substring (const char* self, glong offset, glong len);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -34,6 +34,12 @@ static void gmpc_easy_command_finalize (GObject* obj);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -51,12 +57,6 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
-}
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
 }
 
 
@@ -186,14 +186,16 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 	}
 	cairo_paint (ctx);
 	/* */
-	cairo_rectangle (ctx, 0.0, 0.0, (double) width, (double) height);
+	cairo_rectangle (ctx, 1.0, 1.0, (double) (width - 2), (double) (height - 2));
 	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, (double) height);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0.0, 0.0, 0.0, 0.5);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.5, 0.0, 0.0, 0.0, 1.0);
 	cairo_pattern_add_color_stop_rgba (pattern, 1.0, 0.0, 0.0, 0.0, 0.5);
 	cairo_set_source (ctx, pattern);
-	/*        ctx.set_source_rgba(0.0,0.0,0.0,0.5);*/
 	cairo_fill_preserve (ctx);
+	cairo_set_source_rgba (ctx, 1.0, 1.0, 1.0, 1.0);
+	cairo_stroke (ctx);
+	cairo_rectangle (ctx, 0.0, 0.0, (double) width, (double) height);
 	cairo_set_source_rgba (ctx, 0.0, 0.0, 0.0, 1.0);
 	cairo_stroke (ctx);
 	return (_tmp0 = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), (pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL)), _tmp0);
