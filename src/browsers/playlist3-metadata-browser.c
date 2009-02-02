@@ -2586,7 +2586,7 @@ static void info2_connection_changed(MpdObj *mi, int connect, void *userdata)
 }
 static void info2_plugin_init(void)
 {
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("Metadata Browser"),"",info2_activate, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("Switch metadata browser"),"",_("Switch to the metadata browser"),info2_activate, NULL); 
 }
 /* Needed plugin_wp stuff */
 gmpcPlBrowserPlugin info2_gbp = {

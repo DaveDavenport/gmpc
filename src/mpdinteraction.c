@@ -137,25 +137,25 @@ static void play_command(gpointer user_data, const char *param)
 static void mpd_interaction_init(void)
 {
     /* Player control */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",(GmpcEasyCommandCallback *)mpd_player_play, connection); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",(GmpcEasyCommandCallback *)mpd_player_pause, connection); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",(GmpcEasyCommandCallback *)next_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",(GmpcEasyCommandCallback *)prev_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",(GmpcEasyCommandCallback *)stop_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",_("start playback"),    (GmpcEasyCommandCallback *)mpd_player_play, connection); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",_("pause playback"),   (GmpcEasyCommandCallback *)mpd_player_pause, connection); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",_("next song"),        (GmpcEasyCommandCallback *)next_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",_("previous song"),    (GmpcEasyCommandCallback *)prev_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",_("stop playback"),    (GmpcEasyCommandCallback *)stop_song, NULL); 
 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"(on|off|)",(GmpcEasyCommandCallback *)set_random, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",(GmpcEasyCommandCallback *)set_repeat, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"(on|off|)",_("Random (on|off)"),(GmpcEasyCommandCallback *)set_random, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",_("Repeat (on|off)"),(GmpcEasyCommandCallback *)set_repeat, NULL); 
 
     /* volume commands */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",(GmpcEasyCommandCallback *)volume_set, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"",(GmpcEasyCommandCallback *)volume_up, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"",(GmpcEasyCommandCallback *)volume_down, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",(GmpcEasyCommandCallback *)volume_mute, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
     /* basic playlist commands */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",(GmpcEasyCommandCallback *)play_command, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",(GmpcEasyCommandCallback *)add_command, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",(GmpcEasyCommandCallback *)replace_command, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",_("Replace <query>"),(GmpcEasyCommandCallback *)replace_command, NULL); 
 }
 
 gmpcPlugin server_plug = {

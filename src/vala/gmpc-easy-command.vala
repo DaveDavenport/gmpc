@@ -33,24 +33,29 @@ public class Gmpc.Easy.Command : GLib.Object
     private Gtk.Window window = null;
 
     construct {
-        this.store = new Gtk.ListStore(5,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *));
+        this.store = new Gtk.ListStore(6,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *),typeof(string));
         this.completion  = new Gtk.EntryCompletion();
         this.completion.model = this.store;
         this.completion.text_column = 1;
         this.completion.inline_completion = true;
         this.completion.inline_selection = true;
         this.completion.popup_completion = true;
+
+        var renderer = new Gtk.CellRendererText();
+        this.completion.pack_end(renderer, false);
+        this.completion.add_attribute(renderer, "text", 5);
+        renderer.set("foreground", "grey",null);
     }
 
 
     public delegate void Callback (void *data, string param);
     public
-    uint add_entry(string name, string pattern, Callback *callback, void *userdata)
+    uint add_entry(string name, string pattern,string hint, Callback *callback, void *userdata)
     {
         Gtk.TreeIter iter;
         this.signals++;
         this.store.append(out iter);
-        this.store.set(iter, 0,this.signals,1,name,2,pattern,3, callback,4, userdata,-1);
+        this.store.set(iter, 0,this.signals,1,name,2,pattern,3, callback,4, userdata,5,hint,-1);
         return this.signals;
     }
 

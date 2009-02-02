@@ -10,8 +10,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -34,12 +34,6 @@ static void gmpc_easy_command_finalize (GObject* obj);
 
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -60,14 +54,21 @@ static char* string_substring (const char* self, glong offset, glong len) {
 }
 
 
-guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, GmpcEasyCommandCallback* callback, void* userdata) {
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
+guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata) {
 	GtkTreeIter iter = {0};
 	g_return_val_if_fail (self != NULL, 0U);
 	g_return_val_if_fail (name != NULL, 0U);
 	g_return_val_if_fail (pattern != NULL, 0U);
+	g_return_val_if_fail (hint != NULL, 0U);
 	self->priv->signals++;
 	gtk_list_store_append (self->priv->store, &iter);
-	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, -1, -1);
+	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, -1, -1);
 	return self->priv->signals;
 }
 
@@ -304,8 +305,9 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 	{
 		GtkListStore* _tmp0;
 		GtkEntryCompletion* _tmp1;
+		GtkCellRendererText* renderer;
 		_tmp0 = NULL;
-		self->priv->store = (_tmp0 = gtk_list_store_new (5, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp0);
+		self->priv->store = (_tmp0 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp0);
 		_tmp1 = NULL;
 		self->priv->completion = (_tmp1 = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp1);
 		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
@@ -313,6 +315,11 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
 		gtk_entry_completion_set_popup_completion (self->priv->completion, TRUE);
+		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
+		gtk_cell_layout_pack_end ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, FALSE);
+		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, "text", 5);
+		g_object_set ((GObject*) renderer, "foreground", "grey", NULL, NULL);
+		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	}
 	return obj;
 }
