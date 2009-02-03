@@ -2559,9 +2559,49 @@ static void info2_connection_changed(MpdObj *mi, int connect, void *userdata)
         }
     }
 }
+
+/**
+ * Easy command integration
+ */
+static void info2_show_current_artist(void)
+{
+    mpd_Song *song = mpd_playlist_get_current_song(connection);
+    if(song) {
+        if(song->artist) {
+            info2_activate();
+            info2_fill_artist_view(song->artist);
+        }
+    }
+}
+static void info2_show_current_album(void)
+{
+    mpd_Song *song = mpd_playlist_get_current_song(connection);
+    if(song) {
+        if(song->artist && song->album) {
+            info2_activate();
+            info2_fill_album_view(song->artist,song->album);
+        }
+    }
+}
 static void info2_plugin_init(void)
 {
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("Switch metadata browser"),"",_("Switch to the metadata browser"),info2_activate, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("switch metadata browser"),"",
+            _("Switch to the metadata browser"),
+            (GmpcEasyCommandCallback *)info2_activate, NULL); 
+    /* others */
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("show current song"),"",
+            _("Show the current songs information"),
+            (GmpcEasyCommandCallback *)info2_show_current_song, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("show current artist"),"",
+            _("Show the current artist information"),
+            (GmpcEasyCommandCallback *)info2_show_current_artist, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("show current album"),"",
+            _("Show the current album information"),
+            (GmpcEasyCommandCallback *)info2_show_current_album, NULL); 
 }
 /* Needed plugin_wp stuff */
 gmpcPlBrowserPlugin info2_gbp = {

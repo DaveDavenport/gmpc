@@ -165,7 +165,7 @@ public class Gmpc.Easy.Command : GLib.Object
             var entry = new Gtk.Entry();
 
             window.border_width=16;
-            entry.width_chars = 30;
+            entry.width_chars = 50;
 
             window.add(entry);
 
