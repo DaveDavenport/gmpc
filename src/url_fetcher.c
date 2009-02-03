@@ -182,13 +182,13 @@ static void parse_data(const char *data, guint size, const char *text)
 }
 static void url_fetcher_download_callback(GEADAsyncHandler *handle, const GEADStatus status, gpointer user_data)
 {
-    gchar *uri = gmpc_easy_handler_get_uri(handle);
+    const gchar *uri = gmpc_easy_handler_get_uri(handle);
     if(status == GEAD_DONE)
     {
         GtkWidget *dialog = user_data;
-	goffset length;
-	char *data = gmpc_easy_handler_get_data(handle, &length);
-        parse_data(data,(guint)length,uri);
+        goffset length;
+        const char *data = gmpc_easy_handler_get_data(handle, &length);
+    parse_data(data,(guint)length,uri);
         if(dialog)
         {
             gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);

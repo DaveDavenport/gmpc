@@ -866,10 +866,19 @@ static void pl3_find2_ec_playlist(gpointer user_data, const char *param)
 }
 static void pl3_find2_plugin_init(void)
 {
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("switch search"),"",_("Switch to the search browser"),pl3_find2_browser_activate, NULL); 
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+                _("switch search"),"",
+                _("Switch to the search browser"),
+                (GmpcEasyCommandCallback *)pl3_find2_browser_activate, NULL); 
 
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("search database"), ".*", _("Search database <query>"),pl3_find2_ec_database , NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("search playlist"), ".*", _("Search playlist <query>"),pl3_find2_ec_playlist, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, 
+                _("search database"), ".*",
+                _("Search database <query>"),
+                (GmpcEasyCommandCallback *)pl3_find2_ec_database , NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+                _("search playlist"), ".*",
+                _("Search playlist <query>"),
+                (GmpcEasyCommandCallback *)pl3_find2_ec_playlist, NULL);
 
 }
 /**

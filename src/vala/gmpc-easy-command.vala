@@ -39,7 +39,7 @@ public class Gmpc.Easy.Command : GLib.Object
         string value;
         var model = comp.model;
 
-        model.get(iter, 1, out value, -1);
+        model.get(iter, 1, out value);
         if(value != null){
             string a = "^%s.*".printf(key);
             return GLib.Regex.match_simple(a, value, GLib.RegexCompileFlags.CASELESS, 0);
@@ -96,7 +96,7 @@ public class Gmpc.Easy.Command : GLib.Object
                 string name,pattern,test;
                 Callback callback = null;
                 void * data;
-                model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data, -1);
+                model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data);
 
                 test = "%s[ ]*%s$".printf(name, pattern);
                 if(GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0))

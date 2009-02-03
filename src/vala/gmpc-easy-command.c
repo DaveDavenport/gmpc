@@ -10,8 +10,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -36,12 +36,6 @@ static void gmpc_easy_command_finalize (GObject* obj);
 
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -62,6 +56,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 }
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter) {
 	char* value;
 	GtkTreeModel* _tmp0;
@@ -73,7 +73,7 @@ static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, Gt
 	value = NULL;
 	_tmp0 = NULL;
 	model = (_tmp0 = gtk_entry_completion_get_model (comp), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	gtk_tree_model_get (model, &(*iter), 1, &value, -1, -1);
+	gtk_tree_model_get (model, &(*iter), 1, &value, -1);
 	if (value != NULL) {
 		char* a;
 		gboolean _tmp1;
@@ -133,7 +133,7 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			test = NULL;
 			callback = (_tmp2 = NULL, callback_target = NULL, _tmp2);
 			data = NULL;
-			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1, -1);
+			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
 			_tmp3 = NULL;
 			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s$", name, pattern), test = (g_free (test), NULL), _tmp3);
 			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
