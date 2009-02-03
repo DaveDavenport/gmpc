@@ -227,7 +227,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 		_tmp0 = NULL;
 		self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
 		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
-		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 16);
+		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 24);
 		gtk_entry_set_width_chars (entry, 50);
 		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);
 		/* Composite */
