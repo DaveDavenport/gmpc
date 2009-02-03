@@ -257,8 +257,11 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 		g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
 		g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
 		gtk_widget_show_all ((GtkWidget*) self->priv->window);
+		gtk_window_present (self->priv->window);
 		gtk_widget_grab_focus ((GtkWidget*) entry);
 		(entry == NULL) ? NULL : (entry = (g_object_unref (entry), NULL));
+	} else {
+		gtk_window_present (self->priv->window);
 	}
 }
 

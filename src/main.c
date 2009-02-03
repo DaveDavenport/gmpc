@@ -228,6 +228,16 @@ static void bacon_on_message_received(const char *message, gpointer data)
 }
 #endif
 
+/**
+ * Gmpc Easy Command integration
+ */
+static void pl3_call_easy_command(void)
+{
+    GtkWidget *pl3_win = playlist3_get_window();
+    if(pl3_win) {
+        gmpc_easy_command_popup(gmpc_easy_command,pl3_win);
+    }
+}
 
 int main (int argc, char **argv)
 {
@@ -456,6 +466,7 @@ int main (int argc, char **argv)
     gmpc_easy_command = gmpc_easy_command_new(); 
     gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",_("Quit gmpc"), (GmpcEasyCommandCallback *)main_quit, NULL);
     gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",_("Hide gmpc"), (GmpcEasyCommandCallback *)pl3_hide, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",_("Show gmpc"), (GmpcEasyCommandCallback *)create_playlist3, NULL);
     gmpc_easy_command_add_entry(gmpc_easy_command, 
                             _("show notification"), "",
                             _("Show trayicon notification"), 
@@ -891,6 +902,7 @@ int main (int argc, char **argv)
     g_signal_connect(G_OBJECT(keys), "mm_volume_down",      G_CALLBACK(volume_down),                NULL);
     g_signal_connect(G_OBJECT(keys), "mm_toggle_mute",      G_CALLBACK(volume_toggle_mute),         NULL);
     g_signal_connect(G_OBJECT(keys), "mm_show_notification",G_CALLBACK(tray_icon2_create_tooltip),  NULL);
+    g_signal_connect(G_OBJECT(keys), "mm_show_easy_command",G_CALLBACK(pl3_call_easy_command),  NULL);
     TEC("Setting up multimedia keys");
 
 #endif

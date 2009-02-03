@@ -194,7 +194,11 @@ public class Gmpc.Easy.Command : GLib.Object
 
 
             window.show_all();
+            window.present();
             entry.grab_focus();
+        }
+        else{
+            this.window.present();
         }
     }
 }
