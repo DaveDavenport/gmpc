@@ -846,6 +846,32 @@ static void pl3_find2_save_myself(void)
 		}
 	}
 }
+/* Easy command integration */
+
+static void pl3_find2_ec_database(gpointer user_data, const char *param)
+{
+    pl3_find2_browser_activate();
+    gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
+    gtk_entry_set_text(GTK_ENTRY(search_entry), param);
+    gtk_widget_activate(search_entry);
+}
+static void pl3_find2_ec_playlist(gpointer user_data, const char *param)
+{
+    pl3_find2_browser_activate();
+    gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
+    gtk_entry_set_text(GTK_ENTRY(search_entry), param);
+    gtk_widget_activate(search_entry);
+}
+static void pl3_find2_plugin_init(void)
+{
+    gmpc_easy_command_add_entry(gmpc_easy_command,_("switch search"),"",_("Switch to the search browser"),pl3_find2_browser_activate, NULL); 
+
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("search database"), ".*", _("Search database <query>"),pl3_find2_ec_database , NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("search playlist"), ".*", _("Search playlist <query>"),pl3_find2_ec_playlist, NULL);
+
+}
 /**
  * Plugin structure
  */
@@ -861,6 +887,7 @@ gmpcPlugin find2_browser_plug = {
 	.name = 						N_("Search Browser"),
 	.version = 						{1,1,1},
 	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER|GMPC_INTERNALL,
+    .init    =                      pl3_find2_plugin_init,
     .destroy = 						pl3_find2_browser_destroy,
 	.browser = 						&find2_browser_gbp,
 	.mpd_status_changed = 			pl3_find2_browser_status_changed,
