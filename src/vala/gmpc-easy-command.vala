@@ -31,7 +31,22 @@ public class Gmpc.Easy.Command : GLib.Object
     private Gtk.ListStore store = null;
     private uint signals = 0;
     private Gtk.Window window = null;
+    
+    private
+    bool
+    completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter)
+    {
+        string value;
+        var model = comp.model;
 
+        model.get(iter, 1, out value, -1);
+        if(value != null){
+            string a = "^%s.*".printf(key);
+            return GLib.Regex.match_simple(a, value, GLib.RegexCompileFlags.CASELESS, 0);
+        }
+
+        return false;
+    }
     construct {
         this.store = new Gtk.ListStore(6,typeof(uint), typeof(string), typeof(string),typeof(void *), typeof(void *),typeof(string));
         this.completion  = new Gtk.EntryCompletion();
@@ -40,6 +55,8 @@ public class Gmpc.Easy.Command : GLib.Object
         this.completion.inline_completion = true;
         this.completion.inline_selection = true;
         this.completion.popup_completion = true;
+
+        this.completion.set_match_func(completion_function, null);
 
         var renderer = new Gtk.CellRendererText();
         this.completion.pack_end(renderer, false);
