@@ -17,8 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __GMPC_PROGRESS2_H__
-#define __GMPC_PROGRESS2_H__
+#ifndef __GMPC_PROGRESS_H__
+#define __GMPC_PROGRESS_H__
 
 #include <glib.h>
 #include <glib-object.h>
