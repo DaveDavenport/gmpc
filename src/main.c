@@ -455,6 +455,11 @@ int main (int argc, char **argv)
 
     gmpc_easy_command = gmpc_easy_command_new(); 
     gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",_("Quit gmpc"), (GmpcEasyCommandCallback *)main_quit, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",_("Hide gmpc"), (GmpcEasyCommandCallback *)pl3_hide, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, 
+                            _("show notification"), "",
+                            _("Show trayicon notification"), 
+                            (GmpcEasyCommandCallback *)tray_icon2_create_tooltip, NULL);
 
     TEC("Init easy command");
 
