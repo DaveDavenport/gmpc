@@ -56,7 +56,6 @@ static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userd
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void as_song_clicked(GtkButton *button, gpointer data);
-static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
 static void info2_fill_artist_similar_destroy(GtkWidget *widget, gpointer id);
 static GtkWidget *info2_create_artist_button(mpd_Song *song);
 static GtkWidget *resizer_vbox= NULL;
@@ -349,7 +348,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 /* make the background paintable, and paint the background */
                 event = gtk_event_box_new();
                 gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
-                g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
+                g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
 
                 hbox = gtk_hbox_new(FALSE,6);
@@ -609,7 +608,7 @@ static GtkWidget *info2_create_artist_button(mpd_Song *song)
 	/* Button bg drawing code */
 	event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
-	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
+	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
 
 	vbox = gtk_hbox_new(FALSE, 6);
@@ -1172,30 +1171,6 @@ static void as_song_clicked(GtkButton *button, gpointer data)
 	}
 }
 
-static gboolean info2_row_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-
-	int width = widget->allocation.width;
-	int height = widget->allocation.height;
-	
-	gtk_paint_flat_box(widget->style, 
-					widget->window, 
-					GTK_STATE_SELECTED,
-					GTK_SHADOW_NONE,
-					NULL, 
-					widget,
-					"cell_odd",
-					0,0,
-					width,height);
-
-	gtk_paint_focus(widget->style, widget->window, 
-				GTK_STATE_NORMAL, 
-				NULL, 
-				widget,
-				"button",
-				0,0,width,height);
-	return FALSE;
-}
 /***
  * Collection view
  */
@@ -2144,7 +2119,7 @@ static void info2_init(void)
 	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
 */
 	gtk_widget_set_app_paintable(title_event, TRUE);
-	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
+	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
 
@@ -2463,7 +2438,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	gtk_box_pack_start(GTK_BOX(table), hbox, FALSE, TRUE,0);
 
 	gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
-	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(info2_row_expose_event), NULL);
+	g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
 
 	gtk_container_add(GTK_CONTAINER(event), table);

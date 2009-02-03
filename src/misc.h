@@ -46,4 +46,8 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data);
 
 
 gchar ** tokenize_string(const gchar *string);
+
+
+gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+
 #endif

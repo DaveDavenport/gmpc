@@ -539,3 +539,27 @@ gchar ** tokenize_string(const gchar *string)
 	}
 	return result;
 }
+
+
+gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+
+	int width = widget->allocation.width;
+	int height = widget->allocation.height;
+	
+	gtk_paint_flat_box(widget->style, 
+					widget->window, 
+					GTK_STATE_SELECTED,
+					GTK_SHADOW_NONE,
+					NULL, 
+					widget,
+					"cell_odd",
+					0,0,width,height);
+	gtk_paint_focus(widget->style, widget->window, 
+				GTK_STATE_NORMAL, 
+				NULL, 
+				widget,
+				"button",
+				0,0,width,height);
+	return FALSE;
+}
