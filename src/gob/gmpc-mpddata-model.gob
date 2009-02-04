@@ -341,7 +341,7 @@ requires 2.0.0
         cover_art_fetched(mpd_Song *song, MetaDataResult ret, char *coverpath,GtkTreeRowReference *ref)
         {
 
-            if(ref && ref)
+            if(ref)
             {
                 GtkTreePath *path =gtk_tree_row_reference_get_path(ref);
                 GtkTreeModel *model = gtk_tree_row_reference_get_model(ref);
@@ -370,6 +370,7 @@ requires 2.0.0
                         self->_priv->images[n] = pb2;
                     }
                     gtk_tree_model_row_changed(model,path, &iter);
+                    gtk_tree_path_free(path);
                 }
 
                 if(ret == META_DATA_AVAILABLE || ret == META_DATA_UNAVAILABLE)

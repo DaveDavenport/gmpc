@@ -273,6 +273,7 @@ static gboolean tag2_song_list_button_press_event(GtkWidget *but, GdkEventButton
                 return TRUE;
             }else{
                 gtk_tree_selection_unselect_path(sel, path);
+                gtk_tree_path_free(path);
                 return TRUE;
             }
 
