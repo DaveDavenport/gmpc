@@ -96,15 +96,27 @@ static void pl3_find2_fill_combo(gmpcPlugin *plug)
 		}
 }
 
-static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
+static void pl3_find2_combo_box_field_changed(GtkComboBox *cb, gpointer data)
 {
 	GtkTreeIter iter;
 	if(gtk_combo_box_get_active_iter(cb, &iter))
 	{
 		gint selected_type;
 		gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &selected_type, -1);
-		cfg_set_single_value_as_int(config, "find2-browser", "selected_type", selected_type);
-	}
+        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(data), &iter))
+        {
+            gchar *type;
+            gchar *cfield=NULL;
+            gtk_tree_model_get(gtk_combo_box_get_model(GTK_COMBO_BOX(data)), &iter, 0, &type, -1);
+            if(type)
+            {
+                cfield = g_strdup_printf("selected_type_%s", type);
+                g_free(type);
+                cfg_set_single_value_as_int(config, "find2-browser", cfield, selected_type);
+                g_free(cfield);
+            }
+        }
+    }
 }
 
 static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
@@ -119,35 +131,37 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_combo_box_get_model(box);
-	gmpcPlugin *plug;
-	if(gtk_combo_box_get_active_iter(box, &iter))
-	{
-		int type;
+	gmpcPlugin *plug = NULL;
+    gchar *cfield =NULL;
+    gchar *type = NULL;
+    gint selected_type;
 
-		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 1, &type, 2, &plug,-1);
+    /* this should always be active */
+    if(gtk_combo_box_get_active_iter(box, &iter))
+	{
+		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 0, &type, 2, &plug,-1);
 		pl3_find2_fill_combo(plug);
 	}
 
-	gint selected_type = cfg_get_single_value_as_int_with_default(config, "find2-browser", "selected_type", 0);
-	if(plug == NULL)
-		gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), selected_type);
-	else if(gmpc_plugin_browser_integrate_search_field_supported(plug, selected_type))
-	{
-		gint row = 0;
-		GtkTreeIter iter;
-		for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_combo_store), &iter);
-					gtk_list_store_iter_is_valid(pl3_find2_combo_store, &iter);
-					gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_combo_store), &iter))
-		{
-			gint type;
-			gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &type, -1);
-			if(type == selected_type)
-				break;
-			else
-				++row;
-		}
-		gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), row);
-	}
+    cfield = g_strdup_printf("selected_type_%s", type);
+    selected_type = cfg_get_single_value_as_int_with_default(config, "find2-browser",cfield, 0);
+    g_free(cfield);
+    g_free(type);
+    /* Loop through the field until the match is found */
+    for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_combo_store), &iter);
+            gtk_list_store_iter_is_valid(pl3_find2_combo_store, &iter);
+            gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_combo_store), &iter))
+    {
+        gint type;
+        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &type, -1);
+        if(type == selected_type)
+        {
+            gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter);
+            return;
+        }
+    }
+    /* default, if nothing is found. */
+    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ARTIST);
 }
 /**
  * Construct the browser 
@@ -225,8 +239,6 @@ static void pl3_find2_browser_init(void)
     gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
 	g_signal_connect(G_OBJECT(pl3_find2_curpl), "changed", G_CALLBACK(pl3_find2_browser_type_plugin_changed), NULL);
 	
-    //gtk_check_button_new_with_mnemonic(_("in _play queue"));
-//    g_signal_connect(G_OBJECT(pl3_find2_curpl), "toggled", G_CALLBACK(pl3_find2_browser_search),NULL);
     gtk_box_pack_start(GTK_BOX(hbox), pl3_find2_curpl, FALSE, TRUE,0);
 
 	/* What tag field */
@@ -236,10 +248,12 @@ static void pl3_find2_browser_init(void)
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(search_combo), renderer, TRUE);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(search_combo), renderer, "text", 1, NULL);
     gtk_combo_box_set_model(GTK_COMBO_BOX(search_combo), GTK_TREE_MODEL(pl3_find2_combo_store));
-    gint selected_type = cfg_get_single_value_as_int_with_default(config, "find2-browser", "selected_type", 0);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), selected_type);
+
+    /* Update the tag combo to the right field */
+    pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl),NULL);
+
     gtk_box_pack_start(GTK_BOX(hbox), search_combo, FALSE, TRUE, 0);
-    g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_changed), NULL);
+    g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_field_changed), pl3_find2_curpl);
 
 
 #ifdef USE_SYSTEM_LIBSEXY
