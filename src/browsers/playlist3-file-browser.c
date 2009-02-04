@@ -696,22 +696,21 @@ static void pl3_file_browser_show_info(void)
 
         list = g_list_last (list);
         {
+            mpd_Song *song = NULL;
             GtkTreeIter iter;
-            char *path;
             int type;
             gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-            gtk_tree_model_get (GTK_TREE_MODEL(pl3_fb_store2), &iter,MPDDATA_MODEL_ROW_TYPE,&type, MPDDATA_MODEL_COL_PATH, &path, -1);
+            gtk_tree_model_get (GTK_TREE_MODEL(pl3_fb_store2), &iter,
+                        MPDDATA_MODEL_ROW_TYPE,&type, 
+                        MPDDATA_MODEL_COL_MPDSONG, &song,-1);
             if(type == MPD_DATA_TYPE_SONG)
             {
-                mpd_Song *song = mpd_database_get_fileinfo(connection, path);
                 if(song)
                 {
                     info2_activate();
                     info2_fill_song_view(song);	
-                    mpd_freeSong(song);
                 }
             }
-            q_free(path);
         }
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free (list);

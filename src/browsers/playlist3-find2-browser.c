@@ -481,16 +481,12 @@ static void pl3_find2_browser_show_info(void)
         {
             GtkTreeIter iter;
             mpd_Song *song =NULL;
-            char *path;
             gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) list->data);
-            gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_PATH, &path,-1);
-            song = mpd_database_get_fileinfo(connection, path);
+            gtk_tree_model_get(model,&iter,MPDDATA_MODEL_COL_MPDSONG, &song,-1);
 			if(song) {
 				info2_activate();
 				info2_fill_song_view(song);	
-				mpd_freeSong(song);
 			}
-            q_free(path);
         }
 
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
