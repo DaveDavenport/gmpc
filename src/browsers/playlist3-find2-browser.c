@@ -98,9 +98,13 @@ static void pl3_find2_fill_combo(gmpcPlugin *plug)
 
 static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data)
 {
-	gint selected_type = gtk_combo_box_get_active(cb);
-	if(selected_type != -1)
+	GtkTreeIter iter;
+	if(gtk_combo_box_get_active_iter(cb, &iter))
+	{
+		gint selected_type;
+		gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &selected_type, -1);
 		cfg_set_single_value_as_int(config, "find2-browser", "selected_type", selected_type);
+	}
 }
 
 static void playtime_changed(GmpcMpdDataModel *model, gulong playtime)
@@ -115,17 +119,35 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_combo_box_get_model(box);
+	gmpcPlugin *plug;
 	if(gtk_combo_box_get_active_iter(box, &iter))
 	{
-		gmpcPlugin *plug;
 		int type;
 
         gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 1, &type, 2, &plug,-1);
 		pl3_find2_fill_combo(plug);
-
 	}
+
 	gint selected_type = cfg_get_single_value_as_int_with_default(config, "find2-browser", "selected_type", 0);
-	gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), selected_type);
+	if(plug == NULL)
+		gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), selected_type);
+	else if(gmpc_plugin_browser_integrate_search_field_supported(plug, selected_type))
+	{
+		gint row = 0;
+		GtkTreeIter iter;
+		for(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_find2_combo_store), &iter);
+					gtk_list_store_iter_is_valid(pl3_find2_combo_store, &iter);
+					gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_combo_store), &iter))
+		{
+			gint type;
+			gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &type, -1);
+			if(type == selected_type)
+				break;
+			else
+				++row;
+		}
+		gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), row);
+	}
 }
 /**
  * Construct the browser 
