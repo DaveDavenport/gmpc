@@ -7,28 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-30 15:36+0100\n"
-"PO-Revision-Date: 2009-01-19 19:55+0000\n"
+"POT-Creation-Date: 2009-02-03 20:32+0100\n"
+"PO-Revision-Date: 2009-01-30 15:09+0000\n"
 "Last-Translator: Vojtěch Látal <vojtech@latal.name>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-01-30 14:24+0000\n"
+"X-Launchpad-Export-Date: 2009-02-04 22:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Grafické rozhraní pro mpd démona"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1380 ../src/tray-icon2.c:550
-#: ../src/tray-icon2.c:732 ../src/tray-icon2.c:735 ../src/tray-icon2.c:745
-#: ../src/tray-icon2.c:748
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1411 ../src/tray-icon2.c:554
+#: ../src/tray-icon2.c:736 ../src/tray-icon2.c:739 ../src/tray-icon2.c:749
+#: ../src/tray-icon2.c:752
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1404
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1435
 msgid "Getting help"
 msgstr "_Získat nápovědu"
 
@@ -36,12 +36,12 @@ msgstr "_Získat nápovědu"
 msgid "MPD database is updating."
 msgstr "Databáze MPD se právě aktualizuje."
 
-#: ../glade/playlist3.glade.h:3
+#: ../glade/playlist3.glade.h:3 ../src/mpdinteraction.c:171
 msgid "Mute"
 msgstr "Vypnout zvuk"
 
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:73
+#: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:74
 msgid "Next"
 msgstr "_Další"
 
@@ -50,7 +50,7 @@ msgid "Play/Pause"
 msgstr "_Přehrát / pozastavit"
 
 #. * MM_NEXT
-#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74
+#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:75
 msgid "Previous"
 msgstr "Předcho_zí"
 
@@ -59,12 +59,12 @@ msgid "Profiles"
 msgstr "P_rofily"
 
 #. * MM_REPEAT
-#: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:79
+#: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:80
 msgid "Random"
 msgstr "_Náhodné pořadí"
 
 #. * MM_FASTBACKWARD
-#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:78
+#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:79
 msgid "Repeat"
 msgstr "_Opakovat"
 
@@ -73,7 +73,7 @@ msgid "Show Messages"
 msgstr "Zobrazit _události"
 
 #. * MM_PREV
-#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:75
+#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:76
 msgid "Stop"
 msgstr "_Stop"
 
@@ -179,80 +179,80 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
-#: ../src/main.c:293 ../src/main.c:294
+#. 
+#: ../src/main.c:309 ../src/main.c:310
 msgid "--debug-level="
 msgstr "--uroven-ladeni="
 
 #. *
 #. * Print out version + svn revision
-#.
-#: ../src/main.c:300
+#. 
+#: ../src/main.c:316
 msgid "--version"
 msgstr "--verze"
 
-#: ../src/main.c:308 ../src/main.c:309
+#: ../src/main.c:324 ../src/main.c:325
 msgid "--config="
 msgstr "--konfig="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
-#: ../src/main.c:314
+#. 
+#: ../src/main.c:330
 msgid "--start-hidden"
 msgstr "--skryt-po-spusteni"
 
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
-#: ../src/main.c:321
+#. 
+#: ../src/main.c:337
 msgid "--clean-cover-db"
 msgstr "--vyprazdnit-db-obalu"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
-#: ../src/main.c:327
+#. 
+#: ../src/main.c:343
 msgid "--disable-plugins"
 msgstr "--zakazat-pluginy"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
-#: ../src/main.c:333
+#. 
+#: ../src/main.c:349
 msgid "--replace"
 msgstr "--nahradit"
 
 #. *
 #. * Quit any running gmpc session
-#.
-#: ../src/main.c:339
+#. 
+#: ../src/main.c:355
 msgid "--quit"
 msgstr "--ukoncit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
-#: ../src/main.c:345
+#. 
+#: ../src/main.c:361
 msgid "--import-old-db"
 msgstr "--import-stare-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
-#: ../src/main.c:351
+#. 
+#: ../src/main.c:367
 msgid "--debug-updates"
 msgstr "--ladeni-aktualizaci"
 
 #. *
 #. * Print out help message
-#.
-#: ../src/main.c:358
+#. 
+#: ../src/main.c:374
 msgid "--help"
 msgstr "--napoveda"
 
-#: ../src/main.c:359
+#: ../src/main.c:375
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -284,31 +284,63 @@ msgstr ""
 "\t\t\t\t\t2 Chybové zprávy a varování\n"
 "\t\t\t\t\t3 Všechny zprávy\n"
 "\t--verze\t\tVypíše verzi a git verzi\n"
-"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  ~/."
-"gmpc/gmpc.cfg\n"
+"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  "
+"~/.gmpc/gmpc.cfg\n"
 "\t--procistit-db-obalu\tPročistí soubor s obaly\n"
 "\t--zakazat-rozsireni\tNenačte žádné rozšíření\n"
 "\t--nahradit\t\tNahradí běžící sezení novým\n"
 "\t--konec\t\t\tUkončí běžící gmpc sezení. Funguje pouze pokud je zakázáno "
 "použití více instancí.\n"
 
-#: ../src/main.c:502
+#: ../src/main.c:467
+msgid "quit"
+msgstr ""
+
+#: ../src/main.c:467
+msgid "Quit gmpc"
+msgstr ""
+
+#: ../src/main.c:468
+msgid "hide"
+msgstr ""
+
+#: ../src/main.c:468
+msgid "Hide gmpc"
+msgstr ""
+
+#: ../src/main.c:469
+msgid "show"
+msgstr ""
+
+#: ../src/main.c:469
+msgid "Show gmpc"
+msgstr ""
+
+#: ../src/main.c:471
+msgid "show notification"
+msgstr ""
+
+#: ../src/main.c:472
+msgid "Show trayicon notification"
+msgstr ""
+
+#: ../src/main.c:529
 msgid "Failed to load the configuration system."
 msgstr "Nepodařilo se načtení konfiguračního systému."
 
-#: ../src/main.c:524
+#: ../src/main.c:551
 msgid "Failed to load debug-log file."
 msgstr "Nepodařilo se načíst soubor s ladícími informacemi."
 
-#: ../src/main.c:690
+#: ../src/main.c:717
 msgid "Failed to setup libmpd"
 msgstr "Nepodařilo se nastavit libmpd."
 
-#: ../src/main.c:1076
+#: ../src/main.c:1107
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC má nedostatečná práva na mpd serveru."
 
-#: ../src/main.c:1097
+#: ../src/main.c:1128
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -317,139 +349,139 @@ msgstr ""
 "Nepodařilo se nastavit heslo pro '%s'.\n"
 "Zkuste to prosím znovu."
 
-#: ../src/main.c:1099
+#: ../src/main.c:1130
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Zadejte prosím heslo pro '%s'."
 
-#: ../src/main.c:1124 ../src/main.c:1149
+#: ../src/main.c:1155 ../src/main.c:1180
 msgid "error code"
 msgstr "kód chyby"
 
-#: ../src/main.c:1135
+#: ../src/main.c:1166
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr "Nedostatečná práva k připojení k mpd. Zkontrolujte heslo."
 
-#: ../src/main.c:1172
+#: ../src/main.c:1203
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD před verzí 0.13.0 nejsou podporovány"
 
-#: ../src/main.c:1240
+#: ../src/main.c:1271
 msgid "Connected to mpd"
 msgstr "Připojen k MPD"
 
-#: ../src/main.c:1242
+#: ../src/main.c:1273
 msgid "Disconnected from mpd"
 msgstr "Odpojeno od MPD"
 
-#: ../src/main.c:1277
+#: ../src/main.c:1308
 msgid "Error occured during operation"
 msgstr "Vyskytla se chyba během operace"
 
 #. Create label
-#: ../src/main.c:1307
+#: ../src/main.c:1338
 msgid "The following error(s) occured:"
 msgstr "Vyskytly se následující chyby:"
 
-#: ../src/main.c:1323
+#: ../src/main.c:1354
 msgid "Error Message"
 msgstr "Chybová zpráva"
 
-#: ../src/main.c:1383
+#: ../src/main.c:1414
 msgid "Tagline"
 msgstr "Řádek s tagy"
 
 #. * Mpd version
-#: ../src/main.c:1384 ../src/preferences.c:311
-#: ../src/browsers/server-information.c:354
+#: ../src/main.c:1415 ../src/preferences.c:314
+#: ../src/browsers/server-information.c:331
 msgid "Version"
 msgstr "Verze"
 
-#: ../src/main.c:1387
+#: ../src/main.c:1418
 msgid "Revision"
 msgstr "Revize"
 
-#: ../src/main.c:1389
+#: ../src/main.c:1420
 msgid "Libmpd version"
 msgstr "Verze libmpd"
 
-#: ../src/main.c:1390
+#: ../src/main.c:1421
 msgid "GTK+ version"
 msgstr "Verze GTK+"
 
-#: ../src/main.c:1391
+#: ../src/main.c:1422
 msgid "Libcurl version"
 msgstr "Verze libcurl"
 
-#: ../src/main.c:1392
+#: ../src/main.c:1423
 msgid "Platform"
 msgstr "Platforma"
 
-#: ../src/main.c:1394
+#: ../src/main.c:1425
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/main.c:1397
+#: ../src/main.c:1428
 msgid "Mac OsX"
 msgstr "Mac OSX"
 
-#: ../src/main.c:1399
+#: ../src/main.c:1430
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1403
+#: ../src/main.c:1434
 msgid "Website"
 msgstr "Webová stránka"
 
-#: ../src/main.c:1405
+#: ../src/main.c:1436
 msgid "Options enabled"
 msgstr "Možnosti povoleny"
 
-#: ../src/main.c:1407
+#: ../src/main.c:1438
 msgid "X session management"
 msgstr "Správa sezení X"
 
-#: ../src/main.c:1409 ../src/main.c:1416 ../src/main.c:1424 ../src/main.c:1432
-#: ../src/main.c:1440 ../src/main.c:1448 ../src/main.c:1456 ../src/main.c:1464
-#: ../src/main.c:1472 ../src/preferences.c:304
+#: ../src/main.c:1440 ../src/main.c:1447 ../src/main.c:1455 ../src/main.c:1463
+#: ../src/main.c:1471 ../src/main.c:1479 ../src/main.c:1487 ../src/main.c:1495
+#: ../src/main.c:1503 ../src/preferences.c:307
 msgid "Enabled"
 msgstr "Povoleno"
 
-#: ../src/main.c:1411 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/main.c:1450 ../src/main.c:1458 ../src/main.c:1466
-#: ../src/main.c:1474
+#: ../src/main.c:1442 ../src/main.c:1449 ../src/main.c:1457 ../src/main.c:1465
+#: ../src/main.c:1473 ../src/main.c:1481 ../src/main.c:1489 ../src/main.c:1497
+#: ../src/main.c:1505
 msgid "Disabled"
 msgstr "Zakázáno"
 
-#: ../src/main.c:1414
+#: ../src/main.c:1445
 msgid "NLS Support"
 msgstr "Podpora NLS"
 
-#: ../src/main.c:1422 ../src/mm-keys.c:556
+#: ../src/main.c:1453 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr "Multimediální klávesy"
 
-#: ../src/main.c:1430
+#: ../src/main.c:1461
 msgid "Libegg's trayicon"
 msgstr "Stavová ikona libeggu"
 
-#: ../src/main.c:1438
+#: ../src/main.c:1469
 msgid "System libsexy"
 msgstr "Libsexy systém"
 
-#: ../src/main.c:1446
+#: ../src/main.c:1477
 msgid "Mac integration library"
 msgstr "Integrační knihovna pro Mac"
 
-#: ../src/main.c:1454
+#: ../src/main.c:1485
 msgid "Use ~/.config/ dir"
 msgstr "Použijte adresář ~/.config/"
 
-#: ../src/main.c:1462
+#: ../src/main.c:1493
 msgid "Debug timing"
 msgstr "Časování ladění"
 
-#: ../src/main.c:1470
+#: ../src/main.c:1501
 msgid "Maintainer mode"
 msgstr "Režim správce"
 
@@ -491,67 +523,70 @@ msgstr[1] "minuty"
 msgstr[2] "minut"
 
 #: ../src/misc.c:67
-#, fuzzy
 msgid "second"
 msgid_plural "seconds"
-msgstr[0] "Id ikony"
-msgstr[1] "Id ikony"
-msgstr[2] "Id ikony"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/misc.c:268
 msgid "Failed to execute"
 msgstr "Nepodařilo se provést"
 
-#: ../src/mm-keys.c:72
+#: ../src/mm-keys.c:73
 msgid "PlayPause"
 msgstr "PřehrátPozastavit"
 
 #. * MM_STOP
-#: ../src/mm-keys.c:76
+#: ../src/mm-keys.c:77
 msgid "Fast Forward"
 msgstr "Rychle vpřed"
 
 #. * MM_FASTFORWARD
-#: ../src/mm-keys.c:77
+#: ../src/mm-keys.c:78
 msgid "Fast Backward"
 msgstr "Rychle zpět"
 
 #. * MM_RANDOM
-#: ../src/mm-keys.c:80
+#: ../src/mm-keys.c:81
 msgid "Raise window"
 msgstr "Přenést okno do popředí"
 
 #. * MM_RAISE
-#: ../src/mm-keys.c:81
+#: ../src/mm-keys.c:82
 msgid "Hide window"
 msgstr "Skrýt okno"
 
 #. * MM_HIDE
-#: ../src/mm-keys.c:82
+#: ../src/mm-keys.c:83
 msgid "Toggle window"
 msgstr "Přepnout okno"
 
 #. * MM_TOGGLE_HIDDEN
-#: ../src/mm-keys.c:83
+#: ../src/mm-keys.c:84
 msgid "Volume Up"
 msgstr "Zvýšit hlasitost"
 
 #. * MM_VOLUME_UP
-#: ../src/mm-keys.c:84
+#: ../src/mm-keys.c:85
 msgid "Volume Down"
 msgstr "Snížit hlasitost"
 
 #. * MM_VOLUME_DOWN
-#: ../src/mm-keys.c:85
+#: ../src/mm-keys.c:86
 msgid "Show song"
 msgstr "Zobrazit skladbu"
 
 #. * MM_SHOW_NOTIFICATION
-#: ../src/mm-keys.c:86
+#: ../src/mm-keys.c:87
 msgid "Toggle Mute"
 msgstr "Vypnout/zapnout zvuk"
 
-#: ../src/mm-keys.c:356
+#. * MM_TOGGLE_MUTE
+#: ../src/mm-keys.c:88
+msgid "Show easy command entry"
+msgstr ""
+
+#: ../src/mm-keys.c:366
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
@@ -559,7 +594,7 @@ msgstr ""
 "Nepodařilo se odchytit následující multimediální klávesy:\n"
 "\n"
 
-#: ../src/mm-keys.c:371
+#: ../src/mm-keys.c:381
 msgid ""
 "\n"
 "Ensure that your window manager (or other applications) have not already "
@@ -569,7 +604,7 @@ msgstr ""
 "Ujistěte se, že váš okenní správce (nebo jiná aplikace) nepřiřadila tuto "
 "klávesu pro jinou funkci, pak restartujte GMPC."
 
-#: ../src/mm-keys.c:378
+#: ../src/mm-keys.c:388
 msgid ""
 "Duplicate mapping(s) detected\n"
 "\n"
@@ -581,7 +616,7 @@ msgstr ""
 "Byla nalezena a zakázána některá duplikátní přiřazení multimediální klávesy. "
 "Zkontrolujte prosím nastavení a ujistěte se, že jsou v pořádku."
 
-#: ../src/mm-keys.c:618
+#: ../src/mm-keys.c:628
 #, c-format
 msgid ""
 "Duplicate mapping detected\n"
@@ -592,7 +627,7 @@ msgstr ""
 "\n"
 "%s je už přiřazeno k %s"
 
-#: ../src/mm-keys.c:647
+#: ../src/mm-keys.c:657
 #, c-format
 msgid ""
 "Could not grab multimedia key:\n"
@@ -609,159 +644,263 @@ msgstr ""
 "Ujistěte se, že váš okenní správce (nebo jiná aplikace) nepřiřadila tuto "
 "klávesu pro jinou funkci, pak restartujte GMPC."
 
-#: ../src/mm-keys.c:694
+#: ../src/mm-keys.c:704
 msgid "Action"
 msgstr "Akce"
 
-#: ../src/mm-keys.c:716
+#: ../src/mm-keys.c:726
 msgid "Shortcut"
 msgstr "Klávesová zkratka"
 
-#: ../src/mpdinteraction.c:75
+#. Player control
+#. basic playlist commands
+#: ../src/mpdinteraction.c:158 ../src/mpdinteraction.c:174
+msgid "play"
+msgstr ""
+
+#: ../src/mpdinteraction.c:158
+msgid "start playback"
+msgstr ""
+
+#: ../src/mpdinteraction.c:159
+msgid "pause"
+msgstr ""
+
+#: ../src/mpdinteraction.c:159
+msgid "pause playback"
+msgstr ""
+
+#: ../src/mpdinteraction.c:160
+msgid "next"
+msgstr ""
+
+#: ../src/mpdinteraction.c:160
+msgid "next song"
+msgstr ""
+
+#: ../src/mpdinteraction.c:161
+msgid "prev"
+msgstr ""
+
+#: ../src/mpdinteraction.c:161
+msgid "previous song"
+msgstr ""
+
+#: ../src/mpdinteraction.c:162
+msgid "stop"
+msgstr ""
+
+#: ../src/mpdinteraction.c:162
+msgid "stop playback"
+msgstr ""
+
+#: ../src/mpdinteraction.c:164
+msgid "random"
+msgstr ""
+
+#: ../src/mpdinteraction.c:164
+msgid "Random (on|off)"
+msgstr ""
+
+#: ../src/mpdinteraction.c:165
+msgid "repeat"
+msgstr ""
+
+#: ../src/mpdinteraction.c:165
+msgid "Repeat (on|off)"
+msgstr ""
+
+#. volume commands
+#: ../src/mpdinteraction.c:168
+msgid "volume"
+msgstr ""
+
+#: ../src/mpdinteraction.c:168
+msgid "Volume <level>"
+msgstr ""
+
+#: ../src/mpdinteraction.c:169
+msgid "volume \\+"
+msgstr ""
+
+#: ../src/mpdinteraction.c:169
+msgid "Increase volume"
+msgstr ""
+
+#: ../src/mpdinteraction.c:170
+msgid "volume -"
+msgstr ""
+
+#: ../src/mpdinteraction.c:170
+msgid "Decrease volume"
+msgstr ""
+
+#: ../src/mpdinteraction.c:171
+msgid "mute"
+msgstr ""
+
+#: ../src/mpdinteraction.c:174
+msgid "Play <query>"
+msgstr ""
+
+#: ../src/mpdinteraction.c:175
+msgid "add"
+msgstr ""
+
+#: ../src/mpdinteraction.c:175
+msgid "Add <query>"
+msgstr ""
+
+#: ../src/mpdinteraction.c:176
+msgid "replace"
+msgstr ""
+
+#: ../src/mpdinteraction.c:176
+msgid "Replace <query>"
+msgstr ""
+
+#: ../src/mpdinteraction.c:180
 msgid "Server Settings"
 msgstr "Nastavení serveru"
 
-#: ../src/mpdinteraction.c:105
+#: ../src/mpdinteraction.c:210
 msgid "Connection"
 msgstr "Připojení"
 
-#: ../src/mpdinteraction.c:206
+#: ../src/mpdinteraction.c:311
 msgid "Connecting"
 msgstr "Navazuji spojení"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1185
+#: ../src/mpdinteraction.c:1290
 msgid "All from album"
 msgstr "Všechny z alba"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1197
+#: ../src/mpdinteraction.c:1302
 msgid "All from artist"
 msgstr "Vše od interpreta"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1207
+#: ../src/mpdinteraction.c:1312
 msgid "All from genre"
 msgstr "Všechny s tímto žánrem"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1215
+#: ../src/mpdinteraction.c:1320
 msgid "All from same directory"
 msgstr "Všechny ze stejného adresáře"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1223
+#: ../src/mpdinteraction.c:1328
 msgid "Add more"
 msgstr "Přidat další"
 
-#: ../src/mpdinteraction.c:1233
+#: ../src/mpdinteraction.c:1338
 msgid "Set Rating"
 msgstr ""
 
-#: ../src/playlist3.c:628
+#: ../src/playlist3.c:632
 msgid "MPD database is updating"
 msgstr "Probíhá aktualizace databáze MPD"
 
-#: ../src/playlist3.c:639
+#: ../src/playlist3.c:643
 msgid "MPD is updating its database"
 msgstr "MPD právě aktualizuje databázi"
 
-#: ../src/playlist3.c:643
+#: ../src/playlist3.c:647
 msgid "MPD finished updating its database"
 msgstr "MPD úspěšně ukončilo aktualizaci databáze"
 
-#: ../src/playlist3.c:814
+#: ../src/playlist3.c:818
 msgid "Connected"
 msgstr "Připojeno"
 
-#: ../src/playlist3.c:823 ../src/playlist3.c:2209
+#: ../src/playlist3.c:827 ../src/playlist3.c:2213
 msgid "Not Connected"
 msgstr "Nepřipojeno"
 
-#: ../src/playlist3.c:836 ../src/playlist3.c:845 ../src/playlist3.c:1659
+#: ../src/playlist3.c:840 ../src/playlist3.c:849 ../src/playlist3.c:1663
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:837
+#: ../src/playlist3.c:841
 msgid "Connected to"
 msgstr "Připojen k"
 
-#: ../src/playlist3.c:846
+#: ../src/playlist3.c:850
 msgid "Disconnected"
 msgstr "Odpojen"
 
-#: ../src/playlist3.c:909
-#, fuzzy
+#: ../src/playlist3.c:913
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
 msgstr ""
-"Nepodařilo se otevřít soubor s popisem zobrazení!\n"
-"Přeinstalujte prosím gmpc."
 
-#: ../src/playlist3.c:1693
+#: ../src/playlist3.c:1697
 #, c-format
 msgid "Repeat: %s"
 msgstr "Opakovat: %s"
 
-#: ../src/playlist3.c:1693 ../src/playlist3.c:1706
+#: ../src/playlist3.c:1697 ../src/playlist3.c:1710
 msgid "On"
 msgstr "Zapnuto"
 
-#: ../src/playlist3.c:1693 ../src/playlist3.c:1706
+#: ../src/playlist3.c:1697 ../src/playlist3.c:1710
 msgid "Off"
 msgstr "Vypnuto"
 
-#: ../src/playlist3.c:1706
+#: ../src/playlist3.c:1710
 #, c-format
 msgid "Random: %s"
 msgstr "Náhodné: %s"
 
-#: ../src/playlist3.c:1765
+#: ../src/playlist3.c:1769
 #, c-format
 msgid "MPD Database refreshed at: %c"
 msgstr "Databáze MPD aktualizována v: %c"
 
-#: ../src/playlist3.c:1775
+#: ../src/playlist3.c:1779
 msgid "MPD Reported the following error"
 msgstr "MPD ohlásilo následující chybu"
 
-#: ../src/playlist3.c:1902 ../src/playlist3.c:1909
+#: ../src/playlist3.c:1906 ../src/playlist3.c:1913
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1902
+#: ../src/playlist3.c:1906
 msgid "added"
 msgstr "přidáno"
 
-#: ../src/playlist3.c:1911
+#: ../src/playlist3.c:1915
 msgid "changed hostname to:"
 msgstr "změněn hostitel na:"
 
 #. Update DB
-#: ../src/playlist3.c:2022
+#: ../src/playlist3.c:2026
 msgid "Update Database"
 msgstr "Aktualizovat databázi"
 
 #. Server Information
-#: ../src/playlist3.c:2031
+#: ../src/playlist3.c:2035
 msgid "Information"
 msgstr ""
 
-#: ../src/playlist3.c:2115
+#: ../src/playlist3.c:2119
 msgid "By"
 msgstr "od"
 
-#: ../src/playlist3.c:2122
+#: ../src/playlist3.c:2126
 msgid "From"
 msgstr "Z"
 
-#: ../src/playlist3.c:2200
+#: ../src/playlist3.c:2204
 msgid "Not Playing"
 msgstr "Nepřehrává se"
 
-#: ../src/playlist3.c:2319
+#: ../src/playlist3.c:2323
 msgid "Interface"
 msgstr "Zobrazení"
 
@@ -792,43 +931,43 @@ msgstr ""
 "Jedno nebo více rozšíření se nepodařilo načíst, podívejte se do Nápověda -> "
 "Zobrazit události pro další informace."
 
-#: ../src/preferences.c:92 ../src/preferences.c:193
+#: ../src/preferences.c:93 ../src/preferences.c:194
 msgid "Plugins"
 msgstr "Rozšíření"
 
-#: ../src/preferences.c:154
+#: ../src/preferences.c:155
 msgid "Plugins:"
 msgstr "Pluginy:"
 
-#: ../src/preferences.c:307 ../src/gob/gmpc-mpddata-treeview.gob:73
+#: ../src/preferences.c:310 ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "Name"
 msgstr "Název"
 
-#: ../src/preferences.c:309
+#: ../src/preferences.c:312
 msgid "Function"
 msgstr "Funkce"
 
-#: ../src/preferences.c:330
+#: ../src/preferences.c:333
 msgid "Dummy"
 msgstr "fiktivní"
 
-#: ../src/preferences.c:333
+#: ../src/preferences.c:336
 msgid "Browser Extension"
 msgstr "Rozšíření prohlížeče"
 
-#: ../src/preferences.c:336
+#: ../src/preferences.c:339
 msgid "Metadata Provider"
 msgstr "Poskytovatel metadat"
 
-#: ../src/preferences.c:339
+#: ../src/preferences.c:342
 msgid "Metadata Provider and Browser Extension"
 msgstr "Poskytovatel metadat a rozšíření prohlížeče"
 
-#: ../src/preferences.c:342
+#: ../src/preferences.c:345
 msgid "Misc."
 msgstr "Různé"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:350
 msgid "Unknown"
 msgstr "Neznámý"
 
@@ -854,7 +993,7 @@ msgstr "Přidán 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:277
 msgid "Enter an url"
 msgstr "Zadejte url"
@@ -863,13 +1002,13 @@ msgstr "Zadejte url"
 msgid "Pla_ylist"
 msgstr "Se_znam skladeb"
 
-#: ../src/tray-icon2.c:865
+#: ../src/tray-icon2.c:869
 msgid "Notification"
 msgstr "Oznámení"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -888,7 +1027,7 @@ msgstr "Nastavení připojení"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -908,6 +1047,9 @@ msgstr "Copyright 2003-2007 Qball Cow"
 #: ../glade/aboutdialog.ui.h:2
 msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Vojtěch Látal https://launchpad.net/~latal\n"
+"\n"
 "Launchpad Contributions:\n"
 "  Vojtěch Látal https://launchpad.net/~latal\n"
 "\n"
@@ -1129,9 +1271,8 @@ msgid "Timeout:"
 msgstr "Schovat po:"
 
 #: ../glade/preferences-proxy.ui.h:1
-#, fuzzy
 msgid "<b>Proxy settings</b>"
-msgstr "<b>Proxy</b>"
+msgstr ""
 
 #: ../glade/preferences-proxy.ui.h:2
 msgid "HTTP Proxy:"
@@ -1142,14 +1283,12 @@ msgid "Use a proxy for internet connectivity"
 msgstr "Použít proxy pro připojení k internetu"
 
 #: ../glade/preferences-proxy.ui.h:6
-#, fuzzy
 msgid "Use authentication"
-msgstr "Po_užít ověření"
+msgstr ""
 
 #: ../glade/preferences-proxy.ui.h:7
-#, fuzzy
 msgid "Username:"
-msgstr "název:"
+msgstr ""
 
 #: ../glade/preferences.ui.h:1
 msgid ""
@@ -1184,65 +1323,77 @@ msgstr "Uložit seznam skladeb"
 msgid "name:"
 msgstr "název:"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:103
+#: ../src/browsers/playlist3-current-playlist-browser.c:104
 msgid "item"
 msgid_plural "items"
 msgstr[0] "položka"
 msgstr[1] "položky"
 msgstr[2] "položek"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:104
+#: ../src/browsers/playlist3-current-playlist-browser.c:105
 msgid "(Estimation)"
 msgstr "(odhad)"
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:137
+msgid "switch play queue"
+msgstr ""
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:137
+msgid "Switch to play queue"
+msgstr ""
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:138
+msgid "Clear play queue"
+msgstr ""
+
 #. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:412
-#: ../src/browsers/playlist3-current-playlist-browser.c:1221
+#: ../src/browsers/playlist3-current-playlist-browser.c:416
+#: ../src/browsers/playlist3-current-playlist-browser.c:1227
 msgid "Play Queue"
 msgstr "Fronta"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:483
+#: ../src/browsers/playlist3-current-playlist-browser.c:490
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Jste si jisti, že chcete vyprázdnit seznam skladeb?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:722
-#: ../src/browsers/playlist3-current-playlist-browser.c:741
-#: ../src/browsers/playlist3-current-playlist-browser.c:782
-#: ../src/browsers/playlist3-current-playlist-browser.c:804
+#: ../src/browsers/playlist3-current-playlist-browser.c:728
+#: ../src/browsers/playlist3-current-playlist-browser.c:747
+#: ../src/browsers/playlist3-current-playlist-browser.c:788
+#: ../src/browsers/playlist3-current-playlist-browser.c:810
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "Vaše mpd má poškozené 'addid', nepovede se to"
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:828
+#: ../src/browsers/playlist3-current-playlist-browser.c:834
 msgid "Crop"
 msgstr "Oříznout"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:848
+#: ../src/browsers/playlist3-current-playlist-browser.c:854
 msgid "Paste before"
 msgstr "Vložit před"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:854
+#: ../src/browsers/playlist3-current-playlist-browser.c:860
 msgid "Paste after"
 msgstr "Vložit za"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:869
+#: ../src/browsers/playlist3-current-playlist-browser.c:875
 msgid "Shuffle"
 msgstr "Promíchat"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:884
+#: ../src/browsers/playlist3-current-playlist-browser.c:890
 #: ../src/browsers/playlist3-file-browser.c:944
-#: ../src/browsers/playlist3-find2-browser.c:680
+#: ../src/browsers/playlist3-find2-browser.c:698
 #: ../src/browsers/playlist3-playlist-editor.c:562
 msgid "Edit Columns"
 msgstr "Upravit sloupce"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1011
+#: ../src/browsers/playlist3-current-playlist-browser.c:1017
 msgid "Add URL"
 msgstr "Přidat URL"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1120
+#: ../src/browsers/playlist3-current-playlist-browser.c:1126
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1251,7 +1402,7 @@ msgstr ""
 "<i>Seznam skladeb <b>\"%s\"</b> již existuje.\n"
 "Má se přepsat?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1144
+#: ../src/browsers/playlist3-current-playlist-browser.c:1150
 msgid "Failed to save the playlist file."
 msgstr "Nepodařilo se uložit soubor se seznamem skladeb."
 
@@ -1278,12 +1429,12 @@ msgstr "Rekurzivně přidána složka '%s'"
 #: ../src/browsers/playlist3-file-browser.c:590
 #: ../src/browsers/playlist3-file-browser.c:897
 #: ../src/browsers/playlist3-file-browser.c:929
-#: ../src/browsers/playlist3-find2-browser.c:663
-#: ../src/browsers/playlist3-metadata-browser.c:707
-#: ../src/browsers/playlist3-metadata-browser.c:1070
-#: ../src/browsers/playlist3-metadata-browser.c:1591
-#: ../src/browsers/playlist3-metadata-browser.c:1984
-#: ../src/browsers/playlist3-metadata-browser.c:2459
+#: ../src/browsers/playlist3-find2-browser.c:681
+#: ../src/browsers/playlist3-metadata-browser.c:667
+#: ../src/browsers/playlist3-metadata-browser.c:1030
+#: ../src/browsers/playlist3-metadata-browser.c:1529
+#: ../src/browsers/playlist3-metadata-browser.c:1924
+#: ../src/browsers/playlist3-metadata-browser.c:2404
 #: ../src/browsers/playlist3-playlist-editor.c:616
 msgid "Replace"
 msgstr "Nahradit"
@@ -1330,203 +1481,222 @@ msgstr[2] "seznamů skladeb"
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Jste si jisti, že chcete vyprázdnit vybraný seznam skladeb?"
 
-#: ../src/browsers/playlist3-find2-browser.c:91
+#: ../src/browsers/playlist3-find2-browser.c:95
 msgid "Query"
 msgstr "Dotaz"
 
-#: ../src/browsers/playlist3-find2-browser.c:176
-#: ../src/browsers/server-information.c:363
+#: ../src/browsers/playlist3-find2-browser.c:181
+#: ../src/browsers/server-information.c:340
 msgid "Database"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:177
+#: ../src/browsers/playlist3-find2-browser.c:182
 msgid "Playlist"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:269
-#: ../src/browsers/playlist3-find2-browser.c:735
+#: ../src/browsers/playlist3-find2-browser.c:281
+#: ../src/browsers/playlist3-find2-browser.c:753
 msgid "Search"
 msgstr "Vyhledávání"
 
-#: ../src/browsers/playlist3-find2-browser.c:364
+#: ../src/browsers/playlist3-find2-browser.c:376
 msgid "Search failed"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:655
+#: ../src/browsers/playlist3-find2-browser.c:673
 msgid "Add all"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:835
+#: ../src/browsers/playlist3-find2-browser.c:869
+msgid "switch search"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:869
+msgid "Switch to the search browser"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:871
+msgid "search database"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:871
+msgid "Search database <query>"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:872
+msgid "search playlist"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:872
+msgid "Search playlist <query>"
+msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:887
 msgid "Search Browser"
 msgstr "Prohlížeč vyhledávání"
 
-#: ../src/browsers/playlist3-metadata-browser.c:287
-#: ../src/browsers/playlist3-metadata-browser.c:323
+#: ../src/browsers/playlist3-metadata-browser.c:247
+#: ../src/browsers/playlist3-metadata-browser.c:283
 msgid "Unavailable"
 msgstr "Nedostupný"
 
-#: ../src/browsers/playlist3-metadata-browser.c:317
+#: ../src/browsers/playlist3-metadata-browser.c:277
 msgid "Fetching..."
 msgstr "Získávám..."
 
 #. View
 #. *
 #. * View Button
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:425
-#: ../src/browsers/playlist3-metadata-browser.c:724
-#: ../src/browsers/playlist3-metadata-browser.c:2484
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:385
+#: ../src/browsers/playlist3-metadata-browser.c:684
+#: ../src/browsers/playlist3-metadata-browser.c:2429
 msgid "View"
 msgstr "Zobrazení"
 
-#: ../src/browsers/playlist3-metadata-browser.c:671
-#: ../src/browsers/playlist3-metadata-browser.c:956
+#: ../src/browsers/playlist3-metadata-browser.c:631
+#: ../src/browsers/playlist3-metadata-browser.c:916
 #: ../src/gob/gmpc-mpddata-treeview.gob:67
 #: ../src/gob/gmpc-mpddata-treeview.gob:615
 msgid "Artist"
 msgstr "Interpret"
 
-#: ../src/browsers/playlist3-metadata-browser.c:678
-#: ../src/browsers/playlist3-metadata-browser.c:1570
-#: ../src/browsers/playlist3-metadata-browser.c:2024
+#: ../src/browsers/playlist3-metadata-browser.c:638
+#: ../src/browsers/playlist3-metadata-browser.c:1508
+#: ../src/browsers/playlist3-metadata-browser.c:1964
 msgid "Songs"
 msgstr "Skladby"
 
-#: ../src/browsers/playlist3-metadata-browser.c:686
-#: ../src/browsers/playlist3-metadata-browser.c:1577
-#: ../src/browsers/playlist3-metadata-browser.c:2109
-#: ../src/browsers/playlist3-metadata-browser.c:2440
+#: ../src/browsers/playlist3-metadata-browser.c:646
+#: ../src/browsers/playlist3-metadata-browser.c:1515
+#: ../src/browsers/playlist3-metadata-browser.c:2049
+#: ../src/browsers/playlist3-metadata-browser.c:2385
 msgid "Playtime"
 msgstr "Čas přehrávání"
 
-#: ../src/browsers/playlist3-metadata-browser.c:691
-#: ../src/browsers/playlist3-metadata-browser.c:974
-#: ../src/browsers/playlist3-metadata-browser.c:2065
-#: ../src/browsers/playlist3-metadata-browser.c:2418
+#: ../src/browsers/playlist3-metadata-browser.c:651
+#: ../src/browsers/playlist3-metadata-browser.c:934
+#: ../src/browsers/playlist3-metadata-browser.c:2005
+#: ../src/browsers/playlist3-metadata-browser.c:2363
 #: ../src/gob/gmpc-mpddata-treeview.gob:71
 #: ../src/gob/gmpc-mpddata-treeview.gob:641
 msgid "Genre"
 msgstr "Žánr"
 
-#: ../src/browsers/playlist3-metadata-browser.c:695
-#: ../src/browsers/playlist3-metadata-browser.c:980
-#: ../src/browsers/playlist3-metadata-browser.c:2094
-#: ../src/browsers/playlist3-metadata-browser.c:2424
+#: ../src/browsers/playlist3-metadata-browser.c:655
+#: ../src/browsers/playlist3-metadata-browser.c:940
+#: ../src/browsers/playlist3-metadata-browser.c:2034
+#: ../src/browsers/playlist3-metadata-browser.c:2369
 #: ../src/gob/gmpc-mpddata-treeview.gob:76
 #: ../src/gob/gmpc-mpddata-treeview.gob:653
 msgid "Date"
 msgstr "Datum"
 
-#: ../src/browsers/playlist3-metadata-browser.c:828
-#: ../src/browsers/playlist3-metadata-browser.c:1362
-#: ../src/browsers/playlist3-metadata-browser.c:1467
-#: ../src/browsers/playlist3-metadata-browser.c:1884
+#: ../src/browsers/playlist3-metadata-browser.c:788
+#: ../src/browsers/playlist3-metadata-browser.c:1300
+#: ../src/browsers/playlist3-metadata-browser.c:1405
+#: ../src/browsers/playlist3-metadata-browser.c:1824
 msgid "Collection"
 msgstr "Knihovna"
 
-#: ../src/browsers/playlist3-metadata-browser.c:940
+#: ../src/browsers/playlist3-metadata-browser.c:900
 #: ../src/gob/gmpc-mpddata-treeview.gob:69
 #: ../src/gob/gmpc-mpddata-treeview.gob:602
 msgid "Title"
 msgstr "Název"
 
-#: ../src/browsers/playlist3-metadata-browser.c:949
+#: ../src/browsers/playlist3-metadata-browser.c:909
 #: ../src/gob/gmpc-mpddata-treeview.gob:77
 #: ../src/gob/gmpc-mpddata-treeview.gob:665
 msgid "Duration"
 msgstr "Doba trvání"
 
-#: ../src/browsers/playlist3-metadata-browser.c:962
-#: ../src/browsers/playlist3-metadata-browser.c:2047
-#: ../src/browsers/playlist3-metadata-browser.c:2412
+#: ../src/browsers/playlist3-metadata-browser.c:922
+#: ../src/browsers/playlist3-metadata-browser.c:1987
+#: ../src/browsers/playlist3-metadata-browser.c:2357
 #: ../src/gob/gmpc-mpddata-treeview.gob:68
 #: ../src/gob/gmpc-mpddata-treeview.gob:629
 msgid "Album"
 msgstr "Album"
 
-#: ../src/browsers/playlist3-metadata-browser.c:968
+#: ../src/browsers/playlist3-metadata-browser.c:928
 #: ../src/gob/gmpc-mpddata-treeview.gob:72
 msgid "Track"
 msgstr "Stopa"
 
-#: ../src/browsers/playlist3-metadata-browser.c:986
+#: ../src/browsers/playlist3-metadata-browser.c:946
 #: ../src/gob/gmpc-mpddata-treeview.gob:74
 msgid "Composer"
 msgstr "Skladatel"
 
-#: ../src/browsers/playlist3-metadata-browser.c:992
+#: ../src/browsers/playlist3-metadata-browser.c:952
 #: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Performer"
 msgstr "Účinkující"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1001
-#: ../src/browsers/playlist3-metadata-browser.c:2117
-#: ../src/browsers/playlist3-metadata-browser.c:2448
+#: ../src/browsers/playlist3-metadata-browser.c:961
+#: ../src/browsers/playlist3-metadata-browser.c:2057
+#: ../src/browsers/playlist3-metadata-browser.c:2393
 #: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Directory"
 msgstr "Složka"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1011
+#: ../src/browsers/playlist3-metadata-browser.c:971
 #: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Extension"
 msgstr "Přípona"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1025
-#, fuzzy
+#: ../src/browsers/playlist3-metadata-browser.c:985
 msgid "Rating"
-msgstr "Varování"
+msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:1041
+#: ../src/browsers/playlist3-metadata-browser.c:1001
 msgid "Bitrate"
 msgstr "Datový tok"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1046
-#: ../src/browsers/playlist3-metadata-browser.c:1059
+#: ../src/browsers/playlist3-metadata-browser.c:1006
+#: ../src/browsers/playlist3-metadata-browser.c:1019
 msgid "n/a"
 msgstr "není k dispozici"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1054
+#: ../src/browsers/playlist3-metadata-browser.c:1014
 msgid "Audio format"
 msgstr "Formát hudby"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1096
+#: ../src/browsers/playlist3-metadata-browser.c:1066
 msgid "Lyrics"
 msgstr "Text skladby"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1139
+#: ../src/browsers/playlist3-metadata-browser.c:1109
 msgid "Songs with same title"
 msgstr "Skladby se stejným názvem"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1171
+#: ../src/browsers/playlist3-metadata-browser.c:1141
 msgid "Similar songs"
 msgstr "Podobné skladby"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1184
-msgid "Links"
-msgstr "Odkazy"
-
-#: ../src/browsers/playlist3-metadata-browser.c:1270
+#: ../src/browsers/playlist3-metadata-browser.c:1208
 msgid "Invalid search"
 msgstr "Neplatné hledání"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1322
+#: ../src/browsers/playlist3-metadata-browser.c:1260
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
 msgstr "Zobrazeno je pouze prvních %i výsledků. Zkuste prosím zlepšit dotaz."
 
 #. The label
-#: ../src/browsers/playlist3-metadata-browser.c:1378
+#: ../src/browsers/playlist3-metadata-browser.c:1316
 msgid "Find Artist:"
 msgstr "Hledat interpreta:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1539
+#: ../src/browsers/playlist3-metadata-browser.c:1477
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
 msgstr[0] "<b>Žánr:</b>"
 msgstr[1] "<b>Žánry:</b>"
 msgstr[2] "<b>Žánrů:</b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1554
+#: ../src/browsers/playlist3-metadata-browser.c:1492
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
 msgstr[0] "<b>Datum:</b>"
@@ -1542,73 +1712,105 @@ msgstr[2] "<b>Dat:</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:1622
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:1560
 msgid "Artist info:"
 msgstr "Informace o interpretovi:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1627
+#: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist information"
 msgstr "Informace o interpretovi"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1652
+#: ../src/browsers/playlist3-metadata-browser.c:1590
 msgid "Albums"
 msgstr "Alba"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1699
+#: ../src/browsers/playlist3-metadata-browser.c:1637
 msgid "Similar Artists"
 msgstr "Podobní interpreti"
 
 #. *
 #. * Album Information
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:1963
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:1903
 msgid "Album info:"
 msgstr "Informace o albu:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1968
+#: ../src/browsers/playlist3-metadata-browser.c:1908
 msgid "Album information"
 msgstr "Informace o albu"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2040
+#: ../src/browsers/playlist3-metadata-browser.c:1980
 msgid "Album artist"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2101
-#: ../src/browsers/playlist3-metadata-browser.c:2432
+#: ../src/browsers/playlist3-metadata-browser.c:2041
+#: ../src/browsers/playlist3-metadata-browser.c:2377
 msgid "Tracks"
 msgstr "Skladby"
 
 #. *
 #. * Metadata browser link
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:2299
-#: ../src/browsers/playlist3-metadata-browser.c:2648
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:2244
+#: ../src/browsers/playlist3-metadata-browser.c:2638
 msgid "Metadata Browser"
 msgstr "Prohlížeč metadat"
 
 #. *
 #. * Show current song entry
-#.
-#: ../src/browsers/playlist3-metadata-browser.c:2315
+#. 
+#: ../src/browsers/playlist3-metadata-browser.c:2260
 msgid "Show Current Song"
 msgstr "Zobrazit aktuální skladbu"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2533
+#: ../src/browsers/playlist3-metadata-browser.c:2478
 msgid "kbit/sec"
 msgstr "kbit/sec"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2539
+#: ../src/browsers/playlist3-metadata-browser.c:2484
 msgid "kHz"
 msgstr "kHz"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2540
+#: ../src/browsers/playlist3-metadata-browser.c:2485
 msgid "bits"
 msgstr "bitů"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2541
+#: ../src/browsers/playlist3-metadata-browser.c:2486
 msgid "channels"
 msgstr "kanály"
+
+#: ../src/browsers/playlist3-metadata-browser.c:2589
+msgid "switch metadata browser"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2590
+msgid "Switch to the metadata browser"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2594
+msgid "show current song"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2595
+msgid "Show the current songs information"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2598
+msgid "show current artist"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2599
+msgid "Show the current artist information"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2602
+msgid "show current album"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:2603
+msgid "Show the current album information"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:854
@@ -1659,55 +1861,55 @@ msgid "Reset browser"
 msgstr "Vyprázdnit prohlížeč"
 
 #. name
-#: ../src/browsers/server-information.c:323
+#: ../src/browsers/server-information.c:300
+#: ../src/browsers/server-information.c:508
 #: ../src/browsers/server-information.c:531
-#: ../src/browsers/server-information.c:554
 msgid "Server Information"
 msgstr ""
 
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:324
 msgid "Server"
 msgstr ""
 
-#: ../src/browsers/server-information.c:356
+#: ../src/browsers/server-information.c:333
 msgid "Uptime"
 msgstr ""
 
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:334
 msgid "Time Playing"
 msgstr ""
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:370
+#: ../src/browsers/server-information.c:347
 msgid "Total Playtime"
 msgstr ""
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:372
+#: ../src/browsers/server-information.c:349
 msgid "Number of artists"
 msgstr ""
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:374
+#: ../src/browsers/server-information.c:351
 msgid "Number of albums"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:376
+#: ../src/browsers/server-information.c:353
 msgid "Number of songs"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:378
+#: ../src/browsers/server-information.c:355
 msgid "URL Handlers"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:380
+#: ../src/browsers/server-information.c:357
 msgid "Tag Types"
 msgstr ""
 
-#: ../src/browsers/server-information.c:385
+#: ../src/browsers/server-information.c:362
 msgid "Tag statistics"
 msgstr ""
 
@@ -1816,11 +2018,26 @@ msgstr "Načítání"
 msgid "Rating:"
 msgstr ""
 
-#~ msgid "Failed to contact url: '%s'"
-#~ msgstr "Nepodařilo se kontaktovat url: '%s'"
+#: ../src/vala/gmpc-song-links.c:173
+msgid "Update list from internet"
+msgstr ""
 
-#~ msgid "Failed to parse the playlist link"
-#~ msgstr "Nepodačilo se zpracovat odkaz ze seznamu skladeb"
+#: ../src/vala/gmpc-song-links.c:212
+msgid "Links"
+msgstr "Odkazy"
+
+#: ../src/vala/gmpc-song-links.c:451
+msgid "artist"
+msgstr ""
+
+#: ../src/vala/gmpc-song-links.c:460
+msgid "album"
+msgstr ""
+
+#: ../src/vala/gmpc-song-links.c:499
+#, c-format
+msgid "Lookup %s on %s"
+msgstr ""
 
 #~ msgid "/"
 #~ msgstr "/"
@@ -1835,8 +2052,8 @@ msgstr ""
 #~ msgstr "<b>Seřadit podle:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Nastavené prohlížeče tagů se zobrazí jen pokud je "
 #~ "verze mpd alespoň 0.12.</i></span>"
@@ -1901,6 +2118,7 @@ msgstr ""
 #~ "chyby\n"
 #~ "nic"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
 
@@ -1922,6 +2140,13 @@ msgstr ""
 
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>Pluginy:</b>"
+
+#, c-format
+#~ msgid "Failed to contact url: '%s'"
+#~ msgstr "Nepodařilo se kontaktovat url: '%s'"
+
+#~ msgid "Failed to parse the playlist link"
+#~ msgstr "Nepodačilo se zpracovat odkaz ze seznamu skladeb"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
 #~ msgstr "<span size='large'>Gnome Music Player Client</span>"

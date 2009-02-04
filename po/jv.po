@@ -1,85 +1,85 @@
-# Turkish translation for gmpc
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# Javanese translation for gmpc
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the gmpc package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-02-03 20:32+0100\n"
-"PO-Revision-Date: 2009-02-03 23:25+0000\n"
-"Last-Translator: keenblade <keenblade@gmail.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2009-02-02 14:52+0000\n"
+"Last-Translator: Rahman Yusri Aftian <aftian@yahoo.com>\n"
+"Language-Team: Javanese <jv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=n != 0;\n"
 "X-Launchpad-Export-Date: 2009-02-04 22:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr "mpd süreci için bir gnome önyüzü"
+msgstr ""
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:1411 ../src/tray-icon2.c:554
 #: ../src/tray-icon2.c:736 ../src/tray-icon2.c:739 ../src/tray-icon2.c:749
 #: ../src/tray-icon2.c:752
 msgid "Gnome Music Player Client"
-msgstr "Gnome Muzik Çalıcı İstemcisi"
+msgstr "Gnome Musik Player Client"
 
 #: ../glade/playlist3.glade.h:1 ../src/main.c:1435
 msgid "Getting help"
-msgstr "Yardım almak"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
-msgstr "MPD veritabanı güncelleniyor."
+msgstr ""
 
 #: ../glade/playlist3.glade.h:3 ../src/mpdinteraction.c:171
 msgid "Mute"
-msgstr "Sessiz"
+msgstr "Meneng"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:74
 msgid "Next"
-msgstr "Sonraki"
+msgstr "Terus"
 
 #: ../glade/playlist3.glade.h:5
 msgid "Play/Pause"
-msgstr "Oynat/Duraklat"
+msgstr "Mulai/Nyegat"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:75
 msgid "Previous"
-msgstr "Önceki"
+msgstr "Terusane"
 
 #: ../glade/playlist3.glade.h:7
 msgid "Profiles"
-msgstr "Profiller"
+msgstr "Profil"
 
 #. * MM_REPEAT
 #: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:80
 msgid "Random"
-msgstr "Rastgele"
+msgstr "Acak"
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:79
 msgid "Repeat"
-msgstr "Tekrarla"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:10
 msgid "Show Messages"
-msgstr "Mesajları Göster"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:76
 msgid "Stop"
-msgstr "Durdur"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:12
 msgid "Visit website"
-msgstr "Web sayfasını  ziyaret et"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:13
 msgid "_Collapse Interface"
@@ -87,39 +87,39 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:14
 msgid "_Connect"
-msgstr "_Bağlan"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:15
 msgid "_Control"
-msgstr "_Kontrol"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:16 ../glade/preferences-connection.ui.h:9
 msgid "_Disconnect"
-msgstr "_Bağlantıyı Kes"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:17
 msgid "_Expand Interface"
-msgstr "_Arayüzü Genişlet"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Fullscreen"
-msgstr "_Tam ekran"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Go"
-msgstr "_Git"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:20
 msgid "_Help"
-msgstr "_Yardım"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:21
 msgid "_Music"
-msgstr "_Müzik"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Option"
-msgstr "_Opsiyon"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Send Password"
@@ -127,19 +127,19 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Server"
-msgstr "_Sunucu"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Show Artist Image"
-msgstr "_Sanatçı Resmini Göster"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:26
 msgid "_View"
-msgstr "_Görünüm"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:27
 msgid "gmpc - Playlist Manager"
-msgstr "gmpc - Çalma Listesi Yöneticisi"
+msgstr ""
 
 #: ../src/edit_markup.c:39
 msgid "/path/to/file_name.mp3"
@@ -155,15 +155,15 @@ msgstr ""
 
 #: ../src/edit_markup.c:42
 msgid "The kernel jazz"
-msgstr "The kernel jazz"
+msgstr ""
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
-msgstr "01/24"
+msgstr ""
 
 #: ../src/edit_markup.c:44
 msgid "2 Feb 2006"
-msgstr "2 şubat 2006"
+msgstr ""
 
 #: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
@@ -171,7 +171,7 @@ msgstr ""
 
 #: ../src/gmpc_easy_download.c:281
 msgid "Proxy"
-msgstr "Vekil Sunucu (proxy)"
+msgstr ""
 
 #. *
 #. * Set debug level, options are
@@ -250,7 +250,7 @@ msgstr ""
 #. 
 #: ../src/main.c:374
 msgid "--help"
-msgstr "--yardım"
+msgstr ""
 
 #: ../src/main.c:375
 #, c-format
@@ -280,7 +280,7 @@ msgstr ""
 
 #: ../src/main.c:467
 msgid "Quit gmpc"
-msgstr "Gmpc' den çık"
+msgstr ""
 
 #: ../src/main.c:468
 msgid "hide"
@@ -296,7 +296,7 @@ msgstr ""
 
 #: ../src/main.c:469
 msgid "Show gmpc"
-msgstr "Gmpc' yi göster"
+msgstr ""
 
 #: ../src/main.c:471
 msgid "show notification"
@@ -308,19 +308,19 @@ msgstr ""
 
 #: ../src/main.c:529
 msgid "Failed to load the configuration system."
-msgstr "Yapılandırma dizgesi yüklenmesi başarılamadı."
+msgstr ""
 
 #: ../src/main.c:551
 msgid "Failed to load debug-log file."
-msgstr "debug-log dosyası yüklenmesi başarılamadı."
+msgstr ""
 
 #: ../src/main.c:717
 msgid "Failed to setup libmpd"
-msgstr "libmpd ayarlanması başarılamadı."
+msgstr ""
 
 #: ../src/main.c:1107
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "GMPC için mpd sunucunda  izinler yetersiz."
+msgstr ""
 
 #: ../src/main.c:1128
 #, c-format
@@ -328,38 +328,35 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
-"'%s' için şifre ayarlanamadı.\n"
-"Lütfen tekrar deneyin"
 
 #: ../src/main.c:1130
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr "Lütfen parolana gir:'%s'"
+msgstr ""
 
 #: ../src/main.c:1155 ../src/main.c:1180
 msgid "error code"
-msgstr "hata kodu"
+msgstr ""
 
 #: ../src/main.c:1166
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
-"Mpd sunucusuna bağlanmak için izinler yetersiz. Şifrenizi kontrol edin."
 
 #: ../src/main.c:1203
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr "0.13.0 dem önceki MPD sürümleri desteklenmez"
+msgstr ""
 
 #: ../src/main.c:1271
 msgid "Connected to mpd"
-msgstr "Mpd' ye bağlanıldı"
+msgstr ""
 
 #: ../src/main.c:1273
 msgid "Disconnected from mpd"
-msgstr "Mpd' ye bağlantı kesildi."
+msgstr ""
 
 #: ../src/main.c:1308
 msgid "Error occured during operation"
-msgstr "İş sırasında hata oluştu."
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1338
@@ -368,7 +365,7 @@ msgstr ""
 
 #: ../src/main.c:1354
 msgid "Error Message"
-msgstr "Hata Mesajı"
+msgstr ""
 
 #: ../src/main.c:1414
 msgid "Tagline"
@@ -378,23 +375,23 @@ msgstr ""
 #: ../src/main.c:1415 ../src/preferences.c:314
 #: ../src/browsers/server-information.c:331
 msgid "Version"
-msgstr "Sürüm"
+msgstr ""
 
 #: ../src/main.c:1418
 msgid "Revision"
-msgstr "Düzeltme"
+msgstr ""
 
 #: ../src/main.c:1420
 msgid "Libmpd version"
-msgstr "Libmpd sürümü"
+msgstr ""
 
 #: ../src/main.c:1421
 msgid "GTK+ version"
-msgstr "GTK+ sürümü"
+msgstr ""
 
 #: ../src/main.c:1422
 msgid "Libcurl version"
-msgstr "Libcurl sürümü"
+msgstr ""
 
 #: ../src/main.c:1423
 msgid "Platform"
@@ -414,7 +411,7 @@ msgstr ""
 
 #: ../src/main.c:1434
 msgid "Website"
-msgstr "Web sayfası"
+msgstr ""
 
 #: ../src/main.c:1436
 msgid "Options enabled"
@@ -422,31 +419,31 @@ msgstr ""
 
 #: ../src/main.c:1438
 msgid "X session management"
-msgstr "X oturum yönetimi"
+msgstr ""
 
 #: ../src/main.c:1440 ../src/main.c:1447 ../src/main.c:1455 ../src/main.c:1463
 #: ../src/main.c:1471 ../src/main.c:1479 ../src/main.c:1487 ../src/main.c:1495
 #: ../src/main.c:1503 ../src/preferences.c:307
 msgid "Enabled"
-msgstr "Etkinleştirildi"
+msgstr ""
 
 #: ../src/main.c:1442 ../src/main.c:1449 ../src/main.c:1457 ../src/main.c:1465
 #: ../src/main.c:1473 ../src/main.c:1481 ../src/main.c:1489 ../src/main.c:1497
 #: ../src/main.c:1505
 msgid "Disabled"
-msgstr "Etkisizleştirildi"
+msgstr ""
 
 #: ../src/main.c:1445
 msgid "NLS Support"
-msgstr "NLS Desteği"
+msgstr ""
 
 #: ../src/main.c:1453 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
-msgstr "Çoklu Ortam Tuşları"
+msgstr ""
 
 #: ../src/main.c:1461
 msgid "Libegg's trayicon"
-msgstr "Libegg' in tepsi simgesi"
+msgstr ""
 
 #: ../src/main.c:1469
 msgid "System libsexy"
@@ -454,15 +451,15 @@ msgstr ""
 
 #: ../src/main.c:1477
 msgid "Mac integration library"
-msgstr "Mac bütünleşme kütüphanesi"
+msgstr ""
 
 #: ../src/main.c:1485
 msgid "Use ~/.config/ dir"
-msgstr "~/.config/ dizinini kullanın"
+msgstr ""
 
 #: ../src/main.c:1493
 msgid "Debug timing"
-msgstr "Hata ayıklayıcı zamanlaması"
+msgstr ""
 
 #: ../src/main.c:1501
 msgid "Maintainer mode"
@@ -480,22 +477,25 @@ msgstr ""
 
 #: ../src/misc.c:38
 msgid " Total time: "
-msgstr " Toplam süre "
+msgstr ""
 
 #: ../src/misc.c:55
 msgid "day"
 msgid_plural "days"
-msgstr[0] "gün"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/misc.c:59
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] "saat"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/misc.c:63
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "dakika"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/misc.c:67
 msgid "second"
@@ -509,7 +509,7 @@ msgstr ""
 
 #: ../src/mm-keys.c:73
 msgid "PlayPause"
-msgstr "ÇalDurakla"
+msgstr ""
 
 #. * MM_STOP
 #: ../src/mm-keys.c:77
@@ -524,32 +524,32 @@ msgstr ""
 #. * MM_RANDOM
 #: ../src/mm-keys.c:81
 msgid "Raise window"
-msgstr "Pencereyi yükselt"
+msgstr ""
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:82
 msgid "Hide window"
-msgstr "Pencereyi sakla"
+msgstr ""
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
-msgstr "Pencereyi sevket"
+msgstr ""
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
 msgid "Volume Up"
-msgstr "Sesi Yükselt"
+msgstr ""
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:85
 msgid "Volume Down"
-msgstr "Sesi Düşür"
+msgstr ""
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
-msgstr "Şarkıyı göster"
+msgstr ""
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
@@ -559,15 +559,13 @@ msgstr ""
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
-msgstr "Basit komut girişi göster"
+msgstr ""
 
 #: ../src/mm-keys.c:366
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
-"Takip eden çoklu ortam tuşları ele geçirilemedi:\n"
-"\n"
 
 #: ../src/mm-keys.c:381
 msgid ""
@@ -575,9 +573,6 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
-"\n"
-"Pencere yöneticinizin (veya diğer uygulamaların) bu tuşu zaten başka bazı "
-"işlevlere atamadığından emin olun, sonra gmpc' yi yeniden başlatın."
 
 #: ../src/mm-keys.c:388
 msgid ""
@@ -586,10 +581,6 @@ msgid ""
 "Some duplicate multimedia key mappings were detected, and disabled.  Please "
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
-"Çift eşleştirme tespit edildi\n"
-"\n"
-"Bazı çift çoklu ortam tuş eşleştirmeleri tespit edildi.  Lütfen tercihleri  "
-"tekrar gözden geçirin ve ayarlarınızın doğru olduğundan emin olun."
 
 #: ../src/mm-keys.c:628
 #, c-format
@@ -598,9 +589,6 @@ msgid ""
 "\n"
 "%s is already mapped to %s"
 msgstr ""
-"Çift eşleştirme tespit edildi\n"
-"\n"
-"%s zaten %s ile eşleştirilmiş"
 
 #: ../src/mm-keys.c:657
 #, c-format
@@ -612,20 +600,14 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
-"Çoklu ortam tuşu ele geçirilemedi:\n"
-"\n"
-"\t%s: %s\n"
-"\n"
-"Pencere yöneticinizin (veya diğer uygulamaların) bu tuşu zaten başka bazı "
-"işlevlere atamadığından emin olun, sonra gmpc' yi yeniden başlatın."
 
 #: ../src/mm-keys.c:704
 msgid "Action"
-msgstr "Eylem"
+msgstr ""
 
 #: ../src/mm-keys.c:726
 msgid "Shortcut"
-msgstr "Kısayol"
+msgstr ""
 
 #. Player control
 #. basic playlist commands
@@ -635,11 +617,11 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:158
 msgid "start playback"
-msgstr "Kayıttan yürütmeyi başlat"
+msgstr ""
 
 #: ../src/mpdinteraction.c:159
 msgid "pause"
-msgstr "duraklat"
+msgstr ""
 
 #: ../src/mpdinteraction.c:159
 msgid "pause playback"
@@ -647,19 +629,19 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:160
 msgid "next"
-msgstr "sonraki"
+msgstr ""
 
 #: ../src/mpdinteraction.c:160
 msgid "next song"
-msgstr "sonraki şarkı"
+msgstr ""
 
 #: ../src/mpdinteraction.c:161
 msgid "prev"
-msgstr "önceki"
+msgstr ""
 
 #: ../src/mpdinteraction.c:161
 msgid "previous song"
-msgstr "önceki şarkı"
+msgstr ""
 
 #: ../src/mpdinteraction.c:162
 msgid "stop"
@@ -667,7 +649,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:162
 msgid "stop playback"
-msgstr "kayıttan yürütmeyi durdur"
+msgstr ""
 
 #: ../src/mpdinteraction.c:164
 msgid "random"
@@ -683,7 +665,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:165
 msgid "Repeat (on|off)"
-msgstr "Tekrar (açık|kapalı)"
+msgstr ""
 
 #. volume commands
 #: ../src/mpdinteraction.c:168
@@ -712,7 +694,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:171
 msgid "mute"
-msgstr "sessiz"
+msgstr ""
 
 #: ../src/mpdinteraction.c:174
 msgid "Play <query>"
@@ -728,7 +710,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:176
 msgid "replace"
-msgstr "değiştir"
+msgstr ""
 
 #: ../src/mpdinteraction.c:176
 msgid "Replace <query>"
@@ -736,41 +718,41 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:180
 msgid "Server Settings"
-msgstr "Sunucu Ayarları"
+msgstr ""
 
 #: ../src/mpdinteraction.c:210
 msgid "Connection"
-msgstr "Bağlantı"
+msgstr ""
 
 #: ../src/mpdinteraction.c:311
 msgid "Connecting"
-msgstr "Bağlanıyor"
+msgstr ""
 
 #. Add all from album
 #: ../src/mpdinteraction.c:1290
 msgid "All from album"
-msgstr "Albümün tamamı"
+msgstr ""
 
 #. Add all from artist
 #: ../src/mpdinteraction.c:1302
 msgid "All from artist"
-msgstr "Sanatçıdan tamamı"
+msgstr ""
 
 #. Add all from genre
 #: ../src/mpdinteraction.c:1312
 msgid "All from genre"
-msgstr "Türün tamamı"
+msgstr ""
 
 #. Add all from file
 #: ../src/mpdinteraction.c:1320
 msgid "All from same directory"
-msgstr "Aynı dizindekilerin tamamı"
+msgstr ""
 
 #. Create sub menu
 #. Add
 #: ../src/mpdinteraction.c:1328
 msgid "Add more"
-msgstr "Daha fazla ekle"
+msgstr ""
 
 #: ../src/mpdinteraction.c:1338
 msgid "Set Rating"
@@ -778,27 +760,27 @@ msgstr ""
 
 #: ../src/playlist3.c:632
 msgid "MPD database is updating"
-msgstr "MPD veritabanı güncelleniyor"
+msgstr ""
 
 #: ../src/playlist3.c:643
 msgid "MPD is updating its database"
-msgstr "MPD veritabanını güncelliyor"
+msgstr ""
 
 #: ../src/playlist3.c:647
 msgid "MPD finished updating its database"
-msgstr "MPD veritabanını güncellemeyi bitirdi"
+msgstr ""
 
 #: ../src/playlist3.c:818
 msgid "Connected"
-msgstr "Bağlandı"
+msgstr ""
 
 #: ../src/playlist3.c:827 ../src/playlist3.c:2213
 msgid "Not Connected"
-msgstr "Bağlı Değil"
+msgstr ""
 
 #: ../src/playlist3.c:840 ../src/playlist3.c:849 ../src/playlist3.c:1663
 msgid "GMPC"
-msgstr "GMPC"
+msgstr ""
 
 #: ../src/playlist3.c:841
 msgid "Connected to"
@@ -806,33 +788,31 @@ msgstr ""
 
 #: ../src/playlist3.c:850
 msgid "Disconnected"
-msgstr "Bağlantı Kesildi"
+msgstr ""
 
 #: ../src/playlist3.c:913
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
 msgstr ""
-"Arayüz tanımlama dosyası açılamadı!\n"
-"Lütfen gmpc' yi tekrar yükleyin\n"
 
 #: ../src/playlist3.c:1697
 #, c-format
 msgid "Repeat: %s"
-msgstr "Tekrarla: %s"
+msgstr ""
 
 #: ../src/playlist3.c:1697 ../src/playlist3.c:1710
 msgid "On"
-msgstr "Açık"
+msgstr ""
 
 #: ../src/playlist3.c:1697 ../src/playlist3.c:1710
 msgid "Off"
-msgstr "Kapat"
+msgstr ""
 
 #: ../src/playlist3.c:1710
 #, c-format
 msgid "Random: %s"
-msgstr "Rastgele: %s"
+msgstr ""
 
 #: ../src/playlist3.c:1769
 #, c-format
@@ -841,24 +821,24 @@ msgstr ""
 
 #: ../src/playlist3.c:1779
 msgid "MPD Reported the following error"
-msgstr "MPD Takip eden hatayı raporladı"
+msgstr ""
 
 #: ../src/playlist3.c:1906 ../src/playlist3.c:1913
 msgid "Profile"
-msgstr "Profil"
+msgstr ""
 
 #: ../src/playlist3.c:1906
 msgid "added"
-msgstr "eklendi"
+msgstr ""
 
 #: ../src/playlist3.c:1915
 msgid "changed hostname to:"
-msgstr "sunucu ismi şöyle değiştirildi:"
+msgstr ""
 
 #. Update DB
 #: ../src/playlist3.c:2026
 msgid "Update Database"
-msgstr "Veritabanını Güncelle"
+msgstr ""
 
 #. Server Information
 #: ../src/playlist3.c:2035
@@ -875,7 +855,7 @@ msgstr ""
 
 #: ../src/playlist3.c:2204
 msgid "Not Playing"
-msgstr "Çalınmıyor"
+msgstr ""
 
 #: ../src/playlist3.c:2323
 msgid "Interface"
@@ -883,46 +863,44 @@ msgstr ""
 
 #: ../src/playlist3-messages.c:35
 msgid "Info"
-msgstr "Bilgi"
+msgstr ""
 
 #: ../src/playlist3-messages.c:36
 msgid "Warning"
-msgstr "Uyarı"
+msgstr ""
 
 #: ../src/playlist3-messages.c:37
 msgid "Critical"
-msgstr "Kritik"
+msgstr ""
 
 #: ../src/playlist3-messages.c:217
 msgid "Time"
-msgstr "Süre"
+msgstr ""
 
 #: ../src/playlist3-messages.c:219
 msgid "Message"
-msgstr "Mesaj"
+msgstr ""
 
 #: ../src/plugin.c:216
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
-"Bir ya da daha fazla eklenti yüklenemedi, daha fazla bilgi için bakınız: "
-"yardım->mesajlar"
 
 #: ../src/preferences.c:93 ../src/preferences.c:194
 msgid "Plugins"
-msgstr "Eklentiler"
+msgstr ""
 
 #: ../src/preferences.c:155
 msgid "Plugins:"
-msgstr "Eklantiler:"
+msgstr ""
 
 #: ../src/preferences.c:310 ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "Name"
-msgstr "İsim"
+msgstr ""
 
 #: ../src/preferences.c:312
 msgid "Function"
-msgstr "Fonksiyon"
+msgstr ""
 
 #: ../src/preferences.c:333
 msgid "Dummy"
@@ -930,7 +908,7 @@ msgstr ""
 
 #: ../src/preferences.c:336
 msgid "Browser Extension"
-msgstr "Tarayıcı Uzantısı"
+msgstr ""
 
 #: ../src/preferences.c:339
 msgid "Metadata Provider"
@@ -946,11 +924,11 @@ msgstr ""
 
 #: ../src/preferences.c:350
 msgid "Unknown"
-msgstr "Bilinmeyen"
+msgstr ""
 
 #: ../src/TreeSearchWidget.c:271
 msgid "Find:"
-msgstr "Ara:"
+msgstr ""
 
 #: ../src/url_fetcher.c:62 ../src/url_fetcher.c:91
 #, c-format
@@ -965,7 +943,7 @@ msgstr[1] ""
 
 #: ../src/url_fetcher.c:155 ../src/url_fetcher.c:180
 msgid "Added 1 stream"
-msgstr "1 akış eklendi"
+msgstr ""
 
 #. *
 #. * Setup the label
@@ -990,12 +968,10 @@ msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
-"Gmpc' yi ilk kez başlattınız.\n"
-"Bu yardımcı gmpc' yi mpd sunucunuza bağlamanıza yardımcı olacak."
 
 #: ../src/setup-assistant.c:116
 msgid "Welcome to GMPC"
-msgstr "GMPC ye hoşgeldiniz"
+msgstr ""
 
 #: ../src/setup-assistant.c:135
 msgid "Setup connection"
@@ -1009,12 +985,10 @@ msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
-"Gmpc kullanım için artık hazır.\n"
-"Gmpc' nin keyfini çıkarın."
 
 #: ../src/setup-assistant.c:146
 msgid "Finish"
-msgstr "Bitti"
+msgstr ""
 
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
@@ -1024,48 +998,23 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  zeugma https://launchpad.net/~sunder67\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  XceptN https://launchpad.net/~oyuksel153\n"
-"  zeugma https://launchpad.net/~sunder67\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  XceptN https://launchpad.net/~oyuksel153\n"
-"  zeugma https://launchpad.net/~sunder67\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  XceptN https://launchpad.net/~oyuksel153\n"
-"  zeugma https://launchpad.net/~sunder67\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  XceptN https://launchpad.net/~oyuksel153\n"
-"  keenblade https://launchpad.net/~keenblade\n"
-"  zeugma https://launchpad.net/~sunder67"
+"  Rahman Yusri Aftian https://launchpad.net/~aftian"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
-msgstr "'<sunucuadı>' için şifrenizi giriniz"
+msgstr ""
 
 #: ../glade/password-dialog.ui.h:2
 msgid "Password"
-msgstr "Parola"
+msgstr ""
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
-msgstr "_ Paraloyı kaydet"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:1
 msgid "<b>Profile:</b>"
-msgstr "<b>Profil:</b>"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "Conn_ect"
@@ -1073,21 +1022,21 @@ msgstr ""
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Host:"
-msgstr "Sunucu:"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:4
 #: ../src/browsers/playlist3-playlist-editor.c:467
 #: ../src/browsers/playlist3-playlist-editor.c:506
 msgid "Name:"
-msgstr "İsim:"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:5 ../glade/preferences-proxy.ui.h:3
 msgid "Password:"
-msgstr "Parola:"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:4
 msgid "Port:"
-msgstr "Port:"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:7
 msgid "Timeout (s):"
@@ -1103,15 +1052,15 @@ msgstr ""
 
 #: ../glade/preferences-connection.ui.h:11
 msgid "localhost"
-msgstr "Yerel Anasistem"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:1
 msgid "<b>Enable Field:</b>"
-msgstr "<b>Alanı Etkinleştir:</b>"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:2
 msgid "<b>Example:</b>"
-msgstr "<b>Örnek:</b>"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
@@ -1119,11 +1068,11 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "A_lbum"
-msgstr "A_lbüm"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
-msgstr "Şarkı Biçimini Düzenle"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
@@ -1131,11 +1080,11 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
-msgstr "_Sanatçı"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:8
 msgid "_Date"
-msgstr "_Tarih"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
@@ -1143,19 +1092,19 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Title"
-msgstr "_Başlık"
+msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "example"
-msgstr "örnek"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:1
 msgid "<b>Main:</b>"
-msgstr "<b>Ana:</b>"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:2
 msgid "<b>Playlist:</b>"
-msgstr "<b>Çalma listesi:</b>"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "<b>Song Markup</b>"
@@ -1163,7 +1112,7 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Center playing song"
-msgstr "Çalan şsrkıyı ortala"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Edit _Browser Markup"
@@ -1175,7 +1124,7 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Save position and size between sessions"
-msgstr "Oturum aralarında konum ve boyutu koru"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:8
 msgid "Show buttons instead of dropdown in collapsed view"
@@ -1187,7 +1136,7 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stop playing on exit"
-msgstr "Çıkarken çalmayı durdur"
+msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:11
 msgid "Stylize album covers"
@@ -1195,15 +1144,15 @@ msgstr ""
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
-msgstr "<b>Yüklenmiş Eklentiler:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:1
 msgid "<b>Crossfade:</b>"
-msgstr "<b>Yumuşak Geçiş:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:2
 msgid "<b>Output Devices:</b>"
-msgstr "<b>Çıkış Aygıtları:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:3
 msgid ""
@@ -1217,15 +1166,15 @@ msgstr ""
 
 #: ../glade/preferences-server.ui.h:6
 msgid "fade time (s):"
-msgstr "geçiş zamanı (sn):"
+msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "<b>Inline messages</b>"
-msgstr "<b>Satıriçi iletiler</b>"
+msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:2
 msgid "<b>Notification Area Icon</b>"
-msgstr "<b>Bildiri Alanı Simgesi</b>"
+msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:3
 msgid "<b>PopUp</b>"
@@ -1233,11 +1182,11 @@ msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:4
 msgid "Enable"
-msgstr "Etkinleştir"
+msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:5
 msgid "Position:"
-msgstr "Konum:"
+msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show severity"
@@ -1245,7 +1194,7 @@ msgstr ""
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Timeout:"
-msgstr "Zaman Aşımı:"
+msgstr ""
 
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
@@ -1271,31 +1220,31 @@ msgstr ""
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
-msgstr "<span size=\"x-large\"><b>Eklentiler</b></span><i>Seçili Değil</i>"
+msgstr ""
 
 #: ../glade/preferences.ui.h:3
 msgid "gmpc - Configuration"
-msgstr "gmpc - Yapılandırma"
+msgstr ""
 
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
-msgstr "Mesajlar"
+msgstr ""
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
-msgstr "çalma listesine isim gir"
+msgstr ""
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>Çalma listesi zaten var.</i></span>"
+msgstr ""
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
-msgstr "Çalma Listesini Kaydet"
+msgstr ""
 
 #: ../glade/playlist-save-dialog.ui.h:4
 msgid "name:"
-msgstr "isim"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:104
 msgid "item"
@@ -1305,7 +1254,7 @@ msgstr[1] ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:105
 msgid "(Estimation)"
-msgstr "Tahmin"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:137
 msgid "switch play queue"
@@ -1339,20 +1288,20 @@ msgstr ""
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:834
 msgid "Crop"
-msgstr "Kes"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:854
 msgid "Paste before"
-msgstr "Daha önce yapıştır"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:860
 msgid "Paste after"
-msgstr "Daha sonra yapıştır"
+msgstr ""
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:875
 msgid "Shuffle"
-msgstr "Karışık"
+msgstr ""
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:890
@@ -1360,11 +1309,11 @@ msgstr "Karışık"
 #: ../src/browsers/playlist3-find2-browser.c:698
 #: ../src/browsers/playlist3-playlist-editor.c:562
 msgid "Edit Columns"
-msgstr "Sütunları Düzenle"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1017
 msgid "Add URL"
-msgstr "URL ekle"
+msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1126
 #, c-format
@@ -1372,27 +1321,25 @@ msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
-"<i>Çalma listesi <b>\"%s\"</b> zaten var\n"
-"Üstüne yazılsın mı?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1150
 msgid "Failed to save the playlist file."
-msgstr "Çalma listesi kaydedilemedi."
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:100
 #: ../src/browsers/playlist3-file-browser.c:340
 #: ../src/browsers/playlist3-file-browser.c:1178
 msgid "File Browser"
-msgstr "Dosya Gezgini"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:180
 msgid "Directories"
-msgstr "Dizinler"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:251
 #, c-format
 msgid "Added folder '%s' recursively"
-msgstr "'%s' dizini tüm alt dizinleriyle eklendi"
+msgstr ""
 
 #. add the replace widget
 #. replace the replace widget
@@ -1416,7 +1363,7 @@ msgstr ""
 #: ../src/browsers/playlist3-file-browser.c:615
 #: ../src/browsers/playlist3-file-browser.c:886
 msgid "Update"
-msgstr "Güncelle"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:736
 msgid "Loaded playlist"
@@ -1425,37 +1372,40 @@ msgstr ""
 #: ../src/browsers/playlist3-file-browser.c:1010
 #: ../src/browsers/playlist3-playlist-editor.c:412
 msgid "Added"
-msgstr "Eklendi"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:1012
 #: ../src/browsers/playlist3-playlist-editor.c:412
 msgid "song"
 msgid_plural "songs"
-msgstr[0] "şarkı"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1014
 msgid "directory"
 msgid_plural "directories"
-msgstr[0] "dizin"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1016
 msgid "playlist"
 msgid_plural "playlists"
-msgstr[0] "çalma listesi"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-file-browser.c:1039
 #: ../src/browsers/playlist3-file-browser.c:1089
 msgid "Are you sure you want to clear the selected playlist?"
-msgstr "Seçili çalma listesini temizlemek istediğinizden emin misiniz?"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:95
 msgid "Query"
-msgstr "Sorgu"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:181
 #: ../src/browsers/server-information.c:340
 msgid "Database"
-msgstr "Veritabanı"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:182
 msgid "Playlist"
@@ -1464,15 +1414,15 @@ msgstr ""
 #: ../src/browsers/playlist3-find2-browser.c:281
 #: ../src/browsers/playlist3-find2-browser.c:753
 msgid "Search"
-msgstr "Arama"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:376
 msgid "Search failed"
-msgstr "Arama başarısız oldu"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:673
 msgid "Add all"
-msgstr "Hepsini ekle"
+msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:869
 msgid "switch search"
@@ -1519,27 +1469,27 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:684
 #: ../src/browsers/playlist3-metadata-browser.c:2429
 msgid "View"
-msgstr "Görüntüle"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:631
 #: ../src/browsers/playlist3-metadata-browser.c:916
 #: ../src/gob/gmpc-mpddata-treeview.gob:67
 #: ../src/gob/gmpc-mpddata-treeview.gob:615
 msgid "Artist"
-msgstr "Sanatçı"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:638
 #: ../src/browsers/playlist3-metadata-browser.c:1508
 #: ../src/browsers/playlist3-metadata-browser.c:1964
 msgid "Songs"
-msgstr "Şarkılar"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:646
 #: ../src/browsers/playlist3-metadata-browser.c:1515
 #: ../src/browsers/playlist3-metadata-browser.c:2049
 #: ../src/browsers/playlist3-metadata-browser.c:2385
 msgid "Playtime"
-msgstr "Oynatma süresi"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:651
 #: ../src/browsers/playlist3-metadata-browser.c:934
@@ -1548,7 +1498,7 @@ msgstr "Oynatma süresi"
 #: ../src/gob/gmpc-mpddata-treeview.gob:71
 #: ../src/gob/gmpc-mpddata-treeview.gob:641
 msgid "Genre"
-msgstr "Tarz"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:655
 #: ../src/browsers/playlist3-metadata-browser.c:940
@@ -1557,26 +1507,26 @@ msgstr "Tarz"
 #: ../src/gob/gmpc-mpddata-treeview.gob:76
 #: ../src/gob/gmpc-mpddata-treeview.gob:653
 msgid "Date"
-msgstr "Tarih"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:788
 #: ../src/browsers/playlist3-metadata-browser.c:1300
 #: ../src/browsers/playlist3-metadata-browser.c:1405
 #: ../src/browsers/playlist3-metadata-browser.c:1824
 msgid "Collection"
-msgstr "Arşiv"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:900
 #: ../src/gob/gmpc-mpddata-treeview.gob:69
 #: ../src/gob/gmpc-mpddata-treeview.gob:602
 msgid "Title"
-msgstr "Başlık"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:909
 #: ../src/gob/gmpc-mpddata-treeview.gob:77
 #: ../src/gob/gmpc-mpddata-treeview.gob:665
 msgid "Duration"
-msgstr "Süre"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:922
 #: ../src/browsers/playlist3-metadata-browser.c:1987
@@ -1584,17 +1534,17 @@ msgstr "Süre"
 #: ../src/gob/gmpc-mpddata-treeview.gob:68
 #: ../src/gob/gmpc-mpddata-treeview.gob:629
 msgid "Album"
-msgstr "Albüm"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:928
 #: ../src/gob/gmpc-mpddata-treeview.gob:72
 msgid "Track"
-msgstr "Parça"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:946
 #: ../src/gob/gmpc-mpddata-treeview.gob:74
 msgid "Composer"
-msgstr "Besteci"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:952
 #: ../src/gob/gmpc-mpddata-treeview.gob:75
@@ -1606,12 +1556,12 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2393
 #: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Directory"
-msgstr "Dizin"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:971
 #: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Extension"
-msgstr "Uzantı"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:985
 msgid "Rating"
@@ -1619,7 +1569,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1001
 msgid "Bitrate"
-msgstr "Veri Akış Hızı"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1006
 #: ../src/browsers/playlist3-metadata-browser.c:1019
@@ -1628,7 +1578,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1014
 msgid "Audio format"
-msgstr "Ses formatı"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1066
 msgid "Lyrics"
@@ -1636,15 +1586,15 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1109
 msgid "Songs with same title"
-msgstr "Başlığı aynı olan şarkılar"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1141
 msgid "Similar songs"
-msgstr "Benzer şarkılar"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1208
 msgid "Invalid search"
-msgstr "geçersiz arama"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1260
 #, c-format
@@ -1654,17 +1604,19 @@ msgstr ""
 #. The label
 #: ../src/browsers/playlist3-metadata-browser.c:1316
 msgid "Find Artist:"
-msgstr "Artist Bul:"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1477
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
-msgstr[0] "<b>Tür: </b>"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1492
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
-msgstr[0] "<b>Tarih: </b>"
+msgstr[0] ""
+msgstr[1] ""
 
 #. *
 #. * Artist Information Text view
@@ -1682,35 +1634,35 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1565
 msgid "Artist information"
-msgstr "Sanatçı bilgisi"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1590
 msgid "Albums"
-msgstr "Albümler"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1637
 msgid "Similar Artists"
-msgstr "Benzer Sanatçılar"
+msgstr ""
 
 #. *
 #. * Album Information
 #. 
 #: ../src/browsers/playlist3-metadata-browser.c:1903
 msgid "Album info:"
-msgstr "Albüm bilgisi:"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1908
 msgid "Album information"
-msgstr "Albüm bilgisi"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:1980
 msgid "Album artist"
-msgstr "Albüm sanatçısı"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2041
 #: ../src/browsers/playlist3-metadata-browser.c:2377
 msgid "Tracks"
-msgstr "Parçalar"
+msgstr ""
 
 #. *
 #. * Metadata browser link
@@ -1725,11 +1677,11 @@ msgstr ""
 #. 
 #: ../src/browsers/playlist3-metadata-browser.c:2260
 msgid "Show Current Song"
-msgstr "Geçerli Şarkıyı Göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2478
 msgid "kbit/sec"
-msgstr "kbit/sn"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2484
 msgid "kHz"
@@ -1753,32 +1705,32 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2594
 msgid "show current song"
-msgstr "geçerli şarkıyı göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2595
 msgid "Show the current songs information"
-msgstr "Geçerli şarkı bilgisini göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2598
 msgid "show current artist"
-msgstr "geçerli sanatçıyı göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2599
 msgid "Show the current artist information"
-msgstr "Geçerli sanatçı bilgisini göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2602
 msgid "show current album"
-msgstr "geçerli albümü göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:2603
 msgid "Show the current album information"
-msgstr "Geçerli albüm bilgisini göster"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
 #: ../src/browsers/playlist3-playlist-editor.c:854
 msgid "Playlist Editor"
-msgstr "Çalma Listesi Düzenleyici"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:258
 #: ../src/browsers/playlist3-playlist-editor.c:280
@@ -1789,22 +1741,22 @@ msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:462
 msgid "New playlist"
-msgstr "Yeni çalma listesi"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:501
 msgid "Rename Playlist"
-msgstr "Çalma Listesini Yeniden Adlandır"
+msgstr ""
 
 #. delete
 #: ../src/browsers/playlist3-playlist-editor.c:508
 #: ../src/browsers/playlist3-playlist-editor.c:636
 msgid "Rename"
-msgstr "Yeniden Adlandır"
+msgstr ""
 
 #. Add
 #: ../src/browsers/playlist3-playlist-editor.c:805
 msgid "Add to playlist"
-msgstr "Çalma listesine ekle"
+msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:844
 msgid "Added playing song to favorites list."
@@ -1828,11 +1780,11 @@ msgstr ""
 #: ../src/browsers/server-information.c:508
 #: ../src/browsers/server-information.c:531
 msgid "Server Information"
-msgstr "Sunucu Bilgisi"
+msgstr ""
 
 #: ../src/browsers/server-information.c:324
 msgid "Server"
-msgstr "Sunucu"
+msgstr ""
 
 #: ../src/browsers/server-information.c:333
 msgid "Uptime"
@@ -1845,22 +1797,22 @@ msgstr ""
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:347
 msgid "Total Playtime"
-msgstr "Toplam Çalma Süresi"
+msgstr ""
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:349
 msgid "Number of artists"
-msgstr "Sanatçı sayısı"
+msgstr ""
 
 #. * Mpd Albums
 #: ../src/browsers/server-information.c:351
 msgid "Number of albums"
-msgstr "Albüm sayısı"
+msgstr ""
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:353
 msgid "Number of songs"
-msgstr "Şarkı sayısı"
+msgstr ""
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:355
@@ -1890,15 +1842,15 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:70
 msgid "File"
-msgstr "Dosya"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Disc"
-msgstr "Disk"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:79
 msgid "Comment"
-msgstr "Açıklama"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:80
 msgid "Icon Id"
@@ -1906,7 +1858,7 @@ msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Position"
-msgstr "Konum"
+msgstr ""
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "AlbumArtist"
@@ -1915,11 +1867,11 @@ msgstr ""
 #. Add
 #: ../src/gob/gmpc-mpddata-treeview.gob:747
 msgid "Tools"
-msgstr "Araçlar"
+msgstr ""
 
 #: ../src/gob/gmpc-profiles.gob:72
 msgid "Added profile"
-msgstr "Profil eklendi"
+msgstr ""
 
 #: ../src/gob/gmpc-profiles.gob:80
 msgid "Removed profile"
@@ -1931,7 +1883,7 @@ msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:752
 msgid "Select file"
-msgstr "Dosya Seç"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Failed to open file:"
@@ -1951,31 +1903,31 @@ msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:180
 msgid "Fetching Album Info"
-msgstr "Albüm Bilgisi Alınıyor"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:188
 msgid "Not Available"
-msgstr "Mevcut Değil"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:783
 msgid "Select File"
-msgstr "Dosya Seç"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:253
 msgid "Text Document"
-msgstr "Metin Belgesi"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:793
 msgid "All"
-msgstr "Hepsi"
+msgstr ""
 
 #: ../src/gob/gmpc-metaimage.gob:788
 msgid "Images"
-msgstr "Resimler"
+msgstr ""
 
 #: ../src/gob/gmpc-stats-label.gob:135
 msgid "Loading"
-msgstr "Yükleniyor"
+msgstr ""
 
 #: ../src/vala/gmpc_menu_item_rating.c:59
 msgid "Rating:"
@@ -1983,42 +1935,21 @@ msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:173
 msgid "Update list from internet"
-msgstr "Listeyi internetten güncelle"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:212
 msgid "Links"
-msgstr "Bağlantılar"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:451
 msgid "artist"
-msgstr "sanatçı"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:460
 msgid "album"
-msgstr "albüm"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:499
 #, c-format
 msgid "Lookup %s on %s"
 msgstr ""
-
-#~ msgid "/"
-#~ msgstr "/"
-
-#~ msgid "<b>Name:</b>"
-#~ msgstr "<b>İsim:</b>"
-
-#~ msgid "Error Dialog"
-#~ msgstr "Hata İletişim Kutusu"
-
-#~ msgid "Error msg"
-#~ msgstr "Hata mesajı"
-
-#~ msgid "And"
-#~ msgstr "Ve"
-
-#~ msgid "Accelerator key"
-#~ msgstr "Hızlandırma tuşu"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Hızlandırma tuşkodu"
