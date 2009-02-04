@@ -124,7 +124,7 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
 	{
 		int type;
 
-        gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 1, &type, 2, &plug,-1);
+		gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 1, &type, 2, &plug,-1);
 		pl3_find2_fill_combo(plug);
 	}
 
