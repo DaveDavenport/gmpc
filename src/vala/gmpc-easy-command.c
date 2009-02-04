@@ -10,8 +10,8 @@
 
 
 
-static char* string_substring (const char* self, glong offset, glong len);
 static glong string_get_length (const char* self);
+static char* string_substring (const char* self, glong offset, glong len);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -36,6 +36,12 @@ static void gmpc_easy_command_finalize (GObject* obj);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -53,12 +59,6 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
-}
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
 }
 
 
@@ -251,6 +251,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 		_tmp0 = NULL;
 		self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
 		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
+		gtk_window_set_role (self->priv->window, "easy command");
 		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 24);
 		gtk_entry_set_width_chars (entry, 50);
 		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);

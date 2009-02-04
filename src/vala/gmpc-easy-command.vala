@@ -181,6 +181,8 @@ public class Gmpc.Easy.Command : GLib.Object
             this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
             var entry = new Gtk.Entry();
 
+            this.window.role = "easy command";
+
             window.border_width=24;
             entry.width_chars = 50;
 
