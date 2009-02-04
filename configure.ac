@@ -47,6 +47,15 @@ LT_AC_PROG_RC
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_RC
 AC_PROG_LIBTOOL
+# test for zlib
+zlib=0
+AC_CHECK_LIB(z, inflate,zlib=1,zlib=0)
+AM_CONDITIONAL(HAVE_ZLIB, test x$zlib = x1)
+if test "x$zlib" != "x1"
+then
+ AC_MSG_ERROR([Jamendo plugin requires zlib])
+fi
+
 PKG_PROG_PKG_CONFIG
 
 

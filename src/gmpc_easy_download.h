@@ -29,6 +29,7 @@ typedef struct _gmpc_easy_download_struct{
 
 
 int gmpc_easy_download(const char *url,gmpc_easy_download_struct *dld);
+int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *dld,...);
 void gmpc_easy_download_clean(gmpc_easy_download_struct *dld);
 void quit_easy_download(void);
 
@@ -58,6 +59,11 @@ GEADAsyncHandler *gmpc_easy_async_downloader(
         GEADAsyncCallback callback,
         gpointer user_data);
 
+GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(
+        const gchar *uri, 
+        GEADAsyncCallback callback,
+        gpointer user_data,
+        ...);
 /**
  * Free the handler.
  * Only do this _after_ the message is downloaded
