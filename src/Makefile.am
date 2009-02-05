@@ -66,6 +66,7 @@ BUILT_SOURCES=\
 %.o: %.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
+.PHONY: revisiont.h
 revisiont.h:
 	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
 		echo "Writing new Makefile.config file";\
