@@ -132,7 +132,6 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 			_tmp9 = NULL;
 			value = (_tmp9 = value_collection[value_it], (_tmp9 == NULL) ? NULL : g_strdup (_tmp9));
 			{
-				fprintf (stdout, "Trying: %s\n", value);
 				/* ToDo: Make this nicer... maybe some fancy parsing */
 				if (gtk_tree_model_get_iter_first (model, &iter)) {
 					gboolean found;

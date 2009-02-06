@@ -723,13 +723,19 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
     }
 
-    
+    private 
+    void
+    menu_edit_columns(self,GtkMenuItem *item)
+    {
+        self_edit_columns(self);
+    }
     public
     int 
     right_mouse_intergration(self, GtkMenu *menu)
     {
         int retv = 0;
         int i;
+        GtkWidget *menu_item;
         GtkWidget *submenu = gtk_menu_new();
         for(i=0; i< num_plugins;i++)
         {
@@ -748,6 +754,13 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         }
+        
+        /** Edit column */
+        menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+        gtk_image_menu_item_set_image(menu_item, gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_menu_edit_columns), self);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        retv++;
 
         return retv;
     }

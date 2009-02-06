@@ -91,7 +91,6 @@ public class Gmpc.Easy.Command : GLib.Object
         }
         foreach(string value in value_unsplit.split(";"))
         {
-            stdout.printf("Trying: %s\n", value);
             /* ToDo: Make this nicer... maybe some fancy parsing */ 
             if(model.get_iter_first(out iter))
             {

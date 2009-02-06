@@ -88,7 +88,6 @@ static void song_list_open_selected_songs(GtkWidget *, GtkTreeView *);
 static void song_list_add_selected_songs(GtkWidget *, GtkTreeView *);
 static void song_list_replace_selected_songs(GtkWidget *, GtkTreeView *);
 static gboolean song_list_button_release_event(GtkTreeView *, GdkEventButton *, gpointer );
-static void song_list_edit_columns(GtkMenuItem *, GtkWidget *);
 
 static void info2_button_back(void);
 static void info2_button_forward(void);
@@ -1659,10 +1658,6 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 /*****
  * View Album
  */
-static void song_list_edit_columns(GtkMenuItem *item, GtkWidget *tree)
-{
-	gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(tree));
-}
 static void song_list_row_activated(GtkTreeView *tree, 
 			GtkTreePath *path,
 			GtkTreeViewColumn *column,
@@ -1781,14 +1776,8 @@ static gboolean song_list_button_release_event(GtkTreeView *tree,
 			item = gtk_separator_menu_item_new();
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
-		/* Edit columns */
-		item = gtk_image_menu_item_new_with_label(("Edit Columns"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-				gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		g_signal_connect(G_OBJECT(item), "activate",
-				G_CALLBACK(song_list_edit_columns), tree);
 
+        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
 
 		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));

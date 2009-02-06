@@ -940,13 +940,14 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
     gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree), GTK_MENU(menu));
     /*	if(has_item)*/
     {
+    /*
         item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
         gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                 gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         g_signal_connect(G_OBJECT(item), "activate",
                 G_CALLBACK(pl3_file_browser_edit_columns), NULL);
-
+*/
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL,NULL, NULL, 0, event->time);
         return TRUE;

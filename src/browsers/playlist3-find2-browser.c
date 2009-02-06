@@ -33,7 +33,6 @@
 #include <libsexy/sexy-icon-entry.h>
 #endif
 
-static void pl3_find2_browser_edit_columns(void);
 static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);
 static void pl3_find2_browser_unselected(GtkWidget *);
@@ -626,11 +625,6 @@ static void pl3_find2_browser_add_all(void)
         q_free(message);
     }
 }
-static void pl3_find2_browser_edit_columns(void)
-{
-  gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree));
-
-}
 static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
@@ -732,32 +726,25 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
         gtk_widget_show(item);
 
       }
-      item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
-      gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-          gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-      g_signal_connect(G_OBJECT(item), "activate",
-          G_CALLBACK(pl3_find2_browser_edit_columns), NULL);
-      gtk_widget_show(item);
-			/* add sub menu */
-			if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree))) == 1)
-			{
-				mpd_Song *song = NULL;
-				GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
-				GtkTreePath *path;
-				GtkTreeIter iter;
-				GList *list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree)),&model);
-				path = list->data;
-				/* free result */
-				g_list_free(list);
-				if(path && gtk_tree_model_get_iter(model, &iter, path)) {
-					gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-					if(song)
-						submenu_for_song(menu, song);
-				}
-				if(path)
-					gtk_tree_path_free(path);
-			}
+      /* add sub menu */
+      if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree))) == 1)
+      {
+          mpd_Song *song = NULL;
+          GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
+          GtkTreePath *path;
+          GtkTreeIter iter;
+          GList *list = gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree)),&model);
+          path = list->data;
+          /* free result */
+          g_list_free(list);
+          if(path && gtk_tree_model_get_iter(model, &iter, path)) {
+              gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+              if(song)
+                  submenu_for_song(menu, song);
+          }
+          if(path)
+              gtk_tree_path_free(path);
+      }
 
 
       playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist);

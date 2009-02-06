@@ -533,11 +533,6 @@ static void playlist_editor_rename_playlist(GtkWidget *item, gpointer data)
 	gtk_widget_destroy(dialog);
 }
 
-static void playlist_editor_edit_columns(void)
-{
-  gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(playlist_editor_song_tree));
-}
-
 static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *button, gpointer data)
 {
 	if(button->button == 3)
@@ -559,14 +554,9 @@ static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *
           g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_delete_songs), tree);
         }
       }
-      item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
-      gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-          gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-      g_signal_connect(G_OBJECT(item), "activate",
-          G_CALLBACK(playlist_editor_edit_columns), NULL);
 
-
+     
+      gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
 
 
       gtk_widget_show_all(menu);
