@@ -21,6 +21,7 @@ requires 2.0.0
 
 %ht{
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 %}
 %privateheader{
 #include "main.h"
@@ -165,6 +166,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             self_do_init(self);
             /* set tooltip */
             self_enable_tooltip(self);
+            g_signal_connect(G_OBJECT(self), "key-release-event", G_CALLBACK(self_paste_key_release_event), NULL);
 
             return (GtkWidget *)self;
         }
@@ -745,16 +747,61 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     cut(self)
     {
     }
+
+    private 
+    int
+    paste_key_release_event(self, GdkEventKey *event,gpointer data)
+    {
+        if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
+        {
+            self_paste_copy_songs(self, NULL);
+            return TRUE;
+        }
+        if(paste_queue )
+        {
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
+            {
+                if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
+                {
+                    self_paste_paste_before_songs(self, NULL);
+                    return TRUE;
+
+                }
+            }
+
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
+            {
+                if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
+                {
+                    self_paste_paste_after_songs(self, NULL);
+                    return TRUE;
+                }
+            }
+        }
+
+        if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
+        {
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
+            {
+                if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
+                {
+                    self_paste_cut_songs(self, NULL);
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
     private
     void
-    paste_cut_songs(self, GtkMenuItem item)
+    paste_cut_songs(self, GtkMenuItem *item)
     {
         self_paste_copy_songs(self, item);
         self_cut(self);
     }
     private
     void
-    paste_paste_after_songs(self, GtkMenuItem iter)
+    paste_paste_after_songs(self, GtkMenuItem *iter)
     {
         self_paste_after(self, g_list_first(paste_queue));
         /* free old entries */
@@ -765,7 +812,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private
     void
-    paste_paste_before_songs(self, GtkMenuItem iter)
+    paste_paste_before_songs(self, GtkMenuItem *iter)
     {
         self_paste_before(self, g_list_first(paste_queue));
         /* free old entries */ 
@@ -776,7 +823,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private 
     void
-    paste_copy_songs(self, GtkMenuItem iter)
+    paste_copy_songs(self, GtkMenuItem *iter)
     {
         GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(self));
         /* free old entries */
