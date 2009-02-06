@@ -78,9 +78,6 @@ GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
 static gboolean search_keep_open = FALSE;
 
-static GQueue *cut_queue = NULL;
-
-
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,gpointer data)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
@@ -147,8 +144,6 @@ static void pl3_cp_init(void)
                     _("Clear play queue"),"",
                     _("Clear play queue"),
                     (GmpcEasyCommandCallback *)pl3_current_playlist_browser_clear_playlist, NULL); 
-
-    cut_queue = g_queue_new();
 }
 
 gmpcPlBrowserPlugin current_playlist_gbp = {
@@ -364,7 +359,6 @@ static void pl3_current_playlist_browser_init(void)
     gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
     /* setup signals */
 	g_signal_connect(G_OBJECT(tree), "row-activated",G_CALLBACK(pl3_current_playlist_browser_row_activated), NULL); 
-//	g_signal_connect(G_OBJECT(tree), "button-press-event", G_CALLBACK(pl3_current_playlist_browser_button_press_event), NULL);
 	g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(pl3_current_playlist_browser_button_release_event), NULL);
 	g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event), entry);
 
@@ -619,95 +613,6 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
 	playlist_editor_fill_list();
 }
 
-/**
- * Cut, Copy Paste support
- */
-/*
-static void pl3_current_playlist_browser_cut_songs(void)
-{
-*/
-    /* grab the selection from the tree */
-  /*  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
-*/
-    /** Clear the cut queue */
-  /*  g_queue_foreach(cut_queue, (GFunc)g_free, NULL);
-    g_queue_clear(cut_queue);
-*/    /* check if where connected */
-    /* see if there is a row selected */
-  /*  if (gtk_tree_selection_count_selected_rows (selection) > 0)
-    {
-        GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
-    */    /* start a command list */
-        /* grab the selected songs */
-      /*  list = gtk_tree_selection_get_selected_rows (selection, &model);
-        *//* grab the last song that is selected */
-/*        llist = g_list_last (list);
-  */      /* remove every selected song one by one */
-    /*    do{
-            GtkTreeIter iter;
-            int value;
-            gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-      */      /* Trick that avoids roundtrip to mpd */
-        /*    {
-                char *path = NULL;
-          */      /* this one allready has the pos. */
-/*                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
-                g_queue_push_head(cut_queue, path);
-                value--;
-            } 
-            mpd_playlist_queue_delete_pos(connection, value);			
-        } while ((llist = g_list_previous (llist)));
-        mpd_playlist_queue_commit(connection);
-*/        /* free list */
-  /*      g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free (list);
-    }
-    *//* update everything if where still connected */
-    /*gtk_tree_selection_unselect_all(selection);
-}
-*/
-static void pl3_current_playlist_browser_copy_songs(void)
-{
-    /* grab the selection from the tree */
-    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
-
-    /** Clear the cut queue */
-    g_queue_foreach(cut_queue, (GFunc)g_free, NULL);
-    g_queue_clear(cut_queue);
-    /* check if where connected */
-    /* see if there is a row selected */
-    if (gtk_tree_selection_count_selected_rows (selection) > 0)
-    {
-        GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
-        /* start a command list */
-        /* grab the selected songs */
-        list = gtk_tree_selection_get_selected_rows (selection, &model);
-        /* grab the last song that is selected */
-        llist = g_list_last (list);
-        /* remove every selected song one by one */
-        do{
-            GtkTreeIter iter;
-            int value;
-            gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-            /* Trick that avoids roundtrip to mpd */
-            {
-                char *path = NULL;
-                /* this one allready has the pos. */
-                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
-                g_queue_push_head(cut_queue, path);
-                value--;
-            } 
-        } while ((llist = g_list_previous (llist)));
-        /* free list */
-        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free (list);
-    }
-    /* update everything if where still connected */
-    gtk_tree_selection_unselect_all(selection);
-}
-
 static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GList *paste_list)
 {
     /* grab the selection from the tree */
@@ -810,7 +715,6 @@ static void pl3_current_playlist_browser_paste_before_songs(GtkTreeView *tree, G
                     }
                     mpd_playlist_move_pos(connection, length, id-1);
                     /* The song is now one lower */
-//                    id++;
                     /* length one longer */
                     length++;
                     liter = g_list_next(liter);
@@ -859,35 +763,6 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 				gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_crop_selected_songs), NULL);		
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
-
-        /* Cut/Paste */
-        /*
-        item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT, NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_cut_songs), NULL);
-        item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_copy_songs), NULL);
-
-
-        if(g_queue_get_length(cut_queue) > 0)
-        {
-            item = gtk_image_menu_item_new_with_label(_("Paste before"));
-            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                    gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), NULL);
-
-            item = gtk_image_menu_item_new_with_label(_("Paste after"));
-            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                    gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), NULL);
-        }
-        */
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
 		/* add the clear widget */
@@ -1053,30 +928,6 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         pl3_current_playlist_browser_select_current_song();
         return TRUE;			
     }
-    /*
-    else if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
-    {
-        pl3_current_playlist_browser_copy_songs();
-        return TRUE;
-    }
-    else if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
-    {
-        pl3_current_playlist_browser_cut_songs();
-        return TRUE;
-    }
-    
-    else if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
-    {
-        pl3_current_playlist_browser_paste_after_songs();
-        return TRUE;
-    }
-    
-    else if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
-    {
-        pl3_current_playlist_browser_paste_before_songs();
-        return TRUE;
-    }
-    */
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
         mod_fill_entry_changed(entry, NULL);
