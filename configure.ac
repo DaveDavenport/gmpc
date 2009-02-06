@@ -373,6 +373,8 @@ pixmaps/icons/48x48/apps/Makefile
 pixmaps/icons/48x48/status/Makefile
 pixmaps/icons/64x64/Makefile
 pixmaps/icons/64x64/status/Makefile
+pixmaps/icons/72x72/Makefile
+pixmaps/icons/72x72/status/Makefile
 pixmaps/icons/96x96/Makefile
 pixmaps/icons/96x96/status/Makefile
 pixmaps/icons/128x128/Makefile

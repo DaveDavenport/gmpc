@@ -684,7 +684,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     pb = gdk_pixbuf_new_from_file_at_scale(path,size,size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
                     g_object_unref(pb);
                 }
                 /**

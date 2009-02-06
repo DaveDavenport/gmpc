@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for a in icons/scalable/status/stylized-*cover.svg icons/scalable/status/*-artist.svg; do
-    for b in "48" "64" "96" "128"; do
+    for b in "48" "64" "72" "96" "128"; do
         size=$b'x'$b
         output=${a/scalable/$size};
         width=`inkscape -W "$a"`

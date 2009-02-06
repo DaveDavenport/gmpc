@@ -801,7 +801,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     }
     private
     void
-    paste_paste_after_songs(self, GtkMenuItem *iter)
+    paste_paste_after_songs(self, GtkMenuItem *menuitem)
     {
         self_paste_after(self, g_list_first(paste_queue));
         /* free old entries */
@@ -812,7 +812,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private
     void
-    paste_paste_before_songs(self, GtkMenuItem *iter)
+    paste_paste_before_songs(self, GtkMenuItem *menuitem)
     {
         self_paste_before(self, g_list_first(paste_queue));
         /* free old entries */ 
@@ -823,7 +823,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private 
     void
-    paste_copy_songs(self, GtkMenuItem *iter)
+    paste_copy_songs(self, GtkMenuItem *menitem)
     {
         GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(self));
         /* free old entries */
@@ -940,7 +940,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
         retv++;
         /** Edit column */
         menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
-        gtk_image_menu_item_set_image(menu_item, gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
         g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_edit_columns), self);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
         retv++;
