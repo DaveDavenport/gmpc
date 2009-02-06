@@ -81,39 +81,43 @@ public class Gmpc.Easy.Command : GLib.Object
     activate(Gtk.Entry entry)
     {
         weak Gtk.TreeModel model = this.store;
-        string value = entry.get_text();
+        string value_unsplit = entry.get_text();
         Gtk.TreeIter iter;
-        if(value.length == 0)
+        if(value_unsplit.length == 0)
         {
             this.window.destroy();
             this.window = null;
             return;
         }
-        /* ToDo: Make this nicer... maybe some fancy parsing */ 
-        if(model.get_iter_first(out iter))
+        foreach(string value in value_unsplit.split(";"))
         {
-            do{
-                string name,pattern,test;
-                Callback callback = null;
-                void * data;
-                model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data);
+            stdout.printf("Trying: %s\n", value);
+            /* ToDo: Make this nicer... maybe some fancy parsing */ 
+            if(model.get_iter_first(out iter))
+            {
+                bool found = false;
+                do{
+                    string name,pattern,test;
+                    Callback callback = null;
+                    void * data;
+                    model.get(iter, 1, out name,2, out pattern, 3, out callback,4, out data);
 
-                test = "%s[ ]*%s$".printf(name, pattern);
-                if(GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0))
-                {
-                    stdout.printf("matched: %s to %s\n", test, value);
-                    var param = value.substring(name.length, -1);
-                    var param_str = param.strip();
-                    callback(data, param_str); 
-                    window.destroy();
-                    window =null;
-                    return;
-                }
-            }while(model.iter_next(ref iter));
+                    test = "%s[ ]*%s$".printf(name, pattern);
+                    if(GLib.Regex.match_simple(test, value.strip(), GLib.RegexCompileFlags.CASELESS, 0))
+                    {
+                        stdout.printf("matched: %s to %s\n", test, value.strip());
+                        var param = value.substring(name.length, -1);
+                        var param_str = param.strip();
+                        callback(data, param_str); 
+                        found = true;
+                    }
+                }while(model.iter_next(ref iter) && !found);
+                if(!found)
+                    Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()),Gmpc.Messages.Level.INFO);
+            }
         }
         window.destroy();
         window = null;
-        Gmpc.Messages.show("Unknown command: '%s'".printf(entry.get_text()), Gmpc.Messages.Level.INFO);
     }
     private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event)
     {
@@ -157,9 +161,9 @@ public class Gmpc.Easy.Command : GLib.Object
         ctx.rectangle(1.0,1.0,width-2,height-2);
         var pattern = new Cairo.Pattern.linear(0.0,0.0,0.0, height);
 
-        pattern.add_color_stop_rgba(0.0,0.0,0.0,0.0,0.5);
+        pattern.add_color_stop_rgba(0.0,0.0,0.0,0.2,0.5);
         pattern.add_color_stop_rgba(0.5,0.0,0.0,0.0,1.0);
-        pattern.add_color_stop_rgba(1.0,0.0,0.0,0.0,0.5);
+        pattern.add_color_stop_rgba(1.0,0.0,0.0,0.2,0.5);
         ctx.set_source(pattern);
         ctx.fill_preserve();
         ctx.set_source_rgba(1.0,1.0,1.0,1.0);

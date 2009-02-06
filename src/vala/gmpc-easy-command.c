@@ -33,6 +33,8 @@ static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_matc
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
+static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
+static gint _vala_array_length (gpointer array);
 
 
 
@@ -100,75 +102,106 @@ guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, cons
 void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	GtkTreeModel* model;
 	const char* _tmp0;
-	char* value;
+	char* value_unsplit;
 	GtkTreeIter iter = {0};
-	GtkWindow* _tmp6;
-	char* _tmp7;
+	GtkWindow* _tmp10;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
 	model = (GtkTreeModel*) self->priv->store;
 	_tmp0 = NULL;
-	value = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
-	if (string_get_length (value) == 0) {
+	value_unsplit = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	if (string_get_length (value_unsplit) == 0) {
 		GtkWindow* _tmp1;
 		gtk_object_destroy ((GtkObject*) self->priv->window);
 		_tmp1 = NULL;
 		self->priv->window = (_tmp1 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp1);
-		value = (g_free (value), NULL);
+		value_unsplit = (g_free (value_unsplit), NULL);
 		return;
 	}
-	/* ToDo: Make this nicer... maybe some fancy parsing */
-	if (gtk_tree_model_get_iter_first (model, &iter)) {
-		do {
-			char* name;
-			char* pattern;
-			char* test;
-			GmpcEasyCommandCallback _tmp2;
-			void* callback_target;
-			GmpcEasyCommandCallback callback;
-			void* data;
-			char* _tmp3;
-			name = NULL;
-			pattern = NULL;
-			test = NULL;
-			callback = (_tmp2 = NULL, callback_target = NULL, _tmp2);
-			data = NULL;
-			gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
-			_tmp3 = NULL;
-			test = (_tmp3 = g_strdup_printf ("%s[ ]*%s$", name, pattern), test = (g_free (test), NULL), _tmp3);
-			if (g_regex_match_simple (test, value, G_REGEX_CASELESS, 0)) {
-				char* param;
-				const char* _tmp4;
-				char* param_str;
-				GtkWindow* _tmp5;
-				fprintf (stdout, "matched: %s to %s\n", test, value);
-				param = string_substring (value, string_get_length (name), (glong) (-1));
-				_tmp4 = NULL;
-				param_str = (_tmp4 = g_strstrip (param), (_tmp4 == NULL) ? NULL : g_strdup (_tmp4));
-				callback (data, param_str, callback_target);
-				gtk_object_destroy ((GtkObject*) self->priv->window);
-				_tmp5 = NULL;
-				self->priv->window = (_tmp5 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp5);
-				param = (g_free (param), NULL);
-				param_str = (g_free (param_str), NULL);
-				name = (g_free (name), NULL);
-				pattern = (g_free (pattern), NULL);
-				test = (g_free (test), NULL);
+	{
+		char** _tmp2;
+		char** value_collection;
+		int value_collection_length1;
+		int value_it;
+		_tmp2 = NULL;
+		value_collection = _tmp2 = g_strsplit (value_unsplit, ";", 0);
+		value_collection_length1 = _vala_array_length (_tmp2);
+		for (value_it = 0; value_it < _vala_array_length (_tmp2); value_it = value_it + 1) {
+			const char* _tmp9;
+			char* value;
+			_tmp9 = NULL;
+			value = (_tmp9 = value_collection[value_it], (_tmp9 == NULL) ? NULL : g_strdup (_tmp9));
+			{
+				fprintf (stdout, "Trying: %s\n", value);
+				/* ToDo: Make this nicer... maybe some fancy parsing */
+				if (gtk_tree_model_get_iter_first (model, &iter)) {
+					gboolean found;
+					gboolean _tmp3;
+					found = FALSE;
+					_tmp3 = FALSE;
+					do {
+						char* name;
+						char* pattern;
+						char* test;
+						GmpcEasyCommandCallback _tmp5;
+						void* callback_target;
+						GmpcEasyCommandCallback callback;
+						void* data;
+						char* _tmp6;
+						if (_tmp3) {
+							gboolean _tmp4;
+							_tmp4 = FALSE;
+							if (gtk_tree_model_iter_next (model, &iter)) {
+								_tmp4 = !found;
+							} else {
+								_tmp4 = FALSE;
+							}
+							if (!_tmp4) {
+								break;
+							}
+						}
+						_tmp3 = TRUE;
+						name = NULL;
+						pattern = NULL;
+						test = NULL;
+						callback = (_tmp5 = NULL, callback_target = NULL, _tmp5);
+						data = NULL;
+						gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
+						_tmp6 = NULL;
+						test = (_tmp6 = g_strdup_printf ("%s[ ]*%s$", name, pattern), test = (g_free (test), NULL), _tmp6);
+						if (g_regex_match_simple (test, g_strstrip (value), G_REGEX_CASELESS, 0)) {
+							char* param;
+							const char* _tmp7;
+							char* param_str;
+							fprintf (stdout, "matched: %s to %s\n", test, g_strstrip (value));
+							param = string_substring (value, string_get_length (name), (glong) (-1));
+							_tmp7 = NULL;
+							param_str = (_tmp7 = g_strstrip (param), (_tmp7 == NULL) ? NULL : g_strdup (_tmp7));
+							callback (data, param_str, callback_target);
+							found = TRUE;
+							param = (g_free (param), NULL);
+							param_str = (g_free (param_str), NULL);
+						}
+						name = (g_free (name), NULL);
+						pattern = (g_free (pattern), NULL);
+						test = (g_free (test), NULL);
+					} while (TRUE);
+					if (!found) {
+						char* _tmp8;
+						_tmp8 = NULL;
+						playlist3_show_error_message (_tmp8 = g_strdup_printf ("Unknown command: '%s'", g_strstrip (value)), ERROR_INFO);
+						_tmp8 = (g_free (_tmp8), NULL);
+					}
+				}
 				value = (g_free (value), NULL);
-				return;
 			}
-			name = (g_free (name), NULL);
-			pattern = (g_free (pattern), NULL);
-			test = (g_free (test), NULL);
-		} while (gtk_tree_model_iter_next (model, &iter));
+		}
+		value_collection = (_vala_array_free (value_collection, value_collection_length1, (GDestroyNotify) g_free), NULL);
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->window);
-	_tmp6 = NULL;
-	self->priv->window = (_tmp6 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp6);
-	_tmp7 = NULL;
-	playlist3_show_error_message (_tmp7 = g_strdup_printf ("Unknown command: '%s'", gtk_entry_get_text (entry)), ERROR_INFO);
-	_tmp7 = (g_free (_tmp7), NULL);
-	value = (g_free (value), NULL);
+	_tmp10 = NULL;
+	self->priv->window = (_tmp10 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp10);
+	value_unsplit = (g_free (value_unsplit), NULL);
 }
 
 
@@ -213,9 +246,9 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 	/* */
 	cairo_rectangle (ctx, 1.0, 1.0, (double) (width - 2), (double) (height - 2));
 	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, (double) height);
-	cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0.0, 0.0, 0.0, 0.5);
+	cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0.0, 0.0, 0.2, 0.5);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.5, 0.0, 0.0, 0.0, 1.0);
-	cairo_pattern_add_color_stop_rgba (pattern, 1.0, 0.0, 0.0, 0.0, 0.5);
+	cairo_pattern_add_color_stop_rgba (pattern, 1.0, 0.0, 0.0, 0.2, 0.5);
 	cairo_set_source (ctx, pattern);
 	cairo_fill_preserve (ctx);
 	cairo_set_source_rgba (ctx, 1.0, 1.0, 1.0, 1.0);
@@ -393,6 +426,31 @@ GType gmpc_easy_command_get_type (void) {
 		gmpc_easy_command_type_id = g_type_register_static (G_TYPE_OBJECT, "GmpcEasyCommand", &g_define_type_info, 0);
 	}
 	return gmpc_easy_command_type_id;
+}
+
+
+static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func) {
+	if ((array != NULL) && (destroy_func != NULL)) {
+		int i;
+		for (i = 0; i < array_length; i = i + 1) {
+			if (((gpointer*) array)[i] != NULL) {
+				destroy_func (((gpointer*) array)[i]);
+			}
+		}
+	}
+	g_free (array);
+}
+
+
+static gint _vala_array_length (gpointer array) {
+	int length;
+	length = 0;
+	if (array) {
+		while (((gpointer*) array)[length]) {
+			length++;
+		}
+	}
+	return length;
 }
 
 
