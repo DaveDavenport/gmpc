@@ -973,6 +973,8 @@ int main (int argc, char **argv)
     xmlCleanupParser();
     /* cleanup curl */
     curl_global_cleanup();
+    /* cleanup */
+    gmpc_mpddata_treeview_cleanup();
 
     debug_printf(DEBUG_INFO, "Quit....\n");
     return 0;

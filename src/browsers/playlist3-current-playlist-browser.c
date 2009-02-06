@@ -41,6 +41,11 @@
 #include "playlist3-playlist-editor.h"
 
 
+static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GList *paste_list);
+static void pl3_current_playlist_browser_paste_before_songs(GtkTreeView *tree, GList *paste_list);
+static void pl3_current_playlist_browser_delete_selected_songs (void);
+
+
 static void pl3_current_playlist_browser_scroll_to_current_song(void);
 static void pl3_current_playlist_browser_add(GtkWidget *cat_tree);
 
@@ -327,6 +332,11 @@ static void pl3_current_playlist_browser_init(void)
 	pl3_cp_vbox = gtk_vbox_new(FALSE,6);
     tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
 
+    g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), NULL);
+    g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), NULL);
+    g_signal_connect(G_OBJECT(tree), "cut", G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs), NULL);
+
+
     /* filter */
     mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();
 #ifdef USE_SYSTEM_LIBSEXY
@@ -612,48 +622,51 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget *menu)
 /**
  * Cut, Copy Paste support
  */
+/*
 static void pl3_current_playlist_browser_cut_songs(void)
 {
+*/
     /* grab the selection from the tree */
-    GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
-
+  /*  GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
+*/
     /** Clear the cut queue */
-    g_queue_foreach(cut_queue, (GFunc)g_free, NULL);
+  /*  g_queue_foreach(cut_queue, (GFunc)g_free, NULL);
     g_queue_clear(cut_queue);
-    /* check if where connected */
+*/    /* check if where connected */
     /* see if there is a row selected */
-    if (gtk_tree_selection_count_selected_rows (selection) > 0)
+  /*  if (gtk_tree_selection_count_selected_rows (selection) > 0)
     {
         GList *list = NULL, *llist = NULL;
         GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_cp_tree));
-        /* start a command list */
+    */    /* start a command list */
         /* grab the selected songs */
-        list = gtk_tree_selection_get_selected_rows (selection, &model);
-        /* grab the last song that is selected */
-        llist = g_list_last (list);
-        /* remove every selected song one by one */
-        do{
+      /*  list = gtk_tree_selection_get_selected_rows (selection, &model);
+        *//* grab the last song that is selected */
+/*        llist = g_list_last (list);
+  */      /* remove every selected song one by one */
+    /*    do{
             GtkTreeIter iter;
             int value;
             gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-            /* Trick that avoids roundtrip to mpd */
-            {
+      */      /* Trick that avoids roundtrip to mpd */
+        /*    {
                 char *path = NULL;
-                /* this one allready has the pos. */
-                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
+          */      /* this one allready has the pos. */
+/*                gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
                 g_queue_push_head(cut_queue, path);
                 value--;
             } 
             mpd_playlist_queue_delete_pos(connection, value);			
         } while ((llist = g_list_previous (llist)));
         mpd_playlist_queue_commit(connection);
-        /* free list */
-        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+*/        /* free list */
+  /*      g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free (list);
     }
-    /* update everything if where still connected */
-    gtk_tree_selection_unselect_all(selection);
+    *//* update everything if where still connected */
+    /*gtk_tree_selection_unselect_all(selection);
 }
+*/
 static void pl3_current_playlist_browser_copy_songs(void)
 {
     /* grab the selection from the tree */
@@ -695,7 +708,7 @@ static void pl3_current_playlist_browser_copy_songs(void)
     gtk_tree_selection_unselect_all(selection);
 }
 
-static void pl3_current_playlist_browser_paste_after_songs(void)
+static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GList *paste_list)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -711,7 +724,7 @@ static void pl3_current_playlist_browser_paste_after_songs(void)
         /* grab the selected songs */
         list = gtk_tree_selection_get_selected_rows (selection, &model);
         /* grab the last song that is selected */
-        llist = g_list_last (list);
+        llist = g_list_last(list);
         /* remove every selected song one by one */
         if(llist){
             GtkTreeIter iter;
@@ -721,18 +734,21 @@ static void pl3_current_playlist_browser_paste_after_songs(void)
                 int id;
                 char *path = NULL;
                 int length = mpd_playlist_get_playlist_length(connection);
+                GList *liter = g_list_first(paste_list);
                 gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
-                while((path = g_queue_pop_tail(cut_queue)))
+                while(liter)
                 {
+                    path = liter->data;
                     int song_id = mpd_playlist_add_get_id(connection, path);
-                    if(song_id == -1 && seen)
+                    if(song_id == -1 && !seen)
                     {
                         playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
                         seen = 1;
                     }
                     mpd_playlist_move_pos(connection, length, id);
-                    g_free(path);
                     length++;
+                    printf("added: %s\n", path);
+                    liter = g_list_next(liter);
                 }
             }
         }
@@ -740,22 +756,23 @@ static void pl3_current_playlist_browser_paste_after_songs(void)
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free (list);
     }else{
-            char *path = NULL;
-            while((path = g_queue_pop_head(cut_queue)))
+        GList *liter = g_list_first(paste_list);;
+        while(liter)
+        {
+            char *path = liter->data;
+            int song_id = mpd_playlist_add_get_id(connection, path);
+            if(song_id == -1 && !seen)
             {
-                int song_id = mpd_playlist_add_get_id(connection, path);
-                if(song_id == -1 && seen)
-                {
-                    playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
-                    seen = 1;
-                }
-                g_free(path);
+                playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
+                seen = 1;
             }
-
+            liter = g_list_next(liter);
         }
 
+    }
+    gtk_tree_selection_unselect_all(selection);
 }
-static void pl3_current_playlist_browser_paste_before_songs(void)
+static void pl3_current_playlist_browser_paste_before_songs(GtkTreeView *tree, GList *paste_list)
 {
     /* grab the selection from the tree */
     GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(pl3_cp_tree));
@@ -771,7 +788,7 @@ static void pl3_current_playlist_browser_paste_before_songs(void)
         /* grab the selected songs */
         list = gtk_tree_selection_get_selected_rows (selection, &model);
         /* grab the last song that is selected */
-        llist = g_list_last (list);
+        llist = g_list_first(list);
         /* remove every selected song one by one */
         if(llist){
             GtkTreeIter iter;
@@ -779,23 +796,24 @@ static void pl3_current_playlist_browser_paste_before_songs(void)
             /* Trick that avoids roundtrip to mpd */
             {
                 int id;
-                char *path = NULL;
                 int length = mpd_playlist_get_playlist_length(connection);
+                GList *liter = g_list_first(paste_list);
                 gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
-                while((path = g_queue_pop_head(cut_queue)))
+                while(liter)
                 {
+                    char *path = liter->data;
                     int song_id = mpd_playlist_add_get_id(connection, path);
-                    if(song_id == -1 && seen)
+                    if(song_id == -1 && !seen)
                     {
                         playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
                         seen = 1;
                     }
                     mpd_playlist_move_pos(connection, length, id-1);
-                    g_free(path);
                     /* The song is now one lower */
-                    id++;
+//                    id++;
                     /* length one longer */
                     length++;
+                    liter = g_list_next(liter);
                 }
             }
         }
@@ -803,20 +821,22 @@ static void pl3_current_playlist_browser_paste_before_songs(void)
         g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free (list);
     }else{
-            char *path = NULL;
-            while((path = g_queue_pop_head(cut_queue)))
+            GList *liter = g_list_first(paste_list);
+            while(liter)
             {
+                char *path = liter->data;
                 int song_id = mpd_playlist_add_get_id(connection, path);
-                if(song_id == -1 && seen)
+                if(song_id == -1 && !seen)
                 {
                     playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      
                     seen = 1;
                 }
-                g_free(path);
+                liter = g_list_next(liter);
             }
 
         }
 
+    gtk_tree_selection_unselect_all(selection);
 }
 
 
@@ -844,6 +864,7 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
 
         /* Cut/Paste */
+        /*
         item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT, NULL);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_cut_songs), NULL);
@@ -866,6 +887,7 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, 
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
             g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), NULL);
         }
+        */
 
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu),gtk_separator_menu_item_new());
 		/* add the clear widget */
@@ -1031,6 +1053,7 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         pl3_current_playlist_browser_select_current_song();
         return TRUE;			
     }
+    /*
     else if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
     {
         pl3_current_playlist_browser_copy_songs();
@@ -1041,16 +1064,19 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
         pl3_current_playlist_browser_cut_songs();
         return TRUE;
     }
+    
     else if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
     {
         pl3_current_playlist_browser_paste_after_songs();
         return TRUE;
     }
+    
     else if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
     {
         pl3_current_playlist_browser_paste_before_songs();
         return TRUE;
     }
+    */
     else if (event->keyval == GDK_f && event->state&GDK_CONTROL_MASK)
     {
         mod_fill_entry_changed(entry, NULL);

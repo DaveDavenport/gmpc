@@ -40,6 +40,7 @@ requires 2.0.0
 #define BOTTOM_GRADIENT_HEIGHT 30
 %}
 
+
 %{
 static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_MARKUP,
@@ -127,6 +128,8 @@ static gint  col_position[NUM_COLS] = {
     16,// Extension
     17 // Directory
 };
+
+static GList *paste_queue = NULL;
 %}
 
 class Gmpc:MpdData:Treeview from Gtk:Tree:View {
@@ -162,6 +165,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             self_do_init(self);
             /* set tooltip */
             self_enable_tooltip(self);
+
             return (GtkWidget *)self;
         }
     private
@@ -722,13 +726,95 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     {
         g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
     }
+    /**
+     * Copy paste stuff
+     */
+    signal last NONE (POINTER)
+    void
+    paste_before(self, GList *items)
+    {
+    }
+
+    signal last NONE (POINTER)
+    void
+    paste_after(self, const GList *items)
+    {
+    }
+    signal last NONE (NONE)
+    void
+    cut(self)
+    {
+    }
+    private
+    void
+    paste_cut_songs(self, GtkMenuItem item)
+    {
+        self_paste_copy_songs(self, item);
+        self_cut(self);
+    }
+    private
+    void
+    paste_paste_after_songs(self, GtkMenuItem iter)
+    {
+        self_paste_after(self, g_list_first(paste_queue));
+        /* free old entries */
+        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+        g_list_free(paste_queue);
+        paste_queue = NULL;
+    }
+
+    private
+    void
+    paste_paste_before_songs(self, GtkMenuItem iter)
+    {
+        self_paste_before(self, g_list_first(paste_queue));
+        /* free old entries */ 
+        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+        g_list_free(paste_queue);
+        paste_queue = NULL;
+    }
 
     private 
     void
-    menu_edit_columns(self,GtkMenuItem *item)
+    paste_copy_songs(self, GtkMenuItem iter)
     {
-        self_edit_columns(self);
+        GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(self));
+        /* free old entries */
+        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+        g_list_free(paste_queue);
+        paste_queue = NULL;
+        /* check if where connected */
+        /* see if there is a row selected */
+        if (gtk_tree_selection_count_selected_rows (selection) > 0)
+        {
+            GList *list = NULL, *llist = NULL;
+            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self));
+            /* start a command list */
+            /* grab the selected songs */
+            list = gtk_tree_selection_get_selected_rows (selection, &model);
+            /* grab the last song that is selected */
+            llist = g_list_last (list);
+            /* remove every selected song one by one */
+            do{
+                GtkTreeIter iter;
+                int value;
+                gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+                /* Trick that avoids roundtrip to mpd */
+                {
+                    char *path = NULL;
+                    /* this one allready has the pos. */
+                    gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
+                    paste_queue = g_list_prepend(paste_queue, path);
+                    value--;
+                } 
+            } while ((llist = g_list_previous (llist)));
+            /* free list */
+            g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+            g_list_free (list);
+        }
+        paste_queue = g_list_reverse(paste_queue);
     }
+
     public
     int 
     right_mouse_intergration(self, GtkMenu *menu)
@@ -754,14 +840,76 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         }
-        
+
+
+        /**
+         * Paste integration
+         */
+        menu_item = gtk_separator_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+
+        menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
+        retv++; 
+
+        if(paste_queue )
+        {
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
+            {
+                menu_item = gtk_image_menu_item_new_with_label(_("Paste before"));
+                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_before_songs), self);
+                retv++;
+            }
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
+            {
+                menu_item = gtk_image_menu_item_new_with_label(_("Paste after"));
+                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_after_songs), self);
+                retv++;
+            }
+        }
+
+        if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
+        {
+            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
+            {
+                menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
+                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_cut_songs), self);
+                retv++;
+            }
+        }
+
+        menu_item = gtk_separator_menu_item_new();
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+        retv++;
         /** Edit column */
         menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
         gtk_image_menu_item_set_image(menu_item, gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_menu_edit_columns), self);
+        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_edit_columns), self);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
         retv++;
 
         return retv;
+    }
+
+    public 
+    void
+    cleanup(void)
+    {
+        if(paste_queue)
+        {
+            g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+            g_list_free(paste_queue);
+        }
+        paste_queue = NULL;
     }
 }
