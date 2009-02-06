@@ -73,7 +73,6 @@ static int read_cb(void *z, char *buffer, int size)
         if(r == Z_OK || r == Z_STREAM_END || r == Z_NEED_DICT){
             return size-zs->avail_out;
         }
-        printf("%i\n", r);
     }
     printf("failed unzipping stream\n");
     return -1;
@@ -199,7 +198,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
     while(va_entry)
     {
         char *value = va_arg(ap, typeof(value));
-        printf("add header: %s:%s\n", va_entry, value);
         soup_message_headers_append(msg->request_headers, va_entry, value);
         va_entry = va_arg(ap, typeof(va_entry));
     }
@@ -212,7 +210,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
 
         if(encoding && (strcmp(encoding, "gzip") == 0 || strcmp(encoding, "deflate") == 0))
         {
-            printf("encoding found: %s: %s\n",url, encoding);
             /* 12k buffer */
             char *new_buffer=NULL;
             int size;
@@ -239,7 +236,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
                     }
                 }
             }
-            printf("success: %i\n", success);
             close_cb(zs);
         }
         else
@@ -252,7 +248,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
     }
     else 
     {
-        printf("gmpc easy download fail: %s %s\n",url, soup_status_get_phrase(status));
         success = 0;
     }
     g_object_unref(msg);
@@ -419,9 +414,7 @@ static void gmpc_easy_async_headers_update(SoupMessage *msg, gpointer data)
 {
     const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
     _GEADAsyncHandler *d = data;
-    printf("got header\n");
     if(encoding) {
-        printf("encoding: %s\n", encoding);
         if(strcmp(encoding, "gzip") == 0)
         {
             d->is_gzip = 1;
@@ -489,11 +482,9 @@ static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpo
     }
     else if (msg->status_code == SOUP_STATUS_CANCELLED)
     {
-        printf("Cancelled\n");
         d->callback((GEADAsyncHandler *)d,GEAD_CANCELLED,d->userdata);
     }
     else {
-        printf("Failed\n");
         d->callback((GEADAsyncHandler *)d,GEAD_FAILED,d->userdata);
     }
 }
@@ -558,7 +549,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar *uri, GEAD
     while(va_entry)
     {
         char *value = va_arg(ap, typeof(value));
-        printf("add header: %s:%s\n", va_entry, value);
         soup_message_headers_append(msg->request_headers, va_entry, value);
         va_entry = va_arg(ap, typeof(va_entry));
     }
