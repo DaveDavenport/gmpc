@@ -156,11 +156,8 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 #ifndef EGGTRAYICON
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
 {
-    if(gtk_status_icon_is_embedded(icon))
-    {
-        /* the status icon just got embedded */
-    }
-    else
+    printf("Embedding changed: %i\n", gtk_status_icon_is_embedded(icon));
+    if(!gtk_status_icon_is_embedded(icon))
     {
         /* the widget isn't embedded anymore */
         create_playlist3();
