@@ -59,8 +59,8 @@ public class Gmpc.Image : Gtk.EventBox {
             ctx.clip();
             ctx.save();
 
-            ctx.set_line_width ( 0.8);
-			ctx.set_tolerance (0.1);
+            ctx.set_line_width ( 1.0);
+			ctx.set_tolerance (0.0);
 			if(cover != null)
 			{
 				width = cover.get_width();
@@ -102,9 +102,11 @@ public class Gmpc.Image : Gtk.EventBox {
 					ctx.clip_preserve();
 				else
 					ctx.clip();
-				ctx.paint_with_alpha(1-fade);
+
+                double fade2 = (fade <= 0)?1:fade;
+				ctx.paint_with_alpha(1-fade2);
 				if(temp_border){
-					ctx.set_source_rgba(0,0,0,1-fade);
+					ctx.set_source_rgba(0,0,0,1-fade2);
 					ctx.stroke();
 				}
                 ctx.reset_clip();

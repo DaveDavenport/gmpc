@@ -483,6 +483,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		set_cover_na(self)
         {
+            int border = FALSE;
             GError *error = NULL;
             GdkPixbuf *pb2 = NULL; 
 
@@ -504,11 +505,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART){
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "stylized-no-cover", self->size, 0,&error);
+                border = TRUE;
                 if(error) {
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
                     g_error_free(error);
                 }
-	    }else{
+//                if(pb2)
+  //                  screenshot_add_border(&pb2);
+            }else{
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&error);
                 if(error) {
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
@@ -524,7 +528,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
+                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,border);
                 g_object_unref(pb2);
             } else {
                 /* If failed to load an image, clear it */
@@ -535,6 +540,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		set_cover_fetching(self)
         {
+            int border = FALSE;
             GError *error = NULL;
             GdkPixbuf *pb2 = NULL;
             if(self->_priv->state == STATE_FETCHING) {
@@ -558,6 +564,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
                     g_error_free(error);
                 }
+                border=TRUE;
+//                if(pb2)
+  //                  screenshot_add_border(&pb2);
 	    }else{
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->loading_cover_icon, self->size, 0,&error);
                 if(error) {
@@ -575,7 +584,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,FALSE);
+
+                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+                gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,border);
                 g_object_unref(pb2);
             } else {
                 /* If failed to load an image, clear it */
@@ -628,21 +639,22 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     }
 
 
-                    /* Scale the cover to fit inside the case */
-                    if(width < height){
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,gdk_pixbuf_get_width(pb2)-spineWidth, -1,TRUE,NULL);
-                    }else{
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,gdk_pixbuf_get_height(pb2),TRUE,NULL);
-                    }
-
                     width = gdk_pixbuf_get_width(pb2);
                     height = gdk_pixbuf_get_height(pb2);
+                    /* Scale the cover to fit inside the case */
+                    if(width < height){
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,width-spineWidth, -1,TRUE,NULL);
+                    }else{
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,height,TRUE,NULL);
+                    }
+
 
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
-                    gdk_pixbuf_copy_area(pb, 0,0,gdk_pixbuf_get_width(pb2)-spineWidth,gdk_pixbuf_get_height(pb2),blank,spineWidth,0);
-
+                    gdk_pixbuf_copy_area(pb, 0,0,
+                                ((width-spineWidth)>= gdk_pixbuf_get_width(pb))?gdk_pixbuf_get_width(pb):(width-spineWidth),height,
+                                blank,spineWidth,0);
                     if(pb2)
                     {
                         gdk_pixbuf_composite(pb2,blank,0,0,gdk_pixbuf_get_width(pb2),gdk_pixbuf_get_height(pb2),0,0,1,1,GDK_INTERP_BILINEAR,250);
@@ -651,9 +663,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb);
                     pb = blank;
 
-                    if(!self->squared) 
+//                    if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
+
+//                    screenshot_add_border(&pb);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
                     g_object_unref(pb);
                 }
                 else {
@@ -670,7 +684,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     pb = gdk_pixbuf_new_from_file_at_scale(path,size,size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,FALSE);
                     g_object_unref(pb);
                 }
                 /**

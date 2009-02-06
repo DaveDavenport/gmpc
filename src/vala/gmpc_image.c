@@ -57,7 +57,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	gint y;
 	gint ww;
 	gint wh;
-	gboolean _tmp1;
+	gboolean _tmp2;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (img != NULL, FALSE);
 	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) img)->window);
@@ -70,8 +70,8 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	cairo_rectangle (ctx, (double) (*event).area.x, (double) (*event).area.y, (double) (*event).area.width, (double) (*event).area.height);
 	cairo_clip (ctx);
 	cairo_save (ctx);
-	cairo_set_line_width (ctx, 0.8);
-	cairo_set_tolerance (ctx, 0.1);
+	cairo_set_line_width (ctx, 1.0);
+	cairo_set_tolerance (ctx, 0.0);
 	if (self->priv->cover != NULL) {
 		double _tmp0;
 		double fade2;
@@ -103,6 +103,8 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_restore (ctx);
 	}
 	if (self->priv->temp != NULL) {
+		double _tmp1;
+		double fade2;
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
@@ -113,14 +115,21 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		} else {
 			cairo_clip (ctx);
 		}
-		cairo_paint_with_alpha (ctx, 1 - self->priv->fade);
+		_tmp1 = 0.0;
+		if ((self->priv->fade <= 0)) {
+			_tmp1 = (double) 1;
+		} else {
+			_tmp1 = self->priv->fade;
+		}
+		fade2 = _tmp1;
+		cairo_paint_with_alpha (ctx, 1 - fade2);
 		if (self->priv->temp_border) {
-			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, 1 - self->priv->fade);
+			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, 1 - fade2);
 			cairo_stroke (ctx);
 		}
 		cairo_reset_clip (ctx);
 	}
-	return (_tmp1 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp1);
+	return (_tmp2 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp2);
 }
 
 
