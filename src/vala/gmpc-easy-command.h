@@ -25,7 +25,7 @@ typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* us
 
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpcwiki.sarine.nl/
+ * Project homepage: http://gmpc.wikia.com/
  
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
