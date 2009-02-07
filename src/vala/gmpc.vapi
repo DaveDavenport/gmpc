@@ -86,4 +86,12 @@ namespace Gmpc {
     public string user_path(string file);
     [CCode (cname="open_uri", cheader_filename="misc.h")]
     public void open_uri(string uri);
+
+    namespace Playlist {
+        [CCode (cname="playlist3_get_window", cheader_file="playlist3.h")]
+        public weak Gtk.Window get_window();
+[CCode (cname="playlist3_window_is_hidden", cheader_file="playlist3.h")]
+        public bool is_hidden();
+
+    }
 }

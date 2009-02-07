@@ -424,7 +424,7 @@ int pl3_window_key_press_event(GtkWidget *mw, GdkEventKey *event)
     }
     if(event->keyval == GDK_space && (event->state&GDK_CONTROL_MASK) != 0)
     {
-        gmpc_easy_command_popup(gmpc_easy_command, playlist3_get_window());
+        gmpc_easy_command_popup(gmpc_easy_command);
         return FALSE;
     }
     for(i=0; i< num_plugins;i++)
@@ -674,6 +674,10 @@ static void pl3_show_and_position_window(void)
 
 }
 
+gboolean playlist3_window_is_hidden(void)
+{
+    return pl3_hidden;
+}
 void pl3_toggle_hidden(void)
 {
 	if(pl3_hidden) {

@@ -233,10 +233,7 @@ static void bacon_on_message_received(const char *message, gpointer data)
  */
 static void pl3_call_easy_command(void)
 {
-    GtkWidget *pl3_win = playlist3_get_window();
-    if(pl3_win) {
-        gmpc_easy_command_popup(gmpc_easy_command,pl3_win);
-    }
+    gmpc_easy_command_popup(gmpc_easy_command);
 }
 
 int main (int argc, char **argv)

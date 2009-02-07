@@ -177,14 +177,19 @@ public class Gmpc.Easy.Command : GLib.Object
     }
     public
     void
-    popup(Gtk.Widget win)
+    popup()
     {
         if(this.window == null)
         {
             this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
             var entry = new Gtk.Entry();
 
-            this.window.role = "easy command";
+            /* Setup window */
+            window.role = "easy command";
+            window.type_hint = Gdk.WindowTypeHint.DIALOG;
+            window.decorated = false;
+            window.modal = true;
+            window.set_keep_above(true);
 
             window.border_width=24;
             entry.width_chars = 50;
@@ -201,12 +206,11 @@ public class Gmpc.Easy.Command : GLib.Object
             window.app_paintable = true;
             window.expose_event += popup_expose_handler;
 
-            /* Setup window */
-            window.decorated = false;
-            window.modal = true;
-            window.set_keep_above(true);
-            window.set_transient_for((Gtk.Window)win);
-            window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
+            if(!Gmpc.Playlist.is_hidden())
+            {
+                window.set_transient_for(Gmpc.Playlist.get_window());
+                window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
+            }
 
             /* setup entry */
             entry.set_completion(this.completion);

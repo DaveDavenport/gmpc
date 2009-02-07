@@ -10,8 +10,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -38,12 +38,6 @@ static gint _vala_array_length (gpointer array);
 
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -61,6 +55,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -274,16 +274,20 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
 }
 
 
-void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
+void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (win != NULL);
 	if (self->priv->window == NULL) {
 		GtkWindow* _tmp0;
 		GtkEntry* entry;
 		_tmp0 = NULL;
 		self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
 		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
+		/* Setup window */
 		gtk_window_set_role (self->priv->window, "easy command");
+		gtk_window_set_type_hint (self->priv->window, GDK_WINDOW_TYPE_HINT_DIALOG);
+		gtk_window_set_decorated (self->priv->window, FALSE);
+		gtk_window_set_modal (self->priv->window, TRUE);
+		gtk_window_set_keep_above (self->priv->window, TRUE);
 		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 24);
 		gtk_entry_set_width_chars (entry, 50);
 		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);
@@ -303,12 +307,10 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win) {
 		}
 		g_object_set ((GtkWidget*) self->priv->window, "app-paintable", TRUE, NULL);
 		g_signal_connect_object ((GtkWidget*) self->priv->window, "expose-event", (GCallback) _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event, self, 0);
-		/* Setup window */
-		gtk_window_set_decorated (self->priv->window, FALSE);
-		gtk_window_set_modal (self->priv->window, TRUE);
-		gtk_window_set_keep_above (self->priv->window, TRUE);
-		gtk_window_set_transient_for (self->priv->window, GTK_WINDOW (win));
-		self->priv->window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
+		if (!playlist3_window_is_hidden ()) {
+			gtk_window_set_transient_for (self->priv->window, playlist3_get_window ());
+			self->priv->window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
+		}
 		/* setup entry */
 		gtk_entry_set_completion (entry, self->priv->completion);
 		g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);

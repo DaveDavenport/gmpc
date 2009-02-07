@@ -53,7 +53,7 @@ struct _GmpcEasyCommandClass {
 
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata);
 void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
-void gmpc_easy_command_popup (GmpcEasyCommand* self, GtkWidget* win);
+void gmpc_easy_command_popup (GmpcEasyCommand* self);
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
 GmpcEasyCommand* gmpc_easy_command_new (void);
 GType gmpc_easy_command_get_type (void);

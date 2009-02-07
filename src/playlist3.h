@@ -51,6 +51,7 @@ void playlist_editor_fill_list(void);
 int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 
 GtkWidget * playlist3_get_window(void);
+gboolean playlist3_window_is_hidden(void);
 
 extern GladeXML *pl3_xml;
 /**
