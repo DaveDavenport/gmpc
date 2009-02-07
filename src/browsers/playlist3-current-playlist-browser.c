@@ -643,8 +643,9 @@ static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GL
                 gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
                 while(liter)
                 {
+                    int song_id;
                     path = liter->data;
-                    int song_id = mpd_playlist_add_get_id(connection, path);
+                    song_id = mpd_playlist_add_get_id(connection, path);
                     if(song_id == -1 && !seen)
                     {
                         playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);      

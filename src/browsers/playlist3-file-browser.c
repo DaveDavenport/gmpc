@@ -792,10 +792,6 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
 
     q_free(song_path);
 }
-static void pl3_file_browser_edit_columns(void)
-{
-    gmpc_mpddata_treeview_edit_columns(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
-}
 
 static void pl3_file_browser_add_to_playlist(GtkWidget *menu)
 {

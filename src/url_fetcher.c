@@ -119,18 +119,6 @@ static void url_entry_changed(GtkEntry *entry, GtkWidget *add_button)
 	const gchar *text = gtk_entry_get_text(entry);
 	gtk_widget_set_sensitive(add_button, url_validate_url(text));
 }
-static void url_progress_callback(int size, int total,GtkProgressBar *pb)
-{
-	if(total > 0)
-	{
-		gtk_progress_bar_set_fraction(pb, size/(double)total);
-	}
-	else{
-		gtk_progress_bar_pulse(pb);
-	}
-	while(gtk_events_pending())
-		gtk_main_iteration();
-}
 static int url_check_binary(const char *data,const int size)
 {
 /*	int i=0;*/

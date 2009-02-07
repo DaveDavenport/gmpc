@@ -50,8 +50,6 @@ static void info2_selected(GtkWidget *);
 static void info2_unselected(GtkWidget *);
 static int info2_add_go_menu(GtkWidget *);
 
-void info2_activate(void);
-
 static void info2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static void info2_fill_view(void);
 static int info2_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
