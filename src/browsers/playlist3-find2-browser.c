@@ -47,7 +47,6 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
 static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data);
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
-static void pl3_find2_combo_box_changed(GtkComboBox *cb, gpointer data);
 
 static void pl3_find2_save_myself(void);
 
@@ -151,9 +150,9 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
             gtk_list_store_iter_is_valid(pl3_find2_combo_store, &iter);
             gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_find2_combo_store), &iter))
     {
-        gint type;
-        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &type, -1);
-        if(type == selected_type)
+        gint sel_type;
+        gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store), &iter, 0, &sel_type, -1);
+        if(sel_type == selected_type)
         {
             gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter);
             return;
