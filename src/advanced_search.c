@@ -25,7 +25,7 @@ void advanced_search_destroy(void)
     search_regex = NULL;
 }
 
-MpdData * advanced_search(const gchar *query, int playlist)
+MpdData * advanced_search(const gchar *query, int in_playlist)
 {
     MpdData *data = NULL, *data_t = NULL;
     gchar **text = g_regex_split(search_regex, query, 0);
@@ -34,7 +34,7 @@ MpdData * advanced_search(const gchar *query, int playlist)
     {
         if(strcmp(text[i], "||") == 0){
             printf("Doing or\n");
-            if(playlist)
+            if(in_playlist)
                 data = mpd_playlist_search_commit(connection);
             else
                 data = mpd_database_search_commit(connection);
@@ -57,13 +57,13 @@ MpdData * advanced_search(const gchar *query, int playlist)
             for(j=0;split && split[j];j++)
             {
                 if(!found){
-                    if(playlist)
+                    if(in_playlist)
                         mpd_playlist_search_start(connection, FALSE);
                     else
                         mpd_database_search_start(connection, FALSE);
                     found= 1;
                 }
-                if(playlist)
+                if(in_playlist)
                     mpd_playlist_search_add_constraint(connection, type,split[j]);
                 else
                     mpd_database_search_add_constraint(connection,type,split[j]);
@@ -78,10 +78,13 @@ MpdData * advanced_search(const gchar *query, int playlist)
             for(j=0;split && split[j];j++)
             {
                 if(!found){
-                    mpd_playlist_search_start(connection, FALSE);
+                    if(in_playlist)
+                        mpd_playlist_search_start(connection, FALSE);
+                    else
+                        mpd_database_search_start(connection, FALSE);
                     found = 1;
                 }
-                if(playlist)
+                if(in_playlist)
                     mpd_playlist_search_add_constraint(connection,MPD_TAG_ITEM_ANY,split[j]);
                 else
                     mpd_database_search_add_constraint(connection,MPD_TAG_ITEM_ANY,split[j]);
@@ -90,7 +93,7 @@ MpdData * advanced_search(const gchar *query, int playlist)
         }
     }
     if(found){
-            if(playlist)
+            if(in_playlist)
                 data = mpd_playlist_search_commit(connection);
             else
                 data = mpd_database_search_commit(connection);
