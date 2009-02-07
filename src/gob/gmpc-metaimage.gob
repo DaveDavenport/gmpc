@@ -620,8 +620,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                 if(cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART) 
                 {
+                    int tempw,temph;
                     int size = (self->size > MIN(width,height))? MIN(width,height):self->size; 
-                    float spineRatio = 31.0/343.0;
+                    float spineRatio = 5.0/65.0;
                     int spineWidth = (size)*spineRatio;
                     GdkPixbuf *blank=NULL,*pb2=NULL;
                     const gchar *path2;
@@ -638,22 +639,26 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     }
 
 
-                    width = gdk_pixbuf_get_width(pb2);
-                    height = gdk_pixbuf_get_height(pb2);
                     /* Scale the cover to fit inside the case */
-                    if(width < height){
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,width-spineWidth, -1,TRUE,NULL);
+                    tempw =  gdk_pixbuf_get_width(pb2)-spineWidth;
+                    if((gdk_pixbuf_get_height(pb2)/(double)height)*width < tempw){
+//                    if(width < height){
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,tempw, -1,TRUE,NULL);
                     }else{
-                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,height,TRUE,NULL);
+                        pb = gdk_pixbuf_new_from_file_at_scale(path,-1,gdk_pixbuf_get_height(pb2),TRUE,NULL);
                     }
 
+                    width = gdk_pixbuf_get_width(pb2);
+                    height = gdk_pixbuf_get_height(pb2);
 
                     /* render */
                     blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8,width,height);
                     gdk_pixbuf_fill(blank, 0x000000FF);
+                    tempw = ((width-spineWidth)>= gdk_pixbuf_get_width(pb))?gdk_pixbuf_get_width(pb):(width-spineWidth);
+                    temph = (height >= gdk_pixbuf_get_height(pb))? gdk_pixbuf_get_height(pb):height;
                     gdk_pixbuf_copy_area(pb, 0,0,
-                                ((width-spineWidth)>= gdk_pixbuf_get_width(pb))?gdk_pixbuf_get_width(pb):(width-spineWidth),height,
-                                blank,spineWidth,0);
+                                tempw,temph,
+                                blank,width-tempw,0);
                     if(pb2)
                     {
                         gdk_pixbuf_composite(pb2,blank,0,0,gdk_pixbuf_get_width(pb2),gdk_pixbuf_get_height(pb2),0,0,1,1,GDK_INTERP_BILINEAR,250);
