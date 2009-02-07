@@ -11,8 +11,8 @@ gmpc_remote_SOURCES=\
 INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DVERSION=\"@VERSION@\"\
 	-DGMPC_BUILD=1\
-	-I../src/\
-	-I../src/bacon/
+	-I$(top_srcdir)/src/\
+	-I$(top_srcdir)/src/bacon
 
 LIBS= \
 	@glib_LIBS@ @LIBS@ \
