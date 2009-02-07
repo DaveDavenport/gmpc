@@ -39,7 +39,7 @@ static int quit = FALSE;
 #define COMMENT      0x10 /* bit 4 set: file comment present */
 static char gz_magic[2] = {0x1f, 0x8b};
 static
-int skip_gzip_header(const unsigned char * src, gsize size) {
+int skip_gzip_header(const char * src, gsize size) {
     int idx;
     if (size < 10 || memcmp(src, gz_magic, 2))
         return -1;
@@ -67,9 +67,10 @@ static int read_cb(void *z, char *buffer, int size)
 {
     z_stream *zs = z;
     if(zs){
+        int r;
         zs->next_out = (void *)buffer;
         zs->avail_out = size;
-        int r = inflate(zs, Z_SYNC_FLUSH);
+        r = inflate(zs, Z_SYNC_FLUSH);
         if(r == Z_OK || r == Z_STREAM_END || r == Z_NEED_DICT){
             return size-zs->avail_out;
         }
@@ -79,8 +80,8 @@ static int read_cb(void *z, char *buffer, int size)
 }
 static int close_cb (void *z)
 {
-    printf("Close unzip stream\n");
     z_stream *zs = z;
+    printf("Close unzip stream\n");
     inflateEnd(zs);
     g_free(zs);
     return 0;
@@ -212,7 +213,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
         {
             /* 12k buffer */
             char *new_buffer=NULL;
-            int size;
             z_stream *zs = g_malloc0(sizeof(*zs));
             long data_start = (strcmp(encoding,"gzip") == 0)?skip_gzip_header(msg->response_body->data,msg->response_body->length):0;
             if (data_start != -1){
@@ -429,8 +429,9 @@ static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, 
     _GEADAsyncHandler *d = data;
     if(d->is_gzip||d->is_deflate) {
         if(d->z == NULL) {
+            long data_start;
             d->z= g_malloc0(sizeof(*d->z));
-            long data_start = (d->is_gzip ==1)?skip_gzip_header(buffer->data,buffer->length):0;
+            data_start = (d->is_gzip ==1)?skip_gzip_header(buffer->data,buffer->length):0;
             d->z->next_in  = (void *)((buffer->data)+ data_start);
             d->z->avail_in = buffer->length - data_start;
             if (inflateInit2(d->z, -MAX_WBITS) == Z_OK){
@@ -452,9 +453,9 @@ static void gmpc_easy_async_status_update(SoupMessage *msg, SoupBuffer *buffer, 
             }
         }
         else{
+            int res = 0;
             d->z->next_in  = (void *)((buffer->data));
             d->z->avail_in = buffer->length;
-            int res = 0;
             do{
                 d->data = g_realloc(d->data, d->length+12*1024);
                 res = read_cb(d->z, &(d->data[d->length]), 12*1024);
