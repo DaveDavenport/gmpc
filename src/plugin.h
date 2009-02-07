@@ -175,10 +175,33 @@ typedef struct {
     void (*padding3)                (void);
 } gmpcPlugin;
 
-/** plugin functions */
-gmpcPlugin * 	plugin_get_from_id(int id);
+
+
+
+/**
+ * Playlist function 
+ */
+
+/**
+ * Get the treeview and tree_store of the category list on the left.
+ */
 GtkListStore *	playlist3_get_category_tree_store(void);
 GtkTreeView *	playlist3_get_category_tree_view(void);
+
+/**
+ * Get this GtkWindow of the playlist.
+ * Use this to set parent and so
+ */
+GtkWidget * playlist3_get_window(void);
+/**
+ * indicates if the window is hidden to tray
+ */
+gboolean    playlist3_window_is_hidden(void);
+
+/** plugin functions */
+gmpcPlugin * 	plugin_get_from_id(int id);
+
+
 /**
  * Helper functions to get path to gmpc directory and metadata directory
  */

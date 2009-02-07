@@ -173,7 +173,6 @@ static void playlist_editor_browser_playlist_editor_selected(GtkIconView *giv, G
 }
 static void playlist_editor_browser_playlist_editor_changed(GtkWidget *giv, gpointer data)
 {
-
 	gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), NULL);		
 	gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), NULL);
 	/* iter all the selected items (aka 1) */
@@ -682,13 +681,11 @@ static void playlist_editor_paste_after_songs(GtkTreeView *tree, GList *paste_li
     {
         /* grab the selection from the tree */
         GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(tree));
-
-        int seen= 0;
         /* check if where connected */
         /* see if there is a row selected */
         if (gtk_tree_selection_count_selected_rows (selection) > 0)
         {
-            GList *list = NULL, *llist = NULL;
+            GList *llist = NULL;
             GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
             /* start a command list */
             /* grab the selected songs */
@@ -697,26 +694,19 @@ static void playlist_editor_paste_after_songs(GtkTreeView *tree, GList *paste_li
             llist = g_list_last(list);
             /* remove every selected song one by one */
             if(llist){
-                GtkTreeIter iter;
-  //              gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-                /* Trick that avoids roundtrip to mpd */
+                int id;
+                char *path = NULL;
+                int *indices = gtk_tree_path_get_indices((GtkTreePath *)llist->data);
+                int length = GMPC_MPDDATA_MODEL(model)->num_rows;
+                GList *liter = g_list_first(paste_list);
+                id = indices[0];
+                while(liter)
                 {
-                    int id;
-                    char *path = NULL;
-                    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-                    int *indices = gtk_tree_path_get_indices((GtkTreePath *)llist->data);
-                    int length = GMPC_MPDDATA_MODEL(model)->num_rows;
-                    GList *liter = g_list_first(paste_list);
-                    id = indices[0];
-//                    gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
-                    while(liter)
-                    {
-                        path = liter->data;
-                        mpd_database_playlist_list_add(connection, pl_path, path);
-                        mpd_database_playlist_move(connection, pl_path,length, id+1); 
-                        length++;
-                        liter = g_list_next(liter);
-                    }
+                    path = liter->data;
+                    mpd_database_playlist_list_add(connection, pl_path, path);
+                    mpd_database_playlist_move(connection, pl_path,length, id+1); 
+                    length++;
+                    liter = g_list_next(liter);
                 }
             }
             /* free list */
@@ -758,12 +748,11 @@ static void playlist_editor_paste_before_songs(GtkTreeView *tree, GList *paste_l
         /* grab the selection from the tree */
         GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(tree));
 
-        int seen= 0;
         /* check if where connected */
         /* see if there is a row selected */
         if (gtk_tree_selection_count_selected_rows (selection) > 0)
         {
-            GList *list = NULL, *llist = NULL;
+            GList *llist = NULL;
             GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
             /* start a command list */
             /* grab the selected songs */
@@ -772,29 +761,20 @@ static void playlist_editor_paste_before_songs(GtkTreeView *tree, GList *paste_l
             llist = g_list_first(list);
             /* remove every selected song one by one */
             if(llist){
-                GtkTreeIter iter;
-//                gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-                /* Trick that avoids roundtrip to mpd */
+                int id;
+                int *indices = gtk_tree_path_get_indices((GtkTreePath *)llist->data);
+                int length = GMPC_MPDDATA_MODEL(model)->num_rows;
+                GList *liter = g_list_first(paste_list);
+                id = indices[0];
+
+                while(liter)
                 {
-                    int id;
-                    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-                    int *indices = gtk_tree_path_get_indices((GtkTreePath *)llist->data);
-                    int length = GMPC_MPDDATA_MODEL(model)->num_rows;
-                    GList *liter = g_list_first(paste_list);
-                    id = indices[0];
-                    //gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);			
-                    
-                    while(liter)
-                    {
-                        char *path = liter->data;
-                        mpd_database_playlist_list_add(connection, pl_path, path);
-                        mpd_database_playlist_move(connection, pl_path,length, id); 
-                        /* The song is now one lower */
-                        //                    id++;
-                        /* length one longer */
-                        length++;
-                        liter = g_list_next(liter);
-                    }
+                    char *path = liter->data;
+                    mpd_database_playlist_list_add(connection, pl_path, path);
+                    mpd_database_playlist_move(connection, pl_path,length, id); 
+                    /* length one longer */
+                    length++;
+                    liter = g_list_next(liter);
                 }
             }
             /* free list */
