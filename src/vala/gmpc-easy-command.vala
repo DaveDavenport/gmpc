@@ -34,7 +34,7 @@ public class Gmpc.Easy.Command : GLib.Object
     
     private
     bool
-    completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter)
+    completion_function(Gtk.EntryCompletion comp, string key,Gtk.TreeIter iter)
     {
         string value;
         var model = comp.model;
@@ -118,7 +118,7 @@ public class Gmpc.Easy.Command : GLib.Object
         window.destroy();
         window = null;
     }
-    private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+    private bool key_press_event(Gtk.Entry widget, Gdk.EventKey event)
     {
         /* Escape */
         if(event.keyval == 0xff1b)
@@ -138,7 +138,7 @@ public class Gmpc.Easy.Command : GLib.Object
 
     private
     bool
-    popup_expose_handler(Gtk.Widget widget, Gdk.EventExpose event)
+    popup_expose_handler(Gtk.Window widget, Gdk.EventExpose event)
     {
         var ctx =  Gdk.cairo_create(widget.window);
         int width = widget.allocation.width;

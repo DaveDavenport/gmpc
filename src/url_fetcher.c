@@ -168,7 +168,7 @@ static void parse_data(const char *data, guint size, const char *text)
         pl3_push_statusbar_message(_("Added 1 stream"));
     }
 }
-static void url_fetcher_download_callback(GEADAsyncHandler *handle, const GEADStatus status, gpointer user_data)
+static void url_fetcher_download_callback(const GEADAsyncHandler *handle, const GEADStatus status, gpointer user_data)
 {
     const gchar *uri = gmpc_easy_handler_get_uri(handle);
     if(status == GEAD_DONE)

@@ -6,6 +6,7 @@
 #include <cairo.h>
 #include <float.h>
 #include <math.h>
+#include <plugin.h>
 
 
 
@@ -24,8 +25,8 @@ enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter);
-static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventKey* event);
-static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventExpose* event);
+static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEntry* widget, const GdkEventKey* event);
+static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWindow* widget, const GdkEventExpose* event);
 static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
@@ -204,7 +205,7 @@ void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 }
 
 
-static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventKey* event) {
+static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEntry* widget, const GdkEventKey* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
 	/* Escape */
@@ -224,7 +225,7 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkWid
 }
 
 
-static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWidget* widget, const GdkEventExpose* event) {
+static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWindow* widget, const GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
 	gint height;
@@ -232,10 +233,10 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 	gboolean _tmp0;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
-	ctx = gdk_cairo_create ((GdkDrawable*) widget->window);
-	width = widget->allocation.width;
-	height = widget->allocation.height;
-	if (gtk_widget_is_composited (widget)) {
+	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) widget)->window);
+	width = ((GtkWidget*) widget)->allocation.width;
+	height = ((GtkWidget*) widget)->allocation.height;
+	if (gtk_widget_is_composited ((GtkWidget*) widget)) {
 		cairo_set_operator (ctx, CAIRO_OPERATOR_SOURCE);
 		cairo_set_source_rgba (ctx, 1.0, 1.0, 1.0, 0.0);
 	} else {
@@ -308,7 +309,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 		g_object_set ((GtkWidget*) self->priv->window, "app-paintable", TRUE, NULL);
 		g_signal_connect_object ((GtkWidget*) self->priv->window, "expose-event", (GCallback) _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event, self, 0);
 		if (!playlist3_window_is_hidden ()) {
-			gtk_window_set_transient_for (self->priv->window, playlist3_get_window ());
+			gtk_window_set_transient_for (self->priv->window, (GtkWindow *)playlist3_get_window ());
 			self->priv->window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
 		}
 		/* setup entry */

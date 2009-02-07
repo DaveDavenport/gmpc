@@ -61,13 +61,6 @@ char * edit_song_markup(char *format);
 
 void main_quit(void);
 
-/*
- * functions to get patch to different files.
- * This is needed to make the windows port work.
- * (misc.c)
- */
-char *gmpc_get_full_glade_path(const char *filename);
-
 /* plugin */
 void plugin_load_dir(gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin);

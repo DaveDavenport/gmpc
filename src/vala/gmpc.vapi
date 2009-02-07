@@ -60,8 +60,6 @@ namespace Gmpc {
         [Immutable]
         [CCode (ref_function="", unref_function ="")]
         public class Handle {
-            [CCode (cname="gmpc_easy_async_free_handler", cheader_filename="gmpc_easy_download.h")]
-            public void free ();
             [CCode (cname="gmpc_easy_async_cancel", cheader_filename="gmpc_easy_download.h")]
             public void cancel ();
 
@@ -88,9 +86,9 @@ namespace Gmpc {
     public void open_uri(string uri);
 
     namespace Playlist {
-        [CCode (cname="playlist3_get_window", cheader_file="plugin.h")]
+        [CCode (cname="(GtkWindow *)playlist3_get_window", cheader_filename="plugin.h")]
         public weak Gtk.Window get_window();
-[CCode (cname="playlist3_window_is_hidden", cheader_file="plugin.h")]
+[CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
         public bool is_hidden();
 
     }

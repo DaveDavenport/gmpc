@@ -37,20 +37,23 @@ public class Gmpc.MenuItem.Rating : Gtk.MenuItem
     {
         return 0;
     }
-    override bool button_press_event(Gdk.EventButton event)
+    bool button_press_event(Gdk.EventButton event, void *userdata)
     {
         stdout.printf("Button press event\n");
         this.rating.button_press_event(this.rating.event, event);
         return true;
     }
 
-    override bool button_release_event(Gdk.EventButton event)
+    bool button_release_event(Gdk.EventButton event, void *userdata)
     {
         return true;
     }
 
     public Rating (MPD.Server server, MPD.Song song)
     {
+        /* this fixes vala bitching */
+        GLib.Signal.connect_swapped(this, "button-press-event", (GLib.Callback)button_press_event,this);
+        GLib.Signal.connect_swapped(this, "button-release-event", (GLib.Callback)button_release_event,this);
 
         this.hbox = new Gtk.VBox(false,6);
         this.rating = new Gmpc.Rating(server,song);

@@ -399,6 +399,8 @@ gmpcPlugin proxyplug = {
 /**
  * LIBSOUP BASED ASYNC DOWNLOADER
  */
+
+static void gmpc_easy_async_free_handler_real(GEADAsyncHandler *handle);
 typedef struct {
     SoupMessage *msg;
     gchar *uri;
@@ -488,10 +490,15 @@ static void gmpc_easy_async_callback(SoupSession *session, SoupMessage *msg, gpo
     else {
         d->callback((GEADAsyncHandler *)d,GEAD_FAILED,d->userdata);
     }
+    gmpc_easy_async_free_handler_real((GEADAsyncHandler *)d);
 }
 
 
-void gmpc_easy_async_free_handler(GEADAsyncHandler *handle)
+void gmpc_easy_async_free_handler(const GEADAsyncHandler *handle)
+{
+    g_warning("Deprecated function\n");;
+}
+static void gmpc_easy_async_free_handler_real(GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     if(d->z) close_cb(d->z);
@@ -500,19 +507,19 @@ void gmpc_easy_async_free_handler(GEADAsyncHandler *handle)
     g_free(d);
 }
 
-goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle)
+goffset gmpc_easy_handler_get_content_size(const GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     return soup_message_headers_get_content_length(d->msg->response_headers);
 }
 
-const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle)
+const char  * gmpc_easy_handler_get_uri(const GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     return d->uri;
 }
 
-const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length)
+const char * gmpc_easy_handler_get_data(const GEADAsyncHandler *handle, goffset *length)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     if(length)
@@ -520,7 +527,7 @@ const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *lengt
     return d->data;
 }
 
-void gmpc_easy_async_cancel(GEADAsyncHandler *handle)
+void gmpc_easy_async_cancel(const GEADAsyncHandler *handle)
 {
     _GEADAsyncHandler *d = (_GEADAsyncHandler *)handle;
     soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_CANCELLED);

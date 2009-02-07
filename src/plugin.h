@@ -206,6 +206,7 @@ gmpcPlugin * 	plugin_get_from_id(int id);
  * Helper functions to get path to gmpc directory and metadata directory
  */
 
+char  *         gmpc_get_full_glade_path(const char *filename);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);

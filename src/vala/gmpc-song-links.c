@@ -48,7 +48,7 @@ enum  {
 };
 #define GMPC_SONG_LINKS_some_unique_name VERSION
 static void _gmpc_song_links_download_file_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
-static void gmpc_song_links_download (GmpcSongLinks* self, GtkMenuItem* item);
+static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* item);
 static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkWidget* label, const GdkEventButton* event);
 static gboolean _gmpc_song_links_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
@@ -136,7 +136,7 @@ static void _gmpc_song_links_download_file_gmpc_async_download_callback (const G
 }
 
 
-static void gmpc_song_links_download (GmpcSongLinks* self, GtkMenuItem* item) {
+static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* item) {
 	GtkWidget* _tmp0;
 	GtkWidget* child;
 	GtkProgressBar* _tmp1;
@@ -327,7 +327,6 @@ static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncH
 		}
 		path = (g_free (path), NULL);
 	}
-	gmpc_easy_async_free_handler (self->priv->handle);
 	self->priv->handle = NULL;
 }
 

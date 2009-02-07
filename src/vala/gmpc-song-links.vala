@@ -44,7 +44,7 @@ public class Gmpc.Song.Links: Gtk.Frame
             this.handle.cancel();
         }
     }
-    private void download(Gtk.MenuItem item)
+    private void download(Gtk.ImageMenuItem item)
     {
         var child = this.get_child();
         if(child != null) child.destroy();
@@ -128,7 +128,6 @@ public class Gmpc.Song.Links: Gtk.Frame
                 stdout.printf("Error: %s\n", e.message);
             }
         }
-        this.handle.free();
         this.handle = null;
     }
     private void parse_uris()

@@ -46,7 +46,7 @@ typedef enum {
     GEAD_CANCELLED
 }GEADStatus;
 
-typedef void (*GEADAsyncCallback)(GEADAsyncHandler *handle,const GEADStatus status,gpointer user_data);
+typedef void (*GEADAsyncCallback)(const GEADAsyncHandler *handle,GEADStatus status,gpointer user_data);
 /**
  * @param uri       the http uri to download
  * @param callback  the callback function. Giving status updates on the download.
@@ -68,19 +68,19 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(
  * Free the handler.
  * Only do this _after_ the message is downloaded
  */
-void gmpc_easy_async_free_handler(GEADAsyncHandler *handle);
+void gmpc_easy_async_free_handler(const GEADAsyncHandler *handle);
 
 /**
  * Cancel download, triggers GEAD_CANCEL in callback 
  */
-void gmpc_easy_async_cancel(GEADAsyncHandler *handle);
+void gmpc_easy_async_cancel(const GEADAsyncHandler *handle);
 
 /**
  * Get the size of the download, usefull for progressbar
  */
-goffset gmpc_easy_handler_get_content_size(GEADAsyncHandler *handle);
-const char  * gmpc_easy_handler_get_uri(GEADAsyncHandler *handle);
+goffset gmpc_easy_handler_get_content_size(const GEADAsyncHandler *handle);
+const char  * gmpc_easy_handler_get_uri(const GEADAsyncHandler *handle);
 
-const char * gmpc_easy_handler_get_data(GEADAsyncHandler *handle, goffset *length);
+const char * gmpc_easy_handler_get_data(const GEADAsyncHandler *handle, goffset *length);
 
 char *gmpc_easy_download_uri_escape(const char *part);
