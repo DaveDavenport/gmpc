@@ -528,7 +528,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+//                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
                 gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,border);
                 g_object_unref(pb2);
             } else {
@@ -584,8 +584,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-
-                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+//                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
                 gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,border);
                 g_object_unref(pb2);
             } else {
@@ -663,7 +662,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     g_object_unref(pb);
                     pb = blank;
 
-//                    if(!self->squared) 
+                    if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
 
 //                    screenshot_add_border(&pb);

@@ -67,11 +67,12 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	y = ((GtkWidget*) img)->allocation.y;
 	ww = ((GtkWidget*) img)->allocation.width;
 	wh = ((GtkWidget*) img)->allocation.height;
+	cairo_set_antialias (ctx, CAIRO_ANTIALIAS_NONE);
 	cairo_rectangle (ctx, (double) (*event).area.x, (double) (*event).area.y, (double) (*event).area.width, (double) (*event).area.height);
 	cairo_clip (ctx);
 	cairo_save (ctx);
-	cairo_set_line_width (ctx, 1.0);
-	cairo_set_tolerance (ctx, 0.0);
+	cairo_set_line_width (ctx, 1.1);
+	cairo_set_tolerance (ctx, 0.5);
 	if (self->priv->cover != NULL) {
 		double _tmp0;
 		double fade2;
@@ -80,7 +81,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 		/* Make the path*/
 		cairo_new_path (ctx);
-		cairo_rectangle (ctx, (x + ((ww - width) / 2)) + 0.5, (y + ((wh - height) / 2)) + 0.5, (double) (width - 1), (double) (height - 1));
+		cairo_rectangle (ctx, (double) (x + ((ww - width) / 2)), (double) (y + ((wh - height) / 2)), (double) width, (double) height);
 		_tmp0 = 0.0;
 		if ((self->priv->fade <= 0)) {
 			_tmp0 = (double) 1;
@@ -108,7 +109,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
-		cairo_rectangle (ctx, (x + ((ww - width) / 2)) + 0.5, (y + ((wh - height) / 2)) + 0.5, (double) (width - 1), (double) (height - 1));
+		cairo_rectangle (ctx, (double) (x + ((ww - width) / 2)), (double) (y + ((wh - height) / 2)), (double) width, (double) height);
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, (double) (x + ((ww - width) / 2)), (double) (y + ((wh - height) / 2)));
 		if (self->priv->temp_border) {
 			cairo_clip_preserve (ctx);

@@ -55,12 +55,13 @@ public class Gmpc.Image : Gtk.EventBox {
 			int ww = img.allocation.width;
 			int wh = img.allocation.height;
 
+            ctx.set_antialias(Cairo.Antialias.NONE);
             ctx.rectangle(event.area.x,event.area.y,event.area.width,event.area.height);
             ctx.clip();
             ctx.save();
 
-            ctx.set_line_width ( 1.0);
-			ctx.set_tolerance (0.0);
+            ctx.set_line_width ( 1.1);
+			ctx.set_tolerance (0.5);
 			if(cover != null)
 			{
 				width = cover.get_width();
@@ -70,7 +71,7 @@ public class Gmpc.Image : Gtk.EventBox {
 
 				// Make the path
 				ctx.new_path();
-                ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                ctx.rectangle( x+(ww-width)/2,y+(wh-height)/2,width, height);
 
                 double fade2 = (fade <= 0)?1:fade;
 				Gdk.cairo_set_source_pixbuf(ctx, cover, x+(ww-width)/2,y+(wh-height)/2);
@@ -94,7 +95,7 @@ public class Gmpc.Image : Gtk.EventBox {
 				width = temp.get_width();
 				height = temp.get_height();
 
-                ctx.rectangle( x+(ww-width)/2+0.5,y+(wh-height)/2+0.5,width-1, height-1);
+                ctx.rectangle( x+(ww-width)/2,y+(wh-height)/2,width, height);
                 Gdk.cairo_set_source_pixbuf(ctx, temp, x+(ww-width)/2,y+(wh-height)/2);
 
 
