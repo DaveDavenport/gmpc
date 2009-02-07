@@ -804,10 +804,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     paste_paste_after_songs(self, GtkMenuItem *menuitem)
     {
         self_paste_after(self, g_list_first(paste_queue));
-        /* free old entries */
+        /* free old entries 
         g_list_foreach(paste_queue, (GFunc)g_free, NULL);
         g_list_free(paste_queue);
         paste_queue = NULL;
+        */
     }
 
     private
@@ -815,10 +816,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
     paste_paste_before_songs(self, GtkMenuItem *menuitem)
     {
         self_paste_before(self, g_list_first(paste_queue));
-        /* free old entries */ 
+        /* free old entries  
         g_list_foreach(paste_queue, (GFunc)g_free, NULL);
         g_list_free(paste_queue);
         paste_queue = NULL;
+        */
     }
 
     private 
