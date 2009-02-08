@@ -472,6 +472,12 @@ static void pl3_file_browser_reupdate(void)
 
 		if(gtk_tree_model_get_iter_first(model, &iter))
 		{
+            GtkTreeIter child;
+            if(!gtk_tree_model_iter_children(model, &iter, &child))
+            {
+                gtk_tree_store_set(GTK_TREE_STORE(model), &iter, PL3_FB_OPEN, FALSE, -1);
+                gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
+            }
 			pl3_file_browser_reupdate_folder(&iter);
             pl3_file_browser_view_folder(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_dir_tree)), NULL);
         }
