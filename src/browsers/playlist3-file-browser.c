@@ -115,6 +115,7 @@ GtkWidget *pl3_fb_tree_search = NULL;
 GmpcMpdDataModel *pl3_fb_store2 = NULL;
 static GtkTreeStore *pl3_fb_dir_store = NULL;
 static GtkWidget *pl3_fb_dir_tree = NULL;
+static GtkWidget *pl3_fb_warning_box = NULL;
 
 static void pl3_file_browser_search_activate(void)
 {
@@ -220,6 +221,18 @@ static void pl3_file_browser_init(void)
 	pl3_fb_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_MARKUP);
 	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_tree_search, FALSE, TRUE,0);
 	g_signal_connect(G_OBJECT(pl3_fb_tree_search),"result-activate", G_CALLBACK(pl3_file_browser_search_activate), NULL);
+
+
+        /* Warning box for when there is no music */
+        pl3_fb_warning_box = gtk_label_new("");
+        gtk_label_set_markup(GTK_LABEL(pl3_fb_warning_box), 
+	_("It seems you have no music in your database.\n"
+	  "To add music, copy the music to your <i>music_directory</i> as specified in your mpd config file.\n"
+          "Then update the database. (Server->Update Database)"));
+        gtk_misc_set_alignment(GTK_MISC(pl3_fb_warning_box), 0.0,0.0);
+        gtk_misc_set_padding(GTK_MISC(pl3_fb_warning_box), 12,12);
+	gtk_widget_set_no_show_all(pl3_fb_warning_box, TRUE);
+	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_warning_box, FALSE, TRUE,0);
 
     gtk_paned_add2(GTK_PANED(pl3_fb_vbox), vbox);
 	/* set initial state */
@@ -368,9 +381,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
             PL3_FB_PATH,"/",
             PL3_FB_OPEN,FALSE,
 			-1);
-    gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
-
-
+    gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);	
 }
          
 static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
@@ -469,6 +480,14 @@ static void pl3_file_browser_reupdate(void)
 		GtkTreeIter iter;
 
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_dir_store); 
+		
+		if(mpd_stats_get_total_songs(connection) == 0)
+		{
+                    gtk_widget_show(pl3_fb_warning_box);
+		}else{
+                    gtk_widget_hide(pl3_fb_warning_box);
+		}
+
 
 		if(gtk_tree_model_get_iter_first(model, &iter))
 		{
@@ -1195,6 +1214,14 @@ static void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointe
 	if(connect)
 	{
 		GtkTreePath* path = gtk_tree_path_new_from_string("0");
+		if(mpd_stats_get_total_songs(connection) == 0){
+                    gtk_widget_show(pl3_fb_warning_box);
+		}else{
+                    gtk_widget_hide(pl3_fb_warning_box);
+		}
+
+
+
 		gtk_tree_view_expand_to_path(GTK_TREE_VIEW(pl3_fb_dir_tree), path);
 		gtk_tree_path_free(path);
 	}
@@ -1206,6 +1233,7 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 {
     if(what&MPD_CST_DATABASE)
     {
+        printf("db changed\n");
         pl3_file_browser_reupdate();
     }
 }	
