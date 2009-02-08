@@ -795,6 +795,20 @@ static void playlist_editor_paste_before_songs(GtkTreeView *tree, GList *paste_l
         g_free(pl_path);
     }
 }
+static void playlist_editor_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(tree);
+    GtkTreeIter iter;
+    if(gtk_tree_model_get_iter(model,&iter,path))
+    {
+        mpd_Song *song;
+        gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG,&song, -1); 
+        if(song->file)
+        {
+            play_path(song->file);
+        }
+    }
+}
 
 static void playlist_editor_browser_init(void)
 {
@@ -849,6 +863,8 @@ static void playlist_editor_browser_init(void)
     g_signal_connect(G_OBJECT(tree), "paste-after", G_CALLBACK(playlist_editor_paste_after_songs), NULL);
     g_signal_connect(G_OBJECT(tree), "paste-before", G_CALLBACK(playlist_editor_paste_before_songs), NULL);
 
+
+    g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(playlist_editor_row_activated), NULL);
 
 
 
