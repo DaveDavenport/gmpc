@@ -236,7 +236,7 @@ static void serverstats_combo_changed(GtkComboBox *box, GtkWidget *pb)
 
 static void serverstats_header_style_changed(GtkWidget *vbox, GtkStyle *style,  GtkWidget *vp)
 {
-    gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->white));
+    gtk_widget_modify_bg(vp,GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
 }
 
 static void cancel_clicked(GtkWidget *cancel, gpointer data)
@@ -288,7 +288,7 @@ static void serverstats_init(void)
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), TRUE);
     g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
-    gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->white));
+    gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->base[GTK_STATE_NORMAL]));
     g_signal_connect(G_OBJECT(serverstats_vbox), "style-set", G_CALLBACK(serverstats_header_style_changed), serverstats_event);
 
     /* set label and padding */
