@@ -82,6 +82,7 @@ void playlist_zoom_out(void);
 
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data);
+static void playlist3_error_style_set(GtkWidget *parent, GtkStyle *style_new, GtkWidget *wid);
 
 void pl3_pb_seek_event ( GtkWidget *pb, guint seek_time, gpointer user_data); 
 
@@ -1184,6 +1185,8 @@ void create_playlist3 (void)
 		GtkWidget *event = glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_set_app_paintable(event, TRUE);
 		g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(playlist3_error_expose), NULL);
+		g_signal_connect(G_OBJECT(gtk_widget_get_parent(event)), "style-set", G_CALLBACK(playlist3_error_style_set), event);
+        playlist3_error_style_set(gtk_widget_get_parent(event), NULL, event);
 	}
 
 	/* A signal that responses on change of pane position */
@@ -2224,11 +2227,28 @@ void playlist3_update_header(void)
 	}
 }
 
+static void playlist3_error_style_set(GtkWidget *parent, GtkStyle *style_new, GtkWidget *wid)
+{
 
+    GList *list,*iter;
+    GtkStyle *style =  gtk_rc_get_style_by_paths (gtk_widget_get_settings (wid), 
+            "gtk-tooltips", "GtkWindow",
+            GTK_TYPE_WINDOW);
+    printf("style set\n");
+    if(style)
+    {
+        gtk_widget_set_style(wid,style);
+        list = gtk_container_get_children(GTK_CONTAINER(glade_xml_get_widget(pl3_xml, "error_hbox")));
+        for(iter = list; iter; iter = g_list_next(iter)) {
+            gtk_widget_modify_fg(GTK_WIDGET(iter->data),GTK_STATE_NORMAL, &(style->fg[GTK_STATE_NORMAL]));
+            gtk_widget_modify_text(GTK_WIDGET(iter->data),GTK_STATE_NORMAL, &(style->text[GTK_STATE_NORMAL]));
+        }
+    }
+}
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
 {
-	int width = wid->allocation.width;
+/*	int width = wid->allocation.width;
 	int height = wid->allocation.height;
 	cairo_t *cr = gdk_cairo_create(wid->window);
 
@@ -2240,6 +2260,20 @@ static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gp
 	gdk_cairo_set_source_color(cr,&(wid->style->black));
 	cairo_stroke (cr);
 	cairo_destroy(cr);
+    */
+    printf("expose\n");
+    gtk_paint_flat_box (wid->style,
+            wid->window,
+            GTK_STATE_NORMAL,
+            GTK_SHADOW_OUT,
+            NULL,
+            wid,
+            "tooltip",
+            0, 0,
+            wid->allocation.width,
+            wid->allocation.height);
+
+  
 	return FALSE;
 }
 

@@ -123,9 +123,11 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	last_error_level = el;
 	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
+        GList *list, *siter; 
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
 		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
+
 		/* right image */
 
 		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
@@ -135,12 +137,21 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
 		gtk_box_pack_start(GTK_BOX(event), label, TRUE, TRUE, 0);
 
-		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
-		gtk_widget_show_all(event);
 
+
+        list = gtk_container_get_children(GTK_CONTAINER(event));
+
+		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
+        for(siter = list; siter; siter = g_list_next(siter)) {
+            gtk_widget_modify_fg(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
+            gtk_widget_modify_text(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
+        }
+
+		//event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
+		gtk_widget_show_all(event);
 		/* Error */
 		error_visible = TRUE;
-		timeout_callback = g_timeout_add_seconds(5, (GSourceFunc)playlist3_close_error, NULL);
+		timeout_callback = g_timeout_add_seconds(50, (GSourceFunc)playlist3_close_error, NULL);
 	}else{
 		error_visible = FALSE;
 	}
