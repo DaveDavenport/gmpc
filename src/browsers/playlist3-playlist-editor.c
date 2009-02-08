@@ -414,6 +414,12 @@ static void playlist_editor_list_add_songs(GtkButton *button, GtkTreeView *tree)
 
     }
 }
+static void playlist_editor_list_replace_songs(GtkButton *button, GtkTreeView *tree)
+{
+    mpd_playlist_clear(connection);
+    playlist_editor_list_add_songs(button, tree);
+    mpd_player_play(connection);
+}
 static void playlist_editor_clear_playlist(GtkWidget *item, gpointer data)
 {
   gchar *path = g_object_get_data(G_OBJECT(item), "path");
@@ -546,6 +552,12 @@ static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *
         item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_add_songs), tree);
+
+        item = gtk_image_menu_item_new_with_label(_("Replace"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_replace_songs), tree);
       	if(mpd_server_check_version(connection, 0,13,0))
         {
           item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
@@ -569,6 +581,9 @@ static gboolean playlist_editor_key_pressed(GtkWidget *giv, GdkEventKey *event, 
     if(event->keyval == GDK_Delete)
     {
         playlist_editor_list_delete_songs(NULL, GTK_TREE_VIEW(giv)); 
+    }
+    else if(event->state&GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)) {
+        playlist_editor_list_replace_songs(NULL, GTK_TREE_VIEW(giv)); 
     }
     else if (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)
     {
