@@ -99,10 +99,14 @@ void info2_activate(void);
 void info2_fill_artist_view(const char *);
 void info2_fill_album_view(const char *,const char *);
 void info2_fill_song_view(mpd_Song *);
+
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);
 
+/* tag stuff */
+
+void mpd_interaction_update_supported_tags(void);
 /**
  * Playlist functions 
  */

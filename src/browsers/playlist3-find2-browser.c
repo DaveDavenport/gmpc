@@ -71,27 +71,38 @@ static GtkWidget            *search_entry           = NULL;
 static void pl3_find2_fill_combo(gmpcPlugin *plug)
 {
 	GtkTreeIter iter;
-	int i=0, max = 3;
+	int i=0, max = MPD_TAG_NUM_OF_ITEM_TYPES;
 	gtk_list_store_clear(pl3_find2_combo_store);
 
-	if(mpd_server_check_version(connection,0,12,0))
-	{
-		max = MPD_TAG_NUM_OF_ITEM_TYPES;
-	}
-	for(i=0;i< max;i++)
-	{
-		if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,i))
-		{
-			gtk_list_store_append(pl3_find2_combo_store, &iter);
-			gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
-		}
-	}
+    if(plug)
+    {
+        for(i=0;i< max;i++)
+        {
+            if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,i))
+            {
+                gtk_list_store_append(pl3_find2_combo_store, &iter);
+                gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
+            }
+        }
+    }
+    else 
+    {
+        for(i=0;i< MPD_TAG_NUM_OF_ITEM_TYPES;i++)
+        {
+            if(mpd_server_tag_supported(connection,i)){
+                gtk_list_store_append(pl3_find2_combo_store, &iter);
+                gtk_list_store_set(pl3_find2_combo_store, &iter, 1, mpdTagItemKeys[i], 0,i, -1);	
+            }
+        }
 
-		if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,QUERY_ENTRY))
-		{
-			gtk_list_store_append(pl3_find2_combo_store, &iter);
-			gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
-		}
+    }
+    if(plug == NULL || gmpc_plugin_browser_integrate_search_field_supported(plug,QUERY_ENTRY))
+    {
+        gtk_list_store_append(pl3_find2_combo_store, &iter);
+        gtk_list_store_set(pl3_find2_combo_store, &iter, 1, _("Query"), 0,QUERY_ENTRY, -1);	
+    }
+    
+
 }
 
 static void pl3_find2_combo_box_field_changed(GtkComboBox *cb, gpointer data)
@@ -159,7 +170,7 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
         }
     }
     /* default, if nothing is found. */
-    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ARTIST);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
 }
 /**
  * Construct the browser 
@@ -342,39 +353,36 @@ static MpdData * pl3_find2_browser_view(const gint num_field, const gchar *name,
 			mpd_server_check_command_allowed(connection, "playlistfind")== MPD_SERVER_COMMAND_ALLOWED)
     {
         int found = 0;
-        GtkTreeIter cc_iter;
-        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter) && name && name[0] != '\0')
+        //        if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter) && name && name[0] != '\0')
+        if(num_field == QUERY_ENTRY)
         {
-            if(num_field == QUERY_ENTRY)
-            {
-                data_t = advanced_search(name, search_playlist);
-            }else{
-                gchar ** splitted = tokenize_string(name);
-                int i =0;
-                for(i=0;splitted && splitted[i];i++)
-                {                                                          
-                    if(!found)
-                    {
-                        if(search_playlist)
-                            mpd_playlist_search_start(connection, FALSE);
-                        else
-                            mpd_database_search_start(connection, FALSE);
-                        found = TRUE;
-                    }
-                    if(search_playlist)
-                        mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
-                    else
-                        mpd_database_search_add_constraint(connection, num_field, splitted[i]);
-                }
-                if(splitted)
-                    g_strfreev(splitted);
-                if(found)
+            data_t = advanced_search(name, search_playlist);
+        }else{
+            gchar ** splitted = tokenize_string(name);
+            int i =0;
+            for(i=0;splitted && splitted[i];i++)
+            {                                                          
+                if(!found)
                 {
                     if(search_playlist)
-                        data_t = mpd_playlist_search_commit(connection);
+                        mpd_playlist_search_start(connection, FALSE);
                     else
-                        data_t = mpd_database_search_commit(connection);
+                        mpd_database_search_start(connection, FALSE);
+                    found = TRUE;
                 }
+                if(search_playlist)
+                    mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+                else
+                    mpd_database_search_add_constraint(connection, num_field, splitted[i]);
+            }
+            if(splitted)
+                g_strfreev(splitted);
+            if(found)
+            {
+                if(search_playlist)
+                    data_t = mpd_playlist_search_commit(connection);
+                else
+                    data_t = mpd_database_search_commit(connection);
             }
         }
     }
@@ -790,6 +798,13 @@ static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
 
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data)
 {
+    /* Clear the list */
+    if(connect)
+    {
+        if(pl3_find2_curpl)
+            pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl), NULL);
+        pl3_find2_browser_search();
+    }
 }
 
 /**
@@ -799,11 +814,23 @@ static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, 
 {
     if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j )
     {
-		pl3_find2_browser_activate();
+        GtkTreeIter iter;
+        GtkTreeModel *model;
+        pl3_find2_browser_activate();
+        model = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));        
         gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
-        gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
+        if(gtk_tree_model_get_iter_first(model, &iter)){
+            int found = 1;
+            do{
+                int field;
+                gtk_tree_model_get(model, &iter,0, &field, -1); 
+                if(field == QUERY_ENTRY){
+                    gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter); 
+                    found = 0;
+                }
+            }while(gtk_tree_model_iter_next(model, &iter) && found);
+        }
         gtk_widget_grab_focus(search_entry);
-//        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(pl3_find2_curpl), TRUE);
         return TRUE;
     }
 
@@ -873,9 +900,24 @@ static void pl3_find2_save_myself(void)
 
 static void pl3_find2_ec_database(gpointer user_data, const char *param)
 {
+    GtkTreeIter iter;
+    GtkTreeModel *model;
     pl3_find2_browser_activate();
+
+    model  = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));
     gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
+
+    if(gtk_tree_model_get_iter_first(model, &iter)){
+        int found = 1;
+        do{
+            int field;
+            gtk_tree_model_get(model, &iter,0, &field, -1); 
+            if(field == QUERY_ENTRY){
+                gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter); 
+                found = 0;
+            }
+        }while(gtk_tree_model_iter_next(model, &iter) && found);
+    }
     gtk_entry_set_text(GTK_ENTRY(search_entry), param);
     gtk_widget_activate(search_entry);
 }

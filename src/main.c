@@ -1223,6 +1223,7 @@ static void connection_changed(MpdObj *mi, int connected, gpointer data)
         {
             mpd_send_password(connection);
         }
+        advanced_search_update_taglist();
     }	
 
     /**

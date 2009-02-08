@@ -40,7 +40,7 @@ enum {
     SERVERSTATS_NUM_FIELDS
 };
 
-static GtkWidget *serverstats_sw= NULL, *serverstats_tree = NULL,*serverstats_combo = NULL;
+static GtkWidget *serverstats_sw= NULL, *serverstats_tree = NULL;
 static GtkWidget *serverstats_labels[SERVERSTATS_NUM_FIELDS];
 static gboolean cancel_query = FALSE;
 
@@ -375,10 +375,13 @@ static void serverstats_init(void)
         GtkListStore *store;
         GtkCellRenderer *renderer;
         GtkWidget *pb = gtk_progress_bar_new();
-        serverstats_combo = combo = gtk_combo_box_new_text();
-        for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES-2;i++)
+        combo = gtk_combo_box_new_text();
+        for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES-1;i++)
         {
-            gtk_combo_box_append_text(GTK_COMBO_BOX(combo), mpdTagItemKeys[i]);
+            if(mpd_server_tag_supported(connection,i))
+            {
+                gtk_combo_box_append_text(GTK_COMBO_BOX(combo), mpdTagItemKeys[i]);
+            }
         }
 
         gtk_table_attach(GTK_TABLE(table),combo, 0,2,12,13,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
@@ -461,17 +464,6 @@ static void serverstats_unselected(GtkWidget *container)
 
 
 
-static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)
-{
-    if(!connect && serverstats_tree)
-    {
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(serverstats_tree));
-        serverstats_clear();
-        if(model)
-            gtk_list_store_clear(GTK_LIST_STORE(model));
-        gtk_combo_box_set_active(GTK_COMBO_BOX(serverstats_combo), -1);
-    }
-}
 
 
 /**
@@ -492,6 +484,22 @@ static void serverinformation_popup_close(GtkWidget *dialog, gint response_id, g
     gtk_widget_destroy(dialog);
     
     debug_printf(DEBUG_INFO,"Close dialog: %i %i",width,height);
+}
+
+static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)
+{
+    if(!connect && serverstats_tree)
+    {
+        GtkWidget *dialog = gtk_widget_get_parent(serverstats_sw);
+        if(dialog)
+                gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), 0); 
+        if(serverstats_sw){
+            gtk_widget_destroy(serverstats_sw);
+            serverstats_sw = NULL;
+            serverstats_tree = NULL;
+            printf("cleanup serverstats\n");
+        }
+    }
 }
 void serverinformation_show_popup(void)
 {
@@ -522,7 +530,10 @@ void serverinformation_show_popup(void)
 
 }
 
-
+static void serverstats_destroy(void)
+{
+        serverstats_connection_changed(connection, 0, NULL);
+}
 /** 
  * Define the plugin structure
  */
@@ -531,6 +542,7 @@ gmpcPlugin statistics_plugin = {
 	.name = N_("Server Information"),
 	/* version */
 	.version = {0,1,2},
+    .destroy = serverstats_destroy,
 	/* type */
 	.plugin_type = GMPC_INTERNALL,
 	/** Connection changed */

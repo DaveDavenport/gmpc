@@ -458,7 +458,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 	while(tel)
     {
         te = tel->data;
-        if(te->index != not_to_update)
+        if(te->index != not_to_update && mpd_server_tag_supported(connection,te->type))
         {
             GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
             GtkTreeIter iter;
@@ -479,20 +479,23 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
                     if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
                     {	
-                        gchar *value;
-                        gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-                        if(!nfilter || te3->index < te->index)
-                            mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
-                        if(te3->index < (te->index) && !artist_seen)
-                        {           
-                            if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
-                            {
-                                artist = g_strdup(value);
-                                artist_seen = 1;
+                        if(mpd_server_tag_supported(connection,te3->type))
+                        {
+                            gchar *value;
+                            gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
+                            if(!nfilter || te3->index < te->index)
+                                mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
+                            if(te3->index < (te->index) && !artist_seen)
+                            {           
+                                if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
+                                {
+                                    artist = g_strdup(value);
+                                    artist_seen = 1;
+                                }
                             }
-                        }
 
-                        g_free(value);
+                            g_free(value);
+                        }
                     }
                 }
                 first =first->next;
@@ -694,9 +697,14 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
         }
         else
         {
-            mpd_database_search_field_start(connection, te->type);
-            data = mpd_database_search_commit(connection);
-            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+            if(mpd_server_tag_supported(connection,te->type))
+            {
+                mpd_database_search_field_start(connection, te->type);
+                data = mpd_database_search_commit(connection);
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+            }else {
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
+            }
         }
     }
 
@@ -760,11 +768,16 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
     {
         MpdData *data;
         tag_element *te = iter->data;
-        mpd_database_search_field_start(connection, te->type);
-        
-        data = mpd_database_search_commit(connection);
+
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
-        gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+        if(mpd_server_tag_supported(connection,te->type))
+        {
+            mpd_database_search_field_start(connection, te->type);
+
+            data = mpd_database_search_commit(connection);
+            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+        }else 
+            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
         gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te->model), NULL);
     }
                                     		
@@ -1197,9 +1210,14 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
 		{
 			MpdData *data;
             tag_element *te2 = NULL;
-			mpd_database_search_field_start(connection, te->type);
-			data = mpd_database_search_commit(connection);
-			gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+            if(mpd_server_tag_supported(connection,te->type))
+            {
+                mpd_database_search_field_start(connection, te->type);
+                data = mpd_database_search_commit(connection);
+                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+            }else {
+                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
+            }
 
 			te2 = g_malloc0(sizeof(*te2));
 			te2->index = -1;
@@ -1431,9 +1449,14 @@ static void tag2_pref_column_add(GtkWidget *but, GtkComboBox *box)
 				MpdData *data;
 				tag_element *te2 = giter->data;
 				/* update the content */	
-				mpd_database_search_field_start(connection, te2->type);
-				data = mpd_database_search_commit(connection);                        			
-				gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);	
+                if(mpd_server_tag_supported(connection,te2->type))
+                {
+                    mpd_database_search_field_start(connection, te2->type);
+                    data = mpd_database_search_commit(connection);                        			
+                    gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);	
+                }else{
+                    gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), NULL);	
+                }
 			}
 		}
 	}

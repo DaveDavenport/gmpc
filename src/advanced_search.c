@@ -11,13 +11,21 @@ void advanced_search_init(void)
     GString *string = g_string_new("(");
     for(i=0;i<MPD_TAG_NUM_OF_ITEM_TYPES;i++)
     {
-        g_string_append(string, mpdTagItemKeys[i]);
-        if(i< (MPD_TAG_NUM_OF_ITEM_TYPES-1))
-            g_string_append(string,"|");
+        if(mpd_server_tag_supported(connection,i))
+        {
+            g_string_append(string, mpdTagItemKeys[i]);
+            if(i< (MPD_TAG_NUM_OF_ITEM_TYPES-1))
+                g_string_append(string,"|");
+        }
     }
     g_string_append(string, ")[ ]*[=:][ ]*|[ ]*(\\|\\|)[ ]*");
     search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
     g_string_free(string, TRUE);
+}
+void advanced_search_update_taglist(void)
+{
+    g_regex_unref(search_regex);
+    advanced_search_init();
 }
 void advanced_search_destroy(void)
 {

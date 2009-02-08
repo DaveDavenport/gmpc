@@ -213,6 +213,7 @@ void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
 /* Tell mpd to reload the go menu */
 void            pl3_update_go_menu(void);
 
+
 /**
  * Plugin functions
  */
