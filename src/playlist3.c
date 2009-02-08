@@ -2234,7 +2234,6 @@ static void playlist3_error_style_set(GtkWidget *parent, GtkStyle *style_new, Gt
     GtkStyle *style =  gtk_rc_get_style_by_paths (gtk_widget_get_settings (wid), 
             "gtk-tooltips", "GtkWindow",
             GTK_TYPE_WINDOW);
-    printf("style set\n");
     if(style)
     {
         gtk_widget_set_style(wid,style);
@@ -2248,20 +2247,6 @@ static void playlist3_error_style_set(GtkWidget *parent, GtkStyle *style_new, Gt
 
 static gboolean playlist3_error_expose(GtkWidget *wid, GdkEventExpose *event, gpointer data)
 {
-/*	int width = wid->allocation.width;
-	int height = wid->allocation.height;
-	cairo_t *cr = gdk_cairo_create(wid->window);
-
-	cairo_set_line_width (cr, 1.0);
-	cairo_rectangle(cr, 0,0,width,height);
-	cairo_close_path (cr);
-	gdk_cairo_set_source_color(cr,&(wid->style->mid[GTK_STATE_NORMAL]));
-	cairo_fill_preserve(cr);
-	gdk_cairo_set_source_color(cr,&(wid->style->black));
-	cairo_stroke (cr);
-	cairo_destroy(cr);
-    */
-    printf("expose\n");
     gtk_paint_flat_box (wid->style,
             wid->window,
             GTK_STATE_NORMAL,
