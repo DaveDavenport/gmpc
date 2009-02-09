@@ -161,6 +161,8 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             Self *self = GET_NEW;
             self->_priv->name = g_strdup(name);
             self->_priv->do_sort = sort;
+
+            gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);
             gtk_tree_view_set_model(GTK_TREE_VIEW(self), model);
             /* init the tree */
             self_do_init(self);
@@ -853,6 +855,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                     char *path = NULL;
                     /* this one allready has the pos. */
                     gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
+                    debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
                     paste_queue = g_list_prepend(paste_queue, path);
                     value--;
                 } 
