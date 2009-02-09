@@ -1,4 +1,4 @@
-REVISION=$(shell git rev-parse --short master)
+REVISION=`git rev-parse --short master`
 CONF_VERSION=0
 -include Makefile.config
 
@@ -59,11 +59,7 @@ BUILT_SOURCES=\
 		revisiont.h\
 		revision.h
 
-%.c %.h %-private.h: %.gob
-	@GOB2@ -o gob/ --no-touch-headers --always-private-header $<
-	@touch $@
-
-%.o: %.rc
+gmpc-win32.o: gmpc-win32.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 .PHONY: revisiont.h
