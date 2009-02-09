@@ -2226,7 +2226,9 @@ void playlist3_update_header(void)
 		}
 	}
 }
-
+/**
+ * This code makes gmpc-playlist-messages look like a tooltip window
+ */
 static void playlist3_error_style_set(GtkWidget *parent, GtkStyle *style_new, GtkWidget *wid)
 {
 
