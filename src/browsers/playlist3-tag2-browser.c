@@ -560,6 +560,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
             sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
+            
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
@@ -1247,7 +1248,12 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
     {
         if(tag2_ht)
         {
-            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
+//            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
+            GList *list = g_list_first(tag2_ht);
+            for(;list;list = g_list_next(list))
+            {
+                tag2_songlist_clear_selection(NULL, list->data); 
+            }
         }
     }
 }
