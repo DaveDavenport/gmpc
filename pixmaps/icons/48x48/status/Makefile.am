@@ -8,4 +8,5 @@ dist_icons_DATA = \
 		stylized-cover.png\
 		frame-artist.png\
 		fetching-artist.png\
+		gmpc-tray.png\
 		no-artist.png
