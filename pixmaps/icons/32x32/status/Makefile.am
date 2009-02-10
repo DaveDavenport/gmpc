@@ -9,4 +9,5 @@ dist_icons_DATA = \
 		audio-volume-high.png\
 		audio-volume-low.png\
 		audio-volume-medium.png\
-		audio-volume-muted.png
+		audio-volume-muted.png\
+		gmpc-tray.png
