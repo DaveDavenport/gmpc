@@ -241,6 +241,8 @@ static void tag2_destroy(void)
 
 static void tag2_destroy_tag(tag_element *te)
 {
+    /* Part of inconsistent update hack */
+    g_idle_remove_by_data(te);
 	if(te->timeout)
 		g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
@@ -433,6 +435,20 @@ static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_ele
 
 }
 
+/**
+ * This is a hack here, for one purpose.
+ * When mpd database changes, it could hapening that when updating a sel change on column A
+ * that during the update, the selection of column B changes, what causes another change in column A
+ * So you get recursive updates.
+ * To avoid this, we "delay" the update callbacks to after the update on column A is completely handled.
+ * TODO: This needs to be handled nicer. 
+ */
+static void tag2_changed(GtkTreeSelection *sel2, tag_element *te);
+static gboolean tag2_changed_delayed(gpointer data)
+{
+    tag2_changed(NULL, (tag_element *)data);
+    return FALSE;
+}
 static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 {
     int nfilter = cfg_get_single_value_as_int_with_default(config, "tag2-plugin", "don't filter", 0);
@@ -442,6 +458,14 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
     int not_to_update = te->index;
     int artist_set = FALSE;
     GList *tel = g_list_first(browser->tag_lists);
+    static int working = 0;
+    if(working){
+        printf("error, only one tag2_changed callback allowed at the time, delaying\n");
+        g_idle_add(tag2_changed_delayed,te);
+    return;
+    }
+    working = 1;
+
 	/* Clear songs list */
     /* clear the depending browsers */
 	while(tel)
@@ -560,7 +584,6 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
             sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
-            
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
@@ -604,7 +627,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
     if(found)
         data = mpd_database_search_commit(connection);                                          		
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(browser->tag_songlist)), data);     
-
+    working = 0;
 }
 
 static void tag2_destroy_browser(tag_browser *browser, gpointer user_data) 
@@ -1248,12 +1271,13 @@ static void tag2_status_changed(MpdObj *mi, ChangedStatusType what, gpointer dat
     {
         if(tag2_ht)
         {
-//            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
-            GList *list = g_list_first(tag2_ht);
+            g_list_foreach(tag2_ht,(GFunc)tag2_connection_changed_foreach, NULL);
+/*            GList *list = g_list_first(tag2_ht);
             for(;list;list = g_list_next(list))
             {
                 tag2_songlist_clear_selection(NULL, list->data); 
             }
+            */
         }
     }
 }
