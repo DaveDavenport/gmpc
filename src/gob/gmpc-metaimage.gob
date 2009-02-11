@@ -370,6 +370,21 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_set_cover_na(self);
 			}
+            else
+            {
+                if(self->connection)
+                {
+                    int state = mpd_player_get_state(self->connection);
+                    if(state != MPD_PLAYER_STOP && state != MPD_PLAYER_UNKNOWN)
+                    {
+                        mpd_Song *song = mpd_playlist_get_current_song(self->connection);
+                        if(song){
+                            self_update_cover_from_song(self, song);
+                        }
+                    }
+                }
+
+            }
 
 		}
 
