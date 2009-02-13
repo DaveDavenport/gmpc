@@ -104,8 +104,12 @@ public class Gmpc.Easy.Command : GLib.Object
                     test = "%s[ ]*%s$".printf(name, pattern);
                     if(GLib.Regex.match_simple(test, value.strip(), GLib.RegexCompileFlags.CASELESS, 0))
                     {
+                        string param;
                         stdout.printf("matched: %s to %s\n", test, value.strip());
-                        var param = value.substring(name.length, -1);
+                        if(value.length > name.length)
+                            param = value.substring(name.length, -1);
+                        else
+                            param = "";
                         var param_str = param.strip();
                         callback(data, param_str); 
                         found = true;
