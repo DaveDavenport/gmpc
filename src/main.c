@@ -83,7 +83,10 @@ GmpcMetaWatcher *gmw = NULL;
 /* Easy command */
 GmpcEasyCommand *gmpc_easy_command = NULL;
 
-/* the state the user set gmpc in, so if the user told disconnect, don't try to autoconnect again.. */
+/**
+ * This flag indicate the requested connection state by the user.
+ * If the user presses disconnect,  you don't want to auto-connect anymore.
+ **/
 int gmpc_connected = FALSE;
 
 static void connection_changed_real(GmpcConnection * gmpcconn, MpdObj * mi, int connect, gpointer data);
@@ -773,17 +776,22 @@ int main(int argc, char **argv)
 	meta_data_check_plugin_changed();
 	TEC("Metadata plugin changed check");
 
+    /* Set window debug, this is used for developers to visualize redraws */
+	debug_printf(DEBUG_INFO, "Create main window\n");
+	gdk_window_set_debug_updates(do_debug_updates);
 	/**
      * Create the main window
      */
-	debug_printf(DEBUG_INFO, "Create main window\n");
-	gdk_window_set_debug_updates(do_debug_updates);
 	create_playlist3();
+    /* Initialize the message system */
 	playlist3_message_init();
 	TEC("Creating playlist window");
 
 	/**
      * First run dialog
+     * 
+     * If gmpc is ran for the first time, we want to show a wizard that helps 
+     * the user getting started.
      */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) {
 		setup_assistant();
@@ -816,6 +824,9 @@ int main(int argc, char **argv)
      */
 	gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
 
+    /**
+     * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running
+     */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden) {
 		gtk_init_add((GSourceFunc) pl3_hide, NULL);
 	}

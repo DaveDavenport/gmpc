@@ -157,8 +157,6 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
 	 */
 	gmpc_easy_download_clean(dld);
 
-    session = soup_session_sync_new();
-    gmpc_easy_download_set_proxy(session);
     /** Check for local url */
     if(strncmp(url, "http://", 7) && g_file_test(url, G_FILE_TEST_EXISTS))
     {
@@ -171,23 +169,8 @@ int gmpc_easy_download_with_headers(const char *url,gmpc_easy_download_struct *d
         return 0;
     }
 
-    if(cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use Proxy", FALSE))
-    {
-            char *value = cfg_get_single_value_as_string(config, "Network Settings", "Proxy Address");
-            gint port =  cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port",8080);
-            if(value)
-            {
-                gchar *ppath = g_strdup_printf("http://%s:%i", value, port);
-                SoupURI *uri = soup_uri_new(ppath);
-                session = soup_session_sync_new_with_options(SOUP_SESSION_PROXY_URI, uri,NULL);
-                soup_uri_free(uri);
-                g_free(ppath);
-                g_free(value);
-            }
-    }
-    if(!session){
-        session = soup_session_sync_new();
-    }
+    session = soup_session_sync_new();
+    gmpc_easy_download_set_proxy(session);
 
     msg = soup_message_new("GET",url);
 
