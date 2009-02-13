@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-07 14:58+0100\n"
-"PO-Revision-Date: 2009-01-30 15:10+0000\n"
+"POT-Creation-Date: 2009-02-07 14:59+0100\n"
+"PO-Revision-Date: 2009-02-07 14:18+0000\n"
 "Last-Translator: Aleks K <uteligger1@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-07 13:48+0000\n"
+"X-Launchpad-Export-Date: 2009-02-13 13:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -179,14 +179,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:309 ../src/main.c:310
 msgid "--debug-level="
 msgstr "--debug-niv="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:316
 msgid "--version"
 msgstr "--versjon"
@@ -197,7 +197,7 @@ msgstr "--konfigurasjon="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:330
 msgid "--start-hidden"
 msgstr "--start-usynelig"
@@ -205,49 +205,49 @@ msgstr "--start-usynelig"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--clean-cover-db"
 msgstr "--rengjr-album-database"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:343
 msgid "--disable-plugins"
 msgstr "--deaktiver-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:349
 msgid "--replace"
 msgstr "--erstatt"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:355
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:361
 msgid "--import-old-db"
 msgstr "--importer-gammel-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:367
 msgid "--debug-updates"
 msgstr "--debug-oppdateringer"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:374
 msgid "--help"
 msgstr "--hjelp"
@@ -966,7 +966,7 @@ msgstr "Legg til en strm"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:277
 msgid "Enter an url"
 msgstr "Fyll inn enn lenke"
@@ -981,7 +981,7 @@ msgstr "Påminnelse"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1000,7 +1000,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1031,6 +1031,11 @@ msgstr ""
 "  joki https://launchpad.net/~kyler2k\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  joki https://launchpad.net/~kyler2k\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Aleks K https://launchpad.net/~uteligger1\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  joki https://launchpad.net/~kyler2k\n"
 "\n"
@@ -1509,7 +1514,7 @@ msgstr "Henter..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:384
 #: ../src/browsers/playlist3-metadata-browser.c:683
 #: ../src/browsers/playlist3-metadata-browser.c:2418
@@ -1673,7 +1678,7 @@ msgstr[1] "<b>Datoer: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1559
 msgid "Artist info:"
 msgstr "Artist info:"
@@ -1692,7 +1697,7 @@ msgstr "Lignende Artister"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1892
 msgid "Album info:"
 msgstr "Album info:"
@@ -1712,7 +1717,7 @@ msgstr "Oppgaver"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2233
 #: ../src/browsers/playlist3-metadata-browser.c:2627
 msgid "Metadata Browser"
@@ -1720,7 +1725,7 @@ msgstr "Metadata Utforsker"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2249
 msgid "Show Current Song"
 msgstr "Vis den aktuelle sangen"
@@ -2026,8 +2031,8 @@ msgstr ""
 #~ msgstr "<b>Sortert etter:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>De konfigurerte Informasjons utforskerne vil kun "
 #~ "komme fram med mpd versjon 0.12 eller nyere.</i></span>"
@@ -2112,6 +2117,7 @@ msgstr ""
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Tillegg</b></span>"
 
+#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Klarte ikke  kontakte lenke: '%s'"
 
@@ -2247,8 +2253,7 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Pos"
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Forandringene blir sltt p etter  ha koblet til p "
 #~ "nytt</i></span>"

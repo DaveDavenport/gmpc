@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-07 14:57+0100\n"
-"PO-Revision-Date: 2009-01-30 17:47+0000\n"
+"POT-Creation-Date: 2009-02-07 14:59+0100\n"
+"PO-Revision-Date: 2009-02-12 19:03+0000\n"
 "Last-Translator: Javier García Díaz <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-07 13:48+0000\n"
+"X-Launchpad-Export-Date: 2009-02-13 13:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -179,14 +179,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:309 ../src/main.c:310
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:316
 msgid "--version"
 msgstr "--versión"
@@ -197,7 +197,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:330
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -205,49 +205,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:343
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:349
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:355
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:361
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:367
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:374
 msgid "--help"
 msgstr "--help"
@@ -294,35 +294,35 @@ msgstr ""
 
 #: ../src/main.c:467
 msgid "quit"
-msgstr ""
+msgstr "salir"
 
 #: ../src/main.c:467
 msgid "Quit gmpc"
-msgstr ""
+msgstr "Salir de gmpc"
 
 #: ../src/main.c:468
 msgid "hide"
-msgstr ""
+msgstr "ocultar"
 
 #: ../src/main.c:468
 msgid "Hide gmpc"
-msgstr ""
+msgstr "Ocultar gmpc"
 
 #: ../src/main.c:469
 msgid "show"
-msgstr ""
+msgstr "mostrar"
 
 #: ../src/main.c:469
 msgid "Show gmpc"
-msgstr ""
+msgstr "Mostrar gmpc"
 
 #: ../src/main.c:471
 msgid "show notification"
-msgstr ""
+msgstr "monstrar notificaciones"
 
 #: ../src/main.c:472
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "Mostrar icono en el área de notificación"
 
 #: ../src/main.c:529
 msgid "Failed to load the configuration system."
@@ -360,7 +360,8 @@ msgstr "código de error"
 
 #: ../src/main.c:1168
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
+msgstr ""
+"Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
 
 #: ../src/main.c:1205
 msgid "MPD versions before 0.13.0 are not supported"
@@ -650,11 +651,11 @@ msgstr "Combinación de teclas"
 #. basic playlist commands
 #: ../src/mpdinteraction.c:159 ../src/mpdinteraction.c:175
 msgid "play"
-msgstr ""
+msgstr "reproducir"
 
 #: ../src/mpdinteraction.c:159
 msgid "start playback"
-msgstr ""
+msgstr "comenzar la reproducción"
 
 #: ../src/mpdinteraction.c:160
 msgid "pause"
@@ -666,7 +667,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:161
 msgid "next"
-msgstr ""
+msgstr "siguiente"
 
 #: ../src/mpdinteraction.c:161
 msgid "next song"
@@ -674,7 +675,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:162
 msgid "prev"
-msgstr ""
+msgstr "anterior"
 
 #: ../src/mpdinteraction.c:162
 msgid "previous song"
@@ -682,7 +683,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:163
 msgid "stop"
-msgstr ""
+msgstr "parar"
 
 #: ../src/mpdinteraction.c:163
 msgid "stop playback"
@@ -690,7 +691,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:165
 msgid "random"
-msgstr ""
+msgstr "aleatorio"
 
 #: ../src/mpdinteraction.c:165
 msgid "Random (on|off)"
@@ -698,7 +699,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:166
 msgid "repeat"
-msgstr ""
+msgstr "repetir"
 
 #: ../src/mpdinteraction.c:166
 msgid "Repeat (on|off)"
@@ -707,7 +708,7 @@ msgstr ""
 #. volume commands
 #: ../src/mpdinteraction.c:169
 msgid "volume"
-msgstr ""
+msgstr "volumen"
 
 #: ../src/mpdinteraction.c:169
 msgid "Volume <level>"
@@ -715,23 +716,23 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:170
 msgid "volume \\+"
-msgstr ""
+msgstr "\\+ volumen"
 
 #: ../src/mpdinteraction.c:170
 msgid "Increase volume"
-msgstr ""
+msgstr "Subir el volumen"
 
 #: ../src/mpdinteraction.c:171
 msgid "volume -"
-msgstr ""
+msgstr "- volumen"
 
 #: ../src/mpdinteraction.c:171
 msgid "Decrease volume"
-msgstr ""
+msgstr "Bajar el volumen"
 
 #: ../src/mpdinteraction.c:172
 msgid "mute"
-msgstr ""
+msgstr "silenciar"
 
 #: ../src/mpdinteraction.c:175
 msgid "Play <query>"
@@ -739,7 +740,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:176
 msgid "add"
-msgstr ""
+msgstr "añadir"
 
 #: ../src/mpdinteraction.c:176
 msgid "Add <query>"
@@ -986,7 +987,7 @@ msgstr "Añadido 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:277
 msgid "Enter an url"
 msgstr "Ingrese una url"
@@ -1001,7 +1002,7 @@ msgstr "Notificación"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1020,7 +1021,7 @@ msgstr "Editar conexión"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1066,6 +1067,13 @@ msgstr ""
 "\n"
 "Launchpad Contributions:\n"
 "  Dante Díaz https://launchpad.net/~dante\n"
+"  Javier García Díaz https://launchpad.net/~shortname\n"
+"  Klaus Simon https://launchpad.net/~simon-klaus\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Dante Díaz https://launchpad.net/~dante\n"
+"  DiegoJ https://launchpad.net/~diegojromerolopez\n"
 "  Javier García Díaz https://launchpad.net/~shortname\n"
 "  Klaus Simon https://launchpad.net/~simon-klaus\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
@@ -1325,8 +1333,8 @@ msgstr "<ingresar el nombre de la lista de reproducción>"
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
 msgstr ""
-"<span size=\"x-small\"><i>La lista de reproducción existe actualmente.</i></"
-"span>"
+"<span size=\"x-small\"><i>La lista de reproducción existe "
+"actualmente.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1542,7 +1550,7 @@ msgstr "Descargando..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:384
 #: ../src/browsers/playlist3-metadata-browser.c:683
 #: ../src/browsers/playlist3-metadata-browser.c:2418
@@ -1706,7 +1714,7 @@ msgstr[1] "<b>Fechas: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1559
 msgid "Artist info:"
 msgstr "Información del Artista:"
@@ -1725,7 +1733,7 @@ msgstr "Artistas similares"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1892
 msgid "Album info:"
 msgstr "Información del Álbum"
@@ -1745,7 +1753,7 @@ msgstr "Pistas"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2233
 #: ../src/browsers/playlist3-metadata-browser.c:2627
 msgid "Metadata Browser"
@@ -1753,7 +1761,7 @@ msgstr "Examinador de Metadatos"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2249
 msgid "Show Current Song"
 msgstr "Mostrar la Canción Actual"
@@ -2059,8 +2067,8 @@ msgstr ""
 #~ msgstr "<b>Ordenar por:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>El explorador de Etiquetas configurado solamente "
 #~ "mostrará con la versión mpd 0.12 o posterior.</i></span>"
@@ -2125,6 +2133,7 @@ msgstr ""
 #~ "errores sólo\n"
 #~ "ninguno"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Cliente de Reproducción de Música de Gnome\n"
 
@@ -2148,6 +2157,7 @@ msgstr ""
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>Plugins:</b>"
 
+#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Fallo al contactar la url: '%s'"
 
@@ -2155,8 +2165,7 @@ msgstr ""
 #~ msgstr "Fallo al procesar vinculo de la lista de reproduccion"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
-#~ msgstr ""
-#~ "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
+#~ msgstr "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
 
 #~ msgid "And"
 #~ msgstr "Y"
@@ -2254,9 +2263,10 @@ msgstr ""
 #~ msgid "<b>Duration:</b>"
 #~ msgstr "<b>Duración:</b>"
 
+#, c-format
 #~ msgid ""
-#~ "Trying to run gmpc compiled against libmpd version '%s' with version "
-#~ "libmpd '%s'"
+#~ "Trying to run gmpc compiled against libmpd version '%s' with version libmpd "
+#~ "'%s'"
 #~ msgstr ""
 #~ "Intentando de arrancar gmpc compilado con la versión libmpd '%s' con la "
 #~ "versión libmpd '%s'"

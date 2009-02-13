@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-07 14:59+0100\n"
-"PO-Revision-Date: 2009-01-30 15:10+0000\n"
+"PO-Revision-Date: 2009-02-07 14:18+0000\n"
 "Last-Translator: Mateusz Szyper <mateyko5@o2.pl>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-02-07 13:48+0000\n"
+"X-Launchpad-Export-Date: 2009-02-13 13:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -181,14 +181,14 @@ msgstr "Serwer pośredniczący"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:309 ../src/main.c:310
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:316
 msgid "--version"
 msgstr "--version"
@@ -199,7 +199,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:330
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -207,49 +207,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:337
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:343
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:349
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:355
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:361
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:367
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:374
 msgid "--help"
 msgstr "--help"
@@ -974,7 +974,7 @@ msgstr "Dodano 1 strumień"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:277
 msgid "Enter an url"
 msgstr "Wprowadź url"
@@ -989,7 +989,7 @@ msgstr "Powiadamianie"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1008,7 +1008,7 @@ msgstr "Ustawienia połączenia"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1052,6 +1052,11 @@ msgstr ""
 "  mazdac https://launchpad.net/~mazdac\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  mazdac https://launchpad.net/~mazdac\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Mateusz Szyper https://launchpad.net/~mateyko5\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  mazdac https://launchpad.net/~mazdac\n"
 "\n"
@@ -1525,7 +1530,7 @@ msgstr "Pobieranie..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:384
 #: ../src/browsers/playlist3-metadata-browser.c:683
 #: ../src/browsers/playlist3-metadata-browser.c:2418
@@ -1690,7 +1695,7 @@ msgstr[2] "<b>Roczników: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1559
 msgid "Artist info:"
 msgstr "Informacje o wykonawcy:"
@@ -1709,7 +1714,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1892
 msgid "Album info:"
 msgstr "informacje o albumie:"
@@ -1729,7 +1734,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2233
 #: ../src/browsers/playlist3-metadata-browser.c:2627
 msgid "Metadata Browser"
@@ -1737,7 +1742,7 @@ msgstr "Przeglądarka metadanych"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2249
 msgid "Show Current Song"
 msgstr "Pokaż aktualny utwór"
@@ -2018,14 +2023,12 @@ msgid "Links"
 msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:451
-#, fuzzy
 msgid "artist"
-msgstr "wykonawca"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:460
-#, fuzzy
 msgid "album"
-msgstr "album"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:499
 #, c-format
@@ -2045,8 +2048,8 @@ msgstr ""
 #~ msgstr "<b>Sortuj według:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Skonfigurowana przeglądarka znaczników będzie "
 #~ "działać tylko z mpd w wersji 0.12 lub wyższej</i></span>"
@@ -2111,6 +2114,7 @@ msgstr ""
 #~ "błędy\n"
 #~ "wyłącz"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
 
@@ -2134,8 +2138,8 @@ msgstr ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
 #~ "from the cache"
 #~ msgstr ""
-#~ "Dodano nową wtyczkę metadancyh, GMPC oczyści pamięć podręczną ze "
-#~ "wszystkich brakujących metadanych"
+#~ "Dodano nową wtyczkę metadancyh, GMPC oczyści pamięć podręczną ze wszystkich "
+#~ "brakujących metadanych"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Wtyczki</b></span>"
@@ -2143,6 +2147,7 @@ msgstr ""
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>Wtyczki:</b>"
 
+#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Nie można podłączyć się do url: '%s'"
 
@@ -2333,11 +2338,10 @@ msgstr ""
 #~ msgid "Pos"
 #~ msgstr "Bież.poz."
 
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
+#~ msgid "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
 #~ msgstr ""
-#~ "<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym "
-#~ "podłączeniu do demona MPD</i></span>"
+#~ "<span size=\"small\"><i>Zmiany zostaną wprowadzone po ponownym podłączeniu "
+#~ "do demona MPD</i></span>"
 
 #~ msgid "Configure tag browsers"
 #~ msgstr "Konfiguruj przedlądarkę znaczników"
