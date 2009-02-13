@@ -318,9 +318,19 @@ static void proxy_pref_construct(GtkWidget * container)
 {
 	GObject *temp = NULL;
 	gchar *string;
+    GError *error = NULL;
 	gchar *path = gmpc_get_full_glade_path("preferences-proxy.ui");
 	proxy_pref_xml = gtk_builder_new();
-	gtk_builder_add_from_file(proxy_pref_xml, path, NULL);
+	gtk_builder_add_from_file(proxy_pref_xml, path, &error);
+
+    if(error){
+        debug_printf(DEBUG_ERROR, "Failed to load %s: '%s'", path,error->message); 
+        g_error_free(error);
+        g_free(path);
+       
+        return;
+    }
+
 	q_free(path);
 	/* use proxy */
 	temp = gtk_builder_get_object(proxy_pref_xml, "checkbutton_use_proxy");

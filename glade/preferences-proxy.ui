@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.14"/>
+  <requires lib="gtk+" version="2.12"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkFrame" id="frame_proxy_settings">
     <property name="visible">True</property>
