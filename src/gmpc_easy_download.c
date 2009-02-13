@@ -368,6 +368,7 @@ static void proxy_pref_construct(GtkWidget * container)
 	/* Add to parent */
 	temp = gtk_builder_get_object(proxy_pref_xml, "frame_proxy_settings");
 	gtk_container_add(GTK_CONTAINER(container), GTK_WIDGET(temp));
+    gtk_widget_show_all(container);
 }
 
 void quit_easy_download(void)
