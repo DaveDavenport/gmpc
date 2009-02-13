@@ -148,6 +148,7 @@ gmpcinclude_HEADERS = \
 		config1.h	\
 		misc.h\
 		gmpc_easy_download.h\
+		vala/gmpc-easy-command.h\
 		TreeSearchWidget.h \
 		playlist3-messages.h\
 		metadata.h
