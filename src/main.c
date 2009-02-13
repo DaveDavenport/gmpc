@@ -1353,11 +1353,11 @@ void print_version(void)
 
 	printf(GMPC_COPYRIGHT "\n\n" RESET);
 	printf("%-25s: %s\n", _("Tagline"), GMPC_TAGLINE);
-	printf("%-25s: %s\n", _("Version"), VERSION);
+	printf("%-25s: %i.%i.%i\n", _("Version"), GMPC_MAJOR_VERSION, GMPC_MINOR_VERSION, GMPC_MICRO_VERSION);
 	if (revision && revision[0] != '\0') {
 		printf("%-25s: %s\n", _("Revision"), revision);
 	}
-	printf("%-25s: %s\n", _("Libmpd version"), LIBMPD_VERSION);
+	printf("%-25s: %i.%i.%i\n", _("Libmpd Version"), LIBMPD_MAJOR_VERSION, LIBMPD_MINOR_VERSION, LIBMPD_MICRO_VERSION);
 	printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
 	printf("%-25s: %i.%i.%i\n", _("GLIB version"), GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
 	printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);

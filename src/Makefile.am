@@ -151,6 +151,7 @@ gmpcinclude_HEADERS = \
 		vala/gmpc-easy-command.h\
 		TreeSearchWidget.h \
 		playlist3-messages.h\
+		gmpc-version.h\
 		metadata.h
 
 gmpcincludedir =$(includedir)/gmpc/
@@ -183,6 +184,7 @@ EXTRA_DIST=\
 		qlib/qasyncqueue.h\
 		bacon/bacon-message-connection.h\
 		advanced_search.h\
+		gmpc-version.h.in\
 		gmpc-win32.rc
 
 if EGGTRAYICON

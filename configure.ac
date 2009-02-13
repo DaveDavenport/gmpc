@@ -19,9 +19,16 @@ AM_INIT_AUTOMAKE
 
 
 #Make version and variables available in config.h
-AC_DEFINE(GMPC_MAJOR_VERSION,   package_major_version,	["Major version of gmpc"])
-AC_DEFINE(GMPC_MINOR_VERSION,   package_minor_version,	["Minor version of gmpc"])
-AC_DEFINE(GMPC_MICRO_VERSION,   package_micro_version,	["Micro version of gmpc"])
+#AC_DEFINE(GMPC_MAJOR_VERSION,   package_major_version,	["Major version of gmpc"])
+#AC_DEFINE(GMPC_MINOR_VERSION,   package_minor_version,	["Minor version of gmpc"])
+#AC_DEFINE(GMPC_MICRO_VERSION,   package_micro_version,	["Micro version of gmpc"])
+# This makes sure the right substitution is done
+[GMPC_MAJOR_VERSION]=package_major_version
+[GMPC_MINOR_VERSION]=package_minor_version
+[GMPC_MICRO_VERSION]=package_micro_version
+AC_SUBST([GMPC_MAJOR_VERSION])
+AC_SUBST([GMPC_MINOR_VERSION])
+AC_SUBST([GMPC_MICRO_VERSION])
 AC_DEFINE(GMPC_TAGLINE,         package_tagline,	["Gmpc's tagline"])
 AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
 AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
@@ -345,6 +352,7 @@ AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcur
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/gmpc-version.h
 src/gob/Makefile
 glade/Makefile
 data/Makefile

@@ -21,7 +21,7 @@
 
 #define __MAIN_H__
 #include <config.h>
-
+#include <gmpc-version.h>
 #ifdef ENABLE_NLS
 #include <glib/gi18n.h>
 #endif
