@@ -359,7 +359,6 @@ class Gmpc:Profiles from G:Object
         debug_printf(DEBUG_WARNING, "Trying to remove not-existing profile: %i\n", id);
       return;
     }
-    self_changed(self,PROFILE_REMOVED,-1, id);
     for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
     if(self->_priv->list[i] == prof)
     {
@@ -374,6 +373,7 @@ class Gmpc:Profiles from G:Object
       self_free_profile(prof);
     }
 
+    self_changed(self,PROFILE_REMOVED,-1, id);
   }
 
   /**

@@ -1858,6 +1858,7 @@ static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, con
 	gchar *current = gmpc_profiles_get_current(gmpc_profiles);
 	GList *iter, *mult;
 	/* check if there is anything changed that is important for us. */
+
 	if (changed == PROFILE_COL_CHANGED && col != PROFILE_COL_NAME) {
 		q_free(current);
 		return;
