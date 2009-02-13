@@ -1,5 +1,24 @@
+/* Gnome Music Player Client (GMPC)
+ * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpc.wikia.com/
+ 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
 #include "gmpc-easy-command.h"
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
@@ -25,6 +44,7 @@ enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter);
+static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
 static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEntry* widget, const GdkEventKey* event);
 static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWindow* widget, const GdkEventExpose* event);
 static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
@@ -87,6 +107,16 @@ static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, Gt
 }
 
 
+/**
+     * Add a match entry to the Easy command object.
+     * param self the GmpcEasyCommand object.
+     * param name the name of the command. This is the "prefix" that needs to be matched.
+     * param pattern the pattern where the parameters need to match.
+     * param callback a GmpcEasyCommandCallback that returns when a entry is matched.
+     * param userdata a pointer that is passed to callback.
+     *
+     * return an unique id for the entry.
+     */
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata) {
 	GtkTreeIter iter = {0};
 	g_return_val_if_fail (self != NULL, 0U);
@@ -100,7 +130,7 @@ guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, cons
 }
 
 
-void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
+static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	GtkTreeModel* model;
 	const char* _tmp0;
 	char* value_unsplit;
@@ -284,6 +314,12 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
 }
 
 
+/** 
+     * Tell gmpc-easy-command to popup.
+     * @param self The GmpcEasyCommand object to popup
+     *
+     * This function will popup GmpcEasyCommand, or if allready open, preset it to the user.
+     */
 void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	g_return_if_fail (self != NULL);
 	if (self->priv->window == NULL) {
@@ -335,24 +371,6 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 }
 
 
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type) {
 	GmpcEasyCommand * self;
 	self = g_object_newv (object_type, 0, NULL);
