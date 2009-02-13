@@ -26,7 +26,7 @@ using GLib;
 using Gtk;
 using Cairo;
 
-public class Gmpc.Image : Gtk.EventBox {
+public class Gmpc.Image:Gtk.EventBox {
 	private Gdk.Pixbuf cover = null;
 	private bool cover_border = true;
 	private Gdk.Pixbuf temp = null;
@@ -35,8 +35,7 @@ public class Gmpc.Image : Gtk.EventBox {
 	private uint fade_timeout = 0;
 
 	~Image() {
-		if(fade_timeout > 0)
-		{
+		if (fade_timeout > 0) {
 			GLib.Source.remove(fade_timeout);
 			fade_timeout = 0;
 		}
@@ -46,123 +45,133 @@ public class Gmpc.Image : Gtk.EventBox {
 		this.visible_window = false;
 		this.expose_event += this.on_expose;
 	}
-		private bool on_expose (Image img, Gdk.EventExpose event) {
-			var ctx = Gdk.cairo_create(img.window);
-			int width=0;
-			int height = 0;
-			int x = img.allocation.x;
-			int y = img.allocation.y;
-			int ww = img.allocation.width;
-			int wh = img.allocation.height;
+	private bool on_expose(Image img, Gdk.EventExpose event) {
+		var ctx = Gdk.cairo_create(img.window);
+		int width = 0;
+		int height = 0;
+		int x = img.allocation.x;
+		int y = img.allocation.y;
+		int ww = img.allocation.width;
+		int wh = img.allocation.height;
 
-            ctx.set_antialias(Cairo.Antialias.NONE);
-            ctx.rectangle(event.area.x,event.area.y,event.area.width,event.area.height);
-            ctx.clip();
-            ctx.save();
+		ctx.set_antialias(Cairo.Antialias.NONE);
+		ctx.rectangle(event.area.x, event.area.y, event.area.width, event.area.height);
+		ctx.clip();
+		ctx.save();
 
-            ctx.set_line_width ( 1.1);
-			ctx.set_tolerance (0.5);
-			if(cover != null)
-			{
-				width = cover.get_width();
-				height = cover.get_height();
+		ctx.set_line_width(1.1);
+		ctx.set_tolerance(0.5);
+		if (cover != null) {
+			width = cover.get_width();
+			height = cover.get_height();
 
-				ctx.set_line_join (LineJoin.ROUND);
+			ctx.set_line_join(LineJoin.ROUND);
 
-				// Make the path
-				ctx.new_path();
-                ctx.rectangle( x+(ww-width)/2,y+(wh-height)/2,width, height);
+			// Make the path
+			ctx.new_path();
+			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width, height);
 
-                double fade2 = (fade <= 0)?1:fade;
-				Gdk.cairo_set_source_pixbuf(ctx, cover, x+(ww-width)/2,y+(wh-height)/2);
+			double fade2 = (fade <= 0) ? 1 : fade;
+			Gdk.cairo_set_source_pixbuf(ctx, cover, x + (ww - width) / 2, y + (wh - height) / 2);
 
-				if(cover_border)
-					ctx.clip_preserve();
-				else
-					ctx.clip();
-				ctx.paint_with_alpha(fade2);
-                if(cover_border){
-					ctx.set_source_rgba(0,0,0,fade2);
-					ctx.stroke();
-				}
-				ctx.reset_clip();
-                ctx.restore();
+			if (cover_border)
+				ctx.clip_preserve();
+			else
+				ctx.clip();
+			ctx.paint_with_alpha(fade2);
+			if (cover_border) {
+				ctx.set_source_rgba(0, 0, 0, fade2);
+				ctx.stroke();
 			}
-
-			if(temp != null)
-			{
-				ctx.new_path();
-				width = temp.get_width();
-				height = temp.get_height();
-
-                ctx.rectangle( x+(ww-width)/2,y+(wh-height)/2,width, height);
-                Gdk.cairo_set_source_pixbuf(ctx, temp, x+(ww-width)/2,y+(wh-height)/2);
-
-
-				if(temp_border)
-					ctx.clip_preserve();
-				else
-					ctx.clip();
-
-                double fade2 = (fade <= 0)?1:fade;
-				ctx.paint_with_alpha(1-fade2);
-				if(temp_border){
-					ctx.set_source_rgba(0,0,0,1-fade2);
-					ctx.stroke();
-				}
-                ctx.reset_clip();
-            }
-			return true;
+			ctx.reset_clip();
+			ctx.restore();
 		}
-		private bool timeout_test()
-		{
-			fade -= 0.10;
-			if(fade <= 0.0){
-                fade=0;
-				this.cover = this.temp;
-				this.cover_border = this.temp_border;
-				this.temp = null;
-				this.queue_draw();
-                fade_timeout = 0;
-				return false;
+
+		if (temp != null) {
+			ctx.new_path();
+			width = temp.get_width();
+			height = temp.get_height();
+
+			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width, height);
+			Gdk.cairo_set_source_pixbuf(ctx, temp, x + (ww - width) / 2, y + (wh - height) / 2);
+
+			if (temp_border)
+				ctx.clip_preserve();
+			else
+				ctx.clip();
+
+			double fade2 = (fade <= 0) ? 1 : fade;
+			ctx.paint_with_alpha(1 - fade2);
+			if (temp_border) {
+				ctx.set_source_rgba(0, 0, 0, 1 - fade2);
+				ctx.stroke();
 			}
-
-			this.queue_draw();
-			return true;
+			ctx.reset_clip();
 		}
-		public void set_pixbuf(Gdk.Pixbuf buf, bool border)
-		{
-            if(this.temp == null && this.cover == null) {
-                this.cover_border = border;
-                this.cover = null;
-                this.cover = buf;
-                this.queue_draw();
-                return;
-            }
-            fade = 1.0-fade;
-            if(this.temp != null)
-            {
-                this.cover = this.temp;
-            }
-            this.temp = null;
-			this.temp= buf;
-			this.temp_border = border;
-                this.queue_draw();
-			if(fade_timeout>0) {
-				GLib.Source.remove(fade_timeout);
-			}
-			fade_timeout = Timeout.add(50, this.timeout_test);
-		}
-		public void clear_pixbuf()
-		{
-			fade = 0.0;
-			this.temp = null;
-			if(fade_timeout>0) {
-				GLib.Source.remove(fade_timeout);
-				fade_timeout = 0;
-			}
-			this.cover = null;
-			this.cover_border = false;
-			this.queue_draw();
-		}
+		return true;
 	}
+	private bool timeout_test() {
+		fade -= 0.10;
+		if (fade <= 0.0) {
+			fade = 0;
+			this.cover = this.temp;
+			this.cover_border = this.temp_border;
+			this.temp = null;
+			this.queue_draw();
+			fade_timeout = 0;
+			return false;
+		}
+
+		this.queue_draw();
+		return true;
+	}
+	/**
+     * Set a new pixbuf to be displayed next.
+     * param self a GmpcImage to set the pixbuf on.
+     * param bug the new GdkPixbuf to display.
+     * param border flag that indicates if a border should be drawn.
+     *
+     * Queues the pixbuf buf to be drawn next. If a pixbuf is allready shown, it will fade out and buf 
+     * will fade in.
+     */
+	public void set_pixbuf(Gdk.Pixbuf buf, bool border) {
+		if (this.temp == null && this.cover == null) {
+			this.cover_border = border;
+			this.cover = null;
+			this.cover = buf;
+			this.queue_draw();
+			return;
+		}
+		fade = 1.0 - fade;
+		if (this.temp != null) {
+			this.cover = this.temp;
+		}
+		this.temp = null;
+		this.temp = buf;
+		this.temp_border = border;
+		this.queue_draw();
+		if (fade_timeout > 0) {
+			GLib.Source.remove(fade_timeout);
+		}
+		fade_timeout = Timeout.add(50, this.timeout_test);
+	}
+	/**
+     * Clears the image.
+     * param self a GmpcImage to clear
+     * 
+     * Clears the image. Next set_pixbuf won't cause a fade.
+     */
+	public void clear_pixbuf() {
+		fade = 0.0;
+		this.temp = null;
+		if (fade_timeout > 0) {
+			GLib.Source.remove(fade_timeout);
+			fade_timeout = 0;
+		}
+		this.cover = null;
+		this.cover_border = false;
+		this.queue_draw();
+	}
+}
+
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
