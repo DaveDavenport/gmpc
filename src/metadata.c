@@ -85,6 +85,21 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
                 data2->song = NULL;
                 mpd_data_free(data2);
             }
+            else if(tsong->albumartist)
+            {
+                mpd_database_search_start(connection, TRUE);
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST, tsong->albumartist);
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
+                data2 = mpd_database_search_commit(connection);
+                if(data2)
+                {
+                    edited = data2->song;
+                    data2->song = NULL;
+                    mpd_data_free(data2);
+                }
+
+
+            }
         }
         if(type&(META_ARTIST_ART|META_ARTIST_TXT) && tsong->artist)
         {

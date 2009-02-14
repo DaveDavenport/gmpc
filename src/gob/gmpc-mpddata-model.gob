@@ -456,6 +456,7 @@ requires 2.0.0
                             self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
                             song = mpd_newSong();
                             song->artist = g_strdup(self->_priv->req_artist); 
+                            song->albumartist = g_strdup(self->_priv->req_artist); 
                             song->album = g_strdup(data->tag);
                             path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
                             ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
