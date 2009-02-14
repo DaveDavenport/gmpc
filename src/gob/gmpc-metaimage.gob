@@ -657,7 +657,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     /* Scale the cover to fit inside the case */
                     tempw =  gdk_pixbuf_get_width(pb2)-spineWidth;
                     if((gdk_pixbuf_get_height(pb2)/(double)height)*width < tempw){
-//                    if(width < height){
                         pb = gdk_pixbuf_new_from_file_at_scale(path,tempw, -1,TRUE,NULL);
                     }else{
                         pb = gdk_pixbuf_new_from_file_at_scale(path,-1,gdk_pixbuf_get_height(pb2),TRUE,NULL);
@@ -703,7 +702,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     pb = gdk_pixbuf_new_from_file_at_scale(path,size,size,TRUE,NULL);
                     if(!self->squared) 
                         gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,TRUE);
+                    gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb,(self->image_type != META_ARTIST_ART));
                     g_object_unref(pb);
                 }
                 /**
