@@ -30,7 +30,7 @@ public class Gmpc.Easy.Command:GLib.Object {
 	private uint signals = 0;
 	private Gtk.Window window = null;
 
-	 private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
+	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
 		var model = comp.model;
 
@@ -61,14 +61,14 @@ public class Gmpc.Easy.Command:GLib.Object {
 		renderer.set("foreground", "grey", null);
 	}
 
-    /**
+	/**
      * This function is called when the user entered a line matching this entry.
      * param data the user data passed.
      * param param a string with the extra parameters passed to the command
      */
 	public delegate void Callback(void *data, string param);
 
-    /**
+	/**
      * Add a match entry to the Easy command object.
      * param self the GmpcEasyCommand object.
      * param name the name of the command. This is the "prefix" that needs to be matched.
@@ -86,8 +86,7 @@ public class Gmpc.Easy.Command:GLib.Object {
 		return this.signals;
 	}
 
-	private void
-	 activate(Gtk.Entry entry) {
+	private void activate(Gtk.Entry entry) {
 		weak Gtk.TreeModel model = this.store;
 		string value_unsplit = entry.get_text();
 		Gtk.TreeIter iter;
@@ -97,9 +96,9 @@ public class Gmpc.Easy.Command:GLib.Object {
 			return;
 		}
 		foreach(string value in value_unsplit.split(";")) {
-			/* ToDo: Make this nicer... maybe some fancy parsing */
+            bool found = false;
+            /* ToDo: Make this nicer... maybe some fancy parsing */
 			if (model.get_iter_first(out iter)) {
-				bool found = false;
 				do {
 					string name, pattern, test;
 					Callback callback = null;
@@ -119,10 +118,36 @@ public class Gmpc.Easy.Command:GLib.Object {
 						found = true;
 					}
 				} while (model.iter_next(ref iter) && !found);
-				if (!found)
-					Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
 			}
+            if(!found) {
+                if (model.get_iter_first(out iter)) {
+                    do {
+                        string name, pattern, test;
+                        Callback callback = null;
+                        void *data;
+                        model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
+
+                        test = "^%s.*".printf(value.strip());
+                        if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
+                            string param;
+                            stdout.printf("matched: %s to %s\n", test, name);
+                            if (value.length > name.length)
+                                param = value.substring(name.length, -1);
+                            else
+                                param = "";
+                            var param_str = param.strip();
+                            callback(data, param_str);
+                            found = true;
+                        }
+                        else
+                            stdout.printf("!matched: %s to %s\n", test, name);
+                    } while (model.iter_next(ref iter) && !found);
+                }
+            }
+            if (!found)
+                Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
 		}
+
 		window.destroy();
 		window = null;
 	}
@@ -174,7 +199,7 @@ public class Gmpc.Easy.Command:GLib.Object {
 		return false;
 	}
 
-    /** 
+	/** 
      * Tell gmpc-easy-command to popup.
      * @param self The GmpcEasyCommand object to popup
      *

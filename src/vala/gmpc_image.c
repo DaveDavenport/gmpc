@@ -162,6 +162,15 @@ static gboolean _gmpc_image_timeout_test_gsource_func (gpointer self) {
 }
 
 
+/**
+     * Set a new pixbuf to be displayed next.
+     * param self a GmpcImage to set the pixbuf on.
+     * param bug the new GdkPixbuf to display.
+     * param border flag that indicates if a border should be drawn.
+     *
+     * Queues the pixbuf buf to be drawn next. If a pixbuf is allready shown, it will fade out and buf 
+     * will fade in.
+     */
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 	gboolean _tmp0;
 	GdkPixbuf* _tmp6;
@@ -210,6 +219,12 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border) {
 }
 
 
+/**
+     * Clears the image.
+     * param self a GmpcImage to clear
+     * 
+     * Clears the image. Next set_pixbuf won't cause a fade.
+     */
 void gmpc_image_clear_pixbuf (GmpcImage* self) {
 	GdkPixbuf* _tmp0;
 	GdkPixbuf* _tmp1;

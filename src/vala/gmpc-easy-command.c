@@ -135,7 +135,7 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 	const char* _tmp0;
 	char* value_unsplit;
 	GtkTreeIter iter = {0};
-	GtkWindow* _tmp12;
+	GtkWindow* _tmp19;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
 	model = (GtkTreeModel*) self->priv->store;
@@ -158,16 +158,16 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 		value_collection = _tmp2 = g_strsplit (value_unsplit, ";", 0);
 		value_collection_length1 = _vala_array_length (_tmp2);
 		for (value_it = 0; value_it < _vala_array_length (_tmp2); value_it = value_it + 1) {
-			const char* _tmp11;
+			const char* _tmp18;
 			char* value;
-			_tmp11 = NULL;
-			value = (_tmp11 = value_collection[value_it], (_tmp11 == NULL) ? NULL : g_strdup (_tmp11));
+			_tmp18 = NULL;
+			value = (_tmp18 = value_collection[value_it], (_tmp18 == NULL) ? NULL : g_strdup (_tmp18));
 			{
+				gboolean found;
+				found = FALSE;
 				/* ToDo: Make this nicer... maybe some fancy parsing */
 				if (gtk_tree_model_get_iter_first (model, &iter)) {
-					gboolean found;
 					gboolean _tmp3;
-					found = FALSE;
 					_tmp3 = FALSE;
 					do {
 						char* name;
@@ -225,12 +225,76 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 						pattern = (g_free (pattern), NULL);
 						test = (g_free (test), NULL);
 					} while (TRUE);
-					if (!found) {
-						char* _tmp10;
-						_tmp10 = NULL;
-						playlist3_show_error_message (_tmp10 = g_strdup_printf ("Unknown command: '%s'", g_strstrip (value)), ERROR_INFO);
-						_tmp10 = (g_free (_tmp10), NULL);
+				}
+				if (!found) {
+					if (gtk_tree_model_get_iter_first (model, &iter)) {
+						gboolean _tmp10;
+						_tmp10 = FALSE;
+						do {
+							char* name;
+							char* pattern;
+							char* test;
+							GmpcEasyCommandCallback _tmp12;
+							void* callback_target;
+							GmpcEasyCommandCallback callback;
+							void* data;
+							char* _tmp13;
+							if (_tmp10) {
+								gboolean _tmp11;
+								_tmp11 = FALSE;
+								if (gtk_tree_model_iter_next (model, &iter)) {
+									_tmp11 = !found;
+								} else {
+									_tmp11 = FALSE;
+								}
+								if (!_tmp11) {
+									break;
+								}
+							}
+							_tmp10 = TRUE;
+							name = NULL;
+							pattern = NULL;
+							test = NULL;
+							callback = (_tmp12 = NULL, callback_target = NULL, _tmp12);
+							data = NULL;
+							gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
+							_tmp13 = NULL;
+							test = (_tmp13 = g_strdup_printf ("^%s.*", g_strstrip (value)), test = (g_free (test), NULL), _tmp13);
+							if (g_regex_match_simple (test, name, G_REGEX_CASELESS, 0)) {
+								char* param;
+								const char* _tmp16;
+								char* param_str;
+								param = NULL;
+								fprintf (stdout, "matched: %s to %s\n", test, name);
+								if (string_get_length (value) > string_get_length (name)) {
+									char* _tmp14;
+									_tmp14 = NULL;
+									param = (_tmp14 = string_substring (value, string_get_length (name), (glong) (-1)), param = (g_free (param), NULL), _tmp14);
+								} else {
+									char* _tmp15;
+									_tmp15 = NULL;
+									param = (_tmp15 = g_strdup (""), param = (g_free (param), NULL), _tmp15);
+								}
+								_tmp16 = NULL;
+								param_str = (_tmp16 = g_strstrip (param), (_tmp16 == NULL) ? NULL : g_strdup (_tmp16));
+								callback (data, param_str, callback_target);
+								found = TRUE;
+								param = (g_free (param), NULL);
+								param_str = (g_free (param_str), NULL);
+							} else {
+								fprintf (stdout, "!matched: %s to %s\n", test, name);
+							}
+							name = (g_free (name), NULL);
+							pattern = (g_free (pattern), NULL);
+							test = (g_free (test), NULL);
+						} while (TRUE);
 					}
+				}
+				if (!found) {
+					char* _tmp17;
+					_tmp17 = NULL;
+					playlist3_show_error_message (_tmp17 = g_strdup_printf ("Unknown command: '%s'", g_strstrip (value)), ERROR_INFO);
+					_tmp17 = (g_free (_tmp17), NULL);
 				}
 				value = (g_free (value), NULL);
 			}
@@ -238,8 +302,8 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 		value_collection = (_vala_array_free (value_collection, value_collection_length1, (GDestroyNotify) g_free), NULL);
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->window);
-	_tmp12 = NULL;
-	self->priv->window = (_tmp12 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp12);
+	_tmp19 = NULL;
+	self->priv->window = (_tmp19 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp19);
 	value_unsplit = (g_free (value_unsplit), NULL);
 }
 
