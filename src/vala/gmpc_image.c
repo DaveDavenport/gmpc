@@ -22,6 +22,9 @@
 #include <math.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 
@@ -78,6 +81,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		width = gdk_pixbuf_get_width (self->priv->cover);
 		height = gdk_pixbuf_get_height (self->priv->cover);
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
+		fprintf (stdout, "%i %i %i %i\n", ww, width, x, x + (ww - width) / 2);
 		/* Make the path*/
 		cairo_new_path (ctx);
 		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width - 1)), ((double) (height - 1)));

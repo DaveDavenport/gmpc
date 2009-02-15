@@ -66,7 +66,7 @@ public class Gmpc.Image:Gtk.EventBox {
 			height = cover.get_height();
 
 			ctx.set_line_join(LineJoin.ROUND);
-
+			stdout.printf("%i %i %i %i\n", ww, width, x, x+(ww-width)/2);
 			// Make the path
 			ctx.new_path();
 			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width-1, height-1);
