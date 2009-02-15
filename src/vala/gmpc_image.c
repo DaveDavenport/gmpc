@@ -69,12 +69,10 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	wh = GTK_WIDGET (img)->allocation.height;
 	cairo_set_antialias (ctx, CAIRO_ANTIALIAS_NONE);
 	cairo_rectangle (ctx, ((double) ((*event).area.x)), ((double) ((*event).area.y)), ((double) ((*event).area.width)), ((double) ((*event).area.height)));
-	cairo_set_source_rgb (ctx, ((double) (1)), ((double) (0)), ((double) (0)));
-	cairo_stroke_preserve (ctx);
 	cairo_clip (ctx);
 	cairo_save (ctx);
-	cairo_set_line_width (ctx, 1.1);
-	cairo_set_tolerance (ctx, 0.5);
+	cairo_set_line_width (ctx, 1.0);
+	cairo_set_tolerance (ctx, 0.0);
 	if (self->priv->cover != NULL) {
 		double fade2;
 		width = gdk_pixbuf_get_width (self->priv->cover);
@@ -82,42 +80,45 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
 		/* Make the path*/
 		cairo_new_path (ctx);
-		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width)), ((double) (height)));
+		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width - 1)), ((double) (height - 1)));
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
-		if (self->priv->cover_border) {
-			cairo_clip_preserve (ctx);
-		} else {
-			cairo_clip (ctx);
-		}
+		/*
+		if (cover_border)
+		ctx.clip_preserve();
+		else
+		ctx.clip();
+		*/
 		cairo_paint_with_alpha (ctx, fade2);
 		if (self->priv->cover_border) {
 			cairo_set_source_rgba (ctx, ((double) (0)), ((double) (0)), ((double) (0)), fade2);
 			cairo_stroke (ctx);
 		}
-		cairo_reset_clip (ctx);
-		cairo_restore (ctx);
 	}
+	/*ctx.reset_clip();
+	ctx.restore();
+	*/
 	if (self->priv->temp != NULL) {
 		double fade2;
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
-		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width)), ((double) (height)));
+		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width - 1)), ((double) (height - 1)));
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
-		if (self->priv->temp_border) {
-			cairo_clip_preserve (ctx);
-		} else {
-			cairo_clip (ctx);
-		}
+		/*
+		if (temp_border)
+		ctx.clip_preserve();
+		else
+		ctx.clip();
+		*/
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
 		cairo_paint_with_alpha (ctx, 1 - fade2);
 		if (self->priv->temp_border) {
 			cairo_set_source_rgba (ctx, ((double) (0)), ((double) (0)), ((double) (0)), 1 - fade2);
 			cairo_stroke (ctx);
 		}
-		cairo_reset_clip (ctx);
 	}
+	/*ctx.reset_clip();*/
 	return (_tmp0 = TRUE, (ctx == NULL ? NULL : (ctx = (cairo_destroy (ctx), NULL))), _tmp0);
 }
 

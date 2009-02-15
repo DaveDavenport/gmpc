@@ -56,13 +56,11 @@ public class Gmpc.Image:Gtk.EventBox {
 
 		ctx.set_antialias(Cairo.Antialias.NONE);
 		ctx.rectangle(event.area.x, event.area.y, event.area.width, event.area.height);
-		ctx.set_source_rgb(1,0,0);
-		ctx.stroke_preserve();
 		ctx.clip();
 		ctx.save();
 
-		ctx.set_line_width(1.1);
-		ctx.set_tolerance(0.5);
+		ctx.set_line_width(1.0);
+		ctx.set_tolerance(0.0);
 		if (cover != null) {
 			width = cover.get_width();
 			height = cover.get_height();
@@ -71,44 +69,44 @@ public class Gmpc.Image:Gtk.EventBox {
 
 			// Make the path
 			ctx.new_path();
-			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width, height);
+			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width-1, height-1);
 
 			double fade2 = (fade <= 0) ? 1 : fade;
 			Gdk.cairo_set_source_pixbuf(ctx, cover, x + (ww - width) / 2, y + (wh - height) / 2);
-
+/*
 			if (cover_border)
 				ctx.clip_preserve();
 			else
 				ctx.clip();
-			ctx.paint_with_alpha(fade2);
+*/			ctx.paint_with_alpha(fade2);
 			if (cover_border) {
 				ctx.set_source_rgba(0, 0, 0, fade2);
 				ctx.stroke();
 			}
-			ctx.reset_clip();
+/*			ctx.reset_clip();
 			ctx.restore();
-		}
+*/		}
 
 		if (temp != null) {
 			ctx.new_path();
 			width = temp.get_width();
 			height = temp.get_height();
 
-			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width, height);
+			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width-1, height-1);
 			Gdk.cairo_set_source_pixbuf(ctx, temp, x + (ww - width) / 2, y + (wh - height) / 2);
-
+/*
 			if (temp_border)
 				ctx.clip_preserve();
 			else
 				ctx.clip();
-
+*/
 			double fade2 = (fade <= 0) ? 1 : fade;
 			ctx.paint_with_alpha(1 - fade2);
 			if (temp_border) {
 				ctx.set_source_rgba(0, 0, 0, 1 - fade2);
 				ctx.stroke();
 			}
-			ctx.reset_clip();
+//			ctx.reset_clip();
 		}
 		return true;
 	}
