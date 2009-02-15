@@ -56,6 +56,8 @@ public class Gmpc.Image:Gtk.EventBox {
 
 		ctx.set_antialias(Cairo.Antialias.NONE);
 		ctx.rectangle(event.area.x, event.area.y, event.area.width, event.area.height);
+		ctx.set_source_rgb(1,0,0);
+		ctx.stroke_preserve();
 		ctx.clip();
 		ctx.save();
 
