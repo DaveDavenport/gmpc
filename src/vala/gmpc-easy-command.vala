@@ -119,6 +119,10 @@ public class Gmpc.Easy.Command:GLib.Object {
 					}
 				} while (model.iter_next(ref iter) && !found);
 			}
+            /* If now exact match is found, use the partial matching that is
+             * also used by the completion popup.
+             * First, partial, match is taken.
+             */
             if(!found) {
                 if (model.get_iter_first(out iter)) {
                     do {
@@ -144,6 +148,7 @@ public class Gmpc.Easy.Command:GLib.Object {
                     } while (model.iter_next(ref iter) && !found);
                 }
             }
+            /* If we still cannot match it, give a message */
             if (!found)
                 Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
 		}

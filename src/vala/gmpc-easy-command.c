@@ -226,6 +226,10 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 						test = (g_free (test), NULL);
 					} while (TRUE);
 				}
+				/* If now exact match is found, use the partial matching that is
+				             * also used by the completion popup.
+				             * First, partial, match is taken.
+				             */
 				if (!found) {
 					if (gtk_tree_model_get_iter_first (model, &iter)) {
 						gboolean _tmp10;
@@ -290,6 +294,7 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 						} while (TRUE);
 					}
 				}
+				/* If we still cannot match it, give a message */
 				if (!found) {
 					char* _tmp17;
 					_tmp17 = NULL;
