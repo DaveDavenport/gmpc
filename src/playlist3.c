@@ -1545,7 +1545,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				gchar *markup = cfg_get_single_value_as_string_with_default(config,
 																			"playlist",	/* Category */
 																			"window-markup",	/* Key */
-																			"[%title% - &[%artist%]]|%shortfile%"	/* default value */
+																			"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
 					);
 					/**
                      * Update the image in the menu
