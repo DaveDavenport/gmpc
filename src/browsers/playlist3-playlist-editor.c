@@ -560,7 +560,7 @@ static gboolean playlist_editor_key_released(GtkTreeView *tree, GdkEventButton *
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_replace_songs), tree);
       	if(mpd_server_check_version(connection, 0,13,0))
         {
-          item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE,NULL);
+          item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE,NULL);
           gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
           g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_delete_songs), tree);
         }
