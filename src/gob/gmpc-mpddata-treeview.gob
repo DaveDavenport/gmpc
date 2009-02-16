@@ -64,7 +64,7 @@ static int col_ids[NUM_COLS] = {
 		MPDDATA_MODEL_COL_PATH_EXTENSION,				/* Extension */
 		MPDDATA_MODEL_COL_PATH_DIRECTORY				/* Directory */
 };
-static gchar *col_names[NUM_COLS] = {
+static const gchar *col_names[NUM_COLS] = {
     N_("Markup"),
     N_("Artist"),
     N_("Album"),
