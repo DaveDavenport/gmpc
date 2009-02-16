@@ -64,15 +64,18 @@ public class Gmpc.Image:Gtk.EventBox {
 		if (cover != null) {
 			width = cover.get_width();
 			height = cover.get_height();
-
+			var x_start = x+Math.ceil((ww-width)/2.0);
+			var y_start = y+Math.ceil((wh-height)/2.0);
 			ctx.set_line_join(LineJoin.ROUND);
-			stdout.printf("%i %i %i %i\n", ww, width, x, x+(ww-width)/2);
+			if(width > ww || height > wh) {
+				stdout.printf("Image won't fit %i-%i %i-%i\n",width,ww,height,wh);
+			}
 			// Make the path
 			ctx.new_path();
-			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width-1, height-1);
+			ctx.rectangle(x_start, y_start, width-1, height-1);
 
 			double fade2 = (fade <= 0) ? 1 : fade;
-			Gdk.cairo_set_source_pixbuf(ctx, cover, x + (ww - width) / 2, y + (wh - height) / 2);
+			Gdk.cairo_set_source_pixbuf(ctx, cover, x_start, y_start);
 /*
 			if (cover_border)
 				ctx.clip_preserve();
@@ -91,9 +94,14 @@ public class Gmpc.Image:Gtk.EventBox {
 			ctx.new_path();
 			width = temp.get_width();
 			height = temp.get_height();
-
-			ctx.rectangle(x + (ww - width) / 2, y + (wh - height) / 2, width-1, height-1);
-			Gdk.cairo_set_source_pixbuf(ctx, temp, x + (ww - width) / 2, y + (wh - height) / 2);
+			var x_start = x+Math.ceil((ww-width)/2.0);
+			var y_start = y+Math.ceil((wh-height)/2.0);
+			ctx.set_line_join(LineJoin.ROUND);
+			if(width > ww || height > wh) {
+				stdout.printf("Image won't fit %i-%i %i-%i\n",width,ww,height,wh);
+			}
+			ctx.rectangle(x_start,y_start, width-1, height-1);
+			Gdk.cairo_set_source_pixbuf(ctx, temp, x_start,y_start);
 /*
 			if (temp_border)
 				ctx.clip_preserve();

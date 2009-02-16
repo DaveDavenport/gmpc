@@ -77,16 +77,22 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	cairo_set_line_width (ctx, 1.0);
 	cairo_set_tolerance (ctx, 0.0);
 	if (self->priv->cover != NULL) {
+		double x_start;
+		double y_start;
 		double fade2;
 		width = gdk_pixbuf_get_width (self->priv->cover);
 		height = gdk_pixbuf_get_height (self->priv->cover);
+		x_start = x + ceil ((ww - width) / 2.0);
+		y_start = y + ceil ((wh - height) / 2.0);
 		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
-		fprintf (stdout, "%i %i %i %i\n", ww, width, x, x + (ww - width) / 2);
+		if (width > ww || height > wh) {
+			fprintf (stdout, "Image won't fit %i-%i %i-%i\n", width, ww, height, wh);
+		}
 		/* Make the path*/
 		cairo_new_path (ctx);
-		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width - 1)), ((double) (height - 1)));
+		cairo_rectangle (ctx, x_start, y_start, ((double) (width - 1)), ((double) (height - 1)));
 		fade2 = ((self->priv->fade <= 0) ? 1 : self->priv->fade);
-		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
+		gdk_cairo_set_source_pixbuf (ctx, self->priv->cover, x_start, y_start);
 		/*
 		if (cover_border)
 		ctx.clip_preserve();
@@ -103,12 +109,20 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, GdkEventE
 	ctx.restore();
 	*/
 	if (self->priv->temp != NULL) {
+		double x_start;
+		double y_start;
 		double fade2;
 		cairo_new_path (ctx);
 		width = gdk_pixbuf_get_width (self->priv->temp);
 		height = gdk_pixbuf_get_height (self->priv->temp);
-		cairo_rectangle (ctx, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)), ((double) (width - 1)), ((double) (height - 1)));
-		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, ((double) (x + (ww - width) / 2)), ((double) (y + (wh - height) / 2)));
+		x_start = x + ceil ((ww - width) / 2.0);
+		y_start = y + ceil ((wh - height) / 2.0);
+		cairo_set_line_join (ctx, CAIRO_LINE_JOIN_ROUND);
+		if (width > ww || height > wh) {
+			fprintf (stdout, "Image won't fit %i-%i %i-%i\n", width, ww, height, wh);
+		}
+		cairo_rectangle (ctx, x_start, y_start, ((double) (width - 1)), ((double) (height - 1)));
+		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, x_start, y_start);
 		/*
 		if (temp_border)
 		ctx.clip_preserve();
