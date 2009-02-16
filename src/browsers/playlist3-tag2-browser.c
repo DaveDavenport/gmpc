@@ -834,6 +834,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 #else
     te->sentry  = gtk_entry_new();
 #endif
+    g_signal_connect_swapped(G_OBJECT(te->sentry), "activate", G_CALLBACK(tag2_sentry_changed_real), te);
     te->sw 		= gtk_scrolled_window_new(NULL,NULL);
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
