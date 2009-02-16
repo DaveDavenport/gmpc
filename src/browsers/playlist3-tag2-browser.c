@@ -417,6 +417,21 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 	return FALSE;
 }
 
+static gboolean tag2_key_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, tag_element *te)
+{
+	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+	if(strlen(text) == 0)
+	{
+		if(event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
+		{
+			gtk_widget_hide(te->sentry);
+			gtk_widget_grab_focus(te->tree);
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
 static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_element *te)
 {
 	gunichar *uc;
@@ -871,6 +886,8 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 #endif
 
     g_signal_connect(G_OBJECT(te->sentry), "changed", G_CALLBACK(tag2_sentry_changed), te);
+    g_signal_connect(G_OBJECT(te->sentry), "key-press-event", G_CALLBACK(tag2_key_entry_key_press_event), te);
+
     gtk_box_pack_start(GTK_BOX(te->vbox), te->sentry,FALSE, TRUE, 0);
 
     g_signal_connect(G_OBJECT(te->tree), "key-press-event", G_CALLBACK(tag2_key_release_event), te);
