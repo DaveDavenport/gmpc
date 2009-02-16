@@ -419,8 +419,21 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 
 static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_element *te)
 {
-    if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
-            ((event->keyval >= GDK_space && event->keyval <= GDK_z)))
+	gunichar *uc;
+	if((event->state&GDK_CONTROL_MASK) != 0 && event->keyval == GDK_f)
+	{
+        gtk_widget_grab_focus(te->sentry);      
+       	gtk_widget_show(te->sentry); 
+		return FALSE;
+	}/*
+	else if(event->keyval == GDK_Escape){
+        gtk_entry_set_text(GTK_ENTRY(te->sentry),"");
+		gtk_widget_hide(te->sentry);
+		return FALSE;
+	}*/
+	else  if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && 
+/*            ((event->keyval >= GDK_space && event->keyval <= GDK_z)))*/
+		(uc = gdk_keyval_to_unicode(event->keyval)))
     {
         char data[2];
         data[0] = (char)gdk_keyval_to_unicode(event->keyval);
@@ -1811,3 +1824,5 @@ static int tag2_browser_key_press_event ( GtkWidget *mw, GdkEventKey *event, int
 
     return 0;
 }
+
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
