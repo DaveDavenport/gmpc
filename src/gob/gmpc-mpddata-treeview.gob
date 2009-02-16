@@ -307,7 +307,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
     private
         GtkTreeViewColumn * 
-        add_column(self, char *columnname, int valuerow, int position)
+        add_column(self, const char *columnname, int valuerow, int position)
         {
             GtkCellRenderer *renderer;
             GtkTreeViewColumn *column = NULL;
