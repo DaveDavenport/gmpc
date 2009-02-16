@@ -766,7 +766,8 @@ static void tag2_sentry_changed(GtkWidget *entry, tag_element *te)
     gtk_widget_show(te->sentry);
     if(te->timeout)
         g_source_remove(te->timeout);
-    te->timeout = g_timeout_add_seconds(1, (GSourceFunc)tag2_sentry_changed_real, te);
+    te->timeout = g_timeout_add(250, (GSourceFunc)tag2_sentry_changed_real, te);
+//    tag2_sentry_changed_real(te);
 }
 
 
