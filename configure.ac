@@ -348,8 +348,11 @@ AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files
 AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
 
+SHAVE_INIT([./]) 
 
 AC_OUTPUT([
+shave
+shave-libtool
 Makefile
 src/Makefile
 src/gmpc-version.h
