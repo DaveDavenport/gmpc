@@ -110,7 +110,7 @@ static void serverstats_update(void)
         handlers = mpd_server_get_tag_types(connection);
     if(handlers)
     {
-        value = g_strjoinv(",",handlers);
+        value = g_strjoinv(", ",handlers);
         g_strfreev(handlers);
         handlers = NULL;
     }
@@ -250,13 +250,14 @@ static void serverstats_add_entry(GtkWidget *table, int i,const char *name, int 
     GtkWidget *label;
     /** Mpd Uptime */
     label = gtk_label_new("");
-    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+    gtk_misc_set_alignment(GTK_MISC(label), 0, 0.0);
     gtk_misc_set_padding(GTK_MISC(label), 12,0);
     markup = g_markup_printf_escaped("<b>%s:</b>",name);
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
     gtk_table_attach(GTK_TABLE(table),label, 0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);
     label = serverstats_labels[stats]= gtk_label_new("");
+    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
     gtk_table_attach(GTK_TABLE(table),label, 1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0,0);	
 }
