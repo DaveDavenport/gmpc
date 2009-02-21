@@ -1,3 +1,7 @@
+V = @
+Q = $(V:1=)
+QUIET_GEN =  $(Q:@=@echo '  GEN   '$@;)
+
 noinst_LTLIBRARIES = libcwidgets.la
 
 nodist_libcwidgets_la_SOURCES =\
@@ -33,6 +37,7 @@ BUILT_SOURCES=\
 			  $(nodist_libcwidgets_la_SOURCES)
 
 %.c %.h %-private.h: %.gob
+	$(QUIET_GE) echo "  GOB   $<"
 	@GOB2@ --no-touch-headers --always-private-header $<
 	@touch $@
 
