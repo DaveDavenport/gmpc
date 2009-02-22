@@ -6,16 +6,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:42+0100\n"
-"PO-Revision-Date: 2009-02-13 10:50+0000\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-02-13 14:43+0100\n"
+"PO-Revision-Date: 2009-02-14 18:51+0000\n"
 "Last-Translator: sarojdhakal <Unknown>\n"
 "Language-Team: Nepali <ne@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-13 13:20+0000\n"
+"X-Launchpad-Export-Date: 2009-02-22 18:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -34,7 +34,7 @@ msgstr "सहायता प्राप्ति"
 
 #: ../glade/playlist3.glade.h:2
 msgid "MPD database is updating."
-msgstr ""
+msgstr "MPD डाटाबेस अध्यावधीक हुदैछ"
 
 #: ../glade/playlist3.glade.h:3 ../src/mpdinteraction.c:172
 msgid "Mute"
@@ -179,17 +179,17 @@ msgstr "प्रोक्सी"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:287 ../src/main.c:288
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:294
 msgid "--version"
-msgstr "--संस्करण"
+msgstr "--version"
 
 #: ../src/main.c:302 ../src/main.c:303
 msgid "--config="
@@ -197,7 +197,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:308
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -205,49 +205,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:315
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:321
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:327
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:333
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:352
 msgid "--help"
 msgstr "--help"
@@ -300,11 +300,11 @@ msgstr "gmpc देखाउनुहोस्"
 
 #: ../src/main.c:450
 msgid "show notification"
-msgstr ""
+msgstr "जानकारी देखाउनुहोस्"
 
 #: ../src/main.c:451
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "ट्रेयआइकन जानकारी देखाउनुहोस"
 
 #: ../src/main.c:506
 msgid "Failed to load the configuration system."
@@ -332,11 +332,11 @@ msgstr ""
 #: ../src/main.c:1087
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr ""
+msgstr "'%s' को लागि आफ्नो प्रवेशशव्द प्रविष्ठ गर्नुहोस"
 
 #: ../src/main.c:1116 ../src/main.c:1137
 msgid "error code"
-msgstr ""
+msgstr "त्रुटी कोड"
 
 #: ../src/main.c:1126
 msgid "Insufficient permission to connect to mpd. Check password"
@@ -348,94 +348,94 @@ msgstr ""
 
 #: ../src/main.c:1224
 msgid "Connected to mpd"
-msgstr ""
+msgstr "mpd सगँ जडान भयो"
 
 #: ../src/main.c:1226
 msgid "Disconnected from mpd"
-msgstr ""
+msgstr "mpd सगँ जडान टुट्यो"
 
 #: ../src/main.c:1260
 msgid "Error occured during operation"
-msgstr ""
+msgstr "कार्यगर्दैगर्दा त्रुटी भयो"
 
 #. Create label
 #: ../src/main.c:1284
 msgid "The following error(s) occured:"
-msgstr ""
+msgstr "निम्न त्रुटी(हरू) उत्पन्न भएका छन् :"
 
 #: ../src/main.c:1301
 msgid "Error Message"
-msgstr ""
+msgstr "त्रुटी सन्देश"
 
 #: ../src/main.c:1355
 msgid "Tagline"
-msgstr ""
+msgstr "पुच्छ्रे लाइन"
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
 #: ../src/browsers/server-information.c:331
 msgid "Version"
-msgstr ""
+msgstr "संस्करण"
 
 #: ../src/main.c:1358
 msgid "Revision"
-msgstr ""
+msgstr "पुनरावलोकन"
 
 #: ../src/main.c:1360
 msgid "Libmpd version"
-msgstr ""
+msgstr "libmpd संस्करण"
 
 #: ../src/main.c:1361
 msgid "GTK+ version"
-msgstr ""
+msgstr "GTK+ संस्करण"
 
 #: ../src/main.c:1362
 msgid "Libcurl version"
-msgstr ""
+msgstr "libxurl संस्करण"
 
 #: ../src/main.c:1363
 msgid "Platform"
-msgstr ""
+msgstr "प्लाटफर्म"
 
 #: ../src/main.c:1365
 msgid "Windows"
-msgstr ""
+msgstr "विन्डोज"
 
 #: ../src/main.c:1368
 msgid "Mac OsX"
-msgstr ""
+msgstr "म्याक osX"
 
 #: ../src/main.c:1370
 msgid "*nix"
-msgstr ""
+msgstr "*nix"
 
 #: ../src/main.c:1374
 msgid "Website"
-msgstr ""
+msgstr "वेभसाइट"
 
 #: ../src/main.c:1376
 msgid "Options enabled"
-msgstr ""
+msgstr "विकल्प सक्षम तुल्याइएको छ"
 
 #: ../src/main.c:1377
 msgid "X session management"
-msgstr ""
+msgstr "X सत्र व्यवस्थापक"
 
 #: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
 #: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
 #: ../src/main.c:1442 ../src/preferences.c:307
 msgid "Enabled"
-msgstr ""
+msgstr "सक्रिय"
 
 #: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
 #: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
 #: ../src/main.c:1444
 msgid "Disabled"
-msgstr ""
+msgstr "निस्क्रिय"
 
 #: ../src/main.c:1384
 msgid "NLS Support"
-msgstr ""
+msgstr "NLS समर्थन"
 
 #: ../src/main.c:1392 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
@@ -477,31 +477,31 @@ msgstr ""
 
 #: ../src/misc.c:38
 msgid " Total time: "
-msgstr ""
+msgstr " कुल :समय "
 
 #: ../src/misc.c:55
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "दिन"
+msgstr[1] "दिनहरू"
 
 #: ../src/misc.c:59
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "घण्टा"
+msgstr[1] "घण्टाहरू"
 
 #: ../src/misc.c:63
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "मिनेट"
+msgstr[1] "मिनेटहरू"
 
 #: ../src/misc.c:67
 msgid "second"
 msgid_plural "seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "सेकेन्ड"
+msgstr[1] "सेकेन्डहरू"
 
 #: ../src/misc.c:269
 msgid "Failed to execute"
@@ -529,7 +529,7 @@ msgstr ""
 #. * MM_RAISE
 #: ../src/mm-keys.c:82
 msgid "Hide window"
-msgstr ""
+msgstr "संझ्याल लुकाउनुहोस्"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
@@ -539,22 +539,22 @@ msgstr ""
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
 msgid "Volume Up"
-msgstr ""
+msgstr "आवाज बढाउनुहोस्"
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:85
 msgid "Volume Down"
-msgstr ""
+msgstr "आवाज घटाउनुहोस्"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
-msgstr ""
+msgstr "गीत देखाउनुहोस्"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
 msgid "Toggle Mute"
-msgstr ""
+msgstr "मौन टोगल"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
@@ -947,7 +947,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:240
 msgid "Enter an url"
 msgstr ""
@@ -962,7 +962,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -979,7 +979,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -998,6 +998,10 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  sarojdhakal https://launchpad.net/~lotusnagarkot\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  sarojdhakal https://launchpad.net/~lotusnagarkot"
 
 #: ../glade/password-dialog.ui.h:1
@@ -1458,7 +1462,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2416
@@ -1621,7 +1625,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1557
 msgid "Artist info:"
 msgstr ""
@@ -1640,7 +1644,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1890
 msgid "Album info:"
 msgstr ""
@@ -1660,7 +1664,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2231
 #: ../src/browsers/playlist3-metadata-browser.c:2625
 msgid "Metadata Browser"
@@ -1668,7 +1672,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2247
 msgid "Show Current Song"
 msgstr ""
@@ -1890,73 +1894,73 @@ msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
 msgid "Select file"
-msgstr ""
+msgstr "फाइल छान्नुहोस्"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Failed to open file:"
-msgstr ""
+msgstr "फाइल खोल्न सकिएन:"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "because of encoding issues"
-msgstr ""
+msgstr "इन्कोडिङ्गको समस्याको कारणले गर्दा"
 
 #: ../src/gob/gmpc-meta-text-view.gob:172
 msgid "Fetching Lyric"
-msgstr ""
+msgstr "रचना खोजेर ल्याउदै"
 
 #: ../src/gob/gmpc-meta-text-view.gob:176
 msgid "Fetching Artist Info"
-msgstr ""
+msgstr "कलाकार जानकारी खोजेर ल्याउदै"
 
 #: ../src/gob/gmpc-meta-text-view.gob:180
 msgid "Fetching Album Info"
-msgstr ""
+msgstr "सङ्ग्रह जानकारी खोजेर ल्याउदै"
 
 #: ../src/gob/gmpc-meta-text-view.gob:188
 msgid "Not Available"
-msgstr ""
+msgstr "उपलब्ध छैन"
 
 #: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
 msgid "Select File"
-msgstr ""
+msgstr "फाइल छान्नुहोस्"
 
 #: ../src/gob/gmpc-meta-text-view.gob:253
 msgid "Text Document"
-msgstr ""
+msgstr "पाठ कागजात"
 
 #: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
 msgid "All"
-msgstr ""
+msgstr "सबै"
 
 #: ../src/gob/gmpc-metaimage.gob:821
 msgid "Images"
-msgstr ""
+msgstr "तस्विरहरू"
 
 #: ../src/gob/gmpc-stats-label.gob:135
 msgid "Loading"
-msgstr ""
+msgstr "लोडगर्दै"
 
 #: ../src/vala/gmpc_menu_item_rating.c:59
 msgid "Rating:"
-msgstr ""
+msgstr "स्तर निर्धारण :"
 
 #: ../src/vala/gmpc-song-links.c:173
 msgid "Update list from internet"
-msgstr ""
+msgstr "सुची इन्टरनेटबाट अद्यावधी गर्नुहोस्"
 
 #: ../src/vala/gmpc-song-links.c:212
 msgid "Links"
-msgstr ""
+msgstr "लिङ्कहरु"
 
 #: ../src/vala/gmpc-song-links.c:450
 msgid "artist"
-msgstr ""
+msgstr "कलाकार"
 
 #: ../src/vala/gmpc-song-links.c:459
 msgid "album"
-msgstr ""
+msgstr "सङ्ग्रह"
 
 #: ../src/vala/gmpc-song-links.c:498
 #, c-format
 msgid "Lookup %s on %s"
-msgstr ""
+msgstr "खोज्दै %s लाई %s मा"
