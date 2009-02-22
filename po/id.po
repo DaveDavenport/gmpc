@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:43+0100\n"
+"POT-Creation-Date: 2009-02-22 20:06+0100\n"
 "PO-Revision-Date: 2009-02-18 12:34+0000\n"
 "Last-Translator: Arief Setiadi Wibowo <q_thrynx@yahoo.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
@@ -28,7 +28,7 @@ msgstr "Gnome frontend untuk mpd daemon"
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1376
 msgid "Getting help"
 msgstr "Mendapatkan Bantuan"
 
@@ -169,7 +169,7 @@ msgstr "2 Feb 2006"
 msgid "MPD's Streaming server"
 msgstr "server MPD Streaming"
 
-#: ../src/gmpc_easy_download.c:385
+#: ../src/gmpc_easy_download.c:396
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -179,14 +179,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#. 
+#.
 #: ../src/main.c:287 ../src/main.c:288
 msgid "--debug-level="
 msgstr "--tingkatan-debug="
 
 #. *
 #. * Print out version + svn revision
-#. 
+#.
 #: ../src/main.c:294
 msgid "--version"
 msgstr "--versi"
@@ -197,7 +197,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#. 
+#.
 #: ../src/main.c:308
 msgid "--start-hidden"
 msgstr ""
@@ -205,49 +205,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#. 
+#.
 #: ../src/main.c:315
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#. 
+#.
 #: ../src/main.c:321
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#. 
+#.
 #: ../src/main.c:327
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#. 
+#.
 #: ../src/main.c:333
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#. 
+#.
 #: ../src/main.c:339
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#. 
+#.
 #: ../src/main.c:345
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#. 
+#.
 #: ../src/main.c:352
 msgid "--help"
 msgstr ""
@@ -376,7 +376,7 @@ msgstr "Tagline"
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:331
+#: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Versi"
 
@@ -385,7 +385,8 @@ msgid "Revision"
 msgstr "Revisi"
 
 #: ../src/main.c:1360
-msgid "Libmpd version"
+#, fuzzy
+msgid "Libmpd Version"
 msgstr "Versi libmpd"
 
 #: ../src/main.c:1361
@@ -393,82 +394,87 @@ msgid "GTK+ version"
 msgstr "Versi GTK+"
 
 #: ../src/main.c:1362
+#, fuzzy
+msgid "GLIB version"
+msgstr "Versi GTK+"
+
+#: ../src/main.c:1363
 msgid "Libcurl version"
 msgstr "Versi libcurl"
 
-#: ../src/main.c:1363
+#: ../src/main.c:1364
 msgid "Platform"
 msgstr "Platform"
 
-#: ../src/main.c:1365
+#: ../src/main.c:1366
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/main.c:1368
+#: ../src/main.c:1369
 msgid "Mac OsX"
 msgstr "Mac OsX"
 
-#: ../src/main.c:1370
+#: ../src/main.c:1371
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1374
+#: ../src/main.c:1375
 msgid "Website"
 msgstr "Situs Web"
 
-#: ../src/main.c:1376
+#: ../src/main.c:1377
 msgid "Options enabled"
 msgstr "Pilihan difungsikan"
 
-#: ../src/main.c:1377
+#: ../src/main.c:1378
 msgid "X session management"
 msgstr "Manajemen sesi X"
 
-#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
-#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/preferences.c:307
+#: ../src/main.c:1380 ../src/main.c:1387 ../src/main.c:1395 ../src/main.c:1403
+#: ../src/main.c:1411 ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435
+#: ../src/main.c:1443 ../src/preferences.c:307
 msgid "Enabled"
 msgstr "Difungsikan"
 
-#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
-#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
-#: ../src/main.c:1444
+#: ../src/main.c:1382 ../src/main.c:1389 ../src/main.c:1397 ../src/main.c:1405
+#: ../src/main.c:1413 ../src/main.c:1421 ../src/main.c:1429 ../src/main.c:1437
+#: ../src/main.c:1445
 msgid "Disabled"
 msgstr "Tidak Berfungsi"
 
-#: ../src/main.c:1384
+#: ../src/main.c:1385
 msgid "NLS Support"
 msgstr "Dukungan NLS"
 
-#: ../src/main.c:1392 ../src/mm-keys.c:566
+#: ../src/main.c:1393 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr "Kunci Multimedia"
 
-#: ../src/main.c:1400
+#: ../src/main.c:1401
 msgid "Libegg's trayicon"
 msgstr "Libegg's trayicon"
 
-#: ../src/main.c:1408
+#: ../src/main.c:1409
 msgid "System libsexy"
 msgstr "System libsexy"
 
-#: ../src/main.c:1416
+#: ../src/main.c:1417
 msgid "Mac integration library"
 msgstr "library integrasi Mac"
 
-#: ../src/main.c:1424
+#: ../src/main.c:1425
 msgid "Use ~/.config/ dir"
 msgstr "Gunakan ~/.config/ dir"
 
-#: ../src/main.c:1432
+#: ../src/main.c:1433
 msgid "Debug timing"
 msgstr "Pewaktuan debug"
 
-#: ../src/main.c:1440
+#: ../src/main.c:1441
 msgid "Maintainer mode"
 msgstr ""
 
-#: ../src/metadata.c:748
+#: ../src/metadata.c:763
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -476,7 +482,7 @@ msgstr ""
 "Metadata plugin baru sudah ditambahkan, gmpc sudah menghapus semua kegagalan "
 "dari tembolok"
 
-#: ../src/metadata.c:1211
+#: ../src/metadata.c:1226
 msgid "Metadata Handler"
 msgstr ""
 
@@ -775,7 +781,7 @@ msgstr ""
 msgid "Connected"
 msgstr "Terhubung"
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2128
+#: ../src/playlist3.c:789 ../src/playlist3.c:2129
 msgid "Not Connected"
 msgstr "Tidak Terhubung"
 
@@ -837,28 +843,28 @@ msgid "changed hostname to:"
 msgstr "ubah nama host menjadi:"
 
 #. Update DB
-#: ../src/playlist3.c:1953
+#: ../src/playlist3.c:1954
 msgid "Update Database"
 msgstr "Perbarui Basis Data"
 
 #. Server Information
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:1963
 msgid "Information"
 msgstr "Informasi"
 
-#: ../src/playlist3.c:2042
+#: ../src/playlist3.c:2043
 msgid "By"
 msgstr "Oleh"
 
-#: ../src/playlist3.c:2049
+#: ../src/playlist3.c:2050
 msgid "From"
 msgstr "Dari"
 
-#: ../src/playlist3.c:2121
+#: ../src/playlist3.c:2122
 msgid "Not Playing"
 msgstr "Tidak Dimainkan"
 
-#: ../src/playlist3.c:2246
+#: ../src/playlist3.c:2247
 msgid "Interface"
 msgstr "Antarmuka"
 
@@ -950,7 +956,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#. 
+#.
 #: ../src/url_fetcher.c:240
 msgid "Enter an url"
 msgstr "Masukkan url"
@@ -965,7 +971,7 @@ msgstr "Notifikasi"
 
 #. *
 #. * Append an introduction page
-#. 
+#.
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -982,7 +988,7 @@ msgstr "Atur koneksi"
 
 #. *
 #. * End
-#. 
+#.
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1412,7 +1418,7 @@ msgid "Query"
 msgstr "Query"
 
 #: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:340
+#: ../src/browsers/server-information.c:341
 msgid "Database"
 msgstr "Basis Data"
 
@@ -1473,7 +1479,7 @@ msgstr "Mengambil..."
 #. View
 #. *
 #. * View Button
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2416
@@ -1636,7 +1642,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1557
 msgid "Artist info:"
 msgstr ""
@@ -1655,7 +1661,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1890
 msgid "Album info:"
 msgstr ""
@@ -1675,7 +1681,7 @@ msgstr "Track"
 
 #. *
 #. * Metadata browser link
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2231
 #: ../src/browsers/playlist3-metadata-browser.c:2625
 msgid "Metadata Browser"
@@ -1683,7 +1689,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2247
 msgid "Show Current Song"
 msgstr ""
@@ -1780,60 +1786,60 @@ msgstr ""
 msgid "Tag based browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-tag2-browser.c:1762
+#: ../src/browsers/playlist3-tag2-browser.c:1794
 msgid "Reset browser"
 msgstr ""
 
 #. name
-#: ../src/browsers/server-information.c:300
-#: ../src/browsers/server-information.c:516
-#: ../src/browsers/server-information.c:542
+#: ../src/browsers/server-information.c:301
+#: ../src/browsers/server-information.c:517
+#: ../src/browsers/server-information.c:543
 msgid "Server Information"
 msgstr "Informasi Server"
 
-#: ../src/browsers/server-information.c:324
+#: ../src/browsers/server-information.c:325
 msgid "Server"
 msgstr "Server"
 
-#: ../src/browsers/server-information.c:333
+#: ../src/browsers/server-information.c:334
 msgid "Uptime"
 msgstr ""
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:335
 msgid "Time Playing"
 msgstr ""
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:348
 msgid "Total Playtime"
 msgstr ""
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:349
+#: ../src/browsers/server-information.c:350
 msgid "Number of artists"
 msgstr "Jumlah artis"
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:351
+#: ../src/browsers/server-information.c:352
 msgid "Number of albums"
 msgstr "Jumlah album"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:353
+#: ../src/browsers/server-information.c:354
 msgid "Number of songs"
 msgstr "Jumlah lagu"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:355
+#: ../src/browsers/server-information.c:356
 msgid "URL Handlers"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:358
 msgid "Tag Types"
 msgstr "Type tag"
 
-#: ../src/browsers/server-information.c:362
+#: ../src/browsers/server-information.c:363
 msgid "Tag statistics"
 msgstr "Statistik tag"
 
@@ -1899,11 +1905,11 @@ msgstr "Tambahkan profil"
 msgid "Removed profile"
 msgstr "Buang profil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:779
 msgid "Refetch"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:784
 msgid "Select file"
 msgstr "Pilih berkas"
 
@@ -1931,7 +1937,7 @@ msgstr ""
 msgid "Not Available"
 msgstr "Tidak Tersedia"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:815
 msgid "Select File"
 msgstr "Pilih Berkas"
 
@@ -1939,11 +1945,11 @@ msgstr "Pilih Berkas"
 msgid "Text Document"
 msgstr "Dokumen Teks"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:825
 msgid "All"
 msgstr "Semua"
 
-#: ../src/gob/gmpc-metaimage.gob:821
+#: ../src/gob/gmpc-metaimage.gob:820
 msgid "Images"
 msgstr "Citra"
 

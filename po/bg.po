@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:43+0100\n"
+"POT-Creation-Date: 2009-02-22 20:06+0100\n"
 "PO-Revision-Date: 2009-02-13 23:09+0000\n"
 "Last-Translator: Bonic <bonic1999@yahoo.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -28,7 +28,7 @@ msgstr "GNOME клиент за MPD"
 msgid "Gnome Music Player Client"
 msgstr "Gnome Музикален Плеър"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1376
 msgid "Getting help"
 msgstr "Помощ"
 
@@ -169,7 +169,7 @@ msgstr "2 Фев 2006"
 msgid "MPD's Streaming server"
 msgstr ""
 
-#: ../src/gmpc_easy_download.c:385
+#: ../src/gmpc_easy_download.c:396
 msgid "Proxy"
 msgstr "Прокси"
 
@@ -179,14 +179,14 @@ msgstr "Прокси"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#. 
+#.
 #: ../src/main.c:287 ../src/main.c:288
 msgid "--debug-level="
 msgstr "--ниво поправка на грешки="
 
 #. *
 #. * Print out version + svn revision
-#. 
+#.
 #: ../src/main.c:294
 msgid "--version"
 msgstr "--версия"
@@ -197,7 +197,7 @@ msgstr "--конфигурация="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#. 
+#.
 #: ../src/main.c:308
 msgid "--start-hidden"
 msgstr "--старт-скрит"
@@ -205,49 +205,49 @@ msgstr "--старт-скрит"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#. 
+#.
 #: ../src/main.c:315
 msgid "--clean-cover-db"
 msgstr "--изчисти-база данни-обложки"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#. 
+#.
 #: ../src/main.c:321
 msgid "--disable-plugins"
 msgstr "--деактивирай-плъгини"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#. 
+#.
 #: ../src/main.c:327
 msgid "--replace"
 msgstr "--постави"
 
 #. *
 #. * Quit any running gmpc session
-#. 
+#.
 #: ../src/main.c:333
 msgid "--quit"
 msgstr "--изход"
 
 #. *
 #. * Imports the cover db in the old format.
-#. 
+#.
 #: ../src/main.c:339
 msgid "--import-old-db"
 msgstr "--вмъкни-стара-база данни"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#. 
+#.
 #: ../src/main.c:345
 msgid "--debug-updates"
 msgstr "--поправка грешки-ъпдейт"
 
 #. *
 #. * Print out help message
-#. 
+#.
 #: ../src/main.c:352
 msgid "--help"
 msgstr "--Помощ"
@@ -389,7 +389,7 @@ msgstr "Заключение"
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:331
+#: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Версия"
 
@@ -398,7 +398,8 @@ msgid "Revision"
 msgstr "Преглед"
 
 #: ../src/main.c:1360
-msgid "Libmpd version"
+#, fuzzy
+msgid "Libmpd Version"
 msgstr "Libmpd версия"
 
 #: ../src/main.c:1361
@@ -406,82 +407,87 @@ msgid "GTK+ version"
 msgstr "GTK+ версия"
 
 #: ../src/main.c:1362
+#, fuzzy
+msgid "GLIB version"
+msgstr "GTK+ версия"
+
+#: ../src/main.c:1363
 msgid "Libcurl version"
 msgstr "Libcurl версия"
 
-#: ../src/main.c:1363
+#: ../src/main.c:1364
 msgid "Platform"
 msgstr "Платформа"
 
-#: ../src/main.c:1365
+#: ../src/main.c:1366
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/main.c:1368
+#: ../src/main.c:1369
 msgid "Mac OsX"
 msgstr "Mac OS X"
 
-#: ../src/main.c:1370
+#: ../src/main.c:1371
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1374
+#: ../src/main.c:1375
 msgid "Website"
 msgstr "Уеб-сайт"
 
-#: ../src/main.c:1376
+#: ../src/main.c:1377
 msgid "Options enabled"
 msgstr "Включени опции"
 
-#: ../src/main.c:1377
+#: ../src/main.c:1378
 msgid "X session management"
 msgstr "Управление на X сесията"
 
-#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
-#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/preferences.c:307
+#: ../src/main.c:1380 ../src/main.c:1387 ../src/main.c:1395 ../src/main.c:1403
+#: ../src/main.c:1411 ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435
+#: ../src/main.c:1443 ../src/preferences.c:307
 msgid "Enabled"
 msgstr "Включен"
 
-#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
-#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
-#: ../src/main.c:1444
+#: ../src/main.c:1382 ../src/main.c:1389 ../src/main.c:1397 ../src/main.c:1405
+#: ../src/main.c:1413 ../src/main.c:1421 ../src/main.c:1429 ../src/main.c:1437
+#: ../src/main.c:1445
 msgid "Disabled"
 msgstr "Изключен"
 
-#: ../src/main.c:1384
+#: ../src/main.c:1385
 msgid "NLS Support"
 msgstr "NLS Поддръжка"
 
-#: ../src/main.c:1392 ../src/mm-keys.c:566
+#: ../src/main.c:1393 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr "Мултимедийни бутони"
 
-#: ../src/main.c:1400
+#: ../src/main.c:1401
 msgid "Libegg's trayicon"
 msgstr "Libegg tray икона"
 
-#: ../src/main.c:1408
+#: ../src/main.c:1409
 msgid "System libsexy"
 msgstr "Системна Libsexy biblioteka"
 
-#: ../src/main.c:1416
+#: ../src/main.c:1417
 msgid "Mac integration library"
 msgstr "Библиотека за интеграция с Mac"
 
-#: ../src/main.c:1424
+#: ../src/main.c:1425
 msgid "Use ~/.config/ dir"
 msgstr "Използвай ~/.config директория"
 
-#: ../src/main.c:1432
+#: ../src/main.c:1433
 msgid "Debug timing"
 msgstr "Поправи тайминга"
 
-#: ../src/main.c:1440
+#: ../src/main.c:1441
 msgid "Maintainer mode"
 msgstr "Режим поддръжка"
 
-#: ../src/metadata.c:748
+#: ../src/metadata.c:763
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -489,7 +495,7 @@ msgstr ""
 "Нова плъгин за метаданни беше добвен. Gmpc почисти всички неуспешни опити от "
 "кеша."
 
-#: ../src/metadata.c:1211
+#: ../src/metadata.c:1226
 msgid "Metadata Handler"
 msgstr "Управление на метаданни"
 
@@ -810,7 +816,7 @@ msgstr "Обновяване базата на MPD е завършено"
 msgid "Connected"
 msgstr "Свързан"
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2128
+#: ../src/playlist3.c:789 ../src/playlist3.c:2129
 msgid "Not Connected"
 msgstr "Няма връзка"
 
@@ -872,28 +878,28 @@ msgid "changed hostname to:"
 msgstr "Името на сървъра беше сменено на:"
 
 #. Update DB
-#: ../src/playlist3.c:1953
+#: ../src/playlist3.c:1954
 msgid "Update Database"
 msgstr "Обнови базата"
 
 #. Server Information
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:1963
 msgid "Information"
 msgstr ""
 
-#: ../src/playlist3.c:2042
+#: ../src/playlist3.c:2043
 msgid "By"
 msgstr "в изпълнение на"
 
-#: ../src/playlist3.c:2049
+#: ../src/playlist3.c:2050
 msgid "From"
 msgstr "от"
 
-#: ../src/playlist3.c:2121
+#: ../src/playlist3.c:2122
 msgid "Not Playing"
 msgstr "Не се изпълнява нищо"
 
-#: ../src/playlist3.c:2246
+#: ../src/playlist3.c:2247
 msgid "Interface"
 msgstr "Облик"
 
@@ -985,7 +991,7 @@ msgstr "1 стрийм беше добавен"
 
 #. *
 #. * Setup the label
-#. 
+#.
 #: ../src/url_fetcher.c:240
 msgid "Enter an url"
 msgstr "Въведете URL"
@@ -1000,7 +1006,7 @@ msgstr "Известяване"
 
 #. *
 #. * Append an introduction page
-#. 
+#.
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1019,7 +1025,7 @@ msgstr "Настройка на свързване"
 
 #. *
 #. * End
-#. 
+#.
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1476,7 +1482,7 @@ msgid "Query"
 msgstr "Заявка"
 
 #: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:340
+#: ../src/browsers/server-information.c:341
 msgid "Database"
 msgstr ""
 
@@ -1537,7 +1543,7 @@ msgstr "Сваляне..."
 #. View
 #. *
 #. * View Button
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2416
@@ -1701,7 +1707,7 @@ msgstr[1] "<b>Дати: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1557
 msgid "Artist info:"
 msgstr "Информация за изпълнител:"
@@ -1720,7 +1726,7 @@ msgstr "Подобни изпълнители"
 
 #. *
 #. * Album Information
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1890
 msgid "Album info:"
 msgstr "Информация за албум:"
@@ -1740,7 +1746,7 @@ msgstr "Песни"
 
 #. *
 #. * Metadata browser link
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2231
 #: ../src/browsers/playlist3-metadata-browser.c:2625
 msgid "Metadata Browser"
@@ -1748,7 +1754,7 @@ msgstr "Браузър за метаданни"
 
 #. *
 #. * Show current song entry
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2247
 msgid "Show Current Song"
 msgstr "Покажи песен, която се просвирва в момента"
@@ -1845,60 +1851,60 @@ msgstr ""
 msgid "Tag based browser"
 msgstr "Браузър за тагове"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1762
+#: ../src/browsers/playlist3-tag2-browser.c:1794
 msgid "Reset browser"
 msgstr "Върни браузъра в начално състояние"
 
 #. name
-#: ../src/browsers/server-information.c:300
-#: ../src/browsers/server-information.c:516
-#: ../src/browsers/server-information.c:542
+#: ../src/browsers/server-information.c:301
+#: ../src/browsers/server-information.c:517
+#: ../src/browsers/server-information.c:543
 msgid "Server Information"
 msgstr ""
 
-#: ../src/browsers/server-information.c:324
+#: ../src/browsers/server-information.c:325
 msgid "Server"
 msgstr ""
 
-#: ../src/browsers/server-information.c:333
+#: ../src/browsers/server-information.c:334
 msgid "Uptime"
 msgstr ""
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:335
 msgid "Time Playing"
 msgstr ""
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:348
 msgid "Total Playtime"
 msgstr ""
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:349
+#: ../src/browsers/server-information.c:350
 msgid "Number of artists"
 msgstr ""
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:351
+#: ../src/browsers/server-information.c:352
 msgid "Number of albums"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:353
+#: ../src/browsers/server-information.c:354
 msgid "Number of songs"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:355
+#: ../src/browsers/server-information.c:356
 msgid "URL Handlers"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:358
 msgid "Tag Types"
 msgstr ""
 
-#: ../src/browsers/server-information.c:362
+#: ../src/browsers/server-information.c:363
 msgid "Tag statistics"
 msgstr ""
 
@@ -1964,11 +1970,11 @@ msgstr "Профилът е добавен"
 msgid "Removed profile"
 msgstr "Профилът е премахнат"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:779
 msgid "Refetch"
 msgstr "Свали отново"
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:784
 msgid "Select file"
 msgstr "Избор на файл"
 
@@ -1996,7 +2002,7 @@ msgstr "Търсене на информация за албума"
 msgid "Not Available"
 msgstr "Недостъпен"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:815
 msgid "Select File"
 msgstr "Избиране на файл"
 
@@ -2004,11 +2010,11 @@ msgstr "Избиране на файл"
 msgid "Text Document"
 msgstr "Текстов документ"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:825
 msgid "All"
 msgstr "Всичко"
 
-#: ../src/gob/gmpc-metaimage.gob:821
+#: ../src/gob/gmpc-metaimage.gob:820
 msgid "Images"
 msgstr "Изображения"
 
@@ -2041,7 +2047,6 @@ msgstr ""
 msgid "Lookup %s on %s"
 msgstr ""
 
-#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Неуспешно свързване с: '%s'"
 

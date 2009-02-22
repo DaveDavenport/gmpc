@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:43+0100\n"
+"POT-Creation-Date: 2009-02-22 20:06+0100\n"
 "PO-Revision-Date: 2009-02-18 06:08+0000\n"
 "Last-Translator: Arief Setiadi Wibowo <q_thrynx@yahoo.com>\n"
 "Language-Team: Javanese <jv@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Gnome Music Player Client"
 msgstr "Gnome Musik Player Client"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1376
 msgid "Getting help"
 msgstr "Golek pitulungan"
 
@@ -169,7 +169,7 @@ msgstr "2 Feb 2006"
 msgid "MPD's Streaming server"
 msgstr ""
 
-#: ../src/gmpc_easy_download.c:385
+#: ../src/gmpc_easy_download.c:396
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -179,14 +179,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#. 
+#.
 #: ../src/main.c:287 ../src/main.c:288
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#. 
+#.
 #: ../src/main.c:294
 msgid "--version"
 msgstr "--versi"
@@ -197,7 +197,7 @@ msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#. 
+#.
 #: ../src/main.c:308
 msgid "--start-hidden"
 msgstr ""
@@ -205,49 +205,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#. 
+#.
 #: ../src/main.c:315
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#. 
+#.
 #: ../src/main.c:321
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#. 
+#.
 #: ../src/main.c:327
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
-#. 
+#.
 #: ../src/main.c:333
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
-#. 
+#.
 #: ../src/main.c:339
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#. 
+#.
 #: ../src/main.c:345
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#. 
+#.
 #: ../src/main.c:352
 msgid "--help"
 msgstr ""
@@ -373,7 +373,7 @@ msgstr ""
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:331
+#: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr ""
 
@@ -382,7 +382,7 @@ msgid "Revision"
 msgstr ""
 
 #: ../src/main.c:1360
-msgid "Libmpd version"
+msgid "Libmpd Version"
 msgstr ""
 
 #: ../src/main.c:1361
@@ -390,88 +390,93 @@ msgid "GTK+ version"
 msgstr ""
 
 #: ../src/main.c:1362
+#, fuzzy
+msgid "GLIB version"
+msgstr "--versi"
+
+#: ../src/main.c:1363
 msgid "Libcurl version"
 msgstr ""
 
-#: ../src/main.c:1363
+#: ../src/main.c:1364
 msgid "Platform"
 msgstr ""
 
-#: ../src/main.c:1365
+#: ../src/main.c:1366
 msgid "Windows"
 msgstr ""
 
-#: ../src/main.c:1368
+#: ../src/main.c:1369
 msgid "Mac OsX"
 msgstr ""
 
-#: ../src/main.c:1370
+#: ../src/main.c:1371
 msgid "*nix"
 msgstr ""
 
-#: ../src/main.c:1374
+#: ../src/main.c:1375
 msgid "Website"
 msgstr ""
 
-#: ../src/main.c:1376
+#: ../src/main.c:1377
 msgid "Options enabled"
 msgstr ""
 
-#: ../src/main.c:1377
+#: ../src/main.c:1378
 msgid "X session management"
 msgstr ""
 
-#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
-#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/preferences.c:307
+#: ../src/main.c:1380 ../src/main.c:1387 ../src/main.c:1395 ../src/main.c:1403
+#: ../src/main.c:1411 ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435
+#: ../src/main.c:1443 ../src/preferences.c:307
 msgid "Enabled"
 msgstr ""
 
-#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
-#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
-#: ../src/main.c:1444
+#: ../src/main.c:1382 ../src/main.c:1389 ../src/main.c:1397 ../src/main.c:1405
+#: ../src/main.c:1413 ../src/main.c:1421 ../src/main.c:1429 ../src/main.c:1437
+#: ../src/main.c:1445
 msgid "Disabled"
 msgstr ""
 
-#: ../src/main.c:1384
+#: ../src/main.c:1385
 msgid "NLS Support"
 msgstr ""
 
-#: ../src/main.c:1392 ../src/mm-keys.c:566
+#: ../src/main.c:1393 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr ""
 
-#: ../src/main.c:1400
+#: ../src/main.c:1401
 msgid "Libegg's trayicon"
 msgstr ""
 
-#: ../src/main.c:1408
+#: ../src/main.c:1409
 msgid "System libsexy"
 msgstr ""
 
-#: ../src/main.c:1416
+#: ../src/main.c:1417
 msgid "Mac integration library"
 msgstr ""
 
-#: ../src/main.c:1424
+#: ../src/main.c:1425
 msgid "Use ~/.config/ dir"
 msgstr ""
 
-#: ../src/main.c:1432
+#: ../src/main.c:1433
 msgid "Debug timing"
 msgstr ""
 
-#: ../src/main.c:1440
+#: ../src/main.c:1441
 msgid "Maintainer mode"
 msgstr ""
 
-#: ../src/metadata.c:748
+#: ../src/metadata.c:763
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
 
-#: ../src/metadata.c:1211
+#: ../src/metadata.c:1226
 msgid "Metadata Handler"
 msgstr ""
 
@@ -774,7 +779,7 @@ msgstr ""
 msgid "Connected"
 msgstr ""
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2128
+#: ../src/playlist3.c:789 ../src/playlist3.c:2129
 msgid "Not Connected"
 msgstr ""
 
@@ -836,28 +841,28 @@ msgid "changed hostname to:"
 msgstr ""
 
 #. Update DB
-#: ../src/playlist3.c:1953
+#: ../src/playlist3.c:1954
 msgid "Update Database"
 msgstr ""
 
 #. Server Information
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:1963
 msgid "Information"
 msgstr ""
 
-#: ../src/playlist3.c:2042
+#: ../src/playlist3.c:2043
 msgid "By"
 msgstr ""
 
-#: ../src/playlist3.c:2049
+#: ../src/playlist3.c:2050
 msgid "From"
 msgstr ""
 
-#: ../src/playlist3.c:2121
+#: ../src/playlist3.c:2122
 msgid "Not Playing"
 msgstr ""
 
-#: ../src/playlist3.c:2246
+#: ../src/playlist3.c:2247
 msgid "Interface"
 msgstr ""
 
@@ -947,7 +952,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#. 
+#.
 #: ../src/url_fetcher.c:240
 msgid "Enter an url"
 msgstr ""
@@ -962,7 +967,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#. 
+#.
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -979,7 +984,7 @@ msgstr ""
 
 #. *
 #. * End
-#. 
+#.
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1404,7 +1409,7 @@ msgid "Query"
 msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:340
+#: ../src/browsers/server-information.c:341
 msgid "Database"
 msgstr ""
 
@@ -1465,7 +1470,7 @@ msgstr ""
 #. View
 #. *
 #. * View Button
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2416
@@ -1628,7 +1633,7 @@ msgstr[1] ""
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1557
 msgid "Artist info:"
 msgstr ""
@@ -1647,7 +1652,7 @@ msgstr ""
 
 #. *
 #. * Album Information
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:1890
 msgid "Album info:"
 msgstr ""
@@ -1667,7 +1672,7 @@ msgstr ""
 
 #. *
 #. * Metadata browser link
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2231
 #: ../src/browsers/playlist3-metadata-browser.c:2625
 msgid "Metadata Browser"
@@ -1675,7 +1680,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#. 
+#.
 #: ../src/browsers/playlist3-metadata-browser.c:2247
 msgid "Show Current Song"
 msgstr ""
@@ -1772,60 +1777,60 @@ msgstr ""
 msgid "Tag based browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-tag2-browser.c:1762
+#: ../src/browsers/playlist3-tag2-browser.c:1794
 msgid "Reset browser"
 msgstr ""
 
 #. name
-#: ../src/browsers/server-information.c:300
-#: ../src/browsers/server-information.c:516
-#: ../src/browsers/server-information.c:542
+#: ../src/browsers/server-information.c:301
+#: ../src/browsers/server-information.c:517
+#: ../src/browsers/server-information.c:543
 msgid "Server Information"
 msgstr ""
 
-#: ../src/browsers/server-information.c:324
+#: ../src/browsers/server-information.c:325
 msgid "Server"
 msgstr ""
 
-#: ../src/browsers/server-information.c:333
+#: ../src/browsers/server-information.c:334
 msgid "Uptime"
 msgstr ""
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:335
 msgid "Time Playing"
 msgstr ""
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:348
 msgid "Total Playtime"
 msgstr ""
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:349
+#: ../src/browsers/server-information.c:350
 msgid "Number of artists"
 msgstr ""
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:351
+#: ../src/browsers/server-information.c:352
 msgid "Number of albums"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:353
+#: ../src/browsers/server-information.c:354
 msgid "Number of songs"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:355
+#: ../src/browsers/server-information.c:356
 msgid "URL Handlers"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:358
 msgid "Tag Types"
 msgstr ""
 
-#: ../src/browsers/server-information.c:362
+#: ../src/browsers/server-information.c:363
 msgid "Tag statistics"
 msgstr ""
 
@@ -1891,11 +1896,11 @@ msgstr ""
 msgid "Removed profile"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:779
 msgid "Refetch"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:784
 msgid "Select file"
 msgstr ""
 
@@ -1923,7 +1928,7 @@ msgstr ""
 msgid "Not Available"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:815
 msgid "Select File"
 msgstr ""
 
@@ -1931,11 +1936,11 @@ msgstr ""
 msgid "Text Document"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:825
 msgid "All"
 msgstr ""
 
-#: ../src/gob/gmpc-metaimage.gob:821
+#: ../src/gob/gmpc-metaimage.gob:820
 msgid "Images"
 msgstr ""
 
