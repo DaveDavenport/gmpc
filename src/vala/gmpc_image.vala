@@ -182,4 +182,4 @@ public class Gmpc.Image:Gtk.EventBox {
 	}
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */

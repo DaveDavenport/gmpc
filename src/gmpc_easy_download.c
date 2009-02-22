@@ -590,4 +590,4 @@ char *gmpc_easy_download_uri_escape(const char *part)
 	return soup_uri_encode(part, NULL);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
