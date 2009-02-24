@@ -923,9 +923,24 @@ static void pl3_find2_ec_database(gpointer user_data, const char *param)
 }
 static void pl3_find2_ec_playlist(gpointer user_data, const char *param)
 {
+    GtkTreeIter iter;
+    GtkTreeModel *model;
     pl3_find2_browser_activate();
+
+    model  = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));
     gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), MPD_TAG_ITEM_ANY+1); 
+
+    if(gtk_tree_model_get_iter_first(model, &iter)){
+        int found = 1;
+        do{
+            int field;
+            gtk_tree_model_get(model, &iter,0, &field, -1); 
+            if(field == QUERY_ENTRY){
+                gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter); 
+                found = 0;
+            }
+        }while(gtk_tree_model_iter_next(model, &iter) && found);
+    }
     gtk_entry_set_text(GTK_ENTRY(search_entry), param);
     gtk_widget_activate(search_entry);
 }
