@@ -273,4 +273,4 @@ void url_start_real(const gchar * url)
 	gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */

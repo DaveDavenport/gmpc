@@ -72,4 +72,4 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 
 char *gmpc_easy_download_uri_escape(const char *part);
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
+/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
