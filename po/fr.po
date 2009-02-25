@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:42+0100\n"
-"PO-Revision-Date: 2009-02-12 13:17+0000\n"
-"Last-Translator: Mohaa <Unknown>\n"
+"POT-Creation-Date: 2009-02-22 20:06+0100\n"
+"PO-Revision-Date: 2009-02-13 20:08+0000\n"
+"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-02-13 13:20+0000\n"
+"X-Launchpad-Export-Date: 2009-02-22 18:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -29,7 +29,7 @@ msgstr "Une interface gnome pour le démon mpd"
 msgid "Gnome Music Player Client"
 msgstr "Client de lecture de musique GNOME (gmpc)"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1376
 msgid "Getting help"
 msgstr "Obtenir de l'aide"
 
@@ -170,7 +170,7 @@ msgstr "2 fev 2006"
 msgid "MPD's Streaming server"
 msgstr "Serveur de flux de MPD"
 
-#: ../src/gmpc_easy_download.c:385
+#: ../src/gmpc_easy_download.c:396
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -395,7 +395,7 @@ msgstr ""
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:331
+#: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Version"
 
@@ -404,7 +404,8 @@ msgid "Revision"
 msgstr "Révision"
 
 #: ../src/main.c:1360
-msgid "Libmpd version"
+#, fuzzy
+msgid "Libmpd Version"
 msgstr "version de Libmpd"
 
 #: ../src/main.c:1361
@@ -412,82 +413,87 @@ msgid "GTK+ version"
 msgstr "version de GTK+"
 
 #: ../src/main.c:1362
+#, fuzzy
+msgid "GLIB version"
+msgstr "version de GTK+"
+
+#: ../src/main.c:1363
 msgid "Libcurl version"
 msgstr "version de Libcurl"
 
-#: ../src/main.c:1363
+#: ../src/main.c:1364
 msgid "Platform"
 msgstr "Plateforme"
 
-#: ../src/main.c:1365
+#: ../src/main.c:1366
 msgid "Windows"
 msgstr "Windows"
 
-#: ../src/main.c:1368
+#: ../src/main.c:1369
 msgid "Mac OsX"
 msgstr "Mac OS X"
 
-#: ../src/main.c:1370
+#: ../src/main.c:1371
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1374
+#: ../src/main.c:1375
 msgid "Website"
 msgstr "Site Web"
 
-#: ../src/main.c:1376
+#: ../src/main.c:1377
 msgid "Options enabled"
 msgstr "Options activées"
 
-#: ../src/main.c:1377
+#: ../src/main.c:1378
 msgid "X session management"
 msgstr "Gestion des session X"
 
-#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
-#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/preferences.c:307
+#: ../src/main.c:1380 ../src/main.c:1387 ../src/main.c:1395 ../src/main.c:1403
+#: ../src/main.c:1411 ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435
+#: ../src/main.c:1443 ../src/preferences.c:307
 msgid "Enabled"
 msgstr "Activé"
 
-#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
-#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
-#: ../src/main.c:1444
+#: ../src/main.c:1382 ../src/main.c:1389 ../src/main.c:1397 ../src/main.c:1405
+#: ../src/main.c:1413 ../src/main.c:1421 ../src/main.c:1429 ../src/main.c:1437
+#: ../src/main.c:1445
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: ../src/main.c:1384
+#: ../src/main.c:1385
 msgid "NLS Support"
 msgstr "Support NLS"
 
-#: ../src/main.c:1392 ../src/mm-keys.c:566
+#: ../src/main.c:1393 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr "Touches multimédia"
 
-#: ../src/main.c:1400
+#: ../src/main.c:1401
 msgid "Libegg's trayicon"
 msgstr "icône de notification de Libegg"
 
-#: ../src/main.c:1408
+#: ../src/main.c:1409
 msgid "System libsexy"
 msgstr "Bibliothèque libsexy du système"
 
-#: ../src/main.c:1416
+#: ../src/main.c:1417
 msgid "Mac integration library"
 msgstr "librairie d'intégration du logiciel à l'environnement Mac"
 
-#: ../src/main.c:1424
+#: ../src/main.c:1425
 msgid "Use ~/.config/ dir"
 msgstr "Utiliser le dossier ~/.config/"
 
-#: ../src/main.c:1432
+#: ../src/main.c:1433
 msgid "Debug timing"
 msgstr ""
 
-#: ../src/main.c:1440
+#: ../src/main.c:1441
 msgid "Maintainer mode"
 msgstr "Mode maintenance"
 
-#: ../src/metadata.c:748
+#: ../src/metadata.c:763
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -495,7 +501,7 @@ msgstr ""
 "Un nouveau greffon de méta-données a été ajouté, gmpc a purgé du cache "
 "toutes les requêtes échouées"
 
-#: ../src/metadata.c:1211
+#: ../src/metadata.c:1226
 msgid "Metadata Handler"
 msgstr "Gestionnaire de méta-données"
 
@@ -817,7 +823,7 @@ msgstr "Mise à jour de la base de donnée de MPD terminée"
 msgid "Connected"
 msgstr "Connecté"
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2128
+#: ../src/playlist3.c:789 ../src/playlist3.c:2129
 msgid "Not Connected"
 msgstr "Non connecté"
 
@@ -881,28 +887,28 @@ msgid "changed hostname to:"
 msgstr "nom d'hôte changé en :"
 
 #. Update DB
-#: ../src/playlist3.c:1953
+#: ../src/playlist3.c:1954
 msgid "Update Database"
 msgstr "Mettre à jour la base de données"
 
 #. Server Information
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:1963
 msgid "Information"
 msgstr "Informations"
 
-#: ../src/playlist3.c:2042
+#: ../src/playlist3.c:2043
 msgid "By"
 msgstr "Par"
 
-#: ../src/playlist3.c:2049
+#: ../src/playlist3.c:2050
 msgid "From"
 msgstr "Depuis"
 
-#: ../src/playlist3.c:2121
+#: ../src/playlist3.c:2122
 msgid "Not Playing"
 msgstr "Arrêté"
 
-#: ../src/playlist3.c:2246
+#: ../src/playlist3.c:2247
 msgid "Interface"
 msgstr "Interface"
 
@@ -1135,6 +1141,20 @@ msgstr ""
 "  Djalil Oulmane https://launchpad.net/~djahlil\n"
 "  Johan Serre https://launchpad.net/~serre-johan\n"
 "  Maxime Petazzoni https://launchpad.net/~maxime-petazzoni\n"
+"  QCJN https://launchpad.net/~qcjn\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Raphaël Rigo https://launchpad.net/~devel-gmpc\n"
+"\n"
+"Launchpad Contributions:\n"
+"  Anthony Guéchoum https://launchpad.net/~athael\n"
+"  Athmane MOKRAOUI (ButterflyOfFire) https://launchpad.net/~butterflyoffire\n"
+"  BOUTRY Arnaud https://launchpad.net/~aboutry\n"
+"  Clément Lorteau https://launchpad.net/~northern-lights\n"
+"  Dismantr https://launchpad.net/~dismantr\n"
+"  Djalil Oulmane https://launchpad.net/~djahlil\n"
+"  Johan Serre https://launchpad.net/~serre-johan\n"
+"  Maxime Petazzoni https://launchpad.net/~maxime-petazzoni\n"
+"  Mohaa https://launchpad.net/~mohaalighieri\n"
 "  QCJN https://launchpad.net/~qcjn\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Raphaël Rigo https://launchpad.net/~devel-gmpc\n"
@@ -1557,7 +1577,7 @@ msgid "Query"
 msgstr "Interroger"
 
 #: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:340
+#: ../src/browsers/server-information.c:341
 msgid "Database"
 msgstr "Base de données"
 
@@ -1927,60 +1947,60 @@ msgstr "Ajouter Titre En cours aux Favoris"
 msgid "Tag based browser"
 msgstr "Navigateur par tag"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1762
+#: ../src/browsers/playlist3-tag2-browser.c:1794
 msgid "Reset browser"
 msgstr "Réinitialiser le navigateur"
 
 #. name
-#: ../src/browsers/server-information.c:300
-#: ../src/browsers/server-information.c:516
-#: ../src/browsers/server-information.c:542
+#: ../src/browsers/server-information.c:301
+#: ../src/browsers/server-information.c:517
+#: ../src/browsers/server-information.c:543
 msgid "Server Information"
 msgstr "Informations serveur"
 
-#: ../src/browsers/server-information.c:324
+#: ../src/browsers/server-information.c:325
 msgid "Server"
 msgstr "Serveur"
 
-#: ../src/browsers/server-information.c:333
+#: ../src/browsers/server-information.c:334
 msgid "Uptime"
 msgstr "Temps de service"
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:335
 msgid "Time Playing"
 msgstr "Temps de lecture effectif"
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:348
 msgid "Total Playtime"
 msgstr "Temps de lecture total"
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:349
+#: ../src/browsers/server-information.c:350
 msgid "Number of artists"
 msgstr "Nombre d'artistes"
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:351
+#: ../src/browsers/server-information.c:352
 msgid "Number of albums"
 msgstr "Nombre d'albums"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:353
+#: ../src/browsers/server-information.c:354
 msgid "Number of songs"
 msgstr "Nombre de morceaux"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:355
+#: ../src/browsers/server-information.c:356
 msgid "URL Handlers"
 msgstr "Prise en charge des URL"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:358
 msgid "Tag Types"
 msgstr "Catégories de tags"
 
-#: ../src/browsers/server-information.c:362
+#: ../src/browsers/server-information.c:363
 msgid "Tag statistics"
 msgstr "Statistiques métainformations"
 
@@ -2046,11 +2066,11 @@ msgstr "Profil ajouté"
 msgid "Removed profile"
 msgstr "Profil supprimé"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:779
 msgid "Refetch"
 msgstr "Mettre à jour"
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:784
 msgid "Select file"
 msgstr "Sélectionner un fichier"
 
@@ -2078,7 +2098,7 @@ msgstr "Récupération des informations sur l'album"
 msgid "Not Available"
 msgstr "Non disponible"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:815
 msgid "Select File"
 msgstr "Sélectionner un fichier"
 
@@ -2086,11 +2106,11 @@ msgstr "Sélectionner un fichier"
 msgid "Text Document"
 msgstr "Document texte"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:825
 msgid "All"
 msgstr "Tout"
 
-#: ../src/gob/gmpc-metaimage.gob:821
+#: ../src/gob/gmpc-metaimage.gob:820
 msgid "Images"
 msgstr "Images"
 

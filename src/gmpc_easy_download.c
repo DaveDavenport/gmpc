@@ -71,17 +71,18 @@ int skip_gzip_header(const char *src, gsize size)
 
 static int read_cb(void *z, char *buffer, int size)
 {
-	z_stream *zs = z;
+    int r=0;
+    z_stream *zs = z;
 	if (zs) {
-		int r;
 		zs->next_out = (void *)buffer;
 		zs->avail_out = size;
 		r = inflate(zs, Z_SYNC_FLUSH);
-		if (r == Z_OK || r == Z_STREAM_END || r == Z_NEED_DICT) {
+		if (r == Z_OK || r == Z_STREAM_END || r == Z_NEED_DICT || r == Z_BUF_ERROR) {
 			return size - zs->avail_out;
 		}
 	}
-	printf("failed unzipping stream\n");
+    else printf("no zs\n");
+	printf("failed unzipping stream: %i\n",r);
 	return -1;
 }
 
@@ -422,8 +423,11 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 	if (encoding) {
 		if (strcmp(encoding, "gzip") == 0) {
 			d->is_gzip = 1;
+            debug_printf(DEBUG_WARNING, "Url is gzipped");
 		} else if (strcmp(encoding, "deflate") == 0) {
 			d->is_deflate = 1;
+
+            debug_printf(DEBUG_WARNING, "Url is enflated");
 		}
 	}
 }
@@ -447,11 +451,13 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 						d->length += res;
 				} while (res > 0);
 				if (res < 0) {
+                    debug_printf(DEBUG_ERROR, "Failure during unzipping 1: %s", d->uri);
 					soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 				}
 			} else {
 				/* give error */
-				soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
+                debug_printf(DEBUG_ERROR, "Failure during inflateInit2: %s", d->uri);
+                soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		} else {
 			int res = 0;
@@ -464,7 +470,8 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 					d->length += res;
 			} while (res > 0);
 			if (res < 0) {
-				soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
+                debug_printf(DEBUG_ERROR, "Failure during unzipping 2: %s", d->uri);
+                soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		}
 

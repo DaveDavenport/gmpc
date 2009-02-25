@@ -34,7 +34,8 @@ requires 2.0.0
   enum {
 	PROFILE_ADDED,
 	PROFILE_REMOVED,
-	PROFILE_COL_CHANGED
+	PROFILE_COL_CHANGED,
+    PROFILE_CURRENT
 	};
   enum {
     PROFILE_COL_NAME,
@@ -62,6 +63,20 @@ class Gmpc:Profiles from G:Object
   private Profile **list = {NULL};
   private int num_profiles = {0};
 
+
+    /* Connect on button press event */
+    private 
+    void
+    connect_to_profile_button(self, GtkWidget *button)
+    {
+        gchar *id = g_object_get_data(G_OBJECT(button), "profile-id");
+        if(id)
+        {
+            self_set_current(self, id);
+            mpd_disconnect(connection);
+            connect_to_mpd();
+        }
+    }
   /* signal with (self, id) */
   signal last NONE (INT, INT,STRING)
   void
@@ -69,17 +84,19 @@ class Gmpc:Profiles from G:Object
   {
 	if(changed == PROFILE_ADDED)
     {
+        GtkWidget *connect_button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
         gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Added profile"),self_get_name(self,id));
         playlist3_show_error_message(message, ERROR_INFO);
+
+        g_object_set_data_full(G_OBJECT(connect_button), "profile-id", g_strdup(id), (GDestroyNotify)g_free);
+        g_signal_connect_swapped(G_OBJECT(connect_button), "clicked", G_CALLBACK(self_connect_to_profile_button), self);
+        playlist3_error_add_widget(connect_button);
         q_free(message);
 
         debug_printf(DEBUG_INFO,"Item %s added\n", id);
     }
     else if(changed == PROFILE_REMOVED)
     {
-        gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Removed profile"),self_get_name(self,id));
-        playlist3_show_error_message(message, ERROR_INFO);
-        q_free(message);
 		debug_printf(DEBUG_INFO,"Item %s removed\n", id);
     }
 	else if(changed == PROFILE_COL_CHANGED)
@@ -352,6 +369,7 @@ class Gmpc:Profiles from G:Object
   void
   remove_item(self, const gchar *id)
   {
+    gchar *message = NULL;
     int i=0;
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
@@ -359,6 +377,9 @@ class Gmpc:Profiles from G:Object
         debug_printf(DEBUG_WARNING, "Trying to remove not-existing profile: %i\n", id);
       return;
     }
+    /* Generate removal message before the actual profile is destroyed */
+    message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Removed profile"),self_get_name(self,id));
+
     for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
     if(self->_priv->list[i] == prof)
     {
@@ -372,6 +393,10 @@ class Gmpc:Profiles from G:Object
       cfg_remove_class(self->_priv->profiles, (char *)id);
       self_free_profile(prof);
     }
+
+    /* Display the message */
+    playlist3_show_error_message(message, ERROR_INFO);
+    q_free(message);
 
     self_changed(self,PROFILE_REMOVED,-1, id);
   }
@@ -407,8 +432,12 @@ class Gmpc:Profiles from G:Object
   set_current(self, const gchar *id(check null))
   {
     Profile *prof = self_get_profile(self, id);
-    if(prof)
-      cfg_set_single_value_as_string(config, "connection", "currentprofile", (char *)id);
+    if(prof){
+        cfg_set_single_value_as_string(config, "connection", "currentprofile", (char *)id);
+
+        self_changed(self, PROFILE_CURRENT,0, id); 
+    }
+
   }
   public
   GList *
