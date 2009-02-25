@@ -447,11 +447,13 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 						d->length += res;
 				} while (res > 0);
 				if (res < 0) {
+                    debug_printf(DEBUG_ERROR, "Failure during unzipping: %s", d->uri);
 					soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 				}
 			} else {
 				/* give error */
-				soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
+                debug_printf(DEBUG_ERROR, "Failure during inflateInit2: %s", d->uri);
+                soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		} else {
 			int res = 0;
@@ -464,7 +466,8 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 					d->length += res;
 			} while (res > 0);
 			if (res < 0) {
-				soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
+                debug_printf(DEBUG_ERROR, "Failure during unzipping: %s", d->uri);
+                soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		}
 
