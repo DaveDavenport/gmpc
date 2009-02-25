@@ -77,9 +77,6 @@ class Gmpc:Profiles from G:Object
     }
     else if(changed == PROFILE_REMOVED)
     {
-        gchar *message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Removed profile"),self_get_name(self,id));
-        playlist3_show_error_message(message, ERROR_INFO);
-        q_free(message);
 		debug_printf(DEBUG_INFO,"Item %s removed\n", id);
     }
 	else if(changed == PROFILE_COL_CHANGED)
@@ -352,6 +349,7 @@ class Gmpc:Profiles from G:Object
   void
   remove_item(self, const gchar *id)
   {
+    gchar *message = NULL;
     int i=0;
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
@@ -359,6 +357,9 @@ class Gmpc:Profiles from G:Object
         debug_printf(DEBUG_WARNING, "Trying to remove not-existing profile: %i\n", id);
       return;
     }
+    /* Generate removal message before the actual profile is destroyed */
+    message = g_markup_printf_escaped("<b>%s:</b> '%s'", _("Removed profile"),self_get_name(self,id));
+
     for(i=0; self->_priv->list[i] && self->_priv->list[i] != prof;i++);
     if(self->_priv->list[i] == prof)
     {
@@ -372,6 +373,10 @@ class Gmpc:Profiles from G:Object
       cfg_remove_class(self->_priv->profiles, (char *)id);
       self_free_profile(prof);
     }
+
+    /* Display the message */
+    playlist3_show_error_message(message, ERROR_INFO);
+    q_free(message);
 
     self_changed(self,PROFILE_REMOVED,-1, id);
   }
