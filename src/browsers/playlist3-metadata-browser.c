@@ -1770,9 +1770,6 @@ static gboolean song_list_button_release_event(GtkTreeView *tree,
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(song_list_replace_selected_songs), tree);
 
-			/* Separator */	
-			item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
 
         gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
