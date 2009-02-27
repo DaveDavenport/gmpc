@@ -63,6 +63,19 @@ then
  AC_MSG_ERROR([Jamendo plugin requires zlib])
 fi
 
+
+libspiff=0;
+
+AC_CHECK_HEADER(spiff/spiff_c.h, AC_CHECK_LIB(spiff, spiff_parse,libspiff=1,libspiff=0),libspiff=0)
+if test "x$libspiff" == "x1";
+then
+AC_DEFINE(SPIFF,1,["Use or don't use libspiff"])
+SPIFF_LIBS=-lspiff
+AC_SUBST(SPIFF_LIBS)
+fi
+
+
+
 PKG_PROG_PKG_CONFIG
 
 
@@ -436,5 +449,10 @@ if test "x$macige" = "xyes"; then
 	echo "Use mac integration library:      enabled"
 else
 	echo "Use mac integration library:      disabled"
+fi
+if test "x$libspiff" = "x1"; then
+	echo "Use libspiff library:             enabled"
+else
+	echo "Use libspiff library:             disabled"
 fi
 echo "Now type make to build"

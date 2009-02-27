@@ -97,6 +97,7 @@ LIBS= \
 	@libglade_LIBS@\
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
+	@SPIFF_LIBS@\
 	@sm_LIBS@ 
 
 if USE_SYSTEM_LIBSEXY
