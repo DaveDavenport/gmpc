@@ -99,6 +99,7 @@ static void url_parse_spiff_file(const char *data, int size)
     gchar *filename = g_build_filename(tempdir, "gmpc-temp-spiff-file",NULL);
     if(filename)
     {
+        GError *error = NULL;
         int has_http = FALSE, has_file = FALSE;
         char **handlers = mpd_server_get_url_handlers(connection);
         int i = 0;
@@ -112,7 +113,8 @@ static void url_parse_spiff_file(const char *data, int size)
         if (handlers)
             g_strfreev(handlers);
 
-        if(g_file_set_contents(filename, data,(gssize)size, NULL))
+        g_file_set_contents(filename, data,(gssize)size, &error);
+        if(!error)
         {
             struct spiff_track *strack;
             struct spiff_mvalue *sloc;
@@ -124,6 +126,7 @@ static void url_parse_spiff_file(const char *data, int size)
                         char *scheme = g_uri_parse_scheme(sloc->value);
                         if(scheme)
                         {
+                            debug_printf(DEBUG_INFO, "Trying to add url: %s", sloc->value);
                             if(strcmp(scheme, "http") == 0 && has_http) 
                             {
                                 mpd_playlist_add(connection, sloc->value);
@@ -136,11 +139,19 @@ static void url_parse_spiff_file(const char *data, int size)
                             }
                             g_free(scheme);
                         }
+                        else{
+                            debug_printf(DEBUG_ERROR, "Failed to parse scheme: %s",sloc->value);
+                        }
                     }
                 }
                 spiff_free(slist);
             }
             g_unlink(filename);
+        }
+        else 
+        {
+            debug_printf(DEBUG_ERROR, "Error message: %s", error->message);
+            g_error_free(error);
         }
 
         g_free(filename);
