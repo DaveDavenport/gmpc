@@ -447,8 +447,11 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 				do {
 					d->data = g_realloc(d->data, d->length + 12 * 1024);
 					res = read_cb(d->z, &(d->data[d->length]), 12 * 1024);
+
 					if (res > 0)
 						d->length += res;
+
+                    d->data[d->length]='\0';
 				} while (res > 0);
 				if (res < 0) {
                     debug_printf(DEBUG_ERROR, "Failure during unzipping 1: %s", d->uri);
@@ -466,9 +469,12 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 			do {
 				d->data = g_realloc(d->data, d->length + 12 * 1024);
 				res = read_cb(d->z, &(d->data[d->length]), 12 * 1024);
-				if (res > 0)
+
+                if (res > 0)
 					d->length += res;
-			} while (res > 0);
+
+                d->data[d->length]='\0';
+            } while (res > 0);
 			if (res < 0) {
                 debug_printf(DEBUG_ERROR, "Failure during unzipping 2: %s", d->uri);
                 soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
@@ -476,9 +482,10 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 		}
 
 	} else {
-		d->data = g_realloc(d->data, d->length + buffer->length);
+		d->data = g_realloc(d->data, d->length + buffer->length+1);
 		g_memmove(&(d->data[d->length]), buffer->data, (size_t) buffer->length);
 		d->length += buffer->length;
+        d->data[d->length] = '\0';
 	}
 	d->callback((GEADAsyncHandler *) d, GEAD_PROGRESS, d->userdata);
 }

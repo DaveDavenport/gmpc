@@ -67,7 +67,7 @@ fi
 libspiff=0;
 
 AC_ARG_ENABLE(libspiff,
-    [   --enable-spiff      Use libspiff to parse spiff playlists.],
+    [   --enable-libspiff      Use libspiff to parse spiff playlists.],
     [ case "${enableval}" in
         yes)    enable_libspiff=yes;;
          no)    enable_libspiff=no;;

@@ -70,12 +70,12 @@ static void url_parse_extm3u_file(const char *data, int size)
 {
 	int i = 0;
 	int songs = 0;
-	gchar **tokens = g_strsplit(data, "\n", -1);
+	gchar **tokens = g_regex_split_simple("(\r\n|\n|\r)", data, G_REGEX_MULTILINE, G_REGEX_MATCH_NEWLINE_ANY);	// g_strsplit(data, "\n", -1);
 	if (tokens) {
 		for (i = 0; tokens[i]; i++) {
 			/* Check for File */
 			if (!strncmp(tokens[i], "http://", 7)) {
-				printf("Adding %s\n", tokens[i]);
+				printf("Adding '%s'\n", tokens[i]);
 				mpd_playlist_add(connection, tokens[i]);
 				songs++;
 			}
@@ -271,7 +271,7 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 			GtkWidget *progress = user_data;
 			if (total > 0) {
 				gdouble prog = (length / (double)total);
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), prog);
+				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (prog > 1)?1:prog);
 				printf("%f\n", prog);
 			} else {
 				gtk_progress_bar_pulse(GTK_PROGRESS_BAR(progress));
