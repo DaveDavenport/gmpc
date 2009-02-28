@@ -1343,3 +1343,5 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	gtk_widget_show(smenu);
 
 }
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
