@@ -22,13 +22,10 @@
 #include "main.h"
 #include "playlist3.h"
 
-extern int pl3_zoom;
 static gboolean error_visible = FALSE;
 static ErrorLevel last_error_level = ERROR_INFO;
-guint timeout_callback = 0;
-GtkListStore *message_list = NULL;
-void message_window_open(void);
-void message_window_destroy(GtkWidget *win);
+static guint timeout_callback = 0;
+static GtkListStore *message_list = NULL;
 static GIOChannel *log_file = NULL;
 
 static const char *error_levels[3] = {
@@ -210,6 +207,11 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 	strftime(text, 64,"%H:%M:%S", lt);
 	g_object_set(G_OBJECT(cell), "text",text,NULL);
 }
+/**
+ * The list of messages
+ */
+void message_window_open(void);
+void message_window_destroy(GtkWidget *win);
 static GtkBuilder *message_xml = NULL;
 void message_window_open(void)
 {
@@ -239,13 +241,12 @@ void message_window_open(void)
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(message_list));
 
 	gtk_widget_show(win);
-	//glade_xml_signal_autoconnect(xml);
+
 	gtk_builder_connect_signals(xml, NULL);
 }
 
 void message_window_destroy(GtkWidget *win)
 {
-
 	gtk_widget_destroy(win);
 	g_object_unref(message_xml);
 	message_xml = NULL;

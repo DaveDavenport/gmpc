@@ -41,6 +41,7 @@ typedef enum {
 	PLAYLIST_MINI,
 	PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
+extern int pl3_zoom;
 
 void playlist3_destroy(void);
 gboolean playlist3_show_playtime(gulong playtime);
