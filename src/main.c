@@ -1454,4 +1454,4 @@ void print_version(void)
 		);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

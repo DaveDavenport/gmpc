@@ -1842,4 +1842,4 @@ static int tag2_browser_key_press_event ( GtkWidget *mw, GdkEventKey *event, int
     return 0;
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120*/
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120*/
