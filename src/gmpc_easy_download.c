@@ -445,7 +445,7 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 			if (inflateInit2(d->z, -MAX_WBITS) == Z_OK) {
 				int res = 0;
 				do {
-					d->data = g_realloc(d->data, d->length + 12 * 1024);
+					d->data = g_realloc(d->data, d->length + 12 * 1024+1);
 					res = read_cb(d->z, &(d->data[d->length]), 12 * 1024);
 
 					if (res > 0)
@@ -467,7 +467,7 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 			d->z->next_in = (void *)((buffer->data));
 			d->z->avail_in = buffer->length;
 			do {
-				d->data = g_realloc(d->data, d->length + 12 * 1024);
+				d->data = g_realloc(d->data, d->length + 12 * 1024+1);
 				res = read_cb(d->z, &(d->data[d->length]), 12 * 1024);
 
                 if (res > 0)
