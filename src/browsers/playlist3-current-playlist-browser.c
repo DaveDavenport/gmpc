@@ -259,14 +259,12 @@ static gboolean mod_fill_do_entry_changed(GtkWidget *entry, GtkWidget *tree)
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), data);
         quick_search = TRUE;
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), mod_fill);
-        printf("Set mod_fill 1\n");
         gtk_widget_show(entry);
     }
     else
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
 
-        printf("Set playlist 1\n");
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
         if(!search_keep_open)
         {
@@ -290,7 +288,6 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
             search_keep_open = FALSE;
             gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
 
-            printf("Set playlist 2\n");
             gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
             quick_search = 0;
             gtk_widget_hide(entry);
@@ -653,7 +650,6 @@ static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GL
                     }
                     mpd_playlist_move_pos(connection, length, id);
                     length++;
-                    printf("added: %s\n", path);
                     liter = g_list_next(liter);
                 }
             }
@@ -827,7 +823,6 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTre
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_cp_tree), playlist);
 
-        printf("Set playlist 3\n");
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(mod_fill), NULL);
         quick_search = 0;
         gtk_widget_hide(filter_entry);
