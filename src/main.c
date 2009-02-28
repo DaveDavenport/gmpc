@@ -1422,6 +1422,13 @@ void print_version(void)
 #endif
 		);
 
+	printf("%-25s: %s\n", _("libspiff support"),
+#ifdef SPIFF 
+		   _("Enabled")
+#else
+		   _("Disabled")
+#endif
+	);
 	printf("%-25s: %s\n", _("Use ~/.config/ dir"),
 #ifdef USE_CONFIG_DIR
 		   _("Enabled")
