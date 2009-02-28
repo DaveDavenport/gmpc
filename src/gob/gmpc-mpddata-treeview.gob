@@ -868,16 +868,36 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             /* remove every selected song one by one */
             do{
                 GtkTreeIter iter;
-                int value;
                 gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
                 /* Trick that avoids roundtrip to mpd */
                 {
                     char *path = NULL;
+		    int type = 0;
                     /* this one allready has the pos. */
-                    gtk_tree_model_get (model, &iter, MPDDATA_MODEL_COL_SONG_POS, &value,MPDDATA_MODEL_COL_PATH, &path, -1);			
-                    debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
-                    paste_queue = g_list_prepend(paste_queue, path);
-                    value--;
+                    gtk_tree_model_get (model, &iter, 
+					MPDDATA_MODEL_ROW_TYPE,&type, 
+					MPDDATA_MODEL_COL_PATH, &path, 
+					-1);			
+		    debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
+			if(type == MPD_DATA_TYPE_SONG) {
+				paste_queue = g_list_prepend(paste_queue, path);
+			} else if (type == MPD_DATA_TYPE_DIRECTORY) {
+				MpdData *data = mpd_database_get_directory_recursive(connection, path);
+				for(;data; data= mpd_data_get_next(data)){
+					if(data->type == MPD_DATA_TYPE_SONG) {
+						paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
+					}
+				}
+				g_free(path);
+			} else if (type == MPD_DATA_TYPE_PLAYLIST) {
+				MpdData *data = mpd_database_get_playlist_content(connection, path);
+				for(;data; data= mpd_data_get_next(data)){
+					if(data->type == MPD_DATA_TYPE_SONG) {
+						paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
+					}
+				}
+				g_free(path);
+			}
                 } 
             } while ((llist = g_list_previous (llist)));
             /* free list */
