@@ -84,7 +84,6 @@ static void volume_set(gpointer data, const char *param)
 
 static void set_random(gpointer data, const char *param)
 {
-    printf("param: '%s'\n", param);
     if(strncmp(param,"on",2) == 0){
         mpd_player_set_random(connection, TRUE);
     }else if (strncmp(param, "off", 3) == 0){
@@ -95,7 +94,6 @@ static void set_random(gpointer data, const char *param)
 }
 static void set_repeat(gpointer data, const char *param)
 {
-    printf("param: '%s'\n", param);
     if(strncmp(param,"on",2) == 0){
         mpd_player_set_repeat(connection, TRUE);
     }else if (strncmp(param, "off", 3) == 0){
@@ -114,7 +112,6 @@ static void replace_command(gpointer user_data, const char *param)
 
         if((songs&16383)==16383){
             mpd_playlist_queue_commit(connection);
-            printf("pre-commit %lu\n",songs);
         }
         if(data->type == MPD_DATA_TYPE_SONG) {
             mpd_playlist_queue_add(connection,data->song->file); 
@@ -132,7 +129,6 @@ static void add_command(gpointer user_data, const char *param)
 
         if((songs&16383)==16383){
             mpd_playlist_queue_commit(connection);
-            printf("pre-commit %lu\n",songs);
         }
         if(data->type == MPD_DATA_TYPE_SONG) {
             mpd_playlist_queue_add(connection,data->song->file); 
@@ -147,7 +143,6 @@ static void play_command(gpointer user_data, const char *param)
     MpdData *data = advanced_search(param, TRUE);
     if(data)
     {
-        printf("play path: %s\n", data->song->file);
         play_path(data->song->file);
         mpd_data_free(data);
     }
@@ -1275,7 +1270,6 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
     if(song->file)
     {
         gchar *schema = g_uri_parse_scheme(song->file);
-        printf("schema's: %s\n", schema);
         /* If it has a schame, it isn't an mpd url */
         if(schema) 
         {
