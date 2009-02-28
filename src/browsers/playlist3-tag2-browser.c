@@ -488,9 +488,8 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
     GList *tel = g_list_first(browser->tag_lists);
     static int working = 0;
     if(working){
-        printf("error, only one tag2_changed callback allowed at the time, delaying\n");
-        g_idle_add(tag2_changed_delayed,te);
-    return;
+	    g_idle_add(tag2_changed_delayed,te);
+	    return;
     }
     working = 1;
 

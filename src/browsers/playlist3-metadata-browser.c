@@ -2292,7 +2292,6 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
                 albumartist = data->tag;
                 data->tag = NULL;
                 mpd_data_free(data);
-                printf("found albumartist: %s\n", albumartist);
             }
             else
                 data = mpd_data_get_next(data);
@@ -2768,7 +2767,6 @@ void info2_fill_album_view(const char *artist,const char *album)
                 hs->song->albumartist = data->tag;
                 data->tag = NULL;
                 mpd_data_free(data);
-                printf("found albumartist: %s\n", hs->song->albumartist);
             }
             else
                 data = mpd_data_get_next(data);

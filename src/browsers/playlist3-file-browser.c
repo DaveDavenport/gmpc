@@ -1233,7 +1233,6 @@ static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, v
 {
     if(what&MPD_CST_DATABASE)
     {
-        printf("db changed\n");
         pl3_file_browser_reupdate();
     }
 }	
