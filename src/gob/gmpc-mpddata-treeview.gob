@@ -134,880 +134,882 @@ static GList *paste_queue = NULL;
 %}
 
 class Gmpc:MpdData:Treeview from Gtk:Tree:View {
-    private gchar *name = {NULL} destroywith g_free;
-    private gboolean do_sort = {TRUE};
-    private GtkTreeViewColumn *columns[NUM_COLS];
-    /* Tooltip */
-    private GtkWidget   *tooltip_window = {NULL};
-    private GtkWidget   *tw_image = {NULL};
-    private GtkWidget   *tw_title = {NULL};
-    private GtkWidget   *tw_artist = {NULL};
-    private GtkWidget   *tw_album = {NULL};
-    private GtkWidget   *tw_genre = {NULL};
-    private GtkWidget   *tw_date = {NULL};
-    private GtkWidget   *tw_length = {NULL};
-    private gchar       *file = NULL;
+	private gchar *name = {NULL} destroywith g_free;
+	private gboolean do_sort = {TRUE};
+	private GtkTreeViewColumn *columns[NUM_COLS];
+	/* Tooltip */
+	private GtkWidget   *tooltip_window = {NULL};
+	private GtkWidget   *tw_image = {NULL};
+	private GtkWidget   *tw_title = {NULL};
+	private GtkWidget   *tw_artist = {NULL};
+	private GtkWidget   *tw_album = {NULL};
+	private GtkWidget   *tw_genre = {NULL};
+	private GtkWidget   *tw_date = {NULL};
+	private GtkWidget   *tw_length = {NULL};
+	private gchar       *file = NULL;
 
-    private gboolean    pressed = FALSE;
-
-
+	private gboolean    pressed = FALSE;
 
 
 
 
-    public 
-        GtkWidget * new (const char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
-        {
-            Self *self = GET_NEW;
-            self->_priv->name = g_strdup(name);
-            self->_priv->do_sort = sort;
-
-            gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);
-            gtk_tree_view_set_model(GTK_TREE_VIEW(self), model);
-            /* init the tree */
-            self_do_init(self);
-            /* set tooltip */
-            self_enable_tooltip(self);
-            g_signal_connect(G_OBJECT(self), "key-release-event", G_CALLBACK(self_paste_key_release_event), NULL);
-
-            return (GtkWidget *)self;
-        }
-    private
-        void do_init (self)
-        {
-            int i=0;
-            gchar *conf_size,*conf_opt = g_strdup_printf("%s-colpos", self->_priv->name);
-            GtkTreeViewColumn *col = NULL;
-            for(i = 0;i< NUM_COLS;i++)
-            { 
-                int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
-                col = self_add_column(self,col_names[i],col_ids[i],conf_pos);
-                g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
-            }
-            q_free(conf_opt);
-            conf_opt = g_strdup_printf("%s-colshow", self->_priv->name);
-            conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
-            for(i = 0;i< NUM_COLS;i++)
-            { 
-                int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(self->_priv->columns[i]), "id"));
-                int col_size= cfg_get_single_value_as_int_with_default(config, conf_size,col_names[id], 200); 
-                int col_show= cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[id], col_enabled[id]); 
-                gtk_tree_view_column_set_visible(self->_priv->columns[i],col_show);
-                gtk_tree_view_append_column(GTK_TREE_VIEW(self), self->_priv->columns[i]);
-                /* don't set the icon column */
-                if(col_ids[id]!= MPDDATA_MODEL_COL_ICON_ID)
-                    gtk_tree_view_column_set_fixed_width(self->_priv->columns[i], col_size);
-
-                g_signal_connect_swapped(G_OBJECT(self->_priv->columns[i]), "notify::width", G_CALLBACK(self_column_width), self);
-            }
-            /* set the last column small, to stop weird grows */
-            //for(i=NUM_COLS-1; i>=0 && !gtk_tree_view_column_get_visible(self->_priv->columns[i]);i--);
-            //gtk_tree_view_column_set_fixed_width(self->_priv->columns[i], 150);
-
-            q_free(conf_opt);
-            q_free(conf_size);
-
-            /* */
-            gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(self)), GTK_SELECTION_MULTIPLE);
-            gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(self), TRUE);
-            gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(self), TRUE);
-
-            if(self->_priv->do_sort)
-            {
-                int sort_col = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-column",MPDDATA_MODEL_COL_SONG_TITLE);
-                int sort_order = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-order", GTK_SORT_ASCENDING);
-                if(((sort_col < MPDDATA_MODEL_N_COLUMNS && sort_col >= 0) || sort_col == GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID )&& (sort_order == GTK_SORT_ASCENDING || sort_order == GTK_SORT_DESCENDING)) {
-                    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))),sort_col, sort_order); 
-                }
-            }
-        }
-
-    /**
-     * Save Column Setup
-     */
-    private	
-        void 
-        save_column_setup (self)
-        {
-            int i=0;
-            GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(self));
-            gchar *conf_pos = NULL;
-            gchar *conf_show = NULL;
-
-            i = g_list_length(cols);
-
-            if(i != NUM_COLS)
-            {
-                g_list_free(cols);
-                return;
-            }
-            conf_pos = g_strdup_printf("%s-colpos", self->_priv->name);
-            conf_show = g_strdup_printf("%s-colshow", self->_priv->name);
-//            conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
-            i=0;
-            for(iter = cols; iter; iter = g_list_next(iter))
-            {
-                GtkTreeViewColumn *column = iter->data;
-                int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
-                cfg_set_single_value_as_int(config, conf_pos, col_names[id], i);
-                cfg_set_single_value_as_int(config, conf_show, col_names[id], gtk_tree_view_column_get_visible(column));
-                /* only save width on > 0 columns */
-                //if(gtk_tree_view_column_get_width(column) > 0)
-                //    cfg_set_single_value_as_int(config, conf_size, col_names[id], gtk_tree_view_column_get_width(column));
-                i++;
-            }
-            q_free(conf_pos);
-            q_free(conf_show);
-  //          q_free(conf_size);
-            g_list_free(cols);
-
-            if(self->_priv->do_sort)
-            {
-                int sort_col;
-                GtkSortType sort_order;
-                gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))), &sort_col, &sort_order); 
-                cfg_set_single_value_as_int(config, self->_priv->name, "sort-column",sort_col);
-                cfg_set_single_value_as_int(config, self->_priv->name, "sort-order", sort_order);
-            }
-        }
-
-    override (G:Object)
-        void 
-        dispose (G:Object *obj)
-        {
-            Self *self = GMPC_MPDDATA_TREEVIEW(obj);
-            self_save_column_setup(self);
-            PARENT_HANDLER(obj);
-        }
-    private
-        void
-        highlight_row (GtkTreeViewColumn *tree_column,
-                GtkCellRenderer *cell,
-                GtkTreeModel *tree_model,
-                GtkTreeIter *iter,
-                gpointer data)
-        {
-
-            if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(tree_model) && gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
-                g_object_set(G_OBJECT(cell), "weight", 800,NULL);
-            else
-                g_object_set(G_OBJECT(cell), "weight", 400,NULL);
-
-        }
-        private 
-        void
-        column_width(self, GParamSpec *argc, GtkTreeViewColumn *column)
-        {
-            if(self->_priv->pressed)
-            {
-                int width = gtk_tree_view_column_get_width(column);
-                int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
-                gchar *conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
-                int w = cfg_get_single_value_as_int(config, conf_size, col_names[id]);
-                if(w != width)
-                {
-                    printf("%02i: Set width: %i\n",id,width);
-                    cfg_set_single_value_as_int(config, conf_size, col_names[id],width); 
-                }
-                q_free(conf_size);
-            }
-        }
-
-    private
-        GtkTreeViewColumn * 
-        add_column(self, const char *columnname, int valuerow, int position)
-        {
-            GtkCellRenderer *renderer;
-            GtkTreeViewColumn *column = NULL;
-            GValue value = {0,};
-
-            if(valuerow == MPDDATA_MODEL_COL_ICON_ID)
-            {
-                renderer = gtk_cell_renderer_pixbuf_new();
-                g_value_init(&value, G_TYPE_FLOAT);
-                g_value_set_float(&value, 0.0);
-                g_object_set_property(G_OBJECT(renderer), "xalign", &value); 
-
-                column = gtk_tree_view_column_new ();
-                gtk_tree_view_column_pack_start (column, renderer, TRUE);
-                gtk_tree_view_column_set_attributes (column,renderer,"icon-name", MPDDATA_MODEL_COL_ICON_ID,NULL);
-
-                gtk_tree_view_column_set_resizable(column, TRUE);
-                gtk_tree_view_column_set_fixed_width(column, 20);
-            }
-            else{
-                renderer = gtk_cell_renderer_text_new();
-                column = gtk_tree_view_column_new_with_attributes (_(columnname), renderer,
-                        "text", valuerow,NULL);
-                g_value_init(&value, G_TYPE_INT);
-                g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-                g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
-                gtk_tree_view_column_set_resizable(column, TRUE);
-                if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(gtk_tree_view_get_model(GTK_TREE_VIEW(self))))
-                {
-                    g_object_set(G_OBJECT(renderer), "weight-set", TRUE, NULL);
-                    gtk_tree_view_column_set_cell_data_func (column,renderer,self_highlight_row, NULL, NULL);
-                }
-
-            }
-            gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
-            gtk_tree_view_column_set_reorderable(column, TRUE);
-
-            self->_priv->columns[position] = column;
-
-            if(self->_priv->do_sort)
-            {
-                gtk_tree_view_column_set_sort_column_id(column,valuerow); 
-                gtk_tree_view_column_set_sort_indicator(column, TRUE);
-            }
-
-            return column;
-        }
-    /**
-     * Opens a column editor 
-     */	
-    public
-        void
-        edit_columns(self)
-        {
-            GtkWidget *dialog = egg_column_chooser_dialog_new(GTK_TREE_VIEW(self));
-            gtk_widget_show_all(dialog);
-            gtk_dialog_run(GTK_DIALOG(dialog));
-            self_save_column_setup(self);
-        }
-
-    override (G:Object)
-        void
-        finalize(G:Object *obj)
-        {
-            Self *self = SELF(obj);
-            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(obj));
-            if(model)
-            {
-                gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
-                g_object_unref(model);
-            }
-            if(self->_priv->tooltip_window)
-            {
-                gtk_widget_destroy(self->_priv->tooltip_window);
-                self->_priv->tooltip_window = NULL;
-            }
-            if(self->_priv->file)
-            {
-                g_free(self->_priv->file);
-                self->_priv->file = NULL;
-            }
-            PARENT_HANDLER(obj);
-        }
-
-    /****
-     * TREEVIEW POPUP
-     */
-    private gboolean query_tooltip(self,
-            gint x, gint y, 
-            gboolean keyboard_tip,
-            GtkTooltip *tooltip, 
-            gpointer data)
-    {
-        GtkTreeView *treeview = GTK_TREE_VIEW(self);
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
-        GtkTreeIter iter;
-        GtkTreePath *path = NULL;
-        mpd_Song *song = NULL;
-        int show = FALSE;
-
-        if(!cfg_get_single_value_as_int_with_default(config, "GmpcTreeView", "show-tooltip", TRUE))
-            return FALSE;
-        if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW(treeview), &x, &y,
-                    keyboard_tip,
-                    &model, &path, &iter))
-           return FALSE;
-
-        
-        gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-        if(song)
-        {
-            show = TRUE;
-            /* makes it look a bit nicer */
-            if(self->_priv->file && song->file && strcmp(self->_priv->file, song->file))
-            {
-                show = FALSE;
-                g_free(self->_priv->file);self->_priv->file = NULL; 
-            }
-            else if(!(self->_priv->file && song->file && strcmp(self->_priv->file, song->file) == 0))
-            {
-                gchar *temp;
-
-                gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(self->_priv->tw_image), song);
-                if(self->_priv->file)
-                    g_free(self->_priv->file);
-                self->_priv->file = NULL;
-                if(song->file)
-                    self->_priv->file = g_strdup(song->file);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_title), temp);
-                g_free(temp);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ARTIST,&temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_artist), temp);
-                g_free(temp);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ALBUM, &temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_album), temp);
-                g_free(temp);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_GENRE, &temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_genre), temp);
-                g_free(temp);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_DATE, &temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_date), temp);
-                g_free(temp);
-
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT, &temp, -1);
-                gtk_label_set_text(GTK_LABEL(self->_priv->tw_length), temp);
-                g_free(temp);
 
 
+	public 
+		GtkWidget * new (const char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
+		{
+			Self *self = GET_NEW;
+			self->_priv->name = g_strdup(name);
+			self->_priv->do_sort = sort;
 
-            }
-        }
-        gtk_tree_path_free(path);
-        return show;
-    }
+			gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);
+			gtk_tree_view_set_model(GTK_TREE_VIEW(self), model);
+			/* init the tree */
+			self_do_init(self);
+			/* set tooltip */
+			self_enable_tooltip(self);
+			g_signal_connect(G_OBJECT(self), "key-release-event", G_CALLBACK(self_paste_key_release_event), NULL);
+
+			return (GtkWidget *)self;
+		}
+	private
+		void do_init (self)
+		{
+			int i=0;
+			gchar *conf_size,*conf_opt = g_strdup_printf("%s-colpos", self->_priv->name);
+			GtkTreeViewColumn *col = NULL;
+			for(i = 0;i< NUM_COLS;i++)
+			{ 
+				int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
+				col = self_add_column(self,col_names[i],col_ids[i],conf_pos);
+				g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
+			}
+			q_free(conf_opt);
+			conf_opt = g_strdup_printf("%s-colshow", self->_priv->name);
+			conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
+			for(i = 0;i< NUM_COLS;i++)
+			{ 
+				int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(self->_priv->columns[i]), "id"));
+				int col_size= cfg_get_single_value_as_int_with_default(config, conf_size,col_names[id], 200); 
+				int col_show= cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[id], col_enabled[id]); 
+				gtk_tree_view_column_set_visible(self->_priv->columns[i],col_show);
+				gtk_tree_view_append_column(GTK_TREE_VIEW(self), self->_priv->columns[i]);
+				/* don't set the icon column */
+				if(col_ids[id]!= MPDDATA_MODEL_COL_ICON_ID)
+					gtk_tree_view_column_set_fixed_width(self->_priv->columns[i], col_size);
+
+				g_signal_connect_swapped(G_OBJECT(self->_priv->columns[i]), "notify::width", G_CALLBACK(self_column_width), self);
+			}
+			/* set the last column small, to stop weird grows */
+			//for(i=NUM_COLS-1; i>=0 && !gtk_tree_view_column_get_visible(self->_priv->columns[i]);i--);
+			//gtk_tree_view_column_set_fixed_width(self->_priv->columns[i], 150);
+
+			q_free(conf_opt);
+			q_free(conf_size);
+
+			/* */
+			gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(self)), GTK_SELECTION_MULTIPLE);
+			gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(self), TRUE);
+			gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(self), TRUE);
+
+			if(self->_priv->do_sort)
+			{
+				int sort_col = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-column",MPDDATA_MODEL_COL_SONG_TITLE);
+				int sort_order = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-order", GTK_SORT_ASCENDING);
+				if(((sort_col < MPDDATA_MODEL_N_COLUMNS && sort_col >= 0) || sort_col == GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID )&& (sort_order == GTK_SORT_ASCENDING || sort_order == GTK_SORT_DESCENDING)) {
+					gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))),sort_col, sort_order); 
+				}
+			}
+		}
+
+	/**
+	 * Save Column Setup
+	 */
+	private	
+		void 
+		save_column_setup (self)
+		{
+			int i=0;
+			GList *iter,*cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(self));
+			gchar *conf_pos = NULL;
+			gchar *conf_show = NULL;
+
+			i = g_list_length(cols);
+
+			if(i != NUM_COLS)
+			{
+				g_list_free(cols);
+				return;
+			}
+			conf_pos = g_strdup_printf("%s-colpos", self->_priv->name);
+			conf_show = g_strdup_printf("%s-colshow", self->_priv->name);
+			//            conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
+			i=0;
+			for(iter = cols; iter; iter = g_list_next(iter))
+			{
+				GtkTreeViewColumn *column = iter->data;
+				int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
+				cfg_set_single_value_as_int(config, conf_pos, col_names[id], i);
+				cfg_set_single_value_as_int(config, conf_show, col_names[id], gtk_tree_view_column_get_visible(column));
+				/* only save width on > 0 columns */
+				//if(gtk_tree_view_column_get_width(column) > 0)
+				//    cfg_set_single_value_as_int(config, conf_size, col_names[id], gtk_tree_view_column_get_width(column));
+				i++;
+			}
+			q_free(conf_pos);
+			q_free(conf_show);
+			//          q_free(conf_size);
+			g_list_free(cols);
+
+			if(self->_priv->do_sort)
+			{
+				int sort_col;
+				GtkSortType sort_order;
+				gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))), &sort_col, &sort_order); 
+				cfg_set_single_value_as_int(config, self->_priv->name, "sort-column",sort_col);
+				cfg_set_single_value_as_int(config, self->_priv->name, "sort-order", sort_order);
+			}
+		}
+
+	override (G:Object)
+		void 
+		dispose (G:Object *obj)
+		{
+			Self *self = GMPC_MPDDATA_TREEVIEW(obj);
+			self_save_column_setup(self);
+			PARENT_HANDLER(obj);
+		}
+	private
+		void
+		highlight_row (GtkTreeViewColumn *tree_column,
+				GtkCellRenderer *cell,
+				GtkTreeModel *tree_model,
+				GtkTreeIter *iter,
+				gpointer data)
+		{
+
+			if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(tree_model) && gmpc_mpddata_model_playlist_is_current_song(tree_model, iter))
+				g_object_set(G_OBJECT(cell), "weight", 800,NULL);
+			else
+				g_object_set(G_OBJECT(cell), "weight", 400,NULL);
+
+		}
+	private 
+		void
+		column_width(self, GParamSpec *argc, GtkTreeViewColumn *column)
+		{
+			if(self->_priv->pressed)
+			{
+				int width = gtk_tree_view_column_get_width(column);
+				int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(column), "id"));
+				gchar *conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
+				int w = cfg_get_single_value_as_int(config, conf_size, col_names[id]);
+				if(w != width)
+				{
+					printf("%02i: Set width: %i\n",id,width);
+					cfg_set_single_value_as_int(config, conf_size, col_names[id],width); 
+				}
+				q_free(conf_size);
+			}
+		}
+
+	private
+		GtkTreeViewColumn * 
+		add_column(self, const char *columnname, int valuerow, int position)
+		{
+			GtkCellRenderer *renderer;
+			GtkTreeViewColumn *column = NULL;
+			GValue value = {0,};
+
+			if(valuerow == MPDDATA_MODEL_COL_ICON_ID)
+			{
+				renderer = gtk_cell_renderer_pixbuf_new();
+				g_value_init(&value, G_TYPE_FLOAT);
+				g_value_set_float(&value, 0.0);
+				g_object_set_property(G_OBJECT(renderer), "xalign", &value); 
+
+				column = gtk_tree_view_column_new ();
+				gtk_tree_view_column_pack_start (column, renderer, TRUE);
+				gtk_tree_view_column_set_attributes (column,renderer,"icon-name", MPDDATA_MODEL_COL_ICON_ID,NULL);
+
+				gtk_tree_view_column_set_resizable(column, TRUE);
+				gtk_tree_view_column_set_fixed_width(column, 20);
+			}
+			else{
+				renderer = gtk_cell_renderer_text_new();
+				column = gtk_tree_view_column_new_with_attributes (_(columnname), renderer,
+						"text", valuerow,NULL);
+				g_value_init(&value, G_TYPE_INT);
+				g_value_set_int(&value, PANGO_ELLIPSIZE_END);
+				g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
+				gtk_tree_view_column_set_resizable(column, TRUE);
+				if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(gtk_tree_view_get_model(GTK_TREE_VIEW(self))))
+				{
+					g_object_set(G_OBJECT(renderer), "weight-set", TRUE, NULL);
+					gtk_tree_view_column_set_cell_data_func (column,renderer,self_highlight_row, NULL, NULL);
+				}
+
+			}
+			gtk_tree_view_column_set_sizing(column,GTK_TREE_VIEW_COLUMN_FIXED);
+			gtk_tree_view_column_set_reorderable(column, TRUE);
+
+			self->_priv->columns[position] = column;
+
+			if(self->_priv->do_sort)
+			{
+				gtk_tree_view_column_set_sort_column_id(column,valuerow); 
+				gtk_tree_view_column_set_sort_indicator(column, TRUE);
+			}
+
+			return column;
+		}
+	/**
+	 * Opens a column editor 
+	 */	
+	public
+		void
+		edit_columns(self)
+		{
+			GtkWidget *dialog = egg_column_chooser_dialog_new(GTK_TREE_VIEW(self));
+			gtk_widget_show_all(dialog);
+			gtk_dialog_run(GTK_DIALOG(dialog));
+			self_save_column_setup(self);
+		}
+
+	override (G:Object)
+		void
+		finalize(G:Object *obj)
+		{
+			Self *self = SELF(obj);
+			GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(obj));
+			if(model)
+			{
+				gtk_tree_view_set_model(GTK_TREE_VIEW(obj),NULL);
+				g_object_unref(model);
+			}
+			if(self->_priv->tooltip_window)
+			{
+				gtk_widget_destroy(self->_priv->tooltip_window);
+				self->_priv->tooltip_window = NULL;
+			}
+			if(self->_priv->file)
+			{
+				g_free(self->_priv->file);
+				self->_priv->file = NULL;
+			}
+			PARENT_HANDLER(obj);
+		}
+
+	/****
+	 * TREEVIEW POPUP
+	 */
+	private gboolean query_tooltip(self,
+			gint x, gint y, 
+			gboolean keyboard_tip,
+			GtkTooltip *tooltip, 
+			gpointer data)
+	{
+		GtkTreeView *treeview = GTK_TREE_VIEW(self);
+		GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(treeview));
+		GtkTreeIter iter;
+		GtkTreePath *path = NULL;
+		mpd_Song *song = NULL;
+		int show = FALSE;
+
+		if(!cfg_get_single_value_as_int_with_default(config, "GmpcTreeView", "show-tooltip", TRUE))
+			return FALSE;
+		if (!gtk_tree_view_get_tooltip_context (GTK_TREE_VIEW(treeview), &x, &y,
+					keyboard_tip,
+					&model, &path, &iter))
+			return FALSE;
 
 
-    private
-    gboolean
-    tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
-    {
-		int stripe_x = 1;
-		int stripe_y = 1;
-		int stripe_height = 128; 
-		GdkColor color;
-		GtkStyle *style = gtk_widget_get_style(widget);
-        GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
-        cairo_t *context;
-        cairo_surface_t *surface;
-        cairo_t *cr;
-        GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(widget));
+		gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+		if(song)
+		{
+			show = TRUE;
+			/* makes it look a bit nicer */
+			if(self->_priv->file && song->file && strcmp(self->_priv->file, song->file))
+			{
+				show = FALSE;
+				g_free(self->_priv->file);self->_priv->file = NULL; 
+			}
+			else if(!(self->_priv->file && song->file && strcmp(self->_priv->file, song->file) == 0))
+			{
+				gchar *temp;
+
+				gmpc_metaimage_update_cover_from_song(GMPC_METAIMAGE(self->_priv->tw_image), song);
+				if(self->_priv->file)
+					g_free(self->_priv->file);
+				self->_priv->file = NULL;
+				if(song->file)
+					self->_priv->file = g_strdup(song->file);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_title), temp);
+				g_free(temp);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ARTIST,&temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_artist), temp);
+				g_free(temp);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ALBUM, &temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_album), temp);
+				g_free(temp);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_GENRE, &temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_genre), temp);
+				g_free(temp);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_DATE, &temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_date), temp);
+				g_free(temp);
+
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT, &temp, -1);
+				gtk_label_set_text(GTK_LABEL(self->_priv->tw_length), temp);
+				g_free(temp);
+
+
+
+			}
+		}
+		gtk_tree_path_free(path);
+		return show;
+	}
+
+
+	private
+		gboolean
+		tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
+		{
+			int stripe_x = 1;
+			int stripe_y = 1;
+			int stripe_height = 128; 
+			GdkColor color;
+			GtkStyle *style = gtk_widget_get_style(widget);
+			GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
+			cairo_t *context;
+			cairo_surface_t *surface;
+			cairo_t *cr;
+			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(widget));
 #ifdef ENABLE_GRADIENT_LOOK
-        cairo_pattern_t *gradient;
-        double r, g, b;
-        int gradient_y = widget->allocation.height - BOTTOM_GRADIENT_HEIGHT;
+			cairo_pattern_t *gradient;
+			double r, g, b;
+			int gradient_y = widget->allocation.height - BOTTOM_GRADIENT_HEIGHT;
 #endif
 
 
-        context = gdk_cairo_create(widget->window);
+			context = gdk_cairo_create(widget->window);
 
-        cairo_set_operator(context, CAIRO_OPERATOR_SOURCE);
-        surface = cairo_surface_create_similar(cairo_get_target(context),
-                CAIRO_CONTENT_COLOR_ALPHA,
-                widget->allocation.width,
-                widget->allocation.height);
-        cr = cairo_create(surface);
-
-
+			cairo_set_operator(context, CAIRO_OPERATOR_SOURCE);
+			surface = cairo_surface_create_similar(cairo_get_target(context),
+					CAIRO_CONTENT_COLOR_ALPHA,
+					widget->allocation.width,
+					widget->allocation.height);
+			cr = cairo_create(surface);
 
 
-        if (gdk_screen_is_composited(screen))
-        {
-            cairo_set_source_rgba(cr,
-                    background_color->red   / 65535.0,
-                    background_color->green / 65535.0,
-                    background_color->blue  / 65535.0,
-                    BACKGROUND_OPACITY);
-        }
-        else
-        {
-            gdk_cairo_set_source_color(cr, background_color);
-        }
 
-        cairo_rectangle(cr, 0, 0,
-                widget->allocation.width,
-                widget->allocation.height);
-        cairo_fill(cr);
+
+			if (gdk_screen_is_composited(screen))
+			{
+				cairo_set_source_rgba(cr,
+						background_color->red   / 65535.0,
+						background_color->green / 65535.0,
+						background_color->blue  / 65535.0,
+						BACKGROUND_OPACITY);
+			}
+			else
+			{
+				gdk_cairo_set_source_color(cr, background_color);
+			}
+
+			cairo_rectangle(cr, 0, 0,
+					widget->allocation.width,
+					widget->allocation.height);
+			cairo_fill(cr);
 
 #ifdef ENABLE_GRADIENT_LOOK
-        /* Add a very subtle gradient to the bottom of the notification */
-        gradient = cairo_pattern_create_linear(0, gradient_y, 0,
-                widget->allocation.height);
-        cairo_pattern_add_color_stop_rgba(gradient, 0, 0, 0, 0, 0);
-        cairo_pattern_add_color_stop_rgba(gradient, 1, 0, 0, 0, 0.15);
-        cairo_rectangle(cr, 0, gradient_y, widget->allocation.width,
-                BOTTOM_GRADIENT_HEIGHT);
-        cairo_set_source(cr, gradient);
-        cairo_fill(cr);
-        cairo_pattern_destroy(gradient);
+			/* Add a very subtle gradient to the bottom of the notification */
+			gradient = cairo_pattern_create_linear(0, gradient_y, 0,
+					widget->allocation.height);
+			cairo_pattern_add_color_stop_rgba(gradient, 0, 0, 0, 0, 0);
+			cairo_pattern_add_color_stop_rgba(gradient, 1, 0, 0, 0, 0.15);
+			cairo_rectangle(cr, 0, gradient_y, widget->allocation.width,
+					BOTTOM_GRADIENT_HEIGHT);
+			cairo_set_source(cr, gradient);
+			cairo_fill(cr);
+			cairo_pattern_destroy(gradient);
 #endif
 
-        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
-        cairo_set_line_width(cr, 1.0);
-        cairo_rectangle(cr, 0.5, 0.5,widget->allocation.width - 0.5, widget->allocation.height - 0.5);
-        cairo_stroke(cr);
-        
+			cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
+			cairo_set_line_width(cr, 1.0);
+			cairo_rectangle(cr, 0.5, 0.5,widget->allocation.width - 0.5, widget->allocation.height - 0.5);
+			cairo_stroke(cr);
 
-        color = style->bg[GTK_STATE_SELECTED];
 
-        cairo_rectangle(cr, stripe_x, stripe_y, 160, stripe_height);
+			color = style->bg[GTK_STATE_SELECTED];
+
+			cairo_rectangle(cr, stripe_x, stripe_y, 160, stripe_height);
 
 #ifdef ENABLE_GRADIENT_LOOK
-        r = color.red   / 65535.0;
-        g = color.green / 65535.0;
-        b = color.blue  / 65535.0;
+			r = color.red   / 65535.0;
+			g = color.green / 65535.0;
+			b = color.blue  / 65535.0;
 
-        gradient = cairo_pattern_create_linear(stripe_x, 0, 160, 0);
-        cairo_pattern_add_color_stop_rgba(gradient, 0, r, g, b, 1);
-        cairo_pattern_add_color_stop_rgba(gradient, 1, r, g, b, 0);
-        cairo_set_source(cr, gradient);
-        cairo_fill(cr);
-        cairo_pattern_destroy(gradient);
+			gradient = cairo_pattern_create_linear(stripe_x, 0, 160, 0);
+			cairo_pattern_add_color_stop_rgba(gradient, 0, r, g, b, 1);
+			cairo_pattern_add_color_stop_rgba(gradient, 1, r, g, b, 0);
+			cairo_set_source(cr, gradient);
+			cairo_fill(cr);
+			cairo_pattern_destroy(gradient);
 #else
-        gdk_cairo_set_source_color(cr, &color);
-        cairo_fill(cr);
+			gdk_cairo_set_source_color(cr, &color);
+			cairo_fill(cr);
 #endif
 
-        cairo_destroy(cr);
-        cairo_set_source_surface(context, surface, 0, 0);
-        cairo_paint(context);
-        cairo_surface_destroy(surface);
-        cairo_destroy(context);
+			cairo_destroy(cr);
+			cairo_set_source_surface(context, surface, 0, 0);
+			cairo_paint(context);
+			cairo_surface_destroy(surface);
+			cairo_destroy(context);
 
-        return FALSE;//GTK_WIDGET_CLASS(parent_class)->expose_event(widget, event);
-    }
+			return FALSE;//GTK_WIDGET_CLASS(parent_class)->expose_event(widget, event);
+		}
 
-    private void enable_tooltip(self)
-    {
+	private void enable_tooltip(self)
+	{
 		gchar *markup = NULL;
 		GdkScreen *screen;
 		GdkColormap *colormap;
-        GtkWidget *treeview = GTK_WIDGET(self);
-        GtkWidget *table = gtk_table_new(6,2, FALSE);
-        GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
-        GtkWidget *label;
-        GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
-        self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
-        screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
-        colormap = gdk_screen_get_rgba_colormap(screen);
+		GtkWidget *treeview = GTK_WIDGET(self);
+		GtkWidget *table = gtk_table_new(6,2, FALSE);
+		GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
+		GtkWidget *label;
+		GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
+		self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
+		screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
+		colormap = gdk_screen_get_rgba_colormap(screen);
 
-        if (colormap != NULL && gdk_screen_is_composited(screen))
-        {
-            gtk_widget_set_colormap(self->_priv->tooltip_window, colormap);
-        }
+		if (colormap != NULL && gdk_screen_is_composited(screen))
+		{
+			gtk_widget_set_colormap(self->_priv->tooltip_window, colormap);
+		}
 
 
-        gtk_widget_set_size_request(GTK_WIDGET(self->_priv->tooltip_window), 3*128,-1);
+		gtk_widget_set_size_request(GTK_WIDGET(self->_priv->tooltip_window), 3*128,-1);
 
-        gtk_widget_set_app_paintable(self->_priv->tooltip_window, TRUE);
-        g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), self);
+		gtk_widget_set_app_paintable(self->_priv->tooltip_window, TRUE);
+		g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), self);
 
-        gtk_container_add(GTK_CONTAINER(self->_priv->tooltip_window), vbox);
-        self->_priv->tw_image = gmpc_metaimage_new(META_ALBUM_ART);
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(self->_priv->tw_image), 128);
-        gtk_box_pack_start(GTK_BOX(vbox), self->_priv->tw_image, FALSE, FALSE, 0);
+		gtk_container_add(GTK_CONTAINER(self->_priv->tooltip_window), vbox);
+		self->_priv->tw_image = gmpc_metaimage_new(META_ALBUM_ART);
+		gmpc_metaimage_set_size(GMPC_METAIMAGE(self->_priv->tw_image), 128);
+		gtk_box_pack_start(GTK_BOX(vbox), self->_priv->tw_image, FALSE, FALSE, 0);
 
-        gtk_table_set_row_spacings(GTK_TABLE(table), 6);
-        gtk_table_set_col_spacings(GTK_TABLE(table), 6);
-        /* set layout up */
-        gtk_container_set_border_width(GTK_CONTAINER(vbox),1);
-        gtk_container_set_border_width(GTK_CONTAINER(table), 6);
+		gtk_table_set_row_spacings(GTK_TABLE(table), 6);
+		gtk_table_set_col_spacings(GTK_TABLE(table), 6);
+		/* set layout up */
+		gtk_container_set_border_width(GTK_CONTAINER(vbox),1);
+		gtk_container_set_border_width(GTK_CONTAINER(table), 6);
 
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Title"));
-        gtk_label_set_markup(GTK_LABEL(label), markup);
+		gtk_label_set_markup(GTK_LABEL(label), markup);
 		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,0,1,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_title = gtk_label_new("n/a");
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_title), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_title), PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_title, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,0,1,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_title = gtk_label_new("n/a");
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_title), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_title), PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_title, 1,2,0,1,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
 
 
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Artist"));
 		gtk_label_set_markup(GTK_LABEL(label),markup);
 		g_free(markup);
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,1,2,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_artist = gtk_label_new("n/a");
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_artist), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_artist),PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_artist, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,1,2,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_artist = gtk_label_new("n/a");
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_artist), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_artist),PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_artist, 1,2,1,2,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
 
 
 
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Album"));
-        gtk_label_set_markup(GTK_LABEL(label),markup);
-		g_free(markup);
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,2,3,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_album = gtk_label_new("n/a");
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_album), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_album),PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_album, 1,2,2,3,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
-
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
-		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
-        gtk_label_set_markup(GTK_LABEL(label), markup);
+		gtk_label_set_markup(GTK_LABEL(label),markup);
 		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_genre = gtk_label_new("n/a"); 
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_genre), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_genre),PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_genre, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,2,3,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_album = gtk_label_new("n/a");
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_album), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_album),PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_album, 1,2,2,3,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
 
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
+		markup = g_markup_printf_escaped("<b>%s:</b>", _("Genre"));
+		gtk_label_set_markup(GTK_LABEL(label), markup);
+		g_free(markup);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_genre = gtk_label_new("n/a"); 
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_genre), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_genre),PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_genre, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Date"));
 		gtk_label_set_markup(GTK_LABEL(label), markup);
 		g_free(markup);
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_date = gtk_label_new("n/a"); 
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_date), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_date),PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_date, 1,2,4,5,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_date = gtk_label_new("n/a"); 
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_date), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_date),PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_date, 1,2,4,5,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
 
-        label = gtk_label_new("");
-        gtk_size_group_add_widget(group, label);
+		label = gtk_label_new("");
+		gtk_size_group_add_widget(group, label);
 		markup = g_markup_printf_escaped("<b>%s:</b>", _("Duration"));
-        gtk_label_set_markup(GTK_LABEL(label), markup);
+		gtk_label_set_markup(GTK_LABEL(label), markup);
 		g_free(markup);
-        gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
-        gtk_table_attach(GTK_TABLE(table), label, 0,1,5,6,GTK_FILL, GTK_FILL,0,0);
-        self->_priv->tw_length = gtk_label_new("n/a"); 
-        gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_length), 0.0,0.5);
-        gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_length),PANGO_ELLIPSIZE_END);
-        gtk_table_attach(GTK_TABLE(table), self->_priv->tw_length, 1,2,5,6,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
+		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
+		gtk_table_attach(GTK_TABLE(table), label, 0,1,5,6,GTK_FILL, GTK_FILL,0,0);
+		self->_priv->tw_length = gtk_label_new("n/a"); 
+		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_length), 0.0,0.5);
+		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_length),PANGO_ELLIPSIZE_END);
+		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_length, 1,2,5,6,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
 
 
 
 
-        g_object_unref(group);
+		g_object_unref(group);
 
-        gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
-
-
-
-        g_signal_connect(G_OBJECT(treeview), 
-                "query-tooltip",
-                G_CALLBACK(self_query_tooltip),
-                NULL); 
-        gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(self->_priv->tooltip_window));
-        gtk_widget_show_all(vbox);
-    }
+		gtk_box_pack_start(GTK_BOX(vbox), table, TRUE, TRUE, 0);
 
 
 
+		g_signal_connect(G_OBJECT(treeview), 
+				"query-tooltip",
+				G_CALLBACK(self_query_tooltip),
+				NULL); 
+		gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(self->_priv->tooltip_window));
+		gtk_widget_show_all(vbox);
+	}
 
 
-    /** 
-     * Right mouse click behaviour fix 
-     */
-    private 
-    gboolean click_fix (self, GdkEventButton *event)
-    {
-        GtkTreePath *path = NULL;
-        printf("Button press\n");
-        self->_priv->pressed = TRUE;
-        if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
-        {	
-            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
-            if(gtk_tree_selection_path_is_selected(sel, path))
-            {
-                gtk_tree_path_free(path);
-                return TRUE;
 
-            }
-        }
-        if(path) {
-            gtk_tree_path_free(path);
-        }
-        return FALSE;
-    }
 
-    private 
-    gboolean click_released (self, GdkEventButton *event)
-    {
 
-        printf("Button release\n");
-        self->_priv->pressed = FALSE;
-        return FALSE;
-    }
-    public
-    void
-    enable_click_fix(self)
-    {
-        g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
+	/** 
+	 * Right mouse click behaviour fix 
+	 */
+	private 
+		gboolean click_fix (self, GdkEventButton *event)
+		{
+			GtkTreePath *path = NULL;
+			printf("Button press\n");
+			self->_priv->pressed = TRUE;
+			if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
+			{	
+				GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
+				if(gtk_tree_selection_path_is_selected(sel, path))
+				{
+					gtk_tree_path_free(path);
+					return TRUE;
 
-        g_signal_connect(G_OBJECT(self), "button-release-event", G_CALLBACK(self_click_released), NULL);
-    }
-    /**
-     * Copy paste stuff
-     */
-    signal last NONE (POINTER)
-    void
-    paste_before(self, GList *items)
-    {
-    }
-
-    signal last NONE (POINTER)
-    void
-    paste_after(self, const GList *items)
-    {
-    }
-    signal last NONE (NONE)
-    void
-    cut(self)
-    {
-    }
-
-    private 
-    int
-    paste_key_release_event(self, GdkEventKey *event,gpointer data)
-    {
-        if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
-        {
-            self_paste_copy_songs(self, NULL);
-            return TRUE;
-        }
-        if(paste_queue )
-        {
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
-            {
-                if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
-                {
-                    self_paste_paste_before_songs(self, NULL);
-                    return TRUE;
-
-                }
-            }
-
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
-            {
-                if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
-                {
-                    self_paste_paste_after_songs(self, NULL);
-                    return TRUE;
-                }
-            }
-        }
-
-        if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
-        {
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
-            {
-                if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
-                {
-                    self_paste_cut_songs(self, NULL);
-                    return TRUE;
-                }
-            }
-        }
-        return FALSE;
-    }
-    private
-    void
-    paste_cut_songs(self, GtkMenuItem *item)
-    {
-        self_paste_copy_songs(self, item);
-        self_cut(self);
-    }
-    private
-    void
-    paste_paste_after_songs(self, GtkMenuItem *menuitem)
-    {
-        self_paste_after(self, g_list_first(paste_queue));
-        /* free old entries 
-        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
-        g_list_free(paste_queue);
-        paste_queue = NULL;
-        */
-    }
-
-    private
-    void
-    paste_paste_before_songs(self, GtkMenuItem *menuitem)
-    {
-        self_paste_before(self, g_list_first(paste_queue));
-        /* free old entries  
-        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
-        g_list_free(paste_queue);
-        paste_queue = NULL;
-        */
-    }
-
-    private 
-    void
-    paste_copy_songs(self, GtkMenuItem *menitem)
-    {
-        GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(self));
-        /* free old entries */
-        g_list_foreach(paste_queue, (GFunc)g_free, NULL);
-        g_list_free(paste_queue);
-        paste_queue = NULL;
-        /* check if where connected */
-        /* see if there is a row selected */
-        if (gtk_tree_selection_count_selected_rows (selection) > 0)
-        {
-            GList *list = NULL, *llist = NULL;
-            GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self));
-            /* start a command list */
-            /* grab the selected songs */
-            list = gtk_tree_selection_get_selected_rows (selection, &model);
-            /* grab the last song that is selected */
-            llist = g_list_last (list);
-            /* remove every selected song one by one */
-            do{
-                GtkTreeIter iter;
-                gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
-                /* Trick that avoids roundtrip to mpd */
-                {
-                    char *path = NULL;
-		    int type = 0;
-                    /* this one allready has the pos. */
-                    gtk_tree_model_get (model, &iter, 
-					MPDDATA_MODEL_ROW_TYPE,&type, 
-					MPDDATA_MODEL_COL_PATH, &path, 
-					-1);			
-		    debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
-			if(type == MPD_DATA_TYPE_SONG) {
-				paste_queue = g_list_prepend(paste_queue, path);
-			} else if (type == MPD_DATA_TYPE_DIRECTORY) {
-				MpdData *data = mpd_database_get_directory_recursive(connection, path);
-				for(;data; data= mpd_data_get_next(data)){
-					if(data->type == MPD_DATA_TYPE_SONG) {
-						paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
-					}
 				}
-				g_free(path);
-			} else if (type == MPD_DATA_TYPE_PLAYLIST) {
-				MpdData *data = mpd_database_get_playlist_content(connection, path);
-				for(;data; data= mpd_data_get_next(data)){
-					if(data->type == MPD_DATA_TYPE_SONG) {
-						paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
-					}
-				}
-				g_free(path);
 			}
-                } 
-            } while ((llist = g_list_previous (llist)));
-            /* free list */
-            g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
-            g_list_free (list);
-        }
-        paste_queue = g_list_reverse(paste_queue);
-    }
+			if(path) {
+				gtk_tree_path_free(path);
+			}
+			return FALSE;
+		}
 
-    public
-    int 
-    right_mouse_intergration(self, GtkMenu *menu)
-    {
-        int retv = 0;
-        int i;
-        GtkWidget *menu_item;
-        GtkWidget *submenu = gtk_menu_new();
-        for(i=0; i< num_plugins;i++)
-        {
-            if(gmpc_plugin_is_browser(plugins[i]))
-            {
-                if(gmpc_plugin_get_enabled(plugins[i]))
-                {
-                    retv += gmpc_plugin_browser_song_list_option_menu(plugins[i],self, GTK_MENU(submenu));
-                }
-            }
-        }
-        /* If no submenu item was added, destroy the submenu */
-        if(!retv) gtk_widget_destroy(submenu);
-        else{
-            /* Add a separator in front */
-            menu_item = gtk_separator_menu_item_new();
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-            /* Add a tools menu item with the previously generated menu as submenu */
-            menu_item = gtk_menu_item_new_with_label(_("Tools"));
-            gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), submenu);
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-        }
+	private 
+		gboolean click_released (self, GdkEventButton *event)
+		{
+
+			printf("Button release\n");
+			self->_priv->pressed = FALSE;
+			return FALSE;
+		}
+	public
+		void
+		enable_click_fix(self)
+		{
+			g_signal_connect(G_OBJECT(self), "button-press-event", G_CALLBACK(self_click_fix), NULL);
+
+			g_signal_connect(G_OBJECT(self), "button-release-event", G_CALLBACK(self_click_released), NULL);
+		}
+	/**
+	 * Copy paste stuff
+	 */
+	signal last NONE (POINTER)
+		void
+		paste_before(self, GList *items)
+		{
+		}
+
+	signal last NONE (POINTER)
+		void
+		paste_after(self, const GList *items)
+		{
+		}
+	signal last NONE (NONE)
+		void
+		cut(self)
+		{
+		}
+
+	private 
+		int
+		paste_key_release_event(self, GdkEventKey *event,gpointer data)
+		{
+			if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
+			{
+				self_paste_copy_songs(self, NULL);
+				return TRUE;
+			}
+			if(paste_queue )
+			{
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
+				{
+					if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
+					{
+						self_paste_paste_before_songs(self, NULL);
+						return TRUE;
+
+					}
+				}
+
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
+				{
+					if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
+					{
+						self_paste_paste_after_songs(self, NULL);
+						return TRUE;
+					}
+				}
+			}
+
+			if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
+			{
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
+				{
+					if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
+					{
+						self_paste_cut_songs(self, NULL);
+						return TRUE;
+					}
+				}
+			}
+			return FALSE;
+		}
+	private
+		void
+		paste_cut_songs(self, GtkMenuItem *item)
+		{
+			self_paste_copy_songs(self, item);
+			self_cut(self);
+		}
+	private
+		void
+		paste_paste_after_songs(self, GtkMenuItem *menuitem)
+		{
+			self_paste_after(self, g_list_first(paste_queue));
+			/* free old entries 
+			   g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+			   g_list_free(paste_queue);
+			   paste_queue = NULL;
+			 */
+		}
+
+	private
+		void
+		paste_paste_before_songs(self, GtkMenuItem *menuitem)
+		{
+			self_paste_before(self, g_list_first(paste_queue));
+			/* free old entries  
+			   g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+			   g_list_free(paste_queue);
+			   paste_queue = NULL;
+			 */
+		}
+
+	private 
+		void
+		paste_copy_songs(self, GtkMenuItem *menitem)
+		{
+			GtkTreeSelection *selection = gtk_tree_view_get_selection (GTK_TREE_VIEW(self));
+			/* free old entries */
+			g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+			g_list_free(paste_queue);
+			paste_queue = NULL;
+			/* check if where connected */
+			/* see if there is a row selected */
+			if (gtk_tree_selection_count_selected_rows (selection) > 0)
+			{
+				GList *list = NULL, *llist = NULL;
+				GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self));
+				/* start a command list */
+				/* grab the selected songs */
+				list = gtk_tree_selection_get_selected_rows (selection, &model);
+				/* grab the last song that is selected */
+				llist = g_list_last (list);
+				/* remove every selected song one by one */
+				do{
+					GtkTreeIter iter;
+					gtk_tree_model_get_iter (model, &iter,(GtkTreePath *) llist->data);
+					/* Trick that avoids roundtrip to mpd */
+					{
+						char *path = NULL;
+						int type = 0;
+						/* this one allready has the pos. */
+						gtk_tree_model_get (model, &iter, 
+								MPDDATA_MODEL_ROW_TYPE,&type, 
+								MPDDATA_MODEL_COL_PATH, &path, 
+								-1);			
+						debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
+						if(type == MPD_DATA_TYPE_SONG) {
+							paste_queue = g_list_prepend(paste_queue, path);
+						} else if (type == MPD_DATA_TYPE_DIRECTORY) {
+							MpdData *data = mpd_database_get_directory_recursive(connection, path);
+							for(;data; data= mpd_data_get_next(data)){
+								if(data->type == MPD_DATA_TYPE_SONG) {
+									paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
+								}
+							}
+							g_free(path);
+						} else if (type == MPD_DATA_TYPE_PLAYLIST) {
+							MpdData *data = mpd_database_get_playlist_content(connection, path);
+							for(;data; data= mpd_data_get_next(data)){
+								if(data->type == MPD_DATA_TYPE_SONG) {
+									paste_queue = g_list_prepend(paste_queue, g_strdup(data->song->file));
+								}
+							}
+							g_free(path);
+						}
+					} 
+				} while ((llist = g_list_previous (llist)));
+				/* free list */
+				g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+				g_list_free (list);
+			}
+			paste_queue = g_list_reverse(paste_queue);
+		}
+
+	public
+		int 
+		right_mouse_intergration(self, GtkMenu *menu)
+		{
+			int retv = 0;
+			int i;
+			GtkWidget *menu_item;
+			GtkWidget *submenu = gtk_menu_new();
+			for(i=0; i< num_plugins;i++)
+			{
+				if(gmpc_plugin_is_browser(plugins[i]))
+				{
+					if(gmpc_plugin_get_enabled(plugins[i]))
+					{
+						retv += gmpc_plugin_browser_song_list_option_menu(plugins[i],self, GTK_MENU(submenu));
+					}
+				}
+			}
+			/* If no submenu item was added, destroy the submenu */
+			if(!retv) gtk_widget_destroy(submenu);
+			else{
+				/* Add a separator in front */
+				menu_item = gtk_separator_menu_item_new();
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+				/* Add a tools menu item with the previously generated menu as submenu */
+				menu_item = gtk_menu_item_new_with_label(_("Tools"));
+				gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), submenu);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+			}
 
 
-        /**
-         * Paste integration
-         */
+			/**
+			 * Paste integration
+			 */
 
-        menu_item = gtk_separator_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+			menu_item = gtk_separator_menu_item_new();
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 
 
-        menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
-        retv++; 
+			menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+			g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
+			retv++; 
 
-        if(paste_queue )
-        {
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
-            {
-                menu_item = gtk_image_menu_item_new_with_label(_("Paste before"));
-                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
-                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_before_songs), self);
-                retv++;
-            }
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
-            {
-                menu_item = gtk_image_menu_item_new_with_label(_("Paste after"));
-                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
-                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_after_songs), self);
-                retv++;
-            }
-        }
+			if(paste_queue )
+			{
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
+				{
+					menu_item = gtk_image_menu_item_new_with_label(_("Paste before"));
+					gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+							gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+					g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_before_songs), self);
+					retv++;
+				}
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
+				{
+					menu_item = gtk_image_menu_item_new_with_label(_("Paste after"));
+					gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+							gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+					g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_paste_after_songs), self);
+					retv++;
+				}
+			}
 
-        if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
-        {
-            if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
-            {
-                menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
-                gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-                        gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
-                gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-                g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_cut_songs), self);
-                retv++;
-            }
-        }
+			if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection(GTK_TREE_VIEW(self))) > 0)
+			{
+				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
+				{
+					menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CUT,NULL);
+					gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
+							gtk_image_new_from_stock(GTK_STOCK_PASTE, GTK_ICON_SIZE_MENU));
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+					g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_cut_songs), self);
+					retv++;
+				}
+			}
 
-        menu_item = gtk_separator_menu_item_new();
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-        retv++;
-        /** Edit column */
-        menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
-        g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_edit_columns), self);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-        retv++;
+			menu_item = gtk_separator_menu_item_new();
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+			retv++;
+			/** Edit column */
+			menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+			g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_edit_columns), self);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+			retv++;
 
-        return retv;
-    }
+			return retv;
+		}
 
-    public 
-    void
-    cleanup(void)
-    {
-        if(paste_queue)
-        {
-            g_list_foreach(paste_queue, (GFunc)g_free, NULL);
-            g_list_free(paste_queue);
-        }
-        paste_queue = NULL;
-    }
+	public 
+		void
+		cleanup(void)
+		{
+			if(paste_queue)
+			{
+				g_list_foreach(paste_queue, (GFunc)g_free, NULL);
+				g_list_free(paste_queue);
+			}
+			paste_queue = NULL;
+		}
 }
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
