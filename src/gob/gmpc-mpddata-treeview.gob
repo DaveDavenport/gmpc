@@ -306,7 +306,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				int w = cfg_get_single_value_as_int(config, conf_size, col_names[id]);
 				if(w != width)
 				{
-					printf("%02i: Set width: %i\n",id,width);
 					cfg_set_single_value_as_int(config, conf_size, col_names[id],width); 
 				}
 				q_free(conf_size);
@@ -716,7 +715,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		gboolean click_fix (self, GdkEventButton *event)
 		{
 			GtkTreePath *path = NULL;
-			printf("Button press\n");
 			self->_priv->pressed = TRUE;
 			if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
 			{	
@@ -737,8 +735,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 	private 
 		gboolean click_released (self, GdkEventButton *event)
 		{
-
-			printf("Button release\n");
 			self->_priv->pressed = FALSE;
 			return FALSE;
 		}
