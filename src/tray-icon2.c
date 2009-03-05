@@ -668,7 +668,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 {
 	char buffer[256];
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
-	if(what&(MPD_CST_SONGID))
+	if(what&(MPD_CST_SONGID)|| what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
 		/** 
 		 * If enabled by user, show the tooltip.
