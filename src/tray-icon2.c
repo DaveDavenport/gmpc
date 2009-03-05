@@ -38,6 +38,8 @@ GtkWidget *tray_icon2_gsi = NULL;
 GtkStatusIcon 	*tray_icon2_gsi = NULL;
 #endif
 
+static gchar *current_song_checksum = NULL;
+
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 /**
  * Tooltip 
@@ -255,6 +257,11 @@ static void tray_icon2_destroy(void)
 #endif        
         tray_icon2_gsi = NULL;
 	}
+    /* free the currnet song checksum */
+    if(current_song_checksum) {
+        g_free(current_song_checksum);
+        current_song_checksum = NULL;
+    }
 }
 /**
  * Get enabled
@@ -670,6 +677,8 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(what&(MPD_CST_SONGID)|| what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
+        gchar *new_checksum;
+        new_checksum = mpd_song_checksum(song);
 		/** 
 		 * If enabled by user, show the tooltip.
 		 * But only if playing or paused.
@@ -680,9 +689,16 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 			int state = mpd_player_get_state(connection);
 			if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
 			{
-				tray_icon2_create_tooltip();
+                if(current_song_checksum == NULL || strcmp(current_song_checksum, new_checksum))
+                    tray_icon2_create_tooltip();
 			}
 		}
+
+        if(current_song_checksum){
+            g_free(current_song_checksum);
+            current_song_checksum = NULL;
+        }
+        current_song_checksum = new_checksum;
 		if(tray_icon2_gsi)
 		{
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
