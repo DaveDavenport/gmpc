@@ -677,8 +677,6 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if(what&(MPD_CST_SONGID)|| what&MPD_CST_SONGPOS || what&MPD_CST_PLAYLIST)
 	{
-        gchar *new_checksum;
-        new_checksum = mpd_song_checksum(song);
 		/** 
 		 * If enabled by user, show the tooltip.
 		 * But only if playing or paused.
@@ -687,18 +685,20 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", TRUE))
 		{
 			int state = mpd_player_get_state(connection);
+            gchar *new_checksum;
+            new_checksum = mpd_song_checksum(song);
 			if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
 			{
                 if(current_song_checksum == NULL || strcmp(current_song_checksum, new_checksum))
                     tray_icon2_create_tooltip();
-			}
-		}
-
-        if(current_song_checksum){
-            g_free(current_song_checksum);
-            current_song_checksum = NULL;
+            }
+            if(current_song_checksum){
+                g_free(current_song_checksum);
+                current_song_checksum = NULL;
+            }
+            current_song_checksum = new_checksum;
         }
-        current_song_checksum = new_checksum;
+
 		if(tray_icon2_gsi)
 		{
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
