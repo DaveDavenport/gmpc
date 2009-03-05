@@ -287,6 +287,8 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 		}
 	} else {
 		GtkWidget *dialog = user_data;
+        /* add failed urls anyway */
+        mpd_playlist_add(connection, uri);
 		if (user_data)
 			gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
 	}
