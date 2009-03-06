@@ -994,15 +994,23 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     gchar *retv= NULL;
     /* home dir */
     const gchar *homedir = g_get_home_dir();
+    g_assert(song->artist != NULL);
     g_assert(type < META_QUERY_DATA_TYPES); 
     {
+        GError *error = NULL;
         gchar *filename = NULL, *dirname = NULL;
         const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
         g_assert(song->artist != NULL);
 
         /* Convert it so the filesystem likes it */
         /* TODO: Add error checking */
-        dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,NULL); 
+        dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
+        if(error) {
+            debug_printf(DEBUG_ERROR, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
+            g_error_free(error);
+            if(dirname) g_free(dirname);
+            dirname = g_strdup("invalid");
+        }
         dirname = strip_invalid_chars(dirname);
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,NULL);
         if(g_file_test(retv, G_FILE_TEST_EXISTS) == FALSE) {
