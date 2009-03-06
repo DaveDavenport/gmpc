@@ -412,41 +412,44 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 				{
 					int compare =0;
 					/* get the next directory */
-					while(data->type != MPD_DATA_TYPE_DIRECTORY) data = mpd_data_get_next(data);
-					compare = strcmp(data->directory, test_path);
-					if(compare < 0)
-					{
-						gchar *basename = g_path_get_basename (data->directory);
-						gtk_tree_store_insert_before(pl3_fb_dir_store, &child2,iter,&child);
-						gtk_tree_store_set (pl3_fb_dir_store, &child2,
-                                PL3_FB_ICON, "gtk-open",
-								PL3_FB_NAME, basename,
-								PL3_FB_PATH, data->directory,
-								PL3_FB_OPEN, FALSE,
-								-1);
+					while(data && data->type != MPD_DATA_TYPE_DIRECTORY) data = mpd_data_get_next(data);
+                    if(data)
+                    {
+                        compare = strcmp(data->directory, test_path);
+                        if(compare < 0)
+                        {
+                            gchar *basename = g_path_get_basename (data->directory);
+                            gtk_tree_store_insert_before(pl3_fb_dir_store, &child2,iter,&child);
+                            gtk_tree_store_set (pl3_fb_dir_store, &child2,
+                                    PL3_FB_ICON, "gtk-open",
+                                    PL3_FB_NAME, basename,
+                                    PL3_FB_PATH, data->directory,
+                                    PL3_FB_OPEN, FALSE,
+                                    -1);
 
-						gtk_tree_store_append(pl3_fb_dir_store, &child3, &child2);
-						q_free(basename);
+                            gtk_tree_store_append(pl3_fb_dir_store, &child3, &child2);
+                            q_free(basename);
 
-						/* if the new dir is smaller the temp, we add it. */
-						data = mpd_data_get_next(data);
-						has_next = TRUE;
-					}
-                    else if(compare > 0)
-					{	
-						/* if it's bigger, we delete the row */
-						has_next = gtk_tree_store_remove(pl3_fb_dir_store, &child);
+                            /* if the new dir is smaller the temp, we add it. */
+                            data = mpd_data_get_next(data);
+                            has_next = TRUE;
+                        }
+                        else if(compare > 0)
+                        {	
+                            /* if it's bigger, we delete the row */
+                            has_next = gtk_tree_store_remove(pl3_fb_dir_store, &child);
 
-					}else{
-					   /* if equal we process children if available */
-						if(temp)
-						{
-							pl3_file_browser_reupdate_folder(&child);
-						}
-						/* move to next entry in both */
-						has_next = gtk_tree_model_iter_next(model, &child);					
-						data = mpd_data_get_next(data);
-					}
+                        }else{
+                            /* if equal we process children if available */
+                            if(temp)
+                            {
+                                pl3_file_browser_reupdate_folder(&child);
+                            }
+                            /* move to next entry in both */
+                            has_next = gtk_tree_model_iter_next(model, &child);					
+                            data = mpd_data_get_next(data);
+                        }
+                    }
 				}
 				g_free(test_path);
 			}while(has_next);
