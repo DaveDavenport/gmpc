@@ -963,7 +963,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 static gchar * strip_invalid_chars(gchar *input)
 {
     int i = 0;
-    int length = strlen(input);
+    int length = 0;
+    g_assert(input != NULL);
+    length = strlen(input);
     if(input == NULL) return NULL;
     for(i=0;i<length;i++)
     {
