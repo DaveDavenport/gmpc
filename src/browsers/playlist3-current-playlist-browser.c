@@ -935,17 +935,17 @@ static int  pl3_current_playlist_browser_key_release_event(GtkTreeView *tree, Gd
             ((event->keyval >= GDK_space && event->keyval <= GDK_z)))*/
     {
         char data[10];
-       	gunichar uc = gdk_keyval_to_unicode(event->keyval);
-	if(uc)
-	{
-		memset(data,'\0',10);
-		g_unichar_to_utf8 (uc, data);
-		gtk_widget_grab_focus(entry);      
-		gtk_entry_set_text(GTK_ENTRY(entry),data);
-		gtk_editable_set_position(GTK_EDITABLE(entry),1);
+        guint32 uc = gdk_keyval_to_unicode(event->keyval);
+        if(uc)
+        {
+            memset(data,'\0',10);
+            g_unichar_to_utf8 (uc, data);
+            gtk_widget_grab_focus(entry);      
+            gtk_entry_set_text(GTK_ENTRY(entry),data);
+            gtk_editable_set_position(GTK_EDITABLE(entry),1);
 
-		return TRUE;
-	}
+            return TRUE;
+        }
     }
     return pl3_window_key_press_event(GTK_WIDGET(tree),event);
 }

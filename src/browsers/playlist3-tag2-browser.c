@@ -434,7 +434,7 @@ static gboolean tag2_key_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
 }
 static int  tag2_key_release_event(GtkTreeView *tree, GdkEventKey *event,tag_element *te)
 {
-	gunichar uc;
+	guint32 uc;
 	if((event->state&GDK_CONTROL_MASK) != 0 && event->keyval == GDK_f)
 	{
         gtk_widget_grab_focus(te->sentry);      
