@@ -380,7 +380,7 @@ AC_ARG_ENABLE([shave],
                      no)    enable_shave=no;;
                       *)    AC_MSG_ERROR([bad value ${enableval} for --disable-shave]);;
                 esac],
-              [enable_shave=yes])
+              [enable_shave=no])
 if test x$enable_shave = xyes; then
 SHAVE_INIT([./]) 
 fi
