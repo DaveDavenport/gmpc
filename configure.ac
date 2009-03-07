@@ -373,8 +373,17 @@ fi
 AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
 AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
-
+AC_ARG_ENABLE([shave],
+            [  --disable-shave			Use shave output cleaner when building.],
+              [ case "${enableval}" in
+                    yes)    enable_shave=yes;;
+                     no)    enable_shave=no;;
+                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-shave]);;
+                esac],
+              [enable_shave=yes])
+if test x$enable_shave = xyes; then
 SHAVE_INIT([./]) 
+fi
 
 AC_OUTPUT([
 shave
@@ -471,4 +480,9 @@ if test "x$libspiff" = "x1"; then
 else
 	echo "Use libspiff library:             disabled"
 fi
+echo "";
 echo "Now type make to build"
+if test x$enable_shave = xyes; then
+    echo "Building is done with reduced output. (shave";
+    echo "use --disable-shave to get all (old) output back";
+fi
