@@ -1770,9 +1770,6 @@ static gboolean song_list_button_release_event(GtkTreeView *tree,
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(song_list_replace_selected_songs), tree);
 
-			/* Separator */	
-			item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
 
         gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
@@ -2295,7 +2292,6 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
                 albumartist = data->tag;
                 data->tag = NULL;
                 mpd_data_free(data);
-                printf("found albumartist: %s\n", albumartist);
             }
             else
                 data = mpd_data_get_next(data);
@@ -2771,7 +2767,6 @@ void info2_fill_album_view(const char *artist,const char *album)
                 hs->song->albumartist = data->tag;
                 data->tag = NULL;
                 mpd_data_free(data);
-                printf("found albumartist: %s\n", hs->song->albumartist);
             }
             else
                 data = mpd_data_get_next(data);

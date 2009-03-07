@@ -498,7 +498,6 @@ static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata
             gtk_widget_destroy(serverstats_sw);
             serverstats_sw = NULL;
             serverstats_tree = NULL;
-            printf("cleanup serverstats\n");
         }
     }
 }

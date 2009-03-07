@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,50 +15,47 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 #include <gtk/gtk.h>
 #include <time.h>
 #include "main.h"
 #include "playlist3.h"
 
-extern int pl3_zoom;
 static gboolean error_visible = FALSE;
 static ErrorLevel last_error_level = ERROR_INFO;
-guint timeout_callback = 0;
-GtkListStore *message_list = NULL;
-void message_window_open(void);
-void message_window_destroy(GtkWidget *win);
+static guint timeout_callback = 0;
+static GtkListStore *message_list = NULL;
 static GIOChannel *log_file = NULL;
 
 static const char *error_levels[3] = {
-    N_("Info"),
-    N_("Warning"),
-    N_("Critical")
+	N_("Info"),
+	N_("Warning"),
+	N_("Critical")
 };
 void playlist3_message_destroy(void)
 {
-    g_io_channel_flush(log_file, NULL);
-    g_io_channel_unref(log_file);
+	g_io_channel_flush(log_file, NULL);
+	g_io_channel_unref(log_file);
 }
 
 void playlist3_message_init(void)
 {
 	if(!message_list)
 	{
-        GError *error = NULL;
-				gchar *path = gmpc_get_user_path("gmpc.log");
-				message_list = gtk_list_store_new(3, G_TYPE_INT64, G_TYPE_STRING, G_TYPE_STRING);
+		GError *error = NULL;
+		gchar *path = gmpc_get_user_path("gmpc.log");
+		message_list = gtk_list_store_new(3, G_TYPE_INT64, G_TYPE_STRING, G_TYPE_STRING);
 
-        log_file = g_io_channel_new_file(path, "a", &error);
-        if(error)
-        {
-            g_error("Failed to log file: '%s'", error->message);
-        }
-        q_free(path);
+		log_file = g_io_channel_new_file(path, "a", &error);
+		if(error)
+		{
+			g_error("Failed to log file: '%s'", error->message);
+		}
+		q_free(path);
 
-        g_io_channel_flush(log_file, NULL);
-    }
+		g_io_channel_flush(log_file, NULL);
+	}
 }
 void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 {
@@ -94,8 +91,8 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		case ERROR_WARNING:
 			image_name = GTK_STOCK_DIALOG_WARNING;
 			break;
-        case ERROR_INFO:
-        default:
+		case ERROR_INFO:
+		default:
 			image_name = GTK_STOCK_DIALOG_INFO;
 			break;
 	}
@@ -123,7 +120,7 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	last_error_level = el;
 	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
-        GList *list, *siter; 
+		GList *list, *siter; 
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
 		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
@@ -139,13 +136,13 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 
 
 
-        list = gtk_container_get_children(GTK_CONTAINER(event));
+		list = gtk_container_get_children(GTK_CONTAINER(event));
 
 		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
-        for(siter = list; siter; siter = g_list_next(siter)) {
-            gtk_widget_modify_fg(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
-            gtk_widget_modify_text(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
-        }
+		for(siter = list; siter; siter = g_list_next(siter)) {
+			gtk_widget_modify_fg(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
+			gtk_widget_modify_text(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
+		}
 
 		//event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_show_all(event);
@@ -156,16 +153,24 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		error_visible = FALSE;
 	}
 }
+/* Indicates if a widget is allready added */
+static gboolean widget_added = FALSE;
 
 void playlist3_error_add_widget(GtkWidget *widget)
 {
 	GtkWidget *event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
+	/* Avoid adding more then one widget */
+	if(widget_added) return;
+	widget_added = TRUE;
+
 	gtk_box_pack_end(GTK_BOX(event), widget, FALSE, TRUE, 0);
 	gtk_widget_show_all(event);
 }
 
 gboolean playlist3_close_error(void)
 {
+	/* reset */
+	widget_added = FALSE;
 	if(error_visible)
 	{
 		error_visible = FALSE;
@@ -202,6 +207,11 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 	strftime(text, 64,"%H:%M:%S", lt);
 	g_object_set(G_OBJECT(cell), "text",text,NULL);
 }
+/**
+ * The list of messages
+ */
+void message_window_open(void);
+void message_window_destroy(GtkWidget *win);
 static GtkBuilder *message_xml = NULL;
 void message_window_open(void)
 {
@@ -212,14 +222,14 @@ void message_window_open(void)
 	gchar *path;
 	path = gmpc_get_full_glade_path("playlist-message-window.ui");
 	message_xml = xml = gtk_builder_new();
-    gtk_builder_add_from_file(xml, path, NULL);
+	gtk_builder_add_from_file(xml, path, NULL);
 	q_free(path);
 	playlist3_message_init();
 
-    /* set transient */
-    win = (GtkWidget *) gtk_builder_get_object(xml, "message_window");
-    gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
-    gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER_ON_PARENT);
+	/* set transient */
+	win = (GtkWidget *) gtk_builder_get_object(xml, "message_window");
+	gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
+	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER_ON_PARENT);
 
 	tree= (GtkWidget *) gtk_builder_get_object(xml, "message_tree");
 	renderer = gtk_cell_renderer_pixbuf_new();
@@ -230,16 +240,16 @@ void message_window_open(void)
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1,_("Message"), renderer, "markup", 2,NULL);
 	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(message_list));
 
-    gtk_widget_show(win);
-	//glade_xml_signal_autoconnect(xml);
-    gtk_builder_connect_signals(xml, NULL);
+	gtk_widget_show(win);
+
+	gtk_builder_connect_signals(xml, NULL);
 }
 
 void message_window_destroy(GtkWidget *win)
 {
-
 	gtk_widget_destroy(win);
 	g_object_unref(message_xml);
-    message_xml = NULL;
+	message_xml = NULL;
 }
 
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

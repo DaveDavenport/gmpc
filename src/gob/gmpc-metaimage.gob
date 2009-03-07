@@ -525,8 +525,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     debug_printf(DEBUG_ERROR, "Following error loading stylized-no-cover: %s", error->message);
                     g_error_free(error);
                 }
-//                if(pb2)
-  //                  screenshot_add_border(&pb2);
             }else{
                 pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), self->no_cover_icon, self->size, 0,&error);
                 if(error) {
@@ -535,15 +533,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 }
             }
 
-            if(self->squared) {
-                gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-            } else {
-                gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
-                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
-            }
-
             if(pb2) {
-//                gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+                if(self->squared) {
+                    gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+                } else {
+                    gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
+                    gmpc_image_clear_pixbuf(GMPC_IMAGE(self->_priv->image));
+                }
                 gmpc_image_set_pixbuf(GMPC_IMAGE(self->_priv->image), pb2,border);
                 g_object_unref(pb2);
             } else {

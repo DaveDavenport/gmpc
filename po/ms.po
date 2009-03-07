@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-22 20:06+0100\n"
+"POT-Creation-Date: 2009-02-13 14:43+0100\n"
 "PO-Revision-Date: 2009-02-13 18:33+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Malay <ms@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-22 18:52+0000\n"
+"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,7 +28,7 @@ msgstr "Frontend gnome untuk daemon mpd"
 msgid "Gnome Music Player Client"
 msgstr "Klien Pemain Musik Gnome"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1376
+#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
 msgid "Getting help"
 msgstr "Mendapatkan bantuan"
 
@@ -169,7 +169,7 @@ msgstr "2 Feb 2006"
 msgid "MPD's Streaming server"
 msgstr "server aliran MPD"
 
-#: ../src/gmpc_easy_download.c:396
+#: ../src/gmpc_easy_download.c:385
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -179,14 +179,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:287 ../src/main.c:288
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:294
 msgid "--version"
 msgstr "--version"
@@ -197,7 +197,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:308
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -205,49 +205,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:315
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:321
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:327
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:333
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:339
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:345
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:352
 msgid "--help"
 msgstr "--help"
@@ -359,7 +359,8 @@ msgstr "kod kesalahan"
 
 #: ../src/main.c:1126
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "kebenaran tidak mencukupi untuk menyambung ke mpd. Periksa kata laluan"
+msgstr ""
+"kebenaran tidak mencukupi untuk menyambung ke mpd. Periksa kata laluan"
 
 #: ../src/main.c:1161
 msgid "MPD versions before 0.13.0 are not supported"
@@ -392,7 +393,7 @@ msgstr "Garisan Label"
 
 #. * Mpd version
 #: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:332
+#: ../src/browsers/server-information.c:331
 msgid "Version"
 msgstr "Versi"
 
@@ -401,8 +402,7 @@ msgid "Revision"
 msgstr "Semakan"
 
 #: ../src/main.c:1360
-#, fuzzy
-msgid "Libmpd Version"
+msgid "Libmpd version"
 msgstr "Versi libmpd"
 
 #: ../src/main.c:1361
@@ -410,87 +410,82 @@ msgid "GTK+ version"
 msgstr "Versi GTK+"
 
 #: ../src/main.c:1362
-#, fuzzy
-msgid "GLIB version"
-msgstr "Versi GTK+"
-
-#: ../src/main.c:1363
 msgid "Libcurl version"
 msgstr "Versi libcurl"
 
-#: ../src/main.c:1364
+#: ../src/main.c:1363
 msgid "Platform"
 msgstr "Platform"
 
-#: ../src/main.c:1366
+#: ../src/main.c:1365
 msgid "Windows"
 msgstr "Tetingkap"
 
-#: ../src/main.c:1369
+#: ../src/main.c:1368
 msgid "Mac OsX"
 msgstr "Mac OsX"
 
-#: ../src/main.c:1371
+#: ../src/main.c:1370
 msgid "*nix"
 msgstr "*nix"
 
-#: ../src/main.c:1375
+#: ../src/main.c:1374
 msgid "Website"
 msgstr "Laman web"
 
-#: ../src/main.c:1377
+#: ../src/main.c:1376
 msgid "Options enabled"
 msgstr "Opsyen dibolehkan"
 
-#: ../src/main.c:1378
+#: ../src/main.c:1377
 msgid "X session management"
 msgstr "Pengurusan sesi X"
 
-#: ../src/main.c:1380 ../src/main.c:1387 ../src/main.c:1395 ../src/main.c:1403
-#: ../src/main.c:1411 ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435
-#: ../src/main.c:1443 ../src/preferences.c:307
+#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
+#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
+#: ../src/main.c:1442 ../src/preferences.c:307
 msgid "Enabled"
 msgstr "Dibolehkan"
 
-#: ../src/main.c:1382 ../src/main.c:1389 ../src/main.c:1397 ../src/main.c:1405
-#: ../src/main.c:1413 ../src/main.c:1421 ../src/main.c:1429 ../src/main.c:1437
-#: ../src/main.c:1445
+#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
+#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
+#: ../src/main.c:1444
 msgid "Disabled"
 msgstr "Tidak dibolehkan"
 
-#: ../src/main.c:1385
+#: ../src/main.c:1384
 msgid "NLS Support"
 msgstr "Penyokongan NLS"
 
-#: ../src/main.c:1393 ../src/mm-keys.c:566
+#: ../src/main.c:1392 ../src/mm-keys.c:566
 msgid "Multimedia Keys"
 msgstr "Kunci-kunci Multimedia"
 
-#: ../src/main.c:1401
+#: ../src/main.c:1400
 msgid "Libegg's trayicon"
 msgstr "Dulang ikon libegg"
 
-#: ../src/main.c:1409
+#: ../src/main.c:1408
 msgid "System libsexy"
 msgstr "sistem libsexy"
 
-#: ../src/main.c:1417
+#: ../src/main.c:1416
 msgid "Mac integration library"
 msgstr "librari penggabungan Mac"
 
-#: ../src/main.c:1425
+#: ../src/main.c:1424
 msgid "Use ~/.config/ dir"
 msgstr "guna ~/.config/ dir"
 
-#: ../src/main.c:1433
+#: ../src/main.c:1432
 msgid "Debug timing"
 msgstr "Masa debug"
 
-#: ../src/main.c:1441
+#: ../src/main.c:1440
 msgid "Maintainer mode"
 msgstr "Mod Pemelihara"
 
-#: ../src/metadata.c:763
+#: ../src/metadata.c:748
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -498,7 +493,7 @@ msgstr ""
 "Plugin metadata baru telah ditambah, gmpc telah keluarkan semua gagalan yang "
 "berkenaan daripada memori"
 
-#: ../src/metadata.c:1226
+#: ../src/metadata.c:1211
 msgid "Metadata Handler"
 msgstr "Pengurus Metadata"
 
@@ -820,7 +815,7 @@ msgstr "MPD sudah habis mengemaskini database ia"
 msgid "Connected"
 msgstr "Tersambung"
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2129
+#: ../src/playlist3.c:789 ../src/playlist3.c:2128
 msgid "Not Connected"
 msgstr "Tidak disambung"
 
@@ -884,28 +879,28 @@ msgid "changed hostname to:"
 msgstr "telah menukarkan nama hos kepada:"
 
 #. Update DB
-#: ../src/playlist3.c:1954
+#: ../src/playlist3.c:1953
 msgid "Update Database"
 msgstr "Kemaskini Database"
 
 #. Server Information
-#: ../src/playlist3.c:1963
+#: ../src/playlist3.c:1962
 msgid "Information"
 msgstr "Informasi"
 
-#: ../src/playlist3.c:2043
+#: ../src/playlist3.c:2042
 msgid "By"
 msgstr "Oleh"
 
-#: ../src/playlist3.c:2050
+#: ../src/playlist3.c:2049
 msgid "From"
 msgstr "Daripada"
 
-#: ../src/playlist3.c:2122
+#: ../src/playlist3.c:2121
 msgid "Not Playing"
 msgstr "Tidak Memainkan"
 
-#: ../src/playlist3.c:2247
+#: ../src/playlist3.c:2246
 msgid "Interface"
 msgstr "Interface"
 
@@ -997,7 +992,7 @@ msgstr "Telah menambahkan satu aliran"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:240
 msgid "Enter an url"
 msgstr "Masukkan satu url"
@@ -1012,7 +1007,7 @@ msgstr "Pemberitahuan"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1031,7 +1026,7 @@ msgstr "Sediakan sambungan"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1465,7 +1460,7 @@ msgid "Query"
 msgstr "Pertanyaan"
 
 #: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:341
+#: ../src/browsers/server-information.c:340
 msgid "Database"
 msgstr "Database"
 
@@ -1526,7 +1521,7 @@ msgstr "Mendapat..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2416
@@ -1690,7 +1685,7 @@ msgstr[1] "<b>Tarikh: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1557
 msgid "Artist info:"
 msgstr "Info Artis:"
@@ -1709,7 +1704,7 @@ msgstr "Artis serupa"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1890
 msgid "Album info:"
 msgstr "Info Album:"
@@ -1729,7 +1724,7 @@ msgstr "Tracks"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2231
 #: ../src/browsers/playlist3-metadata-browser.c:2625
 msgid "Metadata Browser"
@@ -1737,7 +1732,7 @@ msgstr "Pelayar Metadata"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2247
 msgid "Show Current Song"
 msgstr "Tunjukkan Lagu Sekarang"
@@ -1834,60 +1829,60 @@ msgstr "Tambah lagu sekarang kepada kegemaran"
 msgid "Tag based browser"
 msgstr "Pelayar berdasarkan label"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1794
+#: ../src/browsers/playlist3-tag2-browser.c:1762
 msgid "Reset browser"
 msgstr "Mulakan balik pelayar"
 
 #. name
-#: ../src/browsers/server-information.c:301
-#: ../src/browsers/server-information.c:517
-#: ../src/browsers/server-information.c:543
+#: ../src/browsers/server-information.c:300
+#: ../src/browsers/server-information.c:516
+#: ../src/browsers/server-information.c:542
 msgid "Server Information"
 msgstr "Maklumat Pelayan"
 
-#: ../src/browsers/server-information.c:325
+#: ../src/browsers/server-information.c:324
 msgid "Server"
 msgstr "Pelayan"
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:333
 msgid "Uptime"
 msgstr "Masa berjalan"
 
-#: ../src/browsers/server-information.c:335
+#: ../src/browsers/server-information.c:334
 msgid "Time Playing"
 msgstr "Masa Bermain"
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:348
+#: ../src/browsers/server-information.c:347
 msgid "Total Playtime"
 msgstr "Masa Bermain Seluruhan"
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:350
+#: ../src/browsers/server-information.c:349
 msgid "Number of artists"
 msgstr "Bilangan artis"
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:352
+#: ../src/browsers/server-information.c:351
 msgid "Number of albums"
 msgstr "Bilangan album"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:354
+#: ../src/browsers/server-information.c:353
 msgid "Number of songs"
 msgstr "Bilangan lagu"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:356
+#: ../src/browsers/server-information.c:355
 msgid "URL Handlers"
 msgstr "Pengurus URL"
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:358
+#: ../src/browsers/server-information.c:357
 msgid "Tag Types"
 msgstr "Jenis Label"
 
-#: ../src/browsers/server-information.c:363
+#: ../src/browsers/server-information.c:362
 msgid "Tag statistics"
 msgstr "Statistik label"
 
@@ -1953,11 +1948,11 @@ msgstr "Telah menambahkan profil"
 msgid "Removed profile"
 msgstr "Telah membuang profil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:779
+#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
 msgid "Refetch"
 msgstr "Mengambil semula"
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:784
+#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
 msgid "Select file"
 msgstr "Pilih fail"
 
@@ -1985,7 +1980,7 @@ msgstr "Mendapatkan Info Album"
 msgid "Not Available"
 msgstr "Tidak Ada"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:815
+#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
 msgid "Select File"
 msgstr "Pilih Fail"
 
@@ -1993,11 +1988,11 @@ msgstr "Pilih Fail"
 msgid "Text Document"
 msgstr "Dokumen Teks"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:825
+#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
 msgid "All"
 msgstr "Semua"
 
-#: ../src/gob/gmpc-metaimage.gob:820
+#: ../src/gob/gmpc-metaimage.gob:821
 msgid "Images"
 msgstr "Imej"
 

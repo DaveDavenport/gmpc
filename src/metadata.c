@@ -963,7 +963,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 static gchar * strip_invalid_chars(gchar *input)
 {
     int i = 0;
-    int length = strlen(input);
+    int length = 0;
+    g_assert(input != NULL);
+    length = strlen(input);
     if(input == NULL) return NULL;
     for(i=0;i<length;i++)
     {
@@ -994,15 +996,34 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     gchar *retv= NULL;
     /* home dir */
     const gchar *homedir = g_get_home_dir();
+    g_assert(song->artist != NULL);
     g_assert(type < META_QUERY_DATA_TYPES); 
     {
+        const gchar *charset;
+        GError *error = NULL;
         gchar *filename = NULL, *dirname = NULL;
         const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
         g_assert(song->artist != NULL);
 
         /* Convert it so the filesystem likes it */
         /* TODO: Add error checking */
-        dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,NULL); 
+
+        if (g_get_charset (&charset))
+        {
+            debug_printf(DEBUG_INFO, "Locale is utf-8, just copying");
+            dirname = g_strdup(song->artist);
+        }else{
+            debug_printf(DEBUG_INFO, "Locale is %s converting to UTF-8", charset);
+            dirname = g_convert_with_fallback (song->artist, -1,
+                      charset, "UTF-8",NULL, NULL, NULL, &error);
+        }
+        //dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
+        if(error) {
+            debug_printf(DEBUG_ERROR, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
+            g_error_free(error);
+            if(dirname) g_free(dirname);
+            dirname = g_strdup("invalid");
+        }
         dirname = strip_invalid_chars(dirname);
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,NULL);
         if(g_file_test(retv, G_FILE_TEST_EXISTS) == FALSE) {

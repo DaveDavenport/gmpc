@@ -41,7 +41,6 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
     for(i=0; text && text[i] ;i++)
     {
         if(strcmp(text[i], "||") == 0){
-            printf("Doing or\n");
             if(in_playlist)
                 data = mpd_playlist_search_commit(connection);
             else
@@ -53,11 +52,8 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
         }
 
         if(text[i][0] == '\0')continue;
-        printf("'%s'-'%s'\n", text[i],text[i+1]);
 
         type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
-        if(type != MPD_TAG_NOT_FOUND)
-            printf("type: %s\n", mpdTagItemKeys[type]);
         if(type != MPD_TAG_NOT_FOUND && text[i+1])
         {
             gchar **split = tokenize_string(text[i+1]);
@@ -111,3 +107,4 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
     data_t = misc_mpddata_remove_duplicate_songs(data_t);
     return data_t;
 }
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

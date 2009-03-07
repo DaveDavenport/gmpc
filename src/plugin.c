@@ -320,7 +320,6 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
         url = g_build_path(G_DIR_SEPARATOR_S, PACKAGE_DATA_DIR, "gmpc","plugins",NULL);
     }
 
-    printf("found url: %s (%s:%s)\n", url, plug->path, homedir);
     g_free(homedir);
     return url;
 #endif

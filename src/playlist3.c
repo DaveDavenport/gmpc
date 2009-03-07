@@ -2462,4 +2462,4 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 		g_free(image);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

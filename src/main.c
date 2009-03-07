@@ -1422,6 +1422,13 @@ void print_version(void)
 #endif
 		);
 
+	printf("%-25s: %s\n", _("libspiff support"),
+#ifdef SPIFF 
+		   _("Enabled")
+#else
+		   _("Disabled")
+#endif
+	);
 	printf("%-25s: %s\n", _("Use ~/.config/ dir"),
 #ifdef USE_CONFIG_DIR
 		   _("Enabled")
@@ -1447,4 +1454,4 @@ void print_version(void)
 		);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

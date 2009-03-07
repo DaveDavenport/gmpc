@@ -25,6 +25,9 @@
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
 
+#ifdef SPIFF
+#include <spiff/spiff_c.h>
+#endif
 /** in gmpc */
 void pl3_option_menu_activate();
 
@@ -67,12 +70,12 @@ static void url_parse_extm3u_file(const char *data, int size)
 {
 	int i = 0;
 	int songs = 0;
-	gchar **tokens = g_strsplit(data, "\n", -1);
+	gchar **tokens = g_regex_split_simple("(\r\n|\n|\r)", data, G_REGEX_MULTILINE, G_REGEX_MATCH_NEWLINE_ANY);	// g_strsplit(data, "\n", -1);
 	if (tokens) {
 		for (i = 0; tokens[i]; i++) {
 			/* Check for File */
 			if (!strncmp(tokens[i], "http://", 7)) {
-				printf("Adding %s\n", tokens[i]);
+				printf("Adding '%s'\n", tokens[i]);
 				mpd_playlist_add(connection, tokens[i]);
 				songs++;
 			}
@@ -84,6 +87,85 @@ static void url_parse_extm3u_file(const char *data, int size)
 		pl3_push_statusbar_message(string);
 		q_free(string);
 	}
+}
+/***
+ * parse spiff file 
+ */
+static void url_parse_spiff_file(const char *data, int size)
+{
+#ifdef SPIFF
+    int songs= 0;
+    const gchar *tempdir = g_get_tmp_dir();
+    gchar *filename = g_build_filename(tempdir, "gmpc-temp-spiff-file",NULL);
+    if(filename)
+    {
+        GError *error = NULL;
+        int has_http = FALSE, has_file = FALSE;
+        char **handlers = mpd_server_get_url_handlers(connection);
+        int i = 0;
+        for (i = 0; handlers && handlers[i]; i++) {
+            if (strcmp(handlers[i], "http://") == 0) {
+                has_http = TRUE;
+            } else if (strcmp(handlers[i], "file://") == 0) {
+                has_file = TRUE;
+            }
+        }
+        if (handlers)
+            g_strfreev(handlers);
+
+        g_file_set_contents(filename, data,(gssize)size, &error);
+        if(!error)
+        {
+            struct spiff_track *strack;
+            struct spiff_mvalue *sloc;
+            struct spiff_list *slist = spiff_parse(filename);
+            if (slist != NULL)
+            {
+                SPIFF_LIST_FOREACH_TRACK(slist, strack) {
+                    SPIFF_TRACK_FOREACH_LOCATION(strack, sloc) {
+                        char *scheme = g_uri_parse_scheme(sloc->value);
+                        if(scheme)
+                        {
+                            debug_printf(DEBUG_INFO, "Trying to add url: %s", sloc->value);
+                            if(strcmp(scheme, "http") == 0 && has_http) 
+                            {
+                                mpd_playlist_add(connection, sloc->value);
+                                songs++;
+                            }
+                            else if(strcmp(scheme, "file") == 0 && has_file)
+                            {
+                                mpd_playlist_add(connection, sloc->value);
+                                songs++;
+                            }
+                            g_free(scheme);
+                        }
+                        else{
+                            debug_printf(DEBUG_ERROR, "Failed to parse scheme: %s",sloc->value);
+                        }
+                    }
+                }
+                spiff_free(slist);
+            }
+            g_unlink(filename);
+        }
+        else 
+        {
+            debug_printf(DEBUG_ERROR, "Error message: %s", error->message);
+            g_error_free(error);
+        }
+
+        g_free(filename);
+    }
+    if (songs) {
+        char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
+        pl3_push_statusbar_message(string);
+        q_free(string);
+    }
+
+
+#else
+    debug_printf(DEBUG_ERROR, "Spiff not supported, install libspiff");
+#endif
 }
 
 /**
@@ -135,6 +217,11 @@ static void parse_data(const char *data, guint size, const char *text)
 		mpd_playlist_add(connection, (char *)text);
 		pl3_push_statusbar_message(_("Added 1 stream"));
 	}
+    else if (!strncasecmp(data, "<?xml", 5)) {
+        debug_printf(DEBUG_INFO,  "Detected a xml file, might be xspf");
+        /* This might just be a xspf file */
+        url_parse_spiff_file(data, size);
+    }
 	/** pls file: */
 	else if (!strncasecmp(data, "[playlist]", 10)) {
 		debug_printf(DEBUG_INFO, "Detected a PLS\n");
@@ -184,7 +271,7 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 			GtkWidget *progress = user_data;
 			if (total > 0) {
 				gdouble prog = (length / (double)total);
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), prog);
+				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (prog > 1)?1:prog);
 				printf("%f\n", prog);
 			} else {
 				gtk_progress_bar_pulse(GTK_PROGRESS_BAR(progress));
@@ -200,6 +287,8 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 		}
 	} else {
 		GtkWidget *dialog = user_data;
+        /* add failed urls anyway */
+        mpd_playlist_add(connection, uri);
 		if (user_data)
 			gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
 	}
@@ -273,4 +362,4 @@ void url_start_real(const gchar * url)
 	gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

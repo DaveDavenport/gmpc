@@ -60,7 +60,33 @@ AC_CHECK_LIB(z, inflate,zlib=1,zlib=0)
 AM_CONDITIONAL(HAVE_ZLIB, test x$zlib = x1)
 if test "x$zlib" != "x1"
 then
- AC_MSG_ERROR([Jamendo plugin requires zlib])
+ AC_MSG_ERROR([GMPC plugin requires zlib])
+fi
+
+
+libspiff=0;
+
+AC_ARG_ENABLE(libspiff,
+    [   --enable-libspiff      Use libspiff to parse spiff playlists.],
+    [ case "${enableval}" in
+        yes)    enable_libspiff=yes;;
+         no)    enable_libspiff=no;;
+          *)    AC_MSG_ERROR([bad value ${enableval} for --enable-libspiff]);;
+     esac],
+     [enable_libspiff=auto])
+
+if test "x${enable_libspiff}" != xno; then 
+    AC_CHECK_HEADER(spiff/spiff_c.h, AC_CHECK_LIB(spiff, spiff_parse,libspiff=1,libspiff=0),libspiff=0)
+    if test "x${libspiff}" == "x1";
+    then
+        AC_DEFINE(SPIFF,1,["Use or don't use libspiff"])
+        SPIFF_LIBS=-lspiff
+        AC_SUBST(SPIFF_LIBS)
+    else 
+        if test "x${enable_libspiff}" == "xyes"; then
+            AC_MSG_ERROR([libspiff not found])
+        fi
+    fi
 fi
 
 PKG_PROG_PKG_CONFIG
@@ -219,7 +245,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="bg bn bs cs de es fi fr gl he hi hu id it jv lv ms nb ne nl pl pt pt_BR ro ru sv tr zh_CN zh_TW"
+ALL_LINGUAS="bg bn bs cs de es fi fr gl he hi hu id it jv lv ms nb ne nl pl pt pt_BR ro ru sq sv tr zh_CN zh_TW"
 
 GETTEXT_PACKAGE=gmpc
 AC_SUBST(GETTEXT_PACKAGE)
@@ -439,5 +465,10 @@ if test "x$macige" = "xyes"; then
 	echo "Use mac integration library:      enabled"
 else
 	echo "Use mac integration library:      disabled"
+fi
+if test "x$libspiff" = "x1"; then
+	echo "Use libspiff library:             enabled"
+else
+	echo "Use libspiff library:             disabled"
 fi
 echo "Now type make to build"

@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 #include <stdio.h>
 #include <gtk/gtk.h>
@@ -75,106 +75,101 @@ void submenu_dir_clicked(GtkWidget *item);
 
 static void volume_set(gpointer data, const char *param)
 {
-    if(strlen(param) > 0)
-    {
-        int volume = atoi(param);
-        mpd_status_set_volume(connection,volume); 
-    }
+	if(strlen(param) > 0)
+	{
+		int volume = atoi(param);
+		mpd_status_set_volume(connection,volume); 
+	}
 }
 
 static void set_random(gpointer data, const char *param)
 {
-    printf("param: '%s'\n", param);
-    if(strncmp(param,"on",2) == 0){
-        mpd_player_set_random(connection, TRUE);
-    }else if (strncmp(param, "off", 3) == 0){
-        mpd_player_set_random(connection, FALSE);
-    }else{
-        random_toggle();
-    }
+	if(strncmp(param,"on",2) == 0){
+		mpd_player_set_random(connection, TRUE);
+	}else if (strncmp(param, "off", 3) == 0){
+		mpd_player_set_random(connection, FALSE);
+	}else{
+		random_toggle();
+	}
 }
 static void set_repeat(gpointer data, const char *param)
 {
-    printf("param: '%s'\n", param);
-    if(strncmp(param,"on",2) == 0){
-        mpd_player_set_repeat(connection, TRUE);
-    }else if (strncmp(param, "off", 3) == 0){
-        mpd_player_set_repeat(connection, FALSE);
-    }else{
-        repeat_toggle();
-    }
+	if(strncmp(param,"on",2) == 0){
+		mpd_player_set_repeat(connection, TRUE);
+	}else if (strncmp(param, "off", 3) == 0){
+		mpd_player_set_repeat(connection, FALSE);
+	}else{
+		repeat_toggle();
+	}
 }
 static void replace_command(gpointer user_data, const char *param)
 {
-    gulong songs = 0;
-    MpdData *data = advanced_search(param, FALSE);
-    mpd_playlist_clear(connection);
-    for(;data; data = mpd_data_get_next(data))
-    {
+	gulong songs = 0;
+	MpdData *data = advanced_search(param, FALSE);
+	mpd_playlist_clear(connection);
+	for(;data; data = mpd_data_get_next(data))
+	{
 
-        if((songs&16383)==16383){
-            mpd_playlist_queue_commit(connection);
-            printf("pre-commit %lu\n",songs);
-        }
-        if(data->type == MPD_DATA_TYPE_SONG) {
-            mpd_playlist_queue_add(connection,data->song->file); 
-            songs++;
-        }
-    }
-    mpd_playlist_queue_commit(connection);
+		if((songs&16383)==16383){
+			mpd_playlist_queue_commit(connection);
+		}
+		if(data->type == MPD_DATA_TYPE_SONG) {
+			mpd_playlist_queue_add(connection,data->song->file); 
+			songs++;
+		}
+	}
+	mpd_playlist_queue_commit(connection);
 }
 static void add_command(gpointer user_data, const char *param)
 {
-    gulong songs = 0;
-    MpdData *data = advanced_search(param, FALSE);
-    for(;data; data = mpd_data_get_next(data))
-    {
+	gulong songs = 0;
+	MpdData *data = advanced_search(param, FALSE);
+	for(;data; data = mpd_data_get_next(data))
+	{
 
-        if((songs&16383)==16383){
-            mpd_playlist_queue_commit(connection);
-            printf("pre-commit %lu\n",songs);
-        }
-        if(data->type == MPD_DATA_TYPE_SONG) {
-            mpd_playlist_queue_add(connection,data->song->file); 
-            songs++;
-        }
-    }
-    mpd_playlist_queue_commit(connection);
+		if((songs&16383)==16383){
+			mpd_playlist_queue_commit(connection);
+		}
+		if(data->type == MPD_DATA_TYPE_SONG) {
+			mpd_playlist_queue_add(connection,data->song->file); 
+			songs++;
+		}
+	}
+	mpd_playlist_queue_commit(connection);
 }
 
 static void play_command(gpointer user_data, const char *param)
 {
-    MpdData *data = advanced_search(param, TRUE);
-    if(data)
-    {
-        printf("play path: %s\n", data->song->file);
-        play_path(data->song->file);
-        mpd_data_free(data);
-    }
+	MpdData *data = advanced_search(param, TRUE);
+	if(data)
+	{
+		play_path(data->song->file);
+		mpd_data_free(data);
+	}
 }
 
 static void mpd_interaction_init(void)
 {
-    /* Player control */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",_("start playback"),    (GmpcEasyCommandCallback *)mpd_player_play, connection); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",_("pause playback"),   (GmpcEasyCommandCallback *)mpd_player_pause, connection); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",_("next song"),        (GmpcEasyCommandCallback *)next_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",_("previous song"),    (GmpcEasyCommandCallback *)prev_song, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",_("stop playback"),    (GmpcEasyCommandCallback *)stop_song, NULL); 
+	/* Player control */
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),  "",_("start playback"),    (GmpcEasyCommandCallback *)mpd_player_play, connection); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("pause"), "",_("pause playback"),   (GmpcEasyCommandCallback *)mpd_player_pause, connection); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("next"),  "",_("next song"),        (GmpcEasyCommandCallback *)next_song, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("prev"),  "",_("previous song"),    (GmpcEasyCommandCallback *)prev_song, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("stop"),  "",_("stop playback"),    (GmpcEasyCommandCallback *)stop_song, NULL); 
 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"(on|off|)",_("Random (on|off)"),(GmpcEasyCommandCallback *)set_random, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",_("Repeat (on|off)"),(GmpcEasyCommandCallback *)set_repeat, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("random"),"(on|off|)",_("Random (on|off)"),(GmpcEasyCommandCallback *)set_random, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",_("Repeat (on|off)"),(GmpcEasyCommandCallback *)set_repeat, NULL); 
 
-    /* volume commands */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
+	/* volume commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
-    /* basic playlist commands */
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
-    gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",_("Replace <query>"),(GmpcEasyCommandCallback *)replace_command, NULL); 
+	/* basic playlist commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",_("Replace <query>"),(GmpcEasyCommandCallback *)replace_command, NULL); 
 }
 
 gmpcPlugin server_plug = {
@@ -184,7 +179,7 @@ gmpcPlugin server_plug = {
 	0,					/** Internal Id */
 	NULL,				/** path to plugin */
 	mpd_interaction_init,/** init */
-        NULL,                           /** Destroy */
+	NULL,                           /** Destroy */
 	NULL,				/** browser ext */
 	ServerStatusChangedCallback,	/** status changed */
 	NULL,
@@ -212,7 +207,7 @@ gmpcPlugin connection_plug = {
 	{1,1,1},                /* version */
 	GMPC_INTERNALL,         /* type */
 	0,                      /* id */
-        NULL,                   /* path */
+	NULL,                   /* path */
 	NULL,                   /* init function */
 	NULL,                   /* destroy function */
 	NULL,                   /* browser */
@@ -269,14 +264,14 @@ static void connection_thread(void)
 int connect_to_mpd(void)
 {
 	char *string = NULL;
-    if(connecting_lock == NULL){
-        connecting_lock = g_mutex_new();
-    }
-    if(!/*G_TRYLOCK*/g_mutex_trylock(connecting_lock))
-    {
-        debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
-        return FALSE;
-    }
+	if(connecting_lock == NULL){
+		connecting_lock = g_mutex_new();
+	}
+	if(!/*G_TRYLOCK*/g_mutex_trylock(connecting_lock))
+	{
+		debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
+		return FALSE;
+	}
 	/**
 	 * Set Hostname
 	 */
@@ -300,22 +295,22 @@ int connect_to_mpd(void)
 	{
 		mpd_set_password(connection,"");
 	}
-/*
-	if(mpd_connect(connection) < 0)
-	{
-		debug_printf(DEBUG_INFO,"Connection failed\n");
-		return TRUE;
-	}
-*/
+	/*
+	   if(mpd_connect(connection) < 0)
+	   {
+	   debug_printf(DEBUG_INFO,"Connection failed\n");
+	   return TRUE;
+	   }
+	 */
 	g_thread_create((GThreadFunc)connection_thread, NULL, FALSE,NULL);
 	connecting_pulse = g_timeout_add(200,(GSourceFunc)(connecting_pulse_callback),NULL);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
 
 	/* Set the title 
-	update_mpd_status();
-	mpd_stats_update(connection);
-	*/
+	   update_mpd_status();
+	   mpd_stats_update(connection);
+	 */
 	/* set that user wants to connect */
 	gmpc_connected = TRUE;
 
@@ -341,7 +336,7 @@ int next_song(void)
 int prev_song(void)
 {
 	if(mpd_server_check_command_allowed(connection, "previous") == MPD_SERVER_COMMAND_ALLOWED)
-	mpd_player_prev(connection);
+		mpd_player_prev(connection);
 	return FALSE;
 }
 
@@ -420,23 +415,23 @@ void volume_down(void)
 
 void volume_mute(void)
 {
-    mpd_status_set_volume(connection, 0);
+	mpd_status_set_volume(connection, 0);
 }
 
 void volume_unmute(void)
 {
-    if(mpd_status_get_volume(connection) == 0)
-        mpd_status_set_volume(connection, current_volume);
+	if(mpd_status_get_volume(connection) == 0)
+		mpd_status_set_volume(connection, current_volume);
 }
 
 void volume_toggle_mute(void)
 {
-    if(current_volume > 0 && mpd_status_get_volume(connection) == 0)
-    {
-        mpd_status_set_volume(connection, current_volume);
-    }else {
-        mpd_status_set_volume(connection, 0);
-    }
+	if(current_volume > 0 && mpd_status_get_volume(connection) == 0)
+	{
+		mpd_status_set_volume(connection, current_volume);
+	}else {
+		mpd_status_set_volume(connection, 0);
+	}
 }
 
 /*****************************************************************
@@ -672,22 +667,22 @@ void add_directory(const gchar *path)
 
 void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata)
 {
-    if(what&MPD_CST_VOLUME)
-    {
-        int volume = mpd_status_get_volume(connection);
-        if(volume)
-            current_volume =  volume;
-    }
+	if(what&MPD_CST_VOLUME)
+	{
+		int volume = mpd_status_get_volume(connection);
+		if(volume)
+			current_volume =  volume;
+	}
 
 	if(!server_pref_xml)return;
 	if(what&MPD_CST_CROSSFADE)
 	{
 		xfade_update();
 	}
-    if(what&MPD_CST_OUTPUT)
-    {
-        update_outputs_settings();
-    }
+	if(what&MPD_CST_OUTPUT)
+	{
+		update_outputs_settings();
+	}
 }
 
 
@@ -706,7 +701,7 @@ static void server_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-server.ui");
 	server_pref_xml = gtk_builder_new();//glade_xml_new(path, "server-vbox",NULL);
-    gtk_builder_add_from_file(server_pref_xml, path, NULL);
+	gtk_builder_add_from_file(server_pref_xml, path, NULL);
 	q_free(path);
 
 	if(server_pref_xml)
@@ -743,9 +738,9 @@ static void server_pref_construct(GtkWidget *container)
 
 		}
 		gtk_container_add(GTK_CONTAINER(container),vbox);
-//		glade_xml_signal_autoconnect(server_pref_xml);
-        gtk_builder_connect_signals(server_pref_xml, NULL);
-    }
+		//		glade_xml_signal_autoconnect(server_pref_xml);
+		gtk_builder_connect_signals(server_pref_xml, NULL);
+	}
 }
 
 /**************************************************
@@ -790,8 +785,8 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles *prof,const int changed,
 
 static void gmpc_connection_changed_pref_win(GmpcConnection *object, MpdObj *mi, int connected, GtkBuilder *xml)
 { 
-    debug_printf(DEBUG_INFO, "set buttons %i", connected);
-    if(connected != mpd_check_connected(mi)) return;
+	debug_printf(DEBUG_INFO, "set buttons %i", connected);
+	if(connected != mpd_check_connected(mi)) return;
 	if(!connected)
 	{
 		gtk_widget_set_sensitive((GtkWidget *)gtk_builder_get_object(xml, "bt_con"), TRUE);
@@ -975,7 +970,7 @@ static void connection_pref_destroy(GtkWidget *container)
 		{
 			gtk_container_remove(GTK_CONTAINER(container),widget);
 			g_object_unref(connection_pref_xml);
-            connection_pref_xml = NULL;
+			connection_pref_xml = NULL;
 		}
 	}
 	else
@@ -1101,8 +1096,8 @@ static void connection_pref_construct(GtkWidget *container)
 	GtkCellRenderer *renderer = NULL;
 	GtkListStore *store = NULL;
 	gchar *path = gmpc_get_full_glade_path("preferences-connection.ui");
-    connection_pref_xml = gtk_builder_new();//glade_xml_new(path, "connection-vbox",NULL);
-    gtk_builder_add_from_file(connection_pref_xml, path, NULL);
+	connection_pref_xml = gtk_builder_new();//glade_xml_new(path, "connection-vbox",NULL);
+	gtk_builder_add_from_file(connection_pref_xml, path, NULL);
 	q_free(path);
 
 	vbox = (GtkWidget *) gtk_builder_get_object(connection_pref_xml, "connection-vbox");
@@ -1143,7 +1138,7 @@ static void connection_pref_construct(GtkWidget *container)
 			gtk_list_store_set(store, &piter, 0,"Default", 1,value,-1);
 			q_free(value);
 			gtk_combo_box_set_active(GTK_COMBO_BOX((GtkWidget *) gtk_builder_get_object(connection_pref_xml, "cb_profiles")),0);
-			*/
+		 */
 	}
 	q_free(def_profile);
 
@@ -1169,7 +1164,7 @@ static void connection_pref_construct(GtkWidget *container)
 	}
 	gtk_container_add(GTK_CONTAINER(container),vbox);
 	//glade_xml_signal_autoconnect(connection_pref_xml);
-    gtk_builder_connect_signals(connection_pref_xml, NULL);
+	gtk_builder_connect_signals(connection_pref_xml, NULL);
 
 
 	a = g_malloc0(sizeof(*a));
@@ -1195,32 +1190,32 @@ void connection_set_password(char *password)
 	 */ 
 	if(password && password[0] != '\0')
 	{
-	  gmpc_profiles_set_password(gmpc_profiles, profile, password);
-	  gmpc_profiles_set_do_auth(gmpc_profiles, profile, TRUE);
+		gmpc_profiles_set_password(gmpc_profiles, profile, password);
+		gmpc_profiles_set_do_auth(gmpc_profiles, profile, TRUE);
 
 	}
 	else
 	{
-	  gmpc_profiles_set_password(gmpc_profiles, profile, NULL);
-	  gmpc_profiles_set_do_auth(gmpc_profiles, profile, FALSE);
+		gmpc_profiles_set_password(gmpc_profiles, profile, NULL);
+		gmpc_profiles_set_do_auth(gmpc_profiles, profile, FALSE);
 	}
 	q_free(profile);
 }
 
 int connection_use_auth(void)
 {
-  int retv;
+	int retv;
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	retv  = gmpc_profiles_get_do_auth(gmpc_profiles, profile);
-  q_free(profile);
-  return retv;
+	q_free(profile);
+	return retv;
 }
 
 char *connection_get_hostname(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_hostname(gmpc_profiles, profile);
-    g_free(profile);
+	g_free(profile);
 
 	return retv;
 }
@@ -1272,19 +1267,18 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	GtkWidget *item;
 	GtkWidget *smenu;
 	smenu  = gtk_menu_new();
-    if(song->file)
-    {
-        gchar *schema = g_uri_parse_scheme(song->file);
-        printf("schema's: %s\n", schema);
-        /* If it has a schame, it isn't an mpd url */
-        if(schema) 
-        {
-            g_object_ref_sink(smenu);
-            g_object_unref(smenu);
-            g_free(schema);
-            return;
-        }        
-    }
+	if(song->file)
+	{
+		gchar *schema = g_uri_parse_scheme(song->file);
+		/* If it has a schame, it isn't an mpd url */
+		if(schema) 
+		{
+			g_object_ref_sink(smenu);
+			g_object_unref(smenu);
+			g_free(schema);
+			return;
+		}        
+	}
 	if(song->artist && song->album) 
 	{
 		/* Add all from album */
@@ -1330,22 +1324,24 @@ void submenu_for_song(GtkWidget *menu, mpd_Song *song)
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	gtk_widget_show(item);
-	
 
-    if(mpd_sticker_supported(connection) && song->file)
-    {
-        smenu  = gtk_menu_new();
 
-        item = gtk_menu_item_new_with_label(_("Set Rating"));
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        gtk_widget_show(item);
+	if(mpd_sticker_supported(connection) && song->file)
+	{
+		smenu  = gtk_menu_new();
 
-        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection,song);
+		item = gtk_menu_item_new_with_label(_("Set Rating"));
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		gtk_widget_show(item);
+
+		sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection,song);
 		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
-    }
+	}
 
 
 	gtk_widget_show(smenu);
 
 }
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

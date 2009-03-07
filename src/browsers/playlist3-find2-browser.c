@@ -575,7 +575,6 @@ static void pl3_find2_browser_add_selected(void)
             {
                 if((songs&16383)==16383){
                     mpd_playlist_queue_commit(connection);
-                    printf("pre-commit %i\n",songs);
                 }
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);
@@ -614,7 +613,6 @@ static void pl3_find2_browser_add_all(void)
             {
                 if((songs&16383)==16383){
                     mpd_playlist_queue_commit(connection);
-                    printf("pre-commit %i\n",songs);
                 }
                 /* add them to the add list */
                 mpd_playlist_queue_add(connection, name);

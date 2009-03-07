@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
+ */
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -94,20 +94,19 @@ char * edit_song_markup(char *format)
 	char *str_format = NULL;
 	GtkTextIter start_iter, stop_iter;
 	GtkWidget *dialog;
-    GError *error = NULL;
+	GError *error = NULL;
 	char *path = gmpc_get_full_glade_path("preferences-esf-dialog.ui");
 	xml_esf= gtk_builder_new();
-    printf("ui path: %s\n", path);
-    gtk_builder_add_from_file(xml_esf, path, &error);
-    if(error) {
-        debug_printf(DEBUG_ERROR, error->message);
-        g_error_free(error);
-        error = NULL;
-    }
+	gtk_builder_add_from_file(xml_esf, path, &error);
+	if(error) {
+		debug_printf(DEBUG_ERROR, error->message);
+		g_error_free(error);
+		error = NULL;
+	}
 	q_free(path);
 	dialog = (GtkWidget *) gtk_builder_get_object(xml_esf, "esf_dialog");
 	buffer= gtk_text_view_get_buffer(GTK_TEXT_VIEW(gtk_builder_get_object(xml_esf, "textview_markup")));
-    gtk_builder_connect_signals(xml_esf, NULL);	
+	gtk_builder_connect_signals(xml_esf, NULL);	
 	g_signal_connect(G_OBJECT(buffer), "changed", G_CALLBACK(esf_render_example), NULL);
 	if(format != NULL)
 	{
@@ -123,8 +122,8 @@ char * edit_song_markup(char *format)
 				gtk_text_buffer_get_end_iter(buffer, &stop_iter);
 				str_format = g_strdup(gtk_text_buffer_get_text(buffer,&start_iter, &stop_iter, FALSE));
 			}
-        default:
-            break;
+		default:
+			break;
 	}
 
 	gtk_widget_destroy(dialog);

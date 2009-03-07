@@ -983,7 +983,6 @@ static void playlist_editor_status_changed(MpdObj *mi, ChangedStatusType what, v
 {
     if(what&MPD_CST_STORED_PLAYLIST)
     {
-        printf("stoed playlist changed\n");
         playlist_editor_fill_list_real();
     }
 }
@@ -1011,9 +1010,6 @@ static void favorites_add_current_song(void)
   {
       mpd_database_playlist_list_add(connection, _("Favorites"), song->file); 
       playlist3_show_error_message(_("Added playing song to favorites list."), ERROR_INFO);
-  }
-  else {
-    printf("no song to add\n");
   }
 }
 static int playlist_editor_add_go_menu(GtkWidget *menu)
