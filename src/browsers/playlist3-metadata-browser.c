@@ -954,12 +954,10 @@ static void info2_fill_song_view_real(mpd_Song *song)
 
 	if(song->file) {
 		/*** Dirname */		
-		char *dirname = g_path_get_dirname(song->file);
-		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
-		info2_add_table_item(table2,markup,dirname,i,TRUE);
+		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Path"));
+		info2_add_table_item(table2,markup,song->file,i,TRUE);
 		g_free(markup);	
 		i++;
-		q_free(dirname);
 	}
 
 	if(song->file &&  strncmp(song->file, "http://",7)) {
