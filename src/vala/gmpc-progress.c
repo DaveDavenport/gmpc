@@ -126,8 +126,8 @@ static gboolean gmpc_progress_motion_notify_event (GmpcProgress* self, GtkScale*
 			gint t_seconds;
 			char* a;
 			guint p;
-			char* _tmp5;
 			char* _tmp4;
+			char* _tmp3;
 			e_hour = 0;
 			e_minutes = 0;
 			e_seconds = 0;
@@ -150,41 +150,31 @@ static gboolean gmpc_progress_motion_notify_event (GmpcProgress* self, GtkScale*
 				char* _tmp1;
 				_tmp2 = NULL;
 				_tmp1 = NULL;
-				a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp2);
+				a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("%02i:", e_hour)), NULL), a = (g_free (a), NULL), _tmp2);
 				_tmp1 = (g_free (_tmp1), NULL);
-				if (e_minutes > 0) {
-					char* _tmp3;
-					_tmp3 = NULL;
-					a = (_tmp3 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp3);
-				}
 			}
-			_tmp5 = NULL;
 			_tmp4 = NULL;
-			a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp5);
-			_tmp4 = (g_free (_tmp4), NULL);
+			_tmp3 = NULL;
+			a = (_tmp4 = g_strconcat (a, _tmp3 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp4);
+			_tmp3 = (g_free (_tmp3), NULL);
 			if (self->priv->total > 0) {
-				char* _tmp6;
-				char* _tmp11;
-				char* _tmp10;
-				_tmp6 = NULL;
-				a = (_tmp6 = g_strconcat (a, (" - "), NULL), a = (g_free (a), NULL), _tmp6);
+				char* _tmp5;
+				char* _tmp9;
+				char* _tmp8;
+				_tmp5 = NULL;
+				a = (_tmp5 = g_strconcat (a, (" - "), NULL), a = (g_free (a), NULL), _tmp5);
 				if (t_hour > 0) {
-					char* _tmp8;
 					char* _tmp7;
-					_tmp8 = NULL;
+					char* _tmp6;
 					_tmp7 = NULL;
-					a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp8);
-					_tmp7 = (g_free (_tmp7), NULL);
-					if (t_minutes > 0) {
-						char* _tmp9;
-						_tmp9 = NULL;
-						a = (_tmp9 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp9);
-					}
+					_tmp6 = NULL;
+					a = (_tmp7 = g_strconcat (a, _tmp6 = (g_strdup_printf ("%02i:", t_hour)), NULL), a = (g_free (a), NULL), _tmp7);
+					_tmp6 = (g_free (_tmp6), NULL);
 				}
-				_tmp11 = NULL;
-				_tmp10 = NULL;
-				a = (_tmp11 = g_strconcat (a, _tmp10 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp11);
-				_tmp10 = (g_free (_tmp10), NULL);
+				_tmp9 = NULL;
+				_tmp8 = NULL;
+				a = (_tmp9 = g_strconcat (a, _tmp8 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp9);
+				_tmp8 = (g_free (_tmp8), NULL);
 			}
 			if (self->priv->do_countdown) {
 				gtk_label_set_width_chars (self->priv->tooltip_label, (gint) string_get_length (a));
@@ -300,8 +290,8 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 			gint t_seconds;
 			char* a;
 			guint p;
-			char* _tmp6;
 			char* _tmp5;
+			char* _tmp4;
 			e_hour = 0;
 			e_minutes = 0;
 			e_seconds = 0;
@@ -324,41 +314,31 @@ void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current) {
 				char* _tmp2;
 				_tmp3 = NULL;
 				_tmp2 = NULL;
-				a = (_tmp3 = g_strconcat (a, _tmp2 = (g_strdup_printf ("%02i", e_hour)), NULL), a = (g_free (a), NULL), _tmp3);
+				a = (_tmp3 = g_strconcat (a, _tmp2 = (g_strdup_printf ("%02i:", e_hour)), NULL), a = (g_free (a), NULL), _tmp3);
 				_tmp2 = (g_free (_tmp2), NULL);
-				if (e_minutes > 0) {
-					char* _tmp4;
-					_tmp4 = NULL;
-					a = (_tmp4 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp4);
-				}
 			}
-			_tmp6 = NULL;
 			_tmp5 = NULL;
-			a = (_tmp6 = g_strconcat (a, _tmp5 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp6);
-			_tmp5 = (g_free (_tmp5), NULL);
+			_tmp4 = NULL;
+			a = (_tmp5 = g_strconcat (a, _tmp4 = (g_strdup_printf ("%02i:%02i", e_minutes, e_seconds)), NULL), a = (g_free (a), NULL), _tmp5);
+			_tmp4 = (g_free (_tmp4), NULL);
 			if (self->priv->total > 0) {
-				char* _tmp7;
-				char* _tmp12;
-				char* _tmp11;
-				_tmp7 = NULL;
-				a = (_tmp7 = g_strconcat (a, (" - "), NULL), a = (g_free (a), NULL), _tmp7);
+				char* _tmp6;
+				char* _tmp10;
+				char* _tmp9;
+				_tmp6 = NULL;
+				a = (_tmp6 = g_strconcat (a, (" - "), NULL), a = (g_free (a), NULL), _tmp6);
 				if (t_hour > 0) {
-					char* _tmp9;
 					char* _tmp8;
-					_tmp9 = NULL;
+					char* _tmp7;
 					_tmp8 = NULL;
-					a = (_tmp9 = g_strconcat (a, _tmp8 = (g_strdup_printf ("%02i", t_hour)), NULL), a = (g_free (a), NULL), _tmp9);
-					_tmp8 = (g_free (_tmp8), NULL);
-					if (t_minutes > 0) {
-						char* _tmp10;
-						_tmp10 = NULL;
-						a = (_tmp10 = g_strconcat (a, (":"), NULL), a = (g_free (a), NULL), _tmp10);
-					}
+					_tmp7 = NULL;
+					a = (_tmp8 = g_strconcat (a, _tmp7 = (g_strdup_printf ("%02i:", t_hour)), NULL), a = (g_free (a), NULL), _tmp8);
+					_tmp7 = (g_free (_tmp7), NULL);
 				}
-				_tmp12 = NULL;
-				_tmp11 = NULL;
-				a = (_tmp12 = g_strconcat (a, _tmp11 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp12);
-				_tmp11 = (g_free (_tmp11), NULL);
+				_tmp10 = NULL;
+				_tmp9 = NULL;
+				a = (_tmp10 = g_strconcat (a, _tmp9 = (g_strdup_printf ("%02i:%02i", t_minutes, t_seconds)), NULL), a = (g_free (a), NULL), _tmp10);
+				_tmp9 = (g_free (_tmp9), NULL);
 			}
 			if (self->priv->do_countdown) {
 				gtk_label_set_width_chars (self->priv->label, (gint) string_get_length (a));

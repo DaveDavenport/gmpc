@@ -117,20 +117,14 @@ public class Gmpc.Progress : Gtk.HBox
                 e_minutes = (int) (p%3600)/60;
                 e_seconds = (int) (p%60);
                 if(e_hour>0) {
-                    a += "%02i".printf(e_hour);
-                    if(e_minutes > 0) {
-                        a+=":";
-                    }
+                    a += "%02i:".printf(e_hour);
                 }
                 a += "%02i:%02i".printf(e_minutes, e_seconds);
                 if(this.total > 0)
                 {
                     a += " - ";
                     if(t_hour>0) {
-                        a += "%02i".printf(t_hour);
-                        if(t_minutes > 0) {
-                            a+=":";
-                        }
+                        a += "%02i:".printf(t_hour);
                     }
                     a += "%02i:%02i".printf(t_minutes,t_seconds);
                 }
@@ -273,20 +267,14 @@ public class Gmpc.Progress : Gtk.HBox
                 e_minutes = (int) (p%3600)/60;
                 e_seconds = (int) (p%60);
                 if(e_hour>0) {
-                    a += "%02i".printf(e_hour);
-                    if(e_minutes > 0) {
-                        a+=":";
-                    }
+                    a += "%02i:".printf(e_hour);
                 }
                 a += "%02i:%02i".printf(e_minutes, e_seconds);
                 if(this.total > 0)
                 {
                     a += " - ";
                     if(t_hour>0) {
-                        a += "%02i".printf(t_hour);
-                        if(t_minutes > 0) {
-                            a+=":";
-                        }
+                        a += "%02i:".printf(t_hour);
                     }
                     a += "%02i:%02i".printf(t_minutes,t_seconds);
                 }
@@ -299,3 +287,5 @@ public class Gmpc.Progress : Gtk.HBox
         }
     }
 }
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
