@@ -1,10 +1,9 @@
 
 #include "gmpc_rating.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <float.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 #include <gmpc-connection.h>
 #include <main.h>
 
@@ -39,7 +38,6 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (wid != NULL, FALSE);
-	fprintf (stdout, "Rating button press event\n");
 	if ((*event).type == GDK_BUTTON_PRESS) {
 		if ((*event).button == 1) {
 			gint width;
@@ -47,7 +45,6 @@ gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, con
 			char* _tmp0;
 			width = ((GtkWidget*) self)->allocation.width;
 			button = (gint) (((((*event).x) / ((double) width)) + 0.15) * 5);
-			fprintf (stdout, "Set sticker\n");
 			_tmp0 = NULL;
 			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0 = g_strdup_printf ("%i", button));
 			_tmp0 = (g_free (_tmp0), NULL);
@@ -63,7 +60,6 @@ static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, Change
 	g_return_if_fail (server != NULL);
 	g_return_if_fail (conn != NULL);
 	if (((what & MPD_CST_STICKER) != 0)) {
-		fprintf (stdout, "Sticker changed %i:%i:%i\n", (gint) what, (gint) MPD_CST_STICKER, gmpc_rating_id);
 		gmpc_rating_update (self);
 	}
 }

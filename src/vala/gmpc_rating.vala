@@ -46,14 +46,12 @@ public class Gmpc.Rating : Gtk.Frame
     }
     public bool button_press_event(Gtk.EventBox wid, Gdk.EventButton event)
     {
-        stdout.printf("Rating button press event\n");
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 1)
             {
                 int width = this.allocation.width;
                 int button = (int)((((event.x)/(double)width)+0.15)*5);
-                stdout.printf("Set sticker\n");
                 MPD.Sticker.Song.set(this.server, this.song.file, "rating", button.to_string());
                 this.set_rating(button);
             }
@@ -66,7 +64,6 @@ public class Gmpc.Rating : Gtk.Frame
     {
         if(((what&MPD.Status.Changed.STICKER) != 0))
         {
-            stdout.printf("Sticker changed %i:%i:%i\n",what,MPD.Status.Changed.STICKER, id);
             this.update();
         }
     }
