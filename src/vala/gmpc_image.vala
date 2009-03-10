@@ -67,9 +67,6 @@ public class Gmpc.Image:Gtk.EventBox {
 			var x_start = x+Math.ceil((ww-width)/2.0);
 			var y_start = y+Math.ceil((wh-height)/2.0);
 			ctx.set_line_join(LineJoin.ROUND);
-			if(width > ww || height > wh) {
-				stdout.printf("Image won't fit %i-%i %i-%i\n",width,ww,height,wh);
-			}
 			// Make the path
 			ctx.new_path();
 			ctx.rectangle(x_start, y_start, width-1, height-1);
@@ -97,9 +94,6 @@ public class Gmpc.Image:Gtk.EventBox {
 			var x_start = x+Math.ceil((ww-width)/2.0);
 			var y_start = y+Math.ceil((wh-height)/2.0);
 			ctx.set_line_join(LineJoin.ROUND);
-			if(width > ww || height > wh) {
-				stdout.printf("Image won't fit %i-%i %i-%i\n",width,ww,height,wh);
-			}
 			ctx.rectangle(x_start,y_start, width-1, height-1);
 			Gdk.cairo_set_source_pixbuf(ctx, temp, x_start,y_start);
 /*
@@ -182,4 +176,4 @@ public class Gmpc.Image:Gtk.EventBox {
 	}
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
