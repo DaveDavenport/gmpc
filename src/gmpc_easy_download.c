@@ -81,15 +81,13 @@ static int read_cb(void *z, char *buffer, int size)
 			return size - zs->avail_out;
 		}
 	}
-    else printf("no zs\n");
-	printf("failed unzipping stream: %i\n",r);
+	debug_printf(DEBUG_ERROR, "failed unzipping stream: %i\n",r);
 	return -1;
 }
 
 static int close_cb(void *z)
 {
 	z_stream *zs = z;
-	printf("Close unzip stream\n");
 	inflateEnd(zs);
 	g_free(zs);
 	return 0;
