@@ -813,7 +813,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 	 * make the playlist update itself
 	 */
 	playlist_status_changed(connection,
-							MPD_CST_STATE | MPD_CST_SONGID |
+							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
 							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
 
@@ -1010,7 +1010,7 @@ void create_playlist3(void)
 					 volume_button, FALSE, FALSE, 0);
 	gtk_widget_show_all(volume_button);
 	playlist_status_changed(connection,
-							MPD_CST_STATE | MPD_CST_SONGID |
+							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
 							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
 	g_signal_connect(G_OBJECT(volume_button), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
@@ -1722,6 +1722,30 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 	if (what & MPD_CST_OUTPUT) {
 		playlist3_fill_server_menu();
+	}
+	if (what & MPD_CST_NEXTSONG) {
+
+		GtkWidget *next_button = glade_xml_get_widget(pl3_xml, "button9");
+		if(next_button)
+		{
+			int i = mpd_player_get_next_song_id(mi);
+			if(i >= 0 )
+			{
+				mpd_Song *song = mpd_playlist_get_song(mi, i);
+				if(song)
+				{
+					mpd_song_markup(buffer, 1024,
+							"[%title% - &[%artist%] (paused)]|%shortfile%",
+							song);
+					gtk_widget_set_tooltip_text(next_button, buffer);
+				}
+				else 
+					gtk_widget_set_tooltip_text(next_button, "");
+				mpd_freeSong(song);
+			}
+			else 
+					gtk_widget_set_tooltip_text(next_button, "");
+		}
 	}
 }
 
