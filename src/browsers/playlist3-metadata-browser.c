@@ -1762,7 +1762,7 @@ static gboolean song_list_button_release_event(GtkTreeView *tree,
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(song_list_add_selected_songs), tree);
 			/* add the replace widget */
-			item = gtk_image_menu_item_new_with_label("Replace");
+			item = gtk_image_menu_item_new_with_label(_("Replace"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);

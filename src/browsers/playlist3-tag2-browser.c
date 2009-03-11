@@ -395,7 +395,7 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_browser_add_selected), te);
 		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
+		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -1043,7 +1043,7 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_songlist_add_selected_songs), browser);
 			/* add the replace widget */
-			item = gtk_image_menu_item_new_with_label("Replace");
+			item = gtk_image_menu_item_new_with_label(_("Replace"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
