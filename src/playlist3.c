@@ -99,7 +99,6 @@ void save_possize_enable_tb(GtkToggleButton *);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
-void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
 void hide_on_close_enable_tb(GtkToggleButton * but);
 void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
@@ -1749,20 +1748,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 }
 
-void playlist_player_cover_art_pressed(GtkEventBox * event_widget, GdkEventButton * event)
-{
-	mpd_Song *song = NULL;
-	int state = mpd_player_get_state(connection);
-	if (state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
-		return;
-	if (!mpd_check_connected(connection))
-		return;
-	song = mpd_playlist_get_current_song(connection);
-	if (song) {
-		info2_activate();
-		info2_fill_song_view(song);
-	}
-}
 
 static void playlist_player_volume_changed(GtkWidget * vol_but)
 {
