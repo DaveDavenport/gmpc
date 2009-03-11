@@ -148,6 +148,28 @@ static void play_command(gpointer user_data, const char *param)
 	}
 }
 
+static void seek_command(gpointer user_data, const char *param)
+{
+	int i = 0, j = 0;
+	gchar **fields;
+	if(!param) return;
+	if(!mpd_check_connected(connection)) return;
+	printf("seek: '%s'\n",param);
+	fields = g_strsplit(param, ":", -1);
+	/* Calculate time */
+	for(j=0;fields && fields[j];j++){
+		i = atoi(fields[j])+i*60;
+	}
+	if(param[0] == '+' || param[0] == '-') {
+		/* seek relative */	
+		mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection)+i);
+	}else{
+		/* seek absolute */
+		mpd_player_seek(connection, i);
+	}
+	g_strfreev(fields);
+}
+
 static void mpd_interaction_init(void)
 {
 	/* Player control */
@@ -170,6 +192,9 @@ static void mpd_interaction_init(void)
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",_("Replace <query>"),(GmpcEasyCommandCallback *)replace_command, NULL); 
+
+	/* Basic seek commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("seek"), "[+-]?[0-9:]+",_("Seek within the current song"), (GmpcEasyCommandCallback *)seek_command, NULL);
 }
 
 gmpcPlugin server_plug = {
