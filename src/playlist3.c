@@ -1735,7 +1735,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				if(song)
 				{
 					mpd_song_markup(buffer, 1024,
-							"[%title% - &[%artist%] (paused)]|%shortfile%",
+							"[%title% - &[%artist%]]|%shortfile%",
 							song);
 					gtk_widget_set_tooltip_text(next_button, buffer);
 				}
