@@ -28,7 +28,7 @@
 
 static void bug_information_generate_message(GtkTextBuffer *buffer)
 {
-    int i, *version;
+    int i;
     gchar *temp;
     GtkTextIter iter;
     GtkTextTag *bold_tag, *larger_tag;
@@ -102,7 +102,7 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
 
     /* platform */
     gtk_text_buffer_insert_with_tags(buffer, &iter, "Platform:\t", -1, bold_tag, NULL);
-#ifdef WIN#@
+#ifdef WIN32
     gtk_text_buffer_insert(buffer, &iter, "Windows\n", -1);
     gtk_text_buffer_insert_with_tags(buffer, &iter, "Windows version:\t", -1, bold_tag, NULL);
     temp = g_strdup_printf("%i\n", g_win32_get_windows_version());
@@ -220,14 +220,15 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nPlugins:\n", -1, bold_tag, larger_tag,NULL);
     for(i=0;i<num_plugins;i++)
     {
-        const gchar *name = gmpc_plugin_get_name(plugins[i]);
-        int *version = gmpc_plugin_get_version(plugins[i]);
-        
-
-        gtk_text_buffer_insert_with_tags(buffer, &iter, name,-1, bold_tag, NULL);
-        temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
-        gtk_text_buffer_insert(buffer, &iter, temp, -1);
-        g_free(temp);
+        if(!gmpc_plugin_is_internal(plugins[i]))
+        {
+            const gchar *name = gmpc_plugin_get_name(plugins[i]);
+            const int *version = gmpc_plugin_get_version(plugins[i]);
+            gtk_text_buffer_insert_with_tags(buffer, &iter, name,-1, bold_tag, NULL);
+            temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
+            gtk_text_buffer_insert(buffer, &iter, temp, -1);
+            g_free(temp);
+        }
     }
 }
 
@@ -244,7 +245,7 @@ void bug_information_window_new(GtkWidget *window)
 
     /* Basic dialog with a close button */
     dialog = gtk_dialog_new_with_buttons(_("Bug information"),
-                    window,
+                    (GtkWindow *)gtk_widget_get_toplevel(window),
                     GTK_DIALOG_DESTROY_WITH_PARENT|GTK_DIALOG_NO_SEPARATOR,
                     GTK_STOCK_CLOSE, GTK_RESPONSE_YES,
                     NULL);
