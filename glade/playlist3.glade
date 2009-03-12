@@ -377,6 +377,21 @@
                       </widget>
                     </child>
                     <child>
+                        <widget class="GtkImageMenuItem" id="menuitembuginformation">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Bug information</property>
+                            <property name="use_underline">True</property>
+                            <signal name="activate" handler="bug_information_window_new"/>
+                            <child internal-child="image">
+                                <widget class="GtkImage" id="menu-item-image25">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-home</property>
+                                </widget>
+                            </child>
+                        </widget>
+                    </child>
+
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="menuitem5">
                         <property name="visible">True</property>
                       </widget>

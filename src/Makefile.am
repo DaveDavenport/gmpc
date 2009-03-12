@@ -43,7 +43,8 @@ gmpc_SOURCES=\
 	bacon/bacon-message-connection.c\
 	advanced_search.c\
 	browsers/server-information.c\
-	edit_markup.c 
+	edit_markup.c\
+	bug-information.c
 
 if EGGTRAYICON
 gmpc_SOURCES+=egg/eggtrayicon.c
@@ -190,6 +191,7 @@ EXTRA_DIST=\
 		bacon/bacon-message-connection.h\
 		advanced_search.h\
 		gmpc-version.h.in\
+		bug-information.h\
 		gmpc-win32.rc
 
 if EGGTRAYICON
