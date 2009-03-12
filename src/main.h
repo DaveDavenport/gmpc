@@ -32,6 +32,7 @@
 #include <libmpd/debug_printf.h>
 #include "config1.h"
 #include "plugin.h"
+#include "vala/gmpc-plugin2.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 
@@ -64,6 +65,7 @@ void main_quit(void);
 /* plugin */
 void plugin_load_dir(gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin);
+void plugin_add_new(GmpcPluginBase *plug, int plugin);
 int plugin_get_pos(int id);
 
 void show_error_message(const gchar *string,const int block);

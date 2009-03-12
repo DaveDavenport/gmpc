@@ -31,6 +31,8 @@ gmpc_SOURCES=\
 	vala/gmpc_menu_item_rating.c\
 	vala/gmpc-easy-command.c\
 	vala/gmpc-song-links.c\
+	vala/gmpc-plugin2.c\
+	vala/gmpc-test-plugin.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -150,6 +152,7 @@ gmpcinclude_HEADERS = \
 		misc.h\
 		gmpc_easy_download.h\
 		vala/gmpc-easy-command.h\
+		vala/gmpc-plugin2.h\
 		TreeSearchWidget.h \
 		playlist3-messages.h\
 		gmpc-version.h\
@@ -176,6 +179,7 @@ EXTRA_DIST=\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-song-links.h\
+		vala/gmpc-test-plugin.h\
 		setup-assistant.h\
 		sm.h\
 		metadata.h\

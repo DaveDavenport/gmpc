@@ -21,6 +21,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gmodule.h>
+#include "vala/gmpc-plugin2.h"
 #include "main.h"
 #include "metadata.h"
 
@@ -30,6 +31,7 @@ int num_plugins = 0;
 
 typedef struct _gmpcPluginParent {
     gmpcPlugin *old;
+    GmpcPluginBase *new;
 }_gmpcPluginParent;
 
 gmpcPluginParent * plugin_get_from_id(int id)
@@ -143,6 +145,19 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 		meta_data_add_plugin(parent);
 	}
 }
+void plugin_add_new(GmpcPluginBase *plug, int plugin)
+{
+    gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
+    parent->new = plug;
+	/* set plugin id */
+	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
+	/* put it in the list */
+	num_plugins++;
+	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
+	plugins[num_plugins-1] = parent;
+	plugins[num_plugins] = NULL;
+}
+
 static int plugin_load(char *path, const char *file)
 {
 	GModule *handle;
@@ -261,6 +276,11 @@ void plugin_load_dir(gchar *path)
 
 void gmpc_plugin_destroy(gmpcPluginParent *plug)
 {
+    if(plug->new)
+    {
+        g_object_unref(plug->new);
+        return;
+    }
     if(plug->old->destroy)
     {
         plug->old->destroy();
@@ -268,6 +288,11 @@ void gmpc_plugin_destroy(gmpcPluginParent *plug)
 }
 void gmpc_plugin_init(gmpcPluginParent *plug)
 {
+    if(plug->new)
+    {
+
+        return;
+    }
     if(plug->old->init)
     {
         plug->old->init();
@@ -275,6 +300,7 @@ void gmpc_plugin_init(gmpcPluginParent *plug)
 }
 void gmpc_plugin_status_changed(gmpcPluginParent *plug, MpdObj *mi, ChangedStatusType what)
 {
+    if(plug->new) return;
     if(plug->old->mpd_status_changed)
     {
         plug->old->mpd_status_changed(mi,what,NULL);
@@ -282,11 +308,20 @@ void gmpc_plugin_status_changed(gmpcPluginParent *plug, MpdObj *mi, ChangedStatu
 }
 const char *gmpc_plugin_get_name(gmpcPluginParent *plug)
 {
+    /* if new plugin, use that method */
+    if(plug->new) {
+        return gmpc_plugin_base_get_name(plug->new);
+    }
     g_assert(plug->old->name != NULL);
     return plug->old->name;
 }
 void gmpc_plugin_save_yourself(gmpcPluginParent *plug)
 {
+    if(plug->new)
+    {
+        gmpc_plugin_base_save_yourself(plug->new);
+        return;
+    }
     if(plug->old->save_yourself)
     {
         plug->old->save_yourself();
@@ -294,6 +329,9 @@ void gmpc_plugin_save_yourself(gmpcPluginParent *plug)
 }
 gboolean gmpc_plugin_get_enabled(gmpcPluginParent *plug)
 {
+    if(plug->new){
+        return gmpc_plugin_base_get_enabled(plug->new);
+    }
     if(plug->old->get_enabled)
     {
         return plug->old->get_enabled();
@@ -302,6 +340,9 @@ gboolean gmpc_plugin_get_enabled(gmpcPluginParent *plug)
 }
 void gmpc_plugin_set_enabled(gmpcPluginParent *plug, gboolean enabled)
 {
+    if(plug->new){
+        return gmpc_plugin_base_set_enabled(plug->new,enabled);
+    }
     if(plug->old->set_enabled)
     {
         plug->old->set_enabled(enabled);
@@ -333,6 +374,8 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 void gmpc_plugin_mpd_connection_changed(gmpcPluginParent *plug, MpdObj *mi, int connected, gpointer data)
 {
     g_assert(plug != NULL);
+
+    if(plug->new) return;
     if(plug->old->mpd_connection_changed != NULL)
     {
         plug->old->mpd_connection_changed(mi,connected,data);
@@ -341,6 +384,9 @@ void gmpc_plugin_mpd_connection_changed(gmpcPluginParent *plug, MpdObj *mi, int 
 
 gboolean gmpc_plugin_is_browser(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return GMPC_PLUGIN2_IS_BROWSER(plug->new); 
+    }
     return ((plug->old->plugin_type&GMPC_PLUGIN_PL_BROWSER) != 0);
 }
 void gmpc_plugin_browser_unselected(gmpcPluginParent *plug, GtkWidget *container)
@@ -443,6 +489,9 @@ gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPluginParent *
 
 gboolean gmpc_plugin_has_preferences(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return GMPC_PLUGIN2_IS_PREFERENCES(plug->new);
+    }
     return (plug->old->pref != NULL);
 }
 
@@ -469,16 +518,25 @@ void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
 
 gboolean gmpc_plugin_is_internal(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return FALSE;
+    }
     return (((plug->old->plugin_type)&GMPC_INTERNALL) != 0);
 }
 
 const int * gmpc_plugin_get_version(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return NULL; 
+    }
     return (int *)plug->old->version;
 }
 
 int gmpc_plugin_get_type(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return plug->new->plugin_type;
+    }
     return plug->old->plugin_type;
 }
 

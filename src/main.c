@@ -49,6 +49,8 @@
 
 /* vala */
 #include "vala/gmpc-easy-command.h"
+#include "vala/gmpc-test-plugin.h"
+#include "vala/gmpc-test-plugin.h"
 
 /**
  * Get revision
@@ -731,7 +733,8 @@ int main(int argc, char **argv)
 	plugin_add(&proxyplug, 0);
 
 	TEC("Loading internal plugins");
-
+	plugin_add_new(gmpc_test_plugin_new(), 0);
+	TEC("Loading new plugins");
 	/**
      *  load dynamic plugins
      */

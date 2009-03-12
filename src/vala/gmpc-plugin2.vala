@@ -22,34 +22,26 @@ using Gtk;
 
 
 namespace Gmpc {
-    public interface Plugin2 {
-        public abstract string get_name ();
-        public abstract int[3] get_version ();
-      
-        /*  */
-        public abstract void save_yourself ();
-
-        /* Get/set enabled */
-        public abstract bool get_enabled ();
-        public abstract void set_enabled (bool state);
-    }
-
-    public abstract class PluginBase : Plugin2 { 
-        public abstract string get_name ();
-        public abstract int[3] get_version ();
+    public abstract class PluginBase :GLib.Object { 
+        public int id;
+        public int plugin_type = 1;
+        public abstract weak string get_name ();
+    //    public abstract weak int[3] get_version ();
         
         public abstract void save_yourself ();
 
         public abstract bool get_enabled ();
         public abstract void set_enabled (bool state);
+    
     }
-    public interface MetaData : Plugin2 {
+    namespace Plugin2 {
+    public interface MetaData : PluginBase {
        public abstract int get_data ();
        /* Set get priority */
        public abstract int get_priority ();
        public abstract void set_priority (int priority);
     }
-    public interface Browser : Plugin2 {
+    public interface Browser : PluginBase {
         /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
         public abstract  void add (Gtk.Widget *category_tree);
         /* This gets called, the plugin should add it view in container */
@@ -58,14 +50,14 @@ namespace Gmpc {
         public abstract void  unselected (Widget *container);
 
     }
-    public interface Preferences : Plugin2 {
+    public interface Preferences : PluginBase {
         public abstract Gtk.Widget pref_construct ();
         public abstract Gtk.Widget pref_destroy ();
 
     }
-    public interface SongList : Plugin2 {
+    public interface SongList : PluginBase {
         public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
 
     }
-
+    }
 }
