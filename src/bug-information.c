@@ -118,99 +118,99 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
 
     /** compile flags*/
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nCompile flags:\n", -1, bold_tag, larger_tag,NULL);
-	temp = g_strdup_printf("%s:\t %s\n", _("X session management"),
+	temp = g_strdup_printf("%s:\t %s\n", ("X session management"),
 #ifdef ENABLE_SM
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
-	temp = g_strdup_printf("%s:\t %s\n", _("NLS Support"),
+	temp = g_strdup_printf("%s:\t %s\n", ("NLS Support"),
 #ifdef ENABLE_NLS
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("Multimedia Keys"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Multimedia Keys"),
 #ifdef ENABLE_MMKEYS
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("Libegg's trayicon"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Libegg's trayicon"),
 #ifdef EGGTRAYICON
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("System libsexy"),
+	temp = g_strdup_printf("%s:\t %s\n", ("System libsexy"),
 #ifdef USE_SYSTEM_LIBSEXY
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("Mac integration library"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Mac integration library"),
 #ifdef ENABLE_IGE
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("libspiff support"),
+	temp = g_strdup_printf("%s:\t %s\n", ("libspiff support"),
 #ifdef SPIFF 
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 	);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
-	temp = g_strdup_printf("%s:\t %s\n", _("Use ~/.config/ dir"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Use ~/.config/ dir"),
 #ifdef USE_CONFIG_DIR
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("Debug timing"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Debug timing"),
 #ifdef DEBUG_TIMING
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", _("Maintainer mode"),
+	temp = g_strdup_printf("%s:\t %s\n", ("Maintainer mode"),
 #ifdef MAINTAINER_MODE
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
@@ -229,6 +229,44 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
             gtk_text_buffer_insert(buffer, &iter, temp, -1);
             g_free(temp);
         }
+    }
+
+    if(mpd_check_connected(connection))
+    {
+        gchar **handlers;
+        /** Plugins */
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "\nMusic Player Daemon:\n", -1, bold_tag, larger_tag,NULL);
+       
+        /* Version */
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "Version:\t",-1, bold_tag, NULL);
+        temp = mpd_server_get_version(connection); 
+        gtk_text_buffer_insert(buffer, &iter, temp, -1);
+        g_free(temp);
+
+        /* total songs */
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "\nSongs:\t",-1, bold_tag, NULL);
+        temp = g_strdup_printf("%i", mpd_stats_get_total_songs(connection));
+        gtk_text_buffer_insert(buffer, &iter, temp, -1);
+        g_free(temp);
+
+        /* hostname */
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "\nHostname:\t",-1, bold_tag, NULL);
+        temp = connection_get_hostname();
+        gtk_text_buffer_insert(buffer, &iter, temp, -1);
+        /* handlers */
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "\nUrl handlers:\t",-1, bold_tag, NULL);
+        handlers = mpd_server_get_url_handlers(connection);
+        if(handlers)
+        {
+            temp = g_strjoinv(",",handlers);
+            g_strfreev(handlers);
+            handlers = NULL;
+        }
+        else 
+            temp = g_strdup("N/A");
+        gtk_text_buffer_insert(buffer, &iter, temp, -1);
+        g_free(temp);
+
     }
 }
 
@@ -251,7 +289,7 @@ void bug_information_window_new(GtkWidget *window)
                     NULL);
 
     /* Set default window size */
-    gtk_window_set_default_size(GTK_WINDOW(dialog), 400, 800);
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 500, 800);
     /* The buffer that holds the "report" */
     buffer = gtk_text_buffer_new(NULL);
 
