@@ -118,106 +118,71 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
 
     /** compile flags*/
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nCompile flags:\n", -1, bold_tag, larger_tag,NULL);
-	temp = g_strdup_printf("%s:\t %s\n", ("X session management"),
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "X session management:\t", -1, bold_tag, NULL);
 #ifdef ENABLE_SM
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
-	temp = g_strdup_printf("%s:\t %s\n", ("NLS Support"),
+
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nNLS Support:\t", -1, bold_tag, NULL);
 #ifdef ENABLE_NLS
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("Multimedia Keys"),
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nMultimedia Keys:\t", -1, bold_tag, NULL);
 #ifdef ENABLE_MMKEYS
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("Libegg's trayicon"),
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibegg's trayicon:\t", -1, bold_tag, NULL);
 #ifdef EGGTRAYICON
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("System libsexy"),
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nSystem libsexy:\t", -1, bold_tag, NULL);
 #ifdef USE_SYSTEM_LIBSEXY
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("Mac integration library"),
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nMac integration:\t", -1, bold_tag, NULL);
 #ifdef ENABLE_IGE
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("libspiff support"),
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibspiff support:\t", -1, bold_tag, NULL);
 #ifdef SPIFF 
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-	);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
-	temp = g_strdup_printf("%s:\t %s\n", ("Use ~/.config/ dir"),
+
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nUse ~/.config/ dir:\t", -1, bold_tag, NULL);
 #ifdef USE_CONFIG_DIR
-		   ("Enabled")
+    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
 #else
-		   ("Disabled")
+    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
-	temp = g_strdup_printf("%s:\t %s\n", ("Debug timing"),
-#ifdef DEBUG_TIMING
-		   ("Enabled")
-#else
-		   ("Disabled")
-#endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
-
-	temp = g_strdup_printf("%s:\t %s\n", ("Maintainer mode"),
-#ifdef MAINTAINER_MODE
-		   ("Enabled")
-#else
-		   ("Disabled")
-#endif
-		);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
 
     /** Plugins */
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nPlugins:\n", -1, bold_tag, larger_tag,NULL);
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nPlugins:\n", -1, bold_tag, larger_tag,NULL);
     for(i=0;i<num_plugins;i++)
     {
         if(!gmpc_plugin_is_internal(plugins[i]))
