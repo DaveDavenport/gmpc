@@ -132,6 +132,7 @@ void plugin_add(gmpcPlugin *plug, int plugin)
 {
     gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
     parent->old = plug;
+    parent->new = NULL;
 	/* set plugin id */
 	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
 	/* put it in the list */
@@ -149,6 +150,7 @@ void plugin_add_new(GmpcPluginBase *plug, int plugin)
 {
     gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
     parent->new = plug;
+    parent->old = NULL;
 	/* set plugin id */
 	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
 	/* put it in the list */
@@ -499,6 +501,10 @@ void gmpc_plugin_preferences_construct(gmpcPluginParent *plug,GtkWidget *wid)
 {
     if(gmpc_plugin_has_preferences(plug))
     {
+        if(plug->new) {
+            gmpc_plugin2_preferences_pane_construct(plug->new, wid);
+            return;
+        }
         g_assert(plug->old->pref != NULL);
         g_assert(plug->old->pref->construct);
         plug->old->pref->construct(wid);
@@ -509,6 +515,10 @@ void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
 {
     if(gmpc_plugin_has_preferences(plug))
     {
+        if(plug->new) {
+            gmpc_plugin2_preferences_pane_destroy(plug->new, wid);
+            return;
+        }
         g_assert(plug->old->pref != NULL);
         g_assert(plug->old->pref->destroy);
         plug->old->pref->destroy(wid);
@@ -527,7 +537,8 @@ gboolean gmpc_plugin_is_internal(gmpcPluginParent *plug)
 const int * gmpc_plugin_get_version(gmpcPluginParent *plug)
 {
     if(plug->new) {
-        return NULL; 
+        gint length;
+        return (int *)gmpc_plugin_base_get_version(plug->new, &length);
     }
     return (int *)plug->old->version;
 }
@@ -542,6 +553,9 @@ int gmpc_plugin_get_type(gmpcPluginParent *plug)
 
 int gmpc_plugin_get_id(gmpcPluginParent *plug)
 {
+    if(plug->new) {
+        return plug->new->id;
+    }
     return plug->old->id;
 }
 

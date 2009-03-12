@@ -92,4 +92,18 @@ namespace Gmpc {
         public bool is_hidden();
 
     }
+
+
+
+    [CCode (cname = "config", cheader_filename="plugin.h")]
+    static Settings config; 
+    [CCode (cheader_filename="config1.h")]
+        [Compact]
+        [Immutable]
+    public class Settings {
+        [CCode (cname="cfg_get_single_value_as_int_with_default", cheader_filename="config1.h")]
+        public int get_int_with_default(string class, string key, int value); 
+        [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
+        public int set_int(string class, string key, int value); 
+    }
 }

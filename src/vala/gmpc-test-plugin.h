@@ -6,6 +6,7 @@
 #include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
 #include "gmpc-plugin2.h"
 
 G_BEGIN_DECLS
@@ -36,6 +37,7 @@ GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
 GmpcTestPlugin* gmpc_test_plugin_new (void);
 GType gmpc_test_plugin_get_type (void);
 
+static const gint GMPC_TEST_PLUGIN_version[] = {0, 0, 2};
 
 G_END_DECLS
 

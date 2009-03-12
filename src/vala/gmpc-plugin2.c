@@ -25,6 +25,7 @@
 enum  {
 	GMPC_PLUGIN_BASE_DUMMY_PROPERTY
 };
+static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1);
 static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self);
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self);
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self);
@@ -34,6 +35,19 @@ static void gmpc_plugin_base_finalize (GObject* obj);
 
 
 
+static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1) {
+	g_return_val_if_fail (self != NULL, NULL);
+	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_get_version'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
+	return NULL;
+}
+
+
+/* The version */
+gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
+	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_version (self, result_length1);
+}
+
+
 static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self) {
 	g_return_val_if_fail (self != NULL, NULL);
 	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_get_name'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
@@ -41,6 +55,7 @@ static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self) {
 }
 
 
+/* = {0,0,1};*/
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_name (self);
 }
@@ -53,7 +68,6 @@ static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self) {
 }
 
 
-/*    public abstract weak int[3] get_version ();*/
 void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
 	GMPC_PLUGIN_BASE_GET_CLASS (self)->save_yourself (self);
 }
@@ -86,6 +100,7 @@ void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state) {
 static void gmpc_plugin_base_class_init (GmpcPluginBaseClass * klass) {
 	gmpc_plugin_base_parent_class = g_type_class_peek_parent (klass);
 	G_OBJECT_CLASS (klass)->finalize = gmpc_plugin_base_finalize;
+	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_plugin_base_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_plugin_base_real_get_name;
 	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_plugin_base_real_save_yourself;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_enabled = gmpc_plugin_base_real_get_enabled;
@@ -187,13 +202,13 @@ GType gmpc_plugin2_browser_get_type (void) {
 }
 
 
-GtkWidget* gmpc_plugin2_preferences_pref_construct (GmpcPlugin2Preferences* self) {
-	return GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pref_construct (self);
+void gmpc_plugin2_preferences_pane_construct (GmpcPlugin2Preferences* self, GtkContainer* container) {
+	GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pane_construct (self, container);
 }
 
 
-GtkWidget* gmpc_plugin2_preferences_pref_destroy (GmpcPlugin2Preferences* self) {
-	return GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pref_destroy (self);
+void gmpc_plugin2_preferences_pane_destroy (GmpcPlugin2Preferences* self, GtkContainer* container) {
+	GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pane_destroy (self, container);
 }
 
 

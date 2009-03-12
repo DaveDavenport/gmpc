@@ -72,12 +72,14 @@ static void pref_plugin_changed(void)
             if(!gmpc_plugin_is_internal(plugins[id]))
             {
                 const int *version = gmpc_plugin_get_version(plugins[id]);
-                if(version) {
+                if(version != NULL) {
                     buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
                             N_(gmpc_plugin_get_name(plugins[id])),
                             version[0],version[1], version[2]);
-                }
-                buf  = g_strdup(_("n/a"));
+                }else 
+                buf  = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
+                        gmpc_plugin_get_name(plugins[id]));
+
             }
             else
             {

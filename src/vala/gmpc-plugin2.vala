@@ -23,10 +23,14 @@ using Gtk;
 
 namespace Gmpc {
     public abstract class PluginBase :GLib.Object { 
+        /* set by gmpc. */
         public int id;
+        /* Default to dummy */
         public int plugin_type = 1;
+        /* The version */
+        public abstract weak int[3] get_version();// = {0,0,1};
+
         public abstract weak string get_name ();
-    //    public abstract weak int[3] get_version ();
         
         public abstract void save_yourself ();
 
@@ -35,29 +39,29 @@ namespace Gmpc {
     
     }
     namespace Plugin2 {
-    public interface MetaData : PluginBase {
-       public abstract int get_data ();
-       /* Set get priority */
-       public abstract int get_priority ();
-       public abstract void set_priority (int priority);
-    }
-    public interface Browser : PluginBase {
-        /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
-        public abstract  void add (Gtk.Widget *category_tree);
-        /* This gets called, the plugin should add it view in container */
-        public abstract void  selected (Widget *container);
-        /* Plugin should remove itself from container */
-        public abstract void  unselected (Widget *container);
+        public interface MetaData : PluginBase {
+            public abstract int get_data ();
+            /* Set get priority */
+            public abstract int get_priority ();
+            public abstract void set_priority (int priority);
+        }
+        public interface Browser : PluginBase {
+            /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
+            public abstract  void browser_add (Gtk.Widget *category_tree);
+            /* This gets called, the plugin should add it view in container */
+            public abstract void  browser_selected (Widget *container);
+            /* Plugin should remove itself from container */
+            public abstract void  browser_unselected (Widget *container);
 
-    }
-    public interface Preferences : PluginBase {
-        public abstract Gtk.Widget pref_construct ();
-        public abstract Gtk.Widget pref_destroy ();
+        }
+        public interface Preferences : PluginBase {
+            public abstract void pane_construct (Gtk.Container container);
+            public abstract void pane_destroy (Gtk.Container container);
 
-    }
-    public interface SongList : PluginBase {
-        public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
+        }
+        public interface SongList : PluginBase {
+            public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
 
-    }
+        }
     }
 }

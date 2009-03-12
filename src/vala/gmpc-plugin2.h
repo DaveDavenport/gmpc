@@ -81,6 +81,7 @@ struct _GmpcPluginBase {
 
 struct _GmpcPluginBaseClass {
 	GObjectClass parent_class;
+	gint* (*get_version) (GmpcPluginBase* self, int* result_length1);
 	const char* (*get_name) (GmpcPluginBase* self);
 	void (*save_yourself) (GmpcPluginBase* self);
 	gboolean (*get_enabled) (GmpcPluginBase* self);
@@ -103,8 +104,8 @@ struct _GmpcPlugin2BrowserIface {
 
 struct _GmpcPlugin2PreferencesIface {
 	GTypeInterface parent_iface;
-	GtkWidget* (*pref_construct) (GmpcPlugin2Preferences* self);
-	GtkWidget* (*pref_destroy) (GmpcPlugin2Preferences* self);
+	void (*pane_construct) (GmpcPlugin2Preferences* self, GtkContainer* container);
+	void (*pane_destroy) (GmpcPlugin2Preferences* self, GtkContainer* container);
 };
 
 struct _GmpcPlugin2SongListIface {
@@ -113,6 +114,7 @@ struct _GmpcPlugin2SongListIface {
 };
 
 
+gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self);
 void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
 gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
@@ -126,8 +128,8 @@ void gmpc_plugin2_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tre
 void gmpc_plugin2_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container);
 void gmpc_plugin2_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container);
 GType gmpc_plugin2_browser_get_type (void);
-GtkWidget* gmpc_plugin2_preferences_pref_construct (GmpcPlugin2Preferences* self);
-GtkWidget* gmpc_plugin2_preferences_pref_destroy (GmpcPlugin2Preferences* self);
+void gmpc_plugin2_preferences_pane_construct (GmpcPlugin2Preferences* self, GtkContainer* container);
+void gmpc_plugin2_preferences_pane_destroy (GmpcPlugin2Preferences* self, GtkContainer* container);
 GType gmpc_plugin2_preferences_get_type (void);
 gint gmpc_plugin2_song_list_song_list (GmpcPlugin2SongList* self, GtkWidget* tree, GtkMenu* menu);
 GType gmpc_plugin2_song_list_get_type (void);
