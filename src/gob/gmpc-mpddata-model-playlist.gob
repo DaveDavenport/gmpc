@@ -411,7 +411,8 @@ override (G:Object)
         /**
          * Call the parent function again
          */
-        gmpc_mpddata_model_get_value(model, iter, column, value);
+        if(n < GMPC_MPDDATA_MODEL(self)->num_rows)
+            gmpc_mpddata_model_get_value(model, iter, column, value);
     }
     /**
      * Moving interface 
