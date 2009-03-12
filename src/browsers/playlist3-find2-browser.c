@@ -68,7 +68,7 @@ static GtkWidget            *search_combo           = NULL;
 static GtkWidget            *search_entry           = NULL;
 
 #define QUERY_ENTRY MPD_TAG_NUM_OF_ITEM_TYPES
-static void pl3_find2_fill_combo(gmpcPlugin *plug)
+static void pl3_find2_fill_combo(gmpcPluginParent *plug)
 {
 	GtkTreeIter iter;
 	int i=0, max = MPD_TAG_NUM_OF_ITEM_TYPES;
@@ -140,7 +140,7 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_combo_box_get_model(box);
-	gmpcPlugin *plug = NULL;
+	gmpcPluginParent *plug = NULL;
     gchar *cfield =NULL;
     gchar *type = NULL;
     gint selected_type;
@@ -402,7 +402,7 @@ static void pl3_find2_browser_search(void)
     if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_find2_curpl), &iter)){
         int type;
         int num_field;
-        gmpcPlugin *plug = NULL;
+        gmpcPluginParent *plug = NULL;
         gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_curpl_model), &iter, 1, &type, 2, &plug,-1);
 
         if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter))

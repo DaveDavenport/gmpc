@@ -30,7 +30,7 @@ long unsigned num_queries = 0;
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
 GMutex *meta_plugins_lock = NULL;
-gmpcPlugin **meta_plugins = NULL;
+gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
 GThread *meta_thread = NULL;
 
@@ -598,7 +598,7 @@ static void meta_data_retrieve_thread(void)
 			 */
 			for(i=0;i<(meta_num_plugins) && data->result != META_DATA_AVAILABLE;i++)
 			{
-                gmpcPlugin *plug =  NULL;
+                gmpcPluginParent *plug =  NULL;
                 /* This is locked when sorting, because entry might be invalid 
                  * plug is always valid once obtained
                  */
@@ -613,7 +613,7 @@ static void meta_data_retrieve_thread(void)
 				 */
 				if(gmpc_plugin_get_enabled(plug))
 				{
-                    debug_printf(DEBUG_INFO, "Query plugin: '%s'", plug->name);
+                    debug_printf(DEBUG_INFO, "Query plugin: '%s'", gmpc_plugin_get_name(plug));
 					data->result = gmpc_plugin_metadata_get_image(plug,data->edited, data->type&META_QUERY_DATA_TYPES, &path);
 					data->result_path = path;
 				}
@@ -716,14 +716,14 @@ void meta_data_init(void)
 
 }
 
-void meta_data_add_plugin(gmpcPlugin *plug)
+void meta_data_add_plugin(gmpcPluginParent *plug)
 {
     if(!meta_plugins_lock){
         meta_plugins_lock = g_mutex_new();
     }
     g_mutex_lock(meta_plugins_lock);
     meta_num_plugins++;
-    meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPlugin **));
+    meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPluginParent **));
     meta_plugins[meta_num_plugins-1] = plug;
     meta_plugins[meta_num_plugins] = NULL;
     g_mutex_unlock(meta_plugins_lock);
@@ -744,7 +744,7 @@ static void meta_data_sort_plugins(void)
         {
             if(gmpc_plugin_metadata_get_priority(meta_plugins[i]) > gmpc_plugin_metadata_get_priority(meta_plugins[i+1]))
             {
-                gmpcPlugin *temp = meta_plugins[i];
+                gmpcPluginParent *temp = meta_plugins[i];
                 changed=1;
                 meta_plugins[i] = meta_plugins[i+1];
                 meta_plugins[i+1] = temp;
@@ -1066,7 +1066,7 @@ static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path
     GtkTreeIter iter;
     if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
     {
-        gmpcPlugin *plug;
+        gmpcPluginParent *plug;
         gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
         if(plug)
         {

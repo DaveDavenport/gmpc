@@ -249,7 +249,7 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
 	{
 		int toggled;
-		gmpcPlugin *plug = NULL;
+		gmpcPluginParent *plug = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &toggled, 3, &plug, -1);
 		{
             gmpc_plugin_set_enabled(plug,!toggled);

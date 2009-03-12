@@ -53,7 +53,7 @@ extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
 
 /* the plugin list */
-extern gmpcPlugin **plugins;
+extern gmpcPluginParent **plugins;
 /* num of plugins */
 extern int num_plugins;
 
@@ -75,7 +75,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
  * Metadata 
  */
 
-void meta_data_add_plugin(gmpcPlugin *plug);
+void meta_data_add_plugin(gmpcPluginParent *plug);
 /**
  * TODO move this 
  */

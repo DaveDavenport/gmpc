@@ -34,6 +34,8 @@ extern MpdObj *connection;
 extern config_obj *config;
 extern GmpcProfiles *gmpc_profiles;
 
+
+typedef struct _gmpcPluginParent gmpcPluginParent;
 /* Plugin Type's */
 /* This is a bitmask.*/
 typedef enum {
@@ -199,7 +201,7 @@ GtkWidget * playlist3_get_window(void);
 gboolean    playlist3_window_is_hidden(void);
 
 /** plugin functions */
-gmpcPlugin * 	plugin_get_from_id(int id);
+gmpcPluginParent * 	plugin_get_from_id(int id);
 
 
 /**
@@ -218,42 +220,43 @@ void            pl3_update_go_menu(void);
  * Plugin functions
  */
 
-int             gmpc_plugin_get_id                          (gmpcPlugin *plug);
-void            gmpc_plugin_init                            (gmpcPlugin *plug);
-void            gmpc_plugin_destroy                         (gmpcPlugin *plug);
-void            gmpc_plugin_save_yourself                   (gmpcPlugin *plug);
+int             gmpc_plugin_get_id                          (gmpcPluginParent *plug);
+void            gmpc_plugin_init                            (gmpcPluginParent *plug);
+void            gmpc_plugin_destroy                         (gmpcPluginParent *plug);
+void            gmpc_plugin_save_yourself                   (gmpcPluginParent *plug);
 
-gboolean        gmpc_plugin_get_enabled                     (gmpcPlugin *plug);           
-void            gmpc_plugin_set_enabled                     (gmpcPlugin *plug, gboolean enabled);
+gboolean        gmpc_plugin_get_enabled                     (gmpcPluginParent *plug);           
+void            gmpc_plugin_set_enabled                     (gmpcPluginParent *plug, gboolean enabled);
 
-const char *    gmpc_plugin_get_name                        (gmpcPlugin *plug);
-void            gmpc_plugin_status_changed                  (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
+const char *    gmpc_plugin_get_name                        (gmpcPluginParent *plug);
+void            gmpc_plugin_status_changed                  (gmpcPluginParent *plug, MpdObj *mi, ChangedStatusType what);
+/* Used by plugins themself */
 gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
-void            gmpc_plugin_mpd_connection_changed          (gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data);
+void            gmpc_plugin_mpd_connection_changed          (gmpcPluginParent *plug, MpdObj *mi, int connected, gpointer data);
 
-gboolean        gmpc_plugin_is_browser                      (gmpcPlugin *plug);
-void            gmpc_plugin_browser_unselected              (gmpcPlugin *plug, GtkWidget *container);
-void            gmpc_plugin_browser_selected                (gmpcPlugin *plug, GtkWidget *container);
-void            gmpc_plugin_browser_add                     (gmpcPlugin *plug, GtkWidget *cat_tree);
-int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPlugin *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
-int             gmpc_plugin_browser_key_press_event         (gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type);
-int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, GtkWidget *menu);
-int             gmpc_plugin_browser_song_list_option_menu   (gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
-gboolean        gmpc_plugin_browser_has_integrate_search    (gmpcPlugin *plug);
-MpdData *       gmpc_plugin_browser_integrate_search        (gmpcPlugin *plug, const int search_field, const gchar * query, GError **error);
-gboolean        gmpc_plugin_browser_integrate_search_field_supported        (gmpcPlugin *plug, const int search_field);
+gboolean        gmpc_plugin_is_browser                      (gmpcPluginParent *plug);
+void            gmpc_plugin_browser_unselected              (gmpcPluginParent *plug, GtkWidget *container);
+void            gmpc_plugin_browser_selected                (gmpcPluginParent *plug, GtkWidget *container);
+void            gmpc_plugin_browser_add                     (gmpcPluginParent *plug, GtkWidget *cat_tree);
+int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPluginParent *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
+int             gmpc_plugin_browser_key_press_event         (gmpcPluginParent *plug, GtkWidget *mw, GdkEventKey *event, int type);
+int             gmpc_plugin_browser_add_go_menu             (gmpcPluginParent *plug, GtkWidget *menu);
+int             gmpc_plugin_browser_song_list_option_menu   (gmpcPluginParent *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
+gboolean        gmpc_plugin_browser_has_integrate_search    (gmpcPluginParent *plug);
+MpdData *       gmpc_plugin_browser_integrate_search        (gmpcPluginParent *plug, const int search_field, const gchar * query, GError **error);
+gboolean        gmpc_plugin_browser_integrate_search_field_supported        (gmpcPluginParent *plug, const int search_field);
 
-gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
-void            gmpc_plugin_preferences_construct           (gmpcPlugin *plug,GtkWidget *wid);
-void            gmpc_plugin_preferences_destroy             (gmpcPlugin *plug,GtkWidget *wid);
+gboolean        gmpc_plugin_has_preferences                 (gmpcPluginParent *plug);
+void            gmpc_plugin_preferences_construct           (gmpcPluginParent *plug,GtkWidget *wid);
+void            gmpc_plugin_preferences_destroy             (gmpcPluginParent *plug,GtkWidget *wid);
 
-int             gmpc_plugin_get_type(gmpcPlugin *plug);
-const int *     gmpc_plugin_get_version                     (gmpcPlugin *plug);
-gboolean        gmpc_plugin_is_internal                     (gmpcPlugin *plug);
+int             gmpc_plugin_get_type(gmpcPluginParent *plug);
+const int *     gmpc_plugin_get_version                     (gmpcPluginParent *plug);
+gboolean        gmpc_plugin_is_internal                     (gmpcPluginParent *plug);
 
 /* metadata */
-gboolean        gmpc_plugin_is_metadata                     (gmpcPlugin *plug);
-int             gmpc_plugin_metadata_get_priority           (gmpcPlugin *plug);
-void            gmpc_plugin_metadata_set_priority           (gmpcPlugin *plug, int priority);
-int             gmpc_plugin_metadata_get_image              (gmpcPlugin *plug, mpd_Song *song, MetaDataType type, char **path);
+gboolean        gmpc_plugin_is_metadata                     (gmpcPluginParent *plug);
+int             gmpc_plugin_metadata_get_priority           (gmpcPluginParent *plug);
+void            gmpc_plugin_metadata_set_priority           (gmpcPluginParent *plug, int priority);
+int             gmpc_plugin_metadata_get_image              (gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, char **path);
 #endif

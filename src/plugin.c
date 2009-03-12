@@ -25,10 +25,14 @@
 #include "metadata.h"
 
 
-gmpcPlugin **plugins = NULL;
+gmpcPluginParent **plugins = NULL;
 int num_plugins = 0;
 
-gmpcPlugin * plugin_get_from_id(int id)
+typedef struct _gmpcPluginParent {
+    gmpcPlugin *old;
+}_gmpcPluginParent;
+
+gmpcPluginParent * plugin_get_from_id(int id)
 {
     int pos = plugin_get_pos(id);
     g_assert_cmpint(pos, <, num_plugins);
@@ -124,17 +128,19 @@ static int plugin_validate(gmpcPlugin *plug)
 
 void plugin_add(gmpcPlugin *plug, int plugin)
 {
+    gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
+    parent->old = plug;
 	/* set plugin id */
 	plug->id = num_plugins|((plugin)?PLUGIN_ID_MARK:PLUGIN_ID_INTERNALL);
 	/* put it in the list */
 	num_plugins++;
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
-	plugins[num_plugins-1] = plug;
+	plugins[num_plugins-1] = parent;
 	plugins[num_plugins] = NULL;
 	
 	if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
 	{
-		meta_data_add_plugin(plug);
+		meta_data_add_plugin(parent);
 	}
 }
 static int plugin_load(char *path, const char *file)
@@ -182,8 +188,7 @@ static int plugin_load(char *path, const char *file)
 		g_module_close(handle);
 		return 1;
 	}
-
-	if(!g_module_symbol(handle, "plugin", (gpointer)&plug)){
+	if(!g_module_symbol(handle, "plugin", (gpointer)&(plug))){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
 //		show_error_message(message,FALSE);
@@ -254,52 +259,52 @@ void plugin_load_dir(gchar *path)
  * gmpcPlugin
  */
 
-void gmpc_plugin_destroy(gmpcPlugin *plug)
+void gmpc_plugin_destroy(gmpcPluginParent *plug)
 {
-    if(plug->destroy)
+    if(plug->old->destroy)
     {
-        plug->destroy();
+        plug->old->destroy();
     }
 }
-void gmpc_plugin_init(gmpcPlugin *plug)
+void gmpc_plugin_init(gmpcPluginParent *plug)
 {
-    if(plug->init)
+    if(plug->old->init)
     {
-        plug->init();
+        plug->old->init();
     }
 }
-void gmpc_plugin_status_changed(gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what)
+void gmpc_plugin_status_changed(gmpcPluginParent *plug, MpdObj *mi, ChangedStatusType what)
 {
-    if(plug->mpd_status_changed)
+    if(plug->old->mpd_status_changed)
     {
-        plug->mpd_status_changed(mi,what,NULL);
+        plug->old->mpd_status_changed(mi,what,NULL);
     }
 }
-const char *gmpc_plugin_get_name(gmpcPlugin *plug)
+const char *gmpc_plugin_get_name(gmpcPluginParent *plug)
 {
-    g_assert(plug->name != NULL);
-    return plug->name;
+    g_assert(plug->old->name != NULL);
+    return plug->old->name;
 }
-void gmpc_plugin_save_yourself(gmpcPlugin *plug)
+void gmpc_plugin_save_yourself(gmpcPluginParent *plug)
 {
-    if(plug->save_yourself)
+    if(plug->old->save_yourself)
     {
-        plug->save_yourself();
+        plug->old->save_yourself();
     }
 }
-gboolean gmpc_plugin_get_enabled(gmpcPlugin *plug)
+gboolean gmpc_plugin_get_enabled(gmpcPluginParent *plug)
 {
-    if(plug->get_enabled)
+    if(plug->old->get_enabled)
     {
-        return plug->get_enabled();
+        return plug->old->get_enabled();
     }
     return TRUE;
 }
-void gmpc_plugin_set_enabled(gmpcPlugin *plug, gboolean enabled)
+void gmpc_plugin_set_enabled(gmpcPluginParent *plug, gboolean enabled)
 {
-    if(plug->set_enabled)
+    if(plug->old->set_enabled)
     {
-        plug->set_enabled(enabled);
+        plug->old->set_enabled(enabled);
     }
 }
 
@@ -325,191 +330,191 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 #endif
 }
 
-void gmpc_plugin_mpd_connection_changed(gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data)
+void gmpc_plugin_mpd_connection_changed(gmpcPluginParent *plug, MpdObj *mi, int connected, gpointer data)
 {
     g_assert(plug != NULL);
-    if(plug->mpd_connection_changed != NULL)
+    if(plug->old->mpd_connection_changed != NULL)
     {
-        plug->mpd_connection_changed(mi,connected,data);
+        plug->old->mpd_connection_changed(mi,connected,data);
     }
 }
 
-gboolean gmpc_plugin_is_browser(gmpcPlugin *plug)
+gboolean gmpc_plugin_is_browser(gmpcPluginParent *plug)
 {
-    return ((plug->plugin_type&GMPC_PLUGIN_PL_BROWSER) != 0);
+    return ((plug->old->plugin_type&GMPC_PLUGIN_PL_BROWSER) != 0);
 }
-void gmpc_plugin_browser_unselected(gmpcPlugin *plug, GtkWidget *container)
+void gmpc_plugin_browser_unselected(gmpcPluginParent *plug, GtkWidget *container)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        g_assert(plug->browser->unselected != NULL);
-        plug->browser->unselected(container);
+        g_assert(plug->old->browser != NULL);
+        g_assert(plug->old->browser->unselected != NULL);
+        plug->old->browser->unselected(container);
     }
 }
-void gmpc_plugin_browser_selected(gmpcPlugin *plug, GtkWidget *container)
+void gmpc_plugin_browser_selected(gmpcPluginParent *plug, GtkWidget *container)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        g_assert(plug->browser->selected != NULL);
-        plug->browser->selected(container);
+        g_assert(plug->old->browser != NULL);
+        g_assert(plug->old->browser->selected != NULL);
+        plug->old->browser->selected(container);
     }
 }
 
-void gmpc_plugin_browser_add(gmpcPlugin *plug, GtkWidget *cat_tree)
+void gmpc_plugin_browser_add(gmpcPluginParent *plug, GtkWidget *cat_tree)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        if(plug->browser->add)
+        g_assert(plug->old->browser != NULL);
+        if(plug->old->browser->add)
         {
-            plug->browser->add(cat_tree);
+            plug->old->browser->add(cat_tree);
         }
     }
 }
 
-int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPlugin *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
+int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPluginParent *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        if(plug->browser->cat_right_mouse_menu != NULL)
+        g_assert(plug->old->browser != NULL);
+        if(plug->old->browser->cat_right_mouse_menu != NULL)
         {
-            return plug->browser->cat_right_mouse_menu(menu,type,tree,event);
-        }
-    }
-    return 0;
-}
-
-int gmpc_plugin_browser_key_press_event(gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type)
-{
-    if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        if(plug->browser->key_press_event != NULL)
-        {
-            return plug->browser->key_press_event(mw,event,type);
+            return plug->old->browser->cat_right_mouse_menu(menu,type,tree,event);
         }
     }
     return 0;
 }
 
-int gmpc_plugin_browser_add_go_menu(gmpcPlugin *plug, GtkWidget *menu)
+int gmpc_plugin_browser_key_press_event(gmpcPluginParent *plug, GtkWidget *mw, GdkEventKey *event, int type)
 {
     if(gmpc_plugin_is_browser(plug)) {
-        g_assert(plug->browser != NULL);
-        if(plug->browser->add_go_menu != NULL)
+        g_assert(plug->old->browser != NULL);
+        if(plug->old->browser->key_press_event != NULL)
         {
-            return plug->browser->add_go_menu(menu);
+            return plug->old->browser->key_press_event(mw,event,type);
         }
     }
     return 0;
 }
 
-int gmpc_plugin_browser_song_list_option_menu(gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu) 
+int gmpc_plugin_browser_add_go_menu(gmpcPluginParent *plug, GtkWidget *menu)
+{
+    if(gmpc_plugin_is_browser(plug)) {
+        g_assert(plug->old->browser != NULL);
+        if(plug->old->browser->add_go_menu != NULL)
+        {
+            return plug->old->browser->add_go_menu(menu);
+        }
+    }
+    return 0;
+}
+
+int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu) 
 {
     if(gmpc_plugin_is_browser(plug))
     {
-        g_assert(plug->browser != NULL);
-        if(plug->browser->song_list_option_menu)
+        g_assert(plug->old->browser != NULL);
+        if(plug->old->browser->song_list_option_menu)
         {
-            return plug->browser->song_list_option_menu(tree, menu);
+            return plug->old->browser->song_list_option_menu(tree, menu);
         }
     }
     return 0;
 }
 
-gboolean gmpc_plugin_browser_has_integrate_search(gmpcPlugin *plug)
+gboolean gmpc_plugin_browser_has_integrate_search(gmpcPluginParent *plug)
 {
     if(gmpc_plugin_is_browser(plug))
     {
-        return plug->browser->integrate_search != NULL;
+        return plug->old->browser->integrate_search != NULL;
     }
     return FALSE;
 }
-MpdData *gmpc_plugin_browser_integrate_search(gmpcPlugin *plug, const int search_field, const gchar * query, GError **error)
+MpdData *gmpc_plugin_browser_integrate_search(gmpcPluginParent *plug, const int search_field, const gchar * query, GError **error)
 {
     if(!gmpc_plugin_browser_has_integrate_search(plug)) return NULL;
-    return plug->browser->integrate_search(search_field,query,error); 
+    return plug->old->browser->integrate_search(search_field,query,error); 
 }
 
-gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPlugin *plug, const int search_field)
+gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPluginParent *plug, const int search_field)
 {
     if(!gmpc_plugin_browser_has_integrate_search(plug)) return FALSE;
-	if(plug->browser->integrate_search_field_supported == NULL) return TRUE;
-    return plug->browser->integrate_search_field_supported(search_field); 
+	if(plug->old->browser->integrate_search_field_supported == NULL) return TRUE;
+    return plug->old->browser->integrate_search_field_supported(search_field); 
 }
 
-gboolean gmpc_plugin_has_preferences(gmpcPlugin *plug)
+gboolean gmpc_plugin_has_preferences(gmpcPluginParent *plug)
 {
-    return (plug->pref != NULL);
+    return (plug->old->pref != NULL);
 }
 
-void gmpc_plugin_preferences_construct(gmpcPlugin *plug,GtkWidget *wid)
-{
-    if(gmpc_plugin_has_preferences(plug))
-    {
-        g_assert(plug->pref != NULL);
-        g_assert(plug->pref->construct);
-        plug->pref->construct(wid);
-    }
-}
-
-void gmpc_plugin_preferences_destroy(gmpcPlugin *plug,GtkWidget *wid)
+void gmpc_plugin_preferences_construct(gmpcPluginParent *plug,GtkWidget *wid)
 {
     if(gmpc_plugin_has_preferences(plug))
     {
-        g_assert(plug->pref != NULL);
-        g_assert(plug->pref->destroy);
-        plug->pref->destroy(wid);
+        g_assert(plug->old->pref != NULL);
+        g_assert(plug->old->pref->construct);
+        plug->old->pref->construct(wid);
+    }
+}
+
+void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
+{
+    if(gmpc_plugin_has_preferences(plug))
+    {
+        g_assert(plug->old->pref != NULL);
+        g_assert(plug->old->pref->destroy);
+        plug->old->pref->destroy(wid);
     }
 }
 
 
-gboolean gmpc_plugin_is_internal(gmpcPlugin *plug)
+gboolean gmpc_plugin_is_internal(gmpcPluginParent *plug)
 {
-    return (((plug->plugin_type)&GMPC_INTERNALL) != 0);
+    return (((plug->old->plugin_type)&GMPC_INTERNALL) != 0);
 }
 
-const int * gmpc_plugin_get_version(gmpcPlugin *plug)
+const int * gmpc_plugin_get_version(gmpcPluginParent *plug)
 {
-    return (int *)plug->version;
+    return (int *)plug->old->version;
 }
 
-int gmpc_plugin_get_type(gmpcPlugin *plug)
+int gmpc_plugin_get_type(gmpcPluginParent *plug)
 {
-    return plug->plugin_type;
+    return plug->old->plugin_type;
 }
 
-int gmpc_plugin_get_id(gmpcPlugin *plug)
+int gmpc_plugin_get_id(gmpcPluginParent *plug)
 {
-    return plug->id;
+    return plug->old->id;
 }
 
-gboolean gmpc_plugin_is_metadata(gmpcPlugin *plug)
+gboolean gmpc_plugin_is_metadata(gmpcPluginParent *plug)
 {
-    return (plug->metadata != NULL);
+    return (plug->old->metadata != NULL);
 }
 
-int gmpc_plugin_metadata_get_priority(gmpcPlugin *plug)
+int gmpc_plugin_metadata_get_priority(gmpcPluginParent *plug)
 {
     if(gmpc_plugin_is_metadata(plug))
     {
-        return plug->metadata->get_priority();
+        return plug->old->metadata->get_priority();
     }
     return 100;
 }
 
-void gmpc_plugin_metadata_set_priority(gmpcPlugin *plug, int priority)
+void gmpc_plugin_metadata_set_priority(gmpcPluginParent *plug, int priority)
 {
     if(gmpc_plugin_is_metadata(plug))
     {
-        return plug->metadata->set_priority(priority);
+        return plug->old->metadata->set_priority(priority);
     }
 }
 
-int gmpc_plugin_metadata_get_image(gmpcPlugin *plug, mpd_Song *song, MetaDataType type, char **path)
+int gmpc_plugin_metadata_get_image(gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, char **path)
 {
     *path = NULL;
     if(gmpc_plugin_is_metadata(plug))
     {
-        return plug->metadata->get_image(song, type, path);
+        return plug->old->metadata->get_image(song, type, path);
     }
     return META_DATA_UNAVAILABLE;
 }
