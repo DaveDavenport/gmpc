@@ -164,15 +164,9 @@ static void bacon_on_message_received(const char *message, gpointer data)
 			main_quit();
 		}
 		/**
-         * Gives play command
+         * Gives play,pause command
          */
-		else if (strcmp(message, "PLAY") == 0) {
-			play_song();
-		}
-		/**
-         * Give pause command
-         */
-		else if (strcmp(message, "PAUSE") == 0) {
+		else if (strcmp(message, "PLAY") == 0 || strcmp(message, "PAUSE") == 0) {
 			play_song();
 		}
 		/**
@@ -444,7 +438,7 @@ int main(int argc, char **argv)
 
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
-	plugin_add_new(gmpc_easy_command, 0);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
 								_("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
@@ -591,8 +585,8 @@ int main(int argc, char **argv)
      * Start IPC system.
      */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple", FALSE) == FALSE) {
-	/**
-         * bacon here we come
+		/**
+		 * bacon here we come
          */
 		bacon_connection = bacon_message_connection_new("gmpc");
 		if (bacon_connection != NULL) {
@@ -736,7 +730,7 @@ int main(int argc, char **argv)
 	plugin_add(&proxyplug, 0);
 
 	TEC("Loading internal plugins");
-	plugin_add_new(gmpc_test_plugin_new(), 0);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0);
 	TEC("Loading new plugins");
 	/**
      *  load dynamic plugins
@@ -926,8 +920,6 @@ int main(int argc, char **argv)
 	/**
 	 * This now gets destroyed with the plugins
 	 */
-//	g_object_unref(gmpc_easy_command);
-
 	advanced_search_destroy();
 	/**
      * Destroy the connection object
