@@ -315,6 +315,14 @@
               </widget>
             </child>
             <child>
+              <widget class="GtkMenuItem" id="menu_tool">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Tools</property>
+                <property name="use_underline">True</property>
+                <property name="sensitive">False</property>
+              </widget>
+            </child>
+            <child>
               <widget class="GtkMenuItem" id="menu_go">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Go</property>
