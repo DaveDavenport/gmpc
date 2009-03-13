@@ -130,6 +130,30 @@ GType gmpc_plugin_base_get_type (void) {
 }
 
 
+gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu) {
+	return GMPC_PLUGIN_TOOL_MENU_IFACE_GET_INTERFACE (self)->tool_menu_integration (self, menu);
+}
+
+
+static void gmpc_plugin_tool_menu_iface_base_init (GmpcPluginToolMenuIfaceIface * iface) {
+	static gboolean initialized = FALSE;
+	if (!initialized) {
+		initialized = TRUE;
+	}
+}
+
+
+GType gmpc_plugin_tool_menu_iface_get_type (void) {
+	static GType gmpc_plugin_tool_menu_iface_type_id = 0;
+	if (gmpc_plugin_tool_menu_iface_type_id == 0) {
+		static const GTypeInfo g_define_type_info = { sizeof (GmpcPluginToolMenuIfaceIface), (GBaseInitFunc) gmpc_plugin_tool_menu_iface_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
+		gmpc_plugin_tool_menu_iface_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPluginToolMenuIface", &g_define_type_info, 0);
+		g_type_interface_add_prerequisite (gmpc_plugin_tool_menu_iface_type_id, GMPC_PLUGIN_TYPE_BASE);
+	}
+	return gmpc_plugin_tool_menu_iface_type_id;
+}
+
+
 gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self) {
 	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_data (self);
 }

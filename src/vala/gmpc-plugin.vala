@@ -39,6 +39,9 @@ namespace Gmpc {
             public abstract void set_enabled (bool state);
 
         }
+        public interface ToolMenuIface : Base {
+            public abstract int tool_menu_integration(Gtk.Menu menu);
+        }
         public interface MetaDataIface : Base {
             public abstract int get_data ();
             /* Set get priority */

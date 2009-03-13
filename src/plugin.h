@@ -172,7 +172,7 @@ typedef struct {
 	void							(*save_yourself)(void);
 
     /* Padding */
-    void (*padding1)                (void);
+    gint    (*tool_menu_integration)    (GtkMenu *menu); 
     void (*padding2)                (void);
     void (*padding3)                (void);
 } gmpcPlugin;
@@ -212,6 +212,9 @@ char  *         gmpc_get_full_glade_path(const char *filename);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
+
+
+void pl3_option_menu_activate(void);
 /* Tell mpd to reload the go menu */
 void            pl3_update_go_menu(void);
 
@@ -230,6 +233,8 @@ void            gmpc_plugin_set_enabled                     (gmpcPluginParent *p
 
 const char *    gmpc_plugin_get_name                        (gmpcPluginParent *plug);
 void            gmpc_plugin_status_changed                  (gmpcPluginParent *plug, MpdObj *mi, ChangedStatusType what);
+
+gint            gmpc_plugin_tool_menu_integration           (gmpcPluginParent  *plug, GtkMenu *menu);
 /* Used by plugins themself */
 gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
 void            gmpc_plugin_mpd_connection_changed          (gmpcPluginParent *plug, MpdObj *mi, int connected, gpointer data);

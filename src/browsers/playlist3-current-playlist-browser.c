@@ -59,6 +59,7 @@ static void pl3_current_playlist_browser_activate(void);
 static void pl3_current_playlist_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
 static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu);
 
+static int pl3_current_playlist_tool_menu_integration(GtkWidget *menu);
 /* just for here */
 static void pl3_current_playlist_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *col);
 static int  pl3_current_playlist_browser_button_release_event(GtkTreeView *tree, GdkEventButton *event);
@@ -165,7 +166,8 @@ gmpcPlugin current_playlist_plug = {
 	.mpd_status_changed = 				pl3_current_playlist_status_changed,
 	.mpd_connection_changed = 			pl3_current_playlist_connection_changed,
 	.destroy = 							pl3_current_playlist_destroy,
-	.save_yourself = 					pl3_current_playlist_save_myself
+	.save_yourself = 					pl3_current_playlist_save_myself,
+    .tool_menu_integration =            pl3_current_playlist_tool_menu_integration
 };
 
 /* internal */
@@ -894,6 +896,11 @@ static int pl3_current_playlist_browser_cat_menu_popup(GtkWidget *menu, int type
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clear_playlist), NULL);
 
+    return 1;
+}
+static int pl3_current_playlist_tool_menu_integration(GtkWidget *menu)
+{
+    GtkWidget *item;
     item = gtk_image_menu_item_new_with_label(_("Add URL"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 		    gtk_image_new_from_icon_name("add-url", GTK_ICON_SIZE_MENU));

@@ -40,6 +40,14 @@ typedef struct _GmpcPluginBase GmpcPluginBase;
 typedef struct _GmpcPluginBaseClass GmpcPluginBaseClass;
 typedef struct _GmpcPluginBasePrivate GmpcPluginBasePrivate;
 
+#define GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE (gmpc_plugin_tool_menu_iface_get_type ())
+#define GMPC_PLUGIN_TOOL_MENU_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, GmpcPluginToolMenuIface))
+#define GMPC_PLUGIN_IS_TOOL_MENU_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE))
+#define GMPC_PLUGIN_TOOL_MENU_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, GmpcPluginToolMenuIfaceIface))
+
+typedef struct _GmpcPluginToolMenuIface GmpcPluginToolMenuIface;
+typedef struct _GmpcPluginToolMenuIfaceIface GmpcPluginToolMenuIfaceIface;
+
 #define GMPC_PLUGIN_TYPE_META_DATA_IFACE (gmpc_plugin_meta_data_iface_get_type ())
 #define GMPC_PLUGIN_META_DATA_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE, GmpcPluginMetaDataIface))
 #define GMPC_PLUGIN_IS_META_DATA_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE))
@@ -88,6 +96,11 @@ struct _GmpcPluginBaseClass {
 	void (*set_enabled) (GmpcPluginBase* self, gboolean state);
 };
 
+struct _GmpcPluginToolMenuIfaceIface {
+	GTypeInterface parent_iface;
+	gint (*tool_menu_integration) (GmpcPluginToolMenuIface* self, GtkMenu* menu);
+};
+
 struct _GmpcPluginMetaDataIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*get_data) (GmpcPluginMetaDataIface* self);
@@ -120,6 +133,8 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
 gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
 void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
 GType gmpc_plugin_base_get_type (void);
+gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
+GType gmpc_plugin_tool_menu_iface_get_type (void);
 gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self);
 gint gmpc_plugin_meta_data_iface_get_priority (GmpcPluginMetaDataIface* self);
 void gmpc_plugin_meta_data_iface_set_priority (GmpcPluginMetaDataIface* self, gint priority);

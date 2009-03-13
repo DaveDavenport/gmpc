@@ -86,7 +86,7 @@ void set_browser_format(void);
 void set_playlist_format(void);
 
 static void playlist_player_volume_changed(GtkWidget * vol_but);
-void pl3_option_menu_activate(void);
+
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -110,6 +110,8 @@ static void pl3_profiles_changed(GmpcProfiles * prof, const int changed, const i
 static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
 static void playlist3_fill_server_menu(void);
 static void playlist3_server_update_db(void);
+
+static void pl3_tool_menu_activate(void);
 
 /* Old category browser style */
 static int old_type = -1;
@@ -820,6 +822,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 	 * Also need updating
 	 */
 	pl3_option_menu_activate();
+	pl3_tool_menu_activate();
 
 	playlist3_fill_server_menu();
 
@@ -2472,4 +2475,34 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 		g_free(image);
 }
 
+/**
+ * Tool menu 
+ */
+
+void pl3_tool_menu_activate(void)
+{
+	int i;
+	int menu_items = 0;
+	GtkWidget *menu = NULL;
+
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_tool")), NULL);
+	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_tool")), FALSE);
+	if (!mpd_check_connected(connection))
+		return;
+
+	menu = gtk_menu_new();
+
+	for (i = 0; i < num_plugins; i++) {
+			menu_items += gmpc_plugin_tool_menu_integration(plugins[i], GTK_MENU(menu));
+	}
+	if (menu_items) {
+		gtk_widget_show_all(menu);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_tool")), menu);
+		gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_tool")), TRUE);
+	} else {
+		g_object_ref_sink(menu);
+		g_object_unref(menu);
+	}
+
+}
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

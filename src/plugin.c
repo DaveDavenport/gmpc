@@ -591,3 +591,17 @@ int gmpc_plugin_metadata_get_image(gmpcPluginParent *plug, mpd_Song *song, MetaD
     return META_DATA_UNAVAILABLE;
 }
 
+
+gint  gmpc_plugin_tool_menu_integration (gmpcPluginParent  *plug, GtkMenu *menu)
+{
+    if(plug->new) {
+        if(GMPC_PLUGIN_IS_TOOL_MENU_IFACE(plug->new)){
+            return gmpc_plugin_tool_menu_iface_tool_menu_integration(GMPC_PLUGIN_TOOL_MENU_IFACE(plug->new), menu);
+        }
+        return 0;
+    }
+    if(plug->old->tool_menu_integration)
+        return plug->old->tool_menu_integration(menu);
+    return 0;
+}
+
