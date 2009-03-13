@@ -1,9 +1,9 @@
 valac -C gmpc_image.vala  --pkg gtk+-2.0 --pkg cairo
 valac -C gmpc-progress.vala  --pkg gtk+-2.0 --pkg cairo
 
-cp gmpc-plugin.vapi gmpc-plugin.vala
-valac -C gmpc-plugin.vala  --pkg gtk+-2.0 --pkg cairo
-rm gmpc-plugin.vala
+
+valac -C gmpc-plugin.vala  --library=gmpc-plugin --pkg gtk+-2.0 --pkg cairo
+
 
 valac -C gmpc_rating.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd`
 
