@@ -349,7 +349,6 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
 			PL3_CAT_TYPE, file_browser_plug.id,
 			PL3_CAT_TITLE, _("File Browser"),
-			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
 			-1);
 	/* add fantom child for lazy tree */

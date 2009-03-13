@@ -421,7 +421,6 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
 			PL3_CAT_TYPE, current_playlist_plug.id,/*PL3_CURRENT_PLAYLIST,*/
 			PL3_CAT_TITLE, _("Play Queue"),
-			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "playlist-browser",
 			-1);
 	if(pl3_curb_tree_ref)

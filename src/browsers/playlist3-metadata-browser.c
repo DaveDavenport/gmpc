@@ -2617,7 +2617,6 @@ static void info2_add(GtkWidget *cat_tree)
 	gtk_list_store_set(store, &iter, 
 			PL3_CAT_TYPE, metab_plugin.id,
 			PL3_CAT_TITLE, _("Metadata Browser"),
-			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-info",
 			-1);
 	if (info2_ref) {
