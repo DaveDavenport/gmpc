@@ -385,7 +385,7 @@
                             <child internal-child="image">
                                 <widget class="GtkImage" id="menu-item-image25">
                                     <property name="visible">True</property>
-                                    <property name="stock">gtk-home</property>
+                                    <property name="stock">gtk-info</property>
                                 </widget>
                             </child>
                         </widget>
