@@ -2482,6 +2482,7 @@ void pl3_tool_menu_update(void)
 	int i;
 	int menu_items = 0;
 	GtkWidget *menu = NULL;
+	GtkAccelGroup *group = gtk_accel_group_new();
 
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_tool")), NULL);
 	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_tool")), FALSE);
@@ -2489,7 +2490,8 @@ void pl3_tool_menu_update(void)
 		return;
 
 	menu = gtk_menu_new();
-
+	gtk_menu_set_accel_group(GTK_MENU(menu), group);
+	gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
 	for (i = 0; i < num_plugins; i++) {
 			menu_items += gmpc_plugin_tool_menu_integration(plugins[i], GTK_MENU(menu));
 	}
