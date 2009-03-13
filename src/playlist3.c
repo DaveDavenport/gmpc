@@ -111,8 +111,6 @@ static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
 static void playlist3_fill_server_menu(void);
 static void playlist3_server_update_db(void);
 
-static void pl3_tool_menu_activate(void);
-
 /* Old category browser style */
 static int old_type = -1;
 
@@ -822,7 +820,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 	 * Also need updating
 	 */
 	pl3_option_menu_activate();
-	pl3_tool_menu_activate();
+	pl3_tool_menu_update();
 
 	playlist3_fill_server_menu();
 
@@ -2479,7 +2477,7 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
  * Tool menu 
  */
 
-void pl3_tool_menu_activate(void)
+void pl3_tool_menu_update(void)
 {
 	int i;
 	int menu_items = 0;

@@ -264,4 +264,10 @@ gboolean        gmpc_plugin_is_metadata                     (gmpcPluginParent *p
 int             gmpc_plugin_metadata_get_priority           (gmpcPluginParent *plug);
 void            gmpc_plugin_metadata_set_priority           (gmpcPluginParent *plug, int priority);
 int             gmpc_plugin_metadata_get_image              (gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, char **path);
+
+/**
+ * Update parts of the gui
+ */
+void pl3_tool_menu_update();
+
 #endif
