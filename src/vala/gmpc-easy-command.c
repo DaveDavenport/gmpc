@@ -19,13 +19,16 @@
 
 #include "gmpc-easy-command.h"
 #include <gtk/gtk.h>
+#include <config.h>
+#include <glib/gi18n-lib.h>
 #include <stdio.h>
+#include <plugin.h>
+#include <config1.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
 #include <float.h>
 #include <math.h>
-#include <plugin.h>
 
 
 
@@ -37,12 +40,21 @@ struct _GmpcEasyCommandPrivate {
 	GtkListStore* store;
 	guint signals;
 	GtkWindow* window;
+	gint* version;
+	gint version_length1;
+	gint version_size;
 };
 
 #define GMPC_EASY_COMMAND_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_EASY_TYPE_COMMAND, GmpcEasyCommandPrivate))
 enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
+#define GMPC_EASY_COMMAND_some_unique_name VERSION
+static const char* gmpc_easy_command_real_get_name (GmpcPluginBase* base);
+static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* result_length1);
+static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base);
+static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base);
+static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean state);
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter);
 static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
 static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEntry* widget, const GdkEventKey* event);
@@ -85,6 +97,70 @@ static char* string_substring (const char* self, glong offset, glong len) {
 }
 
 
+/**
+ * Required plugin implementation
+ */
+static const char* gmpc_easy_command_real_get_name (GmpcPluginBase* base) {
+	GmpcEasyCommand * self;
+	self = (GmpcEasyCommand*) base;
+	return _ ("Gmpc Easy Command");
+}
+
+
+static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* result_length1) {
+	GmpcEasyCommand * self;
+	gint* _tmp0;
+	self = (GmpcEasyCommand*) base;
+	_tmp0 = NULL;
+	return (_tmp0 = self->priv->version, *result_length1 = self->priv->version_length1, _tmp0);
+}
+
+
+/**
+     * Tells the plugin to save itself
+     */
+static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base) {
+	GmpcEasyCommand * self;
+	self = (GmpcEasyCommand*) base;
+	fprintf (stdout, "Vala plugin save myself\n");
+}
+
+
+/* nothing to save 
+*
+     * Get set enabled
+     */
+static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base) {
+	GmpcEasyCommand * self;
+	self = (GmpcEasyCommand*) base;
+	return (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "enabled", 1);
+}
+
+
+static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean state) {
+	GmpcEasyCommand * self;
+	gboolean _tmp0;
+	self = (GmpcEasyCommand*) base;
+	_tmp0 = FALSE;
+	if (!state) {
+		_tmp0 = self->priv->window != NULL;
+	} else {
+		_tmp0 = FALSE;
+	}
+	/* if disabling and popup is open, close it */
+	if (_tmp0) {
+		GtkWindow* _tmp1;
+		gtk_object_destroy ((GtkObject*) self->priv->window);
+		_tmp1 = NULL;
+		self->priv->window = (_tmp1 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp1);
+	}
+	cfg_set_single_value_as_int (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "enabled", (gint) state);
+}
+
+
+/************************************************
+ * private
+ */
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter) {
 	char* value;
 	GtkTreeModel* _tmp0;
@@ -391,6 +467,10 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
      */
 void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	g_return_if_fail (self != NULL);
+	/* if not enabled, don't popup */
+	if (!gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		return;
+	}
 	if (self->priv->window == NULL) {
 		GtkWindow* _tmp0;
 		GtkEntry* entry;
@@ -467,13 +547,13 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_EASY_COMMAND (obj);
 	{
-		GtkListStore* _tmp0;
-		GtkEntryCompletion* _tmp1;
+		GtkListStore* _tmp1;
+		GtkEntryCompletion* _tmp2;
 		GtkCellRendererText* renderer;
-		_tmp0 = NULL;
-		self->priv->store = (_tmp0 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp0);
 		_tmp1 = NULL;
-		self->priv->completion = (_tmp1 = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp1);
+		self->priv->store = (_tmp1 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp1);
+		_tmp2 = NULL;
+		self->priv->completion = (_tmp2 = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp2);
 		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
@@ -495,15 +575,24 @@ static void gmpc_easy_command_class_init (GmpcEasyCommandClass * klass) {
 	g_type_class_add_private (klass, sizeof (GmpcEasyCommandPrivate));
 	G_OBJECT_CLASS (klass)->constructor = gmpc_easy_command_constructor;
 	G_OBJECT_CLASS (klass)->finalize = gmpc_easy_command_finalize;
+	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_easy_command_real_get_name;
+	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_easy_command_real_get_version;
+	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_easy_command_real_save_yourself;
+	GMPC_PLUGIN_BASE_CLASS (klass)->get_enabled = gmpc_easy_command_real_get_enabled;
+	GMPC_PLUGIN_BASE_CLASS (klass)->set_enabled = gmpc_easy_command_real_set_enabled;
 }
 
 
 static void gmpc_easy_command_instance_init (GmpcEasyCommand * self) {
+	gint* _tmp0;
 	self->priv = GMPC_EASY_COMMAND_GET_PRIVATE (self);
 	self->priv->completion = NULL;
 	self->priv->store = NULL;
 	self->priv->signals = (guint) 0;
 	self->priv->window = NULL;
+	self->priv->version = (_tmp0 = g_new0 (gint, 3), _tmp0[0] = 0, _tmp0[1] = 0, _tmp0[2] = 1, _tmp0);
+	self->priv->version_length1 = 3;
+	_tmp0 = NULL;
 }
 
 
@@ -513,6 +602,7 @@ static void gmpc_easy_command_finalize (GObject* obj) {
 	(self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL));
 	(self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL));
 	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
+	self->priv->version = (g_free (self->priv->version), NULL);
 	G_OBJECT_CLASS (gmpc_easy_command_parent_class)->finalize (obj);
 }
 
@@ -521,7 +611,7 @@ GType gmpc_easy_command_get_type (void) {
 	static GType gmpc_easy_command_type_id = 0;
 	if (gmpc_easy_command_type_id == 0) {
 		static const GTypeInfo g_define_type_info = { sizeof (GmpcEasyCommandClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) gmpc_easy_command_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (GmpcEasyCommand), 0, (GInstanceInitFunc) gmpc_easy_command_instance_init, NULL };
-		gmpc_easy_command_type_id = g_type_register_static (G_TYPE_OBJECT, "GmpcEasyCommand", &g_define_type_info, 0);
+		gmpc_easy_command_type_id = g_type_register_static (GMPC_TYPE_PLUGIN_BASE, "GmpcEasyCommand", &g_define_type_info, 0);
 	}
 	return gmpc_easy_command_type_id;
 }

@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
+using Config;
 using GLib;
 using Gtk;
 using Gdk;
@@ -24,12 +24,58 @@ using Cairo;
 using MPD;
 using Gmpc;
 
-public class Gmpc.Easy.Command:GLib.Object {
+public class Gmpc.Easy.Command:Gmpc.PluginBase{
+	/* hack to make gettext happy */
+    private const string some_unique_name = Config.VERSION;
+
 	private Gtk.EntryCompletion completion = null;
 	private Gtk.ListStore store = null;
 	private uint signals = 0;
 	private Gtk.Window window = null;
 
+	/***
+	 * plugin setup
+	 */
+	private int[3] version = {0,0,1};
+
+
+	/**
+	 * Required plugin implementation
+	 */
+	 public override weak string get_name() 
+	 {
+		return _("Gmpc Easy Command");
+	 }
+	 public override weak int[] get_version()
+	 {
+		return this.version;
+	 }
+    /**
+     * Tells the plugin to save itself
+     */
+    public override void save_yourself()
+    {
+        stdout.printf("Vala plugin save myself\n");
+        /* nothing to save */
+    }
+    /**
+     * Get set enabled
+     */
+    public override bool get_enabled() {
+        return (bool)config.get_int_with_default(this.get_name(), "enabled", 1);
+    }
+    public override void set_enabled(bool state) {
+		/* if disabling and popup is open, close it */
+		if(!state && this.window != null) {
+			this.window.destroy();
+			this.window = null;
+		}
+       config.set_int(this.get_name(), "enabled", (int)state); 
+    }
+
+	/************************************************
+	 * private
+	 */
 	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
 		var model = comp.model;
@@ -212,6 +258,9 @@ public class Gmpc.Easy.Command:GLib.Object {
      */
 	public void
 	 popup() {
+		/* if not enabled, don't popup */
+		if(!this.get_enabled()) return;
+
 		if (this.window == null) {
 			this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
 			var entry = new Gtk.Entry();
@@ -256,4 +305,4 @@ public class Gmpc.Easy.Command:GLib.Object {
 	}
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

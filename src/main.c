@@ -443,6 +443,9 @@ int main(int argc, char **argv)
 	TEC("Initializing gtk");
 
 	gmpc_easy_command = gmpc_easy_command_new();
+	/* Add it to the plugin command */
+	plugin_add_new(gmpc_easy_command, 0);
+
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
 								_("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
@@ -920,7 +923,10 @@ int main(int argc, char **argv)
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);
 
-	g_object_unref(gmpc_easy_command);
+	/**
+	 * This now gets destroyed with the plugins
+	 */
+//	g_object_unref(gmpc_easy_command);
 
 	advanced_search_destroy();
 	/**

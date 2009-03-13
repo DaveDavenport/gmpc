@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
+#include "gmpc-plugin2.h"
 
 G_BEGIN_DECLS
 
@@ -41,12 +42,12 @@ typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
 typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 struct _GmpcEasyCommand {
-	GObject parent_instance;
+	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
 };
 
 struct _GmpcEasyCommandClass {
-	GObjectClass parent_class;
+	GmpcPluginBaseClass parent_class;
 };
 
 

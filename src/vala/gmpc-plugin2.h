@@ -97,9 +97,9 @@ struct _GmpcPlugin2MetaDataIface {
 
 struct _GmpcPlugin2BrowserIface {
 	GTypeInterface parent_iface;
-	void (*add) (GmpcPlugin2Browser* self, GtkWidget* category_tree);
-	void (*selected) (GmpcPlugin2Browser* self, GtkWidget* container);
-	void (*unselected) (GmpcPlugin2Browser* self, GtkWidget* container);
+	void (*browser_add) (GmpcPlugin2Browser* self, GtkWidget* category_tree);
+	void (*browser_selected) (GmpcPlugin2Browser* self, GtkWidget* container);
+	void (*browser_unselected) (GmpcPlugin2Browser* self, GtkWidget* container);
 };
 
 struct _GmpcPlugin2PreferencesIface {
@@ -124,9 +124,9 @@ gint gmpc_plugin2_meta_data_get_data (GmpcPlugin2MetaData* self);
 gint gmpc_plugin2_meta_data_get_priority (GmpcPlugin2MetaData* self);
 void gmpc_plugin2_meta_data_set_priority (GmpcPlugin2MetaData* self, gint priority);
 GType gmpc_plugin2_meta_data_get_type (void);
-void gmpc_plugin2_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tree);
-void gmpc_plugin2_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container);
-void gmpc_plugin2_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container);
+void gmpc_plugin2_browser_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tree);
+void gmpc_plugin2_browser_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container);
+void gmpc_plugin2_browser_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container);
 GType gmpc_plugin2_browser_get_type (void);
 void gmpc_plugin2_preferences_pane_construct (GmpcPlugin2Preferences* self, GtkContainer* container);
 void gmpc_plugin2_preferences_pane_destroy (GmpcPlugin2Preferences* self, GtkContainer* container);

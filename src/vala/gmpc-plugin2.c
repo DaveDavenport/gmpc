@@ -166,20 +166,20 @@ GType gmpc_plugin2_meta_data_get_type (void) {
 
 
 /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
-void gmpc_plugin2_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tree) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->add (self, category_tree);
+void gmpc_plugin2_browser_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tree) {
+	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_add (self, category_tree);
 }
 
 
 /* This gets called, the plugin should add it view in container */
-void gmpc_plugin2_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->selected (self, container);
+void gmpc_plugin2_browser_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container) {
+	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_selected (self, container);
 }
 
 
 /* Plugin should remove itself from container */
-void gmpc_plugin2_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->unselected (self, container);
+void gmpc_plugin2_browser_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container) {
+	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_unselected (self, container);
 }
 
 
