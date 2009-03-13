@@ -423,8 +423,6 @@ static void pl3_current_playlist_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TITLE, _("Play Queue"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "playlist-browser",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,
 			-1);
 	if(pl3_curb_tree_ref)
 	{

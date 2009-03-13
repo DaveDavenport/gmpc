@@ -942,15 +942,16 @@ void create_playlist3(void)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes(column, renderer, "icon-name", 3, "stock-size", 5, NULL);
+	g_object_set(G_OBJECT(renderer),  "stock-size", GTK_ICON_SIZE_DND, NULL);
+	gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
 
 	renderer = gtk_cell_renderer_text_new();
 	/* insert the column in the tree */
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes(column, renderer, "text", 1, NULL);
+	gtk_tree_view_column_set_attributes(column, renderer, "text", PL3_CAT_TITLE, NULL);
 	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
 
 	g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 

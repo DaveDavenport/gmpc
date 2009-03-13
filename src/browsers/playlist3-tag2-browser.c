@@ -159,8 +159,7 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 			PL3_CAT_TITLE, name,
 			PL3_CAT_INT_ID,key,
 			PL3_CAT_ICON_ID, "tag-browser",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+			-1);
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(tree), &iter);
 		
 	tb = g_malloc0(sizeof(*tb));

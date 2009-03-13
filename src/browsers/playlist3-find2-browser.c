@@ -331,8 +331,7 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
             PL3_CAT_TITLE, _("Search"),
             PL3_CAT_INT_ID, "",
             PL3_CAT_ICON_ID, "gtk-find",
-            PL3_CAT_PROC, TRUE,
-            PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+            -1);
 
     if (pl3_find2_ref) {
         gtk_tree_row_reference_free(pl3_find2_ref);

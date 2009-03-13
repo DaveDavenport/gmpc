@@ -56,8 +56,8 @@ typedef enum
 	PL3_CAT_TITLE, /** title that is showed */
 	PL3_CAT_INT_ID, /* id */
 	PL3_CAT_ICON_ID, /* icon id */
-	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
-	PL3_CAT_ICON_SIZE, /** icon size */
+	PL3_CAT_PROC_DEPRECATED, /* for the lazy tree, if the dir is allready processed */
+	PL3_CAT_ICON_SIZE_DEPRECATED, /** icon size */
 	PL3_CAT_BROWSE_FORMAT, /** string, added for tag browser */
 	PL3_CAT_ORDER, /* int for sorting the list */
     PL3_CAT_NUM_ITEMS,

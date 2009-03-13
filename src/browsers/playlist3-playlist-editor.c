@@ -131,8 +131,7 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TITLE, _("Playlist Editor"),
 			PL3_CAT_INT_ID, "",
 			PL3_CAT_ICON_ID, "media-playlist",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+			-1);
 	/**
 	 * Clean up old row reference if it exists
 	 */

@@ -351,8 +351,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 			PL3_CAT_TITLE, _("File Browser"),
 			PL3_CAT_INT_ID, "/",
 			PL3_CAT_ICON_ID, "gtk-open",
-			PL3_CAT_PROC, FALSE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+			-1);
 	/* add fantom child for lazy tree */
 
 	if(pl3_fb_tree_ref)
