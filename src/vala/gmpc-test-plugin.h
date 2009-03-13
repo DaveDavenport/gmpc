@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include "gmpc-plugin2.h"
+#include "gmpc-plugin.h"
 
 G_BEGIN_DECLS
 

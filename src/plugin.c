@@ -21,7 +21,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gmodule.h>
-#include "vala/gmpc-plugin2.h"
+#include "vala/gmpc-plugin.h"
 #include "main.h"
 #include "metadata.h"
 
@@ -387,7 +387,7 @@ void gmpc_plugin_mpd_connection_changed(gmpcPluginParent *plug, MpdObj *mi, int 
 gboolean gmpc_plugin_is_browser(gmpcPluginParent *plug)
 {
     if(plug->new) {
-        return GMPC_PLUGIN2_IS_BROWSER(plug->new); 
+        return GMPC_PLUGIN_IS_BROWSER_IFACE(plug->new); 
     }
     return ((plug->old->plugin_type&GMPC_PLUGIN_PL_BROWSER) != 0);
 }
@@ -492,7 +492,7 @@ gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPluginParent *
 gboolean gmpc_plugin_has_preferences(gmpcPluginParent *plug)
 {
     if(plug->new) {
-        return GMPC_PLUGIN2_IS_PREFERENCES(plug->new);
+        return GMPC_PLUGIN_IS_PREFERENCES_IFACE(plug->new);
     }
     return (plug->old->pref != NULL);
 }
@@ -502,7 +502,7 @@ void gmpc_plugin_preferences_construct(gmpcPluginParent *plug,GtkWidget *wid)
     if(gmpc_plugin_has_preferences(plug))
     {
         if(plug->new) {
-            gmpc_plugin2_preferences_pane_construct(plug->new, wid);
+            gmpc_plugin_preferences_iface_pane_construct(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
             return;
         }
         g_assert(plug->old->pref != NULL);
@@ -516,7 +516,7 @@ void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
     if(gmpc_plugin_has_preferences(plug))
     {
         if(plug->new) {
-            gmpc_plugin2_preferences_pane_destroy(plug->new, wid);
+            gmpc_plugin_preferences_iface_pane_destroy(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
             return;
         }
         g_assert(plug->old->pref != NULL);

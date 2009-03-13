@@ -24,7 +24,7 @@ using Cairo;
 using MPD;
 using Gmpc;
 
-public class Gmpc.Easy.Command:Gmpc.PluginBase{
+public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/* hack to make gettext happy */
     private const string some_unique_name = Config.VERSION;
 

@@ -24,7 +24,7 @@
 #include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gmpc-plugin2.h"
+#include "gmpc-plugin.h"
 
 G_BEGIN_DECLS
 

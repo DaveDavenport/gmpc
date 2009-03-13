@@ -36,13 +36,13 @@ static const char* gmpc_test_plugin_real_get_name (GmpcPluginBase* base);
 static void gmpc_test_plugin_real_save_yourself (GmpcPluginBase* base);
 static gboolean gmpc_test_plugin_real_get_enabled (GmpcPluginBase* base);
 static void gmpc_test_plugin_real_set_enabled (GmpcPluginBase* base, gboolean state);
-static void gmpc_test_plugin_real_pane_construct (GmpcPlugin2Preferences* base, GtkContainer* container);
-static void gmpc_test_plugin_real_pane_destroy (GmpcPlugin2Preferences* base, GtkContainer* container);
+static void gmpc_test_plugin_real_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container);
+static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container);
 static void gmpc_test_plugin_connection_changed (GmpcTestPlugin* self, GmpcConnection* conn, MpdObj* server, gint connect);
 static void _gmpc_test_plugin_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_test_plugin_parent_class = NULL;
-static GmpcPlugin2PreferencesIface* gmpc_test_plugin_gmpc_plugin2_preferences_parent_iface = NULL;
+static GmpcPluginPreferencesIfaceIface* gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = NULL;
 static void gmpc_test_plugin_finalize (GObject* obj);
 
 
@@ -101,7 +101,7 @@ static void gmpc_test_plugin_real_set_enabled (GmpcPluginBase* base, gboolean st
 /*********************************************************************************
      * Plugin preferences functions 
      ********************************************************************************/
-static void gmpc_test_plugin_real_pane_construct (GmpcPlugin2Preferences* base, GtkContainer* container) {
+static void gmpc_test_plugin_real_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container) {
 	GmpcTestPlugin * self;
 	GtkHBox* box;
 	GtkLabel* label;
@@ -118,7 +118,7 @@ static void gmpc_test_plugin_real_pane_construct (GmpcPlugin2Preferences* base, 
 }
 
 
-static void gmpc_test_plugin_real_pane_destroy (GmpcPlugin2Preferences* base, GtkContainer* container) {
+static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container) {
 	GmpcTestPlugin * self;
 	GtkBin* _tmp0;
 	GtkBin* bin;
@@ -190,8 +190,8 @@ static void gmpc_test_plugin_class_init (GmpcTestPluginClass * klass) {
 }
 
 
-static void gmpc_test_plugin_gmpc_plugin2_preferences_interface_init (GmpcPlugin2PreferencesIface * iface) {
-	gmpc_test_plugin_gmpc_plugin2_preferences_parent_iface = g_type_interface_peek_parent (iface);
+static void gmpc_test_plugin_gmpc_plugin_preferences_iface_interface_init (GmpcPluginPreferencesIfaceIface * iface) {
+	gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = g_type_interface_peek_parent (iface);
 	iface->pane_construct = gmpc_test_plugin_real_pane_construct;
 	iface->pane_destroy = gmpc_test_plugin_real_pane_destroy;
 }
@@ -215,9 +215,9 @@ GType gmpc_test_plugin_get_type (void) {
 	static GType gmpc_test_plugin_type_id = 0;
 	if (gmpc_test_plugin_type_id == 0) {
 		static const GTypeInfo g_define_type_info = { sizeof (GmpcTestPluginClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) gmpc_test_plugin_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (GmpcTestPlugin), 0, (GInstanceInitFunc) gmpc_test_plugin_instance_init, NULL };
-		static const GInterfaceInfo gmpc_plugin2_preferences_info = { (GInterfaceInitFunc) gmpc_test_plugin_gmpc_plugin2_preferences_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
-		gmpc_test_plugin_type_id = g_type_register_static (GMPC_TYPE_PLUGIN_BASE, "GmpcTestPlugin", &g_define_type_info, 0);
-		g_type_add_interface_static (gmpc_test_plugin_type_id, GMPC_PLUGIN2_TYPE_PREFERENCES, &gmpc_plugin2_preferences_info);
+		static const GInterfaceInfo gmpc_plugin_preferences_iface_info = { (GInterfaceInitFunc) gmpc_test_plugin_gmpc_plugin_preferences_iface_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
+		gmpc_test_plugin_type_id = g_type_register_static (GMPC_PLUGIN_TYPE_BASE, "GmpcTestPlugin", &g_define_type_info, 0);
+		g_type_add_interface_static (gmpc_test_plugin_type_id, GMPC_PLUGIN_TYPE_PREFERENCES_IFACE, &gmpc_plugin_preferences_iface_info);
 	}
 	return gmpc_test_plugin_type_id;
 }

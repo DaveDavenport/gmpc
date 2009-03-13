@@ -24,8 +24,8 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 
-#ifndef __GMPC_PLUGIN_H__
-#define __GMPC_PLUGIN_H__
+#ifndef __PLUGIN_H__
+#define __PLUGIN_H__
 
 #define PLUGIN_ID_MARK 1024
 #define PLUGIN_ID_INTERNALL 2048

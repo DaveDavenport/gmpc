@@ -32,7 +32,7 @@
 #include <libmpd/debug_printf.h>
 #include "config1.h"
 #include "plugin.h"
-#include "vala/gmpc-plugin2.h"
+#include "vala/gmpc-plugin.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 

@@ -20,7 +20,7 @@ using GLib;
 using Gtk;
 using Gmpc;
 
-public class  Gmpc.TestPlugin : Gmpc.PluginBase, Gmpc.Plugin2.Preferences {
+public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface {
     public const int[3] version = {0,0,2};
     /*********************************************************************************
      * Plugin base functions 

@@ -8,16 +8,6 @@ namespace Gmpc {
         signal void status_changed (MPD.Server server, MPD.Status.Changed what);
     }
 
-    [Immutable]
-    [CCode (cname="gmpcPlugin" , cheader_filename="plugin.h",
-        has_construct_function = false
-    )]
-    public struct Plugin { 
-        public weak string name;
-        public int type;
-
-    }
-   
    namespace MetaData {
         [CCode (cprefix = "META_", cheader_filename = "metadata.h")]
         public enum Type {

@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "gmpc-plugin2.h"
+#include "gmpc-plugin.h"
 
 
 
@@ -130,23 +130,23 @@ GType gmpc_plugin_base_get_type (void) {
 }
 
 
-gint gmpc_plugin2_meta_data_get_data (GmpcPlugin2MetaData* self) {
-	return GMPC_PLUGIN2_META_DATA_GET_INTERFACE (self)->get_data (self);
+gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self) {
+	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_data (self);
 }
 
 
 /* Set get priority */
-gint gmpc_plugin2_meta_data_get_priority (GmpcPlugin2MetaData* self) {
-	return GMPC_PLUGIN2_META_DATA_GET_INTERFACE (self)->get_priority (self);
+gint gmpc_plugin_meta_data_iface_get_priority (GmpcPluginMetaDataIface* self) {
+	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_priority (self);
 }
 
 
-void gmpc_plugin2_meta_data_set_priority (GmpcPlugin2MetaData* self, gint priority) {
-	GMPC_PLUGIN2_META_DATA_GET_INTERFACE (self)->set_priority (self, priority);
+void gmpc_plugin_meta_data_iface_set_priority (GmpcPluginMetaDataIface* self, gint priority) {
+	GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->set_priority (self, priority);
 }
 
 
-static void gmpc_plugin2_meta_data_base_init (GmpcPlugin2MetaDataIface * iface) {
+static void gmpc_plugin_meta_data_iface_base_init (GmpcPluginMetaDataIfaceIface * iface) {
 	static gboolean initialized = FALSE;
 	if (!initialized) {
 		initialized = TRUE;
@@ -154,36 +154,36 @@ static void gmpc_plugin2_meta_data_base_init (GmpcPlugin2MetaDataIface * iface) 
 }
 
 
-GType gmpc_plugin2_meta_data_get_type (void) {
-	static GType gmpc_plugin2_meta_data_type_id = 0;
-	if (gmpc_plugin2_meta_data_type_id == 0) {
-		static const GTypeInfo g_define_type_info = { sizeof (GmpcPlugin2MetaDataIface), (GBaseInitFunc) gmpc_plugin2_meta_data_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
-		gmpc_plugin2_meta_data_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPlugin2MetaData", &g_define_type_info, 0);
-		g_type_interface_add_prerequisite (gmpc_plugin2_meta_data_type_id, GMPC_TYPE_PLUGIN_BASE);
+GType gmpc_plugin_meta_data_iface_get_type (void) {
+	static GType gmpc_plugin_meta_data_iface_type_id = 0;
+	if (gmpc_plugin_meta_data_iface_type_id == 0) {
+		static const GTypeInfo g_define_type_info = { sizeof (GmpcPluginMetaDataIfaceIface), (GBaseInitFunc) gmpc_plugin_meta_data_iface_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
+		gmpc_plugin_meta_data_iface_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPluginMetaDataIface", &g_define_type_info, 0);
+		g_type_interface_add_prerequisite (gmpc_plugin_meta_data_iface_type_id, GMPC_PLUGIN_TYPE_BASE);
 	}
-	return gmpc_plugin2_meta_data_type_id;
+	return gmpc_plugin_meta_data_iface_type_id;
 }
 
 
 /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
-void gmpc_plugin2_browser_browser_add (GmpcPlugin2Browser* self, GtkWidget* category_tree) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_add (self, category_tree);
+void gmpc_plugin_browser_iface_browser_add (GmpcPluginBrowserIface* self, GtkWidget* category_tree) {
+	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_add (self, category_tree);
 }
 
 
 /* This gets called, the plugin should add it view in container */
-void gmpc_plugin2_browser_browser_selected (GmpcPlugin2Browser* self, GtkWidget* container) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_selected (self, container);
+void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkWidget* container) {
+	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_selected (self, container);
 }
 
 
 /* Plugin should remove itself from container */
-void gmpc_plugin2_browser_browser_unselected (GmpcPlugin2Browser* self, GtkWidget* container) {
-	GMPC_PLUGIN2_BROWSER_GET_INTERFACE (self)->browser_unselected (self, container);
+void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkWidget* container) {
+	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_unselected (self, container);
 }
 
 
-static void gmpc_plugin2_browser_base_init (GmpcPlugin2BrowserIface * iface) {
+static void gmpc_plugin_browser_iface_base_init (GmpcPluginBrowserIfaceIface * iface) {
 	static gboolean initialized = FALSE;
 	if (!initialized) {
 		initialized = TRUE;
@@ -191,28 +191,28 @@ static void gmpc_plugin2_browser_base_init (GmpcPlugin2BrowserIface * iface) {
 }
 
 
-GType gmpc_plugin2_browser_get_type (void) {
-	static GType gmpc_plugin2_browser_type_id = 0;
-	if (gmpc_plugin2_browser_type_id == 0) {
-		static const GTypeInfo g_define_type_info = { sizeof (GmpcPlugin2BrowserIface), (GBaseInitFunc) gmpc_plugin2_browser_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
-		gmpc_plugin2_browser_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPlugin2Browser", &g_define_type_info, 0);
-		g_type_interface_add_prerequisite (gmpc_plugin2_browser_type_id, GMPC_TYPE_PLUGIN_BASE);
+GType gmpc_plugin_browser_iface_get_type (void) {
+	static GType gmpc_plugin_browser_iface_type_id = 0;
+	if (gmpc_plugin_browser_iface_type_id == 0) {
+		static const GTypeInfo g_define_type_info = { sizeof (GmpcPluginBrowserIfaceIface), (GBaseInitFunc) gmpc_plugin_browser_iface_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
+		gmpc_plugin_browser_iface_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPluginBrowserIface", &g_define_type_info, 0);
+		g_type_interface_add_prerequisite (gmpc_plugin_browser_iface_type_id, GMPC_PLUGIN_TYPE_BASE);
 	}
-	return gmpc_plugin2_browser_type_id;
+	return gmpc_plugin_browser_iface_type_id;
 }
 
 
-void gmpc_plugin2_preferences_pane_construct (GmpcPlugin2Preferences* self, GtkContainer* container) {
-	GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pane_construct (self, container);
+void gmpc_plugin_preferences_iface_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container) {
+	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->pane_construct (self, container);
 }
 
 
-void gmpc_plugin2_preferences_pane_destroy (GmpcPlugin2Preferences* self, GtkContainer* container) {
-	GMPC_PLUGIN2_PREFERENCES_GET_INTERFACE (self)->pane_destroy (self, container);
+void gmpc_plugin_preferences_iface_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container) {
+	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->pane_destroy (self, container);
 }
 
 
-static void gmpc_plugin2_preferences_base_init (GmpcPlugin2PreferencesIface * iface) {
+static void gmpc_plugin_preferences_iface_base_init (GmpcPluginPreferencesIfaceIface * iface) {
 	static gboolean initialized = FALSE;
 	if (!initialized) {
 		initialized = TRUE;
@@ -220,23 +220,23 @@ static void gmpc_plugin2_preferences_base_init (GmpcPlugin2PreferencesIface * if
 }
 
 
-GType gmpc_plugin2_preferences_get_type (void) {
-	static GType gmpc_plugin2_preferences_type_id = 0;
-	if (gmpc_plugin2_preferences_type_id == 0) {
-		static const GTypeInfo g_define_type_info = { sizeof (GmpcPlugin2PreferencesIface), (GBaseInitFunc) gmpc_plugin2_preferences_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
-		gmpc_plugin2_preferences_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPlugin2Preferences", &g_define_type_info, 0);
-		g_type_interface_add_prerequisite (gmpc_plugin2_preferences_type_id, GMPC_TYPE_PLUGIN_BASE);
+GType gmpc_plugin_preferences_iface_get_type (void) {
+	static GType gmpc_plugin_preferences_iface_type_id = 0;
+	if (gmpc_plugin_preferences_iface_type_id == 0) {
+		static const GTypeInfo g_define_type_info = { sizeof (GmpcPluginPreferencesIfaceIface), (GBaseInitFunc) gmpc_plugin_preferences_iface_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
+		gmpc_plugin_preferences_iface_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPluginPreferencesIface", &g_define_type_info, 0);
+		g_type_interface_add_prerequisite (gmpc_plugin_preferences_iface_type_id, GMPC_PLUGIN_TYPE_BASE);
 	}
-	return gmpc_plugin2_preferences_type_id;
+	return gmpc_plugin_preferences_iface_type_id;
 }
 
 
-gint gmpc_plugin2_song_list_song_list (GmpcPlugin2SongList* self, GtkWidget* tree, GtkMenu* menu) {
-	return GMPC_PLUGIN2_SONG_LIST_GET_INTERFACE (self)->song_list (self, tree, menu);
+gint gmpc_plugin_song_list_iface_song_list (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu) {
+	return GMPC_PLUGIN_SONG_LIST_IFACE_GET_INTERFACE (self)->song_list (self, tree, menu);
 }
 
 
-static void gmpc_plugin2_song_list_base_init (GmpcPlugin2SongListIface * iface) {
+static void gmpc_plugin_song_list_iface_base_init (GmpcPluginSongListIfaceIface * iface) {
 	static gboolean initialized = FALSE;
 	if (!initialized) {
 		initialized = TRUE;
@@ -244,14 +244,14 @@ static void gmpc_plugin2_song_list_base_init (GmpcPlugin2SongListIface * iface) 
 }
 
 
-GType gmpc_plugin2_song_list_get_type (void) {
-	static GType gmpc_plugin2_song_list_type_id = 0;
-	if (gmpc_plugin2_song_list_type_id == 0) {
-		static const GTypeInfo g_define_type_info = { sizeof (GmpcPlugin2SongListIface), (GBaseInitFunc) gmpc_plugin2_song_list_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
-		gmpc_plugin2_song_list_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPlugin2SongList", &g_define_type_info, 0);
-		g_type_interface_add_prerequisite (gmpc_plugin2_song_list_type_id, GMPC_TYPE_PLUGIN_BASE);
+GType gmpc_plugin_song_list_iface_get_type (void) {
+	static GType gmpc_plugin_song_list_iface_type_id = 0;
+	if (gmpc_plugin_song_list_iface_type_id == 0) {
+		static const GTypeInfo g_define_type_info = { sizeof (GmpcPluginSongListIfaceIface), (GBaseInitFunc) gmpc_plugin_song_list_iface_base_init, (GBaseFinalizeFunc) NULL, (GClassInitFunc) NULL, (GClassFinalizeFunc) NULL, NULL, 0, 0, (GInstanceInitFunc) NULL, NULL };
+		gmpc_plugin_song_list_iface_type_id = g_type_register_static (G_TYPE_INTERFACE, "GmpcPluginSongListIface", &g_define_type_info, 0);
+		g_type_interface_add_prerequisite (gmpc_plugin_song_list_iface_type_id, GMPC_PLUGIN_TYPE_BASE);
 	}
-	return gmpc_plugin2_song_list_type_id;
+	return gmpc_plugin_song_list_iface_type_id;
 }
 
 
