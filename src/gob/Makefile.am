@@ -66,6 +66,8 @@ INCLUDES=\
 	-I$(top_builddir)/src/egg\
 	-I$(top_srcdir)/src/bacon\
 	-I$(top_builddir)/src/bacon\
+	-I$(top_srcdir)/src/vala\
+	-I$(top_builddir)/src/vala\
 	-DPIXMAP_PATH=\""$(pkgdatadir)"\" \
 	-DGLADE_PATH=\""$(pkgdatadir)"\" \
 	-DVERSION=\"@VERSION@\"\

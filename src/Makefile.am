@@ -87,7 +87,9 @@ INCLUDES=\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
 	-I$(top_srcdir)/src/gob\
-	-I$(top_builddir)/src/gob
+	-I$(top_builddir)/src/gob\
+	-I$(top_srcdir)/src/vala\
+	-I$(top_builddir)/src/vala
 
 
 

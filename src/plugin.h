@@ -268,6 +268,6 @@ int             gmpc_plugin_metadata_get_image              (gmpcPluginParent *p
 /**
  * Update parts of the gui
  */
-void pl3_tool_menu_update();
+void pl3_tool_menu_update(void);
 
 #endif

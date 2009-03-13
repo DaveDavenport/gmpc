@@ -22,9 +22,9 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gmpc-plugin.h"
 
 G_BEGIN_DECLS
 

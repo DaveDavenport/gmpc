@@ -23,6 +23,7 @@ using Gtk;
 
 namespace Gmpc {
     namespace Plugin {
+        [CCode (cheader_filename="gmpc-plugin.h")]
         public abstract class Base : GLib.Object { 
             /* set by gmpc. */
             public int id;

@@ -29,9 +29,6 @@
 #ifdef SPIFF
 #include <spiff/spiff_c.h>
 #endif
-/** in gmpc */
-void pl3_option_menu_activate();
-
 /***
  * Parse PLS files:
  */
