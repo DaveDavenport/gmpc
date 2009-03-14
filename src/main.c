@@ -84,6 +84,8 @@ GmpcSignals *gmpc_signals = NULL;
 GmpcMetaWatcher *gmw = NULL;
 /* Easy command */
 GmpcEasyCommand *gmpc_easy_command = NULL;
+/* Playlist3 messages */
+Playlist3MessagePlugin *pl3_messages = NULL;
 
 /**
  * This flag indicate the requested connection state by the user.
@@ -785,8 +787,8 @@ int main(int argc, char **argv)
 	create_playlist3();
     /* Initialize the message system */
 	//playlist3_message_init();
-
-	plugin_add_new(GMPC_PLUGIN_BASE(playlist3_message_plugin_new()), 0);
+	pl3_messages = playlist3_message_plugin_new();
+	plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0);
 	
 	TEC("Creating playlist window");
 

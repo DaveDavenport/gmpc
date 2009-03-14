@@ -22,42 +22,49 @@
 #include "main.h"
 #include "playlist3.h"
 
-static gboolean error_visible = FALSE;
-static ErrorLevel last_error_level = ERROR_INFO;
-static guint timeout_callback = 0;
-static GtkListStore *message_list = NULL;
-static GIOChannel *log_file = NULL;
-
 static const char *error_levels[3] = {
 	N_("Info"),
 	N_("Warning"),
 	N_("Critical")
 };
-static void playlist3_message_destroy(void)
+
+/**
+ * Private data structure 
+ */
+typedef struct _Playlist3MessagePluginPrivate {
+	gboolean error_visible;
+	ErrorLevel last_error_level;
+	guint timeout_callback;
+	GtkListStore *message_list;
+	GIOChannel *log_file;
+} _Playlist3MessagePluginPrivate;
+
+
+static void playlist3_message_destroy(Playlist3MessagePlugin *self)
 {
-	g_io_channel_flush(log_file, NULL);
-	g_io_channel_unref(log_file);
+	g_io_channel_flush(self->priv->log_file, NULL);
+	g_io_channel_unref(self->priv->log_file);
 }
 
-static void playlist3_message_init(void)
+static void playlist3_message_init(Playlist3MessagePlugin *self)
 {
-	if(!message_list)
+	if(!self->priv->message_list)
 	{
 		GError *error = NULL;
 		gchar *path = gmpc_get_user_path("gmpc.log");
-		message_list = gtk_list_store_new(3, G_TYPE_INT64, G_TYPE_STRING, G_TYPE_STRING);
+		self->priv->message_list = gtk_list_store_new(3, G_TYPE_INT64, G_TYPE_STRING, G_TYPE_STRING);
 
-		log_file = g_io_channel_new_file(path, "a", &error);
+		self->priv->log_file = g_io_channel_new_file(path, "a", &error);
 		if(error)
 		{
 			g_error("Failed to log file: '%s'", error->message);
 		}
 		q_free(path);
 
-		g_io_channel_flush(log_file, NULL);
+		g_io_channel_flush(self->priv->log_file, NULL);
 	}
 }
-void playlist3_show_error_message(const gchar *message, ErrorLevel el)
+void playlist3_message_show(Playlist3MessagePlugin *self, const gchar *message, ErrorLevel el)
 {
 	gchar text[64];
 	struct tm *lt;
@@ -68,18 +75,18 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 	ErrorLevel level;
 	const gchar *image_name;
 	gchar *string;
-	playlist3_message_init();
-	gtk_list_store_prepend(message_list, &iter);
-	gtk_list_store_set(message_list, &iter, 0, (gint64)t, 2, message,-1);
+	playlist3_message_init(self);
+	gtk_list_store_prepend(self->priv->message_list, &iter);
+	gtk_list_store_set(self->priv->message_list, &iter, 0, (gint64)t, 2, message,-1);
 
 
 	lt = localtime(&t);
 	strftime(text, 64,"%d/%m/%Y-%H:%M:%S", lt);
 
 	string = g_strdup_printf("%s:%s:%s\n",text,error_levels[el], message);
-	g_io_channel_write_chars(log_file, string, -1, NULL, NULL);
+	g_io_channel_write_chars(self->priv->log_file, string, -1, NULL, NULL);
 	q_free(string);
-	g_io_channel_flush(log_file, NULL);
+	g_io_channel_flush(self->priv->log_file, NULL);
 
 
 	level = cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO);
@@ -96,28 +103,28 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 			image_name = GTK_STOCK_DIALOG_INFO;
 			break;
 	}
-	gtk_list_store_set(message_list, &iter, 1, image_name,-1);
+	gtk_list_store_set(self->priv->message_list, &iter, 1, image_name,-1);
 	if(el < level)
 	{
 		return;
 	}
-	if(error_visible)
+	if(self->priv->error_visible)
 	{
 		/* higher level errors are not overwritten by lower level errors */
-		if(el < last_error_level)
+		if(el < self->priv->last_error_level)
 		{
 			return;
 		}
 		playlist3_close_error();
-		if(timeout_callback)
+		if(self->priv->timeout_callback)
 		{
-			g_source_remove(timeout_callback);
+			g_source_remove(self->priv->timeout_callback);
 		}
-		timeout_callback = 0;
+		self->priv->timeout_callback = 0;
 
 	}
 	/* store last level */
-	last_error_level = el;
+	self->priv->last_error_level = el;
 	if(pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
 		GList *list, *siter; 
@@ -147,16 +154,16 @@ void playlist3_show_error_message(const gchar *message, ErrorLevel el)
 		//event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_show_all(event);
 		/* Error */
-		error_visible = TRUE;
-		timeout_callback = g_timeout_add_seconds(5, (GSourceFunc)playlist3_close_error, NULL);
+		self->priv->error_visible = TRUE;
+		self->priv->timeout_callback = g_timeout_add_seconds(5, (GSourceFunc)playlist3_message_close, self);
 	}else{
-		error_visible = FALSE;
+		self->priv->error_visible = FALSE;
 	}
 }
 /* Indicates if a widget is allready added */
 static gboolean widget_added = FALSE;
 
-void playlist3_error_add_widget(GtkWidget *widget)
+void playlist3_message_add_widget(Playlist3MessagePlugin *self, GtkWidget *widget)
 {
 	GtkWidget *event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
 	/* Avoid adding more then one widget */
@@ -167,14 +174,14 @@ void playlist3_error_add_widget(GtkWidget *widget)
 	gtk_widget_show_all(event);
 }
 
-gboolean playlist3_close_error(void)
+gboolean playlist3_message_close(Playlist3MessagePlugin *self)
 {
 	/* reset */
 	widget_added = FALSE;
-	if(error_visible)
+	if(self->priv->error_visible)
 	{
-		error_visible = FALSE;
-		g_source_remove(timeout_callback);
+		self->priv->error_visible = FALSE;
+		g_source_remove(self->priv->timeout_callback);
 
 
 		if(pl3_xml)
@@ -185,7 +192,7 @@ gboolean playlist3_close_error(void)
 			gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback)(gtk_widget_destroy), NULL);
 		}
 	}
-	timeout_callback = 0;
+	self->priv->timeout_callback = 0;
 	return FALSE;
 }
 static void message_cell_data_func(GtkTreeViewColumn *tree_column,
@@ -210,11 +217,17 @@ static void message_cell_data_func(GtkTreeViewColumn *tree_column,
 /**
  * The list of messages
  */
-void message_window_open(void);
-void message_window_destroy(GtkWidget *win);
-static GtkBuilder *message_xml = NULL;
-void message_window_open(void)
+
+void message_window_destroy(GtkWidget *win,GdkEvent *event, GtkBuilder *message_xml);
+void message_window_destroy(GtkWidget *win,GdkEvent *event, GtkBuilder *message_xml)
 {
+	gtk_widget_destroy(win);
+	g_object_unref(message_xml);
+	message_xml = NULL;
+}
+static void playlist3_message_window_open(Playlist3MessagePlugin *self)
+{
+	GtkBuilder *message_xml = NULL;
 	GtkWidget *win,*pl3_win = playlist3_get_window(); 
 	GtkBuilder *xml;
 	GtkCellRenderer *renderer;
@@ -224,7 +237,7 @@ void message_window_open(void)
 	message_xml = xml = gtk_builder_new();
 	gtk_builder_add_from_file(xml, path, NULL);
 	q_free(path);
-	playlist3_message_init();
+	playlist3_message_init(self);
 
 	/* set transient */
 	win = (GtkWidget *) gtk_builder_get_object(xml, "message_window");
@@ -238,19 +251,13 @@ void message_window_open(void)
 	gtk_tree_view_insert_column_with_data_func(GTK_TREE_VIEW(tree), -1,_("Time"), renderer,(GtkTreeCellDataFunc)message_cell_data_func, NULL,NULL);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1,_("Message"), renderer, "markup", 2,NULL);
-	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(message_list));
+	gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(self->priv->message_list));
 
 	gtk_widget_show(win);
 
-	gtk_builder_connect_signals(xml, NULL);
+	gtk_builder_connect_signals(xml, xml);
 }
 
-void message_window_destroy(GtkWidget *win)
-{
-	gtk_widget_destroy(win);
-	g_object_unref(message_xml);
-	message_xml = NULL;
-}
 
 /**
  * Turn this into a plugin. This is a test implementation. 
@@ -275,24 +282,37 @@ static void playlist3_message_plugin_finalize(GObject *obj) {
 	Playlist3MessagePluginClass * klass = (g_type_class_peek (playlist3_message_plugin_get_type()));
 	gpointer parent_class = g_type_class_peek_parent (klass);
 	printf("Destroy playlist3 message plugin (%p)\n",parent_class);
-	playlist3_message_destroy();
+	playlist3_message_destroy((Playlist3MessagePlugin *)obj);
+
+	if(((Playlist3MessagePlugin *)obj)->priv){
+		g_free(((Playlist3MessagePlugin *)obj)->priv);
+		((Playlist3MessagePlugin *)obj)->priv = NULL;
+	}
 	if(parent_class)
 		G_OBJECT_CLASS(parent_class)->finalize(obj);
 }
 static GObject *playlist3_message_plugin_constructor(GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
-	GObject * obj;
 	Playlist3MessagePluginClass * klass;
+	Playlist3MessagePlugin *self;
 	GObjectClass * parent_class;
 	klass = (g_type_class_peek (playlist3_message_plugin_get_type()));
 	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
-	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
-	
-	/* Make it an internal plugin */
-	GMPC_PLUGIN_BASE(obj)->plugin_type = GMPC_INTERNALL;
-	printf("Playlist3 message plugin create\n");
-	playlist3_message_init();
+	self = (Playlist3MessagePlugin *) parent_class->constructor (type, n_construct_properties, construct_properties);
 
-	return obj;
+	/* setup private structure */
+	self->priv = g_malloc0(sizeof(Playlist3MessagePluginPrivate));
+	self->priv->error_visible = FALSE;
+	self->priv->last_error_level = ERROR_INFO;
+	self->priv->timeout_callback = 0;
+	self->priv->message_list = NULL;
+	self->priv->log_file = NULL;
+
+	/* Make it an internal plugin */
+	GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_INTERNALL;
+	printf("Playlist3 message plugin create\n");
+	playlist3_message_init(self);
+
+	return G_OBJECT(self);
 }
 
 static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass)
@@ -326,5 +346,26 @@ Playlist3MessagePlugin * playlist3_message_plugin_new(void) {
 	return g_object_newv(playlist3_message_plugin_get_type(), 0, NULL);
 }
 
+/**
+ * Old compatibility functions
+ */
+void playlist3_show_error_message(const gchar *message, ErrorLevel el)
+{
+	playlist3_message_show(pl3_messages, message, el);
+}
 
+void playlist3_close_error(void)
+{
+	playlist3_message_close(pl3_messages);
+}
+
+void playlist3_error_add_widget(GtkWidget *widget)
+{
+	playlist3_message_add_widget(pl3_messages, widget);
+}
+
+void message_window_open(void)
+{
+	playlist3_message_window_open(pl3_messages);
+}
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

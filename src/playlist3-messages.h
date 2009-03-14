@@ -19,21 +19,6 @@
 
 #ifndef __PLAYLIST_MESSAGES_H__
 #define __PLAYLIST_MESSAGES_H__
-
-gboolean playlist3_close_error(void);
-
-typedef enum {
-	ERROR_INFO,
-	ERROR_WARNING,
-	ERROR_CRITICAL
-} ErrorLevel;
-
-void playlist3_show_error_message(const gchar *message, ErrorLevel el);
-void playlist3_error_add_widget(GtkWidget *widget);
-
-#define playlist3_show_message playlist3_show_error_message
-
-
 /**
  * Object based plugin integration
  */
@@ -41,10 +26,11 @@ void playlist3_error_add_widget(GtkWidget *widget);
 
 typedef struct _Playlist3MessagePlugin      Playlist3MessagePlugin;
 typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
-
+typedef struct _Playlist3MessagePluginPrivate Playlist3MessagePluginPrivate;
 struct _Playlist3MessagePlugin
 {
         GmpcPluginBase  parent_instance;
+        Playlist3MessagePluginPrivate *priv;
 };
 
 struct _Playlist3MessagePluginClass
@@ -52,9 +38,24 @@ struct _Playlist3MessagePluginClass
         GmpcPluginBaseClass parent_class;
 };
 
+typedef enum {
+	ERROR_INFO,
+	ERROR_WARNING,
+	ERROR_CRITICAL
+} ErrorLevel;
 
+extern Playlist3MessagePlugin* pl3_messages;
 
 
 Playlist3MessagePlugin * playlist3_message_plugin_new(void);
 
+gboolean playlist3_message_close(Playlist3MessagePlugin *self);
+void playlist3_message_add_widget(Playlist3MessagePlugin *self, GtkWidget *widget);
+void playlist3_message_show(Playlist3MessagePlugin *self, const gchar *message, ErrorLevel el);
+
+/* Old interface */
+void playlist3_close_error(void);
+void playlist3_show_error_message(const gchar *message, ErrorLevel el);
+void playlist3_error_add_widget(GtkWidget *widget);
+void message_window_open(void);
 #endif
