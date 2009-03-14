@@ -265,10 +265,11 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
             if(gmpc_plugin_has_preferences(plug))
             {
                 if(!toggled) {
+                    const gchar *translation_domain = gmpc_plugin_get_translation_domain(plug);
                     gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
                     gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
                             0, plugin_get_pos(gmpc_plugin_get_id(plug)),
-                            1, gmpc_plugin_get_name(plug),
+                            1, g_dgettext(translation_domain, gmpc_plugin_get_name(plug)),
                             -1);
                 }else{
                     GtkTreeIter piter;
@@ -324,10 +325,15 @@ static void plugin_stats_construct(GtkWidget *container)
 		{
 			if(!gmpc_plugin_is_internal(plugins[i]))
 			{
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
                 const int *ver = gmpc_plugin_get_version(plugins[i]);
                 gchar *version = (ver)?g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]):g_strdup("n/a");
 				gtk_list_store_append(store, &iter);
-				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
+				gtk_list_store_set(store, &iter, 
+                                0,TRUE,
+                                1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])),
+                                3,(plugins[i]),
+                                4,version, -1);
                 g_free(version);
 				if(gmpc_plugin_get_enabled(plugins[i])) 
 				{

@@ -112,6 +112,7 @@ static void gmpc_plugin_base_class_init (GmpcPluginBaseClass * klass) {
 
 
 static void gmpc_plugin_base_instance_init (GmpcPluginBase * self) {
+	self->translation_domain = NULL;
 	self->plugin_type = 1;
 }
 
@@ -119,6 +120,7 @@ static void gmpc_plugin_base_instance_init (GmpcPluginBase * self) {
 static void gmpc_plugin_base_finalize (GObject* obj) {
 	GmpcPluginBase * self;
 	self = GMPC_PLUGIN_BASE (obj);
+	self->translation_domain = (g_free (self->translation_domain), NULL);
 	self->path = (g_free (self->path), NULL);
 	G_OBJECT_CLASS (gmpc_plugin_base_parent_class)->finalize (obj);
 }

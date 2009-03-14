@@ -25,6 +25,8 @@ using Gmpc;
 namespace Gmpc {
     namespace Plugin {
         public abstract class Base : GLib.Object { 
+            /* translation domain */
+            public string translation_domain = null;
             /* set path */
             public string path;
             /* set by gmpc. */

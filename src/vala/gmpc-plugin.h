@@ -83,6 +83,7 @@ typedef struct _GmpcPluginSongListIfaceIface GmpcPluginSongListIfaceIface;
 struct _GmpcPluginBase {
 	GObject parent_instance;
 	GmpcPluginBasePrivate * priv;
+	char* translation_domain;
 	char* path;
 	gint id;
 	gint plugin_type;

@@ -365,7 +365,10 @@ void gmpc_plugin_set_enabled(gmpcPluginParent *plug, gboolean enabled)
 
 const gchar * gmpc_plugin_get_translation_domain(gmpcPluginParent *plug)
 {
-
+    if(plug->new)
+    {
+        return plug->new->translation_domain;
+    }
     if(plug->old && plug->old->get_translation_domain) {
         return plug->old->get_translation_domain();
     }
