@@ -529,7 +529,8 @@ void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
 gboolean gmpc_plugin_is_internal(gmpcPluginParent *plug)
 {
     if(plug->new) {
-        return FALSE;
+        return (((plug->new->plugin_type)&GMPC_INTERNALL) != 0);
+;
     }
     return (((plug->old->plugin_type)&GMPC_INTERNALL) != 0);
 }
