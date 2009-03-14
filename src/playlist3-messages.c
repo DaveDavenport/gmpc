@@ -257,7 +257,6 @@ void message_window_destroy(GtkWidget *win)
  * This is not usefull-as-is
  */
 static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass);
-static gpointer playlist3_message_plugin_parent_class = NULL;
 GType playlist3_message_plugin_get_type(void);
 
 static int *playlist3_message_plugin_get_version(GmpcPluginBase *plug, int *length)
@@ -273,9 +272,12 @@ static const char *playlist3_message_plugin_get_name(GmpcPluginBase *plug)
 }
 
 static void playlist3_message_plugin_finalize(GObject *obj) {
-	printf("Destroy playlist3 message plugin\n");
+	Playlist3MessagePluginClass * klass = (g_type_class_peek (playlist3_message_plugin_get_type()));
+	gpointer parent_class = g_type_class_peek_parent (klass);
+	printf("Destroy playlist3 message plugin (%p)\n",parent_class);
 	playlist3_message_destroy();
-	G_OBJECT_CLASS(playlist3_message_plugin_parent_class)->finalize(obj);
+	if(parent_class)
+		G_OBJECT_CLASS(parent_class)->finalize(obj);
 }
 static GObject *playlist3_message_plugin_constructor(GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
@@ -295,7 +297,6 @@ static GObject *playlist3_message_plugin_constructor(GType type, guint n_constru
 
 static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass)
 {
-	playlist3_message_plugin_parent_class = g_type_class_peek_parent(klass);
 	/* Connect destroy and construct */
 	G_OBJECT_CLASS(klass)->finalize =		playlist3_message_plugin_finalize;
 	G_OBJECT_CLASS(klass)->constructor =	playlist3_message_plugin_constructor;
