@@ -162,6 +162,8 @@ void plugin_add_new(GmpcPluginBase *plug, int plugin)
 
 static int plugin_load(char *path, const char *file)
 {
+    GType plugin_type=0;
+    gpointer function;
 	GModule *handle;
 	int *api_version=0;
 	gmpcPlugin *plug = NULL;
@@ -183,6 +185,20 @@ static int plugin_load(char *path, const char *file)
 		q_free(message);
 		return 1;
 	}
+
+	if(g_module_symbol(handle, "gmpc_plugin_get_type", (gpointer)&function)){
+        GmpcPluginBase *new;
+        GType (*get_type)(void);
+        get_type = function;
+        printf("Got type\n");
+        plugin_type = get_type(); 
+        printf("hell\n");
+        new = g_object_new(plugin_type,NULL);
+
+        new->path = g_strdup(path);
+        plugin_add_new(new, 1);
+        return 0;
+    }
 	if(!g_module_symbol(handle, "plugin_api_version", (gpointer)&api_version)){
 		gchar *message = g_strdup_printf("Failed to load plugin:\n%s:%s",file, g_module_error());
 		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());

@@ -7,6 +7,7 @@ namespace Gmpc {
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public abstract class Base : GLib.Object {
 			public int id;
+			public string path;
 			public int plugin_type;
 			public virtual bool get_enabled ();
 			public abstract unowned string get_name ();

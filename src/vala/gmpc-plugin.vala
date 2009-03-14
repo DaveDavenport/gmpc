@@ -25,6 +25,8 @@ using Gmpc;
 namespace Gmpc {
     namespace Plugin {
         public abstract class Base : GLib.Object { 
+            /* set path */
+            public string path;
             /* set by gmpc. */
             public int id;
             /* Default to dummy */
