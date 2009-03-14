@@ -151,7 +151,6 @@ void playlist3_message_show(Playlist3MessagePlugin *self, const gchar *message, 
 			gtk_widget_modify_text(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
 		}
 
-		//event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
 		gtk_widget_show_all(event);
 		/* Error */
 		self->priv->error_visible = TRUE;
