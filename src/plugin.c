@@ -363,6 +363,14 @@ void gmpc_plugin_set_enabled(gmpcPluginParent *plug, gboolean enabled)
     }
 }
 
+const gchar * gmpc_plugin_get_translation_domain(gmpcPluginParent *plug)
+{
+
+    if(plug->old && plug->old->get_translation_domain) {
+        return plug->old->get_translation_domain();
+    }
+    return NULL;
+}
 gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
 {
 #ifdef WIN32

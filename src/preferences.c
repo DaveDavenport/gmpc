@@ -176,10 +176,11 @@ void create_preferences_window(void)
 			if(gmpc_plugin_is_internal(plugins[i]))
 			{
 				GtkTreeIter iter;
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-						1, _(gmpc_plugin_get_name(plugins[i])), -1);
+						1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])), -1);
 				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree")))) == 0)
 				{
@@ -197,6 +198,7 @@ void create_preferences_window(void)
 	{
 		GtkTreeIter iter;
 		gchar *value = g_markup_printf_escaped("<b>%s:</b>", _("Plugins"));
+
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 
 				0,PLUGIN_STATS, 
@@ -206,10 +208,11 @@ void create_preferences_window(void)
 		{
 			if(gmpc_plugin_has_preferences(plugins[i]) && ! gmpc_plugin_is_internal(plugins[i]) && gmpc_plugin_get_enabled(plugins[i]))
 			{
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-						1, gmpc_plugin_get_name(plugins[i]),
+						1, g_dgettext(translation_domain,gmpc_plugin_get_name(plugins[i])),
 						-1);
 			}
 		}

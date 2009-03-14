@@ -173,7 +173,7 @@ typedef struct {
 
     /* Padding */
     gint    (*tool_menu_integration)    (GtkMenu *menu); 
-    void (*padding2)                (void);
+    const gchar*  (*get_translation_domain)   (void);
     void (*padding3)                (void);
 } gmpcPlugin;
 
@@ -231,6 +231,7 @@ void            gmpc_plugin_save_yourself                   (gmpcPluginParent *p
 gboolean        gmpc_plugin_get_enabled                     (gmpcPluginParent *plug);           
 void            gmpc_plugin_set_enabled                     (gmpcPluginParent *plug, gboolean enabled);
 
+const gchar * gmpc_plugin_get_translation_domain(gmpcPluginParent *plug);
 const char *    gmpc_plugin_get_name                        (gmpcPluginParent *plug);
 void            gmpc_plugin_status_changed                  (gmpcPluginParent *plug, MpdObj *mi, ChangedStatusType what);
 
