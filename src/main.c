@@ -1263,7 +1263,7 @@ void show_error_message(const gchar * string, const int block)
 		/* create dialog */
 		error_dialog =
 			gtk_dialog_new_with_buttons(_
-										("Error occured during operation"),
+										("Error occurred during operation"),
 										NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CLOSE, GTK_RESPONSE_OK, NULL);
 		if (pl3_xml) {
 			pl3_win = playlist3_get_window();
@@ -1287,7 +1287,7 @@ void show_error_message(const gchar * string, const int block)
 		gtk_box_pack_start(GTK_BOX(hbox), vbox, TRUE, TRUE, 0);
 
 		/* Create label */
-		label = gtk_label_new(_("The following error(s) occured:"));
+		label = gtk_label_new(_("The following error(s) occurred:"));
 		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
 		/** Create tree view */
