@@ -18,6 +18,9 @@
 */
 
 #include <gmpc-plugin.h>
+#include <stdio.h>
+#include <plugin.h>
+#include <config1.h>
 
 
 
@@ -63,8 +66,7 @@ const char* gmpc_plugin_base_get_name (GmpcPluginBase* self) {
 
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self) {
 	g_return_if_fail (self != NULL);
-	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_save_yourself'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
-	return;
+	fprintf (stdout, "Default save yourself function\n");
 }
 
 
@@ -75,8 +77,10 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
 
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self) {
 	g_return_val_if_fail (self != NULL, FALSE);
-	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_get_enabled'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
-	return FALSE;
+	if (gmpc_plugin_base_get_name (self) == NULL) {
+		return FALSE;
+	}
+	return (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name (self), "enabled", 1);
 }
 
 
@@ -87,8 +91,9 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self) {
 
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state) {
 	g_return_if_fail (self != NULL);
-	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_set_enabled'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
-	return;
+	if (gmpc_plugin_base_get_name (self) != NULL) {
+		cfg_set_single_value_as_int (config, gmpc_plugin_base_get_name (self), "enabled", (gint) state);
+	}
 }
 
 

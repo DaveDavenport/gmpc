@@ -19,11 +19,11 @@
 
 using GLib;
 using Gtk;
+using Gmpc;
 
 
 namespace Gmpc {
     namespace Plugin {
-        [CCode (cheader_filename="gmpc-plugin.h")]
         public abstract class Base : GLib.Object { 
             /* set by gmpc. */
             public int id;
@@ -34,10 +34,21 @@ namespace Gmpc {
 
             public abstract weak string get_name ();
 
-            public abstract void save_yourself ();
+            public virtual void save_yourself () 
+            {
+                stdout.printf("Default save yourself function\n");
+            }
 
-            public abstract bool get_enabled ();
-            public abstract void set_enabled (bool state);
+            public virtual bool get_enabled ()
+            {
+                if(this.get_name() == null) return false;
+                return (bool)Gmpc.config.get_int_with_default(this.get_name(), "enabled", 1);
+            }
+            public virtual void set_enabled (bool state)
+            {
+                if(this.get_name() != null)
+                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+            }
 
         }
         public interface ToolMenuIface : Base {

@@ -8,11 +8,11 @@ namespace Gmpc {
 		public abstract class Base : GLib.Object {
 			public int id;
 			public int plugin_type;
-			public abstract bool get_enabled ();
+			public virtual bool get_enabled ();
 			public abstract unowned string get_name ();
 			public abstract unowned int[] get_version ();
-			public abstract void save_yourself ();
-			public abstract void set_enabled (bool state);
+			public virtual void save_yourself ();
+			public virtual void set_enabled (bool state);
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface BrowserIface : Gmpc.Plugin.Base {
