@@ -33,13 +33,13 @@ static const char *error_levels[3] = {
 	N_("Warning"),
 	N_("Critical")
 };
-void playlist3_message_destroy(void)
+static void playlist3_message_destroy(void)
 {
 	g_io_channel_flush(log_file, NULL);
 	g_io_channel_unref(log_file);
 }
 
-void playlist3_message_init(void)
+static void playlist3_message_init(void)
 {
 	if(!message_list)
 	{
@@ -251,5 +251,75 @@ void message_window_destroy(GtkWidget *win)
 	g_object_unref(message_xml);
 	message_xml = NULL;
 }
+
+/**
+ * Turn this into a plugin 
+ */
+static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass);
+static gpointer playlist3_message_plugin_parent_class = NULL;
+
+static int *playlist3_message_plugin_get_version(GmpcPluginBase *plug, int *length)
+{
+	static int version[3] = {0,0,1};
+	if(length) *length = 3;
+	return (int *)version;
+}
+static const char *playlist3_message_plugin_get_name(GmpcPluginBase *plug)
+{
+	return _("Playlist3 Messages");
+}
+
+static void playlist3_message_plugin_finalize(GObject *obj) {
+	printf("Destroy playlist3 message plugin\n");
+	playlist3_message_destroy();
+	G_OBJECT_CLASS(playlist3_message_plugin_parent_class)->finalize(obj);
+}
+static GObject *playlist3_message_plugin_constructor(GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
+	GObject * obj;
+	Playlist3MessagePluginClass * klass;
+	GObjectClass * parent_class;
+	klass = (g_type_class_peek (playlist3_message_plugin_get_type()));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
+	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
+	
+	/* Make it an internal plugin */
+	GMPC_PLUGIN_BASE(obj)->plugin_type = GMPC_INTERNALL;
+	printf("Playlist3 message plugin create\n");
+	playlist3_message_init();
+
+	return obj;
+}
+
+static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass)
+{
+	playlist3_message_plugin_parent_class = g_type_class_peek_parent(klass);
+	/* Connect destroy and construct */
+	G_OBJECT_CLASS(klass)->finalize = playlist3_message_plugin_finalize;
+	G_OBJECT_CLASS(klass)->constructor = playlist3_message_plugin_constructor;
+	/* Connect plugin functions */
+	GMPC_PLUGIN_BASE_CLASS(klass)->get_version = playlist3_message_plugin_get_version;
+	GMPC_PLUGIN_BASE_CLASS(klass)->get_name =	 playlist3_message_plugin_get_name;
+
+	printf("Register playlist3_message_plugin_class\n");
+}
+GType playlist3_message_plugin_get_type(void) {
+	static GType playlist3_message_plugin_type_id = 0;
+	if(playlist3_message_plugin_type_id == 0) {
+		static const GTypeInfo info = {
+			.class_size = sizeof(Playlist3MessagePluginClass),
+			.class_init = (GClassInitFunc)playlist3_message_plugin_class_init,
+			.instance_size = sizeof(Playlist3MessagePlugin),
+			.n_preallocs = 0
+		};
+		playlist3_message_plugin_type_id = g_type_register_static(GMPC_PLUGIN_TYPE_BASE, "Playlist3MessagesPlugin", &info, 0);
+		printf("Register type playlist3 message plugin\n");
+	}
+	return playlist3_message_plugin_type_id;
+}
+
+Playlist3MessagePlugin * playlist3_message_plugin_new(void) {
+	return g_object_newv(playlist3_message_plugin_get_type(), 0, NULL);
+}
+
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

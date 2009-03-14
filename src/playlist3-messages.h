@@ -33,7 +33,38 @@ void playlist3_error_add_widget(GtkWidget *widget);
 
 
 
-void playlist3_message_init(void);
-void playlist3_message_destroy(void);
+
+
+
+
+typedef struct _Playlist3MessagePlugin      Playlist3MessagePlugin;
+typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
+//typedef struct _Pluglist3MessagePluginPrivate Playlist3MessagePluginPrivate;
+
+struct _Playlist3MessagePlugin
+{
+        GmpcPluginBase  parent_instance;
+};
+
+struct _Playlist3MessagePluginClass
+{
+        GmpcPluginBaseClass parent_class;
+};
+
+
+
+
+Playlist3MessagePlugin * playlist3_message_plugin_new(void);
+GType playlist3_message_plugin_get_type(void);
+
+
+
+
+
+
+
+
+
+
 
 #endif
