@@ -280,7 +280,6 @@ static const char *playlist3_message_plugin_get_name(GmpcPluginBase *plug)
 static void playlist3_message_plugin_finalize(GObject *obj) {
 	Playlist3MessagePluginClass * klass = (g_type_class_peek (playlist3_message_plugin_get_type()));
 	gpointer parent_class = g_type_class_peek_parent (klass);
-	printf("Destroy playlist3 message plugin (%p)\n",parent_class);
 	playlist3_message_destroy((Playlist3MessagePlugin *)obj);
 
 	if(((Playlist3MessagePlugin *)obj)->priv){
@@ -308,7 +307,6 @@ static GObject *playlist3_message_plugin_constructor(GType type, guint n_constru
 
 	/* Make it an internal plugin */
 	GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_INTERNALL;
-	printf("Playlist3 message plugin create\n");
 	playlist3_message_init(self);
 
 	return G_OBJECT(self);
@@ -324,7 +322,6 @@ static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *kl
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_version = playlist3_message_plugin_get_version;
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_name =	 playlist3_message_plugin_get_name;
 
-	printf("Register playlist3_message_plugin_class\n");
 }
 GType playlist3_message_plugin_get_type(void) {
 	static GType playlist3_message_plugin_type_id = 0;
@@ -336,7 +333,6 @@ GType playlist3_message_plugin_get_type(void) {
 			.n_preallocs = 0
 		};
 		playlist3_message_plugin_type_id = g_type_register_static(GMPC_PLUGIN_TYPE_BASE, "Playlist3MessagesPlugin", &info, 0);
-		printf("Register type playlist3 message plugin\n");
 	}
 	return playlist3_message_plugin_type_id;
 }

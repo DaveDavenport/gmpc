@@ -21,9 +21,9 @@
 #include <gtk/gtk.h>
 #include <config.h>
 #include <glib/gi18n-lib.h>
-#include <stdio.h>
 #include <plugin.h>
 #include <config1.h>
+#include <stdio.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
@@ -33,8 +33,8 @@
 
 
 
-static char* string_substring (const char* self, glong offset, glong len);
 static glong string_get_length (const char* self);
+static char* string_substring (const char* self, glong offset, glong len);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -71,6 +71,12 @@ static gint _vala_array_length (gpointer array);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -88,12 +94,6 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
-}
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
 }
 
 
@@ -122,7 +122,6 @@ static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* resu
 static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base) {
 	GmpcEasyCommand * self;
 	self = (GmpcEasyCommand*) base;
-	fprintf (stdout, "Vala plugin save myself\n");
 }
 
 

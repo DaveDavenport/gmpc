@@ -41,7 +41,6 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface {
      */
     public override void save_yourself()
     {
-        stdout.printf("Vala plugin save myself\n");
         /* nothing to save */
     }
 

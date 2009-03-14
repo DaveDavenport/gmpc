@@ -38,7 +38,6 @@ namespace Gmpc {
 
             public virtual void save_yourself () 
             {
-                stdout.printf("Default save yourself function\n");
             }
 
             public virtual bool get_enabled ()

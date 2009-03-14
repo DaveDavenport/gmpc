@@ -55,7 +55,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
      */
     public override void save_yourself()
     {
-        stdout.printf("Vala plugin save myself\n");
         /* nothing to save */
     }
     /**

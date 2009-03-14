@@ -18,9 +18,9 @@
 */
 
 #include "gmpc-test-plugin.h"
-#include <stdio.h>
 #include <plugin.h>
 #include <config1.h>
+#include <stdio.h>
 #include <gmpc-connection.h>
 #include <libmpd/libmpd.h>
 #include <main.h>
@@ -76,7 +76,6 @@ static const char* gmpc_test_plugin_real_get_name (GmpcPluginBase* base) {
 static void gmpc_test_plugin_real_save_yourself (GmpcPluginBase* base) {
 	GmpcTestPlugin * self;
 	self = (GmpcTestPlugin*) base;
-	fprintf (stdout, "Vala plugin save myself\n");
 }
 
 

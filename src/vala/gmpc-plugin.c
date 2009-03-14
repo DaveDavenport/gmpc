@@ -18,7 +18,6 @@
 */
 
 #include <gmpc-plugin.h>
-#include <stdio.h>
 #include <plugin.h>
 #include <config1.h>
 
@@ -66,7 +65,6 @@ const char* gmpc_plugin_base_get_name (GmpcPluginBase* self) {
 
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self) {
 	g_return_if_fail (self != NULL);
-	fprintf (stdout, "Default save yourself function\n");
 }
 
 
