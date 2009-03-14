@@ -31,15 +31,16 @@ typedef enum {
 void playlist3_show_error_message(const gchar *message, ErrorLevel el);
 void playlist3_error_add_widget(GtkWidget *widget);
 
+#define playlist3_show_message playlist3_show_error_message
 
 
-
-
+/**
+ * Object based plugin integration
+ */
 
 
 typedef struct _Playlist3MessagePlugin      Playlist3MessagePlugin;
 typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
-//typedef struct _Pluglist3MessagePluginPrivate Playlist3MessagePluginPrivate;
 
 struct _Playlist3MessagePlugin
 {
@@ -55,16 +56,5 @@ struct _Playlist3MessagePluginClass
 
 
 Playlist3MessagePlugin * playlist3_message_plugin_new(void);
-GType playlist3_message_plugin_get_type(void);
-
-
-
-
-
-
-
-
-
-
 
 #endif

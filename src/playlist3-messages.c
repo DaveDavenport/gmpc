@@ -253,10 +253,12 @@ void message_window_destroy(GtkWidget *win)
 }
 
 /**
- * Turn this into a plugin 
+ * Turn this into a plugin. This is a test implementation. 
+ * This is not usefull-as-is
  */
 static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *klass);
 static gpointer playlist3_message_plugin_parent_class = NULL;
+GType playlist3_message_plugin_get_type(void);
 
 static int *playlist3_message_plugin_get_version(GmpcPluginBase *plug, int *length)
 {
@@ -264,9 +266,10 @@ static int *playlist3_message_plugin_get_version(GmpcPluginBase *plug, int *leng
 	if(length) *length = 3;
 	return (int *)version;
 }
+
 static const char *playlist3_message_plugin_get_name(GmpcPluginBase *plug)
 {
-	return _("Playlist3 Messages");
+	return "Playlist3 Messages";
 }
 
 static void playlist3_message_plugin_finalize(GObject *obj) {
@@ -294,8 +297,9 @@ static void playlist3_message_plugin_class_init (Playlist3MessagePluginClass *kl
 {
 	playlist3_message_plugin_parent_class = g_type_class_peek_parent(klass);
 	/* Connect destroy and construct */
-	G_OBJECT_CLASS(klass)->finalize = playlist3_message_plugin_finalize;
-	G_OBJECT_CLASS(klass)->constructor = playlist3_message_plugin_constructor;
+	G_OBJECT_CLASS(klass)->finalize =		playlist3_message_plugin_finalize;
+	G_OBJECT_CLASS(klass)->constructor =	playlist3_message_plugin_constructor;
+	
 	/* Connect plugin functions */
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_version = playlist3_message_plugin_get_version;
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_name =	 playlist3_message_plugin_get_name;
