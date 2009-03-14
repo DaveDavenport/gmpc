@@ -162,7 +162,6 @@ void plugin_add_new(GmpcPluginBase *plug, int plugin)
 
 static int plugin_load(char *path, const char *file)
 {
-    GType plugin_type=0;
     gpointer function;
 	GModule *handle;
 	int *api_version=0;
@@ -186,15 +185,13 @@ static int plugin_load(char *path, const char *file)
 		return 1;
 	}
 
-	if(g_module_symbol(handle, "gmpc_plugin_get_type", (gpointer)&function)){
+	if(g_module_symbol(handle, "plugin_get_type", (gpointer)&function)){
         GmpcPluginBase *new;
         GType (*get_type)(void);
         get_type = function;
-        printf("Got type\n");
-        plugin_type = get_type(); 
-        printf("hell\n");
-        new = g_object_new(plugin_type,NULL);
-
+        new = g_object_newv(get_type(),0,NULL);
+        
+        if(!new) return 1;
         new->path = g_strdup(path);
         plugin_add_new(new, 1);
         return 0;
@@ -214,7 +211,6 @@ static int plugin_load(char *path, const char *file)
 				file, *api_version, PLUGIN_API_VERSION);
 		debug_printf(DEBUG_ERROR, "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
 			       file, *api_version, PLUGIN_API_VERSION);
-	//	show_error_message(message,FALSE);
         playlist3_show_error_message(message, ERROR_WARNING);
         q_free(string);
 		q_free(message);
