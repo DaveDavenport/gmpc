@@ -417,6 +417,10 @@ gboolean gmpc_plugin_is_browser(gmpcPluginParent *plug)
 void gmpc_plugin_browser_unselected(gmpcPluginParent *plug, GtkWidget *container)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new) {
+            gmpc_plugin_browser_iface_browser_unselected((GmpcPluginBrowserIface *)plug->new, container);
+            return;
+        }
         g_assert(plug->old->browser != NULL);
         g_assert(plug->old->browser->unselected != NULL);
         plug->old->browser->unselected(container);
@@ -425,6 +429,10 @@ void gmpc_plugin_browser_unselected(gmpcPluginParent *plug, GtkWidget *container
 void gmpc_plugin_browser_selected(gmpcPluginParent *plug, GtkWidget *container)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new) {
+            gmpc_plugin_browser_iface_browser_selected((GmpcPluginBrowserIface *)plug->new, container);
+            return;
+        }
         g_assert(plug->old->browser != NULL);
         g_assert(plug->old->browser->selected != NULL);
         plug->old->browser->selected(container);
@@ -434,6 +442,10 @@ void gmpc_plugin_browser_selected(gmpcPluginParent *plug, GtkWidget *container)
 void gmpc_plugin_browser_add(gmpcPluginParent *plug, GtkWidget *cat_tree)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new) {
+            gmpc_plugin_browser_iface_browser_add((GmpcPluginBrowserIface *)plug->new, cat_tree);
+            return;
+        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->add)
         {
@@ -445,6 +457,11 @@ void gmpc_plugin_browser_add(gmpcPluginParent *plug, GtkWidget *cat_tree)
 int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPluginParent *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new){
+            if(type == plug->new->id)
+                return gmpc_plugin_browser_iface_browser_option_menu((GmpcPluginBrowserIface *)plug->new, GTK_MENU(menu));
+            return 0;
+        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->cat_right_mouse_menu != NULL)
         {
@@ -457,6 +474,10 @@ int gmpc_plugin_browser_cat_right_mouse_menu(gmpcPluginParent *plug, GtkWidget *
 int gmpc_plugin_browser_key_press_event(gmpcPluginParent *plug, GtkWidget *mw, GdkEventKey *event, int type)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new) {
+            /* not going to be implemented */
+            return 0;
+        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->key_press_event != NULL)
         {
@@ -469,6 +490,9 @@ int gmpc_plugin_browser_key_press_event(gmpcPluginParent *plug, GtkWidget *mw, G
 int gmpc_plugin_browser_add_go_menu(gmpcPluginParent *plug, GtkWidget *menu)
 {
     if(gmpc_plugin_is_browser(plug)) {
+        if(plug->new) {
+            return gmpc_plugin_browser_iface_browser_add_go_menu((GmpcPluginBrowserIface *)plug->new, GTK_MENU(menu));
+        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->add_go_menu != NULL)
         {
@@ -482,6 +506,10 @@ int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent *plug, GmpcMpdDat
 {
     if(gmpc_plugin_is_browser(plug))
     {
+        if(plug->new) {
+            /* TODO */
+            return 0;
+        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->song_list_option_menu)
         {

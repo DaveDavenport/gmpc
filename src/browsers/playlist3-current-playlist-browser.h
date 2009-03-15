@@ -19,12 +19,22 @@
 
 #ifndef  __PLAYLIST3_CURRENT_PLAYLIST_BROWSER_H__
 #define  __PLAYLIST3_CURRENT_PLAYLIST_BROWSER_H__
-/**
- * Do we want to move this in the plugin system aswell
- */
-void pl3_current_playlist_destroy(void);
+
+typedef struct _PlayQueuePlugin      PlayQueuePlugin;
+typedef struct _PlayQueuePluginClass PlayQueuePluginClass;
+typedef struct _PlayQueuePluginPrivate PlayQueuePluginPrivate;
+struct _PlayQueuePlugin
+{
+        GmpcPluginBase  parent_instance;
+        PlayQueuePluginPrivate *priv;
+};
+
+struct _PlayQueuePluginClass
+{
+        GmpcPluginBaseClass parent_class;
+};
 
 
-extern gmpcPlugin current_playlist_plug;
+PlayQueuePlugin * play_queue_plugin_new(void);
 
 #endif

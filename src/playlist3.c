@@ -262,6 +262,7 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
 		if ((old_type != type)) {
+			printf("Selected: %s %i\n", gmpc_plugin_get_name(plugins[plugin_get_pos(type)]), type);
 			gmpc_plugin_browser_selected(plugins[plugin_get_pos(type)], container);
 		}
 		/**

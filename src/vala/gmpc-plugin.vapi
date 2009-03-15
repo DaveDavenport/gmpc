@@ -18,9 +18,11 @@ namespace Gmpc {
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface BrowserIface : Gmpc.Plugin.Base {
-			public abstract void browser_add (Gtk.Widget* category_tree);
-			public abstract void browser_selected (Gtk.Widget* container);
-			public abstract void browser_unselected (Gtk.Widget* container);
+			public abstract void browser_add (Gtk.Widget category_tree);
+			public virtual int browser_add_go_menu (Gtk.Menu menu);
+			public virtual int browser_option_menu (Gtk.Menu menu);
+			public abstract void browser_selected (Gtk.Widget container);
+			public abstract void browser_unselected (Gtk.Widget container);
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface MetaDataIface : Gmpc.Plugin.Base {

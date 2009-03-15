@@ -34,6 +34,8 @@ static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self);
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state);
 static gpointer gmpc_plugin_base_parent_class = NULL;
 static void gmpc_plugin_base_finalize (GObject* obj);
+static gint gmpc_plugin_browser_iface_real_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
+static gint gmpc_plugin_browser_iface_real_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 
 
 
@@ -213,11 +215,37 @@ void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self,
 }
 
 
+/* Option menu */
+static gint gmpc_plugin_browser_iface_real_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	g_return_val_if_fail (menu != NULL, 0);
+	return 0;
+}
+
+
+gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	return GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_option_menu (self, menu);
+}
+
+
+/* Go menu */
+static gint gmpc_plugin_browser_iface_real_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	g_return_val_if_fail (menu != NULL, 0);
+	return 0;
+}
+
+
+gint gmpc_plugin_browser_iface_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	return GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_add_go_menu (self, menu);
+}
+
+
 static void gmpc_plugin_browser_iface_base_init (GmpcPluginBrowserIfaceIface * iface) {
 	static gboolean initialized = FALSE;
 	if (!initialized) {
 		initialized = TRUE;
 	}
+	iface->browser_option_menu = gmpc_plugin_browser_iface_real_browser_option_menu;
+	iface->browser_add_go_menu = gmpc_plugin_browser_iface_real_browser_add_go_menu;
 }
 
 

@@ -65,12 +65,21 @@ namespace Gmpc {
         }
         public interface BrowserIface : Base {
             /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
-            public abstract  void browser_add (Gtk.Widget *category_tree);
+            public abstract  void browser_add (Gtk.Widget category_tree);
             /* This gets called, the plugin should add it view in container */
-            public abstract void  browser_selected (Widget *container);
+            public abstract void  browser_selected (Gtk.Widget container);
             /* Plugin should remove itself from container */
-            public abstract void  browser_unselected (Widget *container);
-
+            public abstract void  browser_unselected (Gtk.Widget container);
+            /* Option menu */
+            public virtual int browser_option_menu(Gtk.Menu menu)
+            {
+                return 0;
+            }
+            /* Go menu */
+            public virtual int browser_add_go_menu(Gtk.Menu menu)
+            {
+                return 0;
+            }
         }
         public interface PreferencesIface : Base {
             public abstract void pane_construct (Gtk.Container container);

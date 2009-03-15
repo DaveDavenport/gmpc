@@ -817,7 +817,7 @@ static void pl3_file_browser_row_activated(GtkTreeView *tree, GtkTreePath *tp)
     q_free(song_path);
 }
 
-static void pl3_file_browser_add_to_playlist(GtkWidget *menu)
+static void pl3_file_browser_add_to_playlist(GtkWidget *menu, gpointer cb_data)
 {
     GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
@@ -925,7 +925,7 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget *but, GdkEventBu
                 g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
 
 
-                playlist_editor_right_mouse(menu,pl3_file_browser_add_to_playlist);
+                playlist_editor_right_mouse(menu,pl3_file_browser_add_to_playlist,NULL);
                 has_item = 1;
             }
 

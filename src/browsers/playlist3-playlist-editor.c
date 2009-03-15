@@ -918,14 +918,16 @@ int playlist_editor_browser_cat_menu(GtkWidget *menu, int type, GtkWidget *tree,
 
 static void playlist_editor_add_to_new(GtkWidget *item, gpointer data)
 {
+    gpointer cb_data =g_object_get_data(G_OBJECT(item), "cb-data");
     void (*callback)(GtkWidget *item, gpointer data) = data;
+
     playlist_editor_new_playlist(item, NULL);
-    callback(item, NULL); 
+    callback(item, cb_data); 
 
 
 }
 
-void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWidget *menu))
+void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWidget *menu, gpointer data), gpointer cb_data)
 {
     GtkWidget *sitem;
     GtkWidget *item;
@@ -941,6 +943,7 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
     smenu  = gtk_menu_new();
 
     sitem = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);
+    g_object_set_data(G_OBJECT(sitem), "cb-data", cb_data);
     g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(playlist_editor_add_to_new), add_to_playlist);
     gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
 
@@ -962,7 +965,7 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
                 }
                 g_object_set_data_full(G_OBJECT(sitem),"playlist", g_strdup(data->playlist->path), g_free);
                 gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
-                g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(add_to_playlist), NULL);
+                g_signal_connect(G_OBJECT(sitem), "activate", G_CALLBACK(add_to_playlist), cb_data);
                 gtk_widget_show(sitem);                             				
             }
         }

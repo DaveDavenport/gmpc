@@ -709,7 +709,8 @@ int main(int argc, char **argv)
 	g_object_ref_sink(playlist);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 	/** current playlist */
-	plugin_add(&current_playlist_plug, 0);
+	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new(), 0);
+//	plugin_add(&current_playlist_plug, 0);
 
 	/** file browser */
 	plugin_add(&file_browser_plug, 0);

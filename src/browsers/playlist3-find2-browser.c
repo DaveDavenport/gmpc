@@ -628,7 +628,7 @@ static void pl3_find2_browser_add_all(void)
         q_free(message);
     }
 }
-static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu)
+static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu, gpointer cb_data)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree));
@@ -750,7 +750,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
       }
 
 
-      playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist);
+      playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist, NULL);
       gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree), GTK_MENU(menu));
 
       gtk_widget_show_all(menu);

@@ -115,6 +115,8 @@ struct _GmpcPluginBrowserIfaceIface {
 	void (*browser_add) (GmpcPluginBrowserIface* self, GtkWidget* category_tree);
 	void (*browser_selected) (GmpcPluginBrowserIface* self, GtkWidget* container);
 	void (*browser_unselected) (GmpcPluginBrowserIface* self, GtkWidget* container);
+	gint (*browser_option_menu) (GmpcPluginBrowserIface* self, GtkMenu* menu);
+	gint (*browser_add_go_menu) (GmpcPluginBrowserIface* self, GtkMenu* menu);
 };
 
 struct _GmpcPluginPreferencesIfaceIface {
@@ -144,6 +146,8 @@ GType gmpc_plugin_meta_data_iface_get_type (void);
 void gmpc_plugin_browser_iface_browser_add (GmpcPluginBrowserIface* self, GtkWidget* category_tree);
 void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkWidget* container);
 void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkWidget* container);
+gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
+gint gmpc_plugin_browser_iface_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 GType gmpc_plugin_browser_iface_get_type (void);
 void gmpc_plugin_preferences_iface_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container);
 void gmpc_plugin_preferences_iface_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container);
