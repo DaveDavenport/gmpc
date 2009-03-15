@@ -46,7 +46,9 @@ static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* resul
 }
 
 
-/* The version */
+/**
+             * Function should return the version of the plugin
+             */
 gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_version (self, result_length1);
 }
@@ -59,12 +61,20 @@ static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self) {
 }
 
 
-/* = {0,0,1};*/
+/**
+             * Return the name of the plugin
+             */
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_name (self);
 }
 
 
+/**
+             * This is called before the plugin is destroyed. Plugins should save it state here.
+             *
+             * A Browser plugin should store the position in the side-tree here.
+             * Optional function. 
+             */
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self) {
 	g_return_if_fail (self != NULL);
 }
@@ -75,6 +85,10 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
 }
 
 
+/**
+             * Function used by gmpc to check if the plugin is enabled.
+             * By default it is stored in the get_name() category under the enabled key.
+             */
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (gmpc_plugin_base_get_name (self) == NULL) {
@@ -89,6 +103,11 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self) {
 }
 
 
+/**
+             * Function used by gmpc to enable/disable the plugin. 
+             * By default it is stored in the get_name() category under the enabled key.
+             * If something needs to be done on enable/disable override this function.
+             */
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state) {
 	g_return_if_fail (self != NULL);
 	if (gmpc_plugin_base_get_name (self) != NULL) {

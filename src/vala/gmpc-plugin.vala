@@ -24,29 +24,60 @@ using Gmpc;
 
 namespace Gmpc {
     namespace Plugin {
+        /**
+         * This is the base class that a plugin should inherit from.
+         *
+         */
         public abstract class Base : GLib.Object { 
-            /* translation domain */
+            /* This string tell gmpc what translation domain to use when trying to translate the plugins name. 
+             * If NULL then gmpc's translation domain is used.
+             */
             public string translation_domain = null;
-            /* set path */
+            /* This is set by gmpc, it contains the full path of the plugin.
+             * This is used by gmpc_plugin_get_data_path to calculate the location of the data files.
+             */
             public string path;
-            /* set by gmpc. */
+            /**
+             * This id is set by gmpc. It is a unique id identifying the plugin.
+             */
             public int id;
-            /* Default to dummy */
+            /**
+             * The type of the plugin. see #PluginType. 
+             * This is inherited from the old style plugins and no longer used.
+             */
             public int plugin_type = 1;
-            /* The version */
-            public abstract weak int[3] get_version();// = {0,0,1};
-
+            /**
+             * Function should return the version of the plugin
+             */
+            public abstract weak int[3] get_version();
+            /**
+             * Return the name of the plugin
+             */
             public abstract weak string get_name ();
-
+            /**
+             * This is called before the plugin is destroyed. Plugins should save it state here.
+             *
+             * A Browser plugin should store the position in the side-tree here.
+             * Optional function. 
+             */
             public virtual void save_yourself () 
             {
             }
-
+            /**
+             * Function used by gmpc to check if the plugin is enabled.
+             * By default it is stored in the get_name() category under the enabled key.
+             */
             public virtual bool get_enabled ()
             {
                 if(this.get_name() == null) return false;
                 return (bool)Gmpc.config.get_int_with_default(this.get_name(), "enabled", 1);
             }
+
+            /**
+             * Function used by gmpc to enable/disable the plugin. 
+             * By default it is stored in the get_name() category under the enabled key.
+             * If something needs to be done on enable/disable override this function.
+             */
             public virtual void set_enabled (bool state)
             {
                 if(this.get_name() != null)
@@ -54,6 +85,11 @@ namespace Gmpc {
             }
 
         }
+        /**
+         * This interface allows the plugin to add one, or more, entries in the Tools menu.
+         * If need to remove or undate an entry call pl3_tool_menu_update(). This will tell gmpc
+         * To clear the menu, and call this function again on every plugin.
+         */
         public interface ToolMenuIface : Base {
             public abstract int tool_menu_integration(Gtk.Menu menu);
         }
