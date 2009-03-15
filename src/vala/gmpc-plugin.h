@@ -112,6 +112,7 @@ struct _GmpcPluginToolMenuIfaceIface {
 	gint (*tool_menu_integration) (GmpcPluginToolMenuIface* self, GtkMenu* menu);
 };
 
+/* untested */
 struct _GmpcPluginMetaDataIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*get_data) (GmpcPluginMetaDataIface* self);
@@ -134,6 +135,7 @@ struct _GmpcPluginPreferencesIfaceIface {
 	void (*pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
 };
 
+/* untested */
 struct _GmpcPluginSongListIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*song_list) (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);

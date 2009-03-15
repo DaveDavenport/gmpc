@@ -66,6 +66,8 @@ namespace Gmpc {
             /**
              * Function used by gmpc to check if the plugin is enabled.
              * By default it is stored in the get_name() category under the enabled key.
+             * 
+             * @return The state (true or false)
              */
             public virtual bool get_enabled ()
             {
@@ -74,6 +76,9 @@ namespace Gmpc {
             }
 
             /**
+             * Function to enable/disable the plugin
+             * @param state the enable state to set the plugin in. (true or false)
+             * 
              * Function used by gmpc to enable/disable the plugin. 
              * By default it is stored in the get_name() category under the enabled key.
              * If something needs to be done on enable/disable override this function.
@@ -93,6 +98,7 @@ namespace Gmpc {
         public interface ToolMenuIface : Base {
             public abstract int tool_menu_integration(Gtk.Menu menu);
         }
+        /* untested */
         public interface MetaDataIface : Base {
             public abstract int get_data ();
             /* Set get priority */
@@ -122,6 +128,8 @@ namespace Gmpc {
             public abstract void pane_destroy (Gtk.Container container);
 
         }
+
+        /* untested */
         public interface SongListIface : Base {
             public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
 

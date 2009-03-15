@@ -88,6 +88,8 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
 /**
              * Function used by gmpc to check if the plugin is enabled.
              * By default it is stored in the get_name() category under the enabled key.
+             * 
+             * @return The state (true or false)
              */
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self) {
 	g_return_val_if_fail (self != NULL, FALSE);
@@ -104,6 +106,9 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self) {
 
 
 /**
+             * Function to enable/disable the plugin
+             * @param state the enable state to set the plugin in. (true or false)
+             * 
              * Function used by gmpc to enable/disable the plugin. 
              * By default it is stored in the get_name() category under the enabled key.
              * If something needs to be done on enable/disable override this function.
