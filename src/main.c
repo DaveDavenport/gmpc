@@ -52,6 +52,7 @@
 #include "vala/gmpc-test-plugin.h"
 #include "vala/gmpc-test-plugin.h"
 
+#include "gob/gmpc-mpddata-model-playlist.h"
 /**
  * Get revision
  */
@@ -86,6 +87,10 @@ GmpcMetaWatcher *gmw = NULL;
 GmpcEasyCommand *gmpc_easy_command = NULL;
 /* Playlist3 messages */
 Playlist3MessagePlugin *pl3_messages = NULL;
+
+/* The playlist backend */
+GtkTreeModel *playlist = NULL;
+
 
 /**
  * This flag indicate the requested connection state by the user.
@@ -699,6 +704,10 @@ int main(int argc, char **argv)
 	/**
      * Add the internall plugins
      */
+
+    playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
+	g_object_ref_sink(playlist);
+    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 	/** current playlist */
 	plugin_add(&current_playlist_plug, 0);
 
@@ -908,8 +917,8 @@ int main(int argc, char **argv)
 
 	//playlist3_message_destroy();
 	playlist3_destroy();
-	g_object_unref(playlist);
 
+	g_object_unref(playlist);
 	g_object_unref(G_OBJECT(gmw));
 
 	/**

@@ -68,14 +68,12 @@ static void pl3_current_playlist_browser_show_info(void);
 static void pl3_current_playlist_save_playlist(void);
 static void pl3_current_playlist_browser_shuffle_playlist(void);
 static void pl3_current_playlist_browser_clear_playlist(void);
-static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect, gpointer data);
 static void pl3_current_playlist_save_myself(void);
 static void pl3_current_playlist_browser_init(void);
 
 
 
-GtkTreeModel *playlist = NULL;
 GtkWidget *pl3_cp_tree = NULL;
 static gboolean search_keep_open = FALSE;
 
@@ -130,8 +128,6 @@ static void pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned
 
 static void pl3_cp_init(void)
 {
-    playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
-    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
     pl3_current_playlist_browser_init();
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), NULL);
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), NULL);
@@ -152,8 +148,7 @@ gmpcPlBrowserPlugin current_playlist_gbp = {
 	.selected = pl3_current_playlist_browser_selected,
 	.unselected = pl3_current_playlist_browser_unselected,
 	.cat_right_mouse_menu = pl3_current_playlist_browser_cat_menu_popup,
-	.add_go_menu = pl3_current_playlist_browser_add_go_menu,
-	.key_press_event = pl3_current_playlist_key_press_event
+	.add_go_menu = pl3_current_playlist_browser_add_go_menu
 };
 
 
@@ -1099,15 +1094,6 @@ static int pl3_current_playlist_browser_add_go_menu(GtkWidget *menu)
     g_signal_connect(G_OBJECT(item), "activate", 
             G_CALLBACK(pl3_current_playlist_browser_activate), NULL);
     return 1;
-}
-
-/**
- * 
- */
-static int pl3_current_playlist_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
-{
-
-    return FALSE;
 }
 
 static void pl3_current_playlist_connection_changed(MpdObj *mi, int connect,gpointer data)
