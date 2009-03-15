@@ -1375,6 +1375,7 @@ void print_version(void)
 	}
 	printf("%-25s: %i.%i.%i\n", _("Libmpd Version"), LIBMPD_MAJOR_VERSION, LIBMPD_MINOR_VERSION, LIBMPD_MICRO_VERSION);
 	printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
+	printf("%-25s: %i.%i.%i\n", _("GTK+ version (runtime)"), gtk_major_version, gtk_minor_version, gtk_micro_version);
 	printf("%-25s: %i.%i.%i\n", _("GLIB version"), GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
 	printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);
 	printf("%-25s: %s\n\n", _("Platform"),

@@ -83,8 +83,13 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     g_free(temp);
 
     /* gtk+-2.0 */ 
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "Gtk+-2.0:\t", -1, bold_tag, NULL);
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "Compile time Gtk+-2.0:\t", -1, bold_tag, NULL);
     temp = g_strdup_printf("%i.%i.%i\n", GTK_MAJOR_VERSION, GTK_MINOR_VERSION,GTK_MICRO_VERSION);
+    gtk_text_buffer_insert(buffer, &iter, temp, -1);
+    g_free(temp);
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "Runtime Gtk+-2.0:\t", -1, bold_tag, NULL);
+    temp = g_strdup_printf("%i.%i.%i\n", gtk_major_version, gtk_minor_version, gtk_micro_version);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
