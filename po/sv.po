@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-14 15:51-0700\n"
+"POT-Creation-Date: 2009-03-15 01:04+0100\n"
 "PO-Revision-Date: 2009-02-23 08:25+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -387,7 +387,7 @@ msgid "Tagline"
 msgstr ""
 
 #. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:319
+#: ../src/main.c:1362 ../src/preferences.c:323
 #: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Version"
@@ -444,7 +444,7 @@ msgstr ""
 
 #: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
 #: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:312
+#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
 msgid "Enabled"
 msgstr "Aktiverad"
 
@@ -931,7 +931,7 @@ msgstr ""
 "En eller fler insticksmoduler kunde inte startas, se hjälp->meddelanden för "
 "mer information"
 
-#: ../src/preferences.c:98 ../src/preferences.c:199
+#: ../src/preferences.c:98 ../src/preferences.c:200
 msgid "Plugins"
 msgstr "Insticksmoduler"
 
@@ -939,35 +939,35 @@ msgstr "Insticksmoduler"
 msgid "Plugins:"
 msgstr "insticksmoduler:"
 
-#: ../src/preferences.c:315 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "Namn"
 
-#: ../src/preferences.c:317
+#: ../src/preferences.c:321
 msgid "Function"
 msgstr "Funktion"
 
-#: ../src/preferences.c:338
+#: ../src/preferences.c:347
 msgid "Dummy"
 msgstr ""
 
-#: ../src/preferences.c:341
+#: ../src/preferences.c:350
 msgid "Browser Extension"
 msgstr "Webbläsartillägg"
 
-#: ../src/preferences.c:344
+#: ../src/preferences.c:353
 msgid "Metadata Provider"
 msgstr ""
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:356
 msgid "Metadata Provider and Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:359
 msgid "Misc."
 msgstr "Diverse"
 
-#: ../src/preferences.c:355
+#: ../src/preferences.c:364
 msgid "Unknown"
 msgstr "Okänd"
 

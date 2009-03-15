@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-14 15:51-0700\n"
+"POT-Creation-Date: 2009-03-15 01:03+0100\n"
 "PO-Revision-Date: 2009-02-20 14:53+0000\n"
 "Last-Translator: Javier García Díaz <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -404,7 +404,7 @@ msgid "Tagline"
 msgstr "Etiquetas"
 
 #. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:319
+#: ../src/main.c:1362 ../src/preferences.c:323
 #: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Versión"
@@ -461,7 +461,7 @@ msgstr "Gestión de la sesión X"
 
 #: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
 #: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:312
+#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
 msgid "Enabled"
 msgstr "Habilitado"
 
@@ -959,7 +959,7 @@ msgstr ""
 "Uno o mas plugins fallaron al cargar, vea ayuda->mensajes para mas "
 "información"
 
-#: ../src/preferences.c:98 ../src/preferences.c:199
+#: ../src/preferences.c:98 ../src/preferences.c:200
 msgid "Plugins"
 msgstr "Extensiones"
 
@@ -967,35 +967,35 @@ msgstr "Extensiones"
 msgid "Plugins:"
 msgstr "Plugins:"
 
-#: ../src/preferences.c:315 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "Nombre"
 
-#: ../src/preferences.c:317
+#: ../src/preferences.c:321
 msgid "Function"
 msgstr "Función"
 
-#: ../src/preferences.c:338
+#: ../src/preferences.c:347
 msgid "Dummy"
 msgstr "Simulación"
 
-#: ../src/preferences.c:341
+#: ../src/preferences.c:350
 msgid "Browser Extension"
 msgstr "Explorador de Extensiones"
 
-#: ../src/preferences.c:344
+#: ../src/preferences.c:353
 msgid "Metadata Provider"
 msgstr "Proveedor de Metadatos"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:356
 msgid "Metadata Provider and Browser Extension"
 msgstr "Proveedor de Metadatos y Explorador de Extensiones"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:359
 msgid "Misc."
 msgstr "Otros"
 
-#: ../src/preferences.c:355
+#: ../src/preferences.c:364
 msgid "Unknown"
 msgstr "Desconocido"
 

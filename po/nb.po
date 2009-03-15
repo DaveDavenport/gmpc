@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-14 15:51-0700\n"
+"POT-Creation-Date: 2009-03-15 01:03+0100\n"
 "PO-Revision-Date: 2009-02-13 19:16+0000\n"
 "Last-Translator: Aleks K <uteligger1@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -385,7 +385,7 @@ msgid "Tagline"
 msgstr "Taglinje"
 
 #. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:319
+#: ../src/main.c:1362 ../src/preferences.c:323
 #: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Versjon"
@@ -442,7 +442,7 @@ msgstr ""
 
 #: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
 #: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:312
+#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
 msgid "Enabled"
 msgstr "Aktivert"
 
@@ -935,7 +935,7 @@ msgid ""
 msgstr ""
 "En eller flere plugins feilet å lade, se hjelp->melling for mer informasjon"
 
-#: ../src/preferences.c:98 ../src/preferences.c:199
+#: ../src/preferences.c:98 ../src/preferences.c:200
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -943,35 +943,35 @@ msgstr "Plugins"
 msgid "Plugins:"
 msgstr "Tillegg:"
 
-#: ../src/preferences.c:315 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "Navn"
 
-#: ../src/preferences.c:317
+#: ../src/preferences.c:321
 msgid "Function"
 msgstr "Funksjoner"
 
-#: ../src/preferences.c:338
+#: ../src/preferences.c:347
 msgid "Dummy"
 msgstr "Idiot"
 
-#: ../src/preferences.c:341
+#: ../src/preferences.c:350
 msgid "Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:344
+#: ../src/preferences.c:353
 msgid "Metadata Provider"
 msgstr "Metadata Utgiver"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:356
 msgid "Metadata Provider and Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:359
 msgid "Misc."
 msgstr "Misc."
 
-#: ../src/preferences.c:355
+#: ../src/preferences.c:364
 msgid "Unknown"
 msgstr "Ukjent"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-14 15:51-0700\n"
+"POT-Creation-Date: 2009-03-15 01:03+0100\n"
 "PO-Revision-Date: 2009-02-13 18:33+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Malay <ms@li.org>\n"
@@ -403,7 +403,7 @@ msgid "Tagline"
 msgstr "Garisan Label"
 
 #. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:319
+#: ../src/main.c:1362 ../src/preferences.c:323
 #: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Versi"
@@ -460,7 +460,7 @@ msgstr "Pengurusan sesi X"
 
 #: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
 #: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:312
+#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
 msgid "Enabled"
 msgstr "Dibolehkan"
 
@@ -962,7 +962,7 @@ msgstr ""
 "Satu atau lebih plugin telah gagal dimuat, lihat help->messages untuk "
 "maklumat lanjut."
 
-#: ../src/preferences.c:98 ../src/preferences.c:199
+#: ../src/preferences.c:98 ../src/preferences.c:200
 msgid "Plugins"
 msgstr "Plugin"
 
@@ -970,35 +970,35 @@ msgstr "Plugin"
 msgid "Plugins:"
 msgstr "Plugin:"
 
-#: ../src/preferences.c:315 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "Nama"
 
-#: ../src/preferences.c:317
+#: ../src/preferences.c:321
 msgid "Function"
 msgstr "Fungsi"
 
-#: ../src/preferences.c:338
+#: ../src/preferences.c:347
 msgid "Dummy"
 msgstr "Patung"
 
-#: ../src/preferences.c:341
+#: ../src/preferences.c:350
 msgid "Browser Extension"
 msgstr "Tambahan bagi Pelayar Web"
 
-#: ../src/preferences.c:344
+#: ../src/preferences.c:353
 msgid "Metadata Provider"
 msgstr "Pembekal Metadata"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:356
 msgid "Metadata Provider and Browser Extension"
 msgstr "Pembekal Metadata dan Tambahan bagi Pelayar Web"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:359
 msgid "Misc."
 msgstr "Lain-lain."
 
-#: ../src/preferences.c:355
+#: ../src/preferences.c:364
 msgid "Unknown"
 msgstr "Tidak Diketahui"
 

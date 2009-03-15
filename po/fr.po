@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-14 15:51-0700\n"
+"POT-Creation-Date: 2009-03-15 01:03+0100\n"
 "PO-Revision-Date: 2009-02-13 20:08+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -406,7 +406,7 @@ msgid "Tagline"
 msgstr ""
 
 #. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:319
+#: ../src/main.c:1362 ../src/preferences.c:323
 #: ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Version"
@@ -463,7 +463,7 @@ msgstr "Gestion des session X"
 
 #: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
 #: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:312
+#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
 msgid "Enabled"
 msgstr "Activé"
 
@@ -965,7 +965,7 @@ msgstr ""
 "Le chargement d'un ou plusieurs modules a échoué, veuillez consulter aide-"
 ">messages pour plus d'informations"
 
-#: ../src/preferences.c:98 ../src/preferences.c:199
+#: ../src/preferences.c:98 ../src/preferences.c:200
 msgid "Plugins"
 msgstr "Greffons"
 
@@ -973,35 +973,35 @@ msgstr "Greffons"
 msgid "Plugins:"
 msgstr "Greffons :"
 
-#: ../src/preferences.c:315 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "Nom"
 
-#: ../src/preferences.c:317
+#: ../src/preferences.c:321
 msgid "Function"
 msgstr "Fonction"
 
-#: ../src/preferences.c:338
+#: ../src/preferences.c:347
 msgid "Dummy"
 msgstr "Factice"
 
-#: ../src/preferences.c:341
+#: ../src/preferences.c:350
 msgid "Browser Extension"
 msgstr "Extension du navigateur"
 
-#: ../src/preferences.c:344
+#: ../src/preferences.c:353
 msgid "Metadata Provider"
 msgstr "Fournisseur des métadonnées"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:356
 msgid "Metadata Provider and Browser Extension"
 msgstr "Fournisseur des métadonnées et extension du navigateur"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:359
 msgid "Misc."
 msgstr "Divers"
 
-#: ../src/preferences.c:355
+#: ../src/preferences.c:364
 msgid "Unknown"
 msgstr "Inconnu"
 
