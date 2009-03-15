@@ -523,6 +523,10 @@ gboolean gmpc_plugin_browser_has_integrate_search(gmpcPluginParent *plug)
 {
     if(gmpc_plugin_is_browser(plug))
     {
+        if(plug->new){
+            /* TODO */
+            return FALSE;
+        }
         return plug->old->browser->integrate_search != NULL;
     }
     return FALSE;
