@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 01:04+0100\n"
+"POT-Creation-Date: 2009-03-15 19:53+0100\n"
 "PO-Revision-Date: 2009-02-26 20:44+0000\n"
 "Last-Translator: keenblade <keenblade@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
@@ -22,9 +22,8 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "mpd süreci için bir gnome önyüzü"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1358 ../src/tray-icon2.c:556
-#: ../src/tray-icon2.c:747 ../src/tray-icon2.c:750 ../src/tray-icon2.c:760
-#: ../src/tray-icon2.c:763
+#: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:556 ../src/tray-icon2.c:747
+#: ../src/tray-icon2.c:750 ../src/tray-icon2.c:760 ../src/tray-icon2.c:763
 msgid "Gnome Music Player Client"
 msgstr "Gnome Muzik Çalıcı İstemcisi"
 
@@ -33,7 +32,7 @@ msgstr "Gnome Muzik Çalıcı İstemcisi"
 msgid "Bug information"
 msgstr "Albüm bilgisi"
 
-#: ../glade/playlist3.glade.h:2 ../src/main.c:1382
+#: ../glade/playlist3.glade.h:2
 msgid "Getting help"
 msgstr "Yardım almak"
 
@@ -190,25 +189,25 @@ msgstr "Vekil Sunucu (proxy)"
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
 #.
-#: ../src/main.c:285 ../src/main.c:286
+#: ../src/main.c:290 ../src/main.c:291
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
 #.
-#: ../src/main.c:292
+#: ../src/main.c:297
 msgid "--version"
 msgstr ""
 
-#: ../src/main.c:300 ../src/main.c:301
+#: ../src/main.c:305 ../src/main.c:306
 msgid "--config="
 msgstr ""
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
 #.
-#: ../src/main.c:306
+#: ../src/main.c:311
 msgid "--start-hidden"
 msgstr ""
 
@@ -216,53 +215,53 @@ msgstr ""
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
 #.
-#: ../src/main.c:313
+#: ../src/main.c:318
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
 #.
-#: ../src/main.c:319
+#: ../src/main.c:324
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
 #.
-#: ../src/main.c:325
+#: ../src/main.c:330
 msgid "--replace"
 msgstr ""
 
 #. *
 #. * Quit any running gmpc session
 #.
-#: ../src/main.c:331
+#: ../src/main.c:336
 msgid "--quit"
 msgstr ""
 
 #. *
 #. * Imports the cover db in the old format.
 #.
-#: ../src/main.c:337
+#: ../src/main.c:342
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
 #.
-#: ../src/main.c:343
+#: ../src/main.c:348
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
 #.
-#: ../src/main.c:350
+#: ../src/main.c:355
 msgid "--help"
 msgstr "--yardım"
 
-#: ../src/main.c:351
+#: ../src/main.c:356
 #, c-format
 msgid ""
 "Gnome Music Player Client\n"
@@ -284,55 +283,55 @@ msgid ""
 "instances is disabled.\n"
 msgstr ""
 
-#: ../src/main.c:445
+#: ../src/main.c:450
 msgid "quit"
 msgstr ""
 
-#: ../src/main.c:446
+#: ../src/main.c:451
 msgid "Quit gmpc"
 msgstr "Gmpc' den çık"
 
-#: ../src/main.c:447
+#: ../src/main.c:452
 msgid "hide"
 msgstr "sakla"
 
-#: ../src/main.c:448
+#: ../src/main.c:453
 msgid "Hide gmpc"
 msgstr "Gmpc' yi sakla"
 
-#: ../src/main.c:449
+#: ../src/main.c:454
 msgid "show"
 msgstr "göster"
 
-#: ../src/main.c:449
+#: ../src/main.c:454
 msgid "Show gmpc"
 msgstr "Gmpc' yi göster"
 
-#: ../src/main.c:451
+#: ../src/main.c:456
 msgid "show notification"
 msgstr "bildirileri göster"
 
-#: ../src/main.c:452
+#: ../src/main.c:457
 msgid "Show trayicon notification"
 msgstr "Sistem tepsisi simgesinde bildiri göster"
 
-#: ../src/main.c:507
+#: ../src/main.c:512
 msgid "Failed to load the configuration system."
 msgstr "Yapılandırma dizgesi yüklenmesi başarılamadı."
 
-#: ../src/main.c:526
+#: ../src/main.c:531
 msgid "Failed to load debug-log file."
 msgstr "debug-log dosyası yüklenmesi başarılamadı."
 
-#: ../src/main.c:675
+#: ../src/main.c:680
 msgid "Failed to setup libmpd"
 msgstr "libmpd ayarlanması başarılamadı."
 
-#: ../src/main.c:1065
+#: ../src/main.c:1075
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC için mpd sunucunda  izinler yetersiz."
 
-#: ../src/main.c:1091
+#: ../src/main.c:1101
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -341,154 +340,46 @@ msgstr ""
 "'%s' için şifre ayarlanamadı.\n"
 "Lütfen tekrar deneyin"
 
-#: ../src/main.c:1093
+#: ../src/main.c:1103
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Lütfen parolana gir:'%s'"
 
-#: ../src/main.c:1122 ../src/main.c:1143
+#: ../src/main.c:1132 ../src/main.c:1153
 msgid "error code"
 msgstr "hata kodu"
 
-#: ../src/main.c:1132
+#: ../src/main.c:1142
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Mpd sunucusuna bağlanmak için izinler yetersiz. Şifrenizi kontrol edin."
 
-#: ../src/main.c:1167
+#: ../src/main.c:1177
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "0.13.0 dem önceki MPD sürümleri desteklenmez"
 
-#: ../src/main.c:1230
+#: ../src/main.c:1240
 msgid "Connected to mpd"
 msgstr "Mpd' ye bağlanıldı"
 
-#: ../src/main.c:1232
+#: ../src/main.c:1242
 msgid "Disconnected from mpd"
 msgstr "Mpd' ye bağlantı kesildi."
 
-#: ../src/main.c:1266
+#: ../src/main.c:1276
 #, fuzzy
 msgid "Error occurred during operation"
 msgstr "İş sırasında hata oluştu."
 
 #. Create label
-#: ../src/main.c:1290
+#: ../src/main.c:1300
 #, fuzzy
 msgid "The following error(s) occurred:"
 msgstr "Aşağıdaki hata(lar) oluştu."
 
-#: ../src/main.c:1307
+#: ../src/main.c:1317
 msgid "Error Message"
 msgstr "Hata Mesajı"
-
-#: ../src/main.c:1361
-msgid "Tagline"
-msgstr ""
-
-#. * Mpd version
-#: ../src/main.c:1362 ../src/preferences.c:323
-#: ../src/browsers/server-information.c:332
-msgid "Version"
-msgstr "Sürüm"
-
-#: ../src/main.c:1364
-msgid "Revision"
-msgstr "Düzeltme"
-
-#: ../src/main.c:1366
-#, fuzzy
-msgid "Libmpd Version"
-msgstr "Libmpd sürümü"
-
-#: ../src/main.c:1367
-msgid "GTK+ version"
-msgstr "GTK+ sürümü"
-
-#: ../src/main.c:1368
-#, fuzzy
-msgid "GLIB version"
-msgstr "GTK+ sürümü"
-
-#: ../src/main.c:1369
-msgid "Libcurl version"
-msgstr "Libcurl sürümü"
-
-#: ../src/main.c:1370
-msgid "Platform"
-msgstr ""
-
-#: ../src/main.c:1372
-msgid "Windows"
-msgstr ""
-
-#: ../src/main.c:1375
-msgid "Mac OsX"
-msgstr ""
-
-#: ../src/main.c:1377
-msgid "*nix"
-msgstr ""
-
-#: ../src/main.c:1381
-msgid "Website"
-msgstr "Web sayfası"
-
-#: ../src/main.c:1383
-msgid "Options enabled"
-msgstr ""
-
-#: ../src/main.c:1384
-msgid "X session management"
-msgstr "X oturum yönetimi"
-
-#: ../src/main.c:1386 ../src/main.c:1393 ../src/main.c:1401 ../src/main.c:1409
-#: ../src/main.c:1417 ../src/main.c:1425 ../src/main.c:1433 ../src/main.c:1440
-#: ../src/main.c:1448 ../src/main.c:1456 ../src/preferences.c:316
-msgid "Enabled"
-msgstr "Etkinleştirildi"
-
-#: ../src/main.c:1388 ../src/main.c:1395 ../src/main.c:1403 ../src/main.c:1411
-#: ../src/main.c:1419 ../src/main.c:1427 ../src/main.c:1435 ../src/main.c:1442
-#: ../src/main.c:1450 ../src/main.c:1458
-msgid "Disabled"
-msgstr "Etkisizleştirildi"
-
-#: ../src/main.c:1391
-msgid "NLS Support"
-msgstr "NLS Desteği"
-
-#: ../src/main.c:1399 ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "Çoklu Ortam Tuşları"
-
-#: ../src/main.c:1407
-msgid "Libegg's trayicon"
-msgstr "Libegg' in tepsi simgesi"
-
-#: ../src/main.c:1415
-msgid "System libsexy"
-msgstr ""
-
-#: ../src/main.c:1423
-msgid "Mac integration library"
-msgstr "Mac bütünleşme kütüphanesi"
-
-#: ../src/main.c:1431
-msgid "libspiff support"
-msgstr ""
-
-#: ../src/main.c:1438
-msgid "Use ~/.config/ dir"
-msgstr "~/.config/ dizinini kullanın"
-
-#: ../src/main.c:1446
-msgid "Debug timing"
-msgstr "Hata ayıklayıcı zamanlaması"
-
-#: ../src/main.c:1454
-msgid "Maintainer mode"
-msgstr ""
 
 #: ../src/metadata.c:763
 msgid ""
@@ -612,6 +503,10 @@ msgstr ""
 "\n"
 "Bazı çift çoklu ortam tuş eşleştirmeleri tespit edildi.  Lütfen tercihleri  "
 "tekrar gözden geçirin ve ayarlarınızın doğru olduğundan emin olun."
+
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "Çoklu Ortam Tuşları"
 
 #: ../src/mm-keys.c:632
 #, c-format
@@ -808,39 +703,39 @@ msgstr "Daha fazla ekle"
 msgid "Set Rating"
 msgstr ""
 
-#: ../src/playlist3.c:603
+#: ../src/playlist3.c:604
 msgid "MPD database is updating"
 msgstr "MPD veritabanı güncelleniyor"
 
-#: ../src/playlist3.c:613
+#: ../src/playlist3.c:614
 msgid "MPD is updating its database"
 msgstr "MPD veritabanını güncelliyor"
 
-#: ../src/playlist3.c:615
+#: ../src/playlist3.c:616
 msgid "MPD finished updating its database"
 msgstr "MPD veritabanını güncellemeyi bitirdi"
 
-#: ../src/playlist3.c:779
+#: ../src/playlist3.c:780
 msgid "Connected"
 msgstr "Bağlandı"
 
-#: ../src/playlist3.c:788 ../src/playlist3.c:2140
+#: ../src/playlist3.c:789 ../src/playlist3.c:2141
 msgid "Not Connected"
 msgstr "Bağlı Değil"
 
-#: ../src/playlist3.c:801 ../src/playlist3.c:806 ../src/playlist3.c:1618
+#: ../src/playlist3.c:802 ../src/playlist3.c:807 ../src/playlist3.c:1619
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:801
+#: ../src/playlist3.c:802
 msgid "Connected to"
 msgstr ""
 
-#: ../src/playlist3.c:806
+#: ../src/playlist3.c:807
 msgid "Disconnected"
 msgstr "Bağlantı Kesildi"
 
-#: ../src/playlist3.c:871
+#: ../src/playlist3.c:872
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
@@ -848,68 +743,68 @@ msgstr ""
 "Arayüz tanımlama dosyası açılamadı!\n"
 "Lütfen gmpc' yi tekrar yükleyin\n"
 
-#: ../src/playlist3.c:1648
+#: ../src/playlist3.c:1649
 #, c-format
 msgid "Repeat: %s"
 msgstr "Tekrarla: %s"
 
-#: ../src/playlist3.c:1649 ../src/playlist3.c:1662
+#: ../src/playlist3.c:1650 ../src/playlist3.c:1663
 msgid "On"
 msgstr "Açık"
 
-#: ../src/playlist3.c:1649 ../src/playlist3.c:1662
+#: ../src/playlist3.c:1650 ../src/playlist3.c:1663
 msgid "Off"
 msgstr "Kapat"
 
-#: ../src/playlist3.c:1661
+#: ../src/playlist3.c:1662
 #, c-format
 msgid "Random: %s"
 msgstr "Rastgele: %s"
 
-#: ../src/playlist3.c:1709
+#: ../src/playlist3.c:1710
 #, c-format
 msgid "MPD Database refreshed at: %c"
 msgstr ""
 
-#: ../src/playlist3.c:1717
+#: ../src/playlist3.c:1718
 msgid "MPD Reported the following error"
 msgstr "MPD Takip eden hatayı raporladı"
 
-#: ../src/playlist3.c:1849 ../src/playlist3.c:1855
+#: ../src/playlist3.c:1850 ../src/playlist3.c:1856
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1850
+#: ../src/playlist3.c:1851
 msgid "added"
 msgstr "eklendi"
 
-#: ../src/playlist3.c:1857
+#: ../src/playlist3.c:1858
 msgid "changed hostname to:"
 msgstr "sunucu ismi şöyle değiştirildi:"
 
 #. Update DB
-#: ../src/playlist3.c:1965
+#: ../src/playlist3.c:1966
 msgid "Update Database"
 msgstr "Veritabanını Güncelle"
 
 #. Server Information
-#: ../src/playlist3.c:1974
+#: ../src/playlist3.c:1975
 msgid "Information"
 msgstr "Bilgi"
 
-#: ../src/playlist3.c:2054
+#: ../src/playlist3.c:2055
 msgid "By"
 msgstr ""
 
-#: ../src/playlist3.c:2061
+#: ../src/playlist3.c:2062
 msgid "From"
 msgstr ""
 
-#: ../src/playlist3.c:2133
+#: ../src/playlist3.c:2134
 msgid "Not Playing"
 msgstr "Çalınmıyor"
 
-#: ../src/playlist3.c:2258
+#: ../src/playlist3.c:2259
 msgid "Interface"
 msgstr "Arayüz"
 
@@ -948,6 +843,10 @@ msgstr "Eklentiler"
 msgid "Plugins:"
 msgstr "Eklantiler:"
 
+#: ../src/preferences.c:316
+msgid "Enabled"
+msgstr "Etkinleştirildi"
+
 #: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Name"
 msgstr "İsim"
@@ -955,6 +854,11 @@ msgstr "İsim"
 #: ../src/preferences.c:321
 msgid "Function"
 msgstr "Fonksiyon"
+
+#. * Mpd version
+#: ../src/preferences.c:323 ../src/browsers/server-information.c:332
+msgid "Version"
+msgstr "Sürüm"
 
 #: ../src/preferences.c:347
 msgid "Dummy"
@@ -1341,60 +1245,54 @@ msgstr "Çalma Listesini Kaydet"
 msgid "name:"
 msgstr "isim"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:107
+#: ../src/browsers/playlist3-current-playlist-browser.c:114
 msgid "item"
 msgid_plural "items"
 msgstr[0] "öge"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:108
+#: ../src/browsers/playlist3-current-playlist-browser.c:115
 msgid "(Estimation)"
 msgstr "Tahmin"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:141
+#: ../src/browsers/playlist3-current-playlist-browser.c:147
 msgid "switch play queue"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:142
+#: ../src/browsers/playlist3-current-playlist-browser.c:148
 msgid "Switch to play queue"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:145
-#: ../src/browsers/playlist3-current-playlist-browser.c:146
+#: ../src/browsers/playlist3-current-playlist-browser.c:151
+#: ../src/browsers/playlist3-current-playlist-browser.c:152
 msgid "Clear play queue"
 msgstr ""
 
-#. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:425
-#: ../src/browsers/playlist3-current-playlist-browser.c:1094
-msgid "Play Queue"
-msgstr ""
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:496
+#: ../src/browsers/playlist3-current-playlist-browser.c:450
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Çalma listesini temizlemek istediğinizden emin misiniz?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:647
-#: ../src/browsers/playlist3-current-playlist-browser.c:667
-#: ../src/browsers/playlist3-current-playlist-browser.c:709
-#: ../src/browsers/playlist3-current-playlist-browser.c:731
+#: ../src/browsers/playlist3-current-playlist-browser.c:602
+#: ../src/browsers/playlist3-current-playlist-browser.c:622
+#: ../src/browsers/playlist3-current-playlist-browser.c:664
+#: ../src/browsers/playlist3-current-playlist-browser.c:686
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr ""
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:757
+#: ../src/browsers/playlist3-current-playlist-browser.c:712
 msgid "Crop"
 msgstr "Kes"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:771
+#: ../src/browsers/playlist3-current-playlist-browser.c:726
 msgid "Shuffle"
 msgstr "Karışık"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:904
+#: ../src/browsers/playlist3-current-playlist-browser.c:861
 msgid "Add URL"
 msgstr "URL ekle"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:993
+#: ../src/browsers/playlist3-current-playlist-browser.c:950
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1403,9 +1301,14 @@ msgstr ""
 "<i>Çalma listesi <b>\"%s\"</b> zaten var\n"
 "Üstüne yazılsın mı?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1017
+#: ../src/browsers/playlist3-current-playlist-browser.c:974
 msgid "Failed to save the playlist file."
 msgstr "Çalma listesi kaydedilemedi."
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1051
+#: ../src/browsers/playlist3-current-playlist-browser.c:1099
+msgid "Play Queue"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:98
 #: ../src/browsers/playlist3-file-browser.c:351
@@ -1823,14 +1726,14 @@ msgid "Show the current album information"
 msgstr "Geçerli albüm bilgisini göster"
 
 #: ../src/browsers/playlist3-playlist-editor.c:131
-#: ../src/browsers/playlist3-playlist-editor.c:1017
+#: ../src/browsers/playlist3-playlist-editor.c:1020
 msgid "Playlist Editor"
 msgstr "Çalma Listesi Düzenleyici"
 
 #: ../src/browsers/playlist3-playlist-editor.c:255
 #: ../src/browsers/playlist3-playlist-editor.c:277
-#: ../src/browsers/playlist3-playlist-editor.c:955
-#: ../src/browsers/playlist3-playlist-editor.c:1009
+#: ../src/browsers/playlist3-playlist-editor.c:958
+#: ../src/browsers/playlist3-playlist-editor.c:1012
 msgid "Favorites"
 msgstr ""
 
@@ -1849,16 +1752,16 @@ msgid "Rename"
 msgstr "Yeniden Adlandır"
 
 #. Add
-#: ../src/browsers/playlist3-playlist-editor.c:972
+#: ../src/browsers/playlist3-playlist-editor.c:975
 msgid "Add to playlist"
 msgstr "Çalma listesine ekle"
 
-#: ../src/browsers/playlist3-playlist-editor.c:1010
+#: ../src/browsers/playlist3-playlist-editor.c:1013
 msgid "Added playing song to favorites list."
 msgstr ""
 
 #. *
-#: ../src/browsers/playlist3-playlist-editor.c:1030
+#: ../src/browsers/playlist3-playlist-editor.c:1033
 msgid "Add Current Song to favorites"
 msgstr ""
 
@@ -2062,6 +1965,47 @@ msgstr "albüm"
 #, c-format
 msgid "Lookup %s on %s"
 msgstr ""
+
+#~ msgid "Revision"
+#~ msgstr "Düzeltme"
+
+#, fuzzy
+#~ msgid "Libmpd Version"
+#~ msgstr "Libmpd sürümü"
+
+#~ msgid "GTK+ version"
+#~ msgstr "GTK+ sürümü"
+
+#, fuzzy
+#~ msgid "GLIB version"
+#~ msgstr "GTK+ sürümü"
+
+#~ msgid "Libcurl version"
+#~ msgstr "Libcurl sürümü"
+
+#~ msgid "Website"
+#~ msgstr "Web sayfası"
+
+#~ msgid "X session management"
+#~ msgstr "X oturum yönetimi"
+
+#~ msgid "Disabled"
+#~ msgstr "Etkisizleştirildi"
+
+#~ msgid "NLS Support"
+#~ msgstr "NLS Desteği"
+
+#~ msgid "Libegg's trayicon"
+#~ msgstr "Libegg' in tepsi simgesi"
+
+#~ msgid "Mac integration library"
+#~ msgstr "Mac bütünleşme kütüphanesi"
+
+#~ msgid "Use ~/.config/ dir"
+#~ msgstr "~/.config/ dizinini kullanın"
+
+#~ msgid "Debug timing"
+#~ msgstr "Hata ayıklayıcı zamanlaması"
 
 #~ msgid "/"
 #~ msgstr "/"

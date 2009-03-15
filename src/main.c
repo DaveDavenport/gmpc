@@ -1365,108 +1365,108 @@ static void create_gmpc_paths(void)
 
 void print_version(void)
 {
-	printf(BOLD "%s\n", _("Gnome Music Player Client"));
+	printf(BOLD "%s\n", ("Gnome Music Player Client"));
 
 	printf(GMPC_COPYRIGHT "\n\n" RESET);
-	printf("%-25s: %s\n", _("Tagline"), GMPC_TAGLINE);
-	printf("%-25s: %i.%i.%i\n", _("Version"), GMPC_MAJOR_VERSION, GMPC_MINOR_VERSION, GMPC_MICRO_VERSION);
+	printf("%-25s: %s\n", ("Tagline"), GMPC_TAGLINE);
+	printf("%-25s: %i.%i.%i\n", ("Version"), GMPC_MAJOR_VERSION, GMPC_MINOR_VERSION, GMPC_MICRO_VERSION);
 	if (revision && revision[0] != '\0') {
-		printf("%-25s: %s\n", _("Revision"), revision);
+		printf("%-25s: %s\n", ("Revision"), revision);
 	}
-	printf("%-25s: %i.%i.%i\n", _("Libmpd Version"), LIBMPD_MAJOR_VERSION, LIBMPD_MINOR_VERSION, LIBMPD_MICRO_VERSION);
-	printf("%-25s: %i.%i.%i\n", _("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
-	printf("%-25s: %i.%i.%i\n", _("GTK+ version (runtime)"), gtk_major_version, gtk_minor_version, gtk_micro_version);
-	printf("%-25s: %i.%i.%i\n", _("GLIB version"), GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
-	printf("%-25s: %s\n", _("Libcurl version"), LIBCURL_VERSION);
-	printf("%-25s: %s\n\n", _("Platform"),
+	printf("%-25s: %i.%i.%i\n", ("Libmpd Version"), LIBMPD_MAJOR_VERSION, LIBMPD_MINOR_VERSION, LIBMPD_MICRO_VERSION);
+	printf("%-25s: %i.%i.%i\n", ("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
+	printf("%-25s: %i.%i.%i\n", ("GTK+ version (runtime)"), gtk_major_version, gtk_minor_version, gtk_micro_version);
+	printf("%-25s: %i.%i.%i\n", ("GLIB version"), GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
+	printf("%-25s: %s\n", ("Libcurl version"), LIBCURL_VERSION);
+	printf("%-25s: %s\n\n", ("Platform"),
 #ifdef WIN32
-		   _("Windows")
+		   ("Windows")
 #else
 #ifdef OSX
-		   _("Mac OsX")
+		   ("Mac OsX")
 #else
-		   _("*nix")
+		   ("*nix")
 #endif
 #endif
 		);
-	printf("%-25s: " GMPC_WEBSITE "\n", _("Website"));
-	printf("%-25s: " GMPC_BUGTRACKER "\n", _("Getting help"));
-	printf(BOLD "\n%s:\n" RESET, _("Options enabled"));
-	printf("%-25s: %s\n", _("X session management"),
+	printf("%-25s: " GMPC_WEBSITE "\n", ("Website"));
+	printf("%-25s: " GMPC_BUGTRACKER "\n", ("Getting help"));
+	printf(BOLD "\n%s:\n" RESET, ("Options enabled"));
+	printf("%-25s: %s\n", ("X session management"),
 #ifdef ENABLE_SM
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
-	printf("%-25s: %s\n", _("NLS Support"),
+	printf("%-25s: %s\n", ("NLS Support"),
 #ifdef ENABLE_NLS
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("Multimedia Keys"),
+	printf("%-25s: %s\n", ("Multimedia Keys"),
 #ifdef ENABLE_MMKEYS
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("Libegg's trayicon"),
+	printf("%-25s: %s\n", ("Libegg's trayicon"),
 #ifdef EGGTRAYICON
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("System libsexy"),
+	printf("%-25s: %s\n", ("System libsexy"),
 #ifdef USE_SYSTEM_LIBSEXY
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("Mac integration library"),
+	printf("%-25s: %s\n", ("Mac integration library"),
 #ifdef ENABLE_IGE
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("libspiff support"),
+	printf("%-25s: %s\n", ("libspiff support"),
 #ifdef SPIFF 
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 	);
-	printf("%-25s: %s\n", _("Use ~/.config/ dir"),
+	printf("%-25s: %s\n", ("Use ~/.config/ dir"),
 #ifdef USE_CONFIG_DIR
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("Debug timing"),
+	printf("%-25s: %s\n", ("Debug timing"),
 #ifdef DEBUG_TIMING
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 
-	printf("%-25s: %s\n", _("Maintainer mode"),
+	printf("%-25s: %s\n", ("Maintainer mode"),
 #ifdef MAINTAINER_MODE
-		   _("Enabled")
+		   ("Enabled")
 #else
-		   _("Disabled")
+		   ("Disabled")
 #endif
 		);
 }
