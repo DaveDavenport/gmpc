@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 21:46+0000\n"
 "Last-Translator: Vojtěch Látal <vojtech@latal.name>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Informace o albu"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr "_Zobrazit obrázek interpreta"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Nástroje"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -384,15 +382,13 @@ msgid "Disconnected from mpd"
 msgstr "Odpojeno od MPD"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Vyskytla se chyba během operace"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Vyskytly se následující chyby:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -2002,15 +1998,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revize"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Verze libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Verze GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Verze GTK+"
 
 #~ msgid "Libcurl version"
@@ -2156,6 +2144,12 @@ msgstr ""
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Připojeno k mpd</b>"
 
+#~ msgid "Error occured during operation"
+#~ msgstr "Vyskytla se chyba během operace"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Vyskytly se následující chyby:"
+
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Pluginy</b></span>"
 
@@ -2263,6 +2257,9 @@ msgstr ""
 
 #~ msgid "GMPC allready running, quitting"
 #~ msgstr "GMPC již běží. Končím."
+
+#~ msgid "Libmpd version"
+#~ msgstr "Verze libmpd"
 
 #~ msgid "Unique"
 #~ msgstr "Unikátní"

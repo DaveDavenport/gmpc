@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
-"PO-Revision-Date: 2009-03-01 12:08+0000\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"PO-Revision-Date: 2009-03-15 12:26+0000\n"
 "Last-Translator: Wieland Hoffmann <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -29,9 +29,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Album Information"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -139,9 +138,8 @@ msgid "_Show Artist Image"
 msgstr "_Zeige Künstlerbild"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Werkzeuge"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -386,15 +384,13 @@ msgid "Disconnected from mpd"
 msgstr "Verbindung von mpd getrennt"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Ein Fehler ist während der Anwendung aufgetreten"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Folgende Fehler sind aufgetreten:"
+msgstr "Die folgenden Fehler traten auf:"
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -684,9 +680,8 @@ msgid "seek"
 msgstr ""
 
 #: ../src/mpdinteraction.c:197
-#, fuzzy
 msgid "Seek within the current song"
-msgstr "Zeige aktuellen Song"
+msgstr ""
 
 #: ../src/mpdinteraction.c:201
 msgid "Server Settings"
@@ -1656,7 +1651,7 @@ msgstr "Interpret"
 #. ** Dirname
 #: ../src/browsers/playlist3-metadata-browser.c:957
 msgid "Path"
-msgstr ""
+msgstr "Pfad"
 
 #: ../src/browsers/playlist3-metadata-browser.c:966
 #: ../src/gob/gmpc-mpddata-treeview.gob:85
@@ -2082,16 +2077,14 @@ msgstr "Schlage %s bei %s nach"
 #~ msgid "Revision"
 #~ msgstr "Letzte Bearbeitung"
 
-#, fuzzy
 #~ msgid "Libmpd Version"
 #~ msgstr "Libmpd Version"
 
 #~ msgid "GTK+ version"
 #~ msgstr "GTK+ Version"
 
-#, fuzzy
 #~ msgid "GLIB version"
-#~ msgstr "GTK+ Version"
+#~ msgstr "GLIB Version"
 
 #~ msgid "Libcurl version"
 #~ msgstr "Libcurl Version"
@@ -2131,6 +2124,9 @@ msgstr "Schlage %s bei %s nach"
 
 #~ msgid "Mac integration library"
 #~ msgstr "Mac integrations Bibliothek"
+
+#~ msgid "libspiff support"
+#~ msgstr "libspiff Untersützung"
 
 #~ msgid "Use ~/.config/ dir"
 #~ msgstr "Benutze ~/.config/ Verzeichniss"
@@ -2226,6 +2222,12 @@ msgstr "Schlage %s bei %s nach"
 #~ msgstr ""
 #~ "Gmpc ist mit einer mpd-Version kleiner als 0.12.0 verbunden.\n"
 #~ "Dies könnte funktionieren, wird aber nicht länger unterstützt."
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Ein Fehler ist während der Anwendung aufgetreten"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Folgende Fehler sind aufgetreten:"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Plugins</b></span>"
@@ -2479,6 +2481,9 @@ msgstr "Schlage %s bei %s nach"
 
 #~ msgid "<b>Playlist interface:</b>"
 #~ msgstr "<b>Playlist Interface:</b>"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Libmpd Version"
 
 #~ msgid "Unique"
 #~ msgstr "Einmalig"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 18:33+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Malay <ms@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Klien Pemain Musik Gnome"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Informasi mengenai Album"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr "_Tunjuk Imej Artis"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Peralatan"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -383,15 +381,13 @@ msgid "Disconnected from mpd"
 msgstr "Sambungan ke mpd dibatalkan"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Kesalahan muncul ketika operasi"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Kesalahan berikut telah jadi:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -679,9 +675,8 @@ msgid "seek"
 msgstr ""
 
 #: ../src/mpdinteraction.c:197
-#, fuzzy
 msgid "Seek within the current song"
-msgstr "tunjukkan lagu sekarang"
+msgstr ""
 
 #: ../src/mpdinteraction.c:201
 msgid "Server Settings"
@@ -1975,15 +1970,7 @@ msgstr "Periksa %s pada %s"
 #~ msgid "Revision"
 #~ msgstr "Semakan"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Versi libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Versi GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Versi GTK+"
 
 #~ msgid "Libcurl version"
@@ -2033,3 +2020,12 @@ msgstr "Periksa %s pada %s"
 
 #~ msgid "Maintainer mode"
 #~ msgstr "Mod Pemelihara"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Kesalahan muncul ketika operasi"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Kesalahan berikut telah jadi:"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Versi libmpd"

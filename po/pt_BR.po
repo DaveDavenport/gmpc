@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-14 00:27+0000\n"
 "Last-Translator: Kim Ribeiro <ribekim@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -364,15 +364,13 @@ msgid "Disconnected from mpd"
 msgstr "Desconectado de mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Ocorreu um erro durante a operação"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Ocorreu o seguinte erro:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1934,15 +1932,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revisão"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Versão Libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Versão GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Versão GTK+"
 
 #~ msgid "Libcurl version"
@@ -1993,3 +1983,12 @@ msgstr ""
 #~ "Canto direito (acima)\n"
 #~ "Canto esquerdo (abaixo)\n"
 #~ "Canto direito (abaixo)"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Ocorreu um erro durante a operação"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Ocorreu o seguinte erro:"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Versão Libmpd"

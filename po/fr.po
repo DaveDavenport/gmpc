@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
-"PO-Revision-Date: 2009-02-13 20:08+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"PO-Revision-Date: 2009-03-06 23:44+0000\n"
+"Last-Translator: Pierre-Yves Luyten <pyluyten@laposte.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -29,9 +29,8 @@ msgid "Gnome Music Player Client"
 msgstr "Client de lecture de musique GNOME (gmpc)"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Information sur l'album"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -139,9 +138,8 @@ msgid "_Show Artist Image"
 msgstr "_Afficher l'image de l'artiste"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Outils"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -386,15 +384,13 @@ msgid "Disconnected from mpd"
 msgstr "Déconnecté de mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Une erreur est survenue pendant l'opération"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Le(s) erreur(s) suivante(s) est/sont apparue(s) :"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -496,7 +492,7 @@ msgstr "Activer / Désactiver le mode muet"
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
-msgstr ""
+msgstr "Affiche la boite de dialogue \"simple commande\"."
 
 #: ../src/mm-keys.c:367
 msgid ""
@@ -658,7 +654,7 @@ msgstr "Muet"
 
 #: ../src/mpdinteraction.c:192
 msgid "Play <query>"
-msgstr ""
+msgstr "Lire <requête>"
 
 #: ../src/mpdinteraction.c:193
 msgid "add"
@@ -666,7 +662,7 @@ msgstr "Ajouter"
 
 #: ../src/mpdinteraction.c:193
 msgid "Add <query>"
-msgstr ""
+msgstr "Ajoutter <requête>"
 
 #: ../src/mpdinteraction.c:194
 msgid "replace"
@@ -674,7 +670,7 @@ msgstr "Remplacer"
 
 #: ../src/mpdinteraction.c:194
 msgid "Replace <query>"
-msgstr ""
+msgstr "Remplacer <requête>"
 
 #. Basic seek commands
 #: ../src/mpdinteraction.c:197
@@ -682,9 +678,8 @@ msgid "seek"
 msgstr ""
 
 #: ../src/mpdinteraction.c:197
-#, fuzzy
 msgid "Seek within the current song"
-msgstr "Montrer le titre en cours"
+msgstr ""
 
 #: ../src/mpdinteraction.c:201
 msgid "Server Settings"
@@ -1099,6 +1094,7 @@ msgstr ""
 "  Johan Serre https://launchpad.net/~serre-johan\n"
 "  Maxime Petazzoni https://launchpad.net/~maxime-petazzoni\n"
 "  Mohaa https://launchpad.net/~mohaalighieri\n"
+"  Pierre-Yves Luyten https://launchpad.net/~pyluyten\n"
 "  QCJN https://launchpad.net/~qcjn\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Raphaël Rigo https://launchpad.net/~devel-gmpc"
@@ -1366,7 +1362,7 @@ msgstr "(Estimation)"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:147
 msgid "switch play queue"
-msgstr ""
+msgstr "Voir la liste de lecture"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:148
 msgid "Switch to play queue"
@@ -1437,6 +1433,11 @@ msgid ""
 "your mpd config file.\n"
 "Then update the database. (Server->Update Database)"
 msgstr ""
+"Il semble que vous n'ayez pas de musique dans votre base de données.\n"
+"Pour ajouter de la musique, copiez là dans votre <i>répertoire_de_musique</"
+"i> comme spécifié dans le fichier de configuration mpd.\n"
+"Puis, mettez à jour votre base de données. (Serveur->Mettre à jour la base "
+"de données)"
 
 #: ../src/browsers/playlist3-file-browser.c:262
 #, c-format
@@ -1546,7 +1547,7 @@ msgstr "Recherche base de données"
 
 #: ../src/browsers/playlist3-find2-browser.c:952
 msgid "Search database <query>"
-msgstr ""
+msgstr "Rechercher dans la base de données"
 
 #: ../src/browsers/playlist3-find2-browser.c:955
 msgid "search playlist"
@@ -1554,7 +1555,7 @@ msgstr "Recherche liste d'écoute"
 
 #: ../src/browsers/playlist3-find2-browser.c:956
 msgid "Search playlist <query>"
-msgstr ""
+msgstr "Rechercher dans la liste de lecture <requête>"
 
 #: ../src/browsers/playlist3-find2-browser.c:972
 msgid "Search Browser"
@@ -2082,18 +2083,13 @@ msgstr "album"
 msgid "Lookup %s on %s"
 msgstr "Chercher %s sur %s"
 
+#~ msgid "Tagline"
+#~ msgstr "Étiquette"
+
 #~ msgid "Revision"
 #~ msgstr "Révision"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "version de Libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "version de GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "version de GTK+"
 
 #~ msgid "Libcurl version"
@@ -2137,6 +2133,9 @@ msgstr "Chercher %s sur %s"
 
 #~ msgid "Use ~/.config/ dir"
 #~ msgstr "Utiliser le dossier ~/.config/"
+
+#~ msgid "Debug timing"
+#~ msgstr "Temps de débuggage"
 
 #~ msgid "Maintainer mode"
 #~ msgstr "Mode maintenance"
@@ -2235,6 +2234,12 @@ msgstr "Chercher %s sur %s"
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Connecté à mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Une erreur est survenue pendant l'opération"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Le(s) erreur(s) suivante(s) est/sont apparue(s) :"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Greffons</b></span>"
@@ -2781,6 +2786,9 @@ msgstr "Chercher %s sur %s"
 
 #~ msgid "GMPC allready running, quitting"
 #~ msgstr "GMPC est déjà lancé. Une nouvelle instance ne peut être ouverte."
+
+#~ msgid "Libmpd version"
+#~ msgstr "version de Libmpd"
 
 #~ msgid "Unique"
 #~ msgstr "Unique"

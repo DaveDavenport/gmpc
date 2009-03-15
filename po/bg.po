@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:20+0100\n"
 "PO-Revision-Date: 2009-02-13 23:09+0000\n"
 "Last-Translator: Bonic <bonic1999@yahoo.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:37+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Музикален Плеър"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Информация за албум"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr "Покажи снимка на изпълнителя"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Инструменти"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -380,15 +378,13 @@ msgid "Disconnected from mpd"
 msgstr "Връзката с MPD e прекъсната."
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Възникна грешка при изпълнението на"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Грешка:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1991,15 +1987,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Преглед"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Libmpd версия"
-
 #~ msgid "GTK+ version"
-#~ msgstr "GTK+ версия"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "GTK+ версия"
 
 #~ msgid "Libcurl version"
@@ -2050,11 +2038,20 @@ msgstr ""
 #~ msgid "Maintainer mode"
 #~ msgstr "Режим поддръжка"
 
+#~ msgid "Error occured during operation"
+#~ msgstr "Възникна грешка при изпълнението на"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Грешка:"
+
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Неуспешно свързване с: '%s'"
 
 #~ msgid "Failed to parse the playlist link"
 #~ msgstr "* * Неуспешно свързване %s * Показване на съобщение за грешка"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Libmpd версия"
 
 #~ msgid "in _play queue"
 #~ msgstr "в опашката"

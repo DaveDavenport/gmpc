@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 19:16+0000\n"
 "Last-Translator: Aleks K <uteligger1@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:37+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome musikkavspiller klient"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Album informasjon"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -365,15 +364,13 @@ msgid "Disconnected from mpd"
 msgstr "frakoblet fra mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "En feil oppstod mens operasjonen ble utfrt"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Den flgende feil(ene) oppstod:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1981,15 +1978,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revisjon"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Libmpd versjon"
-
 #~ msgid "GTK+ version"
-#~ msgstr "GTK+ Versjon"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "GTK+ Versjon"
 
 #~ msgid "Libcurl version"
@@ -2119,6 +2108,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Gmpc er p dette tidspunktet koblet til en mpd versjon lavere enn 0.12.0\n"
 #~ "Dette vil kansje fungere, men er ikke lenger offisielt stttet"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "En feil oppstod mens operasjonen ble utfrt"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Den flgende feil(ene) oppstod:"
 
 #~ msgid ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
@@ -2381,6 +2376,9 @@ msgstr ""
 
 #~ msgid "Has Up"
 #~ msgstr "Har opp"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Libmpd versjon"
 
 #~ msgid "Unique"
 #~ msgstr "Unik"

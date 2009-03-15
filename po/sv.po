@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-23 08:25+0000\n"
 "Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Klient"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Album information"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr "_Visa artistbilden"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Verktyg"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -367,15 +365,13 @@ msgid "Disconnected from mpd"
 msgstr "Frånkopplad från mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Fel inträffade under körning"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Följande fel inträffade"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1971,14 +1967,6 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revision"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Version"
-
-#, fuzzy
-#~ msgid "GLIB version"
-#~ msgstr "--version"
-
 #~ msgid "Website"
 #~ msgstr "Hemsida"
 
@@ -2040,6 +2028,9 @@ msgstr ""
 
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Klient\n"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Följande fel inträffade"
 
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Kunde inte kontakta url: '%s'"

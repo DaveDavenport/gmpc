@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 17:32+0000\n"
 "Last-Translator: yuan <zwjyuan@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome 音乐播放器客户端"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "专辑介绍"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -363,15 +362,13 @@ msgid "Disconnected from mpd"
 msgstr ""
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "操作时出现错误"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "出现如下错误："
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1963,14 +1960,6 @@ msgstr ""
 msgid "Lookup %s on %s"
 msgstr ""
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Libmpd版本"
-
-#, fuzzy
-#~ msgid "GLIB version"
-#~ msgstr "Libmpd版本"
-
 #~ msgid "Libcurl version"
 #~ msgstr "Libcurl版本"
 
@@ -2052,6 +2041,12 @@ msgstr ""
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>已经连接到mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "操作时出现错误"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "出现如下错误："
 
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>插件：</b>"
@@ -2142,3 +2137,6 @@ msgstr ""
 
 #~ msgid "<span weight=\"bold\">Similar Songs:</span>"
 #~ msgstr "<span weight=\"bold\">相似歌曲：</span>"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Libmpd版本"

@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
-"PO-Revision-Date: 2009-02-27 19:36+0000\n"
-"Last-Translator: spo1ler <splrdhc@gmail.com>\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"PO-Revision-Date: 2009-03-10 13:53+0000\n"
+"Last-Translator: Panda-Yuliya <panda-yuliya@mail.ru>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Клиент музыкального проигрывателя GNOME"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Информация об альбоме:"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -91,7 +90,7 @@ msgstr "Компактный вид"
 
 #: ../glade/playlist3.glade.h:15
 msgid "_Connect"
-msgstr "Под_ключиться"
+msgstr "Соединить"
 
 #: ../glade/playlist3.glade.h:16
 msgid "_Control"
@@ -123,11 +122,11 @@ msgstr "_Музыка"
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Option"
-msgstr "_Дополнительно"
+msgstr "_Опции"
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Send Password"
-msgstr "О_тправить пароль"
+msgstr "Передать пароль"
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Server"
@@ -135,12 +134,11 @@ msgstr "_Cервер"
 
 #: ../glade/playlist3.glade.h:26
 msgid "_Show Artist Image"
-msgstr "Показывать _изображение исполнителя"
+msgstr "_Показывать изображение исполнителя"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Инструменты"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -152,7 +150,7 @@ msgstr "gmpc - Менеджер списка воспроизведения"
 
 #: ../src/edit_markup.c:39
 msgid "/path/to/file_name.mp3"
-msgstr "/path/to/file_name.mp3"
+msgstr "путь к файлу  .mp3"
 
 #: ../src/edit_markup.c:40
 msgid "Jonny Singer"
@@ -160,11 +158,11 @@ msgstr "Jonny Singer"
 
 #: ../src/edit_markup.c:41
 msgid "Sing or Swing you want"
-msgstr ""
+msgstr "Песня или музыка со свингом"
 
 #: ../src/edit_markup.c:42
 msgid "The kernel jazz"
-msgstr ""
+msgstr "ядро джаза"
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
@@ -384,15 +382,13 @@ msgid "Disconnected from mpd"
 msgstr "Отсоединен от mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "При выполнении операции возникла ошибка"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Следующие ошибки возникли:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -680,9 +676,8 @@ msgid "seek"
 msgstr ""
 
 #: ../src/mpdinteraction.c:197
-#, fuzzy
 msgid "Seek within the current song"
-msgstr "показать текущую песню"
+msgstr ""
 
 #: ../src/mpdinteraction.c:201
 msgid "Server Settings"
@@ -799,7 +794,7 @@ msgstr "Профиль"
 
 #: ../src/playlist3.c:1851
 msgid "added"
-msgstr "добавлен"
+msgstr "добавлено"
 
 #: ../src/playlist3.c:1858
 msgid "changed hostname to:"
@@ -1067,6 +1062,7 @@ msgstr ""
 "  Max Habets https://launchpad.net/~sky3\n"
 "  MaxStotsky https://launchpad.net/~maxstotsky\n"
 "  Old Snake https://launchpad.net/~snoopy-rastrnet-deactivatedaccount1\n"
+"  Panda-Yuliya https://launchpad.net/~panda-yuliya\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Ruslan Almukhametov https://launchpad.net/~bigruslan\n"
 "  Sergei Aljoshin https://launchpad.net/~marfeus\n"
@@ -1083,7 +1079,7 @@ msgstr "Пароль"
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
-msgstr "С_охранить пароль"
+msgstr "Сохранить пароль"
 
 #: ../glade/preferences-connection.ui.h:1
 msgid "<b>Profile:</b>"
@@ -1091,11 +1087,11 @@ msgstr "<b>Профиль:</b>"
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "Conn_ect"
-msgstr "По_дключиться"
+msgstr "Подключиться"
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Host:"
-msgstr "Сервер:"
+msgstr "Хост:"
 
 #: ../glade/preferences-connection.ui.h:4
 #: ../src/browsers/playlist3-playlist-editor.c:470
@@ -1113,7 +1109,7 @@ msgstr "Порт:"
 
 #: ../glade/preferences-connection.ui.h:7
 msgid "Timeout (s):"
-msgstr "Ожидание соединения (c):"
+msgstr "Ожидание (c):"
 
 #: ../glade/preferences-connection.ui.h:8
 msgid "_Autoconnect"
@@ -1141,7 +1137,7 @@ msgstr "<span size=\"large\"><i>Форматирование:</i></span>"
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "A_lbum"
-msgstr "А_льбом:"
+msgstr "Альбом"
 
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
@@ -1149,7 +1145,7 @@ msgstr "Редактировать форматирование композиц
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
-msgstr "_Дорожка:"
+msgstr "Дорожка:"
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
@@ -1157,7 +1153,7 @@ msgstr "_Исполнитель"
 
 #: ../glade/preferences-esf-dialog.ui.h:8
 msgid "_Date"
-msgstr "_Дата"
+msgstr "Дата"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
@@ -1181,7 +1177,7 @@ msgstr "<b>Список воспроизведения:</b>"
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "<b>Song Markup</b>"
-msgstr "<b>Разметка названия звуковой дорожки:</b>"
+msgstr "<b>Разметка звуковой дорожки:</b>"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Center playing song"
@@ -1189,7 +1185,7 @@ msgstr "Центрировать проигрываемую композицию
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Edit _Browser Markup"
-msgstr "Редактировать разметку _браузера"
+msgstr "Редактировать разметку  браузера"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Hide on close"
@@ -1257,7 +1253,7 @@ msgstr "<b>Всплывающее окно</b>"
 
 #: ../glade/preferences-trayicon.ui.h:4
 msgid "Enable"
-msgstr "Активировать"
+msgstr "Включить"
 
 #: ../glade/preferences-trayicon.ui.h:5
 msgid "Position:"
@@ -1265,7 +1261,7 @@ msgstr "Позиция:"
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show severity"
-msgstr ""
+msgstr "Показать воздействие"
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Timeout:"
@@ -1328,8 +1324,8 @@ msgstr "имя:"
 msgid "item"
 msgid_plural "items"
 msgstr[0] "пункт"
-msgstr[1] "элемента"
-msgstr[2] "элементов"
+msgstr[1] "элемент"
+msgstr[2] "элементы"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:115
 msgid "(Estimation)"
@@ -1371,7 +1367,7 @@ msgstr "Случайный порядок"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:861
 msgid "Add URL"
-msgstr "Добавить URL"
+msgstr "Добавить ссылку"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:950
 #, c-format
@@ -1384,7 +1380,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:974
 msgid "Failed to save the playlist file."
-msgstr "Невозможно сохранить список воспроизведения"
+msgstr "Невозможно сохранить файл списка воспроизведения"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1051
 #: ../src/browsers/playlist3-current-playlist-browser.c:1099
@@ -1395,7 +1391,7 @@ msgstr "Очередь воспроизведения"
 #: ../src/browsers/playlist3-file-browser.c:351
 #: ../src/browsers/playlist3-file-browser.c:1198
 msgid "File Browser"
-msgstr "Просмотр файлов"
+msgstr "Браузер файлов"
 
 #: ../src/browsers/playlist3-file-browser.c:179
 msgid "Directories"
@@ -1446,7 +1442,7 @@ msgstr "Обновить"
 
 #: ../src/browsers/playlist3-file-browser.c:759
 msgid "Loaded playlist"
-msgstr "Загружен список воспроизведения"
+msgstr "Список воспроизведения загружен"
 
 #: ../src/browsers/playlist3-file-browser.c:1030
 #: ../src/browsers/playlist3-playlist-editor.c:409
@@ -1990,7 +1986,7 @@ msgstr "Выберите файл"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "Failed to open file:"
-msgstr "Невозможно открыть файл"
+msgstr "Не удалось открыть файл"
 
 #: ../src/gob/gmpc-meta-text-view.gob:157
 msgid "because of encoding issues"
@@ -2063,15 +2059,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Ревизия"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Версия Libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Версия GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Версия GTK+"
 
 #~ msgid "Libcurl version"
@@ -2186,6 +2174,9 @@ msgstr ""
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Подключено к mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "При выполнении операции возникла ошибка"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Плагины</b></span>"
@@ -2331,3 +2322,6 @@ msgstr ""
 
 #~ msgid "-"
 #~ msgstr "-"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Версия Libmpd"

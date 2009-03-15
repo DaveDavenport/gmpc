@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-03-01 07:22+0000\n"
 "Last-Translator: Manuel R. Ciosici <manuelciosici@yahoo.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -29,9 +29,8 @@ msgid "Gnome Music Player Client"
 msgstr "Clientul Gnome pentru ascultat muzică"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Durată"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -364,15 +363,13 @@ msgid "Disconnected from mpd"
 msgstr ""
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "A intervenit o eroare pe parcursul operației"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Au intervenit următoarele erori:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1995,14 +1992,6 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revizia"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Versiunea"
-
-#, fuzzy
-#~ msgid "GLIB version"
-#~ msgstr "--version"
-
 #~ msgid "Website"
 #~ msgstr "Pagina de internet"
 
@@ -2101,6 +2090,12 @@ msgstr ""
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Conectat la mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "A intervenit o eroare pe parcursul operației"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Au intervenit următoarele erori:"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Module</b></span>"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-18 12:34+0000\n"
 "Last-Translator: Arief Setiadi Wibowo <q_thrynx@yahoo.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Informasi album"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr ""
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Peralatan"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -367,15 +365,13 @@ msgid "Disconnected from mpd"
 msgstr "Terputus dari mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Kesalahan terjadi selama operasi"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Kesalahan berikut ini terjadi:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1926,15 +1922,7 @@ msgstr "Mencari %s di %s"
 #~ msgid "Revision"
 #~ msgstr "Revisi"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Versi libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Versi GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Versi GTK+"
 
 #~ msgid "Libcurl version"
@@ -1981,3 +1969,12 @@ msgstr "Mencari %s di %s"
 
 #~ msgid "Debug timing"
 #~ msgstr "Pewaktuan debug"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Kesalahan terjadi selama operasi"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Kesalahan berikut ini terjadi:"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Versi libmpd"

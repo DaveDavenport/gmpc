@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
-"PO-Revision-Date: 2009-02-20 14:53+0000\n"
-"Last-Translator: Javier García Díaz <Unknown>\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"PO-Revision-Date: 2009-03-15 13:39+0000\n"
+"Last-Translator: DiegoJ <diegojromerolopez@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Cliente de reproducción de música de GNOME"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Información del Album"
+msgstr "Información de errores"
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -138,9 +137,8 @@ msgid "_Show Artist Image"
 msgstr "_Mostrar Imagen del Artista"
 
 #: ../glade/playlist3.glade.h:27
-#, fuzzy
 msgid "_Tools"
-msgstr "Herramientas"
+msgstr "_Herramientas"
 
 #: ../glade/playlist3.glade.h:28
 msgid "_View"
@@ -384,15 +382,13 @@ msgid "Disconnected from mpd"
 msgstr "Desconectado de mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Un error ha ocurrido durante la operación"
+msgstr "Ha ocurrido un error durante la operación"
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Han ocurrido los siguientes errores:"
+msgstr "El/Los siguiente(s) errore(s) ocurrieron:"
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -494,7 +490,7 @@ msgstr "Activar/desactivar silencio"
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
-msgstr ""
+msgstr "Mostrar entrada de órdenes sencillas"
 
 #: ../src/mm-keys.c:367
 msgid ""
@@ -673,12 +669,11 @@ msgstr "Reemplazar"
 #. Basic seek commands
 #: ../src/mpdinteraction.c:197
 msgid "seek"
-msgstr ""
+msgstr "buscar"
 
 #: ../src/mpdinteraction.c:197
-#, fuzzy
 msgid "Seek within the current song"
-msgstr "mostrar canción actual"
+msgstr "Buscar en la canción actual"
 
 #: ../src/mpdinteraction.c:201
 msgid "Server Settings"
@@ -1602,7 +1597,7 @@ msgstr "Intérprete"
 #. ** Dirname
 #: ../src/browsers/playlist3-metadata-browser.c:957
 msgid "Path"
-msgstr ""
+msgstr "Ruta"
 
 #: ../src/browsers/playlist3-metadata-browser.c:966
 #: ../src/gob/gmpc-mpddata-treeview.gob:85
@@ -1750,7 +1745,7 @@ msgstr "canales"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2570
 msgid "switch metadata browser"
-msgstr ""
+msgstr "cambiar navegador de metadatos"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2571
 msgid "Switch to the metadata browser"
@@ -2027,16 +2022,14 @@ msgstr "Buscar %s en %s"
 #~ msgid "Revision"
 #~ msgstr "Revisión"
 
-#, fuzzy
 #~ msgid "Libmpd Version"
-#~ msgstr "Versión libmpd"
+#~ msgstr "Versión de Libmpd"
 
 #~ msgid "GTK+ version"
 #~ msgstr "Versión GTK+"
 
-#, fuzzy
 #~ msgid "GLIB version"
-#~ msgstr "Versión GTK+"
+#~ msgstr "Versión de GLIB"
 
 #~ msgid "Libcurl version"
 #~ msgstr "Versión Libcurl"
@@ -2076,6 +2069,9 @@ msgstr "Buscar %s en %s"
 
 #~ msgid "Mac integration library"
 #~ msgstr "Libreria de integración de MAC"
+
+#~ msgid "libspiff support"
+#~ msgstr "Soporte libspiff"
 
 #~ msgid "Use ~/.config/ dir"
 #~ msgstr "Usar ~/.config/ dir"
@@ -2181,6 +2177,12 @@ msgstr "Buscar %s en %s"
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Conectado a mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Un error ha ocurrido durante la operación"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Han ocurrido los siguientes errores:"
 
 #~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
 #~ msgstr "<span size=\"xx-large\"><b>Plugins</b></span>"
@@ -2300,3 +2302,6 @@ msgstr "Buscar %s en %s"
 #~ msgstr ""
 #~ "Intentando de arrancar gmpc compilado con la versión libmpd '%s' con la "
 #~ "versión libmpd '%s'"
+
+#~ msgid "Libmpd version"
+#~ msgstr "Versión libmpd"

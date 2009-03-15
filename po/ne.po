@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-14 18:51+0000\n"
 "Last-Translator: sarojdhakal <Unknown>\n"
 "Language-Team: Nepali <ne@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -362,15 +362,13 @@ msgid "Disconnected from mpd"
 msgstr "mpd सगँ जडान टुट्यो"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "कार्यगर्दैगर्दा त्रुटी भयो"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "निम्न त्रुटी(हरू) उत्पन्न भएका छन् :"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1913,15 +1911,7 @@ msgstr "खोज्दै %s लाई %s मा"
 #~ msgid "Revision"
 #~ msgstr "पुनरावलोकन"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "libmpd संस्करण"
-
 #~ msgid "GTK+ version"
-#~ msgstr "GTK+ संस्करण"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "GTK+ संस्करण"
 
 #~ msgid "Libcurl version"

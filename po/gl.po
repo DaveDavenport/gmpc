@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 14:53+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Galician\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -365,15 +365,13 @@ msgid "Disconnected from mpd"
 msgstr ""
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Ocorreu um erro durante a operaçom"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1953,10 +1951,6 @@ msgstr ""
 msgid "Lookup %s on %s"
 msgstr ""
 
-#, fuzzy
-#~ msgid "GLIB version"
-#~ msgstr "--version"
-
 #~ msgid "Disabled"
 #~ msgstr "Deshabilitado"
 
@@ -2011,6 +2005,12 @@ msgstr ""
 #~ msgstr ""
 #~ "O gmpc está actualmente conectado a um mpd com versom anterior à 0.12.0.\n"
 #~ "Pode funcionar mais já nom está suportado."
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Ocorreu um erro durante a operaçom"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
 
 #~ msgid ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "

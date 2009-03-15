@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-13 23:32+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -364,15 +364,13 @@ msgid "Disconnected from mpd"
 msgstr ""
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Fout tijdens uitvoeren"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Do volgende fouten traden op:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -2032,6 +2030,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Gmpc is momenteel verbonden met een versie van Mpd onder de 0.12.0.\n"
 #~ "Misschien werkt het, maar het wordt niet meer ondersteund."
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Fout tijdens uitvoeren"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Do volgende fouten traden op:"
 
 #~ msgid ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "

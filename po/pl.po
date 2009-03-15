@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-14 00:01+0000\n"
 "Last-Translator: Mateusz Szyper <mateyko5@o2.pl>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -30,9 +30,8 @@ msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Informacje o utworze"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -367,15 +366,13 @@ msgid "Disconnected from mpd"
 msgstr ""
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "Napotkano błąd podczas wykonywania operacji"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Napotkano następujące błędy:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1995,15 +1992,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Rewizja"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "wersja Libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "wersja GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "wersja GTK+"
 
 #~ msgid "Libcurl version"
@@ -2124,6 +2113,12 @@ msgstr ""
 
 #~ msgid "<b>Connected to mpd</b>"
 #~ msgstr "<b>Połączono z mpd</b>"
+
+#~ msgid "Error occured during operation"
+#~ msgstr "Napotkano błąd podczas wykonywania operacji"
+
+#~ msgid "The following error(s) occured:"
+#~ msgstr "Napotkano następujące błędy:"
 
 #~ msgid ""
 #~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
@@ -2394,6 +2389,9 @@ msgstr ""
 #~ msgid "<b>Gnome Music Player Client</b>"
 #~ msgstr "<b>Gnome Music Player Client</b>"
 
+#~ msgid "Song _Information"
+#~ msgstr "Informacje o utworze"
+
 #~ msgid "streams"
 #~ msgstr "srumienie"
 
@@ -2483,3 +2481,6 @@ msgstr ""
 
 #~ msgid "<span weight=\"bold\">Similar Songs:</span>"
 #~ msgstr "<span weight=\"bold\">Podobne utwory:</span>"
+
+#~ msgid "Libmpd version"
+#~ msgstr "wersja Libmpd"

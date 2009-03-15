@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 19:53+0100\n"
+"POT-Creation-Date: 2009-03-15 21:21+0100\n"
 "PO-Revision-Date: 2009-02-26 23:55+0000\n"
 "Last-Translator: Ismail Gjevori <isgjevori@hotmail.it>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,8 @@ msgid "Gnome Music Player Client"
 msgstr "Clienti Gnome per player mizike"
 
 #: ../glade/playlist3.glade.h:1
-#, fuzzy
 msgid "Bug information"
-msgstr "Informacion"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
@@ -365,15 +364,13 @@ msgid "Disconnected from mpd"
 msgstr "Shkëputur nga mpd"
 
 #: ../src/main.c:1276
-#, fuzzy
 msgid "Error occurred during operation"
-msgstr "U has gabim gjatë operacionit"
+msgstr ""
 
 #. Create label
 #: ../src/main.c:1300
-#, fuzzy
 msgid "The following error(s) occurred:"
-msgstr "Gabimet e mëposhtme u hasën:"
+msgstr ""
 
 #: ../src/main.c:1317
 msgid "Error Message"
@@ -1934,15 +1931,7 @@ msgstr ""
 #~ msgid "Revision"
 #~ msgstr "Revizion"
 
-#, fuzzy
-#~ msgid "Libmpd Version"
-#~ msgstr "Versioni i Libmpd"
-
 #~ msgid "GTK+ version"
-#~ msgstr "Versioni i GTK+"
-
-#, fuzzy
-#~ msgid "GLIB version"
 #~ msgstr "Versioni i GTK+"
 
 #~ msgid "Libcurl version"
