@@ -209,6 +209,7 @@ gchar * gmpc_get_covers_path(const gchar *filename)
 char *gmpc_get_full_image_path(void)
 {
     gchar *path;
+    /*
 #ifdef WIN32
     gchar *packagedir;
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
@@ -219,6 +220,7 @@ char *gmpc_get_full_image_path(void)
     q_free(packagedir);
 
 #else
+*/
  const gchar **paths = g_get_system_data_dirs();
     int i;
     for(i=0; paths && paths[i]; i++) {
@@ -233,7 +235,7 @@ char *gmpc_get_full_image_path(void)
     }
     if(!path)
         path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, NULL);
-#endif
+//#endif
     return path;
 }
 
@@ -245,6 +247,7 @@ char *gmpc_get_full_image_path(void)
 char *gmpc_get_full_glade_path(const char *filename)
 {
     gchar *path;
+    /*
 #ifdef WIN32
     gchar *packagedir;
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
@@ -254,7 +257,7 @@ char *gmpc_get_full_glade_path(const char *filename)
 
     q_free(packagedir);
 
-#else
+#else*/
     const gchar **paths = g_get_system_data_dirs();
     int i;
     for(i=0; paths && paths[i]; i++) {
@@ -269,7 +272,7 @@ char *gmpc_get_full_glade_path(const char *filename)
     }
     if(!path)
         path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
-#endif
+//#endif
     return path;
 }
 
