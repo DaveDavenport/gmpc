@@ -26,6 +26,7 @@ requires 2.0.0
 %privateheader{
 #include "main.h"
 #include "config.h"
+#include <glib/gi18n.h>
 #include "gmpc-mpddata-model.h"
 #include "eggcolumnchooserdialog.h"
 #include "gmpc-mpddata-model-playlist.h"
