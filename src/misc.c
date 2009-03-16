@@ -242,7 +242,20 @@ char *gmpc_get_full_glade_path(const char *filename)
     q_free(packagedir);
 
 #else
-    path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
+    const gchar **paths = g_get_system_data_dirs();
+    int i;
+    for(i=0; paths && paths[i]; i++) {
+        path = g_build_filename(paths[i], "gmpc", filename, NULL);
+        printf("%s\n", path);    
+        if(g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
+    if(!path)
+        path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
 #endif
     return path;
 }
