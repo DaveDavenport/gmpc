@@ -78,7 +78,7 @@
   </data>
 
   <data dest="${bundle}/Contents/Resources">
-    ${project}/gmpc.icns
+    ${project}/GMPC.icns
   </data>
 
   <data dest="${bundle}/Contents/Resources/etc/gtk-2.0/gtkrc">
