@@ -27,7 +27,6 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
-#include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"

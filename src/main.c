@@ -1143,7 +1143,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 	/* propagate the signal to the connection object */
 	if (mpd_check_connected(mi) != connected) {
 		debug_printf(DEBUG_ERROR,
-					 "Connection state differs from actual state: act: %i connect: %i\n", !connected, connect);
+					 "Connection state differs from actual state: act: %i\n", !connected);
 	}
 	/**
 	 * Check version
