@@ -180,9 +180,14 @@ void create_preferences_window(void)
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-						1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])), -1);
-				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
-								GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree")))) == 0)
+#ifdef ENABLE_NLS
+						1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])), 
+#else
+						1, gmpc_plugin_get_name(plugins[i]),
+#endif
+                            -1);
+                if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
+                                GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree")))) == 0)
 				{
 					gtk_tree_selection_select_iter(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree"))),&iter);
@@ -212,7 +217,11 @@ void create_preferences_window(void)
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
+#ifdef ENABLE_NLS
 						1, g_dgettext(translation_domain,gmpc_plugin_get_name(plugins[i])),
+#else
+						1, gmpc_plugin_get_name(plugins[i]),
+#endif
 						-1);
 			}
 		}
@@ -269,7 +278,12 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
                     gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
                     gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
                             0, plugin_get_pos(gmpc_plugin_get_id(plug)),
+#ifdef ENABLE_NLS
                             1, g_dgettext(translation_domain, gmpc_plugin_get_name(plug)),
+#else
+                            1, gmpc_plugin_get_name(plug),
+#endif
+
                             -1);
                 }else{
                     GtkTreeIter piter;
@@ -331,7 +345,11 @@ static void plugin_stats_construct(GtkWidget *container)
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 
                                 0,TRUE,
+#ifdef ENABLE_NLS
                                 1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])),
+#else
+                                1, gmpc_plugin_get_name(plugins[i]),
+#endif
                                 3,(plugins[i]),
                                 4,version, -1);
                 g_free(version);
