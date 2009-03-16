@@ -1015,7 +1015,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
         }else{
             debug_printf(DEBUG_INFO, "Locale is %s converting to UTF-8", charset);
             dirname = g_convert_with_fallback (song->artist, -1,
-                      charset, "UTF-8",NULL, NULL, NULL, &error);
+                      charset, "UTF-8","-", NULL, NULL, &error);
         }
         //dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
         if(error) {
