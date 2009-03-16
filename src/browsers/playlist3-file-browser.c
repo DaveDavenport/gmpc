@@ -25,7 +25,6 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-file-browser.h"
-#include "TreeSearchWidget.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "playlist3-playlist-editor.h"
@@ -117,19 +116,6 @@ static GtkTreeStore *pl3_fb_dir_store = NULL;
 static GtkWidget *pl3_fb_dir_tree = NULL;
 static GtkWidget *pl3_fb_warning_box = NULL;
 
-static void pl3_file_browser_search_activate(void)
-{
-	GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_store2);
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
-	if (gtk_tree_selection_count_selected_rows (selection) == 1)            
-	{
-		GList *list = gtk_tree_selection_get_selected_rows (selection, &model);
-		pl3_file_browser_row_activated(GTK_TREE_VIEW(pl3_fb_tree),(GtkTreePath *)list->data);	
-		/* free list */
-		g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);                        	
-		g_list_free (list);
-	}
-}
 static void pl3_file_browser_dir_row_activated(GtkTreeView *tree, GtkTreePath *tp, GtkTreeViewColumn *col,gpointer user_data)
 {
 	if(!mpd_check_connected(connection))
@@ -218,10 +204,6 @@ static void pl3_file_browser_init(void)
 
 	gtk_box_pack_start(GTK_BOX(vbox), pl3_fb_sw, TRUE, TRUE,0);
 	gtk_widget_show_all(pl3_fb_sw);	
-	pl3_fb_tree_search = treesearch_new(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_MARKUP);
-	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_tree_search, FALSE, TRUE,0);
-	g_signal_connect(G_OBJECT(pl3_fb_tree_search),"result-activate", G_CALLBACK(pl3_file_browser_search_activate), NULL);
-
 
         /* Warning box for when there is no music */
         pl3_fb_warning_box = gtk_label_new("");
@@ -668,20 +650,10 @@ static int pl3_file_browser_playlist_key_press(GtkWidget *tree, GdkEventKey *eve
     if(event->state&GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert))
     {
         pl3_file_browser_replace_selected();
-    } else if (event->state&GDK_CONTROL_MASK && event->keyval == GDK_f) {
-        treesearch_start(TREESEARCH(pl3_fb_tree_search));
     } else if(event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert) {
         pl3_file_browser_add_selected();
     } else if(event->keyval == GDK_i && event->state&GDK_MOD1_MASK) {
         pl3_file_browser_show_info();
-    } else if((event->state&(GDK_CONTROL_MASK|GDK_MOD1_MASK)) == 0 && ((event->keyval >= GDK_space && event->keyval <= GDK_z))) {
-        char data[2];
-        data[0] = (char)gdk_keyval_to_unicode(event->keyval);
-        data[1] = '\0';
-        treesearch_start(TREESEARCH(pl3_fb_tree_search));
-        gtk_entry_set_text(GTK_ENTRY(TREESEARCH(pl3_fb_tree_search)->entry),data); 
-        gtk_editable_set_position(GTK_EDITABLE(TREESEARCH(pl3_fb_tree_search)->entry),1);
-        return TRUE;
     }
     return FALSE;
 }
