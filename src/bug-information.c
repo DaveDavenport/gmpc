@@ -22,8 +22,6 @@
 #include <main.h>
 #include <bug-information.h>
 
-#include <curl/curl.h>
-
 #include "revision.h"
 
 static void bug_information_generate_message(GtkTextBuffer *buffer)
@@ -96,12 +94,6 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     /* glib-2.0 */ 
     gtk_text_buffer_insert_with_tags(buffer, &iter, "Glib-2.0:\t", -1, bold_tag, NULL);
     temp = g_strdup_printf("%i.%i.%i\n", GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION,GLIB_MICRO_VERSION);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
-
-    /* libcurl */ 
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "Libcurl:\t", -1, bold_tag, NULL);
-    temp = g_strdup_printf("%s\n", LIBCURL_VERSION); 
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 

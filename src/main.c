@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <strings.h>
 
-#include <curl/curl.h>
 #include <libxml/parser.h>
 
 /** Gtk/glib glade stuff */
@@ -375,27 +374,6 @@ int main(int argc, char **argv)
 
 	}
 	TEC("Parsing command line options");
-	/** Init before threads are active.. */
-	debug_printf(DEBUG_INFO, "Initialize curl_global_init");
-	{
-		CURLcode result;
-	/**
-         * Only init the CURL_GLOBAL_WIN32 (should only do something on win32 anyway
-         * Because I don't want to load the ssl part.. (that costs me 0.5mb extra memory)
-         */
-#ifdef WIN32
-		if ((result = curl_global_init(CURL_GLOBAL_WIN32)))
-#else
-		if ((result = curl_global_init(CURL_GLOBAL_NOTHING)))
-#endif
-		{
-			debug_printf(DEBUG_ERROR, "cURL Global init failed: %d\n", result);
-			abort();
-		}
-
-	}
-
-	TEC("Initializing libcurl");
 
 	/**
      *  initialize threading
@@ -942,8 +920,6 @@ int main(int argc, char **argv)
 	mpd_free(connection);
 
 	xmlCleanupParser();
-	/* cleanup curl */
-	curl_global_cleanup();
 	/* cleanup */
 	gmpc_mpddata_treeview_cleanup();
 
@@ -1377,7 +1353,6 @@ void print_version(void)
 	printf("%-25s: %i.%i.%i\n", ("GTK+ version"), GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION);
 	printf("%-25s: %i.%i.%i\n", ("GTK+ version (runtime)"), gtk_major_version, gtk_minor_version, gtk_micro_version);
 	printf("%-25s: %i.%i.%i\n", ("GLIB version"), GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
-	printf("%-25s: %s\n", ("Libcurl version"), LIBCURL_VERSION);
 	printf("%-25s: %s\n\n", ("Platform"),
 #ifdef WIN32
 		   ("Windows")

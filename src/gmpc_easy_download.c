@@ -21,13 +21,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <curl/curl.h>
 #include <libmpd/debug_printf.h>
 #include <libsoup/soup.h>
 #include <zlib.h>
 #include "gmpc_easy_download.h"
 #include "main.h"
-#define CURL_TIMEOUT 10
 
 static int quit = FALSE;
 /****
