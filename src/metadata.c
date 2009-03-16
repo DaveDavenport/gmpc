@@ -999,7 +999,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
     g_assert(song->artist != NULL);
     g_assert(type < META_QUERY_DATA_TYPES); 
     {
-        const gchar *charset;
         GError *error = NULL;
         gchar *filename = NULL, *dirname = NULL;
         const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?"":ext);
@@ -1008,12 +1007,22 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
         /* Convert it so the filesystem likes it */
         /* TODO: Add error checking */
 
+        dirname = g_filename_from_utf8(song->artist, -1, NULL, NULL, NULL);
+        /*
         if (g_get_charset (&charset))
         {
             debug_printf(DEBUG_INFO, "Locale is utf-8, just copying");
             dirname = g_strdup(song->artist);
         }else{
             debug_printf(DEBUG_INFO, "Locale is %s converting to UTF-8", charset);
+            dirname = g_convert_with_fallback (song->artist, -1,
+                      charset, "UTF-8","-", NULL, NULL, &error);
+        }
+        */
+        if(dirname == NULL)
+        {
+            const gchar *charset;
+            g_get_charset (&charset);
             dirname = g_convert_with_fallback (song->artist, -1,
                       charset, "UTF-8","-", NULL, NULL, &error);
         }
