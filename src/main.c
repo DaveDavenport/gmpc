@@ -1013,7 +1013,7 @@ static void init_stock_icons(void)
 {
 	char *path;
 
-	path = gmpc_get_full_image_path("");
+	path = gmpc_get_full_image_path();
 	gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), path);
 	q_free(path);
 

@@ -90,7 +90,7 @@ void url_start(void);
  * This is needed to make the windows port work.
  * (misc.c)
  */
-char *gmpc_get_full_image_path(const char *filename);
+char *gmpc_get_full_image_path(void);
 
 /**
  * Help functions

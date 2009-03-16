@@ -206,7 +206,7 @@ gchar * gmpc_get_covers_path(const gchar *filename)
  * While this is compile time on linux, windows
  * needs to determine it run-time.
  */
-char *gmpc_get_full_image_path(const char *filename)
+char *gmpc_get_full_image_path(void)
 {
     gchar *path;
 #ifdef WIN32
@@ -214,12 +214,25 @@ char *gmpc_get_full_image_path(const char *filename)
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
     debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
 
-    path = g_build_filename(packagedir, "share","gmpc","icons", filename, NULL);
+    path = g_build_filename(packagedir, "share","gmpc","icons",  NULL);
 
     q_free(packagedir);
 
 #else
-    path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, filename,NULL);
+ const gchar **paths = g_get_system_data_dirs();
+    int i;
+    for(i=0; paths && paths[i]; i++) {
+        path = g_build_filename(paths[i], "gmpc", "icons", NULL);
+        printf("%s\n", path);    
+        if(g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
+    if(!path)
+        path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, NULL);
 #endif
     return path;
 }
