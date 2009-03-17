@@ -9,7 +9,7 @@ namespace Gmpc {
 			public int id;
 			public string path;
 			public int plugin_type;
-			public string translation_domain;
+			public weak string translation_domain;
 			public virtual bool get_enabled ();
 			public abstract unowned string get_name ();
 			public abstract unowned int[] get_version ();

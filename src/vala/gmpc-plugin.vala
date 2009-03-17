@@ -32,7 +32,7 @@ namespace Gmpc {
             /* This string tell gmpc what translation domain to use when trying to translate the plugins name. 
              * If NULL then gmpc's translation domain is used.
              */
-            public string translation_domain = null;
+            public weak string translation_domain = null;
             /* This is set by gmpc, it contains the full path of the plugin.
              * This is used by gmpc_plugin_get_data_path to calculate the location of the data files.
              */
