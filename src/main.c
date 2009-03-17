@@ -423,7 +423,7 @@ int main(int argc, char **argv)
 
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
-	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
 								_("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
@@ -683,44 +683,48 @@ int main(int argc, char **argv)
      * Add the internall plugins
      */
 
+	/** init the error messages */
+	pl3_messages = playlist3_message_plugin_new();
+
+
     playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
 	g_object_ref_sink(playlist);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 	/** current playlist */
-	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new(), 0);
+	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new(), 0,NULL);
 //	plugin_add(&current_playlist_plug, 0);
 
 	/** file browser */
-	plugin_add(&file_browser_plug, 0);
+	plugin_add(&file_browser_plug, 0, NULL);
 	/** Find Browser */
-	plugin_add(&find2_browser_plug, 0);
+	plugin_add(&find2_browser_plug, 0, NULL);
 	/* this shows the connection preferences */
-	plugin_add(&connection_plug, 0);
+	plugin_add(&connection_plug, 0, NULL);
 	/* this the server preferences */
-	plugin_add(&server_plug, 0);
+	plugin_add(&server_plug, 0, NULL);
 	/* this shows the playlist preferences */
-	plugin_add(&playlist_plug, 0);
+	plugin_add(&playlist_plug, 0, NULL);
 	/* this shows the markup stuff */
-	plugin_add(&tag2_plug, 0);
+	plugin_add(&tag2_plug, 0, NULL);
 #ifdef ENABLE_MMKEYS
-	plugin_add(&mmkeys_plug, 0);
+	plugin_add(&mmkeys_plug, 0, NULL);
 #endif
 	/* the tray icon */
-	plugin_add(&tray_icon2_plug, 0);
+	plugin_add(&tray_icon2_plug, 0, NULL);
 
 	/* Info3 data browser */
 	/* Meta data browser */
-	plugin_add(&metab_plugin, 0);
+	plugin_add(&metab_plugin, 0, NULL);
 	/* Playlist editor */
-	plugin_add(&playlist_editor_plugin, 0);
+	plugin_add(&playlist_editor_plugin, 0, NULL);
 
-	plugin_add(&statistics_plugin, 0);
+	plugin_add(&statistics_plugin, 0, NULL);
 
-	plugin_add(&metadata_plug, 0);
-	plugin_add(&proxyplug, 0);
+	plugin_add(&metadata_plug, 0, NULL);
+	plugin_add(&proxyplug, 0, NULL);
 
 	TEC("Loading internal plugins");
-	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
 	TEC("Loading new plugins");
 	/**
      *  load dynamic plugins
@@ -774,9 +778,8 @@ int main(int argc, char **argv)
      */
 	create_playlist3();
     /* Initialize the message system */
-	//playlist3_message_init();
-	pl3_messages = playlist3_message_plugin_new();
-	plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0);
+	//playlist3_message_init()
+	plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
 	
 	TEC("Creating playlist window");
 
