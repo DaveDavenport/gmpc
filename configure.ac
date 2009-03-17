@@ -174,7 +174,7 @@ fi
 # Split this out, because pkgconfig macro doesn't return nicely what is missing
 
 # glib
-PKG_CHECK_MODULES([glib], glib-2.0 >= 2.10)
+PKG_CHECK_MODULES([glib], glib-2.0 >= 2.16)
 AC_SUBST(glib_LIBS)
 AC_SUBST(glib_CFLAGS)
 
