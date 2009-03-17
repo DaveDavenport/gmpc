@@ -221,11 +221,10 @@ char *gmpc_get_full_image_path(void)
 
 #else
 */
- const gchar **paths = g_get_system_data_dirs();
+    const gchar * const *paths = g_get_system_data_dirs();
     int i;
     for(i=0; paths && paths[i]; i++) {
         path = g_build_filename(paths[i], "gmpc", "icons", NULL);
-        printf("%s\n", path);    
         if(g_file_test(path, G_FILE_TEST_EXISTS))
         {
             return path;
@@ -258,11 +257,10 @@ char *gmpc_get_full_glade_path(const char *filename)
     q_free(packagedir);
 
 #else*/
-    const gchar **paths = g_get_system_data_dirs();
+    const gchar * const *paths = g_get_system_data_dirs();
     int i;
     for(i=0; paths && paths[i]; i++) {
         path = g_build_filename(paths[i], "gmpc", filename, NULL);
-        printf("%s\n", path);    
         if(g_file_test(path, G_FILE_TEST_EXISTS))
         {
             return path;
