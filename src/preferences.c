@@ -180,12 +180,8 @@ void create_preferences_window(void)
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-#ifdef ENABLE_NLS
-#if GLIB_CHECK_VERSION(2,16,0)
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
 						1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])), 
-#else
-						1, gmpc_plugin_get_name(plugins[i]),
-#endif
 #else
 						1, gmpc_plugin_get_name(plugins[i]),
 #endif
@@ -221,13 +217,10 @@ void create_preferences_window(void)
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-#ifdef ENABLE_NLS
-#if GLIB_CHECK_VERSION(2,16,0)
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
 						1, g_dgettext(translation_domain,gmpc_plugin_get_name(plugins[i])),
 
-#else
-						1, gmpc_plugin_get_name(plugins[i]),
-#endif
 #else
 						1, gmpc_plugin_get_name(plugins[i]),
 #endif
@@ -287,12 +280,9 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
                     gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
                     gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
                             0, plugin_get_pos(gmpc_plugin_get_id(plug)),
-#ifdef ENABLE_NLS
-#if GLIB_CHECK_VERSION(2,16,0)
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
                             1, g_dgettext(translation_domain, gmpc_plugin_get_name(plug)),
-#else
-                            1, gmpc_plugin_get_name(plugins[i]),
-#endif
 #else
                             1, gmpc_plugin_get_name(plug),
 #endif
@@ -358,12 +348,9 @@ static void plugin_stats_construct(GtkWidget *container)
 				gtk_list_store_append(store, &iter);
 				gtk_list_store_set(store, &iter, 
                                 0,TRUE,
-#ifdef ENABLE_NLS
-#if GLIB_CHECK_VERSION(2,16,0)
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
                                 1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])),
-#else
-						1, gmpc_plugin_get_name(plugins[i]),
-#endif
 #else
                         1, gmpc_plugin_get_name(plugins[i]),
 #endif
