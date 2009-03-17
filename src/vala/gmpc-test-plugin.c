@@ -56,7 +56,7 @@ static gint* gmpc_test_plugin_real_get_version (GmpcPluginBase* base, int* resul
 	gint* _tmp0;
 	self = (GmpcTestPlugin*) base;
 	_tmp0 = NULL;
-	return (_tmp0 = GMPC_TEST_PLUGIN_version, *result_length1 = G_N_ELEMENTS (GMPC_TEST_PLUGIN_version), _tmp0);
+	return (_tmp0 = (gint*) GMPC_TEST_PLUGIN_version, *result_length1 = -1, _tmp0);
 }
 
 
