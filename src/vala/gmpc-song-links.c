@@ -50,7 +50,7 @@ enum  {
 static void _gmpc_song_links_download_file_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
 static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* item);
 static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
-static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkWidget* label, const GdkEventButton* event);
+static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event);
 static gboolean _gmpc_song_links_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button);
 static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncHandler* handle, GEADStatus status);
@@ -162,7 +162,7 @@ static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* 
 }
 
 
-static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkWidget* label, const GdkEventButton* event) {
+static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (label != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -347,7 +347,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 	char** _tmp4;
 	gint groups_size;
 	gint groups_length1;
-	gint _tmp3;
+	size_t _tmp3;
 	char** groups;
 	g_return_if_fail (self != NULL);
 	inner_error = NULL;

@@ -54,7 +54,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
 
     }
-    private bool button_press_event(Gtk.Widget label, Gdk.EventButton event)
+    private bool button_press_event(Gtk.EventBox label, Gdk.EventButton event)
     {
         if(event.button == 3)
         {
