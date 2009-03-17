@@ -75,7 +75,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/************************************************
 	 * private
 	 */
-	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
+	private bool completion_function(Gtk.EntryCompletion comp, string key, out Gtk.TreeIter iter) {
 		string value;
 		var model = comp.model;
 

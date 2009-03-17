@@ -33,8 +33,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	GtkListStore* store;
@@ -55,26 +55,20 @@ static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* resu
 static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base);
 static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base);
 static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean state);
-static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter);
+static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, GtkTreeIter* iter);
 static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry);
 static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEntry* widget, const GdkEventKey* event);
 static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, GtkWindow* widget, const GdkEventExpose* event);
 static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
-static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, const GtkTreeIter* iter, gpointer self);
+static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, GtkTreeIter* iter, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
 static void gmpc_easy_command_finalize (GObject* obj);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static gint _vala_array_length (gpointer array);
 
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
 
 
 static char* string_substring (const char* self, glong offset, glong len) {
@@ -94,6 +88,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -160,7 +160,7 @@ static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean s
 /************************************************
  * private
  */
-static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, const GtkTreeIter* iter) {
+static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, GtkTreeIter* iter) {
 	char* value;
 	GtkTreeModel* _tmp0;
 	GtkTreeModel* model;
@@ -531,7 +531,7 @@ GmpcEasyCommand* gmpc_easy_command_new (void) {
 }
 
 
-static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, const GtkTreeIter* iter, gpointer self) {
+static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, GtkTreeIter* iter, gpointer self) {
 	return gmpc_easy_command_completion_function (self, completion, key, iter);
 }
 
