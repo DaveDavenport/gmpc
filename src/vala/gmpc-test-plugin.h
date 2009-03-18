@@ -54,6 +54,7 @@ struct _GmpcTestPluginClass {
 
 void gmpc_test_plugin_image_downloaded (GmpcTestPlugin* self, const GEADAsyncHandler* handle, GEADStatus status);
 void gmpc_test_plugin_callback (GmpcTestPlugin* self, GList* list);
+gboolean gmpc_test_plugin_window_delete_event (GmpcTestPlugin* self, GtkWindow* win);
 void gmpc_test_plugin_menu_activated (GmpcTestPlugin* self, GtkMenuItem* item);
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
 GmpcTestPlugin* gmpc_test_plugin_new (void);

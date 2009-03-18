@@ -32,6 +32,7 @@
 
 
 struct _GmpcTestPluginPrivate {
+	GtkWindow* window;
 	GtkListStore* model;
 };
 
@@ -49,6 +50,7 @@ static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base
 static void gmpc_test_plugin_connection_changed (GmpcTestPlugin* self, GmpcConnection* conn, MpdObj* server, gint connect);
 static void _gmpc_test_plugin_image_downloaded_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
 static void _gmpc_test_plugin_callback_gmpc_meta_data_callback (GList* list, gpointer self);
+static gboolean _gmpc_test_plugin_window_delete_event_gtk_widget_delete_event (GtkWindow* _sender, const GdkEvent* event, gpointer self);
 static void _gmpc_test_plugin_menu_activated_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu);
 static void _gmpc_test_plugin_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
@@ -172,6 +174,7 @@ void gmpc_test_plugin_image_downloaded (GmpcTestPlugin* self, const GEADAsyncHan
 			GdkPixbuf* _tmp0;
 			GdkPixbuf* pb;
 			load = gdk_pixbuf_loader_new ();
+			gdk_pixbuf_loader_set_size (load, 150, 150);
 			{
 				gdk_pixbuf_loader_write (load, (guchar*) data, -1, &inner_error);
 				if (inner_error != NULL) {
@@ -255,7 +258,7 @@ void gmpc_test_plugin_callback (GmpcTestPlugin* self, GList* list) {
 					GtkTreeIter iter = {0};
 					{
 						GdkPixbuf* pb;
-						pb = gdk_pixbuf_new_from_file (uri, &inner_error);
+						pb = gdk_pixbuf_new_from_file_at_scale (uri, 150, 150, TRUE, &inner_error);
 						if (inner_error != NULL) {
 							goto __catch2_g_error;
 							goto __finally2;
@@ -289,33 +292,62 @@ void gmpc_test_plugin_callback (GmpcTestPlugin* self, GList* list) {
 }
 
 
+gboolean gmpc_test_plugin_window_delete_event (GmpcTestPlugin* self, GtkWindow* win) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (win != NULL, FALSE);
+	gtk_widget_hide ((GtkWidget*) self->priv->window);
+	return TRUE;
+}
+
+
 static void _gmpc_test_plugin_callback_gmpc_meta_data_callback (GList* list, gpointer self) {
 	gmpc_test_plugin_callback (self, list);
 }
 
 
+static gboolean _gmpc_test_plugin_window_delete_event_gtk_widget_delete_event (GtkWindow* _sender, const GdkEvent* event, gpointer self) {
+	return gmpc_test_plugin_window_delete_event (self, _sender);
+}
+
+
 void gmpc_test_plugin_menu_activated (GmpcTestPlugin* self, GtkMenuItem* item) {
-	GtkWindow* window;
-	GtkListStore* _tmp0;
+	GtkWindow* _tmp0;
+	GtkListStore* _tmp1;
+	GtkScrolledWindow* sw;
 	GtkIconView* iv;
-	mpd_Song* song;
+	const mpd_Song* song;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (item != NULL);
-	window = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL));
+	if (self->priv->window != NULL) {
+		const mpd_Song* song;
+		gtk_window_present (self->priv->window);
+		gtk_widget_show_all ((GtkWidget*) self->priv->window);
+		gtk_list_store_clear (self->priv->model);
+		song = mpd_playlist_get_current_song (connection);
+		if (song != NULL) {
+			metadata_get_list (song, META_ALBUM_ART, _gmpc_test_plugin_callback_gmpc_meta_data_callback, self);
+		}
+		return;
+	}
 	_tmp0 = NULL;
-	self->priv->model = (_tmp0 = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING, NULL), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp0);
+	self->priv->window = (_tmp0 = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
+	_tmp1 = NULL;
+	self->priv->model = (_tmp1 = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING, NULL), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp1);
+	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
 	iv = g_object_ref_sink ((GtkIconView*) gtk_icon_view_new ());
 	gtk_icon_view_set_model (iv, (GtkTreeModel*) self->priv->model);
 	gtk_icon_view_set_pixbuf_column (iv, 0);
-	gtk_container_add ((GtkContainer*) window, (GtkWidget*) iv);
-	gtk_widget_show_all ((GtkWidget*) window);
+	gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) sw);
+	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) iv);
+	gtk_widget_show_all ((GtkWidget*) self->priv->window);
+	g_signal_connect_object ((GtkWidget*) self->priv->window, "delete-event", (GCallback) _gmpc_test_plugin_window_delete_event_gtk_widget_delete_event, self, 0);
+	/*        this.window.hide_on_delete();*/
 	song = mpd_playlist_get_current_song (connection);
 	if (song != NULL) {
 		metadata_get_list (song, META_ALBUM_ART, _gmpc_test_plugin_callback_gmpc_meta_data_callback, self);
 	}
-	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));
+	(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
 	(iv == NULL) ? NULL : (iv = (g_object_unref (iv), NULL));
-	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
 }
 
 
@@ -399,6 +431,7 @@ static void gmpc_test_plugin_gmpc_plugin_tool_menu_iface_interface_init (GmpcPlu
 
 static void gmpc_test_plugin_instance_init (GmpcTestPlugin * self) {
 	self->priv = GMPC_TEST_PLUGIN_GET_PRIVATE (self);
+	self->priv->window = NULL;
 	self->priv->model = NULL;
 }
 
@@ -409,6 +442,7 @@ static void gmpc_test_plugin_finalize (GObject* obj) {
 	{
 		fprintf (stdout, "Destroying %s\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self));
 	}
+	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
 	(self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL));
 	G_OBJECT_CLASS (gmpc_test_plugin_parent_class)->finalize (obj);
 }

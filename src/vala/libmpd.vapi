@@ -7,7 +7,7 @@ namespace MPD {
     public class Server {
 
         public MPD.Song playlist_get_song(MPD.Server server, int songid);
-        public MPD.Song playlist_get_current_song();
+        public weak MPD.Song playlist_get_current_song();
     }
 
 

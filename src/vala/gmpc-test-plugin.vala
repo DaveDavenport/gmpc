@@ -22,6 +22,7 @@ using Gmpc;
 
 public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, Gmpc.Plugin.ToolMenuIface  {
     public const int[3] version = {0,0,2};
+    private Gtk.Window window = null;
     private Gtk.ListStore model = null;
     /*********************************************************************************
      * Plugin base functions 
@@ -102,6 +103,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
             try{
                 Gtk.TreeIter iter;
                 var load = new Gdk.PixbufLoader();
+                load.set_size(150,150);
                 try {
                     load.write((uchar[])data);
                 }catch (Error e) {
@@ -127,7 +129,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
             if(uri[0] == '/'){
                 Gtk.TreeIter iter;
                 try{
-                Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
+                Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file_at_scale(uri, 150, 150, true);
                 this.model.append(out iter);
                 this.model.set(iter, 0, pb,1, uri, -1);
                 }catch(Error e)
@@ -139,16 +141,35 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
                 Gmpc.AsyncDownload.download(uri, image_downloaded); 
         }
     }
+    public bool window_delete_event(Gtk.Window win)
+    {
+        this.window.hide();
+        return true;
+    }
     public void menu_activated(Gtk.MenuItem item)
     {
-        var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
+        if(this.window != null) {
+            this.window.present();
+            this.window.show_all();
+            this.model.clear();
+            weak MPD.Song song = server.playlist_get_current_song();
+            if(song != null){
+                Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
+            }
+            return;
+        }
+        this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
         this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
+        var sw = new Gtk.ScrolledWindow(null, null);
         var iv = new Gtk.IconView();
         iv.set_model(this.model);
         iv.pixbuf_column = 0;
-        window.add(iv);
-        window.show_all();
-        var song = server.playlist_get_current_song();
+        this.window.add(sw);
+        sw.add(iv);
+        this.window.show_all();
+        this.window.delete_event += window_delete_event; 
+//        this.window.hide_on_delete();
+        weak MPD.Song song = server.playlist_get_current_song();
         if(song != null){
             Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
         }
