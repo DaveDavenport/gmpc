@@ -883,7 +883,10 @@ static gboolean process_itterate(void)
     meta_thread_data *d;
     printf("Process itterate\n");
     /* If queue is empty, do nothing */
-    if(process_queue == NULL) return;
+    if(process_queue == NULL){ 
+        printf("no more in queue\n");
+        return FALSE;
+    }
 
     /**
      * Get the top of the list
