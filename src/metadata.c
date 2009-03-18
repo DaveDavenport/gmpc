@@ -747,7 +747,7 @@ static void retrieve_thread(meta_thread_data *d)
     }
 
     d->index++;
-    g_idle_add(process_itterate,NULL);
+    g_idle_add((GSourceFunc)process_itterate,NULL);
 }
 /* TODO remove this and wrap this */
 typedef struct _gmpcPluginParent {
@@ -791,8 +791,9 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         }
     }
 }
-static void result_itterate(GList *list, meta_thread_data *d)
+static void result_itterate(GList *list, gpointer user_data)
 {
+    meta_thread_data *d = (meta_thread_data *)user_data;
     GList *iter;
     if(list == NULL){ 
         d->index = meta_num_plugins;
@@ -801,40 +802,50 @@ static void result_itterate(GList *list, meta_thread_data *d)
         return;
     }
     d->list = list;
-//	for(iter = g_list_first(list); iter; iter = g_list_next(iter)){
     d->iter = g_list_first(list);//iter;
     if(d->type&(META_ARTIST_ART|META_ALBUM_ART))
     {
+        const char *path = d->iter->data;
+
         printf("New async downloading: %s\n", (const gchar *)d->iter->data);
-        gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
-    }
-    else{
+        if(path[0] == '/') {
+            d->result_path = (char *)path; 
+            d->iter->data = NULL;
+            d->result = META_DATA_AVAILABLE;
+        }else{
+            gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+            return;
+        }
+    }else{
         if(d->iter)
         {
+            GError *error = NULL;
             gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
-            printf("file: %s\n", filename);
-            g_file_set_contents(filename,(char *)d->iter->data, -1, NULL);
-            printf("save done\n");
-
-            d->result_path = filename; 
-            d->result = META_DATA_AVAILABLE;
-            
-            /* listing */
-            if(d->list)
+            g_file_set_contents(filename,(char *)d->iter->data, -1, &error);
+            if(error)
             {
-                g_list_foreach(d->list, (GFunc)g_free, NULL);
-                g_list_free(d->list);
+                printf("Error: %s\n", error->message);
+                g_error_free(error);
+                error = NULL;
             }
-            d->list = NULL;
-            d->iter = NULL;
+            else{
+                d->result_path = filename; 
+                d->result = META_DATA_AVAILABLE;
+            }
+
         }
-        d->index = meta_num_plugins;
-
-        process_itterate();
     }
-//	}
+    /* listing */
+    if(d->list)
+    {
+        g_list_foreach(d->list, (GFunc)g_free, NULL);
+        g_list_free(d->list);
+    }
+    d->list = NULL;
+    d->iter = NULL;
+    d->index = meta_num_plugins;
 
- //   d->index++;
+    process_itterate();
 }
 static gboolean process_itterate(void)
 {
@@ -843,7 +854,7 @@ static gboolean process_itterate(void)
     meta_thread_data *d = process_queue->data;
     if(d->index < meta_num_plugins)
     {
-        if(d == 0)
+        if(d->index == 0)
         {
             if(d->type&META_QUERY_NO_CACHE)
             {
@@ -851,7 +862,9 @@ static gboolean process_itterate(void)
             }
             else
             {
-                d->result = meta_data_get_from_cache(d->edited/*song*/,d->type&META_QUERY_DATA_TYPES, &(d->result_path));
+                d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &(d->result_path));
+                /* We don't do fetching */
+                if(d->result == META_DATA_FETCHING) d->result = META_DATA_UNAVAILABLE;
             }
         }
 
@@ -863,7 +876,7 @@ static gboolean process_itterate(void)
             if(plug->old->metadata->get_uris != NULL)
             {
                 printf("Calling: %s\n", gmpc_plugin_get_name(plug));
-                plug->old->metadata->get_uris(d->edited, d->type&META_QUERY_DATA_TYPES,(GSourceFunc)result_itterate, (gpointer)d); 
+                plug->old->metadata->get_uris(d->edited, d->type&META_QUERY_DATA_TYPES,result_itterate, (gpointer)d); 
             }else{
                 printf("create retrieve thread\n");
                 g_thread_create((GThreadFunc)retrieve_thread, d, FALSE, NULL);
