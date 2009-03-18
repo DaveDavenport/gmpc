@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <gmpc_easy_download.h>
 
 G_BEGIN_DECLS
 
@@ -51,6 +52,9 @@ struct _GmpcTestPluginClass {
 };
 
 
+void gmpc_test_plugin_image_downloaded (GmpcTestPlugin* self, const GEADAsyncHandler* handle, GEADStatus status);
+void gmpc_test_plugin_callback (GmpcTestPlugin* self, GList* list);
+void gmpc_test_plugin_menu_activated (GmpcTestPlugin* self, GtkMenuItem* item);
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
 GmpcTestPlugin* gmpc_test_plugin_new (void);
 GType gmpc_test_plugin_get_type (void);

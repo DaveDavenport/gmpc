@@ -62,3 +62,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
 gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *extention);
 
 #endif
+
+
+void metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(GList *list, gpointer data), gpointer data);

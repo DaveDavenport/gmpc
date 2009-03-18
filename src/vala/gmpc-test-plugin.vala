@@ -20,8 +20,9 @@ using GLib;
 using Gtk;
 using Gmpc;
 
-public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface {
+public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, Gmpc.Plugin.ToolMenuIface  {
     public const int[3] version = {0,0,2};
+    private Gtk.ListStore model = null;
     /*********************************************************************************
      * Plugin base functions 
      * These functions are required.
@@ -92,4 +93,72 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface {
         stdout.printf("Destroying %s\n", this.get_name());
 
     }
+    public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
+    {
+        if(status == Gmpc.AsyncDownload.Status.DONE)
+        {
+            int64 length;
+            weak string data = handle.get_data(out length);
+            try{
+                Gtk.TreeIter iter;
+                var load = new Gdk.PixbufLoader();
+                try {
+                    load.write((uchar[])data);
+                }catch (Error e) {
+                    stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
+                }
+                load.close();
+                Gdk.Pixbuf pb = load.get_pixbuf();//new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); 
+                this.model.append(out iter);
+                this.model.set(iter, 0, pb,1, handle.get_uri(), -1);
+            }catch (Error e) {
+                stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
+
+                return;
+            }
+
+        }
+    }
+    public void callback(GLib.List<string> list)
+    {
+        foreach(weak string uri in list)
+        {
+            stdout.printf("Uri: %s\n", uri);
+            if(uri[0] == '/'){
+                Gtk.TreeIter iter;
+                try{
+                Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
+                this.model.append(out iter);
+                this.model.set(iter, 0, pb,1, uri, -1);
+                }catch(Error e)
+                {
+
+                }
+
+            }else
+                Gmpc.AsyncDownload.download(uri, image_downloaded); 
+        }
+    }
+    public void menu_activated(Gtk.MenuItem item)
+    {
+        var window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
+        this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
+        var iv = new Gtk.IconView();
+        iv.set_model(this.model);
+        iv.pixbuf_column = 0;
+        window.add(iv);
+        window.show_all();
+        var song = server.playlist_get_current_song();
+        if(song != null){
+            Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
+        }
+    }
+    public int tool_menu_integration(Gtk.Menu menu)
+    {
+        Gtk.MenuItem item = new Gtk.MenuItem.with_label("Test plugin");
+        menu.append(item);
+        item.activate += menu_activated;
+        return 0;
+    }
 }
+

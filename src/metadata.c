@@ -1323,6 +1323,21 @@ void metadata_import_old_db(char *url)
 }
 
 
+void metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(GList *list, gpointer data), gpointer data)
+{
+    int i;
+    for(i=0; i < meta_num_plugins; i++)
+    {
+        gmpcPluginParent *plug = meta_plugins[i]; 
+
+        printf("Metadata Plugin: %s\n", gmpc_plugin_get_name(plug));
+        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris) {
+            plug->old->metadata->get_uris(song, type&META_QUERY_DATA_TYPES,callback, (gpointer)data); 
+        }
+    }
+}
+
+
 gmpcPrefPlugin metadata_pref_plug = {
     .construct      = metadata_construct_pref_pane,
     .destroy        =  metadata_destroy_pref_pane

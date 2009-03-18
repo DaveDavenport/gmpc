@@ -7,7 +7,9 @@ namespace MPD {
     public class Server {
 
         public MPD.Song playlist_get_song(MPD.Server server, int songid);
+        public MPD.Song playlist_get_current_song();
     }
+
 
     [CCode (cname = "mpd_Song",
     free_function = "mpd_freeSong", 

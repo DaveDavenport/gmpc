@@ -2,6 +2,9 @@ namespace Gmpc {
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
     static Connection gmpcconn; 
 
+    [CCode (cname = "connection", cheader_filename="main.h")]
+    static MPD.Server server;
+
     [CCode (cheader_filename="gmpc-connection.h")]
     public class Connection {
         signal void connection_changed(MPD.Server server, int connect);
@@ -21,7 +24,11 @@ namespace Gmpc {
             QUERY_DATA_TYPES = 127,
             QUERY_NO_CACHE   = 128
         }
+        
 
+        public delegate void Callback (GLib.List list);
+        [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
+        public void get_list(MPD.Song *song, Type type, Callback callback);
 
    }
    namespace Messages {
@@ -55,6 +62,8 @@ namespace Gmpc {
 
             [CCode (cname="gmpc_easy_handler_get_data", cheader_filename="gmpc_easy_download.h")]
             public weak string get_data(out int64 length);
+            [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
+            public weak string get_uri();
         }
 
 
