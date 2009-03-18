@@ -149,6 +149,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 				new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
 				if(new_data)
 				{
+
 					gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
 					g_free(new_data);
 				}

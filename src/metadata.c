@@ -762,14 +762,14 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
     }
     if(status == GEAD_DONE)
     {
-        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song,  "jpg"); 
+        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
         g_file_set_contents(filename, data, length, NULL);
         d->result = META_DATA_AVAILABLE;
         d->result_path = filename;
 
-        g_list_foreach(d->list, g_free, NULL);
+        g_list_foreach(d->list,(GFunc) g_free, NULL);
         g_list_free(d->list);
         d->list = NULL;
         d->iter = NULL;
@@ -782,7 +782,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
             d->iter = g_list_next(d->iter);
             gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
         }else{
-            g_list_foreach(d->list, g_free, NULL);
+            g_list_foreach(d->list,(GFunc) g_free, NULL);
             g_list_free(d->list);
             d->list = NULL;
             d->iter = NULL;
@@ -803,8 +803,35 @@ static void result_itterate(GList *list, meta_thread_data *d)
     d->list = list;
 //	for(iter = g_list_first(list); iter; iter = g_list_next(iter)){
     d->iter = g_list_first(list);//iter;
-    printf("New async downloading: %s\n", (const gchar *)d->iter->data);
-    gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+    if(d->type&(META_ARTIST_ART|META_ALBUM_ART))
+    {
+        printf("New async downloading: %s\n", (const gchar *)d->iter->data);
+        gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+    }
+    else{
+        if(d->iter)
+        {
+            gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
+            printf("file: %s\n", filename);
+            g_file_set_contents(filename,(char *)d->iter->data, -1, NULL);
+            printf("save done\n");
+
+            d->result_path = filename; 
+            d->result = META_DATA_AVAILABLE;
+            
+            /* listing */
+            if(d->list)
+            {
+                g_list_foreach(d->list, (GFunc)g_free, NULL);
+                g_list_free(d->list);
+            }
+            d->list = NULL;
+            d->iter = NULL;
+        }
+        d->index = meta_num_plugins;
+
+        process_itterate();
+    }
 //	}
 
  //   d->index++;
