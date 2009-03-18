@@ -795,14 +795,28 @@ static void result_itterate(GList *list, gpointer user_data)
 {
     meta_thread_data *d = (meta_thread_data *)user_data;
     GList *iter;
+
+
+    /**
+     * This plugin didn't have a result
+     * Skip to next plugin, 
+     * retry.
+     **/
     if(list == NULL){ 
-        d->index = meta_num_plugins;
-        printf("Not found\n");
-        process_itterate();
+        d->index++;
+        /* retry */
+        g_idle_add((GSourceFunc)process_itterate, NULL);
         return;
     }
+
+    /**
+     * Plugin has a result, try the downloading the first, if that fails
+     */
     d->list = list;
-    d->iter = g_list_first(list);//iter;
+    /* Store the first one in the list */
+    d->iter = g_list_first(list);
+
+    /* If type is ART we need to download something. */
     if(d->type&(META_ARTIST_ART|META_ALBUM_ART))
     {
         const char *path = d->iter->data;
@@ -816,26 +830,28 @@ static void result_itterate(GList *list, gpointer user_data)
             gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
             return;
         }
-    }else{
-        if(d->iter)
+    
+    }
+    /* If type is text, store this in a file. */
+    else
+    {
+        GError *error = NULL;
+        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
+        g_file_set_contents(filename,(char *)d->iter->data, -1, &error);
+        if(error)
         {
-            GError *error = NULL;
-            gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
-            g_file_set_contents(filename,(char *)d->iter->data, -1, &error);
-            if(error)
-            {
-                printf("Error: %s\n", error->message);
-                g_error_free(error);
-                error = NULL;
-            }
-            else{
-                d->result_path = filename; 
-                d->result = META_DATA_AVAILABLE;
-            }
-
+            printf("Error: %s\n", error->message);
+            g_error_free(error);
+            error = NULL;
+        }
+        else{
+            /* If saved succesfull, pass filename back to handler */
+            d->result_path = filename; 
+            d->result = META_DATA_AVAILABLE;
         }
     }
-    /* listing */
+
+    /* Free the list. */
     if(d->list)
     {
         g_list_foreach(d->list, (GFunc)g_free, NULL);
@@ -843,61 +859,109 @@ static void result_itterate(GList *list, gpointer user_data)
     }
     d->list = NULL;
     d->iter = NULL;
-    d->index = meta_num_plugins;
 
-    process_itterate();
+    /**
+     * If still no result, try next plugin
+     */
+    if(d->result == META_DATA_UNAVAILABLE)
+    {
+        d->index++;
+    }
+    /**
+     * If we have a result.
+     * Make it not check other plugins 
+     */
+    else
+        d->index = meta_num_plugins;
+
+    g_idle_add((GSourceFunc)process_itterate, NULL);
 }
+
 static gboolean process_itterate(void)
 {
+
+    meta_thread_data *d;
     printf("Process itterate\n");
+    /* If queue is empty, do nothing */
     if(process_queue == NULL) return;
-    meta_thread_data *d = process_queue->data;
+
+    /**
+     * Get the top of the list
+     */
+    d = process_queue->data;
+    /**
+     * Check if there are still plugins left to process 
+     */
     if(d->index < meta_num_plugins)
     {
+        /**
+         * Before checking all the plugins, query cache
+         * Except when user asks to bypass cache
+         */
         if(d->index == 0)
         {
             if(d->type&META_QUERY_NO_CACHE)
             {
                 d->result = META_DATA_UNAVAILABLE;
-            }
-            else
-            {
+            } else {
                 d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &(d->result_path));
             }
         }
-
-        printf("trying %i\n", d->index);
+        /**
+         * If cache has no reesult, query plugin
+         */
         if(d->result != META_DATA_AVAILABLE) 
         {
             gmpcPluginParent *plug = meta_plugins[d->index];
+    
+            printf("Calling: %s\n", gmpc_plugin_get_name(plug));
             /* TODO WRAP THIS */
+            /**
+             * Query plugins, new type call in this thread.
+             * old type, create new thread. 
+             */
             if(plug->old->metadata->get_uris != NULL)
             {
-                printf("Calling: %s\n", gmpc_plugin_get_name(plug));
-                plug->old->metadata->get_uris(d->edited, d->type&META_QUERY_DATA_TYPES,result_itterate, (gpointer)d); 
+                gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
             }else{
-                printf("create retrieve thread\n");
                 g_thread_create((GThreadFunc)retrieve_thread, d, FALSE, NULL);
             }
             return FALSE;
         }
     }
+    /**
+     * If nothing found, set unavailable
+     */
+    if(d->result == META_DATA_FETCHING) {
+        d->result = META_DATA_UNAVAILABLE;
+    }
+    /**
+     * Store result (or lack off) 
+     **/
     meta_data_set_cache_real(d->edited, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
     if(d->edited->artist)
     {
         if(strcmp(d->edited->artist, "Various Artists")!=0)
             meta_data_set_cache_real(d->song, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
     }
-    if(d->result == META_DATA_FETCHING) {
-        d->result = META_DATA_UNAVAILABLE;
-    }
-
+    /**
+     * Remove from queue
+     * TODO: try to match identical queries?
+     */
     process_queue = g_list_remove(process_queue, d);
+    /**
+     * push on handle result
+     */
     q_async_queue_push(meta_results, d);		
-    printf("remove from queue: with result %i::%s\n",d->result, (d->result_path)?d->result_path:"(null)");
+    /**
+     * Call resuult handler 
+     */
     g_idle_add((GSourceFunc)meta_data_handle_results,NULL);
 
-    process_itterate();
+    /**
+     * Next in queue 
+     */
+    g_idle_add((GSourceFunc)process_itterate, NULL);
     return FALSE;
 }
 
