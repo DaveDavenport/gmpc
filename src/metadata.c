@@ -863,8 +863,6 @@ static gboolean process_itterate(void)
             else
             {
                 d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &(d->result_path));
-                /* We don't do fetching */
-                if(d->result == META_DATA_FETCHING) d->result = META_DATA_UNAVAILABLE;
             }
         }
 
@@ -890,7 +888,9 @@ static gboolean process_itterate(void)
         if(strcmp(d->edited->artist, "Various Artists")!=0)
             meta_data_set_cache_real(d->song, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
     }
-
+    if(d->result == META_DATA_FETCHING) {
+        d->result = META_DATA_UNAVAILABLE;
+    }
 
     process_queue = g_list_remove(process_queue, d);
     q_async_queue_push(meta_results, d);		
