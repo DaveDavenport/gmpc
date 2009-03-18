@@ -111,13 +111,14 @@ typedef struct {
  * Metadata fetching plugin.
  * All fields required
  */
+
 typedef struct {
     /* Set and get priority */
 	int (*get_priority)				(void);
     void (*set_priority)            (int priority);
 	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
     /* Padding */
-    void (*padding1)                (void);
+    void (*get_uris)      (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data);
     void (*padding2)                (void);
     void (*padding3)                (void);
 } gmpcMetaDataPlugin;

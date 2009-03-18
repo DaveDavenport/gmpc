@@ -347,7 +347,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 	char** _tmp4;
 	gint groups_size;
 	gint groups_length1;
-	size_t _tmp3;
+	gint _tmp3;
 	char** groups;
 	g_return_if_fail (self != NULL);
 	inner_error = NULL;

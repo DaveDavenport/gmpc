@@ -117,7 +117,7 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
-        if(plug->metadata->get_image == NULL)
+        if(plug->metadata->get_image == NULL && plug->metadata->get_uris == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
@@ -664,11 +664,24 @@ int gmpc_plugin_metadata_get_image(gmpcPluginParent *plug, mpd_Song *song, MetaD
     *path = NULL;
     if(gmpc_plugin_is_metadata(plug))
     {
-        return plug->old->metadata->get_image(song, type, path);
+        if(plug->old->metadata->get_image)
+            return plug->old->metadata->get_image(song, type, path);
     }
     return META_DATA_UNAVAILABLE;
 }
 
+void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data)
+{
+    if(gmpc_plugin_is_metadata(plug))
+    {
+        if(plug->old->metadata->get_uris)
+        {
+            plug->old->metadata->get_uris(song, type, callback, data);
+            return;
+        }
+    }
+    callback(NULL, data);
+}
 
 gint  gmpc_plugin_tool_menu_integration (gmpcPluginParent  *plug, GtkMenu *menu)
 {

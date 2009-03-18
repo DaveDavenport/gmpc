@@ -540,6 +540,10 @@ void gmpc_easy_async_cancel(const GEADAsyncHandler * handle)
 
 GEADAsyncHandler *gmpc_easy_async_downloader(const gchar * uri, GEADAsyncCallback callback, gpointer user_data)
 {
+	if(uri == NULL) {
+		printf("Error\n");
+		return NULL;
+	}
 	return gmpc_easy_async_downloader_with_headers(uri, callback, user_data, NULL);
 }
 

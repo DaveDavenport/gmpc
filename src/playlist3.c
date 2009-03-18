@@ -918,16 +918,17 @@ void create_playlist3(void)
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL) {
 		/* song id, song title */
-		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new(PL3_CAT_NROWS, G_TYPE_INT,	/* row type, see free_type struct */
-															G_TYPE_STRING,	/* display name */
-															G_TYPE_STRING,	/* full path and stuff for backend */
-															G_TYPE_STRING,	/* icon id */
-															G_TYPE_BOOLEAN,	/* cat proc */
-															G_TYPE_UINT,	/* icon size */
-															G_TYPE_STRING,	/* browser markup */
-															G_TYPE_INT,	/* ordering */
-															G_TYPE_STRING	/* Num items */
-			);
+		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new(PL3_CAT_NROWS, 
+				G_TYPE_INT,	/* row type, see free_type struct */
+				G_TYPE_STRING,	/* display name */
+				G_TYPE_STRING,	/* full path and stuff for backend */
+				G_TYPE_STRING,	/* icon id */
+				G_TYPE_BOOLEAN,	/* cat proc */
+				G_TYPE_UINT,	/* icon size */
+				G_TYPE_STRING,	/* browser markup */
+				G_TYPE_INT,	/* ordering */
+				G_TYPE_STRING	/* Num items */
+				);
 	}
 	g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
 	g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
@@ -1518,6 +1519,8 @@ static void playlist_zoom_level_changed(void)
 	cfg_set_single_value_as_int(config, "playlist", "zoomlevel", pl3_zoom);
 }
 
+
+
 /**
  * Update the window to status changes in mpd
  */
@@ -1634,6 +1637,8 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	 * Anything that can change metadta
 	 */
 	if (what & MPD_CST_SONGID || what & MPD_CST_SONGPOS || what & MPD_CST_PLAYLIST) {
+		int i;
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		playlist3_update_header();
 		if (mpd_player_get_state(mi) == MPD_PLAYER_PLAY) {
 			playlist_player_set_song(mi);

@@ -56,7 +56,7 @@ class Gmpc:Meta:Watcher from  G:Object {
     void
     data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, gchar *path)
     { 
-
+        printf("data: %s\n", (path)?path:"(null)");
     }
 
     /**
