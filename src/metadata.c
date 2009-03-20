@@ -26,6 +26,7 @@
 #include "metadata.h"
 #include "gmpc_easy_download.h"
 
+static void retrieve_thread(void);
 long unsigned num_queries = 0;
 
 config_obj *cover_index= NULL;
@@ -570,13 +571,7 @@ static gboolean meta_data_handle_results(void)
         mpd_freeSong(data->edited);
         q_free(data);
 	}
-	/**
-	 * Keep the timer running
-	 */
-    /* update when handled */
-    test = g_mutex_trylock(meta_processing);
-    if(test)
-        g_mutex_unlock(meta_processing);
+
     return FALSE;
 }
 
@@ -609,7 +604,7 @@ void meta_data_init(void)
     /**
      * Create the retrieval thread
      */
-//    meta_thread = g_thread_create((GThreadFunc)meta_data_retrieve_thread, NULL, TRUE, NULL);
+    meta_thread = g_thread_create((GThreadFunc)retrieve_thread, NULL, TRUE, NULL);
 
 }
 
@@ -734,20 +729,25 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 
 static gboolean process_itterate(void);
 GList *process_queue = NULL;
-static void retrieve_thread(meta_thread_data *d)
+static void retrieve_thread(void)
 {
-    gmpcPluginParent *plug = meta_plugins[d->index];
-    printf("Try plugin:%i:%s\n", d->index,gmpc_plugin_get_name(plug));
-    if(gmpc_plugin_get_enabled(plug))
+    meta_thread_data *d;
+    while((d = q_async_queue_pop(meta_commands)))
     {
-        gchar *path = NULL;
-        d->result = gmpc_plugin_metadata_get_image(plug,d->edited, d->type&META_QUERY_DATA_TYPES, &path);
-        printf("path: %s\n", (path)?path:"(null)");
-        d->result_path = path;
-    }
+        gmpcPluginParent *plug = meta_plugins[d->index];
+        if(d->id == 0) return;
 
-    d->index++;
-    g_idle_add((GSourceFunc)process_itterate,NULL);
+        printf("Try plugin:%i:%s\n", d->index,gmpc_plugin_get_name(plug));
+            gchar *path = NULL;
+            d->result = gmpc_plugin_metadata_get_image(plug,d->edited, d->type&META_QUERY_DATA_TYPES, &path);
+            printf("path: %s\n", (path)?path:"(null)");
+            d->result_path = path;
+        
+
+        d->index++;
+
+        g_idle_add((GSourceFunc)process_itterate,NULL);
+    }
 }
 /* TODO remove this and wrap this */
 typedef struct _gmpcPluginParent {
@@ -927,7 +927,18 @@ static gboolean process_itterate(void)
             {
                 gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
             }else{
-                g_thread_create((GThreadFunc)retrieve_thread, d, FALSE, NULL);
+                //g_thread_create((GThreadFunc)retrieve_thread, d, FALSE, NULL);
+                if(gmpc_plugin_get_enabled(plug))
+                {
+                printf("push remote\n");
+                q_async_queue_push(meta_commands, d);
+                printf("done\n");
+                }
+                else
+                {
+                    d->index++;
+                    g_idle_add((GSourceFunc)process_itterate, NULL);
+                }
             }
             return FALSE;
         }
