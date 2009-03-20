@@ -78,13 +78,13 @@ AC_ARG_ENABLE(libspiff,
 
 if test "x${enable_libspiff}" != xno; then 
     AC_CHECK_HEADER(spiff/spiff_c.h, AC_CHECK_LIB(spiff, spiff_parse,libspiff=1,libspiff=0),libspiff=0)
-    if test "x${libspiff}" == "x1";
+    if test "x${libspiff}" = "x1";
     then
         AC_DEFINE(SPIFF,1,["Use or don't use libspiff"])
         SPIFF_LIBS=-lspiff
         AC_SUBST(SPIFF_LIBS)
     else 
-        if test "x${enable_libspiff}" == "xyes"; then
+        if test "x${enable_libspiff}" = "xyes"; then
             AC_MSG_ERROR([libspiff not found])
         fi
     fi
