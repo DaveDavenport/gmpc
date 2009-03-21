@@ -264,6 +264,11 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's local
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 
+if test "x$USE_NLS" != "xyes"; then
+    echo "Translation support is required.";
+    exit 0;
+fi
+
 
 #Win32 compile support
 
