@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"POT-Creation-Date: 2009-03-16 15:04+0100\n"
 "PO-Revision-Date: 2009-02-13 17:32+0000\n"
 "Last-Translator: yuan <zwjyuan@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
+"X-Launchpad-Export-Date: 2009-03-21 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -186,14 +186,14 @@ msgstr "代理"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:290 ../src/main.c:291
 msgid "--debug-level="
 msgstr ""
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:297
 msgid "--version"
 msgstr "版本--"
@@ -204,7 +204,7 @@ msgstr "--配置="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:311
 msgid "--start-hidden"
 msgstr ""
@@ -212,49 +212,49 @@ msgstr ""
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:318
 msgid "--clean-cover-db"
 msgstr ""
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:324
 msgid "--disable-plugins"
 msgstr ""
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--replace"
 msgstr "由--替代"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:336
 msgid "--quit"
 msgstr "停止--"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:342
 msgid "--import-old-db"
 msgstr ""
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:348
 msgid "--debug-updates"
 msgstr ""
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:355
 msgid "--help"
 msgstr "帮助"
@@ -805,7 +805,7 @@ msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
 
-#: ../src/preferences.c:98 ../src/preferences.c:200
+#: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr ""
 
@@ -813,44 +813,44 @@ msgstr ""
 msgid "Plugins:"
 msgstr "插件："
 
-#: ../src/preferences.c:316
+#: ../src/preferences.c:330
 msgid "Enabled"
 msgstr "启用"
 
-#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:333 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr "名称"
 
-#: ../src/preferences.c:321
+#: ../src/preferences.c:335
 msgid "Function"
 msgstr "功能类别"
 
 #. * Mpd version
-#: ../src/preferences.c:323 ../src/browsers/server-information.c:332
+#: ../src/preferences.c:337 ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "版本"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:365
 msgid "Dummy"
 msgstr ""
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:368
 msgid "Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:353
+#: ../src/preferences.c:371
 msgid "Metadata Provider"
 msgstr ""
 
-#: ../src/preferences.c:356
+#: ../src/preferences.c:374
 msgid "Metadata Provider and Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:359
+#: ../src/preferences.c:377
 msgid "Misc."
 msgstr ""
 
-#: ../src/preferences.c:364
+#: ../src/preferences.c:382
 msgid "Unknown"
 msgstr ""
 
@@ -875,7 +875,7 @@ msgstr ""
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:327
 msgid "Enter an url"
 msgstr ""
@@ -890,7 +890,7 @@ msgstr "提示"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -907,7 +907,7 @@ msgstr "连接设置"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1454,7 +1454,7 @@ msgstr "正在获取..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2410
@@ -1463,8 +1463,8 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:628
 #: ../src/browsers/playlist3-metadata-browser.c:913
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-#: ../src/gob/gmpc-mpddata-treeview.gob:630
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:631
 msgid "Artist"
 msgstr "艺术家"
 
@@ -1485,8 +1485,8 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:931
 #: ../src/browsers/playlist3-metadata-browser.c:1987
 #: ../src/browsers/playlist3-metadata-browser.c:2344
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-#: ../src/gob/gmpc-mpddata-treeview.gob:656
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:657
 msgid "Genre"
 msgstr "流派"
 
@@ -1494,8 +1494,8 @@ msgstr "流派"
 #: ../src/browsers/playlist3-metadata-browser.c:937
 #: ../src/browsers/playlist3-metadata-browser.c:2016
 #: ../src/browsers/playlist3-metadata-browser.c:2350
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/gob/gmpc-mpddata-treeview.gob:668
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:669
 msgid "Date"
 msgstr "日期"
 
@@ -1507,37 +1507,37 @@ msgid "Collection"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:897
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:617
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:618
 msgid "Title"
 msgstr "标题"
 
 #: ../src/browsers/playlist3-metadata-browser.c:906
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:680
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:681
 msgid "Duration"
 msgstr "时长"
 
 #: ../src/browsers/playlist3-metadata-browser.c:919
 #: ../src/browsers/playlist3-metadata-browser.c:1969
 #: ../src/browsers/playlist3-metadata-browser.c:2338
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:644
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:645
 msgid "Album"
 msgstr "专辑"
 
 #: ../src/browsers/playlist3-metadata-browser.c:925
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "音轨"
 
 #: ../src/browsers/playlist3-metadata-browser.c:943
-#: ../src/gob/gmpc-mpddata-treeview.gob:76
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
 msgstr "作曲"
 
 #: ../src/browsers/playlist3-metadata-browser.c:949
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Performer"
 msgstr "表演者"
 
@@ -1547,7 +1547,7 @@ msgid "Path"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:966
-#: ../src/gob/gmpc-mpddata-treeview.gob:85
+#: ../src/gob/gmpc-mpddata-treeview.gob:86
 msgid "Extension"
 msgstr "扩展名"
 
@@ -1613,7 +1613,7 @@ msgstr[0] "<b>日期：</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1555
 msgid "Artist info:"
 msgstr "艺术家简介："
@@ -1632,7 +1632,7 @@ msgstr "相似艺术家"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1885
 msgid "Album info:"
 msgstr "专辑介绍："
@@ -1652,13 +1652,13 @@ msgstr "音轨"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2039
 #: ../src/browsers/playlist3-metadata-browser.c:2374
-#: ../src/gob/gmpc-mpddata-treeview.gob:86
+#: ../src/gob/gmpc-mpddata-treeview.gob:87
 msgid "Directory"
 msgstr "目录"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2226
 #: ../src/browsers/playlist3-metadata-browser.c:2619
 msgid "Metadata Browser"
@@ -1666,7 +1666,7 @@ msgstr ""
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2242
 msgid "Show Current Song"
 msgstr ""
@@ -1828,49 +1828,49 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:68
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
 msgid "Markup"
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr "文件"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Disc"
 msgstr "光盘编号"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "Comment"
 msgstr "备注"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:83
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Position"
 msgstr "位置"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
+#: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr ""
 
 #. Add a tools menu item with the previously generated menu as submenu
-#: ../src/gob/gmpc-mpddata-treeview.gob:931
+#: ../src/gob/gmpc-mpddata-treeview.gob:932
 msgid "Tools"
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:954
+#: ../src/gob/gmpc-mpddata-treeview.gob:955
 msgid "Paste before"
 msgstr "粘贴在前面"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:963
+#: ../src/gob/gmpc-mpddata-treeview.gob:964
 msgid "Paste after"
 msgstr "粘贴在后面"
 
 #. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:989
+#: ../src/gob/gmpc-mpddata-treeview.gob:990
 msgid "Edit Columns"
 msgstr ""
 
@@ -1959,21 +1959,6 @@ msgstr ""
 #, c-format
 msgid "Lookup %s on %s"
 msgstr ""
-
-#~ msgid "Libcurl version"
-#~ msgstr "Libcurl版本"
-
-#~ msgid "Windows"
-#~ msgstr "windows系统"
-
-#~ msgid "Mac OsX"
-#~ msgstr "Mac OsX系统"
-
-#~ msgid "Options enabled"
-#~ msgstr "启用选项"
-
-#~ msgid "Disabled"
-#~ msgstr "禁用"
 
 #~ msgid "/"
 #~ msgstr "/"
@@ -2132,6 +2117,9 @@ msgstr ""
 #~ msgid "The type of accelerator."
 #~ msgstr "快捷键类型。"
 
+#~ msgid "Disabled"
+#~ msgstr "禁用"
+
 #~ msgid "<b>Title:</b>"
 #~ msgstr "<b>标题：</b>"
 
@@ -2140,3 +2128,15 @@ msgstr ""
 
 #~ msgid "Libmpd version"
 #~ msgstr "Libmpd版本"
+
+#~ msgid "Libcurl version"
+#~ msgstr "Libcurl版本"
+
+#~ msgid "Windows"
+#~ msgstr "windows系统"
+
+#~ msgid "Mac OsX"
+#~ msgstr "Mac OsX系统"
+
+#~ msgid "Options enabled"
+#~ msgstr "启用选项"

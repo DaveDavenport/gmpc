@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"POT-Creation-Date: 2009-03-16 15:04+0100\n"
 "PO-Revision-Date: 2009-02-13 21:46+0000\n"
 "Last-Translator: Vojtěch Látal <vojtech@latal.name>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
+"X-Launchpad-Export-Date: 2009-03-21 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -186,14 +186,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:290 ../src/main.c:291
 msgid "--debug-level="
 msgstr "--uroven-ladeni="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:297
 msgid "--version"
 msgstr "--verze"
@@ -204,7 +204,7 @@ msgstr "--konfig="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:311
 msgid "--start-hidden"
 msgstr "--skryt-po-spusteni"
@@ -212,49 +212,49 @@ msgstr "--skryt-po-spusteni"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:318
 msgid "--clean-cover-db"
 msgstr "--vyprazdnit-db-obalu"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:324
 msgid "--disable-plugins"
 msgstr "--zakazat-pluginy"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--replace"
 msgstr "--nahradit"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:336
 msgid "--quit"
 msgstr "--ukoncit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:342
 msgid "--import-old-db"
 msgstr "--import-stare-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:348
 msgid "--debug-updates"
 msgstr "--ladeni-aktualizaci"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:355
 msgid "--help"
 msgstr "--napoveda"
@@ -291,8 +291,8 @@ msgstr ""
 "\t\t\t\t\t2 Chybové zprávy a varování\n"
 "\t\t\t\t\t3 Všechny zprávy\n"
 "\t--verze\t\tVypíše verzi a git verzi\n"
-"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  ~/."
-"gmpc/gmpc.cfg\n"
+"\t--konfig=<file>\t\tNastaví cestu ke konfiguračnímu souboru. Výchozí je  "
+"~/.gmpc/gmpc.cfg\n"
 "\t--procistit-db-obalu\tPročistí soubor s obaly\n"
 "\t--zakazat-rozsireni\tNenačte žádné rozšíření\n"
 "\t--nahradit\t\tNahradí běžící sezení novým\n"
@@ -853,7 +853,7 @@ msgstr ""
 "Jedno nebo více rozšíření se nepodařilo načíst, podívejte se do Nápověda -> "
 "Zobrazit události pro další informace."
 
-#: ../src/preferences.c:98 ../src/preferences.c:200
+#: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr "Rozšíření"
 
@@ -861,44 +861,44 @@ msgstr "Rozšíření"
 msgid "Plugins:"
 msgstr "Pluginy:"
 
-#: ../src/preferences.c:316
+#: ../src/preferences.c:330
 msgid "Enabled"
 msgstr "Povoleno"
 
-#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:333 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr "Název"
 
-#: ../src/preferences.c:321
+#: ../src/preferences.c:335
 msgid "Function"
 msgstr "Funkce"
 
 #. * Mpd version
-#: ../src/preferences.c:323 ../src/browsers/server-information.c:332
+#: ../src/preferences.c:337 ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Verze"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:365
 msgid "Dummy"
 msgstr "fiktivní"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:368
 msgid "Browser Extension"
 msgstr "Rozšíření prohlížeče"
 
-#: ../src/preferences.c:353
+#: ../src/preferences.c:371
 msgid "Metadata Provider"
 msgstr "Poskytovatel metadat"
 
-#: ../src/preferences.c:356
+#: ../src/preferences.c:374
 msgid "Metadata Provider and Browser Extension"
 msgstr "Poskytovatel metadat a rozšíření prohlížeče"
 
-#: ../src/preferences.c:359
+#: ../src/preferences.c:377
 msgid "Misc."
 msgstr "Různé"
 
-#: ../src/preferences.c:364
+#: ../src/preferences.c:382
 msgid "Unknown"
 msgstr "Neznámý"
 
@@ -924,7 +924,7 @@ msgstr "Přidán 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:327
 msgid "Enter an url"
 msgstr "Zadejte url"
@@ -939,7 +939,7 @@ msgstr "Oznámení"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -958,7 +958,7 @@ msgstr "Nastavení připojení"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1482,7 +1482,7 @@ msgstr "Získávám..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2410
@@ -1491,8 +1491,8 @@ msgstr "Zobrazení"
 
 #: ../src/browsers/playlist3-metadata-browser.c:628
 #: ../src/browsers/playlist3-metadata-browser.c:913
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-#: ../src/gob/gmpc-mpddata-treeview.gob:630
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:631
 msgid "Artist"
 msgstr "Interpret"
 
@@ -1513,8 +1513,8 @@ msgstr "Čas přehrávání"
 #: ../src/browsers/playlist3-metadata-browser.c:931
 #: ../src/browsers/playlist3-metadata-browser.c:1987
 #: ../src/browsers/playlist3-metadata-browser.c:2344
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-#: ../src/gob/gmpc-mpddata-treeview.gob:656
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:657
 msgid "Genre"
 msgstr "Žánr"
 
@@ -1522,8 +1522,8 @@ msgstr "Žánr"
 #: ../src/browsers/playlist3-metadata-browser.c:937
 #: ../src/browsers/playlist3-metadata-browser.c:2016
 #: ../src/browsers/playlist3-metadata-browser.c:2350
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/gob/gmpc-mpddata-treeview.gob:668
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:669
 msgid "Date"
 msgstr "Datum"
 
@@ -1535,37 +1535,37 @@ msgid "Collection"
 msgstr "Knihovna"
 
 #: ../src/browsers/playlist3-metadata-browser.c:897
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:617
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:618
 msgid "Title"
 msgstr "Název"
 
 #: ../src/browsers/playlist3-metadata-browser.c:906
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:680
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:681
 msgid "Duration"
 msgstr "Doba trvání"
 
 #: ../src/browsers/playlist3-metadata-browser.c:919
 #: ../src/browsers/playlist3-metadata-browser.c:1969
 #: ../src/browsers/playlist3-metadata-browser.c:2338
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:644
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:645
 msgid "Album"
 msgstr "Album"
 
 #: ../src/browsers/playlist3-metadata-browser.c:925
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "Stopa"
 
 #: ../src/browsers/playlist3-metadata-browser.c:943
-#: ../src/gob/gmpc-mpddata-treeview.gob:76
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
 msgstr "Skladatel"
 
 #: ../src/browsers/playlist3-metadata-browser.c:949
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Performer"
 msgstr "Účinkující"
 
@@ -1575,7 +1575,7 @@ msgid "Path"
 msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:966
-#: ../src/gob/gmpc-mpddata-treeview.gob:85
+#: ../src/gob/gmpc-mpddata-treeview.gob:86
 msgid "Extension"
 msgstr "Přípona"
 
@@ -1645,7 +1645,7 @@ msgstr[2] "<b>Dat:</b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1555
 msgid "Artist info:"
 msgstr "Informace o interpretovi:"
@@ -1664,7 +1664,7 @@ msgstr "Podobní interpreti"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1885
 msgid "Album info:"
 msgstr "Informace o albu:"
@@ -1684,13 +1684,13 @@ msgstr "Skladby"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2039
 #: ../src/browsers/playlist3-metadata-browser.c:2374
-#: ../src/gob/gmpc-mpddata-treeview.gob:86
+#: ../src/gob/gmpc-mpddata-treeview.gob:87
 msgid "Directory"
 msgstr "Složka"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2226
 #: ../src/browsers/playlist3-metadata-browser.c:2619
 msgid "Metadata Browser"
@@ -1698,7 +1698,7 @@ msgstr "Prohlížeč metadat"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2242
 msgid "Show Current Song"
 msgstr "Zobrazit aktuální skladbu"
@@ -1860,49 +1860,49 @@ msgstr "Orientace"
 msgid "The orientation of the tray."
 msgstr "Orientace oznamovací oblasti."
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:68
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
 msgid "Markup"
 msgstr "Značky"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr "Soubor"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Disc"
 msgstr "Disk"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "Comment"
 msgstr "Komentář"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
 msgstr "Id ikony"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:83
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Position"
 msgstr "Pozice"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
+#: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr ""
 
 #. Add a tools menu item with the previously generated menu as submenu
-#: ../src/gob/gmpc-mpddata-treeview.gob:931
+#: ../src/gob/gmpc-mpddata-treeview.gob:932
 msgid "Tools"
 msgstr "Nástroje"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:954
+#: ../src/gob/gmpc-mpddata-treeview.gob:955
 msgid "Paste before"
 msgstr "Vložit před"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:963
+#: ../src/gob/gmpc-mpddata-treeview.gob:964
 msgid "Paste after"
 msgstr "Vložit za"
 
 #. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:989
+#: ../src/gob/gmpc-mpddata-treeview.gob:990
 msgid "Edit Columns"
 msgstr "Upravit sloupce"
 
@@ -1992,63 +1992,6 @@ msgstr ""
 msgid "Lookup %s on %s"
 msgstr ""
 
-#~ msgid "Tagline"
-#~ msgstr "Řádek s tagy"
-
-#~ msgid "Revision"
-#~ msgstr "Revize"
-
-#~ msgid "GTK+ version"
-#~ msgstr "Verze GTK+"
-
-#~ msgid "Libcurl version"
-#~ msgstr "Verze libcurl"
-
-#~ msgid "Platform"
-#~ msgstr "Platforma"
-
-#~ msgid "Windows"
-#~ msgstr "Windows"
-
-#~ msgid "Mac OsX"
-#~ msgstr "Mac OSX"
-
-#~ msgid "*nix"
-#~ msgstr "*nix"
-
-#~ msgid "Website"
-#~ msgstr "Webová stránka"
-
-#~ msgid "Options enabled"
-#~ msgstr "Možnosti povoleny"
-
-#~ msgid "X session management"
-#~ msgstr "Správa sezení X"
-
-#~ msgid "Disabled"
-#~ msgstr "Zakázáno"
-
-#~ msgid "NLS Support"
-#~ msgstr "Podpora NLS"
-
-#~ msgid "Libegg's trayicon"
-#~ msgstr "Stavová ikona libeggu"
-
-#~ msgid "System libsexy"
-#~ msgstr "Libsexy systém"
-
-#~ msgid "Mac integration library"
-#~ msgstr "Integrační knihovna pro Mac"
-
-#~ msgid "Use ~/.config/ dir"
-#~ msgstr "Použijte adresář ~/.config/"
-
-#~ msgid "Debug timing"
-#~ msgstr "Časování ladění"
-
-#~ msgid "Maintainer mode"
-#~ msgstr "Režim správce"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -2062,8 +2005,8 @@ msgstr ""
 #~ msgstr "<b>Seřadit podle:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>Nastavené prohlížeče tagů se zobrazí jen pokud je "
 #~ "verze mpd alespoň 0.12.</i></span>"
@@ -2128,8 +2071,12 @@ msgstr ""
 #~ "chyby\n"
 #~ "nic"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Gnome Music Player Client\n"
+
+#~ msgid "Revision"
+#~ msgstr "Revize"
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Pokus o spuštění gmpc s nevhodnou verzí libmpd."
@@ -2156,6 +2103,7 @@ msgstr ""
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>Pluginy:</b>"
 
+#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Nepodařilo se kontaktovat url: '%s'"
 
@@ -2249,20 +2197,74 @@ msgstr ""
 #~ msgid "The type of accelerator."
 #~ msgstr "Typ klávesové zkratky."
 
+#~ msgid "Disabled"
+#~ msgstr "Zakázáno"
+
 #~ msgid "<b>Title:</b>"
 #~ msgstr "<b>Název:</b>"
 
 #~ msgid "<b>Duration:</b>"
 #~ msgstr "<b>Trvání:</b>"
 
+#~ msgid "Website"
+#~ msgstr "Webová stránka"
+
 #~ msgid "GMPC allready running, quitting"
 #~ msgstr "GMPC již běží. Končím."
+
+#~ msgid "Tagline"
+#~ msgstr "Řádek s tagy"
 
 #~ msgid "Libmpd version"
 #~ msgstr "Verze libmpd"
 
+#~ msgid "GTK+ version"
+#~ msgstr "Verze GTK+"
+
+#~ msgid "Libcurl version"
+#~ msgstr "Verze libcurl"
+
+#~ msgid "Platform"
+#~ msgstr "Platforma"
+
+#~ msgid "Windows"
+#~ msgstr "Windows"
+
+#~ msgid "Mac OsX"
+#~ msgstr "Mac OSX"
+
+#~ msgid "*nix"
+#~ msgstr "*nix"
+
+#~ msgid "Options enabled"
+#~ msgstr "Možnosti povoleny"
+
+#~ msgid "X session management"
+#~ msgstr "Správa sezení X"
+
+#~ msgid "NLS Support"
+#~ msgstr "Podpora NLS"
+
+#~ msgid "Libegg's trayicon"
+#~ msgstr "Stavová ikona libeggu"
+
+#~ msgid "System libsexy"
+#~ msgstr "Libsexy systém"
+
 #~ msgid "Unique"
 #~ msgstr "Unikátní"
+
+#~ msgid "Mac integration library"
+#~ msgstr "Integrační knihovna pro Mac"
+
+#~ msgid "Use ~/.config/ dir"
+#~ msgstr "Použijte adresář ~/.config/"
+
+#~ msgid "Debug timing"
+#~ msgstr "Časování ladění"
+
+#~ msgid "Maintainer mode"
+#~ msgstr "Režim správce"
 
 #~ msgid "in _play queue"
 #~ msgstr "ve frontě"

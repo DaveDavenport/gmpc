@@ -1,4 +1,4 @@
-# Javanese translation for gmpc
+# Danish translation for gmpc
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the gmpc package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
@@ -6,15 +6,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-03-16 15:04+0100\n"
-"PO-Revision-Date: 2009-02-18 06:08+0000\n"
-"Last-Translator: Arief Setiadi Wibowo <Unknown>\n"
-"Language-Team: Javanese <jv@li.org>\n"
+"PO-Revision-Date: 2009-03-16 14:41+0000\n"
+"Last-Translator: Mads Konradsen <Unknown>\n"
+"Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 0;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2009-03-21 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
@@ -25,7 +25,7 @@ msgstr ""
 #: ../data/gmpc.desktop.in.h:2 ../src/tray-icon2.c:556 ../src/tray-icon2.c:747
 #: ../src/tray-icon2.c:750 ../src/tray-icon2.c:760 ../src/tray-icon2.c:763
 msgid "Gnome Music Player Client"
-msgstr "Gnome Musik Player Client"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:1
 msgid "Bug information"
@@ -33,7 +33,7 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:2
 msgid "Getting help"
-msgstr "Golek pitulungan"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:3
 msgid "MPD database is updating."
@@ -41,30 +41,30 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:4 ../src/mpdinteraction.c:189
 msgid "Mute"
-msgstr "Meneng"
+msgstr ""
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:5 ../src/mm-keys.c:74
 msgid "Next"
-msgstr "Terus"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:6
 msgid "Play/Pause"
-msgstr "Mulai/Nyegat"
+msgstr "Afspil/Pause"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:75
 msgid "Previous"
-msgstr "Terusane"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:8
 msgid "Profiles"
-msgstr "Profil"
+msgstr ""
 
 #. * MM_REPEAT
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:80
 msgid "Random"
-msgstr "Acak"
+msgstr ""
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:10 ../src/mm-keys.c:79
@@ -73,12 +73,12 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:11
 msgid "Show Messages"
-msgstr "Munculke pesen"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:76
 msgid "Stop"
-msgstr "Mandeg"
+msgstr "Stop"
 
 #: ../glade/playlist3.glade.h:13
 msgid "Visit website"
@@ -118,7 +118,7 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Music"
-msgstr "_Musik"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Option"
@@ -126,11 +126,11 @@ msgstr ""
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Send Password"
-msgstr "kirim _Sandi"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Server"
-msgstr "_Server"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:26
 msgid "_Show Artist Image"
@@ -154,7 +154,7 @@ msgstr ""
 
 #: ../src/edit_markup.c:40
 msgid "Jonny Singer"
-msgstr "Jonny Singer"
+msgstr ""
 
 #: ../src/edit_markup.c:41
 msgid "Sing or Swing you want"
@@ -166,11 +166,11 @@ msgstr ""
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
-msgstr "01/24"
+msgstr ""
 
 #: ../src/edit_markup.c:44
 msgid "2 Feb 2006"
-msgstr "2 Feb 2006"
+msgstr ""
 
 #: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
@@ -178,7 +178,7 @@ msgstr ""
 
 #: ../src/gmpc_easy_download.c:395
 msgid "Proxy"
-msgstr "Proxy"
+msgstr ""
 
 #. *
 #. * Set debug level, options are
@@ -196,7 +196,7 @@ msgstr ""
 #. 
 #: ../src/main.c:297
 msgid "--version"
-msgstr "--versi"
+msgstr ""
 
 #: ../src/main.c:305 ../src/main.c:306
 msgid "--config="
@@ -283,27 +283,27 @@ msgstr ""
 
 #: ../src/main.c:450
 msgid "quit"
-msgstr "metu"
+msgstr ""
 
 #: ../src/main.c:451
 msgid "Quit gmpc"
-msgstr "Metu gmpc"
+msgstr ""
 
 #: ../src/main.c:452
 msgid "hide"
-msgstr "delikke"
+msgstr ""
 
 #: ../src/main.c:453
 msgid "Hide gmpc"
-msgstr "Delikke gmpc"
+msgstr ""
 
 #: ../src/main.c:454
 msgid "show"
-msgstr "munculke"
+msgstr ""
 
 #: ../src/main.c:454
 msgid "Show gmpc"
-msgstr "Munculke gmpc"
+msgstr ""
 
 #: ../src/main.c:456
 msgid "show notification"
@@ -929,14 +929,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian"
+"  Mads Konradsen https://launchpad.net/~mads-hk"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-15 21:21+0100\n"
+"POT-Creation-Date: 2009-03-16 15:04+0100\n"
 "PO-Revision-Date: 2009-03-15 13:39+0000\n"
 "Last-Translator: DiegoJ <diegojromerolopez@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-15 20:12+0000\n"
+"X-Launchpad-Export-Date: 2009-03-21 11:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -186,14 +186,14 @@ msgstr "Proxy"
 #. * 1 = Error messages
 #. * 2 = Error + Warning messages
 #. * 3 = All messages
-#.
+#. 
 #: ../src/main.c:290 ../src/main.c:291
 msgid "--debug-level="
 msgstr "--debug-level="
 
 #. *
 #. * Print out version + svn revision
-#.
+#. 
 #: ../src/main.c:297
 msgid "--version"
 msgstr "--versión"
@@ -204,7 +204,7 @@ msgstr "--config="
 
 #. *
 #. * Starts gmpc hidden. Either tray or task-bar
-#.
+#. 
 #: ../src/main.c:311
 msgid "--start-hidden"
 msgstr "--start-hidden"
@@ -212,49 +212,49 @@ msgstr "--start-hidden"
 #. *
 #. * Cleans all failed hits from the cover database.
 #. * then exits.
-#.
+#. 
 #: ../src/main.c:318
 msgid "--clean-cover-db"
 msgstr "--clean-cover-db"
 
 #. *
 #. * Start gmpc withouth loading any external plugins
-#.
+#. 
 #: ../src/main.c:324
 msgid "--disable-plugins"
 msgstr "--disable-plugins"
 
 #. *
 #. * Tries to replace the running gmpc session with a new (this) one.
-#.
+#. 
 #: ../src/main.c:330
 msgid "--replace"
 msgstr "--replace"
 
 #. *
 #. * Quit any running gmpc session
-#.
+#. 
 #: ../src/main.c:336
 msgid "--quit"
 msgstr "--quit"
 
 #. *
 #. * Imports the cover db in the old format.
-#.
+#. 
 #: ../src/main.c:342
 msgid "--import-old-db"
 msgstr "--import-old-db"
 
 #. *
 #. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#.
+#. 
 #: ../src/main.c:348
 msgid "--debug-updates"
 msgstr "--debug-updates"
 
 #. *
 #. * Print out help message
-#.
+#. 
 #: ../src/main.c:355
 msgid "--help"
 msgstr "--help"
@@ -367,7 +367,8 @@ msgstr "código de error"
 
 #: ../src/main.c:1142
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
+msgstr ""
+"Permisos insuficientes para conectarse a mpd. Compruebe la contraseña"
 
 #: ../src/main.c:1177
 msgid "MPD versions before 0.13.0 are not supported"
@@ -849,7 +850,7 @@ msgstr ""
 "Uno o mas plugins fallaron al cargar, vea ayuda->mensajes para mas "
 "información"
 
-#: ../src/preferences.c:98 ../src/preferences.c:200
+#: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr "Extensiones"
 
@@ -857,44 +858,44 @@ msgstr "Extensiones"
 msgid "Plugins:"
 msgstr "Plugins:"
 
-#: ../src/preferences.c:316
+#: ../src/preferences.c:330
 msgid "Enabled"
 msgstr "Habilitado"
 
-#: ../src/preferences.c:319 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:333 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr "Nombre"
 
-#: ../src/preferences.c:321
+#: ../src/preferences.c:335
 msgid "Function"
 msgstr "Función"
 
 #. * Mpd version
-#: ../src/preferences.c:323 ../src/browsers/server-information.c:332
+#: ../src/preferences.c:337 ../src/browsers/server-information.c:332
 msgid "Version"
 msgstr "Versión"
 
-#: ../src/preferences.c:347
+#: ../src/preferences.c:365
 msgid "Dummy"
 msgstr "Simulación"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:368
 msgid "Browser Extension"
 msgstr "Explorador de Extensiones"
 
-#: ../src/preferences.c:353
+#: ../src/preferences.c:371
 msgid "Metadata Provider"
 msgstr "Proveedor de Metadatos"
 
-#: ../src/preferences.c:356
+#: ../src/preferences.c:374
 msgid "Metadata Provider and Browser Extension"
 msgstr "Proveedor de Metadatos y Explorador de Extensiones"
 
-#: ../src/preferences.c:359
+#: ../src/preferences.c:377
 msgid "Misc."
 msgstr "Otros"
 
-#: ../src/preferences.c:364
+#: ../src/preferences.c:382
 msgid "Unknown"
 msgstr "Desconocido"
 
@@ -919,7 +920,7 @@ msgstr "Añadido 1 stream"
 
 #. *
 #. * Setup the label
-#.
+#. 
 #: ../src/url_fetcher.c:327
 msgid "Enter an url"
 msgstr "Ingrese una url"
@@ -934,7 +935,7 @@ msgstr "Notificación"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:114
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -953,7 +954,7 @@ msgstr "Editar conexión"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:144
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1273,8 +1274,8 @@ msgstr "<ingresar el nombre de la lista de reproducción>"
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
 msgstr ""
-"<span size=\"x-small\"><i>La lista de reproducción existe actualmente.</i></"
-"span>"
+"<span size=\"x-small\"><i>La lista de reproducción existe "
+"actualmente.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1507,7 +1508,7 @@ msgstr "Descargando..."
 #. View
 #. *
 #. * View Button
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:382
 #: ../src/browsers/playlist3-metadata-browser.c:681
 #: ../src/browsers/playlist3-metadata-browser.c:2410
@@ -1516,8 +1517,8 @@ msgstr "Ver"
 
 #: ../src/browsers/playlist3-metadata-browser.c:628
 #: ../src/browsers/playlist3-metadata-browser.c:913
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-#: ../src/gob/gmpc-mpddata-treeview.gob:630
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:631
 msgid "Artist"
 msgstr "Artista"
 
@@ -1538,8 +1539,8 @@ msgstr "Tiempo de reproducción"
 #: ../src/browsers/playlist3-metadata-browser.c:931
 #: ../src/browsers/playlist3-metadata-browser.c:1987
 #: ../src/browsers/playlist3-metadata-browser.c:2344
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-#: ../src/gob/gmpc-mpddata-treeview.gob:656
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:657
 msgid "Genre"
 msgstr "Género"
 
@@ -1547,8 +1548,8 @@ msgstr "Género"
 #: ../src/browsers/playlist3-metadata-browser.c:937
 #: ../src/browsers/playlist3-metadata-browser.c:2016
 #: ../src/browsers/playlist3-metadata-browser.c:2350
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/gob/gmpc-mpddata-treeview.gob:668
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:669
 msgid "Date"
 msgstr "Fecha"
 
@@ -1560,37 +1561,37 @@ msgid "Collection"
 msgstr "Colección"
 
 #: ../src/browsers/playlist3-metadata-browser.c:897
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:617
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:618
 msgid "Title"
 msgstr "Título"
 
 #: ../src/browsers/playlist3-metadata-browser.c:906
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:680
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:681
 msgid "Duration"
 msgstr "Duración"
 
 #: ../src/browsers/playlist3-metadata-browser.c:919
 #: ../src/browsers/playlist3-metadata-browser.c:1969
 #: ../src/browsers/playlist3-metadata-browser.c:2338
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:644
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:645
 msgid "Album"
 msgstr "Álbum"
 
 #: ../src/browsers/playlist3-metadata-browser.c:925
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "Pista"
 
 #: ../src/browsers/playlist3-metadata-browser.c:943
-#: ../src/gob/gmpc-mpddata-treeview.gob:76
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
 msgstr "Compositor"
 
 #: ../src/browsers/playlist3-metadata-browser.c:949
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Performer"
 msgstr "Intérprete"
 
@@ -1600,7 +1601,7 @@ msgid "Path"
 msgstr "Ruta"
 
 #: ../src/browsers/playlist3-metadata-browser.c:966
-#: ../src/gob/gmpc-mpddata-treeview.gob:85
+#: ../src/gob/gmpc-mpddata-treeview.gob:86
 msgid "Extension"
 msgstr "Extensión:"
 
@@ -1669,7 +1670,7 @@ msgstr[1] "<b>Fechas: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1555
 msgid "Artist info:"
 msgstr "Información del Artista:"
@@ -1688,7 +1689,7 @@ msgstr "Artistas similares"
 
 #. *
 #. * Album Information
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:1885
 msgid "Album info:"
 msgstr "Información del Álbum"
@@ -1708,13 +1709,13 @@ msgstr "Pistas"
 
 #: ../src/browsers/playlist3-metadata-browser.c:2039
 #: ../src/browsers/playlist3-metadata-browser.c:2374
-#: ../src/gob/gmpc-mpddata-treeview.gob:86
+#: ../src/gob/gmpc-mpddata-treeview.gob:87
 msgid "Directory"
 msgstr "Carpeta"
 
 #. *
 #. * Metadata browser link
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2226
 #: ../src/browsers/playlist3-metadata-browser.c:2619
 msgid "Metadata Browser"
@@ -1722,7 +1723,7 @@ msgstr "Examinador de Metadatos"
 
 #. *
 #. * Show current song entry
-#.
+#. 
 #: ../src/browsers/playlist3-metadata-browser.c:2242
 msgid "Show Current Song"
 msgstr "Mostrar la Canción Actual"
@@ -1884,49 +1885,49 @@ msgstr "Orientación"
 msgid "The orientation of the tray."
 msgstr "La orientación del área de notificación."
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:68
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
 msgid "Markup"
 msgstr "Marcado"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr "Archivo"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Disc"
 msgstr "Disco"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "Comment"
 msgstr "Comentario"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
 msgstr "Icon Id"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:83
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Position"
 msgstr "Posición"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
+#: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr "ArtistaDeAlbum"
 
 #. Add a tools menu item with the previously generated menu as submenu
-#: ../src/gob/gmpc-mpddata-treeview.gob:931
+#: ../src/gob/gmpc-mpddata-treeview.gob:932
 msgid "Tools"
 msgstr "Herramientas"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:954
+#: ../src/gob/gmpc-mpddata-treeview.gob:955
 msgid "Paste before"
 msgstr "Pegar antes"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:963
+#: ../src/gob/gmpc-mpddata-treeview.gob:964
 msgid "Paste after"
 msgstr "Pegar despues"
 
 #. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:989
+#: ../src/gob/gmpc-mpddata-treeview.gob:990
 msgid "Edit Columns"
 msgstr "Editar Columnas"
 
@@ -2016,72 +2017,6 @@ msgstr "álbum"
 msgid "Lookup %s on %s"
 msgstr "Buscar %s en %s"
 
-#~ msgid "Tagline"
-#~ msgstr "Etiquetas"
-
-#~ msgid "Revision"
-#~ msgstr "Revisión"
-
-#~ msgid "Libmpd Version"
-#~ msgstr "Versión de Libmpd"
-
-#~ msgid "GTK+ version"
-#~ msgstr "Versión GTK+"
-
-#~ msgid "GLIB version"
-#~ msgstr "Versión de GLIB"
-
-#~ msgid "Libcurl version"
-#~ msgstr "Versión Libcurl"
-
-#~ msgid "Platform"
-#~ msgstr "Plataforma"
-
-#~ msgid "Windows"
-#~ msgstr "Windows"
-
-#~ msgid "Mac OsX"
-#~ msgstr "Mac OsX"
-
-#~ msgid "*nix"
-#~ msgstr "*nix"
-
-#~ msgid "Website"
-#~ msgstr "Sitio web"
-
-#~ msgid "Options enabled"
-#~ msgstr "Opciones habilitadas"
-
-#~ msgid "X session management"
-#~ msgstr "Gestión de la sesión X"
-
-#~ msgid "Disabled"
-#~ msgstr "Desactivado"
-
-#~ msgid "NLS Support"
-#~ msgstr "Soporte NLS"
-
-#~ msgid "Libegg's trayicon"
-#~ msgstr "Icono de bandeja de Libegg"
-
-#~ msgid "System libsexy"
-#~ msgstr "Sistema libsexy"
-
-#~ msgid "Mac integration library"
-#~ msgstr "Libreria de integración de MAC"
-
-#~ msgid "libspiff support"
-#~ msgstr "Soporte libspiff"
-
-#~ msgid "Use ~/.config/ dir"
-#~ msgstr "Usar ~/.config/ dir"
-
-#~ msgid "Debug timing"
-#~ msgstr "Tiempo de depuración"
-
-#~ msgid "Maintainer mode"
-#~ msgstr "Modo mantenimiento"
-
 #~ msgid "/"
 #~ msgstr "/"
 
@@ -2095,8 +2030,8 @@ msgstr "Buscar %s en %s"
 #~ msgstr "<b>Ordenar por:</b>"
 
 #~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
+#~ "<span size=\"small\"><i>The configured Tag browsers will only show up with "
+#~ "mpd version 0.12 or above.</i></span>"
 #~ msgstr ""
 #~ "<span size=\"small\"><i>El explorador de Etiquetas configurado solamente "
 #~ "mostrará con la versión mpd 0.12 o posterior.</i></span>"
@@ -2161,8 +2096,12 @@ msgstr "Buscar %s en %s"
 #~ "errores sólo\n"
 #~ "ninguno"
 
+#, c-format
 #~ msgid "Gnome Music Player Client\n"
 #~ msgstr "Cliente de Reproducción de Música de Gnome\n"
+
+#~ msgid "Revision"
+#~ msgstr "Revisión"
 
 #~ msgid "Trying to run gmpc with a wrong libmpd version."
 #~ msgstr "Tratando de ejecutar gmpc con una versión de libmpd errónea."
@@ -2190,6 +2129,7 @@ msgstr "Buscar %s en %s"
 #~ msgid "<b>Plugins:</b>"
 #~ msgstr "<b>Plugins:</b>"
 
+#, c-format
 #~ msgid "Failed to contact url: '%s'"
 #~ msgstr "Fallo al contactar la url: '%s'"
 
@@ -2197,8 +2137,7 @@ msgstr "Buscar %s en %s"
 #~ msgstr "Fallo al procesar vinculo de la lista de reproduccion"
 
 #~ msgid "<span size='large'>Gnome Music Player Client</span>"
-#~ msgstr ""
-#~ "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
+#~ msgstr "<span size='large'>Cliente de Reproducción de Música de Gnome</span>"
 
 #~ msgid "And"
 #~ msgstr "Y"
@@ -2290,18 +2229,73 @@ msgstr "Buscar %s en %s"
 #~ msgid "The type of accelerator."
 #~ msgstr "El tipo de acelerador."
 
+#~ msgid "Disabled"
+#~ msgstr "Desactivado"
+
 #~ msgid "<b>Title:</b>"
 #~ msgstr "<b>Título:</b>"
 
 #~ msgid "<b>Duration:</b>"
 #~ msgstr "<b>Duración:</b>"
 
+#~ msgid "Website"
+#~ msgstr "Sitio web"
+
+#, c-format
 #~ msgid ""
-#~ "Trying to run gmpc compiled against libmpd version '%s' with version "
-#~ "libmpd '%s'"
+#~ "Trying to run gmpc compiled against libmpd version '%s' with version libmpd "
+#~ "'%s'"
 #~ msgstr ""
 #~ "Intentando de arrancar gmpc compilado con la versión libmpd '%s' con la "
 #~ "versión libmpd '%s'"
 
+#~ msgid "Tagline"
+#~ msgstr "Etiquetas"
+
 #~ msgid "Libmpd version"
 #~ msgstr "Versión libmpd"
+
+#~ msgid "GTK+ version"
+#~ msgstr "Versión GTK+"
+
+#~ msgid "Libcurl version"
+#~ msgstr "Versión Libcurl"
+
+#~ msgid "Platform"
+#~ msgstr "Plataforma"
+
+#~ msgid "Windows"
+#~ msgstr "Windows"
+
+#~ msgid "Mac OsX"
+#~ msgstr "Mac OsX"
+
+#~ msgid "*nix"
+#~ msgstr "*nix"
+
+#~ msgid "Options enabled"
+#~ msgstr "Opciones habilitadas"
+
+#~ msgid "X session management"
+#~ msgstr "Gestión de la sesión X"
+
+#~ msgid "NLS Support"
+#~ msgstr "Soporte NLS"
+
+#~ msgid "Libegg's trayicon"
+#~ msgstr "Icono de bandeja de Libegg"
+
+#~ msgid "System libsexy"
+#~ msgstr "Sistema libsexy"
+
+#~ msgid "Mac integration library"
+#~ msgstr "Libreria de integración de MAC"
+
+#~ msgid "Use ~/.config/ dir"
+#~ msgstr "Usar ~/.config/ dir"
+
+#~ msgid "Debug timing"
+#~ msgstr "Tiempo de depuración"
+
+#~ msgid "Maintainer mode"
+#~ msgstr "Modo mantenimiento"
