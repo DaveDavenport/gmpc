@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 using Config;
-using GLib;
 using Gtk;
 using Gmpc;
 
@@ -234,55 +233,14 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
     {
         Gtk.Bin bin = (Gtk.Bin) container;
         bin.child.destroy();
-        stdout.printf("%s: Destroy preferences panel\n",this.get_name());
     }
 
     /*********************************************************************************
      * Private  
      ********************************************************************************/
 
-    /* Plugin functions */
-    private void connection_changed(Gmpc.Connection conn,MPD.Server server, int connect){
-        stdout.printf("%s: Connection changed: %i\n",this.get_name(), connect);
-    }
-    construct {
-        stdout.printf("create %s\n", this.get_name());
-        gmpcconn.connection_changed += connection_changed;
-    }
-    ~TestPlugin() {
-        stdout.printf("Destroying %s\n", this.get_name());
-
-    }
     public void menu_activated(Gtk.MenuItem item)
     {
-    /*
-        if(this.window != null) {
-            this.window.present();
-            this.window.show_all();
-            this.model.clear();
-            weak MPD.Song song = server.playlist_get_current_song();
-            if(song != null){
-                Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
-            }
-            return;
-        }
-        this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
-        this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
-        var sw = new Gtk.ScrolledWindow(null, null);
-        var iv = new Gtk.IconView();
-        iv.set_model(this.model);
-        iv.pixbuf_column = 0;
-        this.window.add(sw);
-        sw.add(iv);
-        this.window.show_all();
-        this.window.delete_event += window_delete_event; 
-//        this.window.hide_on_delete();
-        weak MPD.Song song = server.playlist_get_current_song();
-        if(song != null){
-            Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
-        }
-        */
-
         weak MPD.Song song = server.playlist_get_current_song();
         new SongWindow(song);
     }

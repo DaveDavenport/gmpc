@@ -29,7 +29,6 @@
 #include <glib/gi18n-lib.h>
 #include <plugin.h>
 #include <config1.h>
-#include <gmpc-connection.h>
 #include <libmpd/libmpd.h>
 
 
@@ -67,15 +66,11 @@ static gboolean gmpc_test_plugin_real_get_enabled (GmpcPluginBase* base);
 static void gmpc_test_plugin_real_set_enabled (GmpcPluginBase* base, gboolean state);
 static void gmpc_test_plugin_real_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container);
 static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container);
-static void gmpc_test_plugin_connection_changed (GmpcTestPlugin* self, GmpcConnection* conn, MpdObj* server, gint connect);
 static void _gmpc_test_plugin_menu_activated_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu);
-static void _gmpc_test_plugin_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
-static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_test_plugin_parent_class = NULL;
 static GmpcPluginPreferencesIfaceIface* gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = NULL;
 static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = NULL;
-static void gmpc_test_plugin_finalize (GObject* obj);
 
 
 
@@ -522,55 +517,18 @@ static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base
 	_tmp0 = NULL;
 	bin = (_tmp0 = GTK_BIN (container), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	gtk_object_destroy ((GtkObject*) bin->child);
-	fprintf (stdout, "%s: Destroy preferences panel\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self));
 	(bin == NULL) ? NULL : (bin = (g_object_unref (bin), NULL));
 }
 
 
 /*********************************************************************************
      * Private  
-     *******************************************************************************
- Plugin functions */
-static void gmpc_test_plugin_connection_changed (GmpcTestPlugin* self, GmpcConnection* conn, MpdObj* server, gint connect) {
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (conn != NULL);
-	g_return_if_fail (server != NULL);
-	fprintf (stdout, "%s: Connection changed: %i\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self), connect);
-}
-
-
+     ********************************************************************************/
 void gmpc_test_plugin_menu_activated (GmpcTestPlugin* self, GtkMenuItem* item) {
 	const mpd_Song* song;
 	SongWindow* _tmp0;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (item != NULL);
-	/*
-	        if(this.window != null) {
-	            this.window.present();
-	            this.window.show_all();
-	            this.model.clear();
-	            weak MPD.Song song = server.playlist_get_current_song();
-	            if(song != null){
-	                Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
-	            }
-	            return;
-	        }
-	        this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
-	        this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
-	        var sw = new Gtk.ScrolledWindow(null, null);
-	        var iv = new Gtk.IconView();
-	        iv.set_model(this.model);
-	        iv.pixbuf_column = 0;
-	        this.window.add(sw);
-	        sw.add(iv);
-	        this.window.show_all();
-	        this.window.delete_event += window_delete_event; 
-	//        this.window.hide_on_delete();
-	        weak MPD.Song song = server.playlist_get_current_song();
-	        if(song != null){
-	            Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
-	        }
-	        */
 	song = mpd_playlist_get_current_song (connection);
 	_tmp0 = NULL;
 	_tmp0 = g_object_ref_sink (song_window_new (song));
@@ -608,32 +566,8 @@ GmpcTestPlugin* gmpc_test_plugin_new (void) {
 }
 
 
-static void _gmpc_test_plugin_connection_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self) {
-	gmpc_test_plugin_connection_changed (self, _sender, server, connect);
-}
-
-
-static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
-	GObject * obj;
-	GmpcTestPluginClass * klass;
-	GObjectClass * parent_class;
-	GmpcTestPlugin * self;
-	klass = GMPC_TEST_PLUGIN_CLASS (g_type_class_peek (GMPC_TYPE_TEST_PLUGIN));
-	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
-	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
-	self = GMPC_TEST_PLUGIN (obj);
-	{
-		fprintf (stdout, "create %s\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self));
-		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_test_plugin_connection_changed_gmpc_connection_connection_changed, self, 0);
-	}
-	return obj;
-}
-
-
 static void gmpc_test_plugin_class_init (GmpcTestPluginClass * klass) {
 	gmpc_test_plugin_parent_class = g_type_class_peek_parent (klass);
-	G_OBJECT_CLASS (klass)->constructor = gmpc_test_plugin_constructor;
-	G_OBJECT_CLASS (klass)->finalize = gmpc_test_plugin_finalize;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_test_plugin_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_test_plugin_real_get_name;
 	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_test_plugin_real_save_yourself;
@@ -656,16 +590,6 @@ static void gmpc_test_plugin_gmpc_plugin_tool_menu_iface_interface_init (GmpcPlu
 
 
 static void gmpc_test_plugin_instance_init (GmpcTestPlugin * self) {
-}
-
-
-static void gmpc_test_plugin_finalize (GObject* obj) {
-	GmpcTestPlugin * self;
-	self = GMPC_TEST_PLUGIN (obj);
-	{
-		fprintf (stdout, "Destroying %s\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self));
-	}
-	G_OBJECT_CLASS (gmpc_test_plugin_parent_class)->finalize (obj);
 }
 
 

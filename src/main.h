@@ -23,7 +23,9 @@
 #include <config.h>
 #include <gmpc-version.h>
 #ifdef ENABLE_NLS
+#ifndef __G_I18N_LIB_H__
 #include <glib/gi18n.h>
+#endif
 #endif
 
 #include "config-defaults.h"
