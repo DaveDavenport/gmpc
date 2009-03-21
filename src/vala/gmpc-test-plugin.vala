@@ -16,15 +16,20 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+using Config;
 using GLib;
 using Gtk;
 using Gmpc;
 
 private class SongWindow : Gtk.Window {
+    private const string some_unique_name = Config.VERSION;
     private Gtk.ListStore model = null;
     private MPD.Song song = null;
+    private Gtk.TreeView tree = null;
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
+        this.set_default_size(650,800);
+        this.set_border_width(8);
     }
 
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
@@ -74,14 +79,96 @@ private class SongWindow : Gtk.Window {
                 Gmpc.AsyncDownload.download(uri, image_downloaded); 
         }
     }
+
+    public void store_image(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
+    {
+        stdout.printf("Aap noot mies\n");
+        if(status == Gmpc.AsyncDownload.Status.DONE)
+        {
+            int64 length;
+            weak string data = handle.get_data(out length);
+            var file = Gmpc.MetaData.get_metadata_filename(Gmpc.MetaData.Type.ALBUM_ART, this.song, "jpg");
+            try {
+                stdout.printf("Storing into: %s\n", file);
+                GLib.FileUtils.set_contents(file, data, (long)length);
+
+                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, file); 
+                metawatcher.data_changed(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, file);  
+            }catch (Error e) {
+
+            }
+        }
+    }
+    private void
+    set_metadata(Gtk.Button button)
+    {
+        Gtk.TreeIter iter;
+        var sel = this.tree.get_selection();
+        string path;
+        if(sel.get_selected(out this.model,out iter))
+        {
+            this.model.get(iter,1,out path);
+            stdout.printf("clicked %s\n",path);
+            if(path[0]  == '/')
+            {
+                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, path); 
+                metawatcher.data_changed(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, path);  
+            }else{
+                Gmpc.AsyncDownload.download(path, store_image); 
+            }
+
+        }
+    }
+    public
+    void
+    destroy_popup(Gtk.Button button)
+    {
+        this.destroy();
+    }
+
     SongWindow (MPD.Song song) {
+        var vbox = new Gtk.VBox(false, 6);
         this.song = song;
         this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
         var sw = new Gtk.ScrolledWindow(null, null);
-        var iv = new Gtk.IconView();
+        var iv = new Gtk.TreeView();
+
+
+        this.tree = iv;
+        sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+        sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
         iv.set_model(this.model);
-        iv.pixbuf_column = 0;
-        this.add(sw);
+        
+        var renderer = new Gtk.CellRendererPixbuf();
+        var column = new Gtk.TreeViewColumn();
+        column.pack_start(renderer,false);
+        iv.append_column(column);
+        column.set_title(_("Cover"));
+        column.add_attribute(renderer, "pixbuf", 0);
+
+        var rendererpb = new Gtk.CellRendererText();
+        column = new Gtk.TreeViewColumn();
+        column.pack_start(rendererpb,true);
+        iv.append_column(column);
+        column.set_title(_("Url"));
+        column.add_attribute(rendererpb, "text", 1);
+
+        vbox.pack_start(sw, true, true,0);
+
+        /* Button */
+        var hbox = new Gtk.HBox(false, 6);
+
+        var button = new Gtk.Button.from_stock("gtk-quit");
+        button.clicked += destroy_popup;
+        hbox.pack_end(button, false, false, 0);
+
+        button = new Gtk.Button.with_label("Set cover");
+        button.clicked += set_metadata;
+        hbox.pack_end(button, false, false, 0);
+
+        vbox.pack_start(hbox, false, false,0);
+
+        this.add(vbox);
         sw.add(iv);
         this.show_all();
 
@@ -90,8 +177,10 @@ private class SongWindow : Gtk.Window {
     ~SongWindow() {
         stdout.printf("song window destroy\n");
     }
-
 }
+
+
+
 public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, Gmpc.Plugin.ToolMenuIface  {
     public const int[3] version = {0,0,2};
     /*********************************************************************************

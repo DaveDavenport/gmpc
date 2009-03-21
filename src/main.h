@@ -53,6 +53,7 @@ extern GmpcConnection 	*gmpcconn;
 extern GmpcSignals 		*gmpc_signals;
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
+extern GmpcMetaWatcher *gmw;
 
 /* the plugin list */
 extern gmpcPluginParent **plugins;

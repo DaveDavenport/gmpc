@@ -19,14 +19,18 @@
 
 #include "gmpc-test-plugin.h"
 #include <libmpd/libmpdclient.h>
+#include <config.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <stdio.h>
 #include <metadata.h>
+#include <glib/gstdio.h>
+#include <main.h>
+#include <gmpc-meta-watcher.h>
+#include <glib/gi18n-lib.h>
 #include <plugin.h>
 #include <config1.h>
 #include <gmpc-connection.h>
 #include <libmpd/libmpd.h>
-#include <main.h>
 
 
 
@@ -34,13 +38,19 @@
 struct _SongWindowPrivate {
 	GtkListStore* model;
 	mpd_Song* song;
+	GtkTreeView* tree;
 };
 
 #define SONG_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_SONG_WINDOW, SongWindowPrivate))
 enum  {
 	SONG_WINDOW_DUMMY_PROPERTY
 };
+#define SONG_WINDOW_some_unique_name VERSION
 static void _song_window_image_downloaded_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
+static void _song_window_store_image_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
+static void song_window_set_metadata (SongWindow* self, GtkButton* button);
+static void _song_window_destroy_popup_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _song_window_callback_gmpc_meta_data_callback (GList* list, gpointer self);
 static SongWindow* song_window_construct (GType object_type, const mpd_Song* song);
 static SongWindow* song_window_new (const mpd_Song* song);
@@ -203,6 +213,105 @@ void song_window_callback (SongWindow* self, GList* list) {
 }
 
 
+void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status) {
+	GError * inner_error;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (handle != NULL);
+	inner_error = NULL;
+	fprintf (stdout, "Aap noot mies\n");
+	if (status == GEAD_DONE) {
+		gint64 length;
+		const char* data;
+		char* file;
+		length = 0LL;
+		data = gmpc_easy_handler_get_data (handle, &length);
+		file = gmpc_get_metadata_filename (META_ALBUM_ART, self->priv->song, "jpg");
+		{
+			fprintf (stdout, "Storing into: %s\n", file);
+			g_file_set_contents (file, data, (glong) length, &inner_error);
+			if (inner_error != NULL) {
+				goto __catch3_g_error;
+				goto __finally3;
+			}
+			meta_data_set_cache (self->priv->song, META_ALBUM_ART, META_DATA_AVAILABLE, file);
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, META_ALBUM_ART, META_DATA_AVAILABLE, file);
+		}
+		goto __finally3;
+		__catch3_g_error:
+		{
+			GError * e;
+			e = inner_error;
+			inner_error = NULL;
+			{
+				(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+			}
+		}
+		__finally3:
+		if (inner_error != NULL) {
+			file = (g_free (file), NULL);
+			g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+			g_clear_error (&inner_error);
+			return;
+		}
+		file = (g_free (file), NULL);
+	}
+}
+
+
+static void _song_window_store_image_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self) {
+	song_window_store_image (self, handle, status);
+}
+
+
+static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
+	GtkTreeIter iter = {0};
+	GtkTreeSelection* _tmp0;
+	GtkTreeSelection* sel;
+	char* path;
+	GtkListStore* _tmp4;
+	GtkListStore* _tmp3;
+	gboolean _tmp2;
+	GtkTreeModel* _tmp1;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	_tmp0 = NULL;
+	sel = (_tmp0 = gtk_tree_view_get_selection (self->priv->tree), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	path = NULL;
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	_tmp1 = NULL;
+	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), self->priv->model = (_tmp3 = (_tmp4 = (GtkListStore*) _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp3), _tmp2)) {
+		gtk_tree_model_get ((GtkTreeModel*) self->priv->model, &iter, 1, &path, -1);
+		fprintf (stdout, "clicked %s\n", path);
+		if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
+			meta_data_set_cache (self->priv->song, META_ALBUM_ART, META_DATA_AVAILABLE, path);
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, META_ALBUM_ART, META_DATA_AVAILABLE, path);
+		} else {
+			gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);
+		}
+	}
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	path = (g_free (path), NULL);
+}
+
+
+void song_window_destroy_popup (SongWindow* self, GtkButton* button) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	gtk_object_destroy ((GtkObject*) self);
+}
+
+
+static void _song_window_destroy_popup_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	song_window_destroy_popup (self, _sender);
+}
+
+
+static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	song_window_set_metadata (self, _sender);
+}
+
+
 static void _song_window_callback_gmpc_meta_data_callback (GList* list, gpointer self) {
 	song_window_callback (self, list);
 }
@@ -210,23 +319,61 @@ static void _song_window_callback_gmpc_meta_data_callback (GList* list, gpointer
 
 static SongWindow* song_window_construct (GType object_type, const mpd_Song* song) {
 	SongWindow * self;
+	GtkVBox* vbox;
 	mpd_Song* _tmp1;
 	const mpd_Song* _tmp0;
 	GtkListStore* _tmp2;
 	GtkScrolledWindow* sw;
-	GtkIconView* iv;
+	GtkTreeView* iv;
+	GtkTreeView* _tmp4;
+	GtkTreeView* _tmp3;
+	GtkCellRendererPixbuf* renderer;
+	GtkTreeViewColumn* column;
+	GtkCellRendererText* rendererpb;
+	GtkTreeViewColumn* _tmp5;
+	GtkHBox* hbox;
+	GtkButton* button;
+	GtkButton* _tmp6;
 	g_return_val_if_fail (song != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
+	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
 	_tmp1 = NULL;
 	_tmp0 = NULL;
 	self->priv->song = (_tmp1 = (_tmp0 = song, (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0)), (self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL)), _tmp1);
 	_tmp2 = NULL;
 	self->priv->model = (_tmp2 = gtk_list_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING, NULL), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp2);
 	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
-	iv = g_object_ref_sink ((GtkIconView*) gtk_icon_view_new ());
-	gtk_icon_view_set_model (iv, (GtkTreeModel*) self->priv->model);
-	gtk_icon_view_set_pixbuf_column (iv, 0);
-	gtk_container_add ((GtkContainer*) self, (GtkWidget*) sw);
+	iv = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new ());
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	self->priv->tree = (_tmp4 = (_tmp3 = iv, (_tmp3 == NULL) ? NULL : g_object_ref (_tmp3)), (self->priv->tree == NULL) ? NULL : (self->priv->tree = (g_object_unref (self->priv->tree), NULL)), _tmp4);
+	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
+	gtk_tree_view_set_model (iv, (GtkTreeModel*) self->priv->model);
+	renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
+	column = g_object_ref_sink (gtk_tree_view_column_new ());
+	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
+	gtk_tree_view_append_column (iv, column);
+	gtk_tree_view_column_set_title (column, _ ("Cover"));
+	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "pixbuf", 0);
+	rendererpb = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
+	_tmp5 = NULL;
+	column = (_tmp5 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp5);
+	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) rendererpb, TRUE);
+	gtk_tree_view_append_column (iv, column);
+	gtk_tree_view_column_set_title (column, _ ("Url"));
+	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) rendererpb, "text", 1);
+	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
+	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
+	button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-quit"));
+	g_signal_connect_object (button, "clicked", (GCallback) _song_window_destroy_popup_gtk_button_clicked, self, 0);
+	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
+	_tmp6 = NULL;
+	button = (_tmp6 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("Set cover")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp6);
+	g_signal_connect_object (button, "clicked", (GCallback) _song_window_set_metadata_gtk_button_clicked, self, 0);
+	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
+	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) hbox, FALSE, FALSE, (guint) 0);
+	gtk_container_add ((GtkContainer*) self, (GtkWidget*) vbox);
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) iv);
 	gtk_widget_show_all ((GtkWidget*) self);
 	metadata_get_list (song, META_ALBUM_ART, _song_window_callback_gmpc_meta_data_callback, self);
@@ -250,6 +397,8 @@ static GObject * song_window_constructor (GType type, guint n_construct_properti
 	self = SONG_WINDOW (obj);
 	{
 		g_object_set ((GtkWindow*) self, "type", GTK_WINDOW_TOPLEVEL, NULL);
+		gtk_window_set_default_size ((GtkWindow*) self, 650, 800);
+		gtk_container_set_border_width ((GtkContainer*) self, (guint) 8);
 	}
 	return obj;
 }
@@ -267,6 +416,7 @@ static void song_window_instance_init (SongWindow * self) {
 	self->priv = SONG_WINDOW_GET_PRIVATE (self);
 	self->priv->model = NULL;
 	self->priv->song = NULL;
+	self->priv->tree = NULL;
 }
 
 
@@ -278,6 +428,7 @@ static void song_window_finalize (GObject* obj) {
 	}
 	(self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL));
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
+	(self->priv->tree == NULL) ? NULL : (self->priv->tree = (g_object_unref (self->priv->tree), NULL));
 	G_OBJECT_CLASS (song_window_parent_class)->finalize (obj);
 }
 

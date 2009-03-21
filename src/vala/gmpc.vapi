@@ -5,6 +5,17 @@ namespace Gmpc {
     [CCode (cname = "connection", cheader_filename="main.h")]
     static MPD.Server server;
 
+    [CCode (cname = "gmw", cheader_filename="main.h")]
+    static MetaWatcher metawatcher;
+
+    [CCode (cheader_filename="gmpc-meta-watcher.h")]
+    public class MetaWatcher {
+       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, string path); 
+
+
+
+    }
+
     [CCode (cheader_filename="gmpc-connection.h")]
     public class Connection {
         signal void connection_changed(MPD.Server server, int connect);
@@ -24,12 +35,24 @@ namespace Gmpc {
             QUERY_DATA_TYPES = 127,
             QUERY_NO_CACHE   = 128
         }
+
+        [CCode (cprefix = "META_DATA_", cheader_filename = "metadata.h")]
+        public enum Result {
+            AVAILABLE,
+            UNAVAILABLE,
+            FETCHING
+        }
         
 
         public delegate void Callback (GLib.List list);
         [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
-        public void get_list(MPD.Song *song, Type type, Callback callback);
+        public void get_list(MPD.Song song, Type type, Callback callback);
 
+        [CCode ( cname="meta_data_set_cache", cheader_filename="metadata.h")]
+        public void set_metadata(MPD.Song song, Type type, Result result, string path); 
+
+        [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
+        public string get_metadata_filename(Type type, MPD.Song song, string extention);
    }
    namespace Messages {
        [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]
@@ -105,4 +128,5 @@ namespace Gmpc {
         [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
         public int set_int(string class, string key, int value); 
     }
+
 }
