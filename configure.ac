@@ -254,6 +254,11 @@ GETTEXT_PACKAGE=gmpc
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",[GMPC gettext package])
 
+if test x$gt_cv_have_gettext != "xyes"; then
+
+	echo "Translations support is required."
+	exit 1;
+fi
 
 #AM_GNU_GETTEXT([external])
 # setting correct paths
@@ -263,12 +268,6 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's local
 
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
-
-if test "x$USE_NLS" != "xyes"; then
-    echo "Translation support is required.";
-    exit 0;
-fi
-
 
 #Win32 compile support
 
