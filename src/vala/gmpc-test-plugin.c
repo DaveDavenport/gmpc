@@ -57,7 +57,7 @@ static void _song_window_store_image_gmpc_async_download_callback (const GEADAsy
 static void song_window_set_metadata (SongWindow* self, GtkButton* button);
 static void _song_window_destroy_popup_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gpointer self);
-static void _song_window_callback_gmpc_meta_data_callback (void* handle, GList* list, gpointer self);
+static void _song_window_callback_gmpc_meta_data_callback (void* handle, const char* plugin_name, GList* list, gpointer self);
 static SongWindow* song_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
 static SongWindow* song_window_new (const mpd_Song* song, MetaDataType type);
 static GObject * song_window_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -215,7 +215,7 @@ static void _song_window_image_downloaded_gmpc_async_download_callback (const GE
 }
 
 
-void song_window_callback (SongWindow* self, void* handle, GList* list) {
+void song_window_callback (SongWindow* self, void* handle, const char* plugin_name, GList* list) {
 	GError * inner_error;
 	g_return_if_fail (self != NULL);
 	inner_error = NULL;
@@ -270,8 +270,6 @@ void song_window_callback (SongWindow* self, void* handle, GList* list) {
 					}
 				} else {
 					GEADAsyncHandler* h;
-					/*this.model.append(out iter);,
-					this.model.set(iter, 0, pb,1, uri, -1);*/
 					h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
 					self->priv->downloads = g_list_append (self->priv->downloads, h);
 				}
@@ -391,8 +389,8 @@ static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gp
 }
 
 
-static void _song_window_callback_gmpc_meta_data_callback (void* handle, GList* list, gpointer self) {
-	song_window_callback (self, handle, list);
+static void _song_window_callback_gmpc_meta_data_callback (void* handle, const char* plugin_name, GList* list, gpointer self) {
+	song_window_callback (self, handle, plugin_name, list);
 }
 
 
@@ -524,6 +522,16 @@ static void song_window_finalize (GObject* obj) {
 	SongWindow * self;
 	self = SONG_WINDOW (obj);
 	{
+		if (self->priv->handle != NULL) {
+			fprintf (stdout, "cancel 1\n");
+			metadata_get_list_cancel (self->priv->handle);
+			self->priv->handle = NULL;
+		}
+		if (self->priv->handle2 != NULL) {
+			fprintf (stdout, "cancel 2\n");
+			metadata_get_list_cancel (self->priv->handle2);
+			self->priv->handle2 = NULL;
+		}
 		{
 			GList* handle_collection;
 			GList* handle_it;
@@ -536,16 +544,6 @@ static void song_window_finalize (GObject* obj) {
 					gmpc_easy_async_cancel (handle);
 				}
 			}
-		}
-		if (self->priv->handle != NULL) {
-			fprintf (stdout, "cancel 1\n");
-			metadata_get_list_cancel (self->priv->handle);
-			self->priv->handle = NULL;
-		}
-		if (self->priv->handle2 != NULL) {
-			fprintf (stdout, "cancel 2\n");
-			metadata_get_list_cancel (self->priv->handle2);
-			self->priv->handle2 = NULL;
 		}
 		fprintf (stdout, "song window destroy\n");
 	}

@@ -24,9 +24,9 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gmpc_easy_download.h>
-#include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gmpc-plugin.h>
 
 G_BEGIN_DECLS
 
@@ -73,7 +73,7 @@ struct _GmpcTestPluginClass {
 
 
 void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status);
-void song_window_callback (SongWindow* self, void* handle, GList* list);
+void song_window_callback (SongWindow* self, void* handle, const char* plugin_name, GList* list);
 void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status);
 void song_window_destroy_popup (SongWindow* self, GtkButton* button);
 GType song_window_get_type (void);

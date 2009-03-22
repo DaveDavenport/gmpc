@@ -1422,7 +1422,7 @@ void metadata_import_old_db(char *url)
 typedef struct MLQuery{
     int index;
     int cancel;
-    void (*callback)(gpointer handle,GList *list, gpointer data);
+    void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data);
     gpointer userdata;
     MetaDataType type;
     mpd_Song *song;
@@ -1455,7 +1455,8 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
             return; 
     }
     if(list) {
-        q->callback(q,list, q->userdata);
+        gmpcPluginParent *plug = meta_plugins[q->index-1]; 
+        q->callback(q,gmpc_plugin_get_name(plug), list,q->userdata);
         g_list_foreach(list,(GFunc) g_free, NULL);
         g_list_free(list);
     }
@@ -1472,7 +1473,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         return;
     }
     /* indicate done, by calling with NULL handle */
-    q->callback(q, NULL, q->userdata);
+    q->callback(q,NULL, NULL, q->userdata);
 
     mpd_freeSong(q->song);
     g_free(q);
@@ -1482,7 +1483,7 @@ void metadata_get_list_cancel(gpointer data)
     MLQuery *q = (MLQuery *)data;
     q->cancel = TRUE;
 }
-gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle, GList *list, gpointer data), gpointer data)
+gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
 {
     int i;
     MLQuery *q = g_malloc0(sizeof(*q));

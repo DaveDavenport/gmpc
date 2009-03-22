@@ -77,7 +77,6 @@ private class SongWindow : Gtk.Window {
             weak uchar[] data = handle.get_data();
             try{
                 var load = new Gdk.PixbufLoader();
-//                load.set_size(150,150);
                 try {
                     load.write(data);
                 }catch (Error e) {
@@ -97,7 +96,7 @@ private class SongWindow : Gtk.Window {
         }
 
     }
-    public void callback(void *handle,GLib.List<string>? list)
+    public void callback(void *handle,string? plugin_name,GLib.List<string>? list)
     {
         if(list == null) {
             stdout.printf("Done fetching\n");
@@ -120,8 +119,6 @@ private class SongWindow : Gtk.Window {
                     Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
                     if(pb != null)
                         add_entry(uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
-                    //this.model.append(out iter);,
-                    //this.model.set(iter, 0, pb,1, uri, -1);
                 }catch(Error e)
                 {
 
@@ -137,7 +134,6 @@ private class SongWindow : Gtk.Window {
     public void store_image(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
-
         this.downloads.remove(handle);
         stdout.printf("Aap noot mies\n");
         if(status == Gmpc.AsyncDownload.Status.DONE)
@@ -244,11 +240,7 @@ private class SongWindow : Gtk.Window {
     }
     ~SongWindow() {
 
-        foreach(weak Gmpc.AsyncDownload.Handle handle in this.downloads)
-        {
-            stdout.printf("cancel download: %s\n", handle.get_uri());
-           handle.cancel(); 
-        }
+
         if(this.handle != null){
             stdout.printf("cancel 1\n");
             Gmpc.MetaData.get_list_cancel(this.handle);
@@ -258,6 +250,11 @@ private class SongWindow : Gtk.Window {
             stdout.printf("cancel 2\n");
             Gmpc.MetaData.get_list_cancel(this.handle2);
             this.handle2 = null;
+        }
+        foreach(weak Gmpc.AsyncDownload.Handle handle in this.downloads)
+        {
+            stdout.printf("cancel download: %s\n", handle.get_uri());
+            handle.cancel(); 
         }
         stdout.printf("song window destroy\n");
     }

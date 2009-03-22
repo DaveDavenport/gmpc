@@ -44,7 +44,7 @@ namespace Gmpc {
         }
         
 
-        public delegate void Callback (void *handle, GLib.List<string>? list);
+        public delegate void Callback (void *handle,string? plugin_name, GLib.List<string>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
         public void* get_list(MPD.Song song, Type type, Callback callback);
 
