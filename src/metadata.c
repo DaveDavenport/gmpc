@@ -1440,7 +1440,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     if(q->cancel){
             printf("Cancel\n");
             if(list){
-                g_list_foreach(list, g_free, NULL);
+                g_list_foreach(list,(GFunc) g_free, NULL);
                 g_list_free(list);
             }
             mpd_freeSong(q->song);
@@ -1450,7 +1450,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     }
     if(list) {
         q->callback(q,list, q->userdata);
-        g_list_foreach(list, g_free, NULL);
+        g_list_foreach(list,(GFunc) g_free, NULL);
         g_list_free(list);
     }
     if(q->index < meta_num_plugins)
@@ -1463,7 +1463,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         return;
     }
     /* indicate done, by calling with NULL handle */
-    q->callback(NULL, NULL, q->userdata);
+    q->callback(q, NULL, q->userdata);
 
     mpd_freeSong(q->song);
     g_free(q);
@@ -1482,6 +1482,9 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
     q->callback = callback;
     q->userdata = data;
     q->type = type;
+    /**
+     * Create a copy, so song is guarantee to be valid during queries of plugins
+     */
     q->song = mpd_songDup(song);
     g_idle_add(metadata_get_list_itterate_idle, q);
     return q;

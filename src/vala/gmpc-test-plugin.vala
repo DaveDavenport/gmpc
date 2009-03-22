@@ -23,15 +23,40 @@ using Gmpc;
 private class SongWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;
     private Gtk.ListStore model = null;
-    private MPD.Song song = null;
     private Gtk.TreeView tree = null;
+
+
+    private MPD.Song song = null;
+    private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
+
+    /** fetching handles */
     private void *handle = null;
+    private void *handle2 = null;
+
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
         this.set_default_size(650,800);
         this.set_border_width(8);
     }
 
+    private void add_entry(string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
+    {
+        Gtk.TreeIter iter;
+        string a;
+        a = "<b>%s</b>: %s".printf(_("Uri"),uri);
+        if(format != null)
+        {
+            a+="\n<b>%s</b>: %s".printf(_("Filetype"), format.get_name());
+            stdout.printf("%s\n",format.get_name()); 
+        }
+        if(pb != null)
+        {
+            a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"));
+
+        }
+        this.model.append(out iter);
+        this.model.set(iter, 0, pb.scale_simple(150,150,Gdk.InterpType.BILINEAR),1, uri,2,a, -1);
+    }
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.DONE)
@@ -39,18 +64,18 @@ private class SongWindow : Gtk.Window {
             int64 length;
             weak string data = handle.get_data(out length);
             try{
-                Gtk.TreeIter iter;
                 var load = new Gdk.PixbufLoader();
-                load.set_size(150,150);
+//                load.set_size(150,150);
                 try {
                     load.write((uchar[])data);
                 }catch (Error e) {
                     stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                 }
                 load.close();
+
                 Gdk.Pixbuf pb = load.get_pixbuf();//new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); 
-                this.model.append(out iter);
-                this.model.set(iter, 0, pb,1, handle.get_uri(), -1);
+                if(pb!= null)
+                    this.add_entry(handle.get_uri(),load.get_format(),pb);
             }catch (Error e) {
                 stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
 
@@ -61,19 +86,23 @@ private class SongWindow : Gtk.Window {
     }
     public void callback(void *handle,GLib.List<string>? list)
     {
-        if(handle == null) {
+        if(list == null) {
             stdout.printf("Done fetching\n");
-            this.handle = null;
+            if(this.handle == handle)
+                this.handle = null;
+            if(this.handle2 == handle)
+                this.handle2 = null;
         }
         foreach(weak string uri in list)
         {
             stdout.printf("Uri: %s\n", uri);
             if(uri[0] == '/'){
-                Gtk.TreeIter iter;
                 try{
-                Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file_at_scale(uri, 150, 150, true);
-                this.model.append(out iter);
-                this.model.set(iter, 0, pb,1, uri, -1);
+                    Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
+                    if(pb != null)
+                        add_entry(uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
+                    //this.model.append(out iter);,
+                    //this.model.set(iter, 0, pb,1, uri, -1);
                 }catch(Error e)
                 {
 
@@ -91,13 +120,13 @@ private class SongWindow : Gtk.Window {
         {
             int64 length;
             weak string data = handle.get_data(out length);
-            var file = Gmpc.MetaData.get_metadata_filename(Gmpc.MetaData.Type.ALBUM_ART, this.song, "jpg");
+            var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song, "jpg");
             try {
                 stdout.printf("Storing into: %s\n", file);
                 GLib.FileUtils.set_contents(file, data, (long)length);
 
-                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, file); 
-                metawatcher.data_changed(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, file);  
+                Gmpc.MetaData.set_metadata(this.song,this.query_type, Gmpc.MetaData.Result.AVAILABLE, file); 
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
             }catch (Error e) {
 
             }
@@ -115,8 +144,8 @@ private class SongWindow : Gtk.Window {
             stdout.printf("clicked %s\n",path);
             if(path[0]  == '/')
             {
-                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, path); 
-                metawatcher.data_changed(this.song, Gmpc.MetaData.Type.ALBUM_ART, Gmpc.MetaData.Result.AVAILABLE, path);  
+                Gmpc.MetaData.set_metadata(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path); 
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
             }else{
                 Gmpc.AsyncDownload.download(path, store_image); 
             }
@@ -130,13 +159,14 @@ private class SongWindow : Gtk.Window {
         this.destroy();
     }
 
-    SongWindow (MPD.Song song) {
+    SongWindow (MPD.Song song, Gmpc.MetaData.Type type) {
         var vbox = new Gtk.VBox(false, 6);
         this.song = song;
-        this.model = new Gtk.ListStore(2,typeof(Gdk.Pixbuf), typeof(string));
+        this.query_type = type;
+
+        this.model = new Gtk.ListStore(3,typeof(Gdk.Pixbuf), typeof(string),typeof(string));
         var sw = new Gtk.ScrolledWindow(null, null);
         var iv = new Gtk.TreeView();
-
 
         this.tree = iv;
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
@@ -155,7 +185,7 @@ private class SongWindow : Gtk.Window {
         column.pack_start(rendererpb,true);
         iv.append_column(column);
         column.set_title(_("Url"));
-        column.add_attribute(rendererpb, "text", 1);
+        column.add_attribute(rendererpb, "markup", 2);
 
         vbox.pack_start(sw, true, true,0);
 
@@ -176,12 +206,21 @@ private class SongWindow : Gtk.Window {
         sw.add(iv);
         this.show_all();
 
-        this.handle = Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
+        this.handle = Gmpc.MetaData.get_list(song, this.query_type, callback);
+        if(this.song.albumartist != null){
+            MPD.Song song2  = song;
+            song2.artist = song2.albumartist;
+            this.handle2 = Gmpc.MetaData.get_list(song2, this.query_type, callback);
+        }
     }
     ~SongWindow() {
         if(this.handle != null){
             Gmpc.MetaData.get_list_cancel(this.handle);
             this.handle = null;
+        }
+        if(this.handle2 != null){
+            Gmpc.MetaData.get_list_cancel(this.handle2);
+            this.handle2 = null;
         }
         stdout.printf("song window destroy\n");
     }
@@ -248,17 +287,27 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
      * Private  
      ********************************************************************************/
 
-    public void menu_activated(Gtk.MenuItem item)
+    public void menu_activated_album(Gtk.MenuItem item)
     {
         weak MPD.Song song = server.playlist_get_current_song();
-        new SongWindow(song);
+        new SongWindow(song,Gmpc.MetaData.Type.ALBUM_ART);
+    }
+
+    public void menu_activated_artist(Gtk.MenuItem item)
+    {
+        weak MPD.Song song = server.playlist_get_current_song();
+        new SongWindow(song,Gmpc.MetaData.Type.ARTIST_ART);
     }
     public int tool_menu_integration(Gtk.Menu menu)
     {
-        Gtk.MenuItem item = new Gtk.MenuItem.with_label("Test plugin");
+        Gtk.MenuItem item = new Gtk.MenuItem.with_label("Test plugin album");
         menu.append(item);
-        item.activate += menu_activated;
-        return 0;
+        item.activate += menu_activated_album;
+
+        item = new Gtk.MenuItem.with_label("Test plugin artist");
+        menu.append(item);
+        item.activate += menu_activated_artist;
+        return 2;
     }
 }
 

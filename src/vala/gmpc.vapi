@@ -23,7 +23,7 @@ namespace Gmpc {
     }
 
    namespace MetaData {
-        [CCode (cprefix = "META_", cheader_filename = "metadata.h")]
+        [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
         public enum Type {
             ALBUM_ART       = 1,
             ARTIST_ART      = 2,
