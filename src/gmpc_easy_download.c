@@ -532,6 +532,15 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 	return d->data;
 }
 
+
+const char *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	if (length)
+		*length = (gint)d->length;
+	return d->data;
+}
+
 void gmpc_easy_async_cancel(const GEADAsyncHandler * handle)
 {
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;

@@ -24,6 +24,8 @@
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <glib/gi18n-lib.h>
 #include <stdio.h>
+#include <float.h>
+#include <math.h>
 #include <glib/gstdio.h>
 #include <main.h>
 #include <gmpc-meta-watcher.h>
@@ -83,6 +85,8 @@ static void song_window_add_entry (SongWindow* self, const char* uri, GdkPixbufF
 	GtkTreeIter iter = {0};
 	char* a;
 	char* _tmp0;
+	gint new_h;
+	gint new_w;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (pb != NULL);
@@ -106,8 +110,17 @@ static void song_window_add_entry (SongWindow* self, const char* uri, GdkPixbufF
 		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh"))), NULL), a = (g_free (a), NULL), _tmp4);
 		_tmp3 = (g_free (_tmp3), NULL);
 	}
+	new_h = 0;
+	new_w = 0;
+	if (gdk_pixbuf_get_width (pb) > gdk_pixbuf_get_height (pb)) {
+		new_h = 150;
+		new_w = (gint) ((150.0 / ((double) gdk_pixbuf_get_height (pb))) * gdk_pixbuf_get_width (pb));
+	} else {
+		new_w = 150;
+		new_h = (gint) ((150.0 / ((double) gdk_pixbuf_get_width (pb))) * gdk_pixbuf_get_height (pb));
+	}
 	gtk_list_store_append (self->priv->model, &iter);
-	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, 150, 150, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
+	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
 	a = (g_free (a), NULL);
 }
 
@@ -118,17 +131,20 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 	g_return_if_fail (handle != NULL);
 	inner_error = NULL;
 	if (status == GEAD_DONE) {
-		gint64 length;
-		const char* data;
-		length = 0LL;
-		data = gmpc_easy_handler_get_data (handle, &length);
+		guchar* _tmp1;
+		gint data_size;
+		gint data_length1;
+		gint _tmp0;
+		guchar* data;
+		_tmp1 = NULL;
+		data = (_tmp1 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = _tmp0, data_size = data_length1, _tmp1);
 		{
 			GdkPixbufLoader* load;
-			GdkPixbuf* _tmp0;
+			GdkPixbuf* _tmp2;
 			GdkPixbuf* pb;
 			load = gdk_pixbuf_loader_new ();
 			{
-				gdk_pixbuf_loader_write (load, (guchar*) data, -1, &inner_error);
+				gdk_pixbuf_loader_write (load, data, data_length1, &inner_error);
 				if (inner_error != NULL) {
 					goto __catch1_g_error;
 					goto __finally1;
@@ -157,8 +173,8 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 				goto __catch0_g_error;
 				goto __finally0;
 			}
-			_tmp0 = NULL;
-			pb = (_tmp0 = gdk_pixbuf_loader_get_pixbuf (load), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+			_tmp2 = NULL;
+			pb = (_tmp2 = gdk_pixbuf_loader_get_pixbuf (load), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2));
 			/*new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); */
 			if (pb != NULL) {
 				song_window_add_entry (self, gmpc_easy_handler_get_uri (handle), gdk_pixbuf_loader_get_format (load), pb);
@@ -260,20 +276,24 @@ void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, 
 	inner_error = NULL;
 	fprintf (stdout, "Aap noot mies\n");
 	if (status == GEAD_DONE) {
-		gint64 length;
-		const char* data;
+		guchar* _tmp1;
+		gint data_size;
+		gint data_length1;
+		gint _tmp0;
+		guchar* data;
 		char* file;
-		length = 0LL;
-		data = gmpc_easy_handler_get_data (handle, &length);
+		_tmp1 = NULL;
+		data = (_tmp1 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = _tmp0, data_size = data_length1, _tmp1);
 		file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, "jpg");
 		{
 			fprintf (stdout, "Storing into: %s\n", file);
-			g_file_set_contents (file, data, (glong) length, &inner_error);
+			g_file_set_contents (file, (const char*) data, (glong) data_length1, &inner_error);
 			if (inner_error != NULL) {
 				goto __catch3_g_error;
 				goto __finally3;
 			}
 			meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
 		}
 		goto __finally3;
@@ -325,6 +345,7 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 		fprintf (stdout, "clicked %s\n", path);
 		if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
 			meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
 		} else {
 			gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);

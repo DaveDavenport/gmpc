@@ -20,9 +20,9 @@
 #include "gmpc-song-links.h"
 #include <gmpc_easy_download.h>
 #include <config.h>
+#include <plugin.h>
 #include <stdlib.h>
 #include <string.h>
-#include <plugin.h>
 #include <glib/gstdio.h>
 #include <stdio.h>
 #include <float.h>
@@ -53,6 +53,7 @@ static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* 
 static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event);
 static gboolean _gmpc_song_links_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button);
+static guchar* _vala_array_dup1 (guchar* self, int length);
 static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncHandler* handle, GEADStatus status);
 static void _gmpc_song_links_open_uri_gtk_button_clicked (GtkLinkButton* _sender, gpointer self);
 static void gmpc_song_links_parse_uris (GmpcSongLinks* self);
@@ -236,6 +237,11 @@ static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button
 }
 
 
+static guchar* _vala_array_dup1 (guchar* self, int length) {
+	return g_memdup (self, length * sizeof (guchar));
+}
+
+
 static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncHandler* handle, GEADStatus status) {
 	GError * inner_error;
 	g_return_if_fail (self != NULL);
@@ -253,16 +259,19 @@ static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncH
 		return;
 	}
 	if (status == GEAD_DONE) {
-		gint64 length;
-		const char* _tmp1;
-		char* a;
+		guchar* _tmp3;
+		gint a_size;
+		gint a_length1;
+		guchar* _tmp2;
+		gint _tmp1;
+		guchar* a;
 		char* path;
-		length = (gint64) 0;
-		_tmp1 = NULL;
-		a = (_tmp1 = gmpc_easy_handler_get_data (handle, &length), (_tmp1 == NULL) ? NULL : g_strdup (_tmp1));
+		_tmp3 = NULL;
+		_tmp2 = NULL;
+		a = (_tmp3 = (_tmp2 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp1), (_tmp2 == NULL) ? ((gpointer) _tmp2) : _vala_array_dup1 (_tmp2, _tmp1)), a_length1 = _tmp1, a_size = a_length1, _tmp3);
 		path = gmpc_get_user_path ("weblinks.list");
 		{
-			g_file_set_contents (path, a, (glong) length, &inner_error);
+			g_file_set_contents (path, (const char*) a, (glong) a_length1, &inner_error);
 			if (inner_error != NULL) {
 				goto __catch1_g_error;
 				goto __finally1;

@@ -54,20 +54,29 @@ private class SongWindow : Gtk.Window {
             a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"));
 
         }
+        int new_h, new_w;
+        if(pb.width > pb.height) {
+            new_h = 150;
+            new_w = (int)((150.0/(double)pb.height)*pb.width);
+        }
+        else
+        {
+            new_w = 150;
+            new_h = (int)((150.0/(double)pb.width)*pb.height);
+        }
         this.model.append(out iter);
-        this.model.set(iter, 0, pb.scale_simple(150,150,Gdk.InterpType.BILINEAR),1, uri,2,a, -1);
+        this.model.set(iter, 0, pb.scale_simple(new_w,new_h,Gdk.InterpType.BILINEAR),1, uri,2,a, -1);
     }
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
-            int64 length;
-            weak string data = handle.get_data(out length);
+            weak uchar[] data = handle.get_data();
             try{
                 var load = new Gdk.PixbufLoader();
 //                load.set_size(150,150);
                 try {
-                    load.write((uchar[])data);
+                    load.write(data);
                 }catch (Error e) {
                     stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                 }
@@ -118,14 +127,14 @@ private class SongWindow : Gtk.Window {
         stdout.printf("Aap noot mies\n");
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
-            int64 length;
-            weak string data = handle.get_data(out length);
+            weak uchar[] data = handle.get_data();
             var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song, "jpg");
             try {
                 stdout.printf("Storing into: %s\n", file);
-                GLib.FileUtils.set_contents(file, data, (long)length);
+                GLib.FileUtils.set_contents(file, (string)data, (long)data.length);
 
                 Gmpc.MetaData.set_metadata(this.song,this.query_type, Gmpc.MetaData.Result.AVAILABLE, file); 
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
             }catch (Error e) {
 
@@ -145,6 +154,7 @@ private class SongWindow : Gtk.Window {
             if(path[0]  == '/')
             {
                 Gmpc.MetaData.set_metadata(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path); 
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
             }else{
                 Gmpc.AsyncDownload.download(path, store_image); 

@@ -100,11 +100,10 @@ public class Gmpc.Song.Links: Gtk.Frame
             return;
         }
         if(status == AsyncDownload.Status.DONE) {
-            int64 length=0;
-            var a = handle.get_data(out length); 
+            var a = handle.get_data(); 
             var path = Gmpc.user_path("weblinks.list");
             try{
-                GLib.FileUtils.set_contents(path, a, (long)length);
+                GLib.FileUtils.set_contents(path, (string)a, (long)a.length);
                 this.parse_uris();
                 this.show_all();
             }

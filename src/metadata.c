@@ -1457,6 +1457,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     {
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
+        printf("Query plugin: %s\n", gmpc_plugin_get_name(plug));
         if(plug->old && plug->old->metadata && plug->old->metadata->get_uris)
             plug->old->metadata->get_uris(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
         else g_idle_add(metadata_get_list_itterate_idle, q);

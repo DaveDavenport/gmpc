@@ -10,7 +10,7 @@ namespace Gmpc {
 
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
-       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, string path); 
+       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, string? path); 
 
 
 
@@ -53,7 +53,7 @@ namespace Gmpc {
 
 
         [CCode ( cname="meta_data_set_cache", cheader_filename="metadata.h")]
-        public void set_metadata(MPD.Song song, Type type, Result result, string path); 
+        public void set_metadata(MPD.Song song, Type type, Result result, string? path); 
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string extention);
@@ -87,8 +87,8 @@ namespace Gmpc {
             [CCode (cname="gmpc_easy_async_cancel", cheader_filename="gmpc_easy_download.h")]
             public void cancel ();
 
-            [CCode (cname="gmpc_easy_handler_get_data", cheader_filename="gmpc_easy_download.h")]
-            public weak string get_data(out int64 length);
+            [CCode (cname="gmpc_easy_handler_get_data_vala_wrap", cheader_filename="gmpc_easy_download.h")]
+            public weak uchar[] get_data();
             [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
             public weak string get_uri();
         }
