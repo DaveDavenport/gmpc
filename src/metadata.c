@@ -780,15 +780,17 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
-            gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
-        }else{
-            g_list_foreach(d->list,(GFunc) g_free, NULL);
-            g_list_free(d->list);
-            d->list = NULL;
-            d->iter = NULL;
-            d->index++;
-            process_itterate();
+            if(d->iter){
+                gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+                return;
+            }
         }
+        g_list_foreach(d->list,(GFunc) g_free, NULL);
+        g_list_free(d->list);
+        d->list = NULL;
+        d->iter = NULL;
+        d->index++;
+        process_itterate();
     }
 }
 static void result_itterate(GList *list, gpointer user_data)
