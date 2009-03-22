@@ -25,6 +25,7 @@ private class SongWindow : Gtk.Window {
     private Gtk.ListStore model = null;
     private MPD.Song song = null;
     private Gtk.TreeView tree = null;
+    private void *handle = null;
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
         this.set_default_size(650,800);
@@ -58,8 +59,12 @@ private class SongWindow : Gtk.Window {
 
         }
     }
-    public void callback(GLib.List<string> list)
+    public void callback(void *handle,GLib.List<string>? list)
     {
+        if(handle == null) {
+            stdout.printf("Done fetching\n");
+            this.handle = null;
+        }
         foreach(weak string uri in list)
         {
             stdout.printf("Uri: %s\n", uri);
@@ -171,9 +176,13 @@ private class SongWindow : Gtk.Window {
         sw.add(iv);
         this.show_all();
 
-        Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
+        this.handle = Gmpc.MetaData.get_list(song, Gmpc.MetaData.Type.ALBUM_ART, callback);
     }
     ~SongWindow() {
+        if(this.handle != null){
+            Gmpc.MetaData.get_list_cancel(this.handle);
+            this.handle = null;
+        }
         stdout.printf("song window destroy\n");
     }
 }

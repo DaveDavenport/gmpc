@@ -38,6 +38,7 @@ struct _SongWindowPrivate {
 	GtkListStore* model;
 	mpd_Song* song;
 	GtkTreeView* tree;
+	void* handle;
 };
 
 #define SONG_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_SONG_WINDOW, SongWindowPrivate))
@@ -50,7 +51,7 @@ static void _song_window_store_image_gmpc_async_download_callback (const GEADAsy
 static void song_window_set_metadata (SongWindow* self, GtkButton* button);
 static void _song_window_destroy_popup_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gpointer self);
-static void _song_window_callback_gmpc_meta_data_callback (GList* list, gpointer self);
+static void _song_window_callback_gmpc_meta_data_callback (void* handle, GList* list, gpointer self);
 static SongWindow* song_window_construct (GType object_type, const mpd_Song* song);
 static SongWindow* song_window_new (const mpd_Song* song);
 static GObject * song_window_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -156,11 +157,14 @@ static void _song_window_image_downloaded_gmpc_async_download_callback (const GE
 }
 
 
-void song_window_callback (SongWindow* self, GList* list) {
+void song_window_callback (SongWindow* self, void* handle, GList* list) {
 	GError * inner_error;
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (list != NULL);
 	inner_error = NULL;
+	if (handle == NULL) {
+		fprintf (stdout, "Done fetching\n");
+		self->priv->handle = NULL;
+	}
 	{
 		GList* uri_collection;
 		GList* uri_it;
@@ -307,8 +311,8 @@ static void _song_window_set_metadata_gtk_button_clicked (GtkButton* _sender, gp
 }
 
 
-static void _song_window_callback_gmpc_meta_data_callback (GList* list, gpointer self) {
-	song_window_callback (self, list);
+static void _song_window_callback_gmpc_meta_data_callback (void* handle, GList* list, gpointer self) {
+	song_window_callback (self, handle, list);
 }
 
 
@@ -371,7 +375,7 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) vbox);
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) iv);
 	gtk_widget_show_all ((GtkWidget*) self);
-	metadata_get_list (song, META_ALBUM_ART, _song_window_callback_gmpc_meta_data_callback, self);
+	self->priv->handle = metadata_get_list (song, META_ALBUM_ART, _song_window_callback_gmpc_meta_data_callback, self);
 	return self;
 }
 
@@ -412,6 +416,7 @@ static void song_window_instance_init (SongWindow * self) {
 	self->priv->model = NULL;
 	self->priv->song = NULL;
 	self->priv->tree = NULL;
+	self->priv->handle = NULL;
 }
 
 
@@ -419,6 +424,10 @@ static void song_window_finalize (GObject* obj) {
 	SongWindow * self;
 	self = SONG_WINDOW (obj);
 	{
+		if (self->priv->handle != NULL) {
+			metadata_get_list_cancel (self->priv->handle);
+			self->priv->handle = NULL;
+		}
 		fprintf (stdout, "song window destroy\n");
 	}
 	(self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL));

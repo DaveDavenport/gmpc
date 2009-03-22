@@ -1416,18 +1416,75 @@ void metadata_import_old_db(char *url)
 }
 
 
-void metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(GList *list, gpointer data), gpointer data)
+/**
+ * Get a list of urls, used by f.e. selector 
+ */
+typedef struct MLQuery{
+    int index;
+    int cancel;
+    void (*callback)(gpointer handle,GList *list, gpointer data);
+    gpointer userdata;
+    MetaDataType type;
+    mpd_Song *song;
+}MLQuery;
+
+static void metadata_get_list_itterate(GList *list, gpointer data);
+static gboolean metadata_get_list_itterate_idle(gpointer data)
+{
+    metadata_get_list_itterate(NULL, data);
+    return FALSE;
+}
+static void metadata_get_list_itterate(GList *list, gpointer data)
+{
+    MLQuery *q = (MLQuery *)data;
+    if(q->cancel){
+            printf("Cancel\n");
+            if(list){
+                g_list_foreach(list, g_free, NULL);
+                g_list_free(list);
+            }
+            mpd_freeSong(q->song);
+            g_free(q);
+            /*  clean up */
+            return; 
+    }
+    if(list) {
+        q->callback(q,list, q->userdata);
+        g_list_foreach(list, g_free, NULL);
+        g_list_free(list);
+    }
+    if(q->index < meta_num_plugins)
+    {
+        gmpcPluginParent *plug = meta_plugins[q->index]; 
+        q->index++;
+        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris)
+            plug->old->metadata->get_uris(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
+        else g_idle_add(metadata_get_list_itterate_idle, q);
+        return;
+    }
+    /* indicate done, by calling with NULL handle */
+    q->callback(NULL, NULL, q->userdata);
+
+    mpd_freeSong(q->song);
+    g_free(q);
+}
+void metadata_get_list_cancel(gpointer data)
+{
+    MLQuery *q = (MLQuery *)data;
+    q->cancel = TRUE;
+}
+gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle, GList *list, gpointer data), gpointer data)
 {
     int i;
-    for(i=0; i < meta_num_plugins; i++)
-    {
-        gmpcPluginParent *plug = meta_plugins[i]; 
-
-        printf("Metadata Plugin: %s\n", gmpc_plugin_get_name(plug));
-        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris) {
-            plug->old->metadata->get_uris(song, type&META_QUERY_DATA_TYPES,callback, (gpointer)data); 
-        }
-    }
+    MLQuery *q = g_malloc0(sizeof(*q));
+    q->cancel =FALSE;
+    q->index = 0;
+    q->callback = callback;
+    q->userdata = data;
+    q->type = type;
+    q->song = mpd_songDup(song);
+    g_idle_add(metadata_get_list_itterate_idle, q);
+    return q;
 }
 
 

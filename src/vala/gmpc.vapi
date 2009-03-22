@@ -44,9 +44,13 @@ namespace Gmpc {
         }
         
 
-        public delegate void Callback (GLib.List list);
+        public delegate void Callback (void *handle, GLib.List<string>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
-        public void get_list(MPD.Song song, Type type, Callback callback);
+        public void* get_list(MPD.Song song, Type type, Callback callback);
+
+        [CCode ( cname="metadata_get_list_cancel", cheader_filename="metadata.h" )]
+        public void* get_list_cancel(void *handle);
+
 
         [CCode ( cname="meta_data_set_cache", cheader_filename="metadata.h")]
         public void set_metadata(MPD.Song song, Type type, Result result, string path); 
