@@ -24,7 +24,7 @@ private class SongWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;
     private Gtk.ListStore model = null;
     private Gtk.TreeView tree = null;
-
+    private GLib.List<Gmpc.AsyncDownload.Handle> downloads = null;
 
     private MPD.Song song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
@@ -69,6 +69,9 @@ private class SongWindow : Gtk.Window {
     }
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
+        if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
+        stdout.printf("Result in\n");
+        this.downloads.remove(handle);
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
             weak uchar[] data = handle.get_data();
@@ -92,15 +95,22 @@ private class SongWindow : Gtk.Window {
             }
 
         }
+
     }
     public void callback(void *handle,GLib.List<string>? list)
     {
         if(list == null) {
             stdout.printf("Done fetching\n");
             if(this.handle == handle)
+            {
+                stdout.printf("done 1\n");
                 this.handle = null;
+            }
             if(this.handle2 == handle)
+            {
+                stdout.printf("done 1\n");
                 this.handle2 = null;
+            }
         }
         foreach(weak string uri in list)
         {
@@ -117,13 +127,18 @@ private class SongWindow : Gtk.Window {
 
                 }
 
-            }else
-                Gmpc.AsyncDownload.download(uri, image_downloaded); 
+            }else{
+                var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
+                this.downloads.append(h);
+            }
         }
     }
 
     public void store_image(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
+        if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
+
+        this.downloads.remove(handle);
         stdout.printf("Aap noot mies\n");
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
@@ -157,7 +172,8 @@ private class SongWindow : Gtk.Window {
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
             }else{
-                Gmpc.AsyncDownload.download(path, store_image); 
+                var h = Gmpc.AsyncDownload.download(path, store_image); 
+                this.downloads.append(h);
             }
 
         }
@@ -213,22 +229,33 @@ private class SongWindow : Gtk.Window {
         vbox.pack_start(hbox, false, false,0);
 
         this.add(vbox);
+        this.hide_on_delete();
         sw.add(iv);
         this.show_all();
 
         this.handle = Gmpc.MetaData.get_list(song, this.query_type, callback);
+        stdout.printf("Query 1\n");
         if(this.song.albumartist != null){
             MPD.Song song2  = song;
             song2.artist = song2.albumartist;
+            stdout.printf("query 2\n");
             this.handle2 = Gmpc.MetaData.get_list(song2, this.query_type, callback);
         }
     }
     ~SongWindow() {
+
+        foreach(weak Gmpc.AsyncDownload.Handle handle in this.downloads)
+        {
+            stdout.printf("cancel download: %s\n", handle.get_uri());
+           handle.cancel(); 
+        }
         if(this.handle != null){
+            stdout.printf("cancel 1\n");
             Gmpc.MetaData.get_list_cancel(this.handle);
             this.handle = null;
         }
         if(this.handle2 != null){
+            stdout.printf("cancel 2\n");
             Gmpc.MetaData.get_list_cancel(this.handle2);
             this.handle2 = null;
         }

@@ -1426,6 +1426,7 @@ typedef struct MLQuery{
     gpointer userdata;
     MetaDataType type;
     mpd_Song *song;
+    int calls;
 }MLQuery;
 
 static void metadata_get_list_itterate(GList *list, gpointer data);
@@ -1437,14 +1438,19 @@ static gboolean metadata_get_list_itterate_idle(gpointer data)
 static void metadata_get_list_itterate(GList *list, gpointer data)
 {
     MLQuery *q = (MLQuery *)data;
+    q->calls--;
     if(q->cancel){
             printf("Cancel\n");
             if(list){
                 g_list_foreach(list,(GFunc) g_free, NULL);
                 g_list_free(list);
             }
-            mpd_freeSong(q->song);
-            g_free(q);
+            if(q == 0)
+            {
+                printf("Cleaning\n");
+                mpd_freeSong(q->song);
+                g_free(q);
+            }
             /*  clean up */
             return; 
     }
@@ -1458,8 +1464,10 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
         printf("Query plugin: %s\n", gmpc_plugin_get_name(plug));
-        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris)
+        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris){
+            q->calls++;
             plug->old->metadata->get_uris(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
+        }
         else g_idle_add(metadata_get_list_itterate_idle, q);
         return;
     }
@@ -1483,6 +1491,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
     q->callback = callback;
     q->userdata = data;
     q->type = type;
+    q->calls =1;
     /**
      * Create a copy, so song is guarantee to be valid during queries of plugins
      */

@@ -39,6 +39,7 @@
 struct _SongWindowPrivate {
 	GtkListStore* model;
 	GtkTreeView* tree;
+	GList* downloads;
 	mpd_Song* song;
 	MetaDataType query_type;
 	void* handle;
@@ -130,6 +131,11 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (handle != NULL);
 	inner_error = NULL;
+	if (status == GEAD_PROGRESS) {
+		return;
+	}
+	fprintf (stdout, "Result in\n");
+	self->priv->downloads = g_list_remove (self->priv->downloads, handle);
 	if (status == GEAD_DONE) {
 		guchar* _tmp1;
 		gint data_size;
@@ -216,9 +222,11 @@ void song_window_callback (SongWindow* self, void* handle, GList* list) {
 	if (list == NULL) {
 		fprintf (stdout, "Done fetching\n");
 		if (self->priv->handle == handle) {
+			fprintf (stdout, "done 1\n");
 			self->priv->handle = NULL;
 		}
 		if (self->priv->handle2 == handle) {
+			fprintf (stdout, "done 1\n");
 			self->priv->handle2 = NULL;
 		}
 	}
@@ -261,7 +269,11 @@ void song_window_callback (SongWindow* self, void* handle, GList* list) {
 						return;
 					}
 				} else {
-					gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
+					GEADAsyncHandler* h;
+					/*this.model.append(out iter);,
+					this.model.set(iter, 0, pb,1, uri, -1);*/
+					h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
+					self->priv->downloads = g_list_append (self->priv->downloads, h);
 				}
 			}
 		}
@@ -274,6 +286,10 @@ void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (handle != NULL);
 	inner_error = NULL;
+	if (status == GEAD_PROGRESS) {
+		return;
+	}
+	self->priv->downloads = g_list_remove (self->priv->downloads, handle);
 	fprintf (stdout, "Aap noot mies\n");
 	if (status == GEAD_DONE) {
 		guchar* _tmp1;
@@ -348,7 +364,9 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
 		} else {
-			gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);
+			GEADAsyncHandler* h;
+			h = gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);
+			self->priv->downloads = g_list_append (self->priv->downloads, h);
 		}
 	}
 	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
@@ -436,9 +454,11 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) hbox, FALSE, FALSE, (guint) 0);
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) vbox);
+	gtk_widget_hide_on_delete ((GtkWidget*) self);
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) iv);
 	gtk_widget_show_all ((GtkWidget*) self);
 	self->priv->handle = metadata_get_list (song, self->priv->query_type, _song_window_callback_gmpc_meta_data_callback, self);
+	fprintf (stdout, "Query 1\n");
 	if (self->priv->song->albumartist != NULL) {
 		const mpd_Song* _tmp7;
 		mpd_Song* song2;
@@ -449,6 +469,7 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 		_tmp9 = NULL;
 		_tmp8 = NULL;
 		song2->artist = (_tmp9 = (_tmp8 = song2->albumartist, (_tmp8 == NULL) ? NULL : g_strdup (_tmp8)), song2->artist = (g_free (song2->artist), NULL), _tmp9);
+		fprintf (stdout, "query 2\n");
 		self->priv->handle2 = metadata_get_list (song2, self->priv->query_type, _song_window_callback_gmpc_meta_data_callback, self);
 		(song2 == NULL) ? NULL : (song2 = (mpd_freeSong (song2), NULL));
 	}
@@ -491,6 +512,7 @@ static void song_window_instance_init (SongWindow * self) {
 	self->priv = SONG_WINDOW_GET_PRIVATE (self);
 	self->priv->model = NULL;
 	self->priv->tree = NULL;
+	self->priv->downloads = NULL;
 	self->priv->song = NULL;
 	self->priv->query_type = META_ALBUM_ART;
 	self->priv->handle = NULL;
@@ -502,11 +524,26 @@ static void song_window_finalize (GObject* obj) {
 	SongWindow * self;
 	self = SONG_WINDOW (obj);
 	{
+		{
+			GList* handle_collection;
+			GList* handle_it;
+			handle_collection = self->priv->downloads;
+			for (handle_it = handle_collection; handle_it != NULL; handle_it = handle_it->next) {
+				const GEADAsyncHandler* handle;
+				handle = (const GEADAsyncHandler*) handle_it->data;
+				{
+					fprintf (stdout, "cancel download: %s\n", gmpc_easy_handler_get_uri (handle));
+					gmpc_easy_async_cancel (handle);
+				}
+			}
+		}
 		if (self->priv->handle != NULL) {
+			fprintf (stdout, "cancel 1\n");
 			metadata_get_list_cancel (self->priv->handle);
 			self->priv->handle = NULL;
 		}
 		if (self->priv->handle2 != NULL) {
+			fprintf (stdout, "cancel 2\n");
 			metadata_get_list_cancel (self->priv->handle2);
 			self->priv->handle2 = NULL;
 		}
@@ -514,6 +551,7 @@ static void song_window_finalize (GObject* obj) {
 	}
 	(self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL));
 	(self->priv->tree == NULL) ? NULL : (self->priv->tree = (g_object_unref (self->priv->tree), NULL));
+	(self->priv->downloads == NULL) ? NULL : (self->priv->downloads = (g_list_free (self->priv->downloads), NULL));
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
 	G_OBJECT_CLASS (song_window_parent_class)->finalize (obj);
 }
