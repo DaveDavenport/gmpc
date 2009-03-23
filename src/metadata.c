@@ -1108,12 +1108,12 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     printf("adding to queue\n");
     if(process_queue == NULL) {
         process_queue = g_list_append(process_queue, mtd);
-        g_idle_add(process_itterate, NULL);
-        return;
+        g_idle_add((GSourceFunc)process_itterate, NULL);
+        return META_DATA_FETCHING;
     }
     process_queue = g_list_append(process_queue, mtd);
 
-    return ret;
+    return META_DATA_FETCHING;
 }
 
 static gchar * strip_invalid_chars(gchar *input)
