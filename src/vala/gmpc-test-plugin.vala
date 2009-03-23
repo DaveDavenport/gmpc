@@ -20,11 +20,12 @@ using Config;
 using Gtk;
 using Gmpc;
 
+
 private class SongWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;
     private Gtk.ListStore model = null;
     private Gtk.TreeView tree = null;
-    private GLib.List<Gmpc.AsyncDownload.Handle> downloads = null;
+    private GLib.List<weak Gmpc.AsyncDownload.Handle> downloads = null;
 
     private MPD.Song song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
@@ -32,6 +33,11 @@ private class SongWindow : Gtk.Window {
     /** fetching handles */
     private void *handle = null;
     private void *handle2 = null;
+
+
+    private Gtk.Entry artist_entry;
+    private Gtk.Entry album_entry;
+    private Gtk.Button refresh = null;
 
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
@@ -70,7 +76,7 @@ private class SongWindow : Gtk.Window {
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
-        stdout.printf("Result in\n");
+        stdout.printf("Result in: %s\n", handle.get_uri());
         this.downloads.remove(handle);
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
@@ -104,11 +110,17 @@ private class SongWindow : Gtk.Window {
             {
                 stdout.printf("done 1\n");
                 this.handle = null;
+                if(this.handle == null)
+                    this.refresh.sensitive = true;
             }
             if(this.handle2 == handle)
             {
                 stdout.printf("done 1\n");
                 this.handle2 = null;
+
+
+                if(this.handle == null)
+                    this.refresh.sensitive = true;
             }
         }
         foreach(weak string uri in list)
@@ -135,7 +147,7 @@ private class SongWindow : Gtk.Window {
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
         this.downloads.remove(handle);
-        stdout.printf("Aap noot mies\n");
+        stdout.printf("Aap noot mies: %s\n", handle.get_uri());
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
             weak uchar[] data = handle.get_data();
@@ -181,6 +193,22 @@ private class SongWindow : Gtk.Window {
         this.destroy();
     }
 
+    public void refresh_query(Gtk.Button button) 
+    {
+        this.model.clear();
+        MPD.Song ss = this.song;
+        ss.artist = this.artist_entry.get_text();
+        if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART)
+        {
+            ss.album = this.album_entry.get_text();
+        }
+        if(this.handle == null && this.handle2 == null) {
+            this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
+            this.refresh.sensitive = false;
+        }
+        
+    }
+
     SongWindow (MPD.Song song, Gmpc.MetaData.Type type) {
         var vbox = new Gtk.VBox(false, 6);
         this.song = song;
@@ -222,7 +250,38 @@ private class SongWindow : Gtk.Window {
         button.clicked += set_metadata;
         hbox.pack_end(button, false, false, 0);
 
-        vbox.pack_start(hbox, false, false,0);
+        vbox.pack_end(hbox, false, false,0);
+
+        /** Change */
+        var group = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
+        var qhbox = new Gtk.HBox(false, 6);
+        var label = new Gtk.Label(_("Artist"));
+        group.add_widget(label);
+        qhbox.pack_start(label, false, false, 0);
+        this.artist_entry = new Gtk.Entry();
+        this.artist_entry.set_text(song.artist);
+        qhbox.pack_start(this.artist_entry, true, true, 0);
+
+        vbox.pack_start(qhbox, false, false, 0);
+       
+        if(type == Gmpc.MetaData.Type.ALBUM_ART)
+        {
+            qhbox = new Gtk.HBox(false, 6);
+            label = new Gtk.Label(_("Album"));
+            group.add_widget(label);
+            qhbox.pack_start(label, false, false, 0);
+            this.album_entry = new Gtk.Entry();
+            this.album_entry.set_text(song.album);
+            qhbox.pack_start(this.album_entry, true, true, 0);
+
+            vbox.pack_start(qhbox, false, false, 0);
+        }
+        this.refresh = button = new Gtk.Button.from_stock("gtk-refresh");
+        var ali = new Gtk.Alignment(1.0f, 0.5f, 0.0f, 0.0f);
+        ali.add(button);
+        vbox.pack_start(ali, false, false, 0);
+        button.clicked += refresh_query;
+        this.refresh.sensitive = false;
 
         this.add(vbox);
         this.hide_on_delete();
@@ -251,10 +310,12 @@ private class SongWindow : Gtk.Window {
             Gmpc.MetaData.get_list_cancel(this.handle2);
             this.handle2 = null;
         }
-        foreach(weak Gmpc.AsyncDownload.Handle handle in this.downloads)
-        {
+        this.downloads.first();
+        while(this.downloads != null){
+            Gmpc.AsyncDownload.Handle handle = this.downloads.data;
             stdout.printf("cancel download: %s\n", handle.get_uri());
             handle.cancel(); 
+            this.downloads.first();
         }
         stdout.printf("song window destroy\n");
     }

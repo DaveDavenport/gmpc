@@ -76,6 +76,7 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 void song_window_callback (SongWindow* self, void* handle, const char* plugin_name, GList* list);
 void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status);
 void song_window_destroy_popup (SongWindow* self, GtkButton* button);
+void song_window_refresh_query (SongWindow* self, GtkButton* button);
 GType song_window_get_type (void);
 void gmpc_test_plugin_menu_activated_album (GmpcTestPlugin* self, GtkMenuItem* item);
 void gmpc_test_plugin_menu_activated_artist (GmpcTestPlugin* self, GtkMenuItem* item);
