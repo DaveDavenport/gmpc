@@ -15,10 +15,10 @@ src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
 src/sm.c
-src/TreeSearchWidget.c
 src/url_fetcher.c
 src/tray-icon2.c
 src/setup-assistant.c
+src/bug-information.c
 
 # Ui files
 [type: gettext/glade]glade/aboutdialog.ui
@@ -44,6 +44,7 @@ src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag2-browser.c
 src/browsers/server-information.c
 
+
 # Egg files
 src/egg/eggcolumnmodel.c
 src/egg/eggcolumnchooserdialog.c
@@ -63,9 +64,9 @@ src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-meta-watcher.gob
 src/gob/gmpc-stats-label.gob
 
-#?
-src/qlib/qasyncqueue.c
-
 # Vala
 src/vala/gmpc_menu_item_rating.c
 src/vala/gmpc-song-links.c
+src/vala/gmpc-easy-command.c
+src/vala/gmpc-test-plugin.c
+
