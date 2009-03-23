@@ -20,7 +20,6 @@
 #include <string.h>
 #include <glib.h>
 #include <glib/gstdio.h>
-#include "qlib/qasyncqueue.h"
 #include "main.h"
 
 #include "metadata.h"
@@ -40,11 +39,11 @@ static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type
 /**
  * This is queue is used to send commands to the retrieval queue
  */
-QAsyncQueue *meta_commands = NULL;
+GAsyncQueue *meta_commands = NULL;
 /**
  * This queue is used to send replies back.
  */
-QAsyncQueue *meta_results = NULL;
+GAsyncQueue *meta_results = NULL;
 
 
 typedef struct {
@@ -555,8 +554,8 @@ static gboolean meta_data_handle_results(void)
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
-	for(data = q_async_queue_try_pop(meta_results);data;
-			data = q_async_queue_try_pop(meta_results)) {	
+	for(data = g_async_queue_try_pop(meta_results);data;
+			data = g_async_queue_try_pop(meta_results)) {	
         printf("result: %s::%i::%s\n",data->song->artist, data->result, data->result_path);
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
  		if(data->callback)
@@ -593,11 +592,11 @@ void meta_data_init(void)
     /**
      * The command queue
      */
-    meta_commands = q_async_queue_new();
+    meta_commands = g_async_queue_new();
     /**
      * the result queue
      */
-    meta_results = q_async_queue_new();
+    meta_results = g_async_queue_new();
 
     /**
      * Create the retrieval thread
@@ -677,8 +676,8 @@ void meta_data_destroy(void)
     {
         debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
         /* remove old stuff */
-        q_async_queue_lock(meta_commands);
-        while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
+        g_async_queue_lock(meta_commands);
+        while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
         {
         }
         /* Create the quit signal, this is just an empty request with id 0 */
@@ -686,8 +685,8 @@ void meta_data_destroy(void)
         mtd->id = 0;
 
         /* push the request to the thread */
-        q_async_queue_push_unlocked(meta_commands, mtd);
-        q_async_queue_unlock(meta_commands);
+        g_async_queue_push_unlocked(meta_commands, mtd);
+        g_async_queue_unlock(meta_commands);
         /* wait for the thread to finish */
         g_thread_join(meta_thread);
         /* cleanup */
@@ -711,7 +710,7 @@ void meta_data_destroy(void)
         debug_printf(DEBUG_INFO,"Done..");
     }
     if(meta_commands){
-        q_async_queue_unref(meta_commands);
+        g_async_queue_unref(meta_commands);
         meta_commands = NULL;
     }
     /* Close the cover database  */
@@ -738,7 +737,7 @@ static gboolean process_itterate(void);
 static void retrieve_thread(void)
 {
     meta_thread_data *d;
-    while((d = q_async_queue_pop(meta_commands)))
+    while((d = g_async_queue_pop(meta_commands)))
     {
         gmpcPluginParent *plug = meta_plugins[d->index];
         if(d->id == 0) return;
@@ -939,7 +938,7 @@ static gboolean process_itterate(void)
                 if(gmpc_plugin_get_enabled(plug))
                 {
                 printf("push remote\n");
-                q_async_queue_push(meta_commands, d);
+                g_async_queue_push(meta_commands, d);
                 printf("done\n");
                 }
                 else
@@ -971,10 +970,40 @@ static gboolean process_itterate(void)
      * TODO: try to match identical queries?
      */
     process_queue = g_list_remove(process_queue, d);
+    if(process_queue){
+        GList *iter = g_list_first(process_queue);
+        for(;iter;iter = g_list_next(iter))
+        {
+            meta_thread_data *d2 = iter->data;
+            if(!meta_compare_func(d,d2)){
+                printf("removing double query \n");
+                /* Remove from intput list */
+                iter = process_queue = g_list_remove(process_queue, d2);
+                /* if there is no old-type callback, only once is sufficient */
+                if(d2->callback)
+                {
+                    printf("Old fashion callback, push back in meta_result\n");
+                    /* Copy result */
+                    d2->result = d->result;
+                    d2->result_path = (d->result_path)?g_strdup(d->result_path):NULL;
+                    /* put result back */
+                    g_async_queue_push(meta_results, d2);		
+                }else{
+                    if(d2->edited) 
+                        mpd_freeSong(d2->edited);
+                    if(d2->song)
+                        mpd_freeSong(d2->song);
+                    q_free(d2);
+                }
+            }
+
+        }
+
+    }
     /**
      * push on handle result
      */
-    q_async_queue_push(meta_results, d);		
+    g_async_queue_push(meta_results, d);		
     /**
      * Call resuult handler 
      */
@@ -1081,30 +1110,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     mtd->index = 0;
     mtd->result = META_DATA_UNAVAILABLE;
     mtd->result_path = NULL;
-    /**
-     * Check if request is allready in queue
-     */
-    /* when using old api style, the request is commited anyway */
-    if(!callback)
-    {
-        /* if it is allready in the queue, there is no need to push it again
-         * because GmpcMetaWatcher signal will arrive at every widget
-         */
-        /*
-         * TODO: this misses items currently in the queue, try to catch that too.
-         */
-        q_async_queue_lock(meta_commands);
-        if(q_async_queue_has_data(meta_commands,(GCompareFunc)meta_compare_func, mtd))
-        {
-            q_async_queue_unlock(meta_commands);
-            mpd_freeSong(mtd->song);
-            mpd_freeSong(mtd->edited);
-            g_free(mtd);
-            return ret;
-        }
-        q_async_queue_unlock(meta_commands);
-    }
-
+  
     printf("adding to queue\n");
     if(process_queue == NULL) {
         process_queue = g_list_append(process_queue, mtd);
@@ -1500,6 +1506,3 @@ gmpcPlugin metadata_plug = {
     .plugin_type    = GMPC_INTERNALL,
     .pref           = &metadata_pref_plug
 };
-
-
-

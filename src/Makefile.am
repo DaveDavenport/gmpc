@@ -38,7 +38,6 @@ gmpc_SOURCES=\
 	url_fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
-	qlib/qasyncqueue.c\
 	bacon/bacon-message-connection.c\
 	advanced_search.c\
 	browsers/server-information.c\
@@ -187,7 +186,6 @@ EXTRA_DIST=\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
-		qlib/qasyncqueue.h\
 		bacon/bacon-message-connection.h\
 		advanced_search.h\
 		gmpc-version.h.in\
