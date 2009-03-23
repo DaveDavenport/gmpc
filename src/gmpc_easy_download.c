@@ -411,6 +411,7 @@ typedef struct {
 	int is_gzip;
 	int is_deflate;
 	z_stream *z;
+	gpointer extra_data;
 } _GEADAsyncHandler;
 static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 {
@@ -540,6 +541,16 @@ const char *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle
 		*length = (gint)d->length;
 	return d->data;
 }
+void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	d->extra_data = user_data;
+}
+gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	return d->extra_data;
+}
 
 void gmpc_easy_async_cancel(const GEADAsyncHandler * handle)
 {
@@ -591,6 +602,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	d->uri = g_strdup(uri);
 	d->callback = callback;
 	d->userdata = user_data;
+	d->extra_data = NULL;
 	soup_message_body_set_accumulate(msg->response_body, FALSE);
 	g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
 	g_signal_connect_after(msg, "got-headers", G_CALLBACK(gmpc_easy_async_headers_update), d);

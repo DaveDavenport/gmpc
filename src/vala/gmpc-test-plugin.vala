@@ -45,11 +45,14 @@ private class SongWindow : Gtk.Window {
         this.set_border_width(8);
     }
 
-    private void add_entry(string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
+    private void add_entry(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
     {
         Gtk.TreeIter iter;
         string a;
         a = "<b>%s</b>: %s".printf(_("Uri"),uri);
+        if(provider != null) {
+            a+="\n<b>%s</b>:  %s".printf(_("Provider"), provider);
+        }
         if(format != null)
         {
             a+="\n<b>%s</b>: %s".printf(_("Filetype"), format.get_name());
@@ -61,7 +64,7 @@ private class SongWindow : Gtk.Window {
 
         }
         int new_h, new_w;
-        if(pb.width > pb.height) {
+        if(pb.width < pb.height) {
             new_h = 150;
             new_w = (int)((150.0/(double)pb.height)*pb.width);
         }
@@ -92,7 +95,7 @@ private class SongWindow : Gtk.Window {
 
                 Gdk.Pixbuf pb = load.get_pixbuf();//new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); 
                 if(pb!= null)
-                    this.add_entry(handle.get_uri(),load.get_format(),pb);
+                    this.add_entry((string)handle.get_user_data(),handle.get_uri(),load.get_format(),pb);
             }catch (Error e) {
                 stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
 
@@ -130,7 +133,7 @@ private class SongWindow : Gtk.Window {
                 try{
                     Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
                     if(pb != null)
-                        add_entry(uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
+                        add_entry(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
                 }catch(Error e)
                 {
 
@@ -138,7 +141,10 @@ private class SongWindow : Gtk.Window {
 
             }else{
                 var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
-                this.downloads.append(h);
+                h.set_user_data(plugin_name);
+                if(h!=null)
+                    this.downloads.append(h);
+                else stdout.printf("async download returned NULL");
             }
         }
     }
@@ -181,7 +187,9 @@ private class SongWindow : Gtk.Window {
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
             }else{
                 var h = Gmpc.AsyncDownload.download(path, store_image); 
-                this.downloads.append(h);
+                if(h!=null)
+                    this.downloads.append(h);
+                else stdout.printf("async download returned NULL");
             }
 
         }
@@ -313,6 +321,7 @@ private class SongWindow : Gtk.Window {
         this.downloads.first();
         while(this.downloads != null){
             Gmpc.AsyncDownload.Handle handle = this.downloads.data;
+            
             stdout.printf("cancel download: %s\n", handle.get_uri());
             handle.cancel(); 
             this.downloads.first();

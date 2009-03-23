@@ -91,6 +91,12 @@ namespace Gmpc {
             public weak uchar[] get_data();
             [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
             public weak string get_uri();
+
+            [CCode (cname="gmpc_easy_handler_get_user_data", cheader_filename="gmpc_easy_download.h")]
+            public void * get_user_data();
+
+            [CCode (cname="gmpc_easy_handler_set_user_data", cheader_filename="gmpc_easy_download.h")]
+            public void set_user_data(void *user_data);
         }
 
 

@@ -74,6 +74,9 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 
 const char *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length);
 
+void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data);
+gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle);
+
 
 char *gmpc_easy_download_uri_escape(const char *part);
 #endif

@@ -27,7 +27,6 @@
 #include "gmpc_easy_download.h"
 
 static void retrieve_thread(void);
-long unsigned num_queries = 0;
 
 config_obj *cover_index= NULL;
 int meta_num_plugins=0;
@@ -36,6 +35,7 @@ gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
 GThread *meta_thread = NULL;
 
+GList *process_queue = NULL;
 static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, char **path);
 /**
  * This is queue is used to send commands to the retrieval queue
@@ -46,7 +46,6 @@ QAsyncQueue *meta_commands = NULL;
  */
 QAsyncQueue *meta_results = NULL;
 
-GMutex *meta_processing = NULL;
 
 typedef struct {
 	guint id;
@@ -600,7 +599,6 @@ void meta_data_init(void)
      */
     meta_results = q_async_queue_new();
 
-    meta_processing = g_mutex_new();
     /**
      * Create the retrieval thread
      */
@@ -682,9 +680,6 @@ void meta_data_destroy(void)
         q_async_queue_lock(meta_commands);
         while((mtd = q_async_queue_try_pop_unlocked(meta_commands)))
         {
-            mpd_freeSong(mtd->song);
-            mpd_freeSong(mtd->edited);
-            q_free(mtd);
         }
         /* Create the quit signal, this is just an empty request with id 0 */
         mtd = g_malloc0(sizeof(*mtd));
@@ -697,11 +692,23 @@ void meta_data_destroy(void)
         g_thread_join(meta_thread);
         /* cleanup */
         g_free(mtd);
+        if(process_queue) {
+            GList *iter;
+            for(iter = g_list_first(process_queue); iter; iter = iter->next)
+            {
+                meta_thread_data *mtd = iter->data;
+                g_list_foreach(mtd->list, (GFunc)g_free, NULL);
+                g_list_free(mtd->list);
+                mtd->list = mtd->iter = NULL;
+                mpd_freeSong(mtd->song);
+                mpd_freeSong(mtd->edited);
+                g_free(mtd);
+            }
+            g_list_free(process_queue);
+            process_queue = NULL;
+        }
+
         debug_printf(DEBUG_INFO,"Done..");
-    }
-    if(meta_processing) {
-        g_mutex_free(meta_processing);
-        meta_processing = NULL;
     }
     if(meta_commands){
         q_async_queue_unref(meta_commands);
@@ -728,7 +735,6 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
  */
 
 static gboolean process_itterate(void);
-GList *process_queue = NULL;
 static void retrieve_thread(void)
 {
     meta_thread_data *d;
@@ -981,19 +987,6 @@ static gboolean process_itterate(void)
     return FALSE;
 }
 
-static void start_process_queue(meta_thread_data *d)
-{
-    printf("adding to queue\n");
-    if(process_queue == NULL) {
-        process_queue = g_list_append(process_queue, d);
-        process_itterate();
-        return;
-    }
-    process_queue = g_list_append(process_queue, d);
-
-}
-
-
 /**
  * Function called by the "client" 
  */
@@ -1112,18 +1105,13 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         q_async_queue_unlock(meta_commands);
     }
 
-    /** push it to the other thread */
-
-    num_queries ++;
-    /* I should fix this */
-    test = g_mutex_trylock(meta_processing);
-    if(test)
-        g_mutex_unlock(meta_processing);
-
-    start_process_queue(mtd);
-    //q_async_queue_push(meta_commands, mtd);
-    /** clean reference to pointer, it's now to the other thread */
-    mtd = NULL;
+    printf("adding to queue\n");
+    if(process_queue == NULL) {
+        process_queue = g_list_append(process_queue, mtd);
+        g_idle_add(process_itterate, NULL);
+        return;
+    }
+    process_queue = g_list_append(process_queue, mtd);
 
     return ret;
 }
