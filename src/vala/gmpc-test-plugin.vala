@@ -35,9 +35,11 @@ private class SongWindow : Gtk.Window {
     private void *handle2 = null;
 
 
+    private Gtk.Label warning_label = null;
     private Gtk.Entry artist_entry;
     private Gtk.Entry album_entry;
     private Gtk.Button refresh = null;
+    private Gtk.ComboBox combo = null;
 
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
@@ -103,7 +105,10 @@ private class SongWindow : Gtk.Window {
         }
         
         if(this.handle == null && this.handle2 == null && this.downloads == null)
-            this.refresh.sensitive = true;
+        {
+        this.refresh.sensitive = true;
+        this.combo.sensitive = true;
+        }
 
     }
     public void callback(void *handle,string? plugin_name,GLib.List<string>? list)
@@ -115,7 +120,10 @@ private class SongWindow : Gtk.Window {
                 stdout.printf("done 1\n");
                 this.handle = null;
                 if(this.handle == null && this.downloads == null)
+                {
                     this.refresh.sensitive = true;
+                    this.combo.sensitive = true;
+                }
             }
             if(this.handle2 == handle)
             {
@@ -124,7 +132,10 @@ private class SongWindow : Gtk.Window {
 
 
                 if(this.handle == null && this.downloads == null)
+                {
+                    this.combo.sensitive = true;
                     this.refresh.sensitive = true;
+                }
             }
         }
         foreach(weak string uri in list)
@@ -217,8 +228,39 @@ private class SongWindow : Gtk.Window {
         if(this.handle == null && this.handle2 == null) {
             this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
             this.refresh.sensitive = false;
+            this.combo.sensitive = false;
         }
         
+    }
+    private void combo_box_changed(Gtk.ComboBox comb)
+    {
+        int active = comb.active;
+        this.model.clear();
+        this.album_entry.sensitive = false;
+        this.artist_entry.sensitive = false;
+        this.refresh.sensitive = false;
+        this.warning_label.hide();
+        if(active == 0)
+        {
+           this.query_type = Gmpc.MetaData.Type.ARTIST_ART;  
+           if(this.song.artist != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
+        }else {
+           this.query_type = Gmpc.MetaData.Type.ALBUM_ART;  
+
+           if(this.song.artist != null && this.song.album != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.album_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
+        }
+
     }
 
     SongWindow (MPD.Song song, Gmpc.MetaData.Type type) {
@@ -234,6 +276,7 @@ private class SongWindow : Gtk.Window {
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
         sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
         iv.set_model(this.model);
+        this.tree.rules_hint = true;
         
         var renderer = new Gtk.CellRendererPixbuf();
         var column = new Gtk.TreeViewColumn();
@@ -246,10 +289,9 @@ private class SongWindow : Gtk.Window {
         column = new Gtk.TreeViewColumn();
         column.pack_start(rendererpb,true);
         iv.append_column(column);
-        column.set_title(_("Url"));
+        column.set_title(_("Information"));
         column.add_attribute(rendererpb, "markup", 2);
 
-        vbox.pack_start(sw, true, true,0);
 
         /* Button */
         var hbox = new Gtk.HBox(false, 6);
@@ -265,9 +307,31 @@ private class SongWindow : Gtk.Window {
         vbox.pack_end(hbox, false, false,0);
 
         /** Change */
+        this.warning_label = new Gtk.Label("");
+        this.warning_label.set_markup("<span size='x-large'>%s</span>".printf(_("Insufficient information to store/fetch this metadata")));
+        this.warning_label.set_alignment(0.0f, 0.5f);
+        vbox.pack_start(this.warning_label, false, false, 0);
+        this.warning_label.hide();
+
         var group = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
         var qhbox = new Gtk.HBox(false, 6);
-        var label = new Gtk.Label(_("Artist"));
+        var label = new Gtk.Label("Type");
+
+        group.add_widget(label);
+        qhbox.pack_start(label, false,false,0);
+
+        this.combo = new Gtk.ComboBox.text(); 
+        qhbox.pack_start(this.combo, false,false,0);
+        this.combo.append_text(_("Artist art"));
+        this.combo.append_text(_("Album art"));
+
+        this.combo.changed += combo_box_changed;
+
+        vbox.pack_start(qhbox, false, false, 0);
+       
+        
+        qhbox = new Gtk.HBox(false, 6);
+        label = new Gtk.Label(_("Artist"));
         group.add_widget(label);
         qhbox.pack_start(label, false, false, 0);
         this.artist_entry = new Gtk.Entry();
@@ -276,30 +340,44 @@ private class SongWindow : Gtk.Window {
 
         vbox.pack_start(qhbox, false, false, 0);
        
-        if(type == Gmpc.MetaData.Type.ALBUM_ART)
+//        if(type == Gmpc.MetaData.Type.ALBUM_ART)
         {
             qhbox = new Gtk.HBox(false, 6);
             label = new Gtk.Label(_("Album"));
             group.add_widget(label);
             qhbox.pack_start(label, false, false, 0);
             this.album_entry = new Gtk.Entry();
-            this.album_entry.set_text(song.album);
+            if(song.album != null)
+                this.album_entry.set_text(song.album);
             qhbox.pack_start(this.album_entry, true, true, 0);
 
             vbox.pack_start(qhbox, false, false, 0);
         }
-        this.refresh = button = new Gtk.Button.from_stock("gtk-refresh");
+        if(type != Gmpc.MetaData.Type.ALBUM_ART)
+            this.album_entry.sensitive = false;
+
+
+        this.refresh = button = new Gtk.Button.with_label(_("Query"));
         var ali = new Gtk.Alignment(1.0f, 0.5f, 0.0f, 0.0f);
         ali.add(button);
         vbox.pack_start(ali, false, false, 0);
         button.clicked += refresh_query;
-        this.refresh.sensitive = false;
 
+
+
+        vbox.pack_start(sw, true, true,0);
         this.add(vbox);
         this.hide_on_delete();
         sw.add(iv);
         this.show_all();
 
+        if(type == Gmpc.MetaData.Type.ALBUM_ART) this.combo.set_active(1);
+        else this.combo.set_active(0);
+
+/*
+        this.refresh.sensitive = false;
+        this.combo.sensitive = false;
+        
         this.handle = Gmpc.MetaData.get_list(song, this.query_type, callback);
         stdout.printf("Query 1\n");
         if(this.song.albumartist != null){
@@ -308,6 +386,7 @@ private class SongWindow : Gtk.Window {
             stdout.printf("query 2\n");
             this.handle2 = Gmpc.MetaData.get_list(song2, this.query_type, callback);
         }
+        */
     }
     ~SongWindow() {
 
