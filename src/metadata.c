@@ -898,7 +898,7 @@ static gboolean process_itterate(void)
              * Query plugins, new type call in this thread.
              * old type, create new thread. 
              */
-            if(plug->old->metadata->get_uris != NULL)
+            if(gmpc_plugin_get_enabled(plug) && plug->old->metadata->get_uris != NULL)
             {
                 gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
             }
@@ -1418,9 +1418,9 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
         printf("Query plugin: %s\n", gmpc_plugin_get_name(plug));
-        if(plug->old && plug->old->metadata && plug->old->metadata->get_uris){
+        if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_uris){
             q->calls++;
-            plug->old->metadata->get_uris(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
+            gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
         }
         else g_idle_add(metadata_get_list_itterate_idle, q);
         return;
