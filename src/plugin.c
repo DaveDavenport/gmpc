@@ -123,6 +123,12 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
+        if(plug->metadata->get_image)
+        {
+            debug_printf(DEBUG_WARNING, "%s:  uses old metadata api\n", plug->name);
+
+
+        }
     }
     /* if there is a browser field, check validity */
     if(plug->browser)

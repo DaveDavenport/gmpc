@@ -92,7 +92,6 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 	char* _tmp0;
 	gint new_h;
 	gint new_w;
-	GdkPixbuf* _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (pb != NULL);
@@ -104,7 +103,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp1;
 		_tmp2 = NULL;
 		_tmp1 = NULL;
-		a = (_tmp2 = g_strconcat (a, _tmp1 = g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider), NULL), a = (g_free (a), NULL), _tmp2);
+		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
 		_tmp1 = (g_free (_tmp1), NULL);
 	}
 	if (format != NULL) {
@@ -112,7 +111,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp3;
 		_tmp4 = NULL;
 		_tmp3 = NULL;
-		a = (_tmp4 = g_strconcat (a, _tmp3 = g_strdup_printf ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format)), NULL), a = (g_free (a), NULL), _tmp4);
+		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_strdup_printf ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format))), NULL), a = (g_free (a), NULL), _tmp4);
 		_tmp3 = (g_free (_tmp3), NULL);
 		fprintf (stdout, "%s\n", gdk_pixbuf_format_get_name (format));
 	}
@@ -121,7 +120,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp5;
 		_tmp6 = NULL;
 		_tmp5 = NULL;
-		a = (_tmp6 = g_strconcat (a, _tmp5 = g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh")), NULL), a = (g_free (a), NULL), _tmp6);
+		a = (_tmp6 = g_strconcat (a, _tmp5 = (g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh"))), NULL), a = (g_free (a), NULL), _tmp6);
 		_tmp5 = (g_free (_tmp5), NULL);
 	}
 	new_h = 0;
@@ -134,15 +133,15 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		new_h = (gint) ((150.0 / ((double) gdk_pixbuf_get_width (pb))) * gdk_pixbuf_get_height (pb));
 	}
 	gtk_list_store_append (self->priv->model, &iter);
-	_tmp7 = NULL;
-	gtk_list_store_set (self->priv->model, &iter, 0, _tmp7 = gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
-	(_tmp7 == NULL) ? NULL : (_tmp7 = (g_object_unref (_tmp7), NULL));
+	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
 	a = (g_free (a), NULL);
 }
 
 
 void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status) {
 	GError * inner_error;
+	gboolean _tmp3;
+	gboolean _tmp4;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (handle != NULL);
 	inner_error = NULL;
@@ -212,7 +211,6 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 			{
 				fprintf (stdout, "Failed to load file: %s::%s\n", e->message, gmpc_easy_handler_get_uri (handle));
 				(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
-				return;
 			}
 		}
 		__finally0:
@@ -221,6 +219,21 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 			g_clear_error (&inner_error);
 			return;
 		}
+	}
+	_tmp3 = FALSE;
+	_tmp4 = FALSE;
+	if (self->priv->handle == NULL) {
+		_tmp4 = self->priv->handle2 == NULL;
+	} else {
+		_tmp4 = FALSE;
+	}
+	if (_tmp4) {
+		_tmp3 = self->priv->downloads == NULL;
+	} else {
+		_tmp3 = FALSE;
+	}
+	if (_tmp3) {
+		g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
 	}
 }
 
@@ -237,16 +250,30 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 	if (list == NULL) {
 		fprintf (stdout, "Done fetching\n");
 		if (self->priv->handle == handle) {
+			gboolean _tmp0;
 			fprintf (stdout, "done 1\n");
 			self->priv->handle = NULL;
+			_tmp0 = FALSE;
 			if (self->priv->handle == NULL) {
+				_tmp0 = self->priv->downloads == NULL;
+			} else {
+				_tmp0 = FALSE;
+			}
+			if (_tmp0) {
 				g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
 			}
 		}
 		if (self->priv->handle2 == handle) {
+			gboolean _tmp1;
 			fprintf (stdout, "done 1\n");
 			self->priv->handle2 = NULL;
+			_tmp1 = FALSE;
 			if (self->priv->handle == NULL) {
+				_tmp1 = self->priv->downloads == NULL;
+			} else {
+				_tmp1 = FALSE;
+			}
+			if (_tmp1) {
 				g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
 			}
 		}

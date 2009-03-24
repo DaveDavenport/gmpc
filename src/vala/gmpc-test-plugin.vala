@@ -98,11 +98,12 @@ private class SongWindow : Gtk.Window {
                     this.add_entry((string)handle.get_user_data(),handle.get_uri(),load.get_format(),pb);
             }catch (Error e) {
                 stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
-
-                return;
             }
 
         }
+        
+        if(this.handle == null && this.handle2 == null && this.downloads == null)
+            this.refresh.sensitive = true;
 
     }
     public void callback(void *handle,string? plugin_name,GLib.List<string>? list)
@@ -113,7 +114,7 @@ private class SongWindow : Gtk.Window {
             {
                 stdout.printf("done 1\n");
                 this.handle = null;
-                if(this.handle == null)
+                if(this.handle == null && this.downloads == null)
                     this.refresh.sensitive = true;
             }
             if(this.handle2 == handle)
@@ -122,7 +123,7 @@ private class SongWindow : Gtk.Window {
                 this.handle2 = null;
 
 
-                if(this.handle == null)
+                if(this.handle == null && this.downloads == null)
                     this.refresh.sensitive = true;
             }
         }
@@ -171,6 +172,7 @@ private class SongWindow : Gtk.Window {
 
             }
         }
+
     }
     private void
     set_metadata(Gtk.Button button)
