@@ -739,8 +739,9 @@ static void retrieve_thread(void)
     while((d = g_async_queue_pop(meta_commands)))
     {
 	    gchar *path = NULL;
-	    gmpcPluginParent *plug = meta_plugins[d->index];
+	    gmpcPluginParent *plug;
         if(d->id == 0) return;
+        plug = meta_plugins[d->index];
 
         printf("Try plugin:%i:%s\n", d->index,gmpc_plugin_get_name(plug));
 		d->result = gmpc_plugin_metadata_get_image(plug,d->edited, d->type&META_QUERY_DATA_TYPES, &path);
