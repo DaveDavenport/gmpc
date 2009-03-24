@@ -40,6 +40,7 @@ private class SongWindow : Gtk.Window {
     private Gtk.Entry album_entry;
     private Gtk.Button refresh = null;
     private Gtk.ComboBox combo = null;
+    private Gtk.ProgressBar bar = null;
 
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
@@ -165,7 +166,19 @@ private class SongWindow : Gtk.Window {
 
     public void store_image(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
-        if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
+        if(status == Gmpc.AsyncDownload.Status.PROGRESS){
+            weak uchar[] data =handle.get_data();
+            this.sensitive = false;
+            this.bar.show();
+            int64 total_size = handle.get_content_size(); 
+            if(data.length > 0 && total_size > 0){
+                double progress = data.length/(double)total_size;
+                this.bar.set_fraction(progress);
+                stdout.printf("fraction: %f\n", progress);
+            }
+            else this.bar.pulse();
+            return;
+        }
         this.downloads.remove(handle);
         stdout.printf("Aap noot mies: %s\n", handle.get_uri());
         if(status == Gmpc.AsyncDownload.Status.DONE)
@@ -183,6 +196,8 @@ private class SongWindow : Gtk.Window {
 
             }
         }
+        this.bar.hide();
+        this.sensitive = true;
 
     }
     private void
@@ -267,6 +282,11 @@ private class SongWindow : Gtk.Window {
         var vbox = new Gtk.VBox(false, 6);
         this.song = song;
         this.query_type = type;
+        
+        this.bar = new Gtk.ProgressBar();
+        vbox.pack_start(this.bar, false, false, 0);
+        this.bar.hide();
+        this.bar.no_show_all = true;
 
         this.model = new Gtk.ListStore(3,typeof(Gdk.Pixbuf), typeof(string),typeof(string));
         var sw = new Gtk.ScrolledWindow(null, null);

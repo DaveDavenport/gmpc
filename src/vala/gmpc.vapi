@@ -97,6 +97,9 @@ namespace Gmpc {
 
             [CCode (cname="gmpc_easy_handler_set_user_data", cheader_filename="gmpc_easy_download.h")]
             public void set_user_data(void *user_data);
+
+            [CCode (cname="gmpc_easy_handler_get_content_size", cheader_filename="gmpc_easy_download.h")]
+            public int64 get_content_size();
         }
 
 
