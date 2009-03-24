@@ -534,7 +534,7 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 }
 
 
-const char *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
+char *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
 {
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
 	if (length)
