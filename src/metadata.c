@@ -543,7 +543,6 @@ static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type
 static gboolean meta_data_handle_results(void)
 {
 	meta_thread_data *data = NULL;
-    int test = 0;
 	if(meta_thread == g_thread_self())
 	{
 		debug_printf(DEBUG_ERROR,"Crap, handled in wrong thread\n");
@@ -695,7 +694,7 @@ void meta_data_destroy(void)
             GList *iter;
             for(iter = g_list_first(process_queue); iter; iter = iter->next)
             {
-                meta_thread_data *mtd = iter->data;
+                mtd = iter->data;
                 g_list_foreach(mtd->list, (GFunc)g_free, NULL);
                 g_list_free(mtd->list);
                 mtd->list = mtd->iter = NULL;
@@ -739,15 +738,15 @@ static void retrieve_thread(void)
     meta_thread_data *d;
     while((d = g_async_queue_pop(meta_commands)))
     {
-        gmpcPluginParent *plug = meta_plugins[d->index];
+	    gchar *path = NULL;
+	    gmpcPluginParent *plug = meta_plugins[d->index];
         if(d->id == 0) return;
 
         printf("Try plugin:%i:%s\n", d->index,gmpc_plugin_get_name(plug));
-            gchar *path = NULL;
-            d->result = gmpc_plugin_metadata_get_image(plug,d->edited, d->type&META_QUERY_DATA_TYPES, &path);
-            printf("path: %s\n", (path)?path:"(null)");
-            d->result_path = path;
-        
+		d->result = gmpc_plugin_metadata_get_image(plug,d->edited, d->type&META_QUERY_DATA_TYPES, &path);
+		printf("path: %s\n", (path)?path:"(null)");
+		d->result_path = path;
+
 
         d->index++;
 
@@ -801,8 +800,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 static void result_itterate(GList *list, gpointer user_data)
 {
     meta_thread_data *d = (meta_thread_data *)user_data;
-    GList *iter;
-
 
     /**
      * This plugin didn't have a result
@@ -840,7 +837,7 @@ static void result_itterate(GList *list, gpointer user_data)
     
     }
     /* If type is text, store this in a file. */
-    else
+    else if (d->type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))
     {
         GError *error = NULL;
         gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL); 
@@ -856,7 +853,13 @@ static void result_itterate(GList *list, gpointer user_data)
             d->result_path = filename; 
             d->result = META_DATA_AVAILABLE;
         }
-    }
+	/* similar are stored in db */
+    }else {
+	    char *path = d->iter->data;
+	    d->result_path = (char *)path; 
+            d->iter->data = NULL;
+            d->result = META_DATA_AVAILABLE;
+    }	
 
     /* Free the list. */
     if(d->list)
@@ -1025,7 +1028,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     meta_thread_data *mtd = NULL;
     mpd_Song *song =NULL;
     guint id = 0;
-    int test = 0;
     /* TODO: Validate request */
 
     /**
@@ -1186,7 +1188,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
             const gchar *charset;
             g_get_charset (&charset);
             dirname = g_convert_with_fallback (song->artist, -1,
-                      charset, "UTF-8","-", NULL, NULL, &error);
+                      charset, "UTF-8",(char *)"-", NULL, NULL, &error);
         }
         //dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
         if(error) {
@@ -1479,7 +1481,6 @@ void metadata_get_list_cancel(gpointer data)
 }
 gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
 {
-    int i;
     MLQuery *q = g_malloc0(sizeof(*q));
     q->cancel =FALSE;
     q->index = 0;

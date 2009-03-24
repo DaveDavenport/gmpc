@@ -141,10 +141,12 @@ private class SongWindow : Gtk.Window {
 
             }else{
                 var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
-                h.set_user_data(plugin_name);
                 if(h!=null)
-                    this.downloads.append(h);
-                else stdout.printf("async download returned NULL");
+		{
+			h.set_user_data(plugin_name);
+			this.downloads.append(h);
+		} 
+               else stdout.printf("async download returned NULL");
             }
         }
     }

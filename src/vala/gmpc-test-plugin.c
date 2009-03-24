@@ -92,6 +92,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 	char* _tmp0;
 	gint new_h;
 	gint new_w;
+	GdkPixbuf* _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (pb != NULL);
@@ -103,7 +104,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp1;
 		_tmp2 = NULL;
 		_tmp1 = NULL;
-		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
+		a = (_tmp2 = g_strconcat (a, _tmp1 = g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider), NULL), a = (g_free (a), NULL), _tmp2);
 		_tmp1 = (g_free (_tmp1), NULL);
 	}
 	if (format != NULL) {
@@ -111,7 +112,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp3;
 		_tmp4 = NULL;
 		_tmp3 = NULL;
-		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_strdup_printf ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format))), NULL), a = (g_free (a), NULL), _tmp4);
+		a = (_tmp4 = g_strconcat (a, _tmp3 = g_strdup_printf ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format)), NULL), a = (g_free (a), NULL), _tmp4);
 		_tmp3 = (g_free (_tmp3), NULL);
 		fprintf (stdout, "%s\n", gdk_pixbuf_format_get_name (format));
 	}
@@ -120,7 +121,7 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		char* _tmp5;
 		_tmp6 = NULL;
 		_tmp5 = NULL;
-		a = (_tmp6 = g_strconcat (a, _tmp5 = (g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh"))), NULL), a = (g_free (a), NULL), _tmp6);
+		a = (_tmp6 = g_strconcat (a, _tmp5 = g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh")), NULL), a = (g_free (a), NULL), _tmp6);
 		_tmp5 = (g_free (_tmp5), NULL);
 	}
 	new_h = 0;
@@ -133,7 +134,9 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 		new_h = (gint) ((150.0 / ((double) gdk_pixbuf_get_width (pb))) * gdk_pixbuf_get_height (pb));
 	}
 	gtk_list_store_append (self->priv->model, &iter);
-	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
+	_tmp7 = NULL;
+	gtk_list_store_set (self->priv->model, &iter, 0, _tmp7 = gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
+	(_tmp7 == NULL) ? NULL : (_tmp7 = (g_object_unref (_tmp7), NULL));
 	a = (g_free (a), NULL);
 }
 
@@ -289,8 +292,8 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 				} else {
 					GEADAsyncHandler* h;
 					h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
-					gmpc_easy_handler_set_user_data (h, plugin_name);
 					if (h != NULL) {
+						gmpc_easy_handler_set_user_data (h, plugin_name);
 						self->priv->downloads = g_list_append (self->priv->downloads, h);
 					} else {
 						fprintf (stdout, "async download returned NULL");
