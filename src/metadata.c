@@ -796,8 +796,10 @@ static void result_itterate(GList *list, gpointer user_data)
             d->iter->data = NULL;
             d->result = META_DATA_AVAILABLE;
         }else{
-            gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
-            return;
+            if(gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d) != NULL)
+            {
+                return;
+            }
         }
     
     }
