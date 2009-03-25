@@ -233,7 +233,6 @@ static mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 static void meta_data_set_cache_real(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
 {
-    printf("saving: %i %s::%s\n", type, song->artist,path);
 	if(!song) return;
 	/**
 	 * Save the path for the album art
@@ -539,14 +538,12 @@ static MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type
 static gboolean meta_data_handle_results(void)
 {
 	meta_thread_data *data = NULL;
-    printf("replying result\n");
     /**
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
 	for(data = g_async_queue_try_pop(meta_results);data;
 			data = g_async_queue_try_pop(meta_results)) {	
-        printf("result: %s::%i::%s\n",data->song->artist, data->result, data->result_path);
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
  		if(data->callback)
 		{
@@ -743,15 +740,17 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         d->list = NULL;
         d->iter = NULL;
         d->index = meta_num_plugins;
-        printf("Saving filename: %i::%s\n", d->result,filename);
         process_itterate();
     }else{
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
             if(d->iter){
-                gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
-                return;
+                GEADAsyncHandler *handle = gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+                if(handle != NULL)
+                {
+                    return;
+                }
             }
         }
         g_list_foreach(d->list,(GFunc) g_free, NULL);
@@ -789,14 +788,13 @@ static void result_itterate(GList *list, gpointer user_data)
     if(d->type&(META_ARTIST_ART|META_ALBUM_ART))
     {
         const char *path = d->iter->data;
-
-        printf("New async downloading: %s\n", (const gchar *)d->iter->data);
         if(path[0] == '/') {
             d->result_path = (char *)path; 
             d->iter->data = NULL;
             d->result = META_DATA_AVAILABLE;
         }else{
-            if(gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d) != NULL)
+            GEADAsyncHandler *handle = gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+            if(handle != NULL)
             {
                 return;
             }
@@ -811,7 +809,6 @@ static void result_itterate(GList *list, gpointer user_data)
         g_file_set_contents(filename,(char *)d->iter->data, -1, &error);
         if(error)
         {
-            printf("Error: %s\n", error->message);
             g_error_free(error);
             error = NULL;
         }
@@ -858,10 +855,8 @@ static gboolean process_itterate(void)
 {
 
     meta_thread_data *d;
-    printf("Process itterate\n");
     /* If queue is empty, do nothing */
     if(process_queue == NULL){ 
-        printf("no more in queue\n");
         return FALSE;
     }
 
@@ -894,7 +889,6 @@ static gboolean process_itterate(void)
         {
             gmpcPluginParent *plug = meta_plugins[d->index];
     
-            printf("Calling: %s\n", gmpc_plugin_get_name(plug));
             /* TODO WRAP THIS */
             /**
              * Query plugins, new type call in this thread.
@@ -938,13 +932,11 @@ static gboolean process_itterate(void)
         {
             meta_thread_data *d2 = iter->data;
             if(!meta_compare_func(d,d2)){
-                printf("removing double query \n");
                 /* Remove from intput list */
                 iter = process_queue = g_list_remove(process_queue, d2);
                 /* if there is no old-type callback, only once is sufficient */
                 if(d2->callback)
                 {
-                    printf("Old fashion callback, push back in meta_result\n");
                     /* Copy result */
                     d2->result = d->result;
                     d2->result_path = (d->result_path)?g_strdup(d->result_path):NULL;
@@ -1072,7 +1064,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     mtd->result = META_DATA_UNAVAILABLE;
     mtd->result_path = NULL;
   
-    printf("adding to queue\n");
     if(process_queue == NULL) {
         process_queue = g_list_append(process_queue, mtd);
         g_idle_add((GSourceFunc)process_itterate, NULL);
@@ -1395,14 +1386,12 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     MLQuery *q = (MLQuery *)data;
     q->calls--;
     if(q->cancel){
-            printf("Cancel\n");
             if(list){
                 g_list_foreach(list,(GFunc) g_free, NULL);
                 g_list_free(list);
             }
             if(q == 0)
             {
-                printf("Cleaning\n");
                 mpd_freeSong(q->song);
                 g_free(q);
             }
@@ -1419,7 +1408,6 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     {
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
-        printf("Query plugin: %s\n", gmpc_plugin_get_name(plug));
         if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_uris){
             q->calls++;
             gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
