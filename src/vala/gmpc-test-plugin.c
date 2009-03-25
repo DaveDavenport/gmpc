@@ -47,9 +47,11 @@ struct _SongWindowPrivate {
 	GtkLabel* warning_label;
 	GtkEntry* artist_entry;
 	GtkEntry* album_entry;
+	GtkEntry* title_entry;
 	GtkButton* refresh;
 	GtkComboBox* combo;
 	GtkProgressBar* bar;
+	GtkTreeViewColumn* column;
 };
 
 #define SONG_WINDOW_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_SONG_WINDOW, SongWindowPrivate))
@@ -57,7 +59,8 @@ enum  {
 	SONG_WINDOW_DUMMY_PROPERTY
 };
 #define SONG_WINDOW_some_unique_name VERSION
-static void song_window_add_entry (SongWindow* self, const char* provider, const char* uri, GdkPixbufFormat* format, GdkPixbuf* pb);
+static void song_window_add_entry_image (SongWindow* self, const char* provider, const char* uri, GdkPixbufFormat* format, GdkPixbuf* pb);
+static void song_window_add_entry_text (SongWindow* self, const char* provider, const char* uri, const char* text);
 static void _song_window_image_downloaded_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
 static void _song_window_store_image_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
 static void song_window_set_metadata (SongWindow* self, GtkButton* button);
@@ -91,7 +94,7 @@ static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_ifac
 
 
 
-static void song_window_add_entry (SongWindow* self, const char* provider, const char* uri, GdkPixbufFormat* format, GdkPixbuf* pb) {
+static void song_window_add_entry_image (SongWindow* self, const char* provider, const char* uri, GdkPixbufFormat* format, GdkPixbuf* pb) {
 	GtkTreeIter iter = {0};
 	char* a;
 	char* _tmp0;
@@ -143,10 +146,34 @@ static void song_window_add_entry (SongWindow* self, const char* provider, const
 }
 
 
+static void song_window_add_entry_text (SongWindow* self, const char* provider, const char* uri, const char* text) {
+	GtkTreeIter iter = {0};
+	char* a;
+	char* _tmp0;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (uri != NULL);
+	g_return_if_fail (text != NULL);
+	a = NULL;
+	_tmp0 = NULL;
+	a = (_tmp0 = g_strdup_printf ("<b>%s</b>: %s", _ ("Uri"), uri), a = (g_free (a), NULL), _tmp0);
+	if (provider != NULL) {
+		char* _tmp2;
+		char* _tmp1;
+		_tmp2 = NULL;
+		_tmp1 = NULL;
+		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
+		_tmp1 = (g_free (_tmp1), NULL);
+	}
+	gtk_list_store_append (self->priv->model, &iter);
+	gtk_list_store_set (self->priv->model, &iter, 3, text, 1, uri, 2, a, -1, -1);
+	a = (g_free (a), NULL);
+}
+
+
 void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* handle, GEADStatus status) {
 	GError * inner_error;
-	gboolean _tmp3;
 	gboolean _tmp4;
+	gboolean _tmp5;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (handle != NULL);
 	inner_error = NULL;
@@ -161,22 +188,62 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 		gint data_length1;
 		gint _tmp0;
 		guchar* data;
+		gboolean _tmp2;
 		_tmp1 = NULL;
 		data = (_tmp1 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = _tmp0, data_size = data_length1, _tmp1);
-		{
-			GdkPixbufLoader* load;
-			GdkPixbuf* _tmp2;
-			GdkPixbuf* pb;
-			load = gdk_pixbuf_loader_new ();
+		_tmp2 = FALSE;
+		if (self->priv->query_type == META_ALBUM_ART) {
+			_tmp2 = TRUE;
+		} else {
+			_tmp2 = self->priv->query_type == META_ARTIST_ART;
+		}
+		if (_tmp2) {
 			{
-				gdk_pixbuf_loader_write (load, data, data_length1, &inner_error);
-				if (inner_error != NULL) {
-					goto __catch1_g_error;
-					goto __finally1;
+				GdkPixbufLoader* load;
+				GdkPixbuf* _tmp3;
+				GdkPixbuf* pb;
+				load = gdk_pixbuf_loader_new ();
+				{
+					gdk_pixbuf_loader_write (load, data, data_length1, &inner_error);
+					if (inner_error != NULL) {
+						goto __catch1_g_error;
+						goto __finally1;
+					}
 				}
+				goto __finally1;
+				__catch1_g_error:
+				{
+					GError * e;
+					e = inner_error;
+					inner_error = NULL;
+					{
+						fprintf (stdout, "Failed to load file: %s::%s\n", e->message, gmpc_easy_handler_get_uri (handle));
+						(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+					}
+				}
+				__finally1:
+				if (inner_error != NULL) {
+					(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
+					goto __catch0_g_error;
+					goto __finally0;
+				}
+				gdk_pixbuf_loader_close (load, &inner_error);
+				if (inner_error != NULL) {
+					(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
+					goto __catch0_g_error;
+					goto __finally0;
+				}
+				_tmp3 = NULL;
+				pb = (_tmp3 = gdk_pixbuf_loader_get_pixbuf (load), (_tmp3 == NULL) ? NULL : g_object_ref (_tmp3));
+				/*new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); */
+				if (pb != NULL) {
+					song_window_add_entry_image (self, (const char*) gmpc_easy_handler_get_user_data (handle), gmpc_easy_handler_get_uri (handle), gdk_pixbuf_loader_get_format (load), pb);
+				}
+				(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
+				(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
 			}
-			goto __finally1;
-			__catch1_g_error:
+			goto __finally0;
+			__catch0_g_error:
 			{
 				GError * e;
 				e = inner_error;
@@ -186,58 +253,29 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 					(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
 				}
 			}
-			__finally1:
+			__finally0:
 			if (inner_error != NULL) {
-				(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
-				goto __catch0_g_error;
-				goto __finally0;
+				g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+				g_clear_error (&inner_error);
+				return;
 			}
-			gdk_pixbuf_loader_close (load, &inner_error);
-			if (inner_error != NULL) {
-				(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
-				goto __catch0_g_error;
-				goto __finally0;
-			}
-			_tmp2 = NULL;
-			pb = (_tmp2 = gdk_pixbuf_loader_get_pixbuf (load), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2));
-			/*new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); */
-			if (pb != NULL) {
-				song_window_add_entry (self, (const char*) gmpc_easy_handler_get_user_data (handle), gmpc_easy_handler_get_uri (handle), gdk_pixbuf_loader_get_format (load), pb);
-			}
-			(load == NULL) ? NULL : (load = (g_object_unref (load), NULL));
-			(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
-		}
-		goto __finally0;
-		__catch0_g_error:
-		{
-			GError * e;
-			e = inner_error;
-			inner_error = NULL;
-			{
-				fprintf (stdout, "Failed to load file: %s::%s\n", e->message, gmpc_easy_handler_get_uri (handle));
-				(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
-			}
-		}
-		__finally0:
-		if (inner_error != NULL) {
-			g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
-			g_clear_error (&inner_error);
-			return;
+		} else {
+			song_window_add_entry_text (self, (const char*) gmpc_easy_handler_get_user_data (handle), gmpc_easy_handler_get_uri (handle), (const char*) data);
 		}
 	}
-	_tmp3 = FALSE;
 	_tmp4 = FALSE;
+	_tmp5 = FALSE;
 	if (self->priv->handle == NULL) {
-		_tmp4 = self->priv->handle2 == NULL;
+		_tmp5 = self->priv->handle2 == NULL;
+	} else {
+		_tmp5 = FALSE;
+	}
+	if (_tmp5) {
+		_tmp4 = self->priv->downloads == NULL;
 	} else {
 		_tmp4 = FALSE;
 	}
 	if (_tmp4) {
-		_tmp3 = self->priv->downloads == NULL;
-	} else {
-		_tmp3 = FALSE;
-	}
-	if (_tmp3) {
 		g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
 		g_object_set ((GtkWidget*) self->priv->combo, "sensitive", TRUE, NULL);
 	}
@@ -294,45 +332,57 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 			const char* uri;
 			uri = (const char*) uri_it->data;
 			{
+				gboolean _tmp2;
 				fprintf (stdout, "Uri: %s\n", uri);
-				if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
-					{
-						GdkPixbuf* pb;
-						pb = gdk_pixbuf_new_from_file (uri, &inner_error);
-						if (inner_error != NULL) {
-							goto __catch2_g_error;
-							goto __finally2;
-						}
-						if (pb != NULL) {
-							song_window_add_entry (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, NULL, NULL), pb);
-						}
-						(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
-					}
-					goto __finally2;
-					__catch2_g_error:
-					{
-						GError * e;
-						e = inner_error;
-						inner_error = NULL;
+				_tmp2 = FALSE;
+				if (self->priv->query_type == META_ALBUM_ART) {
+					_tmp2 = TRUE;
+				} else {
+					_tmp2 = self->priv->query_type == META_ARTIST_ART;
+				}
+				if (_tmp2) {
+					if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
 						{
-							(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+							GdkPixbuf* pb;
+							pb = gdk_pixbuf_new_from_file (uri, &inner_error);
+							if (inner_error != NULL) {
+								goto __catch2_g_error;
+								goto __finally2;
+							}
+							if (pb != NULL) {
+								song_window_add_entry_image (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, NULL, NULL), pb);
+							}
+							(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
 						}
-					}
-					__finally2:
-					if (inner_error != NULL) {
-						g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
-						g_clear_error (&inner_error);
-						return;
+						goto __finally2;
+						__catch2_g_error:
+						{
+							GError * e;
+							e = inner_error;
+							inner_error = NULL;
+							{
+								(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+							}
+						}
+						__finally2:
+						if (inner_error != NULL) {
+							g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+							g_clear_error (&inner_error);
+							return;
+						}
+					} else {
+						GEADAsyncHandler* h;
+						h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
+						if (h != NULL) {
+							gmpc_easy_handler_set_user_data (h, plugin_name);
+							self->priv->downloads = g_list_append (self->priv->downloads, h);
+						} else {
+							fprintf (stdout, "async download returned NULL");
+						}
 					}
 				} else {
-					GEADAsyncHandler* h;
-					h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
-					if (h != NULL) {
-						gmpc_easy_handler_set_user_data (h, plugin_name);
-						self->priv->downloads = g_list_append (self->priv->downloads, h);
-					} else {
-						fprintf (stdout, "async download returned NULL");
-					}
+					fprintf (stdout, "add txt entry\n");
+					song_window_add_entry_text (self, plugin_name, "n/a", uri);
 				}
 			}
 		}
@@ -385,7 +435,7 @@ void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, 
 		char* file;
 		_tmp4 = NULL;
 		data = (_tmp4 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp3), data_length1 = _tmp3, data_size = data_length1, _tmp4);
-		file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, "jpg");
+		file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, NULL);
 		{
 			fprintf (stdout, "Storing into: %s\n", file);
 			g_file_set_contents (file, (const char*) data, (glong) data_length1, &inner_error);
@@ -427,6 +477,7 @@ static void _song_window_store_image_gmpc_async_download_callback (const GEADAsy
 
 
 static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
+	GError * inner_error;
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0;
 	GtkTreeSelection* sel;
@@ -437,6 +488,7 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 	GtkTreeModel* _tmp1;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
+	inner_error = NULL;
 	_tmp0 = NULL;
 	sel = (_tmp0 = gtk_tree_view_get_selection (self->priv->tree), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	path = NULL;
@@ -444,20 +496,68 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 	_tmp3 = NULL;
 	_tmp1 = NULL;
 	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), self->priv->model = (_tmp3 = (_tmp4 = (GtkListStore*) _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp3), _tmp2)) {
+		gboolean _tmp5;
 		gtk_tree_model_get ((GtkTreeModel*) self->priv->model, &iter, 1, &path, -1);
 		fprintf (stdout, "clicked %s\n", path);
-		if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
-			meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
+		_tmp5 = FALSE;
+		if (self->priv->query_type == META_ALBUM_ART) {
+			_tmp5 = TRUE;
 		} else {
-			GEADAsyncHandler* h;
-			h = gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);
-			if (h != NULL) {
-				self->priv->downloads = g_list_append (self->priv->downloads, h);
+			_tmp5 = self->priv->query_type == META_ARTIST_ART;
+		}
+		if (_tmp5) {
+			if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
+				meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
 			} else {
-				fprintf (stdout, "async download returned NULL");
+				GEADAsyncHandler* h;
+				h = gmpc_easy_async_downloader (path, _song_window_store_image_gmpc_async_download_callback, self);
+				if (h != NULL) {
+					self->priv->downloads = g_list_append (self->priv->downloads, h);
+				} else {
+					fprintf (stdout, "async download returned NULL");
+				}
 			}
+		} else {
+			char* lyric;
+			char* file;
+			lyric = NULL;
+			gtk_tree_model_get ((GtkTreeModel*) self->priv->model, &iter, 3, &lyric, -1);
+			file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, NULL);
+			{
+				fprintf (stdout, "Storing into: %s\n", file);
+				g_file_set_contents (file, lyric, (glong) (-1), &inner_error);
+				if (inner_error != NULL) {
+					goto __catch4_g_error;
+					goto __finally4;
+				}
+				meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
+			}
+			goto __finally4;
+			__catch4_g_error:
+			{
+				GError * e;
+				e = inner_error;
+				inner_error = NULL;
+				{
+					(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+				}
+			}
+			__finally4:
+			if (inner_error != NULL) {
+				lyric = (g_free (lyric), NULL);
+				file = (g_free (file), NULL);
+				(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+				path = (g_free (path), NULL);
+				g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+				g_clear_error (&inner_error);
+				return;
+			}
+			lyric = (g_free (lyric), NULL);
+			file = (g_free (file), NULL);
 		}
 	}
 	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
@@ -482,7 +582,11 @@ void song_window_refresh_query (SongWindow* self, GtkButton* button) {
 	mpd_Song* ss;
 	char* _tmp2;
 	const char* _tmp1;
-	gboolean _tmp5;
+	char* _tmp4;
+	const char* _tmp3;
+	char* _tmp6;
+	const char* _tmp5;
+	gboolean _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
 	gtk_list_store_clear (self->priv->model);
@@ -491,20 +595,19 @@ void song_window_refresh_query (SongWindow* self, GtkButton* button) {
 	_tmp2 = NULL;
 	_tmp1 = NULL;
 	ss->artist = (_tmp2 = (_tmp1 = gtk_entry_get_text (self->priv->artist_entry), (_tmp1 == NULL) ? NULL : g_strdup (_tmp1)), ss->artist = (g_free (ss->artist), NULL), _tmp2);
-	if (self->priv->query_type == META_ALBUM_ART) {
-		char* _tmp4;
-		const char* _tmp3;
-		_tmp4 = NULL;
-		_tmp3 = NULL;
-		ss->album = (_tmp4 = (_tmp3 = gtk_entry_get_text (self->priv->album_entry), (_tmp3 == NULL) ? NULL : g_strdup (_tmp3)), ss->album = (g_free (ss->album), NULL), _tmp4);
-	}
-	_tmp5 = FALSE;
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	ss->album = (_tmp4 = (_tmp3 = gtk_entry_get_text (self->priv->album_entry), (_tmp3 == NULL) ? NULL : g_strdup (_tmp3)), ss->album = (g_free (ss->album), NULL), _tmp4);
+	_tmp6 = NULL;
+	_tmp5 = NULL;
+	ss->title = (_tmp6 = (_tmp5 = gtk_entry_get_text (self->priv->title_entry), (_tmp5 == NULL) ? NULL : g_strdup (_tmp5)), ss->title = (g_free (ss->title), NULL), _tmp6);
+	_tmp7 = FALSE;
 	if (self->priv->handle == NULL) {
-		_tmp5 = self->priv->handle2 == NULL;
+		_tmp7 = self->priv->handle2 == NULL;
 	} else {
-		_tmp5 = FALSE;
+		_tmp7 = FALSE;
 	}
-	if (_tmp5) {
+	if (_tmp7) {
 		self->priv->handle = metadata_get_list (ss, self->priv->query_type, _song_window_callback_gmpc_meta_data_callback, self);
 		g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", FALSE, NULL);
 		g_object_set ((GtkWidget*) self->priv->combo, "sensitive", FALSE, NULL);
@@ -519,10 +622,18 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 	g_return_if_fail (comb != NULL);
 	active = gtk_combo_box_get_active (comb);
 	gtk_list_store_clear (self->priv->model);
+	g_object_set ((GtkWidget*) self->priv->title_entry, "sensitive", FALSE, NULL);
 	g_object_set ((GtkWidget*) self->priv->album_entry, "sensitive", FALSE, NULL);
 	g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", FALSE, NULL);
 	g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", FALSE, NULL);
 	gtk_widget_hide ((GtkWidget*) self->priv->warning_label);
+	if (self->priv->column != NULL) {
+		GtkTreeViewColumn* _tmp0;
+		gtk_tree_view_remove_column (self->priv->tree, self->priv->column);
+		gtk_object_destroy ((GtkObject*) self->priv->column);
+		_tmp0 = NULL;
+		self->priv->column = (_tmp0 = NULL, (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp0);
+	}
 	if (active == 0) {
 		self->priv->query_type = META_ARTIST_ART;
 		if (self->priv->song->artist != NULL) {
@@ -532,21 +643,64 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 			gtk_widget_show ((GtkWidget*) self->priv->warning_label);
 		}
 	} else {
-		gboolean _tmp0;
-		self->priv->query_type = META_ALBUM_ART;
-		_tmp0 = FALSE;
-		if (self->priv->song->artist != NULL) {
-			_tmp0 = self->priv->song->album != NULL;
+		if (active == 1) {
+			gboolean _tmp1;
+			self->priv->query_type = META_ALBUM_ART;
+			_tmp1 = FALSE;
+			if (self->priv->song->artist != NULL) {
+				_tmp1 = self->priv->song->album != NULL;
+			} else {
+				_tmp1 = FALSE;
+			}
+			if (_tmp1) {
+				g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
+				g_object_set ((GtkWidget*) self->priv->album_entry, "sensitive", TRUE, NULL);
+				g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
+			} else {
+				gtk_widget_show ((GtkWidget*) self->priv->warning_label);
+			}
 		} else {
-			_tmp0 = FALSE;
+			if (active == 2) {
+				gboolean _tmp2;
+				self->priv->query_type = META_SONG_TXT;
+				_tmp2 = FALSE;
+				if (self->priv->song->artist != NULL) {
+					_tmp2 = self->priv->song->title != NULL;
+				} else {
+					_tmp2 = FALSE;
+				}
+				if (_tmp2) {
+					g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
+					g_object_set ((GtkWidget*) self->priv->title_entry, "sensitive", TRUE, NULL);
+					g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
+				} else {
+					gtk_widget_show ((GtkWidget*) self->priv->warning_label);
+				}
+			}
 		}
-		if (_tmp0) {
-			g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
-			g_object_set ((GtkWidget*) self->priv->album_entry, "sensitive", TRUE, NULL);
-			g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
-		} else {
-			gtk_widget_show ((GtkWidget*) self->priv->warning_label);
-		}
+	}
+	if (active < 2) {
+		GtkCellRendererPixbuf* renderer;
+		GtkTreeViewColumn* _tmp3;
+		renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
+		_tmp3 = NULL;
+		self->priv->column = (_tmp3 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp3);
+		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
+		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
+		gtk_tree_view_column_set_title (self->priv->column, _ ("Cover"));
+		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, "pixbuf", 0);
+		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
+	} else {
+		GtkCellRendererText* renderer;
+		GtkTreeViewColumn* _tmp4;
+		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
+		_tmp4 = NULL;
+		self->priv->column = (_tmp4 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp4);
+		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
+		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
+		gtk_tree_view_column_set_title (self->priv->column, _ ("Lyric"));
+		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, "text", 3);
+		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	}
 }
 
@@ -582,25 +736,23 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	GtkTreeView* iv;
 	GtkTreeView* _tmp5;
 	GtkTreeView* _tmp4;
-	GtkCellRendererPixbuf* renderer;
-	GtkTreeViewColumn* column;
 	GtkCellRendererText* rendererpb;
-	GtkTreeViewColumn* _tmp6;
+	GtkTreeViewColumn* column;
 	GtkHBox* hbox;
 	GtkButton* button;
-	GtkButton* _tmp7;
-	GtkLabel* _tmp8;
-	char* _tmp9;
+	GtkButton* _tmp6;
+	GtkLabel* _tmp7;
+	char* _tmp8;
 	GtkSizeGroup* group;
 	GtkHBox* qhbox;
 	GtkLabel* label;
-	GtkComboBox* _tmp10;
-	GtkHBox* _tmp11;
-	GtkLabel* _tmp12;
-	GtkEntry* _tmp13;
+	GtkComboBox* _tmp9;
+	GtkHBox* _tmp10;
+	GtkLabel* _tmp11;
+	GtkEntry* _tmp12;
+	GtkButton* _tmp21;
+	GtkButton* _tmp20;
 	GtkButton* _tmp19;
-	GtkButton* _tmp18;
-	GtkButton* _tmp17;
 	GtkAlignment* ali;
 	g_return_val_if_fail (song != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
@@ -615,7 +767,7 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_widget_hide ((GtkWidget*) self->priv->bar);
 	gtk_widget_set_no_show_all ((GtkWidget*) self->priv->bar, TRUE);
 	_tmp3 = NULL;
-	self->priv->model = (_tmp3 = gtk_list_store_new (3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, NULL), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp3);
+	self->priv->model = (_tmp3 = gtk_list_store_new (4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, NULL), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp3);
 	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
 	iv = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new ());
 	_tmp5 = NULL;
@@ -625,15 +777,8 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
 	gtk_tree_view_set_model (iv, (GtkTreeModel*) self->priv->model);
 	gtk_tree_view_set_rules_hint (self->priv->tree, TRUE);
-	renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
-	column = g_object_ref_sink (gtk_tree_view_column_new ());
-	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
-	gtk_tree_view_append_column (iv, column);
-	gtk_tree_view_column_set_title (column, _ ("Cover"));
-	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "pixbuf", 0);
 	rendererpb = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
-	_tmp6 = NULL;
-	column = (_tmp6 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp6);
+	column = g_object_ref_sink (gtk_tree_view_column_new ());
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) rendererpb, TRUE);
 	gtk_tree_view_append_column (iv, column);
 	gtk_tree_view_column_set_title (column, _ ("Information"));
@@ -642,16 +787,16 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-quit"));
 	g_signal_connect_object (button, "clicked", (GCallback) _song_window_destroy_popup_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
-	_tmp7 = NULL;
-	button = (_tmp7 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("Set cover")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp7);
+	_tmp6 = NULL;
+	button = (_tmp6 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("Set cover")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp6);
 	g_signal_connect_object (button, "clicked", (GCallback) _song_window_set_metadata_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_end ((GtkBox*) vbox, (GtkWidget*) hbox, FALSE, FALSE, (guint) 0);
+	_tmp7 = NULL;
+	self->priv->warning_label = (_tmp7 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (self->priv->warning_label == NULL) ? NULL : (self->priv->warning_label = (g_object_unref (self->priv->warning_label), NULL)), _tmp7);
 	_tmp8 = NULL;
-	self->priv->warning_label = (_tmp8 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (self->priv->warning_label == NULL) ? NULL : (self->priv->warning_label = (g_object_unref (self->priv->warning_label), NULL)), _tmp8);
-	_tmp9 = NULL;
-	gtk_label_set_markup (self->priv->warning_label, _tmp9 = g_strdup_printf ("<span size='x-large'>%s</span>", _ ("Insufficient information to store/fetch this metadata")));
-	_tmp9 = (g_free (_tmp9), NULL);
+	gtk_label_set_markup (self->priv->warning_label, _tmp8 = g_strdup_printf ("<span size='x-large'>%s</span>", _ ("Insufficient information to store/fetch this metadata")));
+	_tmp8 = (g_free (_tmp8), NULL);
 	gtk_misc_set_alignment ((GtkMisc*) self->priv->warning_label, 0.0f, 0.5f);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) self->priv->warning_label, FALSE, FALSE, (guint) 0);
 	gtk_widget_hide ((GtkWidget*) self->priv->warning_label);
@@ -660,49 +805,68 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Type"));
 	gtk_size_group_add_widget (group, (GtkWidget*) label);
 	gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	_tmp10 = NULL;
-	self->priv->combo = (_tmp10 = g_object_ref_sink ((GtkComboBox*) gtk_combo_box_new_text ()), (self->priv->combo == NULL) ? NULL : (self->priv->combo = (g_object_unref (self->priv->combo), NULL)), _tmp10);
+	_tmp9 = NULL;
+	self->priv->combo = (_tmp9 = g_object_ref_sink ((GtkComboBox*) gtk_combo_box_new_text ()), (self->priv->combo == NULL) ? NULL : (self->priv->combo = (g_object_unref (self->priv->combo), NULL)), _tmp9);
 	gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) self->priv->combo, FALSE, FALSE, (guint) 0);
 	gtk_combo_box_append_text (self->priv->combo, _ ("Artist art"));
 	gtk_combo_box_append_text (self->priv->combo, _ ("Album art"));
+	gtk_combo_box_append_text (self->priv->combo, _ ("Song Lyrics"));
 	g_signal_connect_object (self->priv->combo, "changed", (GCallback) _song_window_combo_box_changed_gtk_combo_box_changed, self, 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
+	_tmp10 = NULL;
+	qhbox = (_tmp10 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (qhbox == NULL) ? NULL : (qhbox = (g_object_unref (qhbox), NULL)), _tmp10);
 	_tmp11 = NULL;
-	qhbox = (_tmp11 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (qhbox == NULL) ? NULL : (qhbox = (g_object_unref (qhbox), NULL)), _tmp11);
-	_tmp12 = NULL;
-	label = (_tmp12 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Artist"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp12);
+	label = (_tmp11 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Artist"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp11);
 	gtk_size_group_add_widget (group, (GtkWidget*) label);
 	gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	_tmp13 = NULL;
-	self->priv->artist_entry = (_tmp13 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->artist_entry == NULL) ? NULL : (self->priv->artist_entry = (g_object_unref (self->priv->artist_entry), NULL)), _tmp13);
+	_tmp12 = NULL;
+	self->priv->artist_entry = (_tmp12 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->artist_entry == NULL) ? NULL : (self->priv->artist_entry = (g_object_unref (self->priv->artist_entry), NULL)), _tmp12);
 	gtk_entry_set_text (self->priv->artist_entry, song->artist);
 	gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) self->priv->artist_entry, TRUE, TRUE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
 	{
-		GtkHBox* _tmp14;
-		GtkLabel* _tmp15;
-		GtkEntry* _tmp16;
+		GtkHBox* _tmp13;
+		GtkLabel* _tmp14;
+		GtkEntry* _tmp15;
+		_tmp13 = NULL;
+		qhbox = (_tmp13 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (qhbox == NULL) ? NULL : (qhbox = (g_object_unref (qhbox), NULL)), _tmp13);
 		_tmp14 = NULL;
-		qhbox = (_tmp14 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (qhbox == NULL) ? NULL : (qhbox = (g_object_unref (qhbox), NULL)), _tmp14);
-		_tmp15 = NULL;
-		label = (_tmp15 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Album"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp15);
+		label = (_tmp14 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Album"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp14);
 		gtk_size_group_add_widget (group, (GtkWidget*) label);
 		gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-		_tmp16 = NULL;
-		self->priv->album_entry = (_tmp16 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->album_entry == NULL) ? NULL : (self->priv->album_entry = (g_object_unref (self->priv->album_entry), NULL)), _tmp16);
+		_tmp15 = NULL;
+		self->priv->album_entry = (_tmp15 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->album_entry == NULL) ? NULL : (self->priv->album_entry = (g_object_unref (self->priv->album_entry), NULL)), _tmp15);
 		if (song->album != NULL) {
 			gtk_entry_set_text (self->priv->album_entry, song->album);
 		}
 		gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) self->priv->album_entry, TRUE, TRUE, (guint) 0);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
 	}
+	{
+		GtkHBox* _tmp16;
+		GtkLabel* _tmp17;
+		GtkEntry* _tmp18;
+		_tmp16 = NULL;
+		qhbox = (_tmp16 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (qhbox == NULL) ? NULL : (qhbox = (g_object_unref (qhbox), NULL)), _tmp16);
+		_tmp17 = NULL;
+		label = (_tmp17 = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Title"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp17);
+		gtk_size_group_add_widget (group, (GtkWidget*) label);
+		gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+		_tmp18 = NULL;
+		self->priv->title_entry = (_tmp18 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->title_entry == NULL) ? NULL : (self->priv->title_entry = (g_object_unref (self->priv->title_entry), NULL)), _tmp18);
+		if (song->title != NULL) {
+			gtk_entry_set_text (self->priv->title_entry, song->title);
+		}
+		gtk_box_pack_start ((GtkBox*) qhbox, (GtkWidget*) self->priv->title_entry, TRUE, TRUE, (guint) 0);
+		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
+	}
 	if (type != META_ALBUM_ART) {
 		g_object_set ((GtkWidget*) self->priv->album_entry, "sensitive", FALSE, NULL);
 	}
+	_tmp21 = NULL;
+	_tmp20 = NULL;
 	_tmp19 = NULL;
-	_tmp18 = NULL;
-	_tmp17 = NULL;
-	self->priv->refresh = (_tmp19 = (_tmp18 = button = (_tmp17 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Query"))), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp17), (_tmp18 == NULL) ? NULL : g_object_ref (_tmp18)), (self->priv->refresh == NULL) ? NULL : (self->priv->refresh = (g_object_unref (self->priv->refresh), NULL)), _tmp19);
+	self->priv->refresh = (_tmp21 = (_tmp20 = button = (_tmp19 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Query"))), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp19), (_tmp20 == NULL) ? NULL : g_object_ref (_tmp20)), (self->priv->refresh == NULL) ? NULL : (self->priv->refresh = (g_object_unref (self->priv->refresh), NULL)), _tmp21);
 	ali = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (1.0f, 0.5f, 0.0f, 0.0f));
 	gtk_container_add ((GtkContainer*) ali, (GtkWidget*) button);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
@@ -765,6 +929,7 @@ static void song_window_instance_init (SongWindow * self) {
 	self->priv->refresh = NULL;
 	self->priv->combo = NULL;
 	self->priv->bar = NULL;
+	self->priv->column = NULL;
 }
 
 
@@ -799,9 +964,11 @@ static void song_window_finalize (GObject* obj) {
 	(self->priv->warning_label == NULL) ? NULL : (self->priv->warning_label = (g_object_unref (self->priv->warning_label), NULL));
 	(self->priv->artist_entry == NULL) ? NULL : (self->priv->artist_entry = (g_object_unref (self->priv->artist_entry), NULL));
 	(self->priv->album_entry == NULL) ? NULL : (self->priv->album_entry = (g_object_unref (self->priv->album_entry), NULL));
+	(self->priv->title_entry == NULL) ? NULL : (self->priv->title_entry = (g_object_unref (self->priv->title_entry), NULL));
 	(self->priv->refresh == NULL) ? NULL : (self->priv->refresh = (g_object_unref (self->priv->refresh), NULL));
 	(self->priv->combo == NULL) ? NULL : (self->priv->combo = (g_object_unref (self->priv->combo), NULL));
 	(self->priv->bar == NULL) ? NULL : (self->priv->bar = (g_object_unref (self->priv->bar), NULL));
+	(self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL));
 	G_OBJECT_CLASS (song_window_parent_class)->finalize (obj);
 }
 

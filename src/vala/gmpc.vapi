@@ -56,7 +56,7 @@ namespace Gmpc {
         public void set_metadata(MPD.Song song, Type type, Result result, string? path); 
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
-        public string get_metadata_filename(Type type, MPD.Song song, string extention);
+        public string get_metadata_filename(Type type, MPD.Song song, string? extention);
    }
    namespace Messages {
        [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]
