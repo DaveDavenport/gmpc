@@ -503,6 +503,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 						GtkLinkButton* label;
 						char* _tmp13;
 						label = g_object_ref_sink ((GtkLinkButton*) gtk_link_button_new (uri));
+						fprintf (stdout, "uri: %s\n", uri);
 						_tmp13 = NULL;
 						gtk_button_set_label ((GtkButton*) label, _tmp13 = g_strdup_printf (_ ("Lookup %s on %s"), _ (typestr), entry));
 						_tmp13 = (g_free (_tmp13), NULL);

@@ -382,11 +382,13 @@ private class SongWindow : Gtk.Window {
 
         var rendererpb = new Gtk.CellRendererText();
         var column = new Gtk.TreeViewColumn();
+        rendererpb.set("xalign",0.0f);
+        rendererpb.set("yalign",0.0f);
         column.pack_start(rendererpb,true);
         iv.append_column(column);
         column.set_title(_("Information"));
         column.add_attribute(rendererpb, "markup", 2);
-
+        
 
 
 

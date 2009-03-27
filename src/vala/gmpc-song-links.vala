@@ -169,6 +169,7 @@ public class Gmpc.Song.Links: Gtk.Frame
             try{
                 string  typestr = file.get_string(entry,"type");
                 string  uri = file.get_string(entry, "url");
+                
                 Type type;
                 switch(typestr) {
                     case _("artist"):
@@ -202,6 +203,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                 if((int)type <= (int)this.type)
                 {
                     var label = new Gtk.LinkButton(uri);
+                    stdout.printf("uri: %s\n", uri);
                     label.set_label(_("Lookup %s on %s").printf(_(typestr),entry));
                     label.set_alignment(0.0f, 0.5f);
                     vbox.pack_start(label, false, true, 0);

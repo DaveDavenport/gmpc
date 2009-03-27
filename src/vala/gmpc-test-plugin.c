@@ -779,6 +779,8 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_tree_view_set_rules_hint (self->priv->tree, TRUE);
 	rendererpb = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 	column = g_object_ref_sink (gtk_tree_view_column_new ());
+	g_object_set ((GObject*) rendererpb, "xalign", 0.0f, NULL);
+	g_object_set ((GObject*) rendererpb, "yalign", 0.0f, NULL);
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) rendererpb, TRUE);
 	gtk_tree_view_append_column (iv, column);
 	gtk_tree_view_column_set_title (column, _ ("Information"));
