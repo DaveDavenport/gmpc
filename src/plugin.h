@@ -116,7 +116,8 @@ typedef struct {
     /* Set and get priority */
 	int (*get_priority)				(void);
     void (*set_priority)            (int priority);
-	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
+	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
+
     /* Padding */
     void (*get_uris)      (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data);
     void (*padding2)                (void);
