@@ -29,6 +29,7 @@
 #include <glib/gstdio.h>
 #include <main.h>
 #include <gmpc-meta-watcher.h>
+#include <pango/pango.h>
 #include <plugin.h>
 #include <config1.h>
 #include <libmpd/libmpd.h>
@@ -686,6 +687,8 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 		_tmp3 = NULL;
 		self->priv->column = (_tmp3 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp3);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
+		g_object_set ((GObject*) renderer, "xalign", 0.0f, NULL);
+		g_object_set ((GObject*) renderer, "yalign", 0.0f, NULL);
 		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
 		gtk_tree_view_column_set_title (self->priv->column, _ ("Cover"));
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, "pixbuf", 0);
@@ -779,8 +782,11 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_tree_view_set_rules_hint (self->priv->tree, TRUE);
 	rendererpb = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 	column = g_object_ref_sink (gtk_tree_view_column_new ());
+	gtk_tree_view_column_set_resizable (column, TRUE);
+	gtk_tree_view_column_set_min_width (column, 250);
 	g_object_set ((GObject*) rendererpb, "xalign", 0.0f, NULL);
 	g_object_set ((GObject*) rendererpb, "yalign", 0.0f, NULL);
+	g_object_set ((GObject*) rendererpb, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) rendererpb, TRUE);
 	gtk_tree_view_append_column (iv, column);
 	gtk_tree_view_column_set_title (column, _ ("Information"));

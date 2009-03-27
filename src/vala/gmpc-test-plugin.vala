@@ -344,6 +344,8 @@ private class SongWindow : Gtk.Window {
             var renderer = new Gtk.CellRendererPixbuf();
             this.column = new Gtk.TreeViewColumn();
             this.column.pack_start(renderer,false);
+            renderer.set("xalign",0.0f);
+            renderer.set("yalign",0.0f);
             this.tree.append_column(this.column);
             this.column.set_title(_("Cover"));
             this.column.add_attribute(renderer, "pixbuf", 0);
@@ -382,8 +384,11 @@ private class SongWindow : Gtk.Window {
 
         var rendererpb = new Gtk.CellRendererText();
         var column = new Gtk.TreeViewColumn();
+        column.resizable = true;
+        column.min_width = 250;
         rendererpb.set("xalign",0.0f);
         rendererpb.set("yalign",0.0f);
+        rendererpb.set("ellipsize", Pango.EllipsizeMode.END);
         column.pack_start(rendererpb,true);
         iv.append_column(column);
         column.set_title(_("Information"));
