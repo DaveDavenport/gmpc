@@ -570,13 +570,32 @@ gchar ** tokenize_string(const gchar *string)
 	return result;
 }
 
+static void process_containers(GtkWidget *container, GtkStyle *style)
+{
+	GList *list = NULL;
+	list = gtk_container_get_children(GTK_CONTAINER(container));
+	if(list)
+	{
+		GList *node;
+		for(node = g_list_first(list);node;node = g_list_next(node))
+		{
+			gtk_widget_modify_fg((GtkWidget *)node->data, GTK_STATE_NORMAL, &(style->fg[GTK_STATE_SELECTED]));
+			gtk_widget_modify_text((GtkWidget *)node->data, GTK_STATE_NORMAL, &(style->fg[GTK_STATE_SELECTED]));
+			if(GTK_IS_CONTAINER(node->data))
+			{
+				process_containers((GtkWidget *)node->data, style);
+			}
+		}
+		g_list_free(list);
+	}	
 
+}
 gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
 
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
-	
+
 	gtk_paint_flat_box(widget->style, 
 					widget->window, 
 					GTK_STATE_SELECTED,
@@ -591,6 +610,7 @@ gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoi
 				widget,
 				"button",
 				0,0,width,height);
+	process_containers(widget, widget->style);
 	return FALSE;
 }
 
