@@ -172,6 +172,8 @@ static void pl3_file_browser_init(void)
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute(column, renderer, "text", PL3_FB_NAME);
 	gtk_tree_view_insert_column(GTK_TREE_VIEW(tree),column, -1);
+
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_dir_tree), PL3_FB_NAME);
 	/* set the search column */
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_FB_NAME);
 
@@ -189,6 +191,7 @@ static void pl3_file_browser_init(void)
 	/* set up the tree */
 	pl3_fb_tree= gmpc_mpddata_treeview_new("file-browser",TRUE, GTK_TREE_MODEL(pl3_fb_store2));
     gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_SONG_TITLE);
   /* setup signals */
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated",G_CALLBACK(pl3_file_browser_row_activated), NULL);
 	g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event), NULL);
