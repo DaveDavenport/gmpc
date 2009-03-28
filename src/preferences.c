@@ -232,10 +232,8 @@ void create_preferences_window(void)
 	label = (GtkWidget *)gtk_builder_get_object(xml_preferences_window, "plugin_label_box");
     gtk_widget_set_app_paintable(label, TRUE);
     g_signal_connect(G_OBJECT(label), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
-//	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->light[GTK_STATE_SELECTED]);
-/*	label = gtk_builder_get_object(xml_preferences_window, "plugin_label");
-	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &dialog->style->fg[GTK_STATE_SELECTED]);
-*/	
+    gtk_widget_set_state(GTK_WIDGET(label), GTK_STATE_SELECTED);
+
     gtk_widget_show(dialog);
     gtk_builder_connect_signals(xml_preferences_window, NULL);
 }

@@ -348,6 +348,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
 
+
                 hbox = gtk_hbox_new(FALSE,6);
                 gtk_container_set_border_width(GTK_CONTAINER(hbox),6);
                 /**
@@ -843,6 +844,8 @@ static void info2_fill_song_view_real(mpd_Song *song)
 		g_signal_connect(G_OBJECT(button), "clicked" , G_CALLBACK(info2_disable_show_current), NULL);
 		gtk_widget_hide(title_vbox);
 	}
+
+    misc_header_style_set_process_containers(title_vbox, NULL, NULL);
 	/** 
 	 * Title Label
 	 * +-----------------+
@@ -1321,6 +1324,8 @@ static void info2_fill_view_real(void)
 	gtk_container_set_border_width(GTK_CONTAINER(artist_table), 8);
 	gtk_box_pack_start(GTK_BOX(resizer_vbox), artist_table, FALSE, TRUE, 0);	
 	g_signal_connect(G_OBJECT(info2_entry), "activate", G_CALLBACK(info2_fill_view_entry_activate), artist_table);
+
+    misc_header_style_set_process_containers(title_vbox, NULL, NULL);
 	/**
 	 * Entry completion
 	 */
@@ -1422,7 +1427,9 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 			gtk_widget_show_all(title_vbox);
 			q_free(buffer);
 		}
-	}
+
+        misc_header_style_set_process_containers(title_vbox, NULL, NULL);
+    }
 
 	/**
 	 *  Artist info box 
@@ -1857,6 +1864,8 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 		gtk_box_pack_start(GTK_BOX(title_vbox), label, TRUE, TRUE,0);
 		q_free(markup);
 	}
+
+    misc_header_style_set_process_containers(title_vbox, NULL, NULL);
 	/**
 	 * Set album image
 	 */
@@ -2097,11 +2106,11 @@ static void info2_init(void)
 	gtk_container_set_border_width(GTK_CONTAINER(ali),1);
 	gtk_container_add(GTK_CONTAINER(ali), title_vbox);
 	gtk_container_add(GTK_CONTAINER(title_event), ali);
-/*
-	g_signal_connect(G_OBJECT(vbox), "style-set", G_CALLBACK(pl3_metabrowser_header_style_changed), title_event);
-*/
 	gtk_widget_set_app_paintable(title_event, TRUE);
 	g_signal_connect(G_OBJECT(title_event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
+    g_signal_connect(title_vbox, "style-set", G_CALLBACK(misc_header_style_set_process_containers), NULL);
+    misc_header_style_set_process_containers(title_vbox, NULL, NULL);
+
 
 	gtk_box_pack_start(GTK_BOX(vbox), title_event, FALSE, TRUE,0);
 
