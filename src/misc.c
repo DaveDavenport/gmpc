@@ -570,8 +570,9 @@ gchar ** tokenize_string(const gchar *string)
 	return result;
 }
 
-static void process_containers(GtkWidget *container, GtkStyle *style)
+static void process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data)
 {
+    GtkStyle *style = container->style;
 	GList *list = NULL;
 	list = gtk_container_get_children(GTK_CONTAINER(container));
 	if(list)
@@ -583,7 +584,7 @@ static void process_containers(GtkWidget *container, GtkStyle *style)
 			gtk_widget_modify_text((GtkWidget *)node->data, GTK_STATE_NORMAL, &(style->fg[GTK_STATE_SELECTED]));
 			if(GTK_IS_CONTAINER(node->data))
 			{
-				process_containers((GtkWidget *)node->data, style);
+				process_containers((GtkWidget *)node->data, NULL, NULL);
 			}
 		}
 		g_list_free(list);
@@ -592,7 +593,6 @@ static void process_containers(GtkWidget *container, GtkStyle *style)
 }
 gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
-
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
 
@@ -610,7 +610,13 @@ gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoi
 				widget,
 				"button",
 				0,0,width,height);
-	process_containers(widget, widget->style);
+
+    if(!g_signal_has_handler_pending(widget, g_signal_lookup("style-set", GTK_TYPE_WIDGET), 0, TRUE))
+    {
+        printf("not connected\n");
+        process_containers(widget, NULL, NULL);
+        g_signal_connect(widget, "style-set", G_CALLBACK(process_containers), NULL);
+    }
 	return FALSE;
 }
 
