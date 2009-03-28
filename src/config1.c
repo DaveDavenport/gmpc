@@ -751,8 +751,14 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, const char *cl
 		cfg->total_size-= strlen(newnode->value);
 		cfg_free_string(newnode->value);
 	}
-	newnode->value = g_strdup(value);	
-	cfg->total_size += strlen(value);
+    if(value)
+    {
+        newnode->value = g_strdup(value);	
+        cfg->total_size += strlen(value);
+    }
+    else{
+        newnode->value = NULL;
+    }
 	cfg_save_delayed(cfg);
     debug_printf(DEBUG_INFO, "triggered save delay: set: %s,%s -> %s", class,key,value);
 }
