@@ -780,12 +780,17 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
     if(connect)	{
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
+        /* Set the disconnect image, and reset the GtkTooltip */
 #ifdef EGGTRAYICON
         gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray-disconnected", GTK_ICON_SIZE_MENU);
 #else
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
         gtk_status_icon_set_tooltip(tray_icon2_gsi, _("Gnome Music Player Client"));
 #endif        
+        /* Destroy notification */
+        if(tray_icon2_tooltip)
+            tray_icon2_tooltip_destroy();
+
 	}
 }
 
