@@ -42,6 +42,39 @@ typedef enum {
 
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 
+/**
+ * This can be extended 
+ */
+typedef enum {
+    META_DATA_CONTENT_EMPTY,
+    /* contains a string with an uri to the data */
+    META_DATA_CONTENT_URI,
+    /* Contains result (text) */
+    META_DATA_CONTENT_TEXT,
+    /* Contains result (raw image data) */
+    META_DATA_CONTENT_IMAGE,
+    /* Contains result (text) in html format */
+    META_DATA_CONTENT_HTML,
+    /* An array of strings, f.e. similar artists*/
+    META_DATA_CONTENT_STRV
+} MetaDataContentType;
+
+typedef struct {
+    /* The MetaDataType this holds */
+    MetaDataType type;
+    /* The name of the plugin that provided the data */
+    const gchar *plugin_name;
+    /* The data type */
+    MetaDataContentType result_type;
+    /* The contents */
+    void  *content;
+    gsize length;
+}MetaData;
+
+MetaData * meta_data_new(void);
+
+
+
 void metadata_import_old_db(char *url);
 
 #include "gmpc-meta-watcher.h"

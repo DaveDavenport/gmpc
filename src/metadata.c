@@ -909,12 +909,13 @@ static gboolean process_itterate(void)
     /**
      * If nothing found, set unavailable
      */
-    if(d->result == META_DATA_FETCHING) {
+    if(d->result == META_DATA_FETCHING || d->result_path == NULL) {
         d->result = META_DATA_UNAVAILABLE;
     }
     /**
      * Store result (or lack off) 
      **/
+
     meta_data_set_cache_real(d->edited, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
     if(d->edited->artist)
     {
@@ -1442,7 +1443,33 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
     g_idle_add(metadata_get_list_itterate_idle, q);
     return q;
 }
+/**
+ * MetaData 
+ */
+MetaData *meta_data_new(void)
+{
+    MetaData *retv = g_new0(MetaData, 1);
+    retv->result_type = META_DATA_CONTENT_EMPTY;
+    return retv;
+}
 
+void meta_data_free(MetaData *data)
+{
+    if(data->content) {
+        if(data->result_type == META_DATA_CONTENT_STRV)
+        {
+            g_strfreev(data->content);
+        }
+        else
+            g_free(data->content);
+        data->content = NULL;
+        data->length = 0;
+    }
+    g_free(data);
+}
+/**
+ * Plugin structure
+ */
 
 gmpcPrefPlugin metadata_pref_plug = {
     .construct      = metadata_construct_pref_pane,

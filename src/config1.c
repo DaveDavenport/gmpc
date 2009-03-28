@@ -741,7 +741,8 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, const char *cl
 		cfg_add_child(node,newnode);
 
 	}	
-	else if(strlen(newnode->value) == strlen(value) && !memcmp(newnode->value, value,strlen(newnode->value)))
+	else if((value == NULL && newnode->value == NULL) || 
+        (value != NULL && newnode->value != NULL && strlen(newnode->value) == strlen(value) && !memcmp(newnode->value, value,strlen(newnode->value))))
 	{
 		/* Check if the content is the same, if it is, do nothing */
 		return;
