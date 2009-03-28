@@ -1448,25 +1448,75 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
  */
 MetaData *meta_data_new(void)
 {
+    /* Create a new structure completely filled with 0's */
     MetaData *retv = g_new0(MetaData, 1);
-    retv->result_type = META_DATA_CONTENT_EMPTY;
+    retv->content_type = META_DATA_CONTENT_EMPTY;
     return retv;
 }
 
 void meta_data_free(MetaData *data)
 {
     if(data->content) {
-        if(data->result_type == META_DATA_CONTENT_STRV)
+        if(data->content_type == META_DATA_CONTENT_STRV)
         {
             g_strfreev(data->content);
         }
         else
             g_free(data->content);
         data->content = NULL;
-        data->length = 0;
+        data->size = 0;
     }
     g_free(data);
 }
+
+MetaData *meta_data_dup(MetaData *data)
+{
+    MetaData *retv = meta_data_new();
+    /* Copy type of metadata */
+    retv->type = data->type;
+    /* Copy the type of the data */
+    retv->content_type = data->content_type;
+    /* Copy the name of the providing plugin. (const char * so only copy pointer ) */
+    retv->plugin_name = data->plugin_name;
+    /* copy the content */
+    retv->size = data->size;
+    if(retv->content_type == META_DATA_CONTENT_STRV) {
+        if(data->content) retv->content =(void *) g_strdupv((gchar **)data->content);
+    }
+    /* raw data always needs a length */
+    else if (data->content_type == META_DATA_CONTENT_IMAGE)
+    {
+        if(data->size > 0 ) {
+            retv->content = g_memdup(data->content, (guint)data->size);
+        }
+    }
+    /* Text is NULL terminated */
+    else
+    {
+        if(data->content){
+            retv->content = g_strdup((gchar *)data->content);
+        }
+    }
+    return retv;
+}
+MetaData *meta_data_dup_steal(MetaData *data)
+{
+    MetaData *retv = meta_data_new();
+    /* Copy type of metadata */
+    retv->type = data->type;
+    /* Copy the type of the data */
+    retv->content_type = data->content_type;
+    /* Copy the name of the providing plugin. (const char * so only copy pointer ) */
+    retv->plugin_name = data->plugin_name;
+    /* copy the content */
+    retv->size = data->size;
+    retv->content = data->content;
+    data->size  = 0;
+    data->content = NULL;
+    return retv;
+}
+
+
 /**
  * Plugin structure
  */

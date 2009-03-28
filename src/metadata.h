@@ -43,6 +43,10 @@ typedef enum {
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 
 /**
+ * The MetaAata object that will be used in the future to pass metadata around
+ */
+
+/**
  * This can be extended 
  */
 typedef enum {
@@ -55,24 +59,43 @@ typedef enum {
     META_DATA_CONTENT_IMAGE,
     /* Contains result (text) in html format */
     META_DATA_CONTENT_HTML,
-    /* An array of strings, f.e. similar artists*/
+    /* A null-terminated array of strings, f.e. similar artists*/
     META_DATA_CONTENT_STRV
 } MetaDataContentType;
 
 typedef struct {
     /* The MetaDataType this holds */
     MetaDataType type;
-    /* The name of the plugin that provided the data */
+    /* The name of the plugin that provided the data 
+     * This can be NULL if unknown.
+     **/
     const gchar *plugin_name;
     /* The data type */
-    MetaDataContentType result_type;
+    MetaDataContentType content_type;
     /* The contents */
     void  *content;
-    gsize length;
+    /* size is only used for raw data. Might be set for text, but that needs to be 
+     * null terminated anyway.
+     */
+    gsize size;
 }MetaData;
-
+/**
+ * Create empty MetaData
+ */
 MetaData * meta_data_new(void);
-
+/**
+ * Free MetaData object
+ */
+void meta_data_free(MetaData *data);
+/**
+ * copy a MetaData object
+ */
+MetaData *meta_data_dup(MetaData *data);
+/**
+ * Steals the data from the orginal.
+ * This can be used to avoid having large data blocks copied.
+ **/
+MetaData *meta_data_dup_steal(MetaData *data);
 
 
 void metadata_import_old_db(char *url);
