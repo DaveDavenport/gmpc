@@ -677,15 +677,43 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 				} else {
 					gtk_widget_show ((GtkWidget*) self->priv->warning_label);
 				}
+			} else {
+				if (active == 3) {
+					gboolean _tmp3;
+					self->priv->query_type = META_ALBUM_TXT;
+					_tmp3 = FALSE;
+					if (self->priv->song->artist != NULL) {
+						_tmp3 = self->priv->song->album != NULL;
+					} else {
+						_tmp3 = FALSE;
+					}
+					if (_tmp3) {
+						g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
+						g_object_set ((GtkWidget*) self->priv->album_entry, "sensitive", TRUE, NULL);
+						g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
+					} else {
+						gtk_widget_show ((GtkWidget*) self->priv->warning_label);
+					}
+				} else {
+					if (active == 4) {
+						self->priv->query_type = META_ARTIST_TXT;
+						if (self->priv->song->artist != NULL) {
+							g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
+							g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
+						} else {
+							gtk_widget_show ((GtkWidget*) self->priv->warning_label);
+						}
+					}
+				}
 			}
 		}
 	}
 	if (active < 2) {
 		GtkCellRendererPixbuf* renderer;
-		GtkTreeViewColumn* _tmp3;
+		GtkTreeViewColumn* _tmp4;
 		renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
-		_tmp3 = NULL;
-		self->priv->column = (_tmp3 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp3);
+		_tmp4 = NULL;
+		self->priv->column = (_tmp4 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp4);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		g_object_set ((GObject*) renderer, "xalign", 0.0f, NULL);
 		g_object_set ((GObject*) renderer, "yalign", 0.0f, NULL);
@@ -695,10 +723,10 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	} else {
 		GtkCellRendererText* renderer;
-		GtkTreeViewColumn* _tmp4;
+		GtkTreeViewColumn* _tmp5;
 		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
-		_tmp4 = NULL;
-		self->priv->column = (_tmp4 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp4);
+		_tmp5 = NULL;
+		self->priv->column = (_tmp5 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp5);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
 		gtk_tree_view_column_set_title (self->priv->column, _ ("Lyric"));
@@ -819,6 +847,8 @@ static SongWindow* song_window_construct (GType object_type, const mpd_Song* son
 	gtk_combo_box_append_text (self->priv->combo, _ ("Artist art"));
 	gtk_combo_box_append_text (self->priv->combo, _ ("Album art"));
 	gtk_combo_box_append_text (self->priv->combo, _ ("Song Lyrics"));
+	gtk_combo_box_append_text (self->priv->combo, _ ("Album Info"));
+	gtk_combo_box_append_text (self->priv->combo, _ ("Artist Biography"));
 	g_signal_connect_object (self->priv->combo, "changed", (GCallback) _song_window_combo_box_changed_gtk_combo_box_changed, self, 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
 	_tmp10 = NULL;

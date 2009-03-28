@@ -337,7 +337,27 @@ private class SongWindow : Gtk.Window {
                 this.refresh.sensitive = true;
            }
            else this.warning_label.show();
+        }else  if (active == 3) {
+           this.query_type = Gmpc.MetaData.Type.ALBUM_TXT;  
+
+           if(this.song.artist != null && this.song.album != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.album_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
+        }else  if (active == 4) {
+           this.query_type = Gmpc.MetaData.Type.ARTIST_TXT;  
+
+           if(this.song.artist != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
         }
+
 
         if(active <2 )
         {
@@ -429,6 +449,8 @@ private class SongWindow : Gtk.Window {
         this.combo.append_text(_("Artist art"));
         this.combo.append_text(_("Album art"));
         this.combo.append_text(_("Song Lyrics"));
+        this.combo.append_text(_("Album Info"));
+        this.combo.append_text(_("Artist Biography"));
 
         this.combo.changed += combo_box_changed;
 
