@@ -474,7 +474,7 @@ static void pl3_current_playlist_browser_crop_selected_songs(PlayQueuePlugin *se
 		{
 
 			do{
-				if(gtk_tree_selection_iter_is_selected(selection, &iter))
+				if(!gtk_tree_selection_iter_is_selected(selection, &iter))
 				{
 					int id=0;
 					/* song pos starts at 1, not a 0, compensate for that */
