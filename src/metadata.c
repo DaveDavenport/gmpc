@@ -1457,7 +1457,7 @@ MetaData *meta_data_new(void)
 void meta_data_free(MetaData *data)
 {
     if(data->content) {
-        if(data->content_type == META_DATA_CONTENT_STRV)
+        if(data->content_type == META_DATA_CONTENT_TEXT_VECTOR)
         {
             g_strfreev(data->content);
         }
@@ -1480,7 +1480,7 @@ MetaData *meta_data_dup(MetaData *data)
     retv->plugin_name = data->plugin_name;
     /* copy the content */
     retv->size = data->size;
-    if(retv->content_type == META_DATA_CONTENT_STRV) {
+    if(retv->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
         if(data->content) retv->content =(void *) g_strdupv((gchar **)data->content);
     }
     /* raw data always needs a length */

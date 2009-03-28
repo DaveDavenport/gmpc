@@ -23,6 +23,30 @@ namespace Gmpc {
     }
 
    namespace MetaData {
+    
+        [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "metadata.h")]
+        public enum ContentType {
+            EMPTY,
+            URI,
+            TEXT,
+            IMAGE,
+            HTML,
+            STRV
+        }
+        [CCode (cname="MetaData", cheader_filename="metadata")]
+        public class Item {
+           public Gmpc.MetaData.Type type; 
+           public weak string plugin_name;
+           public Gmpc.MetaData.ContentType content_type;
+           /* add accessors? */
+           public uchar[] get_image();
+           public string  get_text();
+           /* same as get_text */
+           public string get_uri();
+           public string get_html();
+           public string[] get_text_vector();
+
+        }
         [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
         public enum Type {
             ALBUM_ART       = 1,

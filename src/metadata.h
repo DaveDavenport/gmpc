@@ -60,7 +60,7 @@ typedef enum {
     /* Contains result (text) in html format */
     META_DATA_CONTENT_HTML,
     /* A null-terminated array of strings, f.e. similar artists*/
-    META_DATA_CONTENT_STRV
+    META_DATA_CONTENT_TEXT_VECTOR
 } MetaDataContentType;
 
 typedef struct {
