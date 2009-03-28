@@ -39,12 +39,12 @@ namespace Gmpc {
            public weak string plugin_name;
            public Gmpc.MetaData.ContentType content_type;
            /* add accessors? */
-           public uchar[] get_image();
-           public string  get_text();
+           public weak uchar[] get_image();
+           public weak string  get_text();
            /* same as get_text */
-           public string get_uri();
-           public string get_html();
-           public string[] get_text_vector();
+           public weak string get_uri();
+           public weak string get_html();
+           public weak string[] get_text_vector();
 
         }
         [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
