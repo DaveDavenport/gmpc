@@ -1447,7 +1447,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         /* New api version 2 */
         else if (gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_metadata){
             q->calls++;
-            plug->old->metadata->get_metadata(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate_old, (gpointer)q); 
+            plug->old->metadata->get_metadata(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
         }
 
         else g_idle_add(metadata_get_list_itterate_idle, q);

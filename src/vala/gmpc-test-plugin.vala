@@ -164,32 +164,56 @@ private class SongWindow : Gtk.Window {
         foreach(weak MetaData.Item md in list)
         {
 
-            if(md.content_type == Gmpc.MetaData.ContentType.URI)
+            if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
                 weak string uri = md.get_uri();
                 stdout.printf("Got uri: %s provider: %s\n", uri, md.plugin_name);
-                if(uri[0] == '/'){
-                    try{
-                        Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
-                        if(pb != null)
-                            add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
-                    }catch(Error e)
-                    {
+                if(md.content_type == Gmpc.MetaData.ContentType.URI)
+                {
+                    if(uri[0] == '/'){
+                        try{
+                            Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
+                            if(pb != null)
+                                add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
+                        }catch(Error e)
+                        {
 
+                        }
+                    }else{
+                        var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
+                        if(h!=null)
+                        {
+                            h.set_user_data(md.plugin_name);
+                            this.downloads.append(h);
+                        } 
+                        else stdout.printf("async download returned NULL\n");
                     }
-                }else{
-                    var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
-                    if(h!=null)
-                    {
-                        h.set_user_data(md.plugin_name);
-                        this.downloads.append(h);
-                    } 
-                    else stdout.printf("async download returned NULL\n");
                 }
             }else{
-                weak string uri = md.get_text();
-                stdout.printf("add txt entry\n");
-                add_entry_text(plugin_name, "n/a", uri);
+
+                if(md.content_type == Gmpc.MetaData.ContentType.TEXT)
+                {
+                    weak string uri = md.get_text();
+                    stdout.printf("add txt entry\n");
+                    add_entry_text(plugin_name, "n/a", uri);
+                }
+                else 
+                if(md.content_type == Gmpc.MetaData.ContentType.URI)
+                {
+                    weak string uri = md.get_uri();
+                    if(uri[0] == '/'){
+                        try {
+                            string content;
+                            if(GLib.FileUtils.get_contents(uri,out content))
+                            {
+                               add_entry_text(plugin_name,uri, content);
+                            }
+                        }catch (Error e) {
+
+                        }
+                    }
+
+                }
             }
 
         }

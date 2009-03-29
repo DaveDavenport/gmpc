@@ -334,54 +334,108 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 			const MetaData* md;
 			md = (const MetaData*) md_it->data;
 			{
-				if (md->content_type == META_DATA_CONTENT_URI) {
+				gboolean _tmp2;
+				_tmp2 = FALSE;
+				if (self->priv->query_type == META_ALBUM_ART) {
+					_tmp2 = TRUE;
+				} else {
+					_tmp2 = self->priv->query_type == META_ARTIST_ART;
+				}
+				if (_tmp2) {
 					const char* uri;
 					uri = meta_data_get_uri (md);
 					fprintf (stdout, "Got uri: %s provider: %s\n", uri, md->plugin_name);
-					if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
-						{
-							GdkPixbuf* pb;
-							pb = gdk_pixbuf_new_from_file (uri, &inner_error);
-							if (inner_error != NULL) {
-								goto __catch2_g_error;
-								goto __finally2;
-							}
-							if (pb != NULL) {
-								song_window_add_entry_image (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, NULL, NULL), pb);
-							}
-							(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
-						}
-						goto __finally2;
-						__catch2_g_error:
-						{
-							GError * e;
-							e = inner_error;
-							inner_error = NULL;
+					if (md->content_type == META_DATA_CONTENT_URI) {
+						if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
 							{
-								(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+								GdkPixbuf* pb;
+								pb = gdk_pixbuf_new_from_file (uri, &inner_error);
+								if (inner_error != NULL) {
+									goto __catch2_g_error;
+									goto __finally2;
+								}
+								if (pb != NULL) {
+									song_window_add_entry_image (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, NULL, NULL), pb);
+								}
+								(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
 							}
-						}
-						__finally2:
-						if (inner_error != NULL) {
-							g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
-							g_clear_error (&inner_error);
-							return;
-						}
-					} else {
-						GEADAsyncHandler* h;
-						h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
-						if (h != NULL) {
-							gmpc_easy_handler_set_user_data (h, md->plugin_name);
-							self->priv->downloads = g_list_append (self->priv->downloads, h);
+							goto __finally2;
+							__catch2_g_error:
+							{
+								GError * e;
+								e = inner_error;
+								inner_error = NULL;
+								{
+									(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+								}
+							}
+							__finally2:
+							if (inner_error != NULL) {
+								g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+								g_clear_error (&inner_error);
+								return;
+							}
 						} else {
-							fprintf (stdout, "async download returned NULL\n");
+							GEADAsyncHandler* h;
+							h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
+							if (h != NULL) {
+								gmpc_easy_handler_set_user_data (h, md->plugin_name);
+								self->priv->downloads = g_list_append (self->priv->downloads, h);
+							} else {
+								fprintf (stdout, "async download returned NULL\n");
+							}
 						}
 					}
 				} else {
-					const char* uri;
-					uri = meta_data_get_text (md);
-					fprintf (stdout, "add txt entry\n");
-					song_window_add_entry_text (self, plugin_name, "n/a", uri);
+					if (md->content_type == META_DATA_CONTENT_TEXT) {
+						const char* uri;
+						uri = meta_data_get_text (md);
+						fprintf (stdout, "add txt entry\n");
+						song_window_add_entry_text (self, plugin_name, "n/a", uri);
+					} else {
+						if (md->content_type == META_DATA_CONTENT_URI) {
+							const char* uri;
+							uri = meta_data_get_uri (md);
+							if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
+								{
+									char* content;
+									char* _tmp5;
+									gboolean _tmp4;
+									char* _tmp3;
+									gboolean _tmp6;
+									content = NULL;
+									_tmp5 = NULL;
+									_tmp3 = NULL;
+									_tmp6 = (_tmp4 = g_file_get_contents (uri, &_tmp3, NULL, &inner_error), content = (_tmp5 = _tmp3, content = (g_free (content), NULL), _tmp5), _tmp4);
+									if (inner_error != NULL) {
+										content = (g_free (content), NULL);
+										goto __catch3_g_error;
+										goto __finally3;
+									}
+									if (_tmp6) {
+										song_window_add_entry_text (self, plugin_name, uri, content);
+									}
+									content = (g_free (content), NULL);
+								}
+								goto __finally3;
+								__catch3_g_error:
+								{
+									GError * e;
+									e = inner_error;
+									inner_error = NULL;
+									{
+										(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+									}
+								}
+								__finally3:
+								if (inner_error != NULL) {
+									g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+									g_clear_error (&inner_error);
+									return;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -439,15 +493,15 @@ void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, 
 			fprintf (stdout, "Storing into: %s\n", file);
 			g_file_set_contents (file, (const char*) data, (glong) data_length1, &inner_error);
 			if (inner_error != NULL) {
-				goto __catch3_g_error;
-				goto __finally3;
+				goto __catch4_g_error;
+				goto __finally4;
 			}
 			meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
 			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
 		}
-		goto __finally3;
-		__catch3_g_error:
+		goto __finally4;
+		__catch4_g_error:
 		{
 			GError * e;
 			e = inner_error;
@@ -456,7 +510,7 @@ void song_window_store_image (SongWindow* self, const GEADAsyncHandler* handle, 
 				(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
 			}
 		}
-		__finally3:
+		__finally4:
 		if (inner_error != NULL) {
 			file = (g_free (file), NULL);
 			g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
@@ -528,15 +582,15 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 				fprintf (stdout, "Storing into: %s\n", file);
 				g_file_set_contents (file, lyric, (glong) (-1), &inner_error);
 				if (inner_error != NULL) {
-					goto __catch4_g_error;
-					goto __finally4;
+					goto __catch5_g_error;
+					goto __finally5;
 				}
 				meta_data_set_cache (self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
 				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
 				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
 			}
-			goto __finally4;
-			__catch4_g_error:
+			goto __finally5;
+			__catch5_g_error:
 			{
 				GError * e;
 				e = inner_error;
@@ -545,7 +599,7 @@ static void song_window_set_metadata (SongWindow* self, GtkButton* button) {
 					(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
 				}
 			}
-			__finally4:
+			__finally5:
 			if (inner_error != NULL) {
 				lyric = (g_free (lyric), NULL);
 				file = (g_free (file), NULL);
