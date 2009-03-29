@@ -101,7 +101,7 @@ const gchar *meta_data_get_uri(const MetaData *data);
 const gchar * meta_data_get_text(const MetaData *data);
 const gchar * meta_data_get_html(const MetaData *data);
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length);
-
+const gchar **meta_data_get_text_vector(const MetaData *data);
 
 /* ****************************************** */
 void metadata_import_old_db(char *url);
