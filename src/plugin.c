@@ -124,7 +124,7 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
             return FALSE;                                                                                             
         }
         
-        if(plug->metadata->get_uris == NULL)
+        if(plug->metadata->get_uris == NULL && plug->metadata->get_metadata == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);

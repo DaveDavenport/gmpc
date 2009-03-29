@@ -56,7 +56,7 @@ typedef enum {
     /* Contains result (text) */
     META_DATA_CONTENT_TEXT,
     /* Contains result (raw image data) */
-    META_DATA_CONTENT_IMAGE,
+    META_DATA_CONTENT_RAW,
     /* Contains result (text) in html format */
     META_DATA_CONTENT_HTML,
     /* A null-terminated array of strings, f.e. similar artists*/
@@ -97,7 +97,13 @@ MetaData *meta_data_dup(MetaData *data);
  **/
 MetaData *meta_data_dup_steal(MetaData *data);
 
+const gchar *meta_data_get_uri(const MetaData *data);
+const gchar * meta_data_get_text(const MetaData *data);
+const gchar * meta_data_get_html(const MetaData *data);
+const guchar * meta_data_get_raw(const MetaData *data, gsize *length);
 
+
+/* ****************************************** */
 void metadata_import_old_db(char *url);
 
 #include "gmpc-meta-watcher.h"

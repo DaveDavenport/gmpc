@@ -29,23 +29,36 @@ namespace Gmpc {
             EMPTY,
             URI,
             TEXT,
-            IMAGE,
+            RAW,
             HTML,
             STRV
         }
-        [CCode (cname="MetaData", cheader_filename="metadata")]
+        [CCode (cname="MetaData", cheader_filename="metadata.h")]
+        [Compact]
+        [Immutable]
+        [CCode (free_function="meta_data_free")]
         public class Item {
            public Gmpc.MetaData.Type type; 
            public weak string plugin_name;
            public Gmpc.MetaData.ContentType content_type;
            /* add accessors? */
-           public weak uchar[] get_image();
+           [CCode (cname="meta_data_get_image")]
+           public weak uchar[] get_raw();
+
+           [CCode (cname="meta_data_get_text")]
            public weak string  get_text();
            /* same as get_text */
-           public weak string get_uri();
-           public weak string get_html();
-           public weak string[] get_text_vector();
 
+           [CCode (cname="meta_data_get_uri")]
+           public weak string get_uri();
+
+           [CCode (cname="meta_data_get_html")]
+           public weak string get_html();
+
+           [CCode (cname="meta_data_get_text_vector")]
+           public weak string[] get_text_vector();
+           [CCode (cname="meta_data_dup_steal")]
+           public MetaData.Item dup_steal();
         }
         [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
         public enum Type {
@@ -68,7 +81,7 @@ namespace Gmpc {
         }
         
 
-        public delegate void Callback (void *handle,string? plugin_name, GLib.List<string>? list);
+        public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
         public void* get_list(MPD.Song song, Type type, Callback callback);
 

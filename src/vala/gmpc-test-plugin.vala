@@ -101,6 +101,7 @@ private class SongWindow : Gtk.Window {
         this.downloads.remove(handle);
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
+            /* get user data and take ownership */
             weak uchar[] data = handle.get_data();
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
@@ -133,7 +134,7 @@ private class SongWindow : Gtk.Window {
         }
 
     }
-    public void callback(void *handle,string? plugin_name,GLib.List<string>? list)
+    public void callback(void *handle,string? plugin_name,GLib.List<MetaData.Item>? list)
     {
         if(list == null) {
             stdout.printf("Done fetching\n");
@@ -160,12 +161,13 @@ private class SongWindow : Gtk.Window {
                 }
             }
         }
-        foreach(weak string uri in list)
+        foreach(weak MetaData.Item md in list)
         {
-            stdout.printf("Uri: %s\n", uri);
 
-            if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
+            if(md.content_type == Gmpc.MetaData.ContentType.URI)
             {
+                weak string uri = md.get_uri();
+                stdout.printf("Got uri: %s provider: %s\n", uri, md.plugin_name);
                 if(uri[0] == '/'){
                     try{
                         Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
@@ -179,12 +181,13 @@ private class SongWindow : Gtk.Window {
                     var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
                     if(h!=null)
                     {
-                        h.set_user_data(plugin_name);
+                        h.set_user_data(md.plugin_name);
                         this.downloads.append(h);
                     } 
-                    else stdout.printf("async download returned NULL");
+                    else stdout.printf("async download returned NULL\n");
                 }
             }else{
+                weak string uri = md.get_text();
                 stdout.printf("add txt entry\n");
                 add_entry_text(plugin_name, "n/a", uri);
             }

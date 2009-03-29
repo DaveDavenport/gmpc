@@ -1382,13 +1382,44 @@ static gboolean metadata_get_list_itterate_idle(gpointer data)
     metadata_get_list_itterate(NULL, data);
     return FALSE;
 }
+
+/**
+ * TODO: Remove when all plugins are converted 
+ */
+static void metadata_get_list_itterate_old(GList *list, gpointer data)
+{
+    MLQuery *q = (MLQuery *)data;
+    gmpcPluginParent *plug = meta_plugins[q->index-1]; 
+    GList *iter;
+    for(iter = g_list_first(list); iter; iter = g_list_next(iter))
+    {   
+        MetaData *md = meta_data_new();
+        gchar *uri = iter->data;
+        md->content = uri;
+        md->size = -1;
+        md->type = q->type;
+        md->plugin_name = gmpc_plugin_get_name(plug);
+
+        printf("Uri md object: %s::%s\n", uri, md->plugin_name);
+        if(q->type&(META_ALBUM_ART|META_ARTIST_ART))
+        {
+            md->content_type = META_DATA_CONTENT_URI;
+        }
+        else
+        {
+            md->content_type = META_DATA_CONTENT_TEXT;
+        }
+        iter->data = md;
+    }
+    metadata_get_list_itterate(list, data);
+}
 static void metadata_get_list_itterate(GList *list, gpointer data)
 {
     MLQuery *q = (MLQuery *)data;
     q->calls--;
     if(q->cancel){
             if(list){
-                g_list_foreach(list,(GFunc) g_free, NULL);
+                g_list_foreach(list,(GFunc) meta_data_free, NULL);
                 g_list_free(list);
             }
             if(q == 0)
@@ -1402,7 +1433,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     if(list) {
         gmpcPluginParent *plug = meta_plugins[q->index-1]; 
         q->callback(q,gmpc_plugin_get_name(plug), list,q->userdata);
-        g_list_foreach(list,(GFunc) g_free, NULL);
+        g_list_foreach(list,(GFunc) meta_data_free, NULL);
         g_list_free(list);
     }
     if(q->index < meta_num_plugins)
@@ -1411,8 +1442,14 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
         q->index++;
         if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_uris){
             q->calls++;
-            gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
+            gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate_old, (gpointer)q); 
         }
+        /* New api version 2 */
+        else if (gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_metadata){
+            q->calls++;
+            plug->old->metadata->get_metadata(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate_old, (gpointer)q); 
+        }
+
         else g_idle_add(metadata_get_list_itterate_idle, q);
         return;
     }
@@ -1484,7 +1521,7 @@ MetaData *meta_data_dup(MetaData *data)
         if(data->content) retv->content =(void *) g_strdupv((gchar **)data->content);
     }
     /* raw data always needs a length */
-    else if (data->content_type == META_DATA_CONTENT_IMAGE)
+    else if (data->content_type == META_DATA_CONTENT_RAW)
     {
         if(data->size > 0 ) {
             retv->content = g_memdup(data->content, (guint)data->size);
@@ -1516,7 +1553,26 @@ MetaData *meta_data_dup_steal(MetaData *data)
     return retv;
 }
 
+const gchar * meta_data_get_uri(const MetaData *data)
+{
+    return (const gchar *)data->content;
+}
+const gchar * meta_data_get_text(const MetaData *data)
+{
+    return (const gchar *)data->content;
+}
 
+const gchar * meta_data_get_html(const MetaData *data)
+{
+    return (const gchar *)data->content;
+}
+
+const guchar * meta_data_get_raw(const MetaData *data, gsize *length)
+{
+    if(length)
+        *length = data->size;
+    return (guchar *)data->content;
+}
 /**
  * Plugin structure
  */

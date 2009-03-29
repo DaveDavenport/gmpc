@@ -190,6 +190,7 @@ void song_window_image_downloaded (SongWindow* self, const GEADAsyncHandler* han
 		gint _tmp0;
 		guchar* data;
 		gboolean _tmp2;
+		/* get user data and take ownership */
 		_tmp1 = NULL;
 		data = (_tmp1 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = _tmp0, data_size = data_length1, _tmp1);
 		_tmp2 = FALSE;
@@ -326,22 +327,17 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 		}
 	}
 	{
-		GList* uri_collection;
-		GList* uri_it;
-		uri_collection = list;
-		for (uri_it = uri_collection; uri_it != NULL; uri_it = uri_it->next) {
-			const char* uri;
-			uri = (const char*) uri_it->data;
+		GList* md_collection;
+		GList* md_it;
+		md_collection = list;
+		for (md_it = md_collection; md_it != NULL; md_it = md_it->next) {
+			const MetaData* md;
+			md = (const MetaData*) md_it->data;
 			{
-				gboolean _tmp2;
-				fprintf (stdout, "Uri: %s\n", uri);
-				_tmp2 = FALSE;
-				if (self->priv->query_type == META_ALBUM_ART) {
-					_tmp2 = TRUE;
-				} else {
-					_tmp2 = self->priv->query_type == META_ARTIST_ART;
-				}
-				if (_tmp2) {
+				if (md->content_type == META_DATA_CONTENT_URI) {
+					const char* uri;
+					uri = meta_data_get_uri (md);
+					fprintf (stdout, "Got uri: %s provider: %s\n", uri, md->plugin_name);
 					if (g_utf8_get_char (g_utf8_offset_to_pointer (uri, 0)) == '/') {
 						{
 							GdkPixbuf* pb;
@@ -375,13 +371,15 @@ void song_window_callback (SongWindow* self, void* handle, const char* plugin_na
 						GEADAsyncHandler* h;
 						h = gmpc_easy_async_downloader (uri, _song_window_image_downloaded_gmpc_async_download_callback, self);
 						if (h != NULL) {
-							gmpc_easy_handler_set_user_data (h, plugin_name);
+							gmpc_easy_handler_set_user_data (h, md->plugin_name);
 							self->priv->downloads = g_list_append (self->priv->downloads, h);
 						} else {
-							fprintf (stdout, "async download returned NULL");
+							fprintf (stdout, "async download returned NULL\n");
 						}
 					}
 				} else {
+					const char* uri;
+					uri = meta_data_get_text (md);
 					fprintf (stdout, "add txt entry\n");
 					song_window_add_entry_text (self, plugin_name, "n/a", uri);
 				}
