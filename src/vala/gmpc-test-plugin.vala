@@ -390,6 +390,7 @@ private class SongWindow : Gtk.Window {
         {
             var renderer = new Gtk.CellRendererPixbuf();
             this.column = new Gtk.TreeViewColumn();
+            column.resizable = true;
             this.column.pack_start(renderer,false);
             renderer.set("xalign",0.0f);
             renderer.set("yalign",0.0f);
@@ -401,8 +402,12 @@ private class SongWindow : Gtk.Window {
         {
             var renderer = new Gtk.CellRendererText();
             this.column = new Gtk.TreeViewColumn();
+            column.resizable = true;
             this.column.pack_start(renderer,false);
             this.tree.append_column(this.column);
+
+            renderer.set("wrap-mode",Pango.WrapMode.WORD);
+            renderer.set("wrap-width",300);
             this.column.set_title(_("Lyric"));
             this.column.add_attribute(renderer, "text", 3);
         }

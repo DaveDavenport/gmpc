@@ -766,6 +766,7 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 		renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
 		_tmp4 = NULL;
 		self->priv->column = (_tmp4 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp4);
+		gtk_tree_view_column_set_resizable (self->priv->column, TRUE);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		g_object_set ((GObject*) renderer, "xalign", 0.0f, NULL);
 		g_object_set ((GObject*) renderer, "yalign", 0.0f, NULL);
@@ -779,8 +780,11 @@ static void song_window_combo_box_changed (SongWindow* self, GtkComboBox* comb) 
 		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 		_tmp5 = NULL;
 		self->priv->column = (_tmp5 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp5);
+		gtk_tree_view_column_set_resizable (self->priv->column, TRUE);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
+		g_object_set ((GObject*) renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
+		g_object_set ((GObject*) renderer, "wrap-width", 300, NULL);
 		gtk_tree_view_column_set_title (self->priv->column, _ ("Lyric"));
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, "text", 3);
 		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
