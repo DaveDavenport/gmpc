@@ -1175,13 +1175,14 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 	/**
      * send password, first thing we do, if connected
      */
+	/*
 	if (connected) {
 		if (connection_use_auth()) {
 			mpd_send_password(connection);
 		}
 		advanced_search_update_taglist();
 	}
-
+*/
 	/**
      * force an update of status, to check password
      */
