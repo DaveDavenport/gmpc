@@ -1037,6 +1037,11 @@ static void password_dialog_response(GtkWidget * dialog, gint response, gpointer
 {
 	gchar *path;
 	switch (response) {
+	case 0:
+	{
+
+		return;
+	}
 	case GTK_RESPONSE_OK:
 		{
 			path = (char *)

@@ -877,6 +877,10 @@ static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, 
 	{
 		pl3_find2_browser_search(); 
 	}
+    if(what&MPD_CST_PERMISSION)
+    {
+        pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl),NULL);
+    }
 }	
 static void pl3_find2_save_myself(void)
 {
