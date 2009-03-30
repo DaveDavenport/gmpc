@@ -879,7 +879,8 @@ static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, 
 	}
     if(what&MPD_CST_PERMISSION)
     {
-        pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl),NULL);
+        if(pl3_find2_curpl)
+            pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl),NULL);
     }
 }	
 static void pl3_find2_save_myself(void)
