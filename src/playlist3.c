@@ -1686,9 +1686,16 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 	if (what & MPD_CST_VOLUME) {
 		int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
+		int new_volume = mpd_status_get_volume(connection);
 		/* don't do anything if nothing is changed */
-		if (mpd_status_get_volume(connection) != volume) {
-			gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), mpd_status_get_volume(connection) / 100.0);
+		if(new_volume < 0){
+			gtk_widget_set_sensitive(volume_button, FALSE);
+		}else
+		{
+			gtk_widget_set_sensitive(volume_button, TRUE);
+			if (new_volume != volume) {
+				gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), new_volume / 100.0);
+			}
 		}
 
 	}
@@ -1760,7 +1767,8 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 static void playlist_player_volume_changed(GtkWidget * vol_but)
 {
 	int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
-	if (mpd_status_get_volume(connection) != volume) {
+	int new_volume = mpd_status_get_volume(connection);
+	if (new_volume >= 0 && new_volume != volume) {
 		mpd_status_set_volume(connection, volume);
 	}
 }
