@@ -758,7 +758,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
                         d->result_path = (char *)g_strdup(path);
                         d->result = META_DATA_AVAILABLE;
                     }else{
-                        GEADAsyncHandler *handle = gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+                        GEADAsyncHandler *handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
                         if(handle != NULL)
                         {
                             return;
