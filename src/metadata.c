@@ -731,6 +731,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
+	printf("downloaded\n");
         g_file_set_contents(filename, data, length, NULL);
         d->result = META_DATA_AVAILABLE;
         d->result_path = filename;
@@ -742,6 +743,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         d->index = meta_num_plugins;
         process_itterate();
     }else{
+	printf("download failed\n");
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
@@ -832,13 +834,15 @@ static void result_itterate(GList *list, gpointer user_data)
     if(md->content_type == META_DATA_CONTENT_URI)
     {
         const char *path = meta_data_get_uri(md);// d->iter->data;
+	printf("trying uri: %s\n", path);
         if(path[0] == '/') {
             d->result_path = (char *)g_strdup(path);
             d->result = META_DATA_AVAILABLE;
         }else{
-            GEADAsyncHandler *handle = gmpc_easy_async_downloader((const gchar *)d->iter->data, metadata_download_handler, d);
+            GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
             if(handle != NULL)
             {
+		printf("failed to create handle\n");
                 return;
             }
         }
@@ -924,13 +928,18 @@ static void result_itterate_old(GList *list, gpointer user_data)
         printf("Uri md object: %s::%s\n", uri, md->plugin_name);
         if(d->type&(META_ALBUM_ART|META_ARTIST_ART))
         {
+		printf("set uri\n");
             md->content_type = META_DATA_CONTENT_URI;
         }
         else if(d->type&(META_ARTIST_TXT|META_ALBUM_TXT|META_SONG_TXT))
         {
+
+		printf("set text\n");
             md->content_type = META_DATA_CONTENT_TEXT;
         }else {
-            /* TODO fix similar */
+
+		printf("set other\n");
+		/* TODO fix similar */
             md->content_type = META_DATA_CONTENT_RAW;
         }
         iter->data = md;
