@@ -223,18 +223,33 @@ char *gmpc_get_full_image_path(void)
 */
     const gchar * const *paths = g_get_system_data_dirs();
     int i;
-    for(i=0; paths && paths[i]; i++) {
-        path = g_build_filename(paths[i], "gmpc", "icons", NULL);
-        if(g_file_test(path, G_FILE_TEST_EXISTS))
+
+    /* First try the compile time path */
+    path = g_build_filename(PIXMAP_PATH, NULL);
+    if(path){
+        if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
+            printf("Path 1: %s\n", path);
             return path;
         }
         g_free(path);
         path = NULL;
     }
-    if(!path)
-        path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, NULL);
-//#endif
+
+    for(i=0; paths && paths[i]; i++) {
+        path = g_build_filename(paths[i], "gmpc", "icons", NULL);
+        if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
+        {
+            printf("Path 2: %s\n", path);
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
+    if(path == NULL){
+        g_error("Failed to find images");
+        return NULL;
+    }
     return path;
 }
 
@@ -259,18 +274,32 @@ char *gmpc_get_full_glade_path(const char *filename)
 #else*/
     const gchar * const *paths = g_get_system_data_dirs();
     int i;
+
+    path = g_build_filename(GLADE_PATH, filename,NULL);
+    if(path)
+    {
+        if(g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            printf("glade path1: %s\n",path);
+            return path;
+        }
+        g_free(path);
+    }
     for(i=0; paths && paths[i]; i++) {
         path = g_build_filename(paths[i], "gmpc", filename, NULL);
         if(g_file_test(path, G_FILE_TEST_EXISTS))
         {
+            printf("glade path2: %s\n",path);
             return path;
         }
         g_free(path);
         path = NULL;
     }
-    if(!path)
-        path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
-//#endif
+    if(path == NULL){
+        g_error("Failed to locate glade path");
+        return NULL;
+    }
+    //#endif
     return path;
 }
 
