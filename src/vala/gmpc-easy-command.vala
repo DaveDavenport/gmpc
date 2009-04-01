@@ -305,51 +305,52 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		}
 	}
 
-public static void 
-help_window_destroy(Gtk.Window window,int response)
-{
-	window.destroy();
-}
-public static void
-help_window(void *data, string param) {
-	Gmpc.Easy.Command ec = (Gmpc.Easy.Command *)data;
-	/*  Create window */
-	var window = new Gtk.Dialog.with_buttons(_("Easy Command help"), null, 0, "gtk-close", Gtk.ResponseType.OK,null);
-	window.set_default_size(600,400);
-	/* Treeview with commands */
-	var tree = new Gtk.TreeView();
-	tree.model = ec.store;
-	tree.rules_hint = true;
-	/* scrolled window to add it in */
-	var sw = new Gtk.ScrolledWindow(null, null);
-	/* setup scrolled window */
-	sw.border_width = 8;
-	sw.shadow_type = Gtk.ShadowType.ETCHED_IN;
-	sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+	public static void 
+	help_window_destroy(Gtk.Dialog window,int response)
+	{
+		window.destroy();
+	}
+	public static void
+	help_window(void *data, string? param) 
+	{
+		Gmpc.Easy.Command ec = (Gmpc.Easy.Command *)data;
+		/*  Create window */
+		var window = new Gtk.Dialog.with_buttons(_("Easy Command help"), null, 0, "gtk-close", Gtk.ResponseType.OK,null);
+		window.set_default_size(600,400);
+		/* Treeview with commands */
+		var tree = new Gtk.TreeView();
+		tree.model = ec.store;
+		tree.rules_hint = true;
+		/* scrolled window to add it in */
+		var sw = new Gtk.ScrolledWindow(null, null);
+		/* setup scrolled window */
+		sw.border_width = 8;
+		sw.shadow_type = Gtk.ShadowType.ETCHED_IN;
+		sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
 
-	/* add sw */
-	sw.add(tree);
-	/* Add columns */
-	var renderer = new Gtk.CellRendererText();
-	var column = new Gtk.TreeViewColumn ();
-    tree.append_column(column);
-	column.set_title(_("Command"));
-	column.pack_start(renderer, false);
-	column.add_attribute(renderer, "text", 1);
+		/* add sw */
+		sw.add(tree);
+		/* Add columns */
+		var renderer = new Gtk.CellRendererText();
+		var column = new Gtk.TreeViewColumn ();
+		tree.append_column(column);
+		column.set_title(_("Command"));
+		column.pack_start(renderer, false);
+		column.add_attribute(renderer, "text", 1);
 
-	renderer = new Gtk.CellRendererText();
-	column = new Gtk.TreeViewColumn ();
-    tree.append_column(column);
-	column.pack_start(renderer, false);
-	column.set_title(_("Usage"));
-	column.add_attribute(renderer, "text", 5);
+		renderer = new Gtk.CellRendererText();
+		column = new Gtk.TreeViewColumn ();
+		tree.append_column(column);
+		column.pack_start(renderer, false);
+		column.set_title(_("Usage"));
+		column.add_attribute(renderer, "text", 5);
 
-	window.vbox.pack_start(sw, true, true, 0);
-	/* show all */
-	window.show_all();
-	/* delete event */
-	window.response += help_window_destroy;
-}
+		window.vbox.pack_start(sw, true, true, 0);
+		/* show all */
+		window.show_all();
+		/* delete event */
+		window.response += help_window_destroy;
+	}
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

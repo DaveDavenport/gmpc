@@ -400,6 +400,20 @@
                     </child>
 
                     <child>
+                        <widget class="GtkImageMenuItem" id="menuitemhelpeasycommand">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Easy Command Help</property>
+                            <property name="use_underline">True</property>
+                            <signal name="activate" handler="easy_command_help_window"/>
+                            <child internal-child="image">
+                                <widget class="GtkImage" id="menu-item-image25">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-help</property>
+                                </widget>
+                            </child>
+                        </widget>
+                    </child>
+                    <child>
                       <widget class="GtkSeparatorMenuItem" id="menuitem5">
                         <property name="visible">True</property>
                       </widget>

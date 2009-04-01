@@ -32,8 +32,8 @@
 
 
 
-static char* string_substring (const char* self, glong offset, glong len);
 static glong string_get_length (const char* self);
+static char* string_substring (const char* self, glong offset, glong len);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	guint signals;
@@ -70,6 +70,12 @@ static gint _vala_array_length (gpointer array);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -87,12 +93,6 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
-}
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
 }
 
 
@@ -518,7 +518,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 }
 
 
-void gmpc_easy_command_help_window_destroy (GtkWindow* window, gint response) {
+void gmpc_easy_command_help_window_destroy (GtkDialog* window, gint response) {
 	g_return_if_fail (window != NULL);
 	gtk_object_destroy ((GtkObject*) window);
 }
@@ -539,7 +539,6 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	GtkTreeViewColumn* column;
 	GtkCellRendererText* _tmp1;
 	GtkTreeViewColumn* _tmp2;
-	g_return_if_fail (param != NULL);
 	_tmp0 = NULL;
 	ec = (_tmp0 = (GmpcEasyCommand*) data, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	/*  Create window */

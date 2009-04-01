@@ -111,6 +111,8 @@ static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
 static void playlist3_fill_server_menu(void);
 static void playlist3_server_update_db(void);
 
+void easy_command_help_window(void);
+
 /* Old category browser style */
 static int old_type = -1;
 
@@ -2519,4 +2521,11 @@ void pl3_tool_menu_update(void)
 	}
 
 }
+
+void easy_command_help_window(void)
+{
+	if(gmpc_easy_command)
+		gmpc_easy_command_help_window(gmpc_easy_command,NULL);
+}
+
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
