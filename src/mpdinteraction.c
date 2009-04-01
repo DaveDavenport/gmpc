@@ -184,7 +184,7 @@ static void mpd_interaction_init(void)
 
 	/* volume commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume +"),"\\+", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 

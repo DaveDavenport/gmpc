@@ -18,7 +18,6 @@
 */
 
 #include "gmpc-easy-command.h"
-#include <gtk/gtk.h>
 #include <config.h>
 #include <glib/gi18n-lib.h>
 #include <plugin.h>
@@ -33,11 +32,10 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
-	GtkListStore* store;
 	guint signals;
 	GtkWindow* window;
 	gint* version;
@@ -62,6 +60,7 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
+static void _gmpc_easy_command_help_window_destroy_gtk_dialog_response (GtkDialog* _sender, gint response_id, gpointer self);
 static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, GtkTreeIter* iter, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_easy_command_parent_class = NULL;
@@ -69,12 +68,6 @@ static void gmpc_easy_command_finalize (GObject* obj);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static gint _vala_array_length (gpointer array);
 
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
 
 
 static char* string_substring (const char* self, glong offset, glong len) {
@@ -94,6 +87,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -199,8 +198,8 @@ guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, cons
 	g_return_val_if_fail (pattern != NULL, 0U);
 	g_return_val_if_fail (hint != NULL, 0U);
 	self->priv->signals++;
-	gtk_list_store_append (self->priv->store, &iter);
-	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, -1, -1);
+	gtk_list_store_append (self->store, &iter);
+	gtk_list_store_set (self->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, -1, -1);
 	return self->priv->signals;
 }
 
@@ -213,7 +212,7 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 	GtkWindow* _tmp19;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
-	model = (GtkTreeModel*) self->priv->store;
+	model = (GtkTreeModel*) self->store;
 	_tmp0 = NULL;
 	value_unsplit = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
 	if (string_get_length (value_unsplit) == 0) {
@@ -519,6 +518,74 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 }
 
 
+void gmpc_easy_command_help_window_destroy (GtkWindow* window, gint response) {
+	g_return_if_fail (window != NULL);
+	gtk_object_destroy ((GtkObject*) window);
+}
+
+
+static void _gmpc_easy_command_help_window_destroy_gtk_dialog_response (GtkDialog* _sender, gint response_id, gpointer self) {
+	gmpc_easy_command_help_window_destroy (_sender, response_id);
+}
+
+
+void gmpc_easy_command_help_window (void* data, const char* param) {
+	GmpcEasyCommand* _tmp0;
+	GmpcEasyCommand* ec;
+	GtkDialog* window;
+	GtkTreeView* tree;
+	GtkScrolledWindow* sw;
+	GtkCellRendererText* renderer;
+	GtkTreeViewColumn* column;
+	GtkCellRendererText* _tmp1;
+	GtkTreeViewColumn* _tmp2;
+	g_return_if_fail (param != NULL);
+	_tmp0 = NULL;
+	ec = (_tmp0 = (GmpcEasyCommand*) data, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	/*  Create window */
+	window = g_object_ref_sink ((GtkDialog*) gtk_dialog_new_with_buttons (_ ("Easy Command help"), NULL, 0, "gtk-close", GTK_RESPONSE_OK, NULL, NULL));
+	gtk_window_set_default_size ((GtkWindow*) window, 600, 400);
+	/* Treeview with commands */
+	tree = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new ());
+	gtk_tree_view_set_model (tree, (GtkTreeModel*) ec->store);
+	gtk_tree_view_set_rules_hint (tree, TRUE);
+	/* scrolled window to add it in */
+	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
+	/* setup scrolled window */
+	gtk_container_set_border_width ((GtkContainer*) sw, (guint) 8);
+	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
+	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	/* add sw */
+	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) tree);
+	/* Add columns */
+	renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
+	column = g_object_ref_sink (gtk_tree_view_column_new ());
+	gtk_tree_view_append_column (tree, column);
+	gtk_tree_view_column_set_title (column, _ ("Command"));
+	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
+	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 1);
+	_tmp1 = NULL;
+	renderer = (_tmp1 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL)), _tmp1);
+	_tmp2 = NULL;
+	column = (_tmp2 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp2);
+	gtk_tree_view_append_column (tree, column);
+	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
+	gtk_tree_view_column_set_title (column, _ ("Usage"));
+	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 5);
+	gtk_box_pack_start ((GtkBox*) window->vbox, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
+	/* show all */
+	gtk_widget_show_all ((GtkWidget*) window);
+	/* delete event */
+	g_signal_connect (window, "response", (GCallback) _gmpc_easy_command_help_window_destroy_gtk_dialog_response, NULL);
+	(ec == NULL) ? NULL : (ec = (g_object_unref (ec), NULL));
+	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));
+	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+	(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
+	(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
+	(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
+}
+
+
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type) {
 	GmpcEasyCommand * self;
 	self = g_object_newv (object_type, 0, NULL);
@@ -550,10 +617,10 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		GtkEntryCompletion* _tmp2;
 		GtkCellRendererText* renderer;
 		_tmp1 = NULL;
-		self->priv->store = (_tmp1 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp1);
+		self->store = (_tmp1 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->store == NULL) ? NULL : (self->store = (g_object_unref (self->store), NULL)), _tmp1);
 		_tmp2 = NULL;
 		self->priv->completion = (_tmp2 = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp2);
-		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
+		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->store);
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
@@ -563,6 +630,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_cell_layout_pack_end ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, "text", 5);
 		g_object_set ((GObject*) renderer, "foreground", "grey", NULL, NULL);
+		gmpc_easy_command_add_entry (self, _ ("Help"), "", _ ("Get a list of available commands"), (GmpcEasyCommandCallback*) gmpc_easy_command_help_window, self);
 		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	}
 	return obj;
@@ -586,7 +654,7 @@ static void gmpc_easy_command_instance_init (GmpcEasyCommand * self) {
 	gint* _tmp0;
 	self->priv = GMPC_EASY_COMMAND_GET_PRIVATE (self);
 	self->priv->completion = NULL;
-	self->priv->store = NULL;
+	self->store = NULL;
 	self->priv->signals = (guint) 0;
 	self->priv->window = NULL;
 	self->priv->version = (_tmp0 = g_new0 (gint, 3), _tmp0[0] = 0, _tmp0[1] = 0, _tmp0[2] = 1, _tmp0);
@@ -599,7 +667,7 @@ static void gmpc_easy_command_finalize (GObject* obj) {
 	GmpcEasyCommand * self;
 	self = GMPC_EASY_COMMAND (obj);
 	(self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL));
-	(self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL));
+	(self->store == NULL) ? NULL : (self->store = (g_object_unref (self->store), NULL));
 	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
 	self->priv->version = (g_free (self->priv->version), NULL);
 	G_OBJECT_CLASS (gmpc_easy_command_parent_class)->finalize (obj);

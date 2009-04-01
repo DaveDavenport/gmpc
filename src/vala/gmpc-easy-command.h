@@ -23,6 +23,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gmpc-plugin.h>
+#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -44,6 +45,7 @@ typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* us
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
+	GtkListStore* store;
 };
 
 struct _GmpcEasyCommandClass {
@@ -53,6 +55,8 @@ struct _GmpcEasyCommandClass {
 
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata);
 void gmpc_easy_command_popup (GmpcEasyCommand* self);
+void gmpc_easy_command_help_window_destroy (GtkWindow* window, gint response);
+void gmpc_easy_command_help_window (void* data, const char* param);
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
 GmpcEasyCommand* gmpc_easy_command_new (void);
 GType gmpc_easy_command_get_type (void);
