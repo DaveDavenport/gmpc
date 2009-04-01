@@ -1,4 +1,8 @@
+if EXTRA_VERSION
+REVISION=@EXTRA_VERSION@
+else
 REVISION=`git rev-parse --short master`
+endif
 CONF_VERSION=0
 -include Makefile.config
 
@@ -57,8 +61,7 @@ gmpc_LDADD += gmpc-win32.o
 endif
 
 BUILT_SOURCES=\
-		revisiont.h\
-		revision.h
+		revisiont.h
 
 gmpc-win32.o: gmpc-win32.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
@@ -68,10 +71,11 @@ revisiont.h:
 	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
 		echo "Writing new Makefile.config file";\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
+		echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;\
 	fi;
 
-revision.h:
-	echo "static const char *revision = \"$(REVISION)""\"; " > revision.h
+revision.h:	
+	echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;
 
 INCLUDES=\
 	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \

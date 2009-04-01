@@ -155,6 +155,19 @@ if test x$maintainer_mode = xtrue; then
 fi
 
 
+# EXTRA VERSION
+AC_ARG_WITH([extra-version],
+        [--with-extra-version=revision Specify extra version.],
+        with_extra_version=${withval})
+if test x"${with_extra_version}" != x; then
+    AM_CONDITIONAL([EXTRA_VERSION], [true])
+    EXTRA_VERSION="${with_extra_version}";
+    AC_SUBST(EXTRA_VERSION)
+else
+    AM_CONDITIONAL([EXTRA_VERSION], [false])
+fi
+
+
 # Egg Status Icon 
 AC_ARG_ENABLE([eggtrayicon],
 	[--enable-eggtrayicon Use eggtrayicon instead of GtkStatusIcon.],
