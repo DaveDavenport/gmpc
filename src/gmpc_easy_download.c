@@ -104,8 +104,8 @@ static void gmpc_easy_download_set_proxy(SoupSession * session)
 		char *password = NULL;
 		gint port = cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port", 8080);
 		if (cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use authentication", FALSE)) {
-			password = cfg_get_single_value_as_string(config, "Network Settings", "Password");
-			username = cfg_get_single_value_as_string(config, "Network Settings", "Username");
+			password = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication password");
+			username = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication username");
 		}
 		if (value) {
 			SoupURI *uri = NULL;
