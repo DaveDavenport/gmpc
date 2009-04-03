@@ -97,6 +97,9 @@ void cur_song_center_enable_tb(GtkToggleButton *);
 void show_cover_case_tb(GtkToggleButton * but);
 void save_possize_enable_tb(GtkToggleButton *);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
+void playlist_menu_single_mode_changed(GtkCheckMenuItem * menu);
+void playlist_menu_consume_changed(GtkCheckMenuItem * menu);
+
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
 void hide_on_close_enable_tb(GtkToggleButton * but);
@@ -473,6 +476,14 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 					main_quit();
 				else if (action == KB_ACTION_CLOSE)
 					pl3_close();
+				else if (action == KB_ACTION_SINGLE_MODE){
+					mpd_player_set_single(connection, !mpd_player_get_single(connection));
+					printf("single mode\n");
+					}
+				else if (action == KB_ACTION_CONSUME){
+					mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
+					printf("consume mode\n");
+				}
 				else if (action == KB_ACTION_REPEAT)
 					mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 				else if (action == KB_ACTION_RANDOM)
@@ -817,7 +828,9 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 	playlist_status_changed(connection,
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
-							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
+							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
+							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE
+							, NULL);
 
 	/**
 	 * Also need updating
@@ -1017,7 +1030,9 @@ void create_playlist3(void)
 	playlist_status_changed(connection,
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
-							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
+							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
+							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE
+							, NULL);
 	g_signal_connect(G_OBJECT(volume_button), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 	/* Restore values from config */
@@ -1188,6 +1203,14 @@ void create_playlist3(void)
 					item = glade_xml_get_widget(pl3_xml, "menu_random");
 				} else if (action == KB_ACTION_TOGGLE_MUTE) {
 					item = glade_xml_get_widget(pl3_xml, "menu_mute_toggle");
+				} else if (action == KB_ACTION_SINGLE_MODE) {
+					item = glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle");
+
+					printf("set single mode: %p\n",item);
+				} else if (action == KB_ACTION_CONSUME) {
+					item = glade_xml_get_widget(pl3_xml, "menu_consume_toggle");
+
+					printf("set consume: %p\n", item);
 				}
 
 				if (item) {
@@ -1382,6 +1405,23 @@ void playlist_menu_random_changed(GtkCheckMenuItem * menu)
 		mpd_player_set_random(connection, active);
 	}
 }
+
+void playlist_menu_single_mode_changed(GtkCheckMenuItem * menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if (active != mpd_player_get_single(connection)) {
+		mpd_player_set_single(connection, active);
+	}
+}
+
+void playlist_menu_consume_changed(GtkCheckMenuItem * menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if (active != mpd_player_get_consume(connection)) {
+		mpd_player_set_consume(connection, active);
+	}
+}
+
 
 /**
  * This is artist image
@@ -1674,6 +1714,31 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
 										   (glade_xml_get_widget
 											(pl3_xml, "menu_random")), mpd_player_get_random(connection));
+		}
+	}
+	if (what & MPD_CST_SINGLE_MODE) {
+		if (mpd_check_connected(connection)) {
+			char *string = g_strdup_printf(_("Single mode: %s"),
+										   (mpd_player_get_single(connection)) ? _("On") : _("Off"));
+			pl3_push_statusbar_message(string);
+			q_free(string);
+
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+										   (glade_xml_get_widget
+											(pl3_xml, "menu_single_mode_toggle")), mpd_player_get_single(connection));
+		}
+	}
+
+	if (what & MPD_CST_CONSUME_MODE ) {
+		if (mpd_check_connected(connection)) {
+			char *string = g_strdup_printf(_("Consume: %s"),
+										   (mpd_player_get_consume(connection)) ? _("On") : _("Off"));
+			pl3_push_statusbar_message(string);
+			q_free(string);
+
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+										   (glade_xml_get_widget
+											(pl3_xml, "menu_consume_toggle")), mpd_player_get_consume(connection));
 		}
 	}
 	if (what & MPD_CST_ELAPSED_TIME) {

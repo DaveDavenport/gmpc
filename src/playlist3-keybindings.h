@@ -41,7 +41,9 @@ typedef enum _KeybindAction{
     KB_ACTION_FULLSCREEN,
     KB_ACTION_REPEAT,
     KB_ACTION_RANDOM,
-    KB_ACTION_TOGGLE_MUTE
+    KB_ACTION_TOGGLE_MUTE,
+    KB_ACTION_SINGLE_MODE,
+    KB_ACTION_CONSUME
 }KeybindAction;
 /** Some default keybindings */
 typedef enum _Keybind{
@@ -61,6 +63,8 @@ typedef enum _Keybind{
     KB_REPEAT,
     KB_RANDOM,
     KB_TOGGLE_MUTE,
+    KB_SINGLE_MODE,
+    KB_CONSUME,
     KB_NUM
 }Keybind;
 
@@ -81,7 +85,10 @@ const char *Keybindname[KB_NUM] = {
         "Fullscreen",
         "Repeat",
         "Random",
-        "Mute"
+        "Mute",
+        "SingleMode",
+        "Consume"
+
         };
 int KeybindingDefault[KB_NUM][3] = {
         {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
@@ -99,6 +106,8 @@ int KeybindingDefault[KB_NUM][3] = {
         {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},
         {GDK_r,             GDK_CONTROL_MASK,                   KB_ACTION_REPEAT},
         {GDK_s,             GDK_CONTROL_MASK,                   KB_ACTION_RANDOM},
-        {GDK_m,             GDK_CONTROL_MASK,                   KB_ACTION_TOGGLE_MUTE}
+        {GDK_m,             GDK_CONTROL_MASK,                   KB_ACTION_TOGGLE_MUTE},
+        {GDK_k,             GDK_CONTROL_MASK,                   KB_ACTION_SINGLE_MODE},
+        {GDK_l,             GDK_CONTROL_MASK,                   KB_ACTION_CONSUME}
 };
 #endif

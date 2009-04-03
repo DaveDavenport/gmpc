@@ -239,6 +239,22 @@
                         <signal name="activate" handler="playlist_menu_random_changed"/>
                       </widget>
                     </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_single_mode_toggle">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Single mode</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_menu_single_mode_changed"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_consume_toggle">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Consume</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="playlist_menu_consume_changed"/>
+                      </widget>
+                    </child>
                   </widget>
                 </child>
               </widget>
