@@ -1768,6 +1768,16 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 	if (what & MPD_CST_PERMISSION) {
 		/* Check for control */
+		if (mpd_server_check_command_allowed(connection, "single") == MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle"), TRUE);
+		} else {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle"), FALSE);
+		}
+		if (mpd_server_check_command_allowed(connection, "consume") == MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_consume_toggle"), TRUE);
+		} else {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_consume_toggle"), FALSE);
+		}
 		if (mpd_server_check_command_allowed(connection, "play") ==
 			MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"), TRUE);
