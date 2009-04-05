@@ -73,6 +73,50 @@ void submenu_genre_clicked(GtkWidget *item);
 void submenu_dir_clicked(GtkWidget *item);
 
 
+/**
+ * Easy command interface
+ */
+static void output_set (gpointer data, const char *param)
+{
+	gchar *str_param = g_strstrip(g_strdup(param));
+	gchar **split = g_strsplit(str_param, " ", 2);
+	if(split){
+		int output=-1;
+		if(split[0]) {
+			output = (int) strtol(split[0], NULL, 10);
+		}
+		if(output >=0 && split[1]){
+			if(g_utf8_collate(split[1], _("enable"))==0){
+				printf("enable output %i\n", output);
+				mpd_server_set_output_device(connection, output, 1);
+			}else if (g_utf8_collate(split[1],  _("disable"))==0) {
+				mpd_server_set_output_device(connection, output, 0);
+				printf("disable output %i\n", output);
+			}
+		}
+		g_free(split);
+	}
+	g_free(str_param);
+}
+
+static void crossfade_set(gpointer data, const char *param)
+{
+	gchar *param_c = g_utf8_casefold(param, -1);
+	gchar *key_c = g_utf8_casefold(_("Off"), -1);
+	if(g_utf8_collate(param_c, key_c)==0)
+	{
+		mpd_status_set_crossfade(connection, 0);	
+	}
+	else{
+		int i = (int) strtol(param, NULL, 10); 
+		if(i >= 0 && i < 60)
+		{
+			mpd_status_set_crossfade(connection, i);
+		}
+	}
+	g_free(key_c); 
+	g_free(param_c); 
+}
 static void volume_set(gpointer data, const char *param)
 {
 	if(strlen(param) > 0)
@@ -188,6 +232,10 @@ static void mpd_interaction_init(void)
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("crossfade"),C_("Regex for matching crossfade, translate off","([0-9]+|Off)"), _("Set Crossfade <seconds>"),(GmpcEasyCommandCallback *)crossfade_set, NULL); 
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("output"),C_("Regex for matching output","[0-9]+ (Enable|Disable)"),
+			_("output X enable or disable"),(GmpcEasyCommandCallback *)output_set, NULL); 
 	/* basic playlist commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
