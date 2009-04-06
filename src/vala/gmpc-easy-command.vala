@@ -316,13 +316,24 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		Gmpc.Easy.Command ec = (Gmpc.Easy.Command *)data;
 		/*  Create window */
 		var window = new Gtk.Dialog.with_buttons(_("Easy Command help"), null, 0, "gtk-close", Gtk.ResponseType.OK,null);
+
+		/* set window size */
 		window.set_default_size(600,400);
+
 		/* Treeview with commands */
 		var tree = new Gtk.TreeView();
-		tree.model = ec.store;
+
+		/**
+		 * Don't sort the original model, but added a Sortable "wrapper" model
+		 * Set this wrapper as tree backend
+		 */
+		tree.model = new Gtk.TreeModelSort.with_model(ec.store);
+		/* Setting up tree view, rules-hint for alternating row-color, search_column for search as you type */
 		tree.rules_hint = true;
+		tree.search_column = 1;
 		/* scrolled window to add it in */
 		var sw = new Gtk.ScrolledWindow(null, null);
+
 		/* setup scrolled window */
 		sw.border_width = 8;
 		sw.shadow_type = Gtk.ShadowType.ETCHED_IN;
@@ -331,23 +342,37 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		/* add sw */
 		sw.add(tree);
 		/* Add columns */
+		/* Command column */
 		var renderer = new Gtk.CellRendererText();
 		var column = new Gtk.TreeViewColumn ();
 		tree.append_column(column);
 		column.set_title(_("Command"));
 		column.pack_start(renderer, false);
 		column.add_attribute(renderer, "text", 1);
-
+		column.set_sort_column_id(1);
+		/* Usage column */
 		renderer = new Gtk.CellRendererText();
 		column = new Gtk.TreeViewColumn ();
 		tree.append_column(column);
 		column.pack_start(renderer, false);
 		column.set_title(_("Usage"));
 		column.add_attribute(renderer, "text", 5);
+		column.set_sort_column_id(5);
 
+		/* Label with explenation */
+		var label = new Gtk.Label("");
+		label.set_markup(_("The following commands can be used in the easy command window.\nThe easy command window can be opened by pressing ctrl-space"));
+		label.set_alignment(0.0f, 0.5f);
+		label.set_padding(8,6);
+		/* Add scrolled windows (containing tree) to dialog */
+		window.vbox.pack_start(label, false, false, 0);
+							
+		/* Add scrolled windows (containing tree) to dialog */
 		window.vbox.pack_start(sw, true, true, 0);
+
 		/* show all */
 		window.show_all();
+
 		/* delete event */
 		window.response += help_window_destroy;
 	}

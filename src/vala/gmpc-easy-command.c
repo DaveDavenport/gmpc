@@ -32,8 +32,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	guint signals;
@@ -70,12 +70,6 @@ static gint _vala_array_length (gpointer array);
 
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -93,6 +87,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -534,20 +534,31 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	GmpcEasyCommand* ec;
 	GtkDialog* window;
 	GtkTreeView* tree;
+	GtkTreeModelSort* _tmp1;
 	GtkScrolledWindow* sw;
 	GtkCellRendererText* renderer;
 	GtkTreeViewColumn* column;
-	GtkCellRendererText* _tmp1;
-	GtkTreeViewColumn* _tmp2;
+	GtkCellRendererText* _tmp2;
+	GtkTreeViewColumn* _tmp3;
+	GtkLabel* label;
 	_tmp0 = NULL;
 	ec = (_tmp0 = (GmpcEasyCommand*) data, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	/*  Create window */
 	window = g_object_ref_sink ((GtkDialog*) gtk_dialog_new_with_buttons (_ ("Easy Command help"), NULL, 0, "gtk-close", GTK_RESPONSE_OK, NULL, NULL));
+	/* set window size */
 	gtk_window_set_default_size ((GtkWindow*) window, 600, 400);
 	/* Treeview with commands */
 	tree = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new ());
-	gtk_tree_view_set_model (tree, (GtkTreeModel*) ec->store);
+	/**
+	 * Don't sort the original model, but added a Sortable "wrapper" model
+	 * Set this wrapper as tree backend
+	 */
+	_tmp1 = NULL;
+	gtk_tree_view_set_model (tree, (GtkTreeModel*) (_tmp1 = (GtkTreeModelSort*) gtk_tree_model_sort_new_with_model ((GtkTreeModel*) ec->store)));
+	(_tmp1 == NULL) ? NULL : (_tmp1 = (g_object_unref (_tmp1), NULL));
+	/* Setting up tree view, rules-hint for alternating row-color, search_column for search as you type */
 	gtk_tree_view_set_rules_hint (tree, TRUE);
+	gtk_tree_view_set_search_column (tree, 1);
 	/* scrolled window to add it in */
 	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
 	/* setup scrolled window */
@@ -556,21 +567,33 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	/* add sw */
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) tree);
-	/* Add columns */
+	/* Add columns 
+	 Command column */
 	renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 	column = g_object_ref_sink (gtk_tree_view_column_new ());
 	gtk_tree_view_append_column (tree, column);
 	gtk_tree_view_column_set_title (column, _ ("Command"));
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
 	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 1);
-	_tmp1 = NULL;
-	renderer = (_tmp1 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL)), _tmp1);
+	gtk_tree_view_column_set_sort_column_id (column, 1);
+	/* Usage column */
 	_tmp2 = NULL;
-	column = (_tmp2 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp2);
+	renderer = (_tmp2 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL)), _tmp2);
+	_tmp3 = NULL;
+	column = (_tmp3 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp3);
 	gtk_tree_view_append_column (tree, column);
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
 	gtk_tree_view_column_set_title (column, _ ("Usage"));
 	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 5);
+	gtk_tree_view_column_set_sort_column_id (column, 5);
+	/* Label with explenation */
+	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
+	gtk_label_set_markup (label, _ ("The following commands can be used in the easy command window.\nThe easy command window can be opened by pressing ctrl-space"));
+	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
+	gtk_misc_set_padding ((GtkMisc*) label, 8, 6);
+	/* Add scrolled windows (containing tree) to dialog */
+	gtk_box_pack_start ((GtkBox*) window->vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+	/* Add scrolled windows (containing tree) to dialog */
 	gtk_box_pack_start ((GtkBox*) window->vbox, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
 	/* show all */
 	gtk_widget_show_all ((GtkWidget*) window);
@@ -582,6 +605,7 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
 	(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
+	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
 }
 
 
