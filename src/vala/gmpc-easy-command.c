@@ -60,6 +60,8 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 static gboolean _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event (GtkWindow* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_easy_command_activate_gtk_entry_activate (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (GtkEntry* _sender, const GdkEventKey* event, gpointer self);
+static gboolean _gmpc_easy_command_focus_out_event_gtk_widget_focus_out_event (GtkEntry* _sender, const GdkEventFocus* event, gpointer self);
+static gboolean gmpc_easy_command_focus_out_event (GmpcEasyCommand* self, GtkEntry* entry, const GdkEventFocus* event);
 static void _gmpc_easy_command_help_window_destroy_gtk_dialog_response (GtkDialog* _sender, gint response_id, gpointer self);
 static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, GtkTreeIter* iter, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -457,6 +459,11 @@ static gboolean _gmpc_easy_command_key_press_event_gtk_widget_key_press_event (G
 }
 
 
+static gboolean _gmpc_easy_command_focus_out_event_gtk_widget_focus_out_event (GtkEntry* _sender, const GdkEventFocus* event, gpointer self) {
+	return gmpc_easy_command_focus_out_event (self, _sender, event);
+}
+
+
 /** 
      * Tell gmpc-easy-command to popup.
      * @param self The GmpcEasyCommand object to popup
@@ -508,6 +515,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 		gtk_entry_set_completion (entry, self->priv->completion);
 		g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
 		g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) entry, "focus-out-event", (GCallback) _gmpc_easy_command_focus_out_event_gtk_widget_focus_out_event, self, 0);
 		gtk_widget_show_all ((GtkWidget*) self->priv->window);
 		gtk_window_present (self->priv->window);
 		gtk_widget_grab_focus ((GtkWidget*) entry);
@@ -515,6 +523,18 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	} else {
 		gtk_window_present (self->priv->window);
 	}
+}
+
+
+static gboolean gmpc_easy_command_focus_out_event (GmpcEasyCommand* self, GtkEntry* entry, const GdkEventFocus* event) {
+	GtkWindow* _tmp0;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (entry != NULL, FALSE);
+	fprintf (stdout, "focus out event\n");
+	gtk_object_destroy ((GtkObject*) self->priv->window);
+	_tmp0 = NULL;
+	self->priv->window = (_tmp0 = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0);
+	return FALSE;
 }
 
 

@@ -297,6 +297,8 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			entry.activate += this.activate;
 			entry.key_press_event += this.key_press_event;
 
+			entry.focus_out_event += this.focus_out_event;
+
 			window.show_all();
 			window.present();
 			entry.grab_focus();
@@ -304,7 +306,14 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			this.window.present();
 		}
 	}
-
+	private bool
+	focus_out_event(Gtk.Entry entry, Gdk.EventFocus event)
+	{
+		stdout.printf("focus out event\n");
+		this.window.destroy();
+		this.window = null;
+		return false;
+	}
 	public static void 
 	help_window_destroy(Gtk.Dialog window,int response)
 	{
