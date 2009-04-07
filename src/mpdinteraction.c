@@ -248,6 +248,18 @@ static void repeat_current_song_command(gpointer user_data, const char *param)
 	}
 }
 
+static void update_database_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "update");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Update database: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Update database: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		mpd_database_update_dir(connection, "/");
+	}
+}
+
 static void mpd_interaction_init(void)
 {
 	/* Player control */
@@ -287,6 +299,12 @@ static void mpd_interaction_init(void)
 						"",
 						_("Repeat the current song"),
 						(GmpcEasyCommandCallback *)repeat_current_song_command, NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("update database"),
+						"",
+						_("Update the database"),
+						(GmpcEasyCommandCallback *)update_database_command, NULL);
 }
 
 gmpcPlugin server_plug = {
