@@ -744,20 +744,28 @@ int main(int argc, char **argv)
 		plugin_load_dir(url);
 		q_free(url);
 #endif
-	}
-	/* user space dynamic plugins */
-	url = gmpc_get_user_path("plugins");
-	/**
-     * if dir exists, try to load the plugins.
-     */
-	if (g_file_test(url, G_FILE_TEST_IS_DIR)) {
-		debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
-		if (load_plugins)
-			plugin_load_dir(url);
-	}
-	TEC("Loading plugins from %s", url);
-	q_free(url);
 
+		if(g_getenv("PLUGIN_DIR") != NULL) {
+			gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"),NULL);
+			printf("Loading plugin dir: %s\n", path);
+			if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
+				plugin_load_dir(path);
+			}
+			if(path) g_free(path);
+		}
+		/* user space dynamic plugins */
+		url = gmpc_get_user_path("plugins");
+		/**
+		 * if dir exists, try to load the plugins.
+		 */
+		if (g_file_test(url, G_FILE_TEST_IS_DIR)) {
+			debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
+			if (load_plugins)
+				plugin_load_dir(url);
+		}
+		TEC("Loading plugins from %s", url);
+		q_free(url);
+	}
 	/* time todo some initialisation of plugins */
 	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
 		TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));

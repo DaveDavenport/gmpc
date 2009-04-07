@@ -282,7 +282,7 @@ static gboolean __show_plugin_load_error(gpointer data)
     return FALSE;
 }
 
-void plugin_load_dir(gchar *path)
+void plugin_load_dir(const gchar *path)
 {
     GDir *dir = g_dir_open(path, 0, NULL);
     int failure = 0;

@@ -66,7 +66,7 @@ char * edit_song_markup(char *format);
 void main_quit(void);
 
 /* plugin */
-void plugin_load_dir(gchar *path);
+void plugin_load_dir(const gchar *path);
 void plugin_add(gmpcPlugin *plug, int plugin, GError **error);
 void plugin_add_new(GmpcPluginBase *plug, int plugin, GError **error);
 int plugin_get_pos(int id);
