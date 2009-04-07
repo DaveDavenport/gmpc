@@ -234,6 +234,20 @@ static void stop_after_current_song_command(gpointer user_data, const char *para
 	}
 }
 
+static void repeat_current_song_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "single");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Repeat current song: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Repeat current song: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("The current song will be forever repeated."), ERROR_INFO);
+		mpd_player_set_repeat(connection, TRUE);
+		mpd_player_set_single(connection, TRUE);
+	}
+}
+
 static void mpd_interaction_init(void)
 {
 	/* Player control */
@@ -267,6 +281,12 @@ static void mpd_interaction_init(void)
 						"",
 						_("Stop playback after the current song"),
 						(GmpcEasyCommandCallback *)stop_after_current_song_command, NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("repeat current song"),
+						"",
+						_("Repeat the current song"),
+						(GmpcEasyCommandCallback *)repeat_current_song_command, NULL);
 }
 
 gmpcPlugin server_plug = {
