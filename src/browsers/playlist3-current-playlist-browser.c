@@ -133,7 +133,24 @@ static void pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, unsigned
         __real_pl3_total_playtime_changed(model, loaded_songs, total_playtime, self);
     }
 }
-
+static void pl3_current_playlist_browser_crop_current_song(PlayQueuePlugin *self, const gchar *param)
+{
+    mpd_Song *song = mpd_playlist_get_current_song(connection);
+    if(song)
+    {
+        int length = mpd_playlist_get_playlist_length(connection); 
+        /* Move to first place, this avoid possible "issues" */
+        mpd_playlist_move_id(connection,song->id, 0);
+        for(;length > 1; length--){
+            mpd_playlist_queue_delete_pos(connection, length-1);
+            if((length&16383) == 16383) {
+                printf("commiting block\n");
+                mpd_playlist_queue_commit(connection);
+            }
+        }
+        mpd_playlist_queue_commit(connection);
+    }
+}
 static void pl3_cp_init(PlayQueuePlugin *self)
 {
 
@@ -150,6 +167,11 @@ static void pl3_cp_init(PlayQueuePlugin *self)
                     _("Clear play queue"),"",
                     _("Clear play queue"),
                     (GmpcEasyCommandCallback *)pl3_current_playlist_browser_clear_playlist, self); 
+
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+                    _("Crop current song"),"",
+                    _("Crop the playlist so it only contains the current song"),
+                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_crop_current_song, self); 
 }
 void pl3_current_playlist_destroy(PlayQueuePlugin *self);
 
