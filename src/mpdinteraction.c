@@ -119,9 +119,15 @@ static void crossfade_set(gpointer data, const char *param)
 }
 static void volume_set(gpointer data, const char *param)
 {
-	if(strlen(param) > 0)
+	int current_volume = mpd_status_get_volume(connection);
+	/* if volume is disabled (current_volume < 0) ignore this command */
+	if(strlen(param) > 0 && current_volume >= 0)
 	{
-		int volume = atoi(param);
+		int volume = 0;
+		if(param[0] == '-' || param[0] == '+') {
+			volume = current_volume;
+		}
+		volume += atoi(param);
 		mpd_status_set_volume(connection,volume); 
 	}
 }
@@ -214,6 +220,20 @@ static void seek_command(gpointer user_data, const char *param)
 	g_strfreev(fields);
 }
 
+static void stop_after_current_song_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "single");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Stop after current song: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Stop after current song: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Playback will be stopped after the current playing song."), ERROR_INFO);
+		mpd_player_set_repeat(connection, FALSE);
+		mpd_player_set_single(connection, TRUE);
+	}
+}
+
 static void mpd_interaction_init(void)
 {
 	/* Player control */
@@ -227,9 +247,7 @@ static void mpd_interaction_init(void)
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",_("Repeat (on|off)"),(GmpcEasyCommandCallback *)set_repeat, NULL); 
 
 	/* volume commands */
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume +"),"\\+", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[+-]?[0-9]+",_("Volume (+-)<level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("crossfade"),C_("Regex for matching crossfade, translate off","([0-9]+|Off)"), _("Set Crossfade <seconds>"),(GmpcEasyCommandCallback *)crossfade_set, NULL); 
@@ -243,6 +261,12 @@ static void mpd_interaction_init(void)
 
 	/* Basic seek commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("seek"), "[+-]?[0-9:]+",_("Seek within the current song"), (GmpcEasyCommandCallback *)seek_command, NULL);
+	/* Advanced commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("stop after current song"),
+						"",
+						_("Stop playback after the current song"),
+						(GmpcEasyCommandCallback *)stop_after_current_song_command, NULL);
 }
 
 gmpcPlugin server_plug = {
