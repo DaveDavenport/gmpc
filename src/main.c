@@ -1027,6 +1027,9 @@ void GmpcStatusChangedCallback(MpdObj * mi, ChangedStatusType what, void *userda
 static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi, ChangedStatusType what, gpointer data)
 {
 	int i;
+	if(what&MPD_CST_PERMISSION){
+		advanced_search_update_taglist();
+	}
 	/**
 	 * Make the plugins recieve the signals
 	 */
@@ -1191,6 +1194,9 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 		advanced_search_update_taglist();
 	}
 */
+	if(connected){
+		advanced_search_update_taglist();
+	}
 	/**
      * force an update of status, to check password
      */

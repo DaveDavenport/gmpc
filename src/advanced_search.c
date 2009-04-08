@@ -20,6 +20,7 @@ void advanced_search_init(void)
     }
     g_string_append(string, ")[ ]*[=:][ ]*|[ ]*(\\|\\|)[ ]*");
     search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
+	printf("Created regex: '%s'\n", string->str);
     g_string_free(string, TRUE);
 }
 void advanced_search_update_taglist(void)
@@ -54,6 +55,7 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
         if(text[i][0] == '\0')continue;
 
         type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
+		printf("looking up: '%s' : %s\n", text[i], mpdTagItemKeys[type]);
         if(type != MPD_TAG_NOT_FOUND && text[i+1])
         {
             gchar **split = tokenize_string(text[i+1]);
