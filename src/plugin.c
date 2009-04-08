@@ -416,6 +416,8 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     gchar *retv = g_build_path(G_DIR_SEPARATOR_S, url, "share", "gmpc", "plugins", NULL);
     return retv;//g_strdup(plug->path);
 #else
+    int i;
+    const gchar * const *paths = g_get_system_data_dirs();
     gchar *url = NULL;
     gchar *homedir = gmpc_get_user_path(""); 
     if(strncmp(plug->path,homedir ,strlen(homedir)) == 0)
@@ -427,6 +429,27 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     }
 
     g_free(homedir);
+
+    if(url){
+        if(g_file_test(url, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
+        {
+            printf("Path 1: %s\n", url);
+            return url;
+        }
+        g_free(url);
+        url = NULL;
+    }
+
+    for(i=0; paths && paths[i]; i++) {
+        url = g_build_filename(paths[i], "gmpc", "icons", NULL);
+        if(g_file_test(url, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
+        {
+            printf("Path 2: %s\n", url);
+            return url;
+        }
+        g_free(url);
+        url = NULL;
+    }
     return url;
 #endif
 }
