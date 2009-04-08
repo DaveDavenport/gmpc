@@ -441,7 +441,7 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     }
 
     for(i=0; paths && paths[i]; i++) {
-        url = g_build_filename(paths[i], "gmpc", "icons", NULL);
+        url = g_build_filename(paths[i], "gmpc", "plugins", NULL);
         if(g_file_test(url, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
             printf("Path 2: %s\n", url);
