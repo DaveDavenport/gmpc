@@ -55,13 +55,13 @@ private class SongWindow : Gtk.Window {
     {
         Gtk.TreeIter iter;
         string a;
-        a = "<b>%s</b>: %s".printf(_("Uri"),uri);
+        a = Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
         if(provider != null) {
-            a+="\n<b>%s</b>:  %s".printf(_("Provider"), provider);
+            a+= Markup.printf_escaped("\n<b>%s</b>:  %s",_("Provider"), provider);
         }
         if(format != null)
         {
-            a+="\n<b>%s</b>: %s".printf(_("Filetype"), format.get_name());
+            a+= Markup.printf_escaped("\n<b>%s</b>: %s",_("Filetype"), format.get_name());
             stdout.printf("%s\n",format.get_name()); 
         }
         if(pb != null)
@@ -79,6 +79,7 @@ private class SongWindow : Gtk.Window {
             new_w = 150;
             new_h = (int)((150.0/(double)pb.width)*pb.height);
         }
+        stdout.printf("a: '%s'", a);
         this.model.append(out iter);
         this.model.set(iter, 0, pb.scale_simple(new_w,new_h,Gdk.InterpType.BILINEAR),1, uri,2,a, -1);
     }

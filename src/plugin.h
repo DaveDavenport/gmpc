@@ -119,7 +119,7 @@ typedef struct {
 	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
 
     /* Padding */
-    void (*get_uris)                (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data);
+    void (*get_uris)                (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data) G_GNUC_DEPRECATED;
     /*  New api, return linked list of MetaData Objects (see metadata.h) */
     void (*get_metadata)            (mpd_Song *song, MetaDataType, void (*callback)(GList *metadata, gpointer data), gpointer data);
     void (*padding3)                (void);

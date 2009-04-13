@@ -908,44 +908,6 @@ static void result_itterate(GList *list, gpointer user_data)
 
     g_idle_add((GSourceFunc)process_itterate, NULL);
 }
-/**
- * Remove when all plugins changed
- */
-static void result_itterate_old(GList *list, gpointer user_data)
-{
-    meta_thread_data *d = (meta_thread_data *)user_data;
-    gmpcPluginParent *plug = meta_plugins[d->index];
-    GList *iter;
-    for(iter = g_list_first(list); iter; iter = g_list_next(iter))
-    {
-        MetaData *md = meta_data_new();
-        gchar *uri = iter->data;
-        md->content = uri;
-        md->size = -1;
-        md->type = d->type;
-        md->plugin_name = gmpc_plugin_get_name(plug);
-
-        printf("Uri md object: %s::%s\n", uri, md->plugin_name);
-        if(d->type&(META_ALBUM_ART|META_ARTIST_ART))
-        {
-		printf("set uri\n");
-            md->content_type = META_DATA_CONTENT_URI;
-        }
-        else if(d->type&(META_ARTIST_TXT|META_ALBUM_TXT|META_SONG_TXT))
-        {
-
-		printf("set text\n");
-            md->content_type = META_DATA_CONTENT_TEXT;
-        }else {
-
-		printf("set other\n");
-		/* TODO fix similar */
-            md->content_type = META_DATA_CONTENT_RAW;
-        }
-        iter->data = md;
-    }
-    result_itterate(list, user_data);
-}
 static gboolean process_itterate(void)
 {
 
@@ -989,13 +951,9 @@ static gboolean process_itterate(void)
              * Query plugins, new type call in this thread.
              * old type, create new thread. 
              */
-            if(gmpc_plugin_get_enabled(plug) && plug->old->metadata->get_uris != NULL)
+            if(gmpc_plugin_get_enabled(plug) && plug->old->metadata->get_metadata != NULL)
             {
-                gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate_old, (gpointer)d);
-            }
-            else if (gmpc_plugin_get_enabled(plug) && plug->old->metadata->get_metadata != NULL){
-                printf("query new api: %s\n", gmpc_plugin_get_name(plug));
-                plug->old->metadata->get_metadata(d->edited,  d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
+                gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
             }
             else
             {
@@ -1482,36 +1440,6 @@ static gboolean metadata_get_list_itterate_idle(gpointer data)
     return FALSE;
 }
 
-/**
- * TODO: Remove when all plugins are converted 
- */
-static void metadata_get_list_itterate_old(GList *list, gpointer data)
-{
-    MLQuery *q = (MLQuery *)data;
-    gmpcPluginParent *plug = meta_plugins[q->index-1]; 
-    GList *iter;
-    for(iter = g_list_first(list); iter; iter = g_list_next(iter))
-    {   
-        MetaData *md = meta_data_new();
-        gchar *uri = iter->data;
-        md->content = uri;
-        md->size = -1;
-        md->type = q->type;
-        md->plugin_name = gmpc_plugin_get_name(plug);
-
-        printf("Uri md object: %s::%s\n", uri, md->plugin_name);
-        if(q->type&(META_ALBUM_ART|META_ARTIST_ART))
-        {
-            md->content_type = META_DATA_CONTENT_URI;
-        }
-        else
-        {
-            md->content_type = META_DATA_CONTENT_TEXT;
-        }
-        iter->data = md;
-    }
-    metadata_get_list_itterate(list, data);
-}
 static void metadata_get_list_itterate(GList *list, gpointer data)
 {
     MLQuery *q = (MLQuery *)data;
@@ -1539,16 +1467,10 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     {
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
-        if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_uris){
+        if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_metadata){
             q->calls++;
-            gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate_old, (gpointer)q); 
+            gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
         }
-        /* New api version 2 */
-        else if (gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_metadata){
-            q->calls++;
-            plug->old->metadata->get_metadata(q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
-        }
-
         else g_idle_add(metadata_get_list_itterate_idle, q);
         return;
     }

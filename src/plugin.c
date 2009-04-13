@@ -119,22 +119,21 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         }
         if(plug->metadata->get_image != NULL)
         {
-            g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin get_image api is deprecated "));
+            g_set_error(error, plugin_quark(), 0,"%s: %s %s", _("Failed to load plugin"), plug->name, _("plugin get_image api is deprecated "));
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL was true",plug->name);
             return FALSE;                                                                                             
         }
-        
-        if(plug->metadata->get_uris == NULL && plug->metadata->get_metadata == NULL)
+        if(plug->metadata->get_uris != NULL)
+        {
+            g_set_error(error, plugin_quark(), 0,"%s: %s %s", _("Failed to load plugin"),plug->name, _("plugin get_uris api is deprecated "));
+            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_uris != NULL was true",plug->name);
+            return FALSE;                                                                                             
+        }
+        if(plug->metadata->get_metadata == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
             debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
             return FALSE;                                                                                             
-        }
-        if(plug->metadata->get_image)
-        {
-            debug_printf(DEBUG_WARNING, "%s:  uses old metadata api\n", plug->name);
-
-
         }
     }
     /* if there is a browser field, check validity */
@@ -695,24 +694,13 @@ void gmpc_plugin_metadata_set_priority(gmpcPluginParent *plug, int priority)
     }
 }
 
-int gmpc_plugin_metadata_get_image(gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, char **path)
-{
-    *path = NULL;
-    if(gmpc_plugin_is_metadata(plug))
-    {
-        if(plug->old->metadata->get_image)
-            return plug->old->metadata->get_image(song, type, path);
-    }
-    return META_DATA_UNAVAILABLE;
-}
-
 void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data)
 {
     if(gmpc_plugin_is_metadata(plug))
     {
-        if(plug->old->metadata->get_uris)
+        if(plug->old->metadata->get_metadata)
         {
-            plug->old->metadata->get_uris(song, type, callback, data);
+            plug->old->metadata->get_metadata(song, type, callback, data);
             return;
         }
     }

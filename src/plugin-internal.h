@@ -71,7 +71,6 @@ gboolean        gmpc_plugin_is_internal                     (gmpcPluginParent *p
 gboolean        gmpc_plugin_is_metadata                     (gmpcPluginParent *plug);
 int             gmpc_plugin_metadata_get_priority           (gmpcPluginParent *plug);
 void            gmpc_plugin_metadata_set_priority           (gmpcPluginParent *plug, int priority);
-int             gmpc_plugin_metadata_get_image              (gmpcPluginParent *plug, mpd_Song *song, MetaDataType type, char **path);
 
 void            gmpc_plugin_metadata_query_metadata_list    (gmpcPluginParent *plug, 
         mpd_Song *song, 

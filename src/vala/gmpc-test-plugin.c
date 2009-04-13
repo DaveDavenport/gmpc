@@ -106,13 +106,13 @@ static void song_window_add_entry_image (SongWindow* self, const char* provider,
 	g_return_if_fail (pb != NULL);
 	a = NULL;
 	_tmp0 = NULL;
-	a = (_tmp0 = g_strdup_printf ("<b>%s</b>: %s", _ ("Uri"), uri), a = (g_free (a), NULL), _tmp0);
+	a = (_tmp0 = g_markup_printf_escaped ("<b>%s</b>: %s", _ ("Uri"), uri), a = (g_free (a), NULL), _tmp0);
 	if (provider != NULL) {
 		char* _tmp2;
 		char* _tmp1;
 		_tmp2 = NULL;
 		_tmp1 = NULL;
-		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
+		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_markup_printf_escaped ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
 		_tmp1 = (g_free (_tmp1), NULL);
 	}
 	if (format != NULL) {
@@ -120,7 +120,7 @@ static void song_window_add_entry_image (SongWindow* self, const char* provider,
 		char* _tmp3;
 		_tmp4 = NULL;
 		_tmp3 = NULL;
-		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_strdup_printf ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format))), NULL), a = (g_free (a), NULL), _tmp4);
+		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_markup_printf_escaped ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format))), NULL), a = (g_free (a), NULL), _tmp4);
 		_tmp3 = (g_free (_tmp3), NULL);
 		fprintf (stdout, "%s\n", gdk_pixbuf_format_get_name (format));
 	}
@@ -141,6 +141,7 @@ static void song_window_add_entry_image (SongWindow* self, const char* provider,
 		new_w = 150;
 		new_h = (gint) ((150.0 / ((double) gdk_pixbuf_get_width (pb))) * gdk_pixbuf_get_height (pb));
 	}
+	fprintf (stdout, "a: '%s'", a);
 	gtk_list_store_append (self->priv->model, &iter);
 	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
 	a = (g_free (a), NULL);
