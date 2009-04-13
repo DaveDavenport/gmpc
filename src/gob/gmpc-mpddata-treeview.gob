@@ -914,12 +914,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			GtkWidget *submenu = gtk_menu_new();
 			for(i=0; i< num_plugins;i++)
 			{
-				if(gmpc_plugin_is_browser(plugins[i]))
+				if(gmpc_plugin_get_enabled(plugins[i]))
 				{
-					if(gmpc_plugin_get_enabled(plugins[i]))
-					{
-						retv += gmpc_plugin_browser_song_list_option_menu(plugins[i],self, GTK_MENU(submenu));
-					}
+					retv += gmpc_plugin_browser_song_list_option_menu(plugins[i],self, GTK_MENU(submenu));
 				}
 			}
 			/* If no submenu item was added, destroy the submenu */

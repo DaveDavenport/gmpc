@@ -131,7 +131,7 @@ namespace Gmpc {
 
         /* untested */
         public interface SongListIface : Base {
-            public abstract int song_list (Gtk.Widget *tree, Gtk.Menu *menu);
+            public abstract int song_list (Gtk.Widget tree, Gtk.Menu menu);
 
         }
     }

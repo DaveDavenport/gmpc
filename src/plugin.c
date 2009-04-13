@@ -561,12 +561,17 @@ int gmpc_plugin_browser_add_go_menu(gmpcPluginParent *plug, GtkWidget *menu)
 
 int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu) 
 {
+    if(plug->new) {
+        if(GMPC_PLUGIN_IS_SONG_LIST_IFACE(plug->new))
+        {
+            printf("is song list iface: %s\n", gmpc_plugin_get_name(plug));
+            return gmpc_plugin_song_list_iface_song_list(GMPC_PLUGIN_SONG_LIST_IFACE(plug->new), GTK_WIDGET(tree), menu);
+        }
+        printf("no song list iface: %s\n", gmpc_plugin_get_name(plug));
+        return 0;
+    }
     if(gmpc_plugin_is_browser(plug))
     {
-        if(plug->new) {
-            /* TODO */
-            return 0;
-        }
         g_assert(plug->old->browser != NULL);
         if(plug->old->browser->song_list_option_menu)
         {

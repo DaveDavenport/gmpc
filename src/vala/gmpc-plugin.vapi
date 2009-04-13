@@ -37,7 +37,7 @@ namespace Gmpc {
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface SongListIface : Gmpc.Plugin.Base {
-			public abstract int song_list (Gtk.Widget* tree, Gtk.Menu* menu);
+			public abstract int song_list (Gtk.Widget tree, Gtk.Menu menu);
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface ToolMenuIface : Gmpc.Plugin.Base {
