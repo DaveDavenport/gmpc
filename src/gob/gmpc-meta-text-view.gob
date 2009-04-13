@@ -218,6 +218,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
             GtkTextChildAnchor *anch;
             self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 
             self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL); 
+
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
             gtk_widget_set_no_show_all(self->_priv->cancel, TRUE);
             /* Add 2 empty lines at the end, and make it non-editable */
             gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
