@@ -22,6 +22,7 @@ requires 2.0.0
 %headertop{
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
+#include <unistd.h>
 #include "main.h"
 #include "misc.h"
 %}
@@ -31,6 +32,9 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	private mpd_Song *song 			= {NULL} destroywith mpd_freeSong;
 	private int type 				= {META_ARTIST_TXT};
 	private gulong meta_id 			= {0};
+    private GtkWidget *edit         = {NULL};
+    private GtkWidget *cancel       = {NULL};
+    private gchar *path             = {NULL} destroywith g_free;
 
 	init (self)
 	{
@@ -46,6 +50,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		Self *gmi =  GET_NEW;
 		gmi->_priv->type = type;
+        gtk_text_buffer_create_tag (gmi->_priv->buffer, "not_editable",
+                "editable", FALSE, NULL);
 		return (GtkWidget *)gmi;
 	}
 
@@ -141,6 +147,106 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			}
 	}
 
+    private void
+    cancel_button_clicked(self, GtkWidget *button)
+    {
+        gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+        if(self->_priv->path)
+        {
+            /* Create a copy as self_set_from_path modifies self->_priv->path */
+            gchar* path = g_strdup(self->_priv->path);
+        	self_set_text_from_path(self,path); 
+            g_free(path);
+        }else self_set_text_na(self);
+    }
+
+    private void
+    edit_button_clicked(self, GtkWidget *button)
+    {
+        if(gtk_text_view_get_editable(GTK_TEXT_VIEW(self)))
+        {
+            gchar *content = NULL;
+            GtkTextIter iter_start, iter_end;
+            if(self->_priv->path == NULL || g_access(self->_priv->path,W_OK|R_OK)){
+                if(self->_priv->path) g_free(self->_priv->path);
+                self->_priv->path = gmpc_get_metadata_filename(self->_priv->type, self->_priv->song, "txt");
+            }
+            /* Get start and end of text, and store it */
+            gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter_start);
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &iter_end);
+            content = gtk_text_buffer_get_text(self->_priv->buffer, &iter_start, &iter_end, FALSE);
+            if(content)
+            {
+                GError *error = NULL;
+                g_file_set_contents(self->_priv->path, g_strstrip(content), -1,&error);
+                if(error != NULL)
+                {
+                    char *errorstr = g_markup_printf_escaped("%s: '%s' %s",_("Failed to store metadata file in"), self->_priv->path, error->message);
+                    playlist3_message_show(pl3_messages, errorstr, ERROR_WARNING);
+                    g_free(errorstr);
+                    g_error_free(error);
+                    error = NULL;
+                    g_free(content);
+                    return;
+                }
+                g_free(content);
+            }
+
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+            /* Copy path, because signal callback my destroy path first */
+            content = g_strdup(self->_priv->path);
+            meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_AVAILABLE, content); 
+            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, content);
+            g_free(content);
+
+        }else{
+            gtk_widget_show(self->_priv->cancel);
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), TRUE);
+            gtk_button_set_label(GTK_BUTTON(button), GTK_STOCK_SAVE);
+        }
+
+    }
+    private 
+    void
+    set_text(self, gchar *text, gsize length, int ro)
+    {
+        gtk_text_buffer_set_text(self->_priv->buffer, text, length);
+        if(!ro)
+        {
+            GtkTextIter iter;
+            GtkTextIter end_iter;
+            GtkTextChildAnchor *anch;
+            self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 
+            self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL); 
+            gtk_widget_set_no_show_all(self->_priv->cancel, TRUE);
+            /* Add 2 empty lines at the end, and make it non-editable */
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_insert_with_tags_by_name(self->_priv->buffer, &end_iter, "\n\n", -1,"not_editable", NULL);
+
+            /* Add edit widget */
+            anch = gtk_text_buffer_create_child_anchor(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_get_iter_at_child_anchor(self->_priv->buffer, &iter,anch);
+            /* Make widget non-editable */
+            gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "not_editable",&iter, &end_iter);
+            /* attach widget to anchor */
+            gtk_text_view_add_child_at_anchor(GTK_TEXT_VIEW(self), self->_priv->edit, anch);
+
+            /* Add edit widget */
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+            anch = gtk_text_buffer_create_child_anchor(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_get_iter_at_child_anchor(self->_priv->buffer, &iter,anch);
+            /* Make widget non-editable */
+            gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "not_editable",&iter, &end_iter);
+            /* attach widget to anchor */
+            gtk_text_view_add_child_at_anchor(GTK_TEXT_VIEW(self), self->_priv->cancel, anch);
+
+            /* show button */
+            gtk_widget_show(self->_priv->edit);
+            g_signal_connect_swapped(self->_priv->edit, "clicked",G_CALLBACK(self_edit_button_clicked), self);
+            g_signal_connect_swapped(self->_priv->cancel, "clicked",G_CALLBACK(self_cancel_button_clicked), self);
+        }
+    }
+
 	signal last NONE (STRING)	
 	void
 	set_text_from_path(self, gchar *path)
@@ -153,25 +259,26 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			gsize new_size = 0;
 			if(g_utf8_validate(content, size, NULL))
 			{
-				gtk_text_buffer_set_text(self->_priv->buffer, content, size);
+                self_set_text(self, content, size, FALSE);
 			}
 			else
 			{
 				new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
 				if(new_data)
 				{
-
-					gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
+                    self_set_text(self, new_data, new_size,FALSE);
 					g_free(new_data);
 				}
 				else
 				{
 					new_data = g_strdup_printf("%s: '%s' %s", _("Failed to open file:"), path,_("because of encoding issues"));
-					gtk_text_buffer_set_text(self->_priv->buffer,new_data,-1);
+                    self_set_text(self, new_data, -1,TRUE);
 					g_free(new_data);
 				}
 			}
 			g_free(content);
+            if(self->_priv->path) g_free(self->_priv->path);
+            self->_priv->path = g_strdup(path);
 		}
 	}
 	
@@ -181,15 +288,21 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		if(self->_priv->type == META_SONG_TXT)
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Lyric"),-1);
+            if(self->_priv->path) g_free(self->_priv->path);
+            self->_priv->path = NULL;
+            self_set_text(self, _("Fetching Lyrics"), -1,TRUE);
 		}
 		else if (self->_priv->type == META_ARTIST_TXT)
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Artist Info"),-1);
+            if(self->_priv->path) g_free(self->_priv->path);
+            self->_priv->path = NULL;
+            self_set_text(self, _("Fetching Artist Info"), -1,TRUE);
 		}
 		else
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Album Info"),-1);
+            if(self->_priv->path) g_free(self->_priv->path);
+            self->_priv->path = NULL;
+            self_set_text(self, _("Fetching Album Info"), -1,TRUE);
 		}
 	}
 
@@ -197,7 +310,10 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	set_text_na(self)
 	{
-		gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Not Available"),-1);
+        if(self->_priv->path) g_free(self->_priv->path);
+        self->_priv->path = NULL;
+
+        self_set_text(self, _("Not Available"), -1,FALSE);
 	}
 
 	private
