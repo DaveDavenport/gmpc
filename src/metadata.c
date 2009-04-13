@@ -834,7 +834,7 @@ static void result_itterate(GList *list, gpointer user_data)
     if(md->content_type == META_DATA_CONTENT_URI)
     {
         const char *path = meta_data_get_uri(md);// d->iter->data;
-	printf("trying uri: %s\n", path);
+        printf("trying uri: %s\n", path);
         if(path[0] == '/') {
             d->result_path = (char *)g_strdup(path);
             d->result = META_DATA_AVAILABLE;
@@ -842,8 +842,11 @@ static void result_itterate(GList *list, gpointer user_data)
             GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
             if(handle != NULL)
             {
-		printf("failed to create handle\n");
                 return;
+            }
+            else
+            {
+                printf("Testing: %s: failed to create handle\n", path);
             }
         }
     
