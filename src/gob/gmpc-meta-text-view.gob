@@ -21,6 +21,7 @@ requires 2.0.0
 
 %headertop{
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <libmpd/libmpd.h>
 #include <unistd.h>
 #include "main.h"
