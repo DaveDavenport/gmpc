@@ -26,6 +26,9 @@ requires 2.0.0
 #include "main.h"
 #include "misc.h"
 %}
+%ph{
+#include "vala/gmpc-test-plugin.h"
+%}
 
 class Gmpc:Meta:Text:View from Gtk:Text:View {
 	private GtkTextBuffer *buffer 	= {gtk_text_buffer_new(NULL)} unrefwith g_object_unref;
