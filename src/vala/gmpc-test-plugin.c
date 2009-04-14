@@ -1248,7 +1248,7 @@ static gint gmpc_test_plugin_real_song_list (GmpcPluginSongListIface* base, GtkW
 		GtkImageMenuItem* item;
 		GtkImage* _tmp2;
 		gint _tmp3;
-		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_label (_ ("Metadata editor")));
+		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_label (_ ("Metadata selector")));
 		_tmp2 = NULL;
 		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp2 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-edit", GTK_ICON_SIZE_MENU))));
 		(_tmp2 == NULL) ? NULL : (_tmp2 = (g_object_unref (_tmp2), NULL));

@@ -317,7 +317,10 @@ void open_uri(const gchar *uri)
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
 #endif
 #endif
-	command	= g_strdup_printf(browser_command, uri);
+    gchar *escaped_uri = g_uri_escape_string(uri, ":/", TRUE);
+	command	= g_strdup_printf(browser_command, escaped_uri);
+    printf("commnand: %s\n", command);
+    g_free(escaped_uri);
 	result = g_spawn_command_line_async (command, &error);
 	if(error)
 	{

@@ -167,17 +167,17 @@ public class Gmpc.Song.Links: Gtk.Frame
         foreach(string entry in groups)
         {
             try{
-                string  typestr = file.get_string(entry,"type");
-                string  uri = file.get_string(entry, "url");
+                string typestr = file.get_string(entry,"type");
+                string uri = file.get_string(entry, "url");
                 
                 Type type;
                 switch(typestr) {
-                    case _("artist"):
+                    case "artist":
                         type = Type.ARTIST;
                         if(this.song.artist != null)
                             uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
-                    case _("album"):
+                    case "album":
                         type = Type.ALBUM;
 
                         if(this.song.album != null)
@@ -186,7 +186,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                         if(this.song.artist != null)
                             uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
-                    case _("song"):
+                    case "song":
                     default:
                         type = Type.SONG;
 
@@ -200,6 +200,25 @@ public class Gmpc.Song.Links: Gtk.Frame
                             uri = uri.replace("%ARTIST%", this.song.artist);
                         break;
                 }
+                try{
+                string sar = file.get_string(entry, "search-and-replace");
+                if(sar != null) {
+                    string[] s = sar.split("::");
+                    //if(s.size == 2)
+                    stdout.printf("'%s'::'%s'\n", s[0], s[1]);
+                    if(s.length == 2){
+                        try{
+                        var regex =  new GLib.Regex (s[0]);
+                        uri = regex.replace_literal(uri,-1,0, s[1]);
+                        } catch (GLib.RegexError e) {
+                            stdout.printf("Failed to compile regex: '%s'\n", e.message);
+                        }
+                    }
+                }
+                }catch(Error e) {
+
+                }
+
                 if((int)type <= (int)this.type)
                 {
                     var label = new Gtk.LinkButton(uri);
