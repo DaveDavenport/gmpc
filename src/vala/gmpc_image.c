@@ -142,7 +142,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		}
 	}
 	/*ctx.reset_clip();*/
-	return (_tmp2 = TRUE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp2);
+	return (_tmp2 = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp2);
 }
 
 

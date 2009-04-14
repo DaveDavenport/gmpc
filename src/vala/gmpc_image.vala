@@ -110,7 +110,7 @@ public class Gmpc.Image:Gtk.EventBox {
 			}
 //			ctx.reset_clip();
 		}
-		return true;
+		return false;
 	}
 	private bool timeout_test() {
 		fade -= 0.10;
