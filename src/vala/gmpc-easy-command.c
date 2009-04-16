@@ -32,8 +32,8 @@
 
 
 
-static glong string_get_length (const char* self);
 static char* string_substring (const char* self, glong offset, glong len);
+static glong string_get_length (const char* self);
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
 	guint signals;
@@ -72,12 +72,6 @@ static gint _vala_array_length (gpointer array);
 
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 static char* string_substring (const char* self, glong offset, glong len) {
 	glong string_length;
 	const char* start;
@@ -95,6 +89,12 @@ static char* string_substring (const char* self, glong offset, glong len) {
 	g_return_val_if_fail ((offset + len) <= string_length, NULL);
 	start = g_utf8_offset_to_pointer (self, offset);
 	return g_strndup (start, ((gchar*) g_utf8_offset_to_pointer (start, len)) - ((gchar*) start));
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 

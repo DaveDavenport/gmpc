@@ -20,12 +20,16 @@
 #include "gmpc_image.h"
 #include <float.h>
 #include <math.h>
+#include <pango/pango.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
+#include <pango/pangocairo.h>
+#include <stdio.h>
 
 
 
 
+static glong string_get_length (const char* self);
 struct _GmpcImagePrivate {
 	GdkPixbuf* cover;
 	gboolean cover_border;
@@ -33,11 +37,14 @@ struct _GmpcImagePrivate {
 	gboolean temp_border;
 	double fade;
 	guint fade_timeout;
+	char* _text;
+	PangoFontDescription* fd;
 };
 
 #define GMPC_IMAGE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_IMAGE, GmpcImagePrivate))
 enum  {
-	GMPC_IMAGE_DUMMY_PROPERTY
+	GMPC_IMAGE_DUMMY_PROPERTY,
+	GMPC_IMAGE_TEXT
 };
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const GdkEventExpose* event);
 static gboolean gmpc_image_timeout_test (GmpcImage* self);
@@ -49,6 +56,12 @@ static void gmpc_image_finalize (GObject* obj);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const GdkEventExpose* event) {
 	cairo_t* ctx;
 	gint width;
@@ -58,6 +71,8 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	gint ww;
 	gint wh;
 	gboolean _tmp2;
+	gboolean _tmp3;
+	gboolean _tmp5;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (img != NULL, FALSE);
 	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) img)->window);
@@ -104,6 +119,8 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		if (self->priv->cover_border) {
 			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, fade2);
 			cairo_stroke (ctx);
+		} else {
+			cairo_new_path (ctx);
 		}
 	}
 	/*ctx.reset_clip();
@@ -139,10 +156,49 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		if (self->priv->temp_border) {
 			cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, 1 - fade2);
 			cairo_stroke (ctx);
+		} else {
+			cairo_new_path (ctx);
 		}
 	}
+	_tmp2 = FALSE;
+	_tmp3 = FALSE;
+	if (self->priv->cover != NULL) {
+		_tmp3 = self->priv->_text != NULL;
+	} else {
+		_tmp3 = FALSE;
+	}
+	if (_tmp3) {
+		_tmp2 = string_get_length (self->priv->_text) > 0;
+	} else {
+		_tmp2 = FALSE;
+	}
 	/*ctx.reset_clip();*/
-	return (_tmp2 = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp2);
+	if (_tmp2) {
+		PangoLayout* _tmp4;
+		PangoLayout* layout;
+		gint tw;
+		gint th;
+		gint size;
+		_tmp4 = NULL;
+		layout = (_tmp4 = pango_cairo_create_layout (ctx), (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4));
+		tw = 0;
+		th = 0;
+		cairo_set_antialias (ctx, CAIRO_ANTIALIAS_DEFAULT);
+		size = (gdk_pixbuf_get_width (self->priv->cover)) / ((gint) string_get_length (self->priv->_text));
+		fprintf (stdout, "%i-%i-%i\n", size, ww, (gint) string_get_length (self->priv->_text));
+		pango_font_description_set_absolute_size (self->priv->fd, (double) (size * 1024));
+		pango_layout_set_font_description (layout, self->priv->fd);
+		pango_layout_set_text (layout, self->priv->_text, -1);
+		pango_layout_get_pixel_size (layout, &tw, &th);
+		cairo_move_to (ctx, x + ((ww - tw) / 2.0), y + ((wh - th) / 2.0));
+		pango_cairo_layout_path (ctx, layout);
+		cairo_set_source_rgba (ctx, (double) 0, (double) 0, (double) 0, (double) 1);
+		cairo_stroke_preserve (ctx);
+		cairo_set_source_rgba (ctx, (double) 1, (double) 1, (double) 1, (double) 1);
+		cairo_fill (ctx);
+		(layout == NULL) ? NULL : (layout = (g_object_unref (layout), NULL));
+	}
+	return (_tmp5 = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp5);
 }
 
 
@@ -271,6 +327,23 @@ GmpcImage* gmpc_image_new (void) {
 }
 
 
+const char* gmpc_image_get_text (GmpcImage* self) {
+	g_return_val_if_fail (self != NULL, NULL);
+	return self->priv->_text;
+}
+
+
+void gmpc_image_set_text (GmpcImage* self, const char* value) {
+	char* _tmp2;
+	const char* _tmp1;
+	g_return_if_fail (self != NULL);
+	_tmp2 = NULL;
+	_tmp1 = NULL;
+	self->priv->_text = (_tmp2 = (_tmp1 = value, (_tmp1 == NULL) ? NULL : g_strdup (_tmp1)), self->priv->_text = (g_free (self->priv->_text), NULL), _tmp2);
+	g_object_notify ((GObject *) self, "text");
+}
+
+
 static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, const GdkEventExpose* event, gpointer self) {
 	return gmpc_image_on_expose (self, _sender, event);
 }
@@ -286,19 +359,56 @@ static GObject * gmpc_image_constructor (GType type, guint n_construct_propertie
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_IMAGE (obj);
 	{
+		PangoFontDescription* _tmp0;
 		g_object_set ((GtkWidget*) self, "app-paintable", TRUE, NULL);
 		gtk_event_box_set_visible_window ((GtkEventBox*) self, FALSE);
 		g_signal_connect_object ((GtkWidget*) self, "expose-event", (GCallback) _gmpc_image_on_expose_gtk_widget_expose_event, self, 0);
+		_tmp0 = NULL;
+		self->priv->fd = (_tmp0 = pango_font_description_new (), (self->priv->fd == NULL) ? NULL : (self->priv->fd = (pango_font_description_free (self->priv->fd), NULL)), _tmp0);
+		/*from_string("sans mono"); */
+		pango_font_description_set_family (self->priv->fd, "sans mono");
 	}
 	return obj;
+}
+
+
+static void gmpc_image_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
+	GmpcImage * self;
+	gpointer boxed;
+	self = GMPC_IMAGE (object);
+	switch (property_id) {
+		case GMPC_IMAGE_TEXT:
+		g_value_set_string (value, gmpc_image_get_text (self));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+
+static void gmpc_image_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
+	GmpcImage * self;
+	self = GMPC_IMAGE (object);
+	switch (property_id) {
+		case GMPC_IMAGE_TEXT:
+		gmpc_image_set_text (self, g_value_get_string (value));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
 }
 
 
 static void gmpc_image_class_init (GmpcImageClass * klass) {
 	gmpc_image_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (GmpcImagePrivate));
+	G_OBJECT_CLASS (klass)->get_property = gmpc_image_get_property;
+	G_OBJECT_CLASS (klass)->set_property = gmpc_image_set_property;
 	G_OBJECT_CLASS (klass)->constructor = gmpc_image_constructor;
 	G_OBJECT_CLASS (klass)->finalize = gmpc_image_finalize;
+	g_object_class_install_property (G_OBJECT_CLASS (klass), GMPC_IMAGE_TEXT, g_param_spec_string ("text", "text", "text", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 
@@ -310,6 +420,7 @@ static void gmpc_image_instance_init (GmpcImage * self) {
 	self->priv->temp_border = TRUE;
 	self->priv->fade = 0.0;
 	self->priv->fade_timeout = (guint) 0;
+	self->priv->fd = NULL;
 }
 
 
@@ -324,6 +435,8 @@ static void gmpc_image_finalize (GObject* obj) {
 	}
 	(self->priv->cover == NULL) ? NULL : (self->priv->cover = (g_object_unref (self->priv->cover), NULL));
 	(self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL));
+	self->priv->_text = (g_free (self->priv->_text), NULL);
+	(self->priv->fd == NULL) ? NULL : (self->priv->fd = (pango_font_description_free (self->priv->fd), NULL));
 	G_OBJECT_CLASS (gmpc_image_parent_class)->finalize (obj);
 }
 

@@ -33,7 +33,8 @@ public class Gmpc.Image:Gtk.EventBox {
 	private bool temp_border = true;
 	private double fade = 0.0;
 	private uint fade_timeout = 0;
-
+	public string? text {get; set;} 
+	private Pango.FontDescription fd = null; 
 	~Image() {
 		if (fade_timeout > 0) {
 			GLib.Source.remove(fade_timeout);
@@ -44,6 +45,9 @@ public class Gmpc.Image:Gtk.EventBox {
 		this.app_paintable = true;
 		this.visible_window = false;
 		this.expose_event += this.on_expose;
+		this.fd = new Pango.FontDescription();//from_string("sans mono"); 
+		fd.set_family("sans mono");
+
 	}
 	private bool on_expose(Image img, Gdk.EventExpose event) {
 		var ctx = Gdk.cairo_create(img.window);
@@ -83,6 +87,7 @@ public class Gmpc.Image:Gtk.EventBox {
 				ctx.set_source_rgba(0, 0, 0, fade2);
 				ctx.stroke();
 			}
+			else ctx.new_path();
 /*			ctx.reset_clip();
 			ctx.restore();
 */		}
@@ -108,7 +113,30 @@ public class Gmpc.Image:Gtk.EventBox {
 				ctx.set_source_rgba(0, 0, 0, 1 - fade2);
 				ctx.stroke();
 			}
+			else ctx.new_path();
 //			ctx.reset_clip();
+		}
+
+		if (this.cover != null && this.text != null && this.text.length > 0){
+			var layout = Pango.cairo_create_layout(ctx);
+			int tw, th;
+
+			ctx.set_antialias(Cairo.Antialias.DEFAULT);
+			int size = (cover.width)/(int)this.text.length;
+			stdout.printf("%i-%i-%i\n", size, ww,(int)this.text.length);
+			fd.set_absolute_size(size*1024);
+			layout.set_font_description(fd);
+			layout.set_text(this.text,-1);
+			layout.get_pixel_size(out tw, out th);
+
+			ctx.move_to(x+(ww-tw)/2.0, y+(wh-th)/2.0);
+
+			Pango.cairo_layout_path(ctx,layout);
+
+			ctx.set_source_rgba(0, 0, 0, 1);
+			ctx.stroke_preserve();
+			ctx.set_source_rgba(1, 1, 1, 1);
+			ctx.fill();
 		}
 		return false;
 	}

@@ -458,37 +458,34 @@ void tray_icon2_create_tooltip(void)
 	 * In first box we have image/coverart
 	 * Re-use the gmpc-metaimage widget
 	 */
-    if(mpd_player_get_consume(connection) && mpd_playlist_get_playlist_length(connection)<100)
-    {
-        gchar *temp = g_markup_printf_escaped("<span size='%i' weight='bold'>%i</span>", 32*1024,mpd_playlist_get_playlist_length(connection));
-        coverimg = gtk_label_new("");
-        gtk_label_set_markup(GTK_LABEL(coverimg), temp);
-        g_free(temp);
 
-        gtk_widget_modify_fg(GTK_WIDGET(coverimg), GTK_STATE_NORMAL, &(pl3_win->style->fg[GTK_STATE_SELECTED]));
-
-    }else{
-        coverimg = gmpc_metaimage_new_size(META_ALBUM_ART,80);
-        gmpc_metaimage_set_squared(GMPC_METAIMAGE(coverimg), TRUE);
-        gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
-        gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg),(char *)"gmpc"); 
-        /**
-         * Force an update if mpd is playing
-         */
-        state = mpd_player_get_state(connection);
-        if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE) {
-            gmpc_metaimage_update_cover(GMPC_METAIMAGE(coverimg), connection, MPD_CST_SONGID,NULL);
-        } else  {
-            gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(coverimg));
-        }
+    coverimg = gmpc_metaimage_new_size(META_ALBUM_ART,80);
+    gmpc_metaimage_set_squared(GMPC_METAIMAGE(coverimg), TRUE);
+    gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
+    gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg),(char *)"gmpc"); 
+    /**
+     * Force an update if mpd is playing
+     */
+    state = mpd_player_get_state(connection);
+    if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE) {
+        gmpc_metaimage_update_cover(GMPC_METAIMAGE(coverimg), connection, MPD_CST_SONGID,NULL);
+    } else  {
+        gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(coverimg));
     }
-	/**
-	 * Pack the widget in a eventbox so we can set background color 
-	 */
-	event = gtk_event_box_new();
-	gtk_widget_set_size_request(event, 86,86);
-	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
-	gtk_container_add(GTK_CONTAINER(event), coverimg);
+
+    if(mpd_player_get_consume(connection) && mpd_playlist_get_playlist_length(connection) < 100)
+    {
+        gchar *temp = g_strdup_printf("%i", mpd_playlist_get_playlist_length(connection)); 
+        gmpc_metaimage_set_image_text(GMPC_METAIMAGE(coverimg), temp);
+        g_free(temp);
+    }
+    /**
+     * Pack the widget in a eventbox so we can set background color 
+     */
+    event = gtk_event_box_new();
+    gtk_widget_set_size_request(event, 86,86);
+    gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
+    gtk_container_add(GTK_CONTAINER(event), coverimg);
 	gtk_box_pack_start(GTK_BOX(hbox), event, FALSE,TRUE,0);
 	/**
 	 * 2

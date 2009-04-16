@@ -23,6 +23,8 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <stdlib.h>
+#include <string.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 
 G_BEGIN_DECLS
@@ -57,6 +59,8 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border);
 void gmpc_image_clear_pixbuf (GmpcImage* self);
 GmpcImage* gmpc_image_construct (GType object_type);
 GmpcImage* gmpc_image_new (void);
+const char* gmpc_image_get_text (GmpcImage* self);
+void gmpc_image_set_text (GmpcImage* self, const char* value);
 GType gmpc_image_get_type (void);
 
 
