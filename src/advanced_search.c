@@ -55,7 +55,6 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
         if(text[i][0] == '\0')continue;
 
         type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
-		printf("looking up: '%s' : %s\n", text[i], mpdTagItemKeys[type]);
         if(type != MPD_TAG_NOT_FOUND && text[i+1])
         {
             gchar **split = tokenize_string(text[i+1]);
