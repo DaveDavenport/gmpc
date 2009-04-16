@@ -501,13 +501,14 @@ void tray_icon2_create_tooltip(void)
 	 */
 	if(song)
 	{
-		int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
+        int i;
+        char buffer[256];
+        int size_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "size-offset", 1024);
 		size_offset = (size_offset < 100)?1024:size_offset;
 
 		/** Artist label */
 		if(song->title || song->file || song->name)
 		{
-			char buffer[256];
 			gchar *test = g_strdup_printf("<span size='%i' weight='bold'>[%%title%%|%%shortfile%%][ (%%name%%)]</span>", 14*size_offset);
 			mpd_song_markup_escaped(buffer, 256,test,song);
 			q_free(test);
@@ -519,7 +520,6 @@ void tray_icon2_create_tooltip(void)
 		}
 		if(song->artist)
 		{
-			char buffer[256];
 			gchar *test = g_strdup_printf("<span size='%i'>%%artist%%</span>", 10*size_offset);
 			label = gtk_label_new("");
 			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
@@ -532,7 +532,6 @@ void tray_icon2_create_tooltip(void)
 		}
 		if(song->album)
 		{
-			char buffer[256];
 			gchar *test = g_strdup_printf("<span size='%i'>%%album%%[ (%%year%%)]</span>", 8*size_offset);
 			label = gtk_label_new("");
 			gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
@@ -552,6 +551,24 @@ void tray_icon2_create_tooltip(void)
         gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip_pb), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
         g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),(GDestroyNotify)mpd_freeSong); 
 		gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE,FALSE,0);
+
+        i = mpd_player_get_next_song_id(connection);
+        if(i > 0){
+            mpd_Song *song = mpd_playlist_get_song(connection, i);
+            if(song)
+            {
+                gchar *test = g_strdup_printf("<span size='%i'>%s: [[%%title%% - &[%%artist%%]]|%%shortfile%%]</span>",
+                        7*size_offset,_("Next"));
+                label = gtk_label_new("");
+                gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
+                mpd_song_markup_escaped(buffer, 256,test,song);
+                q_free(test);
+                gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
+                gtk_label_set_markup(GTK_LABEL(label), buffer);
+                gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
+                mpd_freeSong(song);
+            }
+        }
 	} else {
 		gchar *value = g_markup_printf_escaped("<span size='large'>%s</span>", _("Gnome Music Player Client"));
 		label = gtk_label_new("");
