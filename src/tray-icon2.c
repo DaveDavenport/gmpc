@@ -557,7 +557,7 @@ void tray_icon2_create_tooltip(void)
             mpd_Song *song = mpd_playlist_get_song(connection, i);
             if(song)
             {
-                gchar *test = g_strdup_printf("<span size='%i'>%s: [[%%title%% - &[%%artist%%]]|%%shortfile%%]</span>",
+                gchar *test = g_strdup_printf("<span size='%i'>%s: <i>[[%%title%% - &[%%artist%%]]|%%shortfile%%]</i></span>",
                         7*size_offset,_("Next"));
                 label = gtk_label_new("");
                 gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
