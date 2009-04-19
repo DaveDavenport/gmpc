@@ -93,7 +93,7 @@ static void tray_icon2_activate(GtkStatusIcon *gsi, gpointer user_data)
  * Right mouse press on tray icon
  */
 
-void tray_icon2_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
+static void tray_icon2_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 {
 	printf("seek to: %i\n", (int)seek_time);
 	mpd_player_seek(connection, (int)seek_time);
@@ -326,7 +326,7 @@ static gboolean tray_icon2_tooltip_destroy(void)
 
 static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *box, GdkEventButton *event, GtkWidget *vbox)
 {
-    if(event->button == 3 && !has_buttons)
+    if((event == NULL || event->button == 3) && !has_buttons)
     {
         GtkWidget *hbox,*button;
         int	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
@@ -420,7 +420,15 @@ void tray_icon2_create_tooltip(void)
                 return;
             }
         }
-		tray_icon2_tooltip_destroy();
+        if(tray_icon2_tooltip_timeout)
+        {
+            g_source_remove(tray_icon2_tooltip_timeout);
+            tray_icon2_tooltip_timeout = 0;
+        }
+        tray_icon2_tooltip_pb = NULL;
+        gtk_widget_destroy(tray_icon2_tooltip);
+        tray_icon2_tooltip = NULL;
+        //tray_icon2_tooltip_destroy();
 	}
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1) == 0)
 		return;
@@ -503,12 +511,15 @@ void tray_icon2_create_tooltip(void)
 	 */
 	event = gtk_event_box_new();
 	vbox = gtk_vbox_new(FALSE, 0);
-	g_signal_connect(G_OBJECT(hbox), "button-press-event", G_CALLBACK(tray_icon2_tooltip_button_press_event), vbox);
-
 	gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
 	gtk_container_set_border_width(GTK_CONTAINER(vbox),3);
 	gtk_container_add(GTK_CONTAINER(event), vbox);
 	gtk_box_pack_start(GTK_BOX(hbox), event, TRUE,TRUE,0);
+
+    if(!has_buttons){
+        g_signal_connect(G_OBJECT(hbox), "button-press-event", G_CALLBACK(tray_icon2_tooltip_button_press_event), vbox);
+    }
+
 	/**
 	 * If there is a song, show show song info
 	 */
@@ -698,7 +709,11 @@ void tray_icon2_create_tooltip(void)
 		gtk_widget_show_all(tray_icon2_tooltip);
 
 
-		/**
+        if(has_buttons){
+            has_buttons = FALSE;
+            tray_icon2_tooltip_button_press_event(hbox,NULL, vbox);
+        }
+        /**
 		 * Destroy it after 5 seconds
 		 */
 		tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
