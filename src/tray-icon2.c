@@ -92,6 +92,12 @@ static void tray_icon2_activate(GtkStatusIcon *gsi, gpointer user_data)
 /**
  * Right mouse press on tray icon
  */
+
+void tray_icon2_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
+{
+	printf("seek to: %i\n", (int)seek_time);
+	mpd_player_seek(connection, (int)seek_time);
+}
 static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint activate_time, gpointer user_data)
 {
 	GtkWidget *item;
@@ -554,6 +560,9 @@ void tray_icon2_create_tooltip(void)
         gmpc_progress_set_time(GMPC_PROGRESS(tray_icon2_tooltip_pb), 
                 mpd_status_get_total_song_time(connection),
                 mpd_status_get_elapsed_song_time(connection));
+
+
+        g_signal_connect(G_OBJECT(tray_icon2_tooltip_pb), "seek-event", G_CALLBACK(tray_icon2_seek_event), NULL);
 
         gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip_pb), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
         g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song),(GDestroyNotify)mpd_freeSong); 
