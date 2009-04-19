@@ -230,4 +230,8 @@ gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
  */
 void pl3_tool_menu_update(void);
 
+
+/***/
+
+char *connection_get_music_directory(void);
 #endif

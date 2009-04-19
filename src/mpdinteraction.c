@@ -55,6 +55,8 @@ gmpcPrefPlugin server_gpp = {
 void xfade_enable_toggled(GtkToggleButton *but);
 void xfade_time_changed(GtkSpinButton *but);
 void entry_auth_changed(GtkEntry *entry);
+
+void entry_music_directory_changed(GtkEntry *entry);
 void auth_enable_toggled(GtkToggleButton *but);
 
 void preferences_window_autoconnect(GtkToggleButton *tog);
@@ -999,6 +1001,28 @@ void update_preferences_name(GtkWidget *entry)
 	}
 }
 
+void entry_music_directory_changed(GtkEntry *entry)
+{
+	GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(connection_pref_xml, "cb_profiles");
+	GtkWidget *vbox = (GtkWidget *) gtk_builder_get_object(connection_pref_xml, "connection-vbox");
+	gulong *a = g_object_get_data(G_OBJECT(vbox),"profile-signal-handler"); 
+	GtkTreeIter iter;
+	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+
+	if(gtk_combo_box_get_active_iter(combo,&iter))
+	{
+		char *value= NULL, *uid = NULL;
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
+		g_signal_handler_block(G_OBJECT(gmpc_profiles), *a);
+
+		gmpc_profiles_set_music_directory(gmpc_profiles, uid,
+				(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+		g_signal_handler_unblock(G_OBJECT(gmpc_profiles), *a);
+
+		q_free(uid);
+		q_free(value);
+	}
+}
 void update_preferences_hostname(GtkWidget *entry)
 {
 	GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(connection_pref_xml, "cb_profiles");
@@ -1155,6 +1179,12 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 			string);
 		g_free(string);
 
+		/**
+		 * Set music directory 
+		 */
+		string = gmpc_profiles_get_music_directory(gmpc_profiles, uid);
+		gtk_entry_set_text(GTK_ENTRY((GtkWidget *) gtk_builder_get_object(xml, "music_directory")), 
+				string?string:"");
 		/**
 		 * Only enable the rmeove button when there is more then 1 profile
 		 */
@@ -1366,6 +1396,13 @@ char *connection_get_password(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_password(gmpc_profiles, profile);
+	g_free(profile);
+	return retv;
+}
+char *connection_get_music_directory(void)
+{
+	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
+	gchar *retv  = gmpc_profiles_get_music_directory(gmpc_profiles, profile);
 	g_free(profile);
 	return retv;
 }

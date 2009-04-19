@@ -43,6 +43,7 @@ requires 2.0.0
     PROFILE_COL_PORT,
     PROFILE_COL_DO_AUTH,
     PROFILE_COL_PASSWORD,
+    PROFILE_COL_MUSIC_DIRECTORY,
     PROFILE_NUM_COLS
   };
 
@@ -53,6 +54,7 @@ requires 2.0.0
     int       port;
     gboolean  do_auth;
     gchar     *password;
+    gchar     *music_directory;
   }Profile;
 
 %}
@@ -167,6 +169,8 @@ class Gmpc:Profiles from G:Object
     cfg_set_single_value_as_string(self->_priv->profiles, "Default", "password","");
     cfg_set_single_value_as_int(self->_priv->profiles, "Default", "portnumber",6600);
     cfg_set_single_value_as_int(self->_priv->profiles, "Default", "useauth",FALSE);
+
+    cfg_set_single_value_as_string(self->_priv->profiles, "Default", "music directory","");
   }
 
   /*********
@@ -185,6 +189,8 @@ class Gmpc:Profiles from G:Object
       g_free(profile->hostname);
     if(profile->password)
       g_free(profile->password); 
+    if(profile->music_directory)
+        g_free(profile->music_directory);
     g_free(profile);
   }
 
@@ -200,6 +206,7 @@ class Gmpc:Profiles from G:Object
     retv->hostname  = NULL;
     retv->port      = 6600;
     retv->do_auth   = FALSE; 
+    retv->music_directory = NULL;
 
     return retv;
   }
@@ -225,6 +232,8 @@ class Gmpc:Profiles from G:Object
       prof->password = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "password");
       prof->port = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "portnumber");
       prof->do_auth = cfg_get_single_value_as_int(self->_priv->profiles, prof->id, "useauth");
+
+      prof->music_directory = cfg_get_single_value_as_string(self->_priv->profiles, prof->id, "music directory");
     }
     cfg_free_multiple(mult);
   }
@@ -298,6 +307,18 @@ class Gmpc:Profiles from G:Object
   }
 
   /**
+   * get music directory 
+   */
+  public 
+  gchar *                                 
+  get_music_directory(self, const gchar *id (check null))
+  {
+    Profile *prof = self_get_profile(self, id);
+    if(!prof)
+      return NULL;
+    return prof->music_directory;
+  }
+  /**
    * get port 
    */
   public 
@@ -356,6 +377,7 @@ class Gmpc:Profiles from G:Object
     cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "password", prof->password);
     cfg_set_single_value_as_int(self->_priv->profiles, prof->id, "portnumber", prof->port);
     cfg_set_single_value_as_int(self->_priv->profiles, prof->id, "useauth", prof->do_auth);
+    cfg_set_single_value_as_string(self->_priv->profiles, prof->id, "music directory", prof->music_directory);
 
     self->_priv->num_profiles++;
     self->_priv->list = g_realloc(self->_priv->list, (self->_priv->num_profiles+1)*sizeof(Profile *));     
@@ -532,6 +554,32 @@ class Gmpc:Profiles from G:Object
     cfg_set_single_value_as_int(self->_priv->profiles, (char *)id, "portnumber",prof->port);
     self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_PORT,id);
   }
+
+  /**
+   * Set music directory 
+   */
+  public
+  void
+  set_music_directory(self,const gchar *id (check null), gchar *value)
+  {
+      Profile *prof = self_get_profile(self, id);
+      if(!prof)
+          return ;                              
+
+      if((value && prof->music_directory &&  g_utf8_collate(value, prof->music_directory) == 0)|| (value == NULL && prof->music_directory == NULL))
+          return;
+
+      if(prof->music_directory)
+          g_free(prof->music_directory);
+      if(value)
+          prof->music_directory = g_strdup(value);
+      else
+          prof->music_directory = g_strdup("");
+      cfg_set_single_value_as_string(self->_priv->profiles, (char *)id, "music directory",prof->music_directory);
+      self_changed(self,PROFILE_COL_CHANGED, PROFILE_COL_MUSIC_DIRECTORY,id);
+  }
+
+
 	/**
 	 * Set do auth
 	 */
