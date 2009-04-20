@@ -973,10 +973,10 @@ static void info2_fill_song_view_real(mpd_Song *song)
         {
             ext= g_strdup(&(song->file)[j+1]);
             info2_add_table_item(table2,markup,ext,i,TRUE);
-            g_free(markup);
             i++;
             q_free(ext);
         }
+        if(markup) g_free(markup);
 	}
     if(song->file)
     {

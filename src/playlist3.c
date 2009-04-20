@@ -267,7 +267,6 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
 		pl3_push_rsb_message("");
 		/** if type changed give a selected signal */
 		if ((old_type != type)) {
-			printf("Selected: %s %i\n", gmpc_plugin_get_name(plugins[plugin_get_pos(type)]), type);
 			gmpc_plugin_browser_selected(plugins[plugin_get_pos(type)], container);
 		}
 		/**
@@ -478,11 +477,9 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 					pl3_close();
 				else if (action == KB_ACTION_SINGLE_MODE){
 					mpd_player_set_single(connection, !mpd_player_get_single(connection));
-					printf("single mode\n");
 					}
 				else if (action == KB_ACTION_CONSUME){
 					mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
-					printf("consume mode\n");
 				}
 				else if (action == KB_ACTION_REPEAT)
 					mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
@@ -742,7 +739,6 @@ static void playlist3_source_drag_data_recieved(GtkWidget * widget,
  */
 void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 {
-	printf("seek to: %i\n", (int)seek_time);
 	mpd_player_seek(connection, (int)seek_time);
 }
 
@@ -1205,12 +1201,8 @@ void create_playlist3(void)
 					item = glade_xml_get_widget(pl3_xml, "menu_mute_toggle");
 				} else if (action == KB_ACTION_SINGLE_MODE) {
 					item = glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle");
-
-					printf("set single mode: %p\n",item);
 				} else if (action == KB_ACTION_CONSUME) {
 					item = glade_xml_get_widget(pl3_xml, "menu_consume_toggle");
-
-					printf("set consume: %p\n", item);
 				}
 
 				if (item) {
@@ -2492,9 +2484,10 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 	GtkHBox *box = (GtkHBox *) gtk_hbox_new(FALSE, 6);
 	gchar *title, *image;
 	GtkImage *imagew = (GtkImage *) gtk_image_new();
-	GtkLabel *label = (GtkLabel *) gtk_label_new(title ? "" : title);
-
+	GtkLabel *label = NULL;
 	gtk_tree_model_get(model, iter, 3, &image, 1, &title, -1);
+
+	label = (GtkLabel *) gtk_label_new(title ? "" : title);
 
 	/* Create new tabbed-button object */
 	tb = g_malloc0(sizeof(*tb));

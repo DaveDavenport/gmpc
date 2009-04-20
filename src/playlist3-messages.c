@@ -150,6 +150,7 @@ void playlist3_message_show(Playlist3MessagePlugin *self, const gchar *message, 
 			gtk_widget_modify_fg(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
 			gtk_widget_modify_text(GTK_WIDGET(siter->data),GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
 		}
+		if(list) g_list_free(list);
 
 		gtk_widget_show_all(event);
 		/* Error */
@@ -283,7 +284,10 @@ static void playlist3_message_plugin_finalize(GObject *obj) {
 	playlist3_message_destroy((Playlist3MessagePlugin *)obj);
 
 	if(((Playlist3MessagePlugin *)obj)->priv){
-		g_free(((Playlist3MessagePlugin *)obj)->priv);
+		Playlist3MessagePluginPrivate *priv = ((Playlist3MessagePlugin *)obj)->priv;
+		if(priv->message_list)
+			g_object_unref(priv->message_list);
+		g_free(priv);
 		((Playlist3MessagePlugin *)obj)->priv = NULL;
 	}
 	if(parent_class)

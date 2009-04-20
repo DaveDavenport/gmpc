@@ -20,7 +20,6 @@ void advanced_search_init(void)
     }
     g_string_append(string, ")[ ]*[=:][ ]*|[ ]*(\\|\\|)[ ]*");
     search_regex = g_regex_new(string->str, G_REGEX_CASELESS, 0, NULL);
-	printf("Created regex: '%s'\n", string->str);
     g_string_free(string, TRUE);
 }
 void advanced_search_update_taglist(void)

@@ -1082,6 +1082,10 @@ static void play_queue_plugin_finalize(GObject *obj) {
 	pl3_current_playlist_destroy((PlayQueuePlugin *)obj);
 
 	if(self->priv){
+        if(self->priv->mod_fill){
+            g_object_unref(self->priv->mod_fill);
+            self->priv->mod_fill = NULL;
+        }
         if(g_signal_handler_is_connected(G_OBJECT(gmpcconn), self->priv->status_changed_handler))
             g_signal_handler_disconnect(G_OBJECT(gmpcconn), self->priv->status_changed_handler);
 
