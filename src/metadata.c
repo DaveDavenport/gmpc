@@ -731,7 +731,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
-	printf("downloaded\n");
         g_file_set_contents(filename, data, length, NULL);
         d->result = META_DATA_AVAILABLE;
         d->result_path = filename;
@@ -743,7 +742,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         d->index = meta_num_plugins;
         process_itterate();
     }else{
-	printf("download failed\n");
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
@@ -834,7 +832,6 @@ static void result_itterate(GList *list, gpointer user_data)
     if(md->content_type == META_DATA_CONTENT_URI)
     {
         const char *path = meta_data_get_uri(md);// d->iter->data;
-        printf("trying uri: %s\n", path);
         if(path[0] == '/') {
             d->result_path = (char *)g_strdup(path);
             d->result = META_DATA_AVAILABLE;

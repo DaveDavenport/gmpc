@@ -87,9 +87,9 @@ public class Gmpc.Song.Links: Gtk.Frame
     private void open_uri(Gtk.LinkButton button)
     {
         Gtk.LinkButton lb = button;
-        stdout.printf("open uri: %s\n", lb.get_uri());
         Gmpc.open_uri(lb.get_uri());
     }
+
     private void download_file(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == AsyncDownload.Status.PROGRESS) {
@@ -144,7 +144,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                 /* now try to download */
                 this.add(new Gtk.ProgressBar());
                 this.show_all();
-                this.handle = Gmpc.AsyncDownload.download("http://download.sarine.nl/weblinks.list",download_file);
+                this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
                 return;
             }
         }
@@ -204,8 +204,6 @@ public class Gmpc.Song.Links: Gtk.Frame
                 string sar = file.get_string(entry, "search-and-replace");
                 if(sar != null) {
                     string[] s = sar.split("::");
-                    //if(s.size == 2)
-                    stdout.printf("'%s'::'%s'\n", s[0], s[1]);
                     if(s.length == 2){
                         try{
                         var regex =  new GLib.Regex (s[0]);
@@ -222,7 +220,6 @@ public class Gmpc.Song.Links: Gtk.Frame
                 if((int)type <= (int)this.type)
                 {
                     var label = new Gtk.LinkButton(uri);
-                    stdout.printf("uri: %s\n", uri);
                     label.set_label(_("Lookup %s on %s").printf(_(typestr),entry));
                     label.set_alignment(0.0f, 0.5f);
                     vbox.pack_start(label, false, true, 0);

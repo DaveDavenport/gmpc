@@ -232,7 +232,6 @@ static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button
 	g_return_if_fail (button != NULL);
 	_tmp0 = NULL;
 	lb = (_tmp0 = button, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	fprintf (stdout, "open uri: %s\n", gtk_link_button_get_uri (lb));
 	open_uri (gtk_link_button_get_uri (lb));
 	(lb == NULL) ? NULL : (lb = (g_object_unref (lb), NULL));
 }
@@ -379,7 +378,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 			gtk_container_add ((GtkContainer*) self, (GtkWidget*) (_tmp2 = g_object_ref_sink ((GtkProgressBar*) gtk_progress_bar_new ())));
 			(_tmp2 == NULL) ? NULL : (_tmp2 = (g_object_unref (_tmp2), NULL));
 			gtk_widget_show_all ((GtkWidget*) self);
-			self->priv->handle = gmpc_easy_async_downloader ("http://download.sarine.nl/weblinks.list", _gmpc_song_links_download_file_gmpc_async_download_callback, self);
+			self->priv->handle = gmpc_easy_async_downloader ("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw", _gmpc_song_links_download_file_gmpc_async_download_callback, self);
 			(child == NULL) ? NULL : (child = (g_object_unref (child), NULL));
 			(file == NULL) ? NULL : (file = (g_key_file_free (file), NULL));
 			path = (g_free (path), NULL);
@@ -517,8 +516,6 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 							_tmp14 = NULL;
 							_tmp13 = NULL;
 							s = (_tmp14 = _tmp13 = g_strsplit (sar, "::", 0), s_length1 = _vala_array_length (_tmp13), s_size = s_length1, _tmp14);
-							/*if(s.size == 2)*/
-							fprintf (stdout, "'%s'::'%s'\n", s[0], s[1]);
 							if (s_length1 == 2) {
 								{
 									GRegex* regex;
@@ -587,7 +584,6 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 						GtkLinkButton* label;
 						char* _tmp17;
 						label = g_object_ref_sink ((GtkLinkButton*) gtk_link_button_new (uri));
-						fprintf (stdout, "uri: %s\n", uri);
 						_tmp17 = NULL;
 						gtk_button_set_label ((GtkButton*) label, _tmp17 = g_strdup_printf (_ ("Lookup %s on %s"), _ (typestr), entry));
 						_tmp17 = (g_free (_tmp17), NULL);
