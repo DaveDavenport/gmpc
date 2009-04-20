@@ -171,17 +171,34 @@ static void url_parse_spiff_file(const char *data, int size)
  */
 static gboolean url_validate_url(const gchar * text)
 {
+	int i;
+	gchar *scheme;
+	gchar **handlers = NULL;
 	/** test if text has a length */
 	if (!text || text[0] == '\0')
 		return FALSE;
-	/* you need at least 8 chars to form http://<url> */
-	if (strlen(text) < 8)
+	/* Get the scheme of the url */
+	scheme = g_uri_parse_scheme(text);
+	/* If no scheme, then it is not valid */
+	if(scheme == NULL){
 		return FALSE;
-	/* must start with http */
-	if (strncmp(text, "http://", 7))
-		return FALSE;
-
-	return TRUE;
+	}
+	printf("scheme: %s\n", scheme);
+	handlers = mpd_server_get_url_handlers(connection);
+	/* iterate all entries and find matching handler */
+	for(i=0;handlers && handlers[i]; i++)
+	{
+		if(strncasecmp(handlers[i], scheme, strlen(scheme)) == 0)
+		{
+			/* If we found a match, the url is valid */
+			g_free(scheme);
+			if(handlers) g_strfreev(handlers);
+			return TRUE;
+		}
+	}
+	g_free(scheme);
+	if(handlers) g_strfreev(handlers);
+	return FALSE;
 }
 
 /**
@@ -195,13 +212,7 @@ static void url_entry_changed(GtkEntry * entry, GtkWidget * add_button)
 
 static int url_check_binary(const char *data, const int size)
 {
-/*	int i=0;*/
 	int binary = FALSE;
-	/*
-	   for(i=0;i < size;i++) {
-	   if((unsigned int)data[i] > 127) binary = TRUE;
-	   }
-	 */
 	binary = !g_utf8_validate(data, size, NULL);
 	if (binary)
 		printf("Binary data found\n");
@@ -276,7 +287,7 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 			}
 		}
 		if (length > 12 * 1024) {
-			printf("Cancel to much data to handle, assume binary\n");
+			printf("Cancel to much data. Try to parse\n");
 			parse_data(data, (guint) length, uri);
 			gmpc_easy_async_cancel(handle);
 			if (user_data)
@@ -346,10 +357,21 @@ void url_start(void)
 	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
 		GEADAsyncHandler *handler;
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-		/*  In any case, don't download more then 2 kbyte */
-		gtk_widget_show(progress);
-		gtk_widget_set_sensitive(dialog, FALSE);
-		handler = gmpc_easy_async_downloader(text, url_fetcher_download_callback, progress);
+		gchar *scheme = g_uri_parse_scheme(text);
+		if(scheme)
+		{
+			if(strcasecmp(scheme, "http") == 0)
+			{
+				/* a http stream, we download */
+				gtk_widget_show(progress);
+				gtk_widget_set_sensitive(dialog, FALSE);
+				handler = gmpc_easy_async_downloader(text, url_fetcher_download_callback, progress);
+			}else{
+				/* If it is not a http stream, add it */
+				mpd_playlist_add(connection, (char *)text);
+			}
+			g_free(scheme);
+		}
 	}
 
 	gtk_widget_destroy(dialog);
@@ -357,7 +379,19 @@ void url_start(void)
 
 void url_start_real(const gchar * url)
 {
-	gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
+	if(url_validate_url(url))
+	{
+		gchar *scheme = g_uri_parse_scheme(url);
+		if(scheme)
+		{
+			if(strcasecmp(scheme, "http") == 0){
+				gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
+			}else{
+				mpd_playlist_add(connection, (char *)url);
+			}
+			g_free(scheme);
+		}
+	}
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
