@@ -29,6 +29,8 @@
 #ifdef SPIFF
 #include <spiff/spiff_c.h>
 #endif
+
+#define MAX_PLAYLIST_SIZE 12*1024
 /***
  * Parse PLS files:
  */
@@ -286,7 +288,7 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 				gtk_progress_bar_pulse(GTK_PROGRESS_BAR(progress));
 			}
 		}
-		if (length > 12 * 1024) {
+		if (length > MAX_PLAYLIST_SIZE) {
 			printf("Cancel to much data. Try to parse\n");
 			parse_data(data, (guint) length, uri);
 			gmpc_easy_async_cancel(handle);
@@ -301,6 +303,59 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 		if (user_data)
 			gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
 	}
+}
+
+/****************************************
+ * Parsing uri
+ */
+
+static void parse_uri(const char *uri, gpointer data)
+{
+	gchar *scheme;	
+	/* Check NULL */
+	if(uri == NULL) return;
+	/* Check local path */
+	scheme = g_uri_parse_scheme(uri);
+
+	if(scheme == NULL) {
+		/* local uri */
+		if(g_file_test(uri, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_REGULAR))
+		{
+			FILE *fp = fopen(uri, "r");			
+			if(fp)
+			{
+				char buffer[MAX_PLAYLIST_SIZE];
+				ssize_t t = read(fp, buffer, MAX_PLAYLIST_SIZE-1);
+				/* Make sure it is NULL terminated */
+				buffer[t] = '\0';
+				parse_data(buffer, (guint)t, uri);
+
+				fclose(fp);
+			}
+		}else{
+			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
+			playlist3_message_show(pl3_messages, temp, ERROR_WARNING);	
+			g_free(temp);
+		}
+	}else
+	{
+		/* remote uri */
+		if(url_validate_url(uri))
+		{
+			if(strcasecmp(scheme, "http") == 0){
+				gmpc_easy_async_downloader(uri, url_fetcher_download_callback, data);
+			}else{
+				mpd_playlist_add(connection, (char *)uri);
+			}
+		}else{
+			gchar *temp = g_strdup_printf("%s: '%s'", _("Uri scheme not supported"), scheme);
+			playlist3_message_show(pl3_messages, temp,ERROR_WARNING);	
+			g_free(temp);
+		}
+
+	}
+	if(scheme) 
+		g_free(scheme);
 }
 
 void url_start(void)
@@ -357,21 +412,10 @@ void url_start(void)
 	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
 		GEADAsyncHandler *handler;
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-		gchar *scheme = g_uri_parse_scheme(text);
-		if(scheme)
-		{
-			if(strcasecmp(scheme, "http") == 0)
-			{
-				/* a http stream, we download */
-				gtk_widget_show(progress);
-				gtk_widget_set_sensitive(dialog, FALSE);
-				handler = gmpc_easy_async_downloader(text, url_fetcher_download_callback, progress);
-			}else{
-				/* If it is not a http stream, add it */
-				mpd_playlist_add(connection, (char *)text);
-			}
-			g_free(scheme);
-		}
+
+		gtk_widget_show(progress);
+		gtk_widget_set_sensitive(dialog, FALSE);
+		parse_uri(text, progress);
 	}
 
 	gtk_widget_destroy(dialog);
@@ -379,19 +423,7 @@ void url_start(void)
 
 void url_start_real(const gchar * url)
 {
-	if(url_validate_url(url))
-	{
-		gchar *scheme = g_uri_parse_scheme(url);
-		if(scheme)
-		{
-			if(strcasecmp(scheme, "http") == 0){
-				gmpc_easy_async_downloader(url, url_fetcher_download_callback, NULL);
-			}else{
-				mpd_playlist_add(connection, (char *)url);
-			}
-			g_free(scheme);
-		}
-	}
+	parse_uri(url, NULL);
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
