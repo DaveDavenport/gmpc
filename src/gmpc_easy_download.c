@@ -27,7 +27,6 @@
 #include "gmpc_easy_download.h"
 #include "main.h"
 
-static int quit = FALSE;
 /****
  * ZIP MISC
  * **********/
@@ -134,119 +133,6 @@ static void gmpc_easy_download_set_proxy(SoupSession * session)
 	} else {
 		g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, NULL, NULL);
 	}
-}
-
-int gmpc_easy_download_with_headers(const char *url, gmpc_easy_download_struct * dld, ...)
-{
-
-	SoupSession *session = NULL;
-	SoupMessage *msg = NULL;
-	int status;
-	int success = FALSE;
-	va_list ap;
-	char *va_entry;
-	/*int res; */
-	if (!dld)
-		return 0;
-	if (url == NULL)
-		return 0;
-	if (url[0] == '\0')
-		return 0;
-	/**
-     * Make sure it's clean
-     */
-	gmpc_easy_download_clean(dld);
-
-	/** Check for local url */
-	if (strncmp(url, "http://", 7) && g_file_test(url, G_FILE_TEST_EXISTS)) {
-		gsize size;
-		if (g_file_get_contents(url, &(dld->data), &(size), NULL)) {
-			dld->size = (int)size;
-			return 1;
-		}
-		return 0;
-	}
-
-	session = soup_session_sync_new();
-	gmpc_easy_download_set_proxy(session);
-
-	msg = soup_message_new("GET", url);
-
-	soup_message_headers_append(msg->request_headers, "Accept-Encoding", "gzip,deflate");
-
-	va_start(ap, dld);
-	va_entry = va_arg(ap, typeof(va_entry));
-	while (va_entry) {
-		char *value = va_arg(ap, typeof(value));
-		soup_message_headers_append(msg->request_headers, va_entry, value);
-		va_entry = va_arg(ap, typeof(va_entry));
-	}
-	va_end(ap);
-
-	status = soup_session_send_message(session, msg);
-	if (SOUP_STATUS_IS_SUCCESSFUL(status)) {
-		const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
-		soup_message_body_flatten(msg->response_body);
-
-		if (encoding && (strcmp(encoding, "gzip") == 0 || strcmp(encoding, "deflate") == 0)) {
-			/* 12k buffer */
-			char *new_buffer = NULL;
-			z_stream *zs = g_malloc0(sizeof(*zs));
-			long data_start =
-				(strcmp(encoding, "gzip") == 0) ? skip_gzip_header(msg->response_body->data,
-																   msg->response_body->length) : 0;
-			if (data_start != -1) {
-				zs->next_in = (void *)((msg->response_body->data) + data_start);
-				zs->avail_in = msg->response_body->length - data_start;
-				if (inflateInit2(zs, -MAX_WBITS) == Z_OK) {
-					long total_size = 0;
-					int res;
-					do {
-						new_buffer = g_realloc(new_buffer, (total_size + (12 * 1024)) * sizeof(char));
-						res = read_cb(zs, &new_buffer[total_size], 12 * 1024);
-						if (res > 0)
-							total_size += res;
-					} while (res > 0);
-					if (res == 0) {
-						dld->data = new_buffer;
-						dld->size = (int)total_size;
-						success = 1;
-					} else {
-						g_free(new_buffer);
-					}
-				}
-			}
-			close_cb(zs);
-		} else {
-			/* copy libsoup's buffer */
-			dld->size = msg->response_body->length;
-			dld->data = (char *)g_memdup(msg->response_body->data, (guint) msg->response_body->length);
-			success = 1;
-		}
-	} else {
-		success = 0;
-	}
-	g_object_unref(msg);
-	g_object_unref(session);
-	if (success)
-		return 1;
-	if (dld->data)
-		q_free(dld->data);
-	dld->data = NULL;
-	return 0;
-}
-
-int gmpc_easy_download(const char *url, gmpc_easy_download_struct * dld)
-{
-	return gmpc_easy_download_with_headers(url, dld, NULL);
-}
-
-void gmpc_easy_download_clean(gmpc_easy_download_struct * dld)
-{
-	if (dld->data)
-		q_free(dld->data);
-	dld->data = NULL;
-	dld->size = 0;
 }
 
 /***
@@ -378,11 +264,6 @@ static void proxy_pref_construct(GtkWidget * container)
     gtk_widget_show_all(container);
 }
 
-void quit_easy_download(void)
-{
-	debug_printf(DEBUG_INFO, "quitting easy download\n");
-	quit = TRUE;
-}
 
 gmpcPrefPlugin proxyplug_pref = {
 	.construct = proxy_pref_construct,

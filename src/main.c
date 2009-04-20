@@ -883,7 +883,6 @@ int main(int argc, char **argv)
 	}
 #endif
 	/* Quit _all_ downloads */
-	quit_easy_download();
 	gmpc_easy_async_quit();
 
 	/* tell the plugins to save themself. */
