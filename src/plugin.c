@@ -432,7 +432,6 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
     if(url){
         if(g_file_test(url, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
-            printf("Path 1: %s\n", url);
             return url;
         }
         g_free(url);
@@ -443,7 +442,6 @@ gchar *gmpc_plugin_get_data_path(gmpcPlugin *plug)
         url = g_build_filename(paths[i], "gmpc", "plugins", NULL);
         if(g_file_test(url, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
-            printf("Path 2: %s\n", url);
             return url;
         }
         g_free(url);
@@ -564,10 +562,8 @@ int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent *plug, GmpcMpdDat
     if(plug->new) {
         if(GMPC_PLUGIN_IS_SONG_LIST_IFACE(plug->new))
         {
-            printf("is song list iface: %s\n", gmpc_plugin_get_name(plug));
             return gmpc_plugin_song_list_iface_song_list(GMPC_PLUGIN_SONG_LIST_IFACE(plug->new), GTK_WIDGET(tree), menu);
         }
-        printf("no song list iface: %s\n", gmpc_plugin_get_name(plug));
         return 0;
     }
     if(gmpc_plugin_is_browser(plug))

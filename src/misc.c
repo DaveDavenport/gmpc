@@ -229,7 +229,6 @@ char *gmpc_get_full_image_path(void)
     if(path){
         if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
-            printf("Path 1: %s\n", path);
             return path;
         }
         g_free(path);
@@ -240,7 +239,6 @@ char *gmpc_get_full_image_path(void)
         path = g_build_filename(paths[i], "gmpc", "icons", NULL);
         if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
         {
-            printf("Path 2: %s\n", path);
             return path;
         }
         g_free(path);
@@ -280,7 +278,6 @@ char *gmpc_get_full_glade_path(const char *filename)
     {
         if(g_file_test(path, G_FILE_TEST_EXISTS))
         {
-            printf("glade path1: %s\n",path);
             return path;
         }
         g_free(path);
@@ -289,7 +286,6 @@ char *gmpc_get_full_glade_path(const char *filename)
         path = g_build_filename(paths[i], "gmpc", filename, NULL);
         if(g_file_test(path, G_FILE_TEST_EXISTS))
         {
-            printf("glade path2: %s\n",path);
             return path;
         }
         g_free(path);
@@ -319,7 +315,6 @@ void open_uri(const gchar *uri)
 #endif
     gchar *escaped_uri = g_uri_escape_string(uri, ":/", TRUE);
 	command	= g_strdup_printf(browser_command, escaped_uri);
-    printf("commnand: %s\n", command);
     g_free(escaped_uri);
 	result = g_spawn_command_line_async (command, &error);
 	if(error)

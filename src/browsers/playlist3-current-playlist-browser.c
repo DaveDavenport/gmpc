@@ -144,7 +144,6 @@ static void pl3_current_playlist_browser_crop_current_song(PlayQueuePlugin *self
         for(;length > 1; length--){
             mpd_playlist_queue_delete_pos(connection, length-1);
             if((length&16383) == 16383) {
-                printf("commiting block\n");
                 mpd_playlist_queue_commit(connection);
             }
         }
@@ -799,7 +798,6 @@ static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, G
     {
         pl3_current_playlist_browser_init((PlayQueuePlugin *)obj);
     }
-    printf("added \n");
     gtk_container_add(GTK_CONTAINER(container), self->priv->pl3_cp_vbox);
     gtk_widget_show(self->priv->pl3_cp_vbox);
 

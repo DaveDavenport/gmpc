@@ -841,10 +841,6 @@ static void result_itterate(GList *list, gpointer user_data)
             {
                 return;
             }
-            else
-            {
-                printf("Testing: %s: failed to create handle\n", path);
-            }
         }
     
     }

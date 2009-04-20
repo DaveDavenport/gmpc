@@ -41,6 +41,8 @@ GtkStatusIcon 	*tray_icon2_gsi = NULL;
 static gchar *current_song_checksum = NULL;
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+
+static gboolean tray_icon2_tooltip_destroy(void);
 /**
  * Tooltip 
  */
@@ -95,8 +97,14 @@ static void tray_icon2_activate(GtkStatusIcon *gsi, gpointer user_data)
 
 static void tray_icon2_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 {
-	printf("seek to: %i\n", (int)seek_time);
-	mpd_player_seek(connection, (int)seek_time);
+    int	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+    printf("seek to: %i\n", (int)seek_time);
+    mpd_player_seek(connection, (int)seek_time);
+    if(tray_icon2_tooltip_timeout)
+    {
+        g_source_remove(tray_icon2_tooltip_timeout);
+    }
+    tray_icon2_tooltip_timeout = g_timeout_add_seconds(state*2, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
 }
 static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint activate_time, gpointer user_data)
 {
