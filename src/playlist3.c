@@ -672,31 +672,17 @@ static void playlist3_source_drag_data_recieved(GtkWidget * widget,
 	if (info != 99) {
 		int found = 0;
 		const gchar *url_data = (gchar *) data->data;
-		/* Hack, move this too libmpd? */
-		char **handlers = mpd_server_get_url_handlers(connection);
-		int has_http = FALSE, has_file = FALSE;
-		int i = 0;
-		for (i = 0; handlers && handlers[i]; i++) {
-			if (strcmp(handlers[i], "http://") == 0) {
-				has_http = TRUE;
-			} else if (strcmp(handlers[i], "file://") == 0) {
-				has_file = TRUE;
-			}
-		}
-		if (handlers)
-			g_strfreev(handlers);
+		int i;
 		if (url_data) {
 
 			gchar **url = g_uri_list_extract_uris(url_data);
 			for (i = 0; url && url[i]; i++) {
-				if (has_file && strncmp(url[i], "file://", 7) == 0) {
-					char *uri = g_uri_unescape_string(url[i], "");
-					mpd_playlist_add(connection, uri);
-					g_free(uri);
-					found = 1;
-				} else if (has_http && strncmp(url[i], "http://", 7) == 0) {
+				gchar *scheme = g_uri_parse_scheme(url[i]);
+				/* Don't add lines withouth an actual scheme. */
+				if(scheme)
+				{
 					url_start_real(url[i]);
-					found = 1;
+					g_free(scheme);
 				}
 			}
 			if (url)
