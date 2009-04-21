@@ -288,7 +288,7 @@ static void  mod_fill_entry_changed(GtkWidget *entry, PlayQueuePlugin *self)
 {
     if(self->priv->quick_search_timeout != 0)
         g_source_remove(self->priv->quick_search_timeout);
-    self->priv->quick_search_timeout = g_timeout_add_seconds(1, (GSourceFunc)mod_fill_do_entry_changed, self);
+    self->priv->quick_search_timeout = g_timeout_add(250, (GSourceFunc)mod_fill_do_entry_changed, self);
     gtk_widget_show(entry);
 }
 static void mod_fill_entry_activate(GtkWidget *entry, PlayQueuePlugin *self)
