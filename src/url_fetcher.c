@@ -321,7 +321,7 @@ static void parse_uri(const char *uri, gpointer data)
 		/* local uri */
 		if(g_file_test(uri, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_REGULAR))
 		{
-			FILE *fp = fopen(uri, "r");			
+			FILE *fp = g_fopen(uri, "r");			
 			if(fp)
 			{
 				char buffer[MAX_PLAYLIST_SIZE];
