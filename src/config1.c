@@ -404,6 +404,7 @@ static gboolean cfg_save_real(config_obj *cfgo)
 	}
 
     if(cfgo->save_timeout) {
+        g_source_remove(cfgo->save_timeout);
         cfgo->save_timeout = 0;
     }else {
         return FALSE;
