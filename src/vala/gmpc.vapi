@@ -179,4 +179,8 @@ namespace Gmpc {
         public int set_int(string class, string key, int value); 
     }
 
+    namespace Misc{
+        [CCode (cname="colorshift_pixbuf")]
+        public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
+    }
 }

@@ -114,8 +114,21 @@ namespace Gmpc.Favorites{
     public class Button : Gtk.EventBox {
         private MPD.Song? song;
         private Gtk.Image image;
+        private bool state = false;
+        private Gdk.Pixbuf pb = null;
         construct {
             this.visible_window = false;
+
+            var it = Gtk.IconTheme.get_default();
+
+            try {
+                pb = it.load_icon("emblem-favorite",24, 0);
+            }catch(Error e) {
+                stdout.printf("error: %s\n", e.message);
+            }
+
+
+
             if(favorites == null){
                 favorites = new List();
             }
@@ -125,10 +138,12 @@ namespace Gmpc.Favorites{
             }
             favorites.updated += update;
             this.image = new Gtk.Image();
-            this.image.set_from_icon_name("emblem-favorite", Gtk.IconSize.BUTTON);
-            this.image.sensitive = false;
+            this.update(favorites);
             this.add(this.image);
             this.button_press_event += button_press_event_callback;
+            this.enter_notify_event += enter_notify_event_callback;
+            this.leave_notify_event += leave_notify_event_callback;
+
         }
         ~Button() {
             stdout.printf("Button destroy\n");
@@ -141,23 +156,53 @@ namespace Gmpc.Favorites{
         {
             if(event.button == 1 && this.song != null)
             {
-                stdout.printf("Set favorites: %s", (this.image.sensitive)?"off":"on");
-                favorites.set_favorite(this.song.file, !this.image.sensitive);
+                stdout.printf("Set favorites: %s", (this.state)?"off":"on");
+                favorites.set_favorite(this.song.file, !this.state);
             }
             return false;
         }
 
         private
+        bool
+        enter_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
+        {
+
+            var pb2 = pb.copy();
+            if(this.state){
+                Gmpc.Misc.colorshift_pixbuf(pb2, pb, 10);
+            }else{
+                Gmpc.Misc.colorshift_pixbuf(pb2, pb,-50);
+            }
+            this.image.set_from_pixbuf(pb2);
+            return false;
+        }
+
+        private
+        bool
+        leave_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
+        {
+            this.update(favorites);
+            return false;
+        }
+        private
         void
         update(Gmpc.Favorites.List list)
         {
             stdout.printf("set song\n");
-            if(this.song != null)
-            {
-                this.image.sensitive = favorites.is_favorite(this.song.file);
+            if(this.song != null){
+                this.state =  favorites.is_favorite(this.song.file);
             }else{
-                this.image.sensitive = false; 
+                this.state= false;
             }
+            var pb2 = pb.copy();
+            if(this.state) {
+                Gmpc.Misc.colorshift_pixbuf(pb2, pb, 30);
+            }
+            else{
+                Gmpc.Misc.colorshift_pixbuf(pb2, pb, -80);
+            }
+            this.image.set_from_pixbuf(pb2);
+            this.show();
         }
 
         public

@@ -52,4 +52,7 @@ gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpoi
 void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data);
 
 gchar * mpd_song_checksum(const mpd_Song *song);
+
+void
+colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
 #endif
