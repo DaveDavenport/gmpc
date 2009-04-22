@@ -55,7 +55,7 @@ static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, GmpcConnec
 		MpdData* _tmp0;
 		fprintf (stdout, "fill list\n");
 		_tmp0 = NULL;
-		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
+		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("Favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
 		g_signal_emit_by_name (self, "updated");
 	} else {
 		MpdData* _tmp1;
@@ -72,7 +72,7 @@ static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcCon
 	if ((what & MPD_CST_STORED_PLAYLIST) == MPD_CST_STORED_PLAYLIST) {
 		MpdData* _tmp0;
 		_tmp0 = NULL;
-		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
+		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("Favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
 		g_signal_emit_by_name (self, "updated");
 	}
 }
@@ -103,7 +103,7 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 	current = gmpc_favorites_list_is_favorite (self, path);
 	if (current != favorite) {
 		if (favorite) {
-			mpd_database_playlist_list_add (connection, _ ("favorites"), path);
+			mpd_database_playlist_list_add (connection, _ ("Favorites"), path);
 		} else {
 			const MpdData* iter;
 			iter = mpd_data_get_first (self->priv->list);
@@ -111,7 +111,7 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 				if (iter->type == MPD_DATA_TYPE_SONG) {
 					if (_vala_strcmp0 (iter->song->file, path) == 0) {
 						fprintf (stdout, "remove: %i\n", iter->song->pos);
-						mpd_database_playlist_list_delete (connection, _ ("favorites"), iter->song->pos);
+						mpd_database_playlist_list_delete (connection, _ ("Favorites"), iter->song->pos);
 						return;
 					}
 				}

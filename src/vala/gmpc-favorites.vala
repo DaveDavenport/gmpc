@@ -47,7 +47,7 @@ namespace Gmpc.Favorites{
         {
             if(connect == 1){
                 stdout.printf("fill list\n");
-                list = MPD.Database.get_playlist_content(server, _("favorites"));
+                list = MPD.Database.get_playlist_content(server, _("Favorites"));
                 this.updated();
             }else{
                 list = null;
@@ -59,7 +59,7 @@ namespace Gmpc.Favorites{
         {
             if((what&MPD.Status.Changed.STORED_PLAYLIST) == MPD.Status.Changed.STORED_PLAYLIST)
             {
-                list = MPD.Database.get_playlist_content(server, _("favorites"));
+                list = MPD.Database.get_playlist_content(server, _("Favorites"));
                 this.updated();
             }
         }
@@ -91,7 +91,7 @@ namespace Gmpc.Favorites{
             if(current != favorite)
             {
                 if(favorite){
-                    MPD.Database.playlist_list_add(server, _("favorites"), path);
+                    MPD.Database.playlist_list_add(server, _("Favorites"), path);
                 }else{
                     weak MPD.Data.Item iter = this.list.first();
                     while(iter != null)
@@ -100,7 +100,7 @@ namespace Gmpc.Favorites{
                         {
                             if(iter.song.file == path){
                                 stdout.printf("remove: %i\n", iter.song.pos);
-                                MPD.Database.playlist_list_delete(server, _("favorites"), iter.song.pos);
+                                MPD.Database.playlist_list_delete(server, _("Favorites"), iter.song.pos);
                                 return;
                             }
                         }
