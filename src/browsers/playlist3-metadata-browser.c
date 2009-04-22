@@ -968,7 +968,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
 		int j = strlen(song->file);
 		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Extension"));
 
-		for(;j>0&& (song->file[j] != '.' || song->file[j] != '/' || song->file[j] != '\\');j--);
+		for(;j>0&& (song->file[j] != '.' && song->file[j] != '/' && song->file[j] != '\\');j--);
         if(song->file[j] == '.')
         {
             ext= g_strdup(&(song->file)[j+1]);
