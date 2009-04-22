@@ -37,6 +37,7 @@ gmpc_SOURCES=\
 	vala/gmpc-song-links.c\
 	vala/gmpc-plugin.c\
 	vala/gmpc-test-plugin.c\
+	vala/gmpc-favorites.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\

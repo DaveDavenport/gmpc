@@ -15,3 +15,6 @@ valac -C gmpc-easy-command.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg l
 valac -C gmpc-song-links.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd`
 
 valac -C gmpc-test-plugin.vala --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --pkg gmpc-plugin --vapidir=`pwd`
+
+
+valac -C gmpc-favorites.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --pkg gmpc-plugin --vapidir=`pwd`

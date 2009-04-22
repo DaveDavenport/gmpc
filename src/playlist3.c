@@ -32,6 +32,7 @@
 #include "gmpc-liststore-sort.h"
 #include "gmpc-metaimage.h"
 #include "vala/gmpc-progress.h"
+#include "vala/gmpc-favorites.h"
 #ifdef ENABLE_IGE
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
@@ -57,6 +58,7 @@ static GtkTargetEntry target_table[] = {
 
 GtkWidget *metaimage_album_art = NULL;
 GtkWidget *metaimage_artist_art = NULL;
+GmpcFavoritesButton *favorites_button = NULL;
 /**
  * Widgets used in the header.
  * and the new progresbar
@@ -1004,6 +1006,11 @@ void create_playlist3(void)
 	new_pb = pb;
 
 	/* Add volume slider. */
+	favorites_button = gmpc_favorites_button_new();
+	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox10" /*playlist_player" */ )),
+					 GTK_WIDGET(favorites_button), FALSE, FALSE, 0);
+	gtk_widget_show(GTK_WIDGET(favorites_button));
+
 	volume_button = gtk_volume_button_new();
 	gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12" /*playlist_player" */ )),
@@ -1660,6 +1667,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		int i;
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		playlist3_update_header();
+		gmpc_favorites_button_set_song(favorites_button, song);
 		if (mpd_player_get_state(mi) == MPD_PLAYER_PLAY) {
 			playlist_player_set_song(mi);
 		}

@@ -92,7 +92,7 @@ namespace MPD {
             }
     }
     namespace Data{
-        [CCode (cname="MpdDataType", cprefix = "MPD_DATA_TYPE", cheader_filename = "libmpd.h")]
+        [CCode (cname="MpdDataType", cprefix = "MPD_DATA_TYPE_", cheader_filename = "libmpd/libmpd.h")]
             public enum Type {
                 NONE,
                 TAG,
@@ -101,5 +101,28 @@ namespace MPD {
                 PLAYLIST,
                 OUTPUT_DEV
             }
+
+            [CCode (cname = "MpdData",
+                free_function = "mpd_data_free", 
+                cheader_filename = "libmpd/libmpd.h")]
+            [Compact]
+            [Immutable]
+            public class Item {
+                public Data.Type type;
+                public MPD.Song  song;
+               
+                [CCode (cname="mpd_data_get_next_real")] 
+                public weak Item? next(bool free);
+
+                [CCode (cname="mpd_data_get_first")] 
+                public weak Item? first();
+            }
     }
+    namespace Database {
+        public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name); 
+        public void playlist_list_add(MPD.Server server, string playlist_name, string path);
+        public void playlist_list_delete(MPD.Server server, string playlist_name, int pos);
+    }
+
+
 }
