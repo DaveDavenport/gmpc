@@ -25,35 +25,29 @@ using Cairo;
 using MPD;
 using Gmpc;
 
+static const string some_unique_name = Config.VERSION;
 static Gmpc.Favorites.List favorites = null;
 
 namespace Gmpc.Favorites{
-
     public class List : GLib.Object {
-        private ulong con_changed_id = 0;
         private MPD.Data.Item? list = null; 
         construct {
             stdout.printf("Create list\n");
-            this.con_changed_id = GLib.Signal.connect_swapped(gmpcconn, "connection_changed", (GLib.Callback)con_changed, this);
+            gmpcconn.connection_changed += con_changed;
             gmpcconn.status_changed += status_changed;
         }
 
         ~List() {
             stdout.printf("Destroy\n");
-
-            if (this.con_changed_id > 0 &&  GLib.SignalHandler.is_connected(gmpcconn, this.con_changed_id)) {
-                GLib.SignalHandler.disconnect(gmpcconn, this.con_changed_id);
-                this.con_changed_id = 0;
-            }
         }
         
         private
         void 
-        con_changed(MPD.Server server, bool connect)
+        con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
         {
-            if(connect){
+            if(connect == 1){
                 stdout.printf("fill list\n");
-                list = MPD.Database.get_playlist_content(server, "favorites");
+                list = MPD.Database.get_playlist_content(server, _("favorites"));
                 this.updated();
             }else{
                 list = null;
@@ -65,7 +59,7 @@ namespace Gmpc.Favorites{
         {
             if((what&MPD.Status.Changed.STORED_PLAYLIST) == MPD.Status.Changed.STORED_PLAYLIST)
             {
-                list = MPD.Database.get_playlist_content(server, "favorites");
+                list = MPD.Database.get_playlist_content(server, _("favorites"));
                 this.updated();
             }
         }
@@ -97,7 +91,7 @@ namespace Gmpc.Favorites{
             if(current != favorite)
             {
                 if(favorite){
-                    MPD.Database.playlist_list_add(server, "favorites", path);
+                    MPD.Database.playlist_list_add(server, _("favorites"), path);
                 }else{
                     weak MPD.Data.Item iter = this.list.first();
                     while(iter != null)
@@ -106,7 +100,7 @@ namespace Gmpc.Favorites{
                         {
                             if(iter.song.file == path){
                                 stdout.printf("remove: %i\n", iter.song.pos);
-                                MPD.Database.playlist_list_delete(server, "favorites", iter.song.pos);
+                                MPD.Database.playlist_list_delete(server, _("favorites"), iter.song.pos);
                                 return;
                             }
                         }
@@ -121,6 +115,7 @@ namespace Gmpc.Favorites{
         private MPD.Song? song;
         private Gtk.Image image;
         construct {
+            this.visible_window = false;
             if(favorites == null){
                 favorites = new List();
             }

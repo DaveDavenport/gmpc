@@ -1,8 +1,10 @@
 
 #include "gmpc-favorites.h"
+#include <config.h>
 #include <libmpd/libmpd.h>
-#include <stdio.h>
 #include <gmpc-connection.h>
+#include <stdio.h>
+#include <glib/gi18n-lib.h>
 #include <main.h>
 #include <gdk/gdk.h>
 
@@ -11,7 +13,6 @@
 
 GmpcFavoritesList* favorites = NULL;
 struct _GmpcFavoritesListPrivate {
-	gulong con_changed_id;
 	MpdData* list;
 };
 
@@ -19,8 +20,9 @@ struct _GmpcFavoritesListPrivate {
 enum  {
 	GMPC_FAVORITES_LIST_DUMMY_PROPERTY
 };
-static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, MpdObj* server, gboolean connect);
+static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, GmpcConnection* conn, MpdObj* server, gint connect);
 static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
+static void _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static void _gmpc_favorites_list_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_favorites_list_parent_class = NULL;
@@ -45,14 +47,15 @@ static int _vala_strcmp0 (const char * str1, const char * str2);
 
 
 
-static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, MpdObj* server, gboolean connect) {
+static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, GmpcConnection* conn, MpdObj* server, gint connect) {
 	g_return_if_fail (self != NULL);
+	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
-	if (connect) {
+	if (connect == 1) {
 		MpdData* _tmp0;
 		fprintf (stdout, "fill list\n");
 		_tmp0 = NULL;
-		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, "favorites"), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
+		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
 		g_signal_emit_by_name (self, "updated");
 	} else {
 		MpdData* _tmp1;
@@ -69,7 +72,7 @@ static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcCon
 	if ((what & MPD_CST_STORED_PLAYLIST) == MPD_CST_STORED_PLAYLIST) {
 		MpdData* _tmp0;
 		_tmp0 = NULL;
-		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, "favorites"), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
+		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
 		g_signal_emit_by_name (self, "updated");
 	}
 }
@@ -100,7 +103,7 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 	current = gmpc_favorites_list_is_favorite (self, path);
 	if (current != favorite) {
 		if (favorite) {
-			mpd_database_playlist_list_add (connection, "favorites", path);
+			mpd_database_playlist_list_add (connection, _ ("favorites"), path);
 		} else {
 			const MpdData* iter;
 			iter = mpd_data_get_first (self->priv->list);
@@ -108,7 +111,7 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 				if (iter->type == MPD_DATA_TYPE_SONG) {
 					if (_vala_strcmp0 (iter->song->file, path) == 0) {
 						fprintf (stdout, "remove: %i\n", iter->song->pos);
-						mpd_database_playlist_list_delete (connection, "favorites", iter->song->pos);
+						mpd_database_playlist_list_delete (connection, _ ("favorites"), iter->song->pos);
 						return;
 					}
 				}
@@ -131,6 +134,11 @@ GmpcFavoritesList* gmpc_favorites_list_new (void) {
 }
 
 
+static void _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self) {
+	gmpc_favorites_list_con_changed (self, _sender, server, connect);
+}
+
+
 static void _gmpc_favorites_list_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self) {
 	gmpc_favorites_list_status_changed (self, _sender, server, what);
 }
@@ -147,7 +155,7 @@ static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_
 	self = GMPC_FAVORITES_LIST (obj);
 	{
 		fprintf (stdout, "Create list\n");
-		self->priv->con_changed_id = g_signal_connect_swapped (gmpcconn, "connection_changed", (GCallback) gmpc_favorites_list_con_changed, self);
+		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed, self, 0);
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_favorites_list_status_changed_gmpc_connection_status_changed, self, 0);
 	}
 	return obj;
@@ -165,7 +173,6 @@ static void gmpc_favorites_list_class_init (GmpcFavoritesListClass * klass) {
 
 static void gmpc_favorites_list_instance_init (GmpcFavoritesList * self) {
 	self->priv = GMPC_FAVORITES_LIST_GET_PRIVATE (self);
-	self->priv->con_changed_id = (gulong) 0;
 	self->priv->list = NULL;
 }
 
@@ -174,18 +181,7 @@ static void gmpc_favorites_list_finalize (GObject* obj) {
 	GmpcFavoritesList * self;
 	self = GMPC_FAVORITES_LIST (obj);
 	{
-		gboolean _tmp0;
 		fprintf (stdout, "Destroy\n");
-		_tmp0 = FALSE;
-		if (self->priv->con_changed_id > 0) {
-			_tmp0 = g_signal_handler_is_connected (gmpcconn, self->priv->con_changed_id);
-		} else {
-			_tmp0 = FALSE;
-		}
-		if (_tmp0) {
-			g_signal_handler_disconnect (gmpcconn, self->priv->con_changed_id);
-			self->priv->con_changed_id = (gulong) 0;
-		}
 	}
 	(self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL));
 	G_OBJECT_CLASS (gmpc_favorites_list_parent_class)->finalize (obj);
@@ -311,17 +307,18 @@ static GObject * gmpc_favorites_button_constructor (GType type, guint n_construc
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_FAVORITES_BUTTON (obj);
 	{
-		GtkImage* _tmp2;
+		GtkImage* _tmp1;
+		gtk_event_box_set_visible_window ((GtkEventBox*) self, FALSE);
 		if (favorites == NULL) {
-			GmpcFavoritesList* _tmp1;
-			_tmp1 = NULL;
-			favorites = (_tmp1 = gmpc_favorites_list_new (), (favorites == NULL) ? NULL : (favorites = (g_object_unref (favorites), NULL)), _tmp1);
+			GmpcFavoritesList* _tmp0;
+			_tmp0 = NULL;
+			favorites = (_tmp0 = gmpc_favorites_list_new (), (favorites == NULL) ? NULL : (favorites = (g_object_unref (favorites), NULL)), _tmp0);
 		} else {
 			g_object_ref ((GObject*) favorites);
 		}
 		g_signal_connect_object (favorites, "updated", (GCallback) _gmpc_favorites_button_update_gmpc_favorites_list_updated, self, 0);
-		_tmp2 = NULL;
-		self->priv->image = (_tmp2 = g_object_ref_sink ((GtkImage*) gtk_image_new ()), (self->priv->image == NULL) ? NULL : (self->priv->image = (g_object_unref (self->priv->image), NULL)), _tmp2);
+		_tmp1 = NULL;
+		self->priv->image = (_tmp1 = g_object_ref_sink ((GtkImage*) gtk_image_new ()), (self->priv->image == NULL) ? NULL : (self->priv->image = (g_object_unref (self->priv->image), NULL)), _tmp1);
 		gtk_image_set_from_icon_name (self->priv->image, "emblem-favorite", GTK_ICON_SIZE_BUTTON);
 		g_object_set ((GtkWidget*) self->priv->image, "sensitive", FALSE, NULL);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->image);

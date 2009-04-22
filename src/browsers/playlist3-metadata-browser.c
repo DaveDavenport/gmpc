@@ -31,6 +31,7 @@
 #include "gmpc-meta-text-view.h"
 #include "vala/gmpc_rating.h"
 #include "vala/gmpc-song-links.h"
+#include "vala/gmpc-favorites.h"
 
 /**
  * Dragging 
@@ -994,6 +995,19 @@ static void info2_fill_song_view_real(mpd_Song *song)
             gtk_table_attach(GTK_TABLE(table2),ali,1,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
             i++;
         }
+
+        label = gtk_label_new("");
+        markup =  g_markup_printf_escaped("<b>%s:</b>", _("Favored"));
+        gtk_label_set_markup(GTK_LABEL(label),markup);
+        g_free(markup);
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_table_attach(GTK_TABLE(table2), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        ali = gtk_alignment_new(0.0,0.5,0,1);
+        label = (GtkWidget *)gmpc_favorites_button_new();
+        gmpc_favorites_button_set_song(GMPC_FAVORITES_BUTTON(label), song);
+        gtk_container_add(GTK_CONTAINER(ali), label);
+        gtk_table_attach(GTK_TABLE(table2),ali,1,2,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+        i++;
     }
 
     if(show_current_song)
