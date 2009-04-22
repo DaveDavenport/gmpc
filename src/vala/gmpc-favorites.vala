@@ -117,22 +117,15 @@ namespace Gmpc.Favorites{
         private Gdk.Pixbuf pb = null;
         construct {
             this.visible_window = false;
-
             var it = Gtk.IconTheme.get_default();
-
             try {
                 pb = it.load_icon("emblem-favorite",24, 0);
             }catch(Error e) {
                 stdout.printf("error: %s\n", e.message);
             }
-
-
-
             if(favorites == null){
                 favorites = new List();
-            }
-            else
-            {
+            } else {
                 favorites.ref();
             }
             favorites.updated += update;
@@ -152,8 +145,7 @@ namespace Gmpc.Favorites{
         bool
         button_press_event_callback(Gmpc.Favorites.Button button,Gdk.EventButton event)
         {
-            if(event.button == 1 && this.song != null)
-            {
+            if(event.button == 1 && this.song != null) {
                 favorites.set_favorite(this.song.file, !this.state);
             }
             return false;
@@ -164,7 +156,6 @@ namespace Gmpc.Favorites{
         bool
         enter_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
         {
-
             var pb2 = pb.copy();
             if(this.state){
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, 10);
@@ -195,8 +186,7 @@ namespace Gmpc.Favorites{
             var pb2 = pb.copy();
             if(this.state) {
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, 30);
-            }
-            else{
+            }else{
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, -80);
             }
             this.image.set_from_pixbuf(pb2);

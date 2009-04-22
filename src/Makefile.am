@@ -69,7 +69,7 @@ gmpc-win32.o: gmpc-win32.rc
 
 .PHONY: revisiont.h
 revisiont.h:
-	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
+	@if test "$(REVISION)" != "$(CONF_VERSION)"; then\
 		echo "Writing new Makefile.config file";\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
 		echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;\
