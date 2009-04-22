@@ -99,7 +99,6 @@ namespace Gmpc.Favorites{
                         if(iter.type == MPD.Data.Type.SONG)
                         {
                             if(iter.song.file == path){
-                                stdout.printf("remove: %i\n", iter.song.pos);
                                 MPD.Database.playlist_list_delete(server, _("Favorites"), iter.song.pos);
                                 return;
                             }
@@ -146,7 +145,6 @@ namespace Gmpc.Favorites{
 
         }
         ~Button() {
-            stdout.printf("Button destroy\n");
             if(favorites != null)
                 favorites.unref();
         }
@@ -156,12 +154,12 @@ namespace Gmpc.Favorites{
         {
             if(event.button == 1 && this.song != null)
             {
-                stdout.printf("Set favorites: %s", (this.state)?"off":"on");
                 favorites.set_favorite(this.song.file, !this.state);
             }
             return false;
         }
 
+        /* on mouse over, do some pre-highlighting */
         private
         bool
         enter_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
@@ -176,7 +174,7 @@ namespace Gmpc.Favorites{
             this.image.set_from_pixbuf(pb2);
             return false;
         }
-
+        /* Reset default highlighting */
         private
         bool
         leave_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
@@ -184,11 +182,11 @@ namespace Gmpc.Favorites{
             this.update(favorites);
             return false;
         }
+        /* Update the icon according to state */
         private
         void
         update(Gmpc.Favorites.List list)
         {
-            stdout.printf("set song\n");
             if(this.song != null){
                 this.state =  favorites.is_favorite(this.song.file);
             }else{

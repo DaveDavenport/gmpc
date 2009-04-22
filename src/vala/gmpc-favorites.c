@@ -117,7 +117,6 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 			while (iter != NULL) {
 				if (iter->type == MPD_DATA_TYPE_SONG) {
 					if (_vala_strcmp0 (iter->song->file, path) == 0) {
-						fprintf (stdout, "remove: %i\n", iter->song->pos);
 						mpd_database_playlist_list_delete (connection, _ ("Favorites"), iter->song->pos);
 						return;
 					}
@@ -216,20 +215,13 @@ static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavorites
 		_tmp0 = FALSE;
 	}
 	if (_tmp0) {
-		const char* _tmp1;
-		_tmp1 = NULL;
-		if ((self->priv->state)) {
-			_tmp1 = "off";
-		} else {
-			_tmp1 = "on";
-		}
-		fprintf (stdout, "Set favorites: %s", _tmp1);
 		gmpc_favorites_list_set_favorite (favorites, self->priv->song->file, !self->priv->state);
 	}
 	return FALSE;
 }
 
 
+/* on mouse over, do some pre-highlighting */
 static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventCrossing* motion) {
 	GdkPixbuf* _tmp0;
 	GdkPixbuf* pb2;
@@ -248,6 +240,7 @@ static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavorites
 }
 
 
+/* Reset default highlighting */
 static gboolean gmpc_favorites_button_leave_notify_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventCrossing* motion) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (button != NULL, FALSE);
@@ -256,12 +249,12 @@ static gboolean gmpc_favorites_button_leave_notify_event_callback (GmpcFavorites
 }
 
 
+/* Update the icon according to state */
 static void gmpc_favorites_button_update (GmpcFavoritesButton* self, GmpcFavoritesList* list) {
 	GdkPixbuf* _tmp0;
 	GdkPixbuf* pb2;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (list != NULL);
-	fprintf (stdout, "set song\n");
 	if (self->priv->song != NULL) {
 		self->priv->state = gmpc_favorites_list_is_favorite (favorites, self->priv->song->file);
 	} else {
@@ -438,7 +431,6 @@ static void gmpc_favorites_button_finalize (GObject* obj) {
 	GmpcFavoritesButton * self;
 	self = GMPC_FAVORITES_BUTTON (obj);
 	{
-		fprintf (stdout, "Button destroy\n");
 		if (favorites != NULL) {
 			g_object_unref ((GObject*) favorites);
 		}
