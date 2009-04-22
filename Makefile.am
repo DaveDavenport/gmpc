@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign 1.7
 
-SUBDIRS = src pixmaps glade data po pixmaps doc
+SUBDIRS = src pixmaps glade data po pixmaps doc test
 #else
 #SUBDIRS = src pixmaps glade data po pixmaps doc remote
 #endif

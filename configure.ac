@@ -51,6 +51,7 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 
 
 AC_PROG_CC
+AM_PROG_CC_C_O
 LT_AC_PROG_RC
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_RC
@@ -154,6 +155,18 @@ if test x$maintainer_mode = xtrue; then
     AC_DEFINE(MAINTAINER_MODE, 1, [Enable maintainer mode])
 fi
 
+
+# Maintainer mode
+AC_ARG_ENABLE([test],
+	[--enable-test Enable tests],
+	[case "${enableval}" in
+		yes) test_mode=true;;
+		no)  test_mode=false;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-test]);;
+	 esac],
+	[test_mode=false])
+
+AM_CONDITIONAL([ENABLE_TEST], [test x$test_mode = xtrue])
 
 # EXTRA VERSION
 AC_ARG_WITH([extra-version],
@@ -436,6 +449,8 @@ pixmaps/icons/scalable/actions/Makefile
 pixmaps/icons/scalable/status/Makefile
 pixmaps/icons/scalable/apps/Makefile
 pixmaps/icons/scalable/categories/Makefile
+test/Makefile
+test/config/Makefile
 ])
 echo ""
 echo ""

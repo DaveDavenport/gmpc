@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -635,14 +634,6 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 		}
 	}
 	/* remove node from linked list */
-	if(node->next != NULL)
-	{
-		if(node->parent && node->parent->children == node)
-		{
-			node->parent->children = node->next;
-		}
-		node->next->prev = node->prev;
-	}
 	if(node->prev != NULL)
 	{
 		if(node->parent && node->parent->children == node)
@@ -651,12 +642,20 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 		}
 		node->prev->next = node->next;
 	}
+	if(node->next != NULL)
+	{
+		if(node->parent && node->parent->children == node)
+		{
+			node->parent->children = node->next;
+		}
+		node->next->prev = node->prev;
+	}
 	if(node == cfg->root)
 	{
-		if(node->next){
-			cfg->root = node->next;
-		}else if (node->prev){
+		if(node->prev){
 			cfg->root = node->prev;
+		}else if (node->next){
+			cfg->root = node->next;
 		}else{
 			cfg->root = NULL;
 		}
@@ -664,8 +663,8 @@ static void __int_cfg_remove_node(config_obj *cfg, config_node *node)
 	cfg->total_size-= sizeof(config_node);
 	if(node->name){
 		cfg->total_size-=strlen(node->name);
-		 cfg_free_string(node->name);
-	}
+        cfg_free_string(node->name);
+    }
 	if(node->value) {
 		cfg->total_size-=strlen(node->value);
 		cfg_free_string(node->value);
@@ -963,7 +962,7 @@ conf_mult_obj *cfg_get_key_list(config_obj *data,const char *class)
 		}
 		root=root->next;
 	}while(root!= NULL);
-	while(list->prev != NULL) list = list->prev;
+	while(list && list->prev != NULL) list = list->prev;
 /*	g_mutex_unlock(data->lock);*/
 	return list;
 }
