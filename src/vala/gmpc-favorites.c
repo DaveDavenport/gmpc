@@ -216,6 +216,7 @@ static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavorites
 	}
 	if (_tmp0) {
 		gmpc_favorites_list_set_favorite (favorites, self->priv->song->file, !self->priv->state);
+		self->priv->state = !self->priv->state;
 	}
 	return FALSE;
 }

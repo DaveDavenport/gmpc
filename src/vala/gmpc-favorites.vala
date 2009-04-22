@@ -147,6 +147,7 @@ namespace Gmpc.Favorites{
         {
             if(event.button == 1 && this.song != null) {
                 favorites.set_favorite(this.song.file, !this.state);
+                this.state = !this.state;
             }
             return false;
         }
