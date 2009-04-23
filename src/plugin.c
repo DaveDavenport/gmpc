@@ -191,7 +191,7 @@ void plugin_add_new(GmpcPluginBase *plug, int plugin, GError **error)
 	plugins[num_plugins] = NULL;
 }
 
-static int plugin_load(char *path, const char *file, GError **error)
+static int plugin_load(const char *path, const char *file, GError **error)
 {
     gpointer function;
 	GModule *handle;
