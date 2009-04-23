@@ -34,8 +34,8 @@
 
 
 
-static char* string_replace (const char* self, const char* old, const char* replacement);
 static glong string_get_length (const char* self);
+static char* string_replace (const char* self, const char* old, const char* replacement);
 struct _GmpcSongLinksPrivate {
 	GmpcSongLinksType type;
 	mpd_Song* song;
@@ -50,8 +50,8 @@ enum  {
 static void _gmpc_song_links_download_file_gmpc_async_download_callback (const GEADAsyncHandler* handle, GEADStatus status, gpointer self);
 static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* item);
 static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
-static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event);
-static gboolean _gmpc_song_links_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
+static gboolean gmpc_song_links_button_press_event_callback (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event);
+static gboolean _gmpc_song_links_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button);
 static guchar* _vala_array_dup1 (guchar* self, int length);
 static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncHandler* handle, GEADStatus status);
@@ -62,6 +62,12 @@ static void gmpc_song_links_finalize (GObject* obj);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static gint _vala_array_length (gpointer array);
 
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
 
 
 static char* string_replace (const char* self, const char* old, const char* replacement) {
@@ -116,12 +122,6 @@ static char* string_replace (const char* self, const char* old, const char* repl
 }
 
 
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
-
-
 
 GType gmpc_song_links_type_get_type (void) {
 	static GType gmpc_song_links_type_type_id = 0;
@@ -164,7 +164,7 @@ static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* 
 }
 
 
-static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event) {
+static gboolean gmpc_song_links_button_press_event_callback (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (label != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -187,8 +187,8 @@ static gboolean gmpc_song_links_button_press_event (GmpcSongLinks* self, GtkEven
 }
 
 
-static gboolean _gmpc_song_links_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self) {
-	return gmpc_song_links_button_press_event (self, _sender, event);
+static gboolean _gmpc_song_links_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self) {
+	return gmpc_song_links_button_press_event_callback (self, _sender, event);
 }
 
 
@@ -214,7 +214,7 @@ GmpcSongLinks* gmpc_song_links_construct (GType object_type, GmpcSongLinksType t
 	gtk_label_set_markup (label, _tmp2 = g_strdup_printf ("<b>%s:</b>", _ ("Links")));
 	_tmp2 = (g_free (_tmp2), NULL);
 	g_object_set ((GtkFrame*) self, "shadow", GTK_SHADOW_NONE, NULL);
-	g_signal_connect_object ((GtkWidget*) event, "button-press-event", (GCallback) _gmpc_song_links_button_press_event_gtk_widget_button_press_event, self, 0);
+	g_signal_connect_object ((GtkWidget*) event, "button-press-event", (GCallback) _gmpc_song_links_button_press_event_callback_gtk_widget_button_press_event, self, 0);
 	gmpc_song_links_parse_uris (self);
 	return self;
 }

@@ -14,8 +14,8 @@ enum  {
 	GMPC_MENU_ITEM_RATING_DUMMY_PROPERTY
 };
 #define GMPC_MENU_ITEM_RATING_some_unique_name VERSION
-static gboolean gmpc_menu_item_rating_button_press_event (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata);
-static gboolean gmpc_menu_item_rating_button_release_event (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata);
+static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata);
+static gboolean gmpc_menu_item_rating_button_release_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata);
 static gpointer gmpc_menu_item_rating_parent_class = NULL;
 static void gmpc_menu_item_rating_finalize (GObject* obj);
 
@@ -27,15 +27,15 @@ gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self) {
 }
 
 
-static gboolean gmpc_menu_item_rating_button_press_event (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
+static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	fprintf (stdout, "Button press event\n");
-	gmpc_rating_button_press_event (self->rating, self->rating->event, &(*event));
+	gmpc_rating_button_press_event_callback (self->rating, self->rating->event_box, &(*event));
 	return TRUE;
 }
 
 
-static gboolean gmpc_menu_item_rating_button_release_event (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
+static gboolean gmpc_menu_item_rating_button_release_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	return TRUE;
 }
@@ -49,8 +49,8 @@ GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* 
 	g_return_val_if_fail (server != NULL, NULL);
 	g_return_val_if_fail (song != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	g_signal_connect_swapped (self, "button-press-event", (GCallback) gmpc_menu_item_rating_button_press_event, self);
-	g_signal_connect_swapped (self, "button-release-event", (GCallback) gmpc_menu_item_rating_button_release_event, self);
+	g_signal_connect_swapped (self, "button-press-event", (GCallback) gmpc_menu_item_rating_button_press_event_callback, self);
+	g_signal_connect_swapped (self, "button-release-event", (GCallback) gmpc_menu_item_rating_button_release_event_callback, self);
 	_tmp0 = NULL;
 	self->hbox = (_tmp0 = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6)), (self->hbox == NULL) ? NULL : (self->hbox = (g_object_unref (self->hbox), NULL)), _tmp0);
 	_tmp1 = NULL;

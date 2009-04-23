@@ -168,7 +168,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                         try{
                             Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
                             if(pb != null)
-                                add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,null, null), pb);
+                            {
+                                int w,h;
+                                add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,out w, out h), pb);
+                                }
                         }catch(Error e)
                         {
 

@@ -31,7 +31,7 @@ public class Gmpc.Rating : Gtk.Frame
     private MPD.Song song       = null;
     private Gtk.Image[] rat;
     private Gtk.HBox    box;
-    public Gtk.EventBox event;
+    public Gtk.EventBox event_box;
     private int rating = -1;
     static int id = id+1; 
 
@@ -44,7 +44,7 @@ public class Gmpc.Rating : Gtk.Frame
         }
 
     }
-    public bool button_press_event(Gtk.EventBox wid, Gdk.EventButton event)
+    public bool button_press_event_callback(Gtk.EventBox wid, Gdk.EventButton event)
     {
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
@@ -80,18 +80,18 @@ public class Gmpc.Rating : Gtk.Frame
         this.shadow = Gtk.ShadowType.NONE;
 
         this.box = new Gtk.HBox(true,6);
-        this.event = new Gtk.EventBox();
-        this.event.visible_window = false;
+        this.event_box = new Gtk.EventBox();
+        this.event_box.visible_window = false;
         this.rat = new Gtk.Image[5];
         for(i=0;i<5;i++) {
             this.rat[i] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
             this.box.pack_start(this.rat[i], false, false, 0);
         }
 
-        this.add(this.event);
-        this.event.add(this.box);
+        this.add(this.event_box);
+        this.event_box.add(this.box);
 
-        this.event.button_press_event += button_press_event;
+        this.event_box.button_press_event += button_press_event_callback;
         this.show_all();
     }
 

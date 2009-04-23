@@ -75,7 +75,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/************************************************
 	 * private
 	 */
-	private bool completion_function(Gtk.EntryCompletion comp, string key, out Gtk.TreeIter iter) {
+	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
 		var model = comp.model;
 
@@ -98,7 +98,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		this.completion.inline_selection = true;
 		this.completion.popup_completion = true;
 
-		this.completion.set_match_func(completion_function, null);
+		this.completion.set_match_func(completion_function);
 
 		var renderer = new Gtk.CellRendererText();
 		this.completion.pack_end(renderer, false);

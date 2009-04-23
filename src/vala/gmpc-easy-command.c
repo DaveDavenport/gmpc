@@ -401,7 +401,7 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEnt
 		return TRUE;
 	} else {
 		if ((*event).keyval == 0xff09) {
-			gtk_editable_set_position ((GTK_EDITABLE (widget)), -1);
+			gtk_editable_set_position (GTK_EDITABLE (widget), -1);
 			return TRUE;
 		}
 	}
@@ -668,7 +668,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
 		gtk_entry_completion_set_popup_completion (self->priv->completion, TRUE);
-		gtk_entry_completion_set_match_func (self->priv->completion, _gmpc_easy_command_completion_function_gtk_entry_completion_match_func, self, NULL);
+		gtk_entry_completion_set_match_func (self->priv->completion, _gmpc_easy_command_completion_function_gtk_entry_completion_match_func, g_object_ref (self), g_object_unref);
 		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 		gtk_cell_layout_pack_end ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, "text", 5);

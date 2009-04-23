@@ -31,7 +31,7 @@ static void gmpc_favorites_list_finalize (GObject* obj);
 struct _GmpcFavoritesButtonPrivate {
 	mpd_Song* song;
 	GtkImage* image;
-	gboolean state;
+	gboolean fstate;
 	GdkPixbuf* pb;
 };
 
@@ -215,8 +215,8 @@ static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavorites
 		_tmp0 = FALSE;
 	}
 	if (_tmp0) {
-		gmpc_favorites_list_set_favorite (favorites, self->priv->song->file, !self->priv->state);
-		self->priv->state = !self->priv->state;
+		gmpc_favorites_list_set_favorite (favorites, self->priv->song->file, !self->priv->fstate);
+		self->priv->fstate = !self->priv->fstate;
 	}
 	return FALSE;
 }
@@ -231,7 +231,7 @@ static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavorites
 	g_return_val_if_fail (button != NULL, FALSE);
 	_tmp0 = NULL;
 	pb2 = (_tmp0 = gdk_pixbuf_copy (self->priv->pb), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	if (self->priv->state) {
+	if (self->priv->fstate) {
 		colorshift_pixbuf (pb2, self->priv->pb, 10);
 	} else {
 		colorshift_pixbuf (pb2, self->priv->pb, -50);
@@ -257,13 +257,13 @@ static void gmpc_favorites_button_update (GmpcFavoritesButton* self, GmpcFavorit
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (list != NULL);
 	if (self->priv->song != NULL) {
-		self->priv->state = gmpc_favorites_list_is_favorite (favorites, self->priv->song->file);
+		self->priv->fstate = gmpc_favorites_list_is_favorite (favorites, self->priv->song->file);
 	} else {
-		self->priv->state = FALSE;
+		self->priv->fstate = FALSE;
 	}
 	_tmp0 = NULL;
 	pb2 = (_tmp0 = gdk_pixbuf_copy (self->priv->pb), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	if (self->priv->state) {
+	if (self->priv->fstate) {
 		colorshift_pixbuf (pb2, self->priv->pb, 30);
 	} else {
 		colorshift_pixbuf (pb2, self->priv->pb, -80);
@@ -423,7 +423,7 @@ static void gmpc_favorites_button_class_init (GmpcFavoritesButtonClass * klass) 
 
 static void gmpc_favorites_button_instance_init (GmpcFavoritesButton * self) {
 	self->priv = GMPC_FAVORITES_BUTTON_GET_PRIVATE (self);
-	self->priv->state = FALSE;
+	self->priv->fstate = FALSE;
 	self->priv->pb = NULL;
 }
 

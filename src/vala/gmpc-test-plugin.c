@@ -101,6 +101,7 @@ static void gmpc_meta_data_edit_window_add_entry_image (GmpcMetaDataEditWindow* 
 	char* _tmp0;
 	gint new_h;
 	gint new_w;
+	GdkPixbuf* _tmp7;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (uri != NULL);
 	g_return_if_fail (pb != NULL);
@@ -112,7 +113,7 @@ static void gmpc_meta_data_edit_window_add_entry_image (GmpcMetaDataEditWindow* 
 		char* _tmp1;
 		_tmp2 = NULL;
 		_tmp1 = NULL;
-		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_markup_printf_escaped ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
+		a = (_tmp2 = g_strconcat (a, _tmp1 = g_markup_printf_escaped ("\n<b>%s</b>:  %s", _ ("Provider"), provider), NULL), a = (g_free (a), NULL), _tmp2);
 		_tmp1 = (g_free (_tmp1), NULL);
 	}
 	if (format != NULL) {
@@ -120,7 +121,7 @@ static void gmpc_meta_data_edit_window_add_entry_image (GmpcMetaDataEditWindow* 
 		char* _tmp3;
 		_tmp4 = NULL;
 		_tmp3 = NULL;
-		a = (_tmp4 = g_strconcat (a, _tmp3 = (g_markup_printf_escaped ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format))), NULL), a = (g_free (a), NULL), _tmp4);
+		a = (_tmp4 = g_strconcat (a, _tmp3 = g_markup_printf_escaped ("\n<b>%s</b>: %s", _ ("Filetype"), gdk_pixbuf_format_get_name (format)), NULL), a = (g_free (a), NULL), _tmp4);
 		_tmp3 = (g_free (_tmp3), NULL);
 	}
 	if (pb != NULL) {
@@ -128,7 +129,7 @@ static void gmpc_meta_data_edit_window_add_entry_image (GmpcMetaDataEditWindow* 
 		char* _tmp5;
 		_tmp6 = NULL;
 		_tmp5 = NULL;
-		a = (_tmp6 = g_strconcat (a, _tmp5 = (g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh"))), NULL), a = (g_free (a), NULL), _tmp6);
+		a = (_tmp6 = g_strconcat (a, _tmp5 = g_strdup_printf ("\n<b>%s</b>: %ix%i (%s)", _ ("Size"), gdk_pixbuf_get_width (pb), gdk_pixbuf_get_height (pb), _ ("wxh")), NULL), a = (g_free (a), NULL), _tmp6);
 		_tmp5 = (g_free (_tmp5), NULL);
 	}
 	new_h = 0;
@@ -141,7 +142,9 @@ static void gmpc_meta_data_edit_window_add_entry_image (GmpcMetaDataEditWindow* 
 		new_h = (gint) ((150.0 / ((double) gdk_pixbuf_get_width (pb))) * gdk_pixbuf_get_height (pb));
 	}
 	gtk_list_store_append (self->priv->model, &iter);
-	gtk_list_store_set (self->priv->model, &iter, 0, gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
+	_tmp7 = NULL;
+	gtk_list_store_set (self->priv->model, &iter, 0, _tmp7 = gdk_pixbuf_scale_simple (pb, new_w, new_h, GDK_INTERP_BILINEAR), 1, uri, 2, a, -1, -1);
+	(_tmp7 == NULL) ? NULL : (_tmp7 = (g_object_unref (_tmp7), NULL));
 	a = (g_free (a), NULL);
 }
 
@@ -161,7 +164,7 @@ static void gmpc_meta_data_edit_window_add_entry_text (GmpcMetaDataEditWindow* s
 		char* _tmp1;
 		_tmp2 = NULL;
 		_tmp1 = NULL;
-		a = (_tmp2 = g_strconcat (a, _tmp1 = (g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider)), NULL), a = (g_free (a), NULL), _tmp2);
+		a = (_tmp2 = g_strconcat (a, _tmp1 = g_strdup_printf ("\n<b>%s</b>:  %s", _ ("Provider"), provider), NULL), a = (g_free (a), NULL), _tmp2);
 		_tmp1 = (g_free (_tmp1), NULL);
 	}
 	gtk_list_store_append (self->priv->model, &iter);
@@ -349,7 +352,11 @@ void gmpc_meta_data_edit_window_callback (GmpcMetaDataEditWindow* self, void* ha
 									goto __finally2;
 								}
 								if (pb != NULL) {
-									gmpc_meta_data_edit_window_add_entry_image (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, NULL, NULL), pb);
+									gint w;
+									gint h;
+									w = 0;
+									h = 0;
+									gmpc_meta_data_edit_window_add_entry_image (self, plugin_name, uri, gdk_pixbuf_get_file_info (uri, &w, &h), pb);
 								}
 								(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
 							}

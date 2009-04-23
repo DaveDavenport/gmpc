@@ -102,7 +102,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_new_path (ctx);
 		cairo_rectangle (ctx, x_start, y_start, (double) (width - 1), (double) (height - 1));
 		_tmp0 = 0.0;
-		if ((self->priv->fade <= 0)) {
+		if (self->priv->fade <= 0) {
 			_tmp0 = (double) 1;
 		} else {
 			_tmp0 = self->priv->fade;
@@ -140,7 +140,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_rectangle (ctx, x_start, y_start, (double) (width - 1), (double) (height - 1));
 		gdk_cairo_set_source_pixbuf (ctx, self->priv->temp, x_start, y_start);
 		_tmp1 = 0.0;
-		if ((self->priv->fade <= 0)) {
+		if (self->priv->fade <= 0) {
 			_tmp1 = (double) 1;
 		} else {
 			_tmp1 = self->priv->fade;
@@ -184,7 +184,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		tw = 0;
 		th = 0;
 		cairo_set_antialias (ctx, CAIRO_ANTIALIAS_DEFAULT);
-		size = (gdk_pixbuf_get_width (self->priv->cover)) / ((gint) string_get_length (self->priv->_text));
+		size = gdk_pixbuf_get_width (self->priv->cover) / ((gint) string_get_length (self->priv->_text));
 		fprintf (stdout, "%i-%i-%i\n", size, ww, (gint) string_get_length (self->priv->_text));
 		pango_font_description_set_absolute_size (self->priv->fd, (double) (size * 1024));
 		pango_layout_set_font_description (layout, self->priv->fd);
@@ -204,7 +204,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 
 static gboolean gmpc_image_timeout_test (GmpcImage* self) {
 	g_return_val_if_fail (self != NULL, FALSE);
-	self->priv->fade = self->priv->fade - (0.10);
+	self->priv->fade = self->priv->fade - 0.10;
 	if (self->priv->fade <= 0.0) {
 		GdkPixbuf* _tmp1;
 		GdkPixbuf* _tmp0;

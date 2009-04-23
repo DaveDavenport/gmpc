@@ -40,6 +40,11 @@ G_BEGIN_DECLS
 typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
+/**
+     * This function is called when the user entered a line matching this entry.
+     * param data the user data passed.
+     * param param a string with the extra parameters passed to the command
+     */
 typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 struct _GmpcEasyCommand {

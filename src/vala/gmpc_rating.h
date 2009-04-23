@@ -44,7 +44,7 @@ typedef struct _GmpcRatingPrivate GmpcRatingPrivate;
 struct _GmpcRating {
 	GtkFrame parent_instance;
 	GmpcRatingPrivate * priv;
-	GtkEventBox* event;
+	GtkEventBox* event_box;
 };
 
 struct _GmpcRatingClass {
@@ -52,7 +52,7 @@ struct _GmpcRatingClass {
 };
 
 
-gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
+gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
 GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
 void gmpc_rating_set_rating (GmpcRating* self, gint rating);

@@ -113,7 +113,7 @@ namespace Gmpc.Favorites{
     public class Button : Gtk.EventBox {
         private MPD.Song? song;
         private Gtk.Image image;
-        private bool state = false;
+        private bool fstate = false;
         private Gdk.Pixbuf pb = null;
         construct {
             this.visible_window = false;
@@ -146,8 +146,8 @@ namespace Gmpc.Favorites{
         button_press_event_callback(Gmpc.Favorites.Button button,Gdk.EventButton event)
         {
             if(event.button == 1 && this.song != null) {
-                favorites.set_favorite(this.song.file, !this.state);
-                this.state = !this.state;
+                favorites.set_favorite(this.song.file, !this.fstate);
+                this.fstate = !this.fstate;
             }
             return false;
         }
@@ -158,7 +158,7 @@ namespace Gmpc.Favorites{
         enter_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
         {
             var pb2 = pb.copy();
-            if(this.state){
+            if(this.fstate){
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, 10);
             }else{
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb,-50);
@@ -180,12 +180,12 @@ namespace Gmpc.Favorites{
         update(Gmpc.Favorites.List list)
         {
             if(this.song != null){
-                this.state =  favorites.is_favorite(this.song.file);
+                this.fstate =  favorites.is_favorite(this.song.file);
             }else{
-                this.state= false;
+                this.fstate= false;
             }
             var pb2 = pb.copy();
-            if(this.state) {
+            if(this.fstate) {
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, 30);
             }else{
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, -80);

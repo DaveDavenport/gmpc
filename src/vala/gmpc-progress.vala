@@ -61,7 +61,7 @@ public class Gmpc.Progress : Gtk.HBox
     /**
      * Paint a nice box around it
      */
-    private bool tooltip_expose_event(Gtk.Window tooltip, Gdk.EventExpose event)
+    private bool tooltip_expose_event_callback(Gtk.Window tooltip, Gdk.EventExpose event)
     {
         Gtk.paint_box(tooltip.style, 
                 event.window,
@@ -74,7 +74,7 @@ public class Gmpc.Progress : Gtk.HBox
         return false;
     }
 
-    private bool enter_notify_event(Gtk.Scale scale, Gdk.EventCrossing event)
+    private bool enter_notify_event_callback(Gtk.Scale scale, Gdk.EventCrossing event)
     {
         /* Create tooltip if mouse enters the event window */
         if (event.type == Gdk.EventType.ENTER_NOTIFY)
@@ -84,7 +84,7 @@ public class Gmpc.Progress : Gtk.HBox
             tooltip.add(tooltip_label);
             tooltip.border_width = 4;
             tooltip.set_app_paintable(true);
-            tooltip.expose_event += tooltip_expose_event;
+            tooltip.expose_event += tooltip_expose_event_callback;
         }
         /* Destroy tooltip if mouse leaves the event window */
         if (event.type == Gdk.EventType.LEAVE_NOTIFY)
@@ -97,7 +97,7 @@ public class Gmpc.Progress : Gtk.HBox
         }
         return false;
     }
-    private bool motion_notify_event(Gtk.Scale scale, Gdk.EventMotion event)
+    private bool motion_notify_event_callback(Gtk.Scale scale, Gdk.EventMotion event)
     {
         if(event.type == Gdk.EventType.MOTION_NOTIFY)
         {
@@ -156,11 +156,11 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.add_events((int)Gdk.EventMask.POINTER_MOTION_MASK);
         this.scale.add_events((int)Gdk.EventMask.ENTER_NOTIFY_MASK);
         this.scale.add_events((int)Gdk.EventMask.LEAVE_NOTIFY_MASK);
-        this.scale.scroll_event += scroll_event;
-        this.scale.button_press_event += button_press_event;
-        this.scale.motion_notify_event += motion_notify_event;
-        this.scale.enter_notify_event += enter_notify_event;
-        this.scale.leave_notify_event += enter_notify_event;
+        this.scale.scroll_event += scroll_event_callback;
+        this.scale.button_press_event += button_press_event_callback;
+        this.scale.motion_notify_event += motion_notify_event_callback;
+        this.scale.enter_notify_event += enter_notify_event_callback;
+        this.scale.leave_notify_event += enter_notify_event_callback;
 
         this.label = new Gtk.Label("");
         this.label.set_alignment(1.0f,0.5f);
@@ -189,7 +189,7 @@ public class Gmpc.Progress : Gtk.HBox
         }
     }
 
-    private bool button_press_event (Gtk.Scale scale, Gdk.EventButton event)
+    private bool button_press_event_callback (Gtk.Scale scale, Gdk.EventButton event)
     {
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
@@ -212,7 +212,7 @@ public class Gmpc.Progress : Gtk.HBox
         return false;
     }
 
-    private bool scroll_event (Gtk.Scale scale,Gdk.EventScroll event)
+    private bool scroll_event_callback (Gtk.Scale scale,Gdk.EventScroll event)
     {
         if(event.direction == Gdk.ScrollDirection.UP)
         {

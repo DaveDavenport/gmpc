@@ -27,7 +27,7 @@ enum  {
 };
 static gint gmpc_rating_id = 0;
 static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, ChangedStatusType what, GmpcConnection* conn);
-static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
+static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_rating_parent_class = NULL;
 static void gmpc_rating_finalize (GObject* obj);
@@ -35,7 +35,7 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 
 
-gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
+gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (wid != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
@@ -44,7 +44,7 @@ gboolean gmpc_rating_button_press_event (GmpcRating* self, GtkEventBox* wid, con
 			gint button;
 			char* _tmp0;
 			width = ((GtkWidget*) self)->allocation.width;
-			button = (gint) (((((*event).x) / ((double) width)) + 0.15) * 5);
+			button = (gint) ((((*event).x / ((double) width)) + 0.15) * 5);
 			_tmp0 = NULL;
 			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0 = g_strdup_printf ("%i", button));
 			_tmp0 = (g_free (_tmp0), NULL);
@@ -59,7 +59,7 @@ static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, Change
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (server != NULL);
 	g_return_if_fail (conn != NULL);
-	if (((what & MPD_CST_STICKER) != 0)) {
+	if ((what & MPD_CST_STICKER) != 0) {
 		gmpc_rating_update (self);
 	}
 }
@@ -113,8 +113,8 @@ void gmpc_rating_update (GmpcRating* self) {
 }
 
 
-static gboolean _gmpc_rating_button_press_event_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self) {
-	return gmpc_rating_button_press_event (self, _sender, event);
+static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self) {
+	return gmpc_rating_button_press_event_callback (self, _sender, event);
 }
 
 
@@ -137,8 +137,8 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		_tmp0 = NULL;
 		self->priv->box = (_tmp0 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), (self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL)), _tmp0);
 		_tmp1 = NULL;
-		self->event = (_tmp1 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->event == NULL) ? NULL : (self->event = (g_object_unref (self->event), NULL)), _tmp1);
-		gtk_event_box_set_visible_window (self->event, FALSE);
+		self->event_box = (_tmp1 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->event_box == NULL) ? NULL : (self->event_box = (g_object_unref (self->event_box), NULL)), _tmp1);
+		gtk_event_box_set_visible_window (self->event_box, FALSE);
 		_tmp2 = NULL;
 		self->priv->rat = (_tmp2 = g_new0 (GtkImage*, 5 + 1), self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL), self->priv->rat_length1 = 5, self->priv->rat_size = self->priv->rat_length1, _tmp2);
 		for (i = 0; i < 5; i++) {
@@ -147,9 +147,9 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 			self->priv->rat[i] = (_tmp3 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp3);
 			gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
 		}
-		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->event);
-		gtk_container_add ((GtkContainer*) self->event, (GtkWidget*) self->priv->box);
-		g_signal_connect_object ((GtkWidget*) self->event, "button-press-event", (GCallback) _gmpc_rating_button_press_event_gtk_widget_button_press_event, self, 0);
+		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->event_box);
+		gtk_container_add ((GtkContainer*) self->event_box, (GtkWidget*) self->priv->box);
+		g_signal_connect_object ((GtkWidget*) self->event_box, "button-press-event", (GCallback) _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event, self, 0);
 		gtk_widget_show_all ((GtkWidget*) self);
 	}
 	return obj;
@@ -193,7 +193,7 @@ static void gmpc_rating_finalize (GObject* obj) {
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
 	self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL);
 	(self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL));
-	(self->event == NULL) ? NULL : (self->event = (g_object_unref (self->event), NULL));
+	(self->event_box == NULL) ? NULL : (self->event_box = (g_object_unref (self->event_box), NULL));
 	G_OBJECT_CLASS (gmpc_rating_parent_class)->finalize (obj);
 }
 
