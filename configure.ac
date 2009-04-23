@@ -451,6 +451,7 @@ pixmaps/icons/scalable/apps/Makefile
 pixmaps/icons/scalable/categories/Makefile
 test/Makefile
 test/config/Makefile
+test/MpdDataModel/Makefile
 ])
 echo ""
 echo ""
