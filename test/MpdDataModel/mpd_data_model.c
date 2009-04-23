@@ -51,9 +51,27 @@ MpdData * get_test_list(void)
 
 int main(int argc, char **argv)
 {
+    GtkTreeIter iter;
     g_type_init();
     GmpcMpdDataModel *model = gmpc_mpddata_model_new();
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(model), get_test_list());
+    if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(model), &iter))
+    {
+        do{
+            gchar*a, *b, *c;
+            GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
+            gtk_tree_model_get(GTK_TREE_MODEL(model), &iter, 
+                    MPDDATA_MODEL_COL_SONG_TITLE, &b, 
+                    MPDDATA_MODEL_COL_PATH, &a,
+                    MPDDATA_MODEL_COL_SONG_ARTIST, &c, -1);
+
+
+            g_free(a);
+            g_free(b);
+            g_free(c);
+            gtk_tree_path_free(path);
+        }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(model), &iter));
+    }
     g_object_unref(model);
     return EXIT_SUCCESS;
 }
