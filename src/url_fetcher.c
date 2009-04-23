@@ -18,6 +18,7 @@
 */
 
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/debug_printf.h>
@@ -325,7 +326,7 @@ static void parse_uri(const char *uri, gpointer data)
 			if(fp)
 			{
 				char buffer[MAX_PLAYLIST_SIZE];
-				ssize_t t = read(fp, buffer, MAX_PLAYLIST_SIZE-1);
+				ssize_t t = fread(buffer,1, MAX_PLAYLIST_SIZE-1,fp);
 				/* Make sure it is NULL terminated */
 				buffer[t] = '\0';
 				parse_data(buffer, (guint)t, uri);
@@ -410,7 +411,6 @@ void url_start(void)
 	gtk_widget_hide(progress);
 
 	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-		GEADAsyncHandler *handler;
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 		gtk_widget_show(progress);

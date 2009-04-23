@@ -1664,7 +1664,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	 * Anything that can change metadta
 	 */
 	if (what & MPD_CST_SONGID || what & MPD_CST_SONGPOS || what & MPD_CST_PLAYLIST) {
-		int i;
 		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		playlist3_update_header();
 		gmpc_favorites_button_set_song(favorites_button, song);

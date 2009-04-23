@@ -8,6 +8,7 @@
 #include <main.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gdk/gdk.h>
+#include <misc.h>
 
 
 

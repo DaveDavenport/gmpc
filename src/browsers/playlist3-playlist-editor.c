@@ -23,6 +23,7 @@
 #include <libmpd/libmpd.h>
 #include <string.h>
 #include "main.h"
+#include "playlist3.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model-sort.h"

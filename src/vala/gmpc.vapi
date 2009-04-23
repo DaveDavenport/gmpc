@@ -180,7 +180,7 @@ namespace Gmpc {
     }
 
     namespace Misc{
-        [CCode (cname="colorshift_pixbuf")]
+        [CCode (cname="colorshift_pixbuf",cheader_filename="misc.h")]
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
     }
 }

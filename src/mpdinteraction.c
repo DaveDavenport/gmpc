@@ -121,13 +121,13 @@ static void crossfade_set(gpointer data, const char *param)
 }
 static void volume_set(gpointer data, const char *param)
 {
-	int current_volume = mpd_status_get_volume(connection);
+	int cur_volume = mpd_status_get_volume(connection);
 	/* if volume is disabled (current_volume < 0) ignore this command */
 	if(strlen(param) > 0 && current_volume >= 0)
 	{
 		int volume = 0;
 		if(param[0] == '-' || param[0] == '+') {
-			volume = current_volume;
+			volume = cur_volume;
 		}
 		volume += atoi(param);
 		mpd_status_set_volume(connection,volume); 

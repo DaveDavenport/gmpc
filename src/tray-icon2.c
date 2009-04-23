@@ -589,19 +589,19 @@ void tray_icon2_create_tooltip(void)
 
         i = mpd_player_get_next_song_id(connection);
         if(i > 0){
-            mpd_Song *song = mpd_playlist_get_song(connection, i);
-            if(song)
+            mpd_Song *next_psong = mpd_playlist_get_song(connection, i);
+            if(next_psong)
             {
                 gchar *test = g_strdup_printf("<span size='%i'>%s: <i>[[%%title%% - &[%%artist%%]]|%%shortfile%%]</i></span>",
                         7*size_offset,_("Next"));
                 label = gtk_label_new("");
                 gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);           
-                mpd_song_markup_escaped(buffer, 256,test,song);
+                mpd_song_markup_escaped(buffer, 256,test,next_psong);
                 q_free(test);
                 gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
                 gtk_label_set_markup(GTK_LABEL(label), buffer);
                 gtk_box_pack_start(GTK_BOX(vbox), label, FALSE,FALSE,0);
-                mpd_freeSong(song);
+                mpd_freeSong(next_psong);
             }
         }
 	} else {
