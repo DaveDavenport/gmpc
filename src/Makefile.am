@@ -185,6 +185,7 @@ EXTRA_DIST=\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-song-links.h\
 		vala/gmpc-test-plugin.h\
+        vala/gmpc-favorites.h\
 		plugin-internal.h\
 		setup-assistant.h\
 		sm.h\

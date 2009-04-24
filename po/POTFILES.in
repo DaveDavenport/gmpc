@@ -70,4 +70,5 @@ src/vala/gmpc_menu_item_rating.c
 src/vala/gmpc-song-links.c
 src/vala/gmpc-easy-command.c
 src/vala/gmpc-test-plugin.c
+src/vala/gmpc-favorites.c
 
