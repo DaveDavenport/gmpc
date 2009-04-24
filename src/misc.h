@@ -21,6 +21,7 @@
 #define __MISC_H__
 
 #define RANGE(l,u,v) (((v)<(l))?(l):(((v)<(u))?(v):(u)))
+#include <libmpd/libmpd.h>
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes

@@ -193,7 +193,7 @@ void gmpc_meta_data_edit_window_image_downloaded (GmpcMetaDataEditWindow* self, 
 		gboolean _tmp2;
 		/* get user data and take ownership */
 		_tmp1 = NULL;
-		data = (_tmp1 = gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = _tmp0, data_size = data_length1, _tmp1);
+		data = (_tmp1 = (guchar*) gmpc_easy_handler_get_data_vala_wrap (handle, &_tmp0), data_length1 = -1, data_size = data_length1, _tmp1);
 		_tmp2 = FALSE;
 		if (self->priv->query_type == META_ALBUM_ART) {
 			_tmp2 = TRUE;

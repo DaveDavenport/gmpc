@@ -75,7 +75,7 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	gboolean _tmp5;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (img != NULL, FALSE);
-	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) img)->window);
+	ctx = gdk_cairo_create ((GdkDrawable*) gtk_widget_get_window ((GtkWidget*) img));
 	width = 0;
 	height = 0;
 	x = ((GtkWidget*) img)->allocation.x;

@@ -100,7 +100,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
             /* get user data and take ownership */
-            weak uchar[] data = handle.get_data();
+            weak uchar[] data = (uchar[])handle.get_data();
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
                 try{
@@ -253,7 +253,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         Gtk.TreeIter iter;
         var sel = this.tree.get_selection();
-        string path;
+        string path = null;
         if(sel.get_selected(out this.model,out iter))
         {
             this.model.get(iter,1,out path);

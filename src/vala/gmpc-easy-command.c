@@ -417,7 +417,7 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 	gboolean _tmp0;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
-	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) widget)->window);
+	ctx = gdk_cairo_create ((GdkDrawable*) gtk_widget_get_window ((GtkWidget*) widget));
 	width = ((GtkWidget*) widget)->allocation.width;
 	height = ((GtkWidget*) widget)->allocation.height;
 	if (gtk_widget_is_composited ((GtkWidget*) widget)) {
