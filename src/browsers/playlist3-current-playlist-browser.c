@@ -299,6 +299,15 @@ static void mod_fill_entry_activate(GtkWidget *entry, PlayQueuePlugin *self)
     gtk_widget_grab_focus(self->priv->pl3_cp_tree);
 }
 
+#if GTK_CHECK_VERSION(2,16,0)
+static void mod_fill_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+    if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+
+}
+#endif
 
 static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
 {
@@ -318,6 +327,13 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(entry));
 #else
     entry = gtk_entry_new();
+#if GTK_CHECK_VERSION(2,16,0)
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_signal_connect(GTK_ENTRY(entry), "icon-press", G_CALLBACK(mod_fill_clear_search_entry), NULL);
+
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+    gtk_entry_set_icon_activatable(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, FALSE);
+#endif
 #endif    
     gtk_box_pack_start(GTK_BOX(self->priv->pl3_cp_vbox), entry, FALSE, TRUE,0);
     self->priv->filter_entry= entry;

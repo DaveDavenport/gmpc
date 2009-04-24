@@ -842,6 +842,18 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
         g_signal_handlers_unblock_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
     }
 }
+
+#if GTK_CHECK_VERSION(2,16,0)
+static void tag_browser_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+    if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+
+}
+#endif
+
+
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)
 {
 	GtkCellRenderer *renderer;
@@ -859,6 +871,13 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->sentry  = sexy_icon_entry_new(); 
 #else
     te->sentry  = gtk_entry_new();
+#if GTK_CHECK_VERSION(2,16,0)
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_signal_connect(GTK_ENTRY(te->sentry), "icon-press", G_CALLBACK(tag_browser_clear_search_entry), NULL);
+
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+    gtk_entry_set_icon_activatable(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, FALSE);
+#endif
 #endif
     g_signal_connect_swapped(G_OBJECT(te->sentry), "activate", G_CALLBACK(tag2_sentry_changed_real), te);
     te->sw 		= gtk_scrolled_window_new(NULL,NULL);

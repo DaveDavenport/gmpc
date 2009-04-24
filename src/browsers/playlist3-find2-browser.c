@@ -172,6 +172,16 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
     /* default, if nothing is found. */
     gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
 }
+
+#if GTK_CHECK_VERSION(2,16,0)
+static void pl3_find2_browser_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+    if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+
+}
+#endif
 /**
  * Construct the browser 
  */
@@ -270,6 +280,10 @@ static void pl3_find2_browser_init(void)
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(search_entry));
 #else
     search_entry = gtk_entry_new();
+#if GTK_CHECK_VERSION(2,16,0)
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(search_entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_signal_connect(GTK_ENTRY(search_entry), "icon-press", G_CALLBACK(pl3_find2_browser_clear_search_entry), NULL);
+#endif
 #endif
 	entrcomp = gtk_entry_completion_new();
 	gtk_entry_completion_set_text_column(entrcomp, 0);
