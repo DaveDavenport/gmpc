@@ -3,12 +3,12 @@
 #include <config.h>
 #include <libmpd/libmpd.h>
 #include <gmpc-connection.h>
-#include <stdio.h>
 #include <glib/gi18n-lib.h>
 #include <main.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gdk/gdk.h>
 #include <misc.h>
+#include <stdio.h>
 
 
 
@@ -55,13 +55,16 @@ static int _vala_strcmp0 (const char * str1, const char * str2);
 
 
 
+/**
+         * If disconnected from mpd, clear the list.
+         * On connect fill 
+         */
 static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, GmpcConnection* conn, MpdObj* server, gint connect) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
 	if (connect == 1) {
 		MpdData* _tmp0;
-		fprintf (stdout, "fill list\n");
 		_tmp0 = NULL;
 		self->priv->list = (_tmp0 = mpd_database_get_playlist_content (server, _ ("Favorites")), (self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL)), _tmp0);
 		g_signal_emit_by_name (self, "updated");
@@ -73,6 +76,9 @@ static void gmpc_favorites_list_con_changed (GmpcFavoritesList* self, GmpcConnec
 }
 
 
+/**
+         * If playlist changed update the list
+         */
 static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (conn != NULL);
@@ -86,7 +92,9 @@ static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcCon
 }
 
 
-/* Public access functions */
+/**
+         * Check if the song (specified by path) is favored
+         */
 gboolean gmpc_favorites_list_is_favorite (GmpcFavoritesList* self, const char* path) {
 	const MpdData* iter;
 	g_return_val_if_fail (self != NULL, FALSE);
@@ -104,16 +112,24 @@ gboolean gmpc_favorites_list_is_favorite (GmpcFavoritesList* self, const char* p
 }
 
 
+/**
+         * Favor, or unfavor a song
+         */
 void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path, gboolean favorite) {
 	gboolean current;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (path != NULL);
 	current = gmpc_favorites_list_is_favorite (self, path);
+	/* Do nothing if state does not change */
 	if (current != favorite) {
 		if (favorite) {
+			/* Add it */
 			mpd_database_playlist_list_add (connection, _ ("Favorites"), path);
 		} else {
 			const MpdData* iter;
+			/* Remove it 
+			 To be able to remove it we have to first lookup the position 
+			 This needs libmpd 0.18.1 */
 			iter = mpd_data_get_first (self->priv->list);
 			while (iter != NULL) {
 				if (iter->type == MPD_DATA_TYPE_SONG) {
@@ -129,6 +145,11 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 }
 
 
+/**
+     * This class is created, and stays active until the last GmpcFavoritesButton gets removed
+     * POSSIBLE ISSUE: setting favorites list back to NULL seems to fail. It is no issue as 
+     * I know atleast one will be active.
+     */
 GmpcFavoritesList* gmpc_favorites_list_construct (GType object_type) {
 	GmpcFavoritesList * self;
 	self = g_object_newv (object_type, 0, NULL);
@@ -161,7 +182,6 @@ static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_FAVORITES_LIST (obj);
 	{
-		fprintf (stdout, "Create list\n");
 		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed, self, 0);
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_favorites_list_status_changed_gmpc_connection_status_changed, self, 0);
 	}
@@ -187,9 +207,6 @@ static void gmpc_favorites_list_instance_init (GmpcFavoritesList * self) {
 static void gmpc_favorites_list_finalize (GObject* obj) {
 	GmpcFavoritesList * self;
 	self = GMPC_FAVORITES_LIST (obj);
-	{
-		fprintf (stdout, "Destroy\n");
-	}
 	(self->priv->list == NULL) ? NULL : (self->priv->list = (mpd_data_free (self->priv->list), NULL));
 	G_OBJECT_CLASS (gmpc_favorites_list_parent_class)->finalize (obj);
 }
@@ -260,21 +277,30 @@ static void gmpc_favorites_button_update (GmpcFavoritesButton* self, GmpcFavorit
 	if (self->priv->song != NULL) {
 		self->priv->fstate = gmpc_favorites_list_is_favorite (favorites, self->priv->song->file);
 	} else {
-		self->priv->fstate = FALSE;
+		/* Hide the widget and do nothing */
+		gtk_widget_hide ((GtkWidget*) self);
+		return;
 	}
+	/* Copy the pixbuf */
 	_tmp0 = NULL;
 	pb2 = (_tmp0 = gdk_pixbuf_copy (self->priv->pb), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	/* Depending on the state colorshift the pixbuf */
 	if (self->priv->fstate) {
 		colorshift_pixbuf (pb2, self->priv->pb, 30);
 	} else {
 		colorshift_pixbuf (pb2, self->priv->pb, -80);
 	}
 	gtk_image_set_from_pixbuf (self->priv->image, pb2);
+	gtk_widget_show ((GtkWidget*) self->priv->image);
 	gtk_widget_show ((GtkWidget*) self);
 	(pb2 == NULL) ? NULL : (pb2 = (g_object_unref (pb2), NULL));
 }
 
 
+/**********************************************************************
+         * Public api
+         ********************************************************************
+ Set the song the button should watch. or NULL to watch non */
 void gmpc_favorites_button_set_song (GmpcFavoritesButton* self, const mpd_Song* song) {
 	gboolean _tmp0;
 	gboolean _tmp1;
@@ -313,6 +339,9 @@ void gmpc_favorites_button_set_song (GmpcFavoritesButton* self, const mpd_Song* 
 }
 
 
+/**
+     * The actual favorite button
+     */
 GmpcFavoritesButton* gmpc_favorites_button_construct (GType object_type) {
 	GmpcFavoritesButton * self;
 	self = g_object_newv (object_type, 0, NULL);
@@ -345,6 +374,9 @@ static gboolean _gmpc_favorites_button_leave_notify_event_callback_gtk_widget_le
 }
 
 
+/**
+         * Creation of the object 
+         */
 static GObject * gmpc_favorites_button_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
 	GmpcFavoritesButtonClass * klass;
@@ -360,6 +392,7 @@ static GObject * gmpc_favorites_button_constructor (GType type, guint n_construc
 		GtkIconTheme* _tmp0;
 		GtkIconTheme* it;
 		GtkImage* _tmp5;
+		gtk_widget_set_no_show_all ((GtkWidget*) self, TRUE);
 		gtk_event_box_set_visible_window ((GtkEventBox*) self, FALSE);
 		_tmp0 = NULL;
 		it = (_tmp0 = gtk_icon_theme_get_default (), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));

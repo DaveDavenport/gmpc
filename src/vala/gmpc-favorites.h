@@ -34,6 +34,11 @@ typedef struct _GmpcFavoritesButton GmpcFavoritesButton;
 typedef struct _GmpcFavoritesButtonClass GmpcFavoritesButtonClass;
 typedef struct _GmpcFavoritesButtonPrivate GmpcFavoritesButtonPrivate;
 
+/**
+     * This class is created, and stays active until the last GmpcFavoritesButton gets removed
+     * POSSIBLE ISSUE: setting favorites list back to NULL seems to fail. It is no issue as 
+     * I know atleast one will be active.
+     */
 struct _GmpcFavoritesList {
 	GObject parent_instance;
 	GmpcFavoritesListPrivate * priv;
@@ -43,6 +48,9 @@ struct _GmpcFavoritesListClass {
 	GObjectClass parent_class;
 };
 
+/**
+     * The actual favorite button
+     */
 struct _GmpcFavoritesButton {
 	GtkEventBox parent_instance;
 	GmpcFavoritesButtonPrivate * priv;

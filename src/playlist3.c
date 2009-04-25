@@ -1353,23 +1353,6 @@ void playlist_pref_construct(GtkWidget * container)
 	q_free(path);
 }
 
-/* Playlist player */
-static void playlist_player_set_song(MpdObj * mi)
-{
-	char buffer[1024];
-	mpd_Song *song = mpd_playlist_get_current_song(mi);
-	if (song) {
-		char *mark = cfg_get_single_value_as_string_with_default(config,
-																 "playlist",
-																 "player_markup",
-																 DEFAULT_PLAYLIST_PLAYER_MARKUP);
-		/**
-		 * Render song markup
-		 */
-		mpd_song_markup_escaped(buffer, 1024, mark, song);
-		cfg_free_string(mark);
-	}
-}
 
 /**
  * Menu Callback functions
@@ -1566,6 +1549,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	 * Player state changed
 	 */
 	if (what & MPD_CST_STATE) {
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
 #ifdef ENABLE_IGE
 		IgeMacDock *dock = ige_mac_dock_get_default();
 		GdkPixbuf *pb;
@@ -1587,11 +1571,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				gtk_image_set_from_stock(GTK_IMAGE
 										 (glade_xml_get_widget
 										  (pl3_xml, "pp_but_play_img")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
-
-					/**
-                     * Update song indicator in window
-                     */
-				playlist_player_set_song(mi);
 
 					/**
                      * Update window title
@@ -1658,18 +1637,19 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 
 		}
 		playlist3_update_header();
+
+		if ( state == MPD_PLAYER_PLAY|| state == MPD_PLAYER_PAUSE) {
+			gmpc_favorites_button_set_song(favorites_button, song);
+		}else{
+			gmpc_favorites_button_set_song(favorites_button, NULL);
+		}
 	}
 	/**
 	 * Handle song change or Playlist change
 	 * Anything that can change metadta
 	 */
 	if (what & MPD_CST_SONGID || what & MPD_CST_SONGPOS || what & MPD_CST_PLAYLIST) {
-		mpd_Song *song = mpd_playlist_get_current_song(connection);
 		playlist3_update_header();
-		gmpc_favorites_button_set_song(favorites_button, song);
-		if (mpd_player_get_state(mi) == MPD_PLAYER_PLAY) {
-			playlist_player_set_song(mi);
-		}
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE, NULL);
 	}

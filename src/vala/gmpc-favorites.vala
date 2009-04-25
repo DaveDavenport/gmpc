@@ -24,35 +24,41 @@ using Gdk;
 using Cairo;
 using MPD;
 using Gmpc;
-
+/* trick to get config.h included */
 static const string some_unique_name = Config.VERSION;
 static Gmpc.Favorites.List favorites = null;
 
 namespace Gmpc.Favorites{
-    public class List : GLib.Object {
+    /**
+     * This class is created, and stays active until the last GmpcFavoritesButton gets removed
+     * POSSIBLE ISSUE: setting favorites list back to NULL seems to fail. It is no issue as 
+     * I know atleast one will be active.
+     */
+    private class List : GLib.Object {
         private MPD.Data.Item? list = null; 
         construct {
-            stdout.printf("Create list\n");
             gmpcconn.connection_changed += con_changed;
             gmpcconn.status_changed += status_changed;
         }
 
-        ~List() {
-            stdout.printf("Destroy\n");
-        }
-        
+        /**
+         * If disconnected from mpd, clear the list.
+         * On connect fill 
+         */
         private
         void 
         con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
         {
             if(connect == 1){
-                stdout.printf("fill list\n");
                 list = MPD.Database.get_playlist_content(server, _("Favorites"));
                 this.updated();
             }else{
                 list = null;
             }
         }
+        /**
+         * If playlist changed update the list
+         */
         private 
         void
         status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
@@ -63,9 +69,17 @@ namespace Gmpc.Favorites{
                 this.updated();
             }
         }
-
+        /****************************************************************************************
+         * "Public" api.  
+         ****************************************************************************************/
+        /**
+         * Signal for the widget using the list to see if it needs to recheck status
+         */
         signal void updated();
-        /* Public access functions */
+
+        /**
+         * Check if the song (specified by path) is favored
+         */
         public
         bool
         is_favorite(string path)
@@ -83,16 +97,24 @@ namespace Gmpc.Favorites{
             }
             return false;
         }
+        /**
+         * Favor, or unfavor a song
+         */
         public
         void
         set_favorite(string path, bool favorite)
         {
             bool current = this.is_favorite(path);
+            /* Do nothing if state does not change */
             if(current != favorite)
             {
                 if(favorite){
+                    /* Add it */
                     MPD.Database.playlist_list_add(server, _("Favorites"), path);
                 }else{
+                    /* Remove it */
+                    /* To be able to remove it we have to first lookup the position */
+                    /* This needs libmpd 0.18.1 */
                     weak MPD.Data.Item iter = this.list.first();
                     while(iter != null)
                     {
@@ -109,13 +131,24 @@ namespace Gmpc.Favorites{
             }
         }
     }
-
+    /**
+     * The actual favorite button
+     */
     public class Button : Gtk.EventBox {
+        /* the song the button show show the state for */
         private MPD.Song? song;
+        /* The image displaying the state */
         private Gtk.Image image;
+        /* The current state */
         private bool fstate = false;
+        /* The pixbuf holding the unmodified  image */
         private Gdk.Pixbuf pb = null;
+
+        /**
+         * Creation of the object 
+         */
         construct {
+            this.no_show_all = true;
             this.visible_window = false;
             var it = Gtk.IconTheme.get_default();
             try {
@@ -182,18 +215,26 @@ namespace Gmpc.Favorites{
             if(this.song != null){
                 this.fstate =  favorites.is_favorite(this.song.file);
             }else{
-                this.fstate= false;
+                /* Hide the widget and do nothing */
+                this.hide();
+                return;
             }
+            /* Copy the pixbuf */
             var pb2 = pb.copy();
+            /* Depending on the state colorshift the pixbuf */
             if(this.fstate) {
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, 30);
             }else{
                 Gmpc.Misc.colorshift_pixbuf(pb2, pb, -80);
             }
             this.image.set_from_pixbuf(pb2);
+            this.image.show();
             this.show();
         }
-
+        /**********************************************************************
+         * Public api
+         *********************************************************************/
+         /* Set the song the button should watch. or NULL to watch non */
         public
         void
         set_song(MPD.Song? song)
