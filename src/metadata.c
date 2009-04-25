@@ -731,17 +731,31 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
-        g_file_set_contents(filename, data, length, NULL);
-        d->result = META_DATA_AVAILABLE;
-        d->result_path = filename;
+        GError *error = NULL;
+        g_file_set_contents(filename, data, length, &error);
+        if(error == NULL)
+        {
+            d->result = META_DATA_AVAILABLE;
+            d->result_path = filename;
 
-        g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
-        g_list_free(d->list);
-        d->list = NULL;
-        d->iter = NULL;
-        d->index = meta_num_plugins;
-        process_itterate();
-    }else{
+            g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
+            g_list_free(d->list);
+            d->list = NULL;
+            d->iter = NULL;
+            d->index = meta_num_plugins;
+            process_itterate();
+            /* we trown it back, quit */
+            return;
+        }
+        else{
+            debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
+            g_error_free(error); error = NULL;
+            /* If we fail, clean up and try next one */
+            g_free(filename);
+        }
+    }
+
+    {
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
@@ -773,6 +787,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
                     g_file_set_contents(filename,(char *)content, -1, &error);
                     if(error)
                     {
+                        debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
                         g_error_free(error);
                         error = NULL;
                     }
@@ -852,6 +867,7 @@ static void result_itterate(GList *list, gpointer user_data)
         g_file_set_contents(filename,(char *)content, -1, &error);
         if(error)
         {
+            debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
             g_error_free(error);
             error = NULL;
         }
