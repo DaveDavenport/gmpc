@@ -13,7 +13,6 @@ gmpc_GOBFILES = \
 		gmpc-mpddata-model.gob\
 		gmpc-mpddata-model-playlist.gob\
 		gmpc-mpddata-model-sort.gob\
-		gmpc-liststore-sort.gob\
 		gmpc-mpddata-treeview.gob\
 		gmpc-clicklabel.gob\
 		gmpc-stats-label.gob\

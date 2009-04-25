@@ -29,7 +29,7 @@
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
-#include "gmpc-liststore-sort.h"
+#include "vala/gmpc-liststore-sort.h"
 #include "gmpc-metaimage.h"
 #include "vala/gmpc-progress.h"
 #include "vala/gmpc-favorites.h"
@@ -916,8 +916,7 @@ void create_playlist3(void)
 #endif
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL) {
-		/* song id, song title */
-		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new(PL3_CAT_NROWS, 
+		GType types[] = {
 				G_TYPE_INT,	/* row type, see free_type struct */
 				G_TYPE_STRING,	/* display name */
 				G_TYPE_STRING,	/* full path and stuff for backend */
@@ -927,6 +926,12 @@ void create_playlist3(void)
 				G_TYPE_STRING,	/* browser markup */
 				G_TYPE_INT,	/* ordering */
 				G_TYPE_STRING	/* Num items */
+				};
+		/* song id, song title */
+		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new();
+		gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree),
+				PL3_CAT_NROWS, 
+				types	
 				);
 	}
 	g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);

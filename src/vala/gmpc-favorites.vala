@@ -21,9 +21,8 @@ using Config;
 using GLib;
 using Gtk;
 using Gdk;
-using Cairo;
 using MPD;
-using Gmpc;
+
 /* trick to get config.h included */
 static const string some_unique_name = Config.VERSION;
 static Gmpc.Favorites.List favorites = null;
