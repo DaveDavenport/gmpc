@@ -6,6 +6,7 @@
 #include <string.h>
 #include <gmpc-connection.h>
 #include <main.h>
+#include "gtktransition.h"
 
 
 

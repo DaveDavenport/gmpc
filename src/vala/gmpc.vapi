@@ -1,3 +1,4 @@
+[CCode (cheader_filename="gtktransition.h")]
 namespace Gmpc {
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
     static Connection gmpcconn; 

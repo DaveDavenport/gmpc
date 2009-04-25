@@ -188,6 +188,7 @@ EXTRA_DIST=\
 		vala/gmpc-test-plugin.h\
         vala/gmpc-favorites.h\
         vala/gmpc-liststore-sort.h\
+        gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
 		sm.h\

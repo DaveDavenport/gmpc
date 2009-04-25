@@ -31,6 +31,7 @@
 #include <plugin.h>
 #include <config1.h>
 #include <libmpd/libmpd.h>
+#include "gtktransition.h"
 
 
 

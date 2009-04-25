@@ -23,6 +23,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include "gtktransition.h"
 
 
 
