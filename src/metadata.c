@@ -633,7 +633,10 @@ static gboolean process_itterate(void)
                 MetaData *met = NULL;
                 d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &met);
                 if(d->result != META_DATA_FETCHING){
-                    d->result_path =  met->content; met->content = NULL;
+                    if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
+                    {
+                        d->result_path =  met->content; met->content = NULL;
+                    }
                     meta_data_free(met);
                 }
             }
@@ -770,9 +773,12 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
          */
         if(ret != META_DATA_FETCHING)
         {
-            /* Steal result */
-            *path = met->content;
-            met->content = NULL;
+
+            if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
+            {
+                /* Steal result */
+                *path =  met->content; met->content = NULL;
+            }
             meta_data_free(met);
             return ret;	
         }
@@ -1162,6 +1168,11 @@ void meta_data_free(MetaData *data)
         {
             g_strfreev(data->content);
         }
+        else if (data->content_type == META_DATA_CONTENT_TEXT_LIST)
+        {
+                g_list_foreach((GList *)data->content, g_free, NULL);
+                g_list_free((GList *)data->content);
+        }
         else
             g_free(data->content);
         data->content = NULL;
@@ -1191,6 +1202,16 @@ MetaData *meta_data_dup(MetaData *data)
         if(data->size > 0 ) {
             retv->content = g_memdup(data->content, (guint)data->size);
         }
+    }
+    else if (data->content_type == META_DATA_CONTENT_TEXT_LIST)
+    {
+        GList *list = NULL;
+        GList *iter = g_list_first((GList *)(data->content));
+        while((iter = g_list_next(iter)))
+        {
+            list = g_list_append(list, g_strdup(iter->data));
+        }
+        data->content =(void *) g_list_reverse(list);
     }
     /* Text is NULL terminated */
     else
@@ -1247,6 +1268,11 @@ const gchar ** meta_data_get_text_vector(const MetaData *data)
 {
     g_assert(data->content_type == META_DATA_CONTENT_TEXT_VECTOR);
     return (const gchar **)data->content;
+}
+const GList *meta_data_get_text_list(const MetaData *data)
+{
+    g_assert(data->content_type == META_DATA_CONTENT_TEXT_LIST);
+    return (const GList *)data->content;
 }
 /**
  * Plugin structure

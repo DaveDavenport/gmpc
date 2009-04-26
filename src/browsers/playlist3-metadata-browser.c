@@ -32,7 +32,7 @@
 #include "vala/gmpc-rating.h"
 #include "vala/gmpc-song-links.h"
 #include "vala/gmpc-favorites.h"
-
+#include "metadata_cache.h"
 /**
  * Dragging 
  */
@@ -293,122 +293,121 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
         /* if there is metadata, we always assume it's for us */
         if(ret == META_DATA_AVAILABLE)
         {
-            char **str = g_strsplit(path, "\n", 0);
             GList *list = NULL;
-            int i=0;
-            song = mpd_newSong();
-            for(;str && str[i]&& i<20 ;i++)
+            MetaData *met = NULL;
+            int albums = 0;
+            meta_data_get_from_cache(song,type, &met);
+            if(met)
             {
-                MpdData *data = NULL;
-                GtkWidget *event = NULL;
-                GtkWidget *hbox;
-                GtkWidget *label;
-                GtkWidget *gmtv;
-
-
-                /* search if the artist is in the db.*/
-
-                if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
-                    gchar *string = NULL;
-                    size_t length = strlen(str[i]); 
-                    string = g_malloc0((length+4)*sizeof(char ));
-
-
-                    for(; length > 0 && str[i][length] != ' ';length--);
-
-                    if(length > 0 && length < strlen(str[i]))
+                GList *iter = (GList *) meta_data_get_text_list(met);
+                GList *copy = g_list_copy((GList *)iter);
+                if(copy)
+                {
+                    MpdData *data = mpd_database_get_artists(connection);
+                    for(;data && copy && albums < 40; data = mpd_data_get_next(data))
                     {
-                        int id = strlen(str[i])-length-1;
-                        strncat(string, &(str[i][length+1]),id);
-                        string[id] = ',';
-                        string[id+1] = ' ';
-                        strncat(&(string[id+2]),str[i],length);
-                        mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
-                        mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, string);
-                        data = mpd_database_search_commit(connection);
+                        if(strlen(data->tag) > 0)
+                        {
+                            gchar *martist= NULL;
+                            gchar *artist = (gchar *)data->tag;
+                            GRegex *regex;
+                            gchar*query;
+                            /* rename? */
+                            if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
+                                gchar **str = g_strsplit(artist, ",", 2);
+                                if(str[0] && str[1]) {
+                                    gchar *string= g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
+                                    martist = g_regex_escape_string(string, -1);
+                                    g_free(string);
+                                }
+                                else{
+                                    martist= g_regex_escape_string(artist,-1);
+                                }
+
+                            } else {
+                                martist= g_regex_escape_string(artist,-1);
+                            }
+
+                            iter = g_list_first(copy);
+                            query = g_strdup_printf("^%s$", martist);
+                            regex = g_regex_new(query, G_REGEX_CASELESS, 0, NULL);
+                            g_free(query);
+                            if(iter)do{
+                                if(g_regex_match(regex, (gchar *)iter->data, 0, NULL))
+                                {
+                                    GtkWidget *event = NULL, *hbox = NULL, *label;
+                                    GtkWidget *gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,48);
+                                    gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
+                                    gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
+
+                                    //copy = iter = g_list_delete_link(copy, iter);
+                                    /* make the background paintable, and paint the background */
+                                    event = gtk_event_box_new();
+                                    gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
+                                    g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
+
+
+
+                                    hbox = gtk_hbox_new(FALSE,6);
+                                    gtk_container_set_border_width(GTK_CONTAINER(hbox),6);
+                                    /**
+                                     * Aritst Image
+                                     */
+                                    song->artist = data->tag;
+
+                                    gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song);
+                                    gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,TRUE,0);
+                                    song->artist = NULL;
+                                    /**
+                                     * Label
+                                     */
+                                    label = gtk_label_new(data->tag);
+                                    gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+                                    gtk_misc_set_padding(GTK_MISC(label), 8,0);
+                                    gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+                                    gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
+
+
+                                    /**
+                                     *  View button 
+                                     */ 
+                                    if(data)
+                                    {
+                                        GtkWidget *button = gtk_button_new_with_label(_("View"));
+                                        gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
+                                        gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+                                        g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
+                                        g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_artist_viewed_clicked),NULL);
+                                        gtk_box_pack_end(GTK_BOX(hbox), button,FALSE,FALSE,0);
+
+                                        /** Setup dragging */
+                                        gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,GDK_ACTION_COPY|GDK_ACTION_MOVE);
+                                        g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
+                                        g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
+                                        g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(data->tag), g_free);
+                                        g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
+                                        gtk_drag_source_set_icon_name(event, "media-artist");
+                                    }	
+
+                                    gtk_container_add(GTK_CONTAINER(event), hbox);
+                                    list = g_list_append(list, event); 
+                                    albums++;
+                                }
+                            }while((iter = g_list_next(iter)));
+                            g_regex_unref(regex);
+                            g_free(martist);
+                        }
                     }
-                    g_free(string);
-                    string = NULL;
+                    if(data) mpd_data_free(data);
+                    data = NULL;
+                    g_list_free(copy);
                 }
-                if(!data )
-                {
-                    mpd_database_search_field_start(connection, MPD_TAG_ITEM_ARTIST);
-                    mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, str[i]);
-                    data = mpd_database_search_commit(connection);
-                }
-                if (!data && cfg_get_single_value_as_int_with_default(config, "metadata","onlyownsimilar",FALSE))
-                    continue;
-
-                gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,48);
-                gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
-                gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
-
-                /* make the background paintable, and paint the background */
-                event = gtk_event_box_new();
-                gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
-                g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
-
-
-
-                hbox = gtk_hbox_new(FALSE,6);
-                gtk_container_set_border_width(GTK_CONTAINER(hbox),6);
-                /**
-                 * Aritst Image
-                 */
-                if(data)
-                {
-                    song->artist = data->tag;
-                }else
-                    song->artist = str[i];
-                gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song);
-                gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,TRUE,0);
-                song->artist = NULL;
-                /**
-                 * Label
-                 */
-                if(data)
-                    label = gtk_label_new(data->tag);
-                else
-                    label = gtk_label_new(str[i]);
-                gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-                gtk_misc_set_padding(GTK_MISC(label), 8,0);
-                gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-                gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
-
-
-                /**
-                 *  View button 
-                 */ 
-                if(data)
-                {
-                    GtkWidget *button = gtk_button_new_with_label(_("View"));
-                    gtk_button_set_image(GTK_BUTTON(button), gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_BUTTON));
-                    gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-                    g_object_set_data_full(G_OBJECT(button), "artist",g_strdup(data->tag), g_free);
-                    g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(as_artist_viewed_clicked),NULL);
-                    gtk_box_pack_end(GTK_BOX(hbox), button,FALSE,FALSE,0);
-
-                    /** Setup dragging */
-                    gtk_drag_source_set(event, GDK_BUTTON1_MASK,target_table, 1,GDK_ACTION_COPY|GDK_ACTION_MOVE);
-                    g_signal_connect(G_OBJECT(event), "drag-data-get", G_CALLBACK(info2_artist_drag_data_get), NULL);
-                    g_signal_connect(G_OBJECT(event), "drag-begin", G_CALLBACK(info2_start_drag), NULL);
-                    g_object_set_data_full(G_OBJECT(event), "artist",g_strdup(data->tag), g_free);
-                    g_signal_connect(G_OBJECT(event), "button-press-event",G_CALLBACK(as_artist_viewed_clicked_event),NULL);
-                    gtk_drag_source_set_icon_name(event, "media-artist");
-                    mpd_data_free(data);
-                }	
-
-                gtk_container_add(GTK_CONTAINER(event), hbox);
-                list = g_list_append(list, event);
-
-
+                meta_data_free(met);
             }
-            g_strfreev(str);	
-
             /* add them to the table attach */
-            if(list){
+           if(list){
                 GList *node = g_list_first(list);
-                i = 0;
+                int i = 0;
                 for(;node;node = g_list_next(node)){
                     gtk_table_attach_defaults(GTK_TABLE(vbox),node->data, i%3, (i)%3+1,i/3,i/3+1);
                     i++;
@@ -417,8 +416,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
             }
 
             gtk_widget_show_all(vbox);
-            mpd_freeSong(song);
-
         }
 
     }

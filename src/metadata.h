@@ -60,7 +60,9 @@ typedef enum {
     /* Contains result (text) in html format */
     META_DATA_CONTENT_HTML,
     /* A null-terminated array of strings, f.e. similar artists*/
-    META_DATA_CONTENT_TEXT_VECTOR
+    META_DATA_CONTENT_TEXT_VECTOR,
+    /* list */
+    META_DATA_CONTENT_TEXT_LIST
 } MetaDataContentType;
 
 typedef struct {
@@ -102,6 +104,7 @@ const gchar * meta_data_get_text(const MetaData *data);
 const gchar * meta_data_get_html(const MetaData *data);
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length);
 const gchar **meta_data_get_text_vector(const MetaData *data);
+const GList *meta_data_get_text_list (const MetaData *data);
 
 /* ****************************************** */
 void metadata_import_old_db(char *url);

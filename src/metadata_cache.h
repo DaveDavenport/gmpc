@@ -11,5 +11,5 @@ void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult resul
 void metadata_cache_init(void);
 
 void metadata_cache_cleanup(void);
-void metadata_cache_destroy();
+void metadata_cache_destroy(void);
 #endif
