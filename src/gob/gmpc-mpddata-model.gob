@@ -87,8 +87,7 @@ requires 2.0.0
     private int sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
     private int old_sort_column = GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID;
     public gboolean has_up	 = FALSE;
-    private gchar *markup	 = {gmpc_signals_get_browser_markup(gmpc_signals)} destroywith g_free;
-    private gulong markup_signal = 0; 
+    private gchar *markup	 = {cfg_get_single_value_as_string_with_default(config, "playlist", "browser_markup",DEFAULT_MARKUP_BROWSER)} destroywith g_free;
 
     private gulong playtime = {0};
 
@@ -101,35 +100,6 @@ requires 2.0.0
          default_value = FALSE,
          export,
          link);
-
-    private
-    void
-    markup_changed(self, const char *markup, gpointer data)
-    {
-        int i=0;
-        GtkTreePath *path = NULL;
-        GtkTreeIter iter;
-        MpdData *data2 = mpd_data_get_first(self->_priv->data); 
-
-        /* set the new markup */
-        if(self->_priv->markup )
-            g_free(self->_priv->markup);
-        self->_priv->markup  = g_strdup(markup);
-
-        if(self->has_up) i = 1;
-        for(;data2; data2 = mpd_data_get_next_real(data2,FALSE)) 
-        {
-            path = gtk_tree_path_new();
-            gtk_tree_path_append_index(path,i);
-            iter.stamp = self->_priv->stamp;
-            iter.user_data = data2;
-            iter.user_data2 =  GINT_TO_POINTER(i);
-
-            /* propegate change */
-            gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
-            i++;
-        }
-    }
 
     init(self)
     {
@@ -162,11 +132,6 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_USERDATA] = G_TYPE_POINTER;
         self->types[MPDDATA_MODEL_META_DATA] = GDK_TYPE_PIXBUF;
-        /* for the test */
-        if(gmpc_signals != NULL) {
-            self->_priv->markup_signal = g_signal_connect_swapped(G_OBJECT(gmpc_signals), 
-                    "browser-markup-changed", G_CALLBACK(self_markup_changed), self);
-        }
     }
     class_init(klass);
 
@@ -182,11 +147,6 @@ requires 2.0.0
         {
             int i =0;
             Self *self = GMPC_MPDDATA_MODEL(obj); 
-            if(self->_priv->markup_signal)
-            {
-                g_signal_handler_disconnect(G_OBJECT(gmpc_signals),self->_priv->markup_signal);
-            }
-            self->_priv->markup_signal = 0;
 
             if(self->_priv->data)
             {

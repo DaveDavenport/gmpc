@@ -2258,17 +2258,6 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
  * Category editing
  */
 
-void set_browser_format(void)
-{
-	char *string = gmpc_signals_get_browser_markup(gmpc_signals);
-	char *format = edit_song_markup(string);
-	cfg_free_string(string);
-	if (format != NULL) {
-		gmpc_signals_browser_markup_changed(gmpc_signals, format);
-	}
-	q_free(format);
-}
-
 void playlist3_destroy(void)
 {
 	GtkWidget *win = playlist3_get_window();

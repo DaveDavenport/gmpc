@@ -14,8 +14,7 @@ gmpc_GOBFILES = \
 		gmpc-mpddata-model-sort.gob\
 		gmpc-mpddata-treeview.gob\
 		gmpc-clicklabel.gob\
-		gmpc-stats-label.gob\
-		gmpc-signals.gob
+		gmpc-stats-label.gob
 
 gmpc_GOBSTAMPFILES=\
 	$(gmpc_GOBFILES:.gob=.gob.stamp)

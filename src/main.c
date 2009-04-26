@@ -79,7 +79,6 @@ extern gmpcPlugin statistics_plugin;
 GmpcConnection *gmpcconn = NULL;
 /* Implements, and gives signals on profiles */
 GmpcProfiles *gmpc_profiles = NULL;
-GmpcSignals *gmpc_signals = NULL;
 /* Implements, and gives signals on meta_data*/
 GmpcMetaWatcher *gmw = NULL;
 /* Easy command */
@@ -620,7 +619,6 @@ int main(int argc, char **argv)
 	TEC("Session manager setup");
 #endif
 	/** Signals */
-	gmpc_signals = gmpc_signals_new();
 
 	gmpc_profiles = gmpc_profiles_new();
 	TEC("Setting up gmpc idle,signals and profiles");
@@ -916,7 +914,6 @@ int main(int argc, char **argv)
 	TOC("Starting save config");
 	cfg_close(config);
 	TOC("Saved config");
-	g_object_unref(gmpc_signals);
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);
 
