@@ -28,22 +28,8 @@ requires 2.0.0
 
 
 class Gmpc:Meta:Watcher from  G:Object {
-    public  int total_requested= 0;
-    public int queued_requests = 0;
     init(self)
     {
-    }
-    public
-    int
-    get_total_requested(self)
-    {
-        return self->total_requested;
-    }
-    public
-    int
-    get_queued_requests(self)
-    {
-        return self->queued_requests;
     }
 
     public

@@ -301,10 +301,12 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
             {
                 GList *iter = (GList *) meta_data_get_text_list(met);
                 GList *copy = g_list_copy((GList *)iter);
+                GList *remainder = g_list_copy((GList *)iter);
                 if(copy)
                 {
+                    mpd_Song *temp_song = mpd_newSong();
                     MpdData *data = mpd_database_get_artists(connection);
-                    for(;data && copy && albums < 40; data = mpd_data_get_next(data))
+                    for(;data && copy && albums < 50; data = mpd_data_get_next(data))
                     {
                         if(strlen(data->tag) > 0)
                         {
@@ -341,6 +343,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                                     gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
 
                                     //copy = iter = g_list_delete_link(copy, iter);
+                                    remainder = g_list_remove(remainder, iter->data);
                                     /* make the background paintable, and paint the background */
                                     event = gtk_event_box_new();
                                     gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
@@ -353,11 +356,11 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                                     /**
                                      * Aritst Image
                                      */
-                                    song->artist = data->tag;
+                                    temp_song->artist = data->tag;
 
-                                    gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), song);
+                                    gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), temp_song);
                                     gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,TRUE,0);
-                                    song->artist = NULL;
+                                    temp_song->artist = NULL;
                                     /**
                                      * Label
                                      */
@@ -401,6 +404,45 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                     if(data) mpd_data_free(data);
                     data = NULL;
                     g_list_free(copy);
+                    for(iter = g_list_first(remainder); iter && albums < 40; iter = g_list_next(iter))
+                    {
+                        GtkWidget *event = NULL, *hbox = NULL, *label;
+                        GtkWidget *gmtv = gmpc_metaimage_new_size(META_ARTIST_ART,48);
+                        printf("%s\n", iter->data);
+                        gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(gmtv), "no-artist");
+                        gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(gmtv),(char *)"fetching-artist");
+
+                        /* make the background paintable, and paint the background */
+                        event = gtk_event_box_new();
+                        gtk_widget_set_app_paintable(GTK_WIDGET(event), TRUE);
+                        g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
+
+
+
+                        hbox = gtk_hbox_new(FALSE,6);
+                        gtk_container_set_border_width(GTK_CONTAINER(hbox),6);
+                        /**
+                         * Aritst Image
+                         */
+                        temp_song->artist = (gchar *)iter->data; 
+                        gmpc_metaimage_update_cover_from_song_delayed(GMPC_METAIMAGE(gmtv), temp_song);
+                        gtk_box_pack_start(GTK_BOX(hbox), gmtv,FALSE,TRUE,0);
+                        temp_song->artist = NULL;
+                        /**
+                         * Label
+                         */
+                        label = gtk_label_new((gchar *)iter->data);
+                        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+                        gtk_misc_set_padding(GTK_MISC(label), 8,0);
+                        gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
+                        gtk_box_pack_start(GTK_BOX(hbox), label,TRUE,TRUE,0);
+
+                        gtk_container_add(GTK_CONTAINER(event), hbox);
+                        list = g_list_append(list, event); 
+                        albums++;
+                    }
+                    if(remainder) g_list_free(remainder);
+                    mpd_freeSong(temp_song);
                 }
                 meta_data_free(met);
             }
