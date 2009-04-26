@@ -1019,7 +1019,7 @@ static void init_stock_icons(void)
  */
 void GmpcStatusChangedCallback(MpdObj * mi, ChangedStatusType what, void *userdata)
 {
-	gmpc_connection_status_changed(gmpcconn, mi, what);
+	gmpc_connection_call_status_changed(gmpcconn, mi, what);
 }
 
 /* The actual handling of the status changed signal */
@@ -1209,7 +1209,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 	}
 
 	/* remove this when it does not fix it */
-	gmpc_connection_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
+	gmpc_connection_call_connection_changed(gmpcconn, mi, mpd_check_connected(mi));
 }
 
 static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int connected, gpointer data)

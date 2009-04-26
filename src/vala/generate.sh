@@ -21,11 +21,4 @@ build_file "gmpc-test-plugin.vala"
 build_file "gmpc_menu_item_rating.vala" "gmpc_rating.vala"
 build_file "gmpc-liststore-sort.vala"
 
-#valac -C gmpc_rating.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd`
-#valac -C gmpc_menu_item_rating.vala gmpc_rating.vala --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd`
-#valac -C gmpc-easy-command.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --pkg gmpc-plugin --vapidir=`pwd`
-
-#valac -C gmpc-song-links.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd`
-
-#valac -C gmpc-test-plugin.vala --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --pkg gmpc-plugin --vapidir=`pwd`
-#valac -C gmpc-favorites.vala  --pkg config --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --pkg gmpc-plugin --vapidir=`pwd`
+valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala"

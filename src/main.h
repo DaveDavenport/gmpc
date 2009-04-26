@@ -45,7 +45,7 @@
  * Some gobjects
  */
 #include "gob/gmpc-profiles.h"
-#include "gob/gmpc-connection.h"
+#include "gmpc-connection.h"
 #include "gob/gmpc-signals.h"
 
 #include "vala/gmpc-easy-command.h"

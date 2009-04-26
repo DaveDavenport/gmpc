@@ -6,7 +6,6 @@ noinst_LTLIBRARIES = libcwidgets.la
 
 gmpc_GOBFILES = \
 		gmpc-profiles.gob\
-		gmpc-connection.gob\
 		gmpc-meta-watcher.gob\
 		gmpc-metaimage.gob\
 		gmpc-meta-text-view.gob\

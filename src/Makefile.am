@@ -39,6 +39,7 @@ gmpc_SOURCES=\
 	vala/gmpc-test-plugin.c\
 	vala/gmpc-favorites.c\
     vala/gmpc-liststore-sort.c\
+    vala/gmpc-connection.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url_fetcher.c\
@@ -188,6 +189,7 @@ EXTRA_DIST=\
 		vala/gmpc-test-plugin.h\
         vala/gmpc-favorites.h\
         vala/gmpc-liststore-sort.h\
+        vala/gmpc-connection.h\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
