@@ -11,7 +11,7 @@ function build_file()
 valac -C gmpc-plugin.vala  --library=gmpc-plugin --pkg gtk+-2.0 --pkg cairo --pkg libmpd --pkg gmpc --vapidir=`pwd` 
 #-H gmpc-plugin.h
 
-build_file "gmpc_image.vala"
+build_file "gmpc-image.vala"
 build_file "gmpc-progress.vala"
 build_file "gmpc_rating.vala"
 build_file "gmpc-easy-command.vala"

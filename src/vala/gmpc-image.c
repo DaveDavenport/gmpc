@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "gmpc_image.h"
+#include "gmpc-image.h"
 #include <gtktransition.h>
 #include <float.h>
 #include <math.h>

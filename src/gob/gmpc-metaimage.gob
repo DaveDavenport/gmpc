@@ -22,7 +22,7 @@ requires 2.0.0
 %ph{
 #include "main.h"
 #include "misc.h"
-#include "vala/gmpc_image.h"
+#include "vala/gmpc-image.h"
 #include "vala/gmpc-test-plugin.h"
 %}
 
