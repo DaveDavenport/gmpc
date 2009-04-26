@@ -13,12 +13,12 @@ valac -C gmpc-plugin.vala  --library=gmpc-plugin --pkg gtk+-2.0 --pkg cairo --pk
 
 build_file "gmpc-image.vala"
 build_file "gmpc-progress.vala"
-build_file "gmpc_rating.vala"
+build_file "gmpc-rating.vala"
 build_file "gmpc-easy-command.vala"
 build_file "gmpc-song-links.vala"
 build_file "gmpc-favorites.vala"
 build_file "gmpc-test-plugin.vala"
-build_file "gmpc_menu_item_rating.vala" "gmpc_rating.vala"
+build_file "gmpc_menu_item_rating.vala" "gmpc-rating.vala"
 build_file "gmpc-liststore-sort.vala"
 
 valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala"

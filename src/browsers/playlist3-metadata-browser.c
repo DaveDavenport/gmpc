@@ -29,7 +29,7 @@
 #include "gmpc-metaimage.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-meta-text-view.h"
-#include "vala/gmpc_rating.h"
+#include "vala/gmpc-rating.h"
 #include "vala/gmpc-song-links.h"
 #include "vala/gmpc-favorites.h"
 

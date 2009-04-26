@@ -31,7 +31,7 @@ gmpc_SOURCES=\
 	browsers/playlist3-playlist-editor.c\
 	vala/gmpc-image.c\
 	vala/gmpc-progress.c\
-	vala/gmpc_rating.c\
+	vala/gmpc-rating.c\
 	vala/gmpc_menu_item_rating.c\
 	vala/gmpc-easy-command.c\
 	vala/gmpc-song-links.c\
@@ -181,7 +181,7 @@ EXTRA_DIST=\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		vala/gmpc-image.h\
-		vala/gmpc_rating.h\
+		vala/gmpc-rating.h\
 		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\

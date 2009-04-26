@@ -7,7 +7,7 @@
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
-#include "gmpc_rating.h"
+#include "gmpc-rating.h"
 
 G_BEGIN_DECLS
 

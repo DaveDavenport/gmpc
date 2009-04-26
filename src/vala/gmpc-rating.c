@@ -1,5 +1,5 @@
 
-#include "gmpc_rating.h"
+#include "gmpc-rating.h"
 #include <gtktransition.h>
 #include <float.h>
 #include <math.h>
